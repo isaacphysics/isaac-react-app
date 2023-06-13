@@ -1,19 +1,25 @@
 import React, {useState} from 'react';
-import {requestEmailVerification, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {
+    selectors,
+    useAppSelector,
+    useRequestEmailVerificationMutation
+} from "../../state";
 import {Link} from "react-router-dom";
 import * as RS from 'reactstrap';
 import {Button} from 'reactstrap';
 import {isPhy, siteSpecific, WEBMASTER_EMAIL} from "../../services";
 
 export const EmailVerificationBanner = () => {
-    const dispatch = useAppDispatch();
     const [hidden, setHidden] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const status = user?.loggedIn && user?.emailVerificationStatus || null;
     const show = user?.loggedIn && status != "VERIFIED" && !hidden;
 
+    const [sendVerificationEmail] = useRequestEmailVerificationMutation();
     function clickVerify() {
-        dispatch(requestEmailVerification());
+        if (user?.loggedIn && user.email) {
+            sendVerificationEmail({email: user.email});
+        }
         setHidden(true);
     }
 

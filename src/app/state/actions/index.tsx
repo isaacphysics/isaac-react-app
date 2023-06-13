@@ -436,55 +436,6 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     }
 };
 
-export const requestEmailVerification = () => async (dispatch: any, getState: () => AppState) => {
-    const state = getState();
-    const user: Immutable<RegisteredUserDTO> | null = state && state.user && state.user.loggedIn && state.user || null;
-    let error = "";
-    if (user && user.email) {
-        dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST});
-        try {
-            const response = await api.users.requestEmailVerification({email: user.email});
-            if (response.status == 200) {
-                dispatch(showToast({
-                    color: "success", title: "Email verification request succeeded.",
-                    body: "Please follow the verification link given in the email sent to your address.",
-                    timeout: 10000
-                }));
-                dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS});
-                return;
-            }
-            error = response.data || "Error sending request";
-        } catch (e: any) {
-            error = e.message || "Error sending request";
-        }
-    } else {
-        error = "You are not logged in or don't have an e-mail address to verify.";
-    }
-
-    dispatch(showToast({color: "danger", title: "Email verification request failed.",
-        body: "Sending an email to your address failed with error message: " + error
-    }));
-    dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE});
-};
-
-export const handleEmailAlter = (params: ({userid: string | null; token: string | null})) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST});
-        await api.email.verify(params);
-        dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
-        dispatch(requestCurrentUser() as any);
-        dispatch(showToast({
-            title: "Email address verified",
-            body: "The email address has been verified",
-            color: "success",
-            timeout: 5000,
-            closable: false,
-        }) as any);
-    } catch(e: any) {
-        dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
 // User error
 export const getUserIdSchoolLookup = (eventIds: number[]) => async (dispatch: Dispatch<Action>) => {
     try {

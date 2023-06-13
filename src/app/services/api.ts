@@ -87,9 +87,6 @@ export const api = {
         passwordReset: (params: {email: string}) => {
             return endpoint.post(`/users/resetpassword`, params);
         },
-        requestEmailVerification(params: {email: string}) {
-            return endpoint.post(`/users/verifyemail`, params);
-        },
         verifyPasswordReset: (token: string | null) => {
             return endpoint.get(`/users/resetpassword/${token}`)
         },
@@ -148,9 +145,6 @@ export const api = {
         },
     },
     email: {
-        verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
-            return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
-        },
         getTemplateEmail: (contentid: string): AxiosPromise<AppTypes.TemplateEmail> => {
             return endpoint.get(`/email/viewinbrowser/${contentid}`);
         },

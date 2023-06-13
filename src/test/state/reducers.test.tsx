@@ -13,7 +13,7 @@ import {
     rootReducer,
     search,
     toasts,
-    user,
+    userSlice,
     selectors
 } from "../../app/state";
 
@@ -68,13 +68,13 @@ describe("user reducer", () => {
     const previousStates: (PotentialUser | null)[] = [null, {loggedIn: false}, {...dameShirley, loggedIn: true}, {...profWheeler, loggedIn: true}];
 
     it("returns null as an initial value", () => {
-        const actualState = user(undefined, ignoredTestAction);
+        const actualState = userSlice.reducer(undefined, ignoredTestAction);
         expect(actualState).toBe(null);
     });
 
     it("returns the previous state by default", () => {
         previousStates.map((previousState) => {
-            const actualNextState = user(previousState, ignoredTestAction);
+            const actualNextState = userSlice.reducer(previousState, ignoredTestAction);
             expect(actualNextState).toEqual(previousState);
         });
     });
@@ -82,7 +82,7 @@ describe("user reducer", () => {
     it("should always add a user on login response success", () => {
         const addProfWheelerAction: Action = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: profWheeler};
         previousStates.map((previousState) => {
-            const actualNextState = user(previousState, addProfWheelerAction);
+            const actualNextState = userSlice.reducer(previousState, addProfWheelerAction);
             expect(actualNextState).toEqual({...profWheeler, loggedIn: true});
         })
     })

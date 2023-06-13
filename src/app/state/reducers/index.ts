@@ -8,7 +8,6 @@ import {
     eventOverviews,
     events,
     totpChallengePending,
-    user,
     userAuthSettings,
     userPreferences,
     userSchoolLookup,
@@ -46,12 +45,13 @@ import {
     search,
     isaacApi,
     gameboardsSlice,
-    adminUserSearchSlice
+    adminUserSearchSlice,
+    userSlice
 } from "../index";
 
 export const rootReducer = combineReducers({
     // User
-    user,
+    user: userSlice.reducer,
     userAuthSettings,
     userPreferences,
     userSchoolLookup,

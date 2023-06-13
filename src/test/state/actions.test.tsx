@@ -7,7 +7,6 @@ import {
     middleware,
     registerQuestions,
     requestCurrentUser,
-    requestEmailVerification,
     showToast
 } from "../../app/state";
 import {endpoint} from "../../app/services";
@@ -236,54 +235,55 @@ describe("toasts actions", () => {
     });
 });
 
-describe("requestEmailVerification action", () => {
-    afterEach(() => {
-        axiosMock.reset();
-    });
-
-    const {profWheeler} = registeredUserDTOs;
-
-    it("dispatches failure and a failure toast if not logged in", async () => {
-        const store = mockStore();
-        await store.dispatch(requestEmailVerification() as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.TOASTS_SHOW},
-            {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
-        ];
-        const actualActions = store.getActions();
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions).toMatchObject(expectedActions);
-        expect(axiosMock.history.get.length).toBe(0);
-    });
-
-    it("success dispatches request, success, and a toast if logged in", async () => {
-        axiosMock.onPost(`/users/verifyemail`).replyOnce(200);
-        const store = mockStore({user: {...profWheeler, loggedIn: true}});
-        await store.dispatch(requestEmailVerification() as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST},
-            {type: ACTION_TYPE.TOASTS_SHOW},
-            {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS}
-        ];
-        const actualActions = store.getActions();
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions).toMatchObject(expectedActions);
-        expect(axiosMock.history.post.length).toBe(1);
-    });
-
-    it("failure dispatches request, failure, and a toast if logged in", async () => {
-        axiosMock.onPost(`/users/verifyemail`).replyOnce(500, {bypassGenericSiteErrorPage: true});
-        const store = mockStore({user: {...profWheeler, loggedIn: true}});
-        await store.dispatch(requestEmailVerification() as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST},
-            {type: ACTION_TYPE.TOASTS_SHOW},
-            {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
-        ];
-        const actualActions = store.getActions();
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions).toMatchObject(expectedActions);
-        expect(axiosMock.history.post.length).toBe(1);
-    });
-
-});
+// TODO remake these as full "front-end integration" tests
+// describe("requestEmailVerification action", () => {
+//     afterEach(() => {
+//         axiosMock.reset();
+//     });
+//
+//     const {profWheeler} = registeredUserDTOs;
+//
+//     it("dispatches failure and a failure toast if not logged in", async () => {
+//         const store = mockStore();
+//         await store.dispatch(requestEmailVerification() as any);
+//         const expectedActions = [
+//             {type: ACTION_TYPE.TOASTS_SHOW},
+//             {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
+//         ];
+//         const actualActions = store.getActions();
+//         const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+//         expect(actualIsaacActions).toMatchObject(expectedActions);
+//         expect(axiosMock.history.get.length).toBe(0);
+//     });
+//
+//     it("success dispatches request, success, and a toast if logged in", async () => {
+//         axiosMock.onPost(`/users/verifyemail`).replyOnce(200);
+//         const store = mockStore({user: {...profWheeler, loggedIn: true}});
+//         await store.dispatch(requestEmailVerification() as any);
+//         const expectedActions = [
+//             {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST},
+//             {type: ACTION_TYPE.TOASTS_SHOW},
+//             {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS}
+//         ];
+//         const actualActions = store.getActions();
+//         const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+//         expect(actualIsaacActions).toMatchObject(expectedActions);
+//         expect(axiosMock.history.post.length).toBe(1);
+//     });
+//
+//     it("failure dispatches request, failure, and a toast if logged in", async () => {
+//         axiosMock.onPost(`/users/verifyemail`).replyOnce(500, {bypassGenericSiteErrorPage: true});
+//         const store = mockStore({user: {...profWheeler, loggedIn: true}});
+//         await store.dispatch(requestEmailVerification() as any);
+//         const expectedActions = [
+//             {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST},
+//             {type: ACTION_TYPE.TOASTS_SHOW},
+//             {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
+//         ];
+//         const actualActions = store.getActions();
+//         const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+//         expect(actualIsaacActions).toMatchObject(expectedActions);
+//         expect(axiosMock.history.post.length).toBe(1);
+//     });
+//
+// });
