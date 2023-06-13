@@ -33,14 +33,25 @@
 
 .quiz-student-menu {
   position: relative;
-  padding-right: 24px;
-  cursor: pointer;
+  width: 100%;
+  .quiz-student-name {
+    margin-right: 30px;
+    padding-left: 10px;
+    padding-right: 4px;
+    word-wrap: anywhere;
+  }
+  .quiz-student-menu-icon {
+    position: absolute;
+    top: calc(50% - 1px);
+    right: 5px;
+    transform: translateY(-50%);
+  }
 }
 .quiz-student-menu-icon {
   position: absolute;
   right: 0;
   top: 50%;
-  margin-top: -12px;
+  transform: translateY(-50%);
 }
 .quizFeedbackModeSpinner {
   vertical-align: middle;

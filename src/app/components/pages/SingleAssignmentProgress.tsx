@@ -2,7 +2,12 @@ import React, {useContext} from "react";
 import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Button, Container} from "reactstrap";
-import {isaacApi, openActiveModal, useAppDispatch} from "../../state";
+import {
+    openActiveModal,
+    useAppDispatch,
+    useGetAssignmentProgressQuery,
+    useGetSingleSetAssignmentQuery
+} from "../../state";
 import {
     AppAssignmentProgress,
     AssignmentProgressPageSettingsContext,
@@ -43,9 +48,9 @@ const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWith
 export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
     const params = useParams<{ assignmentId?: string }>();
     const assignmentId = parseInt(params.assignmentId || ""); // DANGER: This will produce a NaN if params.assignmentId is undefined
-    const assignmentQuery = isaacApi.endpoints.getSingleSetAssignment.useQuery(assignmentId || skipToken);
+    const assignmentQuery = useGetSingleSetAssignmentQuery(assignmentId || skipToken);
     const { data: assignment } = assignmentQuery;
-    const assignmentProgressQuery = isaacApi.endpoints.getAssignmentProgress.useQuery(assignmentId || skipToken);
+    const assignmentProgressQuery = useGetAssignmentProgressQuery(assignmentId || skipToken);
 
     const augmentAssignmentWithProgress = (assignment: AssignmentDTO, assignmentProgress: AppAssignmentProgress[]): EnhancedAssignmentWithProgress => ({...assignment, progress: assignmentProgress} as EnhancedAssignmentWithProgress);
 
@@ -55,7 +60,7 @@ export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
         <Container>
             <TitleAndBreadcrumb
                 intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
-                currentPageTitle={`Assignment Progress${assignment?.gameboard?.title && (": " + assignment?.gameboard?.title)}`}
+                currentPageTitle={`Assignment Progress${(assignment?.gameboard?.title && (": " + assignment?.gameboard?.title)) ?? ""}`}
                 className="mb-4"
             />
         </Container>

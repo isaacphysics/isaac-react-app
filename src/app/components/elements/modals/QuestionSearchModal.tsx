@@ -78,7 +78,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
 
-    const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({difficulty: SortOrder.ASC});
+    const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({});
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
@@ -87,6 +87,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number) => {
+            // Clear front-end sorting so as not to override ElasticSearch's match ranking
+            setQuestionsSort({});
+
             const isBookSearch = book.length > 0; // Tasty.
             if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for

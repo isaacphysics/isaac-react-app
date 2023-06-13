@@ -162,6 +162,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.dnaReplication, title: "DNA replication", parent: TAG_ID.genetics},
         {id: TAG_ID.transcription, title: `Trans${softHyphen}cription`, parent: TAG_ID.genetics},
         {id: TAG_ID.translation, title: `Trans${softHyphen}lation`, parent: TAG_ID.genetics},
+        {id: TAG_ID.genesAndAlleles, title: `Genes & Alleles`, parent: TAG_ID.genetics},
         // Physiology
 
         // Ecology
@@ -171,7 +172,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}
-    public augmentDocWithSubject(doc: ContentDTO) {
+    public augmentDocWithSubject<T extends ContentDTO>(doc: T) {
         const documentSubject = this.getPageSubjectTag((doc.tags || []) as TAG_ID[]);
         return {...doc, subjectId: documentSubject ? documentSubject.id : TAG_ID.physics};
     }

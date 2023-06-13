@@ -2,7 +2,12 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {isaacApi, selectors, useAppSelector} from "../../../state";
+import {
+    useGetSegueEnvironmentQuery,
+    useDisableAccountMFAMutation,
+    useNewMFASecretMutation,
+    useSetupAccountMFAMutation
+} from "../../../state";
 import {isDefined, SITE_TITLE} from "../../../services";
 import QRCode from 'qrcode';
 
@@ -13,14 +18,14 @@ interface UserMFAProps {
 }
 
 const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
-    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
+    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
     const [mfaVerificationCode, setMFAVerificationCode] = useState<string | undefined>(undefined);
     const [qrCodeStringBase64SVG, setQrCodeStringBase64SVG] = useState<string | undefined>(undefined);
 
-    const [ newMFASecret, { data: totpSharedSecret, reset: resetMFASecret } ] = isaacApi.endpoints.newMFASecret.useMutation();
-    const [ setupAccountMFA ] = isaacApi.endpoints.setupAccountMFA.useMutation();
-    const [ disableAccountMFA ] = isaacApi.endpoints.disableAccountMFA.useMutation();
+    const [ newMFASecret, { data: totpSharedSecret, reset: resetMFASecret } ] = useNewMFASecretMutation();
+    const [ setupAccountMFA ] = useSetupAccountMFAMutation();
+    const [ disableAccountMFA ] = useDisableAccountMFAMutation();
 
     const authenticatorURL: string | null = useMemo(() => {
         if (totpSharedSecret && totpSharedSecret.sharedSecret) {

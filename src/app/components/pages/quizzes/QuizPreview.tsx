@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo} from "react";
 import {loadQuizPreview, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {isDefined, useQuizQuestions, useQuizSections} from "../../../services";
+import {isDefined, tags, useQuizQuestions, useQuizSections} from "../../../services";
 import {
     myQuizzesCrumbs,
     QuizAttemptComponent,
@@ -20,7 +20,7 @@ const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
             ? <QuizPagination {...rest} page={page} pageLink={pageLink} finalLabel="Back to Contents" />
             : <>
                 <Spacer/>
-                <Button color="primary" tag={Link} replace to={pageLink(1)}>{"View questions"}</Button>
+                <Button color="secondary" tag={Link} replace to={pageLink(1)}>{"View questions"}</Button>
             </>}
     </div>;
 
@@ -39,10 +39,10 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
-    const attempt = useMemo<QuizAttemptDTO | undefined>(() =>
+    const attempt = useMemo(() =>
         quiz
             ? {
-                quiz,
+                quiz: tags.augmentDocWithSubject(quiz),
                 quizId: quiz.id,
             }
             : undefined
@@ -57,7 +57,7 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user};
 
-    return <Container className="mb-5">
+    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoading until={attempt || error}>
             {attempt && <>
                 <QuizAttemptComponent preview {...subProps} />

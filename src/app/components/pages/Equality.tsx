@@ -8,7 +8,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, parseMathsExpression, ParsingError} from 'inequality-grammar';
-import {selectors, useAppSelector} from "../../state";
+import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
@@ -25,7 +25,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     const user = useAppSelector(selectors.user.orNull);
     // Does this really need to be a state variable if it is immutable?
     const [editorMode, setEditorMode] = useState<EditorMode>((queryParams.mode as EditorMode) || siteSpecific('maths', 'logic'));
-    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
+    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
 
     /*** Text based input stuff */
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);

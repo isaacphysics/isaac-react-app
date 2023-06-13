@@ -22,3 +22,10 @@
     text-decoration: line-through;
   }
 }
+
+.group-name-buttons {
+  max-width: 100%;
+  .group-name {
+    max-width: calc(100% - 24px);
+  }
+}

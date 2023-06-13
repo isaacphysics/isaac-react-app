@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {isaacApi, selectors, useAppSelector} from "../../../state";
+import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
@@ -8,7 +8,7 @@ import {WarningBanner} from "../../navigation/WarningBanner";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
-    const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "physics"});
+    const {data: news} = useGetNewsPodListQuery({subject: "physics"});
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 

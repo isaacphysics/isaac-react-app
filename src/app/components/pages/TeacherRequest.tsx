@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {
     AppState,
-    isaacApi,
     requestEmailVerification,
     selectors,
     submitMessage,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useGetPageFragmentQuery
 } from "../../state";
 import {
     Alert,
@@ -42,7 +42,7 @@ export const TeacherRequest = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const errorMessage = useAppSelector((state: AppState) => (state && state.error) || null);
-    const {data: warningFragment} = isaacApi.endpoints.getPageFragment.useQuery(warningFragmentId);
+    const {data: warningFragment} = useGetPageFragmentQuery(warningFragmentId);
 
     const [firstName, setFirstName] = useState(user?.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user?.loggedIn && user.familyName || "");

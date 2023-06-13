@@ -1,6 +1,12 @@
 import React, {HTMLProps, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {isaacApi, loadQuizAssignedToMe, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {
+    loadQuizAssignedToMe,
+    selectors,
+    useAppDispatch,
+    useAppSelector,
+    useGetMyAssignmentsQuery
+} from "../../state";
 import {
     Badge,
     Collapse, Dropdown,
@@ -81,7 +87,7 @@ export function useAssignmentsCount() {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const quizzes = useAppSelector(state => state?.quizAssignedToMe);
-    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery(user?.loggedIn ? undefined : skipToken, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
+    const { data: assignments } = useGetMyAssignmentsQuery(user?.loggedIn ? undefined : skipToken, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
 
     const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {

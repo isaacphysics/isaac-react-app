@@ -3,12 +3,12 @@ import {
     AppState,
     fetchGlossaryTerms,
     openActiveModal,
-    requestConstantsSegueEnvironment,
     requestCurrentUser,
     requestNotifications,
     selectors,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useGetSegueEnvironmentQuery
 } from "../../state";
 import {Route, Router, Switch} from "react-router-dom";
 import {Question} from "../pages/Question";
@@ -87,7 +87,7 @@ export const IsaacApp = () => {
     const dispatch = useAppDispatch();
     const serverError = useAppSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
     const goneAwayError = useAppSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
-    const segueEnvironment = useAppSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
+    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
     const notifications = useAppSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
     const user = useAppSelector(selectors.user.orNull);
 
@@ -100,7 +100,6 @@ export const IsaacApp = () => {
         if (!(pathname.includes("/auth/") && pathname.includes("/callback"))) {
             dispatch(requestCurrentUser());
         }
-        dispatch(requestConstantsSegueEnvironment());
         dispatch(fetchGlossaryTerms());
     }, [dispatch]);
 

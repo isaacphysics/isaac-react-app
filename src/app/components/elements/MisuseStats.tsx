@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import {MisuseStatisticDTO} from "../../../IsaacApiTypes";
-import {isaacApi} from "../../state";
+import {useGetMisuseStatisticsQuery, useResetMisuseMonitorMutation} from "../../state";
 import {Button, Table} from "reactstrap";
 import {selectOnChange} from "../../services";
 import {StyledSelect} from "./inputs/StyledSelect";
 
 const EventMisuseTable = ({topMisuses}: {topMisuses: MisuseStatisticDTO[]}) => {
-    const [resetMisuseMonitor] = isaacApi.endpoints.resetMisuseMonitor.useMutation();
+    const [resetMisuseMonitor] = useResetMisuseMonitorMutation();
     return topMisuses.length === 0 ? <span className={"font-italic"}>No misuse statistics for this event type! 🎉</span> : <Table>
         <thead>
         <tr>
@@ -17,7 +17,7 @@ const EventMisuseTable = ({topMisuses}: {topMisuses: MisuseStatisticDTO[]}) => {
         </tr>
         </thead>
         <tbody>
-        {topMisuses.map(m => <tr>
+        {topMisuses.map((m, i) => <tr key={i}>
             <td>{m.agentIdentifier}</td>
             <td>{m.currentCounter}{" "}{m.currentCounter > 0 && <Button className={"float-right"} size={"sm"} onClick={() => resetMisuseMonitor({eventLabel: m.eventType, agentIdentifier: m.agentIdentifier})}>Reset</Button>}</td>
             <td>{m.lastEventTimestamp ? (new Date(m.lastEventTimestamp)).toString() : "None"}</td>
@@ -28,7 +28,7 @@ const EventMisuseTable = ({topMisuses}: {topMisuses: MisuseStatisticDTO[]}) => {
 };
 
 export const MisuseStats = () => {
-    const {data: misuseStats} = isaacApi.endpoints.getMisuseStatistics.useQuery(10);
+    const {data: misuseStats} = useGetMisuseStatisticsQuery(10);
     const [openEventTable, setOpenEventTable] = useState<string[]>([]);
     const eventLabels = misuseStats ? Object.keys(misuseStats) : [];
     return <>

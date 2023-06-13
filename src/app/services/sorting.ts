@@ -36,3 +36,38 @@ export function sortByStringValue<T>(field: keyof T, undefinedFirst: boolean = f
         return aValue.localeCompare(bValue, undefined, {numeric: true, sensitivity: 'base'});
     };
 }
+
+export const sortStringsNumerically = (a: string, b: string) => {
+    const splitRegex = /(\d+)/;
+    const sectionsA = a.split(splitRegex).filter((x) => x != "." && x != "");
+    const sectionsB = b.split(splitRegex).filter((x) => x != "." && x != "");
+
+    for (let i = 0; i < Math.min(sectionsA.length, sectionsB.length); i++) {
+        const isNumberA = sectionsA[i].search(/\d/) != -1;
+        const isNumberB = sectionsB[i].search(/\d/) != -1;
+
+        if (isNumberA && isNumberB) {
+            const numbersA = sectionsA[i].split(/\./).map((x) => parseInt(x));
+            const numbersB = sectionsB[i].split(/\./).map((x) => parseInt(x));
+
+            for (let j = 0; j < Math.min(numbersA.length, numbersB.length); j++) {
+                const comparison = numbersA[j] - numbersB[j];
+                if (comparison) {
+                    return comparison;
+                }
+            }
+
+            if (numbersA.length != numbersB.length) {
+                return numbersB.length - numbersA.length;
+            }
+        } else if (!isNumberA && !isNumberB) {
+            const comparison = sectionsA[i].localeCompare(sectionsB[i]);
+            if (comparison) {
+                return comparison;
+            }
+        } else {
+            return isNumberA ? 1 : -1;
+        }
+    }
+    return sectionsB.length - sectionsA.length;
+};

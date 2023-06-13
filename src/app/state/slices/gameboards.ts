@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {Boards} from "../../../IsaacAppTypes";
-import {isaacApi} from "../index"; // IMPORTANT - must import from index, don't shorten to "./api"
+import {gameboardApi} from "../index"; // IMPORTANT - must import from index, don't shorten to "./api"
 import unionWith from "lodash/unionWith";
 
 const mergeBoards = (boards: Boards, additional: Boards): Boards => ({
@@ -15,13 +15,13 @@ export const gameboardsSlice = createSlice({
     reducers: {},
     extraReducers: builder => {
         builder.addMatcher(
-            isaacApi.endpoints.getGameboards.matchPending,
+            gameboardApi.endpoints.getGameboards.matchPending,
             (gameboards, action) => {
                 const accumulate = action.meta.arg.originalArgs.startIndex !== 0;
                 return accumulate ? gameboards : null;
             }
         ).addMatcher(
-            isaacApi.endpoints.getGameboards.matchFulfilled,
+            gameboardApi.endpoints.getGameboards.matchFulfilled,
             (gameboards, action) => {
                 const accumulate = action.meta.arg.originalArgs.startIndex !== 0;
                 if (gameboards && accumulate) {
@@ -30,7 +30,7 @@ export const gameboardsSlice = createSlice({
                 return action.payload;
             }
         ).addMatcher(
-            isaacApi.endpoints.unlinkUserFromGameboard.matchFulfilled,
+            gameboardApi.endpoints.unlinkUserFromGameboard.matchFulfilled,
             (gameboards, action) => {
                 if (gameboards) {
                     gameboards.totalResults--;

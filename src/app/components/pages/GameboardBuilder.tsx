@@ -1,11 +1,14 @@
 import React, {lazy, useCallback, useEffect, useRef, useState} from 'react';
 import {
     closeActiveModal,
-    isaacApi,
     logAction,
     mutationSucceeded,
     openActiveModal,
     useAppDispatch,
+    useCreateGameboardMutation,
+    useGenerateTemporaryGameboardMutation,
+    useGetGameboardByIdQuery,
+    useGetWildcardsQuery,
 } from "../../state";
 import {Button, Card, CardBody, Col, Container, Input, Label, Row, Spinner, Table} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -52,10 +55,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
-    const {data: wildcards} = isaacApi.endpoints.getWildcards.useQuery();
-    const {data: baseGameboard} = isaacApi.endpoints.getGameboardById.useQuery(baseGameboardId || skipToken);
-    const [generateTemporaryGameboard] = isaacApi.endpoints.generateTemporaryGameboard.useMutation();
-    const [createGameboard, {isLoading: isWaitingForCreateGameboard}] = isaacApi.endpoints.createGameboard.useMutation();
+    const {data: wildcards} = useGetWildcardsQuery();
+    const {data: baseGameboard} = useGetGameboardByIdQuery(baseGameboardId || skipToken);
+    const [generateTemporaryGameboard] = useGenerateTemporaryGameboardMutation();
+    const [createGameboard, {isLoading: isWaitingForCreateGameboard}] = useCreateGameboardMutation();
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTags, setGameboardTags] = useState<Item<string>[]>([]);
