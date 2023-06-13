@@ -86,7 +86,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
             </>}
         />
         <p>
-            Now you&apos;ve made a group, you may want to:
+            {firstTime ? "Now you&apos;ve made a group, you may want to:" : "Once you have invited users to the group, you may want to:"}
         </p>
     </>;
 };
@@ -190,7 +190,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
 
     const tokenQuery = useGetGroupTokenQuery(group?.id ?? skipToken);
     const generateGroupLinkReminder = (token?: AppGroupTokenDTO) => <p>
-        <small><strong>Remember:</strong> Students may need to reuse the group link{token && <>&nbsp;({location.origin}/account?authToken={token?.token})</>} to approve access to their data for any new teachers.</small>
+        <small><strong>Remember:</strong> Students may need to reuse the group link{token && <>&nbsp;(<code>{location.origin}/account?authToken={token?.token}</code>)</>} to approve access to their data for any new teachers.</small>
     </p>
 
     return !group ? <Loading/> : <div className={"mb-4"}>
