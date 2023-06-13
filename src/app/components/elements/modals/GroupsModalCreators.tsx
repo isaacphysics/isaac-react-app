@@ -190,7 +190,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
 
     const tokenQuery = useGetGroupTokenQuery(group?.id ?? skipToken);
     const generateGroupLinkReminder = (token?: AppGroupTokenDTO) => <p>
-        <small><strong>Remember:</strong> Students may need to reuse the group link {token && <>({location.origin}/account?authToken={token?.token})</>} to approve access to their data for any new teachers.</small>
+        <small><strong>Remember:</strong> Students may need to reuse the group link{token && <>&nbsp;({location.origin}/account?authToken={token?.token})</>} to approve access to their data for any new teachers.</small>
     </p>
 
     return !group ? <Loading/> : <div className={"mb-4"}>
