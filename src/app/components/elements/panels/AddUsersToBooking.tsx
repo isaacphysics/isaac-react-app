@@ -90,7 +90,7 @@ export const AddUsersToBooking = () => {
         {searchRequested && <hr className="text-center my-4" />}
 
         {userSearchResults && atLeastOne(userSearchResults.length) && <div className="overflow-auto">
-            <RS.Table bordered className="mb-0 bg-white">
+            <RS.Table bordered className="mb-0 bg-white" data-testid="user-search-table">
                 <thead>
                     <tr>
                         <th className="align-middle">Actions</th>

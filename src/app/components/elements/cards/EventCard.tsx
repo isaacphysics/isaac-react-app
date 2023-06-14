@@ -14,7 +14,7 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
     const isTeacherEvent = event.tags?.includes("teacher");
     const isStudentEvent = event.tags?.includes("student");
 
-    return <RS.Card className={classnames("card-neat", {'disabled text-muted': hasExpired || isCancelled, 'm-4': pod, 'mb-4': !pod})}>
+    return <RS.Card data-testid="event-card" className={classnames("card-neat", {'disabled text-muted': hasExpired || isCancelled, 'm-4': pod, 'mb-4': !pod})}>
         {eventThumbnail && <div className={'event-card-image text-center'}>
             <RS.CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
             {

@@ -1,7 +1,15 @@
 import {siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO} from "../test/utils";
-import {UserRole, UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
+import {
+    BookingStatus,
+    ContentBaseDTO,
+    EmailVerificationStatus,
+    EventStatus,
+    IsaacEventPageDTO,
+    UserRole,
+    UserSummaryWithGroupMembershipDTO
+} from "../IsaacApiTypes";
 import {School} from "../IsaacAppTypes";
 
 export const mockUser = {
@@ -23,7 +31,7 @@ export const mockUser = {
     firstLogin: false,
     lastUpdated: DAYS_AGO(1),
     lastSeen: DAYS_AGO(1),
-    emailVerificationStatus: "VERIFIED",
+    emailVerificationStatus: "VERIFIED" as EmailVerificationStatus,
     id: 1 as const
 };
 
@@ -4794,7 +4802,7 @@ export const mockFragment = (pageId: string) => ({
     published: true
 });
 
-export const mockPage = (pageId: string) => ({
+export const buildMockPage = (pageId: string) => ({
    "id": pageId,
    "title": `Mock page: ${pageId}`,
    "type": "page",
@@ -4820,3 +4828,31 @@ export const mockSchool: School = {
     closed: false,
     dataSource: "somewhere-over-the-rainbow",
 };
+
+export const buildMockEvent = (eventId: string, eventStatus: EventStatus, userBookingStatus?: BookingStatus) => ({
+    title: `Test Event ${eventId}`,
+    subtitle: "Test event",
+    id: eventId,
+    type: "isaacEventPage",
+    children: [
+        {
+            type: "content",
+            encoding: "markdown",
+            children: [],
+            value: `Slow TV with isaacphysics.org (test event ${eventId})`,
+            published: false,
+            tags: []
+        }
+    ],
+    numberOfPlaces: 10,
+    allowGroupReservations: true,
+    eventStatus,
+    placesAvailable: 10,
+    userBookingStatus,
+    date: 1458003600000,
+    bookingDeadline: 4613418000000,
+    location: {
+        "address": {}
+    },
+    endDate: 4613677200000
+});
