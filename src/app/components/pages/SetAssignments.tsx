@@ -399,7 +399,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
                         Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
                     </button>
                 </th>
-                <th>Assign</th>
+                <th>{siteSpecific("Assign", "Manage")}</th>
                 <th>Share</th>
             </tr>
             </thead>
