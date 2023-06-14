@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
-import {isAda, siteSpecific} from "../../../services";
+import {siteSpecific} from "../../../services";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
