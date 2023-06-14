@@ -3,6 +3,7 @@ import {PotentialUser} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
 import {createSlice} from "@reduxjs/toolkit";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {emailApi} from "./api/emailApi";
 
 type UserState = Immutable<PotentialUser> | null;
 export const userSlice = createSlice({
@@ -34,6 +35,14 @@ export const userSlice = createSlice({
         ).addMatcher(
             loggedOutMatcher,
             () => ({loggedIn: false}),
+        ).addMatcher(
+            emailApi.endpoints.verifyEmail.matchFulfilled,
+            (state, action) => {
+                if (state?.loggedIn && Number(action.meta.arg.originalArgs.userid) === state.id) {
+                    return {...state, emailVerificationStatus: "VERIFIED"};
+                }
+                return state;
+            },
         );
     }
 });
