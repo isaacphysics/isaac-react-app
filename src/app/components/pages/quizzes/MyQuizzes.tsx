@@ -26,7 +26,6 @@ import {
 import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
 import {PageFragment} from "../../elements/PageFragment";
-import {RenderNothing} from "../../elements/RenderNothing";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
