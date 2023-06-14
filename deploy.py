@@ -111,7 +111,7 @@ def ask_for_old_api(ctx):
 
 def update_config(ctx):
     print(f"# Update configuration files")
-    ask_to_run_command(f"cd /local/src/isaac-sops-config && git pull")
+    ask_to_run_command(f"cd /local/data && ./fetch-isaac-sops-config.sh")
     print(f"# Decrypt configuration files")
     # GPG would normally prompt us for the key password, but it's not possible to answer that prompt through subprocess.run().
     # Instead, we ask for it here and pass it in to the subprocess as an environment variable.
