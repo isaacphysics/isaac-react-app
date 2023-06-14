@@ -18,7 +18,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
     const user = useAppSelector(selectors.user.orNull);
     const editingSelf = user && user.loggedIn && targetUser.id === user.id;
 
-    const [sendVerificationEmail, {isSuccess: verifyEmailRequestSent}] = useRequestEmailVerificationMutation();
+    const [sendVerificationEmail, {isUninitialized: verificationNotResent, isSuccess: verifyEmailRequestSucceeded}] = useRequestEmailVerificationMutation();
     const requestVerificationEmail = () => {
         if (user?.loggedIn && user.email) {
             sendVerificationEmail({email: user.email});
@@ -79,18 +79,18 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             } />
                         </RS.Col>}
                     </RS.Row>
-                    <RS.Row>
+                    {editingSelf && <RS.Row>
                         <RS.Col>
-                            {editingSelf && targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent && <RS.Button
+                            {targetUser.emailVerificationStatus !== "VERIFIED" && verificationNotResent && <RS.Button
                                 color="link" className="btn-underline" onClick={requestVerificationEmail}
                             >
                                 Verify your email before booking
                             </RS.Button>}
-                            {targetUser.emailVerificationStatus != 'VERIFIED' && verifyEmailRequestSent && <span>
-                            We have sent an email to {targetUser.email}. Please follow the instructions in the email prior to booking.
+                            {targetUser.emailVerificationStatus !== "VERIFIED" && verifyEmailRequestSucceeded && <span>
+                                We have sent an email to {targetUser.email}. Please follow the instructions in the email prior to booking.
                             </span>}
                         </RS.Col>
-                    </RS.Row>
+                    </RS.Row>}
                 </div>
                 {editingSelf && <div>
                     <SchoolInput userToUpdate={{...targetUser, password: null}} disableInput submissionAttempted required={!isTutor(targetUser)} />
