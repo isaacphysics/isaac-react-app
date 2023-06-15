@@ -109,10 +109,10 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
     }
 
     return <Container className="py-2">
-        <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
-            <StyledSelect inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
+        <Label className="w-100 pb-2">Group(s):
+            <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
                     value={selectedGroups}
-                    closeMenuOnSelect={!isStaff(user)}
+                    closeMenuOnSelect={false}
                     onChange={selectOnChange(setSelectedGroups, false)}
                     options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
             />
