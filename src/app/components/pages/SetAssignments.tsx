@@ -453,7 +453,6 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
 export const SetAssignments = () => {
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    const userPreferences = useAppSelector(selectors.user.preferences);
     const { data: groups } = useGetGroupsQuery(false);
     const { data: assignmentsSetByMe } = useGetMySetAssignmentsQuery(undefined);
     const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
