@@ -7,11 +7,10 @@ interface ProgressBarProps {
     secondaryPercentage?: number;
     secondaryTitle?: string;
     children: string | JSX.Element | JSX.Element[];
-    type?: string;
+    colour?: string;
 }
 
-export const ProgressBar = ({percentage, primaryTitle, secondaryPercentage, secondaryTitle, children, type}: ProgressBarProps) => {
-    const colour = type;
+export const ProgressBar = ({percentage, primaryTitle, secondaryPercentage, secondaryTitle, children, colour}: ProgressBarProps) => {
     return <div className="progress-bar-outer mb-2">
         {isDefined(secondaryPercentage) && <div className={`progress-bar-secondary ${colour}`} title={secondaryTitle} style={{width: `${secondaryPercentage}%`}} />}
         <div className={`progress-bar-inner ${colour}`} style={{width: `${percentage}%`}} title={primaryTitle}>

@@ -17,14 +17,6 @@ export const pushSearchToHistory = function(history: History, searchQuery: strin
     });
 };
 
-
-export const pushConceptsToHistory = function(history: History, searchText: string) {
-    history.push({
-        pathname: "/concepts",
-        search: `?query=${encodeURIComponent(searchText)}`,
-    });
-};
-
 export const searchResultIsPublic = function(content: ContentSummaryDTO, user?: Immutable<PotentialUser> | null) {
     if (content.deprecated) {
         return false;

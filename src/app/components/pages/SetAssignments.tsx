@@ -146,13 +146,13 @@ const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
 
 interface HexagonGroupsButtonProps {
     toggleAssignModal: () => void;
-    boardSubjects: string[];
+    boardSubject: string;
     assignees: BoardAssignee[];
     id: string;
 }
-const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: HexagonGroupsButtonProps) =>
+const HexagonGroupsButton = ({toggleAssignModal, boardSubject, assignees, id}: HexagonGroupsButtonProps) =>
     <button onClick={toggleAssignModal} id={id} className="board-subject-hexagon-container">
-        {generateGameboardSubjectHexagons(boardSubjects)}
+        {generateGameboardSubjectHexagons(boardSubject)}
         <span className="groups-assigned" title={"Groups assigned"}>
                 <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>{" "}
                 group{(!assignees || assignees.length != 1) && "s"}
@@ -281,7 +281,7 @@ const Board = ({user, board, assignees, boardView, toggleAssignModal}: BoardProp
                 <td>
                     <div className="board-subject-hexagon-container table-view">
                         <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
-                                             assignees={assignees} boardSubjects={GAMEBOARD_SUBJECT} />
+                                             assignees={assignees} boardSubject={GAMEBOARD_SUBJECT} />
                     </div>
                 </td>
                 <td className="align-middle"><a href={assignmentLink}>{board.title}</a></td>
@@ -321,7 +321,7 @@ const Board = ({user, board, assignees, boardView, toggleAssignModal}: BoardProp
                 <CardBody className="pb-4 pt-4">
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
                     <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
-                                         assignees={assignees} boardSubjects={GAMEBOARD_SUBJECT} />
+                                         assignees={assignees} boardSubject={GAMEBOARD_SUBJECT} />
                     <aside>
                         <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                         <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>

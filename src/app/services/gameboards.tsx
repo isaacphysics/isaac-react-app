@@ -78,15 +78,8 @@ export const determinePreviousGameboardItem = (currentGameboard: GameboardDTO | 
     }
 };
 
-export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
-    return boardSubjects.map((subject, i) =>
-        <div key={subject} className={`board-subject-hexagon subject-${subject} z${i}`} />
-    );
-};
-
-export const showWildcard = (board: GameboardDTO) => {
-    const re = new RegExp('(phys_book_gcse_ch.*|pre_uni_maths.*)');
-    return board?.id && re.test(board.id)
+export const generateGameboardSubjectHexagons = (boardSubject: string) => {
+    return <div className={`board-subject-hexagon subject-${boardSubject}`} />;
 };
 
 export const determineCurrentCreationContext = (currentGameboard: GameboardDTO | NOT_FOUND_TYPE | undefined, currentDocId: string) => {
