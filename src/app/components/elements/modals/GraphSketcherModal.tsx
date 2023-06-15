@@ -129,6 +129,12 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const hexagonSize = 74;
     const colourHexagon = calculateHexagonProportions(hexagonSize/4, 3);
 
+    const copySpecificationToClipboard = useCallback(() => {
+        if (graphSpec && graphSpec.length > 0 && graphSpec[0] !== "") {
+            navigator.clipboard.writeText(graphSpec.join("\n"));
+        }
+    }, [graphSpec]);
+
     return <div id='graph-sketcher-modal' ref={graphSketcherContainer} style={{border: '5px solid black'}}>
         <div className="graph-sketcher-ui">
             <button title="Redo last change" className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">Redo</button>
@@ -145,7 +151,8 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                 <b>Debug mode enabled</b>
                 {graphSpec && graphSpec.length > 0 && graphSpec[0] !== "" && <>
                     <br/><br/>
-                    {graphSpec.map((spec, i) => <span key={i}>{spec}</span>)}
+                    {graphSpec.map((spec, i) => <pre className={"border-0 p-0 m-0"} key={i}>{spec}</pre>)}
+                    <a id="copy-link" onClick={copySpecificationToClipboard}>(copy to clipboard)</a>
                 </>}
             </code>}
 

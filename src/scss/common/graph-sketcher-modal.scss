@@ -23,6 +23,14 @@
             // Cursor shouldn't interact with the debug window
             pointer-events: none;
             max-width: max(50%, 400px);
+            #copy-link {
+                margin-top: 10px;
+                cursor: pointer;
+                pointer-events: all;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
 
         .button {
