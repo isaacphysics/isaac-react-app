@@ -40,6 +40,8 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {DateInput} from "../elements/inputs/DateInput";
 import {Redirect, RouteComponentProps, withRouter} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
+import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
+import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 
 export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
     const dispatch = useAppDispatch();
@@ -342,13 +344,27 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     </Row>
 
                     {/* Submit */}
-                    <Row className="mt-4 mb-2">
+                    <Row className="mt-4 mb-4">
                         <Col md={{size: 6, offset: 3}}>
                             <Input disabled={!consentGivenOrNotRequired} type="submit" value="Register now" className="btn btn-block btn-secondary border-0" />
                         </Col>
                     </Row>
 
                 </Form>
+                <hr className="text-center mb-4" />
+                <h3 className="text-left mb-3">Sign up with:</h3>
+                {isAda &&
+                    <Row className={"mb-3 justify-content-center"}>
+                        <Col md={{size: 7}} lg={{size: 5}}>
+                            <RaspberryPiSignInButton isSignup={true} />
+                        </Col>
+                    </Row>
+                }
+                <Row className={"mb-3 justify-content-center"}>
+                    <Col md={{size: 7}} lg={{size: 5}}>
+                        <GoogleSignInButton />
+                    </Col>
+                </Row>
             </CardBody>
         </Card>
     </Container>;

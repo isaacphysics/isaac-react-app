@@ -1126,4 +1126,13 @@ export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
 
+export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
+    "RASPBERRYPI": "Raspberry Pi Foundation",
+    "FACEBOOK": "Facebook",
+    "TWITTER": "Twitter",
+    "GOOGLE": "Google",
+    "RAVEN": "Raven",
+    "TEST": "Test",
+    "SEGUE": "your email address and password"
+}
 export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023

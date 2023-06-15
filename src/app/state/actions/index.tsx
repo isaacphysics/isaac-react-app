@@ -391,10 +391,10 @@ export const handlePasswordReset = (params: {token: string; password: string}) =
     }
 };
 
-export const handleProviderLoginRedirect = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
+export const handleProviderLoginRedirect = (provider: AuthenticationProvider, isSignup: boolean = false) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT, provider});
     try {
-        const redirectResponse = await api.authentication.getRedirect(provider);
+        const redirectResponse = await api.authentication.getRedirect(provider, isSignup);
         const redirectUrl = redirectResponse.data.redirectUrl;
         dispatch({type: ACTION_TYPE.AUTHENTICATION_REDIRECT, provider, redirectUrl: redirectUrl});
         window.location.href = redirectUrl;

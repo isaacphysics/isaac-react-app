@@ -116,8 +116,10 @@ export const api = {
         }
     },
     authentication: {
-        getRedirect: (provider: ApiTypes.AuthenticationProvider): AxiosPromise => {
-            return endpoint.get(`/auth/${provider}/authenticate`);
+        getRedirect: (provider: ApiTypes.AuthenticationProvider, isSignup: boolean = false): AxiosPromise => {
+            return endpoint.get(`/auth/${provider}/authenticate`, {
+                params: { signup: isSignup }
+            });
         },
         checkProviderCallback: (provider: ApiTypes.AuthenticationProvider, params: string): AxiosPromise => {
             return endpoint.get(`/auth/${provider}/callback${params}`);

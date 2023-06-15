@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {
+    AUTHENTICATOR_FRIENDLY_NAMES_MAP,
     isAda,
     loadZxcvbnIfNotPresent,
     MINIMUM_PASSWORD_LENGTH,
@@ -127,7 +128,9 @@ export const UserPassword = (
                                 You do not currently have a password set for this account; you
                                 sign in using {" "}
                                 {(userAuthSettings.linkedAccounts).map((linked, index) => {
-                                    return <span key={index} className="text-capitalize">{linked.toLowerCase()}</span>;
+                                    return <span key={index} className="text-capitalize">
+                                        {AUTHENTICATOR_FRIENDLY_NAMES_MAP[linked]}
+                                    </span>;
                                 })}.
                             </p>}
                         </Col>

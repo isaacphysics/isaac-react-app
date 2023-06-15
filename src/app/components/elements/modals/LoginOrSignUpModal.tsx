@@ -4,14 +4,14 @@ import {closeActiveModal, selectors, store, useAppDispatch, useAppSelector} from
 import {useLocation} from "react-router-dom";
 import {
     EmailPasswordInputs,
-    GoogleSignInButton,
     PasswordResetButton,
-    RaspberryPiSignInButton,
     TFAInput,
     useLoginLogic
 } from "../../pages/LogIn";
 import {isAda, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
+import {RaspberryPiSignInButton} from "../RaspberryPiSignInButton";
+import {GoogleSignInButton} from "../GoogleSignInButton";
 
 const LoginOrSignUpBody = () => {
 
@@ -97,7 +97,7 @@ const LoginOrSignUpBody = () => {
                         </Button>
 
                         <hr className="text-center hr-or" />
-                        {isAda && <RaspberryPiSignInButton />}
+                        {isAda && <RaspberryPiSignInButton concise={true} />}
                         <GoogleSignInButton/>
                     </>}
             </Form>

@@ -2,13 +2,13 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
+import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isDefined, SITE_TITLE} from "../../../services";
 import {
     useGetSegueEnvironmentQuery,
     useDisableAccountMFAMutation,
     useNewMFASecretMutation,
     useSetupAccountMFAMutation
 } from "../../../state";
-import {isDefined, SITE_TITLE} from "../../../services";
 import QRCode from 'qrcode';
 
 interface UserMFAProps {
@@ -136,8 +136,8 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                         You do not currently have a password set for this account; you
                         sign in using {" "}
                         {(userAuthSettings.linkedAccounts).map((linked, index) =>
-                            <span key={index} className="text-capitalize">
-                                {linked.toLowerCase()}
+                            <span key={index}>
+                                {AUTHENTICATOR_FRIENDLY_NAMES_MAP[linked]}
                             </span>
                         )}.
                     </p>}
