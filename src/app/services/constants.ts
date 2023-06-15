@@ -31,7 +31,6 @@ if (document.location.hostname === "localhost") {
 } else if (document.location.hostname.endsWith(".eu.ngrok.io")) {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }
-export const isTest = document.location.hostname.startsWith("test.") || document.location.hostname.startsWith("wwww.test.");
 export const isStaging = document.location.hostname.startsWith("staging.") || document.location.hostname.startsWith("www.staging.");
 
 export const envSpecific = <L, S, D>(live: L, staging: S, dev: D) => isStaging ? staging : process.env.NODE_ENV === 'production' ? live : dev;
