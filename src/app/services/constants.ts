@@ -881,11 +881,14 @@ export enum TAG_ID {
     transcription = "transcription",
     translation = "translation",
     genesAndAlleles = "genes_alleles",
+    inheritance = "inheritance",
+    biotechnology = "biotechnology",
     // Physiology
 
     // Ecology
 
     // Evolution
+    variation = "variation",
 
 }
 
