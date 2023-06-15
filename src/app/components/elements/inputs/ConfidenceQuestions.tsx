@@ -155,7 +155,7 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
 
     const disabled = state === "initial" && disableInitialState === true;
 
-    return <div className={classNames("quick-question-options", {"quick-question-secondary": isAda && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isAda, "quick-question-muted": disabled && isPhy})}>
+    return <div className={classNames("quick-question-options no-print", {"quick-question-secondary": isAda && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isAda, "quick-question-muted": disabled && isPhy})}>
         {state === "initial" && <div className={"d-flex"}>
             <h4 className={classNames({"text-muted": disabled && isAda})}>{confidenceVariables?.title}</h4>
             <div className="ml-2 mt-n1 not-mobile">
