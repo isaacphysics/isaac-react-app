@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import {
     closeActiveModal,
     showAdditionalManagerSelfRemovalModal,
-    showGroupInvitationModal,
     showGroupManagersModal,
     store,
     useAppDispatch,
@@ -20,10 +19,11 @@ import {history, isAda, isDefined, isTeacherOrAbove, PATHS, siteSpecific} from "
 import {Jumbotron, Row, Col, Form, Input, Table, CustomInput, Alert} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
-import {AppGroup} from "../../../../IsaacAppTypes";
+import {AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {Loading} from "../../handlers/IsaacSpinner";
 import classNames from "classnames";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
@@ -86,7 +86,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
             </>}
         />
         <p>
-            Now you&apos;ve made a group, you may want to:
+            {firstTime ? "Now you&apos;ve made a group, you may want to:" : "Once you have invited users to the group, you may want to:"}
         </p>
     </>;
 };
@@ -97,12 +97,12 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
     buttons: [
         <Row key={0}>
             {/* Only teachers are allowed to add additional managers to a group. */}
-            {isTeacherOrAbove(user) && <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+            {firstTime && isTeacherOrAbove(user) && <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
                 <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap mb-3": isAda})} onClick={() => {
                     store.dispatch(closeActiveModal());
                     store.dispatch(showGroupManagersModal({group, user}));
                 }}>
-                    {firstTime ? "Add group managers" : "Edit group managers"}
+                    Add group managers
                 </Button>
             </Col>}
             <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
@@ -187,6 +187,11 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             dispatch(showAdditionalManagerSelfRemovalModal({group, user: manager}));
         }
     }
+
+    const tokenQuery = useGetGroupTokenQuery(group?.id ?? skipToken);
+    const generateGroupLinkReminder = (token?: AppGroupTokenDTO) => <p>
+        <small><strong>Remember:</strong> Students may need to reuse the group link{token && <>&nbsp;(<code>{location.origin}/account?authToken={token?.token}</code>)</>} to approve access to their data for any new teachers.</small>
+    </p>
 
     return !group ? <Loading/> : <div className={"mb-4"}>
         <h2>Selected group: {group.groupName}</h2>
@@ -280,11 +285,12 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             <p>Enter the email of another {siteSpecific("Isaac", "Ada")} teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
             <Form onSubmit={addManager}>
                 <Input type="text" value={newManagerEmail} placeholder="Enter email address here" onChange={event => setNewManagerEmail(event.target.value)}/>
-                <p>
-                    <small><strong>Remember:</strong> Students may need to reuse the <a className={classNames("pointer-cursor", {"btn-link": isAda})}
-                        onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}>group link</a> to approve access to their data for any new teachers.
-                    </small>
-                </p>
+                <ShowLoadingQuery
+                    query={tokenQuery}
+                    placeholder={generateGroupLinkReminder()}
+                    ifError={() => generateGroupLinkReminder()}
+                    thenRender={generateGroupLinkReminder}
+                />
                 <Button block onClick={addManager} disabled={!isDefined(newManagerEmail) || newManagerEmail === ""}>Add group manager</Button>
             </Form>
         </>}

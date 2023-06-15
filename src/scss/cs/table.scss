@@ -1,5 +1,8 @@
 .table {
   text-align: left;
+  th {
+    font-weight: bold;
+  }
   tr {
     &.disabled {
       background-color: $cs-cultured;

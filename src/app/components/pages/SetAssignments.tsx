@@ -376,7 +376,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             <thead>
             <tr>
                 <th>Groups</th>
-                <th colSpan={4} className="w-100">
+                <th colSpan={2} className="w-100">
                     <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
                         Quiz name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                     </button>
@@ -399,8 +399,9 @@ const CSTable = (props: SetAssignmentsTableProps) => {
                         Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
                     </button>
                 </th>
-                <th>Assign</th>
+                <th>Manage</th>
                 <th>Share</th>
+                <th>Delete</th>
             </tr>
             </thead>
             <tbody>

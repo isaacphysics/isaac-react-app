@@ -10,22 +10,34 @@ import {IsaacGraphSketcherQuestionDTO} from "../../../../IsaacApiTypes";
 import {Markup} from "../markup";
 import {calculateHexagonProportions, Hexagon} from "../svg/Hexagon";
 import classNames from "classnames";
-import {closeActiveModal, openActiveModal, store, useAppDispatch} from "../../../state";
+import {
+    closeActiveModal,
+    openActiveModal,
+    store,
+    useAppDispatch,
+    useGenerateAnswerSpecificationMutation
+} from "../../../state";
 import {PageFragment} from "../PageFragment";
-import {isDefined} from "../../../services";
+import {isStaff} from "../../../services";
+import {Immutable} from "immer";
+import {PotentialUser} from "../../../../IsaacAppTypes";
 
 interface GraphSketcherModalProps {
+    user: Immutable<PotentialUser> | null;
     close: () => void;
     initialState?: GraphSketcherState;
     onGraphSketcherStateChange: (state: GraphSketcherState) => void;
     question?: IsaacGraphSketcherQuestionDTO;
-    allowMultiValuedFunctions?: boolean;
 }
 
 const GraphSketcherModal = (props: GraphSketcherModalProps) => {
-    const { onGraphSketcherStateChange, close, initialState, allowMultiValuedFunctions } = props;
+    const { onGraphSketcherStateChange, close, initialState, user } = props;
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
+
+    const [generateGraphSpec, {data: graphSpec}] = useGenerateAnswerSpecificationMutation();
+    const [debugSketch, setDebugSketch] = useState<boolean>(false);
+    const debugModeEnabled = isStaff(user) && debugSketch;
 
     const [modalSketch, setModalSketch] = useState<GraphSketcher | undefined | null>();
     const graphSketcherContainer = useRef<HTMLDivElement>(null);
@@ -39,19 +51,38 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
         body: <PageFragment fragmentId={`graph_sketcher_help_modal`}/>
     }));
 
+    const generateSpecFromStateIfDebug = useCallback((state?: GraphSketcherState) => {
+        if (state && debugModeEnabled) {
+            generateGraphSpec({type: 'graphChoice', value: JSON.stringify(state)});
+        }
+    }, [user, debugModeEnabled, generateGraphSpec]);
+
+    // If debug mode is enabled, generate the graph spec of the current state
+    useEffect(() => {
+        if (debugModeEnabled) {
+            generateSpecFromStateIfDebug(modalSketch?.state);
+        }
+    }, [debugModeEnabled]);
+
     // This is debounced here because the graph sketcher upstream calls this
     // on every redraw, which happens on every mouse event.
     const updateGraphSketcherState = useCallback(debounce((newState: GraphSketcherState) => {
         onGraphSketcherStateChange(newState);
-    }, 250, {trailing: true}), []);
+        generateSpecFromStateIfDebug(newState);
+    }, 250, {trailing: true}), [onGraphSketcherStateChange, generateSpecFromStateIfDebug]);
+
+    useEffect(() => {
+        if (modalSketch) {
+            modalSketch.updateGraphSketcherState = updateGraphSketcherState;
+        }
+    }, [modalSketch, updateGraphSketcherState]);
 
     // Setup and teardown of the graph sketcher p5 instance
     useEffect(() => {
-        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions });
+        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions: isStaff(user) });
 
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
-            sketch.updateGraphSketcherState = updateGraphSketcherState;
             setModalSketch(sketch);
         }
 
@@ -68,15 +99,6 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     }, []);
 
     useEffect(() => {
-        if (isDefined(modalSketch)) {
-            modalSketch.state = {
-                ...modalSketch.state,
-                curves: initialState?.curves ?? modalSketch.state.curves ?? []
-            };
-        }
-    }, [initialState]);
-
-    useEffect(() => {
         if (modalSketch) {
             modalSketch.drawingColorName = drawingColorName;
         }
@@ -87,6 +109,10 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
             modalSketch.selectedLineType = lineType;
         }
     }, [modalSketch, lineType]);
+
+    const toggleDebugMode = () => {
+        setDebugSketch(db => !db);
+    };
 
     const isRedoable = () => {
         return modalSketch?.isRedoable();
@@ -113,6 +139,15 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
             <button title="Delete all curves" className={'button'} tabIndex={0} id="graph-sketcher-ui-reset-button">Delete all curves</button>
             <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">Submit</div>
             <div className="button" role="button" onClick={showHelpModal} onKeyUp={showHelpModal} tabIndex={0} id="graph-sketcher-ui-help-button">Help</div>
+            {isStaff(user) && <div className="button" role="button" onClick={toggleDebugMode} onKeyUp={toggleDebugMode} tabIndex={0} id="graph-sketcher-ui-debug-button">Debug</div>}
+
+            {debugModeEnabled && <code id="graph-sketcher-ui-debug-window">
+                <b>Debug mode enabled</b>
+                {graphSpec && graphSpec.length > 0 && graphSpec[0] !== "" && <>
+                    <br/><br/>
+                    {graphSpec.map((spec, i) => <span key={i}>{spec}</span>)}
+                </>}
+            </code>}
 
             <input className={"d-none"} id="graph-sketcher-ui-color-select" value={drawingColorName} readOnly />
             <div id="graph-sketcher-ui-color-select-hexagons">

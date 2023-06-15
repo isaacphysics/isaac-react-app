@@ -1,5 +1,5 @@
 import {isaacApi} from "./baseApi";
-import {MisuseStatisticDTO} from "../../../../IsaacApiTypes";
+import {ChoiceDTO, MisuseStatisticDTO} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
 import {showSuccessToast} from "../../actions/popups";
 import {ContentErrorsResponse} from "../../../../IsaacAppTypes";
@@ -48,6 +48,18 @@ const updatedIsaacApi = isaacApi.enhanceEndpoints({
                 errorTitle: "Loading Content Errors Failed",
             })
         }),
+
+        generateAnswerSpecification: build.mutation<string[], ChoiceDTO>({
+            query: (choice) => ({
+                url: "/questions/generateSpecification",
+                method: "POST",
+                body: choice
+            }),
+            transformResponse: (response: {results: string[], totalResults: number}) => response.results,
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "There was a problem generating an answer specification",
+            })
+        }),
     })
 });
 
@@ -55,4 +67,5 @@ export const {
     useGetMisuseStatisticsQuery,
     useResetMisuseMonitorMutation,
     useGetContentErrorsQuery,
+    useGenerateAnswerSpecificationMutation,
 } = updatedIsaacApi;

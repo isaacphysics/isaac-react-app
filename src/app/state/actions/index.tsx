@@ -391,10 +391,10 @@ export const handlePasswordReset = (params: {token: string; password: string}) =
     }
 };
 
-export const handleProviderLoginRedirect = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
+export const handleProviderLoginRedirect = (provider: AuthenticationProvider, isSignup: boolean = false) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT, provider});
     try {
-        const redirectResponse = await api.authentication.getRedirect(provider);
+        const redirectResponse = await api.authentication.getRedirect(provider, isSignup);
         const redirectUrl = redirectResponse.data.redirectUrl;
         dispatch({type: ACTION_TYPE.AUTHENTICATION_REDIRECT, provider, redirectUrl: redirectUrl});
         window.location.href = redirectUrl;
@@ -912,18 +912,6 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
         dispatch(showAxiosErrorToastIfNeeded("Failed to test question", e));
     }
 };
-
-// Generate answer spec for graph sketcher
-export const generateSpecification = (graphChoice: GraphChoiceDTO) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST});
-        const specResponse = await api.questions.generateSpecification(graphChoice);
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS, specResponse: specResponse.data });
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("There was a problem generating a graph specification", e));
-    }
-}
 
 // Search
 export const fetchSearch = (query: string, types: string | undefined) => async (dispatch: Dispatch<Action>) => {
