@@ -57,13 +57,6 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
         }
     }, [user, debugModeEnabled, generateGraphSpec]);
 
-    // If debug mode is enabled, generate the graph spec of the current state
-    useEffect(() => {
-        if (debugModeEnabled) {
-            generateSpecFromStateIfDebug(modalSketch?.state);
-        }
-    }, [debugModeEnabled]);
-
     // This is debounced here because the graph sketcher upstream calls this
     // on every redraw, which happens on every mouse event.
     const updateGraphSketcherState = useCallback(debounce((newState: GraphSketcherState) => {
@@ -148,12 +141,14 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
             {isStaff(user) && <div className="button" role="button" onClick={toggleDebugMode} onKeyUp={toggleDebugMode} tabIndex={0} id="graph-sketcher-ui-debug-button">Debug</div>}
 
             {debugModeEnabled && <code id="graph-sketcher-ui-debug-window">
-                <b>Debug mode enabled</b>
-                {graphSpec && graphSpec.length > 0 && graphSpec[0] !== "" && <>
-                    <br/><br/>
-                    {graphSpec.map((spec, i) => <pre className={"border-0 p-0 m-0"} key={i}>{spec}</pre>)}
-                    <a id="copy-link" onClick={copySpecificationToClipboard}>(copy to clipboard)</a>
-                </>}
+                <b>Debug mode enabled</b><br/><br/>
+                {graphSpec && graphSpec.length > 0 && graphSpec[0] !== ""
+                    ? <>
+                        {graphSpec.map((spec, i) => <pre className={"border-0 p-0 m-0"} key={i}>{spec}</pre>)}
+                        <a id="copy-link" onClick={copySpecificationToClipboard}>(copy to clipboard)</a>
+                    </>
+                    : "Please update the graph to generate a specification."
+                }
             </code>}
 
             <input className={"d-none"} id="graph-sketcher-ui-color-select" value={drawingColorName} readOnly />
