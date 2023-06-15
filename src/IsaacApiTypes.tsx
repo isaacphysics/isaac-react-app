@@ -590,6 +590,7 @@ export interface UserSummaryWithGroupMembershipDTO extends UserSummaryDTO {
 }
 
 export interface IAssignmentLike {
+    title?: string;
     groupId?: number;
     id?: number;
     creationDate?: Date;

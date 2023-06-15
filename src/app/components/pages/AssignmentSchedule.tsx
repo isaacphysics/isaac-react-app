@@ -35,7 +35,6 @@ import {
 } from "reactstrap";
 import {
     BoardLimit,
-    formatBoardOwner,
     getAssignmentStartDate,
     isDefined,
     isStaff,
@@ -71,11 +70,12 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     };
     const assignmentOwnedByMe = assignment.ownerUserId === user.id;
     const assignmentStartDate = getAssignmentStartDate(assignment);
+    const assignmentTitle = assignment?.title ?? assignment.gameboard?.title ?? `No assignment title`;
     const gameboardTitle = assignment.gameboard?.title ?? `No ${siteSpecific("gameboard", "quiz")} title`;
     const gameboardLink = assignment.gameboardId ? `${PATHS.GAMEBOARD}#${assignment.gameboardId}` : undefined;
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
-            <h4><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle}</a></h4>
+            <h4><a title={`Go to ${siteSpecific("gameboard", "quiz")}`} target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{assignmentTitle}</a></h4>
             <div className={"ml-auto text-right"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
                     Copy
@@ -87,11 +87,11 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
         </CardHeader>
         <CardBody>
             <div>Assigned to: <strong>{assignment.groupName}</strong></div>
+            {assignment.gameboard && <div>Gameboard: <strong><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle}</a></strong></div>}
             {assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY().valueOf() && <span className={"text-muted"}> (not started)</span>}</div>}
             {assignment.dueDate && <div>Due date: <strong>{new Date(assignment.dueDate).toDateString()}</strong></div>}
             {assignment.gameboard && <div>Assigned by: <strong>{assignmentOwnedByMe ? "Me" : "Someone else"}</strong></div>}
-            {assignment.gameboard && <div>Gameboard created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
-            {assignment.listingDate <= TODAY() && <div>
+            {assignment.listingDate <= TODAY() && <div className={"mt-2"}>
                 <a color="link" target={"_blank"} rel={"noreferrer noopener"} href={`${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`}>
                     View assignment progress <span className={"sr-only"}>(opens in new tab)</span>
                 </a>
@@ -193,6 +193,7 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
     const [dueDate, setDueDate] = useState<Date>();
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
+    const [assignmentTitle, setAssignmentTitle] = useState<string>();
 
     const [showGameboardPreview, setShowGameboardPreview] = useState<boolean>(false);
     const toggleGameboardPreview = () => setShowGameboardPreview(o => !o);
@@ -209,12 +210,14 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
             setScheduledStartDate(assignmentToCopy.scheduledStartDate ? new Date(assignmentToCopy.scheduledStartDate.valueOf()) : undefined);
             setDueDate(assignmentToCopy.dueDate ? new Date(assignmentToCopy.dueDate.valueOf()) : undefined);
             setAssignmentNotes(assignmentToCopy.notes);
+            setAssignmentTitle(assignmentToCopy.title);
         } else {
             // Create from scratch
             setSelectedGameboard(undefined);
             setScheduledStartDate(undefined);
             setDueDate(undefined);
             setAssignmentNotes(undefined);
+            setAssignmentTitle(undefined);
         }
     }, [assignmentToCopy]);
 
@@ -222,6 +225,7 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
         if (!selectedGameboard || !selectedGameboard[0]?.value) return;
         dispatch(assignGameboard({
             boardId: selectedGameboard[0]?.value,
+            title: assignmentTitle,
             groups: [...selectedGroups],
             dueDate,
             scheduledStartDate: scheduledStartDate && nthHourOf(7, scheduledStartDate),
@@ -232,12 +236,13 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
                 setDueDate(undefined);
                 setScheduledStartDate(undefined);
                 setAssignmentNotes('');
+                setAssignmentTitle(undefined);
             }
             // Fails silently if assignGameboard throws an error - we let it handle opening toasts for errors
         });
     }, [selectedGameboard, selectedGroups, dueDate,
-        scheduledStartDate, assignmentNotes, setSelectedGroups,
-        setDueDate, setScheduledStartDate, setAssignmentNotes]);
+        scheduledStartDate, assignmentNotes, assignmentTitle, setSelectedGroups,
+        setDueDate, setScheduledStartDate, setAssignmentNotes, setAssignmentTitle]);
 
     const yearRange = range(currentYear, currentYear + 5);
 
@@ -263,6 +268,14 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
             Set new assignment
         </ModalHeader>
         <ModalBody>
+            {isStaff(user) && <Label className="w-100 pb-2">Assignment title:
+                <Input
+                    inputId="assignment-title"
+                    value={assignmentTitle}
+                    onChange={e => setAssignmentTitle(!e.target.value ? undefined : e.target.value)}
+                    placeholder={gameboardToPreview?.title ?? "Please enter an assignment title..."}
+                />
+            </Label>}
             <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
                 <StyledSelect inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
                         value={selectedGroups}

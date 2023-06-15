@@ -79,18 +79,20 @@ const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
     const [dueDate, setDueDate] = useState<Date>();
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
+    const [assignmentTitle, setAssignmentTitle] = useState<string | undefined>();
     const user = useAppSelector(selectors.user.orNull);
     const dispatch = useAppDispatch();
 
     if (!board) return <Loading/>;
 
     function assign() {
-        dispatch(assignGameboard({boardId: board?.id as string, groups: selectedGroups, dueDate, scheduledStartDate, notes: assignmentNotes})).then(success => {
+        dispatch(assignGameboard({boardId: board?.id as string, title: assignmentTitle, groups: selectedGroups, dueDate, scheduledStartDate, notes: assignmentNotes})).then(success => {
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(undefined);
                 setScheduledStartDate(undefined);
                 setAssignmentNotes('');
+                setAssignmentTitle(undefined);
             }
         });
     }
@@ -110,6 +112,14 @@ const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
     }
 
     return <Container className="py-2">
+        {isStaff(user) && <Label className="w-100 pb-2">Assignment title:
+            <Input
+                inputId="assignment-title"
+                value={assignmentTitle}
+                onChange={e => setAssignmentTitle(!e.target.value ? undefined : e.target.value)}
+                placeholder={board?.title ?? "Please enter an assignment title..."}
+            />
+        </Label>}
         <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
             <StyledSelect inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
                     value={selectedGroups}

@@ -30,6 +30,7 @@ import {Immutable} from "immer";
 
 export interface AssignmentSpec {
     boardId: string;
+    title?: string;
     groups: Item<number>[];
     dueDate?: Date;
     scheduledStartDate?: Date;
@@ -38,7 +39,7 @@ export interface AssignmentSpec {
 
 export const assignGameboard = createAsyncThunk(
     "gameboards/assignBoard",
-    async ({boardId, groups, dueDate, scheduledStartDate, notes}: AssignmentSpec, {dispatch, rejectWithValue}) => {
+    async ({boardId, title, groups, dueDate, scheduledStartDate, notes}: AssignmentSpec, {dispatch, rejectWithValue}) => {
         const appDispatch = dispatch as AppDispatch;
         if (groups.length === 0) {
             appDispatch(showErrorToast(
@@ -75,7 +76,7 @@ export const assignGameboard = createAsyncThunk(
         }
 
         const groupIds = groups.map(getValue);
-        const assignments: AssignmentDTO[] = groupIds.map(id => ({gameboardId: boardId, groupId: id, dueDate, scheduledStartDate, notes}));
+        const assignments: AssignmentDTO[] = groupIds.map(id => ({gameboardId: boardId, title, groupId: id, dueDate, scheduledStartDate, notes}));
 
         const response = await dispatch(assignmentsApi.endpoints.assignGameboard.initiate(assignments));
         if (mutationSucceeded(response)) {
