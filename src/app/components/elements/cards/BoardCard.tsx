@@ -150,7 +150,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     csCircle
                 )}
             </td>
-            <td colSpan={siteSpecific(1, 4)} className="align-middle">
+            <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
                 <a href={boardLink} className={isAda ? "font-weight-semi-bold" : ""}>{board.title}</a>
             </td>
             <td className={basicCellClasses + " p-0"} colSpan={2}>
@@ -182,6 +182,9 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <ShareLink linkUrl={boardLink} gameboardId={board.id} outline={isAda} clickAwayClose={isAda} />
                 </div>
             </td>
+            {isSetAssignments && isAda && <td className={basicCellClasses}>
+                <Button outline color={"secondary"} className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+            </td>}
             {!isSetAssignments && siteSpecific(
                 <td>
                     <CustomInput
@@ -281,7 +284,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </Row>
                     <CardFooter className={"text-right p-3"}>
                         <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
-                        <Button outline color={"secondary"} className={"mr-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete gameboard"/>
+                        <Button outline color={"secondary"} className={"mr-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="secondary" onClick={toggleAssignModal}>Assign / Unassign</Button>}
                     </CardFooter>
                 </CardBody>
