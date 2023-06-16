@@ -526,8 +526,8 @@ const GroupDetails = ({group}: {group: AppGroup}) => {
 
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} />
-        {/* Only full teachers on Isaac Physics can see the tests tab */}
-        {pageSettings.isTeacher && isPhy
+        {/* Only full teachers can see the tests tab */}
+        {pageSettings.isTeacher
             ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
                 {{
                     [`Assignments (${assignments.length || 0})`]: assignmentTabComponents,
