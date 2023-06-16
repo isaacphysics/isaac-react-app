@@ -82,7 +82,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
     return <RS.FormGroup className={`school ${className}`}>
-        <RS.Label htmlFor={`school-input-${randomNumber}`} >School</RS.Label>
+        <RS.Label htmlFor={`school-input-${randomNumber}`} >My current school</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect
                 isClearable
@@ -99,7 +99,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             />
         </React.Fragment>}
 
-        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex mt-2">
+        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className={(userToUpdate.schoolOther === NOT_APPLICABLE ? "mt-1": "mt-3") + " d-flex"}>
             <RS.CustomInput
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
@@ -113,7 +113,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                         setUserToUpdate?.(userWithoutSchoolInfo);
                     }
                 })}
-                label="Not associated with a school"
+                label="I am not associated with a school"
+                className="larger-checkbox"
             />
         </div>}
     </RS.FormGroup>

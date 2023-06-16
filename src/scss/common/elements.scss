@@ -301,6 +301,15 @@ iframe.email-html {
   opacity: 1;
 }
 
+.larger-checkbox .custom-control-label::before, .larger-checkbox .custom-control-label::after {
+  transform: scale(2);
+  margin-left: 0.5rem;
+};
+
+.larger-checkbox .custom-control-label {
+  padding-left: 1rem;
+};
+
 // OLD NOMENSA TO ALTER INTO ISAAC
 //a, button {
 //  &.btn.btn-link.login-b {

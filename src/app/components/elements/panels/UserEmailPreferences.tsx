@@ -40,7 +40,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
         errorMessage = "Please specify all preferences"
     }
 
-    return <CardBody className="pb-0">
+    return <CardBody className="p-0">
         <h3 className="pb-4">Your communication preferences</h3>
         <p>Get important information about the Isaac {SITE_SUBJECT_TITLE} programme delivered to your inbox.
             These settings can be changed at any time. Expect one email per term for News and a monthly bulletin for Events. {userIsStudent && "Assignment notifications will be sent as needed by your teacher."}</p>

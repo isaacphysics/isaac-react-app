@@ -63,7 +63,7 @@ const RequiredAccountInfoBody = () => {
     const allUserFieldsAreValid = validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts);
 
     return <RS.Form onSubmit={formSubmission}>
-        {!allUserFieldsAreValid && <RS.CardBody className="py-0">
+        {!allUserFieldsAreValid && <RS.CardBody className="p-0">
             {!isTutorOrAbove(user) && <div className="text-left mb-4">
                 Account type: <b>{user?.loggedIn && user.role && UserFacingRole[user.role]}</b> <span>
                     <small>(Are you a teacher or tutor? {" "}
@@ -92,13 +92,15 @@ const RequiredAccountInfoBody = () => {
                     </div>}
                 </RS.Col>}
               </RS.Row>
-            <RS.Row className="d-flex flex-wrap my-2">
-            {!validateUserContexts(initialUserContexts) && 
+            <RS.Row>
+            {!validateUserContexts(initialUserContexts) && <RS.Col>
                         <UserContextAccountInput
                             userContexts={userContexts} setUserContexts={setUserContexts}
                             displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                             setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
-                        />}
+                        />
+                        </RS.Col>}
+                        
             </RS.Row>
         </RS.CardBody>}
 
