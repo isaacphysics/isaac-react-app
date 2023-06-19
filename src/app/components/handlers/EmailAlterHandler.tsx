@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
-    AppState,
     useAppSelector,
     selectors,
     useAppDispatch,
@@ -11,27 +10,23 @@ import {
     useVerifyEmailMutation
 } from "../../state";
 import {Link} from "react-router-dom";
-import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {useQueryParams} from "../../services";
 
 export const EmailAlterHandler = () => {
     const dispatch = useAppDispatch();
 
-    const {userid, token}: {userid?: string; token?: string} = queryString.parse(location.search);
+    const {userid, token} = useQueryParams(true);
 
     const user = useAppSelector(selectors.user.orNull);
-    const errorMessage = useAppSelector((state: AppState) => state && state.error);
     const idsMatch = user && user.loggedIn && user.id === userid;
 
     const [verifyEmail, {isSuccess: emailVerificationSuccess, isError: emailVerificationFailed, error: emailVerificationError}] = useVerifyEmailMutation();
     const [sendVerificationEmail, {isUninitialized: verificationNotResent}] = useRequestEmailVerificationMutation();
 
-    let successMessage = "Email address verification token received.";
-    if (emailVerificationSuccess) {
-        successMessage = "Email address verified";
-    } else if (!errorMessage && !idsMatch) {
-        successMessage = "You are signed in as a different user to the user with the email you have just verified.";
-    }
+    const successMessage = idsMatch
+        ? "Email address verified."
+        : "You are signed in as a different user to the user with the email you have just verified.";
 
     useEffect(() => {
         if (userid && token) {

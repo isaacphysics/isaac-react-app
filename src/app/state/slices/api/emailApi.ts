@@ -27,6 +27,7 @@ export const emailApi = isaacApi.injectEndpoints({
         verifyEmail: build.mutation<void, {userid: string; token: string}>({
             query: ({userid, token}) => ({
                 url: `/users/verifyemail/${userid}/${token}`,
+                method: "GET",
             }),
             onQueryStarted: onQueryLifecycleEvents({
                 onQueryStart: (args, {dispatch}) => {
