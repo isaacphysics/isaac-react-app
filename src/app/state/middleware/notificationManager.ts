@@ -6,7 +6,8 @@ import {
     isLoggedIn,
     KEY,
     persistence,
-    withinLast2Hours
+    withinLast2Hours,
+    withinLast2Minutes
 } from "../../services";
 import {Action} from "../../../IsaacAppTypes";
 import {logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
@@ -32,8 +33,10 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
                 dispatch(openActiveModal(requiredAccountInformationModal));
             }
             // User context re-confirmation modal - used to request a user to update their stage and exam board 
-            else if (needToUpdateUserContextDetails(user.registeredContextsLastConfirmed)) {
-                dispatch(openActiveModal(userContextReconfirmationModal));
+            else if (needToUpdateUserContextDetails(user.registeredContextsLastConfirmed) &&
+            !withinLast2Minutes(persistence.load(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME))) {
+                persistence.save(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME, new Date().toString());
+                dispatch(openActiveModal(userContextReconfirmationModal))
             }
         }
     }

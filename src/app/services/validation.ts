@@ -87,7 +87,7 @@ const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
         return false;
     }
 };
-export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
+export const withinLast2Minutes = withinLastNMinutes.bind(null, 2);
 export const withinLast2Hours = withinLastNMinutes.bind(null, 120);
 
 export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser> | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
