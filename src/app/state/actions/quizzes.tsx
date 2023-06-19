@@ -31,17 +31,16 @@ export const setQuiz = (assignment: QuizAssignmentDTO) => async (dispatch: Dispa
         return newAssignment;
     } catch (e) {
         dispatch(showAxiosErrorToastIfNeeded("Test setting failed", e));
-        throw e;
     }
 };
 
-export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
+export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: Date | null, scheduledStartDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
     dispatch(openActiveModal({
         closeAction: () => {
             dispatch(closeActiveModal())
         },
         title: `Setting test '${quiz.title ?? quiz.id}'`,
-        body: <QuizSettingModal quiz={quiz} dueDate={dueDate} feedbackMode={feedbackMode}/>
+        body: <QuizSettingModal quiz={quiz} dueDate={dueDate} scheduledStartDate={scheduledStartDate} feedbackMode={feedbackMode}/>
     }));
 }
 

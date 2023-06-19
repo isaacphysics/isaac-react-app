@@ -21,8 +21,8 @@ import {
     isEventLeaderOrStaff,
     isPhy,
     MANAGE_QUIZ_TAB,
-    NOT_FOUND,
-    siteSpecific,
+    NOT_FOUND, nthHourOf,
+    siteSpecific, TODAY,
     useDeviceSize,
     useFilteredQuizzes
 } from "../../../services";
@@ -55,24 +55,33 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
             dispatch(markQuizAsCancelled(assignment.id as number));
         }
     };
+    const assignmentNotYetStarted = assignment?.scheduledStartDate && nthHourOf(0, assignment?.scheduledStartDate) > TODAY();
+    const quizTitle = (assignment.quizSummary?.title || assignment.quizId) + (assignmentNotYetStarted ? ` (starts ${formatDate(assignment?.scheduledStartDate)})` : "");
     // TODO RTKQ quiz refactor use isPending from use mutation hook to re-implement this (markQuizAsCancelled would be
     //  the mutation trigger)
     const isCancelling = 'cancelling' in assignment && (assignment as {cancelling: boolean}).cancelling;
     return <div className="p-2">
         <RS.Card className="card-neat">
             <RS.CardBody>
-                <h4 className="border-bottom pb-3 mb-3">{assignment.quizSummary?.title || assignment.quizId}</h4>
+                <h4 className="border-bottom pb-3 mb-3">{quizTitle}</h4>
 
                 <p>Set to: <strong>{assignment.groupName ?? "Unknown"}</strong></p>
-                <p>{assignment.dueDate ? <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></> : <>No due date</>}</p>
                 <p>Set on: <strong>{formatDate(assignment.creationDate)} by {formatAssignmentOwner(user, assignment)}</strong></p>
+                <RS.Row>
+                    {assignment.scheduledStartDate && <RS.Col>
+                        <p>Start date: <strong>{formatDate(assignment.scheduledStartDate)}</strong></p>
+                    </RS.Col>}
+                    <RS.Col>
+                        <p>{assignment.dueDate ? <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></> : <>No due date</>}</p>
+                    </RS.Col>
+                </RS.Row>
 
                 <div className="mt-4 text-right">
                     <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1 bg-light">
                         {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
                     </RS.Button>
                     <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
-                        {siteSpecific("View Results", "View results")}
+                        View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
                     </RS.Button>
                 </div>
             </RS.CardBody>
