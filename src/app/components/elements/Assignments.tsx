@@ -4,14 +4,13 @@ import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {
     determineGameboardStagesAndDifficulties,
-    determineGameboardSubjects,
     difficultyShortLabelMap,
     extractTeacherName,
-    generateGameboardSubjectHexagons,
     isDefined,
     stageLabelMap,
     TAG_ID,
-    tags
+    tags,
+    GAMEBOARD_SUBJECT
 } from "../../services";
 import {formatDate} from "./DateString";
 
@@ -39,7 +38,7 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCompleted === 100) ?
                             <span className="board-subject-hexagon subject-complete"/> :
                             <>
-                                {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
+                                <div className="board-subject-hexagon"/>
                                 <div className="board-percent-completed">{assignment.gameboard.percentageCompleted}</div>
                             </>
                     )}

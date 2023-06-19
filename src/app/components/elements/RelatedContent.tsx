@@ -102,47 +102,6 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
     </div>
 }
 
-function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
-    if (concepts.length == 0 && questions.length == 0) return null;
-    return <div className="d-flex align-items-stretch flex-wrap no-print">
-        <div className="w-100 w-lg-50 d-flex">
-            <div className="flex-fill simple-card mr-lg-3 my-3 p-3 text-wrap">
-                <div className="related-concepts related-title">
-                    <h5 className="mb-2">Related Concepts</h5>
-                </div>
-                <hr/>
-                <div className="d-lg-flex">
-                    <ListGroup className="mr-lg-3">
-                        {concepts.length > 0 ?
-                            concepts.map(contentSummary => renderItem(contentSummary)):
-                            <div className="mt-2 ml-3">There are no related concepts</div>
-                        }
-                    </ListGroup>
-                </div>
-            </div>
-        </div>
-        <div className="w-100 w-lg-50 d-flex">
-            <div className="flex-fill simple-card ml-lg-3 my-3 p-3 text-wrap">
-                <div className="related-questions related-title">
-                    <h5 className="mb-2">Related Questions</h5>
-                    {showConceptGameboardButton && questions.length > 0 && <p className="text-right">
-                        <ConceptGameboardButton conceptId={conceptId}/>
-                    </p>}
-                </div>
-                <hr/>
-                <div className="d-lg-flex">
-                    <ListGroup className="mr-lg-3">
-                        {questions.length > 0 ?
-                            questions.map(contentSummary => renderItem(contentSummary)) :
-                            <div className="mt-2 ml-3">There are no related questions</div>
-                        }
-                    </ListGroup>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-
 export function RelatedContent({content, parentPage, conceptId = ""}: RelatedContentProps) {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
@@ -156,8 +115,6 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
         .sort(sortByNumberStringValue("difficulty"))
         .sort(sortByNumberStringValue("level")); // TODO should this reference to level still be here?
 
-    const concepts = sortedContent
-        .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.CONCEPT);
     const questions = sortedContent
         .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
 

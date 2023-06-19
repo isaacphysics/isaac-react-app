@@ -18,7 +18,7 @@ interface ShowMeButtonsProps {
 export const Homepage = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
-    const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "news", orderDecending: true});
+    const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "news", orderDescending: true});
 
     const featuredNewsItem = (news && user?.loggedIn) ? news[0] : undefined;
     const carouselNewsItems = news ? (user?.loggedIn ? news.slice(1) : news) : [];

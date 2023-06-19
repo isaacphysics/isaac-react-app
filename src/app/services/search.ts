@@ -1,5 +1,5 @@
 import {History} from "history";
-import {DOCUMENT_TYPE, isStaff, TAG_ID} from "./";
+import {DOCUMENT_TYPE, isStaff} from "./";
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
 import {PotentialUser} from "../../IsaacAppTypes";
 import queryString from "query-string";
@@ -14,29 +14,6 @@ export const pushSearchToHistory = function(history: History, searchQuery: strin
     history.push({
         pathname: "/search",
         search: queryString.stringify({...previousQuery, ...newQueryOptions}, {encode: false}),
-    });
-};
-
-export function calculateConceptTypes(physics: boolean, maths: boolean, chemistry: boolean, biology: boolean) {
-    const typesArray = [];
-    if (physics) {
-        typesArray.push(TAG_ID.physics);
-    }
-    if (maths) {
-        typesArray.push(TAG_ID.maths);
-    }
-    if (chemistry) {
-        typesArray.push(TAG_ID.chemistry);
-    }
-    if (biology) {
-        typesArray.push(TAG_ID.biology);
-    }
-    return typesArray.join(",");
-}
-export const pushConceptsToHistory = function(history: History, searchText: string, physics: boolean, maths: boolean, chemistry: boolean, biology: boolean) {
-    history.push({
-        pathname: "/concepts",
-        search: `?query=${encodeURIComponent(searchText)}&types=${calculateConceptTypes(physics, maths, chemistry, biology)}`,
     });
 };
 

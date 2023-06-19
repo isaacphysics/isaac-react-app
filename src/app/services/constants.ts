@@ -575,21 +575,15 @@ export enum QUESTION_CATEGORY {
     BOOK_QUESTIONS = "book",
     QUICK_QUIZ = "quick_quiz",
     TOPIC_TEST = "topic_test",
-    MASTER_MATHS_AND_PHYSICS = "master_maths_and_physics",
 }
 
 export const QUESTION_CATEGORY_ITEM_OPTIONS = [
     {label: "Learn and Practice", value: QUESTION_CATEGORY.LEARN_AND_PRACTICE},
     {label: "Quick Quiz", value: QUESTION_CATEGORY.QUICK_QUIZ},
     // {label: "Topic Test", value: QUESTION_CATEGORY.TOPIC_TEST},
-    // {label: "Master Maths/Physics", value: QUESTION_CATEGORY.MASTER_MATHS_AND_PHYSICS},
 ];
 
 export enum SUBJECTS {
-    PHYSICS = 'physics',
-    MATHS = 'maths',
-    CHEMISTRY = 'chemistry',
-    BIOLOGY = 'biology',
     CS = 'computer_science'
 }
 
@@ -692,171 +686,6 @@ export enum TAG_ID {
     //Theory of computation
     computationalThinking = "computational_thinking",
     modelsOfComputation = "models_of_computation",
-
-    // PHY ----
-
-    // Subjects ---
-    physics = "physics",
-    maths = "maths",
-    chemistry = "chemistry",
-    biology = "biology",
-
-    // Fields ---
-
-    // Physics Fields
-    mechanics = "mechanics",
-    fields = "fields",
-    thermal = "thermal",
-    wavesParticles = "waves_particles",
-    skills = "skills",
-    electricity = "electricity",
-    applications = "applications",
-    // Chemistry Fields
-    inorganic = "inorganic",
-    physical = "physical",
-    analytical = "analytical",
-    foundations = "foundations",
-    organic = "organic",
-    // Maths Fields
-    geometry = "geometry",
-    algebra = "algebra",
-    statistics = "statistics",
-    functions = "functions",
-    calculus = "calculus",
-    number = "number",
-    // Biology Fields
-    biochemistry = "biochemistry",
-    cellBiology = "cell_biology",
-    ecology = "ecology",
-    evolution = "evolution",
-    genetics = "genetics",
-    physiology = "physiology",
-
-    // Physics Topics ---
-
-    // Mechanics
-    dynamics = "dynamics",
-    circularMotion = "circular_motion",
-    oscillations = "oscillations",
-    statics = "statics",
-    kinematics = "kinematics",
-    materials = "materials",
-    // Fields
-    combined = "combined",
-    electric = "electric",
-    magnetic = "magnetic",
-    gravitational = "gravitational",
-    // Thermal
-    gases = "gases",
-    heatCapacity = "heat_capacity",
-    // Waves & Particles
-    nuclear = "nuclear",
-    superposition = "superposition",
-    optics = "optics",
-    quantum = "quantum",
-    waveMotion = "wave_motion",
-    fundamental = "fundamental",
-    // Skills
-    units = "units",
-    graphs = "graphs",
-    uncertainties = "uncertainties",
-    relationships = "relationships",
-    prefixes = "prefixes",
-    sigFigs = "sig_figs",
-    // Electricity
-    chargeCurrent = "charge_current",
-    resistors = "resistors",
-    components = "components",
-    internalResistance = "internal_resistance",
-    capacitors = "capacitors",
-    power = "power",
-
-    // Maths Topics ---
-
-    // Number
-    arithmetic = "arithmetic",
-    rational = "rational",
-    factors = "factors_powers",
-    complexNumbers = "complex_numbers",
-    // Geometry
-    vectors = "vectors",
-    shapes = "shapes",
-    trigonometry = "trigonometry",
-    planes = "planes",
-    // Algebra
-    manipulation = "manipulation",
-    quadratics = "quadratics",
-    series = "series",
-    simultaneous = "simultaneous",
-    matrices = "matrices",
-    // Statistics
-    hypothesisTests = "hypothesis_tests",
-    dataAnalysis = "data_analysis",
-    randomVariables = "random_variables",
-    probability = "probability",
-    // Functions
-    generalFunctions = "general_functions",
-    graphSketching = "graph_sketching",
-    // Calculus
-    integration = "integration",
-    differentiation = "differentiation",
-    differentialEq = "differential_eq",
-
-    // Chemistry Topics ---
-
-    // Inorganic
-    redox = "redox",
-    bonding = "bonding",
-    transitionMetals = "transition_metals",
-    periodicTable = "periodic_table",
-    // Physical
-    energetics = "energetics",
-    electrochemistry = "electrochemistry",
-    equilibrium = "equilibrium",
-    acidsAndBases = "acids_and_bases",
-    entropy = "entropy",
-    kinetics = "kinetics",
-    // Analytical
-    electronicSpectroscopy = "electronic_spectroscopy",
-    nmrSpectroscopy = "nmr_spectroscopy",
-    massSpectrometry = "mass_spectrometry",
-    infraredSpectroscopy = "infrared_spectroscopy",
-    chromatography = "chromatography",
-    // Foundations
-    stoichiometry = "stoichiometry",
-    gasLaws = "gas_laws",
-    numericalSkills = "numerical_skills",
-    atomicStructure = "atomic_structure",
-    // Organic
-    functionalGroups = "functional_groups",
-    aromaticity = "aromaticity",
-    organicReactions = "organic_reactions",
-    isomerism = "isomerism",
-    aromaticReactions = "aromatic_reactions",
-
-    // Biology Topics ---
-
-    // Cell biology
-    cellStructure = "cell_structure",
-    mitosis = "mitosis",
-    meiosis = "meiosis",
-    viruses = "viruses",
-    membraneTransport = "membrane_transport",
-    tissues = "tissues",
-    // Biochemistry
-    proteins = "proteins",
-    carbohydrates = "carbohydrates",
-    lipids = "lipids",
-    // Genetics
-    dnaReplication = "dna_replication",
-    transcription = "transcription",
-    translation = "translation",
-    // Physiology
-
-    // Ecology
-
-    // Evolution
-
 }
 
 export enum TAG_LEVEL {

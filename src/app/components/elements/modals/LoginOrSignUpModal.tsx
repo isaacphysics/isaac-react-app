@@ -32,7 +32,7 @@ const LoginOrSignUpBody = () => {
         <Col lg={6} className="content-body pattern-06-inverted">
             <img src={"/assets/logo.svg"} className={"mt-5 ml-3"} style={{width: "90%"}} alt={"Isaac Computer Science Logo"} />
             <div className={"px-3 mb-4"}>
-                <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>
+                <h1 className={"h2 mb-lg-3 mt-2"}>
                     Log in or sign up<br/>
                 </h1>
                 <p>You need to be logged in to your account to <b>save your answers and progress</b>. If you don&apos;t have an account, you can <b>sign up today for free</b>.</p>
