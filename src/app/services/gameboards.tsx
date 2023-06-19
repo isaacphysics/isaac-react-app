@@ -78,10 +78,6 @@ export const determinePreviousGameboardItem = (currentGameboard: GameboardDTO | 
     }
 };
 
-export const generateGameboardSubjectHexagons = (boardSubject: string) => {
-    return <div className={`board-subject-hexagon subject-${boardSubject}`} />;
-};
-
 export const determineCurrentCreationContext = (currentGameboard: GameboardDTO | NOT_FOUND_TYPE | undefined, currentDocId: string) => {
    if (isFound(currentGameboard) && currentGameboard.contents) {
         return currentGameboard.contents.filter(gameboardItem => gameboardItem.id === currentDocId)[0]?.creationContext;
@@ -136,10 +132,6 @@ export enum BoardCreators {
     "isaac" = "Isaac",
     "me" = "Me",
     "someoneElse" = "Someone else"
-}
-
-export enum BoardSubjects {
-    "all" = "All",
 }
 
 export enum BoardLimit {

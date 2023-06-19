@@ -6,7 +6,6 @@ import {
     determineGameboardStagesAndDifficulties,
     difficultyShortLabelMap,
     extractTeacherName,
-    generateGameboardSubjectHexagons,
     isDefined,
     stageLabelMap,
     TAG_ID,
@@ -39,7 +38,7 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCompleted === 100) ?
                             <span className="board-subject-hexagon subject-complete"/> :
                             <>
-                                {generateGameboardSubjectHexagons(GAMEBOARD_SUBJECT)}
+                                <div className="board-subject-hexagon"/>
                                 <div className="board-percent-completed">{assignment.gameboard.percentageCompleted}</div>
                             </>
                     )}

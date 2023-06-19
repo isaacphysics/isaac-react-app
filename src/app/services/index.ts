@@ -25,7 +25,6 @@ export * from "./easterEggs/csLogoAsciiArt";
 export * from "./user";
 export * from "./validation";
 export * from "./tagsAbstract";
-export * from "./subject";
 export * from "./tagsCS";
 export * from "./tags";
 export * from "./questions";

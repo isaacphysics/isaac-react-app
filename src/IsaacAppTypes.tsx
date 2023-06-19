@@ -449,10 +449,6 @@ export interface UserExamPreferences {
     [EXAM_BOARD.OCR]?: boolean;
 }
 
-export interface SubjectInterests {
-    CS_ALEVEL?: boolean;
-}
-
 export type ProgrammingLanguage = {[pl in PROGRAMMING_LANGUAGE]?: boolean}
 
 export interface BooleanNotation {
@@ -468,7 +464,6 @@ export interface DisplaySettings {
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
-    SUBJECT_INTEREST?: SubjectInterests;
     PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
     BOOLEAN_NOTATION?: BooleanNotation;
     DISPLAY_SETTING?: DisplaySettings;

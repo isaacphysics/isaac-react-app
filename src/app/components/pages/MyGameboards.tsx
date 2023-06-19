@@ -31,7 +31,6 @@ import {
     difficultiesOrdered,
     difficultyShortLabelMap,
     formatBoardOwner,
-    generateGameboardSubjectHexagons,
     isMobile,
     sortIcon,
     stageLabelMap,
@@ -84,7 +83,7 @@ const Board = (props: BoardTableProps) => {
                 <div className="board-subject-hexagon-container table-view">
                     {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
                         <>
-                            {generateGameboardSubjectHexagons(GAMEBOARD_SUBJECT)}
+                            <div className="board-subject-hexagon"/>
                             <div className="board-percent-completed">{board.percentageCompleted}</div>
                         </>
                     }
@@ -130,7 +129,7 @@ const Board = (props: BoardTableProps) => {
                 <div className="board-subject-hexagon-container">
                     {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
                         <>
-                            {generateGameboardSubjectHexagons(GAMEBOARD_SUBJECT)}
+                            <div className="board-subject-hexagon"/>
                             <div className="board-percent-completed">{board.percentageCompleted}</div>
                         </>
                     }
