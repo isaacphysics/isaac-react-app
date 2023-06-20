@@ -19,15 +19,15 @@ import {Immutable} from "immer";
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode) => ({
     teacher: {
         intro: <span>To ensure you see the correct content, please make sure the details below are correct. This also helps us understand the usage of Isaac Computer Science.</span>,
-        connections: <span>If you have changed school or have a different class group, you might also want to {buildConnectionsLink("review your student and group connections")}.</span>
+        connections: <span>If you have changed school or have a different class group, you might also want to {buildConnectionsLink("review your student and group connections.")}</span>
     },
     tutor: {
         intro: <span>To ensure you see the correct content, please make sure the details below are correct. This also helps us understand the usage of Isaac Computer Science.</span>,
-        connections: <span>If you have recently changed which students you tutor, might also want to {buildConnectionsLink("review your student and group connections")}.</span>,
+        connections: <span>If you have recently changed which students you tutor, might also want to {buildConnectionsLink("review your student and group connections.")}</span>,
     },
     student: {
         intro: <span>To ensure you see the correct content, please make sure the details below are correct. This also helps us understand the usage of Isaac Computer Science.</span>,
-        connections: <span>If you have changed school or have a different teacher, you might also want to {buildConnectionsLink("review your teacher connections")}.</span>,
+        connections: <span>If you have changed school or have a different teacher, you might also want to {buildConnectionsLink("review your teacher connections.")}</span>,
     }
 });
 
@@ -57,7 +57,7 @@ const UserContextReconfirmationModalBody = () => {
 
     const modalText = useMemo(() => buildModalText(
         function buildConnectionsLink(text: string) {
-            return <a target={"_blank"} onClick={logReviewTeacherConnections} rel={"noopener"}
+            return <a className="d-inline" target={"_blank"} onClick={logReviewTeacherConnections} rel={"noopener noreferrer"}
                       href={"/account#teacherconnections"}>
                 {text}
                 <span className={"sr-only"}> (opens in new tab) </span>

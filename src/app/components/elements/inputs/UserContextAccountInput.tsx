@@ -32,7 +32,7 @@ function UserContextRow({
 }: UserContextRowProps) {
     const onlyUCWithThisStage = existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
     return <>
-    <RS.Col xs={6} md={6} lg={4} className="pr-1">
+    <RS.Col xs={5} md={5} lg={4} className="pr-1">
         {/* Stage Selector */}
         <Input
             className="form-control w-100 d-inline-block pl-1 pr-10" type="select"
@@ -63,7 +63,7 @@ function UserContextRow({
             )}
         </Input>
         </RS.Col>
-        <RS.Col xs={6} md={6} lg={4} className="pl-1">
+        <RS.Col xs={5} md={5} lg={4} className="pl-1">
         {/* Exam Board Selector */}
         <Input
             className="form-control w-100 d-inline-block pl-1 pr-10 ml-2" type="select"
@@ -135,25 +135,28 @@ export function UserContextAccountInput({
                         setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
                         existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
                     />
-                    </RS.Row>
-
+                    
                     {tutorOrAbove && userContexts.length > 1 && <button
                         type="button" className="mx-2 close float-none align-middle" aria-label="clear stage row"
                         onClick={() => setUserContexts(userContexts.filter((uc, i) => i !== index))}
                     >
                         ×
                     </button>}
-
-                    {showPlusOption && <RS.Label>
+                    </RS.Row>
+                    
+                    {showPlusOption && <RS.Row className="mt-3 ml-0"><RS.Label className="vertical-center">
                         <button
                             type="button" aria-label="Add stage"
-                            className={`${userContexts.length <= 1 ? "ml-2" : ""} align-middle close float-none pointer-cursor`}
+                            className="align-middle close float-none pointer-cursor"
                             onClick={() => setUserContexts([...userContexts, {}])}
                         >
-                            +
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+</svg>
                         </button>
-                        <span className="ml-1">add stage</span>
-                    </RS.Label>}
+                        <span className="ml-2 mt-1 pointer-cursor">Add another stage</span>
+                    </RS.Label></RS.Row>}
 
                     {index === userContexts.length - 1 && (userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <RS.Label className="m-0 mt-3">
                         <CustomInput
