@@ -371,3 +371,16 @@
 //  border: 2px solid red;
 //  content: '';
 //}
+
+.coordinate-question {
+  .coordinate-input {
+    display: block;
+    font-size: 25px;
+    input {
+      margin-left: 3px;
+      margin-right: 3px;
+      max-width: 100px;
+      display: inline-block;
+    }
+  }
+}

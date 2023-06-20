@@ -40,6 +40,14 @@ figure {
   }
 }
 
+.text-center-column {
+  text-align: left;
+  @include respond-above(sm) {
+    padding-left: 20%;
+    padding-right: 20%;
+  }
+}
+
 // NOMENSA figures.scss
 .img-thumbnail {
   border-width: 0;

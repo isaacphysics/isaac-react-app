@@ -41,7 +41,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.genetics, title: "Genetics", parent: TAG_ID.biology},
         {id: TAG_ID.physiology, title: "Physiology", parent: TAG_ID.biology, comingSoonDate: "soon"},
         {id: TAG_ID.ecology, title: "Ecology", parent: TAG_ID.biology, comingSoonDate: "soon"},
-        {id: TAG_ID.evolution, title: "Evolution", parent: TAG_ID.biology, comingSoonDate: "soon"},
+        {id: TAG_ID.evolution, title: "Evolution", parent: TAG_ID.biology},
 
         // --- Physics Topics ---
 
@@ -163,11 +163,14 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.transcription, title: `Trans${softHyphen}cription`, parent: TAG_ID.genetics},
         {id: TAG_ID.translation, title: `Trans${softHyphen}lation`, parent: TAG_ID.genetics},
         {id: TAG_ID.genesAndAlleles, title: `Genes & Alleles`, parent: TAG_ID.genetics},
+        {id: TAG_ID.inheritance, title: "Inheritance", parent: TAG_ID.genetics},
+        {id: TAG_ID.biotechnology, title: `Bio${softHyphen}technology`, parent: TAG_ID.genetics},
         // Physiology
 
         // Ecology
 
         // Evolution
+        {id: TAG_ID.variation, title: "Variation", parent: TAG_ID.evolution},
 
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}

@@ -23,11 +23,13 @@ import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 import {IsaacCallout} from "./IsaacCallout";
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
-
 const classBasedLayouts = {
     left: "align-left",
     right: "align-right",
-    righthalf: "align-right-half"
+    righthalf: "align-right-half",
+    textleft: "text-left",
+    textcentre: "text-center",
+    textcentrecolumn: "text-center-column"
 };
 
 export interface IsaacContentProps extends RouteComponentProps {

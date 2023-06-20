@@ -71,10 +71,9 @@ import {RenderNothing} from "../elements/RenderNothing";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
-    allowScheduling: boolean;
     board: GameboardDTO | undefined;
 }
-const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
+const AssignGroup = ({groups, board}: AssignGroupProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
@@ -110,18 +109,18 @@ const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
     }
 
     return <Container className="py-2">
-        <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
-            <StyledSelect inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
+        <Label className="w-100 pb-2">Group(s):
+            <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
                     value={selectedGroups}
-                    closeMenuOnSelect={!isStaff(user)}
+                    closeMenuOnSelect={false}
                     onChange={selectOnChange(setSelectedGroups, false)}
                     options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
             />
         </Label>
-        {allowScheduling && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
+        <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
                        onChange={setScheduledStartDateAtSevenAM} />
-        </Label>}
+        </Label>
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
@@ -153,20 +152,19 @@ type SetAssignmentsModalProps = {
     user: RegisteredUserDTO;
     isOpen: boolean;
     toggle: () => void;
-    allowScheduling: boolean;
     groups: UserGroupDTO[];
     board: GameboardDTO | undefined;
     assignees: BoardAssignee[];
     boards?: Boards;
 };
 const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
-    const {isOpen, toggle, allowScheduling, board, assignees} = props;
+    const {isOpen, toggle, board, assignees} = props;
 
     const [ unassignBoard ] = useUnassignGameboardMutation();
 
     const hasStarted = (a : {startDate?: Date | number}) => !a.startDate || (Date.now() > a.startDate.valueOf());
 
-    const startedAssignees = useMemo(() => allowScheduling ? assignees.filter(hasStarted) : assignees, [assignees]);
+    const startedAssignees = useMemo(() => assignees.filter(hasStarted), [assignees]);
     const scheduledAssignees = useMemo(() => assignees.filter(a => !hasStarted(a)), [assignees]);
 
     function confirmUnassignBoard(groupId: number, groupName?: string) {
@@ -182,7 +180,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
 
     return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle}>
         <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break"} close={
-            <button role={"button"} className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy})} onClick={toggle}>
+            <button className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy})} onClick={toggle}>
                 Close
             </button>
         }>
@@ -193,7 +191,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
             <hr className="text-center" />
             <AssignGroup {...props} />
             <hr className="text-center" />
-            <div className={classNames("py-2", {"border-bottom": allowScheduling})}>
+            <div className="py-2 border-bottom">
                 <Label>{siteSpecific("Board", "Quiz")} currently assigned to:</Label>
                 {startedAssignees.length > 0
                     ? <Container className="mb-4">{startedAssignees.map(assignee =>
@@ -204,7 +202,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                     )}</Container>
                     : <p>No groups.</p>}
             </div>
-            {allowScheduling && <div className="py-2">
+            <div className="py-2">
                 <Label>Pending {siteSpecific("assignments", "quiz assignments")}: <span className="icon-help mx-1" id={`pending-assignments-help-${board?.id}`}/></Label>
                 <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
                     {siteSpecific("Assignments", "Quizzes")} that are scheduled to begin at a future date. Once the start date passes, students
@@ -224,7 +222,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                         </Row>
                     )}</Container>
                     : <p>No groups.</p>}
-            </div>}
+            </div>
         </ModalBody>
         {isPhy && <ModalFooter>
             <Button block color="tertiary" onClick={toggle}>Close</Button>
@@ -456,7 +454,6 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
 export const SetAssignments = () => {
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    const userPreferences = useAppSelector(selectors.user.preferences);
     const { data: groups } = useGetGroupsQuery(false);
     const { data: assignmentsSetByMe } = useGetMySetAssignmentsQuery(undefined);
     const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
@@ -485,9 +482,6 @@ export const SetAssignments = () => {
     const switchView = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setBoardView(e.target.value as BoardViews);
     }, [setBoardView]);
-
-    // Whether to let the user schedule assignments for the future
-    const allowScheduling = siteSpecific(isStaff(user) || (userPreferences?.BETA_FEATURE?.SCHEDULE_ASSIGNMENTS ?? false), true);
 
     // Logic for set assignments modal.
     // hashAnchor acts as a buffer for a modal that needs to be opened. If it is set, the next time we get boards from
@@ -534,7 +528,7 @@ export const SetAssignments = () => {
         <SetAssignmentsModal
             isOpen={isModalOpen}
             toggle={() => setIsModalOpen(false)}
-            allowScheduling={allowScheduling} user={user}
+            user={user}
             groups={groups ?? []}
             board={modalBoard}
             assignees={(isDefined(modalBoard) && isDefined(modalBoard?.id) && groupsByGameboard[modalBoard.id]) || []}

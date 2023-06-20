@@ -17,6 +17,7 @@ const IsaacSymbolicQuestion = lazy(() => import("../components/content/IsaacSymb
 const IsaacSymbolicChemistryQuestion = lazy(() => import("../components/content/IsaacSymbolicChemistryQuestion"));
 const IsaacGraphSketcherQuestion = lazy(() => import("../components/content/IsaacGraphSketcherQuestion"));
 const IsaacClozeQuestion = lazy(() => import("../components/content/IsaacClozeQuestion"));
+const IsaacCoordinateQuestion = lazy(() => import("../components/content/IsaacCoordinateQuestion"));
 
 export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacMultiChoiceQuestion": "Multiple choice",
@@ -31,6 +32,7 @@ export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacSymbolicLogicQuestion": "Boolean logic",
     "isaacGraphSketcherQuestion": "Graph Sketcher",
     "isaacClozeQuestion": "Cloze drag and drop",
+    "isaacCoordinateQuestion": "Coordinate",
     "default": "Multiple choice"
 };
 
@@ -48,6 +50,7 @@ export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, qu
     "isaacSymbolicLogicQuestion": IsaacSymbolicLogicQuestion,
     "isaacGraphSketcherQuestion": IsaacGraphSketcherQuestion,
     "isaacClozeQuestion": IsaacClozeQuestion,
+    "isaacCoordinateQuestion": IsaacCoordinateQuestion,
     "default": IsaacMultiChoiceQuestion
 };
 

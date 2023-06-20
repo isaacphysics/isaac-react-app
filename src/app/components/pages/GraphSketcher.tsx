@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {selectors, useAppSelector} from "../../state";
+import {selectors, useAppSelector, useGenerateAnswerSpecificationMutation} from "../../state";
 import {Col, Container, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
 import {GraphChoiceDTO} from '../../../IsaacApiTypes';
@@ -10,6 +10,7 @@ import {
     makeGraphSketcher
 } from "isaac-graph-sketcher";
 import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
+import {isStaff} from "../../services";
 
 const GraphSketcherPage = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -18,12 +19,16 @@ const GraphSketcherPage = () => {
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
     const [initialState, setInitialState] = useState<GraphSketcherState>();
     const previewRef = useRef(null);
+    const [generateGraphSpec, {data: graphSpec}] = useGenerateAnswerSpecificationMutation();
 
     function openModal() {
         setModalVisible(true);
     }
 
     function closeModal() {
+        if (currentAttempt?.value && isStaff(user)) {
+            generateGraphSpec({ type: 'graphChoice', value: currentAttempt.value});
+        }
         setModalVisible(false);
     }
 
@@ -92,6 +97,7 @@ const GraphSketcherPage = () => {
                             initialState={initialState}
                         />}
                     </div>
+                    {graphSpec && graphSpec.map((spec, i) => <pre key={i}>{spec}</pre>)}
                 </Col>
             </Row>
         </Container>

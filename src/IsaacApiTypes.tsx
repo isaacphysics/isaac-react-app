@@ -205,6 +205,10 @@ export interface IsaacSymbolicQuestionDTO extends QuestionDTO {
     availableSymbols?: string[];
 }
 
+export interface IsaacCoordinateQuestionDTO extends QuestionDTO {
+    numberOfCoordinates?: number;
+}
+
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
     linkedGameboards?: GameboardDTO[];
 }
@@ -455,12 +459,21 @@ export interface ParsonsChoiceDTO extends ItemChoiceDTO {
     items?: ParsonsItemDTO[];
 }
 
+export interface CoordinateChoiceDTO extends ItemChoiceDTO {
+    items?: CoordinateItemDTO[];
+}
+
 export interface ItemDTO extends ContentDTO {
     altText?: string;
 }
 
 export interface ParsonsItemDTO extends ItemDTO {
     indentation?: number;
+}
+
+export interface CoordinateItemDTO extends ItemDTO {
+    x?: string;
+    y?: string;
 }
 
 export interface QuantityDTO extends ChoiceDTO {
