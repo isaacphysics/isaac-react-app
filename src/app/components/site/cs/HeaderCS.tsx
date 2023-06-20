@@ -59,7 +59,7 @@ export const HeaderCS = () => {
 
                         {isTutorOrAbove(user) && <NavigationSection title="Teach">
                             <LinkItem to="/groups">Groups</LinkItem>
-                            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Set quizzes</LinkItem>
+                            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Set assignments</LinkItem>
                             {isTeacherOrAbove(user) && <>
                                 <LinkItem to="/set_tests">Set tests</LinkItem>
                             </>}
