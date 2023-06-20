@@ -28,8 +28,9 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
         }
 
         if (isDefined(user)) {
+            const firstLogin = persistence.session.load(KEY.FIRST_LOGIN)
             // Required account info modal - takes precedence over stage/exam board re-confirmation modal
-            if (isDefined(state.userPreferences) && !allRequiredInformationIsPresent(user, state.userPreferences, user.registeredContexts)) {
+            if (isDefined(state.userPreferences) && !allRequiredInformationIsPresent(user, state.userPreferences, user.registeredContexts) && firstLogin === null) { 
                 dispatch(openActiveModal(requiredAccountInformationModal));
             }
             // User context re-confirmation modal - used to request a user to update their stage and exam board 
@@ -62,3 +63,4 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
 
     return dispatch(action);
 };
+  
