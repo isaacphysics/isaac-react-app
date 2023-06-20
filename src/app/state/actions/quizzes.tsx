@@ -31,6 +31,7 @@ export const setQuiz = (assignment: QuizAssignmentDTO) => async (dispatch: Dispa
         return newAssignment;
     } catch (e) {
         dispatch(showAxiosErrorToastIfNeeded("Test setting failed", e));
+        throw e;
     }
 };
 
