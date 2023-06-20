@@ -47,7 +47,7 @@ import {
     siteSpecific,
     TODAY
 } from "../../services";
-import {AssignmentScheduleContext, BoardOrder, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
+import {AppGroup, AssignmentScheduleContext, BoardOrder, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import classNames from "classnames";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
@@ -56,6 +56,119 @@ import {Link, useLocation} from "react-router-dom";
 import {combineQueries, ShowLoadingQuery, discardResults} from "../handlers/ShowLoadingQuery";
 import {PhyAddGameboardButtons} from "./SetAssignments";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+
+interface HeaderProps {
+    assignmentsSetByMe?: AssignmentDTO[];
+    viewBy: "startDate" | "dueDate";
+    setViewBy: (vb: "startDate" | "dueDate") => void;
+    groupsToInclude: Item<number>[];
+    setGroupsToInclude: (groups: Item<number>[]) => void;
+    groups?: AppGroup[];
+    user: RegisteredUserDTO;
+    openAssignmentModal: (assignment?: ValidAssignmentWithListingDate) => void;
+    collapse: () => void;
+}
+
+const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, openAssignmentModal, collapse}: HeaderProps) => {
+
+    const headerScrollerSentinel = useRef<HTMLDivElement>(null);
+    const headerScrollerFlag = useRef(false);
+    const headerScrollerObserver = useRef<IntersectionObserver>();
+    const stickyHeaderListContainer = useRef<HTMLDivElement>(null);
+
+    const headerScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+        for (const entry of entries) {
+            if (entry.target.id === 'header-sentinel') {
+                if (entry.isIntersecting) {
+                    stickyHeaderListContainer.current?.classList.remove('active');
+                } else {
+                    if (entry.boundingClientRect.top <= 0) {
+                        // Gone up
+                        stickyHeaderListContainer.current?.classList.add('active');
+                    } else if (entry.boundingClientRect.top > 0) {
+                        // Gone down
+                        stickyHeaderListContainer.current?.classList.remove('active');
+                    }
+                }
+            }
+        }
+    }
+    useEffect(() => {
+        if (headerScrollerSentinel.current && !headerScrollerObserver.current && !headerScrollerFlag.current) {
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 1.0,
+            };
+            headerScrollerObserver.current = new IntersectionObserver(headerScrollerCallback, options);
+            headerScrollerObserver.current.observe(headerScrollerSentinel.current);
+            headerScrollerFlag.current = true;
+            return () => {
+                headerScrollerObserver?.current?.disconnect();
+                headerScrollerObserver.current = undefined;
+                headerScrollerFlag.current = false;
+            };
+        }
+    }, [assignmentsSetByMe]);
+
+    const header = <Card className={"container py-2 px-3 w-100"}>
+        <Row>
+            <Col xs={6}>
+                {assignmentsSetByMe && assignmentsSetByMe.length > 0
+                    ? <>
+                        <Label className={"w-100"}>Filter by group:
+                            <StyledSelect inputId="groups-filter" isMulti isClearable placeholder="All"
+                                          value={groupsToInclude}
+                                          closeMenuOnSelect={!isStaff(user)}
+                                          onChange={selectOnChange(setGroupsToInclude, false)}
+                                          options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
+                            />
+                        </Label>
+                        <Button className={"mt-2 mt-sm-0"} size={"xs"} color={"link"} block onClick={() => {
+                            collapse();
+                            if (headerScrollerSentinel.current && headerScrollerSentinel.current.getBoundingClientRect().top < 0) {
+                                headerScrollerSentinel.current?.scrollIntoView();
+                            }
+                        }}>
+                            Collapse schedule
+                        </Button>
+                    </>
+                    : <div className={"mt-2"}>You have no assignments</div>
+                }
+            </Col>
+            <Col xs={6} className={"py-2"}>
+                <Button size={"sm"} block onClick={() => openAssignmentModal()}>
+                    <span className={"d-block d-md-none"}>Set assignment</span>
+                    <span className={"d-none d-md-block"}>Set new assignment</span>
+                </Button>
+                {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
+                    <ButtonGroup className={"w-100 pt-3"}>
+                        <Button size={"sm"} className={"border-right-0"}
+                                color={viewBy === "startDate" ? "secondary" : "primary"}
+                                outline={viewBy !== "startDate"}
+                                onClick={() => setViewBy("startDate")}>
+                            By start date
+                        </Button>
+                        <Button size={"sm"} className={"border-left-0"}
+                                color={viewBy === "dueDate" ? "secondary" : "primary"}
+                                outline={viewBy !== "dueDate"}
+                                onClick={() => setViewBy("dueDate")}>
+                            By due date
+                        </Button>
+                    </ButtonGroup>
+                </>}
+            </Col>
+        </Row>
+    </Card>;
+
+    return <div className="no-print">
+        <div id="header-sentinel" ref={headerScrollerSentinel}>&nbsp;</div>
+        <div ref={stickyHeaderListContainer} id="stickyheader">
+            {header}
+        </div>
+        {header}
+    </div>;
+}
 
 interface AssignmentListEntryProps {
     assignment: ValidAssignmentWithListingDate;
@@ -427,98 +540,6 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     // Flag to notify children components to completely collapse all assignment sub-lists, so only months are showing
     const [collapsed, setCollapsed] = useState<boolean>(false);
 
-    // --- Sticky header logic ---
-    const headerScrollerSentinel = useRef<HTMLDivElement>(null);
-    const headerScrollerFlag = useRef(false);
-    const headerScrollerObserver = useRef<IntersectionObserver>();
-    const stickyHeaderListContainer = useRef<HTMLDivElement>(null);
-
-    const headerScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-        for (const entry of entries) {
-            if (entry.target.id === 'header-sentinel') {
-                if (entry.isIntersecting) {
-                    stickyHeaderListContainer.current?.classList.remove('active');
-                } else {
-                    if (entry.boundingClientRect.top <= 0) {
-                        // Gone up
-                        stickyHeaderListContainer.current?.classList.add('active');
-                    } else if (entry.boundingClientRect.top > 0) {
-                        // Gone down
-                        stickyHeaderListContainer.current?.classList.remove('active');
-                    }
-                }
-            }
-        }
-    }
-    useEffect(() => {
-        if (headerScrollerSentinel.current && !headerScrollerObserver.current && !headerScrollerFlag.current) {
-            const options = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 1.0,
-            };
-            headerScrollerObserver.current = new IntersectionObserver(headerScrollerCallback, options);
-            headerScrollerObserver.current.observe(headerScrollerSentinel.current);
-            headerScrollerFlag.current = true;
-            return () => {
-                headerScrollerObserver?.current?.disconnect();
-                headerScrollerObserver.current = undefined;
-                headerScrollerFlag.current = false;
-            };
-        }
-    }, [assignmentsSetByMe, gameboards]);
-
-    const header = <Card className={"container py-2 px-3 w-100"}>
-        <Row>
-            <Col xs={6}>
-                {assignmentsSetByMe && assignmentsSetByMe.length > 0
-                    ? <>
-                        <Label className={"w-100"}>Filter by group:
-                            <StyledSelect inputId="groups-filter" isMulti isClearable placeholder="All"
-                                    value={groupsToInclude}
-                                    closeMenuOnSelect={!isStaff(user)}
-                                    onChange={selectOnChange(setGroupsToInclude, false)}
-                                    options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
-                            />
-                        </Label>
-                        <Button className={"mt-2 mt-sm-0"} size={"xs"} color={"link"} block onClick={() => {
-                            setCollapsed(true);
-                            if (headerScrollerSentinel.current && headerScrollerSentinel.current.getBoundingClientRect().top < 0) {
-                                headerScrollerSentinel.current?.scrollIntoView();
-                            }
-                        }}>
-                            Collapse schedule
-                        </Button>
-                    </>
-                    : <div className={"mt-2"}>You have no assignments</div>
-                }
-            </Col>
-            <Col xs={6} className={"py-2"}>
-                <Button size={"sm"} block onClick={() => openAssignmentModal()}>
-                    <span className={"d-block d-md-none"}>Set assignment</span>
-                    <span className={"d-none d-md-block"}>Set new assignment</span>
-                </Button>
-                {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
-                    <ButtonGroup className={"w-100 pt-3"}>
-                        <Button size={"sm"} className={"border-right-0"}
-                                color={viewBy === "startDate" ? "secondary" : "primary"}
-                                outline={viewBy !== "startDate"}
-                                onClick={() => setViewBy("startDate")}>
-                            By start date
-                        </Button>
-                        <Button size={"sm"} className={"border-left-0"}
-                                color={viewBy === "dueDate" ? "secondary" : "primary"}
-                                outline={viewBy !== "dueDate"}
-                                onClick={() => setViewBy("dueDate")}>
-                            By due date
-                        </Button>
-                    </ButtonGroup>
-                </>}
-            </Col>
-        </Row>
-    </Card>;
-    // --- End sticky header logic ---
-
     const pageHelp = <span>
         Use this page to set and manage assignments to your groups. You can assign any {siteSpecific("gameboard", "quiz")} you have saved to your account.
         <br/>
@@ -542,13 +563,13 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                         <br/>
                         It is a work in progress, and we would love to <a target="_blank" href="/contact?subject=Assignment%20Schedule%20Feedback">hear your feedback</a>!
                     </Alert>}
-                    <div className="no-print">
-                        <div id="header-sentinel" ref={headerScrollerSentinel}>&nbsp;</div>
-                        <div ref={stickyHeaderListContainer} id="stickyheader">
-                            {header}
-                        </div>
-                        {header}
-                    </div>
+                    <AssignmentScheduleStickyHeader
+                        assignmentsSetByMe={assignmentsSetByMe}
+                        groupsToInclude={groupsToInclude} setGroupsToInclude={setGroupsToInclude}
+                        viewBy={viewBy} setViewBy={setViewBy}
+                        openAssignmentModal={openAssignmentModal} collapse={() => setCollapsed(true)}
+                        groups={groups} user={user}
+                    />
 
                     {/* Groups-related alerts */}
                     {groups && groups.length === 0 && <Alert color="warning" className="mt-2">
