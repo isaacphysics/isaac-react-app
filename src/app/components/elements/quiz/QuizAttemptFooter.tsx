@@ -74,9 +74,10 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
             if (anyAnswered) {
                 controls = <>
                     <div className="text-center">
-                        {totalCompleted} / {sectionCount} sections complete<br/>
-                        <Button onClick={() => window.confirm("Are you sure? You haven't answered all of the questions") && submitQuiz()}>{submitButton}</Button>
+                        <Button color="secondary" outline onClick={() => window.confirm("Are you sure? You haven't answered all of the questions!") && submitQuiz()}>{submitButton}</Button>
                     </div>
+                    <Spacer/>
+                    {totalCompleted} / {sectionCount} sections complete<br/>
                     <Spacer/>
                     <Button color={siteSpecific("secondary", "primary")} tag={Link} replace to={pageLink(firstIncomplete + 1)}>{primaryButton}</Button>
                 </>;

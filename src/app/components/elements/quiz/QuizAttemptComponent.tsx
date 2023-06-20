@@ -179,9 +179,6 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
                     You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
                 </div>}
                 <Row>
-                    <Col>
-                        <UserContextPicker className="mt-2 no-print text-right"/>
-                    </Col>
                     {rubric && renderRubric && <Col className="text-right">
                         <Button color="tertiary" outline className="mb-4 bg-light"
                             alt="Show instructions" title="Show instructions in a modal"
