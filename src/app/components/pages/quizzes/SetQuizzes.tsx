@@ -19,7 +19,7 @@ import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     below,
     isEventLeaderOrStaff,
-    isPhy,
+    isPhy, isStaff,
     MANAGE_QUIZ_TAB,
     NOT_FOUND, nthHourOf,
     siteSpecific, TODAY,
@@ -155,7 +155,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                     {roleVisibilitySummary(quiz)}
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
-                                    <RS.Button className={below["md"](deviceSize) ? "btn-sm" : ""} onClick={() => dispatch(showQuizSettingModal(quiz))}>
+                                    <RS.Button className={below["md"](deviceSize) ? "btn-sm" : ""} onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))}>
                                         {siteSpecific("Set Test", "Set test")}
                                     </RS.Button>
                                 </div>
