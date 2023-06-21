@@ -16,6 +16,7 @@ import {
     STAGE_NULL_OPTIONS,
     stageLabelMap,
     STAGES_CS,
+    STAGES_CS_STUDENT,
     stagesOrdered,
     useQueryParams,
 } from "./";
@@ -223,11 +224,14 @@ interface StageFilterOptions {
     byUserContexts?: UserContext[];
     includeNullOptions?: boolean;
     hideFurtherA?: true;
+    byRole?: true;
 }
 export function getFilteredStageOptions(filter?: StageFilterOptions) {
     return _STAGE_ITEM_OPTIONS
         // Restrict by subject stages
         .filter(i => STAGES_CS.has(i.value))
+        // Restrict by role
+        .filter(i => !filter?.byRole || STAGES_CS_STUDENT.has(i.value) )
         // Restrict by includeNullOptions flag
         .filter(i => filter?.includeNullOptions || !STAGE_NULL_OPTIONS.has(i.value))
         // Restrict by account settings

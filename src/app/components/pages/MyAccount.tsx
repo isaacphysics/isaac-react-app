@@ -355,11 +355,12 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                                                     userToEdit={userToEdit}/>
                             </TabPane>
 
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
+                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}><div className="pt-4 px-4">
                                 <UserEmailPreference
                                     emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                                     submissionAttempted={attemptedAccountUpdate}
                                 />
+                                </div>
                             </TabPane>}
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>

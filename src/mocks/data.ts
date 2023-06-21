@@ -4638,6 +4638,24 @@ export const mockUserPreferences = {
     }
 };
 
+export const mockIncompleteUserPreferences = {
+    BETA_FEATURE: {
+        HIDE_QUESTION_ATTEMPTS: true
+    },
+    EMAIL_PREFERENCE: {
+        EVENTS: undefined,
+        NEWS_AND_UPDATES: undefined,
+        ASSIGNMENTS: true
+    },
+    BOOLEAN_NOTATION: {
+        MATH: true,
+        ENG: false
+    },
+    DISPLAY_SETTING: {
+        HIDE_QUESTION_ATTEMPTS: true
+    }
+};
+
 export const mockUserAuthSettings = {
     linkedAccounts: [],
     hasSegueAccount: true,

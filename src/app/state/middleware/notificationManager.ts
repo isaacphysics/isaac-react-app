@@ -7,13 +7,13 @@ import {
     KEY,
     persistence,
     withinLast2Hours,
-    withinLast50Minutes
+    withinLast2Minutes
 } from "../../services";
 import {Action} from "../../../IsaacAppTypes";
 import {logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
-import {userContextReconfimationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
+import {userContextReconfirmationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
 
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
 
@@ -28,19 +28,16 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
         }
 
         if (isDefined(user)) {
-            // Required account info modal - takes precedence over stage/exam board re-confirmation modal, and is only
-            // shown once every 50 minutes (using a key in clients browser storage)
-            if (isDefined(state.userPreferences) && !allRequiredInformationIsPresent(user, state.userPreferences, user.registeredContexts) &&
-                !withinLast50Minutes(persistence.load(KEY.REQUIRED_MODAL_SHOWN_TIME))) {
-                persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
-                await dispatch(openActiveModal(requiredAccountInformationModal));
+            const firstLogin = persistence.session.load(KEY.FIRST_LOGIN)
+            // Required account info modal - takes precedence over stage/exam board re-confirmation modal
+            if (isDefined(state.userPreferences) && !allRequiredInformationIsPresent(user, state.userPreferences, user.registeredContexts) && firstLogin === null) { 
+                dispatch(openActiveModal(requiredAccountInformationModal));
             }
-            // User context re-confirmation modal - used to request a user to update their stage and/or exam board
-            // once every academic year.
+            // User context re-confirmation modal - used to request a user to update their stage and exam board 
             else if (needToUpdateUserContextDetails(user.registeredContextsLastConfirmed) &&
-                     !withinLast50Minutes(persistence.load(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME))) {
+            !withinLast2Minutes(persistence.load(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME))) {
                 persistence.save(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME, new Date().toString());
-                await dispatch(openActiveModal(userContextReconfimationModal));
+                dispatch(openActiveModal(userContextReconfirmationModal))
             }
         }
     }
@@ -66,3 +63,4 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
 
     return dispatch(action);
 };
+  

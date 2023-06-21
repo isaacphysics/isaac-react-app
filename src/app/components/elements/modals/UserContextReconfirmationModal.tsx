@@ -6,7 +6,6 @@ import {
     isTeacherOrAbove,
     isTutor,
     isTutorOrAbove,
-    SITE_SUBJECT_TITLE,
     validateUserContexts,
     validateUserSchool
 } from "../../../services";
@@ -17,25 +16,22 @@ import {useDispatch, useSelector} from "react-redux";
 import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
 import {Immutable} from "immer";
 
-const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
+const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode) => ({
     teacher: {
-        intro: <span>So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.</span>,
-        connections: <span>If you have changed school or have a different class group, you might also want to {buildConnectionsLink("review your student and group connections")}.</span>,
-        privacyPolicy: <span>Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
+        intro: <span>To ensure you see the correct content, please make sure the details below are correct. This also helps us understand the usage of Isaac Computer Science.</span>,
+        connections: <span>If you have changed school or have a different class group, you might also want to {buildConnectionsLink("review your student and group connections.")}</span>
     },
     tutor: {
-        intro: <span>So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review the details associated with your account at the beginning of each academic year.</span>,
-        connections: <span>If you have recently changed which students you tutor, might also want to {buildConnectionsLink("review your student and group connections")}.</span>,
-        privacyPolicy: <span>Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
+        intro: <span>To ensure you see the correct content, please make sure the details below are correct. This also helps us understand the usage of Isaac Computer Science.</span>,
+        connections: <span>If you have recently changed which students you tutor, might also want to {buildConnectionsLink("review your student and group connections.")}</span>,
     },
     student: {
-        intro: <span>So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.</span>,
-        connections: <span>If you have changed school or have a different teacher, you might also want to {buildConnectionsLink("review your teacher connections")}.</span>,
-        privacyPolicy: <span>Updating this information helps us continue to show you relevant content throughout your educational journey. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
+        intro: <span>To ensure you see the correct content, please make sure the details below are correct. This also helps us understand the usage of Isaac Computer Science.</span>,
+        connections: <span>If you have changed school or have a different teacher, you might also want to {buildConnectionsLink("review your teacher connections.")}</span>,
     }
 });
 
-const UserContextReconfimationModalBody = () => {
+const UserContextReconfirmationModalBody = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
     const userPreferences = useSelector(selectors.user.preferences);
@@ -61,14 +57,8 @@ const UserContextReconfimationModalBody = () => {
 
     const modalText = useMemo(() => buildModalText(
         function buildConnectionsLink(text: string) {
-            return <a target={"_blank"} onClick={logReviewTeacherConnections} rel={"noopener"}
+            return <a className="d-inline" target={"_blank"} onClick={logReviewTeacherConnections} rel={"noopener noreferrer"}
                       href={"/account#teacherconnections"}>
-                {text}
-                <span className={"sr-only"}> (opens in new tab) </span>
-            </a>;
-        },
-        function buildPrivacyPolicyLink(text: string) {
-            return <a target={"_blank"} rel={"noopener"} href={"/privacy"}>
                 {text}
                 <span className={"sr-only"}> (opens in new tab) </span>
             </a>;
@@ -92,26 +82,27 @@ const UserContextReconfimationModalBody = () => {
     return <Form onSubmit={formSubmission} className={"mb-2"}>
         <p>{modalText.intro}</p>
         <p>{modalText.connections}</p>
-        <div className="text-right text-muted required-before">
-            Required
-        </div>
         <Row className="my-2">
-            <Col xs={12} md={12} lg={6}>
-                 <UserContextAccountInput
-                    user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
-                    displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
-                    setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
-                 />
-            </Col>
-            <Col xs={12} md={6}>
-                <SchoolInput
+            <Col xs={12} md={12} lg={9}>
+            <SchoolInput
                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                     submissionAttempted={submissionAttempted} idPrefix="modal"
                     required={!isTutor(user)}
                 />
             </Col>
+            <Col xs={12} md={6}>
+            </Col>
         </Row>
-        <div className="text-muted small pb-2">{modalText.privacyPolicy}</div>
+        <Row>
+        <Col> 
+            <UserContextAccountInput
+                    userContexts={userContexts} setUserContexts={setUserContexts}
+                    displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
+                    setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
+                 />
+                 </Col>
+                 </Row>
+    
 
         {submissionAttempted && !allFieldsAreValid && <div>
             <h4 role="alert" className="text-danger text-center mb-4">
@@ -121,13 +112,13 @@ const UserContextReconfimationModalBody = () => {
 
         <div className="text-center pb-3 pt-1">
             <Button type={"submit"} color={"secondary"} className={"border-0 my-1 w-lg-50 w-100"}>
-                Update details
+                These details look good
             </Button>
         </div>
     </Form>;
 }
 
-export const userContextReconfimationModal = {
-    title: "Please review your details",
-    body: <UserContextReconfimationModalBody />,
+export const userContextReconfirmationModal = {
+    title: "Are your details up to date?",
+    body: <UserContextReconfirmationModalBody />,
 }
