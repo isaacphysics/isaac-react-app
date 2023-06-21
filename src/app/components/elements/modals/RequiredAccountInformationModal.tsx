@@ -29,6 +29,7 @@ const RequiredAccountInfoBody = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
+    const errorMessage = useAppSelector((state: AppState) => state?.error || null);
 
     // Local state
     const [submissionAttempted, setSubmissionAttempted] = useState(false);

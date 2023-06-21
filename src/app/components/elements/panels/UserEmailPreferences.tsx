@@ -26,17 +26,16 @@ interface UserEmailPreferencesProps {
 export const UserEmailPreference = ({emailPreferences, setEmailPreferences, submissionAttempted, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
     const user = useAppSelector(selectors.user.orNull);
     const userIsStudent = isStudent({...user, loggedIn: true});
-    const error = useAppSelector((state: AppState) => state && state.error);
     const isaacEmailPreferenceDescriptions = {
         assignments: "Receive assignment notifications from your teacher.",
         news: "Be the first to know about new topics, new platform features, and our fantastic competition giveaways.",
         events: "Get valuable updates on our free student workshops/teacher CPD events happening near you."
     };
 
+    // temporarily only showing error relating to not filling out all preferences.
+    // TO DO: PW restrictions on front end will prevent unwanted from occurring, and this can then be changed
     let errorMessage = null;
-    if (error && error.type === "generalError") {
-        errorMessage = error.generalError;
-    } else  if (submissionAttempted && !validateEmailPreferences(emailPreferences)) {
+    if (submissionAttempted && !validateEmailPreferences(emailPreferences)) {
         errorMessage = "Please specify all preferences"
     }
 
