@@ -24,6 +24,16 @@
   }
 }
 
+#start-date-button {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+#due-date-button {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
 .timeline {
   z-index: 0;
   background-color: transparent;

@@ -53,9 +53,10 @@ import classNames from "classnames";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {GameboardViewerInner} from "./Gameboard";
 import {Link, useLocation} from "react-router-dom";
-import {combineQueries, ShowLoadingQuery, discardResults} from "../handlers/ShowLoadingQuery";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {PhyAddGameboardButtons} from "./SetAssignments";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import {formatDate} from "../elements/DateString";
 
 interface HeaderProps {
     assignmentsSetByMe?: AssignmentDTO[];
@@ -143,13 +144,13 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 </Button>
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
                     <ButtonGroup className={"w-100 pt-3"}>
-                        <Button size={"sm"} className={"border-right-0"}
+                        <Button size={"sm"} className={"border-right-0"} id={"start-date-button"}
                                 color={viewBy === "startDate" ? "secondary" : "primary"}
                                 outline={viewBy !== "startDate"}
                                 onClick={() => setViewBy("startDate")}>
                             By start date
                         </Button>
-                        <Button size={"sm"} className={"border-left-0"}
+                        <Button size={"sm"} className={"border-left-0"} id={"due-date-button"}
                                 color={viewBy === "dueDate" ? "secondary" : "primary"}
                                 outline={viewBy !== "dueDate"}
                                 onClick={() => setViewBy("dueDate")}>
@@ -399,7 +400,7 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
                     {showGameboardPreview && <CardFooter className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide {siteSpecific("gameboard", "quiz")} preview</Button></CardFooter>}
                 </Card>}
             </Label>
-            <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
+            <Label className="w-100 pb-2 mt-5">Schedule an assignment start date <span className="text-muted"> (optional)</span>
                 <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
                            onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
             </Label>
@@ -439,8 +440,7 @@ type AssignmentsGroupedByDate = [number, [number, [number, ValidAssignmentWithLi
 export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
-    const gameboardsQuery = useGetGameboardsQuery({startIndex: 0, limit: BoardLimit.All, sort: BoardOrder.created});
-    const { data: gameboards } = gameboardsQuery;
+    const { data: gameboards } = useGetGameboardsQuery({startIndex: 0, limit: BoardLimit.All, sort: BoardOrder.created});
     const { data: groups } = useGetGroupsQuery(false);
 
     const [viewBy, setViewBy] = useState<"startDate" | "dueDate">("startDate");
@@ -492,25 +492,37 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
             }, Date.now()) ?? Date.now()
         )
         , [assignmentsSetByMe, groupFilter, viewBy]);
-    const extendBackSixMonths = () => setEarliestShowDate(esd => {
+    const extendBackSixMonths = (until?: Date) => setEarliestShowDate(esd => {
         const d = new Date(esd.valueOf());
         d.setMonth(d.getMonth() - 6);
+        if (until) {
+            while (d.valueOf() > until.valueOf()) {
+                d.setMonth(d.getMonth() - 6);
+            }
+        }
         return d;
     });
 
     // The assignments that will be shown in the schedule, filtered by groups, and grouped by date
     const assignmentsGroupedByDate = useMemo<AssignmentsGroupedByDate>(() => {
-        if (!assignmentsSetByMe) return [];
+        if (!assignmentsSetByMe || assignmentsSetByMe.length === 0) return [];
         const sortedAssignments: ValidAssignmentWithListingDate[] = sortBy(
             assignmentsSetByMe
                 .map((a) => ({...a, listingDate: new Date(viewBy === "startDate" ? getAssignmentStartDate(a) : (a.dueDate ?? 0).valueOf()), additionalManagerPrivileges: (a?.groupId && groupsById[a.groupId]?.additionalManagerPrivileges) ?? false} as ValidAssignmentWithListingDate))
                 // IMPORTANT - filter ensures that id, gameboard id, and group id exist so the cast to ValidAssignmentWithListingDate was/will be valid
-                .filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId] && (a.listingDate.valueOf() >= earliestShowDate.valueOf()) && (viewBy === "startDate" || isDefined(a.dueDate)))
+                .filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId] && (viewBy === "startDate" || isDefined(a.dueDate)))
             , a => a.listingDate.valueOf()
         );
+        if (sortedAssignments.length === 0) return [];
+        const latestAssignmentDate = sortedAssignments[sortedAssignments.length - 1].listingDate;
+        const assignmentsFilteredByDate = sortedAssignments.filter(a => a.listingDate.valueOf() >= earliestShowDate.valueOf());
+        if (assignmentsFilteredByDate.length === 0) {
+            extendBackSixMonths(latestAssignmentDate);
+            return [];
+        }
         function parseNumericKey<T>([k, v]: [string, T]): [number, T] { return [parseInt(k), v]; }
         return Object.entries(mapValues(
-            groupBy(sortedAssignments, a => a.listingDate.getFullYear()),
+            groupBy(assignmentsFilteredByDate, a => a.listingDate.getFullYear()),
             as => Object.entries(mapValues(
                 groupBy(as, a => a.listingDate.getMonth()),
                 _as => Object.entries(groupBy(_as, a => a.listingDate.getDate())).map(parseNumericKey)
@@ -554,7 +566,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         <PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>
         <ShowLoadingQuery
             defaultErrorTitle="Error loading assignments and/or gameboards"
-            query={combineQueries(assignmentsSetByMeQuery, gameboardsQuery, discardResults)}
+            query={assignmentsSetByMeQuery}
         >
             <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 pl-2 pr-2 timeline-column mb-4 pt-2">
@@ -570,24 +582,22 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                         openAssignmentModal={openAssignmentModal} collapse={() => setCollapsed(true)}
                         groups={groups} user={user}
                     />
-
-                    {/* Groups-related alerts */}
-                    {groups && groups.length === 0 && <Alert color="warning" className="mt-2">
-                        You have not created any groups to assign work to.
-                        Please <Link to="/groups">create a group here first.</Link>
-                    </Alert>}
-                    {groupsToInclude.length > 0 && assignmentsGroupedByDate.length === 0 && <Alert color="warning" className="mt-2">
-                        There are no assignments set to group{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}
-                    </Alert>}
-
-                    {assignmentsGroupedByDate.length > 0 && <Card className="mt-2">
+                    <Card className="mt-2">
                         <CardBody className="pt-0">
+                            {/* Groups-related alerts */}
+                            {groups && groups.length === 0 && <div className="mt-3">
+                                You have not created any groups to assign work to.
+                                Please <Link to="/groups">create a group here first.</Link>
+                            </div>}
+                            {groupsToInclude.length > 0 && assignmentsGroupedByDate.length === 0 && <div className="mt-3">
+                                There are no assignments set to group{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}
+                            </div>}
                             {notAllPastAssignmentsAreListed && <div className="mt-3">
-                                <Button size="sm" onClick={extendBackSixMonths}>
-                                    Show assignments before {earliestShowDate.toDateString().split(" ").filter((_, i) => i % 2 === 1).join(" ")}
+                                <Button size="sm" onClick={() => extendBackSixMonths()}>
+                                    Show assignments before {formatDate(earliestShowDate)}
                                 </Button>
                             </div>}
-                            <div className={classNames("timeline w-100", {"pt-2": !notAllPastAssignmentsAreListed})}>
+                            {assignmentsGroupedByDate.length > 0 && <div className={classNames("timeline w-100", {"pt-2": !notAllPastAssignmentsAreListed})}>
                                 {assignmentsGroupedByDate.map(([y, ms]) =>
                                     <Fragment key={y}>
                                         <div className="year-label w-100 text-right">
@@ -598,9 +608,9 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                                     </Fragment>
                                 )}
                                 <div className={classNames("bg-timeline", {"fade-in": !notAllPastAssignmentsAreListed})}/>
-                            </div>
+                            </div>}
                         </CardBody>
-                    </Card>}
+                    </Card>
                 </div>
                 <AssignmentModal
                     user={user}
