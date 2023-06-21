@@ -2,7 +2,8 @@ import {
     IsaacQuizDTO,
     IsaacQuizSectionDTO,
     QuestionDTO,
-    QuizAttemptDTO, RegisteredUserDTO,
+    QuizAttemptDTO,
+    RegisteredUserDTO,
     UserSummaryDTO
 } from "../../../../IsaacApiTypes";
 import React from "react";
@@ -24,14 +25,8 @@ import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import {Alert, Button, Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
-import {
-    closeActiveModal,
-    openActiveModal,
-    showQuizSettingModal,
-    useAppDispatch,
-} from "../../../state";
+import {closeActiveModal, openActiveModal, showQuizSettingModal, useAppDispatch,} from "../../../state";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
-import {UserContextPicker} from "../inputs/UserContextPicker";
 import {EditContentButton} from "../EditContentButton";
 import {Markup} from "../markup";
 import classNames from "classnames";
