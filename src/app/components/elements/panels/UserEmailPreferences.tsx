@@ -33,10 +33,14 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
         events: "Get valuable updates on our free student workshops/teacher CPD events happening near you."
     };
 
+    // temporarily specified not to display PW error - this can currently happen if user has attempted registration with an invalid PW, then corrected it.
+    // TO DO: PW restrictions on front end will prevent this error from occurring, so this can be removed.
     let errorMessage = null;
-    if (error && error.type === "generalError") {
+    if (error && error.type === "generalError" && !error.generalError.includes("Password must be at least 12 characters") ) {
         errorMessage = error.generalError;
-    } else  if (submissionAttempted && !validateEmailPreferences(emailPreferences)) {
+    } 
+    // made this a separate if statement so that any general error text would be overridden by the more specific error message above
+    if (submissionAttempted && !validateEmailPreferences(emailPreferences)) {
         errorMessage = "Please specify all preferences"
     }
 
