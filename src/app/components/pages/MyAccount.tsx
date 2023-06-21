@@ -371,7 +371,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                         <CardFooter className="py-4">
                             <Row>
                                 <Col size={12} md={{size: 6, offset: 3}}>
-                                    {errorMessage?.type === "generalError" && !errorMessage?.generalError.includes("Password must be at least 12 characters") && <h3 role="alert" className="text-danger text-center">
+                                    {errorMessage?.type === "generalError" && errorMessage?.generalError.includes("Not all required fields") && <h3 role="alert" className="text-danger text-center">
                                         {errorMessage.generalError}
                                     </h3>}
                                     {/* Teacher connections does not have a save */}
