@@ -9,6 +9,7 @@ import {
     QuizSummaryDTO
 } from "../../../IsaacApiTypes";
 import produce, {Immutable} from "immer";
+import {quizApi} from "../index";
 
 type QuizState = {quizzes: QuizSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {
@@ -22,13 +23,15 @@ export const quizzes = (quizzes: QuizState = null, action: Action) => {
 
 type QuizAssignmentsState = QuizAssignmentDTO[] | NOT_FOUND_TYPE | null;
 export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, action: Action) => {
+    if (quizApi.endpoints.getMySetQuizzes.matchPending(action)) {
+        return null;
+    } else if (quizApi.endpoints.getMySetQuizzes.matchFulfilled(action)) {
+        return action.payload;
+    } else if (quizApi.endpoints.getMySetQuizzes.matchRejected(action)) {
+        return NOT_FOUND;
+    }
+
     switch (action.type) {
-        case ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST:
-            return null;
-        case ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS:
-            return action.assignments;
-        case ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE:
-            return NOT_FOUND;
         case ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS:
             if (!isDefined(quizAssignments) || quizAssignments == NOT_FOUND) {
                 return []

@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {
-    loadQuizAssignments,
     markQuizAsCancelled,
     selectors,
     showQuizSettingModal,
     useAppDispatch,
     useAppSelector,
-    useGetGroupsQuery
+    useGetGroupsQuery, useLazyGetMySetQuizzesQuery
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -90,6 +89,10 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     // todo: This is so when the quizAssignments selector tries to augment quizzes with group names, it works. Revisit.
     const { data: groups } = useGetGroupsQuery(false);
 
+    const [loadQuizAssignments] = useLazyGetMySetQuizzesQuery();
+    useEffect(() => {
+        loadQuizAssignments();
+    }, []);
     const quizAssignments = useAppSelector(selectors.quizzes.assignments);
 
     // Set active tab using hash anchor
@@ -101,10 +104,6 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
         setActiveTab(tab);
         setPageTitle(siteSpecific((tab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
     }, [hashAnchor]);
-
-    useEffect(() => {
-        dispatch(loadQuizAssignments());
-    }, [dispatch]);
 
     const {titleFilter, setTitleFilter, filteredQuizzes} = useFilteredQuizzes(user);
 

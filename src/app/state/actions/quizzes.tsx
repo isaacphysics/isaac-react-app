@@ -45,17 +45,6 @@ export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, due
     }));
 }
 
-export const loadQuizAssignments = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST});
-    try {
-        const assignments = await api.quizzes.assignments();
-        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignments.data});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading test assignments failed", e));
-        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE});
-    }
-};
-
 export const loadQuizAssignedToMe = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST});
     try {

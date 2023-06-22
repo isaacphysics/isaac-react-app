@@ -10,7 +10,6 @@ import React, {
 } from "react";
 import {
     loadQuizAssignmentFeedback,
-    loadQuizAssignments,
     openActiveModal,
     selectors,
     useAppDispatch,
@@ -18,7 +17,8 @@ import {
     useGetAssignmentProgressQuery,
     useGetGroupsQuery,
     useGroupAssignments,
-    useGroupAssignmentSummary
+    useGroupAssignmentSummary,
+    useLazyGetMySetQuizzesQuery
 } from "../../state";
 import {
     Button,
@@ -579,7 +579,6 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
 };
 
 export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
-    const dispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
     const accessibilitySettings = useAssignmentProgressAccessibilitySettings({user});
 
@@ -591,12 +590,13 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
         assignmentOrder,
     }), [assignmentOrder, accessibilitySettings]);
 
+    const [loadQuizAssignments] = useLazyGetMySetQuizzesQuery();
     useEffect(() => {
         // Don't attempt to load tests for tutors, they cannot manage them
         if (isTeacherOrAbove(user)) {
-            dispatch(loadQuizAssignments());
+            loadQuizAssignments();
         }
-    }, [dispatch]);
+    }, []);
 
     const pageHelp = <span>
         Click on your groups to see the {siteSpecific("assignments", "quizzes")} you have set. View your students&apos; progress by question.

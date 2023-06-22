@@ -9,9 +9,9 @@ import {
     ContentSummaryDTO,
     Difficulty,
     GameboardDTO,
-    GameboardItem,
+    GameboardItem, IsaacQuizDTO,
     ItemDTO,
-    QuestionDTO, QuestionValidationResponseDTO,
+    QuestionDTO, QuestionValidationResponseDTO, QuizAssignmentDTO,
     QuizAttemptDTO,
     QuizFeedbackMode,
     RegisteredUserDTO,
@@ -331,10 +331,6 @@ export type Action =
     | {type: ACTION_TYPE.QUIZ_SET_REQUEST; assignment: ApiTypes.QuizAssignmentDTO}
     | {type: ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS; newAssignment: ApiTypes.QuizAssignmentDTO}
 
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST}
     | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
     | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE}
@@ -587,6 +583,13 @@ export interface ValidAssignmentWithListingDate extends AssignmentDTO {
     gameboardId: string;
     groupId: number;
     additionalManagerPrivileges: boolean;
+    id: number;
+    listingDate: Date;
+}
+
+export interface ValidQuizAssignmentWithListingDate extends QuizAssignmentDTO {
+    quizId: string;
+    groupId: number;
     id: number;
     listingDate: Date;
 }

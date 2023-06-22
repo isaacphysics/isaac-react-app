@@ -41,8 +41,6 @@ export interface AssignmentDTO extends IAssignmentLike {
     assignerSummary?: UserSummaryDTO;
     notes?: string;
     creationDate?: Date;
-    dueDate?: Date;
-    scheduledStartDate?: Date;
 }
 
 export interface AssignmentFeedbackDTO {
@@ -607,6 +605,7 @@ export interface IAssignmentLike {
     id?: number;
     creationDate?: Date;
     dueDate?: Date;
+    scheduledStartDate?: Date;
     ownerUserId?: number;
 }
 

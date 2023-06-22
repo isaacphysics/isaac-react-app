@@ -1,4 +1,4 @@
-import {AssignmentDTO} from "../../IsaacApiTypes";
+import {AssignmentDTO, IAssignmentLike} from "../../IsaacApiTypes";
 import orderBy from "lodash/orderBy";
 import {EnhancedAssignment} from "../../IsaacAppTypes";
 import {API_PATH, extractTeacherName} from "./";
@@ -91,6 +91,6 @@ export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | unde
     return distinctFormattedAssignmentSetters
 }
 
-export const getAssignmentStartDate = (a: AssignmentDTO): number => (a.scheduledStartDate ?? a.creationDate ?? 0).valueOf();
+export const getAssignmentStartDate = (a: IAssignmentLike): number => (a.scheduledStartDate ?? a.creationDate ?? 0).valueOf();
 
-export const hasAssignmentStarted = (a: AssignmentDTO): boolean => getAssignmentStartDate(a) <= Date.now();
+export const hasAssignmentStarted = (a: IAssignmentLike): boolean => getAssignmentStartDate(a) <= Date.now();

@@ -41,7 +41,6 @@ import {
     isStaff,
     Item,
     itemise,
-    MONTH_NAMES,
     nthHourOf, PATHS,
     selectOnChange,
     siteSpecific,
@@ -54,7 +53,6 @@ import {
     ValidAssignmentWithListingDate,
     ValidQuizAssignmentWithListingDate
 } from "../../../IsaacAppTypes";
-import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import classNames from "classnames";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {GameboardViewerInner} from "./Gameboard";
@@ -63,6 +61,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {PhyAddGameboardButtons} from "./SetAssignments";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {formatDate} from "../elements/DateString";
+import {MonthAssignmentList} from "./AssignmentSchedule";
 
 interface HeaderProps {
     assignmentsSetByMe?: AssignmentDTO[];
@@ -261,93 +260,6 @@ const QuizAssignmentListEntry = ({assignment}: QuizAssignmentListEntryProps) => 
             </div>}
         </CardBody>
     </Card>;
-}
-
-// If the hexagon proportions change, the CSS class bg-timeline needs revisiting
-const dateHexagon = calculateHexagonProportions(20, 1);
-export const DateAssignmentList = ({date, assignments}: {date: number; assignments: (ValidAssignmentWithListingDate | ValidQuizAssignmentWithListingDate)[]}) => {
-    const [open, setOpen] = useState<boolean>(false);
-    const {boardsById, collapsed, setCollapsed, viewBy} = useContext(AssignmentScheduleContext);
-    useEffect(() => {
-        if (collapsed) setOpen(false);
-    }, [collapsed]);
-    return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} onKeyPress={(e) => {
-            if (e.key === "Enter") {
-                setOpen(o => !o);
-                setCollapsed(false);
-            }
-        }} onClick={() => {
-            setOpen(o => !o);
-            setCollapsed(false);
-        }} className={"hexagon-date"}>
-            <svg height={dateHexagon.quarterHeight * 4} width={"100%"}>
-                <Hexagon className={"fill-secondary"} {...dateHexagon}/>
-                {<foreignObject height={dateHexagon.quarterHeight * 4} width={"100%"} y={11} x={dateHexagon.halfWidth * 2.5 + 12}>
-                    <p className={classNames("date-assignment-count", {"text-muted": !open})}>
-                        {assignments[0].listingDate.toDateString().split(" ")[0]} - {assignments.length} assignment{assignments.length > 1 ? "s" : ""}{viewBy === "startDate" ? " set" : " due"}
-                    </p>
-                </foreignObject>}
-                <svg x={2.5 * dateHexagon.halfWidth - (open ? 7 : 3)} y={dateHexagon.quarterHeight * 2 - (open ? 3 : 6.5)}>
-                    <polygon className={classNames("date-toggle-arrow fill-secondary", {"open": open})} points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7"
-                             transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}/>
-                </svg>
-                {<foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
-                    <div className={"position-relative w-100"}>
-                        <h3 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h3>
-                    </div>
-                </foreignObject>}
-            </svg>
-        </div>
-        {open && <div className={"date-assignment-list"}>
-            {assignments.map(a => {
-                if ("gameboardId" in a) {
-                    return <AssignmentListEntry key={a.id} assignment={{...a, gameboard: a.gameboard ?? (a.gameboardId ? boardsById[a.gameboardId] : undefined)}}/>;
-                } else {
-                    return <QuizAssignmentListEntry key={a.id} assignment={a}/>;
-                }
-            })}
-        </div>}
-    </>
-}
-
-const monthHexagon = calculateHexagonProportions(12, 1);
-const shouldOpenMonth = (month: number) => {
-    return (new Date()).getMonth() === month;
-}
-export const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, datesAndAssignments: [number, (ValidAssignmentWithListingDate | ValidQuizAssignmentWithListingDate)[]][]}) => {
-    const [open, setOpen] = useState<boolean>(shouldOpenMonth(month));
-    const assignmentCount = useMemo(() => datesAndAssignments.reduce((n, [_, as]) => n + as.length, 0), [datesAndAssignments]);
-    const {collapsed, setCollapsed, viewBy} = useContext(AssignmentScheduleContext);
-    useEffect(() => {
-        if (collapsed) setOpen(false);
-    }, [collapsed]);
-    return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for ${MONTH_NAMES[month]}`}
-             className={"month-label w-100 text-right d-flex"} onKeyPress={(e) => {
-            if (e.key === "Enter") {
-                setOpen(o => !o);
-                setCollapsed(false);
-            }
-        }} onClick={() => {
-            setOpen(o => !o);
-            setCollapsed(false);
-        }}>
-            <div className={"h-100 text-center position-relative"} style={{width: dateHexagon.halfWidth * 2, paddingTop: 3}}>
-                <svg height={monthHexagon.quarterHeight * 4} width={monthHexagon.halfWidth * 2}>
-                    <Hexagon className={"fill-secondary"} {...monthHexagon}/>
-                    <svg x={monthHexagon.halfWidth - (open ? 7.4 : 3)} y={monthHexagon.quarterHeight * 2 - (open ? 4 : 6.5)}>
-                        <polygon fill={"#ffffff"} points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7"
-                                 transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}/>
-                    </svg>
-                </svg>
-            </div>
-            <h4>{`${MONTH_NAMES[month]}`}</h4>
-            <div className={"mx-3 flex-grow-1 border-bottom"} style={{height: "1.1rem"}}/>
-            <span className={"pt-1 month-assignment-count"}>{assignmentCount} assignment{assignmentCount > 1 ? "s" : ""}{viewBy === "startDate" ? " set" : " due"}</span>
-        </div>
-        {open && datesAndAssignments.map(([d, as]) => <DateAssignmentList key={d} date={d} assignments={as}/>)}
-    </>;
 }
 
 interface AssignmentModalProps {
@@ -630,7 +542,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
             query={assignmentsSetByMeQuery}
         >
             <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
-                <div className="px-md-4 pl-2 pr-2 timeline-column mb-4 pt-2" hidden={showAssignmentModal}>
+                <div className="px-md-4 pl-2 pr-2 timeline-column mb-4 pt-2">
                     {!isStaff(user) && <Alert className="mt-2" color="info">
                         The Assignment Schedule page is an alternate way to manage your assignments, focusing on the start and due dates of the assignments, rather than the assigned gameboard.
                         <br/>
