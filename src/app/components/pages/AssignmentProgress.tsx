@@ -267,7 +267,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     return <div className="assignment-progress-progress">
         <div className="progress-header">
-            <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong>{` students have completed the ${siteSpecific("gameboard", "quiz")} `}<Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link> correctly.
+            <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong> students have completed the assignment.
         </div>
         {progress.length > 0 && <>
             <div className="progress-questions">
@@ -381,7 +381,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
                 </Button>
                 <span className="d-none d-md-inline mx-1">or</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={`${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} onClick={openSingleAssignment}>
-                    {`View individual ${siteSpecific("assignment", "quiz")}`}
+                    View individual assignment
                 </Button>
             </div>
         </div>
@@ -498,11 +498,15 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
                 <span>{quizAssignment.quizSummary?.title || "This test has no title"}{isDefined(quizAssignment.dueDate) && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(quizAssignment.dueDate)})</span>}</span>
             </Button>
             <div className="gameboard-links align-items-center">
-                <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
+                <Button color="link" tag="a" className="mr-md-0">
+                    {isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span>
+                </Button>
                 <span className="d-none d-md-inline">,</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
-                <span className="d-none d-md-inline">or</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={`/test/assignment/${quizAssignment.id}/feedback`} onClick={openSingleAssignment}>View individual assignment</Button>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>
+                    Download CSV
+                </Button>
+                <span className="d-none d-md-inline mx-1">or</span>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={`/test/assignment/${quizAssignment.id}/feedback`} onClick={openSingleAssignment}>View individual test</Button>
             </div>
         </div>
         {isExpanded && <QuizProgressLoader key={quizAssignment.quizId} quizAssignment={quizAssignment} />}
@@ -564,9 +568,9 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
         <div  onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
             <div className="group-name"><span className="icon-group"/><span data-testid={"group-name"}>{group.groupName}</span></div>
             <div className="flex-grow-1" />
-            <div className="py-2"><strong>{assignmentCount}</strong> {siteSpecific("Assignment", "Quiz")}{assignmentCount != 1 && siteSpecific("s", "zes")}<span className="d-none d-md-inline"> set</span></div>
+            <div className="py-2"><strong>{assignmentCount}</strong> assignment{assignmentCount != 1 && "s"} and test{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
             <div className="d-none d-md-inline-block"><a className={"download-csv-link"} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
-                (Download Group {siteSpecific("Assignments", "Quizzes")} CSV)
+                (Download group CSV)
             </a></div>
             {pageSettings.isTeacher && isPhy && <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Test CSV)</a></div>}
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
@@ -599,7 +603,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
     }, [dispatch]);
 
     const pageHelp = <span>
-        Click on your groups to see the {siteSpecific("assignments", "quizzes")} you have set. View your students&apos; progress by question.
+        Click on your groups to see the assignments you have set. View your students&apos; progress by question.
     </span>;
 
     return <>
@@ -613,7 +617,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
             {isAda && <PageFragment fragmentId={"markbook_help"} ifNotFound={RenderNothing} />}
             <div className="w-100 text-right">
                 <InputGroup className="d-inline text-nowrap">
-                    <Label className="pr-2 mt-1">Sort {siteSpecific("assignments", "quizzes")}:</Label>
+                    <Label className="pr-2 mt-1">Sort assignments and tests:</Label>
                     <UncontrolledButtonDropdown size="sm">
                         <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
                             {assignmentOrder.type} ({assignmentOrder.order === SortOrder.ASC ? "ascending" : "descending"})
