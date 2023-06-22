@@ -31,7 +31,7 @@ const classBasedLayouts = {
     textleft: "text-left",
     textcentre: "text-center",
     textcentrecolumn: "text-center-column",
-    clearfix: "clearfix"
+    clearfix: "clearfix w-100"
 };
 
 export interface IsaacContentProps extends RouteComponentProps {
