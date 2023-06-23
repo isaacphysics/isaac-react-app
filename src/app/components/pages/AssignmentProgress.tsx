@@ -570,9 +570,11 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> assignment{assignmentCount != 1 && "s"} and test{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
             <div className="d-none d-md-inline-block"><a className={"download-csv-link"} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
-                (Download group CSV)
+                (Download group assignments CSV)
             </a></div>
-            {pageSettings.isTeacher && isPhy && <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Test CSV)</a></div>}
+            {pageSettings.isTeacher && <div className="d-none d-md-inline-block"><a className={"download-csv-link"} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
+                (Download group tests CSV)
+            </a></div>}
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
                 <img src={siteSpecific("/assets/icon-expand-arrow.png", "/assets/chevron-up.svg")} alt="" className="accordion-arrow" />
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
