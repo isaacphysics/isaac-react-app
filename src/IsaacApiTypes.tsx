@@ -633,6 +633,18 @@ export interface IsaacWildcard extends Content {
     url?: string;
 }
 
+export interface AdminSearchEndpointParams {
+    id?: number;
+    email?: string;
+    familyName?: string;
+    role?: UserRole;
+    schoolOther?: string;
+    postcode?: string;
+    postcodeRadius?: string;
+    schoolURN?: string;
+    subjectOfInterest?: string;
+}
+
 export interface GameFilter {
     subjects?: string[];
     fields?: string[];

@@ -1,42 +1,6 @@
-import {RegisteredUserDTO, TestCaseDTO, UserSummaryForAdminUsersDTO} from "../../../IsaacApiTypes";
-import {Action, AdminStatsResponse, TemplateEmail} from "../../../IsaacAppTypes";
+import {TestCaseDTO} from "../../../IsaacApiTypes";
+import {Action, TemplateEmail} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
-
-export type AdminUserSearchState = UserSummaryForAdminUsersDTO[] | null;
-export const adminUserSearch = (adminUserSearch: AdminUserSearchState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST:
-            return null;
-        case ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS:
-            return action.users;
-        default:
-            return adminUserSearch;
-    }
-};
-
-export type AdminUserGetState = RegisteredUserDTO | null;
-export const adminUserGet = (adminUserGet: AdminUserGetState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.ADMIN_USER_GET_REQUEST:
-            return null;
-        case ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS:
-            return action.getUsers;
-        default:
-            return adminUserGet;
-    }
-};
-
-export type AdminStatsState = AdminStatsResponse | null;
-export const adminStats = (adminSiteStats: AdminStatsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.ADMIN_STATS_REQUEST:
-            return null;
-        case ACTION_TYPE.ADMIN_STATS_RESPONSE_SUCCESS:
-            return action.stats;
-        default:
-            return adminSiteStats;
-    }
-};
 
 export type AdminEmailTemplateState = TemplateEmail | null;
 export const adminEmailTemplate = (adminEmailTemplate: AdminEmailTemplateState = null, action: Action) => {

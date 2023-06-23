@@ -36,8 +36,12 @@ describe("root reducer", () => {
     it("has null as the initial state value for every property", () => {
         const actualInitialState = removeRTKProperties(rootReducer(undefined, ignoredTestAction));
 
-        Object.values(actualInitialState).map((actualInitialValue) => {
-            expect(actualInitialValue).toBe(null);
+        Object.entries(actualInitialState).map(([reducerName, actualInitialValue]) => {
+            if (reducerName === "adminUserSeach") {
+                expect(actualInitialValue).toHaveLength(0);
+            } else {
+                expect(actualInitialValue).toBe(null);
+            }
         });
     });
 
