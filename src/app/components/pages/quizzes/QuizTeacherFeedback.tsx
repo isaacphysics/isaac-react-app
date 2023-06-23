@@ -17,6 +17,7 @@ import {
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
     isDefined,
+    siteSpecific,
     useAssignmentProgressAccessibilitySettings
 } from "../../../services";
 import {AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
@@ -37,7 +38,7 @@ import {
     DropdownToggle,
     Label,
     Row,
-    UncontrolledDropdown
+    UncontrolledButtonDropdown
 } from "reactstrap";
 
 const pageHelp = <span>
@@ -122,7 +123,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     </span>
                     {isDefined(assignment.dueDate) && <><Spacer/>Due: {formatDate(assignment.dueDate)}</>}
                 </p>
-                <Row>
+                <Row className="align-items-center">
                     {assignment.dueDate && <Col xs={12} sm={6} md={4}>
                         <Label for="dueDate" className="pr-1">Extend the due date:
                             <DateInput id="dueDate" value={dueDate ?? undefined} invalid={(dueDate && (dueDate < assignment.dueDate)) ?? undefined}
@@ -135,9 +136,9 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         </div>
                     </Col>}
                     <Col>
-                        <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br/>
-                        <UncontrolledDropdown className="d-inline-block">
-                            <DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
+                        <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label>
+                        <UncontrolledButtonDropdown size="sm">
+                            <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
                                 {settingFeedbackMode ?
                                     <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></>
                                 :   feedbackNames[assignment.quizFeedbackMode as QuizFeedbackMode]}
@@ -151,7 +152,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                                     </DropdownItem>
                                 )}
                             </DropdownMenu>
-                        </UncontrolledDropdown>
+                        </UncontrolledButtonDropdown>
                     </Col>
                     <Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
                         <Button
