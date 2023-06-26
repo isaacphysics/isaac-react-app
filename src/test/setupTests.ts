@@ -12,7 +12,7 @@ jest.mock("react-ga"); // Google Analytics requires a DOM.window which doesn't e
 jest.mock("../app/services/websockets"); // MSW can't handle websockets just yet
 jest.mock("../app/services/reactRouterExtension", () => ({
     ...jest.requireActual("../app/services/reactRouterExtension"),
-    useQueryParams: jest.fn(),
+    useQueryParams: jest.fn(() => ({})),
 }));
 
 // TODO jest.mock("../app/services/localStorage"); <--- need to mock this effectively
