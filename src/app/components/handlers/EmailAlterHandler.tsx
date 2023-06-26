@@ -19,7 +19,7 @@ export const EmailAlterHandler = () => {
     const {userid, token} = useQueryParams(true);
 
     const user = useAppSelector(selectors.user.orNull);
-    const idsMatch = user && user.loggedIn && user.id === userid;
+    const idsMatch = user && user.loggedIn && user.id === Number(userid);
 
     const [verifyEmail, {isSuccess: emailVerificationSuccess, isError: emailVerificationFailed, error: emailVerificationError}] = useVerifyEmailMutation();
     const [sendVerificationEmail, {isUninitialized: verificationNotResent}] = useRequestEmailVerificationMutation();
