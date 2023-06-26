@@ -3,10 +3,8 @@ import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO} from "../test/utils";
 import {
     BookingStatus,
-    ContentBaseDTO,
     EmailVerificationStatus,
     EventStatus,
-    IsaacEventPageDTO,
     UserRole,
     UserSummaryWithGroupMembershipDTO
 } from "../IsaacApiTypes";

@@ -1,7 +1,7 @@
 import {PrintingSettings} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {getRTKQueryErrorMessage, routerPageChange, emailApi} from "../index";
+import {routerPageChange} from "../index";
 
 export type PrintingSettingsState = PrintingSettings | null;
 export const printingSettingsSlice = createSlice({
