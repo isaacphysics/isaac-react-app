@@ -128,8 +128,8 @@ function QuizHeader({attempt, preview, user}: QuizAttemptProps) {
                 Please be aware that for tests your answer to each question <b>will be visible to your teacher(s) after
                 you submit your test</b> so that they can provide further feedback and support if they wish to do so.
                 <br />
-                Assignments are different. We do not share with your teachers any of your entered answers or the
-                number of your attempts to questions in assignments.
+                {siteSpecific("Assignments", "Quiz assignments")} are different. We do not share with your teachers any of your entered answers or the
+                number of your attempts to questions in {siteSpecific("assignments", "quizzes")}.
             </Alert>}
         </>;
     } else {
