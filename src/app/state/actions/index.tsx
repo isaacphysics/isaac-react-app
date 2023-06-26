@@ -879,52 +879,6 @@ export const fetchSearch = (query: string, types: string | undefined) => async (
 };
 
 // Admin
-export const getEmailTemplate = (contentid: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST});
-    try {
-        const email = await api.email.getTemplateEmail(contentid);
-        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS, email: email.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to get email template", e));
-    }
-};
-
-export const sendAdminEmail = (contentid: string, emailType: string, roles: EmailUserRoles) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST});
-    try {
-        await api.email.sendAdminEmail(contentid, emailType, roles);
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_SUCCESS});
-        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Sending email failed", e));
-    }
-};
-
-export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids: number[]) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST});
-    try {
-        await api.email.sendAdminEmailWithIds(contentid, emailType, ids);
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS});
-        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Sending email with ids failed", e));
-    }
-};
-
-export const sendProvidedEmailWithUserIds = (emailTemplate: EmailTemplateDTO, emailType: string, ids: number[]) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_REQUEST});
-    try {
-        await api.email.sendProvidedEmailWithUserIds(emailTemplate, emailType, ids);
-        dispatch({type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS});
-        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Sending email with ids failed", e));
-    }
-};
 
 export const resetMemberPassword = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST, member});

@@ -146,20 +146,6 @@ export const api = {
             return endpoint.delete(`/auth/${provider}/link`);
         },
     },
-    email: {
-        getTemplateEmail: (contentid: string): AxiosPromise<AppTypes.TemplateEmail> => {
-            return endpoint.get(`/email/viewinbrowser/${contentid}`);
-        },
-        sendAdminEmail: (contentid: string, emailType: string, roles: EmailUserRoles): AxiosPromise => {
-            return endpoint.post(`/email/sendemail/${contentid}/${emailType}`, roles);
-        },
-        sendAdminEmailWithIds: (contentid: string, emailType: string, ids: number[]): AxiosPromise => {
-            return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
-        },
-        sendProvidedEmailWithUserIds: (emailTemplate: EmailTemplateDTO, emailType: string, ids: number[]): AxiosPromise => {
-            return endpoint.post(`/email/sendprovidedemailwithuserids/${emailType}`, {userIds: ids, emailTemplate: emailTemplate});
-        },
-    },
     notifications: {
         get: (): AxiosPromise => {
             return endpoint.get(`/notifications`)

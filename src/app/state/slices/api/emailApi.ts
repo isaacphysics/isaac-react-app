@@ -2,25 +2,8 @@ import {isaacApi} from "./baseApi";
 import {showSuccessToast} from "../../actions/popups";
 import {requestCurrentUser} from "../../actions";
 import {onQueryLifecycleEvents} from "./utils";
-
-// verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
-//     return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
-// },
-// getTemplateEmail: (contentid: string): AxiosPromise<AppTypes.TemplateEmail> => {
-//     return endpoint.get(`/email/viewinbrowser/${contentid}`);
-// },
-// sendAdminEmail: (contentid: string, emailType: string, roles: EmailUserRoles): AxiosPromise => {
-//     return endpoint.post(`/email/sendemail/${contentid}/${emailType}`, roles);
-// },
-// sendAdminEmailWithIds: (contentid: string, emailType: string, ids: number[]): AxiosPromise => {
-//     return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
-// },
-// sendProvidedEmailWithUserIds: (emailTemplate: EmailTemplateDTO, emailType: string, ids: number[]): AxiosPromise => {
-//     return endpoint.post(`/email/sendprovidedemailwithuserids/${emailType}`, {userIds: ids, emailTemplate: emailTemplate});
-// },
-// requestEmailVerification(params: {email: string}) {
-//     return endpoint.post(`/users/verifyemail`, params);
-// },
+import {EmailUserRoles, TemplateEmail} from "../../../../IsaacAppTypes";
+import {EmailTemplateDTO} from "../../../../IsaacApiTypes";
 
 export const emailApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -49,10 +32,59 @@ export const emailApi = isaacApi.injectEndpoints({
                 successMessage: "Please follow the verification link given in the email sent to your address.",
             }),
         }),
+
+        sendAdminEmail: build.mutation<void, {contentId: string; emailType: string; roles: EmailUserRoles}>({
+            query: ({contentId, emailType, roles}) => ({
+                url: `/email/sendemail/${contentId}/${emailType}`,
+                method: "POST",
+                body: roles,
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Sending email failed",
+                successTitle: "Email sent",
+                successMessage: "Email sent to users successfully",
+            })
+        }),
+
+        sendAdminEmailWithIds: build.mutation<void, {contentId: string; emailType: string; ids: number[]}>({
+            query: ({contentId, emailType, ids}) => ({
+                url: `/email/sendemailwithuserids/${contentId}/${emailType}`,
+                method: "POST",
+                body: ids,
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Sending email with ids failed",
+                successTitle: "Email sent",
+                successMessage: "Email sent to users successfully",
+            })
+        }),
+
+        sendProvidedEmailWithUserIds: build.mutation<void, {emailTemplate: EmailTemplateDTO; emailType: string; ids: number[]}>({
+            query: ({emailTemplate, emailType, ids}) => ({
+                url: `/email/sendprovidedemailwithuserids/${emailType}`,
+                method: "POST",
+                body: {userIds: ids, emailTemplate},
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Sending email with ids failed",
+                successTitle: "Email sent",
+                successMessage: "Email sent to users successfully",
+            })
+        }),
+
+        getTemplateEmail: build.query<TemplateEmail, string>({
+            query: (contentId) => `/email/viewinbrowser/${contentId}`,
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to get email template",
+            })
+        }),
     })
 });
 
 export const {
     useVerifyEmailMutation,
     useRequestEmailVerificationMutation,
+    useSendAdminEmailWithIdsMutation,
+    useSendProvidedEmailWithUserIdsMutation,
+    useLazyGetTemplateEmailQuery
 } = emailApi;

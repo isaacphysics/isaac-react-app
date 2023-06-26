@@ -26,7 +26,6 @@ import {
     myProgress,
     userAnsweredQuestionsByDate,
     userProgress,
-    adminEmailTemplate,
     testQuestions,
     quizAssignedToMe,
     quizAssignment,
@@ -86,7 +85,6 @@ export const rootReducer = combineReducers({
 
     // Admin
     adminUserSeach: adminUserSearchSlice.reducer,
-    adminEmailTemplate,
     testQuestions,
 
     // Groups

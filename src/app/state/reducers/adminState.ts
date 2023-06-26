@@ -1,18 +1,6 @@
 import {TestCaseDTO} from "../../../IsaacApiTypes";
-import {Action, TemplateEmail} from "../../../IsaacAppTypes";
+import {Action} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
-
-export type AdminEmailTemplateState = TemplateEmail | null;
-export const adminEmailTemplate = (adminEmailTemplate: AdminEmailTemplateState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST:
-            return null;
-        case ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS:
-            return action.email;
-        default:
-            return adminEmailTemplate;
-    }
-};
 
 // For string match tool
 type TestQuestionsState = TestCaseDTO[] | null;
