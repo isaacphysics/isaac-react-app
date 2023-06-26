@@ -34,11 +34,12 @@ export interface AssignmentSpec {
     dueDate?: Date;
     scheduledStartDate?: Date;
     notes?: string;
+    userId?: number;
 }
 
 export const assignGameboard = createAsyncThunk(
     "gameboards/assignBoard",
-    async ({boardId, groups, dueDate, scheduledStartDate, notes}: AssignmentSpec, {dispatch, rejectWithValue}) => {
+    async ({boardId, groups, dueDate, scheduledStartDate, notes, userId}: AssignmentSpec, {dispatch, rejectWithValue}) => {
         const appDispatch = dispatch as AppDispatch;
         if (groups.length === 0) {
             appDispatch(showErrorToast(
@@ -92,6 +93,7 @@ export const assignGameboard = createAsyncThunk(
                 creationDate: (new Date()).valueOf() as unknown as Date,
                 dueDate: dueDate?.valueOf() as unknown as Date | undefined,
                 scheduledStartDate: scheduledStartDate?.valueOf() as unknown as Date | undefined,
+                ownerUserId: userId,
                 notes
             }));
             const successfulIds = newAssignments.map(a => a.groupId);

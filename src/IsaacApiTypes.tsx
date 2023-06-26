@@ -40,9 +40,6 @@ export interface AssignmentDTO extends IAssignmentLike {
     ownerUserId?: number;
     assignerSummary?: UserSummaryDTO;
     notes?: string;
-    creationDate?: Date;
-    dueDate?: Date;
-    scheduledStartDate?: Date;
 }
 
 export interface AssignmentFeedbackDTO {
@@ -203,6 +200,10 @@ export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO 
 export interface IsaacSymbolicQuestionDTO extends QuestionDTO {
     formulaSeed?: string;
     availableSymbols?: string[];
+}
+
+export interface IsaacCoordinateQuestionDTO extends QuestionDTO {
+    numberOfCoordinates?: number;
 }
 
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
@@ -455,12 +456,21 @@ export interface ParsonsChoiceDTO extends ItemChoiceDTO {
     items?: ParsonsItemDTO[];
 }
 
+export interface CoordinateChoiceDTO extends ItemChoiceDTO {
+    items?: CoordinateItemDTO[];
+}
+
 export interface ItemDTO extends ContentDTO {
     altText?: string;
 }
 
 export interface ParsonsItemDTO extends ItemDTO {
     indentation?: number;
+}
+
+export interface CoordinateItemDTO extends ItemDTO {
+    x?: string;
+    y?: string;
 }
 
 export interface QuantityDTO extends ChoiceDTO {
@@ -594,6 +604,7 @@ export interface IAssignmentLike {
     id?: number;
     creationDate?: Date;
     dueDate?: Date;
+    scheduledStartDate?: Date;
     ownerUserId?: number;
 }
 

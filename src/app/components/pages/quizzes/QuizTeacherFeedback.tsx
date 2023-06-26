@@ -16,7 +16,7 @@ import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
-    isDefined,
+    isDefined, nthHourOf, TODAY,
     useAssignmentProgressAccessibilitySettings
 } from "../../../services";
 import {AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
@@ -78,7 +78,9 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
     const assignment = assignmentState && 'assignment' in assignmentState ? assignmentState.assignment : null;
     const error = assignmentState && 'error' in assignmentState ? assignmentState.error : null;
-    const quizTitle = (assignment?.quiz?.title || assignment?.quiz?.id || "Test") + " results";
+    const assignmentStartDate = assignment?.scheduledStartDate ?? assignment?.creationDate;
+    const assignmentNotYetStarted = assignmentStartDate && nthHourOf(0, assignmentStartDate) > TODAY();
+    const quizTitle = (assignment?.quiz?.title || assignment?.quiz?.id || "Test") + (assignmentNotYetStarted ? ` (starts ${formatDate(assignmentStartDate)})` : " results");
 
     // Date input variables
     const yearRange = range(currentYear, currentYear + 5);
@@ -116,12 +118,16 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
         <ShowLoading until={assignmentState}>
             {assignment && <>
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
-                <p className="d-flex">
+                <div className="d-flex mb-4">
                     <span>
                         Set by: {extractTeacherName(assignment.assignerSummary ?? null)} on {formatDate(assignment.creationDate)}
                     </span>
                     {isDefined(assignment.dueDate) && <><Spacer/>Due: {formatDate(assignment.dueDate)}</>}
-                </p>
+                </div>
+                {assignmentNotYetStarted && <div className="mb-4">
+                    <h4 className="alert-heading">This test has not yet started</h4>
+                    <p>It will be released to your group on {formatDate(assignmentStartDate)}.</p>
+                </div>}
                 <Row>
                     {assignment.dueDate && <Col xs={12} sm={6} md={4}>
                         <Label for="dueDate" className="pr-1">Extend the due date:

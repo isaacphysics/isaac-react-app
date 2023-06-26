@@ -60,9 +60,9 @@ def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: 
     if not EXEC:
         return input(f"{command}\n")
 
-    response = input(f"Execute: {command}?: ")
-    while response.lower() not in ["y", "yes", "s", "skip", "a", "abort"]:
-        response = input("Please respond with one of:\n - Yes (or y)\n - Skip (or s)\n - Abort (or a)\n")
+    response = input(f"Execute: {command}?: ").lower()
+    while response not in ["y", "yes", "s", "skip", "a", "abort"]:
+        response = input("Please respond with one of:\n - Yes (or y)\n - Skip (or s)\n - Abort (or a)\n").lower()
 
     if response in ["a", "abort"]:
         print("! Aborting release process, please clean up after yourself !")
@@ -111,7 +111,7 @@ def ask_for_old_api(ctx):
 
 def update_config(ctx):
     print(f"# Update configuration files")
-    ask_to_run_command(f"cd /local/src/isaac-sops-config && git pull")
+    ask_to_run_command(f"cd /local/data && ./fetch-isaac-sops-config.sh")
     print(f"# Decrypt configuration files")
     # GPG would normally prompt us for the key password, but it's not possible to answer that prompt through subprocess.run().
     # Instead, we ask for it here and pass it in to the subprocess as an environment variable.

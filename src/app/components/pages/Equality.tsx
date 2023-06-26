@@ -29,7 +29,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
 
     /*** Text based input stuff */
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
-    const sketchRef = useRef<Inequality|null|undefined>();
+    const sketchRef = useRef<Inequality | null | undefined>();
     const debounceTimer = useRef<number|null>(null);
     const [inputState, setInputState] = useState(() => ({pythonExpression: '', userInput: '', valid: true}));
 
@@ -160,7 +160,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     }, [editorSyntax]);
 
     useLayoutEffect(() => {
-        const {sketch} = makeInequality(
+        const {sketch, p} = makeInequality(
             hiddenEditorRef.current,
             100,
             0,
@@ -175,12 +175,22 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
 
         sketch.log = { initialState: [], actions: [] };
         sketch.onNewEditorState = updateState;
-        sketch.onCloseMenus = () => { void 0 };
-        sketch.isUserPrivileged = () => { return true; };
-        sketch.onNotifySymbolDrag = () => { void 0 };
-        sketch.isTrashActive = () => { return false; };
+        sketch.onCloseMenus = () => undefined;
+        sketch.isUserPrivileged = () => true;
+        sketch.onNotifySymbolDrag = () => undefined;
+        sketch.isTrashActive = () => false;
 
         sketchRef.current = sketch;
+
+        return () => {
+            if (sketchRef.current) {
+                sketchRef.current.onNewEditorState = () => null;
+                sketchRef.current.onCloseMenus = () => null;
+                sketchRef.current.isTrashActive = () => false;
+                sketchRef.current = null;
+            }
+            p.remove();
+        };
     }, [hiddenEditorRef.current]);
     /*** End of text based input stuff */
 

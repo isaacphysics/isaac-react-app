@@ -72,7 +72,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
                                  validationPending={validationPending} setValidationPending={setValidationPending}
                                  disableInitialState={confidenceDisabled}
                                  identifier={doc.id} type={"quick_question"} />
-            {isVisible && <Row className="mt-3">
+            {isVisible && <Row className="mt-3 no-print">
                 <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
                     <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isAda})} onClick={hideAnswer}>
                         Hide answer
