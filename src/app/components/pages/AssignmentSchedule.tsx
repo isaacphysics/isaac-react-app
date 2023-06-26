@@ -6,6 +6,7 @@ import {
     useGetGameboardsQuery,
     useGetGroupsQuery,
     useGetMySetAssignmentsQuery,
+    useLazyGetGameboardByIdQuery,
     useUnassignGameboardMutation
 } from "../../state";
 import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
@@ -27,10 +28,6 @@ import {
     Container,
     Input,
     Label,
-    Modal,
-    ModalBody,
-    ModalFooter,
-    ModalHeader,
     Row
 } from "reactstrap";
 import {
@@ -53,9 +50,10 @@ import classNames from "classnames";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {GameboardViewerInner} from "./Gameboard";
 import {Link, useLocation} from "react-router-dom";
-import {combineQueries, ShowLoadingQuery, discardResults} from "../handlers/ShowLoadingQuery";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {PhyAddGameboardButtons} from "./SetAssignments";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import {formatDate} from "../elements/DateString";
 
 interface HeaderProps {
     assignmentsSetByMe?: AssignmentDTO[];
@@ -68,7 +66,6 @@ interface HeaderProps {
     openAssignmentModal: (assignment?: ValidAssignmentWithListingDate) => void;
     collapse: () => void;
 }
-
 const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewBy, setViewBy, setGroupsToInclude, groupsToInclude, openAssignmentModal, collapse}: HeaderProps) => {
 
     const headerScrollerSentinel = useRef<HTMLDivElement>(null);
@@ -143,13 +140,13 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 </Button>
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
                     <ButtonGroup className={"w-100 pt-3"}>
-                        <Button size={"sm"} className={"border-right-0"}
+                        <Button size={"sm"} className={"border-right-0"} id={"start-date-button"}
                                 color={viewBy === "startDate" ? "secondary" : "primary"}
                                 outline={viewBy !== "startDate"}
                                 onClick={() => setViewBy("startDate")}>
                             By start date
                         </Button>
-                        <Button size={"sm"} className={"border-left-0"}
+                        <Button size={"sm"} className={"border-left-0"} id={"due-date-button"}
                                 color={viewBy === "dueDate" ? "secondary" : "primary"}
                                 outline={viewBy !== "dueDate"}
                                 onClick={() => setViewBy("dueDate")}>
@@ -184,7 +181,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     };
     const assignmentOwnedByMe = assignment.ownerUserId === user.id;
     const assignmentStartDate = getAssignmentStartDate(assignment);
-    const gameboardTitle = assignment.gameboard?.title ?? `No ${siteSpecific("gameboard", "quiz")} title`;
+    const gameboardTitle = assignment.gameboard?.title ?? `Unknown ${siteSpecific("gameboard", "quiz")} (may belong to another user)`;
     const gameboardLink = assignment.gameboardId ? `${PATHS.GAMEBOARD}#${assignment.gameboardId}` : undefined;
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
@@ -296,11 +293,11 @@ const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, dates
 
 interface AssignmentModalProps {
     user: RegisteredUserDTO;
-    showAssignmentModal: boolean;
-    toggleAssignModal: () => void;
+    showSetAssignmentUI: boolean;
+    toggleSetAssignmentUI: () => void;
     assignmentToCopy: AssignmentDTO | undefined;
 }
-const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignmentToCopy}: AssignmentModalProps) => {
+const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assignmentToCopy}: AssignmentModalProps) => {
     const dispatch = useAppDispatch();
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
@@ -317,8 +314,9 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
     useEffect(() => {
         setSelectedGroups([]);
         if (assignmentToCopy && assignmentToCopy.gameboardId) {
+            const displayTitle = (assignmentToCopy.gameboard?.title ?? boardsById[assignmentToCopy.gameboardId]?.title ?? `Unknown ${siteSpecific("gameboard", "quiz")}`) + (assignmentToCopy.gameboard?.ownerUserId === user.id ? "" : ` (belongs to another user)`);
             // Copy existing assignment
-            setSelectedGameboard([{value: assignmentToCopy.gameboardId, label: boardsById[assignmentToCopy.gameboardId]?.title ?? "No gameboard title"}]);
+            setSelectedGameboard([{value: assignmentToCopy.gameboardId, label: displayTitle}]);
             setScheduledStartDate(assignmentToCopy.scheduledStartDate ? new Date(assignmentToCopy.scheduledStartDate.valueOf()) : undefined);
             setDueDate(assignmentToCopy.dueDate ? new Date(assignmentToCopy.dueDate.valueOf()) : undefined);
             setAssignmentNotes(assignmentToCopy.notes);
@@ -338,7 +336,8 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
             groups: [...selectedGroups],
             dueDate,
             scheduledStartDate: scheduledStartDate && nthHourOf(7, scheduledStartDate),
-            notes: assignmentNotes
+            notes: assignmentNotes,
+            userId: user.id
         })).then((result) => {
             if (assignGameboard.fulfilled.match(result)) {
                 setSelectedGroups([]);
@@ -357,90 +356,100 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
     const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false;
 
     useEffect(() => {
-        if (showAssignmentModal) setShowGameboardPreview(false);
-    }, [showAssignmentModal]);
+        if (showSetAssignmentUI) setShowGameboardPreview(false);
+    }, [showSetAssignmentUI]);
 
     const alreadyAssignedGroupNames = useMemo<string[]>(() => {
         if (!selectedGameboard || selectedGameboard.length === 0 || !selectedGroups || selectedGroups.length === 0) return [];
         return selectedGroups.filter(g => g.value && boardIdsByGroupId[g.value]?.includes(selectedGameboard[0]?.value)).map(g => g.label);
     }, [selectedGroups, boardIdsByGroupId, selectedGameboard]);
 
-    const gameboardToPreview = selectedGameboard?.[0]?.value ? boardsById[selectedGameboard[0].value] : undefined;
+    // This logic means that even if a user doesn't have a gameboard saved to their account, they can still preview it.
+    // Very useful for copying assignments from other users.
+    const [getGameboardById, {currentData: gameboardSearch, isLoading, isFetching, }] = useLazyGetGameboardByIdQuery();
+    let gameboardToPreview = undefined;
+    if (selectedGameboard?.[0]?.value) {
+        gameboardToPreview = boardsById[selectedGameboard[0].value];
+        if (!gameboardToPreview) {
+            if (gameboardSearch?.id === selectedGameboard[0].value) {
+                gameboardToPreview = gameboardSearch;
+            } else if (!isLoading && !isFetching) {
+                getGameboardById(selectedGameboard[0].value);
+            }
+        }
+    }
 
-    return <Modal isOpen={showAssignmentModal} toggle={toggleAssignModal}>
-        <ModalHeader close={
-            <button className="close" onClick={toggleAssignModal}>
-                Close
-            </button>
-        }>
-            Set new assignment
-        </ModalHeader>
-        <ModalBody>
-            <Label className="w-100 pb-2">Group(s):
-                <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
-                        value={selectedGroups}
-                        closeMenuOnSelect={false}
-                        onChange={selectOnChange(setSelectedGroups, false)}
-                        options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
-                />
-            </Label>
-            <Label className="w-100 pb-2">Gameboard:
-                <StyledSelect inputId="gameboard-to-assign" isClearable placeholder="None"
-                        value={selectedGameboard}
-                        onChange={selectOnChange(setSelectedGameboard, false)}
-                        options={gameboards.map(g => itemise(g.id ?? "", g.title ?? "No gameboard title"))}
-                />
-                {alreadyAssignedGroupNames && alreadyAssignedGroupNames.length > 0 && <Alert color={"warning"} className={"my-1"}>
-                    This {siteSpecific("gameboard", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
-                </Alert>}
-                {selectedGameboard && selectedGameboard?.[0]?.value && boardsById[selectedGameboard[0].value] && boardsById[selectedGameboard[0].value]?.contents && <Card className={"my-1"} >
-                    <CardHeader className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("gameboard", "quiz")} preview</Button></CardHeader>
-                    {showGameboardPreview && gameboardToPreview && <GameboardViewerInner gameboard={gameboardToPreview}/>}
-                    {showGameboardPreview && <CardFooter className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide {siteSpecific("gameboard", "quiz")} preview</Button></CardFooter>}
-                </Card>}
-            </Label>
-            <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
-                <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
-                           onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
-            </Label>
-            <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
-                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
-                           onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} />
-                {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
-            </Label>
-            {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
-                <Input type="textarea"
-                       spellCheck={true}
-                       rows={3}
-                       value={assignmentNotes}
-                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
-                />
-                <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
-                {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
+    return <>
+        <h3>
+            Set new assignment{assignmentToCopy ? " (from existing)" : ""}
+        </h3>
+        <Label className="w-100 pb-2">Group(s):
+            <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
+                          value={selectedGroups}
+                          closeMenuOnSelect={false}
+                          onChange={selectOnChange(setSelectedGroups, false)}
+                          options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
+            />
+        </Label>
+        <Label className="w-100 pb-2">Gameboard:
+            <StyledSelect inputId="gameboard-to-assign" isClearable placeholder="None"
+                          value={selectedGameboard}
+                          onChange={selectOnChange(setSelectedGameboard, false)}
+                          options={gameboards.map(g => itemise(g.id ?? "", g.title ?? `Unknown ${siteSpecific("gameboard", "quiz")} (may belong to another user)`))}
+            />
+            {alreadyAssignedGroupNames && alreadyAssignedGroupNames.length > 0 && <Alert color={"warning"} className={"my-1"}>
+                This {siteSpecific("gameboard", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
+            </Alert>}
+            {gameboardToPreview?.contents && <Card className={"my-1"} >
+                <CardHeader className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("gameboard", "quiz")} preview</Button></CardHeader>
+                {showGameboardPreview && gameboardToPreview && <GameboardViewerInner gameboard={gameboardToPreview}/>}
+                {showGameboardPreview && <CardFooter className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide {siteSpecific("gameboard", "quiz")} preview</Button></CardFooter>}
+            </Card>}
+        </Label>
+        <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
+            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
+                       onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
+        </Label>
+        <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
+            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
+                       onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} />
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
+        </Label>
+        {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
+            <Input type="textarea"
+                   spellCheck={true}
+                   rows={3}
+                   value={assignmentNotes}
+                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
+            />
+            <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
+            {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
                 <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
-                }
-            </Label>}
-            <Button
-                className="mt-2 mb-2"
-                block color={siteSpecific("secondary", "primary")}
-                onClick={assign}
-                disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard) || alreadyAssignedGroupNames.length === selectedGroups.length}
-            >
-                Assign to group{selectedGroups.length > 1 ? "s" : ""}
-            </Button>
-        </ModalBody>
-        <ModalFooter>
-            <Button block color="tertiary" onClick={toggleAssignModal}>Close</Button>
-        </ModalFooter>
-    </Modal>;
+            }
+        </Label>}
+        <Row className={"mt-3"}>
+            <Col xs={12} sm={6}>
+                <Button
+                    className="mb-2 mb-sm-0"
+                    block color={siteSpecific("secondary", "primary")}
+                    onClick={assign}
+                    disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard) || alreadyAssignedGroupNames.length === selectedGroups.length}
+                >
+                    Assign to group{selectedGroups.length > 1 ? "s" : ""}
+                </Button>
+            </Col>
+            <Col xs={12} sm={6}>
+                <Button block color="tertiary" onClick={toggleSetAssignmentUI}>Back to schedule</Button>
+            </Col>
+        </Row>
+    </>;
 }
 
 type AssignmentsGroupedByDate = [number, [number, [number, ValidAssignmentWithListingDate[]][]][]][];
 export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
-    const gameboardsQuery = useGetGameboardsQuery({startIndex: 0, limit: BoardLimit.All, sort: BoardOrder.created});
-    const { data: gameboards } = gameboardsQuery;
+    const { data: gameboards } = useGetGameboardsQuery({startIndex: 0, limit: BoardLimit.All, sort: BoardOrder.created});
     const { data: groups } = useGetGroupsQuery(false);
 
     const [viewBy, setViewBy] = useState<"startDate" | "dueDate">("startDate");
@@ -492,25 +501,37 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
             }, Date.now()) ?? Date.now()
         )
         , [assignmentsSetByMe, groupFilter, viewBy]);
-    const extendBackSixMonths = () => setEarliestShowDate(esd => {
+    const extendBackSixMonths = (until?: Date) => setEarliestShowDate(esd => {
         const d = new Date(esd.valueOf());
         d.setMonth(d.getMonth() - 6);
+        if (until) {
+            while (d.valueOf() > until.valueOf()) {
+                d.setMonth(d.getMonth() - 6);
+            }
+        }
         return d;
     });
 
     // The assignments that will be shown in the schedule, filtered by groups, and grouped by date
     const assignmentsGroupedByDate = useMemo<AssignmentsGroupedByDate>(() => {
-        if (!assignmentsSetByMe) return [];
+        if (!assignmentsSetByMe || assignmentsSetByMe.length === 0) return [];
         const sortedAssignments: ValidAssignmentWithListingDate[] = sortBy(
             assignmentsSetByMe
                 .map((a) => ({...a, listingDate: new Date(viewBy === "startDate" ? getAssignmentStartDate(a) : (a.dueDate ?? 0).valueOf()), additionalManagerPrivileges: (a?.groupId && groupsById[a.groupId]?.additionalManagerPrivileges) ?? false} as ValidAssignmentWithListingDate))
                 // IMPORTANT - filter ensures that id, gameboard id, and group id exist so the cast to ValidAssignmentWithListingDate was/will be valid
-                .filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId] && (a.listingDate.valueOf() >= earliestShowDate.valueOf()) && (viewBy === "startDate" || isDefined(a.dueDate)))
+                .filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId] && (viewBy === "startDate" || isDefined(a.dueDate)))
             , a => a.listingDate.valueOf()
         );
+        if (sortedAssignments.length === 0) return [];
+        const latestAssignmentDate = sortedAssignments[sortedAssignments.length - 1].listingDate;
+        const assignmentsFilteredByDate = sortedAssignments.filter(a => a.listingDate.valueOf() >= earliestShowDate.valueOf());
+        if (assignmentsFilteredByDate.length === 0) {
+            extendBackSixMonths(latestAssignmentDate);
+            return [];
+        }
         function parseNumericKey<T>([k, v]: [string, T]): [number, T] { return [parseInt(k), v]; }
         return Object.entries(mapValues(
-            groupBy(sortedAssignments, a => a.listingDate.getFullYear()),
+            groupBy(assignmentsFilteredByDate, a => a.listingDate.getFullYear()),
             as => Object.entries(mapValues(
                 groupBy(as, a => a.listingDate.getMonth()),
                 _as => Object.entries(groupBy(_as, a => a.listingDate.getDate())).map(parseNumericKey)
@@ -524,18 +545,18 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     const [assignmentToCopy, setAssignmentToCopy] = useState<AssignmentDTO | undefined>();
     const {hash} = useLocation();
     const gameboardId = hash.includes("#") ? hash.slice(1) : undefined;
-    const [showAssignmentModal, setShowAssignmentModal] = useState<boolean>(false);
+    const [showSetAssignmentUI, setShowSetAssignmentUI] = useState<boolean>(false);
     const openAssignmentModal = useCallback((assignment?: ValidAssignmentWithListingDate) => {
         setAssignmentToCopy(assignment);
-        setShowAssignmentModal(true);
-    }, [setAssignmentToCopy, setShowAssignmentModal]);
+        setShowSetAssignmentUI(true);
+    }, [setAssignmentToCopy, setShowSetAssignmentUI]);
     useEffect(() => {
         if (gameboardId) {
             setAssignmentToCopy({gameboardId});
-            setShowAssignmentModal(true);
+            setShowSetAssignmentUI(true);
         }
     }, []);
-    const toggleAssignModal = () => setShowAssignmentModal(o => !o);
+    const toggleSetAssignmentUI = () => setShowSetAssignmentUI(o => !o);
 
     // Flag to notify children components to completely collapse all assignment sub-lists, so only months are showing
     const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -548,13 +569,13 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Assignment Schedule" help={pageHelp}/>
-        <h4 className="mt-4 mb-3">
-            Assign a {siteSpecific("gameboard", "quiz")} from...
-        </h4>
+        {/*<h4 className="mt-4 mb-3">*/}
+        {/*    Assign a {siteSpecific("gameboard", "quiz")} from...*/}
+        {/*</h4>*/}
         <PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>
         <ShowLoadingQuery
             defaultErrorTitle="Error loading assignments and/or gameboards"
-            query={combineQueries(assignmentsSetByMeQuery, gameboardsQuery, discardResults)}
+            query={assignmentsSetByMeQuery}
         >
             <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 pl-2 pr-2 timeline-column mb-4 pt-2">
@@ -563,31 +584,29 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                         <br/>
                         It is a work in progress, and we would love to <a target="_blank" href="/contact?subject=Assignment%20Schedule%20Feedback">hear your feedback</a>!
                     </Alert>}
-                    <AssignmentScheduleStickyHeader
+                    {!showSetAssignmentUI && <AssignmentScheduleStickyHeader
                         assignmentsSetByMe={assignmentsSetByMe}
                         groupsToInclude={groupsToInclude} setGroupsToInclude={setGroupsToInclude}
                         viewBy={viewBy} setViewBy={setViewBy}
                         openAssignmentModal={openAssignmentModal} collapse={() => setCollapsed(true)}
                         groups={groups} user={user}
-                    />
-
-                    {/* Groups-related alerts */}
-                    {groups && groups.length === 0 && <Alert color="warning" className="mt-2">
-                        You have not created any groups to assign work to.
-                        Please <Link to="/groups">create a group here first.</Link>
-                    </Alert>}
-                    {groupsToInclude.length > 0 && assignmentsGroupedByDate.length === 0 && <Alert color="warning" className="mt-2">
-                        There are no assignments set to group{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}
-                    </Alert>}
-
-                    {assignmentsGroupedByDate.length > 0 && <Card className="mt-2">
-                        <CardBody className="pt-0">
+                    />}
+                    <Card className="mt-2">
+                        <CardBody className="pt-0" hidden={showSetAssignmentUI}>
+                            {/* Groups-related alerts */}
+                            {groups && groups.length === 0 && <div className="mt-3">
+                                You have not created any groups to assign work to.
+                                Please <Link to="/groups">create a group here first.</Link>
+                            </div>}
+                            {groupsToInclude.length > 0 && assignmentsGroupedByDate.length === 0 && <div className="mt-3">
+                                There are no assignments set to group{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}
+                            </div>}
                             {notAllPastAssignmentsAreListed && <div className="mt-3">
-                                <Button size="sm" onClick={extendBackSixMonths}>
-                                    Show assignments before {earliestShowDate.toDateString().split(" ").filter((_, i) => i % 2 === 1).join(" ")}
+                                <Button size="sm" onClick={() => extendBackSixMonths()}>
+                                    Show assignments before {formatDate(earliestShowDate)}
                                 </Button>
                             </div>}
-                            <div className={classNames("timeline w-100", {"pt-2": !notAllPastAssignmentsAreListed})}>
+                            {assignmentsGroupedByDate.length > 0 && <div className={classNames("timeline w-100", {"pt-2": !notAllPastAssignmentsAreListed})}>
                                 {assignmentsGroupedByDate.map(([y, ms]) =>
                                     <Fragment key={y}>
                                         <div className="year-label w-100 text-right">
@@ -598,16 +617,18 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                                     </Fragment>
                                 )}
                                 <div className={classNames("bg-timeline", {"fade-in": !notAllPastAssignmentsAreListed})}/>
-                            </div>
+                            </div>}
                         </CardBody>
-                    </Card>}
+                        <CardBody className="pt-3" hidden={!showSetAssignmentUI}>
+                            <AssignmentModal
+                                user={user}
+                                showSetAssignmentUI={showSetAssignmentUI}
+                                toggleSetAssignmentUI={toggleSetAssignmentUI}
+                                assignmentToCopy={assignmentToCopy}
+                            />
+                        </CardBody>
+                    </Card>
                 </div>
-                <AssignmentModal
-                    user={user}
-                    showAssignmentModal={showAssignmentModal}
-                    toggleAssignModal={toggleAssignModal}
-                    assignmentToCopy={assignmentToCopy}
-                />
             </AssignmentScheduleContext.Provider>
         </ShowLoadingQuery>
     </Container>;

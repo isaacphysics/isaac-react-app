@@ -97,10 +97,10 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
-    const sketchRef = useRef<Inequality>();
+    const sketchRef = useRef<Inequality | null | undefined>();
 
     useLayoutEffect(() => {
-        const {sketch} = makeInequality(
+        const {sketch, p} = makeInequality(
             hiddenEditorRef.current,
             100,
             0,
@@ -111,16 +111,26 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf',
             }
         );
-        if (isDefined(sketch)) {
-            sketch.log = { initialState: [], actions: [] };
-            sketch.onNewEditorState = updateState;
-            sketch.onCloseMenus = () => undefined;
-            sketch.isUserPrivileged = () => true;
-            sketch.onNotifySymbolDrag = () => undefined;
-            sketch.isTrashActive = () => false
+        if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
 
-            sketchRef.current = sketch;
-        }
+        sketch.log = { initialState: [], actions: [] };
+        sketch.onNewEditorState = updateState;
+        sketch.onCloseMenus = () => undefined;
+        sketch.isUserPrivileged = () => true;
+        sketch.onNotifySymbolDrag = () => undefined;
+        sketch.isTrashActive = () => false
+
+        sketchRef.current = sketch;
+
+        return () => {
+            if (sketchRef.current) {
+                sketchRef.current.onNewEditorState = () => null;
+                sketchRef.current.onCloseMenus = () => null;
+                sketchRef.current.isTrashActive = () => false;
+                sketchRef.current = null;
+            }
+            p.remove();
+        };
     }, [hiddenEditorRef.current]);
 
     const [errors, setErrors] = useState<string[]>();

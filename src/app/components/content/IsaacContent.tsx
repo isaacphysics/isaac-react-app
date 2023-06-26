@@ -21,6 +21,7 @@ import {isQuestion} from "../../services";
 import {IsaacCodeTabs} from "./IsaacCodeTabs";
 import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 import {IsaacCallout} from "./IsaacCallout";
+import {RenderNothing} from "../elements/RenderNothing";
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
 const classBasedLayouts = {
@@ -29,7 +30,8 @@ const classBasedLayouts = {
     righthalf: "align-right-half",
     textleft: "text-left",
     textcentre: "text-center",
-    textcentrecolumn: "text-center-column"
+    textcentrecolumn: "text-center-column",
+    clearfix: "clearfix w-100"
 };
 
 export interface IsaacContentProps extends RouteComponentProps {
@@ -70,6 +72,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
                     case "callout": selectedComponent = <IsaacCallout {...props} />; break;
                     case "accordion": selectedComponent = <IsaacAccordion {...props} />; break;
                     case "horizontal": selectedComponent = <IsaacHorizontal {...props} />; break;
+                    case "clearfix": selectedComponent = RenderNothing; break;
                     default: selectedComponent =
                         <IsaacContentValueOrChildren encoding={encoding} value={value}>
                             {children}

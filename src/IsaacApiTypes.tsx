@@ -40,9 +40,6 @@ export interface AssignmentDTO extends IAssignmentLike {
     ownerUserId?: number;
     assignerSummary?: UserSummaryDTO;
     notes?: string;
-    creationDate?: Date;
-    dueDate?: Date;
-    scheduledStartDate?: Date;
 }
 
 export interface AssignmentFeedbackDTO {
@@ -607,6 +604,7 @@ export interface IAssignmentLike {
     id?: number;
     creationDate?: Date;
     dueDate?: Date;
+    scheduledStartDate?: Date;
     ownerUserId?: number;
 }
 
@@ -633,6 +631,18 @@ export interface GameboardItem {
 export interface IsaacWildcard extends Content {
     description?: string;
     url?: string;
+}
+
+export interface AdminSearchEndpointParams {
+    id?: number;
+    email?: string;
+    familyName?: string;
+    role?: UserRole;
+    schoolOther?: string;
+    postcode?: string;
+    postcodeRadius?: string;
+    schoolURN?: string;
+    subjectOfInterest?: string;
 }
 
 export interface GameFilter {

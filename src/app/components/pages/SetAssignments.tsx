@@ -78,13 +78,13 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
     const [dueDate, setDueDate] = useState<Date>();
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
-    const user = useAppSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.loggedInOrNull);
     const dispatch = useAppDispatch();
 
     if (!board) return <Loading/>;
 
     function assign() {
-        dispatch(assignGameboard({boardId: board?.id as string, groups: selectedGroups, dueDate, scheduledStartDate, notes: assignmentNotes})).then(success => {
+        dispatch(assignGameboard({boardId: board?.id as string, groups: selectedGroups, dueDate, scheduledStartDate, notes: assignmentNotes, userId: user?.id})).then(success => {
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(undefined);

@@ -16,8 +16,8 @@ import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
-    isDefined,
     siteSpecific,
+    isDefined, nthHourOf, TODAY,
     useAssignmentProgressAccessibilitySettings
 } from "../../../services";
 import {AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
@@ -79,7 +79,9 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
     const assignment = assignmentState && 'assignment' in assignmentState ? assignmentState.assignment : null;
     const error = assignmentState && 'error' in assignmentState ? assignmentState.error : null;
-    const quizTitle = (assignment?.quiz?.title || assignment?.quiz?.id || "Test") + " results";
+    const assignmentStartDate = assignment?.scheduledStartDate ?? assignment?.creationDate;
+    const assignmentNotYetStarted = assignmentStartDate && nthHourOf(0, assignmentStartDate) > TODAY();
+    const quizTitle = (assignment?.quiz?.title || assignment?.quiz?.id || "Test") + (assignmentNotYetStarted ? ` (starts ${formatDate(assignmentStartDate)})` : " results");
 
     // Date input variables
     const yearRange = range(currentYear, currentYear + 5);
@@ -117,13 +119,17 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
         <ShowLoading until={assignmentState}>
             {assignment && <>
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
-                <p className="d-flex">
+                <div className="d-flex mb-4">
                     <span>
                         Set by: {extractTeacherName(assignment.assignerSummary ?? null)} on {formatDate(assignment.creationDate)}
                     </span>
                     {isDefined(assignment.dueDate) && <><Spacer/>Due: {formatDate(assignment.dueDate)}</>}
-                </p>
-                <Row className="align-items-center">
+                </div>
+                {assignmentNotYetStarted && <div className="mb-4">
+                    <h4 className="alert-heading">This test has not yet started</h4>
+                    <p>It will be released to your group on {formatDate(assignmentStartDate)}.</p>
+                </div>}
+                <Row>
                     {assignment.dueDate && <Col xs={12} sm={6} md={4}>
                         <Label for="dueDate" className="pr-1">Extend the due date:
                             <DateInput id="dueDate" value={dueDate ?? undefined} invalid={(dueDate && (dueDate < assignment.dueDate)) ?? undefined}
@@ -136,7 +142,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         </div>
                     </Col>}
                     <Col>
-                        <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label>
+                        <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br />
                         <UncontrolledButtonDropdown size="sm">
                             <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
                                 {settingFeedbackMode ?

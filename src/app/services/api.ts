@@ -174,39 +174,6 @@ export const api = {
             return endpoint.post(`/notifications/${id}/${response}`)
         }
     },
-    admin: {
-        userSearch: {
-            get: (queryParams: {}): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
-                return endpoint.get(`/admin/users/`, {params: queryParams});
-            }
-        },
-        userGet: {
-            get: (userid: number | undefined): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
-                return endpoint.get(`/admin/users/${userid}`);
-            }
-        },
-        userDelete: {
-            delete: (userid: number | undefined): AxiosPromise => {
-                return endpoint.delete(`/admin/users/${userid}`);
-            }
-        },
-        modifyUserRoles: {
-            post: (role: ApiTypes.UserRole, userIds: number[]) => {
-                return endpoint.post(`/admin/users/change_role/${role}`, userIds);
-            }
-        },
-        modifyUserEmailVerificationStatuses: {
-            post: (status: ApiTypes.EmailVerificationStatus, emails: string[]) => {
-                return endpoint.post(`/admin/users/change_email_verification_status/${status}/true`, emails);
-            }
-        },
-        getSiteStats: (): AxiosPromise<AppTypes.AdminStatsResponse> => {
-            return endpoint.get(`/admin/stats`)
-        },
-        mergeUsers: (targetId: number, sourceId: number) => {
-            return endpoint.post(`/admin/users/merge`, {targetId, sourceId})
-        }
-    },
     authorisations: {
         get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
             return endpoint.get("authorisations");

@@ -128,6 +128,7 @@ def check_app_and_api_are_clean(update_description):
             if build_conclusion != 'success':
                 prompt_user(f'The last remote build for branch "{branch}" of {service_name} finished with status "{build_conclusion}"!: {build_link}')
 
+            subprocess.run("git fetch", **subprocess_options[service_name])
             diff_with_remote = subprocess.run("git diff origin/master --name-only", **subprocess_options[service_name]).stdout.strip()
             if len(diff_with_remote) > 0:
                 prompt_user(f'The {service_name} repo does not have the latest changes from the remote branch (i.e. you are not on master or you need to `git pull`).')
