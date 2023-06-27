@@ -72,7 +72,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
                     case "callout": selectedComponent = <IsaacCallout {...props} />; break;
                     case "accordion": selectedComponent = <IsaacAccordion {...props} />; break;
                     case "horizontal": selectedComponent = <IsaacHorizontal {...props} />; break;
-                    case "clearfix": selectedComponent = RenderNothing; break;
+                    case "clearfix": selectedComponent = <>&nbsp;</>; break;
                     default: selectedComponent =
                         <IsaacContentValueOrChildren encoding={encoding} value={value}>
                             {children}
