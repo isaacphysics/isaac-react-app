@@ -40,7 +40,7 @@ describe("SetAssignments", () => {
                 expect(screen.queryByText("Loading...")).toBeNull();
             });
         }
-        expect(screen.queryAllByTestId("gameboard-card")).toHaveLength(6);
+        expect(await screen.findAllByTestId("gameboard-card")).toHaveLength(6);
     });
 
     it('should show all gameboards in table view (and start in this view on CS)', async () => {

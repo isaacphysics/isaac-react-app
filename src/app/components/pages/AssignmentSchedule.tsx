@@ -134,19 +134,19 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 }
             </Col>
             <Col xs={6} className={"py-2"}>
-                <Button size={"sm"} block onClick={() => openAssignmentModal()}>
-                    <span className={"d-block d-md-none"}>Set assignment</span>
-                    <span className={"d-none d-md-block"}>Set new assignment</span>
-                </Button>
+                {/*<Button size={"sm"} block onClick={() => openAssignmentModal()}>*/}
+                {/*    <span className={"d-block d-md-none"}>Set assignment</span>*/}
+                {/*    <span className={"d-none d-md-block"}>Set new assignment</span>*/}
+                {/*</Button>*/}
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
                     <ButtonGroup className={"w-100 pt-3"}>
-                        <Button size={"sm"} className={"border-right-0"} id={"start-date-button"}
+                        <Button size={"md"} className={"border-right-0"} id={"start-date-button"}
                                 color={viewBy === "startDate" ? "secondary" : "primary"}
                                 outline={viewBy !== "startDate"}
                                 onClick={() => setViewBy("startDate")}>
                             By start date
                         </Button>
-                        <Button size={"sm"} className={"border-left-0"} id={"due-date-button"}
+                        <Button size={"md"} className={"border-left-0"} id={"due-date-button"}
                                 color={viewBy === "dueDate" ? "secondary" : "primary"}
                                 outline={viewBy !== "dueDate"}
                                 onClick={() => setViewBy("dueDate")}>
@@ -188,10 +188,10 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
             <h4><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle}</a></h4>
             <div className={"ml-auto text-right"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
-                    Copy
+                    Set again
                 </Button>
                 {(assignmentOwnedByMe || assignment.additionalManagerPrivileges) && <Button color="link" size="sm" onClick={deleteAssignment}>
-                    Delete
+                    Unassign
                 </Button>}
             </div>
         </CardHeader>
@@ -561,10 +561,13 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     // Flag to notify children components to completely collapse all assignment sub-lists, so only months are showing
     const [collapsed, setCollapsed] = useState<boolean>(false);
 
+    // const pageHelp = <span>
+    //     Use this page to set and manage assignments to your groups. You can assign any {siteSpecific("gameboard", "quiz")} you have saved to your account.
+    //     <br/>
+    //     Students in the group will be emailed when you set a new assignment.
+    // </span>;
     const pageHelp = <span>
-        Use this page to set and manage assignments to your groups. You can assign any {siteSpecific("gameboard", "quiz")} you have saved to your account.
-        <br/>
-        Students in the group will be emailed when you set a new assignment.
+        Use this page to manage assignments for your groups, and view them as a timeline. You can unassign work, and assign existing assignments to other groups.
     </span>;
 
     return <Container>
@@ -572,7 +575,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         {/*<h4 className="mt-4 mb-3">*/}
         {/*    Assign a {siteSpecific("gameboard", "quiz")} from...*/}
         {/*</h4>*/}
-        <PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>
+        {/*<PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>*/}
         <ShowLoadingQuery
             defaultErrorTitle="Error loading assignments and/or gameboards"
             query={assignmentsSetByMeQuery}
@@ -592,7 +595,10 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                         groups={groups} user={user}
                     />}
                     <Card className="mt-2">
-                        <CardBody className="pt-0" hidden={showSetAssignmentUI}>
+                        <CardBody hidden={showSetAssignmentUI}>
+                            <p>
+                                Use the <Link to={PATHS.SET_ASSIGNMENTS}>set assignments</Link> page to schedule new assignments to your groups.
+                            </p>
                             {/* Groups-related alerts */}
                             {groups && groups.length === 0 && <div className="mt-3">
                                 You have not created any groups to assign work to.
