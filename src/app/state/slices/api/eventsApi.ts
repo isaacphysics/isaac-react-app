@@ -1,7 +1,7 @@
 import {isaacApi} from "./baseApi";
 import {EventBookingDTO, IsaacEventPageDTO} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
-import {AugmentedEvent, EventMapData} from "../../../../IsaacAppTypes";
+import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {apiHelper, EventStageFilter, EventStatusFilter, EventTypeFilter, isDefined} from "../../../services";
 
 export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
@@ -65,7 +65,7 @@ type EventsQueryParams = {
 }
 
 export const eventsApi = isaacApi.enhanceEndpoints({
-    addTagTypes: ["EventBookings", "Event", "EventsList", "EventGroupBookings", "AllEventGroupBookings", "EventMapData"],
+    addTagTypes: ["EventBookings", "Event", "EventsList", "EventGroupBookings", "AllEventGroupBookings"],
 }).injectEndpoints({
     endpoints: (build) => ({
         getEvent: build.query<AugmentedEvent, string>({

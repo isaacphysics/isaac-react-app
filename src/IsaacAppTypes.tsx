@@ -586,19 +586,6 @@ export interface EventOverview {
     numberOfPlaces: number;
 }
 
-export interface EventMapData {
-    id?: string;
-    title?: string;
-    subtitle?: string;
-    date?: Date;
-    bookingDeadline?: Date;
-    status?: ApiTypes.EventStatus;
-    address?: ApiTypes.Address;
-    latitude?: number;
-    longitude?: number;
-    deadline?: Date;
-}
-
 export interface AdditionalInformation {
     jobTitle?: string;
     yearGroup?: string;
