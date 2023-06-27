@@ -405,7 +405,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                 </Row>
             </Col>}
         </div>
-    </>
+    </>;
 };
 
 export const reservationsModal = ({event}: {event: AugmentedEvent}): ActiveModal => {

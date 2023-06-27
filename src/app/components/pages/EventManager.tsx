@@ -31,9 +31,9 @@ export const EventManager = ({user}: {user: PotentialUser}) => {
         <div className="my-5">
             <EventOverviews user={user} setSelectedEventId={setSelectedEventId} />
             {selectedEventId !== null && event && <>
-                {event && <div ref={selectedEventRef} className="mb-3">
+                <div ref={selectedEventRef} className="mb-3">
                     <SelectedEventDetails event={event} />
-                </div>}
+                </div>
                 <div>
                     <ManageExistingBookings
                         user={user} eventId={selectedEventId} eventBookings={eventBookings ?? []}
