@@ -1,11 +1,14 @@
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
-import {AppState, recordEventAttendance, selectors, useAppDispatch, useAppSelector} from "../../../state";
-import {atLeastOne, isEventLeader, NOT_FOUND, sortOnPredicateAndReverse} from "../../../services";
+import {
+    recordEventAttendance,
+    useAppDispatch
+} from "../../../state";
+import {atLeastOne, isEventLeader, sortOnPredicateAndReverse} from "../../../services";
 import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
-import {ATTENDANCE, PotentialUser} from "../../../../IsaacAppTypes";
+import {ATTENDANCE, AugmentedEvent, PotentialUser, UserSchoolLookup} from "../../../../IsaacAppTypes";
 
 function displayAttendanceAsSymbol(status?: string) {
     switch (status) {
@@ -15,11 +18,15 @@ function displayAttendanceAsSymbol(status?: string) {
     }
 }
 
-export const EventAttendance = ({user, eventId}: {user: PotentialUser; eventId: string}) => {
+interface EventAttendanceProps {
+    user: PotentialUser;
+    eventId: string;
+    event: AugmentedEvent;
+    eventBookings: EventBookingDTO[];
+    userIdToSchoolMapping: UserSchoolLookup;
+}
+export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSchoolMapping}: EventAttendanceProps) => {
     const dispatch = useAppDispatch();
-    const selectedEvent = useAppSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
-    const bookings = useAppSelector((state: AppState) => state && state.eventBookings || []);
-    const userIdToSchoolMapping = useAppSelector(selectors.admin.userSchoolLookup) || {};
 
     const [sortPredicate, setSortPredicate] = useState("bookingDate");
     const [reverse, setReverse] = useState(true);
@@ -31,14 +38,14 @@ export const EventAttendance = ({user, eventId}: {user: PotentialUser; eventId: 
     }
 
     let canRecordAttendance = false;
-    if (selectedEvent && selectedEvent.date) {
-        const morningOfEvent = new Date(selectedEvent.date);
+    if (event.date) {
+        const morningOfEvent = new Date(event.date);
         morningOfEvent.setUTCHours(0, 0);
         canRecordAttendance = morningOfEvent <= new Date();
     }
 
-    return <React.Fragment>
-        {canRecordAttendance && atLeastOne(bookings.length) && <Accordion trustedTitle="Record event attendance" disabled={selectedEvent?.isCancelled && "You cannot record attendance for a cancelled event"}>
+    return <>
+        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion trustedTitle="Record event attendance" disabled={event.isCancelled && "You cannot record attendance for a cancelled event"}>
             {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
                 As an event leader, you are only able to see the bookings of users who have granted you access to their data.
             </div>}
@@ -91,13 +98,12 @@ export const EventAttendance = ({user, eventId}: {user: PotentialUser; eventId: 
                         </tr>
                     </thead>
                     <tbody>
-                        {bookings
-                            .sort(sortOnPredicateAndReverse(sortPredicate, reverse))
+                        {eventBookings?.sort(sortOnPredicateAndReverse(sortPredicate, reverse))
                             .filter(filterOnSurname)
                             .map(booking => {
                                 const userBooked = booking.userBooked as UserSummaryWithEmailAddressDTO;
                                 const additionalInformation = booking.additionalInformation;
-                                const userSchool = booking.userBooked && userIdToSchoolMapping[booking.userBooked.id as number];
+                                const userSchool = booking.userBooked && userIdToSchoolMapping?.[booking.userBooked.id as number];
 
                                 return <tr key={booking.bookingId}>
                                     <td className="align-middle">
@@ -132,5 +138,5 @@ export const EventAttendance = ({user, eventId}: {user: PotentialUser; eventId: 
                 </RS.Table>
             </div>
         </Accordion>}
-    </React.Fragment>;
+    </>;
 };

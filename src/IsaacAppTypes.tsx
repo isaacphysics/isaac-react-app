@@ -14,7 +14,6 @@ import {
     QuestionDTO, QuestionValidationResponseDTO,
     QuizAttemptDTO,
     QuizFeedbackMode,
-    RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
     UserContext,
@@ -88,10 +87,6 @@ export type Action =
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
-
-    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_REQUEST}
-    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_SUCCESS; schoolLookup: UserSchoolLookup}
-    | {type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST}
     | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS; authorisations: ApiTypes.UserSummaryWithEmailAddressDTO[]}
@@ -201,22 +196,6 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_MAP_DATA_REQUEST}
     | {type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS; eventMapData: EventMapData[]; total: number}
     | {type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.EVENT_REQUEST}
-    | {type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS; augmentedEvent: AugmentedEvent}
-    | {type: ACTION_TYPE.EVENT_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST}
-    | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS; eventBookings: ApiTypes.EventBookingDTO[]}
-    | {type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST}
-    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS; eventBookingsForGroup: ApiTypes.EventBookingDTO[]}
-    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_REQUEST}
-    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_SUCCESS; eventBookingsForAllGroups: ApiTypes.EventBookingDTO[]}
-    | {type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST}
     | {type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_SUCCESS; eventBookingCSV: any}

@@ -1,9 +1,8 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {FormGroup} from "reactstrap";
 import {
     AppState,
-    getUserIdSchoolLookup,
     resetPassword,
     selectors,
     useAppDispatch,
@@ -12,7 +11,7 @@ import {
     useAdminSearchUsersMutation,
     useAdminDeleteUserMutation,
     useAdminModifyUserEmailVerificationStatusMutation,
-    useAdminModifyUserRolesMutation,
+    useAdminModifyUserRolesMutation, useAdminGetUserIdsSchoolLookupQuery,
 } from "../../state";
 import {AdminSearchEndpointParams, EmailVerificationStatus, UserRole} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
@@ -22,6 +21,7 @@ import {Link} from "react-router-dom";
 import classNames from "classnames";
 import {ShowLoading} from "../handlers/ShowLoading";
 import produce from "immer";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 export const AdminUserManager = () => {
     const dispatch = useAppDispatch();
@@ -43,7 +43,6 @@ export const AdminUserManager = () => {
     const [modifyUserEmailVerificationStatuses, {isLoading: userVerificationStatusBeingModified}] = useAdminModifyUserEmailVerificationStatusMutation();
     const userBeingModified = userBeingDeleted || userRoleBeingModified || userVerificationStatusBeingModified;
 
-    const userIdToSchoolMapping = useAppSelector(selectors.admin.userSchoolLookup);
     const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
     let promotableRoles: UserRole[] = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
     const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVERY_FAILED"];
@@ -51,11 +50,8 @@ export const AdminUserManager = () => {
         promotableRoles = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"];
     }
 
-    useEffect(() => {
-        if (searchResults && searchResults.length > 0) {
-            dispatch(getUserIdSchoolLookup(searchResults.map((result) => result.id).filter((result) => result != undefined) as number[]));
-        }
-    }, [dispatch, searchResults]);
+    const schoolLookupParam = searchResults && searchResults.length > 0 ? searchResults.map((result) => result.id).filter(isDefined) : skipToken;
+    const {data: userIdToSchoolMapping} = useAdminGetUserIdsSchoolLookupQuery(schoolLookupParam);
 
     const setParamIfNotDefault = useCallback((param: string, value: string, defaultValue: string) => {
         setSearchQuery(produce(queryParams => {

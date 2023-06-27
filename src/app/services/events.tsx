@@ -21,6 +21,7 @@ export const studentOnlyEventMessage = (eventId?: string) => <React.Fragment>
     <Link to={`/contact?subject=${encodeURI("Non-student attendance at " + eventId)}`}>contact us</Link>.
 </React.Fragment>;
 
+// TODO remove after events moved to RTK query
 export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
     const augmentedEvent: AugmentedEvent = Object.assign({}, event);
     if (event.date != null) {

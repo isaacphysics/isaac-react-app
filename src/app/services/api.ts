@@ -11,8 +11,6 @@ import {
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
     AuthenticationProvider,
-    EmailTemplateDTO,
-    EventBookingDTO,
     ResultsWrapper,
     TestCaseDTO,
     UserContext
@@ -24,7 +22,6 @@ import {
     Choice,
     Concepts,
     CredentialsAuthDTO,
-    EmailUserRoles,
     QuestionSearchQuery,
     QuestionSearchResponse,
     UserPreferencesDTO,
@@ -100,10 +97,6 @@ export const api = {
         },
         passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);
-        },
-
-        getUserIdSchoolLookup: (userIds: number[]): AxiosPromise<AppTypes.UserSchoolLookup> => {
-            return endpoint.get(`/users/school_lookup?user_ids=${userIds.join(",")}`);
         },
         getProgress: (userIdOfInterest = "current_user"): AxiosPromise<AppTypes.UserProgress> => {
             return endpoint.get(`users/${userIdOfInterest}/progress`);
@@ -262,9 +255,6 @@ export const api = {
         }
     },
     events: {
-        get: (eventId: string): AxiosPromise<ApiTypes.IsaacEventPageDTO> => {
-            return endpoint.get(`/events/${eventId}`);
-        },
         getEvents: (
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
             showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean, showReservedOnly: boolean,
@@ -319,23 +309,11 @@ export const api = {
         cancelMyBooking: (eventId: string) => {
             return endpoint.delete(`/events/${eventId}/bookings/cancel`);
         },
-        getEventBookings: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
-            return endpoint.get(`/events/${eventId}/bookings`);
-        },
-        getEventBookingsForGroup: (eventId: string, groupId: number): AxiosPromise<EventBookingDTO[]> => {
-            return endpoint.get(`/events/${eventId}/bookings/for_group/${groupId}`);
-        },
-        getEventBookingsForAllGroups: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
-            return endpoint.get(`/events/${eventId}/groups_bookings`);
-        },
         bookUserOnEvent: (eventId: string, userId: number, additionalInformation: AdditionalInformation) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}`, additionalInformation);
         },
         reserveUsersOnEvent: (eventId: string, userIds: number[]) => {
             return endpoint.post(`/events/${eventId}/reservations`, userIds);
-        },
-        cancelUsersReservationsOnEvent: (eventId: string, userIds: number[]) => {
-            return endpoint.post(`/events/${eventId}/reservations/cancel`, userIds);
         },
         resendUserConfirmationEmail: (eventId: string, userId: number) => {
             return endpoint.post(`/events/${eventId}/bookings/${userId}/resend_confirmation`);

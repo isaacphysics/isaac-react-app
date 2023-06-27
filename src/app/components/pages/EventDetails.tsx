@@ -7,13 +7,12 @@ import {
     AppState,
     bookMyselfOnEvent,
     cancelMyBooking,
-    getEvent,
     openActiveModal,
     selectors,
     showErrorToast,
     showToast,
     useAppDispatch,
-    useAppSelector
+    useAppSelector, useGetEventQuery
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {
@@ -56,6 +55,8 @@ import {EditContentButton} from "../elements/EditContentButton";
 import {Map, Marker, Popup, TileLayer} from "react-leaflet";
 import * as L from "leaflet";
 import {teacherEventConfirmationModal} from "../elements/modals/TeacherEventConfirmationModal";
+import {skipToken} from "@reduxjs/toolkit/query";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 function formatDate(date: Date | number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -68,11 +69,9 @@ interface EventDetailsProps {
 
 const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
     const dispatch = useAppDispatch();
-    const event = useAppSelector((state: AppState) => state && state.currentEvent);
     const user = useAppSelector(selectors.user.orNull);
-    useEffect(() => {
-        dispatch(getEvent(eventId));
-    }, [dispatch, eventId]);
+    const eventQuery = useGetEventQuery(eventId || skipToken);
+    const {data: event} = eventQuery;
 
     const [bookingFormOpen, setBookingFormOpen] = useState(false);
     const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});
@@ -87,7 +86,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
     }
 
     function googleCalendarTemplate() {
-        if (event && event !== NOT_FOUND) {
+        if (event) {
             // https://calendar.google.com/calendar/event?action=TEMPLATE&text=[event_name]&dates=[start_date as YYYYMMDDTHHMMSS or YYYYMMDD]/[end_date as YYYYMMDDTHHMMSS or YYYYMMDD]&details=[extra_info]&location=[full_address_here]
             const address = event.location && event.location.address ? [event.location.address.addressLine1, event.location.address.addressLine2, event.location.address.town, event.location.address.county, event.location.address.postalCode, event.location.address.country] : [];
 
@@ -103,7 +102,10 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
         }
     }
 
-    return <ShowLoading until={event} thenRender={event => {
+    return <ShowLoadingQuery
+        query={eventQuery}
+        defaultErrorTitle={"Event not found"}
+        thenRender={event => {
         const studentOnlyRestrictionSatisfied = userSatisfiesStudentOnlyRestrictionForEvent(user, event);
 
         const canMakeABooking = userCanMakeEventBooking(user, event);
@@ -343,7 +345,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                     }
                                     {canReserveSpaces &&
                                     <Button color="primary" onClick={() => {
-                                        dispatch(openActiveModal(reservationsModal()))
+                                        dispatch(openActiveModal(reservationsModal({event})))
                                     }}>
                                         Manage reservations
                                     </Button>
@@ -365,7 +367,6 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                 </CardBody>
             </Card>
         </Container>
-    }
-    }/>;
+    }}/>;
 };
 export default EventDetails;
