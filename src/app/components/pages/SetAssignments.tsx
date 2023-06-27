@@ -552,15 +552,20 @@ export const SetAssignments = () => {
                 )}
             </h3>
             : <>
-                {boards && boards.totalResults > 0 && <h4>
-                    You have <strong>{boards.totalResults}</strong> {siteSpecific("gameboard", "quiz")}{boards.totalResults > 1 && siteSpecific("s", "zes")} ready to assign...{" "}
-                    {isAda && <Button className={"font-size-1-25"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
-                        create another quiz?
-                    </Button>}
+                {isPhy && <h4>
+                    Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view assignments by start date and due date.
                 </h4>}
-                {!boards && <h4>
-                    You have <IsaacSpinner size="sm" inline/> {siteSpecific("gameboards", "quizzes")} ready to assign...
-                </h4>}
+                {isAda && <>
+                    {boards && boards.totalResults > 0 && <h4>
+                        You have <strong>{boards.totalResults}</strong> quiz{boards.totalResults > 1 && "zes"} ready to assign...{" "}
+                        {<Button className={"font-size-1-25"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
+                            create another quiz?
+                        </Button>}
+                    </h4>}
+                    {!boards && <h4>
+                        You have <IsaacSpinner size="sm" inline/> {siteSpecific("gameboards", "quizzes")} ready to assign...
+                    </h4>}
+                </>}
                 <Row>
                     {(isPhy || boardView === BoardViews.card) && <Col sm={6} lg={3} xl={2}>
                         <Label className="w-100">

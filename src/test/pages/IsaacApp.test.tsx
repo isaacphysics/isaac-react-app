@@ -12,11 +12,11 @@ const myIsaacLinks = siteSpecific(
     [PATHS.MY_ASSIGNMENTS, PATHS.MY_GAMEBOARDS, "/tests", "/progress", "/account"]
 );
 const tutorLinks = siteSpecific(
-    ["/tutor_features", "/groups", PATHS.SET_ASSIGNMENTS, PATHS.ASSIGNMENT_PROGRESS],
+    ["/tutor_features", "/groups", PATHS.SET_ASSIGNMENTS, "/assignment_schedule", PATHS.ASSIGNMENT_PROGRESS],
     ["/groups", PATHS.SET_ASSIGNMENTS, PATHS.ASSIGNMENT_PROGRESS]
 );
 const teacherLinks = siteSpecific(
-    ["/teacher_features", "/groups", PATHS.SET_ASSIGNMENTS, PATHS.ASSIGNMENT_PROGRESS, "/set_tests", "/set_tests#manage"],
+    ["/teacher_features", "/groups", PATHS.SET_ASSIGNMENTS, "/assignment_schedule", PATHS.ASSIGNMENT_PROGRESS, "/set_tests"],
     ["/groups", PATHS.SET_ASSIGNMENTS, "/set_tests", PATHS.ASSIGNMENT_PROGRESS, "/teaching_order"]
 );
 const learnLinks = siteSpecific(

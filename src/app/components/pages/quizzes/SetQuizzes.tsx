@@ -96,7 +96,6 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
-    const [pageTitle, setPageTitle] = useState(siteSpecific((activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
 
     // todo: This is so when the quizAssignments selector tries to augment quizzes with group names, it works. Revisit.
     const { data: groups } = useGetGroupsQuery(false);
@@ -110,7 +109,6 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
             (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) ||
             MANAGE_QUIZ_TAB.set;
         setActiveTab(tab);
-        setPageTitle(siteSpecific((tab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
     }, [hashAnchor]);
 
     useEffect(() => {
@@ -119,10 +117,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
     const {titleFilter, setTitleFilter, filteredQuizzes} = useFilteredQuizzes(user);
 
-    function activeTabChanged(tabIndex: number) {
-        setPageTitle(siteSpecific((tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"))
-    }
-
+    const pageTitle= siteSpecific("Set / Manage Tests", "Manage tests");
     const pageHelp = <span>
         Use this page to manage and set tests to your groups. You can assign any test the {siteSpecific("Isaac", "Ada")} team have built.
         <br />
@@ -139,7 +134,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "set_tests_help" : undefined} />
         {isAda && <PageFragment fragmentId={"set_tests_help"} ifNotFound={RenderNothing} />}
-        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>
+        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab}>
             {{
                 [siteSpecific("Set Tests", "Available tests")]:
                 <ShowLoading until={filteredQuizzes}>
