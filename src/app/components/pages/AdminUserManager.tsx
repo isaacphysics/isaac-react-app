@@ -11,7 +11,8 @@ import {
     useAdminSearchUsersMutation,
     useAdminDeleteUserMutation,
     useAdminModifyUserEmailVerificationStatusMutation,
-    useAdminModifyUserRolesMutation, useAdminGetUserIdsSchoolLookupQuery,
+    useAdminModifyUserRolesMutation,
+    useAdminGetUserIdsSchoolLookupQuery,
 } from "../../state";
 import {AdminSearchEndpointParams, EmailVerificationStatus, UserRole} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
@@ -240,7 +241,7 @@ export const AdminUserManager = () => {
         <RS.Card className="my-4">
             <RS.CardTitle data-testid="user-search-numbers" tag="h4" className="pl-4 pt-3 mb-0">
                 Manage users ({isDefined(searchResults) && searchResults.length || 0})<br />
-                \Selected ({selectedUserIds.length})
+                Selected ({selectedUserIds.length})
             </RS.CardTitle>
 
             <RS.CardBody innerRef={adminSearchResultsRef}>
