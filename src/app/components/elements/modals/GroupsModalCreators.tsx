@@ -86,7 +86,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
             </>}
         />
         <p>
-            {firstTime ? "Now you&apos;ve made a group, you may want to:" : "Once you have invited users to the group, you may want to:"}
+            {firstTime ? "Now you've made a group, you may want to:" : "Once you have invited users to the group, you may want to:"}
         </p>
     </>;
 };
@@ -110,7 +110,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
                     store.dispatch(closeActiveModal());
                     history.push(PATHS.SET_ASSIGNMENTS);
                 }}>
-                    Set {siteSpecific("an assignment", "a quiz")}
+                    Set an assignment
                 </Button>
             </Col>
             {firstTime && <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
