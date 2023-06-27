@@ -184,11 +184,6 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
 
-    | {type: ACTION_TYPE.EVENTS_REQUEST}
-    | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: AugmentedEvent[]; total: number}
-    | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.EVENTS_CLEAR}
-
     | {type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST}
     | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS; eventOverviews: EventOverview[]}
     | {type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE}

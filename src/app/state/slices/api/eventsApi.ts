@@ -1,8 +1,8 @@
 import {isaacApi} from "./baseApi";
 import {EventBookingDTO, IsaacEventPageDTO} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
-import {AugmentedEvent} from "../../../../IsaacAppTypes";
-import {apiHelper, isDefined} from "../../../services";
+import {AugmentedEvent, EventMapData} from "../../../../IsaacAppTypes";
+import {apiHelper, EventStageFilter, EventStatusFilter, EventTypeFilter, isDefined} from "../../../services";
 
 export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
     const augmentedEvent: AugmentedEvent = Object.assign({}, event);
@@ -56,9 +56,16 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
     return augmentedEvent;
 };
 
+type EventsQueryParams = {
+    typeFilter: EventTypeFilter;
+    statusFilter: EventStatusFilter;
+    stageFilter: EventStageFilter;
+    startIndex: number;
+    limit: number;
+}
 
 export const eventsApi = isaacApi.enhanceEndpoints({
-    addTagTypes: ["EventBookings", "Event", "EventGroupBookings", "AllEventGroupBookings"],
+    addTagTypes: ["EventBookings", "Event", "EventsList", "EventGroupBookings", "AllEventGroupBookings", "EventMapData"],
 }).injectEndpoints({
     endpoints: (build) => ({
         getEvent: build.query<AugmentedEvent, string>({
@@ -66,6 +73,39 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             providesTags: (event) => event ? [{type: "Event", id: event.id}] : [],
             transformResponse: augmentEvent,
         }),
+
+        getEvents: build.query<{events: AugmentedEvent[], total: number}, EventsQueryParams>({
+            query: ({startIndex, limit, stageFilter, statusFilter, typeFilter}) => ({
+                url: "/events",
+                params: {
+                    tags: typeFilter !== EventTypeFilter["All events"] ? typeFilter : undefined,
+                    start_index: startIndex,
+                    limit,
+                    show_active_only: statusFilter === EventStatusFilter["Upcoming events"],
+                    show_inactive_only: false,
+                    show_booked_only: statusFilter === EventStatusFilter["My booked events"],
+                    show_reservations_only: statusFilter === EventStatusFilter["My event reservations"],
+                    show_stage_only: stageFilter !== EventStageFilter["All stages"] ? stageFilter : undefined
+                }
+            }),
+            transformResponse: (data: {results: IsaacEventPageDTO[], totalResults: number}) => ({events: data.results.map(augmentEvent), total: data.totalResults}),
+            serializeQueryArgs: ({queryArgs}) => {
+                const {stageFilter, statusFilter, typeFilter} = queryArgs;
+                return {stageFilter, statusFilter, typeFilter};
+            },
+            merge: ({events: currentEvents}, {events: newEvents, total}) => {
+                return {events: Array.from(new Set([...currentEvents, ...newEvents])), total};
+            },
+            forceRefetch: ({currentArg, previousArg}) => {
+                return currentArg?.startIndex !== previousArg?.startIndex || currentArg?.limit !== previousArg?.limit;
+            },
+            providesTags: ["EventsList"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Events request failed",
+            })
+        }),
+
+        // === Bookings ===
 
         getEventBookings: build.query<EventBookingDTO[], string>({
             query: (eventId) => `/events/${eventId}/bookings`,
@@ -109,8 +149,8 @@ export const eventsApi = isaacApi.enhanceEndpoints({
 
 export const {
     useGetEventQuery,
+    useLazyGetEventsQuery,
     useGetEventBookingsQuery,
     useGetEventBookingsForGroupQuery,
-    useGetEventBookingsForAllGroupsQuery,
     useCancelUsersReservationsOnEventMutation,
 } = eventsApi;

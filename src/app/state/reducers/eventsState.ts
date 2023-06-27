@@ -1,18 +1,5 @@
-import {Action, AugmentedEvent, EventMapData, EventOverview} from "../../../IsaacAppTypes";
+import {Action, EventOverview} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
-
-type EventsState = {events: AugmentedEvent[]; total: number} | null;
-export const events = (events: EventsState = null, action: Action) => {
-    const currentEvents = events ? events.events : [];
-    switch (action.type) {
-        case ACTION_TYPE.EVENTS_RESPONSE_SUCCESS:
-            return {events: Array.from(new Set([...currentEvents, ...action.augmentedEvents])), total: action.total};
-        case ACTION_TYPE.EVENTS_CLEAR:
-            return null;
-        default:
-            return events;
-    }
-};
 
 type EventOverviewsState = EventOverview[] | null;
 export const eventOverviews = (eventOverviews: EventOverviewsState = null, action: Action) => {

@@ -3,14 +3,8 @@ import {
     ACTION_TYPE,
     api,
     API_REQUEST_FAILURE_MESSAGE,
-    atLeastOne,
-    augmentEvent,
     DOCUMENT_TYPE,
-    EventStageFilter,
-    EventStatusFilter,
-    EventTypeFilter,
     history,
-    isDefined,
     isFirstLoginInPersistence,
     KEY,
     persistence,
@@ -23,7 +17,6 @@ import {
     AppGroupMembership,
     ATTENDANCE,
     CredentialsAuthDTO,
-    EmailUserRoles,
     FreeTextRule,
     PotentialUser,
     QuestionSearchQuery,
@@ -35,14 +28,9 @@ import {
 import {
     AuthenticationProvider,
     ChoiceDTO,
-    EmailTemplateDTO,
-    EmailVerificationStatus,
     GlossaryTermDTO,
-    GraphChoiceDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
-    RegisteredUserDTO,
-    UserRole,
     TestCaseDTO,
     UserContext,
     UserSummaryDTO,
@@ -881,26 +869,6 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
 };
 
 // Events
-export const clearEventsList = {type: ACTION_TYPE.EVENTS_CLEAR};
-
-export const getEventsList = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter, stageFilter: EventStageFilter) => async (dispatch: Dispatch<Action>) => {
-    const typeFilterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
-    const showStageOnly = stageFilter !== EventStageFilter["All stages"] ? stageFilter : null;
-    const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
-    const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
-    const showReservedOnly = statusFilter === EventStatusFilter["My event reservations"];
-    const showInactiveOnly = false;
-    try {
-        dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
-        const response = await api.events.getEvents(startIndex, eventsPerPage, typeFilterTags, showActiveOnly,
-            showInactiveOnly, showBookedOnly, showReservedOnly, showStageOnly);
-        const augmentedEvents = response.data.results.map(event => augmentEvent(event));
-        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: response.data.totalResults});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Events request failed", e));
-    }
-};
 
 export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dispatch<Action>) => {
     try {
@@ -920,7 +888,6 @@ export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dis
         dispatch(showAxiosErrorToastIfNeeded("Unable to display events", e));
     }
 };
-
 export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST});

@@ -1,8 +1,6 @@
 import axios, {AxiosPromise} from "axios";
 import {
     API_PATH,
-    EventStageFilter,
-    EventTypeFilter,
     IMAGE_PATH,
     securePadCredentials,
     securePadPasswordReset,
@@ -255,22 +253,6 @@ export const api = {
         }
     },
     events: {
-        getEvents: (
-            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
-            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean, showReservedOnly: boolean,
-            showStageOnly: EventStageFilter | null
-        ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
-            return endpoint.get(`/events`, {params: {
-                start_index: startIndex,
-                limit: eventsPerPage,
-                show_active_only: showActiveOnly,
-                show_inactive_only: showInactiveOnly,
-                show_booked_only: showBookedOnly,
-                show_reservations_only: showReservedOnly,
-                show_stage_only: showStageOnly,
-                tags: filterEventsByType
-            }});
-        },
         getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
             return endpoint.get(`/events`, {params: {
                 start_index: 0, limit: numberOfActiveEvents, show_active_only: active,

@@ -2,15 +2,11 @@ import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    AppState,
-    clearEventsList,
     getEventMapData,
-    getEventsList,
     selectors,
-    useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useLazyGetEventsQuery
 } from "../../state";
-import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {EventCard} from "../elements/cards/EventCard";
@@ -25,6 +21,7 @@ import {
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 
 interface EventsPageQueryParams {
@@ -40,11 +37,10 @@ const EVENTS_PER_PAGE = 6;
 export const Events = withRouter(({history, location}: RouteComponentProps) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
-    const dispatch = useAppDispatch();
-    const eventsState = useAppSelector((state: AppState) => state?.events);
     // const eventMapData = useAppSelector((state: AppState) => state?.eventMapData);
     const user = useAppSelector(selectors.user.orNull);
-    const numberOfLoadedEvents = eventsState ? eventsState.events.length : 0;
+
+    const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
 
     const statusFilter =
         (user && user.loggedIn && query.show_booked_only && EventStatusFilter["My booked events"]) ||
@@ -55,11 +51,9 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     const stageFilter = query.show_stage_only || EventStageFilter["All stages"];
 
     useEffect(() => {
-        const startIndex = 0;
-        dispatch(clearEventsList);
-        dispatch(getEventsList(startIndex, EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter));
         dispatch(getEventMapData(startIndex, -1, typeFilter, statusFilter, stageFilter));
-    }, [dispatch, typeFilter, statusFilter, stageFilter]);
+        getEventsList({startIndex: 0, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
+    }, [typeFilter, statusFilter, stageFilter]);
 
     const pageHelp = <span>
         Follow the links below to find out more about our FREE events.
@@ -115,32 +109,38 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                 </RS.Form>
 
                 {/* Results */}
-                <ShowLoading until={eventsState} thenRender={({events, total}) => <div className="my-4">
-                    <RS.Row>
-                        {events.map(event => <div key={event.id} className="col-xs-12 col-sm-6 col-md-4 d-flex">
-                            <EventCard event={event} />
-                        </div>)}
-                    </RS.Row>
+                <ShowLoadingQuery
+                    query={eventsQuery}
+                    defaultErrorTitle={"Error loading events list"}
+                    thenRender={({events, total}) => {
+                        const numberOfLoadedEvents = events.length;
 
-                    {/* Load More Button */}
-                    {numberOfLoadedEvents < total && <div className="text-center mb-5">
-                        <RS.Button onClick={() => {
-                            dispatch(getEventsList(numberOfLoadedEvents, EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter));
-                        }}>
-                            Load more events
-                        </RS.Button>
-                    </div>}
+                        return <div className="my-4">
+                            <RS.Row>
+                                {events.map(event => <div key={event.id} className="col-xs-12 col-sm-6 col-md-4 d-flex">
+                                    <EventCard event={event} />
+                                </div>)}
+                            </RS.Row>
 
-                    {/* No Results */}
-                    {total === 0 && <div className="text-center">
-                        <p>Sorry, we cannot find any events that match your filter settings.</p>
-                        {statusFilter === EventStatusFilter["My booked events"] && <p>
-                            N.B. Events booked via Eventbrite may not appear here; for these if you have received email
-                            confirmation you are booked.
-                        </p>}
-                    </div>}
-                </div>
-                } />
+                            {/* Load More Button */}
+                            {numberOfLoadedEvents < total && <div className="text-center mb-5">
+                                <RS.Button onClick={() => {
+                                    getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
+                                }}>
+                                    Load more events
+                                </RS.Button>
+                            </div>}
+
+                            {/* No Results */}
+                            {total === 0 && <div className="text-center">
+                                <p>Sorry, we cannot find any events that match your filter settings.</p>
+                                {statusFilter === EventStatusFilter["My booked events"] && <p>
+                                    N.B. Events booked via Eventbrite may not appear here; for these if you have received email
+                                    confirmation you are booked.
+                                </p>}
+                            </div>}
+                        </div>;
+                }} />
                 <div className="mb-5">
                     <PageFragment fragmentId="event_type_descriptions" ifNotFound={RenderNothing}/>
                 </div>
