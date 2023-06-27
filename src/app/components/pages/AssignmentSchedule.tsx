@@ -567,7 +567,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     //     Students in the group will be emailed when you set a new assignment.
     // </span>;
     const pageHelp = <span>
-        Use this page to manage assignments to your groups, and view them as a timeline. You can unassign work, and assign existing assignments to other groups.
+        Use this page to manage assignments for your groups, and view them as a timeline. You can unassign work, and assign existing assignments to other groups.
     </span>;
 
     return <Container>
