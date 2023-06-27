@@ -142,7 +142,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
 
         adminGetUserIdsSchoolLookup: build.query<UserSchoolLookup, number[]>({
             query: (userIds) => ({
-                url: `/admin/users/school_lookup?user_ids=${userIds.join(",")}`,
+                url: `/users/school_lookup?user_ids=${userIds.join(",")}`,
             }),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Failed to load user school lookup details",
