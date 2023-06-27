@@ -17,7 +17,7 @@ import {Spacer} from "../../elements/Spacer";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
-    below,
+    below, isAda,
     isEventLeaderOrStaff,
     isPhy, isStaff,
     MANAGE_QUIZ_TAB,
@@ -28,6 +28,8 @@ import {
 } from "../../../services";
 import {Tabs} from "../../elements/Tabs";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {PageFragment} from "../../elements/PageFragment";
+import {RenderNothing} from "../../elements/RenderNothing";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -80,7 +82,7 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
                     <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1 bg-light">
                         {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
                     </RS.Button>
-                    <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
+                    <RS.Button tag={Link} to={`/test/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
                         View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
                     </RS.Button>
                 </div>
@@ -136,6 +138,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "set_tests_help" : undefined} />
+        {isAda && <PageFragment fragmentId={"set_tests_help"} ifNotFound={RenderNothing} />}
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>
             {{
                 [siteSpecific("Set Tests", "Available tests")]:

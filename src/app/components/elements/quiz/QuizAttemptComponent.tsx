@@ -124,12 +124,12 @@ function QuizHeader({attempt, preview, user}: QuizAttemptProps) {
                 </span>
                 {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
             </p>
-            {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && <Alert color="info">
+            {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && <Alert color={siteSpecific("info", "warning")}>
                 Please be aware that for tests your answer to each question <b>will be visible to your teacher(s) after
                 you submit your test</b> so that they can provide further feedback and support if they wish to do so.
                 <br />
-                Assignments are different. We do not share with your teachers any of your entered answers or the
-                number of your attempts to questions in assignments.
+                {siteSpecific("Assignments", "Quiz assignments")} are different. We do not share with your teachers any of your entered answers or the
+                number of your attempts to questions in {siteSpecific("assignments", "quizzes")}.
             </Alert>}
         </>;
     } else {

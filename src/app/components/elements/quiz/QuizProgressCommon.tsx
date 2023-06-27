@@ -1,7 +1,14 @@
 import React, {useContext, useState} from "react";
 import {closeActiveModal, openActiveModal, returnQuizToStudent, useAppDispatch} from "../../../state";
 import {Button} from "reactstrap";
-import {IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
+import {
+    ContentBaseDTO,
+    IsaacQuizDTO,
+    IsaacQuizSectionDTO,
+    Mark,
+    QuizAssignmentDTO,
+    QuizUserFeedbackDTO
+} from "../../../../IsaacApiTypes";
 import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
 import {isDefined, isQuestion, QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP, siteSpecific} from "../../../services";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -31,6 +38,16 @@ interface ResultRowProps {
 
 export function questionsInSection(section?: IsaacQuizSectionDTO) {
     return section?.children?.filter(isQuestion) || [];
+}
+
+export function questionsInQuiz(quiz?: IsaacQuizDTO) {
+    const questions: ContentBaseDTO[] = []
+    quiz?.children?.forEach(
+        section => {
+            questions.push(...questionsInSection(section))
+        }
+    )
+    return questions;
 }
 
 export const passMark = 0.75;
@@ -171,6 +188,7 @@ export function ResultRow({row, assignment}: ResultRowProps) {
 
 export function ResultsTable({assignment}: ResultsTableProps) {
     const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
+    const quiz: IsaacQuizDTO | undefined = assignment.quiz;
     return <div className={"progress-table-container mb-5"}>
         <table className="progress-table border">
             <tbody>
@@ -182,9 +200,9 @@ export function ResultsTable({assignment}: ResultsTableProps) {
                     <th rowSpan={2} className="border-bottom total-column">Overall</th>
                 </tr>
                 <tr className="bg-white">
-                    {sections.map(section => questionsInSection(section).map((question, index) => <th key={question.id} className="border">
+                    {questionsInQuiz(quiz).map((question, index) => <th key={question.id} className="border">
                         {`Q${index + 1}`}
-                    </th>)).flat()}
+                    </th>).flat()}
                 </tr>
                 {assignment.userFeedback?.map(row =>
                     <ResultRow key={row.user?.id} row={row} assignment={assignment} />

@@ -9,7 +9,7 @@ import {history, isPhy, PATHS, SITE_SUBJECT, siteSpecific} from "../../app/servi
 
 const myIsaacLinks = siteSpecific(
     ["/account", PATHS.MY_GAMEBOARDS, PATHS.MY_ASSIGNMENTS, "/progress", "/tests"],
-    [PATHS.MY_ASSIGNMENTS, PATHS.MY_GAMEBOARDS, "/progress", "/account"]
+    [PATHS.MY_ASSIGNMENTS, PATHS.MY_GAMEBOARDS, "/tests", "/progress", "/account"]
 );
 const tutorLinks = siteSpecific(
     ["/tutor_features", "/groups", PATHS.SET_ASSIGNMENTS, PATHS.ASSIGNMENT_PROGRESS],
@@ -17,7 +17,7 @@ const tutorLinks = siteSpecific(
 );
 const teacherLinks = siteSpecific(
     ["/teacher_features", "/groups", PATHS.SET_ASSIGNMENTS, PATHS.ASSIGNMENT_PROGRESS, "/set_tests", "/set_tests#manage"],
-    ["/groups", PATHS.SET_ASSIGNMENTS, PATHS.ASSIGNMENT_PROGRESS, "/teaching_order"]
+    ["/groups", PATHS.SET_ASSIGNMENTS, "/set_tests", PATHS.ASSIGNMENT_PROGRESS, "/teaching_order"]
 );
 const learnLinks = siteSpecific(
     ["/11_14", "/gcse", "/alevel", PATHS.QUESTION_FINDER, "/concepts"],

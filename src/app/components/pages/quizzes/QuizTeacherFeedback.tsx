@@ -16,6 +16,7 @@ import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
+    siteSpecific,
     isDefined, nthHourOf, TODAY,
     useAssignmentProgressAccessibilitySettings
 } from "../../../services";
@@ -37,7 +38,7 @@ import {
     DropdownToggle,
     Label,
     Row,
-    UncontrolledDropdown
+    UncontrolledButtonDropdown
 } from "reactstrap";
 
 const pageHelp = <span>
@@ -141,9 +142,9 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         </div>
                     </Col>}
                     <Col>
-                        <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br/>
-                        <UncontrolledDropdown className="d-inline-block">
-                            <DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
+                        <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br />
+                        <UncontrolledButtonDropdown size="sm">
+                            <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
                                 {settingFeedbackMode ?
                                     <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></>
                                 :   feedbackNames[assignment.quizFeedbackMode as QuizFeedbackMode]}
@@ -157,7 +158,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                                     </DropdownItem>
                                 )}
                             </DropdownMenu>
-                        </UncontrolledDropdown>
+                        </UncontrolledButtonDropdown>
                     </Col>
                     <Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
                         <Button
