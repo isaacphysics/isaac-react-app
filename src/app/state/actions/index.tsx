@@ -45,7 +45,6 @@ import {
 import {AxiosError} from "axios";
 import ReactGA from "react-ga";
 import ReactGA4 from "react-ga4";
-import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {
     AppState,
@@ -57,7 +56,8 @@ import {
     showToast,
     logAction,
     isaacApi,
-    AppDispatch, eventsApi
+    AppDispatch,
+    eventsApi
 } from "../index";
 import {Immutable} from "immer";
 import {AnyAction} from "redux";
@@ -869,18 +869,6 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
 };
 
 // Events
-export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST});
-        const response = await api.events.getEventOverviews(eventOverviewFilter);
-        // We ignore response.data.total because we do not currently page the results of event overviews
-        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS, eventOverviews: response.data.results});
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to load event overviews", error) as any);
-    }
-};
-
 export const getEventBookingCSV = (eventId: string) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST});

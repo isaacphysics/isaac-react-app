@@ -26,7 +26,6 @@ import {
     ValidationUser
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state";
-import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {Immutable} from "immer";
 
 export const endpoint = axios.create({
@@ -251,15 +250,6 @@ export const api = {
         send: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
             return endpoint.post(`/contact/`, params, {});
         }
-    },
-    events: {
-        getEventOverviews: (eventOverviewFilter: EventOverviewFilter): AxiosPromise<{results: AppTypes.EventOverview[]; totalResults: number}> => {
-            const params = {limit: -1, startIndex: 0};
-            if (eventOverviewFilter !== EventOverviewFilter["All events"]) {
-                Object.assign(params, {filter: eventOverviewFilter})
-            }
-            return endpoint.get('/events/overview', {params});
-        },
     },
     eventBookings: {
         bookMyselfOnEvent: (eventId: string, additionalInformation: AdditionalInformation) => {

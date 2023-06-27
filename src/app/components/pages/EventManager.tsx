@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import * as RS from "reactstrap";
+import {Container} from "reactstrap";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB, isDefined, isEventLeader, scrollVerticallyIntoView} from "../../services";
@@ -26,12 +26,13 @@ export const EventManager = ({user}: {user: PotentialUser}) => {
     const eventBookingUserIds = eventBookings?.map(booking => booking.userBooked && booking.userBooked.id).filter(isDefined);
     const {data: userIdToSchoolMapping} = useAdminGetUserIdsSchoolLookupQuery(eventBookingUserIds ?? skipToken);
 
-    return  <RS.Container>
+    return  <Container>
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin"/>
         <div className="my-5">
             <EventOverviews user={user} setSelectedEventId={setSelectedEventId} />
+            <div className="mt-3" ref={selectedEventRef}/>
             {selectedEventId !== null && event && <>
-                <div ref={selectedEventRef} className="mb-3">
+                <div className="mb-3">
                     <SelectedEventDetails event={event} />
                 </div>
                 <div>
@@ -51,5 +52,5 @@ export const EventManager = ({user}: {user: PotentialUser}) => {
                 </div>
             </>}
         </div>
-    </RS.Container>
+    </Container>
 };

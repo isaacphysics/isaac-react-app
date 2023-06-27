@@ -1,8 +1,9 @@
 import {isaacApi} from "./baseApi";
 import {EventBookingDTO, IsaacEventPageDTO} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
-import {AugmentedEvent} from "../../../../IsaacAppTypes";
+import {AugmentedEvent, EventOverview} from "../../../../IsaacAppTypes";
 import {apiHelper, EventStageFilter, EventStatusFilter, EventTypeFilter, isDefined} from "../../../services";
+import {EventOverviewFilter} from "../../../components/elements/panels/EventOverviews";
 
 export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
     const augmentedEvent: AugmentedEvent = Object.assign({}, event);
@@ -65,7 +66,7 @@ type EventsQueryParams = {
 }
 
 export const eventsApi = isaacApi.enhanceEndpoints({
-    addTagTypes: ["EventBookings", "Event", "EventsList", "EventGroupBookings", "AllEventGroupBookings"],
+    addTagTypes: ["EventBookings", "Event", "EventsList", "EventGroupBookings", "AllEventGroupBookings", "AdminEventsList"],
 }).injectEndpoints({
     endpoints: (build) => ({
         getEvent: build.query<AugmentedEvent, string>({
@@ -89,6 +90,8 @@ export const eventsApi = isaacApi.enhanceEndpoints({
                 }
             }),
             transformResponse: (data: {results: IsaacEventPageDTO[], totalResults: number}) => ({events: data.results.map(augmentEvent), total: data.totalResults}),
+            // i.e. choose the query args to use as the cache key - ones that, if changed, will start a new request
+            // in a new cache entry.
             serializeQueryArgs: ({queryArgs}) => {
                 const {stageFilter, statusFilter, typeFilter} = queryArgs;
                 return {stageFilter, statusFilter, typeFilter};
@@ -96,12 +99,40 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             merge: ({events: currentEvents}, {events: newEvents, total}) => {
                 return {events: Array.from(new Set([...currentEvents, ...newEvents])), total};
             },
+            // i.e. choose the query args that cause the query to be rerun, to update what is currently in the cache.
+            // As far as I can tell, forceRefetch should be entirely disjoint from serializeQueryArgs (and visa versa).
             forceRefetch: ({currentArg, previousArg}) => {
                 return currentArg?.startIndex !== previousArg?.startIndex || currentArg?.limit !== previousArg?.limit;
             },
             providesTags: ["EventsList"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Events request failed",
+            })
+        }),
+
+        adminGetEventOverviews: build.query<{eventOverviews: EventOverview[], total: number}, {startIndex: number; limit: number; eventOverviewFilter: EventOverviewFilter}>({
+            query: ({startIndex, limit, eventOverviewFilter}) => ({
+                url: "/events/overview",
+                params: {
+                    start_index: startIndex,
+                    limit,
+                    filter: eventOverviewFilter === EventOverviewFilter["All events"] ? undefined : eventOverviewFilter,
+                }
+            }),
+            transformResponse: (data: {results: EventOverview[], totalResults: number}) => ({eventOverviews: data.results, total: data.totalResults}),
+            serializeQueryArgs: ({queryArgs}) => {
+                const {eventOverviewFilter} = queryArgs;
+                return {eventOverviewFilter};
+            },
+            merge: ({eventOverviews: currentEvents}, {eventOverviews: newEvents, total}) => {
+                return {eventOverviews: Array.from(new Set([...currentEvents, ...newEvents])), total};
+            },
+            forceRefetch: ({currentArg, previousArg}) => {
+                return currentArg?.startIndex !== previousArg?.startIndex || currentArg?.limit !== previousArg?.limit;
+            },
+            providesTags: ["AdminEventsList"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to load event overviews",
             })
         }),
 
@@ -151,6 +182,7 @@ export const {
     useGetEventQuery,
     useLazyGetEventsQuery,
     useGetEventBookingsQuery,
+    useLazyAdminGetEventOverviewsQuery,
     useGetEventBookingsForGroupQuery,
     useCancelUsersReservationsOnEventMutation,
 } = eventsApi;
