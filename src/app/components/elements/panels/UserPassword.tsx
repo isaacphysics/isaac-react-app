@@ -1,8 +1,8 @@
-import {Button, CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {Button, CardBody, Col, FormGroup, Input, Label, Row, UncontrolledTooltip, FormFeedback} from "reactstrap";
 import React, {useState} from "react";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {loadZxcvbnIfNotPresent, MINIMUM_PASSWORD_LENGTH, passwordDebounce, validateEmail} from "../../../services";
+import {loadZxcvbnIfNotPresent, passwordDebounce, validateEmail} from "../../../services";
 import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
 
 interface UserPasswordProps {
@@ -17,10 +17,12 @@ interface UserPasswordProps {
     setNewPasswordConfirm: (e: any) => void;
     newPasswordConfirm: string;
     editingOtherUser: boolean;
+    arePasswordsIdentical: boolean;
+    passwordMeetsRequirements: boolean;
 }
 
 export const UserPassword = (
-    {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm, editingOtherUser}: UserPasswordProps) => {
+    {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm, editingOtherUser, arePasswordsIdentical, passwordMeetsRequirements}: UserPasswordProps) => {
 
     const dispatch = useAppDispatch();
     const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
@@ -36,9 +38,15 @@ export const UserPassword = (
     };
 
     return <CardBody className={"pb-0"}>
-        <Row>
+        <Row className="mb-2">
             <Col md={{size: 6, offset: 3}}>
-                <h4>Password</h4>
+                <div style={{ display: "flex" }}>
+                    <h4 className="mb-0">Password</h4>
+                    <span id={`password-help-tooltip`} className="icon-help mb-0" style={{ alignSelf: "center" }}/>
+                    <UncontrolledTooltip target={`password-help-tooltip`} placement="bottom">
+                        {"Passwords must be at least 12 characters, containing at least one number, one lowercase letter, one uppercase letter, and one special character."}
+                    </UncontrolledTooltip>
+                </div>
             </Col>
         </Row>
         {userAuthSettings && userAuthSettings.hasSegueAccount ?
@@ -65,7 +73,9 @@ export const UserPassword = (
                                 <Label htmlFor="new-password">New password</Label>
                                 <Input
                                     invalid={!!newPasswordConfirm && !isNewPasswordConfirmed}
-                                    id="new-password" type="password" name="new-password"
+                                    id="new-password" 
+                                    type="password" 
+                                    name="new-password"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setNewPassword(e.target.value);
                                         passwordDebounce(e.target.value, setPasswordFeedback);
@@ -74,7 +84,7 @@ export const UserPassword = (
                                         passwordDebounce(e.target.value, setPasswordFeedback);
                                     }}
                                     onFocus={loadZxcvbnIfNotPresent}
-                                    aria-describedby="passwordValidationMessage"
+                                    aria-describedby="passwordConfirmationValidationMessage"
                                     disabled={!editingOtherUser && currentPassword == ""}
                                 />
                                 {passwordFeedback &&
@@ -95,18 +105,18 @@ export const UserPassword = (
                                 <Input
                                     invalid={!!currentPassword && !isNewPasswordConfirmed}
                                     id="password-confirm"
-                                    type="password" name="password-confirmation"
+                                    type="password" 
+                                    name="password-confirmation"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setNewPasswordConfirm(e.target.value);
                                         setMyUser(Object.assign({}, myUser, {password: e.target.value}));
-                                    }} aria-describedby="passwordConfirmationValidationMessage"
+                                    }} 
+                                    aria-describedby="passwordConfirmationValidationMessage"
                                     disabled={!editingOtherUser && currentPassword == ""}
                                 />
-                                {currentPassword && !isNewPasswordConfirmed &&
                                     <FormFeedback id="passwordConfirmationValidationMessage">
-                                        New passwords must match and be at least {MINIMUM_PASSWORD_LENGTH} characters long.
+                                    {!arePasswordsIdentical ? "New passwords must match." : !passwordMeetsRequirements && "Passwords must be at least 12 characters, containing at least one number, one lowercase letter, one uppercase letter, and one special character."}
                                     </FormFeedback>
-                                }
                             </FormGroup>
                         </Col>
                     </Row>

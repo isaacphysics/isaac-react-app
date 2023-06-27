@@ -185,7 +185,9 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
     }, [hashAnchor, authToken]);
 
     // Values derived from inputs (props and state)
-    const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
+    const passwordMeetsRequirements = (newPasswordConfirm.length === 0) || validatePassword(newPasswordConfirm);
+    const arePasswordsIdentical = (newPassword === newPasswordConfirm);
+    const isNewPasswordConfirmed = arePasswordsIdentical && passwordMeetsRequirements;
 
     function setProgrammingLanguage(newProgrammingLanguage: ProgrammingLanguage) {
         setMyUserPreferences({...myUserPreferences, PROGRAMMING_LANGUAGE: newProgrammingLanguage});
@@ -337,6 +339,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                                     setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
                                     isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
+                                    arePasswordsIdentical={arePasswordsIdentical} passwordMeetsRequirements={passwordMeetsRequirements}
                                 />
                                 {isStaff(user) && !editingOtherUser &&
                                     // Currently staff only
@@ -377,7 +380,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                                     {/* Teacher connections does not have a save */}
                                     <Input
                                         type="submit" value="Save" className="btn btn-block btn-secondary border-0"
-                                        disabled={!accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections}
+                                        disabled={!accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections || !isNewPasswordConfirmed}
                                     />
                                 </Col>
                             </Row>

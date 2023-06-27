@@ -204,7 +204,25 @@ export const handlers = [
             ctx.status(200),
             ctx.json({results: [], totalResults: 0})
         );
-    })
+    }),
+    rest.get(API_PATH + "/groups/membership", (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json([])
+        );
+    }),
+    rest.get(API_PATH + "/authorisations", (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json([])
+        );
+    }),
+    rest.get(API_PATH + "/authorisations/other_users", (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json([])
+        );
+    }),
 ];
 
 // --- Extra handler builder functions ---

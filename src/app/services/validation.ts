@@ -38,9 +38,12 @@ const isDobOverN = (n: number, dateOfBirth?: Date) => {
 
 export const isDobOverThirteen = (dateOfBirth?: Date) => isDobOverN(13, dateOfBirth);
 
-export const MINIMUM_PASSWORD_LENGTH = 6;
+export const MINIMUM_PASSWORD_LENGTH = 12;
 export const validatePassword = (password: string) => {
-    return password.length >= MINIMUM_PASSWORD_LENGTH;
+    const regex = new RegExp(
+        `^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{${MINIMUM_PASSWORD_LENGTH},}$`
+      );
+      return regex.test(password);
 };
 
 export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences | null) => {

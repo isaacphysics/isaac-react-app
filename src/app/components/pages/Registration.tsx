@@ -15,7 +15,8 @@ import {
     FormGroup,
     Input,
     Label,
-    Row
+    Row, 
+    UncontrolledTooltip
 } from "reactstrap";
 import {PasswordFeedback} from "../../../IsaacAppTypes";
 import {
@@ -130,7 +131,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="first-name-input" className="form-required">
+                                <Label htmlFor="first-name-input">
                                     First name
                                 </Label>
                                 <Input
@@ -148,7 +149,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="last-name-input" className="form-required">
+                                <Label htmlFor="last-name-input">
                                     Last name
                                 </Label>
                                 <Input
@@ -170,19 +171,27 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-input" className="form-required">
+                                <Label htmlFor="password-input">
                                     Password
                                 </Label>
+                                <span id={`password-help-tooltip`} className="icon-help ml-1" />
+                                <UncontrolledTooltip target={`password-help-tooltip`} placement="bottom">
+                                    {"Passwords must be at least 12 characters, containing at least one number, one lowercase letter, one uppercase letter, and one special character."}
+                                </UncontrolledTooltip>
                                 <Input
-                                    id="password-input" type="password" name="password" required
-                                    defaultValue={userPassword}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setUnverifiedPassword(e.target.value);
-                                        passwordDebounce(e.target.value, setPasswordFeedback);
-                                    }}
-                                    onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        passwordDebounce(e.target.value, setPasswordFeedback);
-                                    }}
+                                id="password-input"
+                                type="password" 
+                                name="password" 
+                                autoComplete="new-password"
+                                required
+                                defaultValue={userPassword}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setUnverifiedPassword(e.target.value);
+                                    passwordDebounce(e.target.value, setPasswordFeedback);
+                                }}
+                                onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    passwordDebounce(e.target.value, setPasswordFeedback);
+                                }}
                                 />
                                 {passwordFeedback &&
                                     <span className='float-right small mt-1'>
@@ -196,21 +205,30 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                         </Col>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="password-confirm" className="form-required">
+                                <Label htmlFor="password-confirm">
                                     Re-enter password
                                 </Label>
                                 <Input
-                                    id="password-confirm" name="password" type="password"
-                                    required aria-describedby="invalidPassword"
+                                    id="password-confirm" 
+                                    name="password" 
+                                    type="password"
+                                    autoComplete="new-password"
+                                    required 
+                                    aria-describedby="invalidPassword"
                                     disabled={!unverifiedPassword}
                                     invalid={attemptedSignUp && !passwordIsValid}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         assignToRegistrationUser({password: e.target.value});
                                     }}
                                 />
+                                {/* Feedback that appears for password match before submission */}
+                                <FormFeedback id="password-match-feedback" className="always-show">
+                                    {registrationUser.password && !(registrationUser.password == unverifiedPassword) && "Passwords don't match."}
+                                </FormFeedback>
+                                {/* Feedback that is hidden until after form submission attempt */}
                                 <FormFeedback id="password-validation-feedback">
-                                    {attemptedSignUp && !passwordIsValid &&
-                                            "Passwords must match and be at least 6 characters long"}
+                                    {attemptedSignUp && (registrationUser.password == unverifiedPassword) && !validatePassword(registrationUser.password || "") &&
+                                            "Please ensure your password is at least 12 characters, containing at least one number, one lowercase letter, one uppercase letter, and one special character."}
                                 </FormFeedback>
                             </FormGroup>
                         </Col>
@@ -220,12 +238,16 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     <Row>
                         <Col md={6}>
                             <FormGroup>
-                                <Label htmlFor="email-input" className="form-required">
+                                <Label htmlFor="email-input">
                                     Email address
                                 </Label>
                                 <Input
-                                    id="email-input" name="email" type="email"
-                                    aria-describedby="email-validation-feedback" required
+                                    id="email-input" 
+                                    name="email" 
+                                    type="email"
+                                    autoComplete="email"
+                                    aria-describedby="email-validation-feedback" 
+                                    required
                                     defaultValue={userEmail}
                                     invalid={attemptedSignUp && !emailIsValid}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -271,6 +293,9 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                         />
                                     </Col>
                                 </Row>
+                                <FormFeedback id="dob-validation-feedback" className="always-show">
+                                    {(attemptedSignUp && !confirmedOverThirteen) && "Please enter a date of birth or confirm you are over 13 years old."}
+                                </FormFeedback>
                             </FormGroup>
                         </Col>
                     </Row>
@@ -278,16 +303,8 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     {/* Form Error */}
                     <Row>
                         <Col>
-                            {attemptedSignUp &&
-                                (!givenNameIsValid || !familyNameIsValid || !passwordIsValid || !emailIsValid) &&
-                                <h4 role="alert" className="text-danger text-left">
-                                    Not all required fields have been correctly filled.
-                                </h4>
-                            }
                             <h4 role="alert" className="text-danger text-left">
-                                {attemptedSignUp && !confirmedOverThirteen ?
-                                    `You must be over 13 years old to create an account.` :
-                                    errorMessage}
+                                {errorMessage}
                             </h4>
                         </Col>
                     </Row>

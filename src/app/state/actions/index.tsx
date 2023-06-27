@@ -223,22 +223,20 @@ export const updateCurrentUser = (
     redirect: boolean
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
-    if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
-        if (currentUser.loggedIn && currentUser.email !== updatedUser.email) {
-            const emailChangeConfirmed = window.confirm(
-                "You have edited your email address. Your current address will continue to work until you verify your " +
-                "new address by following the verification link sent to it via email. Continue?"
-            );
-            if (!emailChangeConfirmed) {
-                dispatch(showToast({
-                    title: "Account settings not updated",
-                    body: "Your account settings update was cancelled.",
-                    color: "danger",
-                    timeout: 5000,
-                    closable: false,
+    if (currentUser.loggedIn && currentUser.id == updatedUser.id && currentUser.email !== updatedUser.email) {
+       const emailChangeConfirmed = window.confirm(
+            "You have edited your email address. Your current address will continue to work until you verify your " +
+            "new address by following the verification link sent to it via email. Continue?"
+        );
+        if (!emailChangeConfirmed) {
+            dispatch(showToast({
+                title: "Account settings not updated",
+                body: "Your account settings update was cancelled.",
+                color: "danger",
+                timeout: 5000,
+                closable: false,
                 }) as any);
-                return; //early
-            }
+            return; //early
         }
     }
 
