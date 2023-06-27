@@ -869,25 +869,6 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
 };
 
 // Events
-
-export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch(clearEventsList as any);
-        dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
-        const getActive = true;
-        const eventsResponse = await api.events.getFirstN(numberOfEvents, getActive);
-        if (eventsResponse.data.totalResults < numberOfEvents) {
-            const numberOfRemainingEvents = numberOfEvents - eventsResponse.data.totalResults;
-            const inactiveEventsResponse = await api.events.getFirstN(numberOfRemainingEvents, !getActive);
-            eventsResponse.data.results.push(...inactiveEventsResponse.data.results);
-        }
-        const augmentedEvents = eventsResponse.data.results.map(event => augmentEvent(event));
-        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: augmentedEvents.length});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Unable to display events", e));
-    }
-};
 export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST});
@@ -897,27 +878,6 @@ export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => a
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE});
         dispatch(showAxiosErrorToastIfNeeded("Failed to load event overviews", error) as any);
-    }
-};
-
-export const getEventMapData = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter, stageFilter: EventStageFilter) => async (dispatch: Dispatch<Action>) => {
-    const filterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
-    const showStageOnly = stageFilter !== EventStageFilter["All stages"] ? stageFilter : null;
-    const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
-    const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
-    const showInactiveOnly = false;
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_MAP_DATA_REQUEST});
-        const response = await api.events.getEventMapData(startIndex, eventsPerPage, filterTags, showActiveOnly,
-            showInactiveOnly, showBookedOnly, showStageOnly);
-        dispatch({
-            type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS,
-            eventMapData: response.data.results,
-            total: response.data.totalResults
-        });
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Event map data request failed", e));
     }
 };
 

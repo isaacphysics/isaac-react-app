@@ -1,6 +1,5 @@
 import {combineReducers} from "redux";
 import {
-    eventMapData,
     eventOverviews,
     totpChallengePending,
     userAuthSettings,
@@ -98,7 +97,6 @@ export const rootReducer = combineReducers({
 
     // Events
     eventOverviews,
-    eventMapData,
 
     // Quizzes
     quizzes,

@@ -253,12 +253,6 @@ export const api = {
         }
     },
     events: {
-        getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
-            return endpoint.get(`/events`, {params: {
-                start_index: 0, limit: numberOfActiveEvents, show_active_only: active,
-                show_inactive_only: !active, show_booked_only: false, tags: null
-            }});
-        },
         getEventOverviews: (eventOverviewFilter: EventOverviewFilter): AxiosPromise<{results: AppTypes.EventOverview[]; totalResults: number}> => {
             const params = {limit: -1, startIndex: 0};
             if (eventOverviewFilter !== EventOverviewFilter["All events"]) {
@@ -266,20 +260,6 @@ export const api = {
             }
             return endpoint.get('/events/overview', {params});
         },
-        getEventMapData: (
-            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
-            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean,
-            showStageOnly: EventStageFilter | null): AxiosPromise<{results: AppTypes.EventMapData[]; totalResults: number}> => {
-            return endpoint.get(`/events/map_data`, {params: {
-                start_index: startIndex,
-                limit: eventsPerPage,
-                show_active_only: showActiveOnly,
-                show_inactive_only: showInactiveOnly,
-                show_booked_only: showBookedOnly,
-                show_stage_only: showStageOnly,
-                tags: filterEventsByType
-            }});
-        }
     },
     eventBookings: {
         bookMyselfOnEvent: (eventId: string, additionalInformation: AdditionalInformation) => {

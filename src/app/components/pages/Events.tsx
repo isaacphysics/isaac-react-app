@@ -2,7 +2,6 @@ import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    getEventMapData,
     selectors,
     useAppSelector,
     useLazyGetEventsQuery
@@ -37,7 +36,6 @@ const EVENTS_PER_PAGE = 6;
 export const Events = withRouter(({history, location}: RouteComponentProps) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
-    // const eventMapData = useAppSelector((state: AppState) => state?.eventMapData);
     const user = useAppSelector(selectors.user.orNull);
 
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
@@ -51,7 +49,6 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     const stageFilter = query.show_stage_only || EventStageFilter["All stages"];
 
     useEffect(() => {
-        dispatch(getEventMapData(startIndex, -1, typeFilter, statusFilter, stageFilter));
         getEventsList({startIndex: 0, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
     }, [typeFilter, statusFilter, stageFilter]);
 
