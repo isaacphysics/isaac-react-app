@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Table, Alert} from "reactstrap";
 import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     addMyselfToWaitingList,
-    AppState,
     bookMyselfOnEvent,
     cancelMyBooking,
     openActiveModal,
@@ -14,7 +13,6 @@ import {
     useAppDispatch,
     useAppSelector, useGetEventQuery
 } from "../../state";
-import {ShowLoading} from "../handlers/ShowLoading";
 import {
     persistence,
     atLeastOne,
@@ -31,7 +29,6 @@ import {
     isStaff,
     isTeacherOrAbove,
     KEY,
-    NOT_FOUND,
     SITE_TITLE,
     studentOnlyEventMessage,
     userCanBeAddedToEventWaitingList,
@@ -76,6 +73,18 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
     const [bookingFormOpen, setBookingFormOpen] = useState(false);
     const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});
 
+    // This is UGLY but there's a weird issue between the leaflet.css file and how webpack loads url()s that makes everything go kaboom.
+    // There are various places online discussing this issue, but this one is a good starting point: https://github.com/Leaflet/Leaflet/issues/4968
+    // _______
+    // WARNING 2022-03-01 - This will need to be reconsidered when we upgrade the front-end dependencies
+    // ¯¯¯¯¯¯¯
+    const icon = useMemo(() => L.icon({
+        iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
+        iconUrl: require('leaflet/dist/images/marker-icon.png'),
+        shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+        iconAnchor: [12, 41]
+    }), []);
+
     function updateAdditionalInformation(update: AdditionalInformation) {
         setAdditionalInformation(Object.assign({}, additionalInformation, update));
     }
@@ -100,6 +109,11 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
 
             window.open(calendarTemplateUrl.filter(s => !!s).join('&'), '_blank');
         }
+    }
+
+    function stopBookingIfStudent() {
+        setBookingFormOpen(false);
+        dispatch(showErrorToast("Event booking cancelled", "You cannot sign up to a teacher event as a student."));
     }
 
     return <ShowLoadingQuery
@@ -130,33 +144,16 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             }
         }
 
-        function stopBookingIfStudent() {
-            setBookingFormOpen(false);
-            dispatch(showErrorToast("Event booking cancelled", "You cannot sign up to a teacher event as a student."));
-        }
-
-        function checkTeacherStatusThenSubmitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
-            formEvent.preventDefault();
-            dispatch(openActiveModal(teacherEventConfirmationModal(submitBooking, stopBookingIfStudent)));
-        }
-
         function openAndScrollToBookingForm() {
             document.getElementById("open_booking_form_button")?.scrollIntoView({behavior: 'smooth'});
             document.getElementById("booking_form")?.scrollIntoView({behavior: 'smooth'});
             setBookingFormOpen(true);
         }
 
-        // This is UGLY but there's a weird issue between the leaflet.css file and how webpack loads url()s that makes everything go kaboom.
-        // There are various places online discussing this issue, but this one is a good starting point: https://github.com/Leaflet/Leaflet/issues/4968
-        // _______
-        // WARNING 2022-03-01 - This will need to be reconsidered when we upgrade the front-end dependencies
-        // ¯¯¯¯¯¯¯
-        let icon = L.icon({
-            iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
-            iconUrl: require('leaflet/dist/images/marker-icon.png'),
-            shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-            iconAnchor: [12, 41]
-        });
+        function checkTeacherStatusThenSubmitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
+            formEvent.preventDefault();
+            dispatch(openActiveModal(teacherEventConfirmationModal(submitBooking, stopBookingIfStudent)));
+        }
 
         const checkTeacherStatus = isPhy && event.isATeacherEvent && !isTeacherOrAbove(user);
 
