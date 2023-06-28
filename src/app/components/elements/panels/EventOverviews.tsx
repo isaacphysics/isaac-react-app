@@ -62,7 +62,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                 }}>
                     Load more events
                 </RS.Button>
-                <span className="ml-2">(showing {eventOverviews?.length ?? 0} of {total})</span>
+                <span className="ml-2">(showing {eventOverviews?.length ?? 0} of {total ?? 0})</span>
             </div>
             <div className="float-right mb-4">
                 <RS.Label>
