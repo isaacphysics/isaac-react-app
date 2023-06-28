@@ -15,7 +15,6 @@ import {
 } from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
-    AdditionalInformation,
     Choice,
     Concepts,
     CredentialsAuthDTO,
