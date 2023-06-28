@@ -5,7 +5,7 @@ import {AdditionalInformation, AugmentedEvent, EventOverview} from "../../../../
 import {apiHelper, EventStageFilter, EventStatusFilter, EventTypeFilter, isDefined} from "../../../services";
 import {EventOverviewFilter} from "../../../components/elements/panels/EventOverviews";
 
-export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
+const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
     const augmentedEvent: AugmentedEvent = Object.assign({}, event);
     if (event.date != null) {
         const startDate = new Date(event.date);
