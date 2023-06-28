@@ -1,5 +1,5 @@
 import {Action, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, extractQuestions, isDefined, isFound, NOT_FOUND} from "../../services";
+import {ACTION_TYPE, extractQuestions, NOT_FOUND} from "../../services";
 import {
     ChoiceDTO,
     IsaacQuizDTO,
@@ -8,63 +8,6 @@ import {
     QuizAttemptFeedbackDTO
 } from "../../../IsaacApiTypes";
 import produce, {Immutable} from "immer";
-
-type QuizAssignmentsState = QuizAssignmentDTO[] | NOT_FOUND_TYPE | null;
-export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST:
-            return null;
-        case ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS:
-            return action.assignments;
-        case ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE:
-            return NOT_FOUND;
-        case ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS:
-            if (!isDefined(quizAssignments) || quizAssignments == NOT_FOUND) {
-                return []
-            } else {
-                return [...quizAssignments, action.newAssignment];
-            }
-        case ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_REQUEST:
-            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.map(assignment => {
-                if (assignment.id === action.quizAssignmentId) {
-                    return {...assignment, cancelling: true};
-                }
-                return assignment;
-            }) : quizAssignments;
-        case ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_FAILURE:
-            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.map(assignment => {
-                if (assignment.id === action.quizAssignmentId) {
-                    return {...assignment, cancelling: undefined};
-                }
-                return assignment;
-            }) : quizAssignments;
-        case ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_SUCCESS:
-            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.filter(assignment => {
-                return assignment.id !== action.quizAssignmentId;
-            }) : quizAssignments;
-        case ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS:
-            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.map(assignment => {
-                if (assignment.id === action.quizAssignmentId) {
-                    return {...assignment, ...action.update};
-                }
-                return assignment;
-            }) : quizAssignments;
-        case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_SUCCESS:
-            if (isFound(quizAssignments)) {
-                return quizAssignments.map(qa => {
-                    if (qa.id === action.assignment.id) {
-                        return { ...qa, quiz: action.assignment.quiz, userFeedback: action.assignment.userFeedback };
-                    } else {
-                        return qa;
-                    }
-                })
-            } else {
-                return quizAssignments;
-            }
-        default:
-            return quizAssignments;
-    }
-};
 
 type QuizAssignedToMeState = QuizAssignmentDTO[] | NOT_FOUND_TYPE | null;
 export const quizAssignedToMe = (quizAssignments: QuizAssignedToMeState = null, action: Action) => {
@@ -173,42 +116,6 @@ export const studentQuizAttempt = (possibleAttempt: StudentQuizAttemptState = nu
             return {error: action.error};
         default:
             return possibleAttempt;
-    }
-};
-
-type QuizAssignmentState = {assignment: QuizAssignmentDTO} | {error: string} | null;
-export const quizAssignment = (possibleAssignment: QuizAssignmentState = null, action: Action): QuizAssignmentState => {
-    switch (action.type) {
-        case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_REQUEST:
-            return null;
-        case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_SUCCESS:
-            return {assignment: action.assignment};
-        case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_FAILURE:
-            return {error: action.error};
-        case ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_RESPONSE_SUCCESS:
-            if (possibleAssignment && 'assignment' in possibleAssignment && possibleAssignment.assignment.id === action.quizAssignmentId) {
-                return {assignment: {
-                    ...possibleAssignment.assignment,
-                    userFeedback: possibleAssignment.assignment.userFeedback?.map(feedback => {
-                        if (feedback.user?.id === action.feedback.user?.id) {
-                            return action.feedback;
-                        } else {
-                            return feedback;
-                        }
-                    }),
-                }};
-            }
-            return possibleAssignment;
-        case ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS:
-            if (possibleAssignment && 'assignment' in possibleAssignment && possibleAssignment.assignment.id === action.quizAssignmentId) {
-                return {assignment: {
-                    ...possibleAssignment.assignment,
-                    ...action.update,
-                }};
-            }
-            return possibleAssignment;
-        default:
-            return possibleAssignment;
     }
 };
 

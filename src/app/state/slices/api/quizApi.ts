@@ -1,17 +1,26 @@
 import {isaacApi} from "./baseApi";
 import {
-    ChoiceDTO, IsaacQuizDTO,
+    ChoiceDTO,
+    IsaacQuizDTO,
     QuestionValidationResponseDTO,
-    QuizAssignmentDTO, QuizAttemptDTO, QuizAttemptFeedbackDTO,
-    QuizSummaryDTO, QuizUserFeedbackDTO,
+    QuizAssignmentDTO,
+    QuizAttemptDTO,
+    QuizAttemptFeedbackDTO,
+    QuizSummaryDTO,
+    QuizUserFeedbackDTO,
     ResultsWrapper
 } from "../../../../IsaacApiTypes";
-import {onQueryLifecycleEvents} from "./utils";
+import {
+    anonymisationFunctions,
+    anonymiseIfNeededWith,
+    anonymiseListIfNeededWith,
+    onQueryLifecycleEvents
+} from "./utils";
 import {Immutable} from "immer";
 import {isDefined} from "../../../services";
 
 export const quizApi = isaacApi.enhanceEndpoints({
-    addTagTypes: ["AvailableQuizList", "QuizzesAssignedToMe", "QuizzesSetByMe", "QuizzesAttemptedFreelyByMe"],
+    addTagTypes: ["AvailableQuizList", "QuizzesAssignedToMe", "QuizzesSetByMe", "QuizzesAttemptedFreelyByMe", "QuizAssignment"],
 }).injectEndpoints({
     endpoints: (build) => ({
 
@@ -76,8 +85,10 @@ export const quizApi = isaacApi.enhanceEndpoints({
         //     return endpoint.get(`/quiz/assignment/${quizAssignmentId}`);
         // },
 
-        getQuizAssignmentFeedback: build.query<QuizAssignmentDTO, number>({
+        getQuizAssignmentWithFeedback: build.query<QuizAssignmentDTO, number>({
             query: (quizAssignmentId) => `/quiz/assignment/${quizAssignmentId}`,
+            providesTags: (result, error, quizAssignmentId) => [{type: "QuizAssignment", id: quizAssignmentId}],
+            transformResponse: anonymiseIfNeededWith(anonymisationFunctions.assignment),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading test assignment feedback failed",
             })
@@ -168,13 +179,10 @@ export const quizApi = isaacApi.enhanceEndpoints({
 
         // === Quiz assignment management endpoints (for teachers and tutors) ===
 
-        // assignments: (): AxiosPromise<QuizAssignmentDTO[]> => {
-        //     return endpoint.get(`/quiz/assigned`);
-        // },
-
         getQuizAssignmentsSetByMe: build.query<QuizAssignmentDTO[], void>({
             query: () => `/quiz/assigned`,
             providesTags: ["QuizzesSetByMe"],
+            transformResponse: anonymiseListIfNeededWith(anonymisationFunctions.assignment),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading test assignments failed",
             })
@@ -206,7 +214,8 @@ export const quizApi = isaacApi.enhanceEndpoints({
                 method: "POST",
                 body: update,
             }),
-            invalidatesTags: ["QuizzesAssignedToMe", "QuizzesSetByMe"],
+            invalidatesTags: (result, error, {quizAssignmentId}) =>
+                ["QuizzesAssignedToMe", "QuizzesSetByMe", {type: "QuizAssignment", id: quizAssignmentId}],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: ({update}) => {
                     if (isDefined(update.quizFeedbackMode)) return "Failed to update test feedback mode";
@@ -231,16 +240,13 @@ export const quizApi = isaacApi.enhanceEndpoints({
             })
         }),
 
-        // markQuizAttemptAsIncomplete: (quizAssignmentId: number, userId: number): AxiosPromise<QuizUserFeedbackDTO> => {
-        //     return endpoint.post(`/quiz/assignment/${quizAssignmentId}/${userId}/incomplete`);
-        // },
-
         returnQuizToStudent: build.mutation<QuizUserFeedbackDTO, {quizAssignmentId: number, userId: number}>({
             query: ({quizAssignmentId, userId}) => ({
                 url: `/quiz/assignment/${quizAssignmentId}/${userId}/incomplete`,
                 method: "POST",
             }),
-            invalidatesTags: ["QuizzesAttemptedFreelyByMe", "QuizzesAssignedToMe"],
+            invalidatesTags: (result, error, {quizAssignmentId}) =>
+                ["QuizzesAssignedToMe", "QuizzesSetByMe", {type: "QuizAssignment", id: quizAssignmentId}],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Failed to return work to the student",
             })
@@ -250,5 +256,9 @@ export const quizApi = isaacApi.enhanceEndpoints({
 
 export const {
     useGetAvailableQuizzesQuery,
-    useUpdateQuizAttemptMutation
+    useUpdateQuizAttemptMutation,
+    useGetQuizAssignmentsSetByMeQuery,
+    useGetQuizAssignmentWithFeedbackQuery,
+    useUpdateQuizAssignmentMutation,
+    useReturnQuizToStudentMutation
 } = quizApi;

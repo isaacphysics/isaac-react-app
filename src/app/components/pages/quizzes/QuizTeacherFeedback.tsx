@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {
-    loadQuizAssignmentFeedback,
-    selectors,
+    getRTKQueryErrorMessage,
     showToast,
-    updateQuizAssignmentDueDate,
-    updateQuizAssignmentFeedbackMode,
     useAppDispatch,
-    useAppSelector
+    useGetQuizAssignmentWithFeedbackQuery,
+    useUpdateQuizAssignmentMutation
 } from "../../../state";
 import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -16,14 +14,15 @@ import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
-    isDefined, nthHourOf, TODAY,
+    isDefined,
+    nthHourOf,
+    TODAY,
     useAssignmentProgressAccessibilitySettings
 } from "../../../services";
 import {AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
-import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {currentYear, DateInput} from "../../elements/inputs/DateInput";
 import range from "lodash/range";
 import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
@@ -53,106 +52,91 @@ const feedbackNames: Record<QuizFeedbackMode, string> = {
 
 export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const {quizAssignmentId} = useParams<{quizAssignmentId: string}>();
-    const pageSettings = useAssignmentProgressAccessibilitySettings({user});
-    const assignmentState = useAppSelector(selectors.quizzes.assignment);
-
     const dispatch = useAppDispatch();
+    const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
     const numericQuizAssignmentId = parseInt(quizAssignmentId, 10);
-    useEffect(() => {
-        dispatch(loadQuizAssignmentFeedback(numericQuizAssignmentId));
-    }, [dispatch, numericQuizAssignmentId]);
+    const {data: quizAssignment, error: assignmentError} = useGetQuizAssignmentWithFeedbackQuery(numericQuizAssignmentId);
+    const [updateQuiz, {isLoading: isUpdatingQuiz, error: updateError}] = useUpdateQuizAssignmentMutation();
 
-    const [settingFeedbackMode, setSettingFeedbackMode] = useState(false);
-    const setFeedbackMode = async (mode: QuizFeedbackMode) => {
-        if (mode === assignment?.quizFeedbackMode) {
-            return;
-        }
-        try {
-            setSettingFeedbackMode(true);
-            await dispatch(updateQuizAssignmentFeedbackMode(numericQuizAssignmentId, mode));
-        } finally {
-            setSettingFeedbackMode(false);
+    const error = assignmentError || updateError;
+
+    const setFeedbackMode = (mode: QuizFeedbackMode) => {
+        if (mode !== quizAssignment?.quizFeedbackMode) {
+            updateQuiz({quizAssignmentId: numericQuizAssignmentId, update: {quizFeedbackMode: mode}});
         }
     };
 
-    const assignment = assignmentState && 'assignment' in assignmentState ? assignmentState.assignment : null;
-    const error = assignmentState && 'error' in assignmentState ? assignmentState.error : null;
-    const assignmentStartDate = assignment?.scheduledStartDate ?? assignment?.creationDate;
+    const assignmentStartDate = quizAssignment?.scheduledStartDate ?? quizAssignment?.creationDate;
     const assignmentNotYetStarted = assignmentStartDate && nthHourOf(0, assignmentStartDate) > TODAY();
-    const quizTitle = (assignment?.quiz?.title || assignment?.quiz?.id || "Test") + (assignmentNotYetStarted ? ` (starts ${formatDate(assignmentStartDate)})` : " results");
+    const quizTitle = (quizAssignment?.quiz?.title || quizAssignment?.quiz?.id || "Test") + (assignmentNotYetStarted ? ` (starts ${formatDate(assignmentStartDate)})` : " results");
 
     // Date input variables
     const yearRange = range(currentYear, currentYear + 5);
-
-    const [settingDueDate, setSettingDueDate] = useState<boolean>(false);
-    const [dueDate, setDueDate] = useState<Date | null>( null);
+    const [dueDate, setDueDate] = useState<Date>();
 
     useEffect(() => {
-        setDueDate(assignment?.dueDate ?? null);
-    }, [assignment?.dueDate]);
+        setDueDate(quizAssignment?.dueDate);
+    }, [quizAssignment?.dueDate]);
 
-    const setValidDueDate = async (newDate : Date | null) => {
-        if (settingDueDate || !newDate || assignment?.dueDate == newDate) {
+    const setValidDueDate = (newDate : Date) => {
+        if (isUpdatingQuiz || !newDate || quizAssignment?.dueDate == newDate) {
             return;
         }
-        if (assignment?.dueDate && newDate > assignment.dueDate) {
-            try {
-                setSettingDueDate(true);
-                if (confirm("Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.")) {
-                    dispatch(updateQuizAssignmentDueDate(numericQuizAssignmentId, newDate)).then((succeeded) => {
-                        if (succeeded) {
-                            dispatch(showToast({color: "success", title: "Due date extended successfully", body: `This test is now due ${newDate.toLocaleDateString()}.`, timeout: 5000}));
-                        }
+        if (quizAssignment?.dueDate && newDate > quizAssignment.dueDate) {
+            if (confirm("Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.")) {
+                updateQuiz({quizAssignmentId: numericQuizAssignmentId, update: {dueDate: newDate}})
+                    .then(() => {
+                        dispatch(showToast({color: "success", title: "Due date extended successfully", body: `This test is now due ${newDate.toLocaleDateString()}.`, timeout: 5000}));
                     });
-                } else {
-                    setDueDate(assignment.dueDate);
-                }
-            } finally {
-                setSettingDueDate(false);
+            } else {
+                setDueDate(quizAssignment.dueDate);
             }
         }
     }
 
     return <Container>
-        <ShowLoading until={assignmentState}>
-            {assignment && <>
+        <ShowLoading until={quizAssignment}>
+            {quizAssignment && <>
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
                 <div className="d-flex mb-4">
                     <span>
-                        Set by: {extractTeacherName(assignment.assignerSummary ?? null)} on {formatDate(assignment.creationDate)}
+                        Set by: {extractTeacherName(quizAssignment.assignerSummary)} on {formatDate(quizAssignment.creationDate)}
                     </span>
-                    {isDefined(assignment.dueDate) && <><Spacer/>Due: {formatDate(assignment.dueDate)}</>}
+                    {isDefined(quizAssignment.dueDate) && <><Spacer/>Due: {formatDate(quizAssignment.dueDate)}</>}
                 </div>
                 {assignmentNotYetStarted && <div className="mb-4">
                     <h4 className="alert-heading">This test has not yet started</h4>
                     <p>It will be released to your group on {formatDate(assignmentStartDate)}.</p>
                 </div>}
                 <Row>
-                    {assignment.dueDate && <Col xs={12} sm={6} md={4}>
+                    {quizAssignment.dueDate && <Col xs={12} sm={6} md={4}>
                         <Label for="dueDate" className="pr-1">Extend the due date:
-                            <DateInput id="dueDate" value={dueDate ?? undefined} invalid={(dueDate && (dueDate < assignment.dueDate)) ?? undefined}
-                                       yearRange={yearRange} noClear onChange={(e) => setDueDate(e.target.valueAsDate)}/>
+                            <DateInput id="dueDate" value={dueDate} invalid={dueDate && (dueDate < quizAssignment.dueDate)}
+                                       yearRange={yearRange} noClear onChange={(e) => setDueDate(e.target.valueAsDate ?? undefined)}
+                                       disabled={isUpdatingQuiz}
+                            />
                         </Label>
+                        {dueDate && (dueDate < quizAssignment.dueDate) && <small className={"text-danger"}>
+                            You cannot set the due date to be earlier than the current due date.
+                        </small>}
                         <div className={"mt-2 w-100 text-center mb-2"}>
-                            {dueDate && (dueDate > assignment.dueDate) && <Button color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
-                                {settingDueDate ? <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></> : "Extend due date"}
+                            {dueDate && (dueDate > quizAssignment.dueDate) && <Button disabled={isUpdatingQuiz} color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
+                                Extend due date
                             </Button>}
                         </div>
                     </Col>}
                     <Col>
                         <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br/>
                         <UncontrolledDropdown className="d-inline-block">
-                            <DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
-                                {settingFeedbackMode ?
-                                    <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></>
-                                :   feedbackNames[assignment.quizFeedbackMode as QuizFeedbackMode]}
+                            <DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!isUpdatingQuiz} id="feedbackMode" disabled={isUpdatingQuiz}>
+                                {feedbackNames[quizAssignment.quizFeedbackMode as QuizFeedbackMode]}
                             </DropdownToggle>
                             <DropdownMenu>
                                 {QuizFeedbackModes.map(mode =>
                                     <DropdownItem key={mode}
                                                     onClick={() => setFeedbackMode(mode)}
-                                                    active={mode === assignment?.quizFeedbackMode}>
+                                                    active={mode === quizAssignment?.quizFeedbackMode}>
                                         {feedbackNames[mode]}
                                     </DropdownItem>
                                 )}
@@ -162,7 +146,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     <Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
                         <Button
                             color="primary" outline className="btn-md mt-1 text-nowrap"
-                            href={getQuizAssignmentCSVDownloadLink(assignment.id as number)}
+                            href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
                             target="_blank"
                         >
                             Export as CSV
@@ -172,7 +156,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                         <AssignmentProgressLegend showQuestionKey />
-                        <ResultsTable assignment={assignment} />
+                        <ResultsTable assignment={quizAssignment} />
                     </AssignmentProgressPageSettingsContext.Provider>
                 </div>
             </>}
@@ -180,7 +164,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
                 <Alert color="danger">
                     <h4 className="alert-heading">Error loading test feedback</h4>
-                    <p>{error}</p>
+                    <p>{getRTKQueryErrorMessage(error).message}</p>
                 </Alert>
             </>}
         </ShowLoading>

@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {
-    loadQuizAssignments,
     markQuizAsCancelled,
-    selectors,
     showQuizSettingModal,
     useAppDispatch,
-    useAppSelector,
-    useGetGroupsQuery
+    useGetGroupsQuery,
+    useGetQuizAssignmentsSetByMeQuery
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -19,15 +17,17 @@ import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     below,
     isEventLeaderOrStaff,
-    isPhy, isStaff,
+    isPhy, isStaff, KEY,
     MANAGE_QUIZ_TAB,
-    NOT_FOUND, nthHourOf,
-    siteSpecific, TODAY,
+    nthHourOf, persistence,
+    siteSpecific,
+    TODAY,
     useDeviceSize,
     useFilteredQuizzes
 } from "../../../services";
 import {Tabs} from "../../elements/Tabs";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -96,10 +96,9 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
     const [pageTitle, setPageTitle] = useState(siteSpecific((activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
 
-    // todo: This is so when the quizAssignments selector tries to augment quizzes with group names, it works. Revisit.
     const { data: groups } = useGetGroupsQuery(false);
-
-    const quizAssignments = useAppSelector(selectors.quizzes.assignments);
+    const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
+    const quizAssignmentsQuery = useGetQuizAssignmentsSetByMeQuery();
 
     // Set active tab using hash anchor
     useEffect(() => {
@@ -110,10 +109,6 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
         setActiveTab(tab);
         setPageTitle(siteSpecific((tab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
     }, [hashAnchor]);
-
-    useEffect(() => {
-        dispatch(loadQuizAssignments());
-    }, [dispatch]);
 
     const {titleFilter, setTitleFilter, filteredQuizzes} = useFilteredQuizzes(user);
 
@@ -170,14 +165,24 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                 </ShowLoading>,
 
                 [siteSpecific("Manage Tests", "Previously set tests")]:
-                <ShowLoading until={quizAssignments} ifNotFound={<RS.Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</RS.Alert>}>
-                    {quizAssignments && quizAssignments !== NOT_FOUND && <>
-                        {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
-                        {quizAssignments.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-xl-3 my-2">
-                            {quizAssignments.map(assignment => <QuizAssignment key={assignment.id} user={user} assignment={assignment} />)}
-                        </div>}
-                    </>}
-                </ShowLoading>,
+                    <ShowLoadingQuery
+                        query={quizAssignmentsQuery}
+                        ifError={() => <RS.Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</RS.Alert>}
+                        thenRender={quizAssignments => {
+                            const quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
+                                const groupName = persistence.load(KEY.ANONYMISE_GROUPS) === "YES"
+                                    ? `Demo Group ${assignment.groupId}`
+                                    : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
+                                return {...assignment, groupName};
+                            });
+                            return <>
+                                {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
+                                {quizAssignments.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-xl-3 my-2">
+                                    {quizAssignmentsWithGroupNames.map(assignment => <QuizAssignment key={assignment.id} user={user} assignment={assignment} />)}
+                                </div>}
+                            </>
+                        }}
+                    />
             }}
         </Tabs>
     </RS.Container>;

@@ -20,8 +20,6 @@ import {
     userProgress,
     testQuestions,
     quizAssignedToMe,
-    quizAssignment,
-    quizAssignments,
     quizAttempt,
     quizAttemptedFreelyByMe,
     quizPreview,
@@ -94,11 +92,9 @@ export const rootReducer = combineReducers({
     search,
 
     // Quizzes
-    quizAssignments,
     quizAssignedToMe,
     quizAttempt,
     studentQuizAttempt,
-    quizAssignment,
     quizPreview,
     quizAttemptedFreelyByMe,
 

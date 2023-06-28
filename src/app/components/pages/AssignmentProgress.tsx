@@ -2,21 +2,17 @@ import React, {
     ComponentProps,
     useCallback,
     useContext,
-    useEffect,
     useLayoutEffect,
     useMemo,
     useRef,
     useState
 } from "react";
 import {
-    loadQuizAssignmentFeedback,
-    loadQuizAssignments,
     openActiveModal,
-    selectors,
     useAppDispatch,
-    useAppSelector,
     useGetAssignmentProgressQuery,
     useGetGroupsQuery,
+    useGetQuizAssignmentWithFeedbackQuery,
     useGroupAssignments,
     useGroupAssignmentSummary
 } from "../../state";
@@ -46,7 +42,6 @@ import {
     GameboardItem,
     GameboardItemState,
     QuizAssignmentDTO,
-    QuizUserFeedbackDTO,
     RegisteredUserDTO
 } from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
@@ -58,9 +53,7 @@ import {
     hasAssignmentStarted,
     isAda,
     isDefined,
-    isFound,
     isPhy,
-    isTeacherOrAbove,
     MARKBOOK_TYPE_TAB,
     PATHS,
     siteSpecific,
@@ -69,7 +62,6 @@ import {
 } from "../../services";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
-import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {Tabs} from "../elements/Tabs";
 import {formatMark, ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
@@ -448,32 +440,18 @@ export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: b
     </div></div>
 };
 
-const QuizProgressLoader = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) => {
-    const dispatch = useAppDispatch();
-    const quizAssignmentId = isDefined(quizAssignment.id) ? quizAssignment.id : null;
-    const quizAssignments = useAppSelector(selectors.quizzes.assignments);
+const QuizProgressLoader = ({quizAssignmentId}: { quizAssignmentId: number }) => {
+    const quizAssignmentFeedbackQuery = useGetQuizAssignmentWithFeedbackQuery(quizAssignmentId);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
-
-    useEffect(() => {
-        if (isDefined(quizAssignmentId)) {
-            dispatch(loadQuizAssignmentFeedback(quizAssignmentId));
+    return <ShowLoadingQuery
+        query={quizAssignmentFeedbackQuery}
+        defaultErrorTitle={"Error loading test assignment feedback"}
+        thenRender={quizAssignmentWithFeedback =>
+            <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
+                <ResultsTable assignment={quizAssignmentWithFeedback} />
+            </div>
         }
-    }, [quizAssignmentId]);
-
-    let userFeedback: Nullable<QuizUserFeedbackDTO[]> = [];
-    useEffect(() => {
-        if (isFound(quizAssignments)) {
-            userFeedback = quizAssignments.find(qa => qa.id === quizAssignmentId)?.userFeedback;
-        }
-    }, [quizAssignments])
-
-    return isDefined(userFeedback)
-        ? <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
-            <ResultsTable assignment={quizAssignment} />
-        </div>
-        : <div className="p-4 text-center">
-            <IsaacSpinner size="md" />
-        </div>;
+    />
 };
 
 const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) => {
@@ -505,7 +483,7 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={`/test/assignment/${quizAssignment.id}/feedback`} onClick={openSingleAssignment}>View individual assignment</Button>
             </div>
         </div>
-        {isExpanded && <QuizProgressLoader key={quizAssignment.quizId} quizAssignment={quizAssignment} />}
+        {isExpanded && <QuizProgressLoader key={quizAssignment.quizId} quizAssignmentId={quizAssignment.id} />}
     </div> : null;
 };
 
@@ -579,7 +557,6 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
 };
 
 export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
-    const dispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
     const accessibilitySettings = useAssignmentProgressAccessibilitySettings({user});
 
@@ -590,13 +567,6 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
         ...accessibilitySettings,
         assignmentOrder,
     }), [assignmentOrder, accessibilitySettings]);
-
-    useEffect(() => {
-        // Don't attempt to load tests for tutors, they cannot manage them
-        if (isTeacherOrAbove(user)) {
-            dispatch(loadQuizAssignments());
-        }
-    }, [dispatch]);
 
     const pageHelp = <span>
         Click on your groups to see the {siteSpecific("assignments", "quizzes")} you have set. View your students&apos; progress by question.

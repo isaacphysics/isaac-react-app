@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {closeActiveModal, openActiveModal, returnQuizToStudent, useAppDispatch} from "../../../state";
+import {closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation} from "../../../state";
 import {Button} from "reactstrap";
 import {IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
@@ -68,22 +68,16 @@ export function formatMark(numerator: number, denominator: number, formatAsPerce
 }
 
 export function ResultRow({row, assignment}: ResultRowProps) {
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [returningQuizToStudent, setReturningQuizToStudent] = useState(false);
     const dispatch = useAppDispatch();
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
+    const [dropdownOpen, setDropdownOpen] = useState(false);
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
+    const [returnQuizToStudent, {isLoading: returningQuizToStudent}] = useReturnQuizToStudentMutation();
     const returnToStudent = () => {
         const confirm = async () => {
-            try {
-                setReturningQuizToStudent(true);
-                await dispatch(returnQuizToStudent(assignment.id as number, row.user?.id as number));
-            } finally {
-                setReturningQuizToStudent(false);
-                dispatch(closeActiveModal());
-            }
+            returnQuizToStudent({quizAssignmentId: assignment.id as number, userId: row.user?.id as number});
         };
         dispatch(openActiveModal({
             closeAction: () => {
