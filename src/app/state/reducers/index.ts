@@ -25,7 +25,6 @@ import {
     quizAttempt,
     quizAttemptedFreelyByMe,
     quizPreview,
-    quizzes,
     studentQuizAttempt,
     activeAuthorisations,
     groupMemberships,
@@ -95,7 +94,6 @@ export const rootReducer = combineReducers({
     search,
 
     // Quizzes
-    quizzes,
     quizAssignments,
     quizAssignedToMe,
     quizAttempt,

@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from "react";
-import {deregisterQuestions, loadQuizzes, registerQuestions, selectors, useAppDispatch, useAppSelector} from "../state";
+import {deregisterQuestions, registerQuestions, selectors, useAppDispatch, useAppSelector} from "../state";
 import {API_PATH, isDefined, isEventLeaderOrStaff, isQuestion, tags, useQueryParams} from "./";
 import {
     ContentDTO,
@@ -11,6 +11,7 @@ import {
     RegisteredUserDTO
 } from "../../IsaacApiTypes";
 import partition from "lodash/partition";
+import {useGetAvailableQuizzesQuery} from "../state";
 
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     const qs: QuestionDTO[] = [];
@@ -50,16 +51,10 @@ export function useQuizSections(attempt?: QuizAttemptDTO) {
 }
 
 export function useFilteredQuizzes(user: RegisteredUserDTO) {
-    const quizzes = useAppSelector(selectors.quizzes.available);
     const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
     const {filter}: {filter?: string} = useQueryParams();
-    const startIndex = 0;
     const [titleFilter, setTitleFilter] = useState<string|undefined>(filter?.replace(/[^a-zA-Z0-9 ]+/g, ''));
-
-    const dispatch = useAppDispatch();
-    useEffect(() => {
-        dispatch(loadQuizzes(startIndex));
-    }, [dispatch, startIndex]);
+    const {data: quizzes} = useGetAvailableQuizzesQuery(0);
 
     useEffect(() => {
         if (isDefined(titleFilter) && isDefined(quizzes)) {

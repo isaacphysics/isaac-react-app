@@ -5,20 +5,9 @@ import {
     IsaacQuizDTO,
     QuizAssignmentDTO,
     QuizAttemptDTO,
-    QuizAttemptFeedbackDTO,
-    QuizSummaryDTO
+    QuizAttemptFeedbackDTO
 } from "../../../IsaacApiTypes";
 import produce, {Immutable} from "immer";
-
-type QuizState = {quizzes: QuizSummaryDTO[]; total: number} | null;
-export const quizzes = (quizzes: QuizState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS:
-            return {quizzes: action.quizzes.results as QuizSummaryDTO[], total: action.quizzes.totalResults as number};
-        default:
-            return quizzes;
-    }
-};
 
 type QuizAssignmentsState = QuizAssignmentDTO[] | NOT_FOUND_TYPE | null;
 export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, action: Action) => {

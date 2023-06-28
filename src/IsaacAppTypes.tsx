@@ -192,10 +192,6 @@ export type Action =
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
 
-    | {type: ACTION_TYPE.QUIZZES_REQUEST}
-    | {type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS; quizzes: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
-
     | {type: ACTION_TYPE.QUIZ_SET_REQUEST; assignment: ApiTypes.QuizAssignmentDTO}
     | {type: ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS; newAssignment: ApiTypes.QuizAssignmentDTO}
 
