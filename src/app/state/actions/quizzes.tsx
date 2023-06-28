@@ -13,6 +13,16 @@ import {
 import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
 import {QuizSettingModal} from "../../components/elements/modals/QuizSettingModal";
 
+export const loadQuizzes = (startIndex: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZZES_REQUEST});
+    try {
+        const quizzes = await api.quizzes.available(startIndex);
+        dispatch({type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS, quizzes: quizzes.data});
+    } catch (e) {
+        dispatch(showAxiosErrorToastIfNeeded("Loading tests failed", e));
+    }
+};
+
 export const setQuiz = (assignment: QuizAssignmentDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_SET_REQUEST, assignment});
     try {

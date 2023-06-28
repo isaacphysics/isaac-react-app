@@ -38,7 +38,6 @@ export * from "./slices/api/contentApi";
 export * from "./slices/api/groupsApi";
 export * from "./slices/api/emailApi";
 export * from "./slices/api/eventsApi";
-export * from "./slices/api/quizApi";
 export * from "./slices/gameboards";
 export * from "./reducers/userState";
 export * from "./actions/popups";

@@ -74,6 +74,7 @@ export const selectors = {
             };
         },
         assignedToMe: (state: AppState) => state?.quizAssignedToMe,
+        available: (state: AppState) => state?.quizzes?.quizzes,
         assignments: (state: AppState) => state?.quizAssignments && (persistence.load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignments(state?.quizAssignments) : augmentWithGroupNameIfInCache(state, state?.quizAssignments)),
         /* Retrieves the current users most recent attempt at the current quiz being viewed */
         currentQuizAttempt: (state: AppState) => state?.quizAttempt,

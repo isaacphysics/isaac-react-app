@@ -272,6 +272,9 @@ export const api = {
         }
     },
     quizzes: {
+        available: (startIndex: number): AxiosPromise<ResultsWrapper<ApiTypes.QuizSummaryDTO>> => {
+            return endpoint.get(`/quiz/available/${startIndex}`);
+        },
         createQuizAssignment: (assignment: ApiTypes.QuizAssignmentDTO): AxiosPromise<ApiTypes.QuizAssignmentDTO> => {
             return endpoint.post(`/quiz/assignment`, assignment);
         },
@@ -319,6 +322,9 @@ export const api = {
         },
         logQuizSectionView: (quizAttemptId: number, page: number): AxiosPromise<never> => {
             return endpoint.post(`/quiz/attempt/${quizAttemptId}/log`, `sectionNumber=${page}`, {});
+        },
+        getQuizAssignmentResultsSummaryCSV: (assignmentId: number) => {
+            return endpoint.get(`/quiz/assignment/${assignmentId}/download`);
         }
     },
 };
