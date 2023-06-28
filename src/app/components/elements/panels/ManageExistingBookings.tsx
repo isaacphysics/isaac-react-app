@@ -6,7 +6,6 @@ import {
     useAppDispatch,
     useCancelUserBookingMutation,
     useDeleteUserBookingMutation,
-    useGetEventBookingCSVMutation,
     usePromoteUserBookingMutation,
     useResendUserConfirmationEmailMutation
 } from "../../../state";
@@ -70,7 +69,6 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
     const [cancelUserBooking] = useCancelUserBookingMutation();
     const [deleteUserBooking] = useDeleteUserBookingMutation();
     const [resendUserConfirmationEmail] = useResendUserConfirmationEmailMutation();
-    const [getEventBookingCSV] = useGetEventBookingCSVMutation();
 
     return <Accordion trustedTitle="Manage current bookings">
         {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
@@ -247,7 +245,6 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                 <RS.Button
                     color="primary" outline className="btn-md mt-1"
                     href={`${API_PATH}/events/${eventId}/bookings/download`}
-                    onClick={() => getEventBookingCSV(eventId)}
                 >
                     Export as CSV
                 </RS.Button>

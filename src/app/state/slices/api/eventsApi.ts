@@ -312,13 +312,6 @@ export const eventsApi = isaacApi.enhanceEndpoints({
                 errorTitle: "Failed to record event attendance"
             })
         }),
-
-        getEventBookingCSV: build.mutation<any, string>({
-            query: (eventId) => `/events/${eventId}/bookings/download`,
-            onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to load event booking csv"
-            })
-        })
     })
 });
 
@@ -334,7 +327,6 @@ export const {
     useDeleteUserBookingMutation,
     usePromoteUserBookingMutation,
     useResendUserConfirmationEmailMutation,
-    useGetEventBookingCSVMutation,
     useAddMyselfToWaitingListMutation,
     useBookMyselfOnEventMutation,
     useCancelMyBookingMutation,
