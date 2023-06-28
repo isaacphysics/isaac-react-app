@@ -2,13 +2,13 @@ import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
 import {
-    cancelUserBooking,
-    deleteUserBooking,
-    getEventBookingCSV,
-    promoteUserBooking,
-    resendUserConfirmationEmail,
     showGroupEmailModal,
-    useAppDispatch
+    useAppDispatch,
+    useCancelUserBookingMutation,
+    useDeleteUserBookingMutation,
+    useGetEventBookingCSVMutation,
+    usePromoteUserBookingMutation,
+    useResendUserConfirmationEmailMutation
 } from "../../../state";
 import {
     API_PATH,
@@ -20,12 +20,13 @@ import {
     isEventLeader,
     sortOnPredicateAndReverse,
     stageLabelMap,
-    zeroOrLess
+    zeroOrLess, confirmThen, isDefined
 } from "../../../services";
 import {PotentialUser, UserSchoolLookup} from "../../../../IsaacAppTypes";
 import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
 import produce from "immer";
+import {RenderNothing} from "../RenderNothing";
 
 interface ManageExistingBookingsProps {
     user: PotentialUser;
@@ -64,6 +65,12 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
         });
         return idsToReturn;
     }
+
+    const [promoteUserBooking] = usePromoteUserBookingMutation();
+    const [cancelUserBooking] = useCancelUserBookingMutation();
+    const [deleteUserBooking] = useDeleteUserBookingMutation();
+    const [resendUserConfirmationEmail] = useResendUserConfirmationEmailMutation();
+    const [getEventBookingCSV] = useGetEventBookingCSVMutation();
 
     return <Accordion trustedTitle="Manage current bookings">
         {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
@@ -148,24 +155,44 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                         {augmentedEventBookings?.sort(sortOnPredicateAndReverse(sortPredicate, reverse))
                             .map(booking => {
                                 const userId = booking.userBooked && booking.userBooked.id;
-                                return <tr key={booking.bookingId}>
+                                return !isDefined(userId) ? RenderNothing : <tr key={booking.bookingId}>
                                     <td className="align-middle">
                                         {(['WAITING_LIST', 'CANCELLED'].includes(booking.bookingStatus as string)) &&
-                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(promoteUserBooking(eventId, userId))}>
+                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                                confirmThen(
+                                                    "Are you sure you want to convert this to a confirmed booking?",
+                                                    () => promoteUserBooking({eventId, userId})
+                                                )
+                                            }>
                                                 Promote
                                             </RS.Button>
                                         }
                                         {(['WAITING_LIST', 'CONFIRMED'].includes(booking.bookingStatus as string)) &&
-                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(cancelUserBooking(eventId, userId))}>
+                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                                confirmThen(
+                                                    "Are you sure you want to cancel this booking?",
+                                                    () => cancelUserBooking({eventId, userId})
+                                                )
+                                            }>
                                                 Cancel
                                             </RS.Button>
                                         }
                                         {isAdmin(user) &&
-                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(deleteUserBooking(eventId, userId))}>
+                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                                confirmThen(
+                                                    "Are you sure you want to delete this booking permanently?",
+                                                    () => deleteUserBooking({eventId, userId})
+                                                )
+                                            }>
                                                 Delete
                                             </RS.Button>
                                         }
-                                        <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() => dispatch(resendUserConfirmationEmail(eventId, userId))}>
+                                        <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                            confirmThen(
+                                                "Are you sure you want to resend the confirmation email for this booking?",
+                                                () => resendUserConfirmationEmail({eventId, userId})
+                                            )
+                                        }>
                                             Resend email
                                         </RS.Button>
                                     </td>
@@ -220,7 +247,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                 <RS.Button
                     color="primary" outline className="btn-md mt-1"
                     href={`${API_PATH}/events/${eventId}/bookings/download`}
-                    onClick={() => dispatch(getEventBookingCSV(eventId))}
+                    onClick={() => getEventBookingCSV(eventId)}
                 >
                     Export as CSV
                 </RS.Button>

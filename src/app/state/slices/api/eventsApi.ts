@@ -1,7 +1,7 @@
 import {isaacApi} from "./baseApi";
 import {EventBookingDTO, IsaacEventPageDTO} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
-import {AugmentedEvent, EventOverview} from "../../../../IsaacAppTypes";
+import {AdditionalInformation, AugmentedEvent, EventOverview} from "../../../../IsaacAppTypes";
 import {apiHelper, EventStageFilter, EventStatusFilter, EventTypeFilter, isDefined} from "../../../services";
 import {EventOverviewFilter} from "../../../components/elements/panels/EventOverviews";
 
@@ -136,7 +136,57 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             })
         }),
 
-        // === Bookings ===
+        // === Self booking endpoints ===
+
+        bookMyselfOnEvent: build.mutation<void, {eventId: string; additionalInformation: AdditionalInformation}>({
+            query: ({eventId, additionalInformation}) => ({
+                url: `/events/${eventId}/bookings`,
+                method: "POST",
+                body: additionalInformation
+            }),
+            invalidatesTags: (_, __, {eventId}) => [{type: "Event", id: eventId}],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Event booking failed",
+                successTitle: "Event booking confirmed",
+                successMessage: "You have been successfully booked onto this event.",
+            })
+        }),
+
+        // The way `waitingListOnly` is used here is kind of bad practice since it's only used for toasts. This isn't
+        // really a problem for mutations, but it's not great for queries, because it means that the query will be
+        // refetched when the "useless" parameter changes. In cases like that, using a lazy query hook would work.
+        addMyselfToWaitingList: build.mutation<void, {eventId: string; additionalInformation: AdditionalInformation; waitingListOnly?: boolean}>({
+            query: ({eventId, additionalInformation}) => ({
+                url: `/events/${eventId}/waiting_list`,
+                method: "POST",
+                body: additionalInformation
+            }),
+            invalidatesTags: (_, __, {eventId}) => [{type: "Event", id: eventId}],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Event booking failed",
+                successTitle: ({waitingListOnly}) => waitingListOnly
+                    ? "Booking request received"
+                    : "Waiting list booking confirmed",
+                successMessage: ({waitingListOnly}) => waitingListOnly
+                    ? "You have requested a place on this event."
+                    : "You have been successfully added to the waiting list for this event.",
+            })
+        }),
+
+        cancelMyBooking: build.mutation<void, string>({
+            query: (eventId) => ({
+                url: `/events/${eventId}/bookings/cancel`,
+                method: "DELETE"
+            }),
+            invalidatesTags: (_, __, eventId) => [{type: "Event", id: eventId}],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Event booking cancellation failed",
+                successTitle: "Your booking has been cancelled",
+                successMessage: "Your booking has successfully been cancelled.",
+            })
+        }),
+
+        // === Booking management ===
 
         getEventBookings: build.query<EventBookingDTO[], string>({
             query: (eventId) => `/events/${eventId}/bookings`,
@@ -175,6 +225,100 @@ export const eventsApi = isaacApi.enhanceEndpoints({
                 successMessage: "You have successfully cancelled students reservations for this event."
             })
         }),
+
+        bookUserOnEvent: build.mutation<void, {eventId: string; userId: number; additionalInformation: AdditionalInformation}>({
+            query: ({eventId, userId, additionalInformation}) => ({
+                url: `/events/${eventId}/bookings/${userId}`,
+                method: "POST",
+                body: additionalInformation
+            }),
+            invalidatesTags: ["EventBookings"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "The action on behalf of the user was unsuccessful",
+                successTitle: "Action successful",
+                successMessage: "The action on behalf of the user was successful."
+            })
+        }),
+
+        reserveUsersOnEvent: build.mutation<void, {eventId: string; userIds: number[]}>({
+            query: ({eventId, userIds}) => ({
+                url: `/events/${eventId}/reservations`,
+                method: "POST",
+                body: userIds
+            }),
+            invalidatesTags: (_, __, {eventId}) => ["EventGroupBookings", {type: "Event", id: eventId}],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Reservation failed",
+                successTitle: "Reservations confirmed",
+                successMessage: "You have successfully reserved students onto this event."
+            })
+        }),
+
+        // === Admin event manager endpoints ===
+
+        promoteUserBooking: build.mutation<void, {eventId: string; userId: number}>({
+            query: ({eventId, userId}) => ({
+                url: `/events/${eventId}/bookings/${userId}/promote`,
+                method: "POST",
+                body: {eventId, userId} // TODO <--- is this body even needed?
+            }),
+            invalidatesTags: ["EventBookings"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to promote event booking"
+            })
+        }),
+
+        resendUserConfirmationEmail: build.mutation<void, {eventId: string; userId: number}>({
+            query: ({eventId, userId}) => ({
+                url: `/events/${eventId}/bookings/${userId}/resend_confirmation`,
+                method: "POST"
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to resend email for event booking",
+                successTitle: "Event email sent",
+                successMessage: ({userId}) => `Email sent to ${userId}`
+            })
+        }),
+
+        cancelUserBooking: build.mutation<void, {eventId: string; userId: number}>({
+            query: ({eventId, userId}) => ({
+                url: `/events/${eventId}/bookings/${userId}/cancel`,
+                method: "DELETE"
+            }),
+            invalidatesTags: ["EventBookings"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to cancel event booking",
+            })
+        }),
+
+        deleteUserBooking: build.mutation<void, {eventId: string; userId: number}>({
+            query: ({eventId, userId}) => ({
+                url: `/events/${eventId}/bookings/${userId}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["EventBookings"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to un-book user from event"
+            })
+        }),
+
+        recordUserEventAttendance: build.mutation<void, {eventId: string; userId: number; attended: boolean}>({
+            query: ({eventId, userId, attended}) => ({
+                url: `/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`,
+                method: "POST"
+            }),
+            invalidatesTags: ["EventBookings"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to record event attendance"
+            })
+        }),
+
+        getEventBookingCSV: build.mutation<any, string>({
+            query: (eventId) => `/events/${eventId}/bookings/download`,
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to load event booking csv"
+            })
+        })
     })
 });
 
@@ -185,4 +329,15 @@ export const {
     useLazyAdminGetEventOverviewsQuery,
     useGetEventBookingsForGroupQuery,
     useCancelUsersReservationsOnEventMutation,
+    useRecordUserEventAttendanceMutation,
+    useCancelUserBookingMutation,
+    useDeleteUserBookingMutation,
+    usePromoteUserBookingMutation,
+    useResendUserConfirmationEmailMutation,
+    useGetEventBookingCSVMutation,
+    useAddMyselfToWaitingListMutation,
+    useBookMyselfOnEventMutation,
+    useCancelMyBookingMutation,
+    useBookUserOnEventMutation,
+    useReserveUsersOnEventMutation
 } = eventsApi;

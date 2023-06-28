@@ -2,13 +2,12 @@ import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
 import {
-    recordEventAttendance,
-    useAppDispatch
+    useRecordUserEventAttendanceMutation
 } from "../../../state";
 import {atLeastOne, isEventLeader, sortOnPredicateAndReverse} from "../../../services";
 import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
-import {ATTENDANCE, AugmentedEvent, PotentialUser, UserSchoolLookup} from "../../../../IsaacAppTypes";
+import {AugmentedEvent, PotentialUser, UserSchoolLookup} from "../../../../IsaacAppTypes";
 
 function displayAttendanceAsSymbol(status?: string) {
     switch (status) {
@@ -26,7 +25,8 @@ interface EventAttendanceProps {
     userIdToSchoolMapping: UserSchoolLookup;
 }
 export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSchoolMapping}: EventAttendanceProps) => {
-    const dispatch = useAppDispatch();
+
+    const [recordEventAttendance] = useRecordUserEventAttendanceMutation();
 
     const [sortPredicate, setSortPredicate] = useState("bookingDate");
     const [reverse, setReverse] = useState(true);
@@ -108,12 +108,12 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                                 return <tr key={booking.bookingId}>
                                     <td className="align-middle">
                                         {booking.bookingStatus != 'ATTENDED' && <RS.Button color="primary" outline className="btn-sm mb-2"
-                                            onClick={() => dispatch(recordEventAttendance(eventId, userBooked.id as number, ATTENDANCE.ATTENDED))}
+                                            onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: true})}
                                         >
                                             Mark&nbsp;as Attended
                                         </RS.Button>}
                                         {booking.bookingStatus != 'ABSENT' && <RS.Button color="primary" outline className="btn-sm mb-2"
-                                            onClick={() => dispatch(recordEventAttendance(eventId, userBooked.id as number, ATTENDANCE.ABSENT))}
+                                            onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: false})}
                                         >
                                             Mark&nbsp;as Absent
                                         </RS.Button>}

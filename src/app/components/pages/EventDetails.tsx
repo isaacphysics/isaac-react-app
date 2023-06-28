@@ -3,15 +3,16 @@ import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Table
 import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    addMyselfToWaitingList,
-    bookMyselfOnEvent,
-    cancelMyBooking,
     openActiveModal,
     selectors,
     showErrorToast,
     showToast,
     useAppDispatch,
-    useAppSelector, useGetEventQuery
+    useAppSelector,
+    useGetEventQuery,
+    useBookMyselfOnEventMutation,
+    useAddMyselfToWaitingListMutation,
+    useCancelMyBookingMutation
 } from "../../state";
 import {
     persistence,
@@ -40,7 +41,7 @@ import {
     isAdminOrEventManager,
     isEventLeader,
     isPhy,
-    userBookedReservedOrOnWaitingList
+    userBookedReservedOrOnWaitingList, confirmThen
 } from "../../services";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -116,6 +117,10 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
         dispatch(showErrorToast("Event booking cancelled", "You cannot sign up to a teacher event as a student."));
     }
 
+    const [bookMyselfOnEvent] = useBookMyselfOnEventMutation();
+    const [addMyselfToWaitingList] = useAddMyselfToWaitingListMutation();
+    const [cancelMyBooking] = useCancelMyBookingMutation();
+
     return <ShowLoadingQuery
         query={eventQuery}
         defaultErrorTitle={"Event not found"}
@@ -137,9 +142,9 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                 if (failureToastOrTrue !== true) {
                     dispatch(showToast(failureToastOrTrue));
                 } else if (canMakeABooking) {
-                    dispatch(bookMyselfOnEvent(event.id as string, additionalInformation));
+                    bookMyselfOnEvent({eventId: event.id as string, additionalInformation});
                 } else if (canBeAddedToWaitingList) {
-                    dispatch(addMyselfToWaitingList(event.id as string, additionalInformation, event.isWaitingListOnly));
+                    addMyselfToWaitingList({eventId: event.id as string, additionalInformation, waitingListOnly: event.isWaitingListOnly});
                 }
             }
         }
@@ -327,34 +332,38 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 }
 
                                 {/* Options for logged-in users */}
-                                {isLoggedIn(user) && !event.hasExpired && <React.Fragment>
+                                {isLoggedIn(user) && !event.hasExpired && <>
                                     {event.isReservationOnly && !canReserveSpaces && !isTeacherOrAbove(user) && !userBookedReservedOrOnWaitingList(user, event) && <Alert color={"warning"}>
-                                        Places on this event can only be reserved by teachers.{" "}
-                                        Please ask your teacher to reserve a place for you.{" "}
-                                        You will need to be accompanied by a teacher to the event.{" "}
-                                    </Alert>}
+                                            Places on this event can only be reserved by teachers.{" "}
+                                            Please ask your teacher to reserve a place for you.{" "}
+                                            You will need to be accompanied by a teacher to the event.{" "}
+                                        </Alert>
+                                    }
                                     {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
-                                    <Button onClick={() => {
-                                        setBookingFormOpen(true)
-                                    }}>
-                                        {formatMakeBookingButtonMessage(event)}
-                                    </Button>
+                                        <Button onClick={() => {
+                                            setBookingFormOpen(true)
+                                        }}>
+                                            {formatMakeBookingButtonMessage(event)}
+                                        </Button>
                                     }
                                     {canReserveSpaces &&
-                                    <Button color="primary" onClick={() => {
-                                        dispatch(openActiveModal(reservationsModal({event})))
-                                    }}>
-                                        Manage reservations
-                                    </Button>
+                                        <Button color="primary" onClick={() => {
+                                            dispatch(openActiveModal(reservationsModal({event})))
+                                        }}>
+                                            Manage reservations
+                                        </Button>
                                     }
                                     {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
-                                    <Button color="primary" outline onClick={() => {
-                                        dispatch(cancelMyBooking(eventId))
-                                    }}>
-                                        {formatCancelBookingButtonMessage(event)}
-                                    </Button>
+                                        <Button color="primary" outline onClick={() =>
+                                            confirmThen(
+                                                "Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.",
+                                                () => cancelMyBooking(eventId)
+                                            )
+                                        }>
+                                            {formatCancelBookingButtonMessage(event)}
+                                        </Button>
                                     }
-                                </React.Fragment>}
+                                </>}
                                 <Button tag={Link} to="/events" color="primary" outline>
                                     Back to events
                                 </Button>

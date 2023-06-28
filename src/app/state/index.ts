@@ -7,7 +7,6 @@
 // See https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de
 // for a more detailed explanation of the process.
 export * from "./actions/routing";
-export * from "./reducers/eventsState";
 export * from "./slices/api/utils";
 export * from "./middleware/utils";
 export * from "./reducers/topicState";

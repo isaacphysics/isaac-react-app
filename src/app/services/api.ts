@@ -16,7 +16,6 @@ import {
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     AdditionalInformation,
-    ATTENDANCE,
     Choice,
     Concepts,
     CredentialsAuthDTO,
@@ -249,42 +248,6 @@ export const api = {
     contactForm: {
         send: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
             return endpoint.post(`/contact/`, params, {});
-        }
-    },
-    eventBookings: {
-        bookMyselfOnEvent: (eventId: string, additionalInformation: AdditionalInformation) => {
-            return endpoint.post(`/events/${eventId}/bookings`, additionalInformation);
-        },
-        addMyselfToWaitingList: (eventId: string, additionalInformation: AdditionalInformation) => {
-            return endpoint.post(`/events/${eventId}/waiting_list`, additionalInformation);
-        },
-        cancelMyBooking: (eventId: string) => {
-            return endpoint.delete(`/events/${eventId}/bookings/cancel`);
-        },
-        bookUserOnEvent: (eventId: string, userId: number, additionalInformation: AdditionalInformation) => {
-            return endpoint.post(`/events/${eventId}/bookings/${userId}`, additionalInformation);
-        },
-        reserveUsersOnEvent: (eventId: string, userIds: number[]) => {
-            return endpoint.post(`/events/${eventId}/reservations`, userIds);
-        },
-        resendUserConfirmationEmail: (eventId: string, userId: number) => {
-            return endpoint.post(`/events/${eventId}/bookings/${userId}/resend_confirmation`);
-        },
-        promoteUserBooking: (eventId: string, userId: number) => {
-            return endpoint.post(`/events/${eventId}/bookings/${userId}/promote`, {eventId, userId});
-        },
-        cancelUserBooking: (eventId: string, userId: number) => {
-            return endpoint.delete(`/events/${eventId}/bookings/${userId}/cancel`);
-        },
-        deleteUserBooking: (eventId: string, userId: number) => {
-            return endpoint.delete(`/events/${eventId}/bookings/${userId}`);
-        },
-        recordEventAttendance: (eventId: string, userId: number, attendance: ATTENDANCE) => {
-            const attended = attendance === ATTENDANCE.ATTENDED;
-            return endpoint.post(`/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`);
-        },
-        getEventBookingCSV: (eventId: string) => {
-            return endpoint.get(`/events/${eventId}/bookings/download`);
         }
     },
     logger: {

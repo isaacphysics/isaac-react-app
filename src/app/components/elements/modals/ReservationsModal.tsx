@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useState} from "react";
 import {
     AppState,
     closeActiveModal,
-    reserveUsersOnEvent,
     store,
     submitMessage,
     useAppDispatch,
@@ -10,7 +9,8 @@ import {
     useGetEventBookingsForGroupQuery,
     useGetGroupsQuery,
     useGetGroupMembersQuery,
-    useCancelUsersReservationsOnEventMutation
+    useCancelUsersReservationsOnEventMutation,
+    useReserveUsersOnEventMutation
 } from "../../../state";
 import {
     Button,
@@ -152,10 +152,11 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
         }
     }, [user]);
 
+    const [reserveUsersOnEvent] = useReserveUsersOnEventMutation();
     const requestReservations = () => {
         if (event.id && selectedGroupId) {
             const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
-            dispatch(reserveUsersOnEvent(event.id, reservableIds, selectedGroupId));
+            reserveUsersOnEvent({eventId: event.id, userIds: reservableIds});
             // Send contact form with details of the group booking
             const subject = `Event group booking: ${event.id}:${selectedGroupId}`;
             const message = `
