@@ -117,8 +117,3 @@ export const loadFreeQuizAttempt = (quizId: string) => async (dispatch: Dispatch
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
-
-export const logQuizSectionView = (quizAttemptId: number, page: number) => async () => {
-    // No actual dispatch
-    api.quizzes.logQuizSectionView(quizAttemptId, page);
-};

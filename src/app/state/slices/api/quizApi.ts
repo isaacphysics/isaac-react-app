@@ -149,15 +149,14 @@ export const quizApi = isaacApi.enhanceEndpoints({
             })
         }),
 
-        // logQuizSectionView: (quizAttemptId: number, page: number): AxiosPromise<never> => {
-        //     return endpoint.post(`/quiz/attempt/${quizAttemptId}/log`, `sectionNumber=${page}`, {});
-        // },
-
         logQuizSectionView: build.mutation<void, {quizAttemptId: number, page: number}>({
             query: ({quizAttemptId, page}) => ({
                 url: `/quiz/attempt/${quizAttemptId}/log`,
                 method: "POST",
-                body: `sectionNumber=${page}`,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `sectionNumber=${page}`
             })
         }),
 
@@ -249,4 +248,5 @@ export const {
     useGetQuizAssignmentsAssignedToMeQuery,
     useMarkQuizAttemptAsCompleteMutation,
     useGetQuizPreviewQuery,
+    useLogQuizSectionViewMutation
 } = quizApi;

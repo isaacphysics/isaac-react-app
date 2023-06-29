@@ -97,12 +97,17 @@ export function useCurrentQuizAttempt(studentId?: number) {
 
     // If we have a student id, then we're asking for the attempt for a given student
     const [attempt, error] = studentId
-        ? [studentAttempt, studentError]
-        : [currentUserAttempt, currentUserError];
+            ? [studentAttempt, studentError]
+            : [currentUserAttempt, currentUserError];
+
     // Augment quiz object with subject id, propagating undefined-ness
-    const attemptWithQuizSubject = attempt
-        ? {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)}
-        : undefined;
+    // WARNING: This useMemo stops an infinite loop of re-renders - this is because when a quiz question attempt
+    // changes, this causes the quiz attempt to change, but that causes the quiz question attempt to change again, etc.
+    const attemptWithQuizSubject = useMemo(() => {
+        return attempt
+            ? {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)}
+            : undefined;
+    }, [attempt]);
 
     const questions = useQuizQuestions(attempt);
     const sections = useQuizSections(attempt);
