@@ -50,10 +50,6 @@ export const clearQuizAttempt = () => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: {}});
 };
 
-export const clearStudentQuizAttempt = () => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS, studentAttempt: {}});
-};
-
 export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     // Get current answer
     const state = getState();
@@ -80,17 +76,6 @@ export const loadQuizAttemptFeedback = (quizAttemptId: number) => async (dispatc
     } catch (e: any) {
         dispatch(showAxiosErrorToastIfNeeded("Loading quiz feedback failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
-    }
-};
-
-export const loadStudentQuizAttemptFeedback = (quizAttemptId: number, userId: number) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_REQUEST, quizAttemptId, userId});
-    try {
-        const studentAttempt = await api.quizzes.loadStudentQuizAttemptFeedback(quizAttemptId, userId);
-        dispatch({type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS, studentAttempt: studentAttempt.data});
-    } catch (e: any) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading student quiz feedback failed", e));
-        dispatch({type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
 

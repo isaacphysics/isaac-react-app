@@ -20,7 +20,6 @@ import {
     userProgress,
     testQuestions,
     quizAttempt,
-    studentQuizAttempt,
     activeAuthorisations,
     groupMemberships,
     otherUserAuthorisations,
@@ -90,7 +89,6 @@ export const rootReducer = combineReducers({
 
     // Quizzes
     quizAttempt,
-    studentQuizAttempt,
 
     // API reducer
     [isaacApi.reducerPath]: isaacApi.reducer

@@ -187,10 +187,10 @@ export const anonymisationFunctions = {
             })),
         };
     },
-    quizAttempt: produce<{ studentAttempt: QuizAttemptFeedbackDTO }>((quizAttempt) => {
-        if (quizAttempt.studentAttempt.user) {
-            quizAttempt.studentAttempt.user.familyName = "";
-            quizAttempt.studentAttempt.user.givenName = "Test Student";
+    quizAttempt: produce<QuizAttemptFeedbackDTO>((quizAttempt) => {
+        if (quizAttempt.user) {
+            quizAttempt.user.familyName = "";
+            quizAttempt.user.givenName = "Test Student";
         }
     }),
     userProgress: (userProgress: UserProgress): UserProgress => userProgress && {

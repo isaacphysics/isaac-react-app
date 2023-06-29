@@ -1,5 +1,14 @@
 import {useEffect, useMemo, useState} from "react";
-import {deregisterQuestions, registerQuestions, selectors, useAppDispatch, useAppSelector} from "../state";
+import {
+    deregisterQuestions,
+    getRTKQueryErrorMessage,
+    registerQuestions,
+    selectors,
+    useAppDispatch,
+    useAppSelector,
+    useGetStudentQuizAttemptWithFeedbackQuery,
+    useGetAvailableQuizzesQuery
+} from "../state";
 import {API_PATH, isDefined, isEventLeaderOrStaff, isQuestion, tags, useQueryParams} from "./";
 import {
     ContentDTO,
@@ -11,7 +20,7 @@ import {
     RegisteredUserDTO
 } from "../../IsaacApiTypes";
 import partition from "lodash/partition";
-import {useGetAvailableQuizzesQuery} from "../state";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     const qs: QuestionDTO[] = [];
@@ -75,7 +84,7 @@ export function useFilteredQuizzes(user: RegisteredUserDTO) {
     return {titleFilter, setTitleFilter, filteredQuizzes};
 }
 
-export function useCurrentQuizAttempt(studentId?: number) {
+export function useCurrentQuizAttempt(quizAssignmentId?: number, studentId?: number) {
     const currentUserAttemptState = useAppSelector(selectors.quizzes.currentQuizAttempt);
     const [currentUserAttempt, currentUserError] = useMemo(() => {
         if (!isDefined(currentUserAttemptState)) return [];
@@ -85,19 +94,12 @@ export function useCurrentQuizAttempt(studentId?: number) {
         ];
     }, [currentUserAttemptState]);
 
-    const studentAttemptState = useAppSelector(selectors.quizzes.currentStudentQuizAttempt);
-    const [studentAttempt, studentError, studentUser] = useMemo(() => {
-        if (!isDefined(studentAttemptState)) return [];
-        return [
-            'studentAttempt' in studentAttemptState ? studentAttemptState.studentAttempt.attempt : undefined,
-            'error' in studentAttemptState ? studentAttemptState.error : undefined,
-            'studentAttempt' in studentAttemptState ? studentAttemptState.studentAttempt.user : undefined
-        ];
-    }, [studentAttemptState]);
+    const studentQueryKey = studentId && quizAssignmentId ? {userId: studentId, quizAssignmentId} : skipToken;
+    const {data: studentAttemptAndUser, error: studentError} = useGetStudentQuizAttemptWithFeedbackQuery(studentQueryKey);
 
     // If we have a student id, then we're asking for the attempt for a given student
     const [attempt, error] = studentId
-            ? [studentAttempt, studentError]
+            ? [studentAttemptAndUser?.attempt, studentError ? getRTKQueryErrorMessage(studentError)?.message : undefined]
             : [currentUserAttempt, currentUserError];
 
     // Augment quiz object with subject id, propagating undefined-ness
@@ -114,12 +116,13 @@ export function useCurrentQuizAttempt(studentId?: number) {
 
     const dispatch = useAppDispatch();
     useEffect( () => {
+        if (!isDefined(questions) || questions.length === 0) return;
         // All register questions does is store the questions in redux WITH SOME EXTRA CALCULATED STRUCTURE
         dispatch(registerQuestions(questions, undefined, true));
         return () => dispatch(deregisterQuestions(questions.map(q => q.id as string)));
     }, [dispatch, questions]);
 
-    return {attempt: attemptWithQuizSubject, error, studentUser, questions, sections};
+    return {attempt: attemptWithQuizSubject, error, studentUser: studentAttemptAndUser?.user, questions, sections};
 }
 
 export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {

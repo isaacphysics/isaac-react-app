@@ -62,12 +62,10 @@ export const quizApi = isaacApi.enhanceEndpoints({
             })
         }),
 
-        // loadStudentQuizAttemptFeedback: (quizAssignmentId: number, userId: number): AxiosPromise<QuizAttemptFeedbackDTO> => {
-        //     return endpoint.get(`/quiz/assignment/${quizAssignmentId}/attempt/${userId}`)
-        // },
-
-        getStudentQuizAttemptFeedback: build.query<QuizAttemptFeedbackDTO, {quizAssignmentId: number, userId: number}>({
+        // Retrieves the quiz attempt for the current student being looked at (this is used to render /test/attempt/feedback/[group id]/[student id])
+        getStudentQuizAttemptWithFeedback: build.query<QuizAttemptFeedbackDTO, {quizAssignmentId: number, userId: number}>({
             query: ({quizAssignmentId, userId}) => `/quiz/assignment/${quizAssignmentId}/attempt/${userId}`,
+            transformResponse: anonymiseIfNeededWith(anonymisationFunctions.quizAttempt),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading student test feedback failed",
             })
@@ -248,5 +246,6 @@ export const {
     useGetQuizAssignmentsAssignedToMeQuery,
     useMarkQuizAttemptAsCompleteMutation,
     useGetQuizPreviewQuery,
-    useLogQuizSectionViewMutation
+    useLogQuizSectionViewMutation,
+    useGetStudentQuizAttemptWithFeedbackQuery
 } = quizApi;

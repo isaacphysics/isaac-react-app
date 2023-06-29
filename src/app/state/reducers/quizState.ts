@@ -60,15 +60,3 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
             return possibleAttempt;
     }
 };
-
-type StudentQuizAttemptState = {studentAttempt: QuizAttemptFeedbackDTO} | {error: string} | null;
-export const studentQuizAttempt = (possibleAttempt: StudentQuizAttemptState = null, action: Action): StudentQuizAttemptState => {
-    switch (action.type) {
-        case ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS:
-            return {studentAttempt: action.studentAttempt};
-        case ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE:
-            return {error: action.error};
-        default:
-            return possibleAttempt;
-    }
-};

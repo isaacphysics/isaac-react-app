@@ -1,9 +1,7 @@
 import React, {useCallback, useEffect} from "react";
 import {
     clearQuizAttempt,
-    clearStudentQuizAttempt,
     loadQuizAttemptFeedback,
-    loadStudentQuizAttemptFeedback,
     useAppDispatch
 } from "../../../state";
 import {Link, useParams} from "react-router-dom";
@@ -51,23 +49,16 @@ const pageHelp = <span>
 export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const {quizAttemptId, page, studentId, quizAssignmentId} = useParams<{quizAttemptId?: string; page?: string; studentId?: string; quizAssignmentId?: string;}>();
     const numericStudentId = studentId ? parseInt(studentId, 10) : undefined;
-    const {attempt, studentUser, questions, sections, error} = useCurrentQuizAttempt(numericStudentId);
+    const numericQuizAssignmentId = quizAssignmentId ? parseInt(quizAssignmentId, 10) : undefined;
+    const {attempt, studentUser, questions, sections, error} = useCurrentQuizAttempt(numericQuizAssignmentId, numericStudentId);
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        isDefined(quizAttemptId) && dispatch(loadQuizAttemptFeedback(parseInt(quizAttemptId, 10)));
-
-        if (isDefined(numericStudentId) && isDefined(quizAssignmentId)) {
-            dispatch(loadStudentQuizAttemptFeedback(parseInt(quizAssignmentId, 10), numericStudentId));
+        if (isDefined(quizAttemptId)) {
+            dispatch(loadQuizAttemptFeedback(parseInt(quizAttemptId, 10)));
         }
-
-        return () => {
-            dispatch(clearQuizAttempt());
-            if (isDefined(studentId)) {
-                dispatch(clearStudentQuizAttempt());
-            }
-        };
+        return () => dispatch(clearQuizAttempt());
     }, [dispatch, quizAttemptId, quizAssignmentId, studentId]);
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
