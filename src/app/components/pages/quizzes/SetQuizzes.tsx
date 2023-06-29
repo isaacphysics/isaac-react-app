@@ -1,10 +1,10 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {
-    markQuizAsCancelled,
     showQuizSettingModal,
     useAppDispatch,
     useGetGroupsQuery,
-    useGetQuizAssignmentsSetByMeQuery
+    useGetQuizAssignmentsSetByMeQuery,
+    useCancelQuizAssignmentMutation
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -15,7 +15,7 @@ import {Spacer} from "../../elements/Spacer";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
-    below,
+    below, confirmThen,
     isEventLeaderOrStaff,
     isPhy, isStaff, KEY,
     MANAGE_QUIZ_TAB,
@@ -49,17 +49,13 @@ function formatAssignmentOwner(user: RegisteredUserDTO, assignment: QuizAssignme
 }
 
 function QuizAssignment({user, assignment}: QuizAssignmentProps) {
-    const dispatch = useAppDispatch();
-    const cancel = () => {
-        if (window.confirm("Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.")) {
-            dispatch(markQuizAsCancelled(assignment.id as number));
-        }
-    };
+    const [markQuizAsCancelled, {isLoading: isCancelling}] = useCancelQuizAssignmentMutation();
+    const cancel = () => confirmThen(
+        "Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.",
+        () => markQuizAsCancelled(assignment.id as number)
+    );
     const assignmentNotYetStarted = assignment?.scheduledStartDate && nthHourOf(0, assignment?.scheduledStartDate) > TODAY();
     const quizTitle = (assignment.quizSummary?.title || assignment.quizId) + (assignmentNotYetStarted ? ` (starts ${formatDate(assignment?.scheduledStartDate)})` : "");
-    // TODO RTKQ quiz refactor use isPending from use mutation hook to re-implement this (markQuizAsCancelled would be
-    //  the mutation trigger)
-    const isCancelling = 'cancelling' in assignment && (assignment as {cancelling: boolean}).cancelling;
     return <div className="p-2">
         <RS.Card className="card-neat">
             <RS.CardBody>

@@ -1,5 +1,10 @@
 import {QuizAttemptProps, QuizPagination} from "./QuizAttemptComponent";
-import {showSuccessToast, useAppDispatch, useMarkQuizAttemptAsCompleteMutation} from "../../../state";
+import {
+    mutationSucceeded,
+    showSuccessToast,
+    useAppDispatch,
+    useMarkQuizAttemptAsCompleteMutation
+} from "../../../state";
 import {Link, useHistory} from "react-router-dom";
 import React from "react";
 import {Spacer} from "../Spacer";
@@ -21,9 +26,11 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
 
     const submitQuiz = () => {
         markQuizAttemptAsComplete(attempt.id as number)
-            .then(() => {
-                dispatch(showSuccessToast("Test submitted successfully", "Your answers have been submitted successfully."));
-                history.push(props.feedbackLink);
+            .then((result) => {
+                if (mutationSucceeded(result)) {
+                    dispatch(showSuccessToast("Test submitted successfully", "Your answers have been submitted successfully."));
+                    history.push(props.feedbackLink);
+                }
             });
     };
 

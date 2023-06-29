@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {
     getRTKQueryErrorMessage,
-    showToast,
+    mutationSucceeded,
+    showSuccessToast,
     useAppDispatch,
     useGetQuizAssignmentWithFeedbackQuery,
     useUpdateQuizAssignmentMutation
@@ -12,6 +13,7 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizFeedbackMode, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
+    confirmThen,
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
     isDefined,
@@ -84,14 +86,16 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
             return;
         }
         if (quizAssignment?.dueDate && newDate > quizAssignment.dueDate) {
-            if (confirm("Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.")) {
-                updateQuiz({quizAssignmentId: numericQuizAssignmentId, update: {dueDate: newDate}})
-                    .then(() => {
-                        dispatch(showToast({color: "success", title: "Due date extended successfully", body: `This test is now due ${newDate.toLocaleDateString()}.`, timeout: 5000}));
-                    });
-            } else {
-                setDueDate(quizAssignment.dueDate);
-            }
+            confirmThen(
+                "Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.",
+                () => updateQuiz({quizAssignmentId: numericQuizAssignmentId, update: {dueDate: newDate}})
+                    .then((result) => {
+                        if (mutationSucceeded(result)) {
+                            dispatch(showSuccessToast("Due date extended successfully", `This test is now due ${newDate.toLocaleDateString()}.`));
+                        }
+                    }),
+                () => setDueDate(quizAssignment.dueDate)
+            );
         }
     }
 
