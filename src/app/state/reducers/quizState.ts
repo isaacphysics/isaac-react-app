@@ -72,20 +72,3 @@ export const studentQuizAttempt = (possibleAttempt: StudentQuizAttemptState = nu
             return possibleAttempt;
     }
 };
-
-type QuizPreviewState = {quiz: IsaacQuizDTO} | {error: string} | null;
-export const quizPreview = (quizPreview: QuizPreviewState = null, action: Action): QuizPreviewState => {
-    switch (action.type) {
-        case ACTION_TYPE.QUIZ_LOAD_PREVIEW_REQUEST:
-            if (quizPreview && 'quiz' in quizPreview && quizPreview.quiz.id === action.quizId) {
-                return quizPreview;
-            }
-            return null;
-        case ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_FAILURE:
-            return {error: action.error};
-        case ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_SUCCESS:
-            return {quiz: action.quiz};
-        default:
-            return quizPreview;
-    }
-}

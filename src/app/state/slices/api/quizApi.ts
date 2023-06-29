@@ -86,10 +86,6 @@ export const quizApi = isaacApi.enhanceEndpoints({
             })
         }),
 
-        // loadQuizPreview: (quizId: string): AxiosPromise<IsaacQuizDTO> => {
-        //     return endpoint.get(`/quiz/${quizId}/preview`);
-        // },
-
         getQuizPreview: build.query<IsaacQuizDTO, string>({
             query: (quizId) => `/quiz/${quizId}/preview`,
             onQueryStarted: onQueryLifecycleEvents({
@@ -251,5 +247,6 @@ export const {
     useReturnQuizToStudentMutation,
     useGetAttemptedFreelyByMeQuery,
     useGetQuizAssignmentsAssignedToMeQuery,
-    useMarkQuizAttemptAsCompleteMutation
+    useMarkQuizAttemptAsCompleteMutation,
+    useGetQuizPreviewQuery,
 } = quizApi;

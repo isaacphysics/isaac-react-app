@@ -107,17 +107,6 @@ export const markQuizAsCancelled = (quizAssignmentId: number) => async (dispatch
     }
 };
 
-export const loadQuizPreview = (quizId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_REQUEST, quizId});
-    try {
-        const quiz = await api.quizzes.loadQuizPreview(quizId);
-        dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_SUCCESS, quiz: quiz.data});
-    } catch (e: any) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading quiz preview failed", e));
-        dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_FAILURE, error: extractMessage(e)});
-    }
-};
-
 export const loadFreeQuizAttempt = (quizId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST, quizId});
     try {

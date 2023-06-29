@@ -64,13 +64,6 @@ export const selectors = {
     },
 
     quizzes: {
-        preview: (state: AppState) => {
-            const qp = state?.quizPreview;
-            return {
-                quiz: qp && 'quiz' in qp ? qp.quiz : null,
-                error: qp && 'error' in qp ? qp.error : null,
-            };
-        },
         /* Retrieves the current users most recent attempt at the current quiz being viewed */
         currentQuizAttempt: (state: AppState) => state?.quizAttempt,
         /* Retrieves the quiz attempt for the current student being looked at (this is used to render /test/attempt/feedback/[group id]/[student id]) */
