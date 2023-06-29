@@ -284,20 +284,8 @@ export const api = {
         loadQuizAttemptFeedback: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
             return endpoint.get(`/quiz/attempt/${quizAttemptId}/feedback`);
         },
-        loadStudentQuizAttemptFeedback: (quizAssignmentId: number, userId: number): AxiosPromise<ApiTypes.QuizAttemptFeedbackDTO> => {
-            return endpoint.get(`/quiz/assignment/${quizAssignmentId}/attempt/${userId}`)
-        },
-        cancelQuizAssignment: (quizAssignmentId: number): AxiosPromise<never> => {
-            return endpoint.delete(`/quiz/assignment/${quizAssignmentId}`);
-        },
-        loadQuizPreview: (quizId: string): AxiosPromise<ApiTypes.IsaacQuizDTO> => {
-            return endpoint.get(`/quiz/${quizId}/preview`);
-        },
         loadFreeQuizAttempt: (quizId: string): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
             return endpoint.post(`/quiz/${quizId}/attempt`);
-        },
-        logQuizSectionView: (quizAttemptId: number, page: number): AxiosPromise<never> => {
-            return endpoint.post(`/quiz/attempt/${quizAttemptId}/log`, `sectionNumber=${page}`, {});
         }
     },
 };

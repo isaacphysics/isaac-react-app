@@ -169,10 +169,6 @@ export const quizApi = isaacApi.enhanceEndpoints({
             })
         }),
 
-        // createQuizAssignment: (assignment: QuizAssignmentDTO): AxiosPromise<QuizAssignmentDTO> => {
-        //     return endpoint.post(`/quiz/assignment`, assignment);
-        // },
-
         assignQuiz: build.mutation<QuizAssignmentDTO, QuizAssignmentDTO>({
             query: (assignment) => ({
                 url: "/quiz/assignment",
@@ -184,10 +180,6 @@ export const quizApi = isaacApi.enhanceEndpoints({
                 errorTitle: "Failed to assign test",
             })
         }),
-
-        // updateQuizAssignment: (quizAssignmentId: number, update: QuizAssignmentDTO): AxiosPromise<never> => {
-        //     return endpoint.post(`/quiz/assignment/${quizAssignmentId}`, update);
-        // },
 
         updateQuizAssignment: build.mutation<void, {quizAssignmentId: number, update: QuizAssignmentDTO}>({
             query: ({quizAssignmentId, update}) => ({
@@ -205,10 +197,6 @@ export const quizApi = isaacApi.enhanceEndpoints({
                 },
             })
         }),
-
-        // cancelQuizAssignment: (quizAssignmentId: number): AxiosPromise<never> => {
-        //     return endpoint.delete(`/quiz/assignment/${quizAssignmentId}`);
-        // },
 
         cancelQuizAssignment: build.mutation<void, number>({
             query: (quizAssignmentId) => ({
@@ -247,5 +235,7 @@ export const {
     useMarkQuizAttemptAsCompleteMutation,
     useGetQuizPreviewQuery,
     useLogQuizSectionViewMutation,
-    useGetStudentQuizAttemptWithFeedbackQuery
+    useGetStudentQuizAttemptWithFeedbackQuery,
+    useAssignQuizMutation,
+    useCancelQuizAssignmentMutation,
 } = quizApi;

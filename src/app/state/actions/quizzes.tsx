@@ -10,20 +10,8 @@ import {
     selectors,
     showAxiosErrorToastIfNeeded
 } from "../index";
-import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
 import {QuizSettingModal} from "../../components/elements/modals/QuizSettingModal";
-
-export const setQuiz = (assignment: QuizAssignmentDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUIZ_SET_REQUEST, assignment});
-    try {
-        const newAssignment = await api.quizzes.createQuizAssignment(assignment);
-        dispatch({type: ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS, newAssignment: newAssignment.data});
-        return newAssignment;
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Test setting failed", e));
-        throw e;
-    }
-};
 
 export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, allowedToSchedule?: boolean, dueDate?: Date | null, scheduledStartDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
     dispatch(openActiveModal({
@@ -76,19 +64,6 @@ export const loadQuizAttemptFeedback = (quizAttemptId: number) => async (dispatc
     } catch (e: any) {
         dispatch(showAxiosErrorToastIfNeeded("Loading quiz feedback failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
-    }
-};
-
-export const markQuizAsCancelled = (quizAssignmentId: number) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_REQUEST, quizAssignmentId});
-    try {
-        await api.quizzes.cancelQuizAssignment(quizAssignmentId);
-        dispatch({type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_SUCCESS, quizAssignmentId});
-        return true;
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_FAILURE, quizAssignmentId});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to cancel test", e));
-        return false;
     }
 };
 

@@ -192,18 +192,11 @@ export type Action =
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
 
-    | {type: ACTION_TYPE.QUIZ_SET_REQUEST; assignment: ApiTypes.QuizAssignmentDTO}
-    | {type: ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS; newAssignment: ApiTypes.QuizAssignmentDTO}
-
     | {type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST; quizAssignmentId: number}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST; quizAttemptId: number}
     | {type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE; error: string}
-
-    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_REQUEST; quizAssignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_SUCCESS; quizAssignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_FAILURE; quizAssignmentId: number}
     ;
 
 export type NOT_FOUND_TYPE = 404;

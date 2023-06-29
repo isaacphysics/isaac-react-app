@@ -8,7 +8,6 @@ import {
     useUpdateQuizAssignmentMutation
 } from "../../../state";
 import {useParams} from "react-router-dom";
-import {ShowLoading} from "../../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizFeedbackMode, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
@@ -40,6 +39,9 @@ import {
     Row,
     UncontrolledDropdown
 } from "reactstrap";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
+import {SerializedError} from "@reduxjs/toolkit";
+import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.
@@ -58,10 +60,9 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
     const numericQuizAssignmentId = parseInt(quizAssignmentId, 10);
-    const {data: quizAssignment, error: assignmentError} = useGetQuizAssignmentWithFeedbackQuery(numericQuizAssignmentId);
-    const [updateQuiz, {isLoading: isUpdatingQuiz, error: updateError}] = useUpdateQuizAssignmentMutation();
-
-    const error = assignmentError || updateError;
+    const quizAssignmentQuery = useGetQuizAssignmentWithFeedbackQuery(numericQuizAssignmentId);
+    const {data: quizAssignment} = quizAssignmentQuery;
+    const [updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
 
     const setFeedbackMode = (mode: QuizFeedbackMode) => {
         if (mode !== quizAssignment?.quizFeedbackMode) {
@@ -99,9 +100,19 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
         }
     }
 
+    const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
+        <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
+        <Alert color="danger">
+            <h4 className="alert-heading">Error loading test feedback</h4>
+            <p>{getRTKQueryErrorMessage(error)?.message}</p>
+        </Alert>
+    </>;
+
     return <Container>
-        <ShowLoading until={quizAssignment}>
-            {quizAssignment && <>
+        <ShowLoadingQuery
+            query={quizAssignmentQuery}
+            ifError={buildErrorComponent}
+            thenRender={quizAssignment => <>
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
                 <div className="d-flex mb-4">
                     <span>
@@ -139,8 +150,8 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                             <DropdownMenu>
                                 {QuizFeedbackModes.map(mode =>
                                     <DropdownItem key={mode}
-                                                    onClick={() => setFeedbackMode(mode)}
-                                                    active={mode === quizAssignment?.quizFeedbackMode}>
+                                                  onClick={() => setFeedbackMode(mode)}
+                                                  active={mode === quizAssignment?.quizFeedbackMode}>
                                         {feedbackNames[mode]}
                                     </DropdownItem>
                                 )}
@@ -163,14 +174,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         <ResultsTable assignment={quizAssignment} />
                     </AssignmentProgressPageSettingsContext.Provider>
                 </div>
-            </>}
-            {error && <>
-                <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
-                <Alert color="danger">
-                    <h4 className="alert-heading">Error loading test feedback</h4>
-                    <p>{getRTKQueryErrorMessage(error).message}</p>
-                </Alert>
-            </>}
-        </ShowLoading>
+            </>
+        }/>
     </Container>;
 };
