@@ -51,11 +51,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             })
         }),
 
-        // loadQuizAttemptFeedback: (quizAttemptId: number): AxiosPromise<QuizAttemptDTO> => {
-        //     return endpoint.get(`/quiz/attempt/${quizAttemptId}/feedback`);
-        // },
-
-        getQuizAttemptFeedback: build.query<QuizAttemptDTO, number>({
+        getMyQuizAttemptWithFeedback: build.query<QuizAttemptDTO, number>({
             query: (quizAttemptId) => `/quiz/attempt/${quizAttemptId}/feedback`,
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading test feedback failed",
@@ -238,4 +234,5 @@ export const {
     useGetStudentQuizAttemptWithFeedbackQuery,
     useAssignQuizMutation,
     useCancelQuizAssignmentMutation,
+    useGetMyQuizAttemptWithFeedbackQuery
 } = quizApi;

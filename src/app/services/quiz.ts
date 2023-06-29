@@ -7,7 +7,7 @@ import {
     useAppDispatch,
     useAppSelector,
     useGetStudentQuizAttemptWithFeedbackQuery,
-    useGetAvailableQuizzesQuery
+    useGetAvailableQuizzesQuery, useGetMyQuizAttemptWithFeedbackQuery
 } from "../state";
 import {API_PATH, isDefined, isEventLeaderOrStaff, isQuestion, tags, useQueryParams} from "./";
 import {
@@ -84,23 +84,17 @@ export function useFilteredQuizzes(user: RegisteredUserDTO) {
     return {titleFilter, setTitleFilter, filteredQuizzes};
 }
 
-export function useCurrentQuizAttempt(quizAssignmentId?: number, studentId?: number) {
-    const currentUserAttemptState = useAppSelector(selectors.quizzes.currentQuizAttempt);
-    const [currentUserAttempt, currentUserError] = useMemo(() => {
-        if (!isDefined(currentUserAttemptState)) return [];
-        return [
-            'attempt' in currentUserAttemptState ? currentUserAttemptState.attempt : undefined,
-            'error' in currentUserAttemptState ? currentUserAttemptState.error : undefined
-        ];
-    }, [currentUserAttemptState]);
+export function useQuizAttemptFeedback(quizAttemptId: number | undefined, quizAssignmentId: number | undefined, studentId: number | undefined) {
+    const myQuizAttemptKey = quizAttemptId && !isDefined(studentId) ? quizAttemptId : skipToken;
+    const {data: currentUserAttempt, error: currentUserError} = useGetMyQuizAttemptWithFeedbackQuery(myQuizAttemptKey);
 
-    const studentQueryKey = studentId && quizAssignmentId ? {userId: studentId, quizAssignmentId} : skipToken;
-    const {data: studentAttemptAndUser, error: studentError} = useGetStudentQuizAttemptWithFeedbackQuery(studentQueryKey);
+    const studentQuizAttemptQueryKey = studentId && quizAssignmentId ? {userId: studentId, quizAssignmentId} : skipToken;
+    const {data: studentAttemptAndUser, error: studentError} = useGetStudentQuizAttemptWithFeedbackQuery(studentQuizAttemptQueryKey);
 
-    // If we have a student id, then we're asking for the attempt for a given student
+    // If we have a student id, then we're look at the attempt for a given student
     const [attempt, error] = studentId
-            ? [studentAttemptAndUser?.attempt, studentError ? getRTKQueryErrorMessage(studentError)?.message : undefined]
-            : [currentUserAttempt, currentUserError];
+        ? [studentAttemptAndUser?.attempt, studentError ? getRTKQueryErrorMessage(studentError)?.message : undefined]
+        : [currentUserAttempt, currentUserError ? getRTKQueryErrorMessage(currentUserError)?.message : undefined];
 
     // Augment quiz object with subject id, propagating undefined-ness
     // WARNING: This useMemo stops an infinite loop of re-renders - this is because when a quiz question attempt
@@ -111,8 +105,8 @@ export function useCurrentQuizAttempt(quizAssignmentId?: number, studentId?: num
             : undefined;
     }, [attempt]);
 
-    const questions = useQuizQuestions(attempt);
-    const sections = useQuizSections(attempt);
+    const questions = useQuizQuestions(attemptWithQuizSubject);
+    const sections = useQuizSections(attemptWithQuizSubject);
 
     const dispatch = useAppDispatch();
     useEffect( () => {
@@ -123,6 +117,39 @@ export function useCurrentQuizAttempt(quizAssignmentId?: number, studentId?: num
     }, [dispatch, questions]);
 
     return {attempt: attemptWithQuizSubject, error, studentUser: studentAttemptAndUser?.user, questions, sections};
+}
+
+export function useCurrentQuizAttempt() {
+    const currentUserAttemptState = useAppSelector(selectors.quizzes.currentQuizAttempt);
+    const [attempt, error] = useMemo(() => {
+        if (!isDefined(currentUserAttemptState)) return [];
+        return [
+            'attempt' in currentUserAttemptState ? currentUserAttemptState.attempt : undefined,
+            'error' in currentUserAttemptState ? currentUserAttemptState.error : undefined
+        ];
+    }, [currentUserAttemptState]);
+
+    // Augment quiz object with subject id, propagating undefined-ness
+    // WARNING: This useMemo stops an infinite loop of re-renders - this is because when a quiz question attempt
+    // changes, this causes the quiz attempt to change, but that causes the quiz question attempt to change again, etc.
+    const attemptWithQuizSubject = useMemo(() => {
+        return attempt
+            ? {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)}
+            : undefined;
+    }, [attempt]);
+
+    const questions = useQuizQuestions(attemptWithQuizSubject);
+    const sections = useQuizSections(attemptWithQuizSubject);
+
+    const dispatch = useAppDispatch();
+    useEffect( () => {
+        if (!isDefined(questions) || questions.length === 0) return;
+        // All register questions does is store the questions in redux WITH SOME EXTRA CALCULATED STRUCTURE
+        dispatch(registerQuestions(questions, undefined, true));
+        return () => dispatch(deregisterQuestions(questions.map(q => q.id as string)));
+    }, [dispatch, questions]);
+
+    return {attempt: attemptWithQuizSubject, error, questions, sections};
 }
 
 export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {

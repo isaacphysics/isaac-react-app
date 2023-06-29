@@ -2,9 +2,7 @@ import {Action} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, extractQuestions} from "../../services";
 import {
     ChoiceDTO,
-    IsaacQuizDTO,
     QuizAttemptDTO,
-    QuizAttemptFeedbackDTO
 } from "../../../IsaacApiTypes";
 import produce, {Immutable} from "immer";
 
@@ -26,12 +24,6 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
             return {error: action.error};
         case ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST:
             if (possibleAttempt && 'attempt' in possibleAttempt && possibleAttempt.attempt.quizAssignmentId === action.quizAssignmentId) {
-                // Optimistically keep current attempt
-                return possibleAttempt;
-            }
-            return null;
-        case ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST:
-            if (possibleAttempt && 'attempt' in possibleAttempt && possibleAttempt.attempt.id === action.quizAttemptId) {
                 // Optimistically keep current attempt
                 return possibleAttempt;
             }

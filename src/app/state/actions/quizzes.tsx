@@ -56,17 +56,6 @@ export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: str
     }
 };
 
-export const loadQuizAttemptFeedback = (quizAttemptId: number) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST, quizAttemptId});
-    try {
-        const attempt = await api.quizzes.loadQuizAttemptFeedback(quizAttemptId);
-        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
-    } catch (e: any) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading quiz feedback failed", e));
-        dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
-    }
-};
-
 export const loadFreeQuizAttempt = (quizId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST, quizId});
     try {
