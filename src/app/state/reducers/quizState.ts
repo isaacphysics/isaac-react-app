@@ -1,58 +1,12 @@
-import {Action, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, extractQuestions, NOT_FOUND} from "../../services";
+import {Action} from "../../../IsaacAppTypes";
+import {ACTION_TYPE, extractQuestions} from "../../services";
 import {
     ChoiceDTO,
     IsaacQuizDTO,
-    QuizAssignmentDTO,
     QuizAttemptDTO,
     QuizAttemptFeedbackDTO
 } from "../../../IsaacApiTypes";
 import produce, {Immutable} from "immer";
-
-type QuizAssignedToMeState = QuizAssignmentDTO[] | NOT_FOUND_TYPE | null;
-export const quizAssignedToMe = (quizAssignments: QuizAssignedToMeState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST:
-            return null;
-        case ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS:
-            return action.assignments;
-        case ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE:
-            return NOT_FOUND;
-        case ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS:
-            return (quizAssignments !== NOT_FOUND && quizAssignments?.map(assignment => {
-                if (assignment.attempt?.id === action.attempt.id) {
-                    return {
-                        ...assignment,
-                        attempt: action.attempt,
-                    };
-                }
-                return assignment;
-            })) || null;
-        default:
-            return quizAssignments;
-    }
-};
-
-type QuizAttemptedFreelyByMeState = QuizAttemptDTO[] | NOT_FOUND_TYPE | null;
-export const quizAttemptedFreelyByMe = (quizAttempts: QuizAttemptedFreelyByMeState = null, action: Action): QuizAttemptedFreelyByMeState => {
-    switch (action.type) {
-        case ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_REQUEST:
-            return null;
-        case ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_SUCCESS:
-            return action.attempts;
-        case ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_FAILURE:
-            return NOT_FOUND;
-        case ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS:
-            return (quizAttempts !== NOT_FOUND && quizAttempts?.map(attempt => {
-                if (attempt?.id === action.attempt.id) {
-                    return action.attempt;
-                }
-                return attempt;
-            })) || null;
-        default:
-            return quizAttempts;
-    }
-};
 
 const updateQuizAttemptQuestion = (questionId: string, questionAttempt: Immutable<ChoiceDTO>) => produce<{attempt: QuizAttemptDTO}>((quizAttempt) => {
     const quizQuestions = extractQuestions(quizAttempt?.attempt.quiz);

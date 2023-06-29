@@ -35,10 +35,6 @@ export const quizApi = isaacApi.enhanceEndpoints({
             })
         }),
 
-        // assignedToMe: (): AxiosPromise<QuizAssignmentDTO[]> => {
-        //     return endpoint.get(`/quiz/assignments`);
-        // },
-
         getQuizAssignmentsAssignedToMe: build.query<QuizAssignmentDTO[], void>({
             query: () => `/quiz/assignments`,
             providesTags: ["QuizzesAssignedToMe"],
@@ -46,10 +42,6 @@ export const quizApi = isaacApi.enhanceEndpoints({
                 errorTitle: "Loading tests assigned to you failed",
             })
         }),
-
-        // loadAttemptedFreelyByMe: (): AxiosPromise<QuizAttemptDTO[]> => {
-        //     return endpoint.get(`/quiz/free_attempts`);
-        // },
 
         getAttemptedFreelyByMe: build.query<QuizAttemptDTO[], void>({
             query: () => `/quiz/free_attempts`,
@@ -260,5 +252,7 @@ export const {
     useGetQuizAssignmentsSetByMeQuery,
     useGetQuizAssignmentWithFeedbackQuery,
     useUpdateQuizAssignmentMutation,
-    useReturnQuizToStudentMutation
+    useReturnQuizToStudentMutation,
+    useGetAttemptedFreelyByMeQuery,
+    useGetQuizAssignmentsAssignedToMeQuery,
 } = quizApi;

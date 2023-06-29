@@ -1,7 +1,5 @@
-import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith, AppState, groupsApi} from "./index";
-import {KEY, persistence, NOT_FOUND, isDefined} from "../services";
-import {QuizAssignmentDTO} from "../../IsaacApiTypes";
-import {AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith, AppState} from "./index";
+import {NOT_FOUND} from "../services";
 
 export const selectors = {
 
@@ -73,12 +71,10 @@ export const selectors = {
                 error: qp && 'error' in qp ? qp.error : null,
             };
         },
-        assignedToMe: (state: AppState) => state?.quizAssignedToMe,
         /* Retrieves the current users most recent attempt at the current quiz being viewed */
         currentQuizAttempt: (state: AppState) => state?.quizAttempt,
         /* Retrieves the quiz attempt for the current student being looked at (this is used to render /test/attempt/feedback/[group id]/[student id]) */
         currentStudentQuizAttempt: (state: AppState) => state?.studentQuizAttempt && 'studentAttempt' in state?.studentQuizAttempt ? anonymiseIfNeededWith(anonymisationFunctions.quizAttempt)(state.studentQuizAttempt) : state?.studentQuizAttempt,
-        attemptedFreelyByMe: (state: AppState) => state?.quizAttemptedFreelyByMe,
     },
 };
 

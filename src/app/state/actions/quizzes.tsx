@@ -35,17 +35,6 @@ export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, all
     }));
 }
 
-export const loadQuizAssignedToMe = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST});
-    try {
-        const assignments = await api.quizzes.assignedToMe();
-        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS, assignments: assignments.data});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading tests assigned to you failed", e));
-        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE});
-    }
-};
-
 export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST, quizAssignmentId});
     try {
@@ -152,19 +141,7 @@ export const loadFreeQuizAttempt = (quizId: string) => async (dispatch: Dispatch
     }
 };
 
-export const loadQuizzesAttemptedFreelyByMe = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_REQUEST});
-    try {
-        const attempts = await api.quizzes.loadAttemptedFreelyByMe();
-        dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_SUCCESS, attempts: attempts.data});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading freely attempted tests failed", e));
-        dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_FAILURE});
-    }
-};
-
 export const logQuizSectionView = (quizAttemptId: number, page: number) => async () => {
     // No actual dispatch
     api.quizzes.logQuizSectionView(quizAttemptId, page);
 };
-

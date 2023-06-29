@@ -275,9 +275,6 @@ export const api = {
         createQuizAssignment: (assignment: ApiTypes.QuizAssignmentDTO): AxiosPromise<ApiTypes.QuizAssignmentDTO> => {
             return endpoint.post(`/quiz/assignment`, assignment);
         },
-        assignedToMe: (): AxiosPromise<ApiTypes.QuizAssignmentDTO[]> => {
-            return endpoint.get(`/quiz/assignments`);
-        },
         loadQuizAssignmentAttempt: (quizAssignmentId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
             return endpoint.post(`/quiz/assignment/${quizAssignmentId}/attempt`);
         },
@@ -301,9 +298,6 @@ export const api = {
         },
         loadFreeQuizAttempt: (quizId: string): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
             return endpoint.post(`/quiz/${quizId}/attempt`);
-        },
-        loadAttemptedFreelyByMe: (): AxiosPromise<ApiTypes.QuizAttemptDTO[]> => {
-            return endpoint.get(`/quiz/free_attempts`);
         },
         logQuizSectionView: (quizAttemptId: number, page: number): AxiosPromise<never> => {
             return endpoint.post(`/quiz/attempt/${quizAttemptId}/log`, `sectionNumber=${page}`, {});
