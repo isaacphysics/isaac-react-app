@@ -13,7 +13,7 @@ export const emailApi = isaacApi.injectEndpoints({
                 method: "GET",
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                onQueryStart: (args, {dispatch}) => {
+                onQuerySuccess: (args, {dispatch}) => {
                     dispatch(requestCurrentUser());
                     dispatch(showSuccessToast("Email address verified", "The email address has been verified"));
                 }
