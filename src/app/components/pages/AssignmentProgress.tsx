@@ -267,7 +267,9 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     return <div className="assignment-progress-progress">
         <div className="progress-header">
-            <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong> students have completed the assignment.
+            <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong>
+            {` students have completed the assignment `}
+            <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link>.
         </div>
         {progress.length > 0 && <>
             <div className="progress-questions">
