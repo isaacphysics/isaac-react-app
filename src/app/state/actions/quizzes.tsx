@@ -72,18 +72,6 @@ export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: str
     }
 };
 
-export const markQuizAttemptAsComplete = (quizAttemptId: number) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST, quizAttemptId});
-    try {
-        const attempt = await api.quizzes.markQuizAttemptAsComplete(quizAttemptId);
-        dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS, attempt: attempt.data});
-        return true;
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Failed to submit your test answers", e));
-        return false;
-    }
-};
-
 export const loadQuizAttemptFeedback = (quizAttemptId: number) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST, quizAttemptId});
     try {

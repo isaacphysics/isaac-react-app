@@ -142,10 +142,6 @@ export const quizApi = isaacApi.enhanceEndpoints({
             invalidatesTags: ["QuizzesAttemptedFreelyByMe", "QuizzesAssignedToMe"], // TODO might not actually invalidate this tag...
         }),
 
-        // markQuizAttemptAsComplete: (quizAttemptId: number): AxiosPromise<QuizAttemptDTO> => {
-        //     return endpoint.post(`/quiz/attempt/${quizAttemptId}/complete`);
-        // },
-
         markQuizAttemptAsComplete: build.mutation<QuizAttemptDTO, number>({
             query: (quizAttemptId) => ({
                 url: `/quiz/attempt/${quizAttemptId}/complete`,
@@ -255,4 +251,5 @@ export const {
     useReturnQuizToStudentMutation,
     useGetAttemptedFreelyByMeQuery,
     useGetQuizAssignmentsAssignedToMeQuery,
+    useMarkQuizAttemptAsCompleteMutation
 } = quizApi;
