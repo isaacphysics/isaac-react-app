@@ -119,7 +119,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.periodicTable, title: "Periodic Table", parent: TAG_ID.inorganic},
         {id: TAG_ID.bonding, title: "Bonding", parent: TAG_ID.inorganic},
         {id: TAG_ID.redox, title: "Redox", parent: TAG_ID.inorganic},
-        {id: TAG_ID.transitionMetals, title: `Transi${softHyphen}tional Metals`, parent: TAG_ID.inorganic},
+        {id: TAG_ID.transitionMetals, title: `Transition Metals`, parent: TAG_ID.inorganic},
         // Physical
         {id: TAG_ID.kinetics, title: "Kinetics", parent: TAG_ID.physical},
         {id: TAG_ID.energetics, title: `Energe${softHyphen}tics`, parent: TAG_ID.physical},
