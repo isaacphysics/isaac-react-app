@@ -14,6 +14,7 @@ import {
     UserRole
 } from "../../IsaacApiTypes";
 import {siteSpecific} from "./";
+import Plausible from "plausible-tracker";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
@@ -59,14 +60,13 @@ export const EDITOR_ORIGIN = siteSpecific(
 export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
 export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/#!/compare";
 
-export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
-    "UA-122616705-1",
-    "UA-260507153-1"
-);
-export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
-    envSpecific("G-MM4SM6FNCF", "G-VXBDM5GDNG", "G-5VLS1Q1FCZ", "G-2YDE0QV3TK"),
-    envSpecific("G-HQ3BM12YB3", "G-EQPHX0WKJ7", "G-W7YJPSQTKP", "G-1Q8QGL0D5J"),
-);
+ export const { trackPageview, trackEvent } = Plausible(
+    {
+        trackLocalhost: true,  // todo: remove
+        domain: "dev.adacomputerscience.org",  // todo: remove and rely on default
+        apiHost: "https://staging-analytics.raspberrypi.org/"  // todo: replace with self-hosted instance
+    }
+)
 
 export const SOCIAL_LINKS = siteSpecific(
     {

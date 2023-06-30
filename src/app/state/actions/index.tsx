@@ -15,7 +15,7 @@ import {
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    TAG_ID
+    TAG_ID, trackEvent
 } from "../../services";
 import {
     Action,
@@ -55,8 +55,6 @@ import {
     tokenVerificationModal
 } from "../../components/elements/modals/TeacherConnectionModalCreators";
 import {AxiosError} from "axios";
-import ReactGA from "react-ga";
-import ReactGA4 from "react-ga4";
 import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {
@@ -95,12 +93,13 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
                 }) as any;
             }
         } else {
-            ReactGA.exception({
-                description: `load_fail: ${error}`
-            });
-            ReactGA4.gtag("event", "exception", {
-                description: `load_fail: ${error}`
-            });
+            trackEvent("exception", {props:
+                        {
+                            description: `load_fail: ${error}`,
+                            fatal: true
+                        }
+                }
+            )
             return showToast({
                 color: "danger", title: error, timeout: 5000,
                 body: API_REQUEST_FAILURE_MESSAGE
@@ -415,16 +414,12 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         if (providerResponse.data.firstLogin) {
-            ReactGA.event({
-                category: 'user',
-                action: 'registration',
-                label: `Create Account (${provider})`,
-            });
-            ReactGA4.event({
-                category: 'user',
-                action: 'registration',
-                label: `Create Account (${provider})`,
-            });
+            trackEvent("registration", {props:
+                    {
+                        provider: provider,
+                    }
+                }
+            )
         }
         const nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
         persistence.remove(KEY.AFTER_AUTH_PATH);
