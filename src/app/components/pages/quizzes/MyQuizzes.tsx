@@ -45,6 +45,7 @@ function QuizItem({item}: QuizAssignmentProps) {
     const assignment = isAttempt(item) ? null : item;
     const attempt = isAttempt(item) ? item : assignment?.attempt;
     const status: Status = !attempt ? Status.Unstarted : !attempt.completedDate ? Status.Started : Status.Complete;
+    const assignmentStartDate = assignment?.scheduledStartDate ?? assignment?.creationDate;
     return <div className="p-2">
         <RS.Card className="card-neat">
             <RS.CardBody>
@@ -55,7 +56,7 @@ function QuizItem({item}: QuizAssignmentProps) {
                     attempt && <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>
                 }
                 {assignment && <p>
-                    Set: {formatDate(assignment.creationDate)}
+                    Set: {formatDate(assignmentStartDate)}
                     {assignment.assignerSummary && <> by {extractTeacherName(assignment.assignerSummary)}</>}
                 </p>}
                 {attempt && <p>
