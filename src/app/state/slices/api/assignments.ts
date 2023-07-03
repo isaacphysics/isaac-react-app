@@ -32,24 +32,24 @@ export const useGroupAssignmentSummary = (groupId?: number) => {
 
 // This looks a bit odd, but it means that we can use the same sort function for both gameboard and quiz assignments
 type SortFuncInputType = {creationDate?: Date, dueDate?: Date, scheduledStartDate?: Date, gameboard?: GameboardDTO, quiz?: IsaacQuizDTO};
-const sortAssignments = (as: SortFuncInputType[] | undefined, sortOrder?: AssignmentOrderSpec) => {
-    let sortedAs;
+const sortAssignments = (assignments: SortFuncInputType[] | undefined, sortOrder?: AssignmentOrderSpec) => {
+    let sortedAssignments;
     switch (sortOrder?.type) {
         case AssignmentOrderType.DueDate:
-            sortedAs = sortBy(as, a => a.dueDate?.valueOf() ?? a.creationDate?.valueOf() ?? 0);
+            sortedAssignments = sortBy(assignments, a => a.dueDate?.valueOf() ?? a.creationDate?.valueOf() ?? 0);
             break;
         case AssignmentOrderType.StartDate:
-            sortedAs = sortBy(as, a => a.scheduledStartDate?.valueOf() ?? a.creationDate?.valueOf() ?? 0);
+            sortedAssignments = sortBy(assignments, a => a.scheduledStartDate?.valueOf() ?? a.creationDate?.valueOf() ?? 0);
             break;
         case AssignmentOrderType.Title:
-            sortedAs = [...(as ?? [])].sort((a, b) =>
+            sortedAssignments = [...(assignments ?? [])].sort((a, b) =>
                 sortStringsNumerically(a.gameboard?.title ?? a.quiz?.title ?? "", b.gameboard?.title ?? b.quiz?.title ?? "")
             );
             break;
         default:
-            sortedAs = as;
+            sortedAssignments = assignments;
     }
-    return sortOrder?.order === SortOrder.DESC ? sortedAs?.reverse() : sortedAs;
+    return sortOrder?.order === SortOrder.DESC ? sortedAssignments?.reverse() : sortedAssignments;
 }
 
 // Returns assignment objects with full gameboard and question part data
