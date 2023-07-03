@@ -18,7 +18,7 @@ describe("MyGameboards", () => {
     it('should start in table view', async () => {
         renderMyGameboards();
         await waitFor(() => {
-            expect(screen.queryByText("Loading...")).toBeNull();
+            expect(screen.queryAllByText("Loading...")).toBeEmpty();
         });
         const viewDropdown: HTMLInputElement = await screen.findByLabelText("Display in");
         expect(viewDropdown.value).toEqual("Table View");
