@@ -42,10 +42,9 @@ const sortAssignments = (as: SortFuncInputType[] | undefined, sortOrder?: Assign
             sortedAs = sortBy(as, a => a.scheduledStartDate?.valueOf() ?? a.creationDate?.valueOf() ?? 0);
             break;
         case AssignmentOrderType.Title:
-            sortedAs = produce<SortFuncInputType[]>(x => x?.sort(
-                    (a, b) =>
-                        sortStringsNumerically(a.gameboard?.title ?? a.quiz?.title ?? "", b.gameboard?.title ?? b.quiz?.title ?? "")
-                ))(as);
+            sortedAs = [...(as ?? [])].sort((a, b) =>
+                sortStringsNumerically(a.gameboard?.title ?? a.quiz?.title ?? "", b.gameboard?.title ?? b.quiz?.title ?? "")
+            );
             break;
         default:
             sortedAs = as;
