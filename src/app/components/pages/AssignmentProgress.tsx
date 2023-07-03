@@ -570,7 +570,7 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
         <div  onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
             <div className="group-name"><span className="icon-group"/><span data-testid={"group-name"}>{group.groupName}</span></div>
             <div className="flex-grow-1" />
-            <div className="py-2"><strong>{assignmentCount}</strong> assignment{assignmentCount != 1 && "s"} and test{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
+            <div className="py-2"><strong>{assignmentCount}</strong> assignment{assignmentCount != 1 && "s"} or test{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
             <div className="d-none d-md-inline-block"><a className={"download-csv-link"} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
                 (Download group assignments CSV)
             </a></div>
