@@ -1,6 +1,7 @@
 import React from "react";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import ReactGA4 from "react-ga4";
 import {trackEvent, WEBMASTER_EMAIL} from "../../services";
 
 export const SessionExpired = () => {
@@ -12,6 +13,10 @@ export const SessionExpired = () => {
             }
         }
     )
+    ReactGA4.gtag("event", "exception", {
+        description: 'session_expired',
+        fatal: true
+    });
 
     return <Container>
         <div>

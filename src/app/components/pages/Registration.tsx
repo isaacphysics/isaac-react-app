@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {errorSlice, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
 import {Link} from "react-router-dom";
+import ReactGA4 from "react-ga4";
 import {
     Alert,
     Card,
@@ -99,6 +100,11 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     }
                 }
             )
+            ReactGA4.event({
+                category: 'user',
+                action: 'registration',
+                label: 'Create Account (SEGUE)',
+            });
         }
     };
 
