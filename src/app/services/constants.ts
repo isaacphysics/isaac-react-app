@@ -67,9 +67,7 @@ export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
 
  export const { trackPageview, trackEvent } = Plausible(
     {
-        trackLocalhost: true,  // todo: remove
-        domain: "dev.adacomputerscience.org",  // todo: remove and rely on default
-        apiHost: "https://staging-analytics.raspberrypi.org/"  // todo: replace with self-hosted instance
+        apiHost: "https://monitor.isaacphysics.org/"
     }
 )
 
