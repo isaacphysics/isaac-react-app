@@ -172,7 +172,7 @@ interface AssignmentListEntryProps {
 }
 const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    const {openAssignmentModal, viewBy, boardsById} = useContext(AssignmentScheduleContext);
+    const {openAssignmentModal, boardsById} = useContext(AssignmentScheduleContext);
     const [ unassignGameboard ] = useUnassignGameboardMutation();
     const [showMore, setShowMore] = useState(false);
     const [showGameboardPreview, setShowGameboardPreview] = useState(false);
