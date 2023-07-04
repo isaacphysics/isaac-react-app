@@ -202,7 +202,6 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
 
     const boardStagesAndDifficulties = determineGameboardStagesAndDifficulties(gameboardToPreview);
 
-    console.log(gameboardToPreview);
 
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
