@@ -5,9 +5,10 @@ import {useLogQuizSectionViewMutation} from "../../../state";
 
 export function useSectionViewLogging(attempt: QuizAttemptDTO | undefined, pageNumber: number | null) {
     const [logQuizSectionView] = useLogQuizSectionViewMutation();
+    const attemptId = attempt?.id;
     useEffect(() => {
-        if (attempt && isDefined(attempt.id) && pageNumber !== null) {
-            logQuizSectionView({quizAttemptId: attempt.id as number, page: pageNumber});
+        if (isDefined(attemptId) && pageNumber !== null) {
+            logQuizSectionView({quizAttemptId: attemptId, page: pageNumber});
         }
-    }, [attempt, pageNumber]);
+    }, [attemptId, pageNumber]);
 }
