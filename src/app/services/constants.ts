@@ -67,7 +67,7 @@ export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
 
  export const { trackPageview, trackEvent } = Plausible(
     {
-        apiHost: siteSpecific("https://monitor.isaacphysics.org/", "https://tickets.adacomputerscience.org/"),
+        apiHost: siteSpecific("https://plausible.isaacphysics.org/", "https://plausible.adacomputerscience.org/"),
     }
 )
 
