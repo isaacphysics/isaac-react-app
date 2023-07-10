@@ -20,7 +20,7 @@ export const PhysBookGcse = () => {
                 <PageFragment fragmentId="phys_book_gcse_intro"/>
             </div>
             <div className="book-levels">
-                <Tabs tabTitleClass="px-3 py-1 hint-tab-title" tabContentClass="pt-2">
+                <Tabs tabTitleClass="px-3 py-1 hint-tab-title" tabContentClass="pt-2" activeTabOverride={2}>
                     {{
                         'Boards for Class and Homework': <Col>
                             <h4>Chapters:</h4>
