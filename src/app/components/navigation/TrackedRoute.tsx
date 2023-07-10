@@ -1,30 +1,26 @@
 import React, {useEffect} from "react";
 import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
-import ReactGA, {FieldsObject} from "react-ga";
 import ReactGA4 from "react-ga4";
 import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors, useAppSelector} from "../../state";
 import {
-    GOOGLE_ANALYTICS_ACCOUNT_ID,
     GOOGLE_ANALYTICS_4_MEASUREMENT_ID,
     isTeacherOrAbove,
     isTutorOrAbove,
     KEY,
-    persistence, TEACHER_REQUEST_ROUTE
+    persistence,
+    TEACHER_REQUEST_ROUTE,
+    trackPageview
 } from "../../services";
 import {Unauthorised} from "../pages/Unauthorised";
 import {Immutable} from "immer";
 
-ReactGA.initialize(GOOGLE_ANALYTICS_ACCOUNT_ID);
 ReactGA4.initialize(GOOGLE_ANALYTICS_4_MEASUREMENT_ID);
-ReactGA.set({ anonymizeIp: true });
 ReactGA4.set({ anonymizeIp: true });
 
-const trackPage = (page: string, options?: FieldsObject) => {
-    ReactGA.set({ page, ...options });
-    ReactGA4.set({ page, ...options });
-    ReactGA.pageview(page);
+const trackPage = (page: string) => {
+    ReactGA4.set({ page });
     ReactGA4.send({ hitType: "pageview", page });
 };
 
@@ -32,22 +28,22 @@ interface UserFilterProps {
     ifUser?: (user: Immutable<PotentialUser>) => boolean;
 }
 
-type TrackedRouteProps = RouteProps & {trackingOptions?: FieldsObject; componentProps?: FieldsObject} & UserFilterProps;
+type TrackedRouteProps = RouteProps & {componentProps?: any} & UserFilterProps;
 type TrackedRouteComponentProps = RouteComponentProps & {
     component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
-    trackingOptions?: FieldsObject;
 };
 
-const WrapperComponent = function({component: Component, trackingOptions, ...props}: TrackedRouteComponentProps) {
+const WrapperComponent = function({component: Component, ...props}: TrackedRouteComponentProps) {
     useEffect(() => {
-        trackPage(props.location.pathname, trackingOptions);
-    }, [props.location.pathname, trackingOptions]);
+        trackPageview();
+        trackPage(props.location.pathname);
+    }, [props.location.pathname]);
     return <FigureNumberingContext.Provider value={{}}> {/* Create a figure numbering scope for each page */}
         <Component {...props} />
     </FigureNumberingContext.Provider>;
 };
 
-export const TrackedRoute = function({component, trackingOptions, componentProps, ...rest}: TrackedRouteProps) {
+export const TrackedRoute = function({component, componentProps, ...rest}: TrackedRouteProps) {
     const user = useAppSelector(selectors.user.orNull);
     if (component) {
         if (rest.ifUser !== undefined) {
@@ -57,7 +53,7 @@ export const TrackedRoute = function({component, trackingOptions, componentProps
                 const userNeedsToBeTutorOrTeacher = rest.ifUser && [isTutorOrAbove.name, isTeacherOrAbove.name].includes(rest.ifUser.name); // TODO we should try to find a more robust way than this
                 return <ShowLoading until={user}>
                     {user && ifUser(user) ?
-                        <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} {...componentProps} /> :
+                        <WrapperComponent component={component} {...propsWithUser} {...componentProps} /> :
                         user && !user.loggedIn && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
                             persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                             :
@@ -73,7 +69,7 @@ export const TrackedRoute = function({component, trackingOptions, componentProps
             }}/>;
         } else {
             return <Route {...rest} render={props => {
-                return <WrapperComponent component={component} trackingOptions={trackingOptions} {...props} {...componentProps} />;
+                return <WrapperComponent component={component} {...props} {...componentProps} />;
             }}/>;
         }
     } else {

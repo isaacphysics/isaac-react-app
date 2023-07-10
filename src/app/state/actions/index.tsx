@@ -15,7 +15,7 @@ import {
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    TAG_ID
+    TAG_ID, trackEvent
 } from "../../services";
 import {
     Action,
@@ -55,7 +55,6 @@ import {
     tokenVerificationModal
 } from "../../components/elements/modals/TeacherConnectionModalCreators";
 import {AxiosError} from "axios";
-import ReactGA from "react-ga";
 import ReactGA4 from "react-ga4";
 import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
@@ -95,9 +94,13 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
                 }) as any;
             }
         } else {
-            ReactGA.exception({
-                description: `load_fail: ${error}`
-            });
+            trackEvent("exception", {props:
+                        {
+                            description: `load_fail: ${error}`,
+                            fatal: true
+                        }
+                }
+            )
             ReactGA4.gtag("event", "exception", {
                 description: `load_fail: ${error}`
             });
@@ -415,11 +418,12 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         if (providerResponse.data.firstLogin) {
-            ReactGA.event({
-                category: 'user',
-                action: 'registration',
-                label: `Create Account (${provider})`,
-            });
+            trackEvent("registration", {props:
+                    {
+                        provider: provider,
+                    }
+                }
+            )
             ReactGA4.event({
                 category: 'user',
                 action: 'registration',
