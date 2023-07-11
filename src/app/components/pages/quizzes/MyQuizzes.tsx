@@ -157,7 +157,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
-        {isAda && <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />}
+        <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <Tabs className="mb-5 mt-4" tabContentClass="mt-4">
             {{
                 [siteSpecific("In Progress Tests", "In progress tests")]:
