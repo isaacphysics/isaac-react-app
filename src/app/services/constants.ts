@@ -858,6 +858,8 @@ export enum TAG_ID {
     proteins = "proteins",
     carbohydrates = "carbohydrates",
     lipids = "lipids",
+    respiration = "respiration",
+    photosynthesis = "photosynthesis",
     // Genetics
     dnaReplication = "dna_replication",
     transcription = "transcription",
@@ -866,12 +868,16 @@ export enum TAG_ID {
     inheritance = "inheritance",
     biotechnology = "biotechnology",
     // Physiology
-
+    plants = "plants",
     // Ecology
-
+    populations = "populations",
+    ecosystems = "ecosystems",
+    nutrientCycles = "nutrient_cycles",
+    biodiversity = "biodiversity",
     // Evolution
     variation = "variation",
-
+    theory = "theory",
+    phylogenetics = "phylogenetics",
 }
 
 export enum TAG_LEVEL {
