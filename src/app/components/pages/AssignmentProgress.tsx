@@ -618,7 +618,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 help={pageHelp}
                 modalId="assignment_progress_help"
             />
-            {isAda && <PageFragment fragmentId={"markbook_help"} ifNotFound={RenderNothing} />}
+            <PageFragment fragmentId={"markbook_help"} ifNotFound={RenderNothing} />
             <div className="w-100 text-right">
                 <InputGroup className="d-inline text-nowrap">
                     <Label className="pr-2 mt-1">Sort assignments and tests:</Label>

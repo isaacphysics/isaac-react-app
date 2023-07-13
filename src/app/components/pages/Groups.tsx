@@ -461,7 +461,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="groups_help" />
-        {isAda && <PageFragment fragmentId={"groups_help"} ifNotFound={RenderNothing} />}
+        <PageFragment fragmentId={"groups_help"} ifNotFound={RenderNothing} />
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <Row className="mb-5">
                 <Col lg={4}>
