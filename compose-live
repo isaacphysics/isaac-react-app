@@ -78,8 +78,7 @@ services:
       - JAVA_OPTIONS=-Dlog.path=/isaac-logs -Dsegue.version=$API_VERSION
     volumes:
       - /local/data/m2:/root/.m2:rw
-      - /local/data/isaac-sops-config-decrypted/common/$SITE:/local/data/config/common/$SITE:ro
-      - /local/data/isaac-sops-config-decrypted/$ENV/$SITE:/local/data/config/$ENV/$SITE:ro
+      - /local/data/isaac-sops-config-decrypted/$ENV/$SITE:/local/data/config:ro
       - /local/data/$CONTENT_REPO:/local/data/$CONTENT_REPO:rw
       - /var/log/isaac/$SITE-$ENV:/isaac-logs:rw
     networks:

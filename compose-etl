@@ -61,8 +61,7 @@ services:
       - JAVA_OPTIONS=-Dlog.path=/isaac-logs -Dsegue.version=$API_VERSION -Djetty.port=8090
     volumes:
       - /local/data/m2:/root/.m2:rw
-      - /local/data/isaac-sops-config-decrypted/common:/local/data/config/common:ro
-      - /local/data/isaac-sops-config-decrypted/$ENV/$SITE:/local/data/config/$ENV/$SITE:ro
+      - /local/data/isaac-sops-config-decrypted/$ENV/$SITE:/local/data/config:ro
       - /local/data/isaac-config/$SITE/content_indices.properties:/local/data/conf/content_indices.properties:rw
       - /local/data/$CONTENT_REPO:/local/data/$CONTENT_REPO:rw
       - /var/log/isaac/$SITE-etl:/isaac-logs:rw
