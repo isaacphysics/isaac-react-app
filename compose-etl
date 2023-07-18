@@ -57,7 +57,7 @@ services:
     container_name: $ETL_NAME
     image: docker.isaacscience.org/isaac-etl:$API_VERSION
     environment:
-      - SEGUE_CONFIG_LOCATION=/local/data/config/$ENV/$SITE/segue-config.dec.yaml
+      - SEGUE_CONFIG_LOCATION=/local/data/config/segue-config.dec.yaml
       - JAVA_OPTIONS=-Dlog.path=/isaac-logs -Dsegue.version=$API_VERSION -Djetty.port=8090
     volumes:
       - /local/data/m2:/root/.m2:rw
