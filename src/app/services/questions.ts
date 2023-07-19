@@ -1,6 +1,6 @@
 import React, {lazy} from "react";
 import {AppQuestionDTO, IsaacQuestionProps, ValidatedChoice} from "../../IsaacAppTypes";
-import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP} from './';
+import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP, REVERSE_GREEK_LETTERS_MAP_WITH_VAREPSILON} from './';
 import {ChoiceDTO, ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 import {selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
@@ -95,7 +95,7 @@ export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
 export function sanitiseInequalityState(state: any) {
     const saneState = JSON.parse(JSON.stringify(state));
     if (saneState.result?.tex) {
-        saneState.result.tex = saneState.result.tex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
+        saneState.result.tex = saneState.result.tex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP_WITH_VAREPSILON[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP_WITH_VAREPSILON[l] : l).join('');
     }
     if (saneState.result?.python) {
         saneState.result.python = saneState.result.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
@@ -106,7 +106,7 @@ export function sanitiseInequalityState(state: any) {
     if (saneState.symbols) {
         for (const symbol of saneState.symbols) {
             if (symbol.expression.latex) {
-                symbol.expression.latex = symbol.expression.latex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
+                symbol.expression.latex = symbol.expression.latex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP_WITH_VAREPSILON[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP_WITH_VAREPSILON[l] : l).join('');
             }
             if (symbol.expression.python) {
                 symbol.expression.python = symbol.expression.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');

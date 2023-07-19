@@ -1041,6 +1041,7 @@ for(const entry of Object.entries(GREEK_LETTERS_MAP)) {
 }
 _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
+export const REVERSE_GREEK_LETTERS_MAP_WITH_VAREPSILON: { [key: string]: string } = {..._REVERSE_GREEK_LETTERS_MAP, "ε": "varepsilon"};
 
 
 export const specificDoughnutColours: { [key: string]: string } = siteSpecific(
