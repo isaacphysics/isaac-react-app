@@ -170,7 +170,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 
     function saveUpdatedGroup(event: React.FormEvent) {
         event?.preventDefault();
-        if (!newGroupName || newGroupName.length === 0) {
+        if (!newGroupName || newGroupName.length === 0 || newGroupName.trim().length === 0) {
             dispatch(showErrorToast(`Cannot ${group ? "rename" : "create"} group`, "The group name must be specified."));
             return;
         }
@@ -343,9 +343,14 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 };
 
 const MobileGroupCreatorComponent = ({className, createNewGroup}: GroupCreatorProps & {className: string}) => {
+    const dispatch = useAppDispatch();
     const [newGroupName, setNewGroupName] = useState("");
 
     function saveUpdatedGroup() {
+        if (!newGroupName || newGroupName.length === 0 || newGroupName.trim().length === 0) {
+            dispatch(showErrorToast("Cannot create group", "The group name must be specified."));
+            return;
+        }
         createNewGroup(newGroupName).then(success => {
             if (success) {
                 setNewGroupName("");
