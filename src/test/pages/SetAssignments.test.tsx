@@ -28,7 +28,7 @@ describe("SetAssignments", () => {
         renderSetAssignments();
         if (isPhy) {
             await waitFor(() => {
-                expect(screen.queryByText("Loading...")).toBeNull();
+                expect(screen.queryAllByText("Loading...")).toHaveLength(0);
             });
             const viewDropdown: HTMLInputElement = await screen.findByLabelText("Display in");
             expect(viewDropdown.value).toEqual("Card View");
@@ -37,7 +37,7 @@ describe("SetAssignments", () => {
             const viewDropdown = await screen.findByLabelText("Display in");
             await userEvent.selectOptions(viewDropdown, "Card View");
             await waitFor(() => {
-                expect(screen.queryByText("Loading...")).toBeNull();
+                expect(screen.queryAllByText("Loading...")).toHaveLength(0);
             });
         }
         expect(await screen.findAllByTestId("gameboard-card")).toHaveLength(6);
@@ -47,7 +47,7 @@ describe("SetAssignments", () => {
         renderSetAssignments();
         if (isAda) {
             await waitFor(() => {
-                expect(screen.queryByText("Loading...")).toBeNull();
+                expect(screen.queryAllByText("Loading...")).toHaveLength(0);
             });
             const viewDropdown: HTMLInputElement = await screen.findByLabelText("Display in");
             expect(viewDropdown.value).toEqual("Table View");
