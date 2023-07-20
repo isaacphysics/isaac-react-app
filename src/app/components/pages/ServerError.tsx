@@ -2,7 +2,6 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import ReactGA4 from "react-ga4";
 import {siteSpecific, trackEvent, WEBMASTER_EMAIL} from "../../services";
 
 export const ServerError = () => {
@@ -13,10 +12,6 @@ export const ServerError = () => {
             }
         }
     )
-    ReactGA4.gtag("event", "exception", {
-        description: 'server_error',
-        fatal: true
-    });
     return <Container>
         <div>
             <TitleAndBreadcrumb currentPageTitle="Error" />

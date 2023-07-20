@@ -8,7 +8,6 @@ global.window.confirm = jest.fn(() => true);
 global.confirm = jest.fn(() => true);
 global.window.HTMLElement.prototype.scrollTo = jest.fn();
 global.window.HTMLElement.prototype.scrollIntoView = jest.fn();
-jest.mock("react-ga4"); // Google Analytics requires a DOM.window which doesn't exist in test
 jest.mock("plausible-tracker", () => jest.fn(() => ({trackPageview: jest.fn(), trackEvent: jest.fn()}))); // Plausible requires a DOM.window which doesn't exist in test
 jest.mock("../app/services/websockets"); // MSW can't handle websockets just yet
 

@@ -2,7 +2,6 @@ import React, {useCallback, useContext} from 'react';
 import {VideoDTO} from "../../../IsaacApiTypes";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {NOT_FOUND, trackEvent} from "../../services";
-import ReactGA4 from "react-ga4";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 
 interface IsaacVideoProps {
@@ -90,10 +89,6 @@ export function IsaacVideo(props: IsaacVideoProps) {
                         }
                     }
                 )
-                ReactGA4.gtag("event", "exception", {
-                    description: `youtube_error: ${error?.message || 'problem with YT library'}`,
-                    fatal: false
-                });
             }
         }
     }, [dispatch, pageId]);
