@@ -1040,8 +1040,8 @@ for(const entry of Object.entries(GREEK_LETTERS_MAP)) {
     _REVERSE_GREEK_LETTERS_MAP[entry[1]] = entry[0];
 }
 // Use "epsilon" in textual and code representations, but "varepsilon" in LaTeX (because we use "\varepsilon" instead
-// of "\epsilon" to display epsilon in LaTeX)  
-export const REVERSE_GREEK_LETTERS_MAP_PYTHON = {_REVERSE_GREEK_LETTERS_MAP, "ε": "epsilon"};
+// of "\epsilon" to display epsilon in LaTeX)
+export const REVERSE_GREEK_LETTERS_MAP_PYTHON: { [key: string]: string } = {..._REVERSE_GREEK_LETTERS_MAP, "ε": "epsilon"};
 export const REVERSE_GREEK_LETTERS_MAP_LATEX: { [key: string]: string } = {..._REVERSE_GREEK_LETTERS_MAP, "ε": "varepsilon"};
 
 
