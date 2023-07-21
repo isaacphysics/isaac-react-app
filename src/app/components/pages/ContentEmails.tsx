@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {sendProvidedEmailWithUserIds, useAppDispatch} from "../../state";
+import {useSendProvidedEmailWithUserIdsMutation} from "../../state";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
@@ -19,7 +19,6 @@ interface ContentEmailsProps {
 const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
 
 const ContentEmails = (props: ContentEmailsProps) => {
-    const dispatch = useAppDispatch();
     const [csvIDs, setCSVIDs] = useState(props.location.state?.csvIDs || [] as number[]);
     const [emailType, setEmailType] = useState("null");
     const [emailSent, setEmailSent] = useState(false);
@@ -47,6 +46,8 @@ const ContentEmails = (props: ContentEmailsProps) => {
     }, [emailSubject, plaintextTemplate, htmlTemplate, overrideEnvelopeFrom]);
 
     const mailgunAddress = siteSpecific("no-reply@mail.isaacphysics.org", "no-reply@mail.adacomputerscience.org");
+
+    const [sendProvidedEmailWithUserIds] = useSendProvidedEmailWithUserIdsMutation();
 
     return <RS.Container id="admin-emails-page">
         <TitleAndBreadcrumb currentPageTitle="Content email sending" />
@@ -162,7 +163,7 @@ const ContentEmails = (props: ContentEmailsProps) => {
                                 onClick={() => {
                                     if (window.confirm(`Are you sure you want to send a ${emailType} email to ${numberOfUsers} user${numberOfUsers > 1 ? "s" : ""}?`)) {
                                         setEmailSent(true);
-                                        dispatch(sendProvidedEmailWithUserIds(emailTemplate, emailType, csvIDs));
+                                        sendProvidedEmailWithUserIds({emailTemplate, emailType, ids: csvIDs});
                                     }
                                 }}
                             />

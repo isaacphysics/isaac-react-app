@@ -440,55 +440,6 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     }
 };
 
-export const requestEmailVerification = () => async (dispatch: any, getState: () => AppState) => {
-    const state = getState();
-    const user: Immutable<RegisteredUserDTO> | null = state && state.user && state.user.loggedIn && state.user || null;
-    let error = "";
-    if (user && user.email) {
-        dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST});
-        try {
-            const response = await api.users.requestEmailVerification({email: user.email});
-            if (response.status == 200) {
-                dispatch(showToast({
-                    color: "success", title: "Email verification request succeeded.",
-                    body: "Please follow the verification link given in the email sent to your address.",
-                    timeout: 10000
-                }));
-                dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS});
-                return;
-            }
-            error = response.data || "Error sending request";
-        } catch (e: any) {
-            error = e.message || "Error sending request";
-        }
-    } else {
-        error = "You are not logged in or don't have an e-mail address to verify.";
-    }
-
-    dispatch(showToast({color: "danger", title: "Email verification request failed.",
-        body: "Sending an email to your address failed with error message: " + error
-    }));
-    dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE});
-};
-
-export const handleEmailAlter = (params: ({userid: string | null; token: string | null})) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST});
-        await api.email.verify(params);
-        dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
-        dispatch(requestCurrentUser() as any);
-        dispatch(showToast({
-            title: "Email address verified",
-            body: "The email address has been verified",
-            color: "success",
-            timeout: 5000,
-            closable: false,
-        }) as any);
-    } catch(e: any) {
-        dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
 // User error
 export const getUserIdSchoolLookup = (eventIds: number[]) => async (dispatch: Dispatch<Action>) => {
     try {
@@ -932,52 +883,6 @@ export const fetchSearch = (query: string, types: string | undefined) => async (
 };
 
 // Admin
-export const getEmailTemplate = (contentid: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST});
-    try {
-        const email = await api.email.getTemplateEmail(contentid);
-        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_SUCCESS, email: email.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to get email template", e));
-    }
-};
-
-export const sendAdminEmail = (contentid: string, emailType: string, roles: EmailUserRoles) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST});
-    try {
-        await api.email.sendAdminEmail(contentid, emailType, roles);
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_SUCCESS});
-        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Sending email failed", e));
-    }
-};
-
-export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids: number[]) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST});
-    try {
-        await api.email.sendAdminEmailWithIds(contentid, emailType, ids);
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS});
-        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Sending email with ids failed", e));
-    }
-};
-
-export const sendProvidedEmailWithUserIds = (emailTemplate: EmailTemplateDTO, emailType: string, ids: number[]) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_REQUEST});
-    try {
-        await api.email.sendProvidedEmailWithUserIds(emailTemplate, emailType, ids);
-        dispatch({type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS});
-        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Sending email with ids failed", e));
-    }
-};
 
 export const resetMemberPassword = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST, member});

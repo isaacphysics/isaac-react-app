@@ -87,9 +87,6 @@ export const api = {
         passwordReset: (params: {email: string}) => {
             return endpoint.post(`/users/resetpassword`, params);
         },
-        requestEmailVerification(params: {email: string}) {
-            return endpoint.post(`/users/verifyemail`, params);
-        },
         verifyPasswordReset: (token: string | null) => {
             return endpoint.get(`/users/resetpassword/${token}`)
         },
@@ -147,23 +144,6 @@ export const api = {
         },
         unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
             return endpoint.delete(`/auth/${provider}/link`);
-        },
-    },
-    email: {
-        verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {
-            return endpoint.get(`/users/verifyemail/${params.userid}/${params.token}`);
-        },
-        getTemplateEmail: (contentid: string): AxiosPromise<AppTypes.TemplateEmail> => {
-            return endpoint.get(`/email/viewinbrowser/${contentid}`);
-        },
-        sendAdminEmail: (contentid: string, emailType: string, roles: EmailUserRoles): AxiosPromise => {
-            return endpoint.post(`/email/sendemail/${contentid}/${emailType}`, roles);
-        },
-        sendAdminEmailWithIds: (contentid: string, emailType: string, ids: number[]): AxiosPromise => {
-            return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
-        },
-        sendProvidedEmailWithUserIds: (emailTemplate: EmailTemplateDTO, emailType: string, ids: number[]): AxiosPromise => {
-            return endpoint.post(`/email/sendprovidedemailwithuserids/${emailType}`, {userIds: ids, emailTemplate: emailTemplate});
         },
     },
     notifications: {

@@ -27,7 +27,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
         dispatch(getEventOverviews(overviewFilter));
     }, [dispatch, setSelectedEventId, overviewFilter]);
 
-    return <Accordion trustedTitle="Events overview" index={0}>
+    return <Accordion trustedTitle="Events overview" index={0} startOpen>
         {isEventLeader(user) && <div className="bg-grey p-2 mb-4 text-center">
             As an event leader, you are only able to see the details of events which you manage.
         </div>}
@@ -84,7 +84,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                     <tbody>
                         {eventOverviews
                             .sort(sortOnPredicateAndReverse(sortPredicate, reverse))
-                            .map((event) => <tr key={event.id}>
+                            .map((event) => <tr key={event.id} data-testid="event-manager-row">
                                 <td className="align-middle"><RS.Button color="primary" outline className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
                                     Manage
                                 </RS.Button></td>

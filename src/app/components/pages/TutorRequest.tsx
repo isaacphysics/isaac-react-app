@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {
     AppState,
-    requestEmailVerification,
     selectors,
     submitMessage,
     useAppDispatch,
     useAppSelector,
-    useGetPageFragmentQuery
+    useGetPageFragmentQuery,
+    useRequestEmailVerificationMutation
 } from "../../state";
 import {
     Alert,
@@ -43,6 +43,13 @@ export const TutorRequest = () => {
     const user = useAppSelector(selectors.user.orNull);
     const errorMessage = useAppSelector((state: AppState) => (state && state.error) || null);
     const {data: warningFragment} = useGetPageFragmentQuery(warningFragmentId);
+
+    const [sendVerificationEmail] = useRequestEmailVerificationMutation();
+    const requestVerificationEmail = () => {
+        if (user?.loggedIn && user.email) {
+            sendVerificationEmail({email: user.email});
+        }
+    };
 
     const [firstName, setFirstName] = useState(user?.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user?.loggedIn && user.familyName || "");
@@ -173,7 +180,7 @@ export const TutorRequest = () => {
                                         <Col>
                                             <small className="text-danger text-left">Your email address is not verified —
                                                 please click on the link in the verification email to confirm your
-                                                email address. You can <Button color="link primary-font-link" onClick={() => dispatch(requestEmailVerification())}>request a
+                                                email address. You can <Button color="link primary-font-link" onClick={requestVerificationEmail}>request a
                                                 new verification email</Button> if necessary.
                                             </small>
                                         </Col>

@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React from "react";
 import * as RS from "reactstrap";
 import {AdditionalInformation, AugmentedEvent} from "../../../IsaacAppTypes";
 import {SchoolInput} from "./inputs/SchoolInput";
-import {requestEmailVerification, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {selectors, useAppSelector, useRequestEmailVerificationMutation} from "../../state";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 import {examBoardLabelMap, isAda, isTutor, stageLabelMap, studentOnlyEventMessage} from "../../services";
 import {Immutable} from "immer";
@@ -15,13 +15,17 @@ interface EventBookingFormProps {
 }
 
 export const EventBookingForm = ({event, targetUser, additionalInformation, updateAdditionalInformation}: EventBookingFormProps) => {
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const editingSelf = user && user.loggedIn && targetUser.id === user.id;
 
-    const [verifyEmailRequestSent, setVerifyEmailRequestSent] = useState(false);
+    const [sendVerificationEmail, {isUninitialized: verificationNotResent, isSuccess: verifyEmailRequestSucceeded}] = useRequestEmailVerificationMutation();
+    const requestVerificationEmail = () => {
+        if (user?.loggedIn && user.email) {
+            sendVerificationEmail({email: user.email});
+        }
+    };
 
-    return <React.Fragment>
+    return <>
         {/* Account Information */}
         <RS.Card className="mb-3 bg-light">
             <RS.CardBody>
@@ -75,24 +79,21 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             } />
                         </RS.Col>}
                     </RS.Row>
-                    <RS.Row>
+                    {editingSelf && <RS.Row>
                         <RS.Col>
-                            {editingSelf && targetUser.emailVerificationStatus != 'VERIFIED' && !verifyEmailRequestSent && <RS.Button
-                                color="link" className="btn-underline" onClick={() => {
-                                    dispatch(requestEmailVerification());
-                                    setVerifyEmailRequestSent(true);
-                                }}
+                            {targetUser.emailVerificationStatus !== "VERIFIED" && verificationNotResent && <RS.Button
+                                color="link" className="btn-underline" onClick={requestVerificationEmail}
                             >
                                 Verify your email before booking
                             </RS.Button>}
-                            {targetUser.emailVerificationStatus != 'VERIFIED' && verifyEmailRequestSent && <span>
-                            We have sent an email to {targetUser.email}. Please follow the instructions in the email prior to booking.
+                            {targetUser.emailVerificationStatus !== "VERIFIED" && verifyEmailRequestSucceeded && <span>
+                                We have sent an email to {targetUser.email}. Please follow the instructions in the email prior to booking.
                             </span>}
                         </RS.Col>
-                    </RS.Row>
+                    </RS.Row>}
                 </div>
                 {editingSelf && <div>
-                    <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} disableInput submissionAttempted required={!isTutor(targetUser)} />
+                    <SchoolInput userToUpdate={{...targetUser, password: null}} disableInput submissionAttempted required={!isTutor(targetUser)} />
                 </div>}
                 {editingSelf && <div className="text-center alert-warning p-1">
                     If this information is incorrect, please update it from your <a href="/account" target="_blank">account page</a>.
@@ -199,5 +200,5 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                 </React.Fragment>}
             </RS.CardBody>
         </RS.Card>
-    </React.Fragment>
+    </>
 };

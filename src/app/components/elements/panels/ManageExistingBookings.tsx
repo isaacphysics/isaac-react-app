@@ -29,6 +29,7 @@ import {
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
+import produce from "immer";
 
 export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialUser; eventBookingId: string}) => {
     const dispatch = useAppDispatch();
@@ -47,13 +48,13 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialU
         setReverse(!reverse);
     };
 
-    let augmentedEventBookings = eventBookings.map((booking: EventBookingDTO & {schoolName?: string}) => {
+    const augmentedEventBookings = eventBookings.map(produce((booking: EventBookingDTO & {schoolName?: string}) => {
         if (booking.userBooked && booking.userBooked.id) {
             const schoolDetails = userIdToSchoolMapping[booking.userBooked.id];
             booking.schoolName = schoolDetails ? schoolDetails.name : "UNKNOWN";
         }
         return booking
-    });
+    }));
 
     function relevantUsers (bookingType: string) {
         let idsToReturn: number[] = [];
