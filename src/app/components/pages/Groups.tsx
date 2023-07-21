@@ -170,7 +170,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 
     function saveUpdatedGroup(event: React.FormEvent) {
         event?.preventDefault();
-        if (!newGroupName || newGroupName.length === 0) {
+        if (!newGroupName || newGroupName.length === 0 || newGroupName.trim().length === 0) {
             dispatch(showErrorToast(`Cannot ${group ? "rename" : "create"} group`, "The group name must be specified."));
             return;
         }
@@ -343,9 +343,14 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 };
 
 const MobileGroupCreatorComponent = ({className, createNewGroup}: GroupCreatorProps & {className: string}) => {
+    const dispatch = useAppDispatch();
     const [newGroupName, setNewGroupName] = useState("");
 
     function saveUpdatedGroup() {
+        if (!newGroupName || newGroupName.length === 0 || newGroupName.trim().length === 0) {
+            dispatch(showErrorToast("Cannot create group", "The group name must be specified."));
+            return;
+        }
         createNewGroup(newGroupName).then(success => {
             if (success) {
                 setNewGroupName("");
@@ -461,7 +466,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="groups_help" />
-        {isAda && <PageFragment fragmentId={"groups_help"} ifNotFound={RenderNothing} />}
+        <PageFragment fragmentId={"groups_help"} ifNotFound={RenderNothing} />
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <Row className="mb-5">
                 <Col lg={4}>

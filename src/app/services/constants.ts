@@ -14,6 +14,7 @@ import {
     UserRole
 } from "../../IsaacApiTypes";
 import {siteSpecific} from "./";
+import Plausible from "plausible-tracker";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
@@ -59,14 +60,16 @@ export const EDITOR_ORIGIN = siteSpecific(
 export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
 export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/#!/compare";
 
-export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
-    "UA-122616705-1",
-    "UA-260507153-1"
-);
 export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
     envSpecific("G-MM4SM6FNCF", "G-VXBDM5GDNG", "G-5VLS1Q1FCZ", "G-2YDE0QV3TK"),
     envSpecific("G-HQ3BM12YB3", "G-EQPHX0WKJ7", "G-W7YJPSQTKP", "G-1Q8QGL0D5J"),
 );
+
+ export const { trackPageview, trackEvent } = Plausible(
+    {
+        apiHost: siteSpecific("https://plausible.isaacphysics.org", "https://plausible.adacomputerscience.org"),
+    }
+)
 
 export const SOCIAL_LINKS = siteSpecific(
     {
@@ -752,6 +755,8 @@ export enum TAG_ID {
     proteins = "proteins",
     carbohydrates = "carbohydrates",
     lipids = "lipids",
+    respiration = "respiration",
+    photosynthesis = "photosynthesis",
     // Genetics
     dnaReplication = "dna_replication",
     transcription = "transcription",
@@ -760,12 +765,16 @@ export enum TAG_ID {
     inheritance = "inheritance",
     biotechnology = "biotechnology",
     // Physiology
-
+    plants = "plants",
     // Ecology
-
+    populations = "populations",
+    ecosystems = "ecosystems",
+    nutrientCycles = "nutrient_cycles",
+    biodiversity = "biodiversity",
     // Evolution
     variation = "variation",
-
+    theory = "theory",
+    phylogenetics = "phylogenetics",
 }
 
 export enum TAG_LEVEL {
@@ -927,8 +936,10 @@ const _REVERSE_GREEK_LETTERS_MAP: { [key: string]: string } = {};
 for(const entry of Object.entries(GREEK_LETTERS_MAP)) {
     _REVERSE_GREEK_LETTERS_MAP[entry[1]] = entry[0];
 }
-_REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
-export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
+// Use "epsilon" in textual and code representations, but "varepsilon" in LaTeX (because we use "\varepsilon" instead
+// of "\epsilon" to display epsilon in LaTeX)
+export const REVERSE_GREEK_LETTERS_MAP_PYTHON: { [key: string]: string } = {..._REVERSE_GREEK_LETTERS_MAP, "ε": "epsilon"};
+export const REVERSE_GREEK_LETTERS_MAP_LATEX: { [key: string]: string } = {..._REVERSE_GREEK_LETTERS_MAP, "ε": "varepsilon"};
 
 
 export const specificDoughnutColours: { [key: string]: string } = siteSpecific(

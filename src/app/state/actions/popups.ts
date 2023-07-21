@@ -1,8 +1,7 @@
 import {getRTKQueryErrorMessage, AppDispatch} from "../index";
 import {Dispatch} from "react";
 import {Action, ActiveModal, Toast} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE} from "../../services";
-import ReactGA from "react-ga";
+import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE, trackEvent} from "../../services";
 import ReactGA4 from "react-ga4";
 
 // Toasts
@@ -51,9 +50,12 @@ export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
                 return showErrorToast(error, getRTKQueryErrorMessage(response.error).message);
             }
         } else {
-            ReactGA.exception({
-                description: `load_fail: ${error}`
-            });
+            trackEvent("exception", {props:
+                    {
+                        description: `load_fail: ${error}`
+                    }
+                }
+            )
             ReactGA4.gtag("event", "exception", {
                 description: `load_fail: ${error}`
             });

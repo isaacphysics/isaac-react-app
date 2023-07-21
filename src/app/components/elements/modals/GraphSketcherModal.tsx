@@ -80,7 +80,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
         }
 
         return () => {
-            modalSketch?.teardown();
+            sketch?.teardown();
             setModalSketch(null);
             if (graphSketcherContainer.current) {
                 for (const canvas of graphSketcherContainer.current.getElementsByTagName('canvas')) {

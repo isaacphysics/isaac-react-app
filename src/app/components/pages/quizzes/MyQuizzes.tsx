@@ -16,7 +16,7 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
-    extractTeacherName,
+    extractTeacherName, isAda,
     isAttempt,
     isFound,
     isTutorOrAbove,
@@ -25,6 +25,7 @@ import {
 } from "../../../services";
 import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
+import {PageFragment} from "../../elements/PageFragment";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -44,6 +45,7 @@ function QuizItem({item}: QuizAssignmentProps) {
     const assignment = isAttempt(item) ? null : item;
     const attempt = isAttempt(item) ? item : assignment?.attempt;
     const status: Status = !attempt ? Status.Unstarted : !attempt.completedDate ? Status.Started : Status.Complete;
+    const assignmentStartDate = assignment?.scheduledStartDate ?? assignment?.creationDate;
     return <div className="p-2">
         <RS.Card className="card-neat">
             <RS.CardBody>
@@ -54,7 +56,7 @@ function QuizItem({item}: QuizAssignmentProps) {
                     attempt && <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>
                 }
                 {assignment && <p>
-                    Set: {formatDate(assignment.creationDate)}
+                    Set: {formatDate(assignmentStartDate)}
                     {assignment.assignerSummary && <> by {extractTeacherName(assignment.assignerSummary)}</>}
                 </p>}
                 {attempt && <p>
@@ -155,7 +157,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
-
+        <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <Tabs className="mb-5 mt-4" tabContentClass="mt-4">
             {{
                 [siteSpecific("In Progress Tests", "In progress tests")]:
