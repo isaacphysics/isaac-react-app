@@ -228,22 +228,6 @@ export const api = {
             return endpoint.get(`/pages/topics/${topicName}`);
         }
     },
-    schools: {
-        search: (query: string): AxiosPromise<AppTypes.School[]> => {
-            return endpoint.get(`/schools/?limit=3&query=${encodeURIComponent(query)}`);
-        },
-        getByUrn: (urn: string): AxiosPromise<AppTypes.School[]> => {
-            return endpoint.get(`/schools/?urn=${encodeURIComponent(urn)}`);
-        }
-    },
-    countries: {
-        getCountries: (): AxiosPromise<Record<string, string>> => {
-            return endpoint.get(`/countries`);
-        },
-        getPriorityCountries: (): AxiosPromise<Record<string, string>> => {
-            return endpoint.get(`/countries/priority`);
-        }
-    },
     websockets: {
         userAlerts: (): WebSocket => {
             const userAlertsURI = "/user-alerts";

@@ -10,6 +10,7 @@ import {
     useGetGroupMembersQuery,
     useCancelUsersReservationsOnEventMutation,
     useReserveUsersOnEventMutation,
+    useLazyGetSchoolByUrnQuery,
     useSubmitContactFormMutation
 } from "../../../state";
 import {
@@ -28,7 +29,7 @@ import {
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {ActiveModal, AppGroup, AugmentedEvent} from "../../../../IsaacAppTypes";
 import {RegisteredUserDTO, UserSummaryWithGroupMembershipDTO} from "../../../../IsaacApiTypes";
-import {api, bookingStatusMap, isDefined, isLoggedIn, schoolNameWithPostcode} from "../../../services";
+import {bookingStatusMap, isDefined, isLoggedIn, schoolNameWithPostcode} from "../../../services";
 import _orderBy from "lodash/orderBy";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
@@ -142,10 +143,13 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
         setCancelReservationCheckboxes(checkboxes);
     };
 
+    const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
     useEffect(function fetchUsersSchool() {
         if (user?.schoolId && user?.schoolId !== "") {
-            api.schools.getByUrn(user?.schoolId).then(({data}) => {
-                setSchool(schoolNameWithPostcode(data[0]));
+            getSchoolByUrn(user?.schoolId).then(({data}) => {
+                if (data && data.length > 0) {
+                    setSchool(schoolNameWithPostcode(data[0]));
+                }
             });
         } else if (user?.schoolOther) {
             setSchool(user.schoolOther);

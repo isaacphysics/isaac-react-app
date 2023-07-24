@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
-import {api, schoolNameWithPostcode, validateUserSchool} from "../../../services";
+import {schoolNameWithPostcode, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
+import {useLazyGetSchoolByUrnQuery, useLazySearchSchoolsQuery} from "../../../state";
 
 interface SchoolInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -18,24 +19,37 @@ interface SchoolInputProps {
 }
 const NOT_APPLICABLE = "N/A";
 
-const schoolSearch = (schoolSearchText: string, setAsyncSelectOptionsCallback: (options: {value: string | School, label: string | undefined}[]) => void) => {
-    api.schools.search(schoolSearchText).then(({data}) => {
-        setAsyncSelectOptionsCallback(data && data.length > 0 ? data.map((item) => ({value: item, label: schoolNameWithPostcode(item)})) : []);
+const schoolSearch = (searchFn: (school : string) => Promise<School[]>) => (schoolSearchText: string, setAsyncSelectOptionsCallback: (options: {value: string | School, label: string | undefined}[]) => void) => {
+    searchFn(schoolSearchText).then((schools) => {
+        setAsyncSelectOptionsCallback(schools.map((item) => ({value: item, label: schoolNameWithPostcode(item)})));
     }).catch((response) => {
         console.error("Error searching for schools. ", response);
     });
 };
 // Must define this debounced function _outside_ the component to ensure it doesn't get overwritten each rerender!
-const throttledSchoolSearch = throttle(schoolSearch, 450, {trailing: true, leading: true});
+const throttledSchoolSearch = (searchFn: (school : string) => Promise<School[]>) => throttle(schoolSearch(searchFn), 450, {trailing: true, leading: true});
 
 export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput, required}: SchoolInputProps) => {
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
+    const [searchSchools] = useLazySearchSchoolsQuery();
+    const searchSchoolsFn = useCallback(throttledSchoolSearch((school: string) => {
+        return searchSchools(school).then(({data, error}) => {
+            if (data && data.length > 0) {
+                return data;
+            }
+            throw error;
+        })
+    }), [searchSchools]);
+
+    const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
     // Get school associated with urn
     function fetchSchool(urn: string) {
-        if (urn != "") {
-            api.schools.getByUrn(urn).then(({data}) => {
-                setSelectedSchoolObject(data[0]);
+        if (urn !== "") {
+            getSchoolByUrn(urn).then(({data}) => {
+                if (data && data.length > 0) {
+                    setSelectedSchoolObject(data[0]);
+                }
             });
         } else {
             setSelectedSchoolObject(null);
@@ -94,7 +108,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 className={(isInvalid ? "react-select-error " : "") + "basic-multi-select"}
                 classNamePrefix="select"
                 onChange={handleSetSchool}
-                loadOptions={throttledSchoolSearch}
+                loadOptions={searchSchoolsFn}
                 filterOption={() => true}
                 formatCreateLabel={(input) => <span>Use &quot;{input}&quot; as your school name</span>}
             />
