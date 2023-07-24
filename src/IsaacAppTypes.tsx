@@ -184,10 +184,6 @@ export type Action =
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
 
-    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST}
-    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
-
     | {type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST; quizAssignmentId: number}
     | {type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
@@ -681,8 +677,6 @@ export interface PageSettings {
     isTeacher: boolean;
     assignmentOrder?: AssignmentOrderSpec;
 }
-
-export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
 
 export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
     groupName: string;
