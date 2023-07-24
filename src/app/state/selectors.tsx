@@ -16,10 +16,6 @@ export const selectors = {
         boards: (state: AppState) => state?.boards ?? null
     },
 
-    doc: {
-        get: (state: AppState) => state?.doc || null,
-    },
-
     questions: {
         getQuestions: (state: AppState) => state?.questions?.questions,
         allQuestionsAttempted: (state: AppState) => {

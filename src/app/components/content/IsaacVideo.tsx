@@ -3,7 +3,7 @@ import {VideoDTO} from "../../../IsaacApiTypes";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {NOT_FOUND, trackEvent} from "../../services";
 import ReactGA4 from "react-ga4";
-import {AccordionSectionContext} from "../../../IsaacAppTypes";
+import {AccordionSectionContext, PageContext} from "../../../IsaacAppTypes";
 
 interface IsaacVideoProps {
     doc: VideoDTO;
@@ -63,8 +63,7 @@ export function pauseAllVideos() {
 export function IsaacVideo(props: IsaacVideoProps) {
     const dispatch = useAppDispatch();
     const {doc: {src, altText}} = props;
-    const page = useAppSelector(selectors.doc.get);
-    const pageId = page && page !== NOT_FOUND && page.id || undefined;
+    const {id: pageId} = useContext(PageContext);
     const embedSrc = src && rewrite(src);
     const altTextToUse = `Embedded YouTube video: ${altText || src}.`
 

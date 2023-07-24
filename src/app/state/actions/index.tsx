@@ -439,23 +439,6 @@ export const requestNotifications = () => async (dispatch: Dispatch<Action>) => 
     }
 }
 
-// Document & topic fetch
-export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
-    let apiEndpoint;
-    switch (documentType) {
-        case DOCUMENT_TYPE.CONCEPT: apiEndpoint = api.concepts; break;
-        case DOCUMENT_TYPE.QUESTION: apiEndpoint = api.questions; break;
-        case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
-    }
-    try {
-        const response = await apiEndpoint.get(pageId);
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
-    }
-};
-
 export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.TOPIC_REQUEST, topicName});
     try {

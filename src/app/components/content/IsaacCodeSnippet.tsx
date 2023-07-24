@@ -1,5 +1,5 @@
 import {CodeSnippetDTO, ContentDTO} from "../../../IsaacApiTypes";
-import React, {useEffect, useRef} from "react";
+import React, {useContext, useEffect, useRef} from "react";
 import {Col, Row} from "reactstrap";
 import hljs from 'highlight.js/lib/core';
 import {highlightJsService} from "../../services/highlightJs";
@@ -9,6 +9,7 @@ import classNames from "classnames";
 import {useExpandContent} from "../elements/markup/portals/Tables";
 import {useStatefulElementRef} from "../elements/markup/portals/utils";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {PageContext} from "../../../IsaacAppTypes";
 
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;
@@ -18,7 +19,7 @@ highlightJsService.registerLanguages();
 
 const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     const dispatch = useAppDispatch();
-    const rootDoc = useAppSelector(selectors.doc.get);
+    const {id} = useContext(PageContext);
 
     const codeSnippetRef = useRef<HTMLElement>(null);
 
@@ -30,7 +31,7 @@ const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     }, [doc]);
 
     const logViewOnGitHub = () => {
-        dispatch(logAction({type: "VIEW_GITHUB_CODE", pageId: (rootDoc as ContentDTO).id, githubUrl: doc.url}));
+        dispatch(logAction({type: "VIEW_GITHUB_CODE", pageId: id, githubUrl: doc.url}));
     };
 
     const [scrollPromptRef, updateScrollPromptRef] = useStatefulElementRef<HTMLDivElement>();

@@ -99,10 +99,6 @@ export type Action =
     | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS; notifications: any[]}
 
-    | {type: ACTION_TYPE.DOCUMENT_REQUEST; documentType: DOCUMENT_TYPE; documentId: string}
-    | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
-    | {type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
@@ -386,6 +382,7 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
+export const PageContext = React.createContext<{id?: string; type?: DOCUMENT_TYPE; level?: number}>({});
 export const ClozeDropRegionContext = React.createContext<{
     register: (id: string, index: number) => void,
     questionPartId: string, readonly: boolean,

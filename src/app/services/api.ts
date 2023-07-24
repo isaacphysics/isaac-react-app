@@ -155,9 +155,6 @@ export const api = {
         }
     },
     questions: {
-        get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
-            return endpoint.get(`/pages/questions/${id}`);
-        },
         search: (query: QuestionSearchQuery): AxiosPromise<QuestionSearchResponse> => {
             return endpoint.get(`/pages/questions/`, {
                 params: query,
@@ -184,14 +181,6 @@ export const api = {
             return endpoint.get('/pages/concepts', {
                 params: { limit: 999 , ids: conceptIds, tags: tagIds }
             });
-        },
-        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
-            return endpoint.get(`/pages/concepts/${id}`);
-        },
-    },
-    pages: {
-        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
-            return endpoint.get(`/pages/${id}`);
         },
     },
     topics: {

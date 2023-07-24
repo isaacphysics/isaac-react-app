@@ -10,7 +10,6 @@ export * from "./actions/routing";
 export * from "./slices/api/utils";
 export * from "./middleware/utils";
 export * from "./reducers/topicState";
-export * from "./reducers/contentState";
 export * from "./slices/internalAppState";
 export * from "./actions/logging";
 export * from "./reducers/staticState";

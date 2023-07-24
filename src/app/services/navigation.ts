@@ -11,13 +11,12 @@ import {
     DOCUMENT_TYPE,
     fastTrackProgressEnabledBoards,
     makeAttemptAtTopicHistory,
-    NOT_FOUND, PATHS, siteSpecific,
+    PATHS, siteSpecific,
     TAG_ID,
     useQueryParams,
     useUserContext
 } from "./";
 import {AudienceContext, ContentDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {useLocation} from "react-router-dom";
 
@@ -36,10 +35,10 @@ export interface PageNavigation {
 
 const defaultPageNavigation = (currentGameboard?: GameboardDTO) => ({breadcrumbHistory: [], currentGameboard});
 
-export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavigation => {
+export const useNavigation = (doc: ContentDTO | undefined): PageNavigation => {
     const {search} = useLocation();
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
-    const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
+    const currentDocId = doc ? doc.id as string : "";
     const dispatch = useAppDispatch();
     const {data: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
 
@@ -51,7 +50,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
-    if (doc === null || doc === NOT_FOUND) {
+    if (doc === undefined) {
         return defaultPageNavigation(currentGameboard);
     }
 

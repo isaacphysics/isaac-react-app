@@ -1,7 +1,14 @@
-import {GameboardItem, IsaacConceptPageDTO, IsaacPodDTO} from "../../../../IsaacApiTypes";
-import {FEATURED_NEWS_TAG} from "../../../services";
+import {
+    ContentSummaryDTO,
+    GameboardItem,
+    IsaacConceptPageDTO,
+    IsaacPodDTO,
+    IsaacQuestionPageDTO, ResultsWrapper
+} from "../../../../IsaacApiTypes";
+import {FEATURED_NEWS_TAG, tags} from "../../../services";
 import {onQueryLifecycleEvents} from "./utils";
 import {isaacApi} from "./baseApi";
+import {DocumentSubject} from "../../../../IsaacAppTypes";
 
 const contentApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -29,10 +36,35 @@ const contentApi = isaacApi.injectEndpoints({
             keepUnusedDataFor: 60
         }),
 
-        getPageFragment: build.query<IsaacConceptPageDTO, string>({
-            query: (fragmentId) => ({
-                url: `/pages/fragments/${fragmentId}`
+        getConceptPage: build.query<IsaacConceptPageDTO & DocumentSubject, string>({
+            query: (conceptId) => `/pages/concepts/${conceptId}`,
+            transformResponse: (page: IsaacConceptPageDTO) => tags.augmentDocWithSubject(page)
+        }),
+
+        listConcepts: build.query<ContentSummaryDTO[], {conceptIds?: string; tagIds?: string}>({
+            query: ({conceptIds, tagIds}) => ({
+                url: "/pages/concepts",
+                params: {conceptIds, tagIds, limit: 999}
             }),
+            transformResponse: (response: ResultsWrapper<ContentSummaryDTO>) => response.results ?? [],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Loading concepts list failed"
+            })
+        }),
+
+        getQuestionPage: build.query<IsaacQuestionPageDTO & DocumentSubject, string>({
+            query: (questionId) => `/pages/questions/${questionId}`,
+            transformResponse: (page: IsaacQuestionPageDTO) => tags.augmentDocWithSubject(page)
+        }),
+
+        getGenericPage: build.query<IsaacConceptPageDTO & DocumentSubject, string>({
+            query: (pageId) => `/pages/${pageId}`,
+            transformResponse: (page: IsaacConceptPageDTO) => tags.augmentDocWithSubject(page)
+        }),
+
+        getPageFragment: build.query<IsaacConceptPageDTO & DocumentSubject, string>({
+            query: (fragmentId) => `/pages/fragments/${fragmentId}`,
+            transformResponse: (page: IsaacConceptPageDTO) => tags.augmentDocWithSubject(page),
             keepUnusedDataFor: 60
         }),
 
@@ -45,4 +77,12 @@ const contentApi = isaacApi.injectEndpoints({
     })
 });
 
-export const {useGetNewsPodListQuery, useGetPageFragmentQuery, useGetFasttrackConceptQuestionsQuery} = contentApi;
+export const {
+    useGetNewsPodListQuery,
+    useGetPageFragmentQuery,
+    useGetConceptPageQuery,
+    useListConceptsQuery,
+    useGetQuestionPageQuery,
+    useGetGenericPageQuery,
+    useGetFasttrackConceptQuestionsQuery
+} = contentApi;
