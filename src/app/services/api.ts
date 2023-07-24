@@ -176,13 +176,6 @@ export const api = {
             return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
         }
     },
-    concepts: {
-        list: (conceptIds?: string, tagIds?: string): AxiosPromise<Concepts> => {
-            return endpoint.get('/pages/concepts', {
-                params: { limit: 999 , ids: conceptIds, tags: tagIds }
-            });
-        },
-    },
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
             return endpoint.get(`/pages/topics/${topicName}`);
