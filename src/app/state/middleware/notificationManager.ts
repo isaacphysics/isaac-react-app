@@ -10,12 +10,12 @@ import {
     withinLast50Minutes
 } from "../../services";
 import {Action} from "../../../IsaacAppTypes";
-import {logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
+import {AppDispatch, logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
 import {userContextReconfimationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
 
-export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
+export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: AppDispatch) => async (action: Action) => {
 
     const state = middlewareApi.getState();
     if([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, routerPageChange.type].includes(action.type)) {

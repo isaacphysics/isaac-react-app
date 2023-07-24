@@ -249,11 +249,6 @@ export const api = {
             return endpoint.post(`/contact/`, params, {});
         }
     },
-    logger: {
-        log : (eventDetails: object): AxiosPromise<void> => {
-            return endpoint.post(`/log`, eventDetails);
-        },
-    },
     websockets: {
         userAlerts: (): WebSocket => {
             const userAlertsURI = "/user-alerts";
