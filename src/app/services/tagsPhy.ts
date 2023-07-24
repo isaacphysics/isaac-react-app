@@ -39,8 +39,8 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.cellBiology, title: "Cell Biology", parent: TAG_ID.biology},
         {id: TAG_ID.biochemistry, title: `Bio${softHyphen}chemistry`, parent: TAG_ID.biology},
         {id: TAG_ID.genetics, title: "Genetics", parent: TAG_ID.biology},
-        {id: TAG_ID.physiology, title: "Physiology", parent: TAG_ID.biology, comingSoonDate: "soon"},
-        {id: TAG_ID.ecology, title: "Ecology", parent: TAG_ID.biology, comingSoonDate: "soon"},
+        {id: TAG_ID.physiology, title: "Physiology", parent: TAG_ID.biology},
+        {id: TAG_ID.ecology, title: "Ecology", parent: TAG_ID.biology},
         {id: TAG_ID.evolution, title: "Evolution", parent: TAG_ID.biology},
 
         // --- Physics Topics ---
@@ -119,7 +119,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.periodicTable, title: "Periodic Table", parent: TAG_ID.inorganic},
         {id: TAG_ID.bonding, title: "Bonding", parent: TAG_ID.inorganic},
         {id: TAG_ID.redox, title: "Redox", parent: TAG_ID.inorganic},
-        {id: TAG_ID.transitionMetals, title: `Transi${softHyphen}tional Metals`, parent: TAG_ID.inorganic},
+        {id: TAG_ID.transitionMetals, title: `Transition Metals`, parent: TAG_ID.inorganic},
         // Physical
         {id: TAG_ID.kinetics, title: "Kinetics", parent: TAG_ID.physical},
         {id: TAG_ID.energetics, title: `Energe${softHyphen}tics`, parent: TAG_ID.physical},
@@ -158,6 +158,8 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.proteins, title: "Proteins", parent: TAG_ID.biochemistry},
         {id: TAG_ID.carbohydrates, title: `Carbo${softHyphen}hydrates`, parent: TAG_ID.biochemistry},
         {id: TAG_ID.lipids, title: "Lipids", parent: TAG_ID.biochemistry},
+        {id: TAG_ID.respiration, title: "Respiration", parent: TAG_ID.biochemistry},
+        {id: TAG_ID.photosynthesis, title: `Photo${softHyphen}synthesis`, parent: TAG_ID.biochemistry},
         // Genetics
         {id: TAG_ID.dnaReplication, title: "DNA replication", parent: TAG_ID.genetics},
         {id: TAG_ID.transcription, title: `Trans${softHyphen}cription`, parent: TAG_ID.genetics},
@@ -166,12 +168,16 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.inheritance, title: "Inheritance", parent: TAG_ID.genetics},
         {id: TAG_ID.biotechnology, title: `Bio${softHyphen}technology`, parent: TAG_ID.genetics},
         // Physiology
-
+        {id: TAG_ID.plants, title: "Plants", parent: TAG_ID.physiology},
         // Ecology
-
+        {id: TAG_ID.populations, title: "Populations", parent: TAG_ID.ecology},
+        {id: TAG_ID.ecosystems, title: "Ecosystems", parent: TAG_ID.ecology},
+        {id: TAG_ID.nutrientCycles, title: `Nutrient Cycles`, parent: TAG_ID.ecology},
+        {id: TAG_ID.biodiversity, title: "Biodiversity", parent: TAG_ID.ecology},
         // Evolution
         {id: TAG_ID.variation, title: "Variation", parent: TAG_ID.evolution},
-
+        {id: TAG_ID.theory, title: "Theory", parent: TAG_ID.evolution},
+        {id: TAG_ID.phylogenetics, title: `Phylo${softHyphen}genetics`, parent: TAG_ID.evolution},
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}

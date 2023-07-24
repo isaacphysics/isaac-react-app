@@ -28,6 +28,8 @@ import {
 import {Tabs} from "../../elements/Tabs";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
+import {PageFragment} from "../../elements/PageFragment";
+import {RenderNothing} from "../../elements/RenderNothing";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -76,7 +78,7 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
                     <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1 bg-light">
                         {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
                     </RS.Button>
-                    <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
+                    <RS.Button tag={Link} to={`/test/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
                         View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
                     </RS.Button>
                 </div>
@@ -90,7 +92,6 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
-    const [pageTitle, setPageTitle] = useState(siteSpecific((activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
 
     const { data: groups } = useGetGroupsQuery(false);
     const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
@@ -103,15 +104,11 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
             (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) ||
             MANAGE_QUIZ_TAB.set;
         setActiveTab(tab);
-        setPageTitle(siteSpecific((tab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
     }, [hashAnchor]);
 
     const {titleFilter, setTitleFilter, filteredQuizzes} = useFilteredQuizzes(user);
 
-    function activeTabChanged(tabIndex: number) {
-        setPageTitle(siteSpecific((tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"))
-    }
-
+    const pageTitle= siteSpecific("Set / Manage Tests", "Manage tests");
     const pageHelp = <span>
         Use this page to manage and set tests to your groups. You can assign any test the {siteSpecific("Isaac", "Ada")} team have built.
         <br />
@@ -127,7 +124,8 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "set_tests_help" : undefined} />
-        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>
+        <PageFragment fragmentId={"set_tests_help"} ifNotFound={RenderNothing} />
+        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab}>
             {{
                 [siteSpecific("Set Tests", "Available tests")]:
                 <ShowLoading until={filteredQuizzes}>

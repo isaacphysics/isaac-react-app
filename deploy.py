@@ -116,7 +116,7 @@ def update_config(ctx):
     # GPG would normally prompt us for the key password, but it's not possible to answer that prompt through subprocess.run().
     # Instead, we ask for it here and pass it in to the subprocess as an environment variable.
     gpg_password = getpass.getpass("Enter password for SOPS GPG key: ")
-    ask_to_run_command(f"cd /local/src/isaac-sops-config && ./deploy_in_docker.sh /local/data/keys/$(hostname)_gpg.ppk /local/src/isaac-sops-config /local/data/isaac-sops-config-decrypted {ctx['env']}", env_vars={"GPG_KEY_PASSWORD": gpg_password})
+    ask_to_run_command(f"cd /local/src/isaac-sops-config && ./deploy_in_docker.sh /local/data/keys/$(hostname)_gpg.ppk /local/src/isaac-sops-config /local/data/isaac-sops-config-decrypted {ctx['env']} {ctx['site']}", env_vars={"GPG_KEY_PASSWORD": gpg_password})
 
 
 def run_db_migrations(ctx):

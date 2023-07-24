@@ -15,9 +15,8 @@ import {
     confirmThen,
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
-    isDefined,
-    nthHourOf,
-    TODAY,
+    siteSpecific,
+    isDefined, nthHourOf, TODAY,
     useAssignmentProgressAccessibilitySettings
 } from "../../../services";
 import {AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
@@ -37,7 +36,7 @@ import {
     DropdownToggle,
     Label,
     Row,
-    UncontrolledDropdown
+    UncontrolledButtonDropdown
 } from "reactstrap";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";
@@ -143,8 +142,8 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     </Col>}
                     <Col>
                         <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br/>
-                        <UncontrolledDropdown className="d-inline-block">
-                            <DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!isUpdatingQuiz} id="feedbackMode" disabled={isUpdatingQuiz}>
+                        <UncontrolledButtonDropdown size="sm">
+                            <DropdownToggle color={siteSpecific("tertiary", "secondary")} className={siteSpecific("border", "")} caret size={siteSpecific("lg", "sm")} disabled={isUpdatingQuiz}>
                                 {feedbackNames[quizAssignment.quizFeedbackMode as QuizFeedbackMode]}
                             </DropdownToggle>
                             <DropdownMenu>
@@ -156,7 +155,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                                     </DropdownItem>
                                 )}
                             </DropdownMenu>
-                        </UncontrolledDropdown>
+                        </UncontrolledButtonDropdown>
                     </Col>
                     <Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
                         <Button

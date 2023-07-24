@@ -139,3 +139,28 @@ header {
 .banner {
   background-color: $cs-white;
 }
+
+.toast-header {
+  background-color: $cs-white !important;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 16px;
+  span {
+    display: inline-block;
+    @extend .font-size-1-5;
+    margin-top: 2.5px;
+  }
+  .text-danger {
+    color: $failed-fill !important;
+  }
+  .text-success {
+    color: $perfect-fill !important;
+  }
+  .text-warning {
+    color: $yellow-200 !important;
+  }
+}
+
+.toast-body {
+  background-color: rgba($cs-cultured, 0.4) !important;
+}

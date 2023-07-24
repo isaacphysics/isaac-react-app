@@ -106,9 +106,11 @@ export const showWildcard = (board: GameboardDTO) => {
     return board?.id && (re.test(board.id) || isaacPhysicsBoard)
 };
 
-export const determineGameboardSubjects = (board: GameboardDTO) => {
+export const determineGameboardSubjects = (board?: GameboardDTO) => {
     if (isAda) {
         return ["compsci"];
+    } else if (!board) {
+        return ["physics"];
     }
     const subjects = ["physics", "maths", "chemistry", "biology"];
     let allSubjects: string[] = [];
