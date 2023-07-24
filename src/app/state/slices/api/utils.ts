@@ -30,7 +30,7 @@ import {errorSlice} from "../internalAppState";
 import {SerializedError} from "@reduxjs/toolkit";
 import {Dispatch} from "redux";
 import {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";
-import {showRTKQueryErrorToastIfNeeded, showSuccessToast} from "../../actions/popups";
+import {showErrorToast, showRTKQueryErrorToastIfNeeded, showSuccessToast} from "../../actions/popups";
 
 // This is used by default as the `baseQuery` of our API slice
 export const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
@@ -75,6 +75,7 @@ interface QueryLifecycleSpec<T, R> {
     successMessage?: string | ((args: T, response: R) => string);
     onQuerySuccess?: (args: T, response: R, api: {dispatch: Dispatch<any>, getState: () => any}) => void;
     errorTitle?: string | ((args: T, error: FetchBaseQueryError) => string);
+    errorMessage?: string | ((args: T, error: FetchBaseQueryError) => string);
     onQueryError?: (args: T, error: FetchBaseQueryError, api: {dispatch: Dispatch<any>, getState: () => any}) => void;
 }
 // A helper function to handle the lifecycle of a query, with hooks for start, success and error, and toasts for success
@@ -87,7 +88,7 @@ interface QueryLifecycleSpec<T, R> {
 // has completed.
 //
 // The `groupsApi` file is probably the best place to look for more in depth examples of how to use this.
-export const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, successMessage, onQuerySuccess, errorTitle, onQueryError}: QueryLifecycleSpec<T, R>) => async (arg: T, { dispatch, getState, queryFulfilled }: { dispatch: Dispatch<any>, getState: () => any, queryFulfilled: PromiseWithKnownReason<{data: R, meta: {} | undefined}, any>}) => {
+export const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, successMessage, onQuerySuccess, errorTitle, errorMessage, onQueryError}: QueryLifecycleSpec<T, R>) => async (arg: T, { dispatch, getState, queryFulfilled }: { dispatch: Dispatch<any>, getState: () => any, queryFulfilled: PromiseWithKnownReason<{data: R, meta: {} | undefined}, any>}) => {
     const queryStartCallbacks = onQueryStart?.(arg, {dispatch, getState});
     try {
         const response = await queryFulfilled;
@@ -100,7 +101,8 @@ export const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, succes
     } catch (e: any) {
         if (errorTitle) {
             const errorTitleText = typeof errorTitle === "function" ? errorTitle(arg, e.error) : errorTitle;
-            dispatch(showRTKQueryErrorToastIfNeeded(errorTitleText, e));
+            const errorMessageText = typeof errorMessage === "function" ? errorMessage(arg, e.error) : errorMessage;
+            dispatch(showRTKQueryErrorToastIfNeeded(errorTitleText, e, errorMessageText));
         }
         onQueryError?.(arg, e.error, {dispatch, getState});
         queryStartCallbacks?.resetOptimisticUpdates();

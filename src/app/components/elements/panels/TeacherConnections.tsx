@@ -3,25 +3,21 @@ import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {
-    authenticateWithTokenAfterPrompt,
-    getActiveAuthorisations,
-    getStudentAuthorisations,
-    releaseAllAuthorisationsAfterPrompt,
-    releaseAuthorisationAfterPrompt,
-    revokeAuthorisationAfterPrompt,
-    selectors,
+    openActiveModal,
+    showErrorToast,
     useAppDispatch,
-    useAppSelector,
     useChangeMyMembershipStatusMutation,
-    useGetGroupMembershipsQuery
+    useGetActiveAuthorisationsQuery,
+    useGetGroupMembershipsQuery, useGetOtherUserAuthorisationsQuery,
+    useLazyGetTokenOwnerQuery
 } from "../../../state";
 import classnames from "classnames";
 import {
     extractTeacherName,
-    isAda,
     isLoggedIn,
     isPhy,
-    isStudent, isTutorOrAbove,
+    isStudent,
+    isTutorOrAbove,
     MEMBERSHIP_STATUS,
     siteSpecific
 } from "../../../services";
@@ -30,6 +26,12 @@ import {PageFragment} from "../PageFragment";
 import {RenderNothing} from "../RenderNothing";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {
+    releaseAllConfirmationModal,
+    releaseConfirmationModal,
+    revocationConfirmationModal,
+    tokenVerificationModal
+} from "../modals/TeacherConnectionModalCreators";
 
 interface TeacherConnectionsProps {
     user: PotentialUser;
@@ -39,31 +41,42 @@ interface TeacherConnectionsProps {
 }
 export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdit}: TeacherConnectionsProps) => {
     const dispatch = useAppDispatch();
-    const activeAuthorisations = useAppSelector(selectors.connections.activeAuthorisations);
-    const studentAuthorisations = useAppSelector(selectors.connections.otherUserAuthorisations);
     const groupQuery = (user.loggedIn && user.id) ? ((editingOtherUser && userToEdit?.id) || undefined) : skipToken;
     const {data: groupMemberships} = useGetGroupMembershipsQuery(groupQuery);
     const [changeMyMembershipStatus] = useChangeMyMembershipStatusMutation();
+    const {data: activeAuthorisations} = useGetActiveAuthorisationsQuery((editingOtherUser && userToEdit?.id) || undefined);
+    const {data: studentAuthorisations} = useGetOtherUserAuthorisationsQuery((editingOtherUser && userToEdit?.id) || undefined);
 
-    useEffect(() => {
-        if (user.loggedIn && user.id) {
-            dispatch(getActiveAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
-            dispatch(getStudentAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
+    const [getTokenOwner] = useLazyGetTokenOwnerQuery();
+    const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
+        // Some users paste the URL in the token box, so remove the token from the end if they do.
+        // Tokens so far are also always uppercase; this is hardcoded in the API, so safe to assume here:
+        const sanitisedToken = token?.split("?authToken=").at(-1)?.toUpperCase().replace(/ /g,'');
+        if (!sanitisedToken) {
+            dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
+            return;
         }
-    }, [dispatch, editingOtherUser, userToEdit?.id]);
+        const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
+        if (usersToGrantAccess && usersToGrantAccess.length) {
+            // TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
+            //      their data
+            // TODO highlight teachers who have already been granted access? (see verification modal code)
+            dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
+        }
+    }
 
     useEffect(() => {
         if (authToken && user.loggedIn && user.id) {
-            dispatch(authenticateWithTokenAfterPrompt(user.id, authToken));
+            authenticateWithTokenAfterPrompt(user.id, authToken);
         }
-    }, [dispatch, authToken]);
+    }, [authToken]);
 
     const [authenticationToken, setAuthenticationToken] = useState<string | null>(authToken);
 
     function processToken(event: React.FormEvent<HTMLFormElement | HTMLButtonElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
         if (user.loggedIn && user.id) {
-            dispatch(authenticateWithTokenAfterPrompt(user.id, authenticationToken));
+            authenticateWithTokenAfterPrompt(user.id, authenticationToken);
         }
     }
 
@@ -117,7 +130,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                             <RS.Button
                                                 color="link" className="revoke-teacher"
                                                 disabled={editingOtherUser}
-                                                onClick={() => user.loggedIn && user.id && dispatch(revokeAuthorisationAfterPrompt(user.id, teacherAuthorisation))}
+                                                onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
                                             >
                                                 Revoke
                                             </RS.Button>
@@ -169,7 +182,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                             </RS.UncontrolledTooltip>
                                             <RS.Button
                                                 color="link" className="revoke-teacher" disabled={editingOtherUser}
-                                                onClick={() => user.loggedIn && user.id && dispatch(releaseAuthorisationAfterPrompt(user.id, student))}
+                                                onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(releaseConfirmationModal(user.id, student)))}
                                             >
                                                 Remove
                                             </RS.Button>
@@ -182,7 +195,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                 </p>}
                             </div>
                             {studentAuthorisations && studentAuthorisations.length > 0 && <p className="remove-link">
-                                <RS.Button color="link" onClick={() => user.loggedIn && user.id && dispatch(releaseAllAuthorisationsAfterPrompt(user.id))} disabled={editingOtherUser}>
+                                <RS.Button color="link" onClick={() => dispatch(openActiveModal(releaseAllConfirmationModal()))} disabled={editingOtherUser}>
                                     Remove all
                                 </RS.Button>
                             </p>}

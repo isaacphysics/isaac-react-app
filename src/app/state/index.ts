@@ -32,6 +32,7 @@ export * from "./slices/api/baseApi";
 export * from "./slices/api/segueInfoApi";
 export * from "./slices/api/adminApi";
 export * from "./slices/api/userApi";
+export * from "./slices/api/authorisationsApi";
 export * from "./slices/api/gameboardApi";
 export * from "./slices/api/assignmentsApi";
 export * from "./slices/api/contentApi";

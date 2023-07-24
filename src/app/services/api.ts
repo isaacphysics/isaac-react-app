@@ -142,35 +142,6 @@ export const api = {
             return endpoint.post(`/notifications/${id}/${response}`)
         }
     },
-    authorisations: {
-        get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get("authorisations");
-        },
-        adminGet: (userId: number): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get(`authorisations/${userId}`);
-        },
-        getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
-            return endpoint.get("/authorisations/other_users");
-        },
-        adminGetOtherUsers: (userId: number): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
-            return endpoint.get(`/authorisations/other_users/${userId}`);
-        },
-        getTokenOwner: (token: string): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get(`/authorisations/token/${token}/owner`);
-        },
-        useToken: (token: string) => {
-            return endpoint.post(`/authorisations/use_token/${token}`);
-        },
-        revoke: (userId: number) => {
-            return endpoint.delete(`/authorisations/${userId}`);
-        },
-        release: (userId: number) => {
-            return endpoint.delete(`/authorisations/release/${userId}`);
-        },
-        releaseAll: () => {
-            return endpoint.delete(`/authorisations/release/`);
-        }
-    },
     glossary: {
         getTerms: (): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.GlossaryTermDTO>> => {
             // FIXME: Magic number. This needs to go through pagination with

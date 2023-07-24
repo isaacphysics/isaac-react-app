@@ -20,9 +20,7 @@ import {
     userProgress,
     testQuestions,
     quizAttempt,
-    activeAuthorisations,
     groupMemberships,
-    otherUserAuthorisations,
     currentTopic,
     questionSearchResult,
     search,
@@ -72,8 +70,6 @@ export const rootReducer = combineReducers({
 
     // Groups
     groupMemberships,
-    activeAuthorisations,
-    otherUserAuthorisations,
 
     // Topics
     currentTopic,
