@@ -425,19 +425,6 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     }
 };
 
-// Contact us
-export const submitMessage = (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST});
-    try {
-        await api.contactForm.send(params);
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
-    } catch (e: any) {
-        const errorMessage = extractMessage(e);
-        dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: errorMessage});
-        dispatch(showAxiosErrorToastIfNeeded(errorMessage, e));
-    }
-};
-
 // Teacher connections
 export const getActiveAuthorisations = (userId?: number) => async (dispatch: Dispatch<Action>) => {
     try {

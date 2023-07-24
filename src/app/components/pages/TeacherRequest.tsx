@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {
     AppState,
     selectors,
-    submitMessage,
-    useAppDispatch,
     useAppSelector,
-    useGetPageFragmentQuery, useRequestEmailVerificationMutation
+    useGetPageFragmentQuery,
+    useRequestEmailVerificationMutation,
+    useSubmitContactFormMutation
 } from "../../state";
 import {
     Alert,
@@ -38,10 +38,10 @@ const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
 export const TeacherRequest = () => {
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const errorMessage = useAppSelector((state: AppState) => (state && state.error) || null);
     const {data: warningFragment} = useGetPageFragmentQuery(warningFragmentId);
+    const [submitContactForm] = useSubmitContactFormMutation();
 
     const [sendVerificationEmail] = useRequestEmailVerificationMutation();
     const requestVerificationEmail = () => {
@@ -148,7 +148,7 @@ export const TeacherRequest = () => {
                             :
                             <Form name="contact" onSubmit={e => {
                                 e.preventDefault();
-                                dispatch(submitMessage({firstName, lastName, emailAddress, subject, message}));
+                                submitContactForm({firstName, lastName, emailAddress, subject, message});
                                 setMessageSent(true);
                             }}>
                                 <CardBody>

@@ -244,11 +244,6 @@ export const api = {
             return endpoint.get(`/countries/priority`);
         }
     },
-    contactForm: {
-        send: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
-            return endpoint.post(`/contact/`, params, {});
-        }
-    },
     websockets: {
         userAlerts: (): WebSocket => {
             const userAlertsURI = "/user-alerts";

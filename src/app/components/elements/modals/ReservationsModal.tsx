@@ -3,14 +3,14 @@ import {
     AppState,
     closeActiveModal,
     store,
-    submitMessage,
     useAppDispatch,
     useAppSelector,
     useGetEventBookingsForGroupQuery,
     useGetGroupsQuery,
     useGetGroupMembersQuery,
     useCancelUsersReservationsOnEventMutation,
-    useReserveUsersOnEventMutation
+    useReserveUsersOnEventMutation,
+    useSubmitContactFormMutation
 } from "../../../state";
 import {
     Button,
@@ -153,6 +153,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
     }, [user]);
 
     const [reserveUsersOnEvent] = useReserveUsersOnEventMutation();
+    const [submitContactForm] = useSubmitContactFormMutation();
     const requestReservations = () => {
         if (event.id && selectedGroupId) {
             const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
@@ -171,7 +172,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
             ---
             ${additionalBookingNotes}
             `;
-            dispatch(submitMessage({firstName: user?.givenName ?? "[Unknown]", lastName: user?.familyName ?? "[Teacher]", emailAddress: user?.email ?? "[Unknown]", subject, message}));
+            submitContactForm({firstName: user?.givenName ?? "[Unknown]", lastName: user?.familyName ?? "[Teacher]", emailAddress: user?.email ?? "[Unknown]", subject, message});
         }
         setCheckAllCheckbox(false);
     };
