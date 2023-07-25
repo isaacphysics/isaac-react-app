@@ -3,9 +3,9 @@ import {
     GameboardItem,
     IsaacConceptPageDTO,
     IsaacPodDTO,
-    IsaacQuestionPageDTO, ResultsWrapper
+    IsaacQuestionPageDTO, IsaacTopicSummaryPageDTO, ResultsWrapper
 } from "../../../../IsaacApiTypes";
-import {FEATURED_NEWS_TAG, tags} from "../../../services";
+import {FEATURED_NEWS_TAG, TAG_ID, tags} from "../../../services";
 import {onQueryLifecycleEvents} from "./utils";
 import {isaacApi} from "./baseApi";
 import {DocumentSubject} from "../../../../IsaacAppTypes";
@@ -74,6 +74,10 @@ const contentApi = isaacApi.injectEndpoints({
                 params: {concept, "upper_question_id": upperQuestionId}
             })
         }),
+
+        getTopicSummary: build.query<IsaacTopicSummaryPageDTO, TAG_ID>({
+            query: (topicName) => `/pages/topics/${topicName}`
+        })
     })
 });
 
@@ -84,5 +88,6 @@ export const {
     useListConceptsQuery,
     useGetQuestionPageQuery,
     useGetGenericPageQuery,
-    useGetFasttrackConceptQuestionsQuery
+    useGetFasttrackConceptQuestionsQuery,
+    useGetTopicSummaryQuery
 } = contentApi;

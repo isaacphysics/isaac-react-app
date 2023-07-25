@@ -1,16 +1,6 @@
 import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith, AppState} from "./index";
-import {NOT_FOUND} from "../services";
 
 export const selectors = {
-
-    topic: {
-        currentTopic: (state: AppState) => {
-            if (!state) return null;
-            if (!state.currentTopic) return null;
-            if (state.currentTopic === NOT_FOUND) return null;
-            return state.currentTopic;
-        }
-    },
 
     boards: {
         boards: (state: AppState) => state?.boards ?? null

@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import queryString from "query-string";
-import {fetchTopicSummary, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery} from "../state";
+import {selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetTopicSummaryQuery} from "../state";
 import {
     determineCurrentCreationContext,
     determineGameboardHistory,
@@ -39,14 +39,10 @@ export const useNavigation = (doc: ContentDTO | undefined): PageNavigation => {
     const {search} = useLocation();
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
     const currentDocId = doc ? doc.id as string : "";
-    const dispatch = useAppDispatch();
-    const {data: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
 
-    useEffect(() => {
-        if (topic) dispatch(fetchTopicSummary(topic as TAG_ID));
-    }, [topic, currentDocId, dispatch]);
+    const {currentData: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
+    const {currentData: currentTopic} = useGetTopicSummaryQuery(topic ? topic as TAG_ID : skipToken);
 
-    const currentTopic = useAppSelector(selectors.topic.currentTopic);
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
 

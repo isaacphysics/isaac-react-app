@@ -131,10 +131,6 @@ export type Action =
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
-    | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
-    | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string | undefined}
     | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
 

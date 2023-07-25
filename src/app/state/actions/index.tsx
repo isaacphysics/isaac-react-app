@@ -439,16 +439,6 @@ export const requestNotifications = () => async (dispatch: Dispatch<Action>) => 
     }
 }
 
-export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.TOPIC_REQUEST, topicName});
-    try {
-        const response = await api.topics.get(topicName);
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS, topic: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE});
-    }
-};
-
 // Glossary Terms
 export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST});

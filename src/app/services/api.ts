@@ -176,11 +176,6 @@ export const api = {
             return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
         }
     },
-    topics: {
-        get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
-            return endpoint.get(`/pages/topics/${topicName}`);
-        }
-    },
     websockets: {
         userAlerts: (): WebSocket => {
             const userAlertsURI = "/user-alerts";
