@@ -27,6 +27,7 @@ export const DefaultQueryError = ({error, title}: {error?: FetchBaseQueryError |
 
 interface ShowLoadingQueryInfo<T> {
     currentData?: T | NOT_FOUND_TYPE;
+    data?: T | NOT_FOUND_TYPE;
     isLoading: boolean;
     isFetching: boolean;
     isError: boolean;
@@ -36,6 +37,7 @@ interface ShowLoadingQueryInfo<T> {
 export function combineQueries<T, R, S>(firstQuery: ShowLoadingQueryInfo<T>, secondQuery: ShowLoadingQueryInfo<R>, combineResult: (firstQueryResult: NonNullable<T>, secondQueryResult: NonNullable<R>) => NonNullable<S>): ShowLoadingQueryInfo<S> {
     return {
         currentData: isFound<T>(firstQuery.currentData) && isFound<R>(secondQuery.currentData) ? combineResult(firstQuery.currentData, secondQuery.currentData) : undefined,
+        data: isFound<T>(firstQuery.data) && isFound<R>(secondQuery.data) ? combineResult(firstQuery.data, secondQuery.data) : undefined,
         isLoading: firstQuery.isLoading || secondQuery.isLoading,
         isFetching: firstQuery.isFetching || secondQuery.isFetching,
         isError: firstQuery.isError || secondQuery.isError,
@@ -52,6 +54,7 @@ interface ShowLoadingQueryBaseProps<T> {
     placeholder?: JSX.Element | JSX.Element[];
     query: ShowLoadingQueryInfo<T>;
     ifNotFound?: JSX.Element | JSX.Element[];
+    useOldDataIfAvailable?: boolean; // Whether to use data or currentData
 }
 type ShowLoadingQueryErrorProps<T> = ShowLoadingQueryBaseProps<T> & ({
     ifError: (error?: FetchBaseQueryError | SerializedError) => JSX.Element | JSX.Element[];
@@ -72,8 +75,8 @@ type ShowLoadingQueryProps<T> = ShowLoadingQueryErrorProps<T> & ({
 //  - Either: `defaultErrorTitle` (the title for the default error component) or `ifError` (a function that takes the query error and produces a React element)
 //  - `placeholder` (React element to show while loading)
 //  - `query` (the object returned by a RTKQ useQuery hook)
-export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, ifError, ifNotFound, defaultErrorTitle}: ShowLoadingQueryProps<T>) {
-    const {currentData, isLoading, isFetching, isError, error} = query;
+export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, ifError, ifNotFound, defaultErrorTitle, useOldDataIfAvailable}: ShowLoadingQueryProps<T>) {
+    const {currentData, data, isLoading, isFetching, isError, error} = query;
     const renderError = () => ifError ? <>{ifError(error)}</> : <DefaultQueryError error={error} title={defaultErrorTitle}/>;
     if (isError && error) {
         return "status" in error && typeof error.status === "number" && [NOT_FOUND, NO_CONTENT].includes(error.status) && ifNotFound ? <>{ifNotFound}</> : renderError();
@@ -81,7 +84,8 @@ export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, i
     if (isLoading || isFetching) {
         return placeholder ? <>{placeholder}</> : loadingPlaceholder;
     }
-    return isDefined(currentData)
-        ? (isFound<T>(currentData) ? <>{thenRender ? thenRender(currentData) : children}</> : (ifNotFound ? <>{ifNotFound}</> : renderError()))
+    const dataToUse = useOldDataIfAvailable ? data : currentData;
+    return isDefined(dataToUse)
+        ? (isFound<T>(dataToUse) ? <>{thenRender ? thenRender(dataToUse) : children}</> : (ifNotFound ? <>{ifNotFound}</> : renderError()))
         : renderError();
 }
