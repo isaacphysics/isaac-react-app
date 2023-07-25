@@ -107,10 +107,6 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string}
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>}
 
-    | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST}
     | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; myAnsweredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
     | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
@@ -126,9 +122,6 @@ export type Action =
     | {type: ACTION_TYPE.TEST_QUESTION_REQUEST}
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string | undefined}
-    | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
 
     | {type: ACTION_TYPE.TOASTS_SHOW; toast: Toast}
     | {type: ACTION_TYPE.TOASTS_HIDE; toastId: string}

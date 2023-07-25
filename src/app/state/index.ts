@@ -11,14 +11,12 @@ export * from "./slices/api/utils";
 export * from "./middleware/utils";
 export * from "./slices/internalAppState";
 export * from "./actions/logging";
-export * from "./reducers/searchState";
 export * from "./middleware/userConsistencyCheckerCurrentUser";
 export * from "./middleware/hidePreviousQuestionAttempt";
 export * from "./reducers/quizState";
 export * from "./reducers/questionState";
 export * from "./reducers/notifiersState";
 export * from "./reducers/groupsState";
-export * from "./reducers/gameboardsState";
 export * from "./reducers/progressState";
 export * from "./reducers/adminState";
 

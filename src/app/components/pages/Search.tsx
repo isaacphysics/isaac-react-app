@@ -1,6 +1,11 @@
 import React, {FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {AppState, fetchSearch, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {
+    selectors,
+    useAppDispatch,
+    useAppSelector,
+    useLazySearchQuery
+} from "../../state";
 import * as RS from "reactstrap";
 import {Col, Container, Row} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -55,12 +60,12 @@ const selectStyle: StylesConfig<Item<DOCUMENT_TYPE>, true, GroupBase<Item<DOCUME
 // Whenever the query parameters change we send a search request to the API.
 export const Search = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
-    const dispatch = useAppDispatch();
-    const searchResults = useAppSelector((state: AppState) => state?.search?.searchResults || null);
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     const [queryState, setQueryState] = useState(urlQuery);
+
+    const [search, {currentData: searchResults, isFetching}] = useLazySearchQuery();
 
     let initialFilters = urlFilters;
     if (isAda && urlFilters.length === 0) {
@@ -69,10 +74,13 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(initialFilters.map(itemise));
 
     useEffect(function triggerSearchAndUpdateLocalStateOnUrlChange() {
-        dispatch(fetchSearch(urlQuery ?? "", initialFilters.length ? initialFilters.join(",") : undefined));
+        // Don't trigger search if the query is undefined or empty
+        if (urlQuery) {
+            search({query: urlQuery ?? "", types: initialFilters.length ? initialFilters.join(",") : undefined});
+        }
         setQueryState(urlQuery);
         setFiltersState(initialFilters.map(itemise));
-    }, [dispatch, location.search]);
+    }, [location.search]);
 
     function updateSearchUrl(e?: FormEvent<HTMLFormElement>) {
         if (e) {e.preventDefault();}
@@ -98,8 +106,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     }, [filtersState]);
 
     // Process results and add shortcut responses
-    const filteredSearchResults = searchResults?.results && searchResults.results
-        .filter(result => searchResultIsPublic(result, user))
+    const filteredSearchResults = searchResults?.filter(result => searchResultIsPublic(result, user))
         .filter(result => isPhy || isIntendedAudience(result.audience, userContext, user));
     const shortcutResponses = (queryState ? shortcuts(queryState) : []) as ShortcutResponse[];
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
@@ -123,7 +130,10 @@ export const Search = withRouter((props: RouteComponentProps) => {
                         <RS.CardHeader className="search-header">
                             <RS.Col sm={12} md={5} lg={siteSpecific(5, 4)} xl={siteSpecific(5, 3)}>
                                 <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <IsaacSpinner /> : null}
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {isFetching
+                                        ? <IsaacSpinner className={siteSpecific("position-absolute", "")} style={siteSpecific({marginTop: -5}, {})} size={siteSpecific("sm", "md")} inline/>
+                                        : (shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : null)
+                                    }
                                 </h3>
                             </RS.Col>
                             <RS.Col sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)}>
@@ -153,9 +163,10 @@ export const Search = withRouter((props: RouteComponentProps) => {
                         </RS.CardHeader>
                         {urlQuery != "" && <RS.CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
-                                {gotResults ?
-                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={true}/>
-                                    : <em>No results found</em>}
+                                {gotResults
+                                    ? <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={true}/>
+                                    : <em>{isFetching ? "Searching..." : "No results found"}</em>
+                                }
                             </ShowLoading>
                         </RS.CardBody>}
                     </RS.Card>

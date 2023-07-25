@@ -1,11 +1,9 @@
 import React, {lazy, Suspense, useCallback, useEffect, useMemo, useState} from "react";
 import {
     AppState,
-    clearQuestionSearch,
     closeActiveModal,
-    searchQuestions,
     useAppDispatch,
-    useAppSelector
+    useAppSelector, useLazySearchQuestionsQuery
 } from "../../../state";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
@@ -35,7 +33,7 @@ import {
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
-import {Loading} from "../../handlers/IsaacSpinner";
+import {IsaacSpinner, Loading} from "../../handlers/IsaacSpinner";
 import {StyledSelect} from "../inputs/StyledSelect";
 
 // Immediately load GameboardBuilderRow, but allow splitting
@@ -82,7 +80,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
-    const questions = useAppSelector((state: AppState) => state && state.questionSearchResult);
+    const [searchQuestions, {data: questions, isFetching}] = useLazySearchQuestionsQuery();
     const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
@@ -93,14 +91,13 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
             const isBookSearch = book.length > 0; // Tasty.
             if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for
-                dispatch(clearQuestionSearch);
                 return;
             }
 
             const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ")
             const examBoardString = examBoards.join(",");
 
-            dispatch(searchQuestions({
+            searchQuestions({
                 searchString: searchString,
                 tags,
                 stages: stages.join(",") || undefined,
@@ -109,7 +106,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 fasttrack,
                 startIndex,
                 limit: 300
-            }));
+            });
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
         }, 250),
@@ -151,6 +148,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     `${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`
                 )}
             </strong>
+            {isFetching && <IsaacSpinner className={siteSpecific("position-absolute", "")} style={siteSpecific({marginTop: -11}, {})} size={siteSpecific("sm", "md")} inline/>}
         </div>
         <div>
             <RS.Input

@@ -8,7 +8,7 @@ import {
 import {FEATURED_NEWS_TAG, TAG_ID, tags} from "../../../services";
 import {onQueryLifecycleEvents} from "./utils";
 import {isaacApi} from "./baseApi";
-import {DocumentSubject} from "../../../../IsaacAppTypes";
+import {DocumentSubject, QuestionSearchQuery} from "../../../../IsaacAppTypes";
 
 export const contentApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -92,7 +92,36 @@ export const contentApi = isaacApi.injectEndpoints({
                 url: `/fasttrack/${gameboardId}/concepts`,
                 params: {concept, "upper_question_id": upperQuestionId}
             })
-        })
+        }),
+
+        // === Search ===
+
+        search: build.query<ContentSummaryDTO[], {query: string; types?: string}>({
+            query: ({query, types}) => ({
+                url: "/search",
+                params: {query, types}
+            }),
+            transformResponse: (response: ResultsWrapper<ContentSummaryDTO>) => response.results ?? [],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Search failed"
+            }),
+            keepUnusedDataFor: 0
+        }),
+
+        searchQuestions: build.query<ContentSummaryDTO[], QuestionSearchQuery>({
+            query: (query) => ({
+                url: "/pages/questions",
+                params: query
+            }),
+            transformResponse: (response: ResultsWrapper<ContentSummaryDTO>) => response.results?.map((question) => ({
+                ...question,
+                url: question.url?.replace("/isaac-api/api/pages", "")
+            })) ?? [],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to search for questions"
+            }),
+            keepUnusedDataFor: 0
+        }),
     })
 });
 
@@ -105,5 +134,7 @@ export const {
     useGetGenericPageQuery,
     useGetFasttrackConceptQuestionsQuery,
     useGetTopicSummaryQuery,
-    useGetGlossaryTermsQuery
+    useGetGlossaryTermsQuery,
+    useLazySearchQuery,
+    useLazySearchQuestionsQuery
 } = contentApi;

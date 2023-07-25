@@ -64,11 +64,6 @@ export const apiHelper = {
 };
 
 export const api = {
-    search: {
-        get: (query: string, types: string | undefined): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
-            return endpoint.get(`/search`, {params: {query, types}});
-        }
-    },
     users: {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
@@ -143,11 +138,6 @@ export const api = {
         }
     },
     questions: {
-        search: (query: QuestionSearchQuery): AxiosPromise<QuestionSearchResponse> => {
-            return endpoint.get(`/pages/questions/`, {
-                params: query,
-            });
-        },
         answer: (id: string, answer: Immutable<ApiTypes.ChoiceDTO>): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
         },
