@@ -439,17 +439,6 @@ export const requestNotifications = () => async (dispatch: Dispatch<Action>) => 
     }
 }
 
-// Glossary Terms
-export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST});
-    try {
-        const response = await api.glossary.getTerms();
-        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS, terms: response.data.results as GlossaryTermDTO[]});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE});
-    }
-};
-
 // Questions
 export const registerQuestions = (questions: QuestionDTO[], accordionClientId?: string, isQuiz?: boolean) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, questions, accordionClientId, isQuiz});

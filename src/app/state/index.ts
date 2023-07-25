@@ -11,7 +11,6 @@ export * from "./slices/api/utils";
 export * from "./middleware/utils";
 export * from "./slices/internalAppState";
 export * from "./actions/logging";
-export * from "./reducers/staticState";
 export * from "./reducers/searchState";
 export * from "./middleware/userConsistencyCheckerCurrentUser";
 export * from "./middleware/hidePreviousQuestionAttempt";

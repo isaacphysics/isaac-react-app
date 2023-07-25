@@ -7,7 +7,6 @@ import {
     mainContentIdSlice,
     printingSettingsSlice,
     transientUserContextSlice,
-    glossaryTerms,
     questions,
     activeModals,
     notifications,
@@ -44,9 +43,6 @@ export const rootReducer = combineReducers({
     toasts,
     activeModals,
     notifications,
-
-    // Static Content
-    glossaryTerms,
 
     // Question
     questions,

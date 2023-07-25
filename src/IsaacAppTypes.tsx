@@ -99,10 +99,6 @@ export type Action =
     | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS; notifications: any[]}
 
-    | {type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST}
-    | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
-    | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.QUESTION_REGISTRATION; questions: ApiTypes.QuestionDTO[]; accordionClientId?: string, isQuiz?: boolean}
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionIds: string[]}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO>}

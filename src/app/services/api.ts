@@ -142,18 +142,6 @@ export const api = {
             return endpoint.post(`/notifications/${id}/${response}`)
         }
     },
-    glossary: {
-        getTerms: (): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.GlossaryTermDTO>> => {
-            // FIXME: Magic number. This needs to go through pagination with
-            // limit and start_index query parameters.
-            return endpoint.get('/glossary/terms', {
-                params: { limit: 10000 }
-            });
-        },
-        getTermById: (id: string): AxiosPromise<ApiTypes.GlossaryTermDTO> => {
-            return endpoint.get(`/glossary/terms/${id}`);
-        }
-    },
     questions: {
         search: (query: QuestionSearchQuery): AxiosPromise<QuestionSearchResponse> => {
             return endpoint.get(`/pages/questions/`, {

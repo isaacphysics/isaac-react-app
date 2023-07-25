@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Col, Container, Input, Label, Row} from "reactstrap";
-import {AppState, useAppSelector} from "../../state";
+import {AppState, useAppSelector, useGetGlossaryTermsQuery} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShareLink} from "../elements/ShareLink";
@@ -67,7 +67,7 @@ export const Glossary = () => {
     const [searchText, setSearchText] = useState("");
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
-    const rawGlossaryTerms = useAppSelector((state: AppState) => state && state.glossaryTerms);
+    const {data: rawGlossaryTerms} = useGetGlossaryTermsQuery();
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } | undefined {

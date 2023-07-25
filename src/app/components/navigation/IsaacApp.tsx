@@ -1,7 +1,6 @@
 import React, {lazy, Suspense, useEffect} from 'react';
 import {
-    AppState,
-    fetchGlossaryTerms,
+    AppState, contentApi,
     openActiveModal,
     requestCurrentUser,
     requestNotifications,
@@ -100,7 +99,7 @@ export const IsaacApp = () => {
         if (!(pathname.includes("/auth/") && pathname.includes("/callback"))) {
             dispatch(requestCurrentUser());
         }
-        dispatch(fetchGlossaryTerms());
+        dispatch(contentApi.util.prefetch("getGlossaryTerms", undefined, {}));
     }, [dispatch]);
 
     const loggedInUserId = isLoggedIn(user) ? user.id : undefined;

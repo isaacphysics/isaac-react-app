@@ -1,6 +1,6 @@
 import {
     ContentSummaryDTO,
-    GameboardItem,
+    GameboardItem, GlossaryTermDTO,
     IsaacConceptPageDTO,
     IsaacPodDTO,
     IsaacQuestionPageDTO, IsaacTopicSummaryPageDTO, ResultsWrapper
@@ -10,7 +10,7 @@ import {onQueryLifecycleEvents} from "./utils";
 import {isaacApi} from "./baseApi";
 import {DocumentSubject} from "../../../../IsaacAppTypes";
 
-const contentApi = isaacApi.injectEndpoints({
+export const contentApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
 
         getNewsPodList: build.query<IsaacPodDTO[], {subject: string; orderDecending?: boolean}>({
@@ -36,9 +36,44 @@ const contentApi = isaacApi.injectEndpoints({
             keepUnusedDataFor: 60
         }),
 
+        getGlossaryTerms: build.query<GlossaryTermDTO[], void>({
+            query: () => ({
+                url: "/glossary/terms",
+                params: {limit: 10000}
+            }),
+            transformResponse: (response: ResultsWrapper<GlossaryTermDTO>) => response.results ?? [],
+            keepUnusedDataFor: 300 // 5 minutes
+        }),
+
+        getGlossaryTermById: build.query<GlossaryTermDTO, string>({
+            query: (id) => `/glossary/terms/${id}`,
+        }),
+
+        // === Pages ===
+
         getConceptPage: build.query<IsaacConceptPageDTO & DocumentSubject, string>({
             query: (conceptId) => `/pages/concepts/${conceptId}`,
             transformResponse: (page: IsaacConceptPageDTO) => tags.augmentDocWithSubject(page)
+        }),
+
+        getQuestionPage: build.query<IsaacQuestionPageDTO & DocumentSubject, string>({
+            query: (questionId) => `/pages/questions/${questionId}`,
+            transformResponse: (page: IsaacQuestionPageDTO) => tags.augmentDocWithSubject(page)
+        }),
+
+        getGenericPage: build.query<IsaacConceptPageDTO & DocumentSubject, string>({
+            query: (pageId) => `/pages/${pageId}`,
+            transformResponse: (page: IsaacConceptPageDTO) => tags.augmentDocWithSubject(page)
+        }),
+
+        getTopicSummary: build.query<IsaacTopicSummaryPageDTO, TAG_ID>({
+            query: (topicName) => `/pages/topics/${topicName}`
+        }),
+
+        getPageFragment: build.query<IsaacConceptPageDTO & DocumentSubject, string>({
+            query: (fragmentId) => `/pages/fragments/${fragmentId}`,
+            transformResponse: (page: IsaacConceptPageDTO) => tags.augmentDocWithSubject(page),
+            keepUnusedDataFor: 60
         }),
 
         listConcepts: build.query<ContentSummaryDTO[], {conceptIds?: string; tagIds?: string}>({
@@ -52,31 +87,11 @@ const contentApi = isaacApi.injectEndpoints({
             })
         }),
 
-        getQuestionPage: build.query<IsaacQuestionPageDTO & DocumentSubject, string>({
-            query: (questionId) => `/pages/questions/${questionId}`,
-            transformResponse: (page: IsaacQuestionPageDTO) => tags.augmentDocWithSubject(page)
-        }),
-
-        getGenericPage: build.query<IsaacConceptPageDTO & DocumentSubject, string>({
-            query: (pageId) => `/pages/${pageId}`,
-            transformResponse: (page: IsaacConceptPageDTO) => tags.augmentDocWithSubject(page)
-        }),
-
-        getPageFragment: build.query<IsaacConceptPageDTO & DocumentSubject, string>({
-            query: (fragmentId) => `/pages/fragments/${fragmentId}`,
-            transformResponse: (page: IsaacConceptPageDTO) => tags.augmentDocWithSubject(page),
-            keepUnusedDataFor: 60
-        }),
-
         getFasttrackConceptQuestions: build.query<GameboardItem[], {gameboardId: string; concept: string; upperQuestionId: string}>({
             query: ({gameboardId, concept, upperQuestionId}) => ({
                 url: `/fasttrack/${gameboardId}/concepts`,
                 params: {concept, "upper_question_id": upperQuestionId}
             })
-        }),
-
-        getTopicSummary: build.query<IsaacTopicSummaryPageDTO, TAG_ID>({
-            query: (topicName) => `/pages/topics/${topicName}`
         })
     })
 });
@@ -89,5 +104,6 @@ export const {
     useGetQuestionPageQuery,
     useGetGenericPageQuery,
     useGetFasttrackConceptQuestionsQuery,
-    useGetTopicSummaryQuery
+    useGetTopicSummaryQuery,
+    useGetGlossaryTermsQuery
 } = contentApi;
