@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
+import React from "react";
 import queryString from "query-string";
-import {selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetTopicSummaryQuery} from "../state";
+import {selectors, useAppSelector, useGetGameboardByIdQuery, useGetTopicSummaryQuery} from "../state";
 import {
     determineCurrentCreationContext,
     determineGameboardHistory,

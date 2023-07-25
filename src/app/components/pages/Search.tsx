@@ -2,7 +2,6 @@ import React, {FormEvent, MutableRefObject, useEffect, useRef, useState} from "r
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {
     selectors,
-    useAppDispatch,
     useAppSelector,
     useLazySearchQuery
 } from "../../state";
@@ -76,7 +75,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     useEffect(function triggerSearchAndUpdateLocalStateOnUrlChange() {
         // Don't trigger search if the query is undefined or empty
         if (urlQuery) {
-            search({query: urlQuery ?? "", types: initialFilters.length ? initialFilters.join(",") : undefined});
+            search({query: urlQuery, types: initialFilters.length ? initialFilters.join(",") : undefined});
         }
         setQueryState(urlQuery);
         setFiltersState(initialFilters.map(itemise));

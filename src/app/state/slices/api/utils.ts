@@ -1,5 +1,4 @@
 import {
-    isDefined,
     KEY,
     persistence,
     NOT_FOUND,
@@ -11,7 +10,6 @@ import produce from "immer";
 import {
     AppAssignmentProgress,
     AppGroup,
-    AppQuizAssignment,
     GroupMembershipDetailDTO,
     NOT_FOUND_TYPE,
     UserProgress
@@ -30,7 +28,7 @@ import {errorSlice} from "../internalAppState";
 import {SerializedError} from "@reduxjs/toolkit";
 import {Dispatch} from "redux";
 import {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";
-import {showErrorToast, showRTKQueryErrorToastIfNeeded, showSuccessToast} from "../../actions/popups";
+import {showRTKQueryErrorToastIfNeeded, showSuccessToast} from "../../actions/popups";
 
 // This is used by default as the `baseQuery` of our API slice
 export const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
