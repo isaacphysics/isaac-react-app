@@ -1,7 +1,8 @@
 import {isDefined} from "./";
 import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
-import {UserRole} from "../../IsaacApiTypes";
+import {AuthenticationProvider, UserRole} from "../../IsaacApiTypes";
 import {Immutable} from "immer";
+import {useLazyGetProviderRedirectQuery} from "../state";
 
 export function isLoggedIn(user?: Immutable<PotentialUser> | null): user is Immutable<LoggedInUser> {
     return user ? user.loggedIn : false;
@@ -71,3 +72,14 @@ export function schoolNameWithPostcode(schoolResult: School): string | undefined
     }
     return schoolName;
 }
+
+export const useProviderLogin = (provider: AuthenticationProvider, isSignup = false) => {
+    const [getProviderRedirectUrl] = useLazyGetProviderRedirectQuery();
+    return () => {
+        getProviderRedirectUrl({provider, isSignup}).then(response => {
+            if (response.isSuccess) {
+                window.location.assign(response.data);
+            }
+        });
+    };
+};

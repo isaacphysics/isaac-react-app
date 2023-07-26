@@ -1,14 +1,9 @@
 import React from "react";
 import {Button} from "reactstrap";
-import {handleProviderLoginRedirect, useAppDispatch} from "../../state";
+import {useProviderLogin} from "../../services";
 
 export const RaspberryPiSignInButton = ({isSignup, concise}: {isSignup?: boolean, concise?: boolean}) => {
-    const dispatch = useAppDispatch();
-
-    const logInWithRaspberryPi = () => {
-        dispatch(handleProviderLoginRedirect("RASPBERRYPI", isSignup));
-    };
-
+    const logInWithRaspberryPi = useProviderLogin("RASPBERRYPI", isSignup);
     return <Button className={"position-relative"} block outline color="primary" onClick={logInWithRaspberryPi}>
         <img className="rpf-button-logo" src={"/assets/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>
         {

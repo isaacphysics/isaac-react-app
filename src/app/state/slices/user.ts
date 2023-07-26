@@ -4,6 +4,7 @@ import {ACTION_TYPE} from "../../services";
 import {createSlice} from "@reduxjs/toolkit";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {emailApi} from "./api/emailApi";
+import {authApi} from "./api/authApi";
 
 type UserState = Immutable<PotentialUser> | null;
 export const userSlice = createSlice({
@@ -30,8 +31,14 @@ export const userSlice = createSlice({
             loggingInMatcher,
             () => ({loggedIn: false, requesting: true}),
         ).addMatcher(
+            authApi.endpoints.checkProviderCallback.matchFulfilled,
+            (_, action) => ({loggedIn: true, ...action.payload}),
+        ).addMatcher(
             loggedInMatcher,
             (_, action) => ({loggedIn: true, ...action.user}),
+        ).addMatcher(
+            authApi.endpoints.checkProviderCallback.matchRejected,
+            () => ({loggedIn: false}),
         ).addMatcher(
             loggedOutMatcher,
             () => ({loggedIn: false}),

@@ -1,7 +1,7 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE, isDefined} from "../../services";
-import {redirectTo, getUserId, logAction, setUserId, AppDispatch} from "../index";
+import {redirectTo, getUserId, logAction, setUserId, AppDispatch, authApi} from "../index";
 
 let timeoutHandle: number | undefined;
 
@@ -57,26 +57,30 @@ function clearCurrentUser() {
 // hard redirecting to the homepage (or the session expired page) which will cause the Redux store to be cleared.
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
     let redirect: string | undefined;
-    switch (action.type) {
-        case ACTION_TYPE.USER_CONSISTENCY_ERROR:
-            redirect = "/consistency-error";
-            clearCurrentUser();
-            break;
-        case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
-        case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
-            redirect = "/";
-            clearCurrentUser();
-            break;
-        case ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE:
-            // If the current user request returns an error we assume the user is not logged in.
-            // We should therefore, remove any data in local and session storage that might be related to the user.
-            // We do not redirect to the homepage as that would happen to anonymous users after following any hard link.
-            clearCurrentUser();
-            break;
-        case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
-        case ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS:
-            setCurrentUser(action.user, api);
-            break;
+    if (authApi.endpoints.checkProviderCallback.matchFulfilled(action)) {
+        setCurrentUser(action.payload, api);
+    } else {
+        switch (action.type) {
+            case ACTION_TYPE.USER_CONSISTENCY_ERROR:
+                redirect = "/consistency-error";
+                clearCurrentUser();
+                break;
+            case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
+            case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
+                redirect = "/";
+                clearCurrentUser();
+                break;
+            case ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE:
+                // If the current user request returns an error we assume the user is not logged in.
+                // We should therefore, remove any data in local and session storage that might be related to the user.
+                // We do not redirect to the homepage as that would happen to anonymous users after following any hard link.
+                clearCurrentUser();
+                break;
+            case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
+            case ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS:
+                setCurrentUser(action.user, api);
+                break;
+        }
     }
 
     const result = next(action);

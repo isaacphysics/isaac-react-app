@@ -285,53 +285,6 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
     }
 };
 
-export const handleProviderLoginRedirect = (provider: AuthenticationProvider, isSignup: boolean = false) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT, provider});
-    try {
-        const redirectResponse = await api.authentication.getRedirect(provider, isSignup);
-        const redirectUrl = redirectResponse.data.redirectUrl;
-        dispatch({type: ACTION_TYPE.AUTHENTICATION_REDIRECT, provider, redirectUrl: redirectUrl});
-        window.location.href = redirectUrl;
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Login redirect failed", e));
-    }
-    // TODO MT handle case when user is already logged in
-};
-
-export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<AnyAction>) => {
-    dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
-    try {
-        const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
-        // Request user preferences, as we do in the requestCurrentUser action: TODO do we need this? they'll get fetched when required by components
-        await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(userApi.util.invalidateTags(["UserPreferences"]))
-        ]);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
-        if (providerResponse.data.firstLogin) {
-            persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
-            trackEvent("registration", {props:
-                    {
-                        provider: provider,
-                    }
-                }
-            )
-            ReactGA4.event({
-                category: 'user',
-                action: 'registration',
-                label: `Create Account (${provider})`,
-            });
-        }
-        const nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
-        persistence.remove(KEY.AFTER_AUTH_PATH);
-        history.push(nextPage?.replace("#!", "") || "/account");
-    } catch (error: any) {
-        history.push("/auth_error", { errorMessage: extractMessage(error) });
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
-        dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
-    }
-};
-
 export const openIsaacBooksModal = () => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(isaacBooksModal()) as any);
 };
