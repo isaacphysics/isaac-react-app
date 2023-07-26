@@ -1,13 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
     AppState,
-    handleProviderLoginRedirect,
     logInUser,
-    resetPassword,
     selectors,
     submitTotpChallengeResponse,
     useAppDispatch,
-    useAppSelector
+    useAppSelector, usePasswordResetMutation
 } from "../../state";
 import {
     Button,
@@ -115,18 +113,16 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
 
 // Component handling the display of "Forgotten your password?" and its relevant interactions
 export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttempted, small}: {email: string, isValidEmail: boolean, setPasswordResetAttempted: (b: boolean) => void, small?: boolean}) => {
-    const dispatch = useAppDispatch();
-    const [passwordResetRequest, setPasswordResetRequest] = useState(false);
+    const [resetPassword, {isUninitialized: passwordResetRequestNotSent}] = usePasswordResetMutation();
 
     const attemptPasswordReset = () => {
         setPasswordResetAttempted(true);
         if (isValidEmail) {
-            dispatch(resetPassword({email: email}));
-            setPasswordResetRequest(!passwordResetRequest);
+            resetPassword(email);
         }
     };
 
-    return !passwordResetRequest ?
+    return passwordResetRequestNotSent ?
         <div className={small ? "mt-1 w-100 text-right" : ""}>
             <Button color="link" onClick={attemptPasswordReset}>
                 {small ? <small>Forgotten your password?</small> : "Forgotten your password?"}

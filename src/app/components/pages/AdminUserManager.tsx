@@ -3,9 +3,7 @@ import * as RS from "reactstrap";
 import {FormGroup} from "reactstrap";
 import {
     AppState,
-    resetPassword,
     selectors,
-    useAppDispatch,
     useAppSelector,
     useMergeUsersMutation,
     useAdminSearchUsersMutation,
@@ -13,6 +11,7 @@ import {
     useAdminModifyUserEmailVerificationStatusMutation,
     useAdminModifyUserRolesMutation,
     useAdminGetUserIdsSchoolLookupQuery,
+    usePasswordResetMutation
 } from "../../state";
 import {AdminSearchEndpointParams, EmailVerificationStatus, UserRole} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
@@ -25,8 +24,6 @@ import produce from "immer";
 import {skipToken} from "@reduxjs/toolkit/query";
 
 export const AdminUserManager = () => {
-    const dispatch = useAppDispatch();
-
     const [searchUsers, {isUninitialized: searchNotRequested}] = useAdminSearchUsersMutation();
     const searchResults = useAppSelector(selectors.admin.userSearch);
     const [searchQuery, setSearchQuery] = useState<AdminSearchEndpointParams>({
@@ -127,9 +124,10 @@ export const AdminUserManager = () => {
         }
     };
 
+    const [resetPassword] = usePasswordResetMutation();
     const attemptPasswordReset = (email: string | undefined) => {
         if (isDefined(email)) {
-            dispatch(resetPassword({email: email}));
+            resetPassword(email);
         }
     };
 

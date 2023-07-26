@@ -13,7 +13,6 @@ import {
 } from "../../services";
 import {
     Action,
-    AppGroupMembership,
     CredentialsAuthDTO,
     FreeTextRule,
     PotentialUser,
@@ -286,44 +285,6 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
     }
 };
 
-export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
-    try {
-        await api.users.passwordReset(params);
-        dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
-        dispatch(showToast({
-            color: "success",
-            title: "Password reset email sent",
-            body: `If an account exists with the email address ${params.email}, we have sent you a password reset email. If you don’t receive an email, you may not have an account with this email address.`,
-            timeout: 10000
-        }) as any);
-    } catch (e: any) {
-        dispatch(showAxiosErrorToastIfNeeded("Password reset failed", e));
-    }
-};
-
-export const verifyPasswordReset = (token: string | null) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST});
-        await api.users.verifyPasswordReset(token);
-        dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS});
-    } catch(e: any) {
-        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const handlePasswordReset = (params: {token: string; password: string}) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
-        await api.users.handlePasswordReset(params);
-        dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
-        history.push('/login');
-        dispatch(showToast({color: "success", title: "Password reset successful", body: "Please log in with your new password.", timeout: 5000}) as any);
-    } catch(e: any) {
-        dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
 export const handleProviderLoginRedirect = (provider: AuthenticationProvider, isSignup: boolean = false) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT, provider});
     try {
@@ -516,19 +477,6 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
     } catch (e) {
         dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE});
         dispatch(showAxiosErrorToastIfNeeded("Failed to test question", e));
-    }
-};
-
-// Admin
-
-export const resetMemberPassword = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST, member});
-    try {
-        await api.users.passwordResetById(member.groupMembershipInformation.userId as number);
-        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS, member});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE, member});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to send password reset", e));
     }
 };
 

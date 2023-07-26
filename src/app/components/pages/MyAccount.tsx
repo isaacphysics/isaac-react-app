@@ -22,7 +22,6 @@ import {
     errorSlice,
     ErrorState,
     getChosenUserAuthSettings,
-    resetPassword,
     showErrorToast,
     updateCurrentUser,
     useAdminGetUserQuery,
@@ -79,7 +78,6 @@ const stateToProps = (state: AppState, props: any) => {
 };
 
 const dispatchToProps = {
-    resetPassword,
     getChosenUserAuthSettings,
 };
 

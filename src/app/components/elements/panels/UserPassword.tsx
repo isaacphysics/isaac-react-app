@@ -8,10 +8,15 @@ import {
     loadZxcvbnIfNotPresent,
     MINIMUM_PASSWORD_LENGTH,
     passwordDebounce,
-    siteSpecific,
     validateEmail
 } from "../../../services";
-import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
+import {
+    linkAccount,
+    logOutUserEverywhere,
+    unlinkAccount,
+    useAppDispatch,
+    usePasswordResetMutation
+} from "../../../state";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -33,13 +38,12 @@ export const UserPassword = (
     const dispatch = useAppDispatch();
     const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
 
-    const [passwordResetRequested, setPasswordResetRequested] = useState(false);
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
 
+    const [resetPassword, {isUninitialized: passwordResetNotRequested}] = usePasswordResetMutation();
     const resetPasswordIfValidEmail = () => {
         if (currentUserEmail && validateEmail(currentUserEmail)) {
-            dispatch(resetPassword({email: currentUserEmail}));
-            setPasswordResetRequested(true);
+            resetPassword(currentUserEmail);
         }
     };
 
@@ -120,7 +124,7 @@ export const UserPassword = (
                     </Row>
                 </Col>
             </Row>
-            : !passwordResetRequested ?
+            : passwordResetNotRequested ?
                 <React.Fragment>
                     <Row className="pt-4">
                         <Col className="text-center">

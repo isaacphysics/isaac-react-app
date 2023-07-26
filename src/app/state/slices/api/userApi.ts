@@ -43,6 +43,47 @@ export const userApi = isaacApi.enhanceEndpoints({
             providesTags: ["UserPreferences"],
         }),
 
+        // === Password reset ===
+
+        passwordReset: build.mutation<void, string>({
+            query: (email) => ({
+                url: `/users/resetpassword`,
+                method: "POST",
+                body: {email}
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                successTitle: "Password reset email sent",
+                successMessage: (email) => `If an account exists with the email address ${email}, we have sent you a password reset email. If you don’t receive an email, you may not have an account with this email address.`,
+                errorTitle: "Password reset failed"
+            })
+        }),
+
+        verifyPasswordReset: build.mutation<void, string>({
+            query: (token) => `/users/resetpassword/${token}`,
+        }),
+
+        handlePasswordReset: build.mutation<void, {token: string; password: string}>({
+            query: ({token, password}) => ({
+                url: `/users/resetpassword/${token}`,
+                method: "POST",
+                body: securePadPasswordReset({password})
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                successTitle: "Password reset successful",
+                successMessage: "Please log in with your new password",
+            })
+        }),
+
+        passwordResetById: build.mutation<void, number>({
+            query: (id) => ({
+                url: `/users/${id}/resetpassword`,
+                method: "POST"
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to send password reset email"
+            })
+        }),
+
         // === Progress ===
 
         getAnsweredQuestionsByDate: build.query<AnsweredQuestionsByDate, number>({
@@ -128,4 +169,8 @@ export const {
     useGetProgressQuery,
     useGetSnapshotQuery,
     useGetUserPreferencesQuery,
+    usePasswordResetMutation,
+    useVerifyPasswordResetMutation,
+    useHandlePasswordResetMutation,
+    usePasswordResetByIdMutation,
 } = userApi;
