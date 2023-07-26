@@ -58,8 +58,8 @@ describe("requestCurrentUser action", () => {
         const expectedAsyncActions = [
             {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST},
             {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings},
+            createMockAPIAction("getUserPreferences", "query", "pending", undefined, undefined),
             // Would need to mock the RTK query API response for this to work
-            // createMockAPIAction("getUserPreferences", "query", "pending", undefined, undefined),
             // createMockAPIAction("getUserPreferences", "query", "fulfilled", undefined, userPreferences),
         ];
         const expectedFinalActions = [{type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: dameShirley}];
