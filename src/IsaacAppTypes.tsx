@@ -55,9 +55,6 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
-    | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
-    | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}

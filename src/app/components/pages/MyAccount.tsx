@@ -26,7 +26,8 @@ import {
     showErrorToast,
     updateCurrentUser,
     useAdminGetUserQuery,
-    useAppDispatch
+    useAppDispatch,
+    useGetUserPreferencesQuery
 } from "../../state";
 import {
     BooleanNotation,
@@ -70,7 +71,6 @@ const stateToProps = (state: AppState, props: any) => {
     return {
         errorMessage: state?.error ?? null,
         userAuthSettings: state?.userAuthSettings ?? null,
-        userPreferences: state?.userPreferences ?? null,
         firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
         hashAnchor: hash?.slice(1) ?? null,
         authToken: searchParams?.authToken as string ?? null,
@@ -88,7 +88,6 @@ interface AccountPageProps {
     errorMessage: ErrorState;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     getChosenUserAuthSettings: (userid: number) => void;
-    userPreferences: UserPreferencesDTO | null;
     firstLogin: boolean;
     hashAnchor: string | null;
     authToken: string | null;
@@ -107,7 +106,7 @@ function hashEqual<T>(current: NonNullable<T>, prev: NonNullable<T>, options?: N
     return equal;
 }
 
-const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
+const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, userAuthSettings, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
     const dispatch = useAppDispatch();
 
     const {data: adminUserToEdit} = useAdminGetUserQuery(userOfInterest ? Number(userOfInterest) : skipToken);
@@ -133,6 +132,8 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
             {...user, password: ""}
     );
     const userChanged = useMemo(() => !hashEqual({...(editingOtherUser ? userToEdit : user), password: ""}, userToUpdate), [userToUpdate, userToEdit, user, editingOtherUser]);
+
+    const {currentData: userPreferences} = useGetUserPreferencesQuery();
 
     // This is necessary for updating the user when the user updates fields from the required account info modal, for example.
     useEffect(function keepUserInSyncWithChangesElsewhere() {

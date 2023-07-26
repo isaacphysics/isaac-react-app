@@ -1,7 +1,7 @@
 import {PrintingSettings} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {routerPageChange} from "../index";
+import {createSlice, isAnyOf, PayloadAction} from "@reduxjs/toolkit";
+import {routerPageChange, userApi} from "../index";
 
 export type PrintingSettingsState = PrintingSettings | null;
 export const printingSettingsSlice = createSlice({
@@ -53,12 +53,19 @@ export const errorSlice = createSlice({
             ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE,
             ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE,
             ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE,
-            ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE
         ].includes(action.type);
 
         builder.addMatcher(
             generalMatcher,
             (_, action) => ({type: "generalError", generalError: action.errorMessage})
+        ).addMatcher(
+            isAnyOf(
+                userApi.endpoints.getUserPreferences.matchRejected
+            ),
+            (_, {error}) => ({
+                type: "generalError",
+                generalError: error.message ?? "Unknown error. Please try again later and contact us if the problem persists."
+            })
         );
     }
 })

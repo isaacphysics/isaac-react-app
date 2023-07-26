@@ -1,7 +1,8 @@
 import {isaacApi} from "./baseApi";
 import {anonymisationFunctions, anonymiseIfNeededWith, onQueryLifecycleEvents} from "./utils";
 import {AnsweredQuestionsByDate, TOTPSharedSecretDTO} from "../../../../IsaacApiTypes";
-import {UserProgress, UserSnapshot} from "../../../../IsaacAppTypes";
+import {UserPreferencesDTO, UserProgress, UserSnapshot} from "../../../../IsaacAppTypes";
+import {securePadPasswordReset} from "../../../services";
 
 // Used by the websocket and getProgress endpoint to update the user snapshot
 export const updateUserSnapshotAction = (snapshot: UserSnapshot, partial?: boolean) => {
@@ -32,9 +33,16 @@ export const updateProgressSnapshotAction = (snapshot: UserSnapshot) =>
 
 
 export const userApi = isaacApi.enhanceEndpoints({
-    addTagTypes: ["UserSnapshot"],
+    addTagTypes: ["UserSnapshot", "UserPreferences"],
 }).injectEndpoints({
     endpoints: (build) => ({
+        // === User ===
+
+        getUserPreferences: build.query<UserPreferencesDTO, void>({
+            query: () => `/users/user_preferences`,
+            providesTags: ["UserPreferences"],
+        }),
+
         // === Progress ===
 
         getAnsweredQuestionsByDate: build.query<AnsweredQuestionsByDate, number>({
@@ -118,5 +126,6 @@ export const {
     useNewMFASecretMutation,
     useGetAnsweredQuestionsByDateQuery,
     useGetProgressQuery,
-    useGetSnapshotQuery
+    useGetSnapshotQuery,
+    useGetUserPreferencesQuery,
 } = userApi;

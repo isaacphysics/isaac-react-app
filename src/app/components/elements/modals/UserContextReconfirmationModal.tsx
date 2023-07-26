@@ -17,7 +17,7 @@ import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
+import {closeActiveModal, logAction, selectors, updateCurrentUser, useGetUserPreferencesQuery} from "../../../state";
 import {Immutable} from "immer";
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
@@ -41,7 +41,7 @@ const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode,
 const UserContextReconfimationModalBody = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
-    const userPreferences = useSelector(selectors.user.preferences);
+    const {currentData: userPreferences} = useGetUserPreferencesQuery();
 
     const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>({...user, password: null});
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();

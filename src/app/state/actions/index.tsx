@@ -42,9 +42,10 @@ import {
     showToast,
     logAction,
     isaacApi,
-    AppDispatch
+    AppDispatch, userApi
 } from "../index";
 import {Immutable} from "immer";
+import {AnyAction} from "redux";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -142,14 +143,14 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
     }
 };
 
-export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<Action>) => {
+export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<AnyAction>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
     try {
         const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
         // Request user preferences, as we do in the requestCurrentUser action:
         await Promise.all([
             dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
+            dispatch(userApi.util.invalidateTags(["UserPreferences"]))
         ]);
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
@@ -160,17 +161,7 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
     }
 };
 
-export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
-    try {
-        const userPreferenceSettings = await api.users.getPreferences();
-        dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences: userPreferenceSettings.data});
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
+export const requestCurrentUser = () => async (dispatch: Dispatch<AnyAction>) => {
     dispatch({type: ACTION_TYPE.CURRENT_USER_REQUEST});
     try {
         // Request the user
@@ -178,7 +169,7 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
         // Now with that information request auth settings and preferences asynchronously
         await Promise.all([
             dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
+            dispatch(userApi.util.invalidateTags(["UserPreferences"]))
         ]);
         dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
@@ -272,7 +263,7 @@ export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => 
     }
 };
 
-export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
+export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<AnyAction>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
 
     try {
@@ -286,7 +277,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         // Request user preferences, as we do in the requestCurrentUser action:
         await Promise.all([
             dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
+            dispatch(userApi.util.invalidateTags(["UserPreferences"])),
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
@@ -346,14 +337,14 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider, is
     // TODO MT handle case when user is already logged in
 };
 
-export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
+export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<AnyAction>) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
-        // Request user preferences, as we do in the requestCurrentUser action:
+        // Request user preferences, as we do in the requestCurrentUser action: TODO do we need this? they'll get fetched when required by components
         await Promise.all([
             dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
+            dispatch(userApi.util.invalidateTags(["UserPreferences"]))
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         if (providerResponse.data.firstLogin) {

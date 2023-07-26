@@ -19,6 +19,7 @@ import {
 import {ACTION_TYPE} from "../../app/services";
 import {Action} from "../../IsaacAppTypes";
 import {jest} from "@jest/globals";
+import {createMockAPIAction} from "./utils";
 
 const mockStore = configureMockStore([thunk, ...middleware]);
 const axiosMock = new MockAdapter(endpoint);
@@ -58,8 +59,8 @@ describe("requestCurrentUser action", () => {
         const expectedAsyncActions = [
             {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST},
             {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings},
-            {type: ACTION_TYPE.USER_PREFERENCES_REQUEST},
-            {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences}
+            createMockAPIAction("getUserPreferences", "query", "pending", undefined, undefined),
+            createMockAPIAction("getUserPreferences", "query", "fulfilled", undefined, userPreferences),
         ];
         const expectedFinalActions = [{type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: dameShirley}];
 

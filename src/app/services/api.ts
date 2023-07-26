@@ -68,9 +68,6 @@ export const api = {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
         },
-        getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
-            return endpoint.get(`/users/user_preferences`)
-        },
         passwordReset: (params: {email: string}) => {
             return endpoint.post(`/users/resetpassword`, params);
         },

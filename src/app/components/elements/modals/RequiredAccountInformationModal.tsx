@@ -1,11 +1,10 @@
 import {
-    AppState,
     closeActiveModal,
     errorSlice,
     selectors,
     updateCurrentUser,
     useAppDispatch,
-    useAppSelector
+    useAppSelector, useGetUserPreferencesQuery
 } from "../../../state";
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
@@ -38,7 +37,7 @@ const RequiredAccountInfoBody = () => {
     // Redux state
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
+    const {currentData: userPreferences} = useGetUserPreferencesQuery();
 
     // Local state
     const [submissionAttempted, setSubmissionAttempted] = useState(false);

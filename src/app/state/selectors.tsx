@@ -22,8 +22,7 @@ export const selectors = {
 
     user:  {
         orNull: (state: AppState) => state?.user || null,
-        loggedInOrNull: (state: AppState) => state?.user?.loggedIn && state.user || null,
-        preferences: (state: AppState) => state?.userPreferences
+        loggedInOrNull: (state: AppState) => state?.user?.loggedIn && state.user || null
     },
 
     mainContentId: {
