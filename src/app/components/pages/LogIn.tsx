@@ -1,11 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
-    AppState,
-    logInUser,
+    getRTKQueryErrorMessage,
+    mutationSucceeded,
     selectors,
-    submitTotpChallengeResponse,
-    useAppDispatch,
     useAppSelector,
+    useLoginMutation,
+    useMfaCompleteLoginMutation,
     usePasswordResetMutation
 } from "../../state";
 import {
@@ -22,7 +22,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history, isAda, SITE_TITLE} from "../../services";
+import {history, isAda, KEY, persistence, SITE_TITLE} from "../../services";
 import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Loading} from "../handlers/IsaacSpinner";
@@ -31,31 +31,46 @@ import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
- * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
- * to handle when users have two-factor auth enabled.
+ * email and password inputs, and a button to login. Literally all login logic should be in here.
  * For examples, see usage in LogIn or LoginOrSignUpBody components.
  */
 export const useLoginLogic = () => {
-
-    const dispatch = useAppDispatch();
-
-    const totpChallengePending = useAppSelector((state: AppState) => state?.totpChallengePending);
-    const errorMessage = useAppSelector(selectors.error.general);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState<boolean>(false);
-    const [logInAttempted, setLoginAttempted] = useState(false);
 
     const isValidEmail = email.length > 0 && email.includes("@");
     const isValidPassword = password.length > 0;
 
     const [passwordResetAttempted, setPasswordResetAttempted] = useState(false);
 
+    const [logInUser, {data: loginResponse, error, isUninitialized: logInNotAttempted}] = useLoginMutation();
+    const errorMessage = error && getRTKQueryErrorMessage(error).message;
+    const totpChallengePending = !logInNotAttempted && loginResponse && "2FA_REQUIRED" in loginResponse && loginResponse["2FA_REQUIRED"];
+
+    const redirectToAfterAuthPath = () => {
+        history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
+    };
+
     const validateAndLogIn = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if ((isValidPassword && isValidEmail)) {
-            dispatch(logInUser("SEGUE", {email: email, password: password, rememberMe: rememberMe}));
+            logInUser({provider: "SEGUE", credentials: {email: email, password: password, rememberMe: rememberMe}})
+                .then(response => {
+                    if (mutationSucceeded(response) && !("2FA_REQUIRED" in response.data)) {
+                        redirectToAfterAuthPath();
+                    }
+                });
         }
+    };
+
+    const [mfaCompleteLogin] = useMfaCompleteLoginMutation();
+    const submitTotpChallengeResponse = (mfaVerificationCode: string) => {
+        mfaCompleteLogin({mfaVerificationCode, rememberMe}).then(response => {
+            if (mutationSucceeded(response)) {
+                redirectToAfterAuthPath();
+            }
+        });
     };
 
     const signUp = (event: React.MouseEvent) => {
@@ -63,22 +78,16 @@ export const useLoginLogic = () => {
         history.push("/register", {email: email, password: password});
     };
 
-    const attemptLogIn = () => {
-        setLoginAttempted(true);
-    };
-
     return {
-        loginFunctions: {attemptLogIn, signUp, validateAndLogIn},
+        loginFunctions: {signUp, validateAndLogIn, submitTotpChallengeResponse},
         setStateFunctions: {setEmail, setPassword, setRememberMe, setPasswordResetAttempted},
-        loginValues: {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword}
+        loginValues: {email, totpChallengePending, errorMessage, logInAttempted: !logInNotAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword}
     };
 }
 
 // Handles display and logic of the two-factor authentication form (usually shown after the first login step)
-export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {rememberMe: boolean}, ref: React.Ref<HTMLHeadingElement>) {
-    const dispatch = useAppDispatch();
+export const TFAInput = React.forwardRef(function TFAForm({submitTotpChallengeResponse}: {submitTotpChallengeResponse: (mfaVerificationCode: string) => void}, ref: React.Ref<HTMLHeadingElement>) {
     const [mfaVerificationCode, setMfaVerificationCode] = useState("");
-
     return <>
         <h3 ref={ref} tabIndex={-1}>Two-Factor Authentication</h3>
         <p>Two-factor authentication has been enabled for this account.</p>
@@ -104,8 +113,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
                 disabled={isNaN(Number(mfaVerificationCode))}
                 onClick={(event) => {
                     event.preventDefault();
-                    if (mfaVerificationCode)
-                        dispatch(submitTotpChallengeResponse(mfaVerificationCode, rememberMe))
+                    submitTotpChallengeResponse(mfaVerificationCode);
                 }}
             />
         </FormGroup>
@@ -147,7 +155,7 @@ interface EmailPasswordInputsProps {
     validPassword: boolean;
     logInAttempted: boolean;
     passwordResetAttempted: boolean;
-    errorMessage: string | null;
+    errorMessage: string | undefined;
     displayLabels?: boolean;
 }
 export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPassword, logInAttempted, passwordResetAttempted, errorMessage, displayLabels = true}: EmailPasswordInputsProps) => {
@@ -188,7 +196,7 @@ export const LogIn = () => {
     const user = useAppSelector(selectors.user.orNull);
 
     const {loginFunctions, setStateFunctions, loginValues} = useLoginLogic();
-    const {attemptLogIn, signUp, validateAndLogIn} = loginFunctions;
+    const {signUp, validateAndLogIn, submitTotpChallengeResponse} = loginFunctions;
     const {setEmail, setPassword, setRememberMe, setPasswordResetAttempted} = setStateFunctions;
     const {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword} = loginValues;
 
@@ -227,7 +235,7 @@ export const LogIn = () => {
                                 Log&nbsp;in or sign&nbsp;up:
                             </h2>
                             {totpChallengePending ?
-                                <TFAInput ref={subHeadingRef} rememberMe={rememberMe} />
+                                <TFAInput ref={subHeadingRef} submitTotpChallengeResponse={submitTotpChallengeResponse} />
                                 :
                                 <React.Fragment>
                                     <EmailPasswordInputs
@@ -262,7 +270,6 @@ export const LogIn = () => {
                                                 id="log-in"
                                                 tag="input" value="Log in"
                                                 color="secondary" type="submit" className="mb-2" block
-                                                onClick={attemptLogIn}
                                                 disabled={!!user?.requesting}
                                             />
                                         </Col>

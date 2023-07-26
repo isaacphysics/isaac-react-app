@@ -1,4 +1,4 @@
-import {Dispatch, Middleware, MiddlewareAPI} from "redux";
+import {Middleware, MiddlewareAPI} from "redux";
 import {
     ACTION_TYPE,
     allRequiredInformationIsPresent,

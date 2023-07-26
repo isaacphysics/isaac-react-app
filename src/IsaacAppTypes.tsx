@@ -51,14 +51,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE; errorMessage: string}
 
-    | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
-    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
-    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
     | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST}

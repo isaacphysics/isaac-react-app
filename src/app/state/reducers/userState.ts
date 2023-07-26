@@ -18,15 +18,3 @@ export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null,
             return userAuthSettings;
     }
 };
-
-type TotpChallengePendingState = boolean | null;
-export const totpChallengePending = (totpChallengePending: TotpChallengePendingState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED:
-            return true;
-        case ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS:
-            return false;
-        default:
-            return totpChallengePending;
-    }
-};

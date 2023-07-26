@@ -48,7 +48,6 @@ export const errorSlice = createSlice({
     },
     extraReducers: (builder) => {
         const generalMatcher = (action: any): action is {type: string, errorMessage: string} => [
-            ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE,
             ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE,
             ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE
         ].includes(action.type);

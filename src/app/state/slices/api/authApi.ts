@@ -1,8 +1,9 @@
 import {userApi} from "./userApi";
 import {AuthenticationProvider, RegisteredUserDTO} from "../../../../IsaacApiTypes";
-import {onQueryLifecycleEvents} from "./utils";
-import {FIRST_LOGIN_STATE, KEY, persistence, trackEvent} from "../../../services";
+import {isaacBaseQuery, onQueryLifecycleEvents} from "./utils";
+import {FIRST_LOGIN_STATE, KEY, persistence, securePadCredentials, trackEvent} from "../../../services";
 import ReactGA4 from "react-ga4";
+import {CredentialsAuthDTO} from "../../../../IsaacAppTypes";
 
 export const authApi = userApi.enhanceEndpoints({
     addTagTypes: ["UserAuthSettings"],
@@ -45,17 +46,34 @@ export const authApi = userApi.enhanceEndpoints({
             })
         }),
 
+        login: build.mutation<RegisteredUserDTO | {"2FA_REQUIRED": true}, {provider: AuthenticationProvider; credentials: CredentialsAuthDTO}>({
+            query: ({provider, credentials}) => ({
+                url: `/auth/${provider}/authenticate`,
+                method: "POST",
+                body: securePadCredentials(credentials)
+            }),
+            invalidatesTags: (result, error) => !error && result && !("2FA_REQUIRED" in result)
+                ? ["UserAuthSettings", "UserPreferences"]
+                : [],
+        }),
+
+        mfaCompleteLogin: build.mutation<RegisteredUserDTO, {mfaVerificationCode: string; rememberMe: boolean}>({
+            query: ({mfaVerificationCode, rememberMe}) => ({
+                url: `/auth/mfa/challenge`,
+                method: "POST",
+                body: {mfaVerificationCode, rememberMe}
+            }),
+            invalidatesTags: ["UserAuthSettings", "UserPreferences"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Error with MFA verification code."
+            })
+        }),
+
         //         logout: (): AxiosPromise => {
         //             return endpoint.post(`/auth/logout`);
         //         },
         //         logoutEverywhere: (): AxiosPromise => {
         //             return endpoint.post(`/auth/logout/everywhere`);
-        //         },
-        //         login: (provider: ApiTypes.AuthenticationProvider, credentials: CredentialsAuthDTO): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
-        //             return endpoint.post(`/auth/${provider}/authenticate`, securePadCredentials(credentials));
-        //         },
-        //         mfaCompleteLogin: (mfaVerificationCode : string, rememberMe: boolean): AxiosPromise => {
-        //             return endpoint.post(`/auth/mfa/challenge`, {mfaVerificationCode: mfaVerificationCode, rememberMe});
         //         },
         //         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
         //             return endpoint.get(`/auth/user_authentication_settings`)
@@ -76,4 +94,6 @@ export const authApi = userApi.enhanceEndpoints({
 export const {
     useLazyGetProviderRedirectQuery,
     useCheckProviderCallbackMutation,
+    useLoginMutation,
+    useMfaCompleteLoginMutation,
 } = authApi;

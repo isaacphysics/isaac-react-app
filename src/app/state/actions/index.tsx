@@ -142,24 +142,6 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
     }
 };
 
-export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<AnyAction>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
-    try {
-        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
-        // Request user preferences, as we do in the requestCurrentUser action:
-        await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(userApi.util.invalidateTags(["UserPreferences"]))
-        ]);
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showAxiosErrorToastIfNeeded("Error with verification code.", e));
-    }
-};
-
 export const requestCurrentUser = () => async (dispatch: Dispatch<AnyAction>) => {
     dispatch({type: ACTION_TYPE.CURRENT_USER_REQUEST});
     try {
@@ -259,29 +241,6 @@ export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => 
         dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS});
     } catch (e) {
         dispatch(showAxiosErrorToastIfNeeded("Logout everywhere failed", e));
-    }
-};
-
-export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<AnyAction>) => {
-    dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
-
-    try {
-        const result = await api.authentication.login(provider, credentials);
-
-        if (result.status === 202) {
-            // indicates MFA is required for this user and user isn't logged in yet.
-            dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
-            return;
-        }
-        // Request user preferences, as we do in the requestCurrentUser action:
-        await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(userApi.util.invalidateTags(["UserPreferences"])),
-        ]);
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
     }
 };
 

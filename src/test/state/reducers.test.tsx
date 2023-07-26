@@ -77,14 +77,6 @@ describe("user reducer", () => {
             expect(actualNextState).toEqual(previousState);
         });
     });
-
-    it("should always add a user on login response success", () => {
-        const addProfWheelerAction: Action = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: profWheeler};
-        previousStates.map((previousState) => {
-            const actualNextState = userSlice.reducer(previousState, addProfWheelerAction);
-            expect(actualNextState).toEqual({...profWheeler, loggedIn: true});
-        })
-    })
 });
 
 describe("questions reducer", () => {
