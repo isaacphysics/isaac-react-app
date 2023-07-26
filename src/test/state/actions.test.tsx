@@ -50,14 +50,13 @@ describe("requestCurrentUser action", () => {
         const userPreferences = userPreferencesSettings[dameShirley.id as number];
 
         axiosMock.onGet(`/users/current_user`).replyOnce(200, dameShirley);
-        axiosMock.onGet(`/auth/user_authentication_settings`).replyOnce(200, userAuthSettings);
+        //axiosMock.onGet(`/auth/user_authentication_settings`).replyOnce(200, userAuthSettings);
 
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedFirstActions = [{type: ACTION_TYPE.CURRENT_USER_REQUEST}];
         const expectedAsyncActions = [
-            {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST},
-            {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings},
+            {"payload": ["CurrentUserAuthSettings"], "type": "isaacApi/invalidateTags"},
             {"payload": ["UserPreferences"], "type": "isaacApi/invalidateTags"},
             // Would need to mock the RTK query API response for this to work
             // createMockAPIAction("getUserPreferences", "query", "fulfilled", undefined, userPreferences),
@@ -75,7 +74,7 @@ describe("requestCurrentUser action", () => {
                 .toContainEqual(expectedAsyncAction);
         });
         expect(actualIsaacActions.slice(-expectedFinalActions.length)).toEqual(expectedFinalActions);
-        expect(axiosMock.history.get.length).toBe(2);
+        expect(axiosMock.history.get.length).toBe(1);
     });
 
     it("dispatches USER_UPDATE_RESPONSE_FAILURE on a 401 response", async () => {

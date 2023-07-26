@@ -16,16 +16,17 @@ import {
     TabContent,
     TabPane,
 } from "reactstrap";
-import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
+import {UserContext} from "../../../IsaacApiTypes";
 import {
     AppState,
     errorSlice,
     ErrorState,
-    getChosenUserAuthSettings,
     showErrorToast,
     updateCurrentUser,
     useAdminGetUserQuery,
     useAppDispatch,
+    useGetCurrentUserAuthSettingsQuery,
+    useGetSelectedUserAuthSettingsQuery,
     useGetUserPreferencesQuery
 } from "../../state";
 import {
@@ -69,7 +70,6 @@ const stateToProps = (state: AppState, props: any) => {
     const searchParams = queryString.parse(search);
     return {
         errorMessage: state?.error ?? null,
-        userAuthSettings: state?.userAuthSettings ?? null,
         firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
         hashAnchor: hash?.slice(1) ?? null,
         authToken: searchParams?.authToken as string ?? null,
@@ -77,15 +77,9 @@ const stateToProps = (state: AppState, props: any) => {
     }
 };
 
-const dispatchToProps = {
-    getChosenUserAuthSettings,
-};
-
 interface AccountPageProps {
     user: PotentialUser;
     errorMessage: ErrorState;
-    userAuthSettings: UserAuthenticationSettingsDTO | null;
-    getChosenUserAuthSettings: (userid: number) => void;
     firstLogin: boolean;
     hashAnchor: string | null;
     authToken: string | null;
@@ -104,7 +98,12 @@ function hashEqual<T>(current: NonNullable<T>, prev: NonNullable<T>, options?: N
     return equal;
 }
 
-const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, userAuthSettings, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
+const AccountPageComponent = ({user, errorMessage, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
+    // TODO CHRIS once user details update is inside RTKQ, the error message slice can be removed and replaced
+    //  with the error messages from the mutation hooks (useGetCurrentUserAuthSettingsQuery, whatever the
+    //  equivalent is for updating user details, etc.)
+    //  Or at least, the error message slice can have its extra reducers removed and just be used for server errors
+
     const dispatch = useAppDispatch();
 
     const {data: adminUserToEdit} = useAdminGetUserQuery(userOfInterest ? Number(userOfInterest) : skipToken);
@@ -114,11 +113,9 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
         return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false}
     }, [adminUserToEdit]);
 
-    useEffect(() => {
-        if (userOfInterest) {
-            getChosenUserAuthSettings(Number(userOfInterest));
-        }
-    }, [userOfInterest]);
+    const {currentData: userAuthSettings} = useGetCurrentUserAuthSettingsQuery(userOfInterest ? skipToken : undefined);
+    // TODO CHRIS do we actually want to allow people to fetch other users' auth settings?
+    const {currentData: chosenUserAuthSettings} = useGetSelectedUserAuthSettingsQuery(userOfInterest ? Number(userOfInterest) : skipToken);
 
     // - Admin user modification
     const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
@@ -393,4 +390,4 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
     </Container>;
 };
 
-export const MyAccount = withRouter(connect(stateToProps, dispatchToProps)(AccountPageComponent));
+export const MyAccount = withRouter(connect(stateToProps)(AccountPageComponent));

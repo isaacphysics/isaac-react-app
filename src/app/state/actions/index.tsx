@@ -41,7 +41,8 @@ import {
     showToast,
     logAction,
     isaacApi,
-    AppDispatch, userApi
+    AppDispatch,
+    authApi
 } from "../index";
 import {Immutable} from "immer";
 import {AnyAction} from "redux";
@@ -87,27 +88,6 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
     return {type: ACTION_TYPE.TEST_ACTION};
 }
 
-// User authentication
-export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
-    try {
-        const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
-        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings: authenticationSettings.data});
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const getChosenUserAuthSettings = (userId: number) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_REQUEST});
-    try {
-        const authenticationSettings = await api.authentication.getSelectedUserAuthSettings(userId);
-        dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS, selectedUserAuthSettings: authenticationSettings.data});
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
 export const linkAccount = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_LINK_REQUEST});
     try {
@@ -121,14 +101,12 @@ export const linkAccount = (provider: AuthenticationProvider) => async (dispatch
     }
 };
 
-export const unlinkAccount = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
+export const unlinkAccount = (provider: AuthenticationProvider) => async (dispatch: Dispatch<AnyAction>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST});
     try {
         await api.authentication.unlinkAccount(provider);
         dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS, provider});
-        await Promise.all([
-            dispatch(getUserAuthSettings() as any)
-        ]);
+        await dispatch(authApi.util.invalidateTags(["UserPreferences", "CurrentUserAuthSettings"]));
         dispatch(showToast({
             title: "Account unlinked",
             body: "Your account settings were updated successfully.",
@@ -148,10 +126,7 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<AnyAction>) =>
         // Request the user
         const currentUser = await api.users.getCurrent();
         // Now with that information request auth settings and preferences asynchronously
-        await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(userApi.util.invalidateTags(["UserPreferences"]))
-        ]);
+        await dispatch(authApi.util.invalidateTags(["UserPreferences", "CurrentUserAuthSettings"]));
         dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE});

@@ -37,7 +37,6 @@ export * from "./slices/api/eventsApi";
 export * from "./slices/api/quizApi";
 export * from "./slices/api/miscApi";
 export * from "./slices/gameboards";
-export * from "./reducers/userState";
 export * from "./actions/popups";
 export * from "./actions/groups";
 export * from "./actions/quizzes";

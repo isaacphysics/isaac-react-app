@@ -1,7 +1,7 @@
 import {PrintingSettings} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services";
 import {createSlice, isAnyOf, PayloadAction} from "@reduxjs/toolkit";
-import {routerPageChange, userApi} from "../index";
+import {authApi, routerPageChange, userApi} from "../index";
 
 export type PrintingSettingsState = PrintingSettings | null;
 export const printingSettingsSlice = createSlice({
@@ -48,8 +48,7 @@ export const errorSlice = createSlice({
     },
     extraReducers: (builder) => {
         const generalMatcher = (action: any): action is {type: string, errorMessage: string} => [
-            ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE,
-            ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE
+            ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE
         ].includes(action.type);
 
         builder.addMatcher(
@@ -57,7 +56,8 @@ export const errorSlice = createSlice({
             (_, action) => ({type: "generalError", generalError: action.errorMessage})
         ).addMatcher(
             isAnyOf(
-                userApi.endpoints.getUserPreferences.matchRejected
+                userApi.endpoints.getUserPreferences.matchRejected,
+                authApi.endpoints.getCurrentUserAuthSettings.matchRejected
             ),
             (_, {error}) => ({
                 type: "generalError",

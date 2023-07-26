@@ -1,6 +1,5 @@
 import {combineReducers} from "redux";
 import {
-    userAuthSettings,
     errorSlice,
     mainContentIdSlice,
     printingSettingsSlice,
@@ -21,7 +20,6 @@ import {
 export const rootReducer = combineReducers({
     // User
     user: userSlice.reducer,
-    userAuthSettings,
 
     // Internal App
     printingSettings: printingSettingsSlice.reducer,

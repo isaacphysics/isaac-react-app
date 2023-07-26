@@ -81,12 +81,6 @@ export const api = {
         logoutEverywhere: (): AxiosPromise => {
             return endpoint.post(`/auth/logout/everywhere`);
         },
-        getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
-            return endpoint.get(`/auth/user_authentication_settings`)
-        },
-        getSelectedUserAuthSettings: (userId: number): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
-            return endpoint.get(`/auth/user_authentication_settings/${userId}`)
-        },
         linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
             return endpoint.get(`/auth/${provider}/link`)
         },

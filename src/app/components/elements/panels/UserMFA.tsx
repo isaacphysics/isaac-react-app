@@ -13,7 +13,7 @@ import QRCode from 'qrcode';
 
 interface UserMFAProps {
     userToUpdate: ValidationUser;
-    userAuthSettings: UserAuthenticationSettingsDTO | null;
+    userAuthSettings: UserAuthenticationSettingsDTO | undefined;
     editingOtherUser: boolean;
 }
 

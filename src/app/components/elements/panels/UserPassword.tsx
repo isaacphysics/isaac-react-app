@@ -25,7 +25,7 @@ interface UserPasswordProps {
     myUser: ValidationUser;
     setMyUser: (e: any) => void;
     isNewPasswordConfirmed: boolean;
-    userAuthSettings: UserAuthenticationSettingsDTO | null;
+    userAuthSettings: UserAuthenticationSettingsDTO | undefined;
     setNewPassword: (e: any) => void;
     setNewPasswordConfirm: (e: any) => void;
     newPasswordConfirm: string;
