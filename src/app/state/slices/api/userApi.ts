@@ -55,7 +55,6 @@ export const userApi = isaacApi.enhanceEndpoints({
             query: (userIdOfInterest = "current_user") => `/users/${userIdOfInterest}/progress`,
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.userProgress),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to get user progress",
                 onQuerySuccess: (arg, progress, {dispatch}) => {
                     if (arg === "current_user" && progress.userSnapshot) {
                         dispatch(updateUserSnapshotAction(progress.userSnapshot));
@@ -68,7 +67,6 @@ export const userApi = isaacApi.enhanceEndpoints({
             query: () => `/users/current_user/snapshot`,
             providesTags: ["UserSnapshot"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to get user snapshot",
                 onQuerySuccess: (arg, snapshot, {dispatch}) => {
                     dispatch(updateProgressSnapshotAction(snapshot));
                 },
