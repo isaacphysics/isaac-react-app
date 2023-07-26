@@ -75,7 +75,7 @@ describe("requestCurrentUser action", () => {
                 .toContainEqual(expectedAsyncAction);
         });
         expect(actualIsaacActions.slice(-expectedFinalActions.length)).toEqual(expectedFinalActions);
-        expect(axiosMock.history.get.length).toBe(3);
+        expect(axiosMock.history.get.length).toBe(2);
     });
 
     it("dispatches USER_UPDATE_RESPONSE_FAILURE on a 401 response", async () => {
