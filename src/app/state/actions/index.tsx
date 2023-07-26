@@ -18,7 +18,6 @@ import {
     FreeTextRule,
     PotentialUser,
     UserPreferencesDTO,
-    UserSnapshot,
     ValidatedChoice,
     ValidationUser,
 } from "../../../IsaacAppTypes";
@@ -187,11 +186,6 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
     }
 };
 
-
-export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE, userSnapshot: newUserSnapshot});
-};
-
 // TODO scope for pulling out a separate registerUser method from this
 export const updateCurrentUser = (
     updatedUser: Immutable<ValidationUser>,
@@ -255,36 +249,6 @@ export const updateCurrentUser = (
         }
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.MY_PROGRESS_REQUEST});
-    try {
-        const response = await api.users.getProgress();
-        dispatch({type: ACTION_TYPE.MY_PROGRESS_RESPONSE_SUCCESS, myProgress: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.MY_PROGRESS_RESPONSE_FAILURE});
-    }
-};
-
-export const getUserProgress = (userIdOfInterest?: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});
-    try {
-        const response = await api.users.getProgress(userIdOfInterest);
-        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, userProgress: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE});
-    }
-};
-
-export const getSnapshot = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_SNAPSHOT_REQUEST});
-    try {
-        const response = await api.users.getSnapshot();
-        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_SUCCESS, snapshot: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_FAILURE});
     }
 };
 
@@ -506,28 +470,6 @@ export function setCurrentAttempt<T extends ChoiceDTO>(questionId: string, attem
         attempt
     });
 }
-
-export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST});
-    try {
-        const myAnsweredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
-        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, myAnsweredQuestionsByDate: myAnsweredQuestionsByDate.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to get my answered question activity data", e));
-    }
-};
-
-export const getUserAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST});
-    try {
-        const userAnsweredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
-        dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, userAnsweredQuestionsByDate: userAnsweredQuestionsByDate.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to get user answered question activity data", e));
-    }
-};
 
 export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (dispatch: Dispatch<Action>) =>  {
     if (page.supersededBy) {

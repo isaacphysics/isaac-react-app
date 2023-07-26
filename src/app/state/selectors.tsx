@@ -1,4 +1,4 @@
-import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith, AppState} from "./index";
+import {anonymisationFunctions, anonymiseListIfNeededWith, AppState} from "./index";
 
 export const selectors = {
 
@@ -23,20 +23,11 @@ export const selectors = {
     user:  {
         orNull: (state: AppState) => state?.user || null,
         loggedInOrNull: (state: AppState) => state?.user?.loggedIn && state.user || null,
-        progress: (state: AppState) => state?.myProgress,
-        snapshot: (state: AppState) => state?.myProgress?.userSnapshot,
-        achievementsRecord: (state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord,
-        answeredQuestionsByDate: (state: AppState) => state?.myAnsweredQuestionsByDate,
         preferences: (state: AppState) => state?.userPreferences
     },
 
     mainContentId: {
         orDefault: (state: AppState) => state?.mainContentId || "main",
-    },
-
-    teacher: {
-        userProgress: (state: AppState) => state?.userProgress && anonymiseIfNeededWith(anonymisationFunctions.userProgress)(state.userProgress),
-        userAnsweredQuestionsByDate: (state: AppState) => state?.userAnsweredQuestionsByDate
     },
 
     admin: {

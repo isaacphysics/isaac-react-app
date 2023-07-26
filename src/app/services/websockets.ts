@@ -1,5 +1,5 @@
 import {api, isLoggedIn} from "./";
-import {getSnapshot, partiallyUpdateUserSnapshot, store} from "../state";
+import {AppDispatch, store, updateProgressSnapshotAction, updateUserSnapshotAction, userApi} from "../state";
 
 let notificationWebSocket: WebSocket | null  = null;
 let webSocketCheckTimeout: number | null = null;
@@ -7,6 +7,7 @@ let webSocketErrorCount = 0;
 let lastKnownServerTime: number | null = null;
 
 const openNotificationSocket = function(): void {
+    const dispatch = store.dispatch as AppDispatch;
 
     if (notificationWebSocket !== null) {
         return;
@@ -44,13 +45,16 @@ const openNotificationSocket = function(): void {
         }
 
         if (websocketMessage.userSnapshot) {
-            store.dispatch(partiallyUpdateUserSnapshot(websocketMessage.userSnapshot));
+            dispatch(updateUserSnapshotAction(websocketMessage.userSnapshot) as any);
+            dispatch(updateProgressSnapshotAction(websocketMessage.userSnapshot));
         } else if (websocketMessage.notifications) {
             websocketMessage.notifications.forEach(function(entry: any) {
                 const notificationMessage = JSON.parse(entry.message);
                 // specific user streak update
                 if (notificationMessage.dailyStreakRecord && notificationMessage.weeklyStreakRecord) {
-                    store.dispatch(partiallyUpdateUserSnapshot({dailyStreakRecord: notificationMessage.dailyStreakRecord, weeklyStreakRecord: notificationMessage.weeklyStreakRecord}));
+                    const streakUpdate = {dailyStreakRecord: notificationMessage.dailyStreakRecord, weeklyStreakRecord: notificationMessage.weeklyStreakRecord};
+                    dispatch(updateUserSnapshotAction(streakUpdate, true) as any);
+                    dispatch(updateProgressSnapshotAction(streakUpdate));
                 }
             });
         }
@@ -58,7 +62,7 @@ const openNotificationSocket = function(): void {
 
     notificationWebSocket.onerror = function(error) {
         console.error("WebSocket error:", error);
-        store.dispatch(getSnapshot());
+        dispatch(userApi.endpoints.getSnapshot.initiate());
     }
 
 
@@ -111,7 +115,10 @@ const openNotificationSocket = function(): void {
 export const checkForWebSocket = function(): void {
     try {
         if (notificationWebSocket !== null) {
-            if (!store.getState()?.myProgress?.userSnapshot) {
+            // If we already have a WebSocket connection, check if we have a snapshot. (we need to use any here since
+            // the type of the state/selector is a bit broken for some reason).
+            const {data: currentSnapshot} = userApi.endpoints.getSnapshot.select()(store.getState() as any);
+            if (!currentSnapshot) {
                 // If we don't have a snapshot, request one.
                 notificationWebSocket.send("user-snapshot-nudge");
             } else {

@@ -87,12 +87,6 @@ export const api = {
         },
         passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);
-        },
-        getProgress: (userIdOfInterest = "current_user"): AxiosPromise<AppTypes.UserProgress> => {
-            return endpoint.get(`users/${userIdOfInterest}/progress`);
-        },
-        getSnapshot: (): AxiosPromise<AppTypes.UserSnapshot> => {
-            return endpoint.get(`users/current_user/snapshot`);
         }
     },
     authentication: {
@@ -140,15 +134,6 @@ export const api = {
     questions: {
         answer: (id: string, answer: Immutable<ApiTypes.ChoiceDTO>): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
-        },
-        answeredQuestionsByDate: (userId: number | string, fromDate: number, toDate: number, perDay: boolean): AxiosPromise<ApiTypes.AnsweredQuestionsByDate> => {
-            return endpoint.get(`/questions/answered_questions/${userId}`, {
-                params: {
-                    "from_date": fromDate,
-                    "to_date": toDate,
-                    "per_day": perDay
-                }
-            })
         },
         testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
             return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});

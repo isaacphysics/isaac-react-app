@@ -8,7 +8,6 @@ import {
 } from "../../../../IsaacAppTypes";
 import {GameboardDTO, IsaacQuizDTO} from "../../../../IsaacApiTypes";
 import sortBy from "lodash/sortBy";
-import produce from "immer";
 
 // Returns summary assignment objects without data on gameboard contents - much faster to request these from the API
 // than those returned from useGroupAssignments

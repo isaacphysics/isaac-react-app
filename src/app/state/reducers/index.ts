@@ -11,10 +11,6 @@ import {
     activeModals,
     notifications,
     toasts,
-    myAnsweredQuestionsByDate,
-    myProgress,
-    userAnsweredQuestionsByDate,
-    userProgress,
     testQuestions,
     quizAttempt,
     groupMemberships,
@@ -44,12 +40,6 @@ export const rootReducer = combineReducers({
 
     // Question
     questions,
-
-    // Progress
-    myProgress,
-    myAnsweredQuestionsByDate,
-    userProgress,
-    userAnsweredQuestionsByDate,
 
     // Admin
     adminUserSeach: adminUserSearchSlice.reducer,
