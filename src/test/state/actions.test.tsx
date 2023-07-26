@@ -58,7 +58,7 @@ describe("requestCurrentUser action", () => {
         const expectedAsyncActions = [
             {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST},
             {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings},
-            createMockAPIAction("getUserPreferences", "query", "pending", undefined, undefined),
+            {"payload": ["UserPreferences"], "type": "isaacApi/invalidateTags"},
             // Would need to mock the RTK query API response for this to work
             // createMockAPIAction("getUserPreferences", "query", "fulfilled", undefined, userPreferences),
         ];
