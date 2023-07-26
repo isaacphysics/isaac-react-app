@@ -1,8 +1,6 @@
 import axios, {AxiosPromise} from "axios";
 import {
     API_PATH,
-    EventStageFilter,
-    EventTypeFilter,
     IMAGE_PATH,
     securePadCredentials,
     securePadPasswordReset,
@@ -11,27 +9,21 @@ import {
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
     AuthenticationProvider,
-    EmailTemplateDTO,
-    EventBookingDTO,
     ResultsWrapper,
     TestCaseDTO,
     UserContext
 } from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
-    AdditionalInformation,
-    ATTENDANCE,
     Choice,
     Concepts,
     CredentialsAuthDTO,
-    EmailUserRoles,
     QuestionSearchQuery,
     QuestionSearchResponse,
     UserPreferencesDTO,
     ValidationUser
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state";
-import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {Immutable} from "immer";
 
 export const endpoint = axios.create({
@@ -100,10 +92,6 @@ export const api = {
         },
         passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);
-        },
-
-        getUserIdSchoolLookup: (userIds: number[]): AxiosPromise<AppTypes.UserSchoolLookup> => {
-            return endpoint.get(`/users/school_lookup?user_ids=${userIds.join(",")}`);
         },
         getProgress: (userIdOfInterest = "current_user"): AxiosPromise<AppTypes.UserProgress> => {
             return endpoint.get(`users/${userIdOfInterest}/progress`);
@@ -259,102 +247,6 @@ export const api = {
     contactForm: {
         send: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
             return endpoint.post(`/contact/`, params, {});
-        }
-    },
-    events: {
-        get: (eventId: string): AxiosPromise<ApiTypes.IsaacEventPageDTO> => {
-            return endpoint.get(`/events/${eventId}`);
-        },
-        getEvents: (
-            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
-            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean, showReservedOnly: boolean,
-            showStageOnly: EventStageFilter | null
-        ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
-            return endpoint.get(`/events`, {params: {
-                start_index: startIndex,
-                limit: eventsPerPage,
-                show_active_only: showActiveOnly,
-                show_inactive_only: showInactiveOnly,
-                show_booked_only: showBookedOnly,
-                show_reservations_only: showReservedOnly,
-                show_stage_only: showStageOnly,
-                tags: filterEventsByType
-            }});
-        },
-        getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
-            return endpoint.get(`/events`, {params: {
-                start_index: 0, limit: numberOfActiveEvents, show_active_only: active,
-                show_inactive_only: !active, show_booked_only: false, tags: null
-            }});
-        },
-        getEventOverviews: (eventOverviewFilter: EventOverviewFilter): AxiosPromise<{results: AppTypes.EventOverview[]; totalResults: number}> => {
-            const params = {limit: -1, startIndex: 0};
-            if (eventOverviewFilter !== EventOverviewFilter["All events"]) {
-                Object.assign(params, {filter: eventOverviewFilter})
-            }
-            return endpoint.get('/events/overview', {params});
-        },
-        getEventMapData: (
-            startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
-            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean,
-            showStageOnly: EventStageFilter | null): AxiosPromise<{results: AppTypes.EventMapData[]; totalResults: number}> => {
-            return endpoint.get(`/events/map_data`, {params: {
-                start_index: startIndex,
-                limit: eventsPerPage,
-                show_active_only: showActiveOnly,
-                show_inactive_only: showInactiveOnly,
-                show_booked_only: showBookedOnly,
-                show_stage_only: showStageOnly,
-                tags: filterEventsByType
-            }});
-        }
-    },
-    eventBookings: {
-        bookMyselfOnEvent: (eventId: string, additionalInformation: AdditionalInformation) => {
-            return endpoint.post(`/events/${eventId}/bookings`, additionalInformation);
-        },
-        addMyselfToWaitingList: (eventId: string, additionalInformation: AdditionalInformation) => {
-            return endpoint.post(`/events/${eventId}/waiting_list`, additionalInformation);
-        },
-        cancelMyBooking: (eventId: string) => {
-            return endpoint.delete(`/events/${eventId}/bookings/cancel`);
-        },
-        getEventBookings: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
-            return endpoint.get(`/events/${eventId}/bookings`);
-        },
-        getEventBookingsForGroup: (eventId: string, groupId: number): AxiosPromise<EventBookingDTO[]> => {
-            return endpoint.get(`/events/${eventId}/bookings/for_group/${groupId}`);
-        },
-        getEventBookingsForAllGroups: (eventId: string): AxiosPromise<EventBookingDTO[]> => {
-            return endpoint.get(`/events/${eventId}/groups_bookings`);
-        },
-        bookUserOnEvent: (eventId: string, userId: number, additionalInformation: AdditionalInformation) => {
-            return endpoint.post(`/events/${eventId}/bookings/${userId}`, additionalInformation);
-        },
-        reserveUsersOnEvent: (eventId: string, userIds: number[]) => {
-            return endpoint.post(`/events/${eventId}/reservations`, userIds);
-        },
-        cancelUsersReservationsOnEvent: (eventId: string, userIds: number[]) => {
-            return endpoint.post(`/events/${eventId}/reservations/cancel`, userIds);
-        },
-        resendUserConfirmationEmail: (eventId: string, userId: number) => {
-            return endpoint.post(`/events/${eventId}/bookings/${userId}/resend_confirmation`);
-        },
-        promoteUserBooking: (eventId: string, userId: number) => {
-            return endpoint.post(`/events/${eventId}/bookings/${userId}/promote`, {eventId, userId});
-        },
-        cancelUserBooking: (eventId: string, userId: number) => {
-            return endpoint.delete(`/events/${eventId}/bookings/${userId}/cancel`);
-        },
-        deleteUserBooking: (eventId: string, userId: number) => {
-            return endpoint.delete(`/events/${eventId}/bookings/${userId}`);
-        },
-        recordEventAttendance: (eventId: string, userId: number, attendance: ATTENDANCE) => {
-            const attended = attendance === ATTENDANCE.ATTENDED;
-            return endpoint.post(`/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`);
-        },
-        getEventBookingCSV: (eventId: string) => {
-            return endpoint.get(`/events/${eventId}/bookings/download`);
         }
     },
     logger: {

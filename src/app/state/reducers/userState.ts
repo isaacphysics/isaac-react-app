@@ -1,4 +1,4 @@
-import {Action, UserPreferencesDTO, UserSchoolLookup} from "../../../IsaacAppTypes";
+import {Action, UserPreferencesDTO} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {userApi} from "../index";
@@ -38,17 +38,5 @@ export const totpChallengePending = (totpChallengePending: TotpChallengePendingS
             return false;
         default:
             return totpChallengePending;
-    }
-};
-
-export type UserSchoolLookupState = UserSchoolLookup | null;
-export const userSchoolLookup = (userSchoolLookup: UserSchoolLookupState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.USER_SCHOOL_LOOKUP_REQUEST:
-            return null;
-        case ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_SUCCESS:
-            return {...action.schoolLookup};
-        default:
-            return userSchoolLookup;
     }
 };

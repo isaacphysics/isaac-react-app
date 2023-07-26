@@ -1,11 +1,16 @@
 import React, {useState} from "react";
 import {UserSummaryForAdminUsersDTO} from "../../../../IsaacApiTypes";
 import {AdditionalInformation, AugmentedEvent} from "../../../../IsaacAppTypes";
-import {bookUserOnEvent, closeActiveModal, showToast, store, useAppDispatch} from "../../../state";
+import {
+    closeActiveModal,
+    showErrorToast,
+    store,
+    useAppDispatch,
+    useBookUserOnEventMutation
+} from "../../../state";
 import * as RS from "reactstrap";
 import {atLeastOne, formatBookingModalConfirmMessage, siteSpecific, zeroOrLess} from "../../../services";
 import {EventBookingForm} from "../EventBookingForm";
-import {FAILURE_TOAST} from "../../navigation/Toasts";
 
 export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, selectedEvent: AugmentedEvent, eventBookingIds: number[]) {
     return {
@@ -28,13 +33,15 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
             const userCanBeAddedToWaitingList = selectedEvent.eventStatus == 'WAITING_LIST_ONLY' ||
                 (!eventBookingIds.includes(selectedUser.id as number) && zeroOrLess(selectedEvent.placesAvailable));
 
+            const [bookUserOnEvent] = useBookUserOnEventMutation();
             function makeUserBooking(formEvent: React.FormEvent) {
                 if (formEvent) {formEvent.preventDefault()}
                 if (additionalInformation.authorisation === undefined || (additionalInformation.authorisation === "OTHER" && additionalInformation.authorisationOther === undefined)) {
-                    dispatch(showToast(Object.assign({}, FAILURE_TOAST, {title: "Event booking failed", body: "You must provide an authorisation reason to complete this request."})));
+                    dispatch(showErrorToast("Event booking failed", "You must provide an authorisation reason to complete this request."));
                     return;
                 }
-                dispatch(bookUserOnEvent(selectedEvent.id as string, selectedUser.id as number, additionalInformation))
+                bookUserOnEvent({eventId: selectedEvent.id as string, userId: selectedUser.id as number, additionalInformation})
+                    .then(() => dispatch(closeActiveModal()));
             }
 
             return <RS.Form onSubmit={makeUserBooking} className="mb-4">

@@ -71,23 +71,36 @@ export const resultOrNotFound = <T>(result: T, error: FetchBaseQueryError | Seri
 
 interface QueryLifecycleSpec<T, R> {
     onQueryStart?: (args: T, api: {dispatch: Dispatch<any>, getState: () => any}) => void | {resetOptimisticUpdates: (() => void)};
-    successTitle?: string;
-    successMessage?: string;
+    successTitle?: string | ((args: T, response: R) => string);
+    successMessage?: string | ((args: T, response: R) => string);
     onQuerySuccess?: (args: T, response: R, api: {dispatch: Dispatch<any>, getState: () => any}) => void;
-    errorTitle?: string;
+    errorTitle?: string | ((args: T, error: FetchBaseQueryError) => string);
     onQueryError?: (args: T, error: FetchBaseQueryError, api: {dispatch: Dispatch<any>, getState: () => any}) => void;
 }
+// A helper function to handle the lifecycle of a query, with hooks for start, success and error, and toasts for success
+// and error.
+// Each hook gets any data that is available at the time of the hook (arguments, response, error, etc.), and a dispatch
+// function to dispatch actions.
+//
+// The `onQueryStart` hook can return an object with a `resetOptimisticUpdates` function, which will be called if the
+// query fails. This allows you to use RTKs optimistic updates feature to update the state of the app before the query
+// has completed.
+//
+// The `groupsApi` file is probably the best place to look for more in depth examples of how to use this.
 export const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, successMessage, onQuerySuccess, errorTitle, onQueryError}: QueryLifecycleSpec<T, R>) => async (arg: T, { dispatch, getState, queryFulfilled }: { dispatch: Dispatch<any>, getState: () => any, queryFulfilled: PromiseWithKnownReason<{data: R, meta: {} | undefined}, any>}) => {
     const queryStartCallbacks = onQueryStart?.(arg, {dispatch, getState});
     try {
         const response = await queryFulfilled;
         if (successTitle && successMessage) {
-            dispatch(showSuccessToast(successTitle, successMessage));
+            const successTitleText = typeof successTitle === "function" ? successTitle(arg, response.data) : successTitle;
+            const successMessageText = typeof successMessage === "function" ? successMessage(arg, response.data) : successMessage;
+            dispatch(showSuccessToast(successTitleText, successMessageText));
         }
         onQuerySuccess?.(arg, response.data, {dispatch, getState});
     } catch (e: any) {
         if (errorTitle) {
-            dispatch(showRTKQueryErrorToastIfNeeded(errorTitle, e));
+            const errorTitleText = typeof errorTitle === "function" ? errorTitle(arg, e.error) : errorTitle;
+            dispatch(showRTKQueryErrorToastIfNeeded(errorTitleText, e));
         }
         onQueryError?.(arg, e.error, {dispatch, getState});
         queryStartCallbacks?.resetOptimisticUpdates();

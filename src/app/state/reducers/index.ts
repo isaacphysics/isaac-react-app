@@ -1,16 +1,8 @@
 import {combineReducers} from "redux";
 import {
-    currentEvent,
-    eventBookings,
-    eventBookingsForAllGroups,
-    eventBookingsForGroup,
-    eventMapData,
-    eventOverviews,
-    events,
     totpChallengePending,
     userAuthSettings,
     userPreferences,
-    userSchoolLookup,
     errorSlice,
     mainContentIdSlice,
     printingSettingsSlice,
@@ -53,7 +45,6 @@ export const rootReducer = combineReducers({
     user: userSlice.reducer,
     userAuthSettings,
     userPreferences,
-    userSchoolLookup,
     totpChallengePending,
 
     // Internal App
@@ -102,15 +93,6 @@ export const rootReducer = combineReducers({
 
     // Search
     search,
-
-    // Events
-    events,
-    currentEvent,
-    eventOverviews,
-    eventMapData,
-    eventBookings,
-    eventBookingsForGroup,
-    eventBookingsForAllGroups,
 
     // Quizzes
     quizzes,

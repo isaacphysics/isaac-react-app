@@ -3,14 +3,8 @@ import {
     ACTION_TYPE,
     api,
     API_REQUEST_FAILURE_MESSAGE,
-    atLeastOne,
-    augmentEvent,
     DOCUMENT_TYPE,
-    EventStageFilter,
-    EventStatusFilter,
-    EventTypeFilter,
     history,
-    isDefined,
     isFirstLoginInPersistence,
     KEY,
     persistence,
@@ -19,11 +13,8 @@ import {
 } from "../../services";
 import {
     Action,
-    AdditionalInformation,
     AppGroupMembership,
-    ATTENDANCE,
     CredentialsAuthDTO,
-    EmailUserRoles,
     FreeTextRule,
     PotentialUser,
     QuestionSearchQuery,
@@ -35,14 +26,9 @@ import {
 import {
     AuthenticationProvider,
     ChoiceDTO,
-    EmailTemplateDTO,
-    EmailVerificationStatus,
     GlossaryTermDTO,
-    GraphChoiceDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
-    RegisteredUserDTO,
-    UserRole,
     TestCaseDTO,
     UserContext,
     UserSummaryDTO,
@@ -56,7 +42,6 @@ import {
 } from "../../components/elements/modals/TeacherConnectionModalCreators";
 import {AxiosError} from "axios";
 import ReactGA4 from "react-ga4";
-import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {
     AppState,
@@ -68,7 +53,7 @@ import {
     showToast,
     logAction,
     isaacApi,
-    AppDispatch
+    AppDispatch,
 } from "../index";
 import {Immutable} from "immer";
 
@@ -437,18 +422,6 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         history.push("/auth_error", { errorMessage: extractMessage(error) });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         dispatch(showAxiosErrorToastIfNeeded("Login Failed", error));
-    }
-};
-
-// User error
-export const getUserIdSchoolLookup = (eventIds: number[]) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.USER_SCHOOL_LOOKUP_REQUEST});
-        const response = await api.users.getUserIdSchoolLookup(eventIds);
-        dispatch({type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_SUCCESS, schoolLookup: response.data});
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.USER_SCHOOL_LOOKUP_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to load user school lookup details", error) as any);
     }
 };
 
@@ -892,325 +865,6 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE, member});
         dispatch(showAxiosErrorToastIfNeeded("Failed to send password reset", e));
-    }
-};
-
-// Events
-export const clearEventsList = {type: ACTION_TYPE.EVENTS_CLEAR};
-
-export const getEvent = (eventId: string) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_REQUEST});
-        const augmentedEvent = augmentEvent((await api.events.get(eventId)).data);
-        dispatch({type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS, augmentedEvent});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.EVENT_RESPONSE_FAILURE});
-    }
-};
-
-export const getEventsList = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter, stageFilter: EventStageFilter) => async (dispatch: Dispatch<Action>) => {
-    const typeFilterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
-    const showStageOnly = stageFilter !== EventStageFilter["All stages"] ? stageFilter : null;
-    const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
-    const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
-    const showReservedOnly = statusFilter === EventStatusFilter["My event reservations"];
-    const showInactiveOnly = false;
-    try {
-        dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
-        const response = await api.events.getEvents(startIndex, eventsPerPage, typeFilterTags, showActiveOnly,
-            showInactiveOnly, showBookedOnly, showReservedOnly, showStageOnly);
-        const augmentedEvents = response.data.results.map(event => augmentEvent(event));
-        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: response.data.totalResults});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Events request failed", e));
-    }
-};
-
-export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch(clearEventsList as any);
-        dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
-        const getActive = true;
-        const eventsResponse = await api.events.getFirstN(numberOfEvents, getActive);
-        if (eventsResponse.data.totalResults < numberOfEvents) {
-            const numberOfRemainingEvents = numberOfEvents - eventsResponse.data.totalResults;
-            const inactiveEventsResponse = await api.events.getFirstN(numberOfRemainingEvents, !getActive);
-            eventsResponse.data.results.push(...inactiveEventsResponse.data.results);
-        }
-        const augmentedEvents = eventsResponse.data.results.map(event => augmentEvent(event));
-        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: augmentedEvents.length});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Unable to display events", e));
-    }
-};
-
-export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST});
-        const response = await api.events.getEventOverviews(eventOverviewFilter);
-        // We ignore response.data.total because we do not currently page the results of event overviews
-        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS, eventOverviews: response.data.results});
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to load event overviews", error) as any);
-    }
-};
-
-export const getEventMapData = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter, stageFilter: EventStageFilter) => async (dispatch: Dispatch<Action>) => {
-    const filterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
-    const showStageOnly = stageFilter !== EventStageFilter["All stages"] ? stageFilter : null;
-    const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
-    const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
-    const showInactiveOnly = false;
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_MAP_DATA_REQUEST});
-        const response = await api.events.getEventMapData(startIndex, eventsPerPage, filterTags, showActiveOnly,
-            showInactiveOnly, showBookedOnly, showStageOnly);
-        dispatch({
-            type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS,
-            eventMapData: response.data.results,
-            total: response.data.totalResults
-        });
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Event map data request failed", e));
-    }
-};
-
-export const getEventBookings = (eventId: string) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST});
-        const response = await api.eventBookings.getEventBookings(eventId);
-        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS, eventBookings: response.data});
-        const userIds = response.data.map(booking => booking.userBooked && booking.userBooked.id) as number[];
-        if (atLeastOne(userIds.length)) {
-            dispatch(getUserIdSchoolLookup(userIds) as any);
-        }
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to load event bookings", error) as any);
-    }
-};
-
-export const getEventBookingsForGroup = (eventId: string, groupId: number) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST});
-        const response = await api.eventBookings.getEventBookingsForGroup(eventId, groupId);
-        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS, eventBookingsForGroup: response.data});
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to load event bookings", error) as any);
-    }
-};
-
-export const getEventBookingsForAllGroups = (eventId: string) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_REQUEST});
-        const response = await api.eventBookings.getEventBookingsForAllGroups(eventId);
-        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_SUCCESS, eventBookingsForAllGroups: response.data});
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to load event bookings", error) as any);
-    }
-};
-
-export const getEventBookingCSV = (eventId: string) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST});
-        const response = await api.eventBookings.getEventBookingCSV(eventId);
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_SUCCESS, eventBookingCSV: response.data});
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_CSV_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to load event booking csv", error) as any);
-    }
-};
-
-export const bookMyselfOnEvent = (eventId: string, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_REQUEST});
-        await api.eventBookings.bookMyselfOnEvent(eventId, additionalInformation);
-        await dispatch(getEvent(eventId) as any);
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_SUCCESS});
-        dispatch(showToast({
-            title: "Event booking confirmed", body: "You have been successfully booked onto this event.",
-            color: "success", timeout: 5000, closable: false,
-        }) as any);
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Event booking failed", error) as any);
-    }
-};
-
-export const reserveUsersOnEvent = (eventId: string, userIds: number[], groupId: number) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_REQUEST});
-        await api.eventBookings.reserveUsersOnEvent(eventId, userIds);
-        await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
-        await dispatch(getEvent(eventId) as any);
-        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_SUCCESS});
-        dispatch(showToast({
-            title: "Reservations confirmed", body: "You have successfully reserved students onto this event.",
-            color: "success", timeout: 5000, closable: false,
-        }) as any);
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.EVENT_RESERVATION_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Reservation failed", error) as any);
-    }
-};
-
-export const cancelReservationsOnEvent = (eventId: string, userIds: number[], groupId: number | undefined) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_REQUEST});
-        await api.eventBookings.cancelUsersReservationsOnEvent(eventId, userIds);
-        if (isDefined(groupId)) {
-            await dispatch(getEventBookingsForGroup(eventId, groupId) as any);
-        } else {
-            await dispatch(getEventBookingsForAllGroups(eventId) as any);
-        }
-        await dispatch(getEvent(eventId) as any);
-        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_SUCCESS});
-        dispatch(showToast({
-            title: "Reservations cancelled", body: "You have successfully cancelled students reservations for this event.",
-            color: "success", timeout: 5000, closable: false,
-        }) as any);
-    } catch (error) {
-        dispatch({ type: ACTION_TYPE.CANCEL_EVENT_RESERVATIONS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Unable to cancel some of the reservations", error) as any);
-    }
-};
-
-export const addMyselfToWaitingList = (eventId: string, additionalInformation: AdditionalInformation, waitingListOnly?: boolean) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_REQUEST});
-        await api.eventBookings.addMyselfToWaitingList(eventId, additionalInformation);
-        await dispatch(getEvent(eventId) as any);
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_SUCCESS});
-        dispatch(showToast({
-            title: waitingListOnly ? "Booking request received" : "Waiting list booking confirmed",
-            body: waitingListOnly ? "You have requested a place on this event." :
-                "You have been successfully added to the waiting list for this event.",
-            color: "success",
-            timeout: 5000,
-            closable: false,
-        }) as any);
-        dispatch(getEvent(eventId) as any);
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Event booking failed", error) as any);
-    }
-};
-
-export const cancelMyBooking = (eventId: string) => async (dispatch: Dispatch<Action>) => {
-    const cancel = window.confirm('Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.');
-    if (cancel) {
-        try {
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_REQUEST});
-            await api.eventBookings.cancelMyBooking(eventId);
-            await dispatch(getEvent(eventId) as any);
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_RESPONSE_SUCCESS});
-            dispatch(showToast({
-                title: "Your booking has been cancelled", body: "Your booking has successfully been cancelled.",
-                color: "success", timeout: 5000, closable: false,
-            }) as any);
-            dispatch(getEvent(eventId) as any);
-        } catch (error) {
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_RESPONSE_FAILURE});
-            dispatch(showAxiosErrorToastIfNeeded("Event booking cancellation failed", error) as any);
-        }
-    }
-};
-
-export const bookUserOnEvent = (eventBookingId: string, userId: number, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_REQUEST});
-        await api.eventBookings.bookUserOnEvent(eventBookingId, userId, additionalInformation);
-        dispatch(getEventBookings(eventBookingId) as any);
-        dispatch(closeActiveModal() as any);
-        dispatch(showToast({
-            title: "Action successful", body: "The action on behalf of the user was successful.",
-            color: "success", timeout: 5000, closable: false,
-        }) as any);
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_SUCCESS});
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("The action on behalf of the user was unsuccessful", error) as any);
-    }
-};
-
-export const resendUserConfirmationEmail = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
-    const resendEmail = window.confirm('Are you sure you want to resend the confirmation email for this booking?');
-    if (resendEmail && userId) {
-        try {
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_REQUEST});
-            await api.eventBookings.resendUserConfirmationEmail(eventBookingId, userId);
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_RESPONSE_SUCCESS});
-            dispatch(showToast({
-                color: "success", closable: false, timeout: 5000,
-                title: "Event email sent", body: `Email sent to ${userId}`
-            }) as any);
-        } catch (error) {
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_RESEND_EMAIL_RESPONSE_FAILURE});
-            dispatch(showAxiosErrorToastIfNeeded("Failed to resend email for event booking", error) as any);
-        }
-    }
-};
-
-export const promoteUserBooking = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
-    const promote = window.confirm('Are you sure you want to convert this to a confirmed booking?');
-    if (promote && userId) {
-        try {
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_REQUEST});
-            await api.eventBookings.promoteUserBooking(eventBookingId, userId);
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_RESPONSE_SUCCESS});
-            dispatch(getEventBookings(eventBookingId) as any);
-        } catch (error) {
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_PROMOTION_RESPONSE_FAILURE});
-            dispatch(showAxiosErrorToastIfNeeded("Failed to promote event booking", error) as any);
-        }
-    }
-};
-
-export const cancelUserBooking = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
-    const cancelBooking = window.confirm('Are you sure you want to cancel this booking?');
-    if (cancelBooking && userId) {
-        try {
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_REQUEST});
-            await api.eventBookings.cancelUserBooking(eventBookingId, userId);
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_RESPONSE_SUCCESS});
-            dispatch(getEventBookings(eventBookingId) as any);
-        } catch (error) {
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_CANCELLATION_RESPONSE_FAILURE});
-            dispatch(showAxiosErrorToastIfNeeded("Failed to cancel event booking", error) as any);
-        }
-    }
-};
-
-export const deleteUserBooking = (eventBookingId: string, userId?: number) => async (dispatch: Dispatch<Action>) => {
-    const deleteBooking = window.confirm('Are you sure you want to delete this booking permanently?');
-    if (deleteBooking && userId) {
-        try {
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_DELETION_REQUEST});
-            await api.eventBookings.deleteUserBooking(eventBookingId, userId);
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_DELETION_RESPONSE_SUCCESS});
-            dispatch(getEventBookings(eventBookingId) as any);
-        } catch (error) {
-            dispatch({type: ACTION_TYPE.EVENT_BOOKING_DELETION_RESPONSE_FAILURE});
-            dispatch(showAxiosErrorToastIfNeeded("Failed to un-book user from event", error) as any);
-        }
-    }
-};
-
-export const recordEventAttendance = (eventId: string, userId: number, attendance: ATTENDANCE) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_REQUEST});
-        await api.eventBookings.recordEventAttendance(eventId, userId, attendance);
-        dispatch({type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS});
-        dispatch(getEventBookings(eventId) as any);
-    } catch (error) {
-        dispatch({type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to record event attendance", error) as any);
     }
 };
 

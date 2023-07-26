@@ -288,6 +288,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
 export const {
     useGetGroupsQuery,
     useGetGroupTokenQuery,
+    useGetGroupMembersQuery,
     useLazyGetGroupMembersQuery,
     useGetGroupMembershipsQuery,
     useChangeMyMembershipStatusMutation,
