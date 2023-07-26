@@ -53,7 +53,9 @@ import {
     showToast,
     logAction,
     isaacApi,
-    AppDispatch, authorisationsApi, groupsApi,
+    AppDispatch,
+    authorisationsApi,
+    groupsApi,
 } from "../index";
 import {Immutable} from "immer";
 
