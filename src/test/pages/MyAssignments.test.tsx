@@ -22,7 +22,7 @@ const FILTER_LABEL_TEXT = siteSpecific("Filter assignments by name", "Filter qui
 
 describe("MyAssignments", () => {
 
-    const renderMyAssignments = (extraEndpoints?: RestHandler<any>[]) => {
+    const renderMyAssignments = async (extraEndpoints?: RestHandler<any>[]) => {
         await renderTestEnvironment({
             PageComponent: MyAssignments,
             initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
@@ -31,13 +31,13 @@ describe("MyAssignments", () => {
     };
 
     it('should show my current assignments on render', async () => {
-        renderMyAssignments();
+        await renderMyAssignments();
         const assignments = await screen.findAllByTestId("my-assignment");
         expect(assignments).toHaveLength(mockMyAssignments.length);
     });
 
     it('should render with "To Do" tab open first', async () => {
-        renderMyAssignments();
+        await renderMyAssignments();
         const toDoTab = await screen.findByTitle(TAB_TITLE.TO_DO);
         const olderTab = await screen.findByTitle(TAB_TITLE.OLDER);
         const completedTab = await screen.findByTitle(TAB_TITLE.COMPLETED);
@@ -47,7 +47,7 @@ describe("MyAssignments", () => {
     });
 
     it('should allow users to filter assignments on gameboard title', async () => {
-        renderMyAssignments();
+        await renderMyAssignments();
         const filter = await siteSpecific(() => screen.findByPlaceholderText(FILTER_LABEL_TEXT), () => screen.findByLabelText(FILTER_LABEL_TEXT))();
         await userEvent.type(filter, "Test Gameboard 3");
         // Only one assignment should be shown
@@ -59,7 +59,7 @@ describe("MyAssignments", () => {
     });
 
     it('should open "Older" tab when tab is clicked, and tab should contain no assignments', async () => {
-        renderMyAssignments();
+        await renderMyAssignments();
         const toDoTab = await screen.findByTitle(TAB_TITLE.TO_DO);
         const olderTab = await screen.findByTitle(TAB_TITLE.OLDER);
         const completedTab = await screen.findByTitle(TAB_TITLE.COMPLETED);
@@ -73,7 +73,7 @@ describe("MyAssignments", () => {
     });
 
     it('should contain assignments with undefined due date and older than a month in the "Older Assignments" tab', async () => {
-        renderMyAssignments([
+        await renderMyAssignments([
             rest.get(API_PATH + "/assignments", (req, res, ctx) => {
                 let d = new Date();
                 d.setUTCDate(d.getUTCDate() - 1);
@@ -99,7 +99,7 @@ describe("MyAssignments", () => {
     });
 
     it('should show the scheduled start date as the "Assigned" date if it exists', async () => {
-        renderMyAssignments([
+        await renderMyAssignments([
             rest.get(API_PATH + "/assignments", (req, res, ctx) => {
                 return res(
                     ctx.status(200),
@@ -136,7 +136,7 @@ describe("MyAssignments", () => {
     });
 
     it('should show the assignment creation date as the "Assigned" date if the scheduled start date does not exist', async () => {
-        renderMyAssignments([
+        await renderMyAssignments([
             rest.get(API_PATH + "/assignments", (req, res, ctx) => {
                 return res(
                     ctx.status(200),

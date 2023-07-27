@@ -92,9 +92,13 @@ export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptio
         if (role === "ANONYMOUS") {
             expect(user?.loggedIn).toBeFalsy();
         } else {
+            const userWithRole = produce(mockUser, u => {
+                u.role = role ?? mockUser.role;
+            });
+            const actualRole = (modifyUser ? modifyUser(userWithRole) : userWithRole).role;
             expect(user?.loggedIn).toBeTruthy();
             const userRole = user && "role" in user ? user.role : "ANONYMOUS";
-            expect(userRole).toEqual(role ?? mockUser.role);
+            expect(userRole).toEqual(actualRole);
         }
     });
 };

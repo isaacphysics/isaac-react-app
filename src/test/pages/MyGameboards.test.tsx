@@ -8,7 +8,7 @@ import {PATHS} from "../../app/services";
 
 describe("MyGameboards", () => {
 
-    const renderMyGameboards = () => {
+    const renderMyGameboards = async () => {
         await renderTestEnvironment({
             PageComponent: MyGameboards,
             initalRouteEntries: [PATHS.MY_GAMEBOARDS]
@@ -16,7 +16,7 @@ describe("MyGameboards", () => {
     };
 
     it('should start in table view', async () => {
-        renderMyGameboards();
+        await renderMyGameboards();
         await waitFor(() => {
             expect(screen.queryAllByText("Loading...")).toHaveLength(0);
         });
@@ -25,13 +25,13 @@ describe("MyGameboards", () => {
     });
 
     it('should show all of my gameboards in table view', async () => {
-        renderMyGameboards();
+        await renderMyGameboards();
         const gameboardRows = await screen.findAllByTestId("gameboard-table-row");
         expect(gameboardRows).toHaveLength(mockGameboards.totalResults);
     });
 
     it('should initially fetch the first 6 gameboards in card view', async () => {
-        renderMyGameboards();
+        await renderMyGameboards();
         // Change view to "Card View"
         const viewDropdown = await screen.findByLabelText("Display in");
         await userEvent.selectOptions(viewDropdown, "Card View");
