@@ -4,7 +4,7 @@ import {ACTION_TYPE} from "../../services";
 import {createSlice, isAnyOf} from "@reduxjs/toolkit";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {emailApi} from "./api/emailApi";
-import {authApi} from "./api/authApi";
+import {authApi, loggedInMatcher} from "./api/authApi";
 
 type UserState = Immutable<PotentialUser> | null;
 export const userSlice = createSlice({
@@ -12,7 +12,7 @@ export const userSlice = createSlice({
     initialState: null as UserState,
     reducers: {},
     extraReducers: builder => {
-        const loggedInMatcher = (action: any): action is {type: string, user: RegisteredUserDTO} => [
+        const userUpdateMatcher = (action: any): action is {type: string, user: RegisteredUserDTO} => [
             ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS,
             ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS,
         ].includes(action.type);
@@ -31,26 +31,17 @@ export const userSlice = createSlice({
             ),
             () => ({loggedIn: false, requesting: true}),
         ).addMatcher(
-            isAnyOf(
-                authApi.endpoints.checkProviderCallback.matchFulfilled,
-                authApi.endpoints.login.matchFulfilled,
-                authApi.endpoints.mfaCompleteLogin.matchFulfilled,
-            ),
-            (_, action) => {
-                if ("2FA_REQUIRED" in action.payload) {
-                    return {loggedIn: false};
-                } else {
-                    return {loggedIn: true, ...action.payload};
-                }
-            },
-        ).addMatcher(
             loggedInMatcher,
+            (_, action) => ({loggedIn: true, ...action.payload}),
+        ).addMatcher(
+            userUpdateMatcher,
             (_, action) => ({loggedIn: true, ...action.user}),
         ).addMatcher(
             isAnyOf(
                 authApi.endpoints.checkProviderCallback.matchRejected,
                 authApi.endpoints.login.matchRejected,
                 authApi.endpoints.mfaCompleteLogin.matchRejected,
+                authApi.endpoints.register.matchRejected
             ),
             () => ({loggedIn: false}),
         ).addMatcher(

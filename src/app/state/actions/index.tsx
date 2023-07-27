@@ -189,25 +189,6 @@ export const updateCurrentUser = (
     }
 };
 
-export const registerUser = (
-    newUser: Immutable<ValidationUser>
-) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-        const currentUser = await api.users.updateCurrent(newUser, {}, null, undefined);
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        await dispatch(requestCurrentUser() as any);
-        trackEvent("registration", {props: {provider: "SEGUE"}});
-        ReactGA4.event({
-            category: 'user',
-            action: 'registration',
-            label: 'Create Account (SEGUE)',
-        });
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
 export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_OUT_REQUEST});
     try {

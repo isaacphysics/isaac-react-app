@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {errorSlice, registerUser, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {
+    getRTKQueryErrorMessage,
+    mutationSucceeded,
+    selectors,
+    useAppSelector,
+    useRegisterMutation
+} from "../../state";
 import {Link} from "react-router-dom";
 import {
     Alert,
@@ -44,9 +50,7 @@ import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {Immutable} from "immer";
 
 export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const errorMessage = useAppSelector(selectors.error.general);
     const userEmail = location.state?.email || undefined;
     const userPassword = location.state?.password || undefined;
 
@@ -66,9 +70,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const [dobOver13CheckboxChecked, setDobOver13CheckboxChecked] = useState(false);
     const [dob10To12CheckboxChecked, setDob10To12CheckboxChecked] = useState(false);
     const [parentalConsentCheckboxChecked, setParentalConsentCheckboxChecked] = useState(false);
-    const [attemptedSignUp, setAttemptedSignUp] = useState(false);
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
-
 
     // Values derived from inputs (props and state)
     const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
@@ -83,14 +85,23 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const consentGivenOrNotRequired = isAda || (confirmedTenToTwelve === parentalConsentCheckboxChecked);
     const dobTooYoung = isDefined(registrationUser.dateOfBirth) && !isDobOldEnoughForSite(registrationUser.dateOfBirth);
 
+    const [
+        registerUser,
+        {
+            isUninitialized: notAttemptedSignUp,
+            error: registrationError,
+            isError: isRegisterError
+        }
+    ] = useRegisterMutation();
+    const attemptedSignUp = !notAttemptedSignUp;
     // Form's submission method
     const register = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setAttemptedSignUp(true);
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && confirmedOldEnoughForSite && consentGivenOrNotRequired) {
-            dispatch(errorSlice.actions.clearError());
-            dispatch(registerUser(registrationUser)).then(() => {
-                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: true});
+            registerUser(registrationUser).then(response => {
+                if (mutationSucceeded(response)) {
+                    history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: true});
+                }
             });
         }
     };
@@ -300,7 +311,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                             <h4 role="alert" className="text-danger text-left">
                                 {attemptedSignUp && !confirmedOldEnoughForSite ?
                                     `You must be over ${siteSpecific("10", "13")} years old to create an account.` :
-                                    errorMessage}
+                                    (isRegisterError && getRTKQueryErrorMessage(registrationError).message)}
                             </h4>
                         </Col>
                     </Row>

@@ -1,7 +1,7 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE, isDefined} from "../../services";
-import {redirectTo, getUserId, logAction, setUserId, AppDispatch, authApi} from "../index";
+import {redirectTo, getUserId, logAction, setUserId, AppDispatch, authApi, loggedInMatcher} from "../index";
 import {isAnyOf} from "@reduxjs/toolkit";
 
 let timeoutHandle: number | undefined;
@@ -58,15 +58,8 @@ function clearCurrentUser() {
 // hard redirecting to the homepage (or the session expired page) which will cause the Redux store to be cleared.
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
     let redirect: string | undefined;
-    if (isAnyOf(
-            authApi.endpoints.checkProviderCallback.matchFulfilled,
-            authApi.endpoints.login.matchFulfilled,
-            authApi.endpoints.mfaCompleteLogin.matchFulfilled
-        )(action)
-    ) {
-        if (!("2FA_REQUIRED" in action.payload)) {
-            setCurrentUser(action.payload, api);
-        }
+    if (loggedInMatcher(action)) {
+        setCurrentUser(action.payload, api);
     } else {
         switch (action.type) {
             case ACTION_TYPE.USER_CONSISTENCY_ERROR:

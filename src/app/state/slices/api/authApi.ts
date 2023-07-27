@@ -10,6 +10,8 @@ import {securePadCredentials, trackEvent} from "../../../services";
 import ReactGA4 from "react-ga4";
 import {CredentialsAuthDTO, ValidationUser} from "../../../../IsaacAppTypes";
 import {Immutable} from "immer";
+import {isAnyOf, PayloadAction} from "@reduxjs/toolkit";
+import {requestCurrentUser} from "../../actions";
 
 export const authApi = userApi.enhanceEndpoints({
     addTagTypes: ["CurrentUserAuthSettings"],
@@ -88,6 +90,18 @@ export const authApi = userApi.enhanceEndpoints({
                 method: "POST",
                 body: {registeredUser: user}
             }),
+            invalidatesTags: ["CurrentUserAuthSettings", "UserPreferences"],
+            onQueryStarted: onQueryLifecycleEvents({
+                onQuerySuccess: (arg, newUser, {dispatch}) => {
+                    dispatch(requestCurrentUser());
+                    trackEvent("registration", {props: {provider: "SEGUE"}});
+                    ReactGA4.event({
+                        category: 'user',
+                        action: 'registration',
+                        label: 'Create Account (SEGUE)',
+                    });
+                }
+            })
         }),
 
         //         logout: (): AxiosPromise => {
@@ -143,6 +157,20 @@ export const authApi = userApi.enhanceEndpoints({
     })
 });
 
+// Custom matcher that matches a login action that was successful and not a 2FA challenge
+export const fulfilledLoginWithNo2FAMatcher = (action: any): action is PayloadAction<RegisteredUserDTO, string, {arg: {originalArgs: {provider: AuthenticationProvider, credentials: CredentialsAuthDTO}}, requestId: string, requestStatus: "fulfilled"}> => {
+    return authApi.endpoints.login.matchFulfilled(action) && !("2FA_REQUIRED" in action.payload);
+};
+
+// Matches any action that results in the user being logged in successfully. The action payload will
+// always be the logged-in user object.
+export const loggedInMatcher = isAnyOf(
+    fulfilledLoginWithNo2FAMatcher,
+    authApi.endpoints.mfaCompleteLogin.matchFulfilled,
+    authApi.endpoints.register.matchFulfilled,
+    authApi.endpoints.checkProviderCallback.matchFulfilled
+);
+
 export const {
     useSetupAccountMFAMutation,
     useDisableAccountMFAMutation,
@@ -152,5 +180,6 @@ export const {
     useLoginMutation,
     useMfaCompleteLoginMutation,
     useGetCurrentUserAuthSettingsQuery,
-    useGetSelectedUserAuthSettingsQuery
+    useGetSelectedUserAuthSettingsQuery,
+    useRegisterMutation,
 } = authApi;
