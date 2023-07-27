@@ -3,7 +3,6 @@ import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
     AudienceContext,
-    AuthenticationProvider,
     ChoiceDTO,
     ContentBase,
     ContentSummaryDTO,

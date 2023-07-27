@@ -6,7 +6,7 @@ const tutorOnlyRoutes = [PATHS.SET_ASSIGNMENTS, "/groups"];
 describe("Visiting a tutor-only page", () => {
 
     it('should redirect anonymous users to login', async () => {
-        renderTestEnvironment({role: "ANONYMOUS"});
+        await renderTestEnvironment({role: "ANONYMOUS"});
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of tutorOnlyRoutes) {
@@ -18,7 +18,7 @@ describe("Visiting a tutor-only page", () => {
     });
 
     it('should redirect student users to teacher account contact page', async () => {
-        renderTestEnvironment({role: "STUDENT"});
+        await renderTestEnvironment({role: "STUDENT"});
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of tutorOnlyRoutes) {
@@ -30,7 +30,7 @@ describe("Visiting a tutor-only page", () => {
     });
 
     it('should not redirect tutors', async () => {
-        renderTestEnvironment({role: "TUTOR"});
+        await renderTestEnvironment({role: "TUTOR"});
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of tutorOnlyRoutes) {
@@ -41,7 +41,7 @@ describe("Visiting a tutor-only page", () => {
     });
 
     it('should not redirect teachers', async () => {
-        renderTestEnvironment({role: "TEACHER"});
+        await renderTestEnvironment({role: "TEACHER"});
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of tutorOnlyRoutes) {
@@ -52,7 +52,7 @@ describe("Visiting a tutor-only page", () => {
     });
 
     it('should not redirect admins', async () => {
-        renderTestEnvironment({role: "ADMIN"});
+        await renderTestEnvironment({role: "ADMIN"});
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of tutorOnlyRoutes) {
@@ -67,7 +67,7 @@ const teacherOnlyRoutes = [siteSpecific("/set_tests", PATHS.SET_ASSIGNMENTS)];
 describe("Visiting a teacher-only page", () => {
 
     isAda && it('should show "Teacher upgrade" page to students', async () => {
-        renderTestEnvironment({role: "STUDENT"});
+        await renderTestEnvironment({role: "STUDENT"});
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of teacherOnlyRoutes) {
@@ -80,7 +80,7 @@ describe("Visiting a teacher-only page", () => {
 
     // Cannot test a teacher-but-not-tutor page on Ada since there are no such pages
     isPhy && it('should show "Access denied" page to tutors', async () => {
-        renderTestEnvironment({role: "TUTOR"});
+        await renderTestEnvironment({role: "TUTOR"});
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of teacherOnlyRoutes) {
@@ -92,7 +92,7 @@ describe("Visiting a teacher-only page", () => {
     });
 
     it('should not redirect teachers', async () => {
-        renderTestEnvironment({role: "TEACHER"});
+        await renderTestEnvironment({role: "TEACHER"});
         // Wait for main content to be loaded
         await screen.findByTestId("main");
         for (const route of teacherOnlyRoutes) {

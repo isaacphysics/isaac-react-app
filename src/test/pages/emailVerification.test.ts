@@ -13,7 +13,7 @@ if (isPhy) {
         it("allows the current user to request a verification email", async () => {
             const mockEvent = buildMockEvent("test-event", "OPEN");
             const emailVerificationRequestHandler = handlerThatReturns();
-            renderTestEnvironment({
+            await renderTestEnvironment({
                 modifyUser: (user) => ({...user, emailVerificationStatus: "NOT_VERIFIED", role: "STUDENT"}),
                 extraEndpoints: [
                     rest.get(API_PATH + `/events`, handlerThatReturns({data: {results: [mockEvent], totalResults: 0}})),
@@ -52,7 +52,7 @@ if (isPhy) {
 
         it("does not allow the current user to request a verification email for someone else", async () => {
             const mockEvent = buildMockEvent("test-event", "OPEN");
-            renderTestEnvironment({
+            await renderTestEnvironment({
                 role: "ADMIN",
                 extraEndpoints: [
                     rest.get(API_PATH + `/events/overview`, handlerThatReturns({data: {results: [mockEvent], totalResults: 0}})),
@@ -99,7 +99,7 @@ describe("EmailAlterHandler", () => {
         const verifyEmailHandler = handlerThatReturns();
         // @ts-ignore Mock useQueryParams to return a valid token
         useQueryParams.mockImplementation(() => ({userid: mockUser.id.toString(), token: "valid-token"}));
-        renderTestEnvironment({
+        await renderTestEnvironment({
             PageComponent: EmailAlterHandler,
             modifyUser: (user) => ({...user, emailVerificationStatus: "NOT_VERIFIED", role: "STUDENT"}),
             extraEndpoints: [
@@ -124,7 +124,7 @@ describe("EmailAlterHandler", () => {
         const verifyEmailHandler = handlerThatReturns();
         // @ts-ignore Mock useQueryParams to return a valid token
         useQueryParams.mockImplementation(() => ({userid: "2", token: "valid-token"}));
-        renderTestEnvironment({
+        await renderTestEnvironment({
             PageComponent: EmailAlterHandler,
             modifyUser: (user) => ({...user, id: 1, emailVerificationStatus: "VERIFIED", role: "STUDENT"}),
             extraEndpoints: [

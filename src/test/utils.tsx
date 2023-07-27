@@ -1,18 +1,19 @@
 import {UserRole} from "../IsaacApiTypes";
-import {createMockAPIAction} from "./state/utils";
 import {authApi, isaacApi, store} from "../app/state";
 import {isDefined, API_PATH, SITE, SITE_SUBJECT} from "../app/services";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {rest, RestHandler} from "msw";
-import produce from "immer";
+import produce, {Immutable} from "immer";
 import {mockUser} from "../mocks/data";
 import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
 import {MemoryRouter} from "react-router";
-import {screen, within} from "@testing-library/react";
+import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import {createMockAPIAction} from "./state/utils";
+import {PotentialUser} from "../IsaacAppTypes";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -43,11 +44,9 @@ interface RenderTestEnvironmentOptions {
 // Provider with the global store.
 // When called, the Redux store will be cleaned completely, and other the MSW server handlers will be reset to
 // defaults (those in handlers.ts).
-export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
+export const renderTestEnvironment = async (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
-    store.dispatch(createMockAPIAction("logout", "mutation", "fulfilled", undefined, undefined));
-    store.dispatch(isaacApi.util.resetApiState());
-    server.resetHandlers();
+    await server.resetHandlers();
     if (role || modifyUser) {
         server.use(
             rest.get(API_PATH + "/users/current_user", (req, res, ctx) => {
@@ -75,8 +74,10 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     if (extraEndpoints) {
         server.use(...extraEndpoints);
     }
+    store.dispatch(createMockAPIAction("logout", "mutation", "fulfilled", undefined, undefined));
+    store.dispatch(isaacApi.util.resetApiState());
     if (isDefined(PageComponent) && PageComponent.name !== "IsaacApp") {
-        store.dispatch(authApi.endpoints.getCurrentUser.initiate());
+        await store.dispatch(authApi.endpoints.getCurrentUser.initiate());
     }
     render(<Provider store={store}>
         {PageComponent
@@ -85,6 +86,17 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
             </MemoryRouter>
             : <IsaacApp/>}
     </Provider>);
+    // Wait for the user to be loaded, and make sure that it has the correct role
+    await waitFor(() => {
+        const user: Immutable<PotentialUser> | null = store.getState()?.user;
+        if (role === "ANONYMOUS") {
+            expect(user?.loggedIn).toBeFalsy();
+        } else {
+            expect(user?.loggedIn).toBeTruthy();
+            const userRole = user && "role" in user ? user.role : "ANONYMOUS";
+            expect(userRole).toEqual(role ?? mockUser.role);
+        }
+    });
 };
 
 export type NavBarMenus = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";

@@ -5,7 +5,6 @@ import {IsaacContent} from "./IsaacContent";
 import {
     DOCUMENT_TYPE,
     isAda,
-    isFound,
     isIntendedAudience,
     makeIntendedAudienceComparator,
     mergeDisplayOptions,
@@ -13,7 +12,7 @@ import {
     stringifyAudience,
     useUserContext
 } from "../../services";
-import {AppState, selectors, useAppSelector} from "../../state";
+import {selectors, useAppSelector} from "../../state";
 import {useLocation} from "react-router-dom";
 import {PageContext} from "../../../IsaacAppTypes";
 

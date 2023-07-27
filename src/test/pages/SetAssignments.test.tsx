@@ -18,7 +18,7 @@ jest.setTimeout(10000);
 describe("SetAssignments", () => {
 
     const renderSetAssignments = () => {
-        renderTestEnvironment({
+        await renderTestEnvironment({
             PageComponent: SetAssignments,
             initalRouteEntries: [PATHS.SET_ASSIGNMENTS]
         });
@@ -127,7 +127,7 @@ describe("SetAssignments", () => {
     it('should let you assign a gameboard in card view (using the modal)', async () => {
         let requestGroupIds: string[];
         let requestAssignment: {gameboardId: string, scheduledStartDate?: any, dueDate?: any, notes?: string};
-        renderTestEnvironment({
+        await renderTestEnvironment({
             PageComponent: SetAssignments,
             initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
             extraEndpoints: [

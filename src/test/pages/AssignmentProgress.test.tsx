@@ -9,7 +9,7 @@ import {rest} from "msw";
 describe("AssignmentProgress", () => {
 
     it("shows an accordion section for each active group", async () => {
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TUTOR",
         });
         await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
@@ -21,7 +21,7 @@ describe("AssignmentProgress", () => {
         const mockGroup = mockActiveGroups[0];
         const mockAssignments = mockAssignmentsGroup2;
         const mockTestAssignments = mockQuizAssignments.filter(q => q.groupId === mockGroup.id);
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
                 rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
@@ -61,7 +61,7 @@ describe("AssignmentProgress", () => {
         const mockGroup = mockActiveGroups[0];
         const mockAssignments = mockAssignmentsGroup2;
         const mockTestAssignments = mockQuizAssignments.filter(q => q.groupId === mockGroup.id);
-        renderTestEnvironment({
+        await renderTestEnvironment({
             role: "TUTOR",
             extraEndpoints: [
                 rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),

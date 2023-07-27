@@ -23,7 +23,7 @@ const FILTER_LABEL_TEXT = siteSpecific("Filter assignments by name", "Filter qui
 describe("MyAssignments", () => {
 
     const renderMyAssignments = (extraEndpoints?: RestHandler<any>[]) => {
-        renderTestEnvironment({
+        await renderTestEnvironment({
             PageComponent: MyAssignments,
             initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
             extraEndpoints

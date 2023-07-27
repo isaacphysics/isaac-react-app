@@ -9,7 +9,7 @@ import {PATHS} from "../../app/services";
 describe("MyGameboards", () => {
 
     const renderMyGameboards = () => {
-        renderTestEnvironment({
+        await renderTestEnvironment({
             PageComponent: MyGameboards,
             initalRouteEntries: [PATHS.MY_GAMEBOARDS]
         });
