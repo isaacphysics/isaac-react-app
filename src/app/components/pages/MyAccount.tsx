@@ -19,8 +19,7 @@ import {
 import {UserContext} from "../../../IsaacApiTypes";
 import {
     AppState,
-    errorSlice,
-    ErrorState, getRTKQueryErrorMessage,
+    getRTKQueryErrorMessage,
     showErrorToast,
     useAdminGetUserQuery,
     useAppDispatch,
@@ -114,7 +113,7 @@ const AccountPageComponent = ({user, hashAnchor, authToken, userOfInterest}: Acc
     const {updateUser, queryStatus: {isLoading: saving, isUninitialized: notAttemptedAccountUpdate, error: updateUserError}} = useUserUpdate();
     const attemptedAccountUpdate = !notAttemptedAccountUpdate;
 
-    const error = userPreferencesError || userAuthSettingsError || updateUserError
+    const error = userPreferencesError || userAuthSettingsError || updateUserError;
     const errorMessage = error && getRTKQueryErrorMessage(error).message;
 
     // - Admin user modification

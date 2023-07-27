@@ -12,18 +12,13 @@ import {
 import {
     Action,
     FreeTextRule,
-    PotentialUser,
-    UserPreferencesDTO,
-    ValidatedChoice,
-    ValidationUser,
+    ValidatedChoice
 } from "../../../IsaacAppTypes";
 import {
-    AuthenticationProvider,
     ChoiceDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
-    TestCaseDTO,
-    UserContext
+    TestCaseDTO
 } from "../../../IsaacApiTypes";
 import {AxiosError} from "axios";
 import ReactGA4 from "react-ga4";
@@ -38,11 +33,9 @@ import {
     showToast,
     logAction,
     isaacApi,
-    AppDispatch,
-    authApi
+    AppDispatch
 } from "../index";
 import {Immutable} from "immer";
-import {AnyAction} from "redux";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
