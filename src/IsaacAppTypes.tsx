@@ -37,12 +37,6 @@ export type Action =
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_LINK_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS; provider: AuthenticationProvider; redirectUrl: string}
-    | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
-    | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
 

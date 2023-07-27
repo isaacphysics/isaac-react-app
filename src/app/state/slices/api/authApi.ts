@@ -131,12 +131,23 @@ export const authApi = userApi.enhanceEndpoints({
             })
         }),
 
-        //         linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
-        //             return endpoint.get(`/auth/${provider}/link`)
-        //         },
-        //         unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
-        //             return endpoint.delete(`/auth/${provider}/link`);
-        //         },
+        linkAccount: build.mutation<string, AuthenticationProvider>({
+            query: (provider) => `/auth/${provider}/link`,
+            transformResponse: (response: {redirectUrl: string}) => response.redirectUrl,
+        }),
+
+        unlinkAccount: build.mutation<void, AuthenticationProvider>({
+            query: (provider) => ({
+                url: `/auth/${provider}/link`,
+                method: "DELETE"
+            }),
+            invalidatesTags: ["CurrentUserAuthSettings", "UserPreferences"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to unlink account",
+                successTitle: "Account unlinked",
+                successMessage: "Your account has been unlinked from the selected provider."
+            }),
+        }),
 
         // === Account MFA ===
 
@@ -227,4 +238,6 @@ export const {
     useRegisterMutation,
     useLogoutMutation,
     useLogoutEverywhereMutation,
+    useLinkAccountMutation,
+    useUnlinkAccountMutation,
 } = authApi;

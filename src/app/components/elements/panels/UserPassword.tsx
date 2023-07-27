@@ -11,11 +11,11 @@ import {
     validateEmail
 } from "../../../services";
 import {
-    linkAccount,
     useLogoutEverywhereMutation,
-    unlinkAccount,
     useAppDispatch,
-    usePasswordResetMutation
+    useLinkAccountMutation,
+    useUnlinkAccountMutation,
+    usePasswordResetMutation, mutationSucceeded
 } from "../../../state";
 
 interface UserPasswordProps {
@@ -35,7 +35,6 @@ interface UserPasswordProps {
 export const UserPassword = (
     {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm, editingOtherUser}: UserPasswordProps) => {
 
-    const dispatch = useAppDispatch();
     const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
 
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
@@ -46,6 +45,16 @@ export const UserPassword = (
             resetPassword(currentUserEmail);
         }
     };
+
+    const [linkAccount] = useLinkAccountMutation();
+    const linkAccountAndRedirect = (provider: AuthenticationProvider) => {
+        linkAccount(provider).then(response => {
+            if (mutationSucceeded(response)) {
+                window.location.assign(response.data);
+            }
+        });
+    };
+    const [unlinkAccount] = useUnlinkAccountMutation();
 
     const [logOutUserEverywhere] = useLogoutEverywhereMutation();
 
@@ -177,7 +186,7 @@ export const UserPassword = (
                                             type="button"
                                             id="linked-accounts-no-password"
                                             className="linked-account-button rpf-button"
-                                            onClick={() => dispatch(authenticationProvidersUsed("RASPBERRYPI") ? unlinkAccount("RASPBERRYPI") : linkAccount("RASPBERRYPI"))}
+                                            onClick={() => authenticationProvidersUsed("RASPBERRYPI") ? unlinkAccount("RASPBERRYPI") : linkAccountAndRedirect("RASPBERRYPI")}
                                         />
                                         <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
                                             {authenticationProvidersUsed("RASPBERRYPI") ? " Remove linked Raspberry Pi account" : " Add linked Raspberry Pi account"}
@@ -190,7 +199,7 @@ export const UserPassword = (
                                     type="button"
                                     id="linked-accounts-no-password"
                                     className="linked-account-button google-button"
-                                    onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}
+                                    onClick={() => authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccountAndRedirect("GOOGLE")}
                                 />
                                 <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
                                     {authenticationProvidersUsed("GOOGLE") ? " Remove linked Google account" : " Add linked Google account"}

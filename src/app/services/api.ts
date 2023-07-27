@@ -71,14 +71,6 @@ export const api = {
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent, registeredUserContexts});
         },
     },
-    authentication: {
-        linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
-            return endpoint.get(`/auth/${provider}/link`)
-        },
-        unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
-            return endpoint.delete(`/auth/${provider}/link`);
-        },
-    },
     notifications: {
         get: (): AxiosPromise => {
             return endpoint.get(`/notifications`)
