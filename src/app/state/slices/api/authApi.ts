@@ -1,4 +1,4 @@
-import {userApi} from "./userApi";
+import {userApi} from "../../index";
 import {
     AuthenticationProvider,
     RegisteredUserDTO,
@@ -11,12 +11,17 @@ import ReactGA4 from "react-ga4";
 import {CredentialsAuthDTO, ValidationUser} from "../../../../IsaacAppTypes";
 import {Immutable} from "immer";
 import {isAnyOf, PayloadAction} from "@reduxjs/toolkit";
-import {requestCurrentUser} from "../../actions";
 
 export const authApi = userApi.enhanceEndpoints({
     addTagTypes: ["CurrentUserAuthSettings"],
 }).injectEndpoints({
     endpoints: (build) => ({
+
+        getCurrentUser: build.mutation<RegisteredUserDTO, void>({
+            query: () => "/users/current_user",
+            invalidatesTags: ["CurrentUserAuthSettings", "UserPreferences"],
+        }),
+
         // === Authentication settings ===
 
         getCurrentUserAuthSettings: build.query<UserAuthenticationSettingsDTO, void>({
@@ -93,7 +98,7 @@ export const authApi = userApi.enhanceEndpoints({
             invalidatesTags: ["CurrentUserAuthSettings", "UserPreferences"],
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: (arg, newUser, {dispatch}) => {
-                    dispatch(requestCurrentUser());
+                    dispatch(authApi.endpoints.getCurrentUser.initiate());
                     trackEvent("registration", {props: {provider: "SEGUE"}});
                     ReactGA4.event({
                         category: 'user',
@@ -104,12 +109,28 @@ export const authApi = userApi.enhanceEndpoints({
             })
         }),
 
-        //         logout: (): AxiosPromise => {
-        //             return endpoint.post(`/auth/logout`);
-        //         },
-        //         logoutEverywhere: (): AxiosPromise => {
-        //             return endpoint.post(`/auth/logout/everywhere`);
-        //         },
+        logout: build.mutation<void, void>({
+            query: () => ({
+                url: "/auth/logout",
+                method: "POST"
+            }),
+            invalidatesTags: ["CurrentUserAuthSettings", "UserPreferences"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Logout failed"
+            })
+        }),
+
+        logoutEverywhere: build.mutation<void, void>({
+            query: () => ({
+                url: "/auth/logout/everywhere",
+                method: "POST"
+            }),
+            invalidatesTags: ["CurrentUserAuthSettings", "UserPreferences"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Logout everywhere failed"
+            })
+        }),
+
         //         linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
         //             return endpoint.get(`/auth/${provider}/link`)
         //         },
@@ -171,6 +192,28 @@ export const loggedInMatcher = isAnyOf(
     authApi.endpoints.checkProviderCallback.matchFulfilled
 );
 
+// Matches actions that result in the most up-to-date user object being available.
+export const newUserObjectMatcher = isAnyOf(
+    authApi.endpoints.getCurrentUser.matchFulfilled,
+    loggedInMatcher
+);
+
+// Matches everything that should be considered a logout action.
+export const loggedOutMatcher = isAnyOf(
+    authApi.endpoints.logout.matchFulfilled,
+    authApi.endpoints.logoutEverywhere.matchFulfilled
+);
+
+// Matches any action that results in the user object being invalidated.
+export const invalidateUserObjectMatcher = isAnyOf(
+    loggedOutMatcher,
+    authApi.endpoints.checkProviderCallback.matchRejected,
+    authApi.endpoints.login.matchRejected,
+    authApi.endpoints.mfaCompleteLogin.matchRejected,
+    authApi.endpoints.register.matchRejected,
+    authApi.endpoints.getCurrentUser.matchRejected
+);
+
 export const {
     useSetupAccountMFAMutation,
     useDisableAccountMFAMutation,
@@ -182,4 +225,6 @@ export const {
     useGetCurrentUserAuthSettingsQuery,
     useGetSelectedUserAuthSettingsQuery,
     useRegisterMutation,
+    useLogoutMutation,
+    useLogoutEverywhereMutation,
 } = authApi;

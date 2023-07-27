@@ -65,9 +65,6 @@ export const apiHelper = {
 
 export const api = {
     users: {
-        getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
-            return endpoint.get(`/users/current_user`);
-        },
         updateCurrent: (registeredUser: Immutable<ValidationUser>, userPreferences: UserPreferencesDTO, passwordCurrent: string | null, registeredUserContexts?: UserContext[])
             :  AxiosPromise<Immutable<ApiTypes.RegisteredUserDTO>> =>
         {
@@ -75,12 +72,6 @@ export const api = {
         },
     },
     authentication: {
-        logout: (): AxiosPromise => {
-            return endpoint.post(`/auth/logout`);
-        },
-        logoutEverywhere: (): AxiosPromise => {
-            return endpoint.post(`/auth/logout/everywhere`);
-        },
         linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
             return endpoint.get(`/auth/${provider}/link`)
         },

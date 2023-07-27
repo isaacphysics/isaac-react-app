@@ -10,37 +10,47 @@ import {
     withinLast50Minutes
 } from "../../services";
 import {Action} from "../../../IsaacAppTypes";
-import {AppDispatch, logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
+import {
+    AppDispatch,
+    authApi,
+    logAction,
+    needToUpdateUserContextDetails,
+    openActiveModal,
+    routerPageChange,
+    userApi
+} from "../index";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
 import {userContextReconfimationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
 
-export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: AppDispatch) => async (action: Action) => {
+export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (next: AppDispatch) => async (action: Action) => {
 
     const state = middlewareApi.getState();
-    if([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, routerPageChange.type].includes(action.type)) {
+    if (action.type === routerPageChange.type || authApi.endpoints.getCurrentUser.matchFulfilled(action)) {
         // Get user object either from the action or state
         let user = undefined;
-        if (action.type === ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS) {
-            user = action.user;
+        if (authApi.endpoints.getCurrentUser.matchFulfilled(action)) {
+            user = action.payload;
         } else if (isLoggedIn(state?.user)) {
             user = state.user;
         }
 
+        const {data: userPreferences} = await middlewareApi.dispatch(userApi.endpoints.getUserPreferences.initiate() as any);
+
         if (isDefined(user)) {
             // Required account info modal - takes precedence over stage/exam board re-confirmation modal, and is only
             // shown once every 50 minutes (using a key in clients browser storage)
-            if (isDefined(state.userPreferences) && !allRequiredInformationIsPresent(user, state.userPreferences, user.registeredContexts) &&
+            if (isDefined(userPreferences) && !allRequiredInformationIsPresent(user, userPreferences, user?.registeredContexts) &&
                 !withinLast50Minutes(persistence.load(KEY.REQUIRED_MODAL_SHOWN_TIME))) {
                 persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
-                await dispatch(openActiveModal(requiredAccountInformationModal));
+                await middlewareApi.dispatch(openActiveModal(requiredAccountInformationModal));
             }
             // User context re-confirmation modal - used to request a user to update their stage and/or exam board
             // once every academic year.
             else if (needToUpdateUserContextDetails(user.registeredContextsLastConfirmed) &&
                      !withinLast50Minutes(persistence.load(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME))) {
                 persistence.save(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME, new Date().toString());
-                await dispatch(openActiveModal(userContextReconfimationModal));
+                await middlewareApi.dispatch(openActiveModal(userContextReconfimationModal));
             }
         }
     }
@@ -55,14 +65,14 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
                 lastQuestionId !== action.questionId &&
                 !withinLast2Hours(persistence.load(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME))
             ) {
-                dispatch(logAction({
+                middlewareApi.dispatch(logAction({
                     type: "LOGIN_MODAL_SHOWN"
-                }));
+                }) as any);
                 persistence.session.remove(KEY.FIRST_ANON_QUESTION);
                 persistence.save(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME, new Date().toString());
-                await dispatch(openActiveModal(loginOrSignUpModal) as any);
+                await middlewareApi.dispatch(openActiveModal(loginOrSignUpModal));
         }
     }
 
-    return dispatch(action);
+    return next(action);
 };

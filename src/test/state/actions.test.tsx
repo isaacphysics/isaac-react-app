@@ -5,7 +5,6 @@ import thunk from "redux-thunk";
 import {
     middleware,
     registerQuestions,
-    requestCurrentUser,
     showToast
 } from "../../app/state";
 import {endpoint} from "../../app/services";
@@ -39,87 +38,87 @@ describe("middleware",  () => {
     });
 });
 
-describe("requestCurrentUser action", () => {
-    afterEach(() => {
-        axiosMock.reset();
-    });
-
-    it("dispatches USER_LOG_IN_RESPONSE_SUCCESS after a successful request", async () => {
-        const {dameShirley} = registeredUserDTOs;
-        const userAuthSettings = userAuthenticationSettings[dameShirley.id as number];
-        const userPreferences = userPreferencesSettings[dameShirley.id as number];
-
-        axiosMock.onGet(`/users/current_user`).replyOnce(200, dameShirley);
-        //axiosMock.onGet(`/auth/user_authentication_settings`).replyOnce(200, userAuthSettings);
-
-        const store = mockStore();
-        await store.dispatch(requestCurrentUser() as any);
-        const expectedFirstActions = [{type: ACTION_TYPE.CURRENT_USER_REQUEST}];
-        const expectedAsyncActions = [
-            {"payload": ["CurrentUserAuthSettings"], "type": "isaacApi/invalidateTags"},
-            {"payload": ["UserPreferences"], "type": "isaacApi/invalidateTags"},
-            // Would need to mock the RTK query API response for this to work
-            // createMockAPIAction("getUserPreferences", "query", "fulfilled", undefined, userPreferences),
-        ];
-        const expectedFinalActions = [{type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: dameShirley}];
-
-        const actualActions = store.getActions();
-
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions.length)
-            .toEqual(expectedFirstActions.length + expectedAsyncActions.length + expectedFinalActions.length);
-        expect(actualIsaacActions.slice(0, expectedFirstActions.length)).toEqual(expectedFirstActions);
-        expectedAsyncActions.forEach(expectedAsyncAction => {
-            expect(actualIsaacActions.slice(expectedFirstActions.length, -expectedFinalActions.length))
-                .toContainEqual(expectedAsyncAction);
-        });
-        expect(actualIsaacActions.slice(-expectedFinalActions.length)).toEqual(expectedFinalActions);
-        expect(axiosMock.history.get.length).toBe(1);
-    });
-
-    it("dispatches USER_UPDATE_RESPONSE_FAILURE on a 401 response", async () => {
-        const {mustBeLoggedIn401} = errorResponses;
-        axiosMock.onGet(`/users/current_user`).replyOnce(401, mustBeLoggedIn401);
-        const store = mockStore();
-        await store.dispatch(requestCurrentUser() as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.CURRENT_USER_REQUEST},
-            {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
-        ];
-        const actualActions = store.getActions();
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions).toEqual(expectedActions);
-        expect(axiosMock.history.get.length).toBe(1);
-    });
-
-    it("dispatches USER_UPDATE_RESPONSE_FAILURE when no connection to the api", async () => {
-        axiosMock.onGet(`/users/current_user`).networkError();
-        const store = mockStore();
-        await store.dispatch(requestCurrentUser() as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.CURRENT_USER_REQUEST},
-            {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
-        ];
-        const actualActions = store.getActions();
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions).toEqual(expectedActions);
-        expect(axiosMock.history.get.length).toBe(1);
-    });
-
-    it("does not care if the response times-out", async () => {
-        axiosMock.onGet(`/users/current_user`).timeout();
-        const store = mockStore();
-        await store.dispatch(requestCurrentUser() as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.CURRENT_USER_REQUEST},
-            {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
-        ];
-        const actualActions = store.getActions();
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions).toEqual(expectedActions);
-        expect(axiosMock.history.get.length).toBe(1);
-    });
-});
+// describe("requestCurrentUser action", () => {
+//     afterEach(() => {
+//         axiosMock.reset();
+//     });
+//
+//     it("dispatches USER_LOG_IN_RESPONSE_SUCCESS after a successful request", async () => {
+//         const {dameShirley} = registeredUserDTOs;
+//         const userAuthSettings = userAuthenticationSettings[dameShirley.id as number];
+//         const userPreferences = userPreferencesSettings[dameShirley.id as number];
+//
+//         axiosMock.onGet(`/users/current_user`).replyOnce(200, dameShirley);
+//         //axiosMock.onGet(`/auth/user_authentication_settings`).replyOnce(200, userAuthSettings);
+//
+//         const store = mockStore();
+//         await store.dispatch(requestCurrentUser() as any);
+//         const expectedFirstActions = [{type: ACTION_TYPE.CURRENT_USER_REQUEST}];
+//         const expectedAsyncActions = [
+//             {"payload": ["CurrentUserAuthSettings"], "type": "isaacApi/invalidateTags"},
+//             {"payload": ["UserPreferences"], "type": "isaacApi/invalidateTags"},
+//             // Would need to mock the RTK query API response for this to work
+//             // createMockAPIAction("getUserPreferences", "query", "fulfilled", undefined, userPreferences),
+//         ];
+//         const expectedFinalActions = [{type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: dameShirley}];
+//
+//         const actualActions = store.getActions();
+//
+//         const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+//         expect(actualIsaacActions.length)
+//             .toEqual(expectedFirstActions.length + expectedAsyncActions.length + expectedFinalActions.length);
+//         expect(actualIsaacActions.slice(0, expectedFirstActions.length)).toEqual(expectedFirstActions);
+//         expectedAsyncActions.forEach(expectedAsyncAction => {
+//             expect(actualIsaacActions.slice(expectedFirstActions.length, -expectedFinalActions.length))
+//                 .toContainEqual(expectedAsyncAction);
+//         });
+//         expect(actualIsaacActions.slice(-expectedFinalActions.length)).toEqual(expectedFinalActions);
+//         expect(axiosMock.history.get.length).toBe(1);
+//     });
+//
+//     it("dispatches USER_UPDATE_RESPONSE_FAILURE on a 401 response", async () => {
+//         const {mustBeLoggedIn401} = errorResponses;
+//         axiosMock.onGet(`/users/current_user`).replyOnce(401, mustBeLoggedIn401);
+//         const store = mockStore();
+//         await store.dispatch(requestCurrentUser() as any);
+//         const expectedActions = [
+//             {type: ACTION_TYPE.CURRENT_USER_REQUEST},
+//             {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
+//         ];
+//         const actualActions = store.getActions();
+//         const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+//         expect(actualIsaacActions).toEqual(expectedActions);
+//         expect(axiosMock.history.get.length).toBe(1);
+//     });
+//
+//     it("dispatches USER_UPDATE_RESPONSE_FAILURE when no connection to the api", async () => {
+//         axiosMock.onGet(`/users/current_user`).networkError();
+//         const store = mockStore();
+//         await store.dispatch(requestCurrentUser() as any);
+//         const expectedActions = [
+//             {type: ACTION_TYPE.CURRENT_USER_REQUEST},
+//             {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
+//         ];
+//         const actualActions = store.getActions();
+//         const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+//         expect(actualIsaacActions).toEqual(expectedActions);
+//         expect(axiosMock.history.get.length).toBe(1);
+//     });
+//
+//     it("does not care if the response times-out", async () => {
+//         axiosMock.onGet(`/users/current_user`).timeout();
+//         const store = mockStore();
+//         await store.dispatch(requestCurrentUser() as any);
+//         const expectedActions = [
+//             {type: ACTION_TYPE.CURRENT_USER_REQUEST},
+//             {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
+//         ];
+//         const actualActions = store.getActions();
+//         const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+//         expect(actualIsaacActions).toEqual(expectedActions);
+//         expect(axiosMock.history.get.length).toBe(1);
+//     });
+// });
 
 describe("registerQuestion action", () => {
     it("dispatches a question registration action", () => {

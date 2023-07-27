@@ -1,8 +1,16 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE, isDefined} from "../../services";
-import {redirectTo, getUserId, logAction, setUserId, AppDispatch, authApi, loggedInMatcher} from "../index";
-import {isAnyOf} from "@reduxjs/toolkit";
+import {
+    redirectTo,
+    getUserId,
+    logAction,
+    setUserId,
+    AppDispatch,
+    authApi,
+    newUserObjectMatcher,
+    loggedOutMatcher
+} from "../index";
 
 let timeoutHandle: number | undefined;
 
@@ -19,7 +27,7 @@ const checkUserConsistency = (middleware: MiddlewareAPI) => {
     const storedUserId = getUserId();
     const state = middleware.getState();
     const dispatch = middleware.dispatch as AppDispatch;
-    const appUserId = state?.user?._id;
+    const appUserId = state?.user?.id;
     if (storedUserId != appUserId) {
         dispatch(logAction({type: "USER_CONSISTENCY_WARNING_SHOWN", userAgent: navigator.userAgent}));
         // Mark error after this check has finished, else the error will be snuffed by the error reducer.
@@ -34,7 +42,7 @@ const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
     const dispatch = api.dispatch as AppDispatch;
     clearTimeout(timeoutHandle);
     // Only start checking if we can successfully store the user id
-    if (setUserId(user._id)) {
+    if (setUserId(user.id)) {
         scheduleNextCheck(api);
     } else {
         // eslint-disable-next-line no-console
@@ -58,29 +66,19 @@ function clearCurrentUser() {
 // hard redirecting to the homepage (or the session expired page) which will cause the Redux store to be cleared.
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
     let redirect: string | undefined;
-    if (loggedInMatcher(action)) {
+    if (newUserObjectMatcher(action)) {
         setCurrentUser(action.payload, api);
-    } else {
-        switch (action.type) {
-            case ACTION_TYPE.USER_CONSISTENCY_ERROR:
-                redirect = "/consistency-error";
-                clearCurrentUser();
-                break;
-            case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
-            case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
-                redirect = "/";
-                clearCurrentUser();
-                break;
-            case ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE:
-                // If the current user request returns an error we assume the user is not logged in.
-                // We should therefore, remove any data in local and session storage that might be related to the user.
-                // We do not redirect to the homepage as that would happen to anonymous users after following any hard link.
-                clearCurrentUser();
-                break;
-            case ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS:
-                setCurrentUser(action.user, api);
-                break;
-        }
+    } else if (loggedOutMatcher(action)) {
+        redirect = "/";
+        clearCurrentUser();
+    } else if (authApi.endpoints.getCurrentUser.matchRejected(action)) {
+        // If the current user request returns an error we assume the user is not logged in.
+        // We should therefore, remove any data in local and session storage that might be related to the user.
+        // We do not redirect to the homepage as that would happen to anonymous users after following any hard link.
+        clearCurrentUser();
+    } else if (action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
+        redirect = "/consistency-error";
+        clearCurrentUser();
     }
 
     const result = next(action);

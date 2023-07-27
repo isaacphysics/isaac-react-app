@@ -1,7 +1,7 @@
 import {Action, AppQuestionDTO, isValidatedChoice} from "../../../IsaacAppTypes";
+import {userApi} from "../index";
 import {ACTION_TYPE} from "../../services";
 import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
-import {userApi} from "../slices/api/userApi";
 
 export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {

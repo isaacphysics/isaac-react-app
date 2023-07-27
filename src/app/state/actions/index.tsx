@@ -117,19 +117,6 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
     }
 };
 
-export const requestCurrentUser = () => async (dispatch: Dispatch<AnyAction>) => {
-    dispatch({type: ACTION_TYPE.CURRENT_USER_REQUEST});
-    try {
-        // Request the user
-        const currentUser = await api.users.getCurrent();
-        // Now with that information request auth settings and preferences asynchronously
-        await dispatch(authApi.util.invalidateTags(["UserPreferences", "CurrentUserAuthSettings"]));
-        dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: currentUser.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE});
-    }
-};
-
 export const updateCurrentUser = (
     updatedUser: Immutable<ValidationUser>,
     updatedUserPreferences: UserPreferencesDTO,
@@ -137,7 +124,7 @@ export const updateCurrentUser = (
     passwordCurrent: string | null,
     currentUser: Immutable<PotentialUser>,
     redirect: boolean
-) => async (dispatch: Dispatch<Action>) => {
+) => async (dispatch: Dispatch<AnyAction>) => {
     // Confirm email change
     if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
         if (currentUser.loggedIn && currentUser.email !== updatedUser.email) {
@@ -164,7 +151,7 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
         const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        await dispatch(requestCurrentUser() as any);
+        await dispatch(authApi.endpoints.getCurrentUser.initiate() as any);
 
         if (!editingOtherUser) {
             dispatch(showToast({
@@ -186,26 +173,6 @@ export const updateCurrentUser = (
         }
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_LOG_OUT_REQUEST});
-    try {
-        await api.authentication.logout();
-        dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Logout failed", e));
-    }
-};
-
-export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST});
-    try {
-        await api.authentication.logoutEverywhere();
-        dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Logout everywhere failed", e));
     }
 };
 

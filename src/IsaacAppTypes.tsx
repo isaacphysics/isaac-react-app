@@ -23,7 +23,8 @@ import {
     DOCUMENT_TYPE,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
-    PROGRAMMING_LANGUAGE, SortOrder,
+    PROGRAMMING_LANGUAGE,
+    SortOrder,
     STAGE,
     TAG_ID,
     TAG_LEVEL
@@ -33,9 +34,6 @@ import {Immutable} from "immer";
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
 
-    | {type: ACTION_TYPE.CURRENT_USER_REQUEST}
-    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
-    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE; errorMessage: string}
@@ -46,10 +44,6 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE; errorMessage: string}
 
-    | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
-    | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST}
-    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
 
     | {type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST}

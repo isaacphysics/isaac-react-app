@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
-import {logOutUser, useAppDispatch} from "../../state";
+import {useLogoutMutation} from "../../state";
 import {IsaacSpinner} from "./IsaacSpinner";
 
 export const LogOutHandler = () => {
-    const dispatch = useAppDispatch();
+    const [logOutUser] = useLogoutMutation();
     useEffect(() => {
-        dispatch(logOutUser());
+        logOutUser();
     }, []);
     return <>
         <div className="w-100 text-center">

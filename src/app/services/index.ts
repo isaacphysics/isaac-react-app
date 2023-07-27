@@ -7,13 +7,13 @@ export * from "./dates";
 export * from "./polyfills";
 // export * from "./highlightJs";  // Importing this here breaks bundle splitting and is not needed to avoid circular deps!
 export * from "./json";
-export * from "./progress";
 export * from "./select";
 export * from "./svg";
 export * from "./sorting";
 
 // No internal /services dependencies
 export * from "./constants";
+export * from "./progress";
 export * from "./miscUtils";
 export * from "./credentialPadding";
 export * from "./history";

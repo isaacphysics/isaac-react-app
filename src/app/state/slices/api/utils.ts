@@ -24,7 +24,7 @@ import {
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
-import {errorSlice} from "../internalAppState";
+import {errorSlice} from "../../index";
 import {SerializedError} from "@reduxjs/toolkit";
 import {Dispatch} from "redux";
 import {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";

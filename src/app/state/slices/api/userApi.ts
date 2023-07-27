@@ -41,6 +41,7 @@ export const userApi = isaacApi.enhanceEndpoints({
         getUserPreferences: build.query<UserPreferencesDTO, void>({
             query: () => `/users/user_preferences`,
             providesTags: ["UserPreferences"],
+            keepUnusedDataFor: Infinity, // Needs to be invalidated on logout (for example)
         }),
 
         // === Password reset ===

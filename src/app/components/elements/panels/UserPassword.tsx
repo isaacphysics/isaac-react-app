@@ -12,7 +12,7 @@ import {
 } from "../../../services";
 import {
     linkAccount,
-    logOutUserEverywhere,
+    useLogoutEverywhereMutation,
     unlinkAccount,
     useAppDispatch,
     usePasswordResetMutation
@@ -46,6 +46,8 @@ export const UserPassword = (
             resetPassword(currentUserEmail);
         }
     };
+
+    const [logOutUserEverywhere] = useLogoutEverywhereMutation();
 
     return <CardBody className={"pb-0"}>
         <Row>
@@ -215,7 +217,7 @@ export const UserPassword = (
                         </small>
                         <Col className="text-center mt-2">
                             <div className="vertical-center ml-2">
-                                <Button onClick={() => dispatch(logOutUserEverywhere())}>
+                                <Button onClick={() => logOutUserEverywhere()}>
                                     Log me out everywhere
                                 </Button>
                             </div>

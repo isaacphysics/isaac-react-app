@@ -15,10 +15,10 @@ const USER_ID1 = "foo";
 const USER_ID2 = "bar";
 
 const loginAction = createMockAPIAction("login", "mutation", "fulfilled", {_id: USER_ID1, id: USER_ID1}, {provider: "SEGUE"});
-const logoutAction = {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS};
+const logoutAction = createMockAPIAction("logout", "mutation", "fulfilled", undefined, undefined);
 const userConsistencyErrorAction = {type: ACTION_TYPE.USER_CONSISTENCY_ERROR};
-const checkForUserAction = {type: ACTION_TYPE.CURRENT_USER_REQUEST};
-const checkForUserFailureAction = {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE};
+const checkForUserAction = createMockAPIAction("getCurrentUser", "query", "pending", undefined, undefined);
+const checkForUserFailureAction = createMockAPIAction("getCurrentUser", "query", "rejected", undefined, undefined);
 
 describe("userConsistencyCheckerMiddleware", () => {
     beforeEach(() => {
