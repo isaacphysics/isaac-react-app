@@ -34,10 +34,6 @@ import {Immutable} from "immer";
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
 
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE; errorMessage: string}
-
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
 
     | {type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST}

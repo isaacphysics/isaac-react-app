@@ -3,12 +3,12 @@ import {
     AuthenticationProvider,
     RegisteredUserDTO,
     TOTPSharedSecretDTO,
-    UserAuthenticationSettingsDTO
+    UserAuthenticationSettingsDTO, UserContext
 } from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
 import {securePadCredentials, trackEvent} from "../../../services";
 import ReactGA4 from "react-ga4";
-import {CredentialsAuthDTO, ValidationUser} from "../../../../IsaacAppTypes";
+import {CredentialsAuthDTO, UserPreferencesDTO, ValidationUser} from "../../../../IsaacAppTypes";
 import {Immutable} from "immer";
 import {isAnyOf, PayloadAction} from "@reduxjs/toolkit";
 
@@ -19,6 +19,15 @@ export const authApi = userApi.enhanceEndpoints({
 
         getCurrentUser: build.mutation<RegisteredUserDTO, void>({
             query: () => "/users/current_user",
+            invalidatesTags: ["CurrentUserAuthSettings", "UserPreferences"],
+        }),
+        
+        updateUser: build.mutation<RegisteredUserDTO, {registeredUser: Immutable<ValidationUser>, userPreferences: UserPreferencesDTO, passwordCurrent: string | null, registeredUserContexts?: UserContext[]}>({
+            query: (params) => ({
+                url: "/users",
+                method: "POST",
+                body: params
+            }),
             invalidatesTags: ["CurrentUserAuthSettings", "UserPreferences"],
         }),
 
@@ -206,6 +215,7 @@ export const loggedInMatcher = isAnyOf(
 // Matches actions that result in the most up-to-date user object being available.
 export const newUserObjectMatcher = isAnyOf(
     authApi.endpoints.getCurrentUser.matchFulfilled,
+    authApi.endpoints.updateUser.matchFulfilled,
     loggedInMatcher
 );
 
@@ -226,6 +236,7 @@ export const invalidateUserObjectMatcher = isAnyOf(
 );
 
 export const {
+    useUpdateUserMutation,
     useSetupAccountMFAMutation,
     useDisableAccountMFAMutation,
     useNewMFASecretMutation,

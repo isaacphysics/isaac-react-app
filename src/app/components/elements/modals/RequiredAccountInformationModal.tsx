@@ -1,10 +1,10 @@
 import {
-    closeActiveModal,
-    errorSlice,
+    closeActiveModal, getRTKQueryErrorMessage,
+    mutationSucceeded,
     selectors,
-    updateCurrentUser,
     useAppDispatch,
-    useAppSelector, useGetUserPreferencesQuery
+    useAppSelector,
+    useGetUserPreferencesQuery
 } from "../../../state";
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
@@ -21,7 +21,7 @@ import {
     SITE_TITLE,
     siteSpecific,
     TEACHER_REQUEST_ROUTE,
-    UserFacingRole,
+    UserFacingRole, useUserUpdate,
     validateEmailPreferences,
     validateUserContexts,
     validateUserGender,
@@ -37,11 +37,14 @@ const RequiredAccountInfoBody = () => {
     // Redux state
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const {currentData: userPreferences} = useGetUserPreferencesQuery();
+
+    const {currentData: userPreferences, error: userPreferencesError} = useGetUserPreferencesQuery();
+    const {updateUser, queryStatus: {isUninitialized: notAttemptedAccountUpdate, error: updateUserError}} = useUserUpdate();
+    const submissionAttempted = !notAttemptedAccountUpdate;
+    const error = userPreferencesError || updateUserError;
+    const errorMessage = error && getRTKQueryErrorMessage(error).message;
 
     // Local state
-    const [submissionAttempted, setSubmissionAttempted] = useState(false);
-
     const initialUserValue = {...user, password: null};
     const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>(initialUserValue);
 
@@ -74,12 +77,12 @@ const RequiredAccountInfoBody = () => {
     // Form submission
     function formSubmission(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        setSubmissionAttempted(true);
-
         if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
-            dispatch(errorSlice.actions.clearError());
-            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false));
-            dispatch(closeActiveModal());
+            updateUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false).then(response => {
+                if (response && mutationSucceeded(response)) {
+                    dispatch(closeActiveModal());
+                }
+            });
         }
     }
 
@@ -145,9 +148,14 @@ const RequiredAccountInfoBody = () => {
             />
         </div>}
 
-        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) && <div>
+        {!errorMessage && submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) && <div>
             <h4 role="alert" className="text-danger text-center mb-4">
                 Not all required fields have been correctly filled.
+            </h4>
+        </div>}
+        {errorMessage && <div>
+            <h4 role="alert" className="text-danger text-center">
+                {errorMessage}
             </h4>
         </div>}
 

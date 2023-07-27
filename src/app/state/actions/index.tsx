@@ -85,65 +85,6 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
     return {type: ACTION_TYPE.TEST_ACTION};
 }
 
-export const updateCurrentUser = (
-    updatedUser: Immutable<ValidationUser>,
-    updatedUserPreferences: UserPreferencesDTO,
-    userContexts: UserContext[] | undefined,
-    passwordCurrent: string | null,
-    currentUser: Immutable<PotentialUser>,
-    redirect: boolean
-) => async (dispatch: Dispatch<AnyAction>) => {
-    // Confirm email change
-    if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
-        if (currentUser.loggedIn && currentUser.email !== updatedUser.email) {
-            const emailChangeConfirmed = window.confirm(
-                "You have edited your email address. Your current address will continue to work until you verify your " +
-                "new address by following the verification link sent to it via email. Continue?"
-            );
-            if (!emailChangeConfirmed) {
-                dispatch(showToast({
-                    title: "Account settings not updated",
-                    body: "Your account settings update was cancelled.",
-                    color: "danger",
-                    timeout: 5000,
-                    closable: false,
-                }) as any);
-                return; //early
-            }
-        }
-    }
-
-    const editingOtherUser = currentUser.loggedIn && currentUser.id != updatedUser.id;
-
-    try {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-        const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        await dispatch(authApi.endpoints.getCurrentUser.initiate() as any);
-
-        if (!editingOtherUser) {
-            dispatch(showToast({
-                title: "Account settings updated",
-                body: "Your account settings were updated successfully.",
-                color: "success",
-                timeout: 5000,
-                closable: false,
-            }) as any);
-        } else if (editingOtherUser) {
-            redirect && history.push('/');
-            dispatch(showToast({
-                title: "Account settings updated",
-                body: "The user's account settings were updated successfully.",
-                color: "success",
-                timeout: 5000,
-                closable: false,
-            }) as any);
-        }
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
 export const openIsaacBooksModal = () => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(isaacBooksModal()) as any);
 };

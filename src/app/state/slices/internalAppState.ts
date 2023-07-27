@@ -1,7 +1,7 @@
 import {PrintingSettings} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services";
-import {createSlice, isAnyOf, PayloadAction} from "@reduxjs/toolkit";
-import {authApi, routerPageChange, userApi} from "../index";
+import {EXAM_BOARD, STAGE} from "../../services";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {routerPageChange} from "../index";
 
 export type PrintingSettingsState = PrintingSettings | null;
 export const printingSettingsSlice = createSlice({
@@ -37,7 +37,7 @@ export const transientUserContextSlice = createSlice({
     }
 })
 
-export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
+export type ErrorState = {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const errorSlice = createSlice({
     name: "error",
     initialState: null as ErrorState,
@@ -45,24 +45,5 @@ export const errorSlice = createSlice({
         apiServerError: (_) => ({type: "serverError"}),
         apiGoneAway: (_) => ({type: "goneAwayError"}),
         clearError: (_) => null
-    },
-    extraReducers: (builder) => {
-        const generalMatcher = (action: any): action is {type: string, errorMessage: string} => [
-            ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE
-        ].includes(action.type);
-
-        builder.addMatcher(
-            generalMatcher,
-            (_, action) => ({type: "generalError", generalError: action.errorMessage})
-        ).addMatcher(
-            isAnyOf(
-                userApi.endpoints.getUserPreferences.matchRejected,
-                authApi.endpoints.getCurrentUserAuthSettings.matchRejected
-            ),
-            (_, {error}) => ({
-                type: "generalError",
-                generalError: error.message ?? "Unknown error. Please try again later and contact us if the problem persists."
-            })
-        );
     }
-})
+});

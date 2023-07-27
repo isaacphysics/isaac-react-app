@@ -9,7 +9,7 @@ import {
     isTutor,
     isTutorOrAbove,
     SITE_TITLE,
-    siteSpecific,
+    siteSpecific, useUserUpdate,
     validateUserContexts,
     validateUserSchool
 } from "../../../services";
@@ -17,7 +17,7 @@ import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {closeActiveModal, logAction, selectors, updateCurrentUser, useGetUserPreferencesQuery} from "../../../state";
+import {closeActiveModal, logAction, mutationSucceeded, selectors, useGetUserPreferencesQuery} from "../../../state";
 import {Immutable} from "immer";
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
@@ -41,12 +41,14 @@ const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode,
 const UserContextReconfimationModalBody = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
+
     const {currentData: userPreferences} = useGetUserPreferencesQuery();
+    const {updateUser, queryStatus: {isUninitialized: notAttemptedAccountUpdate}} = useUserUpdate();
+    const submissionAttempted = !notAttemptedAccountUpdate;
 
     const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>({...user, password: null});
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
-    const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
     const initialUserContexts = useMemo(() =>
         user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : []
@@ -81,16 +83,18 @@ const UserContextReconfimationModalBody = () => {
     // Form submission
     const formSubmission = useCallback((event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setSubmissionAttempted(true);
         if (user && isLoggedIn(user) && allFieldsAreValid) {
             const userPreferencesToUpdate = {
                 BOOLEAN_NOTATION: booleanNotation,
                 DISPLAY_SETTING: displaySettings
             };
-            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false));
-            dispatch(closeActiveModal());
+            updateUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false).then(response => {
+                if (response && mutationSucceeded(response)) {
+                    dispatch(closeActiveModal());
+                }
+            });
         }
-    }, [dispatch, setSubmissionAttempted, userToUpdate, allFieldsAreValid, userContexts, booleanNotation, displaySettings, user]);
+    }, [dispatch, userToUpdate, allFieldsAreValid, userContexts, booleanNotation, displaySettings, user]);
 
     return <Form onSubmit={formSubmission} className={"mb-2"}>
         <p>{modalText.intro}</p>

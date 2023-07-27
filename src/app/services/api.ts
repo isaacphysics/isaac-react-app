@@ -64,13 +64,6 @@ export const apiHelper = {
 };
 
 export const api = {
-    users: {
-        updateCurrent: (registeredUser: Immutable<ValidationUser>, userPreferences: UserPreferencesDTO, passwordCurrent: string | null, registeredUserContexts?: UserContext[])
-            :  AxiosPromise<Immutable<ApiTypes.RegisteredUserDTO>> =>
-        {
-            return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent, registeredUserContexts});
-        },
-    },
     notifications: {
         get: (): AxiosPromise => {
             return endpoint.get(`/notifications`)

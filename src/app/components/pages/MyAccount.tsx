@@ -20,9 +20,8 @@ import {UserContext} from "../../../IsaacApiTypes";
 import {
     AppState,
     errorSlice,
-    ErrorState,
+    ErrorState, getRTKQueryErrorMessage,
     showErrorToast,
-    updateCurrentUser,
     useAdminGetUserQuery,
     useAppDispatch,
     useGetCurrentUserAuthSettingsQuery,
@@ -48,7 +47,7 @@ import {
     isDefined,
     isDobOldEnoughForSite,
     isStaff,
-    SITE_TITLE, siteSpecific,
+    SITE_TITLE, siteSpecific, useUserUpdate,
     validateEmail,
     validateEmailPreferences,
     validatePassword
@@ -69,7 +68,6 @@ const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
     const searchParams = queryString.parse(search);
     return {
-        errorMessage: state?.error ?? null,
         firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
         hashAnchor: hash?.slice(1) ?? null,
         authToken: searchParams?.authToken as string ?? null,
@@ -79,7 +77,6 @@ const stateToProps = (state: AppState, props: any) => {
 
 interface AccountPageProps {
     user: PotentialUser;
-    errorMessage: ErrorState;
     firstLogin: boolean;
     hashAnchor: string | null;
     authToken: string | null;
@@ -98,11 +95,7 @@ function hashEqual<T>(current: NonNullable<T>, prev: NonNullable<T>, options?: N
     return equal;
 }
 
-const AccountPageComponent = ({user, errorMessage, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
-    // TODO CHRIS once user details update is inside RTKQ, the error message slice can be removed and replaced
-    //  with the error messages from the mutation hooks (useGetCurrentUserAuthSettingsQuery, whatever the
-    //  equivalent is for updating user details, etc.)
-    //  Or at least, the error message slice can have its extra reducers removed and just be used for server errors
+const AccountPageComponent = ({user, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
 
     const dispatch = useAppDispatch();
 
@@ -113,9 +106,16 @@ const AccountPageComponent = ({user, errorMessage, hashAnchor, authToken, userOf
         return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false}
     }, [adminUserToEdit]);
 
-    const {currentData: userAuthSettings} = useGetCurrentUserAuthSettingsQuery(userOfInterest ? skipToken : undefined);
-    // TODO CHRIS do we actually want to allow people to fetch other users' auth settings?
+    const {currentData: userPreferences, error: userPreferencesError} = useGetUserPreferencesQuery();
+    const {currentData: userAuthSettings, error: userAuthSettingsError} = useGetCurrentUserAuthSettingsQuery(userOfInterest ? skipToken : undefined);
+    // TODO do we actually want to allow people to fetch other users' auth settings?
     const {currentData: chosenUserAuthSettings} = useGetSelectedUserAuthSettingsQuery(userOfInterest ? Number(userOfInterest) : skipToken);
+
+    const {updateUser, queryStatus: {isLoading: saving, isUninitialized: notAttemptedAccountUpdate, error: updateUserError}} = useUserUpdate();
+    const attemptedAccountUpdate = !notAttemptedAccountUpdate;
+
+    const error = userPreferencesError || userAuthSettingsError || updateUserError
+    const errorMessage = error && getRTKQueryErrorMessage(error).message;
 
     // - Admin user modification
     const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
@@ -128,8 +128,6 @@ const AccountPageComponent = ({user, errorMessage, hashAnchor, authToken, userOf
     );
     const userChanged = useMemo(() => !hashEqual({...(editingOtherUser ? userToEdit : user), password: ""}, userToUpdate), [userToUpdate, userToEdit, user, editingOtherUser]);
 
-    const {currentData: userPreferences} = useGetUserPreferencesQuery();
-
     // This is necessary for updating the user when the user updates fields from the required account info modal, for example.
     useEffect(function keepUserInSyncWithChangesElsewhere() {
         if (editingOtherUser && userToEdit) {
@@ -140,8 +138,6 @@ const AccountPageComponent = ({user, errorMessage, hashAnchor, authToken, userOf
     }, [user, editingOtherUser, userToEdit]);
 
     // Inputs which trigger re-render
-    const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
-    const [saving, setSaving] = useState(false);
 
     // - Passwords
     const [newPassword, setNewPassword] = useState("");
@@ -210,9 +206,6 @@ const AccountPageComponent = ({user, errorMessage, hashAnchor, authToken, userOf
     // Form's submission method
     function updateAccount(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        setAttemptedAccountUpdate(true);
-        setSaving(true);
-
         let newPreferences = {...myUserPreferences};
 
         // Only update email preferences on the email preferences tab
@@ -230,20 +223,18 @@ const AccountPageComponent = ({user, errorMessage, hashAnchor, authToken, userOf
             (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
             (!userToUpdate.password || isNewPasswordConfirmed))
         {
-            dispatch(errorSlice.actions.clearError());
-            dispatch(updateCurrentUser(
+            updateUser(
                 userToUpdate,
                 editingOtherUser ? {} : newPreferences,
                 contextsChanged ? userContextsToUpdate : undefined,
                 currentPassword,
                 user,
                 true
-            )).then(() => setSaving(false)).catch(() => setSaving(false));
+            );
             return;
         } else if (activeTab == ACCOUNT_TAB.emailpreferences) {
             dispatch(showErrorToast("Account update failed", "Please make sure that all required fields in the \"Profile\" tab have been filled in."));
         }
-        setSaving(false);
     }
 
     // Changing tab clears the email preferences - stops the user from modifying them when not explicitly on the
@@ -367,8 +358,8 @@ const AccountPageComponent = ({user, errorMessage, hashAnchor, authToken, userOf
                         <CardFooter className="py-4">
                             <Row>
                                 <Col size={12} md={{size: 6, offset: 3}}>
-                                    {errorMessage?.type === "generalError" && <h3 role="alert" className="text-danger text-center">
-                                        {errorMessage.generalError}
+                                    {errorMessage && <h3 role="alert" className="text-danger text-center">
+                                        {errorMessage}
                                     </h3>}
                                     {/* Teacher connections does not have a save */}
                                     <Input

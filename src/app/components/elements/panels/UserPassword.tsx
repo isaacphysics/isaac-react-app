@@ -12,10 +12,10 @@ import {
 } from "../../../services";
 import {
     useLogoutEverywhereMutation,
-    useAppDispatch,
     useLinkAccountMutation,
     useUnlinkAccountMutation,
-    usePasswordResetMutation, mutationSucceeded
+    usePasswordResetMutation,
+    mutationSucceeded
 } from "../../../state";
 
 interface UserPasswordProps {

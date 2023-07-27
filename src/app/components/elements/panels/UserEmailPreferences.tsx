@@ -24,7 +24,6 @@ interface UserEmailPreferencesProps {
     idPrefix?: string;
 }
 export const UserEmailPreference = ({emailPreferences, setEmailPreferences, submissionAttempted, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
-    const error = useAppSelector((state: AppState) => state && state.error);
     const isaacEmailPreferenceDescriptions = {
         assignments: siteSpecific(
             "Get notified when your teacher gives your group a new assignment.",
@@ -40,10 +39,8 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
         )
     };
 
-    let errorMessage = null;
-    if (error && error.type === "generalError") {
-        errorMessage = error.generalError;
-    } else  if (submissionAttempted && !validateEmailPreferences(emailPreferences)) {
+    let errorMessage: string | undefined;
+    if (submissionAttempted && !validateEmailPreferences(emailPreferences)) {
         errorMessage = "Please specify all email preferences"
     }
 

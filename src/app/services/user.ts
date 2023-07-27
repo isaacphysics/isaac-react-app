@@ -1,8 +1,15 @@
-import {isDefined} from "./";
-import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
-import {AuthenticationProvider, UserRole} from "../../IsaacApiTypes";
+import {history, isDefined} from "./";
+import {LoggedInUser, PotentialUser, School, UserPreferencesDTO, ValidationUser} from "../../IsaacAppTypes";
+import {AuthenticationProvider, UserContext, UserRole} from "../../IsaacApiTypes";
 import {Immutable} from "immer";
-import {useLazyGetProviderRedirectQuery} from "../state";
+import {
+    mutationSucceeded,
+    showErrorToast,
+    showSuccessToast,
+    useAppDispatch,
+    useLazyGetProviderRedirectQuery,
+    useUpdateUserMutation
+} from "../state";
 
 export function isLoggedIn(user?: Immutable<PotentialUser> | null): user is Immutable<LoggedInUser> {
     return user ? user.loggedIn : false;
@@ -81,5 +88,56 @@ export const useProviderLogin = (provider: AuthenticationProvider, isSignup = fa
                 window.location.assign(response.data);
             }
         });
+    };
+};
+
+export const useUserUpdate = () => {
+    const dispatch = useAppDispatch();
+    const [updateUser, queryStatus] = useUpdateUserMutation();
+    const updateUserWithUI = async (
+        updatedUser: Immutable<ValidationUser>,
+        updatedUserPreferences: UserPreferencesDTO,
+        userContexts: UserContext[] | undefined,
+        passwordCurrent: string | null,
+        currentUser: Immutable<PotentialUser>,
+        redirect: boolean
+    ) => {
+        if (currentUser.loggedIn && currentUser.id === updatedUser.id) {
+            if (currentUser.loggedIn && currentUser.email !== updatedUser.email) {
+                const emailChangeConfirmed = window.confirm(
+                    "You have edited your email address. Your current address will continue to work until you verify your " +
+                    "new address by following the verification link sent to it via email. Continue?"
+                );
+                if (!emailChangeConfirmed) {
+                    dispatch(showErrorToast("Account settings not updated", "Your account settings update was cancelled."));
+                    return;
+                }
+            }
+        }
+        const editingOtherUser = currentUser.loggedIn && currentUser.id !== updatedUser.id;
+        const response = await updateUser({
+            registeredUser: updatedUser,
+            userPreferences: updatedUserPreferences,
+            passwordCurrent,
+            registeredUserContexts: userContexts
+        });
+        if (mutationSucceeded(response)) {
+            dispatch(showSuccessToast(
+                "Account settings updated",
+                editingOtherUser
+                    ? "The user's account settings were updated successfully."
+                    : "Your account settings have been updated successfully."
+            ));
+            if (editingOtherUser && redirect) {
+                history.push("/");
+            }
+        }
+        return response;
+    };
+    // Return the embellished function and the queryStatus object so that the caller can use the params object to check
+    // the status of the mutation
+    return {
+        updateUser: updateUserWithUI,
+        queryStatus
     };
 };
