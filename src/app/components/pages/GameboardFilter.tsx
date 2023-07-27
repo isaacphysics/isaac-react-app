@@ -1,13 +1,9 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-    AppState,
     extractDataFromQueryResponse,
-    fetchConcepts,
     setAssignBoardPath,
-    useAppDispatch,
-    useAppSelector,
     useGenerateTemporaryGameboardMutation,
-    useLazyGetGameboardByIdQuery
+    useLazyGetGameboardByIdQuery, useListConceptsQuery
 } from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
@@ -62,6 +58,7 @@ import {
     CardBody
 } from "reactstrap";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -310,18 +307,12 @@ interface CSFilterProps extends FilterProps {
     setConcepts : React.Dispatch<React.SetStateAction<Item<string>[]>>;
 }
 const CSFilter = ({selections, setSelections, stages, setStages, difficulties, setDifficulties, examBoards, setExamBoards, concepts, setConcepts, previousBoard, scrollToQuestions, refresh} : CSFilterProps) => {
-    const dispatch = useAppDispatch();
-
     const topicChoices = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
-    const conceptDTOs = useAppSelector((state: AppState) => selections[2]?.length > 0 ? state?.concepts?.results : undefined);
     const [conceptChoices, setConceptChoices] = useState<GroupBase<Item<string>>[]>([]);
 
-    const selectedTopics = selections[2];
-    useEffect(() => {
-        if (selectedTopics) {
-            dispatch(fetchConcepts(undefined, toCSV(selectedTopics)));
-        }
-    }, [dispatch, selectedTopics]);
+    const selectedTopics = selections.at(2) ?? [];
+    const {data: conceptDTOs} = useListConceptsQuery(selectedTopics.length > 0 ? {tagIds: toCSV(selectedTopics)} : skipToken);
+
     useEffect(function updateConceptChoices() {
         const newChoices = selectedTopics?.map(itemiseAndGroupConceptsByTag(conceptDTOs ?? [])) ?? [];
         setConceptChoices(newChoices);

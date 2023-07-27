@@ -54,11 +54,11 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
 }
 
 export const GameboardCreatedModal = ({gameboardId, error, resetBuilder}: {gameboardId: string | undefined, error: FetchBaseQueryError | SerializedError | undefined, resetBuilder: () => void}) => {
-    const errorMessage = getRTKQueryErrorMessage(error).message;
+    const errorMessage = error && getRTKQueryErrorMessage(error).message;
     return <div>
         {gameboardId
             ? <GameboardSuccessfullyCreated/>
-            : <GameboardNotFound errorMessage={errorMessage}/>
+            : errorMessage && <GameboardNotFound errorMessage={errorMessage}/>
         }
         <GameboardCreatedModalButtons resetBuilder={resetBuilder} gameboardId={gameboardId} />
     </div>;

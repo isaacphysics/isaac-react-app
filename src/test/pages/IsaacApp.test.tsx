@@ -6,6 +6,8 @@ import zip from "lodash/zip";
 import {USER_ROLES, UserRole} from "../../IsaacApiTypes";
 import {NAV_BAR_MENU_TITLE, NavBarMenus, renderTestEnvironment} from "../utils";
 import {history, isPhy, PATHS, SITE_SUBJECT, siteSpecific} from "../../app/services";
+import {store} from "../../app/state";
+import {wait} from "@testing-library/user-event/utils/misc/wait";
 
 const myIsaacLinks = siteSpecific(
     ["/account", PATHS.MY_GAMEBOARDS, PATHS.MY_ASSIGNMENTS, "/progress", "/tests"],
@@ -106,7 +108,7 @@ const navigationBarLinksPerRole: {[p in (UserRole | "ANONYMOUS")]: {[menu in Nav
 describe("IsaacApp", () => {
 
     it('should open on the home page', async () => {
-        renderTestEnvironment();
+        await renderTestEnvironment();
         await waitFor(() => {
             expect(history.location.pathname).toBe("/");
         });
@@ -116,7 +118,7 @@ describe("IsaacApp", () => {
     ["ANONYMOUS"].concat(USER_ROLES).forEach((r) => {
         const role = r as UserRole | "ANONYMOUS";
         it(`should give a user with the role ${role} access to the correct navigation menu items`, async () => {
-            renderTestEnvironment({role});
+            await renderTestEnvironment({role});
             for (const [menu, hrefs] of Object.entries(navigationBarLinksPerRole[role])) {
                 const header = await screen.findByTestId("header");
                 const menuTitle = NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu as NavBarMenus];
@@ -148,14 +150,14 @@ describe("IsaacApp", () => {
 
     // TODO implement test data and this test for CS
     isPhy && it('should show the users number of current assignments in the navigation menu (Physics only)', async () => {
-        renderTestEnvironment();
+        await renderTestEnvironment();
         const myAssignmentsBadge = await screen.findByTestId("my-assignments-badge");
         expect(myAssignmentsBadge.textContent?.includes("4")).toBeTruthy();
     });
 
     // TODO broken since we only show 3-4 news pods on the homepage
     // isAda && it('should show featured news pods before non-featured ones, and order pods correctly based on id (CS only)', async () => {
-    //     renderTestEnvironment();
+    //     await renderTestEnvironment();
     //     const transformPodList = siteSpecific((ps: any[]) => ps, (ps: any[]) => reverse(ps));
     //     const newsCarousel = await screen.findByTestId("news-pod-deck");
     //     const newsPods = await within(newsCarousel).findAllByTestId("news-pod");

@@ -2,11 +2,11 @@ import React, {ChangeEvent, useState} from "react";
 import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {
     AppDispatch,
-    closeActiveModal, hideToast,
-    setQuiz, showQuizSettingModal,
-    showToast,
     useAppDispatch,
-    useGetGroupsQuery
+    useGetGroupsQuery,
+    useAssignQuizMutation,
+    showSuccessToast,
+    mutationSucceeded, closeActiveModal
 } from "../../../state";
 import {isDefined, Item, nthHourOf, selectOnChange, TODAY} from "../../../services";
 import range from "lodash/range";
@@ -49,8 +49,9 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
 
+    const [assignQuiz, {isLoading: isAssigning}] = useAssignQuizMutation();
+
     const [validated, setValidated] = useState<Set<ControlName>>(new Set());
-    const [submitting, setSubmitting] = useState(false);
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date | null>(initialDueDate ?? null);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date | null>(initialScheduledStartDate ?? null);
@@ -84,6 +85,7 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
                             selectOnChange(setSelectedGroups, false)(s);
                             addValidated('group');
                         }}
+                        value={selectedGroups}
                         onBlur={() => addValidated('group')}
                         isSearchable
                         menuPortalTarget={document.body}
@@ -133,43 +135,42 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
                        onChange={(e) => setDueDate(e.target.valueAsDate)}/>
             {dueDateInvalid && <small className={"pt-2 text-danger"}>{allowedToSchedule ? "Due date must be on, or after the start date." : "Due date must be after today."}</small>}
         </Label>
-        <div className="text-right">
-            <Button disabled={selectedGroups.length === 0 || !feedbackMode || submitting || dueDateInvalid || scheduledStartDateInvalid}
-                       onMouseEnter={() => setValidated(new Set(['group', 'feedbackMode']))}
-                       onClick={async () => {
-                           const assignment = {
-                               quizId: quiz.id,
-                               groupId: selectedGroups[0].value,
-                               dueDate: dueDate ?? undefined,
-                               scheduledStartDate: scheduledStartDate ? nthHourOf(7, scheduledStartDate) : undefined,
-                               quizFeedbackMode: feedbackMode ?? undefined,
-                           };
-                           if (!allowedToSchedule) {
-                               delete assignment.scheduledStartDate;
-                           }
-                           let toastId: string | null;
-                           const again = () => {
-                               if (toastId) {
-                                   dispatch(hideToast(toastId));
-                               }
-                               dispatch(showQuizSettingModal(quiz, allowedToSchedule, dueDate, scheduledStartDate, feedbackMode));
-                           };
-                           try {
-                               setSubmitting(true);
-                               await dispatch(setQuiz(assignment));
-                               toastId = await dispatch(showToast({
-                                   color: "success", title: "Test set", body: "Test set to " + selectedGroups[0].label + " successfully", timeout: 7000,
-                                   buttons: [<Button key="again" onClick={again}>Set to another group</Button>]
-                               }));
-                           } catch (e) {
-                               return;
-                           } finally {
-                               setSubmitting(false);
-                           }
-                           dispatch(closeActiveModal());
-                       }}
+
+        <div className="w-100">
+            <Button
+                className={"float-left mb-4"}
+                color="tertiary"
+                disabled={isAssigning}
+                onClick={() => dispatch(closeActiveModal())}
             >
-                {submitting ? <IsaacSpinner /> : "Set test"}
+                Close
+            </Button>
+            <Button
+                className={"float-right mb-4"}
+                disabled={selectedGroups.length === 0 || !feedbackMode || isAssigning || dueDateInvalid || scheduledStartDateInvalid}
+                onMouseEnter={() => setValidated(new Set(['group', 'feedbackMode']))}
+                onClick={() => {
+                    const assignment = {
+                        quizId: quiz.id,
+                        groupId: selectedGroups[0].value,
+                        dueDate: dueDate ?? undefined,
+                        scheduledStartDate: scheduledStartDate ? nthHourOf(7, scheduledStartDate) : undefined,
+                        quizFeedbackMode: feedbackMode ?? undefined,
+                    };
+                    if (!allowedToSchedule) {
+                        delete assignment.scheduledStartDate;
+                    }
+                    assignQuiz(assignment)
+                        .then((result) => {
+                            if (mutationSucceeded(result)) {
+                                dispatch(showSuccessToast("Test set", "Test set to " + selectedGroups[0].label + " successfully"));
+                                setSelectedGroups([]);
+                                setValidated(new Set());
+                            }
+                        });
+                }}
+            >
+                {isAssigning ? <IsaacSpinner size={"sm"} /> : "Set test"}
             </Button>
         </div>
     </div>;

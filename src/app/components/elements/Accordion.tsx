@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {
@@ -6,15 +6,13 @@ import {
     audienceStyle,
     DOCUMENT_TYPE,
     isAda,
-    isAQuestionLikeDoc,
     isPhy,
-    NOT_FOUND,
     notRelevantMessage,
     scrollVerticallyIntoView,
     useUserContext
 } from "../../services";
-import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {AccordionSectionContext} from "../../../IsaacAppTypes";
+import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {AccordionSectionContext, PageContext} from "../../../IsaacAppTypes";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {v4 as uuid_v4} from "uuid";
 import classNames from "classnames";
@@ -38,11 +36,11 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
-    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
+    const {id: pageId, type: pageType} = useContext(PageContext);
 
     // Toggle
     const isFirst = index === 0;
-    const openFirst = isAda || Boolean(page && page !== NOT_FOUND && page.type === DOCUMENT_TYPE.QUESTION);
+    const openFirst = isAda || pageType === DOCUMENT_TYPE.QUESTION;
     const [open, setOpen] = useState(disabled ? false : (startOpen === undefined ? (openFirst && isFirst) : startOpen));
 
     // If start open changes we need to update whether or not the accordion section should be open
@@ -72,28 +70,20 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         }
     }, [hash, anchorId]);
 
-    function getPage() {
-        if (page && page != NOT_FOUND) {
-            return page
-        }
-        return null
-    }
-
     function logAccordionOpen() {
-        let currentPage = getPage()
-        if (currentPage) {
+        if (pageType && pageId) {
             let eventDetails;
-            if (isAQuestionLikeDoc(currentPage)) {
+            if (pageType === DOCUMENT_TYPE.QUESTION || pageType === DOCUMENT_TYPE.FAST_TRACK_QUESTION) {
                 eventDetails = {
                     type: "QUESTION_PART_OPEN",
-                    questionPageId: currentPage.id,
+                    questionPageId: pageId,
                     questionPartIndex: index,
                     questionPartId: id
                 };
-            } else if (currentPage.type === DOCUMENT_TYPE.CONCEPT) {
+            } else if (pageType === DOCUMENT_TYPE.CONCEPT) {
                 eventDetails = {
                     type: "CONCEPT_SECTION_OPEN",
-                    conceptPageId: currentPage.id,
+                    conceptPageId: pageId,
                     conceptSectionIndex: index,
                     conceptSectionLevel: null,
                     conceptSectionId: id
@@ -101,7 +91,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             } else {
                 eventDetails = {
                     type: "ACCORDION_SECTION_OPEN",
-                    pageId: currentPage.id,
+                    pageId: pageId,
                     accordionId: id,
                     accordionTitle: trustedTitle,
                     accordionIndex: index
@@ -138,10 +128,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         if (allValidated && allWrong) accordionIcon = "cross";
     }
 
-    const isConceptPage = page && page != NOT_FOUND && page.type === DOCUMENT_TYPE.CONCEPT;
-
     const isOpen = open && !disabled;
-
     return <div className="accordion">
         <div className="accordion-header">
             <RS.Button
@@ -167,7 +154,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }}
                 aria-expanded={isOpen ? "true" : "false"}
             >
-                {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center " +
+                {pageType === DOCUMENT_TYPE.CONCEPT && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center " +
                     "justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
                     {audienceString}
                 </span>}
@@ -207,7 +194,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     <RS.CardBody>
                         {children}
                     </RS.CardBody>
-                    <ReportAccordionButton pageId={getPage()?.id} sectionId={id} sectionTitle={trustedTitle}/>
+                    <ReportAccordionButton pageId={pageId} sectionId={id} sectionTitle={trustedTitle}/>
                 </RS.Card>
             </AccordionSectionContext.Provider>
         </RS.Collapse>

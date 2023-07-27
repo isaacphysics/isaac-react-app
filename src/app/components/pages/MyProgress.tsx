@@ -1,12 +1,8 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {
-    getMyAnsweredQuestionsByDate,
-    getMyProgress,
-    getUserAnsweredQuestionsByDate,
-    getUserProgress,
-    selectors,
-    useAppDispatch,
-    useAppSelector
+    useGetAnsweredQuestionsByDateQuery,
+    useGetProgressQuery,
+    useGetSnapshotQuery
 } from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Card, CardBody, Col, Container, Row} from "reactstrap";
@@ -29,6 +25,7 @@ import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 const siteSpecificStats = siteSpecific(
     // Physics
@@ -70,22 +67,12 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const { userIdOfInterest } = match.params;
     const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
-    const dispatch = useAppDispatch();
-    const myProgress = useAppSelector(selectors.user.progress);
-    const userProgress = useAppSelector(selectors.teacher.userProgress);
-    const achievements = useAppSelector(selectors.user.achievementsRecord);
-    const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
-    const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
-
-    useEffect(() => {
-        if (viewingOwnData && user.loggedIn) {
-            dispatch(getMyProgress());
-            dispatch(getMyAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
-        } else if (isTeacherOrAbove(user)) {
-            dispatch(getUserProgress(userIdOfInterest));
-            dispatch(getUserAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
-        }
-    }, [dispatch, userIdOfInterest, viewingOwnData, user]);
+    const userId = viewingOwnData && user.loggedIn
+        ? user.id
+        : (isTeacherOrAbove(user) ? parseInt(userIdOfInterest) : undefined);
+    const {currentData: answeredQuestionsByDate} = useGetAnsweredQuestionsByDateQuery(userId ?? skipToken);
+    const {currentData: progress} = useGetProgressQuery(userId ? `${userId}` : skipToken);
+    const {achievements} = useGetSnapshotQuery(undefined, {selectFromResult: ({data}) => ({achievements: data?.achievementsRecord})});
 
     const tabRefs: FlushableRef[] = [useRef(), useRef()];
 
@@ -94,9 +81,6 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     if (!viewingOwnData && !isTeacherOrAbove(user)) {
         return <Unauthorised />
     }
-
-    const progress = (!viewingOwnData && isTeacherOrAbove(user)) ? userProgress : myProgress;
-    const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
 
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;

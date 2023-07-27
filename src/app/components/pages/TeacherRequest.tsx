@@ -2,10 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {
     AppState,
     selectors,
-    submitMessage,
-    useAppDispatch,
     useAppSelector,
-    useGetPageFragmentQuery, useRequestEmailVerificationMutation
+    useGetPageFragmentQuery,
+    useLazyGetSchoolByUrnQuery,
+    useRequestEmailVerificationMutation,
+    useSubmitContactFormMutation
 } from "../../state";
 import {
     Alert,
@@ -22,7 +23,7 @@ import {
     Row
 } from "reactstrap";
 import {
-    api, isAda,
+    isAda,
     isPhy,
     isTeacherOrAbove,
     schoolNameWithPostcode,
@@ -38,10 +39,10 @@ const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
 export const TeacherRequest = () => {
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const errorMessage = useAppSelector((state: AppState) => (state && state.error) || null);
     const {data: warningFragment} = useGetPageFragmentQuery(warningFragmentId);
+    const [submitContactForm] = useSubmitContactFormMutation();
 
     const [sendVerificationEmail] = useRequestEmailVerificationMutation();
     const requestVerificationEmail = () => {
@@ -75,11 +76,13 @@ export const TeacherRequest = () => {
         "Thanks, \n\n" + firstName + " " + lastName;
     const isValidEmail = validateEmail(emailAddress);
 
-
+    const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
     function fetchSchool(urn: string) {
         if (urn !== "") {
-            api.schools.getByUrn(urn).then(({data}) => {
-                setSchool(schoolNameWithPostcode(data[0]));
+            getSchoolByUrn(urn).then(({data}) => {
+                if (data && data.length > 0) {
+                    setSchool(schoolNameWithPostcode(data[0]));
+                }
             });
         } else if (user?.loggedIn && user.schoolOther) {
             setSchool(user.schoolOther);
@@ -148,7 +151,7 @@ export const TeacherRequest = () => {
                             :
                             <Form name="contact" onSubmit={e => {
                                 e.preventDefault();
-                                dispatch(submitMessage({firstName, lastName, emailAddress, subject, message}));
+                                submitContactForm({firstName, lastName, emailAddress, subject, message});
                                 setMessageSent(true);
                             }}>
                                 <CardBody>

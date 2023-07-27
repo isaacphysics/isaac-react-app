@@ -96,15 +96,3 @@ export const unitsList: string[] = [
     "m",
     "s"
 ];
-
-export const searchResultsList: ResultsWrapper<ContentSummaryDTO> = {
-    totalResults: 1,
-    results: [
-        {
-            id: "result1",
-            title: "Result 1"
-        }
-    ]
-};
-
-

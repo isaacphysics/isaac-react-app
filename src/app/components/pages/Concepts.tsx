@@ -1,6 +1,6 @@
 import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {AppState, fetchConcepts, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {selectors, useAppSelector, useListConceptsQuery} from "../../state";
 import * as RS from "reactstrap";
 import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
@@ -14,11 +14,8 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 // This component is Isaac Physics only (currently)
 export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const concepts = useAppSelector((state: AppState) => state?.concepts?.results || null);
-
-    useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);
+    const {data: concepts} = useListConceptsQuery({});
 
     const searchParsed = queryString.parse(location.search);
 
@@ -33,12 +30,12 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const chemistry = filters.includes(TAG_ID.chemistry);
     const biology = filters.includes(TAG_ID.biology);
 
-    let [searchText, setSearchText] = useState(query);
-    let [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
-    let [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
-    let [conceptFilterChemistry, setConceptFilterChemistry] = useState(chemistry);
-    let [conceptFilterBiology, setConceptFilterBiology] = useState(biology);
-    let [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
+    const [searchText, setSearchText] = useState(query);
+    const [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
+    const [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
+    const [conceptFilterChemistry, setConceptFilterChemistry] = useState(chemistry);
+    const [conceptFilterBiology, setConceptFilterBiology] = useState(biology);
+    const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {

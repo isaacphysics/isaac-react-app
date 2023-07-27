@@ -5,7 +5,7 @@ import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {Provider} from "react-redux";
-import {fetchGlossaryTerms, store, useAppDispatch} from "../../state";
+import {contentApi, store, useAppDispatch} from "../../state";
 import {StaticRouter} from "react-router";
 import classNames from "classnames";
 
@@ -29,9 +29,9 @@ function EditorListener() {
     const [doc, setDoc] = useState();
     const dispatch = useAppDispatch();
 
-    // Fetch glossary terms so they can be rendered
+    // Pre-fetch glossary terms so they can be rendered quickly
     useEffect(() => {
-        dispatch(fetchGlossaryTerms());
+        dispatch(contentApi.util.prefetch("getGlossaryTerms", undefined, {}));
     }, [dispatch]);
 
     const listener = useCallback((event: MessageEvent) => {

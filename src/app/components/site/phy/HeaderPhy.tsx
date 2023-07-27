@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {selectors, useAppSelector} from "../../../state";
+import {selectors, useAppSelector, useGetSnapshotQuery} from "../../../state";
 import {Col, Container, Row, UncontrolledTooltip} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarPhy} from "./NavigationBarPhy";
@@ -9,7 +9,7 @@ import {useDeviceSize} from "../../../services";
 
 export const HeaderPhy = () => {
     const user = useAppSelector(selectors.user.orNull);
-    const streakRecord = useAppSelector(selectors.user.snapshot);
+    const {currentData: streakRecord} = useGetSnapshotQuery();
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
     return <header className="light" data-testid={"header"}>

@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
-import {getMyProgress, selectors, useAppDispatch, useAppSelector} from "../../state";
+import React from "react";
+import {selectors, useAppSelector, useGetSnapshotQuery} from "../../state";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
-import {isTeacherOrAbove, PATHS, siteSpecific} from "../../services";
+import {isTeacherOrAbove, PATHS} from "../../services";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
@@ -12,15 +12,8 @@ import {LinkCard} from "../elements/cards/LinkCard";
 
 // TODO do we need a version of this for CS tutors?
 export const TeacherTools = () => {
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const achievementsSelector = useAppSelector(selectors.user.achievementsRecord);
-
-    useEffect(() => {
-        if (!achievementsSelector) {
-            dispatch(getMyProgress());
-        }
-    }, [dispatch, user]);
+    const {achievements} = useGetSnapshotQuery(undefined, {selectFromResult: ({data}) => ({achievements: data?.achievementsRecord})});
 
     const pageTitle = user && isTeacherOrAbove(user) ? "Teacher tools" : "How we help teachers";
 
@@ -66,7 +59,7 @@ export const TeacherTools = () => {
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
                                     title="Create a group" linkDestination="/groups" linkText="Manage groups"
-                                    amountText={achievementText("created", (achievementsSelector && achievementsSelector.TEACHER_GROUPS_CREATED) || 0, "group")}
+                                    amountText={achievementText("created", (achievements?.TEACHER_GROUPS_CREATED) || 0, "group")}
                                 >
                                     Create and alter groups on the manage groups page.
                                 </ActionCard>
@@ -75,7 +68,7 @@ export const TeacherTools = () => {
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
                                     title="Set a quiz" linkDestination={PATHS.SET_ASSIGNMENTS} linkText={"Set quizzes"}
-                                    amountText={achievementText("set", (achievementsSelector && achievementsSelector.TEACHER_ASSIGNMENTS_SET) || 0, "assignment")}
+                                    amountText={achievementText("set", (achievements?.TEACHER_ASSIGNMENTS_SET) || 0, "assignment")}
                                 >
                                     Set more assignments from the set assignments page.
                                 </ActionCard>
@@ -84,7 +77,7 @@ export const TeacherTools = () => {
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
                                     title="Create a gameboard" linkDestination={PATHS.GAMEBOARD_BUILDER} linkText="Create gameboards"
-                                    amountText={achievementText("created", (achievementsSelector && achievementsSelector.TEACHER_GAMEBOARDS_CREATED) || 0, "gameboard")}
+                                    amountText={achievementText("created", (achievements?.TEACHER_GAMEBOARDS_CREATED) || 0, "gameboard")}
                                 >
                                     Create custom gameboards to set as assignments to your groups.
                                 </ActionCard>

@@ -17,15 +17,15 @@ jest.setTimeout(10000);
 
 describe("SetAssignments", () => {
 
-    const renderSetAssignments = () => {
-        renderTestEnvironment({
+    const renderSetAssignments = async () => {
+        await renderTestEnvironment({
             PageComponent: SetAssignments,
             initalRouteEntries: [PATHS.SET_ASSIGNMENTS]
         });
     };
 
     it('should show 6 gameboards in card view (and start in this view on Phy)', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         if (isPhy) {
             await waitFor(() => {
                 expect(screen.queryAllByText("Loading...")).toHaveLength(0);
@@ -44,7 +44,7 @@ describe("SetAssignments", () => {
     });
 
     it('should show all gameboards in table view (and start in this view on CS)', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         if (isAda) {
             await waitFor(() => {
                 expect(screen.queryAllByText("Loading...")).toHaveLength(0);
@@ -62,7 +62,7 @@ describe("SetAssignments", () => {
     });
 
     isPhy && it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
             const button = await screen.findByRole("link", {name: title});
             expect(button.getAttribute("href")).toBe(href);
@@ -70,7 +70,7 @@ describe("SetAssignments", () => {
     });
 
     it('should show all the correct information for a gameboard in card view', async () => {
-        renderSetAssignments();
+        await renderSetAssignments();
         if (!isPhy) {
             // Change view to "Card View"
             const viewDropdown = await screen.findByLabelText("Display in");
@@ -127,7 +127,7 @@ describe("SetAssignments", () => {
     it('should let you assign a gameboard in card view (using the modal)', async () => {
         let requestGroupIds: string[];
         let requestAssignment: {gameboardId: string, scheduledStartDate?: any, dueDate?: any, notes?: string};
-        renderTestEnvironment({
+        await renderTestEnvironment({
             PageComponent: SetAssignments,
             initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
             extraEndpoints: [

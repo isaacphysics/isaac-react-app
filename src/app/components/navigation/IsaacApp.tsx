@@ -1,9 +1,9 @@
 import React, {lazy, Suspense, useEffect} from 'react';
 import {
     AppState,
-    fetchGlossaryTerms,
+    authApi,
+    contentApi,
     openActiveModal,
-    requestCurrentUser,
     requestNotifications,
     selectors,
     useAppDispatch,
@@ -98,9 +98,9 @@ export const IsaacApp = () => {
         // The auth callback will get the logged-in user for us.
         const pathname = window.location.pathname;
         if (!(pathname.includes("/auth/") && pathname.includes("/callback"))) {
-            dispatch(requestCurrentUser());
+            dispatch(authApi.endpoints.getCurrentUser.initiate());
         }
-        dispatch(fetchGlossaryTerms());
+        dispatch(contentApi.util.prefetch("getGlossaryTerms", undefined, {}));
     }, [dispatch]);
 
     const loggedInUserId = isLoggedIn(user) ? user.id : undefined;

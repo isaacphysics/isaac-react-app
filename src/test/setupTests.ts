@@ -15,6 +15,10 @@ jest.mock("../app/services/reactRouterExtension", () => ({
     ...jest.requireActual("../app/services/reactRouterExtension"),
     useQueryParams: jest.fn(() => ({})),
 }));
+jest.mock('../app/state/actions/index', () => ({
+    ...jest.requireActual('../app/state/actions/index'),
+    redirectTo: jest.fn(),
+}));
 
 // TODO jest.mock("../app/services/localStorage"); <--- need to mock this effectively
 

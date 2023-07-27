@@ -3,7 +3,6 @@ import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
     AudienceContext,
-    AuthenticationProvider,
     ChoiceDTO,
     ContentBase,
     ContentSummaryDTO,
@@ -23,7 +22,8 @@ import {
     DOCUMENT_TYPE,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
-    PROGRAMMING_LANGUAGE, SortOrder,
+    PROGRAMMING_LANGUAGE,
+    SortOrder,
     STAGE,
     TAG_ID,
     TAG_LEVEL
@@ -33,83 +33,7 @@ import {Immutable} from "immer";
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
 
-    | {type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE; userSnapshot: UserSnapshot}
-
-    | {type: ACTION_TYPE.CURRENT_USER_REQUEST}
-    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
-    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
-    | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_REQUEST}
-    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS; selectedUserAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
-    | {type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_LINK_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS; provider: AuthenticationProvider; redirectUrl: string}
-    | {type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
-    | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
-    | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
-    | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
-
-    | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
-    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
-    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST}
-    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS}
-    | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST}
-    | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_LOG_OUT_REQUEST}
-    | {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST}
-    | {type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.MY_PROGRESS_REQUEST}
-    | {type: ACTION_TYPE.MY_PROGRESS_RESPONSE_SUCCESS; myProgress: UserProgress}
-    | {type: ACTION_TYPE.MY_PROGRESS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.USER_PROGRESS_REQUEST}
-    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS; userProgress: UserProgress}
-    | {type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.USER_SNAPSHOT_REQUEST}
-    | {type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_SUCCESS; snapshot: UserSnapshot}
-    | {type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
-    | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
-    | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
     | {type: ACTION_TYPE.USER_CONSISTENCY_ERROR}
-
-    | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_REQUEST}
-    | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS; authorisations: ApiTypes.UserSummaryWithEmailAddressDTO[]}
-    | {type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_REQUEST}
-    | {type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_SUCCESS; otherUserAuthorisations: ApiTypes.UserSummaryDTO[]}
-    | {type: ACTION_TYPE.AUTHORISATIONS_OTHER_USERS_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST}
-    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST}
-    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.AUTHORISATIONS_REVOKE_REQUEST}
-    | {type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_REQUEST}
-    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_REQUEST}
-    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST}
     | {type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS; groupMemberships: GroupMembershipDetailDTO[]}
@@ -122,14 +46,6 @@ export type Action =
     | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS; notifications: any[]}
 
-    | {type: ACTION_TYPE.DOCUMENT_REQUEST; documentType: DOCUMENT_TYPE; documentId: string}
-    | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
-    | {type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST}
-    | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
-    | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.QUESTION_REGISTRATION; questions: ApiTypes.QuestionDTO[]; accordionClientId?: string, isQuiz?: boolean}
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionIds: string[]}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO>}
@@ -138,40 +54,13 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string}
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>}
 
-    | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST}
-    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; myAnsweredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
-    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST}
-    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; userAnsweredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
-    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_REQUEST; assignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_SUCCESS; assignmentResultsCSV: string}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.TEST_QUESTION_REQUEST}
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
-    | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
-    | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST}
-    | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS}
-    | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE; errorMessage: string}
-
-    | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string | undefined}
-    | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
 
     | {type: ACTION_TYPE.TOASTS_SHOW; toast: Toast}
     | {type: ACTION_TYPE.TOASTS_HIDE; toastId: string}
@@ -180,66 +69,10 @@ export type Action =
     | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModal}
     | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
 
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST; member: AppGroupMembership}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS; member: AppGroupMembership}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
-
-    | {type: ACTION_TYPE.CONCEPTS_REQUEST}
-    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
-
-    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST}
-    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
-
-    | {type: ACTION_TYPE.QUIZZES_REQUEST}
-    | {type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS; quizzes: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
-
-    | {type: ACTION_TYPE.QUIZ_SET_REQUEST; assignment: ApiTypes.QuizAssignmentDTO}
-    | {type: ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS; newAssignment: ApiTypes.QuizAssignmentDTO}
-
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST; quizAssignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST; quizAttemptId: number}
     | {type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE; error: string}
-    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_REQUEST; quizAttemptId: number; userId: number}
-    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS; studentAttempt: ApiTypes.QuizAttemptFeedbackDTO}
-    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE; error: string}
-
-    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST; quizAttemptId: number}
-    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
-
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_REQUEST; quizAssignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_SUCCESS; assignment: ApiTypes.QuizAssignmentDTO}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_FAILURE; error: string}
-
-    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_REQUEST; quizAssignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_SUCCESS; quizAssignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_FAILURE; quizAssignmentId: number}
-
-    | {type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_REQUEST; quizId: string}
-    | {type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_SUCCESS; quiz: ApiTypes.IsaacQuizDTO}
-    | {type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_FAILURE; error: string}
-
-    | {type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_REQUEST}
-    | {type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_SUCCESS; attempts: ApiTypes.QuizAttemptDTO[]}
-    | {type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_REQUEST}
-    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_RESPONSE_SUCCESS; quizAssignmentId: number; feedback: ApiTypes.QuizUserFeedbackDTO}
-
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS; quizAssignmentId: number; update: ApiTypes.QuizAssignmentDTO}
     ;
 
 export type NOT_FOUND_TYPE = 404;
@@ -465,6 +298,7 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
+export const PageContext = React.createContext<{id?: string; type?: DOCUMENT_TYPE; level?: number}>({});
 export const ClozeDropRegionContext = React.createContext<{
     register: (id: string, index: number) => void,
     questionPartId: string, readonly: boolean,
@@ -730,10 +564,8 @@ export interface PageSettings {
     assignmentOrder?: AssignmentOrderSpec;
 }
 
-export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
-
 export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
-    groupName?: string;
+    groupName: string;
 }
 
 export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "SECTION_MARKS", "DETAILED_FEEDBACK"];

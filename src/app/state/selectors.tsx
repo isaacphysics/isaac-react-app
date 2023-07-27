@@ -1,25 +1,9 @@
-import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith, AppState, groupsApi} from "./index";
-import {KEY, persistence, NOT_FOUND, isDefined} from "../services";
-import {QuizAssignmentDTO} from "../../IsaacApiTypes";
-import {AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {anonymisationFunctions, anonymiseListIfNeededWith, AppState} from "./index";
 
 export const selectors = {
 
-    topic: {
-        currentTopic: (state: AppState) => {
-            if (!state) return null;
-            if (!state.currentTopic) return null;
-            if (state.currentTopic === NOT_FOUND) return null;
-            return state.currentTopic;
-        }
-    },
-
     boards: {
         boards: (state: AppState) => state?.boards ?? null
-    },
-
-    doc: {
-        get: (state: AppState) => state?.doc || null,
     },
 
     questions: {
@@ -32,27 +16,13 @@ export const selectors = {
         }
     },
 
-    error: {
-        general: (state: AppState) => state?.error && state.error.type == "generalError" && state.error.generalError || null,
-    },
-
     user:  {
         orNull: (state: AppState) => state?.user || null,
-        loggedInOrNull: (state: AppState) => state?.user?.loggedIn && state.user || null,
-        progress: (state: AppState) => state?.myProgress,
-        snapshot: (state: AppState) => state?.myProgress?.userSnapshot,
-        achievementsRecord: (state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord,
-        answeredQuestionsByDate: (state: AppState) => state?.myAnsweredQuestionsByDate,
-        preferences: (state: AppState) => state?.userPreferences
+        loggedInOrNull: (state: AppState) => state?.user?.loggedIn && state.user || null
     },
 
     mainContentId: {
         orDefault: (state: AppState) => state?.mainContentId || "main",
-    },
-
-    teacher: {
-        userProgress: (state: AppState) => state?.userProgress && anonymiseIfNeededWith(anonymisationFunctions.userProgress)(state.userProgress),
-        userAnsweredQuestionsByDate: (state: AppState) => state?.userAnsweredQuestionsByDate
     },
 
     admin: {
@@ -60,45 +30,14 @@ export const selectors = {
     },
 
     connections: {
-        activeAuthorisations: (state: AppState) => state?.activeAuthorisations && anonymiseIfNeededWith(anonymisationFunctions.activeAuthorisations)(state?.activeAuthorisations),
-        otherUserAuthorisations: (state: AppState) => state?.otherUserAuthorisations && anonymiseIfNeededWith(anonymisationFunctions.otherUserAuthorisations)(state?.otherUserAuthorisations),
         groupMemberships: (state: AppState) => state?.groupMemberships && anonymiseListIfNeededWith(anonymisationFunctions.groupMembershipDetail)(state?.groupMemberships)
     },
 
     quizzes: {
-        preview: (state: AppState) => {
-            const qp = state?.quizPreview;
-            return {
-                quiz: qp && 'quiz' in qp ? qp.quiz : null,
-                error: qp && 'error' in qp ? qp.error : null,
-            };
-        },
-        assignedToMe: (state: AppState) => state?.quizAssignedToMe,
-        available: (state: AppState) => state?.quizzes?.quizzes,
-        assignments: (state: AppState) => state?.quizAssignments && (persistence.load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignments(state?.quizAssignments) : augmentWithGroupNameIfInCache(state, state?.quizAssignments)),
         /* Retrieves the current users most recent attempt at the current quiz being viewed */
         currentQuizAttempt: (state: AppState) => state?.quizAttempt,
-        /* Retrieves the quiz attempt for the current student being looked at (this is used to render /test/attempt/feedback/[group id]/[student id]) */
-        currentStudentQuizAttempt: (state: AppState) => state?.studentQuizAttempt && 'studentAttempt' in state?.studentQuizAttempt ? anonymiseIfNeededWith(anonymisationFunctions.quizAttempt)(state.studentQuizAttempt) : state?.studentQuizAttempt,
-        assignment: (state: AppState) => state?.quizAssignment && anonymiseIfNeededWith(anonymisationFunctions.assignment)(state.quizAssignment),
-        attemptedFreelyByMe: (state: AppState) => state?.quizAttemptedFreelyByMe,
     },
 };
-
-// TODO make sure this works!!!
-function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAssignmentDTO[] | NOT_FOUND_TYPE | null | undefined): AppQuizAssignment[] | NOT_FOUND_TYPE | undefined | null {
-    if (!isDefined(quizAssignments) || quizAssignments === NOT_FOUND) {
-        return quizAssignments;
-    }
-    const {data: activeGroups} = groupsApi.endpoints.getGroups.select(false)(state as any);
-    return quizAssignments.map(assignment => {
-        const groupName = activeGroups?.find(g => g.id === assignment.groupId)?.groupName;
-        return {
-            ...assignment,
-            groupName,
-        };
-    });
-}
 
 // Important type checking to avoid an awkward bug
 interface SelectorsWithNoPropArgs {

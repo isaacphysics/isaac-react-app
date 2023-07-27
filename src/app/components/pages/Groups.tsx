@@ -22,7 +22,6 @@ import {
 } from "reactstrap"
 import {Link} from "react-router-dom";
 import {
-    resetMemberPassword,
     showGroupManagersModal,
     showGroupInvitationModal,
     showGroupEmailModal,
@@ -35,7 +34,8 @@ import {
     useCreateGroupMutation,
     useDeleteGroupMemberMutation,
     useUpdateGroupMutation,
-    useLazyGetGroupMembersQuery
+    useLazyGetGroupMembersQuery,
+    usePasswordResetByIdMutation
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import sortBy from "lodash/sortBy";
@@ -87,13 +87,13 @@ interface MemberInfoProps {
     user: RegisteredUserDTO;
 }
 const MemberInfo = ({group, member, user}: MemberInfoProps) => {
-    const dispatch = useAppDispatch();
-    const [passwordRequestSent, setPasswordRequestSent] = useState(false);
     const [deleteMember] = useDeleteGroupMemberMutation();
+    const [resetMemberPassword, {isUninitialized: passwordRequestNotSent}] = usePasswordResetByIdMutation();
 
     function resetPassword() {
-        setPasswordRequestSent(true);
-        dispatch(resetMemberPassword(member));
+        if (member.id) {
+            resetMemberPassword(member.id);
+        }
     }
 
     function confirmDeleteMember() {
@@ -133,11 +133,11 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
         </div>
         <div className="d-flex justify-content-between">
             {isTeacherOrAbove(user) && <>
-                <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)}
+                <Tooltip tipText={passwordResetInformation(member, !passwordRequestNotSent)}
                           className="text-right d-none d-sm-block">
                     <Button color="link" size="sm" onClick={resetPassword}
-                            disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
-                        {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
+                            disabled={!canSendPasswordResetRequest(member, !passwordRequestNotSent)}>
+                        {passwordRequestNotSent ? 'Reset Password' : 'Reset email sent'}
                     </Button>
                 </Tooltip>
                 {"  "}

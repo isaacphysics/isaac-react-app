@@ -22,7 +22,7 @@ const LoginOrSignUpBody = () => {
     const location = useLocation();
 
     const {loginFunctions, setStateFunctions, loginValues} = useLoginLogic();
-    const {attemptLogIn, signUp, validateAndLogIn} = loginFunctions;
+    const {signUp, validateAndLogIn, submitTotpChallengeResponse} = loginFunctions;
     const {setEmail, setPassword, setRememberMe, setPasswordResetAttempted} = setStateFunctions;
     const {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword} = loginValues;
 
@@ -58,7 +58,7 @@ const LoginOrSignUpBody = () => {
             {!totpChallengePending && <span className={"d-block d-lg-none pb-3"}>To <b>continue with an account</b>, please do so below</span>}
             <Form name="login" onSubmit={validateAndLogIn} noValidate>
                 {totpChallengePending ?
-                    <TFAInput rememberMe={rememberMe} />
+                    <TFAInput submitTotpChallengeResponse={submitTotpChallengeResponse} />
                     :
                     <>
                         <EmailPasswordInputs
@@ -86,7 +86,6 @@ const LoginOrSignUpBody = () => {
                             id="log-in"
                             tag="input" value="Log in"
                             color="secondary" type="submit" block
-                            onClick={attemptLogIn}
                             disabled={!!user?.requesting}
                         />
 

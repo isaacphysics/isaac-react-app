@@ -8,10 +8,15 @@ import {
     loadZxcvbnIfNotPresent,
     MINIMUM_PASSWORD_LENGTH,
     passwordDebounce,
-    siteSpecific,
     validateEmail
 } from "../../../services";
-import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
+import {
+    useLogoutEverywhereMutation,
+    useLinkAccountMutation,
+    useUnlinkAccountMutation,
+    usePasswordResetMutation,
+    mutationSucceeded
+} from "../../../state";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -20,7 +25,7 @@ interface UserPasswordProps {
     myUser: ValidationUser;
     setMyUser: (e: any) => void;
     isNewPasswordConfirmed: boolean;
-    userAuthSettings: UserAuthenticationSettingsDTO | null;
+    userAuthSettings: UserAuthenticationSettingsDTO | undefined;
     setNewPassword: (e: any) => void;
     setNewPasswordConfirm: (e: any) => void;
     newPasswordConfirm: string;
@@ -30,18 +35,28 @@ interface UserPasswordProps {
 export const UserPassword = (
     {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm, editingOtherUser}: UserPasswordProps) => {
 
-    const dispatch = useAppDispatch();
     const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
 
-    const [passwordResetRequested, setPasswordResetRequested] = useState(false);
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
 
+    const [resetPassword, {isUninitialized: passwordResetNotRequested}] = usePasswordResetMutation();
     const resetPasswordIfValidEmail = () => {
         if (currentUserEmail && validateEmail(currentUserEmail)) {
-            dispatch(resetPassword({email: currentUserEmail}));
-            setPasswordResetRequested(true);
+            resetPassword(currentUserEmail);
         }
     };
+
+    const [linkAccount] = useLinkAccountMutation();
+    const linkAccountAndRedirect = (provider: AuthenticationProvider) => {
+        linkAccount(provider).then(response => {
+            if (mutationSucceeded(response)) {
+                window.location.assign(response.data);
+            }
+        });
+    };
+    const [unlinkAccount] = useUnlinkAccountMutation();
+
+    const [logOutUserEverywhere] = useLogoutEverywhereMutation();
 
     return <CardBody className={"pb-0"}>
         <Row>
@@ -120,7 +135,7 @@ export const UserPassword = (
                     </Row>
                 </Col>
             </Row>
-            : !passwordResetRequested ?
+            : passwordResetNotRequested ?
                 <React.Fragment>
                     <Row className="pt-4">
                         <Col className="text-center">
@@ -171,7 +186,7 @@ export const UserPassword = (
                                             type="button"
                                             id="linked-accounts-no-password"
                                             className="linked-account-button rpf-button"
-                                            onClick={() => dispatch(authenticationProvidersUsed("RASPBERRYPI") ? unlinkAccount("RASPBERRYPI") : linkAccount("RASPBERRYPI"))}
+                                            onClick={() => authenticationProvidersUsed("RASPBERRYPI") ? unlinkAccount("RASPBERRYPI") : linkAccountAndRedirect("RASPBERRYPI")}
                                         />
                                         <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
                                             {authenticationProvidersUsed("RASPBERRYPI") ? " Remove linked Raspberry Pi account" : " Add linked Raspberry Pi account"}
@@ -184,7 +199,7 @@ export const UserPassword = (
                                     type="button"
                                     id="linked-accounts-no-password"
                                     className="linked-account-button google-button"
-                                    onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}
+                                    onClick={() => authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccountAndRedirect("GOOGLE")}
                                 />
                                 <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
                                     {authenticationProvidersUsed("GOOGLE") ? " Remove linked Google account" : " Add linked Google account"}
@@ -211,7 +226,7 @@ export const UserPassword = (
                         </small>
                         <Col className="text-center mt-2">
                             <div className="vertical-center ml-2">
-                                <Button onClick={() => dispatch(logOutUserEverywhere())}>
+                                <Button onClick={() => logOutUserEverywhere()}>
                                     Log me out everywhere
                                 </Button>
                             </div>

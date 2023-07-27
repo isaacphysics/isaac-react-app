@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {AppState, handlePasswordReset, useAppDispatch, useAppSelector, verifyPasswordReset} from "../../state";
+import {
+    getRTKQueryErrorMessage, mutationSucceeded,
+    useHandlePasswordResetMutation,
+    useVerifyPasswordResetMutation
+} from "../../state";
 import {Button, Card, CardBody, CardFooter, Container, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
 import {PasswordFeedback} from "../../../IsaacAppTypes";
-import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../services";
+import {history, loadZxcvbnIfNotPresent, passwordDebounce} from "../../services";
 import {RouteComponentProps} from "react-router";
 
 
 export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: string}>) => {
-    const dispatch = useAppDispatch();
-    const errorMessage = useAppSelector((state: AppState) => state?.error || null);
     const urlToken = match.params.token || null;
 
     const [isValidPassword, setValidPassword] = useState(true);
@@ -25,7 +27,17 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
         )
     };
 
-    useEffect(() => {dispatch(verifyPasswordReset(urlToken))}, [dispatch, urlToken]);
+    const [verifyPasswordReset, {error: verifyPasswordError, isError: isVerifyPasswordError}] = useVerifyPasswordResetMutation();
+    useEffect(() => {
+        if (urlToken) {
+            verifyPasswordReset(urlToken);
+        }
+    }, [urlToken]);
+
+    const [handlePasswordReset, {error: handlePasswordResetError, isError: ishandlePasswordResetError}] = useHandlePasswordResetMutation();
+
+    const isErrored = isVerifyPasswordError || ishandlePasswordResetError;
+    const error = verifyPasswordError || handlePasswordResetError;
 
     return <Container id="email-verification">
         <div>
@@ -65,13 +77,17 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
                     </Form>
                 </CardBody>
                 <CardFooter>
-                    <h4 role="alert" className="text-danger text-center mb-0">
-                        {errorMessage && errorMessage.type === "generalError" && errorMessage.generalError}
-                    </h4>
-                    <Button color="secondary" className="mb-2" block
+                    {error && <h4 role="alert" className="text-danger text-center mb-0">
+                        {getRTKQueryErrorMessage(error).message}
+                    </h4>}
+                    <Button color="secondary" className="mb-2" block disabled={!isValidPassword || !currentPassword || !urlToken}
                         onClick={() => {
-                            if (isValidPassword && !errorMessage && urlToken) {
-                                dispatch(handlePasswordReset({token: urlToken, password: currentPassword}));
+                            if (isValidPassword && !isErrored && urlToken) {
+                                handlePasswordReset({token: urlToken, password: currentPassword}).then(result => {
+                                    if (mutationSucceeded(result)) {
+                                        history.push("/login");
+                                    }
+                                });
                             }
                         }}
                         id="change-password"

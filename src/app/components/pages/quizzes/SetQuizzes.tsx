@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {
-    loadQuizAssignments,
-    markQuizAsCancelled,
-    selectors,
     showQuizSettingModal,
     useAppDispatch,
-    useAppSelector,
-    useGetGroupsQuery
+    useGetGroupsQuery,
+    useGetQuizAssignmentsSetByMeQuery,
+    useCancelQuizAssignmentMutation
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -17,17 +15,19 @@ import {Spacer} from "../../elements/Spacer";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
-    below, isAda,
+    below, confirmThen,
     isEventLeaderOrStaff,
-    isPhy, isStaff,
+    isPhy, isStaff, KEY,
     MANAGE_QUIZ_TAB,
-    NOT_FOUND, nthHourOf,
-    siteSpecific, TODAY,
+    nthHourOf, persistence,
+    siteSpecific,
+    TODAY,
     useDeviceSize,
     useFilteredQuizzes
 } from "../../../services";
 import {Tabs} from "../../elements/Tabs";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {PageFragment} from "../../elements/PageFragment";
 import {RenderNothing} from "../../elements/RenderNothing";
 
@@ -51,17 +51,13 @@ function formatAssignmentOwner(user: RegisteredUserDTO, assignment: QuizAssignme
 }
 
 function QuizAssignment({user, assignment}: QuizAssignmentProps) {
-    const dispatch = useAppDispatch();
-    const cancel = () => {
-        if (window.confirm("Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.")) {
-            dispatch(markQuizAsCancelled(assignment.id as number));
-        }
-    };
+    const [markQuizAsCancelled, {isLoading: isCancelling}] = useCancelQuizAssignmentMutation();
+    const cancel = () => confirmThen(
+        "Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.",
+        () => markQuizAsCancelled(assignment.id as number)
+    );
     const assignmentNotYetStarted = assignment?.scheduledStartDate && nthHourOf(0, assignment?.scheduledStartDate) > TODAY();
     const quizTitle = (assignment.quizSummary?.title || assignment.quizId) + (assignmentNotYetStarted ? ` (starts ${formatDate(assignment?.scheduledStartDate)})` : "");
-    // TODO RTKQ quiz refactor use isPending from use mutation hook to re-implement this (markQuizAsCancelled would be
-    //  the mutation trigger)
-    const isCancelling = 'cancelling' in assignment && (assignment as {cancelling: boolean}).cancelling;
     return <div className="p-2">
         <RS.Card className="card-neat">
             <RS.CardBody>
@@ -97,10 +93,9 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const hashAnchor = location.hash?.slice(1) ?? null;
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
 
-    // todo: This is so when the quizAssignments selector tries to augment quizzes with group names, it works. Revisit.
     const { data: groups } = useGetGroupsQuery(false);
-
-    const quizAssignments = useAppSelector(selectors.quizzes.assignments);
+    const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
+    const quizAssignmentsQuery = useGetQuizAssignmentsSetByMeQuery();
 
     // Set active tab using hash anchor
     useEffect(() => {
@@ -110,10 +105,6 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
             MANAGE_QUIZ_TAB.set;
         setActiveTab(tab);
     }, [hashAnchor]);
-
-    useEffect(() => {
-        dispatch(loadQuizAssignments());
-    }, [dispatch]);
 
     const {titleFilter, setTitleFilter, filteredQuizzes} = useFilteredQuizzes(user);
 
@@ -168,14 +159,24 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                 </ShowLoading>,
 
                 [siteSpecific("Manage Tests", "Previously set tests")]:
-                <ShowLoading until={quizAssignments} ifNotFound={<RS.Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</RS.Alert>}>
-                    {quizAssignments && quizAssignments !== NOT_FOUND && <>
-                        {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
-                        {quizAssignments.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-xl-3 my-2">
-                            {quizAssignments.map(assignment => <QuizAssignment key={assignment.id} user={user} assignment={assignment} />)}
-                        </div>}
-                    </>}
-                </ShowLoading>,
+                    <ShowLoadingQuery
+                        query={quizAssignmentsQuery}
+                        ifError={() => <RS.Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</RS.Alert>}
+                        thenRender={quizAssignments => {
+                            const quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
+                                const groupName = persistence.load(KEY.ANONYMISE_GROUPS) === "YES"
+                                    ? `Demo Group ${assignment.groupId}`
+                                    : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
+                                return {...assignment, groupName};
+                            });
+                            return <>
+                                {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
+                                {quizAssignments.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-xl-3 my-2">
+                                    {quizAssignmentsWithGroupNames.map(assignment => <QuizAssignment key={assignment.id} user={user} assignment={assignment} />)}
+                                </div>}
+                            </>
+                        }}
+                    />
             }}
         </Tabs>
     </RS.Container>;

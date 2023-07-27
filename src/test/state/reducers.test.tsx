@@ -1,5 +1,5 @@
 import {union, mapValues} from "lodash"
-import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList} from "../test-factory";
+import {questionDTOs, registeredUserDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services";
 import {Action, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";
 import {GameboardDTO} from "../../IsaacApiTypes";
@@ -11,7 +11,6 @@ import {
     gameboardsSlice,
     questions,
     rootReducer,
-    search,
     toasts,
     userSlice,
     selectors
@@ -78,14 +77,6 @@ describe("user reducer", () => {
             expect(actualNextState).toEqual(previousState);
         });
     });
-
-    it("should always add a user on login response success", () => {
-        const addProfWheelerAction: Action = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: profWheeler};
-        previousStates.map((previousState) => {
-            const actualNextState = userSlice.reducer(previousState, addProfWheelerAction);
-            expect(actualNextState).toEqual({...profWheeler, loggedIn: true});
-        })
-    })
 });
 
 describe("questions reducer", () => {
@@ -132,30 +123,6 @@ describe("questions reducer", () => {
             expect(actualNextState).toEqual(expectedNextState);
         })
     });
-});
-
-describe("search reducer", () => {
-    it("returns null as an initial value", () => {
-        const actualState = search(undefined, ignoredTestAction);
-        expect(actualState).toBe(null);
-    });
-
-    it("returns the previous state by default", () => {
-        const previousStates = [null, {searchResults: searchResultsList}];
-        previousStates.map((previousState) => {
-            const actualNextState = search(previousState, ignoredTestAction);
-            expect(actualNextState).toEqual(previousState);
-        });
-    });
-
-    it("should replace the list of search results on ", () => {
-        const unitsAction: Action = {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResultsList};
-        const previousStates = [null, {searchResults: {totalResults: 0, results: []}}];
-        previousStates.map((previousState) => {
-            const actualNextState = search(previousState, unitsAction);
-            expect(actualNextState).toEqual({searchResults: searchResultsList});
-        })
-    })
 });
 
 describe("toasts reducer", () => {
