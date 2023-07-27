@@ -3,9 +3,7 @@ import {
     ACTION_TYPE,
     api,
     API_REQUEST_FAILURE_MESSAGE,
-    FIRST_LOGIN_STATE,
     history,
-    isFirstLoginInPersistence,
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
@@ -13,7 +11,6 @@ import {
 } from "../../services";
 import {
     Action,
-    CredentialsAuthDTO,
     FreeTextRule,
     PotentialUser,
     UserPreferencesDTO,
@@ -133,7 +130,6 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<AnyAction>) =>
     }
 };
 
-// TODO scope for pulling out a separate registerUser method from this
 export const updateCurrentUser = (
     updatedUser: Immutable<ValidationUser>,
     updatedUserPreferences: UserPreferencesDTO,
@@ -170,13 +166,7 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
         await dispatch(requestCurrentUser() as any);
 
-        const isFirstLogin = isFirstLoginInPersistence() || false;
-        if (isFirstLogin) {
-            persistence.session.remove(KEY.FIRST_LOGIN);
-            if (redirect) {
-                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
-            }
-        } else if (!editingOtherUser) {
+        if (!editingOtherUser) {
             dispatch(showToast({
                 title: "Account settings updated",
                 body: "Your account settings were updated successfully.",
@@ -194,6 +184,25 @@ export const updateCurrentUser = (
                 closable: false,
             }) as any);
         }
+    } catch (e: any) {
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+    }
+};
+
+export const registerUser = (
+    newUser: Immutable<ValidationUser>
+) => async (dispatch: Dispatch<Action>) => {
+    try {
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
+        const currentUser = await api.users.updateCurrent(newUser, {}, null, undefined);
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
+        await dispatch(requestCurrentUser() as any);
+        trackEvent("registration", {props: {provider: "SEGUE"}});
+        ReactGA4.event({
+            category: 'user',
+            action: 'registration',
+            label: 'Create Account (SEGUE)',
+        });
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }

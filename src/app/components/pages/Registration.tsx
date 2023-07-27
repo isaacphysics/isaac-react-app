@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {errorSlice, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
+import {errorSlice, registerUser, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {Link} from "react-router-dom";
-import ReactGA4 from "react-ga4";
 import {
     Alert,
     Card,
@@ -17,9 +16,9 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {PasswordFeedback} from "../../../IsaacAppTypes";
+import {PasswordFeedback, ValidationUser} from "../../../IsaacAppTypes";
 import {
-    FIRST_LOGIN_STATE,
+    history,
     isAda,
     isDefined, isDobOldEnoughForSite,
     isDobOverTen,
@@ -29,8 +28,9 @@ import {
     loadZxcvbnIfNotPresent,
     passwordDebounce,
     persistence,
-    SITE_TITLE, SITE_TITLE_SHORT,
-    siteSpecific, trackEvent,
+    SITE_TITLE,
+    SITE_TITLE_SHORT,
+    siteSpecific,
     validateEmail,
     validateName,
     validatePassword
@@ -41,6 +41,7 @@ import {Redirect, RouteComponentProps, withRouter} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
+import {Immutable} from "immer";
 
 export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
     const dispatch = useAppDispatch();
@@ -50,15 +51,14 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const userPassword = location.state?.password || undefined;
 
     // Inputs which trigger re-render
-    const [registrationUser, setRegistrationUser] = useState(
-        Object.assign({}, user,{
-            email: userEmail,
-            dateOfBirth: undefined,
-            password: null,
-            familyName: undefined,
-            givenName: undefined
-        })
-    );
+    const [registrationUser, setRegistrationUser] = useState<Immutable<ValidationUser>>({
+        ...user,
+        email: userEmail,
+        dateOfBirth: undefined,
+        password: null,
+        familyName: undefined,
+        givenName: undefined
+    });
 
     loadZxcvbnIfNotPresent();
 
@@ -87,32 +87,18 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const register = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedSignUp(true);
-
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && confirmedOldEnoughForSite && consentGivenOrNotRequired) {
-            persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
-            Object.assign(registrationUser, {loggedIn: false});
             dispatch(errorSlice.actions.clearError());
-            dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true})), true));
-            // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
-            trackEvent("registration", {props:
-                    {
-                        provider: "SEGUE"
-                    }
-                }
-            )
-            ReactGA4.event({
-                category: 'user',
-                action: 'registration',
-                label: 'Create Account (SEGUE)',
+            dispatch(registerUser(registrationUser)).then(() => {
+                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: true});
             });
         }
     };
 
-
     // Convenience method
-    const assignToRegistrationUser = (updates: {}) => {
+    const assignToRegistrationUser = (updates: Partial<ValidationUser>) => {
         // Create new object to trigger re-render
-        setRegistrationUser(Object.assign({}, registrationUser, updates));
+        setRegistrationUser({...registrationUser, ...updates});
     };
 
     if (user && user.loggedIn) {
@@ -267,7 +253,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                             }
                                             disableDefaults
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                assignToRegistrationUser({dateOfBirth: event.target.valueAsDate});
+                                                assignToRegistrationUser({dateOfBirth: event.target.valueAsDate ?? undefined});
                                                 // DOB takes priority over age confirmation
                                                 setDobOver13CheckboxChecked(false);
                                                 setDob10To12CheckboxChecked(false);
@@ -282,7 +268,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                             checked={confirmedOverThirteen}
                                             required
                                             label="I am at least 13 years old"
-                                            disabled={(isPhy && dob10To12CheckboxChecked) || registrationUser.dateOfBirth}
+                                            disabled={(isPhy && dob10To12CheckboxChecked) || !!registrationUser.dateOfBirth}
                                             onChange={(e) => setDobOver13CheckboxChecked(e?.target.checked)}
                                             invalid={dobTooYoung}
                                         />
@@ -292,7 +278,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                             checked={confirmedTenToTwelve}
                                             required
                                             label="I am aged 10 to 12 years old"
-                                            disabled={dobOver13CheckboxChecked || registrationUser.dateOfBirth}
+                                            disabled={dobOver13CheckboxChecked || !!registrationUser.dateOfBirth}
                                             onChange={(e) => setDob10To12CheckboxChecked(e?.target.checked)}
                                             invalid={dobTooYoung}
                                         />}

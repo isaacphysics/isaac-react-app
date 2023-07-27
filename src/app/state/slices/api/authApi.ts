@@ -6,9 +6,10 @@ import {
     UserAuthenticationSettingsDTO
 } from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
-import {FIRST_LOGIN_STATE, KEY, persistence, securePadCredentials, trackEvent} from "../../../services";
+import {securePadCredentials, trackEvent} from "../../../services";
 import ReactGA4 from "react-ga4";
-import {CredentialsAuthDTO} from "../../../../IsaacAppTypes";
+import {CredentialsAuthDTO, ValidationUser} from "../../../../IsaacAppTypes";
+import {Immutable} from "immer";
 
 export const authApi = userApi.enhanceEndpoints({
     addTagTypes: ["CurrentUserAuthSettings"],
@@ -47,13 +48,7 @@ export const authApi = userApi.enhanceEndpoints({
                 errorTitle: "Login failed",
                 onQuerySuccess: ({provider}, user) => {
                     if (user.firstLogin) {
-                        persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
-                        trackEvent("registration", {props:
-                                {
-                                    provider: provider,
-                                }
-                            }
-                        );
+                        trackEvent("registration", {props: {provider}});
                         ReactGA4.event({
                             category: 'user',
                             action: 'registration',
@@ -85,6 +80,14 @@ export const authApi = userApi.enhanceEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Error with MFA verification code."
             })
+        }),
+
+        register: build.mutation<RegisteredUserDTO, Immutable<ValidationUser>>({
+            query: (user) => ({
+                url: "/users",
+                method: "POST",
+                body: {registeredUser: user}
+            }),
         }),
 
         //         logout: (): AxiosPromise => {

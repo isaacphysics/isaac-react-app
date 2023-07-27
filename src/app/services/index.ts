@@ -31,7 +31,6 @@ export * from "./tagsCS";
 export * from "./tags";
 export * from "./subject";
 export * from "./questions";
-export * from "./firstLogin";
 export * from "./notificationChecker";
 export * from "./passwordStrength";
 export * from "./searchResults";
