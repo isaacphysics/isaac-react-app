@@ -3,10 +3,14 @@ import {FreeTextRule} from "../../../IsaacAppTypes";
 import * as RS from "reactstrap";
 import {ContentBase, TestCaseDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AppState, testQuestion, useAppDispatch, useAppSelector} from "../../state";
+import {AppState, questionDevelopmentTest, useAppDispatch, useAppSelector} from "../../state";
 import {Tabs} from "../elements/Tabs";
 import {atLeastOne} from "../../services";
 import {IsaacContent} from "../content/IsaacContent";
+
+interface NumberedChoice {
+    choiceNumber: number;
+}
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
@@ -57,7 +61,7 @@ function generateDefaultChoice() {
     }
 }
 const defaultChoiceExample = generateDefaultChoice();
-function removeChoiceNumber(choice: FreeTextRule & {choiceNumber: number}) {
+function removeChoiceNumber(choice: FreeTextRule & NumberedChoice) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {choiceNumber, ...cleanChoice} = choice;
     return cleanChoice;
@@ -66,7 +70,7 @@ function notEqualToDefaultChoice(choice: FreeTextRule) {
     return choiceHash(choice) != choiceHash(defaultChoiceExample);
 }
 
-function convertQuestionChoicesToJson(questionChoices: (FreeTextRule & {choiceNumber: number})[]) {
+function convertQuestionChoicesToJson(questionChoices: (FreeTextRule & NumberedChoice)[]) {
     return JSON.stringify(questionChoices.map(removeChoiceNumber), null, 2)
 }
 
@@ -114,13 +118,157 @@ function isEditableExplanation(explanation?: any) {
     return explanation?.children && explanation.children.length > 0 && explanation.children[0].value !== undefined;
 }
 
+interface ChoiceBuilder {
+    questionChoices: (FreeTextRule & NumberedChoice)[],
+    setQuestionChoices: (questionChoices: (FreeTextRule & NumberedChoice)[]) => void,
+    questionChoicesJson: string,
+    setQuestionChoicesJson: (questionChoicesJson: string) => void,
+}
+
+const RuleBasedChoiceBuilder = ({questionChoices, setQuestionChoices, questionChoicesJson, setQuestionChoicesJson}: ChoiceBuilder) => {
+    const [jsonParseError, setJsonParseError] = useState(false);
+
+    return <React.Fragment>
+        <h2 className="h3">Matching rules</h2>
+        <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
+            {{
+                'GUI': <RS.Table className="mb-3">
+                    <thead><tr><th>Rule</th><th colSpan={3}>Response</th></tr></thead>
+                    <tbody>
+                    {questionChoices.map(choice => <tr key={choice.choiceNumber}>
+                        <td>
+                            <RS.Label className="mb-3 w-100">
+                                Value
+                                <div className="d-flex align-items-center">
+                                    <RS.Input
+                                        className="w-100" type="text" value={choice.value}
+                                        onChange={e => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, value: e.target.value} : c))}
+                                    />
+                                    <span id={`choice-help-${choice.choiceNumber}`} className="icon-help mr-2" />
+                                </div>
+                            </RS.Label>
+                            <RS.UncontrolledTooltip target={`choice-help-${choice.choiceNumber}`} placement="bottom" innerClassName="">
+                                <div className="text-left">
+                                    <RS.Table>
+                                        <thead>
+                                        <tr><th className="text-light" colSpan={2}>In-word wildcards:</th></tr>
+                                        </thead>
+                                        <tr>
+                                            <td><strong><code className="text-dark">|</code></strong></td>
+                                            <td className="text-light">Separate an OR list of word choices.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><code className="text-dark">.</code></strong></td>
+                                            <td className="text-light">Match only one character.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><code className="text-dark">*</code></strong></td>
+                                            <td className="text-light">Match zero or more characters.</td>
+                                        </tr>
+                                    </RS.Table>
+                                </div>
+                            </RS.UncontrolledTooltip>
+                            <RS.Row>
+                                <RS.Col xs={3} className="text-center">
+                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, caseInsensitive: !c.caseInsensitive} : c))}>
+                                        <RS.Label>Ignore case {checkMark(choice.caseInsensitive)}</RS.Label>
+                                    </RS.Button>
+                                </RS.Col>
+                                <RS.Col xs={3} className="text-center">
+                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsAnyOrder: !c.allowsAnyOrder} : c))}>
+                                        <RS.Label>Any order {checkMark(choice.allowsAnyOrder)}</RS.Label>
+                                    </RS.Button>
+                                </RS.Col>
+                                <RS.Col xs={3} className="text-center">
+                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsExtraWords: !c.allowsExtraWords} : c))}>
+                                        <RS.Label>Extra words {checkMark(choice.allowsExtraWords)}</RS.Label>
+                                    </RS.Button>
+                                </RS.Col>
+                                <RS.Col xs={3} className="text-center">
+                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsMisspelling: !c.allowsMisspelling} : c))}>
+                                        <RS.Label>Misspelling {checkMark(choice.allowsMisspelling)}</RS.Label>
+                                    </RS.Button>
+                                </RS.Col>
+                            </RS.Row>
+                        </td>
+                        <td className="align-middle">
+                            <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, correct: !c.correct} : c))}>
+                                <div className="h4 px-4">{checkMark(choice.correct)}</div>
+                            </RS.Button>
+                        </td>
+                        <td>
+                            <RS.Label>
+                                Feedback:
+                                {isEditableExplanation(choice.explanation) ?
+                                    <RS.Input
+                                        type="textarea" value={(choice.explanation as any).children[0].value}
+                                        onChange={event => {
+                                            const explanation = choice.explanation as any;
+                                            explanation.children[0].value = event.target.value;
+                                            setQuestionChoices(questionChoices.map(c => choice == c ? {...c, explanation} : c));
+                                        }}
+                                    />
+                                    :
+                                    <IsaacContent doc={choice.explanation as ContentBase}/>
+                                }
+                            </RS.Label>
+                        </td>
+                        <td>
+                            <button
+                                type="button" className="close" aria-label="Delete matching rule"
+                                onClick={() => setQuestionChoices(questionChoices.filter(choiceInState => choice !== choiceInState))}
+                            >×</button>
+                        </td>
+                    </tr>)}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colSpan={4} className="text-center pb-3">
+                            <RS.Button color="link" onClick={() => setQuestionChoices([...questionChoices, generateDefaultChoice()])}>
+                                <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
+                            </RS.Button>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </RS.Table>,
+                "JSON": <div className="mb-3">
+                    <p>JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion</p>
+                    <RS.Input
+                        type="textarea" rows={25} className={jsonParseError ? "alert-danger" : ""}
+                        value={questionChoicesJson}
+                        onChange={event => {
+                            setQuestionChoicesJson(event.target.value);
+                            setJsonParseError(false);
+                        }}
+                    />
+                    <div className="text-center">
+                        <RS.Button
+                            className="my-2" onClick={() => {
+                            try {
+                                setQuestionChoices(convertJsonToQuestionChoices(questionChoicesJson));
+                            } catch (e) {
+                                setJsonParseError(true);
+                            }
+                        }}
+                        >
+                            Submit
+                        </RS.Button>
+                    </div>
+                </div>
+            }}
+        </Tabs>
+    </React.Fragment>
+
+}
+
 export const FreeTextBuilder = () => {
     const dispatch = useAppDispatch();
     const testCaseResponses = useAppSelector((state: AppState) => state && state.testQuestions || []);
 
-    const [questionChoices, setQuestionChoices] = useState<(FreeTextRule & {choiceNumber: number})[]>([JSON.parse(JSON.stringify(defaultChoiceExample))]);
+    const [questionType, setQuestionType] = useState<"isaacFreeTextQuestion" | "isaacLlmQuetion">("isaacFreeTextQuestion");
+
+    const [questionChoices, setQuestionChoices] = useState<(FreeTextRule & NumberedChoice)[]>([JSON.parse(JSON.stringify(defaultChoiceExample))]);
     const [questionChoicesJson, setQuestionChoicesJson] = useState(convertQuestionChoicesToJson(questionChoices));
-    const [jsonParseError, setJsonParseError] = useState(false);
     useEffect(() => {setQuestionChoicesJson(convertQuestionChoicesToJson(questionChoices))}, [questionChoices]);
 
     const [testCases, setTestCases] = useState<(TestCaseDTO & {testCaseNumber: number})[]>([JSON.parse(JSON.stringify(defaultTestCaseExample))]);
@@ -142,242 +290,121 @@ export const FreeTextBuilder = () => {
     const cleanTestCases = testCases.map(removeTestCaseNumber).filter(notEqualToDefaultTestCase);
     const atLeastOneQuestionChoiceAndTestCase = atLeastOne(cleanQuestionChoices.length) && atLeastOne(cleanTestCases.length);
 
-    return <RS.Container>
+    return <RS.Container fluid>
         <TitleAndBreadcrumb className="mb-4" currentPageTitle="Free-text question builder" />
         <RS.Form onSubmit={(event: React.FormEvent) => {
             if (event) {event.preventDefault();}
             if (atLeastOneQuestionChoiceAndTestCase) {
                 setChoicesHashAtPreviousRequest(choicesHash(questionChoices));
-                dispatch(testQuestion(cleanQuestionChoices, cleanTestCases));
+                dispatch(questionDevelopmentTest(questionType, cleanQuestionChoices, cleanTestCases));
             }
         }}>
-            <RS.Card className="mb-4">
-                <RS.CardBody>
-                    <h2 className="h3">Matching rules</h2>
-                    <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
-                        {{
-                            'GUI': <RS.Table className="mb-3">
-                                <thead><tr><th>Rule</th><th colSpan={3}>Response</th></tr></thead>
-                                <tbody>
-                                    {questionChoices.map(choice => <tr key={choice.choiceNumber}>
-                                        <td>
-                                            <RS.Label className="mb-3 w-100">
-                                                Value
-                                                <div className="d-flex align-items-center">
+            <RS.Row className="mb-5">
+                <RS.Col xl={6}>
+                    <RS.Card className="mb-4">
+                        <RS.CardBody>
+                            <RuleBasedChoiceBuilder questionChoices={questionChoices} setQuestionChoices={setQuestionChoices} questionChoicesJson={questionChoicesJson} setQuestionChoicesJson={setQuestionChoicesJson} />
+                        </RS.CardBody>
+                    </RS.Card>
+                </RS.Col>
+                <RS.Col xl={6}>
+                    <RS.Card className="mb-4">
+                        <RS.CardBody>
+                            <h2 className="h3">Test answers ({numberOfResponseMatches}/{testCases.length})</h2>
+                            <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
+                                {{
+                                    'GUI': <RS.Table className="mb-2">
+                                        <thead>
+                                        <tr>
+                                            <th className="w-10 text-center">Expected</th>
+                                            <th>Value</th>
+                                            <th className="bg-light w-10 text-center">Actual</th>
+                                            <th className="bg-light w-20">Feedback</th>
+                                            <th className="bg-light w-10 text-center">Match</th>
+                                            <th className="bg-light"/>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {testCases.map(testCase => {
+                                            const testCaseResponse = testCaseResponseMap[testCaseHash(testCase)];
+                                            const matchFailure = !!testCaseResponse && testCaseResponse.match == false;
+                                            return <tr key={testCase.testCaseNumber}>
+                                                <td className="w-10 text-center align-middle">
+                                                    <RS.Button color="link" onClick={() => setTestCases(testCases.map(tc => testCase == tc ? {...tc, expected: !tc.expected} : tc))}>
+                                                        {checkMark(testCase.expected)}
+                                                    </RS.Button>
+                                                </td>
+                                                <td>
                                                     <RS.Input
-                                                        className="w-100" type="text" value={choice.value}
-                                                        onChange={e => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, value: e.target.value} : c))}
+                                                        type="text" value={testCase?.answer?.value || ""}
+                                                        onChange={event => setTestCases(testCases.map(
+                                                            testCaseInState => testCaseInState === testCase ?
+                                                                {...testCase, answer: {...testCase.answer, value: event.target.value}} :
+                                                                testCaseInState
+                                                        ))}
                                                     />
-                                                    <span id={`choice-help-${choice.choiceNumber}`} className="icon-help mr-2" />
-                                                </div>
-                                            </RS.Label>
-                                            <RS.UncontrolledTooltip target={`choice-help-${choice.choiceNumber}`} placement="bottom" innerClassName="">
-                                                <div className="text-left">
-                                                    <RS.Table>
-                                                        <thead>
-                                                            <tr><th className="text-light" colSpan={2}>In-word wildcards:</th></tr>
-                                                        </thead>
-                                                        <tr>
-                                                            <td><strong><code className="text-dark">|</code></strong></td>
-                                                            <td className="text-light">Separate an OR list of word choices.</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><strong><code className="text-dark">.</code></strong></td>
-                                                            <td className="text-light">Match only one character.</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><strong><code className="text-dark">*</code></strong></td>
-                                                            <td className="text-light">Match zero or more characters.</td>
-                                                        </tr>
-                                                    </RS.Table>
-                                                </div>
-                                            </RS.UncontrolledTooltip>
-                                            <RS.Row>
-                                                <RS.Col xs={3} className="text-center">
-                                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, caseInsensitive: !c.caseInsensitive} : c))}>
-                                                        <RS.Label>Ignore case {checkMark(choice.caseInsensitive)}</RS.Label>
-                                                    </RS.Button>
-                                                </RS.Col>
-                                                <RS.Col xs={3} className="text-center">
-                                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsAnyOrder: !c.allowsAnyOrder} : c))}>
-                                                        <RS.Label>Any order {checkMark(choice.allowsAnyOrder)}</RS.Label>
-                                                    </RS.Button>
-                                                </RS.Col>
-                                                <RS.Col xs={3} className="text-center">
-                                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsExtraWords: !c.allowsExtraWords} : c))}>
-                                                        <RS.Label>Extra words {checkMark(choice.allowsExtraWords)}</RS.Label>
-                                                    </RS.Button>
-                                                </RS.Col>
-                                                <RS.Col xs={3} className="text-center">
-                                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsMisspelling: !c.allowsMisspelling} : c))}>
-                                                        <RS.Label>Misspelling {checkMark(choice.allowsMisspelling)}</RS.Label>
-                                                    </RS.Button>
-                                                </RS.Col>
-                                            </RS.Row>
-                                        </td>
-                                        <td className="align-middle">
-                                            <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, correct: !c.correct} : c))}>
-                                                <div className="h4 px-4">{checkMark(choice.correct)}</div>
-                                            </RS.Button>
-                                        </td>
-                                        <td>
-                                            <RS.Label>
-                                                Feedback:
-                                                {isEditableExplanation(choice.explanation) ?
-                                                    <RS.Input
-                                                        type="textarea" value={(choice.explanation as any).children[0].value}
-                                                        onChange={event => {
-                                                            const explanation = choice.explanation as any;
-                                                            explanation.children[0].value = event.target.value;
-                                                            setQuestionChoices(questionChoices.map(c => choice == c ? {...c, explanation} : c));
-                                                        }}
-                                                    />
-                                                    :
-                                                    <IsaacContent doc={choice.explanation as ContentBase}/>
-                                                }
-                                            </RS.Label>
-                                        </td>
-                                        <td>
-                                            <button
-                                                type="button" className="close" aria-label="Delete matching rule"
-                                                onClick={() => setQuestionChoices(questionChoices.filter(choiceInState => choice !== choiceInState))}
-                                            >×</button>
-                                        </td>
-                                    </tr>)}
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colSpan={4} className="text-center pb-3">
-                                            <RS.Button color="link" onClick={() => setQuestionChoices([...questionChoices, generateDefaultChoice()])}>
-                                                <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
-                                            </RS.Button>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </RS.Table>,
-                            "JSON": <div className="mb-3">
-                                <p>JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion</p>
-                                <RS.Input
-                                    type="textarea" rows={25} className={jsonParseError ? "alert-danger" : ""}
-                                    value={questionChoicesJson}
-                                    onChange={event => {
-                                        setQuestionChoicesJson(event.target.value);
-                                        setJsonParseError(false);
-                                    }}
-                                />
-                                <div className="text-center">
-                                    <RS.Button
-                                        className="my-2" onClick={() => {
-                                            try {
-                                                setQuestionChoices(convertJsonToQuestionChoices(questionChoicesJson));
-                                            } catch (e) {
-                                                setJsonParseError(true);
-                                            }
-                                        }}
-                                    >
-                                        Submit
-                                    </RS.Button>
-                                </div>
-                            </div>
-                        }}
-                    </Tabs>
-                </RS.CardBody>
-            </RS.Card>
+                                                </td>
 
-            <RS.Card className="mb-4">
-                <RS.CardBody>
-                    <h2 className="h3">Test answers ({numberOfResponseMatches}/{testCases.length})</h2>
-                    <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
-                        {{
-                            'GUI': <RS.Table className="mb-2">
-                                <thead>
-                                    <tr>
-                                        <th className="w-10 text-center">Expected</th>
-                                        <th>Value</th>
-                                        <th className="bg-light w-10 text-center">Actual</th>
-                                        <th className="bg-light w-20">Feedback</th>
-                                        <th className="bg-light w-10 text-center">Match</th>
-                                        <th className="bg-light"/>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {testCases.map(testCase => {
-                                        const testCaseResponse = testCaseResponseMap[testCaseHash(testCase)];
-                                        const matchFailure = !!testCaseResponse && testCaseResponse.match == false;
-                                        return <tr key={testCase.testCaseNumber}>
-                                            <td className="w-10 text-center align-middle">
-                                                <RS.Button color="link" onClick={() => setTestCases(testCases.map(tc => testCase == tc ? {...tc, expected: !tc.expected} : tc))}>
-                                                    {checkMark(testCase.expected)}
+                                                <td className={`w-10 text-center align-middle ${matchFailure ? "alert-danger" : "bg-light"}`}>
+                                                    {testCaseResponse && checkMark(testCaseResponse.correct)}
+                                                </td>
+                                                <td className={`align-middle ${matchFailure ? "alert-danger" : "bg-light"}`}>
+                                                    {testCaseResponse?.explanation && <IsaacContent doc={testCaseResponse.explanation}/>}
+                                                </td>
+                                                <td className={`w-10 text-center align-middle ${matchFailure ? "alert-danger" : "bg-light"}`}>
+                                                    {testCaseResponse && checkMark(testCaseResponse.match)}
+                                                </td>
+                                                <td className={`${matchFailure ? "alert-danger" : "bg-light"}`}>
+                                                    <button
+                                                        type="button" className="close" aria-label="Delete matching rule"
+                                                        onClick={() => setTestCases(testCases.filter(testCaseInState => testCase !== testCaseInState))}
+                                                    >×</button>
+                                                </td>
+                                            </tr>;
+                                        })}
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colSpan={6} className="text-center pb-3">
+                                                <RS.Button color="link" onClick={() => setTestCases([...testCases, generateDefaultTestCase()])}>
+                                                    <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
                                                 </RS.Button>
                                             </td>
-                                            <td>
-                                                <RS.Input
-                                                    type="text" value={testCase?.answer?.value || ""}
-                                                    onChange={event => setTestCases(testCases.map(
-                                                        testCaseInState => testCaseInState === testCase ?
-                                                            {...testCase, answer: {...testCase.answer, value: event.target.value}} :
-                                                            testCaseInState
-                                                    ))}
-                                                />
-                                            </td>
-
-                                            <td className={`w-10 text-center align-middle ${matchFailure ? "alert-danger" : "bg-light"}`}>
-                                                {testCaseResponse && checkMark(testCaseResponse.correct)}
-                                            </td>
-                                            <td className={`align-middle ${matchFailure ? "alert-danger" : "bg-light"}`}>
-                                                {testCaseResponse?.explanation && <IsaacContent doc={testCaseResponse.explanation}/>}
-                                            </td>
-                                            <td className={`w-10 text-center align-middle ${matchFailure ? "alert-danger" : "bg-light"}`}>
-                                                {testCaseResponse && checkMark(testCaseResponse.match)}
-                                            </td>
-                                            <td className={`${matchFailure ? "alert-danger" : "bg-light"}`}>
-                                                <button
-                                                    type="button" className="close" aria-label="Delete matching rule"
-                                                    onClick={() => setTestCases(testCases.filter(testCaseInState => testCase !== testCaseInState))}
-                                                >×</button>
-                                            </td>
-                                        </tr>;
-                                    })}
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colSpan={6} className="text-center pb-3">
-                                            <RS.Button color="link" onClick={() => setTestCases([...testCases, generateDefaultTestCase()])}>
-                                                <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
+                                        </tr>
+                                        </tfoot>
+                                    </RS.Table>,
+                                    'CSV': <div className="mb-3">
+                                        <p>Enter test cases as CSV with the headers: expected(true/false), value</p>
+                                        <RS.Input type="textarea" rows={10} value={testCasesCsv} onChange={event => {
+                                            setCsvParseError(false);
+                                            setTestCasesCsv(event.target.value);
+                                        }} />
+                                        <div className="text-center">
+                                            <RS.Button
+                                                className={`my-2 ${csvParseError ? "alert-danger" : ""}`}
+                                                onClick={() => {
+                                                    try {
+                                                        setTestCases(convertCsvToTestCases(testCasesCsv));
+                                                    } catch (e) {
+                                                        setCsvParseError(true);
+                                                    }
+                                                }}
+                                            >
+                                                Submit
                                             </RS.Button>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </RS.Table>,
-                            'CSV': <div className="mb-3">
-                                <p>Enter test cases as CSV with the headers: expected(true/false), value</p>
-                                <RS.Input type="textarea" rows={10} value={testCasesCsv} onChange={event => {
-                                    setCsvParseError(false);
-                                    setTestCasesCsv(event.target.value);
-                                }} />
-                                <div className="text-center">
-                                    <RS.Button
-                                        className={`my-2 ${csvParseError ? "alert-danger" : ""}`}
-                                        onClick={() => {
-                                            try {
-                                                setTestCases(convertCsvToTestCases(testCasesCsv));
-                                            } catch (e) {
-                                                setCsvParseError(true);
-                                            }
-                                        }}
-                                    >
-                                        Submit
-                                    </RS.Button>
-                                </div>
-                            </div>
-                        }}
-                    </Tabs>
-                </RS.CardBody>
-            </RS.Card>
+                                        </div>
+                                    </div>
+                                }}
+                            </Tabs>
+                        </RS.CardBody>
+                    </RS.Card>
 
-            <div className="mb-5 text-center">
-                <RS.Input type="submit" value="Test question" className="btn btn-xl btn-secondary border-0" />
-            </div>
+                    <div className="mb-5 text-center">
+                        <RS.Input type="submit" value="Test question" className="btn btn-xl btn-secondary border-0" />
+                    </div>
+
+                </RS.Col>
+            </RS.Row>
         </RS.Form>
     </RS.Container>;
 };

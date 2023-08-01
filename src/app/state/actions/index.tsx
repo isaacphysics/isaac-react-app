@@ -22,6 +22,7 @@ import {
     AdditionalInformation,
     AppGroupMembership,
     ATTENDANCE,
+    Choice,
     CredentialsAuthDTO,
     EmailUserRoles,
     FreeTextRule,
@@ -906,10 +907,10 @@ export const getQuizAssignmentResultsSummaryCSV = (assignmentId: number) => asyn
 };
 
 // Question testing
-export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCaseDTO[]) => async (dispatch: Dispatch<Action>) => {
+export const questionDevelopmentTest = (questionType: string, questionChoices: Choice[], testCases: TestCaseDTO[]) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.TEST_QUESTION_REQUEST});
-        const testResponse = await api.questions.testFreeTextQuestion(questionChoices, testCases);
+        const testResponse = await api.questions.questionDevelopmentTest(questionType, questionChoices, testCases);
         dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS, testCaseResponses: testResponse.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE});

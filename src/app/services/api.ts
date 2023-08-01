@@ -236,8 +236,8 @@ export const api = {
                 }
             })
         },
-        testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
-            return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
+        questionDevelopmentTest: (questionType: String, userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
+            return endpoint.post(`/questions/test?type=${questionType}`, {userDefinedChoices, testCases});
         }
     },
     concepts: {
