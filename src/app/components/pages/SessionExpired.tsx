@@ -1,19 +1,13 @@
 import React from "react";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import ReactGA from "react-ga";
-import ReactGA4 from "react-ga4";
+import ReactGA from "react-ga4";
 import {WEBMASTER_EMAIL} from "../../services";
 
 export const SessionExpired = () => {
 
-    ReactGA.exception({
+    ReactGA.gtag("event", "exception", {
         description: 'session_expired',
-        fatal: true
-    });
-    ReactGA4.gtag("event", "exception", {
-        description: 'session_expired',
-        fatal: true
     });
 
     return <Container>

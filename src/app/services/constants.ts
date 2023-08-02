@@ -42,7 +42,6 @@ export const EDITOR_ORIGIN = "https://editor.isaaccomputerscience.org";
 export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
 export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/#!/compare";
 
-export const GOOGLE_ANALYTICS_ACCOUNT_ID = "UA-137475074-1";
 export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = envSpecific("G-H95WP5C8DR", "G-KZJS9ZKWBD", "G-2QRVC1GSQY");
 
 export const SOCIAL_LINKS = {

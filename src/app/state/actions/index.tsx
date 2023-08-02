@@ -55,8 +55,7 @@ import {
     tokenVerificationModal
 } from "../../components/elements/modals/TeacherConnectionModalCreators";
 import {AxiosError} from "axios";
-import ReactGA from "react-ga";
-import ReactGA4 from "react-ga4";
+import ReactGA from "react-ga4";
 import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
 import {
     AppState,
@@ -94,10 +93,7 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
                 }) as any;
             }
         } else {
-            ReactGA.exception({
-                description: `load_fail: ${error}`
-            });
-            ReactGA4.gtag("event", "exception", {
+            ReactGA.gtag("event", "exception", {
                 description: `load_fail: ${error}`
             });
             return showToast({
@@ -413,11 +409,6 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         if (providerResponse.data.firstLogin) {
             ReactGA.event({
-                category: 'user',
-                action: 'registration',
-                label: `Create Account (${provider})`,
-            });
-            ReactGA4.event({
                 category: 'user',
                 action: 'registration',
                 label: `Create Account (${provider})`,

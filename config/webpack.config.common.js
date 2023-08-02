@@ -53,7 +53,7 @@ module.exports = (env) => {
             alias: {
                 'p5': 'p5/lib/p5.min.js'
             },
-            fallback: { "querystring": require.resolve("querystring-es3") }
+            fallback: { "query-string": require.resolve("querystring-es3") }
         },
 
         module: {

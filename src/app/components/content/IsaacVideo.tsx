@@ -2,8 +2,7 @@ import React, {useCallback, useContext} from 'react';
 import {VideoDTO} from "../../../IsaacApiTypes";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {NOT_FOUND} from "../../services";
-import ReactGA from "react-ga";
-import ReactGA4 from "react-ga4";
+import ReactGA from "react-ga4";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 
 interface IsaacVideoProps {
@@ -84,11 +83,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
                 });
             } catch (error: any) {
                 console.error("Error with YouTube library: ", error, error.stack);
-                ReactGA.exception({
-                    description: `youtube_error: ${error?.message || 'problem with YT library'}`,
-                    fatal: false
-                });
-                ReactGA4.gtag("event", "exception", {
+                ReactGA.gtag("event", "exception", {
                     description: `youtube_error: ${error?.message || 'problem with YT library'}`,
                     fatal: false
                 });
