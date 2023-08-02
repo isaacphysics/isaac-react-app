@@ -824,10 +824,15 @@ export interface Choice extends ChoiceDTO {
 }
 
 export interface FreeTextRule extends Choice {
+    type: "freeTextRule";
     caseInsensitive?: boolean;
     allowsAnyOrder?: boolean;
     allowsExtraWords?: boolean;
     allowsMisspelling?: boolean;
+}
+
+export interface LlmPrompt extends Choice {
+    type: "llmPrompt";
 }
 
 export type Concepts = ResultsWrapper<ContentSummaryDTO>;

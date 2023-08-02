@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {FreeTextRule} from "../../../IsaacAppTypes";
+import {FreeTextRule, LlmPrompt} from "../../../IsaacAppTypes";
 import * as RS from "reactstrap";
-import {ContentBase, TestCaseDTO} from "../../../IsaacApiTypes";
+import {Content, ContentBase, TestCaseDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AppState, questionDevelopmentTest, useAppDispatch, useAppSelector} from "../../state";
 import {Tabs} from "../elements/Tabs";
@@ -10,6 +10,20 @@ import {IsaacContent} from "../content/IsaacContent";
 
 interface NumberedChoice {
     choiceNumber: number;
+}
+
+function isFreeTextRule(choice: FreeTextRule | LlmPrompt): choice is FreeTextRule {
+    return choice.type === "freeTextRule";
+}
+function areAllFreeTextRules(choices: (FreeTextRule | LlmPrompt)[]): choices is FreeTextRule[] {
+    return choices.every(isFreeTextRule);
+}
+
+function isLlmPrompt(choice: FreeTextRule | LlmPrompt): choice is LlmPrompt {
+    return choice.type === "llmPrompt";
+}
+function areAllLlmPrompts(choices: (FreeTextRule | LlmPrompt)[]): choices is LlmPrompt[] {
+    return choices.every(isLlmPrompt);
 }
 
 interface AugmentedTestCase extends TestCaseDTO {
@@ -27,16 +41,26 @@ function stringHash(input: string) {
     return hash;
 }
 
-function choiceHash(choice: FreeTextRule) {
+function freeTextHash(choice: FreeTextRule) {
     const {value, correct, explanation, caseInsensitive, allowsAnyOrder, allowsExtraWords, allowsMisspelling} = choice;
     const definingProperties =
         "" + value + correct + stringHash(JSON.stringify(explanation)) +
         caseInsensitive + allowsAnyOrder + allowsExtraWords + allowsMisspelling;
     return stringHash(definingProperties);
 }
+function llmPromptHash(choice: LlmPrompt) {
+    const {value} = choice;
+    return stringHash("" + value);
+}
 
-function choicesHash(choices: FreeTextRule[]) {
-    return stringHash(choices.map(c => choiceHash(c)).join(","));
+function choicesHash(choices: FreeTextRule[] | LlmPrompt[]) {
+    if (areAllFreeTextRules(choices)) {
+        return stringHash(choices.map(freeTextHash).join(","));
+    } else if (areAllLlmPrompts(choices)) {
+        return stringHash(choices.map(llmPromptHash).join(","));
+    } else {
+        throw new Error("Mixed choice types");
+    }
 }
 
 function testCaseHash(testCaseInput: TestCaseDTO) {
@@ -52,25 +76,35 @@ function checkMark(boolean?: boolean) {
 }
 
 let choiceNumber = 0;
-function generateDefaultChoice() {
+function generateDefaultFreeTextChoice(): FreeTextRule & NumberedChoice {
     choiceNumber++;
     return {
         "choiceNumber": choiceNumber, "type": "freeTextRule", "encoding": "markdown", "value": "",
         "correct": true, "caseInsensitive": true, "allowsAnyOrder": false, "allowsExtraWords": false, "allowsMisspelling": false,
-        "explanation": {"type": "content", "children": [{"type": "content", "value": `Match ${choiceNumber}`, "encoding": "markdown"}], "encoding": "markdown"}
+        "explanation": {"type": "content", "children": [{"type": "content", "value": `Match ${choiceNumber}`, "encoding": "markdown"} as ContentBase], "encoding": "markdown"} as Content
     }
 }
-const defaultChoiceExample = generateDefaultChoice();
-function removeChoiceNumber(choice: FreeTextRule & NumberedChoice) {
+const defaultFreeTextChoiceExample = generateDefaultFreeTextChoice();
+
+function generateDefaultLlmPromptChoice(): LlmPrompt & NumberedChoice {
+    return {
+        "choiceNumber": 0, "type": "llmPrompt", "encoding": "markdown", "value": `"<$Student Answer>" is equivalent to "some model answer".`
+    };
+}
+const defaultLlmPromptChoiceExample = generateDefaultLlmPromptChoice();
+
+function removeChoiceNumber(choice: (FreeTextRule | LlmPrompt) & NumberedChoice) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {choiceNumber, ...cleanChoice} = choice;
     return cleanChoice;
 }
-function notEqualToDefaultChoice(choice: FreeTextRule) {
-    return choiceHash(choice) != choiceHash(defaultChoiceExample);
+function notEqualToDefaultChoice(choice: FreeTextRule | LlmPrompt) {
+    if (isFreeTextRule(choice)) return freeTextHash(choice) != freeTextHash(defaultFreeTextChoiceExample);
+    if (isLlmPrompt(choice)) return llmPromptHash(choice) != llmPromptHash(defaultLlmPromptChoiceExample);
+    else throw new Error("Choice neither FreeTextRule nor LlmPrompt");
 }
 
-function convertQuestionChoicesToJson(questionChoices: (FreeTextRule & NumberedChoice)[]) {
+function convertQuestionChoicesToJson(questionChoices: ((FreeTextRule | LlmPrompt) & NumberedChoice)[]) {
     return JSON.stringify(questionChoices.map(removeChoiceNumber), null, 2)
 }
 
@@ -79,14 +113,18 @@ function convertJsonToQuestionChoices(jsonString: string) {
     let choicesArray;
     if (Array.isArray(parsedJson)) {
         choicesArray = parsedJson;
-    } else if (parsedJson.hasOwnProperty("type") && parsedJson.type == "isaacFreeTextQuestion") {
+    } else if (parsedJson.type === "isaacFreeTextQuestion" || parsedJson.type === "isaacLlmQuestion") {
         choicesArray = parsedJson.choices;
     } else {
-        throw TypeError("Neither a Choices array nor a FreeTextQuestion");
+        throw TypeError("Neither a Choices array, LlmQuestion nor a FreeTextQuestion");
     }
-    return choicesArray.map(
-        (choice: FreeTextRule, i: number) => Object.assign(choice, {choiceNumber: i})
-    );
+    if (areAllFreeTextRules(choicesArray)) {
+        return choicesArray.map((choice: FreeTextRule, i: number) => Object.assign(choice, {choiceNumber: i}));
+    } else if (areAllLlmPrompts(choicesArray)) {
+        return choicesArray.map((choice: LlmPrompt, i: number) => Object.assign(choice, {choiceNumber: i}));
+    } else {
+        throw new Error("Mixed choice types when converting from JSON");
+    }
 }
 
 let testCaseNumber = 0;
@@ -118,14 +156,11 @@ function isEditableExplanation(explanation?: any) {
     return explanation?.children && explanation.children.length > 0 && explanation.children[0].value !== undefined;
 }
 
-interface ChoiceBuilder {
-    questionChoices: (FreeTextRule & NumberedChoice)[],
-    setQuestionChoices: (questionChoices: (FreeTextRule & NumberedChoice)[]) => void,
-    questionChoicesJson: string,
-    setQuestionChoicesJson: (questionChoicesJson: string) => void,
-}
+interface JsonChoiceBuilder { questionChoicesJson: string; setQuestionChoicesJson: (questionChoicesJson: string) => void }
+interface LlmPromptChoiceBuilder extends JsonChoiceBuilder { questionChoices: (LlmPrompt & NumberedChoice)[]; setQuestionChoices: (questionChoices: (LlmPrompt & NumberedChoice)[]) => void }
+interface RuleBasedChoiceBuilder extends JsonChoiceBuilder { questionChoices: (FreeTextRule & NumberedChoice)[]; setQuestionChoices: (questionChoices: (FreeTextRule & NumberedChoice)[]) => void }
 
-const RuleBasedChoiceBuilder = ({questionChoices, setQuestionChoices, questionChoicesJson, setQuestionChoicesJson}: ChoiceBuilder) => {
+const RuleBasedChoiceBuilder = ({questionChoices, setQuestionChoices, questionChoicesJson, setQuestionChoicesJson}: RuleBasedChoiceBuilder) => {
     const [jsonParseError, setJsonParseError] = useState(false);
 
     return <React.Fragment>
@@ -224,7 +259,7 @@ const RuleBasedChoiceBuilder = ({questionChoices, setQuestionChoices, questionCh
                     <tfoot>
                     <tr>
                         <td colSpan={4} className="text-center pb-3">
-                            <RS.Button color="link" onClick={() => setQuestionChoices([...questionChoices, generateDefaultChoice()])}>
+                            <RS.Button color="link" onClick={() => setQuestionChoices([...questionChoices, generateDefaultFreeTextChoice()])}>
                                 <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
                             </RS.Button>
                         </td>
@@ -245,7 +280,8 @@ const RuleBasedChoiceBuilder = ({questionChoices, setQuestionChoices, questionCh
                         <RS.Button
                             className="my-2" onClick={() => {
                             try {
-                                setQuestionChoices(convertJsonToQuestionChoices(questionChoicesJson));
+                                const convertedQuestionChoices = convertJsonToQuestionChoices(questionChoicesJson);
+                                if (areAllFreeTextRules(convertedQuestionChoices)) { setQuestionChoices(convertedQuestionChoices); }
                             } catch (e) {
                                 setJsonParseError(true);
                             }
@@ -258,16 +294,71 @@ const RuleBasedChoiceBuilder = ({questionChoices, setQuestionChoices, questionCh
             }}
         </Tabs>
     </React.Fragment>
+}
 
+const LlmPromptChoiceBuilder = ({questionChoices, setQuestionChoices, questionChoicesJson, setQuestionChoicesJson}: LlmPromptChoiceBuilder) => {
+    const [jsonParseError, setJsonParseError] = useState(false);
+
+    const llmPromptChoice = questionChoices[0];
+    function setLlmPromptChoice(llmPromptChoice: LlmPrompt) {
+        setQuestionChoices([{...llmPromptChoice, choiceNumber: 0}]);
+    }
+
+    return <React.Fragment>
+        <h2 className="h3">Prompt Template</h2>
+        <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
+            {{
+                'GUI': <div className="mb-3">
+                    <RS.Label htmlFor="prompt-input">
+                        <strong>Prompt:</strong>
+                        <small id="prompt-help" className="form-text text-muted mt-0 d-inline ml-1">
+                            <code className="text-danger border">{`<$STUDENT_ANSWER>`}</code> will be replaced by the student's question attempt.
+                        </small>
+                    </RS.Label>
+                    <RS.Input
+                        id="prompt-input" aria-describedby="prompt-help"
+                        type="textarea" rows={8}
+                        value={llmPromptChoice.value}
+                        onChange={event => setLlmPromptChoice({...llmPromptChoice, value: event.target.value})}
+                    />
+                </div>,
+                'JSON': <div className="mb-3">
+                    <p>JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion</p>
+                    <RS.Input
+                        type="textarea" rows={25} className={jsonParseError ? "alert-danger" : ""}
+                        value={questionChoicesJson}
+                        onChange={event => {
+                            setQuestionChoicesJson(event.target.value);
+                            setJsonParseError(false);
+                        }}
+                    />
+                    <div className="text-center">
+                        <RS.Button
+                            className="my-2" onClick={() => {
+                            try {
+                                const convertedQuestionChoices = convertJsonToQuestionChoices(questionChoicesJson);
+                                if (areAllLlmPrompts(convertedQuestionChoices)) { setQuestionChoices(convertedQuestionChoices); }
+                            } catch (e) {
+                                setJsonParseError(true);
+                            }
+                        }}
+                        >
+                            Submit
+                        </RS.Button>
+                    </div>
+                </div>
+            }}
+        </Tabs>
+    </React.Fragment>
 }
 
 export const FreeTextBuilder = () => {
     const dispatch = useAppDispatch();
     const testCaseResponses = useAppSelector((state: AppState) => state && state.testQuestions || []);
 
-    const [questionType, setQuestionType] = useState<"isaacFreeTextQuestion" | "isaacLlmQuetion">("isaacFreeTextQuestion");
+    const [questionType, setQuestionType] = useState<"isaacFreeTextQuestion" | "isaacLlmQuestion">("isaacLlmQuestion");
 
-    const [questionChoices, setQuestionChoices] = useState<(FreeTextRule & NumberedChoice)[]>([JSON.parse(JSON.stringify(defaultChoiceExample))]);
+    const [questionChoices, setQuestionChoices] = useState<(FreeTextRule & NumberedChoice)[] | (LlmPrompt & NumberedChoice)[]>([JSON.parse(JSON.stringify(defaultLlmPromptChoiceExample))]);
     const [questionChoicesJson, setQuestionChoicesJson] = useState(convertQuestionChoicesToJson(questionChoices));
     useEffect(() => {setQuestionChoicesJson(convertQuestionChoicesToJson(questionChoices))}, [questionChoices]);
 
@@ -303,7 +394,18 @@ export const FreeTextBuilder = () => {
                 <RS.Col xl={6}>
                     <RS.Card className="mb-4">
                         <RS.CardBody>
-                            <RuleBasedChoiceBuilder questionChoices={questionChoices} setQuestionChoices={setQuestionChoices} questionChoicesJson={questionChoicesJson} setQuestionChoicesJson={setQuestionChoicesJson} />
+                            <RS.Label>
+                                Free-text markng type:
+                                <select className="ml-2" value={questionType} onChange={event => {
+                                    setQuestionType(event.target.value as "isaacFreeTextQuestion" | "isaacLlmQuestion");
+                                    setQuestionChoices(event.target.value === "isaacFreeTextQuestion" ? [generateDefaultFreeTextChoice()] : [generateDefaultLlmPromptChoice()]);
+                                }}>
+                                    <option value="isaacFreeTextQuestion">Rule based marking</option>
+                                    <option value="isaacLlmQuestion">LLM based marking</option>
+                                </select>
+                            </RS.Label>
+                            {areAllFreeTextRules(questionChoices) && <RuleBasedChoiceBuilder {...{questionChoices, setQuestionChoices, questionChoicesJson, setQuestionChoicesJson}} />}
+                            {areAllLlmPrompts(questionChoices) && <LlmPromptChoiceBuilder  {...{questionChoices, setQuestionChoices, questionChoicesJson, setQuestionChoicesJson}} />}
                         </RS.CardBody>
                     </RS.Card>
                 </RS.Col>
