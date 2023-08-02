@@ -25,7 +25,7 @@ export const mockUser = {
             examBoard: "all"
         }
     ],
-    registeredContextsLastConfirmed: DAYS_AGO(3),
+    registeredContextsLastConfirmed: DAYS_AGO(-1),
     firstLogin: false,
     lastUpdated: DAYS_AGO(1),
     lastSeen: DAYS_AGO(1),
