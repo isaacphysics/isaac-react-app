@@ -534,7 +534,7 @@ export const SetAssignments = () => {
             assignees={(isDefined(modalBoard) && isDefined(modalBoard?.id) && groupsByGameboard[modalBoard.id]) || []}
         />
 
-        <TitleAndBreadcrumb currentPageTitle={"Set assignments"} help={pageHelp} modalId="set_assignments_help"/>
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} help={pageHelp} modalId="set_assignments_help"/>
         <PageFragment fragmentId={`set_${siteSpecific("gameboards", "quizzes")}_help`} ifNotFound={RenderNothing} />
         {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
         {groups && groups.length === 0 && <Alert color="warning">
