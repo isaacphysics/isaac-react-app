@@ -124,9 +124,6 @@ export const api = {
         logout: (): AxiosPromise => {
             return endpoint.post(`/auth/logout`);
         },
-        logoutEverywhere: (): AxiosPromise => {
-            return endpoint.post(`/auth/logout/everywhere`);
-        },
         login: (provider: ApiTypes.AuthenticationProvider, credentials: CredentialsAuthDTO): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.post(`/auth/${provider}/authenticate`, securePadCredentials(credentials));
         },

@@ -56,7 +56,6 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
     switch (action.type) {
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
-        case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
             userLoggedOut = true;
             clearCurrentUser();
             break;

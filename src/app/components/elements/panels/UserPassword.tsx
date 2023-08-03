@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {loadZxcvbnIfNotPresent, passwordDebounce, validateEmail} from "../../../services";
-import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
+import {linkAccount, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -174,31 +174,6 @@ export const UserPassword = (
                                 <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
                                     {authenticationProvidersUsed("GOOGLE") ? " Remove linked Google account" : " Add linked Google account"}
                                 </Label>
-                            </div>
-                        </Col>
-                    </FormGroup>
-                </Col>
-            </Row>
-        </React.Fragment>
-        <React.Fragment>
-            <Row>
-                <Col md={{size: 6, offset: 3}}>
-                    <hr className="text-center"/>
-                </Col>
-            </Row>
-            <Row>
-                <Col md={{size: 6, offset: 3}}>
-                    <FormGroup>
-                        <h4>Log Out</h4>
-                        <small>
-                            {"If you forgot to log out on a device you no longer have access to, you can " +
-                            "log your account out on all devices, including this one."}
-                        </small>
-                        <Col className="text-center mt-2">
-                            <div className="vertical-center ml-2">
-                                <Button onClick={() => dispatch(logOutUserEverywhere())}>
-                                    Log me out everywhere
-                                </Button>
                             </div>
                         </Col>
                     </FormGroup>
