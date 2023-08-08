@@ -18,6 +18,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
+import {MetaDescription} from "../elements/MetaDescription";
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
     const dispatch = useAppDispatch();
@@ -37,6 +38,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     return <ShowLoading until={topicPage} thenRender={topicPage =>
         <Container id="topic-page">
             <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
+            <MetaDescription description={topicPage.summary} />
             <CanonicalHrefElement />
             <Row>
                 <Col className={"py-3 mw-760"}>
