@@ -178,37 +178,19 @@ export const anonymisationFunctions = {
         groupName: anonymisationOptions?.anonymiseGroupNames ? `Demo Group ${appGroup?.id}` : appGroup.groupName,
         members: appGroup?.members?.map((a, i) => anonymisationFunctions.userSummary()(a, {indexOverride: i})),
     }),
-    assignments: (quizAssignments: QuizAssignmentDTO[] | NOT_FOUND_TYPE | null) => {
-        if (!isDefined(quizAssignments) || quizAssignments === NOT_FOUND) {
-            return quizAssignments;
-        }
-        return quizAssignments.map(assignment => {
-            const groupName = `Demo Group ${assignment.groupId}`;
-            return {
-                // @ts-ignore we know an assignment will be returned from this, since we pass in an assignment
-                ...anonymisationFunctions.assignment({assignment: assignment}).assignment,
-                groupName,
-            } as AppQuizAssignment;
-        });
-    },
-    assignment: (assignmentState: {assignment: QuizAssignmentDTO} | {error: string}): {assignment: QuizAssignmentDTO} | {error: string} => {
-        if ("error" in assignmentState) {
-            return assignmentState;
-        }
+    assignment: (assignment: QuizAssignmentDTO): QuizAssignmentDTO => {
         return {
-            assignment: {
-                ...assignmentState.assignment,
-                userFeedback: assignmentState.assignment.userFeedback?.map((uf, i) => ({
-                    ...uf,
-                    user: uf.user && anonymisationFunctions.userSummary()(uf.user, {indexOverride: i})
-                })),
-            },
+            ...assignment,
+            userFeedback: assignment.userFeedback?.map((uf, i) => ({
+                ...uf,
+                user: uf.user && anonymisationFunctions.userSummary()(uf.user, {indexOverride: i})
+            })),
         };
     },
-    quizAttempt: produce<{ studentAttempt: QuizAttemptFeedbackDTO }>((quizAttempt) => {
-        if (quizAttempt.studentAttempt.user) {
-            quizAttempt.studentAttempt.user.familyName = "";
-            quizAttempt.studentAttempt.user.givenName = "Test Student";
+    quizAttempt: produce<QuizAttemptFeedbackDTO>((quizAttempt) => {
+        if (quizAttempt.user) {
+            quizAttempt.user.familyName = "";
+            quizAttempt.user.givenName = "Test Student";
         }
     }),
     userProgress: (userProgress: UserProgress): UserProgress => userProgress && {

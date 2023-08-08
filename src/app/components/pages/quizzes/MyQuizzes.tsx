@@ -1,11 +1,7 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {
-    loadQuizAssignedToMe,
-    loadQuizzes,
-    loadQuizzesAttemptedFreelyByMe,
-    selectors,
-    useAppDispatch,
-    useAppSelector
+    useGetAttemptedFreelyByMeQuery,
+    useGetQuizAssignmentsAssignedToMeQuery
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -25,6 +21,7 @@ import {
 } from "../../../services";
 import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
+import {useGetAvailableQuizzesQuery} from "../../../state";
 import {PageFragment} from "../../elements/PageFragment";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
@@ -119,19 +116,10 @@ function QuizGrid({quizzes, empty}: AssignmentGridProps) {
 }
 
 const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
-    const quizAssignments = useAppSelector(selectors.quizzes.assignedToMe);
-    const freeAttempts = useAppSelector(selectors.quizzes.attemptedFreelyByMe);
-    const quizzes = useAppSelector(selectors.quizzes.available);
 
-    const dispatch = useAppDispatch();
-
-    const startIndex = 0;
-
-    useEffect(() => {
-        dispatch(loadQuizzes(startIndex));
-        dispatch(loadQuizAssignedToMe());
-        dispatch(loadQuizzesAttemptedFreelyByMe());
-    }, [dispatch, startIndex]);
+    const {data: quizzes} = useGetAvailableQuizzesQuery(0);
+    const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
+    const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
 
     const pageHelp = <span>
         Use this page to see tests you need to take and your test results.

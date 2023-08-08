@@ -19,14 +19,7 @@ import {
     userAnsweredQuestionsByDate,
     userProgress,
     testQuestions,
-    quizAssignedToMe,
-    quizAssignment,
-    quizAssignments,
     quizAttempt,
-    quizAttemptedFreelyByMe,
-    quizPreview,
-    quizzes,
-    studentQuizAttempt,
     activeAuthorisations,
     groupMemberships,
     otherUserAuthorisations,
@@ -95,14 +88,7 @@ export const rootReducer = combineReducers({
     search,
 
     // Quizzes
-    quizzes,
-    quizAssignments,
-    quizAssignedToMe,
     quizAttempt,
-    studentQuizAttempt,
-    quizAssignment,
-    quizPreview,
-    quizAttemptedFreelyByMe,
 
     // API reducer
     [isaacApi.reducerPath]: isaacApi.reducer

@@ -154,10 +154,6 @@ export type Action =
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_REQUEST; assignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_SUCCESS; assignmentResultsCSV: string}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.TEST_QUESTION_REQUEST}
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE}
@@ -192,54 +188,10 @@ export type Action =
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
 
-    | {type: ACTION_TYPE.QUIZZES_REQUEST}
-    | {type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS; quizzes: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
-
-    | {type: ACTION_TYPE.QUIZ_SET_REQUEST; assignment: ApiTypes.QuizAssignmentDTO}
-    | {type: ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS; newAssignment: ApiTypes.QuizAssignmentDTO}
-
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_REQUEST}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_REQUEST}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS; assignments: ApiTypes.QuizAssignmentDTO[]}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST; quizAssignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST; quizAttemptId: number}
     | {type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE; error: string}
-    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_REQUEST; quizAttemptId: number; userId: number}
-    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS; studentAttempt: ApiTypes.QuizAttemptFeedbackDTO}
-    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE; error: string}
-
-    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST; quizAttemptId: number}
-    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
-
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_REQUEST; quizAssignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_SUCCESS; assignment: ApiTypes.QuizAssignmentDTO}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_FAILURE; error: string}
-
-    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_REQUEST; quizAssignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_SUCCESS; quizAssignmentId: number}
-    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_FAILURE; quizAssignmentId: number}
-
-    | {type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_REQUEST; quizId: string}
-    | {type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_SUCCESS; quiz: ApiTypes.IsaacQuizDTO}
-    | {type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_FAILURE; error: string}
-
-    | {type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_REQUEST}
-    | {type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_SUCCESS; attempts: ApiTypes.QuizAttemptDTO[]}
-    | {type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_REQUEST}
-    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_RESPONSE_SUCCESS; quizAssignmentId: number; feedback: ApiTypes.QuizUserFeedbackDTO}
-
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS; quizAssignmentId: number; update: ApiTypes.QuizAssignmentDTO}
     ;
 
 export type NOT_FOUND_TYPE = 404;
@@ -733,7 +685,7 @@ export interface PageSettings {
 export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
 
 export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
-    groupName?: string;
+    groupName: string;
 }
 
 export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "SECTION_MARKS", "DETAILED_FEEDBACK"];

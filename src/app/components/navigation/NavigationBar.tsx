@@ -1,11 +1,11 @@
 import React, {HTMLProps, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {
-    loadQuizAssignedToMe,
     selectors,
     useAppDispatch,
     useAppSelector,
-    useGetMyAssignmentsQuery
+    useGetMyAssignmentsQuery,
+    useGetQuizAssignmentsAssignedToMeQuery
 } from "../../state";
 import {
     Badge,
@@ -25,7 +25,8 @@ import {
     isFound,
     partitionCompleteAndIncompleteQuizzes,
     isLoggedIn,
-    isPhy, siteSpecific
+    isPhy,
+    siteSpecific
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
@@ -84,23 +85,20 @@ export function MenuBadge({count, message, ...rest}: {count: number, message: st
 }
 
 export function useAssignmentsCount() {
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const quizzes = useAppSelector(state => state?.quizAssignedToMe);
-    const { data: assignments } = useGetMyAssignmentsQuery(user?.loggedIn ? undefined : skipToken, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
 
-    const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
-    useEffect(() => {
-        if (user?.loggedIn) {
-            dispatch(loadQuizAssignedToMe());
-        }
-    }, [dispatch, loggedInUserId]);
+    // Only fetches assignments if the user is logged in, and refetch on login/logout, reconnect.
+    const queryArg = user?.loggedIn ? undefined : skipToken;
+    // We should add refetchOnFocus: true if we want to refetch on browser focus - hard to say if this is a good idea or not.
+    const queryOptions = {refetchOnMountOrArgChange: true, refetchOnReconnect: true};
+    const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery(queryArg, queryOptions);
+    const {data: assignments} = useGetMyAssignmentsQuery(queryArg, queryOptions);
 
     const assignmentsCount = assignments
         ? filterAssignmentsByStatus(assignments).inProgressRecent.length
         : 0;
-    const quizzesCount = quizzes && isFound(quizzes)
-        ? partitionCompleteAndIncompleteQuizzes(quizzes)[1].length
+    const quizzesCount = quizAssignments && isFound(quizAssignments)
+        ? partitionCompleteAndIncompleteQuizzes(quizAssignments)[1].length
         : 0;
 
     return {assignmentsCount, quizzesCount};
