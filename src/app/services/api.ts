@@ -142,35 +142,6 @@ export const api = {
             return endpoint.post(`/notifications/${id}/${response}`)
         }
     },
-    authorisations: {
-        get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get("authorisations");
-        },
-        adminGet: (userId: number): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get(`authorisations/${userId}`);
-        },
-        getOtherUsers: (): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
-            return endpoint.get("/authorisations/other_users");
-        },
-        adminGetOtherUsers: (userId: number): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
-            return endpoint.get(`/authorisations/other_users/${userId}`);
-        },
-        getTokenOwner: (token: string): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
-            return endpoint.get(`/authorisations/token/${token}/owner`);
-        },
-        useToken: (token: string) => {
-            return endpoint.post(`/authorisations/use_token/${token}`);
-        },
-        revoke: (userId: number) => {
-            return endpoint.delete(`/authorisations/${userId}`);
-        },
-        release: (userId: number) => {
-            return endpoint.delete(`/authorisations/release/${userId}`);
-        },
-        releaseAll: () => {
-            return endpoint.delete(`/authorisations/release/`);
-        }
-    },
     glossary: {
         getTerms: (): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.GlossaryTermDTO>> => {
             // FIXME: Magic number. This needs to go through pagination with
@@ -226,37 +197,6 @@ export const api = {
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
             return endpoint.get(`/pages/topics/${topicName}`);
-        }
-    },
-    schools: {
-        search: (query: string): AxiosPromise<AppTypes.School[]> => {
-            return endpoint.get(`/schools/?limit=3&query=${encodeURIComponent(query)}`);
-        },
-        getByUrn: (urn: string): AxiosPromise<AppTypes.School[]> => {
-            return endpoint.get(`/schools/?urn=${encodeURIComponent(urn)}`);
-        }
-    },
-    countries: {
-        getCountries: (): AxiosPromise<Record<string, string>> => {
-            return endpoint.get(`/countries`);
-        },
-        getPriorityCountries: (): AxiosPromise<Record<string, string>> => {
-            return endpoint.get(`/countries/priority`);
-        }
-    },
-    contactForm: {
-        send: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
-            return endpoint.post(`/contact/`, params, {});
-        }
-    },
-    logger: {
-        log : (eventDetails: object): AxiosPromise<void> => {
-            return endpoint.post(`/log`, eventDetails);
-        },
-    },
-    fasttrack: {
-        concepts: (gameboardId: string, concept: string, upperQuestionId: string): AxiosPromise<ApiTypes.GameboardItem[]> => {
-            return endpoint.get(`/fasttrack/${gameboardId}/concepts`, {params: {concept, "upper_question_id": upperQuestionId}});
         }
     },
     websockets: {

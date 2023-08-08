@@ -1,9 +1,10 @@
 import {GameboardItem, IsaacFastTrackQuestionPageDTO} from "../../../IsaacApiTypes";
 import queryString from "query-string";
-import {useAppDispatch, useAppSelector} from "../../state";
-import {AppState} from "../../state";
-import React, {useContext, useEffect} from "react";
-import {fetchFasttrackConcepts} from "../../state";
+import {
+    useAppSelector,
+    useGetFasttrackConceptQuestionsQuery,
+} from "../../state";
+import React, {useContext, useMemo} from "react";
 import * as RS from "reactstrap";
 import {selectors} from "../../state";
 import {Link} from "react-router-dom";
@@ -12,6 +13,7 @@ import {Hexagon} from "./svg/Hexagon";
 import {HexagonConnection} from "./svg/HexagonConnection";
 import {Markup} from "./markup";
 import {GameboardContext} from "../../../IsaacAppTypes";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 type QuestionLevel = "topTen" | "upper" | "lower";
 
@@ -61,11 +63,12 @@ function calculateProgressBarHeight(questionLevel: LevelTag, hexagonQuarterHeigh
 }
 
 export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; search: string}) {
-    const {questionHistory: qhs}: {questionHistory?: string} = queryString.parse(search);
-    const questionHistory = qhs ? qhs.split(",") : [];
-    const dispatch = useAppDispatch();
     const pageQuestionParts = useAppSelector(selectors.questions.getQuestions);
-    const fastTrackConcepts = useAppSelector((appState: AppState) => appState && appState.fasttrackConcepts);
+
+    const questionHistory = useMemo(() => {
+        const {questionHistory: qhs}: {questionHistory?: string} = queryString.parse(search);
+        return qhs ? qhs.split(",") : [];
+    }, [search]);
 
     const deviceSize = useDeviceSize();
     const hexagonUnitLength = {xl: 28, lg: 26, md: 22, sm: 22, xs: 12.5}[deviceSize];
@@ -75,19 +78,17 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     const progressBarPadding = ["xs"].includes(deviceSize) ? 1 : 5;
 
     const gameboard = useContext(GameboardContext);
-
-    const conceptQuestions =
-        gameboard && fastTrackConcepts && fastTrackConcepts.gameboardId === gameboard.id && fastTrackConcepts.concept === doc.title ?
-            fastTrackConcepts.items
-            : null;
-
-    useEffect(() => {
-        if (gameboard) {
-            const uppers = questionHistory.filter(e => /upper/i.test(e));
-            const upper = uppers.pop() || "";
-            dispatch(fetchFasttrackConcepts(gameboard.id as string, doc.title as string, upper));
-        }
-    }, [dispatch, gameboard, doc]);
+    const upper = useMemo(() => questionHistory.filter(e => /upper/i.test(e)).at(-1) ?? "", [questionHistory]);
+    // Skip the query if we don't have a gameboard
+    const queryKey = gameboard
+        ? {
+            gameboardId: gameboard.id as string,
+            concept: doc.title as string,
+            upperQuestionId: upper,
+        } : skipToken;
+    // currentData is initially set to undefined whenever the queryKey changes (i.e. it always holds the data for the
+    // current gameboard/concept/upperQuestionId combination)
+    const {currentData: conceptQuestions} = useGetFasttrackConceptQuestionsQuery(queryKey);
 
     if (gameboard === null) return null;
 
@@ -407,7 +408,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         </RS.Row>;
     }
 
-    const categorisedConceptQuestions = categoriseConceptQuestions(conceptQuestions || []);
+    const categorisedConceptQuestions = categoriseConceptQuestions(conceptQuestions ?? []);
     const progress = evaluateProgress(categorisedConceptQuestions, questionHistory);
     return renderProgress(progress);
 }

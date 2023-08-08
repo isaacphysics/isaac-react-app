@@ -20,11 +20,8 @@ import {
     userProgress,
     testQuestions,
     quizAttempt,
-    activeAuthorisations,
     groupMemberships,
-    otherUserAuthorisations,
     currentTopic,
-    fasttrackConcepts,
     questionSearchResult,
     search,
     isaacApi,
@@ -73,8 +70,6 @@ export const rootReducer = combineReducers({
 
     // Groups
     groupMemberships,
-    activeAuthorisations,
-    otherUserAuthorisations,
 
     // Topics
     currentTopic,
@@ -82,7 +77,6 @@ export const rootReducer = combineReducers({
     // Gameboards
     boards: gameboardsSlice.reducer,
     questionSearchResult,
-    fasttrackConcepts,
 
     // Search
     search,

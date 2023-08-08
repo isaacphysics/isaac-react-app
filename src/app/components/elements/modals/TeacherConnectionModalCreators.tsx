@@ -1,11 +1,8 @@
 import React from "react";
 import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {
-    authenticateWithToken,
+    authorisationsApi,
     closeActiveModal,
-    releaseAllAuthorisations,
-    releaseAuthorisation,
-    revokeAuthorisation,
     store
 } from "../../../state";
 import * as RS from "reactstrap";
@@ -52,7 +49,10 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
                 Cancel
             </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(authenticateWithToken(authToken))}}>
+            <RS.Button key={0} color="secondary" onClick={() => {
+                store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authToken))
+                    .then(() => store.dispatch(closeActiveModal()))
+            }}>
                 Confirm
             </RS.Button>,
         ]
@@ -76,7 +76,10 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
                 Cancel
             </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(revokeAuthorisation(userId, userToRevoke))}}>
+            <RS.Button key={0} color="secondary" onClick={() => {
+                store.dispatch(authorisationsApi.endpoints.revokeAuthorisation.initiate(userId))
+                    .then(() => store.dispatch(closeActiveModal()))
+            }}>
                 Confirm
             </RS.Button>,
         ]
@@ -99,14 +102,17 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
                 Cancel
             </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(releaseAuthorisation(userId, otherUser))}}>
+            <RS.Button key={0} color="secondary" onClick={() => {
+                store.dispatch(authorisationsApi.endpoints.releaseAuthorisation.initiate(userId))
+                    .then(() => store.dispatch(closeActiveModal()))
+            }}>
                 Confirm
             </RS.Button>,
         ]
     }
 };
 
-export const releaseAllConfirmationModal = (userId: number) => {
+export const releaseAllConfirmationModal = () => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         title: "Remove access to all students' data",
@@ -121,7 +127,10 @@ export const releaseAllConfirmationModal = (userId: number) => {
             <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
                 Cancel
             </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(releaseAllAuthorisations(userId))}}>
+            <RS.Button key={0} color="secondary" onClick={() => {
+                store.dispatch(authorisationsApi.endpoints.releaseAllAuthorisations.initiate())
+                    .then(() => store.dispatch(closeActiveModal()))
+            }}>
                 Confirm
             </RS.Button>,
         ]
