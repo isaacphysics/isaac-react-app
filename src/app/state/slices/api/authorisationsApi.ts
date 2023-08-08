@@ -56,7 +56,7 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             invalidatesTags: ["ActiveAuthorisations", "Groups", "GroupMemberships", "MyGroupMemberships", "AllMyAssignments"],
             onQueryStarted: onQueryLifecycleEvents({
                 successTitle: "Granted access",
-                successMessage: "ou have granted access to your data.",
+                successMessage: "You have granted access to your data.",
                 errorTitle: "Teacher connection failed",
                 errorMessage: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
             })
