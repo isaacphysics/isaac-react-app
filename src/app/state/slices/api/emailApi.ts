@@ -27,7 +27,7 @@ export const emailApi = isaacApi.injectEndpoints({
                 body: {email},
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Email verification request failed",
+                errorTitle: "Email verification request failed.",
                 successTitle: "Email verification request succeeded.",
                 successMessage: "Please follow the verification link given in the email sent to your address.",
             }),
