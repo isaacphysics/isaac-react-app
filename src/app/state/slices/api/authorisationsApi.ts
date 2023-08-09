@@ -63,8 +63,8 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
         }),
 
         revokeAuthorisation: build.mutation<void, number>({
-            query: (userId) => ({
-                url: `/authorisations/${userId}`,
+            query: (userIdToRevoke) => ({
+                url: `/authorisations/${userIdToRevoke}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["ActiveAuthorisations"],
@@ -76,8 +76,8 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
         }),
 
         releaseAuthorisation: build.mutation<void, number>({
-            query: (userId) => ({
-                url: `/authorisations/release/${userId}`,
+            query: (userIdToRelease) => ({
+                url: `/authorisations/release/${userIdToRelease}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["OtherAuthorisations"],
