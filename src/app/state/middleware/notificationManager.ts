@@ -1,4 +1,4 @@
-import {Dispatch, Middleware, MiddlewareAPI} from "redux";
+import {AnyAction, Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {
     ACTION_TYPE,
     allRequiredInformationIsPresent,
@@ -51,14 +51,14 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
         if (lastQuestionId === null) {
             persistence.session.save(KEY.FIRST_ANON_QUESTION, action.questionId);
         } else if (
-                state && !isLoggedIn(state.user) &&
-                lastQuestionId !== action.questionId &&
-                !withinLast2Hours(persistence.load(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME))
-            ) {
-                logAction({ type: "LOGIN_MODAL_SHOWN" });
-                persistence.session.remove(KEY.FIRST_ANON_QUESTION);
-                persistence.save(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME, new Date().toString());
-                await dispatch(openActiveModal(loginOrSignUpModal) as any);
+            state && !isLoggedIn(state.user) &&
+            lastQuestionId !== action.questionId &&
+            !withinLast2Hours(persistence.load(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME))
+        ) {
+            middlewareApi.dispatch(logAction({ type: "LOGIN_MODAL_SHOWN" }) as unknown as AnyAction); // Using middlewareApi.dispatch so that thunk is handled correctly 
+            persistence.session.remove(KEY.FIRST_ANON_QUESTION);
+            persistence.save(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME, new Date().toString());
+            await dispatch(openActiveModal(loginOrSignUpModal) as any);
         }
     }
 
