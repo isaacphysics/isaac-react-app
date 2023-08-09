@@ -9,7 +9,6 @@ import {FeaturedContentTabs} from "../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../elements/EventsCarousel";
 import {FeaturedNewsItem} from "../elements/FeaturedNewsItem";
 import classNames from "classnames";
-import {WarningBanner} from "../navigation/WarningBanner";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -45,7 +44,6 @@ export const Homepage = () => {
     </Container>;
 
     return <>
-        <WarningBanner/>
         <div id="homepage">
             <section id="call-to-action" className="homepageHero">
                 <Container className="pt-4 z1">
