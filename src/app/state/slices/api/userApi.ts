@@ -40,7 +40,19 @@ export const userApi = isaacApi.injectEndpoints({
                 errorTitle: "Failed to get 2FA secret"
             })
         }),
+
+        upgradeToTeacherAccount: build.mutation({
+            query: () => ({
+                url: "/users/current_user/upgrade_to_teacher",
+                method: "POST"
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                successTitle: "Account upgraded",
+                successMessage: "You have upgraded to a teacher account!",
+                errorTitle: "Failed to upgrade account"
+            })
+        })
     })
 });
 
-export const {useSetupAccountMFAMutation, useDisableAccountMFAMutation, useNewMFASecretMutation} = userApi;
+export const {useSetupAccountMFAMutation, useDisableAccountMFAMutation, useNewMFASecretMutation, useUpgradeToTeacherAccountMutation} = userApi;

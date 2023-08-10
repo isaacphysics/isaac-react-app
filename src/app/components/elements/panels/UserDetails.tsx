@@ -19,6 +19,7 @@ import {Link} from "react-router-dom";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
 import {CountryInput} from "../inputs/CountryInput";
+import {AccountTypeMessage} from "../AccountTypeMessage";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -59,12 +60,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>
         <Row className="mb-3">
             <Col>
-                Account type: <b>{userToUpdate?.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate?.role == "STUDENT" && <span>
-                    <small>(Are you a teacher or tutor? {" "}
-                        <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
-                            Upgrade your account
-                        </Link>{".)"}</small>
-                </span>}
+                <AccountTypeMessage role={userToUpdate?.role} />
             </Col>
         </Row>
         <Row>
