@@ -1,5 +1,5 @@
 import {Difficulty, GameboardDTO, RegisteredUserDTO, Stage} from "../../IsaacApiTypes";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import sortBy from "lodash/sortBy";
 import {determineAudienceViews, difficultiesOrdered, isFound, stagesOrdered} from "./";
 import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards} from "../../IsaacAppTypes";
@@ -32,12 +32,12 @@ export function boardCompletionSelection(board: GameboardDTO, boardCompletion: B
     } else return boardCompletion == BoardCompletions.any;
 }
 
-const createGameabordLink = (gameboardId: string) => `/gameboards#${gameboardId}`;
+const createGameboardLink = (gameboardId: string) => `/gameboards#${gameboardId}`;
 
 const createGameboardHistory = (title: string, gameboardId: string) => {
     return [
         // TODO could also push a link to my gameboards here when it exists
-        {title: title, to: createGameabordLink(gameboardId)}
+        {title: title, to: createGameboardLink(gameboardId)}
     ]
 };
 export const determineGameboardHistory = (currentGameboard: GameboardDTO) => {

@@ -30,7 +30,6 @@ export const selectors = {
         anyQuestionPreviouslyAttempted: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
         },
-        graphSketcherSpec: (state: AppState) => state?.graphSketcherSpec,
     },
 
     segue: {

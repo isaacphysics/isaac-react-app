@@ -14,8 +14,6 @@ const IsaacRegexMatchQuestion = lazy(() => import("../components/content/IsaacRe
 const IsaacFreeTextQuestion = lazy(() => import("../components/content/IsaacFreeTextQuestion"));
 const IsaacSymbolicLogicQuestion = lazy(() => import("../components/content/IsaacSymbolicLogicQuestion"));
 const IsaacSymbolicQuestion = lazy(() => import("../components/content/IsaacSymbolicQuestion"));
-const IsaacSymbolicChemistryQuestion = lazy(() => import("../components/content/IsaacSymbolicChemistryQuestion"));
-const IsaacGraphSketcherQuestion = lazy(() => import("../components/content/IsaacGraphSketcherQuestion"));
 const IsaacClozeQuestion = lazy(() => import("../components/content/IsaacClozeQuestion"));
 
 export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
@@ -25,11 +23,9 @@ export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacParsonsQuestion": "Parsons",
     "isaacNumericQuestion": "Numeric",
     "isaacSymbolicQuestion": "Symbolic",
-    "isaacSymbolicChemistryQuestion": "Chemistry",
     "isaacStringMatchQuestion": "String match",
     "isaacFreeTextQuestion": "Free text",
     "isaacSymbolicLogicQuestion": "Boolean logic",
-    "isaacGraphSketcherQuestion": "Graph Sketcher",
     "isaacClozeQuestion": "Cloze drag and drop",
     "default": "Multiple choice"
 };
@@ -41,12 +37,10 @@ export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, qu
     "isaacParsonsQuestion": IsaacParsonsQuestion,
     "isaacNumericQuestion": IsaacNumericQuestion,
     "isaacSymbolicQuestion": IsaacSymbolicQuestion,
-    "isaacSymbolicChemistryQuestion": IsaacSymbolicChemistryQuestion,
     "isaacStringMatchQuestion": IsaacStringMatchQuestion,
     "isaacRegexMatchQuestion": IsaacRegexMatchQuestion,
     "isaacFreeTextQuestion": IsaacFreeTextQuestion,
     "isaacSymbolicLogicQuestion": IsaacSymbolicLogicQuestion,
-    "isaacGraphSketcherQuestion": IsaacGraphSketcherQuestion,
     "isaacClozeQuestion": IsaacClozeQuestion,
     "default": IsaacMultiChoiceQuestion
 };

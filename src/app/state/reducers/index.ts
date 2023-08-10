@@ -21,7 +21,6 @@ import {
     glossaryTerms,
     concepts,
     doc,
-    graphSketcherSpec,
     questions,
     activeModals,
     notifications,
@@ -85,8 +84,7 @@ const appReducer = combineReducers({
 
     // Question
     questions,
-    graphSketcherSpec,
-
+    
     // Progress
     myProgress,
     myAnsweredQuestionsByDate,

@@ -17,10 +17,6 @@ export interface IsaacCardDeckDTO extends ContentDTO {
     cards?: IsaacCardDTO[];
 }
 
-export interface ChemicalFormulaDTO extends ChoiceDTO {
-    mhchemExpression?: string;
-}
-
 export interface TestCaseDTO extends QuestionValidationResponseDTO {
     expected?: boolean;
 }
@@ -120,9 +116,6 @@ export interface IsaacFeaturedProfileDTO extends ContentDTO {
 export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
 }
 
-export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
-}
-
 export interface IsaacItemQuestionDTO extends QuestionDTO {
     items?: ItemDTO[];
 }
@@ -192,8 +185,6 @@ export interface IsaacRegexMatchQuestionDTO extends QuestionDTO {
     multiLineEntry?: boolean;
 }
 
-export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestionDTO {
-}
 
 export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO {
 }
@@ -326,11 +317,6 @@ export interface AnvilAppDTO extends ContentDTO {
     appId?: string;
     appAccessKey?: string;
 }
-
-export interface ChemicalFormulaDTO extends ChoiceDTO {
-    mhchemExpression?: string;
-}
-
 export interface ChoiceDTO extends ContentDTO {
 }
 
@@ -422,10 +408,6 @@ export interface InteractiveCodeSnippetDTO extends CodeSnippetDTO {
     wrapCodeInMain?: boolean;
 }
 
-export interface GraphChoiceDTO extends ChoiceDTO {
-    graphSpec?: string;
-}
-
 export interface ImageDTO extends MediaDTO {
     clickUrl?: string;
     clickTarget?: string;
@@ -507,7 +489,7 @@ export interface GroupMembershipDTO {
     created?: Date;
 }
 
-export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "all";
+export type Stage = "gcse" | "a_level" | "all";
 
 export type ExamBoard = "aqa" | "cie" | "edexcel" | "eduqas" | "ocr" | "wjec" | "all";
 
