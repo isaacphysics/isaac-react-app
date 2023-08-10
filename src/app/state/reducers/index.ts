@@ -1,17 +1,8 @@
 import {combineReducers} from "redux";
 import {
-    currentEvent,
-    eventBookings,
-    eventBookingsForAllGroups,
-    eventBookingsForGroup,
-    eventMapData,
-    eventOverviews,
-    events,
     totpChallengePending,
-    user,
     userAuthSettings,
     userPreferences,
-    userSchoolLookup,
     errorSlice,
     mainContentIdSlice,
     printingSettingsSlice,
@@ -27,34 +18,23 @@ import {
     myProgress,
     userAnsweredQuestionsByDate,
     userProgress,
-    adminEmailTemplate,
     testQuestions,
-    quizAssignedToMe,
-    quizAssignment,
-    quizAssignments,
     quizAttempt,
-    quizAttemptedFreelyByMe,
-    quizPreview,
-    quizzes,
-    studentQuizAttempt,
-    activeAuthorisations,
     groupMemberships,
-    otherUserAuthorisations,
     currentTopic,
-    fasttrackConcepts,
     questionSearchResult,
     search,
     isaacApi,
     gameboardsSlice,
-    adminUserSearchSlice
+    adminUserSearchSlice,
+    userSlice
 } from "../index";
 
 export const rootReducer = combineReducers({
     // User
-    user,
+    user: userSlice.reducer,
     userAuthSettings,
     userPreferences,
-    userSchoolLookup,
     totpChallengePending,
 
     // Internal App
@@ -86,13 +66,10 @@ export const rootReducer = combineReducers({
 
     // Admin
     adminUserSeach: adminUserSearchSlice.reducer,
-    adminEmailTemplate,
     testQuestions,
 
     // Groups
     groupMemberships,
-    activeAuthorisations,
-    otherUserAuthorisations,
 
     // Topics
     currentTopic,
@@ -100,29 +77,12 @@ export const rootReducer = combineReducers({
     // Gameboards
     boards: gameboardsSlice.reducer,
     questionSearchResult,
-    fasttrackConcepts,
 
     // Search
     search,
 
-    // Events
-    events,
-    currentEvent,
-    eventOverviews,
-    eventMapData,
-    eventBookings,
-    eventBookingsForGroup,
-    eventBookingsForAllGroups,
-
     // Quizzes
-    quizzes,
-    quizAssignments,
-    quizAssignedToMe,
     quizAttempt,
-    studentQuizAttempt,
-    quizAssignment,
-    quizPreview,
-    quizAttemptedFreelyByMe,
 
     // API reducer
     [isaacApi.reducerPath]: isaacApi.reducer

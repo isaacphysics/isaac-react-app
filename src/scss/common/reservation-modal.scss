@@ -1,5 +1,8 @@
 #reservation-modal {
     table {
+        input[type=checkbox] {
+            z-index: 3 !important;
+        }
         &.reserved {
             th {
                 &.checkbox {
@@ -15,10 +18,8 @@
                 }
             }
         }
-        td {
-            .custom-checkbox {
-                padding-left: 32px;
-            }
+        td .custom-checkbox {
+            margin-left: 14px;
         }
     }
 }

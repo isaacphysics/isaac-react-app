@@ -1,21 +1,19 @@
-import React, {useEffect, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Table, Alert} from "reactstrap";
 import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    addMyselfToWaitingList,
-    AppState,
-    bookMyselfOnEvent,
-    cancelMyBooking,
-    getEvent,
     openActiveModal,
     selectors,
     showErrorToast,
     showToast,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useGetEventQuery,
+    useBookMyselfOnEventMutation,
+    useAddMyselfToWaitingListMutation,
+    useCancelMyBookingMutation
 } from "../../state";
-import {ShowLoading} from "../handlers/ShowLoading";
 import {
     persistence,
     atLeastOne,
@@ -32,7 +30,6 @@ import {
     isStaff,
     isTeacherOrAbove,
     KEY,
-    NOT_FOUND,
     SITE_TITLE,
     studentOnlyEventMessage,
     userCanBeAddedToEventWaitingList,
@@ -44,7 +41,7 @@ import {
     isAdminOrEventManager,
     isEventLeader,
     isPhy,
-    userBookedReservedOrOnWaitingList
+    userBookedReservedOrOnWaitingList, confirmThen
 } from "../../services";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -56,6 +53,8 @@ import {EditContentButton} from "../elements/EditContentButton";
 import {Map, Marker, Popup, TileLayer} from "react-leaflet";
 import * as L from "leaflet";
 import {teacherEventConfirmationModal} from "../elements/modals/TeacherEventConfirmationModal";
+import {skipToken} from "@reduxjs/toolkit/query";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 function formatDate(date: Date | number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -68,14 +67,24 @@ interface EventDetailsProps {
 
 const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
     const dispatch = useAppDispatch();
-    const event = useAppSelector((state: AppState) => state && state.currentEvent);
     const user = useAppSelector(selectors.user.orNull);
-    useEffect(() => {
-        dispatch(getEvent(eventId));
-    }, [dispatch, eventId]);
+    const eventQuery = useGetEventQuery(eventId || skipToken);
+    const {data: event} = eventQuery;
 
     const [bookingFormOpen, setBookingFormOpen] = useState(false);
     const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});
+
+    // This is UGLY but there's a weird issue between the leaflet.css file and how webpack loads url()s that makes everything go kaboom.
+    // There are various places online discussing this issue, but this one is a good starting point: https://github.com/Leaflet/Leaflet/issues/4968
+    // _______
+    // WARNING 2022-03-01 - This will need to be reconsidered when we upgrade the front-end dependencies
+    // ¯¯¯¯¯¯¯
+    const icon = useMemo(() => L.icon({
+        iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
+        iconUrl: require('leaflet/dist/images/marker-icon.png'),
+        shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+        iconAnchor: [12, 41]
+    }), []);
 
     function updateAdditionalInformation(update: AdditionalInformation) {
         setAdditionalInformation(Object.assign({}, additionalInformation, update));
@@ -87,7 +96,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
     }
 
     function googleCalendarTemplate() {
-        if (event && event !== NOT_FOUND) {
+        if (event) {
             // https://calendar.google.com/calendar/event?action=TEMPLATE&text=[event_name]&dates=[start_date as YYYYMMDDTHHMMSS or YYYYMMDD]/[end_date as YYYYMMDDTHHMMSS or YYYYMMDD]&details=[extra_info]&location=[full_address_here]
             const address = event.location && event.location.address ? [event.location.address.addressLine1, event.location.address.addressLine2, event.location.address.town, event.location.address.county, event.location.address.postalCode, event.location.address.country] : [];
 
@@ -103,7 +112,19 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
         }
     }
 
-    return <ShowLoading until={event} thenRender={event => {
+    function stopBookingIfStudent() {
+        setBookingFormOpen(false);
+        dispatch(showErrorToast("Event booking cancelled", "You cannot sign up to a teacher event as a student."));
+    }
+
+    const [bookMyselfOnEvent] = useBookMyselfOnEventMutation();
+    const [addMyselfToWaitingList] = useAddMyselfToWaitingListMutation();
+    const [cancelMyBooking] = useCancelMyBookingMutation();
+
+    return <ShowLoadingQuery
+        query={eventQuery}
+        defaultErrorTitle={"Event not found"}
+        thenRender={event => {
         const studentOnlyRestrictionSatisfied = userSatisfiesStudentOnlyRestrictionForEvent(user, event);
 
         const canMakeABooking = userCanMakeEventBooking(user, event);
@@ -121,21 +142,11 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                 if (failureToastOrTrue !== true) {
                     dispatch(showToast(failureToastOrTrue));
                 } else if (canMakeABooking) {
-                    dispatch(bookMyselfOnEvent(event.id as string, additionalInformation));
+                    bookMyselfOnEvent({eventId: event.id as string, additionalInformation});
                 } else if (canBeAddedToWaitingList) {
-                    dispatch(addMyselfToWaitingList(event.id as string, additionalInformation, event.isWaitingListOnly));
+                    addMyselfToWaitingList({eventId: event.id as string, additionalInformation, waitingListOnly: event.isWaitingListOnly});
                 }
             }
-        }
-
-        function stopBookingIfStudent() {
-            setBookingFormOpen(false);
-            dispatch(showErrorToast("Event booking cancelled", "You cannot sign up to a teacher event as a student."));
-        }
-
-        function checkTeacherStatusThenSubmitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
-            formEvent.preventDefault();
-            dispatch(openActiveModal(teacherEventConfirmationModal(submitBooking, stopBookingIfStudent)));
         }
 
         function openAndScrollToBookingForm() {
@@ -144,17 +155,10 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             setBookingFormOpen(true);
         }
 
-        // This is UGLY but there's a weird issue between the leaflet.css file and how webpack loads url()s that makes everything go kaboom.
-        // There are various places online discussing this issue, but this one is a good starting point: https://github.com/Leaflet/Leaflet/issues/4968
-        // _______
-        // WARNING 2022-03-01 - This will need to be reconsidered when we upgrade the front-end dependencies
-        // ¯¯¯¯¯¯¯
-        let icon = L.icon({
-            iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
-            iconUrl: require('leaflet/dist/images/marker-icon.png'),
-            shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-            iconAnchor: [12, 41]
-        });
+        function checkTeacherStatusThenSubmitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
+            formEvent.preventDefault();
+            dispatch(openActiveModal(teacherEventConfirmationModal(submitBooking, stopBookingIfStudent)));
+        }
 
         const checkTeacherStatus = isPhy && event.isATeacherEvent && !isTeacherOrAbove(user);
 
@@ -328,34 +332,38 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 }
 
                                 {/* Options for logged-in users */}
-                                {isLoggedIn(user) && !event.hasExpired && <React.Fragment>
+                                {isLoggedIn(user) && !event.hasExpired && <>
                                     {event.isReservationOnly && !canReserveSpaces && !isTeacherOrAbove(user) && !userBookedReservedOrOnWaitingList(user, event) && <Alert color={"warning"}>
-                                        Places on this event can only be reserved by teachers.{" "}
-                                        Please ask your teacher to reserve a place for you.{" "}
-                                        You will need to be accompanied by a teacher to the event.{" "}
-                                    </Alert>}
+                                            Places on this event can only be reserved by teachers.{" "}
+                                            Please ask your teacher to reserve a place for you.{" "}
+                                            You will need to be accompanied by a teacher to the event.{" "}
+                                        </Alert>
+                                    }
                                     {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
-                                    <Button onClick={() => {
-                                        setBookingFormOpen(true)
-                                    }}>
-                                        {formatMakeBookingButtonMessage(event)}
-                                    </Button>
+                                        <Button onClick={() => {
+                                            setBookingFormOpen(true)
+                                        }}>
+                                            {formatMakeBookingButtonMessage(event)}
+                                        </Button>
                                     }
                                     {canReserveSpaces &&
-                                    <Button color="primary" onClick={() => {
-                                        dispatch(openActiveModal(reservationsModal()))
-                                    }}>
-                                        Manage reservations
-                                    </Button>
+                                        <Button color="primary" onClick={() => {
+                                            dispatch(openActiveModal(reservationsModal({event})))
+                                        }}>
+                                            Manage reservations
+                                        </Button>
                                     }
                                     {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
-                                    <Button color="primary" outline onClick={() => {
-                                        dispatch(cancelMyBooking(eventId))
-                                    }}>
-                                        {formatCancelBookingButtonMessage(event)}
-                                    </Button>
+                                        <Button color="primary" outline onClick={() =>
+                                            confirmThen(
+                                                "Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.",
+                                                () => cancelMyBooking(eventId)
+                                            )
+                                        }>
+                                            {formatCancelBookingButtonMessage(event)}
+                                        </Button>
                                     }
-                                </React.Fragment>}
+                                </>}
                                 <Button tag={Link} to="/events" color="primary" outline>
                                     Back to events
                                 </Button>
@@ -365,7 +373,6 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                 </CardBody>
             </Card>
         </Container>
-    }
-    }/>;
+    }}/>;
 };
 export default EventDetails;

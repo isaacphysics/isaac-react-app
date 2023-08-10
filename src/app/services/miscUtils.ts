@@ -104,3 +104,17 @@ export function useOutsideCallback(ref: RefObject<any>, callback : () => void, d
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export function noop(x: never) {}
+
+// Confirms (currently using `window.confirm`, but we could change that to a more Isaac/Ada-themed thing moving
+// forwards) that the user would like to perform an action, given a particular prompt.
+//
+// Depending on whether they confirm or not, the confirmCallback or cancelCallback is run.
+//
+// Will return whatever value the callbacks return.
+export const confirmThen = <T, R>(prompt: string, confirmCallback: () => T, cancelCallback?: () => R): T | R | undefined => {
+    const confirmed = window.confirm(prompt);
+    if (confirmed) {
+        return confirmCallback();
+    }
+    return cancelCallback?.();
+}

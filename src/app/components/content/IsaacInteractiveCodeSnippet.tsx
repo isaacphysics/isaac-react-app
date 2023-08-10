@@ -26,7 +26,8 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
             setup: doc.setupCode,
             test: doc.testCode,
             wrapCodeInMain: doc.wrapCodeInMain,
-            language: doc.language
+            language: doc.language,
+            dataUrl: doc.dataUrl
         });
     }
 

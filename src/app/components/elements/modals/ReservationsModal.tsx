@@ -1,68 +1,69 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {
     AppState,
-    cancelReservationsOnEvent,
     closeActiveModal,
-    getEventBookingsForAllGroups,
-    getEventBookingsForGroup,
-    reserveUsersOnEvent,
     store,
-    submitMessage,
     useAppDispatch,
     useAppSelector,
+    useGetEventBookingsForGroupQuery,
     useGetGroupsQuery,
-    useLazyGetGroupMembersQuery
+    useGetGroupMembersQuery,
+    useCancelUsersReservationsOnEventMutation,
+    useReserveUsersOnEventMutation,
+    useLazyGetSchoolByUrnQuery,
+    useSubmitContactFormMutation
 } from "../../../state";
 import {
     Button,
     Col,
     CustomInput,
-    Dropdown,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
     Input,
     Label,
     Row,
-    Table
+    Table,
+    UncontrolledButtonDropdown
 } from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {ActiveModal, AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
-import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
-import {api, bookingStatusMap, isLoggedIn, NOT_FOUND, schoolNameWithPostcode} from "../../../services";
+import {ActiveModal, AppGroup, AugmentedEvent} from "../../../../IsaacAppTypes";
+import {RegisteredUserDTO, UserSummaryWithGroupMembershipDTO} from "../../../../IsaacApiTypes";
+import {bookingStatusMap, isDefined, isLoggedIn, schoolNameWithPostcode} from "../../../services";
 import _orderBy from "lodash/orderBy";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
 import sortBy from "lodash/sortBy";
+import {skipToken} from "@reduxjs/toolkit/query";
+import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
-const ReservationsModal = () => {
+const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
 
-    const {data: activeGroups} = useGetGroupsQuery(false);
-    const [getGroupMembers] = useLazyGetGroupMembersQuery();
-    const sortedActiveGroups = useMemo<AppGroup[]>(() => sortBy(activeGroups ?? [], g => g.groupName), [activeGroups]);
-
     const [selectedGroupId, setSelectedGroupId] = useState<number>();
-    const selectedGroup = sortedActiveGroups && sortedActiveGroups.find(g => g.id === selectedGroupId);
+    const {data: activeGroups} = useGetGroupsQuery(false);
+    const sortedActiveGroups = useMemo<AppGroup[]>(() => sortBy(activeGroups ?? [], g => g.groupName), [activeGroups]);
+    // Below is only used to display the group name in the dropdown - the group members are fetched separately
+    const selectedGroup = useMemo(() => activeGroups?.find(g => g.id === selectedGroupId), [activeGroups, selectedGroupId]);
+
     // Select first group in list when groups are initially fetched
     useEffect(() => {
-        if (!selectedGroup && sortedActiveGroups && sortedActiveGroups.length > 0) {
+        if (!selectedGroupId && sortedActiveGroups && sortedActiveGroups.length > 0) {
             setSelectedGroupId(sortedActiveGroups[0].id);
         }
     }, [sortedActiveGroups]);
 
-    const selectedEvent = useAppSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
-    const eventBookingsForGroup = useAppSelector((state: AppState) => state && state.eventBookingsForGroup || []);
-    const eventBookingsForAllGroups = useAppSelector((state: AppState) => state && state.eventBookingsForAllGroups || []);
+    // TODO once the weird group caching is removed, we should add a cache to the group members endpoint (with a 60 second or so expiry)
+    const {currentData: groupMembers, isFetching: fetchingGroupMembers} = useGetGroupMembersQuery(selectedGroupId ?? skipToken);
+    const {currentData: eventBookingsForGroup} = useGetEventBookingsForGroupQuery(selectedGroupId && event.id ? {groupId: selectedGroupId, eventId: event.id} : skipToken);
 
-    const [unbookedUsers, setUnbookedUsers] = useState<AppGroupMembership[]>([]);
+    const [unbookedUsers, setUnbookedUsers] = useState<UserSummaryWithGroupMembershipDTO[]>([]);
     const [userCheckboxes, setUserCheckboxes] = useState<{[key: number]: boolean}>({});
     const [checkAllCheckbox, setCheckAllCheckbox] = useState<boolean>(false);
     const [cancelReservationCheckboxes, setCancelReservationCheckboxes] = useState<{[key: number]: boolean}>({});
     const [checkAllCancelReservationsCheckbox, setCheckAllCancelReservationsCheckbox] = useState<boolean>();
-    const [groupDropdownOpen, setGroupDropdownOpen] = useState(false);
-    const [unbookedUsersById, setUnbookedUsersById] = useState<{[id: number]: AppGroupMembership}>({});
+    const [unbookedUsersById, setUnbookedUsersById] = useState<{[id: number]: UserSummaryWithGroupMembershipDTO}>({});
 
     // Group booking contact form state
     const [groupSupervisorContactName, setGroupSupervisorContactName] = useState<string>(`${user?.givenName}${user?.familyName ? " " + user?.familyName : ""}`);
@@ -71,67 +72,14 @@ const ReservationsModal = () => {
     const [school, setSchool] = useState<string>();
 
     useEffect(() => {
-        setUnbookedUsersById(unbookedUsers.reduce((acc: {[id: number]: AppGroupMembership}, u) => ({...acc, [u.id as number]: u}), {}));
+        setUnbookedUsersById(unbookedUsers.reduce((acc: {[id: number]: UserSummaryWithGroupMembershipDTO}, u) => ({...acc, [u.id as number]: u}), {}));
     }, [unbookedUsers]);
 
-    const [modifiedBookingsForAllGroups, setModifiedBookingsForAllGroups] = useState(eventBookingsForAllGroups);
-
     useEffect(() => {
-        if (selectedEvent && selectedEvent.id) {
-            dispatch(getEventBookingsForAllGroups(selectedEvent.id));
-        }
-    }, [dispatch, selectedEvent]);
-
-    useEffect(() => {
-        const flattenedGroupBookings = eventBookingsForAllGroups.flat();
-        const uniqueBookings = flattenedGroupBookings.filter((v,i,a)=> a.findIndex(t => (t.bookingId === v.bookingId)) === i);
-        setModifiedBookingsForAllGroups(uniqueBookings);
-    }, [eventBookingsForAllGroups]);
-
-    useEffect(() => {
-        if (selectedGroup?.id && !selectedGroup.members) {
-            getGroupMembers(selectedGroup.id);
-        }
-        if (selectedEvent && selectedEvent.id && selectedGroup && selectedGroup.id) {
-            dispatch(getEventBookingsForGroup(selectedEvent.id, selectedGroup.id));
-        }
-    }, [dispatch, selectedEvent, selectedGroup]);
-
-    useEffect(() => {
-        const bookedUserIds = modifiedBookingsForAllGroups
-            .filter(booking => booking.bookingStatus !== "CANCELLED")
-            .map(booking => booking.userBooked && booking.userBooked.id);
-        let newCancelReservationCheckboxes: boolean[] = [];
-        for (const userId of bookedUserIds) {
-            if (userId) {
-                newCancelReservationCheckboxes[userId] = false;
-            }
-        }
-        setCancelReservationCheckboxes(newCancelReservationCheckboxes);
-
-        const newUnbookedUsers = _orderBy(
-            modifiedBookingsForAllGroups
-                .filter(booking => !bookedUserIds.includes(booking.userBooked?.id as number))
-                // do not allow the reservation of teachers on a student only event
-                .filter(booking => !(selectedEvent?.isStudentOnly && booking.userBooked?.role !== "STUDENT")),
-            ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']
-        );
-        let newUserCheckboxes: boolean[] = [];
-        for (const user of newUnbookedUsers) {
-            if (!user.userBooked?.id || !user.userBooked?.authorisedFullAccess) continue;
-            newUserCheckboxes[user.userBooked?.id] = false;
-        }
-        setUserCheckboxes(newUserCheckboxes);
-        setCheckAllCheckbox(false);
-
-    }, [modifiedBookingsForAllGroups]);
-
-    useEffect(() => {
-        if (selectedGroup && selectedGroup.members) {
-            const bookedUserIds = eventBookingsForGroup
-                .filter(booking => booking.bookingStatus !== "CANCELLED")
-                .map(booking => booking.userBooked && booking.userBooked.id);
-            let newCancelReservationCheckboxes: boolean[] = [];
+        if (groupMembers) {
+            const bookedUserIds = eventBookingsForGroup?.filter(booking => booking.userBooked?.id && booking.bookingStatus !== "CANCELLED")
+                .map(booking => booking.userBooked && booking.userBooked.id) ?? [];
+            let newCancelReservationCheckboxes: {[id: number]: boolean} = {};
             for (const userId of bookedUserIds) {
                 if (userId) {
                     newCancelReservationCheckboxes[userId] = false;
@@ -140,13 +88,13 @@ const ReservationsModal = () => {
             setCancelReservationCheckboxes(newCancelReservationCheckboxes);
 
             const newUnbookedUsers = _orderBy(
-                selectedGroup.members
+                groupMembers
                     .filter(member => !bookedUserIds.includes(member.id as number))
                     // do not allow the reservation of teachers on a student only event
-                    .filter(member => !(selectedEvent?.isStudentOnly && member.role !== "STUDENT")),
+                    .filter(member => !(event.isStudentOnly && member.role !== "STUDENT")),
                 ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']
             );
-            let newUserCheckboxes: boolean[] = [];
+            let newUserCheckboxes: {[id : number]: boolean} = {};
             for (const user of newUnbookedUsers) {
                 if (!user.id || !user.authorisedFullAccess) continue;
                 newUserCheckboxes[user.id] = false;
@@ -155,12 +103,11 @@ const ReservationsModal = () => {
             setCheckAllCheckbox(false);
             setUnbookedUsers(newUnbookedUsers);
         }
-    }, [selectedGroup, eventBookingsForGroup]);
+    }, [groupMembers, eventBookingsForGroup]);
 
     const toggleCheckboxForUser = (userId?: number) => {
-        if (!userId) return;
-        let checkboxes = { ...userCheckboxes };
-        checkboxes[userId] = !checkboxes[userId];
+        if (!isDefined(userId)) return;
+        const checkboxes = { ...userCheckboxes, [userId]: !userCheckboxes[userId]};
         setUserCheckboxes(checkboxes);
         if (!Object.values(checkboxes).every(v => v)) {
             setCheckAllCheckbox(false);
@@ -179,9 +126,8 @@ const ReservationsModal = () => {
     };
 
     const toggleCancelReservationCheckboxForUser = (userId?: number) => {
-        if (!userId) return;
-        let checkboxes = { ...cancelReservationCheckboxes };
-        checkboxes[userId] = !checkboxes[userId];
+        if (!isDefined(userId)) return;
+        const checkboxes = { ...cancelReservationCheckboxes, [userId]: !cancelReservationCheckboxes[userId]};
         setCancelReservationCheckboxes(checkboxes);
         if (!Object.values(checkboxes).every(v => v)) {
             setCheckAllCancelReservationsCheckbox(false);
@@ -197,25 +143,31 @@ const ReservationsModal = () => {
         setCancelReservationCheckboxes(checkboxes);
     };
 
+    const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
     useEffect(function fetchUsersSchool() {
         if (user?.schoolId && user?.schoolId !== "") {
-            api.schools.getByUrn(user?.schoolId).then(({data}) => {
-                setSchool(schoolNameWithPostcode(data[0]));
+            getSchoolByUrn(user?.schoolId).then(({data}) => {
+                if (data && data.length > 0) {
+                    setSchool(schoolNameWithPostcode(data[0]));
+                }
             });
         } else if (user?.schoolOther) {
             setSchool(user.schoolOther);
         }
     }, [user]);
 
+    const [reserveUsersOnEvent] = useReserveUsersOnEventMutation();
+    const [submitContactForm] = useSubmitContactFormMutation();
+
     const requestReservations = () => {
-        if (selectedEvent && selectedEvent.id && selectedGroup && selectedGroup.id) {
+        if (event.id && selectedGroupId) {
             const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
-            dispatch(reserveUsersOnEvent(selectedEvent.id, reservableIds, selectedGroup.id));
+            reserveUsersOnEvent({eventId: event.id, userIds: reservableIds});
             // Send contact form with details of the group booking
-            const subject = `Event group booking: ${selectedEvent.id}:${selectedGroup.id}`;
+            const subject = `Event group booking: ${event.id}:${selectedGroupId}`;
             const message = `
-            Event: ${selectedEvent.title} (id: ${selectedEvent.id})
-            Group id: ${selectedGroup.id}
+            Event: ${event.title} (id: ${event.id})
+            Group id: ${selectedGroupId}
             Students reserved: ${reservableIds.join(", ")}
             School: ${school}
             
@@ -225,36 +177,35 @@ const ReservationsModal = () => {
             ---
             ${additionalBookingNotes}
             `;
-            dispatch(submitMessage({firstName: user?.givenName ?? "[Unknown]", lastName: user?.familyName ?? "[Teacher]", emailAddress: user?.email ?? "[Unknown]", subject, message}));
+            submitContactForm({firstName: user?.givenName ?? "[Unknown]", lastName: user?.familyName ?? "[Teacher]", emailAddress: user?.email ?? "[Unknown]", subject, message});
         }
         setCheckAllCheckbox(false);
     };
 
+    const [cancelReservationsOnEvent] = useCancelUsersReservationsOnEventMutation();
     const cancelReservations = () => {
-        if (selectedEvent && selectedEvent.id) { // do we need this group id
+        if (event.id) { // do we need this group id
             const cancellableIds = Object.entries(cancelReservationCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
-            selectedGroup?.id ? dispatch(cancelReservationsOnEvent(selectedEvent.id, cancellableIds, selectedGroup.id)) :
-                dispatch(cancelReservationsOnEvent(selectedEvent.id, cancellableIds, undefined));
+            cancelReservationsOnEvent({eventId: event.id, userIds: cancellableIds, groupId: selectedGroupId});
         }
         setCheckAllCancelReservationsCheckbox(false);
     };
 
     const isReservationLimitReached = () => {
-        if (selectedEvent && selectedEvent.groupReservationLimit) {
-            const bookings = eventBookingsForGroup
-                .filter(booking =>
+        if (event.groupReservationLimit) {
+            const bookings = eventBookingsForGroup?.filter(booking =>
                     (booking.bookingStatus === "CONFIRMED" || booking.bookingStatus === "RESERVED" || booking.bookingStatus ==="WAITING_LIST")
                     && booking.reservedById === user?.id
                 )
                 // teachers should not count toward student event limits
-                .filter(booking => !selectedEvent.isAStudentEvent || booking.userBooked?.role === "STUDENT");
+                .filter(booking => !event.isAStudentEvent || booking.userBooked?.role === "STUDENT") ?? [];
 
             const candidateBookings = Object.entries(userCheckboxes)
                 .filter(([,selected]) => selected)
                 // teachers should not count toward student event limits
-                .filter(([id,]) => !selectedEvent.isAStudentEvent || unbookedUsersById[id as any]?.role === "STUDENT");
+                .filter(([id,]) => !event.isAStudentEvent || unbookedUsersById[id as any]?.role === "STUDENT");
 
-            return (candidateBookings.length + bookings.length) > selectedEvent.groupReservationLimit;
+            return (candidateBookings.length + bookings.length) > event.groupReservationLimit;
         }
         // By default, return true to disable all the checkboxes: prevents awkward situations.
         return true;
@@ -262,37 +213,44 @@ const ReservationsModal = () => {
 
     const allowedToReserve = Object.values(userCheckboxes).some(v => v) && !isReservationLimitReached() && groupSupervisorContactName && groupSupervisorContactEmail;
 
-    return <React.Fragment>
+    return <>
         <div id="reservation-modal">
-            {!selectedEvent?.allowGroupReservations && <p>This event does not allow group reservations.</p>}
-            {selectedEvent?.allowGroupReservations && <Col>
+            {!event.allowGroupReservations && <p>This event does not allow group reservations.</p>}
+            {event.allowGroupReservations && <Col>
                 <Row className="mb-5">
                     <Col md={3}>
                         <ShowLoading until={sortedActiveGroups}>
                             <React.Fragment>
-                                {sortedActiveGroups && sortedActiveGroups.length > 0 && <Dropdown isOpen={groupDropdownOpen} toggle={() => setGroupDropdownOpen(!groupDropdownOpen)}>
+                                {sortedActiveGroups && sortedActiveGroups.length > 0 && <UncontrolledButtonDropdown>
                                     <DropdownToggle caret color="primary mb-4">
-                                        {selectedGroup ? selectedGroup.groupName : "Select group"}
+                                        {selectedGroup ? selectedGroup?.groupName : "Select group"}
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         {sortedActiveGroups.map(group =>
                                             <DropdownItem onClick={() => setSelectedGroupId(group.id)}
                                                 key={group.id}
-                                                active={selectedGroup?.id === group.id}
+                                                active={selectedGroupId === group.id}
                                             >
                                                 {group.groupName}
                                             </DropdownItem>
                                         )}
                                     </DropdownMenu>
-                                </Dropdown>}
+                                </UncontrolledButtonDropdown>}
                             </React.Fragment>
                         </ShowLoading>
                     </Col>
-                    {sortedActiveGroups && sortedActiveGroups.length === 0 && <p>Create a groups from the <Link to="/groups" onClick={() => dispatch(closeActiveModal())}>Manage groups</Link> page to book your students onto an event</p>}
+                    {sortedActiveGroups && sortedActiveGroups.length === 0 && <p>
+                        Create a groups from the <Link to="/groups" onClick={() => dispatch(closeActiveModal())}>Manage groups</Link> page to book your students onto an event
+                    </p>}
                     <Col cols={12} lg={{size: 8, offset: 1}} xl={{size: 9, offset: 0}}>
-                        {sortedActiveGroups && sortedActiveGroups.length > 0 && (!selectedGroup || !selectedGroup.members) && <p>Select one of your groups from the dropdown menu to see its members.</p>}
-                        {selectedGroup && selectedGroup.members && selectedGroup.members.length == 0 && <p>This group has no members. Please select another group.</p>}
-                        <React.Fragment>
+                        {fetchingGroupMembers
+                            ? <div className={"w-100 text-center"}>Loading group members... <IsaacSpinner size={"sm"} inline/></div>
+                            : <>
+                                {!groupMembers && <p>Select one of your groups from the dropdown menu to see its members.</p>}
+                                {groupMembers && groupMembers.length === 0 && <p>This group has no members. Please select another group.</p>}
+                            </>
+                        }
+                        <>
                             <Table bordered responsive className="bg-white reserved">
                                 <thead>
                                 <tr>
@@ -320,10 +278,10 @@ const ReservationsModal = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {modifiedBookingsForAllGroups.map(booking => {
+                                    {eventBookingsForGroup?.map(booking => {
                                         const bookingCancelled = booking.bookingStatus === "CANCELLED";
                                         return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id} className={classNames({"bg-light text-muted": bookingCancelled})}>
-                                            <td className="align-middle text-center">
+                                            <td className="align-middle">
                                                 <CustomInput key={booking.userBooked.id}
                                                     id={`${booking.userBooked.id}`}
                                                     type="checkbox"
@@ -342,7 +300,7 @@ const ReservationsModal = () => {
                                             <td className="align-middle">{!booking.reservedById ? '' : (booking.reservedById === user?.id ? 'You' : 'Someone else')}</td>
                                         </tr>);
                                     })}
-                                    {eventBookingsForAllGroups.length == 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
+                                    {eventBookingsForGroup && eventBookingsForGroup.length === 0 && <tr><td colSpan={4}>None of the members of this group are booked in for this event.</td></tr>}
                                 </tbody>
                             </Table>
 
@@ -351,15 +309,15 @@ const ReservationsModal = () => {
                                     Cancel reservations
                                 </Button>
                             </div>
-                        </React.Fragment>
-                        {selectedGroup && selectedGroup.members && selectedGroup.members.length > 0 && <React.Fragment>
+                        </>
+                        {groupMembers && groupMembers.length > 0 && <>
                             <Table bordered responsive className="mt-3 bg-white unreserved">
                                 <thead>
                                     <tr>
                                         <th colSpan={2}>Other students in this group</th>
                                     </tr>
                                     <tr>
-                                        <th className="w-auto text-nowrap align-middle checkbox">
+                                        <th className="w-auto text-nowrap align-middle">
                                             <CustomInput
                                                 id="check_all_unbooked"
                                                 type="checkbox"
@@ -377,7 +335,7 @@ const ReservationsModal = () => {
                                 <tbody>
                                     {unbookedUsers.length > 0 && unbookedUsers.map(user => {
                                         return (user.id && <tr key={user.id}>
-                                            <td className="w-auto align-middle text-center">
+                                            <td className="align-middle">
                                                 <CustomInput
                                                     key={user.id}
                                                     id={`${user.id}`}
@@ -440,7 +398,7 @@ const ReservationsModal = () => {
                             <Row className="toolbar">
                                 <Col>
                                     {isReservationLimitReached() && <p className="text-danger">
-                                        You can only reserve a maximum of {selectedEvent && selectedEvent.groupReservationLimit} group members onto this event.
+                                        You can only reserve a maximum of {event.groupReservationLimit} group members onto this event.
                                     </p>}
                                     <div className="text-center">
                                         <Button color="primary" disabled={!allowedToReserve} onClick={requestReservations}>
@@ -449,20 +407,20 @@ const ReservationsModal = () => {
                                     </div>
                                 </Col>
                             </Row>
-                        </React.Fragment>}
+                        </>}
                     </Col>
                 </Row>
             </Col>}
         </div>
-    </React.Fragment>
+    </>;
 };
 
-export const reservationsModal = (): ActiveModal => {
+export const reservationsModal = ({event}: {event: AugmentedEvent}): ActiveModal => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         size: 'xl',
         title: "Group reservations",
-        body: <ReservationsModal />,
+        body: <ReservationsModal event={event} />,
         overflowVisible: true
     }
 };

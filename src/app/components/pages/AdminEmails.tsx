@@ -1,5 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {AppState, getEmailTemplate, sendAdminEmailWithIds, useAppDispatch, useAppSelector} from "../../state";
+import {
+    AppState,
+    useAppSelector,
+    useLazyGetTemplateEmailQuery,
+    useSendAdminEmailWithIdsMutation
+} from "../../state";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
@@ -17,16 +22,17 @@ interface AdminEmailsProps {
 const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
 
 export const AdminEmails = (props: AdminEmailsProps) => {
-    const dispatch = useAppDispatch();
     const [csvIDs, setCSVIDs] = useState(props.location.state?.csvIDs || [] as number[]);
     const [emailType, setEmailType] = useState("null");
     const [contentObjectID, setContentObjectID] = useState("");
     const [emailSent, setEmailSent] = useState(false);
     const user = useAppSelector((state: AppState) => state?.user);
-    const emailTemplateSelector = useAppSelector((state: AppState) => state && state.adminEmailTemplate && state.adminEmailTemplate);
+
+    const [getEmailTemplate, {data: emailTemplate}] = useLazyGetTemplateEmailQuery();
+    const [sendAdminEmailWithIds] = useSendAdminEmailWithIdsMutation();
 
     const numberOfUsers = csvIDs.length;
-    const canSubmit = emailTemplateSelector && emailType != "null" && numberOfUsers > 0;
+    const canSubmit = emailTemplate && emailType != "null" && numberOfUsers > 0;
     const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num))), 250);
 
     useEffect(() => {
@@ -91,23 +97,23 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                             type="submit" value="Load template"
                             className={"btn btn-block btn-secondary border-0 " + classnames({disabled: contentObjectID.length == 0})}
                             disabled={contentObjectID.length == 0}
-                            onClick={() => dispatch(getEmailTemplate(contentObjectID))}
+                            onClick={() => getEmailTemplate(contentObjectID)}
                         />
                     </RS.Col>
                 </RS.Row>
             </RS.CardBody>
         </RS.Card>
 
-        {emailTemplateSelector && <>
+        {emailTemplate && <>
             <RS.Card className="p-3 my-3">
                 <RS.CardTitle tag="h2">Details</RS.CardTitle>
                 <RS.CardBody>
                     <ul>
-                        <li><b>Subject:</b> {emailTemplateSelector.subject || "no subject"}</li>
-                        {emailTemplateSelector.from && <li><b>From:</b> {emailTemplateSelector.fromName || ""} &lt;{emailTemplateSelector.from}&gt;</li>}
-                        {emailTemplateSelector.replyTo && <li><b>Reply-To:</b> {emailTemplateSelector.replyToName || ""} &lt;{emailTemplateSelector.replyTo}&gt;</li>}
+                        <li><b>Subject:</b> {emailTemplate.subject || "no subject"}</li>
+                        {emailTemplate.from && <li><b>From:</b> {emailTemplate.fromName || ""} &lt;{emailTemplate.from}&gt;</li>}
+                        {emailTemplate.replyTo && <li><b>Reply-To:</b> {emailTemplate.replyToName || ""} &lt;{emailTemplate.replyTo}&gt;</li>}
                         <li><b>Sent via:</b>&nbsp;
-                            {emailTemplateSelector.sender?.includes("@mail.isaac") ? "MailGun" : "University"}
+                            {emailTemplate.sender?.includes("@mail.isaac") ? "MailGun" : "University"}
                         </li>
                     </ul>
                 </RS.CardBody>
@@ -117,8 +123,8 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                 <RS.CardTitle tag="h2">HTML preview</RS.CardTitle>
                 <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
                 <RS.CardBody>
-                    {emailTemplateSelector.html &&
-                        <iframe title="Email content preview" className="email-preview-frame" srcDoc={emailTemplateSelector.html}/>
+                    {emailTemplate.html &&
+                        <iframe title="Email content preview" className="email-preview-frame" srcDoc={emailTemplate.html}/>
                     }
                 </RS.CardBody>
             </RS.Card>
@@ -127,7 +133,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                 <RS.CardTitle tag="h2">Plain text preview</RS.CardTitle>
                 <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
                 <RS.CardBody>
-                    <pre>{emailTemplateSelector.plainText}</pre>
+                    <pre>{emailTemplate.plainText}</pre>
                 </RS.CardBody>
             </RS.Card>
             </>
@@ -148,7 +154,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                                 onClick={() => {
                                     if (window.confirm(`Are you sure you want to send a ${emailType} email (${contentObjectID}) to ${numberOfUsers} user${numberOfUsers > 1 ? "s" : ""}?`)) {
                                         setEmailSent(true);
-                                        dispatch(sendAdminEmailWithIds(contentObjectID, emailType, csvIDs));
+                                        sendAdminEmailWithIds({contentId: contentObjectID, emailType, ids: csvIDs});
                                     }
                                 }}
                             />

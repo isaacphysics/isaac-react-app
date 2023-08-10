@@ -1,5 +1,5 @@
 import React from "react";
-import {isAda, siteSpecific} from "../../services";
+import {siteSpecific} from "../../services";
 import classNames from "classnames";
 
 export interface IsaacSpinnerProps {
@@ -21,8 +21,8 @@ export const IsaacSpinner = ({size = "md", className, color = "primary", inline 
         : <div role="status" className="pb-1">{contents}</div>;
 };
 
-export const Loading = ({noText, className}: {noText?: boolean; className?: string}) =>
+export const Loading = ({noText, className, displayText}: {noText?: boolean; className?: string, displayText?: string}) =>
     <div className={classNames(className, "w-100 text-center pb-2")}>
-        {!noText && <h2 aria-hidden="true" className="pt-5">Loading...</h2>}
+        {!noText && <h2 aria-hidden="true" className="pt-5">{displayText ?? "Loading..."}</h2>}
         <IsaacSpinner />
     </div>;

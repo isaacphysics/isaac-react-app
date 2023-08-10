@@ -10,7 +10,7 @@ import {
 } from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
 import {showSuccessToast} from "../../actions/popups";
-import {AdminStatsResponse, ContentErrorsResponse} from "../../../../IsaacAppTypes";
+import {AdminStatsResponse, ContentErrorsResponse, UserSchoolLookup} from "../../../../IsaacAppTypes";
 
 export const adminApi = isaacApi.enhanceEndpoints({
     addTagTypes: ["MisuseStatistics"],
@@ -140,6 +140,17 @@ export const adminApi = isaacApi.enhanceEndpoints({
             }),
         }),
 
+        adminGetUserIdsSchoolLookup: build.query<UserSchoolLookup, number[]>({
+            query: (userIds) => ({
+                url: `/users/school_lookup?user_ids=${userIds.join(",")}`,
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to load user school lookup details",
+            })
+        }),
+
+        // === Misc ===
+
         generateAnswerSpecification: build.mutation<string[], ChoiceDTO>({
             query: (choice) => ({
                 url: "/questions/generateSpecification",
@@ -165,5 +176,6 @@ export const {
     useAdminModifyUserEmailVerificationStatusMutation,
     useAdminGetUserQuery,
     useGetSiteStatisticsQuery,
+    useAdminGetUserIdsSchoolLookupQuery,
     useGenerateAnswerSpecificationMutation,
 } = adminApi;

@@ -27,39 +27,39 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.theoryOfComputation, title: "Models of computation", parent: TAG_ID.computerScience, stageOverride: GCSE_HIDDEN},
 
         // Algorithms and data structures topics
-        {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.computationalThinking, title: "Computational thinking", parent: TAG_ID.dataStructuresAndAlgorithms},
         {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms},
-        {id: TAG_ID.pathfinding, title: "Pathfinding algorithms", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.searching, title: "Searching algorithms", parent: TAG_ID.dataStructuresAndAlgorithms},
         {id: TAG_ID.sorting, title: "Sorting algorithms", parent: TAG_ID.dataStructuresAndAlgorithms},
+        {id: TAG_ID.pathfinding, title: "Pathfinding algorithms", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_HIDDEN},
+        {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_HIDDEN},
+        {id: TAG_ID.computationalThinking, title: "Computational thinking", parent: TAG_ID.dataStructuresAndAlgorithms},
 
         // Computing systems
+        {id: TAG_ID.architecture, title: "Systems architecture", parent: TAG_ID.computerSystems},
         {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems},
-        {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.computerSystems},
         {id: TAG_ID.memoryAndStorage, title: "Memory and storage", parent: TAG_ID.computerSystems},
+        {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.computerSystems},
         {id: TAG_ID.operatingSystems, title: "Operating systems", parent: TAG_ID.computerSystems},
         {id: TAG_ID.programmingLanguages, title: "Programming languages", parent: TAG_ID.computerSystems},
+        {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems},
         {id: TAG_ID.numberRepresentation, title: "Representation of numbers", parent: TAG_ID.computerSystems},
         {id: TAG_ID.textRepresentation, title: "Representation of text", parent: TAG_ID.computerSystems},
-        {id: TAG_ID.architecture, title: "Systems architecture", parent: TAG_ID.computerSystems},
-        {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems},
 
         // Creating media topics
         {id: TAG_ID.imageRepresentation, title: "Representation of images", parent: TAG_ID.creatingMedia},
         {id: TAG_ID.soundRepresentation, title: "Representation of sound", parent: TAG_ID.creatingMedia},
 
         // Data and information topics
-        {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.databases, title: "Databases", parent: TAG_ID.dataAndInformation},
         {id: TAG_ID.fileOrganisation, title: "File organisation", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
+        {id: TAG_ID.databases, title: "Databases", parent: TAG_ID.dataAndInformation},
         {id: TAG_ID.sql, title: "SQL", parent: TAG_ID.dataAndInformation},
+        {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
 
         // Design and development topics
-        {id: TAG_ID.programDesign, title: "Program design", parent: TAG_ID.designAndDevelopment},
         {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.designAndDevelopment, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.softwareProject, title: "Software projects", parent: TAG_ID.designAndDevelopment, stageOverride: GCSE_HIDDEN},
+        {id: TAG_ID.programDesign, title: "Program design", parent: TAG_ID.designAndDevelopment},
         {id: TAG_ID.testing, title: "Testing", parent: TAG_ID.designAndDevelopment},
+        {id: TAG_ID.softwareProject, title: "Software projects (coursework)", parent: TAG_ID.designAndDevelopment, stageOverride: GCSE_HIDDEN},
 
         // Effective use of tools topics
         {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.effectiveUseOfTools},
@@ -76,21 +76,21 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.webTechnologies, title: "Web technologies", parent: TAG_ID.computerNetworks, stageOverride: GCSE_HIDDEN},
 
         // Programming topics
-        {id: TAG_ID.eventDrivenProgramming, title: "Event-driven programming", parent: TAG_ID.programming},
-        {id: TAG_ID.files, title: "File handling", parent: TAG_ID.programming},
-        {id: TAG_ID.functionalProgramming, title: "Functional programming", parent: TAG_ID.programming, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programming},
-        {id: TAG_ID.proceduralProgramming, title: "Procedural programming", parent: TAG_ID.programming},
         {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.programming},
-        {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.programming, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.stringHandling, title: "String handling", parent: TAG_ID.programming},
         {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.programming},
+        {id: TAG_ID.stringHandling, title: "String handling", parent: TAG_ID.programming},
+        {id: TAG_ID.files, title: "File handling", parent: TAG_ID.programming},
+        {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.programming, stageOverride: GCSE_HIDDEN},
+        {id: TAG_ID.proceduralProgramming, title: "Procedural programming", parent: TAG_ID.programming},
+        {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming (OOP)", parent: TAG_ID.programming},
+        {id: TAG_ID.eventDrivenProgramming, title: "Event-driven programming", parent: TAG_ID.programming},
+        {id: TAG_ID.functionalProgramming, title: "Functional programming", parent: TAG_ID.programming, stageOverride: GCSE_HIDDEN},
 
         // Safety and security topics
-        {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.cyberSecurity},
+        {id: TAG_ID.socialEngineering, title: "Social engineering", parent: TAG_ID.cyberSecurity},
         {id: TAG_ID.maliciousCode, title: "Malicious software", parent: TAG_ID.cyberSecurity},
         {id: TAG_ID.security, title: "Network security", parent: TAG_ID.cyberSecurity},
-        {id: TAG_ID.socialEngineering, title: "Social engineering", parent: TAG_ID.cyberSecurity},
+        {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.cyberSecurity},
 
         // Models of computation topics
         {id: TAG_ID.machinesWithMemory, title: "Machines with memory", parent: TAG_ID.theoryOfComputation, stageOverride: GCSE_HIDDEN},

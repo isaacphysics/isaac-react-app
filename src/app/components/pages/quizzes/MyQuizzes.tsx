@@ -1,11 +1,7 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {
-    loadQuizAssignedToMe,
-    loadQuizzes,
-    loadQuizzesAttemptedFreelyByMe,
-    selectors,
-    useAppDispatch,
-    useAppSelector
+    useGetAttemptedFreelyByMeQuery,
+    useGetQuizAssignmentsAssignedToMeQuery
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -25,6 +21,7 @@ import {
 } from "../../../services";
 import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
+import {useGetAvailableQuizzesQuery} from "../../../state";
 import {PageFragment} from "../../elements/PageFragment";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
@@ -51,9 +48,12 @@ function QuizItem({item}: QuizAssignmentProps) {
             <RS.CardBody>
                 <h4 className="border-bottom pb-3 mb-3">{item.quizSummary?.title || item.quizId }</h4>
 
-                {assignment ?
-                    <p>{assignment.dueDate && <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></>}</p> :
-                    attempt && <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>
+                {assignment
+                    ? <p>{assignment.dueDate && <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></>}</p>
+                    : attempt && siteSpecific(
+                        <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>,
+                        <p>{status === Status.Started ? "Attempting" : "Attempted"} independently</p>
+                    )
                 }
                 {assignment && <p>
                     Set: {formatDate(assignmentStartDate)}
@@ -116,19 +116,10 @@ function QuizGrid({quizzes, empty}: AssignmentGridProps) {
 }
 
 const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
-    const quizAssignments = useAppSelector(selectors.quizzes.assignedToMe);
-    const freeAttempts = useAppSelector(selectors.quizzes.attemptedFreelyByMe);
-    const quizzes = useAppSelector(selectors.quizzes.available);
 
-    const dispatch = useAppDispatch();
-
-    const startIndex = 0;
-
-    useEffect(() => {
-        dispatch(loadQuizzes(startIndex));
-        dispatch(loadQuizAssignedToMe());
-        dispatch(loadQuizzesAttemptedFreelyByMe());
-    }, [dispatch, startIndex]);
+    const {data: quizzes} = useGetAvailableQuizzesQuery(0);
+    const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
+    const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
 
     const pageHelp = <span>
         Use this page to see tests you need to take and your test results.
@@ -160,7 +151,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <Tabs className="mb-5 mt-4" tabContentClass="mt-4">
             {{
-                [siteSpecific("In Progress Tests", "In progress tests")]:
+                [siteSpecific("In Progress Tests", "Tests in progress")]:
                     <ShowLoading
                         until={quizAssignments}
                         ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}

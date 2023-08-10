@@ -21,6 +21,7 @@ import {PageFragment} from "../PageFragment";
 import {isStaff} from "../../../services";
 import {Immutable} from "immer";
 import {PotentialUser} from "../../../../IsaacAppTypes";
+import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 
 interface GraphSketcherModalProps {
     user: Immutable<PotentialUser> | null;
@@ -128,6 +129,10 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
         }
     }, [graphSpec]);
 
+    const [showQuestionReminder, setShowQuestionReminder] = useState<boolean>(true);
+    const onQuestionReminderClick = () => setShowQuestionReminder(prev => !prev);
+    const questionDoc = props.question;
+
     return <div id='graph-sketcher-modal' ref={graphSketcherContainer} style={{border: '5px solid black'}}>
         <div className="graph-sketcher-ui">
             <button title="Redo last change" className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">Redo</button>
@@ -139,6 +144,16 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
             <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">Submit</div>
             <div className="button" role="button" onClick={showHelpModal} onKeyUp={showHelpModal} tabIndex={0} id="graph-sketcher-ui-help-button">Help</div>
             {isStaff(user) && <div className="button" role="button" onClick={toggleDebugMode} onKeyUp={toggleDebugMode} tabIndex={0} id="graph-sketcher-ui-debug-button">Debug</div>}
+
+            {!showQuestionReminder && <div
+                className="button"
+                id="graph-sketcher-ui-question-button"
+                role="button" tabIndex={-1}
+                onClick={() => setShowQuestionReminder(true)}
+                onKeyUp={() => setShowQuestionReminder(true)}
+            >
+                Show Question
+            </div>}
 
             {debugModeEnabled && <code id="graph-sketcher-ui-debug-window">
                 <b>Debug mode enabled</b><br/><br/>
@@ -175,11 +190,17 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                 </svg>
                 <p className={"hover-text"}>Line colour</p>
             </div>
-            {props.question?.value &&
-                <Markup trusted-markup-encoding={props.question.encoding}>
-                    {props.question.value}
-                </Markup>
-            }
+            {showQuestionReminder && (questionDoc?.value || (questionDoc?.children && questionDoc?.children?.length > 0)) && <div className="question-reminder">
+                <IsaacContentValueOrChildren value={questionDoc.value} encoding={questionDoc.encoding}>
+                    {questionDoc?.children}
+                </IsaacContentValueOrChildren>
+                <div
+                    className="reminder-toggle"
+                    role="button" tabIndex={-1}
+                    onClick={onQuestionReminderClick}
+                    onKeyUp={onQuestionReminderClick}
+                >Hide Question</div>
+            </div>}
         </div>
     </div>
 }

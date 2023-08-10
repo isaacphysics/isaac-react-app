@@ -283,6 +283,10 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
                     screenReaderText = undefined;
                 }
 
+                // KaTeX has phantom elements that make a mess of selection and of copy-paste.
+                // Until https://github.com/KaTeX/KaTeX/issues/3668 is resolved, apply suggested fix ourselves, awfully:
+                katexRenderResult = katexRenderResult.replaceAll("color:transparent;", "color:transparent;visibility:hidden;");
+
                 // If katex-a11y fails, generate MathML using KaTeX for accessibility
                 if (screenReaderText) {
                     katexRenderResult = katexRenderResult.replace('<span class="katex">',

@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {
     AppState,
-    requestEmailVerification,
     selectors,
-    submitMessage,
-    useAppDispatch,
     useAppSelector,
-    useGetPageFragmentQuery
+    useGetPageFragmentQuery,
+    useLazyGetSchoolByUrnQuery,
+    useRequestEmailVerificationMutation,
+    useSubmitContactFormMutation
 } from "../../state";
 import {
     Alert,
@@ -23,7 +23,7 @@ import {
     Row
 } from "reactstrap";
 import {
-    api, isAda,
+    isAda,
     isPhy,
     isTeacherOrAbove,
     schoolNameWithPostcode,
@@ -39,10 +39,17 @@ const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
 export const TeacherRequest = () => {
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const errorMessage = useAppSelector((state: AppState) => (state && state.error) || null);
     const {data: warningFragment} = useGetPageFragmentQuery(warningFragmentId);
+    const [submitContactForm] = useSubmitContactFormMutation();
+
+    const [sendVerificationEmail] = useRequestEmailVerificationMutation();
+    const requestVerificationEmail = () => {
+        if (user?.loggedIn && user.email) {
+            sendVerificationEmail({email: user.email});
+        }
+    };
 
     const [firstName, setFirstName] = useState(user?.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user?.loggedIn && user.familyName || "");
@@ -69,11 +76,13 @@ export const TeacherRequest = () => {
         "Thanks, \n\n" + firstName + " " + lastName;
     const isValidEmail = validateEmail(emailAddress);
 
-
+    const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
     function fetchSchool(urn: string) {
         if (urn !== "") {
-            api.schools.getByUrn(urn).then(({data}) => {
-                setSchool(schoolNameWithPostcode(data[0]));
+            getSchoolByUrn(urn).then(({data}) => {
+                if (data && data.length > 0) {
+                    setSchool(schoolNameWithPostcode(data[0]));
+                }
             });
         } else if (user?.loggedIn && user.schoolOther) {
             setSchool(user.schoolOther);
@@ -92,7 +101,7 @@ export const TeacherRequest = () => {
 
     // Direct private tutors and parents towards the tutor account request page
     const noSchool = <p>
-        If you don't have an associated school please fill out our
+        If you don&apos;t have an associated school please fill out our
         {" "}<Link to="/contact?preset=teacherRequest">Contact us</Link>{" "}
         form. If you are a private tutor or parent, you can
         {" "}<Link to="/tutor_account_request">
@@ -142,7 +151,7 @@ export const TeacherRequest = () => {
                             :
                             <Form name="contact" onSubmit={e => {
                                 e.preventDefault();
-                                dispatch(submitMessage({firstName, lastName, emailAddress, subject, message}));
+                                submitContactForm({firstName, lastName, emailAddress, subject, message});
                                 setMessageSent(true);
                             }}>
                                 <CardBody>
@@ -216,7 +225,7 @@ export const TeacherRequest = () => {
                                         <Col>
                                             <small className="text-danger text-left">Your email address is not verified —
                                                 please click on the link in the verification email to confirm your
-                                                email address. You can <Button color="link primary-font-link" onClick={() => dispatch(requestEmailVerification())}>request a
+                                                email address. You can <Button color="link primary-font-link" onClick={requestVerificationEmail}>request a
                                                     new verification email</Button> if necessary.
                                             </small>
                                         </Col>

@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {
     AppState,
-    requestEmailVerification,
     selectors,
-    submitMessage,
     useAppDispatch,
     useAppSelector,
-    useGetPageFragmentQuery
+    useGetPageFragmentQuery,
+    useRequestEmailVerificationMutation, useSubmitContactFormMutation
 } from "../../state";
 import {
     Alert,
@@ -39,10 +38,17 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 const warningFragmentId = "teacher_registration_warning_message"; // TUTOR have decided to keep this message
 
 export const TutorRequest = () => {
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const errorMessage = useAppSelector((state: AppState) => (state && state.error) || null);
     const {data: warningFragment} = useGetPageFragmentQuery(warningFragmentId);
+    const [submitContactForm] = useSubmitContactFormMutation();
+
+    const [sendVerificationEmail] = useRequestEmailVerificationMutation();
+    const requestVerificationEmail = () => {
+        if (user?.loggedIn && user.email) {
+            sendVerificationEmail({email: user.email});
+        }
+    };
 
     const [firstName, setFirstName] = useState(user?.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user?.loggedIn && user.familyName || "");
@@ -104,7 +110,7 @@ export const TutorRequest = () => {
                             :
                             <Form name="contact" onSubmit={e => {
                                 e.preventDefault();
-                                dispatch(submitMessage({firstName, lastName, emailAddress, subject, message}));
+                                submitContactForm({firstName, lastName, emailAddress, subject, message});
                                 setMessageSent(true);
                             }}>
                                 <CardBody>
@@ -173,7 +179,7 @@ export const TutorRequest = () => {
                                         <Col>
                                             <small className="text-danger text-left">Your email address is not verified —
                                                 please click on the link in the verification email to confirm your
-                                                email address. You can <Button color="link primary-font-link" onClick={() => dispatch(requestEmailVerification())}>request a
+                                                email address. You can <Button color="link primary-font-link" onClick={requestVerificationEmail}>request a
                                                 new verification email</Button> if necessary.
                                             </small>
                                         </Col>
