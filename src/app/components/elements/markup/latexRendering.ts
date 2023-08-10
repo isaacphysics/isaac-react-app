@@ -290,7 +290,7 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
                 // If katex-a11y fails, generate MathML using KaTeX for accessibility
                 if (screenReaderText) {
                     katexRenderResult = katexRenderResult.replace('<span class="katex">',
-                        `<span class="katex"><span class="sr-only">${screenReaderText}</span>`);
+                        `<span class="katex"><span class="sr-only" aria-label="${screenReaderText}" role="text"></span>`);
                 } else {
                     const katexMathML = katex.renderToString(latexMunged.replace(dropZoneRegex, "clickable drop zone"), {...katexOptions, output: "mathml"})
                         .replace(`class="katex"`, `class="katex-mathml"`);
