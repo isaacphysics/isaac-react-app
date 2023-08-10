@@ -2,7 +2,6 @@ import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
 import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import ReactGA4 from "react-ga4";
 import {siteSpecific, trackEvent, WEBMASTER_EMAIL} from "../../services";
 import {FallbackProps} from "react-error-boundary";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
@@ -26,10 +25,6 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
             }
         }
     )
-    ReactGA4.gtag("event", "exception", {
-        description: `client_error: ${error?.message || 'unknown'}`,
-        fatal: true
-    });
     const usefulInformation = {
         userId: user?.loggedIn && user.id || "Not currently logged in",
         location: window.location.href,

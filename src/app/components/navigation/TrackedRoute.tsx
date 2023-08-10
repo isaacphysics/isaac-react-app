@@ -1,11 +1,9 @@
 import React, {useEffect} from "react";
 import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
-import ReactGA4 from "react-ga4";
 import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors, useAppSelector} from "../../state";
 import {
-    GOOGLE_ANALYTICS_4_MEASUREMENT_ID,
     isTeacherOrAbove,
     isTutorOrAbove,
     KEY,
@@ -15,14 +13,6 @@ import {
 } from "../../services";
 import {Unauthorised} from "../pages/Unauthorised";
 import {Immutable} from "immer";
-
-ReactGA4.initialize(GOOGLE_ANALYTICS_4_MEASUREMENT_ID);
-ReactGA4.set({ anonymizeIp: true });
-
-const trackPage = (page: string) => {
-    ReactGA4.set({ page });
-    ReactGA4.send({ hitType: "pageview", page });
-};
 
 interface UserFilterProps {
     ifUser?: (user: Immutable<PotentialUser>) => boolean;
@@ -36,7 +26,6 @@ type TrackedRouteComponentProps = RouteComponentProps & {
 const WrapperComponent = function({component: Component, ...props}: TrackedRouteComponentProps) {
     useEffect(() => {
         trackPageview();
-        trackPage(props.location.pathname);
     }, [props.location.pathname]);
     return <FigureNumberingContext.Provider value={{}}> {/* Create a figure numbering scope for each page */}
         <Component {...props} />
