@@ -13,7 +13,7 @@ import {
 export const TeacherAccountSelfUpgrade = () => {
     const [upgradeToTeacherAccount] = useUpgradeToTeacherAccountMutation();
     const user = useAppSelector(selectors.user.orNull);
-    const [emailVerified, setEmailVerified] = useState(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
+    const [emailVerified] = useState(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
     const [sendVerificationEmail] = useRequestEmailVerificationMutation();
     const requestVerificationEmail = () => {
         if (user?.loggedIn && user.email) {
