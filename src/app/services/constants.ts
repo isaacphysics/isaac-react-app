@@ -57,8 +57,8 @@ export const EDITOR_ORIGIN = siteSpecific(
     "https://editor.adacomputerscience.org"
 );
 
-export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
-export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/#!/compare";
+export const EDITOR_URL = EDITOR_ORIGIN + "/edit/master/";
+export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/compare";
 
 export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
     envSpecific("G-MM4SM6FNCF", "G-VXBDM5GDNG", "G-5VLS1Q1FCZ", "G-2YDE0QV3TK"),
