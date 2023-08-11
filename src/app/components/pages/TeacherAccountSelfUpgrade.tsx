@@ -8,8 +8,6 @@ import {
     useRequestEmailVerificationMutation,
     useUpgradeToTeacherAccountMutation
 } from "../../state";
-import {useUserContext} from "../../services";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 
 
 export const TeacherAccountSelfUpgrade = () => {
