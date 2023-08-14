@@ -98,7 +98,7 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                         </tr>
                     </thead>
                     <tbody>
-                        {eventBookings?.sort(sortOnPredicateAndReverse(sortPredicate, reverse))
+                        {[...eventBookings]?.sort(sortOnPredicateAndReverse(sortPredicate, reverse))
                             .filter(filterOnSurname)
                             .map(booking => {
                                 const userBooked = booking.userBooked as UserSummaryWithEmailAddressDTO;
