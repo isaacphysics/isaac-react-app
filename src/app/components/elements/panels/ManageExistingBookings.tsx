@@ -150,7 +150,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                         </tr>
                     </thead>
                     <tbody>
-                        {augmentedEventBookings?.sort(sortOnPredicateAndReverse(sortPredicate, reverse))
+                        {[...augmentedEventBookings]?.sort(sortOnPredicateAndReverse(sortPredicate, reverse))
                             .map(booking => {
                                 const userId = booking.userBooked && booking.userBooked.id;
                                 return !isDefined(userId) ? RenderNothing : <tr key={booking.bookingId}>
