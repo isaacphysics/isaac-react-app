@@ -158,6 +158,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
     const [reserveUsersOnEvent] = useReserveUsersOnEventMutation();
     const [submitContactForm] = useSubmitContactFormMutation();
+
     const requestReservations = () => {
         if (event.id && selectedGroupId) {
             const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));

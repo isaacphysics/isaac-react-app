@@ -77,7 +77,7 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
                 Cancel
             </RS.Button>,
             <RS.Button key={0} color="secondary" onClick={() => {
-                store.dispatch(authorisationsApi.endpoints.revokeAuthorisation.initiate(userId))
+                store.dispatch(authorisationsApi.endpoints.revokeAuthorisation.initiate(userToRevoke.id as number))
                     .then(() => store.dispatch(closeActiveModal()))
             }}>
                 Confirm
@@ -103,7 +103,7 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
                 Cancel
             </RS.Button>,
             <RS.Button key={0} color="secondary" onClick={() => {
-                store.dispatch(authorisationsApi.endpoints.releaseAuthorisation.initiate(userId))
+                store.dispatch(authorisationsApi.endpoints.releaseAuthorisation.initiate(otherUser.id as number))
                     .then(() => store.dispatch(closeActiveModal()))
             }}>
                 Confirm

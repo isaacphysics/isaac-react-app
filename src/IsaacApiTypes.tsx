@@ -423,6 +423,7 @@ export interface InteractiveCodeSnippetDTO extends CodeSnippetDTO {
     testCode?: string;
     expectedResult?: string;
     wrapCodeInMain?: boolean;
+    dataUrl?: string;
 }
 
 export interface GraphChoiceDTO extends ChoiceDTO {

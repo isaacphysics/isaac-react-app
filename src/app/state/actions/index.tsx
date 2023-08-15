@@ -31,7 +31,6 @@ import {
     UserContext
 } from "../../../IsaacApiTypes";
 import {AxiosError} from "axios";
-import ReactGA4 from "react-ga4";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {
     AppState,
@@ -43,7 +42,7 @@ import {
     showToast,
     logAction,
     isaacApi,
-    AppDispatch
+    AppDispatch,
 } from "../index";
 import {Immutable} from "immer";
 
@@ -76,9 +75,6 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
                         }
                 }
             )
-            ReactGA4.gtag("event", "exception", {
-                description: `load_fail: ${error}`
-            });
             return showToast({
                 color: "danger", title: error, timeout: 5000,
                 body: API_REQUEST_FAILURE_MESSAGE
@@ -400,11 +396,6 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
                     }
                 }
             )
-            ReactGA4.event({
-                category: 'user',
-                action: 'registration',
-                label: `Create Account (${provider})`,
-            });
         }
         const nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
         persistence.remove(KEY.AFTER_AUTH_PATH);

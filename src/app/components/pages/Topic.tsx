@@ -19,6 +19,7 @@ import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {NotFound} from "./NotFound";
+import {MetaDescription} from "../elements/MetaDescription";
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
     const user = useAppSelector(selectors.user.orNull);
@@ -41,6 +42,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
         thenRender={topicPage =>
             <Container id="topic-page">
                 <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
+                <MetaDescription description={topicPage.summary} />
                 <CanonicalHrefElement />
                 <Row>
                     <Col className={"py-3 mw-760"}>

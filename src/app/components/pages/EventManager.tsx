@@ -24,7 +24,7 @@ export const EventManager = ({user}: {user: PotentialUser}) => {
     const {data: event} = useGetEventQuery(selectedEventId ?? skipToken);
     const {data: eventBookings} = useGetEventBookingsQuery(selectedEventId ?? skipToken);
     const eventBookingUserIds = eventBookings?.map(booking => booking.userBooked && booking.userBooked.id).filter(isDefined);
-    const {data: userIdToSchoolMapping} = useAdminGetUserIdsSchoolLookupQuery(eventBookingUserIds ?? skipToken);
+    const {data: userIdToSchoolMapping} = useAdminGetUserIdsSchoolLookupQuery(eventBookingUserIds?.length ? eventBookingUserIds : skipToken);
 
     return  <Container>
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin"/>

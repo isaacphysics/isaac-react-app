@@ -56,15 +56,15 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             invalidatesTags: ["ActiveAuthorisations", "Groups", "GroupMemberships", "MyGroupMemberships", "AllMyAssignments"],
             onQueryStarted: onQueryLifecycleEvents({
                 successTitle: "Granted access",
-                successMessage: "ou have granted access to your data.",
+                successMessage: "You have granted access to your data.",
                 errorTitle: "Teacher connection failed",
                 errorMessage: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
             })
         }),
 
         revokeAuthorisation: build.mutation<void, number>({
-            query: (userId) => ({
-                url: `/authorisations/${userId}`,
+            query: (userIdToRevoke) => ({
+                url: `/authorisations/${userIdToRevoke}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["ActiveAuthorisations"],
@@ -76,8 +76,8 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
         }),
 
         releaseAuthorisation: build.mutation<void, number>({
-            query: (userId) => ({
-                url: `/authorisations/release/${userId}`,
+            query: (userIdToRelease) => ({
+                url: `/authorisations/release/${userIdToRelease}`,
                 method: "DELETE",
             }),
             invalidatesTags: ["OtherAuthorisations"],

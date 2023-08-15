@@ -101,6 +101,10 @@
                 background-image: url('/assets/inequality-help-phy.svg');
             }
 
+            &#graph-sketcher-ui-question-button {
+                background-image: url('/assets/inequality-togglequestion-phy.svg');
+            }
+
             &#graph-sketcher-ui-debug-button {
                 background-image: url('/assets/hex-debug.svg');
 
@@ -186,6 +190,11 @@
                     right: 2 * $button-spacing;
                 }
 
+                &#graph-sketcher-ui-question-button {
+                    bottom: 3 * $button-spacing + $button-size;
+                    left: 2 * $button-spacing;
+                }
+
                 &#graph-sketcher-ui-undo-button {
                     bottom: 2 * $button-spacing;
                     left: 2 * $button-spacing;
@@ -251,6 +260,11 @@
                 &#graph-sketcher-ui-reset-button {
                     top: 3 * $button-spacing + $button-size;
                     right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-question-button {
+                    bottom: 3 * $button-spacing + $button-size;
+                    left: 2 * $button-spacing;
                 }
 
                 &#graph-sketcher-ui-undo-button {

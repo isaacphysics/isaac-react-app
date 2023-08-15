@@ -48,9 +48,12 @@ function QuizItem({item}: QuizAssignmentProps) {
             <RS.CardBody>
                 <h4 className="border-bottom pb-3 mb-3">{item.quizSummary?.title || item.quizId }</h4>
 
-                {assignment ?
-                    <p>{assignment.dueDate && <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></>}</p> :
-                    attempt && <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>
+                {assignment
+                    ? <p>{assignment.dueDate && <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></>}</p>
+                    : attempt && siteSpecific(
+                        <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>,
+                        <p>{status === Status.Started ? "Attempting" : "Attempted"} independently</p>
+                    )
                 }
                 {assignment && <p>
                     Set: {formatDate(assignmentStartDate)}
@@ -148,7 +151,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <Tabs className="mb-5 mt-4" tabContentClass="mt-4">
             {{
-                [siteSpecific("In Progress Tests", "In progress tests")]:
+                [siteSpecific("In Progress Tests", "Tests in progress")]:
                     <ShowLoading
                         until={quizAssignments}
                         ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}

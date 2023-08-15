@@ -9,54 +9,54 @@
     z-index: 250;
 }
 
+.question-reminder {
+    position: absolute;
+    bottom: 30px;
+    left: 250px;
+    right: 250px;
+    text-align: justify;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 1.25rem;
+    pointer-events: none;
+    z-index: 255 !important;
+
+    .reminder-toggle {
+        position: relative;
+        text-transform: uppercase;
+        font-weight: bold;
+        text-align: center;
+        pointer-events: all;
+        background: $inequality-item-colour;
+        color: $inequality-item-font-colour;
+        width: 200px;
+        margin: 0 auto;
+        padding: 6px;
+        border-radius: 6px;
+    }
+
+    code {
+        background: none;
+    }
+}
+
+@media screen and (orientation: portrait) {
+    .question-reminder {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1023px) {
+    .question-reminder {
+        left: 100px;
+        right: 100px;
+    }
+}
+
 #inequality-modal {
     * {
         cursor: default;
-    }
-
-    .question-reminder {
-        position: absolute;
-        bottom: 30px;
-        left: 250px;
-        right: 250px;
-        text-align: justify;
-        border-radius: 20px;
-        background-color: rgba(0, 0, 0, 0.6);
-        color: white;
-        padding: 1.25rem;
-        pointer-events: none;
-        z-index: 255 !important;
-
-        .reminder-toggle {
-            position: relative;
-            text-transform: uppercase;
-            font-weight: bold;
-            text-align: center;
-            pointer-events: all;
-            background: $inequality-item-colour;
-            color: $inequality-item-font-colour;
-            width: 200px;
-            margin: 0 auto;
-            padding: 6px;
-            border-radius: 6px;
-        }
-
-        code {
-            background: none;
-        }
-    }
-
-    @media screen and (orientation: portrait) {
-        .question-reminder {
-            display: none;
-        }
-    }
-
-    @media screen and (max-width: 1023px) {
-        .question-reminder {
-            left: 100px;
-            right: 100px;
-        }
     }
 
     .orientation-warning {
