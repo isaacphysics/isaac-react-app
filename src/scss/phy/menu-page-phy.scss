@@ -4,9 +4,12 @@
 
 .menu-card:focus {
   border: none;
-  box-shadow: 0 0 0 2px $phy_green !important;
+  box-shadow: none;
   border-radius: 0;
-  outline: none !important;
+  outline: none;
+  &:after {
+    box-shadow: 0 0 0 2px black;
+  }
 }
 
 .isaac-cards-body {
@@ -36,12 +39,6 @@
       color: #ccc;
       &:hover .card-title {
         color: #ccc;
-      }
-      &:focus {
-        border: none;
-        box-shadow: 0 0 0 1px #ccc !important;
-        border-radius: 0;
-        outline: none !important;
       }
     }
   }
