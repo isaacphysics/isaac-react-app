@@ -43,7 +43,7 @@ export const userApi = isaacApi.injectEndpoints({
 
         upgradeToTeacherAccount: build.mutation({
             query: () => ({
-                url: "/users/current_user/upgrade_to_teacher",
+                url: "/users/current_user/upgrade/TEACHER",
                 method: "POST"
             }),
             onQueryStarted: onQueryLifecycleEvents({
