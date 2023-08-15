@@ -73,8 +73,8 @@ describe("Visiting a teacher-only page", () => {
         for (const route of teacherOnlyRoutes) {
             history.replace(route);
             const titleElement = await screen.findByTestId("main-heading");
-            await within(titleElement).findByText("Mock page: teacher_accounts");
-            expect(history.location.pathname).toEqual("/pages/teacher_accounts");
+            await within(titleElement).findByText("Upgrade to a teacher account");
+            expect(history.location.pathname).toEqual("/teacher_account_request");
         }
     });
 

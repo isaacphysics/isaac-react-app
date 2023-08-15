@@ -16,4 +16,4 @@ export const SITE_TITLE_SHORT = siteSpecific("Isaac", "Ada");
 
 export const WEBMASTER_EMAIL = siteSpecific("webmaster@isaacphysics.org", "webmaster@adacomputerscience.org");
 
-export const TEACHER_REQUEST_ROUTE = siteSpecific("/pages/contact_us_teacher", "/pages/teacher_accounts");
+export const TEACHER_REQUEST_ROUTE = siteSpecific("/pages/contact_us_teacher", "/teacher_account_request");

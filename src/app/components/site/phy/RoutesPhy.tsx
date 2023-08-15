@@ -28,6 +28,7 @@ import {MyQuizzes} from "../../pages/quizzes/MyQuizzes";
 import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
+import {TeacherRequest} from "../../pages/TeacherRequest";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -113,6 +114,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
     <TrackedRoute key={key++} exact path="/tutor_features" component={TutorFeatures}/>,
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
+    <TrackedRoute exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>,
 
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,
