@@ -78,6 +78,16 @@ export const validateUserGender = (user?: Immutable<ValidationUser> | null) => {
     return user && user.gender && user.gender !== "UNKNOWN";
 };
 
+export const wasTodayUTC = (dateOfAction: string | null) => {
+    if (dateOfAction) {
+        const now = new Date();
+        const actionTime = new Date(dateOfAction);
+        return now.getUTCDate() == actionTime.getUTCDate();
+    } else {
+        return false;
+    }
+};
+
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
     if (dateOfAction) {
         const now = new Date();
