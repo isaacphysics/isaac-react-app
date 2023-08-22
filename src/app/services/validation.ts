@@ -86,7 +86,7 @@ export const wasTodayUTC = (dateOfAction: string | null) => {
     } else {
         return false;
     }
-}
+};
 
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
     if (dateOfAction) {
