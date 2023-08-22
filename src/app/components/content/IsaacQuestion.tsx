@@ -19,9 +19,13 @@ import {
     isAda,
     isLoggedIn,
     isPhy,
+    KEY,
+    persistence,
     QUESTION_TYPES,
     selectQuestionPart,
-    useFastTrackInformation
+    trackEvent,
+    useFastTrackInformation,
+    wasTodayUTC
 } from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
 import {AccordionSectionContext, ConfidenceContext, GameboardContext} from "../../../IsaacAppTypes";
@@ -103,6 +107,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         <RS.Form onSubmit={function submitCurrentAttempt(event) {
             if (event) {event.preventDefault();}
             if (questionPart?.currentAttempt) {
+
+                // Notify Plausible that at least one question attempt has taken place today
+                if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {
+                    persistence.save(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME, new Date().toString())
+                    trackEvent("question_attempted")
+                }
+
                 dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt, currentGameboard?.id));
                 if (isLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
                     dispatch(saveGameboard({
