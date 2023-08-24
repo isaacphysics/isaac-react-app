@@ -18,13 +18,11 @@ export const ChunkOrClientError = ({resetErrorBoundary, error}: FallbackProps) =
 export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    trackEvent("exception", {props:
-            {
-                description: `client_error: ${error?.message || 'unknown'}`,
-                fatal: true
-            }
-        }
-    )
+
+    useEffect(() => {
+        trackEvent("exception", { props: { description: `client_error: ${error?.message || 'unknown'}`, fatal: true } });
+    }, [error]);
+
     const usefulInformation = {
         userId: user?.loggedIn && user.id || "Not currently logged in",
         location: window.location.href,
