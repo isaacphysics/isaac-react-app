@@ -170,7 +170,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                 [siteSpecific("Practice Tests", "Practice tests")]:
                     <ShowLoading until={quizzes}>
                         {quizzes && <>
-                            {quizzes.length === 0 && <p><em>There are no tests currently available.</em></p>}
+                            {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
                             <RS.ListGroup className="mb-3 quiz-list">
                                 {quizzes.filter(showQuiz).map(quiz => <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                     <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">

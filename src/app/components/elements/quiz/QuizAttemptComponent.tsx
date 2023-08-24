@@ -12,6 +12,7 @@ import {
     extractTeacherName,
     isAda,
     isDefined,
+    isPhy,
     isTeacherOrAbove,
     QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP,
     siteSpecific,
@@ -124,12 +125,17 @@ function QuizHeader({attempt, preview, user}: QuizAttemptProps) {
                 </span>
                 {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
             </p>
-            {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && <Alert color={siteSpecific("info", "warning")}>
-                Please be aware that for tests your answer to each question <b>will be visible to your teacher(s) after
-                you submit your test</b> so that they can provide further feedback and support if they wish to do so.
-                <br />
-                {siteSpecific("Assignments", "Quiz assignments")} are different. We do not share with your teachers any of your entered answers or the
-                number of your attempts to questions in {siteSpecific("assignments", "quizzes")}.
+            {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && !isDefined(attempt.completedDate) && <Alert color={siteSpecific("info", "warning")}>
+                {siteSpecific(<>
+                    Please be aware that for tests your answer to each question <b>will be visible to your teacher(s) after
+                    you submit your test</b> so that they can provide further feedback and support if they wish to do so.
+                    <br />
+                    Assignments are different. We do not share with your teachers any of your entered answers or the
+                    number of your attempts to questions in assignments.
+                </>, <>
+                    Please be aware that your answer to each test question will be visible to your teacher(s) after you submit your test.
+                    This is to allow them to provide further feedback and support.
+                </>)}
             </Alert>}
         </>;
     } else {
@@ -144,8 +150,8 @@ function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
         {rubric && renderRubric && <div>
             <h4>Instructions</h4>
             <IsaacContentValueOrChildren value={rubric.value}>
-            {rubric.children}
-        </IsaacContentValueOrChildren>
+                {rubric.children}
+            </IsaacContentValueOrChildren>
         </div>}
     </div>
 }
@@ -155,7 +161,7 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
     const section = sections && sections[page - 1];
     const rubric = attempt.quiz?.rubric;
     const attribution = attempt.quiz?.attribution;
-    const renderRubric = (rubric?.children || []).length > 0;
+    const renderRubric = (rubric?.children || []).length > 0 && (isPhy || !isDefined(attempt.completedDate));
     const dispatch = useAppDispatch();
 
     const openQuestionModal = (attempt: QuizAttemptDTO) => {
