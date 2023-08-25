@@ -8,7 +8,7 @@ WORKDIR /build
 
 COPY package.json /build
 COPY yarn.lock /build
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 COPY . /build
 RUN yarn $BUILD_TARGET
