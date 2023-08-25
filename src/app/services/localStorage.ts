@@ -6,6 +6,7 @@ export enum KEY {
     REQUIRED_MODAL_SHOWN_TIME = "requiredModalShownTime",
     RECONFIRM_USER_CONTEXT_SHOWN_TIME = "reconfirmStageExamBoardShownTime",
     LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME = "loginOrSignUpModalShownTime",
+    EMAIL_CONFIRMATION_MODAL_SHOWN_TIME = "emailconfirmationModalShownTime",
     LAST_NOTIFICATION_TIME = "lastNotificationTime",
     ANONYMISE_USERS = "anonymiseUsers",
     MOST_RECENT_ALL_TOPICS_PATH = "mostRecentAllTopicsPath",

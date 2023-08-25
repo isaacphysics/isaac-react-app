@@ -1,6 +1,14 @@
 #registration-page {
-}
+  .larger-radio {
+    margin-left: 4px;
+  }
 
-.always-show {
+  .larger-radio .custom-control-label::before,
+  .larger-radio .custom-control-label::after {
+    transform: scale(1.5);
+  }
+
+  .always-show {
     display: block;
+  }
 }

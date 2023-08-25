@@ -224,3 +224,8 @@ select.form-control {
     }
   }
 }
+
+.was-validated select.form-control:invalid,
+select.form-control.is-invalid {
+  padding-right: 0 !important;
+}

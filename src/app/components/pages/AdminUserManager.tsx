@@ -293,6 +293,10 @@ export const AdminUserManager = () => {
                                             <th>User role</th>
                                             <th>School</th>
                                             <th>Verification status</th>
+                                            <th>Teacher pending? 
+                                                <span id="teacher-pending" className="icon-help mb-0" style={{ alignSelf: "center" }} />
+                                                <RS.UncontrolledTooltip target="#teacher-pending" placement="bottom">Awaiting teacher status verification</RS.UncontrolledTooltip>
+                                            </th>
                                             <th>Member since</th>
                                             <th>Last seen</th>
                                         </tr>
@@ -328,6 +332,7 @@ export const AdminUserManager = () => {
                                                 <td>{user.role}</td>
                                                 <td>{isDefined(user.id) && isDefined(userIdToSchoolMapping) && isDefined(userIdToSchoolMapping[user.id]) && (userIdToSchoolMapping[user.id].name ?? "")}</td>
                                                 <td>{user.emailVerificationStatus}</td>
+                                                <td>{user.teacherPending === true ? "Y" : "N"}</td>
                                                 <td><DateString>{user.registrationDate}</DateString></td>
                                                 <td><DateString>{user.lastSeen}</DateString></td>
                                             </tr>

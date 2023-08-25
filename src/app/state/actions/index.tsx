@@ -208,7 +208,7 @@ export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => as
     dispatch({type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE, userSnapshot: newUserSnapshot});
 };
 
-// TODO scope for pulling out a separate registerUser method from this
+
 export const updateCurrentUser = (
     updatedUser: Immutable<ValidationUser>,
     updatedUserPreferences: UserPreferencesDTO,
@@ -241,13 +241,13 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
         const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        await dispatch(requestCurrentUser() as any);
+        dispatch(requestCurrentUser() as any);
 
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
             persistence.session.remove(KEY.FIRST_LOGIN);
             if (redirect) {
-                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
+                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/', {firstLogin: isFirstLogin});
             }
         } else if (!editingOtherUser) {
             dispatch(showToast({
@@ -271,6 +271,30 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
+
+export const registerUser = (
+    newUser: Immutable<ValidationUser>,
+    userPreferences: UserPreferencesDTO,
+    userContexts: UserContext[],
+    recaptchaToken: string,
+) => async (dispatch: Dispatch<Action>) => {
+    
+    try {
+        dispatch({type: ACTION_TYPE.USER_REGISTRATION_REQUEST});
+        const currentUser = await api.users.updateCurrent(newUser, userPreferences, null, userContexts, recaptchaToken);
+        dispatch({type: ACTION_TYPE.USER_REGISTRATION_RESPONSE_SUCCESS, user: currentUser.data});
+        dispatch(requestCurrentUser() as any);
+
+        const isFirstLogin = isFirstLoginInPersistence() || false;
+        if (isFirstLogin) {
+            persistence.session.remove(KEY.FIRST_LOGIN);
+            history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/', {firstLogin: isFirstLogin});
+        } 
+    } catch (e: any) {
+        dispatch({type: ACTION_TYPE.USER_REGISTRATION_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+    }
+};
+
 
 export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_PROGRESS_REQUEST});
@@ -343,8 +367,8 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
         dispatch(showToast({
             color: "success",
             title: "Password reset email sent",
-            body: `A password reset email has been sent to '${params.email}'`,
-            timeout: 5000
+            body: `If an account exists with the email address ${params.email}, we have sent you a password reset email. If you don't receive an email, you may not have an account with this email address.`,
+            timeout: 10000
         }) as any);
     } catch (e: any) {
         dispatch(showAxiosErrorToastIfNeeded("Password reset failed", e));
@@ -1499,6 +1523,10 @@ export const handleServerError = () => {
 export const handleApiGoneAway = () => {
     store.dispatch(errorSlice.actions.apiGoneAway());
 };
+
+export const clearError = () => {
+    store.dispatch(errorSlice.actions.clearError());
+}
 
 export const setAssignBoardPath = (path: string) => {
     persistence.save(KEY.ASSIGN_BOARD_PATH, path);

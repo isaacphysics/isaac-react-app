@@ -2,7 +2,7 @@ import {Button, CardBody, Col, FormGroup, Input, Label, Row, UncontrolledTooltip
 import React, {useState} from "react";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {loadZxcvbnIfNotPresent, passwordDebounce, validateEmail} from "../../../services";
+import {PASSWORD_REQUIREMENTS, loadZxcvbnIfNotPresent, passwordDebounce, validateEmail} from "../../../services";
 import {linkAccount, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
 
 interface UserPasswordProps {
@@ -44,7 +44,7 @@ export const UserPassword = (
                     <h4 className="mb-0">Password</h4>
                     <span id={`password-help-tooltip`} className="icon-help mb-0" style={{ alignSelf: "center" }}/>
                     <UncontrolledTooltip target={`password-help-tooltip`} placement="bottom">
-                        {"Passwords must be at least 12 characters, containing at least one number, one lowercase letter, one uppercase letter, and one special character."}
+                    {PASSWORD_REQUIREMENTS}
                     </UncontrolledTooltip>
                 </div>
             </Col>
@@ -115,7 +115,7 @@ export const UserPassword = (
                                     disabled={!editingOtherUser && currentPassword == ""}
                                 />
                                     <FormFeedback id="passwordConfirmationValidationMessage">
-                                    {!arePasswordsIdentical ? "New passwords must match." : !passwordMeetsRequirements && "Passwords must be at least 12 characters, containing at least one number, one lowercase letter, one uppercase letter, and one special character."}
+                                    {!arePasswordsIdentical ? "New passwords must match." : !passwordMeetsRequirements && PASSWORD_REQUIREMENTS}
                                     </FormFeedback>
                             </FormGroup>
                         </Col>

@@ -233,15 +233,15 @@ export const DateInput = (props: DateInputProps) => {
     return <React.Fragment>
         <InputGroup id={props.id} {...controlPropsWithValidationStripped} className={inputGroupClasses}>
             <Input className="date-input-day mr-1" type="select" {...controlProps} aria-label={`Day${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("day")} value={values.day.get() || ""}>
-                {values.day.get() === undefined && <option />}
+                {values.day.get() === undefined && <option value="" disabled hidden>Day</option>}
                 {range(1, Math.max(lastInMonth(), values.day.get() || 0) + 1).map(day => <option key={day}>{day}</option>)}
             </Input>
             <Input className="date-input-month mr-1" type="select" {...controlProps} aria-label={`Month${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("month")} value={values.month.get() || ""}>
-                {values.month.get() === undefined && <option />}
+                {values.month.get() === undefined && <option value="" disabled hidden>Month</option>}
                 {MONTHS.map((month, index)=> <option value={index + 1} key={index + 1}>{month}</option>)}
             </Input>
             <Input className="date-input-year mr-1" type="select" {...controlProps} aria-label={`Year${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("year")} value={values.year.get() || ""}>
-                {values.year.get() === undefined && <option />}
+                {values.year.get() === undefined && <option value="" disabled hidden>Year</option>}
                 {yearRange.map(year => <option key={year}>{year}</option>)}
             </Input>
             {(props.noClear === undefined || !props.noClear) && <Button close {...controlPropsWithValidationStripped} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />}

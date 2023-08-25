@@ -1,3 +1,5 @@
+import { EmailVerificationStatus } from "../../../IsaacApiTypes";
+
 export const MOST_RECENT_AUGUST = () => {
     const date = new Date();
     if (date.getMonth() < 7) { // Month is 0-indexed for some stupid reason
@@ -11,4 +13,8 @@ export const MOST_RECENT_AUGUST = () => {
 
 export const needToUpdateUserContextDetails = (lastConfirmedDate: Date | undefined): boolean => {
     return !!lastConfirmedDate && lastConfirmedDate <= MOST_RECENT_AUGUST();
+}
+
+export const needToVerifyEmail = (teacherPending: boolean, emailVerificationStatus: EmailVerificationStatus): boolean => {
+    return teacherPending && emailVerificationStatus !== "VERIFIED";
 }

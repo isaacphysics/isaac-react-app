@@ -2,6 +2,18 @@ import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO} from "../test/utils";
 import {UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
 
+export const registrationUserData = {
+    givenName: "Test",
+    familyName: "User",
+    wrongEmail: "testuser@hotmail.com",
+    email: "testuser@test.com",
+    wrongPassword: "test1234",
+    password: "Testing123456!",
+    gender: "FEMALE",
+    stage: "gcse",
+    verificationInfo: "www.website.com",
+  };
+
 export const mockUser = {
     givenName: "Test",
     familyName: "Admin",
@@ -22,6 +34,30 @@ export const mockUser = {
     lastUpdated: DAYS_AGO(1),
     lastSeen: DAYS_AGO(1),
     emailVerificationStatus: "VERIFIED",
+    teacherPending: false,
+    id: 1 as const
+};
+
+export const registrationMockUser = {
+    givenName: "Test",
+    familyName: "User",
+    email: "testuser@test.com",
+    dateOfBirth: undefined,
+    gender: "FEMALE",
+    registrationDate: DAYS_AGO(0),
+    role: "STUDENT",
+    schoolOther: "N/A",
+    registeredContexts: [
+        {
+            stage: "gcse",
+            examBoard: "ocr"
+        }
+    ],
+    registeredContextsLastConfirmed: DAYS_AGO(0),
+    firstLogin: true,
+    lastUpdated: DAYS_AGO(0),
+    lastSeen: DAYS_AGO(0),
+    emailVerificationStatus: "UNVERIFIED",
     id: 1 as const
 };
 

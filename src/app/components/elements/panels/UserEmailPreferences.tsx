@@ -32,8 +32,6 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
         events: "Get valuable updates on our free student workshops/teacher CPD events happening near you."
     };
 
-    // temporarily only showing error relating to not filling out all preferences.
-    // TO DO: PW restrictions on front end will prevent unwanted from occurring, and this can then be changed
     let errorMessage = null;
     if (submissionAttempted && !validateEmailPreferences(emailPreferences)) {
         errorMessage = "Please specify all preferences"

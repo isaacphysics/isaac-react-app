@@ -67,11 +67,12 @@ declare module '*.module.sass' {
 declare module "bootstrap";
 declare module "math-random-seed";
 
-declare var MathJax: any;
-declare var ISAAC_SITE: string;
-declare var REACT_APP_API_VERSION: string;
+declare const MathJax: any;
+declare const ISAAC_SITE: string;
+declare const REACT_APP_API_VERSION: string;
+declare const GOOGLE_RECAPTCHA_SITE_KEY: string;
 declare const ENV_QUIZ_FEATURE_FLAG: boolean;
-declare var EDITOR_PREVIEW: boolean;
+declare const EDITOR_PREVIEW: boolean;
 
 declare module "inequality-grammar" {
   export const parseMathsExpression: (exp: string) => (any[]) | ParsingError;

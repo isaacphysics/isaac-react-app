@@ -7,6 +7,7 @@ import {
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     isDefined,
+    isTeacherPending,
     isTutorOrAbove,
     STAGE
 } from "../../../services";
@@ -104,7 +105,7 @@ export function UserContextAccountInput({
     userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted,
 }: UserContextAccountInputProps) {
     const user = useAppSelector(selectors.user.orNull);
-    const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
+    const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true}) || isTeacherPending({...user, loggedIn: true});
     const studyingOrTeaching = tutorOrAbove ? 'teaching' : 'studying';
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
 
@@ -126,7 +127,10 @@ export function UserContextAccountInput({
                 const showPlusOption = tutorOrAbove &&
                     index === userContexts.length - 1 &&
                     // at least one exam board for the potential stage
-                    getFilteredStageOptions({byUserContexts: userContexts, hideFurtherA: true}).length > 0;
+                    getFilteredStageOptions({byUserContexts: userContexts, hideFurtherA: true}).length > 0 &&
+                    userContexts.findIndex(
+                      (p) => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL
+                    ) === -1;                    
 
                 return <RS.FormGroup key={index}>
                     <RS.Row>

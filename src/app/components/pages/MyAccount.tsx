@@ -167,7 +167,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
     const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts?.length ? userToUpdate?.registeredContexts : [{}], userContextsToUpdate, {unorderedArrays: true}), [userContextsToUpdate, userToUpdate]);
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
-
+    
     useEffect(() => {
         setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
         setMyUserPreferences(userPreferences);
@@ -229,7 +229,6 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                 return; // early exit
             }
         }
-
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
             allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
@@ -245,7 +244,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                 true
             )).then(() => setSaving(false)).catch(() => setSaving(false));
             return;
-        } else if (activeTab == ACCOUNT_TAB.emailpreferences) {
+        } else if (activeTab == ACCOUNT_TAB.emailpreferences || ACCOUNT_TAB.passwordreset) {
             dispatch(showErrorToast("Account update failed", "Please make sure that all required fields in the \"Profile\" tab have been filled in."));
         }
         setSaving(false);

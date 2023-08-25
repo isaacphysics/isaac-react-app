@@ -43,6 +43,9 @@ export type Action =
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE; errorMessage: string}
+    | {type: ACTION_TYPE.USER_REGISTRATION_REQUEST}
+    | {type: ACTION_TYPE.USER_REGISTRATION_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
+    | {type: ACTION_TYPE.USER_REGISTRATION_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE; errorMessage: string}

@@ -19,6 +19,10 @@ export function isTutorOrAbove(user?: {readonly role?: UserRole, readonly logged
     return isDefined(user) && (user.role !== "STUDENT") && (user.loggedIn ?? true);
 }
 
+export function isTeacherPending(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly teacherPending?: boolean} | null): boolean {
+    return isDefined(user) && (user.teacherPending === true) && (user.loggedIn ?? true);
+}
+
 export function isTeacherOrAbove(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
     return isDefined(user) && (user.role !== "STUDENT") && (user.role !== "TUTOR") && (user.loggedIn ?? true);
 }

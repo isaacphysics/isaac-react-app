@@ -49,27 +49,32 @@ export const UserDetails = (props: UserDetailsProps) => {
         userToUpdate?.email && allRequiredInformationIsPresent(userToUpdate, {EMAIL_PREFERENCE: null}, userContexts);
 
     return <CardBody className="pt-0">
-        <Row>
-            <Col>
-                <span className="d-block pb-0 text-right text-muted required-before">
-                    Required
-                </span>
-            </Col>
-        </Row>
         <Row className="mb-3">
             <Col>
-                Account type: <b>{userToUpdate?.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate?.role == "STUDENT" && <span>
-                    <small>(Are you a teacher or tutor? {" "}
+                Account type:{" "}
+                <b>{userToUpdate?.role && UserFacingRole[userToUpdate.role]}</b>{" "}
+                {userToUpdate?.role == "STUDENT" &&
+                  (userToUpdate?.teacherPending === true ? (
+                    <span>
+                      <small>(Your teacher account upgrade is pending.)</small>
+                    </span>
+                  ) : (
+                    <span>
+                      <small>
+                        (Are you a teacher or tutor?{" "}
                         <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
-                            Upgrade your account
-                        </Link>.)</small>
-                </span>}
+                          Upgrade your account
+                        </Link>
+                        .)
+                      </small>
+                    </span>
+                  ))}
             </Col>
         </Row>
         <Row>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="first-name-input" className="form-required">First name</Label>
+                    <Label htmlFor="first-name-input">First name</Label>
                     <Input
                         invalid={!validateName(userToUpdate.givenName)} id="first-name-input" type="text"
                         name="givenName" defaultValue={userToUpdate.givenName}
@@ -84,7 +89,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="last-name-input" className="form-required">Last name</Label>
+                    <Label htmlFor="last-name-input">Last name</Label>
                     <Input
                         invalid={!validateName(userToUpdate.familyName)} id="last-name-input" type="text"
                         name="last-name" defaultValue={userToUpdate.familyName}
@@ -101,7 +106,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row>
             <Col md={6}>
                 <FormGroup>
-                    <Label htmlFor="email-input" className="form-required">Email address</Label>
+                    <Label htmlFor="email-input">Email address</Label>
                     <Input
                         invalid={!validateEmail(userToUpdate.email)} id="email-input" type="email"
                         name="email" defaultValue={userToUpdate.email}
@@ -118,8 +123,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
             <Col md={6}>
                 <FormGroup>
-                    <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required/>
+                    <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} />
                 </FormGroup>
             </Col>
         </Row>

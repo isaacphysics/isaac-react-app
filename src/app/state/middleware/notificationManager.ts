@@ -10,8 +10,9 @@ import {
     withinLast2Minutes
 } from "../../services";
 import {Action} from "../../../IsaacAppTypes";
-import {logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
+import {logAction, needToUpdateUserContextDetails, needToVerifyEmail, openActiveModal, routerPageChange} from "../index";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
+import { emailConfirmationModal } from "../../components/elements/modals/EmailConfirmationModal";
 import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
 import {userContextReconfirmationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
 
@@ -29,6 +30,11 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
 
         if (isDefined(user)) {
             const firstLogin = persistence.session.load(KEY.FIRST_LOGIN)
+            // email confirmation modal to take precedence over other modals, only for teacherPending accounts
+            if (needToVerifyEmail(user.teacherPending, user.emailVerificationStatus) && !withinLast2Minutes(persistence.load(KEY.EMAIL_CONFIRMATION_MODAL_SHOWN_TIME)) && firstLogin === null) {
+                persistence.save(KEY.EMAIL_CONFIRMATION_MODAL_SHOWN_TIME, new Date().toString())
+                dispatch(openActiveModal(emailConfirmationModal));  
+            }
             // Required account info modal - takes precedence over stage/exam board re-confirmation modal
             if (isDefined(state.userPreferences) && !allRequiredInformationIsPresent(user, state.userPreferences, user.registeredContexts) && firstLogin === null) { 
                 dispatch(openActiveModal(requiredAccountInformationModal));

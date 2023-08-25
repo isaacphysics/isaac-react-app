@@ -24,7 +24,7 @@ import {
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {history, SITE_SUBJECT_TITLE, validatePassword} from "../../services";
+import {history, PASSWORD_REQUIREMENTS, SITE_SUBJECT_TITLE, validatePassword} from "../../services";
 import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Loading} from "../handlers/IsaacSpinner";
@@ -170,7 +170,7 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
         <FormGroup>
             {displayLabels && <Label htmlFor="email-input">Email address</Label>}
             <Input
-                id="email-input" type="email" name="email" placeholder="Email address"
+                id="email-input" autoComplete="email" type="email" name="email" placeholder="Email address"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
                 invalid={!!errorMessage || (!validEmail && (logInAttempted || passwordResetAttempted))}
                 aria-describedby="emailValidationMessage"
@@ -185,17 +185,17 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
             {displayLabels && (<><Label htmlFor="password-input">Password</Label>
             <span id={`password-help-tooltip`} className="icon-help ml-1" />
             <UncontrolledTooltip target={`password-help-tooltip`} placement="bottom">
-                {"Passwords must be at least 12 characters, containing at least one number, one lowercase letter, one uppercase letter, and one special character."}
+            {PASSWORD_REQUIREMENTS}
             </UncontrolledTooltip></>)}
             <Input
-                id="password-input" type="password" name="password" placeholder="Password"
+                id="password-input" autoComplete="current-password" type="password" name="password" placeholder="Password"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
                 invalid={!!errorMessage || (!validPassword && (logInAttempted))}
                 aria-describedby="passwordValidationMessage"
                 required
             />
             <FormFeedback id="passwordValidationMessage">
-                {!validPassword && "Passwords must be at least 12 characters, containing at least one number, one lowercase letter, one uppercase letter, and one special character."}
+                {!validPassword && PASSWORD_REQUIREMENTS}
             </FormFeedback>
         </FormGroup>
     </>;
@@ -243,7 +243,7 @@ export const LogIn = () => {
                         <Form name="login" onSubmit={validateAndLogIn} noValidate>
 
                             <h2 className="h-title mb-4"  ref={headingRef} tabIndex={-1}>
-                                Log&nbsp;in or sign&nbsp;up:
+                                Log in or sign up:
                             </h2>
                             {totpChallengePending ?
                                 <TFAInput ref={subHeadingRef} rememberMe={rememberMe} />

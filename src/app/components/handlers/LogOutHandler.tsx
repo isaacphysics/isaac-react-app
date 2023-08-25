@@ -4,7 +4,9 @@ import {IsaacSpinner} from "./IsaacSpinner";
 
 export const LogOutHandler = () => {
     const dispatch = useAppDispatch();
+
     useEffect(() => {dispatch(logOutUser())}, [dispatch]);
+
     return <React.Fragment>
         <div className="w-100 text-center">
             <h2 className="pt-5 pb-2">

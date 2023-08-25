@@ -170,6 +170,7 @@ module.exports = (env) => {
             ]}),
             new webpack.DefinePlugin({
                 REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
+                GOOGLE_RECAPTCHA_SITE_KEY: `"${process.env.GOOGLE_RECAPTCHA_SITE_KEY}"`,
                 ENV_QUIZ_FEATURE_FLAG: process.env.QUIZ_FEATURE && process.env.QUIZ_FEATURE.trim() === "true",
                 EDITOR_PREVIEW: JSON.stringify(isRenderer)
             }),

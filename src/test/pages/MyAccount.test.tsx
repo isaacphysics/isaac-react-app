@@ -1,20 +1,13 @@
 import { screen, within } from "@testing-library/react";
-import { renderTestEnvironment } from "../utils";
+import { getById, renderTestEnvironment } from "../utils";
 import userEvent from "@testing-library/user-event";
+import { PASSWORD_REQUIREMENTS } from "../../app/services";
 
 const validPassword = "Testing123456!"
 const invalidPassword = "password"
 const wrongPassword = "wrongPassword"
 const noMatchError = "New passwords must match."
-const invalidPasswordError = "Passwords must be at least 12 characters, containing at least one number, one lowercase letter, one uppercase letter, and one special character."
-
-const getById = (id: string) => {
-    const element = document.getElementById(id);
-    if (!element) {
-      throw new Error(`Element with ID "${id}" not found.`);
-    }
-    return element;
-  };
+const invalidPasswordError = PASSWORD_REQUIREMENTS
 
 describe("My Account", () => {
   it("Submit button should be disabled until all PW fields in My Account are filled and meeting requirements", async () => {

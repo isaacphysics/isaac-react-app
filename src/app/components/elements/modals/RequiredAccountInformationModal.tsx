@@ -87,7 +87,6 @@ const RequiredAccountInfoBody = () => {
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
-                            required
                         />
                     </div>}
                 </RS.Col>}

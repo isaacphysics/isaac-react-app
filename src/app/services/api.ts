@@ -95,10 +95,10 @@ export const api = {
         handlePasswordReset: (params: {token: string; password: string}) => {
             return endpoint.post(`/users/resetpassword/${params.token}`, securePadPasswordReset({password: params.password}));
         },
-        updateCurrent: (registeredUser: Immutable<ValidationUser>, userPreferences: UserPreferencesDTO, passwordCurrent: string | null, registeredUserContexts?: UserContext[])
+        updateCurrent: (registeredUser: Immutable<ValidationUser>, userPreferences: UserPreferencesDTO, passwordCurrent: string | null, registeredUserContexts?: UserContext[], recaptchaToken?: string)
             :  AxiosPromise<Immutable<ApiTypes.RegisteredUserDTO>> =>
         {
-            return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent, registeredUserContexts});
+            return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent, registeredUserContexts, recaptchaToken});
         },
         passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);

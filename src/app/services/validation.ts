@@ -21,6 +21,22 @@ export const validateEmail = (email?: string) => {
     return email && email.length > 0 && email.includes("@");
 };
 
+ // function that returns true if email exists and is not on the nonSchoolDomains list
+ export const allowedDomain = (email: string | undefined) => {
+    const nonSchoolDomains = [
+      "@gmail",
+      "@yahoo",
+      "@hotmail",
+      "@sharklasers",
+      "@guerrillamail",
+    ];
+
+    if (!email) {
+      return false;
+    }
+    return !nonSchoolDomains.some((domain) => email.includes(domain));
+  };
+
 export const isValidGameboardId = (gameboardId?: string) => {
     return !gameboardId || /^[a-z0-9_-]+$/.test(gameboardId);
 };
@@ -42,6 +58,7 @@ const isDobOverN = (n: number, dateOfBirth?: Date | number) => {
 export const isDobOverThirteen = (dateOfBirth?: Date | number) => isDobOverN(13, dateOfBirth);
 
 export const MINIMUM_PASSWORD_LENGTH = 12;
+export const PASSWORD_REQUIREMENTS = `Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters, containing at least one number, one lowercase letter, one uppercase letter, and one punctuation character.`
 export const validatePassword = (password: string) => {
     const regex = new RegExp(
         `^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{${MINIMUM_PASSWORD_LENGTH},}$`
@@ -131,3 +148,26 @@ export function validateBookingSubmission(event: AugmentedEvent, user: Immutable
 export function safePercentage(correct: number | null | undefined, attempts: number | null | undefined) {
     return (!(correct || correct == 0) || !attempts) ? null : correct / attempts * 100;
 }
+
+
+export const validateForm = (
+    registrationUser: Immutable<ValidationUser>,
+    unverifiedPassword: string | undefined,
+    userContexts: UserContext[],
+    dobOver13CheckboxChecked: boolean,
+    emailPreferences: UserEmailPreferences | undefined
+  ) => {
+    return (
+      validateName(registrationUser.familyName) &&
+      validateName(registrationUser.givenName) &&
+      validateUserSchool(registrationUser) &&
+      validatePassword(registrationUser.password || "") &&
+      registrationUser.password === unverifiedPassword &&
+      validateEmail(registrationUser.email) &&
+      (isDobOverThirteen(registrationUser.dateOfBirth) || dobOver13CheckboxChecked) &&
+      validateUserGender(registrationUser) &&
+      validateUserContexts(userContexts) &&
+      validateEmailPreferences(emailPreferences)
+    );
+  };
+  

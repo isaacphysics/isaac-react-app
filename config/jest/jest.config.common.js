@@ -26,7 +26,8 @@ module.exports = {
     ],
     "moduleNameMapper": {
         "^react-native$": "react-native-web",
-        "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+        "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
+        '^react-google-recaptcha$': '<rootDir>/src/mocks/react-google-recaptcha.tsx',
     },
     "moduleFileExtensions": [
         "web.js",
@@ -46,5 +47,6 @@ module.exports = {
     ],
     "globals": {
         REACT_APP_API_VERSION: "any",
+        GOOGLE_RECAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
     }
 };
