@@ -27,13 +27,13 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
         userId: user?.loggedIn && user.id || "Not currently logged in",
         location: window.location.href,
         userAgent: window.navigator.userAgent,
-        errorDetails: "\n" + error?.stack || "",
+        errorMessage: "\n" + (error?.message || ""),
     }
     const usefulInformationLabels: {[k in keyof typeof usefulInformation]: string} = {
         userId: "User ID",
         location: "Location",
         userAgent: "User Agent",
-        errorDetails: "Error Details",
+        errorMessage: "Error Details",
     }
 
     useEffect(() => {
@@ -66,7 +66,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
                     </Link>
                     {", or "}
                     <Link
-                        to={`/contact?subject=App Error&message=${encodeURI(plainTextUsefulInformation)}`}
+                        to={`/contact?subject=App Error&message=${encodeURIComponent(plainTextUsefulInformation)}`}
                         onKeyPress={() => resetErrorBoundary()} onClick={() => resetErrorBoundary()}
                     >
                         contact
