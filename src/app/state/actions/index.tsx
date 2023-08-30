@@ -405,11 +405,17 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
                         provider: provider,
                     }
                 }
-            )
+            );
         }
-        const nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
-        persistence.remove(KEY.AFTER_AUTH_PATH);
-        history.push(nextPage?.replace("#!", "") || "/account");
+
+        // On first login, redirect to /account unless the "next page" already contains "account".
+        // This is to handle the case of a user registering while following a group invite - /account?authToken=GROUP1
+        const nextPage = persistence.pop(KEY.AFTER_AUTH_PATH)?.replace("#!", "") || "/";
+        if (providerResponse.data.firstLogin && !nextPage.includes("account")) {
+            history.push('/account');
+        } else {
+            history.push(nextPage);
+        }
     } catch (error: any) {
         history.push("/auth_error", { errorMessage: extractMessage(error) });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
