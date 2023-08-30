@@ -405,11 +405,15 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
                         provider: provider,
                     }
                 }
-            )
+            );
         }
-        const nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
-        persistence.remove(KEY.AFTER_AUTH_PATH);
-        history.push(nextPage?.replace("#!", "") || "/account");
+
+        // On first login (registration), redirect to /account if there is no after-auth path.
+        // After-auth path should take presedence for the case where users register while following a group invite - /account?authToken=GROUP1, for example.
+        // They will see the required account information modal either way on registration.
+        const nextPage = persistence.pop(KEY.AFTER_AUTH_PATH);
+        const defaultNextPage = providerResponse.data.firstLogin ? "/account" : "/";
+        history.push(nextPage || defaultNextPage);
     } catch (error: any) {
         history.push("/auth_error", { errorMessage: extractMessage(error) });
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
