@@ -1,5 +1,6 @@
 import {
     filterAssignmentsByProperties,
+    filterAssignmentsByStatus,
     getDistinctAssignmentGroups,
     getDistinctAssignmentSetters
 } from "../../app/services";
@@ -185,6 +186,63 @@ describe("Correct assignments are filtered out based on properties", () => {
         }
     )
 })
+
+describe("Assignment categorisation depending on status", () => {
+    it("Records an assignment as 'in progress' if it has no due date and its creation date is within the last month, otherwise it is considered 'old'", () => {
+        // Arrange
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const recentAssignmentWithoutDueDate: AssignmentDTO = {...assignmentA, creationDate: yesterday};
+
+        const lastMonth = new Date();
+        lastMonth.setMonth(lastMonth.getMonth() - 1);
+        lastMonth.setDate(lastMonth.getDate() - 1); // Make sure it is more than 4 weeks ago even in February
+        const oldAssignmentWithoutDueDate: AssignmentDTO = {...assignmentA, creationDate: lastMonth};
+
+        // Act
+        const result = filterAssignmentsByStatus([recentAssignmentWithoutDueDate, oldAssignmentWithoutDueDate]);
+
+        // Assert
+        expect(result.inProgressRecent).toContain(recentAssignmentWithoutDueDate);
+        expect(result.inProgressOld).toContain(oldAssignmentWithoutDueDate);
+    });
+
+    it("Records an assignment as 'in progress' if it has a due date is today or in the future, othersie it is condidered 'old'", () => {
+        // Arrange
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const assignmentWithAFutreDueDate: AssignmentDTO = {...assignmentA, dueDate: tomorrow};
+
+        const middayToday = new Date();
+        middayToday.setHours(12, 0, 0, 0);
+        const assignmentWithADueDateToday: AssignmentDTO = {...assignmentA, dueDate: middayToday};
+
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const assignmentWithADueDateYesterday: AssignmentDTO = {...assignmentA, dueDate: yesterday};
+
+        // Act
+        const result = filterAssignmentsByStatus([assignmentWithAFutreDueDate, assignmentWithADueDateToday, assignmentWithADueDateYesterday]);
+
+        // Assert
+        expect(result.inProgressRecent).toContain(assignmentWithAFutreDueDate);
+        expect(result.inProgressRecent).toContain(assignmentWithADueDateToday);
+        expect(result.inProgressOld).toContain(assignmentWithADueDateYesterday);
+    });
+
+    it("Records an assignment as completed if all questions are correct even if due date is in the future", () => {
+        // Arrange
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const completedAssignment: AssignmentDTO = {...assignmentA, gameboard: {...assignmentA.gameboard, percentageCompleted: 100}, dueDate: tomorrow};
+
+        // Act
+        const result = filterAssignmentsByStatus([completedAssignment]);
+
+        // Assert
+        expect(result.completed).toContain(completedAssignment);
+    });
+});
 
 describe("Distinct groups and assignment setters in the assignment list are found", () => {
     it("Finds the set of distinct groups in the assignment list", () => {

@@ -12,10 +12,9 @@ export function getAssignmentCSVDownloadLink(assignmentId: number) {
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {
     const now = new Date();
     const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));
-    // Midnight five days ago:
-    const fiveDaysAgo = new Date(now);
-    fiveDaysAgo.setDate(now.getDate() - 5);
-    fiveDaysAgo.setHours(0, 0, 0, 0);
+    // Midnight last night:
+    const midnightLastNight = new Date(now);
+    midnightLastNight.setHours(0, 0, 0, 0);
 
     const myAssignments: {inProgressRecent: AssignmentDTO[]; inProgressOld: AssignmentDTO[]; completed: AssignmentDTO[]} = {
         inProgressRecent: [],
@@ -28,9 +27,9 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
             if (assignment?.gameboard?.percentageCompleted === undefined || assignment.gameboard.percentageCompleted < 100) {
                 const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
                 const noDueDateButRecent = !assignment.dueDate && (assignmentStartDate && assignmentStartDate > fourWeeksAgo);
-                const dueDateAndCurrent = assignment.dueDate && (assignment.dueDate >= fiveDaysAgo);
+                const dueDateAndCurrent = assignment.dueDate && (assignment.dueDate >= midnightLastNight);
                 if (noDueDateButRecent || dueDateAndCurrent) {
-                    // Assignment either not/only just overdue, or else set within last month but no due date.
+                    // Assignments before their due date, or else set within last month but no due date.
                     myAssignments.inProgressRecent.push(assignment);
                 } else {
                     myAssignments.inProgressOld.push(assignment);
