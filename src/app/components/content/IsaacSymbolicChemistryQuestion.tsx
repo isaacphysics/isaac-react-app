@@ -1,4 +1,4 @@
-import React, {lazy, useEffect, useMemo, useRef, useState} from "react";
+import React, {lazy, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
@@ -27,13 +27,15 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         initialEditorSymbols.current = _flattenDeep(currentAttemptValue.symbols);
     }, [currentAttempt, currentAttemptValue]);
 
-    const closeModal = (previousYPosition: number) => () => {
-        document.body.style.overflow = "initial";
-        setModalVisible(false);
-        if (isDefined(previousYPosition)) {
-            window.scrollTo(0, previousYPosition);
-        }
-    };
+    const closeModalAndReturnToScrollPosition = useCallback(function(previousYPosition: number) {
+        return function() {
+            document.body.style.overflow = "initial";
+            setModalVisible(false);
+            if (isDefined(previousYPosition)) {
+                window.scrollTo(0, previousYPosition);
+            }
+        };
+    }(window.scrollY), [modalVisible]);
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
@@ -51,7 +53,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
             />
             {modalVisible && <InequalityModal
-                close={closeModal(window.scrollY)}
+                close={closeModalAndReturnToScrollPosition}
                 onEditorStateChange={(state: any) => {
                     dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" })
                     initialEditorSymbols.current = state.symbols;
