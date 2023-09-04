@@ -268,9 +268,9 @@ const CSTable = (props: GameboardsTableProps) => {
             </thead>
             <tbody>
             {boards?.boards
-                .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
-                    && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                    && (boardCompletionSelection(board, boardCompletion)))
+                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                .filter(board => boardCompletionSelection(board, boardCompletion))
                 .map(board =>
                     <BoardCard
                         key={board.id}

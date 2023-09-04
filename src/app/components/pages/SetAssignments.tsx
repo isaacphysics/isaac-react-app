@@ -405,7 +405,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </thead>
             <tbody>
             {boards?.boards
-                .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
+                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter)
                     && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All"))
                 .map(board =>
                     <BoardCard
