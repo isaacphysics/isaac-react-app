@@ -298,9 +298,6 @@ interface InequalityModalProps {
     questionDoc?: ContentDTO;
 }
 const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEditorStateChange, questionDoc, initialEditorSymbols, editorSeed}: InequalityModalProps) => {
-    // Close sometimes captures the previousYPosition of the window in its scope. This is correct on the first rendering of InequalityModal, but not on subsequent renderings.
-    // We therefore useCallback to use the first close function passed to the component not the one from the most recent rerender.
-    const closeWithInitialClosureScope = useCallback(close, []);
     const parsedAvailableSymbols = useMemo(() => Array.from(new Set(parsePseudoSymbolicAvailableSymbols(availableSymbols))).filter(s => s.trim() !== ""), [availableSymbols]);
 
     const inequalityModalRef = useRef<HTMLDivElement>(null);
@@ -430,7 +427,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     }, []);
 
     const handleKeyPress = useCallback((ev: KeyboardEvent) => {
-        if (ev.code === "Escape") closeWithInitialClosureScope();
+        if (ev.code === "Escape") close();
     }, []);
 
     // --- Resetting to seed value ---
@@ -466,8 +463,8 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
         <div
             className="inequality-ui confirm button"
             role="button" tabIndex={-1}
-            onClick={closeWithInitialClosureScope}
-            onKeyUp={closeWithInitialClosureScope}
+            onClick={close}
+            onKeyUp={close}
         >
             OK
         </div>
