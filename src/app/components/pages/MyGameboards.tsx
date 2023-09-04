@@ -29,7 +29,7 @@ import {
     formatBoardOwner,
     isAda,
     isMobile,
-    isPhy, isTutorOrAbove, PATHS,
+    isPhy, isTutorOrAbove, matchesAllWordsInAnyOrder, PATHS,
     siteSpecific,
     sortIcon,
     useGameboards
@@ -81,7 +81,7 @@ const PhyTable = (props: GameboardsTableProps) => {
                 <Row>
                     <Col lg={4}>
                         <Label className="w-100">
-                            Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
+                            Filter boards <Input type="text" data-testid="title-filter" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
                         </Label>
                     </Col>
                     {/* TODO MT add stage selector */}
@@ -165,9 +165,9 @@ const PhyTable = (props: GameboardsTableProps) => {
                         </thead>
                         <tbody>
                         {boards?.boards
-                            .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
-                                && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                                && (boardCompletionSelection(board, boardCompletion)))
+                            .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                            .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                            .filter(board => boardCompletionSelection(board, boardCompletion))
                             .map(board =>
                                 <BoardCard
                                     key={board.id}
@@ -206,7 +206,7 @@ const CSTable = (props: GameboardsTableProps) => {
             </Col>
             <Col xs={6} md={3} lg={4} xl={{size: 3, offset: 3}}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter boards by name</span><Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} />
+                    <span className={"text-nowrap"}>Filter boards by name</span><Input type="text" data-testid="title-filter" onChange={(e) => setBoardTitleFilter(e.target.value)} />
                 </Label>
             </Col>
             <Col xs={6} md={3} lg={2} xl={2}>
