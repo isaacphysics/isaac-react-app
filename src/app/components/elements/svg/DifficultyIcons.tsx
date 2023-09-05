@@ -9,7 +9,7 @@ import {Rectangle} from "./Rectangle";
 const difficultyIconWidth = 25;
 const difficultyIconXPadding = 1.5;
 const yPadding = 2;
-const difficultyCategoryLevels = [1, 2];
+const difficultyCategoryLevels = [1, 2, 3];
 const miniHexagon = calculateHexagonProportions(difficultyIconWidth / 2, 0);
 const miniSquare = {width: difficultyIconWidth, height: difficultyIconWidth};
 

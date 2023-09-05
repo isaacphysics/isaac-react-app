@@ -549,7 +549,7 @@ export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_2: `Challenge (C2) \u25A0\u25A0`,
     challenge_3: "Challenge (C3) \u25A0\u25A0\u25A0",
 }
-export const difficultiesOrdered: Difficulty[] = ["practice_1", "practice_2", "challenge_1", "challenge_2"];
+export const difficultiesOrdered: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
 export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
     {value: d, label: difficultyLabelMap[d]}
 ));
