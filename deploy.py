@@ -210,7 +210,7 @@ def deploy_live(ctx):
         ask_to_run_command(f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-api-live-{ctx['api']}")
 
         print("# Wait until the api is up:")
-        api_endpoint = f"https://isaac{'computerscience' if ctx['site'] == Site.ADA else 'physics'}.org/api/{ctx['api']}/api/info/segue_environment"
+        api_endpoint = f"https://{'adacomputerscience' if ctx['site'] == Site.ADA else 'isaacphysics'}.org/api/{ctx['api']}/api/info/segue_environment"
         expected_response = '\'{"segueEnvironment":"PROD"}\''
         ask_to_run_command(f'while [ "$(curl --silent {api_endpoint})" != {expected_response} ]; do echo "Waiting for API..."; sleep 1; done && echo "The API is up!"')
 
