@@ -183,8 +183,18 @@ def deploy_live(ctx):
     ).rstrip()
     ctx['old_api'] = previous_api_version
 
-    front_end_only_release = 'front-end-only' == input("Is this a front-end-only release? [front-end-only / n] ").lower()
-    if not front_end_only_release:
+    response = input("Is this a front-end-only release? [front-end-only / n] ").lower()
+    while response not in ["front-end-only", "n"]:
+        response = input("Please respond with one of:\n - front-end-only \n - n\n").lower()
+    front_end_only_release = response == "front-end-only"
+
+    if front_end_only_release:
+        print("# Front-end-only release - confirm which API this app image expects:")
+        expected_api = ask_to_run_command(f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' docker.isaacscience.org/isaac-{ctx['site']}-app:{ctx['app']}")
+
+        print("# Front-end-only release - confirm the expected API is running:")
+        ask_to_run_command(f"docker ps --format '{{{{.Names}}}}' | grep {ctx['site']}-api-live-{expected_api}")
+    else:
         print("# List possibly-unused live apis:")
         ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {previous_api_version}", expected_nonzero_exit_codes=[1])
         print("# Bring down and remove the penultimate live api(s), if that is sensible, using something like:")
