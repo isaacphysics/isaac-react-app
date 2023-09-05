@@ -9,6 +9,13 @@ export function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedA
 export function getAssignmentCSVDownloadLink(assignmentId: number) {
     return `${API_PATH}/assignments/assign/${assignmentId}/progress/download`;
 }
+
+function allQuestionsAttempted(assignment: AssignmentDTO) {
+    // questionPartsTotal will be 0 for the case when we someday include concepts in gameboards.
+    return assignment?.gameboard?.contents?.every(c => c.questionPartsTotal === 0 || c.questionPartsNotAttempted === 0);
+}
+
+type AssignmentStatus = "inProgressRecent" | "inProgressOld" | "allAttempted" | "completed";
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {
     const now = new Date();
     const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));
@@ -16,9 +23,11 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
     const midnightLastNight = new Date(now);
     midnightLastNight.setHours(0, 0, 0, 0);
 
-    const myAssignments: {inProgressRecent: AssignmentDTO[]; inProgressOld: AssignmentDTO[]; completed: AssignmentDTO[]} = {
+
+    const myAssignments: Record<AssignmentStatus, AssignmentDTO[]> = {
         inProgressRecent: [],
         inProgressOld: [],
+        allAttempted: [],
         completed: []
     };
 
@@ -31,6 +40,8 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
                 if (noDueDateButRecent || dueDateAndCurrent) {
                     // Assignments before their due date, or else set within last month but no due date.
                     myAssignments.inProgressRecent.push(assignment);
+                } else if (allQuestionsAttempted(assignment)) {
+                    myAssignments.allAttempted.push(assignment);
                 } else {
                     myAssignments.inProgressOld.push(assignment);
                 }

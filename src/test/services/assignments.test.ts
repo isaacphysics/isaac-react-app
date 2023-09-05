@@ -6,6 +6,14 @@ import {
 } from "../../app/services";
 import {AssignmentDTO, GameboardDTO, UserSummaryDTO} from "../../IsaacApiTypes";
 
+const threePartQuestion = {
+    id: "three_part_question",
+    contentType: "isaacQuestionPage",
+    questionPartsCorrect: 0,
+    questionPartsIncorrect: 0,
+    questionPartsNotAttempted: 0,
+    questionPartsTotal: 3,
+}
 
 const assignmentA = {
     gameboardId: "0",
@@ -56,6 +64,10 @@ const assignmentD = {
 }
 const assignments: AssignmentDTO[] = [assignmentA, assignmentB, assignmentC, assignmentD]
 
+const completedQuestion = {...threePartQuestion, id: "completed_question", questionPartsCorrect: 3};
+const fullyAttemptedQuestion = {...threePartQuestion, id: "fully_attempted_question", questionPartsCorrect: 1, questionPartsIncorrect: 2};
+const partiallyAttemptedQuestion = {...threePartQuestion, id: "partially_attempted_question", questionPartsCorrect: 1, questionPartsIncorrect: 1, questionPartsNotAttempted: 1};
+const notAttemptedQuestion = {...threePartQuestion, id: "not_attempted_question", questionPartsNotAttempted: 3};
 
 describe("Correct assignments are filtered out based on properties", () => {
     it("Returns only the relevant assignment when 'Yet another gameboard' name filter is applied",
@@ -228,6 +240,34 @@ describe("Assignment categorisation depending on status", () => {
         expect(result.inProgressRecent).toContain(assignmentWithAFutreDueDate);
         expect(result.inProgressRecent).toContain(assignmentWithADueDateToday);
         expect(result.inProgressOld).toContain(assignmentWithADueDateYesterday);
+    });
+
+    it("Records an assignment as 'all attempted' if all questions have at least one attempt", () => {
+        // Arrange
+        const assignmentWithAllQuestionsAttempted: AssignmentDTO = {...assignmentA,
+            gameboard: {...assignmentA.gameboard, percentageCompleted: 100 * 7 / 9, contents: [completedQuestion, completedQuestion, fullyAttemptedQuestion]}
+        };
+        const assignmentWithAllQuestionsCorrect: AssignmentDTO = {...assignmentA,
+            gameboard: {...assignmentA.gameboard, percentageCompleted: 100, contents: [completedQuestion, completedQuestion, completedQuestion]}
+        };
+        const partiallyAttemptedAssignment: AssignmentDTO = {...assignmentA,
+            gameboard: {...assignmentA.gameboard, percentageCompleted: 100 * 4 / 9, contents: [completedQuestion, partiallyAttemptedQuestion, notAttemptedQuestion]}
+        };
+
+        // Act
+        const result = filterAssignmentsByStatus([
+            assignmentWithAllQuestionsCorrect,
+            assignmentWithAllQuestionsAttempted,
+            partiallyAttemptedAssignment
+        ]);
+
+        // Assert
+        expect(result.allAttempted).toContain(assignmentWithAllQuestionsAttempted);
+        expect(result.allAttempted.length).toBe(1);
+        expect(result.completed).toContain(assignmentWithAllQuestionsCorrect);
+        expect(result.completed.length).toBe(1);
+        expect(result.inProgressOld).toContain(partiallyAttemptedAssignment);
+        expect(result.inProgressOld.length).toBe(1);
     });
 
     it("Records an assignment as completed if all questions are correct even if due date is in the future", () => {
