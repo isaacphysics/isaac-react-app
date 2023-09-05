@@ -39,4 +39,12 @@ describe("MyGameboards", () => {
         const gameboardCards = await screen.findAllByTestId("gameboard-card");
         expect(gameboardCards).toHaveLength(6);
     });
+
+    it('should filter gameboards by title in table view', async () => {
+        renderMyGameboards();
+        const titleFilter = await screen.findByTestId("title-filter");
+        await userEvent.type(titleFilter, "test 1"); // Should match "Test Gameboard 1"
+        const gameboardRows = await screen.findAllByTestId("gameboard-table-row");
+        expect(gameboardRows).toHaveLength(1);
+    });
 });

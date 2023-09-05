@@ -52,6 +52,7 @@ import {
     isStaff,
     Item,
     itemise,
+    matchesAllWordsInAnyOrder,
     nthHourOf,
     PATHS,
     selectOnChange,
@@ -320,9 +321,9 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                     </thead>
                     <tbody>
                     {boards?.boards
-                        .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
-                            && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                            && (boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))))
+                        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                        .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                        .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
                         .map(board =>
                             <BoardCard
                                 key={board.id}
@@ -404,7 +405,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </thead>
             <tbody>
             {boards?.boards
-                .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
+                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter)
                     && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All"))
                 .map(board =>
                     <BoardCard
