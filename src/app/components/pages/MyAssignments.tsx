@@ -27,7 +27,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     //  that require refetching.
     const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
 
-    const [assignmentStateFilter, setAssignmentStateFilter] = useState<AssignmentState>("To do");
+    const [assignmentStateFilter, setAssignmentStateFilter] = useState<AssignmentState>("All");
     const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
     const [assignmentSetByFilter, setAssignmentSetByFilter] = useState<string>("All");
     const [assignmentGroupFilter, setAssignmentGroupFilter] = useState<string>("All");
@@ -54,7 +54,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                         } || undefined;
 
                         const assignmentByStates: Record<AssignmentState, AssignmentDTO[]> = {
-                            "All": assignments,
+                            "All": [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld, ...myAssignments.allAttempted, ...myAssignments.completed],
                             "To do": myAssignments.inProgressRecent,
                             "Older": myAssignments.inProgressOld,
                             "All attempted": myAssignments.allAttempted,
