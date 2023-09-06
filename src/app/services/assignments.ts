@@ -15,6 +15,11 @@ function allQuestionsAttempted(assignment: AssignmentDTO) {
     return assignment?.gameboard?.contents?.every(c => c.questionPartsTotal === 0 || c.questionPartsNotAttempted === 0);
 }
 
+function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO & {startDate: Date} {
+    const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate as Date;
+    return {...assignment, startDate: assignmentStartDate};
+}
+
 type AssignmentStatus = "inProgressRecent" | "inProgressOld" | "allAttempted" | "completed";
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {
     const now = new Date();
@@ -23,8 +28,7 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
     const midnightLastNight = new Date(now);
     midnightLastNight.setHours(0, 0, 0, 0);
 
-
-    const myAssignments: Record<AssignmentStatus, AssignmentDTO[]> = {
+    const myAssignments: Record<AssignmentStatus, (AssignmentDTO & {startDate: Date})[]> = {
         inProgressRecent: [],
         inProgressOld: [],
         allAttempted: [],
@@ -32,13 +36,13 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
     };
 
     if (assignments) {
-        assignments.forEach(assignment => {
+        assignments
+        .map(createAssignmentWithStartDate)
+        .forEach(assignment => {
             if (assignment?.gameboard?.percentageCompleted === undefined || assignment.gameboard.percentageCompleted < 100) {
-                const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
-                const noDueDateButRecent = !assignment.dueDate && (assignmentStartDate && assignmentStartDate > fourWeeksAgo);
-                const dueDateAndCurrent = assignment.dueDate && (assignment.dueDate >= midnightLastNight);
-                if (noDueDateButRecent || dueDateAndCurrent) {
-                    // Assignments before their due date, or else set within last month but no due date.
+                const noDueDateButRecent = !assignment.dueDate && (assignment.startDate > fourWeeksAgo);
+                const beforeDueDate = assignment.dueDate && (assignment.dueDate >= midnightLastNight);
+                if (beforeDueDate || noDueDateButRecent) {
                     myAssignments.inProgressRecent.push(assignment);
                 } else if (allQuestionsAttempted(assignment)) {
                     myAssignments.allAttempted.push(assignment);
@@ -49,9 +53,10 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
                 myAssignments.completed.push(assignment);
             }
         });
-        myAssignments.inProgressRecent = orderBy(myAssignments.inProgressRecent, ["dueDate", "creationDate"], ["asc", "desc"]);
-        myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["creationDate"], ["desc"]);
-        myAssignments.completed = orderBy(myAssignments.completed, ["creationDate"], ["desc"]);
+        myAssignments.inProgressRecent = orderBy(myAssignments.inProgressRecent, ["dueDate", "startDate"], ["asc", "desc"]);
+        myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["startDate"], ["desc"]);
+        myAssignments.allAttempted = orderBy(myAssignments.allAttempted, ["startDate"], ["desc"]);
+        myAssignments.completed = orderBy(myAssignments.completed, ["startDate"], ["desc"]);
     }
 
     return myAssignments;
