@@ -12,10 +12,14 @@ interface ShowLoadingProps<T> {
     ifNotFound?: ReactElement;
 }
 
-const defaultPlaceholder = <div className="w-100 text-center pb-2">
-    <h2 aria-hidden="true" className="pt-5">Loading...</h2>
+export const defaultPlaceholder = (
+  <div className="w-100 text-center pb-2">
+    <h2 data-testid="loading-spinner" aria-hidden="true" className="pt-5">
+      Loading...
+    </h2>
     <IsaacSpinner />
-</div>;
+  </div>
+);
 
 export const ShowLoading = <T extends {}>({until, children, thenRender, placeholder=defaultPlaceholder, ifNotFound=<NotFound />}: ShowLoadingProps<T>) => {
     const [duringLoad, setDuringLoad] = useState(false);

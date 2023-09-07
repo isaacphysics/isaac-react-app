@@ -22,6 +22,7 @@ interface RenderTestEnvironmentOptions {
   role?: UserRole | "ANONYMOUS";
   modifyUser?: (u: typeof mockUser) => typeof mockUser;
   PageComponent?: React.FC<any>;
+  componentProps?: Record<string, any>;
   initialRouteEntries?: string[];
   extraEndpoints?: RestHandler<any>[];
 }
@@ -42,6 +43,7 @@ export const renderTestEnvironment = (
     role,
     modifyUser,
     PageComponent,
+    componentProps,
     initialRouteEntries,
     extraEndpoints,
   } = options ?? {};
@@ -82,7 +84,7 @@ export const renderTestEnvironment = (
     <Provider store={store}>
       {PageComponent ? (
         <MemoryRouter initialEntries={initialRouteEntries ?? []}>
-          <PageComponent />
+          <PageComponent {...componentProps} />
         </MemoryRouter>
       ) : (
         <IsaacApp />

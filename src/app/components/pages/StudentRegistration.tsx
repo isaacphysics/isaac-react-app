@@ -34,7 +34,7 @@ import { EmailInput } from "../elements/inputs/EmailInput";
 import { RegistrationNameInput } from "../elements/inputs/RegistrationNameInput";
 import { RegistrationDobInput } from "../elements/inputs/RegistrationDobInput";
 import { PasswordInputs } from "../elements/inputs/PasswordInput";
-import useRegistration from "../handlers/useRegistration";
+import useRegistration from "../hooks/useRegistration";
 import { RegistrationSubmit } from "../elements/inputs/RegistrationSubmit";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Recaptcha } from "../elements/inputs/Recaptcha";
