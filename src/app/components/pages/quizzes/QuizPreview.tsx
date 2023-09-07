@@ -1,7 +1,6 @@
-import React, {useCallback, useEffect, useMemo} from "react";
-import {loadQuizPreview, selectors, useAppDispatch, useAppSelector} from "../../../state";
+import React, {useCallback, useMemo} from "react";
+import {getRTKQueryErrorMessage, useGetQuizPreviewQuery} from "../../../state";
 import {Link, useParams} from "react-router-dom";
-import {ShowLoading} from "../../handlers/ShowLoading";
 import {isDefined, tags, useQuizQuestions, useQuizSections} from "../../../services";
 import {
     myQuizzesCrumbs,
@@ -13,6 +12,9 @@ import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Alert, Button, Container} from "reactstrap";
+import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
+import {SerializedError} from "@reduxjs/toolkit";
 
 const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
     <div className="d-flex border-top pt-2 my-2 align-items-center">
@@ -29,13 +31,10 @@ const pageHelp = <span>
 </span>;
 
 export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
-    const {quiz, error} = useAppSelector(selectors.quizzes.preview);
-    const {page, quizId} = useParams<{quizId: string; page?: string;}>();
 
-    const dispatch = useAppDispatch();
-    useEffect(() => {
-        dispatch(loadQuizPreview(quizId));
-    }, [dispatch, quizId]);
+    const {page, quizId} = useParams<{quizId: string; page?: string;}>();
+    const quizPreviewQuery = useGetQuizPreviewQuery(quizId);
+    const {data: quiz} = quizPreviewQuery;
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
@@ -57,19 +56,18 @@ export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user};
 
+    const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
+        <TitleAndBreadcrumb currentPageTitle="Test Preview" intermediateCrumbs={myQuizzesCrumbs} />
+        <Alert color="danger">
+            <h4 className="alert-heading">Error loading test preview</h4>
+            <p>{getRTKQueryErrorMessage(error).message}</p>
+        </Alert>
+    </>;
+
     return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
-        <ShowLoading until={attempt || error}>
-            {attempt && <>
-                <QuizAttemptComponent preview {...subProps} />
-                <QuizFooter {...subProps} />
-            </>}
-            {error && <>
-                <TitleAndBreadcrumb currentPageTitle="Test Preview" intermediateCrumbs={myQuizzesCrumbs} />
-                <Alert color="danger">
-                    <h4 className="alert-heading">Error loading test preview</h4>
-                    <p>{error}</p>
-                </Alert>
-            </>}
-        </ShowLoading>
+        <ShowLoadingQuery query={quizPreviewQuery} ifError={buildErrorComponent}>
+            <QuizAttemptComponent preview {...subProps} />
+            <QuizFooter {...subProps} />
+        </ShowLoadingQuery>
     </Container>;
 };

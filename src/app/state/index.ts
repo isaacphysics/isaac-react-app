@@ -7,7 +7,6 @@
 // See https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de
 // for a more detailed explanation of the process.
 export * from "./actions/routing";
-export * from "./reducers/eventsState";
 export * from "./slices/api/utils";
 export * from "./middleware/utils";
 export * from "./reducers/topicState";
@@ -33,10 +32,15 @@ export * from "./slices/api/baseApi";
 export * from "./slices/api/segueInfoApi";
 export * from "./slices/api/adminApi";
 export * from "./slices/api/userApi";
+export * from "./slices/api/authorisationsApi";
 export * from "./slices/api/gameboardApi";
 export * from "./slices/api/assignmentsApi";
 export * from "./slices/api/contentApi";
 export * from "./slices/api/groupsApi";
+export * from "./slices/api/emailApi";
+export * from "./slices/api/eventsApi";
+export * from "./slices/api/quizApi";
+export * from "./slices/api/miscApi";
 export * from "./slices/gameboards";
 export * from "./reducers/userState";
 export * from "./actions/popups";
@@ -47,6 +51,7 @@ export * from "./middleware/userConsistencyChecker";
 export * from "./slices/api/gameboards";
 export * from "./slices/api/assignments";
 export * from "./slices/admin";
+export * from "./slices/user";
 export * from "./actions";
 export * from "./selectors";
 export * from "./reducers";

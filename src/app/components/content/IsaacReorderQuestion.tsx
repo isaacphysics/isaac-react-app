@@ -145,7 +145,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                         }
                     </Droppable>
                 </Col>
-                <Col md={{size: 6}} className="no-print">
+                <Col md={{size: 6}} className={classNames({"no-print": !currentAttempt || currentAttempt?.items?.length === 0})}>
                     <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided, snapshot) =>

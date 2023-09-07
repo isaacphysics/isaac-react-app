@@ -1,5 +1,4 @@
 import {
-    apiHelper,
     atLeastOne,
     isDefined,
     isTeacherOrAbove,
@@ -9,7 +8,6 @@ import {
     STAGES_PHY,
     zeroOrLess
 } from "./";
-import {IsaacEventPageDTO} from "../../IsaacApiTypes";
 import {AugmentedEvent, PotentialUser} from "../../IsaacAppTypes";
 import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
 import React from "react";
@@ -20,58 +18,6 @@ export const studentOnlyEventMessage = (eventId?: string) => <React.Fragment>
     {"This event is aimed at students. If you are not a student but still wish to attend, please "}
     <Link to={`/contact?subject=${encodeURI("Non-student attendance at " + eventId)}`}>contact us</Link>.
 </React.Fragment>;
-
-export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
-    const augmentedEvent: AugmentedEvent = Object.assign({}, event);
-    if (event.date != null) {
-        const startDate = new Date(event.date);
-        const now = Date.now();
-        if (event.endDate != null) {  // Non-breaking change; if endDate not specified, behaviour as before
-            const endDate = new Date(event.endDate);
-            augmentedEvent.isMultiDay = startDate.toDateString() != endDate.toDateString();
-            augmentedEvent.hasExpired = now > endDate.getTime();
-            augmentedEvent.isInProgress = startDate.getTime() <= now && now <= endDate.getTime();
-        } else {
-            augmentedEvent.hasExpired = now > startDate.getTime();
-            augmentedEvent.isInProgress = false;
-            augmentedEvent.isMultiDay = false;
-        }
-        augmentedEvent.isWithinBookingDeadline =
-            !augmentedEvent.hasExpired &&
-            (event.bookingDeadline ? now <= new Date(event.bookingDeadline).getTime() : true);
-    }
-
-    if (event.tags) {
-        augmentedEvent.isATeacherEvent = event.tags.includes("teacher");
-        augmentedEvent.isAStudentEvent = event.tags.includes("student");
-        augmentedEvent.isVirtual = event.tags.includes("virtual");
-        augmentedEvent.isRecurring = event.tags.includes("recurring");
-        augmentedEvent.isStudentOnly = event.tags.includes("student_only");
-        if (event.tags.includes("physics")) {
-            augmentedEvent.field = "physics";
-        }
-        if (event.tags.includes("maths")) {
-            augmentedEvent.field = "maths";
-        }
-    }
-
-    augmentedEvent.isNotClosed = !["CLOSED", "CANCELLED"].includes(event.eventStatus as string);
-    augmentedEvent.isCancelled = event.eventStatus === "CANCELLED";
-    augmentedEvent.isWaitingListOnly = event.eventStatus === "WAITING_LIST_ONLY";
-    augmentedEvent.isReservationOnly = event.eventStatus === "RESERVATION_ONLY";
-
-    // we have to fix the event image url.
-    if(augmentedEvent.eventThumbnail && augmentedEvent.eventThumbnail.src) {
-        augmentedEvent.eventThumbnail.src = apiHelper.determineImageUrl(augmentedEvent.eventThumbnail.src);
-    } else {
-        if (augmentedEvent.eventThumbnail == null) {
-            augmentedEvent.eventThumbnail = {};
-        }
-        augmentedEvent.eventThumbnail.src = 'http://placehold.it/500x276';
-    }
-
-    return augmentedEvent;
-};
 
 export const formatEventDetailsDate = (event: AugmentedEvent) => {
     if (event.isRecurring) {

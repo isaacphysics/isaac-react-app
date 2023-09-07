@@ -74,7 +74,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: ({updatedGroup, message}, _, {dispatch}) => {
                     if (message) {
-                        dispatch(showSuccessToast("Group saved successfully", message));
+                        dispatch(showSuccessToast("Group updated successfully", message));
                     }
                     [true, false].forEach(archivedGroupsOnly => {
                         dispatch(groupsApi.util.updateQueryData(
@@ -288,6 +288,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
 export const {
     useGetGroupsQuery,
     useGetGroupTokenQuery,
+    useGetGroupMembersQuery,
     useLazyGetGroupMembersQuery,
     useGetGroupMembershipsQuery,
     useChangeMyMembershipStatusMutation,

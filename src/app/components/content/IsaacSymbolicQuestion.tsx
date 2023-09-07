@@ -1,4 +1,4 @@
-import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {ChangeEvent, lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
@@ -86,13 +86,15 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         }
     }, [currentAttempt]);
 
-    const closeModal = (previousYPosition: number) => () => {
-        document.body.style.overflow = "initial";
-        setModalVisible(false);
-        if (isDefined(previousYPosition)) {
-            window.scrollTo(0, previousYPosition);
-        }
-    };
+    const closeModalAndReturnToScrollPosition = useCallback(function(previousYPosition: number) {
+        return function() {
+            document.body.style.overflow = "initial";
+            setModalVisible(false);
+            if (isDefined(previousYPosition)) {
+                window.scrollTo(0, previousYPosition);
+            }
+        };
+    }(window.scrollY), [modalVisible]);
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
@@ -216,7 +218,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             </div>
             {/* TODO Accessibility */}
             {modalVisible && <InequalityModal
-                close={closeModal(window.scrollY)}
+                close={closeModalAndReturnToScrollPosition}
                 onEditorStateChange={updateState}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}

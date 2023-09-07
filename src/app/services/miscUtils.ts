@@ -9,6 +9,17 @@ export function isDefined<T>(value: T | undefined | null): value is NonNullable<
 }
 
 /**
+ * This function is used to check if a string contains all the words in a search phease, in any order.
+ * 
+ * @param text The text to check.
+ * @param searchPhrase The search phrase from which words are checked for in the text.
+ * @returns Whether the text contains all the words in the phrase, in any order, or not.
+ */
+export function matchesAllWordsInAnyOrder(text: string | undefined, searchPhrase: string): boolean {
+    return searchPhrase.toLowerCase().split(" ").every(word => text?.toLowerCase().includes(word.toLowerCase()));
+}
+
+/**
  * This provides a simple interface for post message passing in-between domains.
  *
  * @param uid               Unique identifier of this particular message conversation
@@ -104,3 +115,17 @@ export function useOutsideCallback(ref: RefObject<any>, callback : () => void, d
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export function noop(x: never) {}
+
+// Confirms (currently using `window.confirm`, but we could change that to a more Isaac/Ada-themed thing moving
+// forwards) that the user would like to perform an action, given a particular prompt.
+//
+// Depending on whether they confirm or not, the confirmCallback or cancelCallback is run.
+//
+// Will return whatever value the callbacks return.
+export const confirmThen = <T, R>(prompt: string, confirmCallback: () => T, cancelCallback?: () => R): T | R | undefined => {
+    const confirmed = window.confirm(prompt);
+    if (confirmed) {
+        return confirmCallback();
+    }
+    return cancelCallback?.();
+}

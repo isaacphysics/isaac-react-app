@@ -59,9 +59,9 @@ export const HeaderCS = () => {
 
                         {isTutorOrAbove(user) && <NavigationSection title="Teach">
                             <LinkItem to="/groups">Groups</LinkItem>
-                            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Set assignments</LinkItem>
+                            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Assignments</LinkItem>
                             {isTeacherOrAbove(user) && <>
-                                <LinkItem to="/set_tests">Set tests</LinkItem>
+                                <LinkItem to="/set_tests">Tests</LinkItem>
                             </>}
                             <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
                             {isTeacherOrAbove(user) && <>
@@ -69,7 +69,7 @@ export const HeaderCS = () => {
                             </>}
                         </NavigationSection>}
 
-                        {isLoggedIn(user) && <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount/* + quizzesCount*/} message="incomplete assignments" />}</>}>
+                        {isLoggedIn(user) && <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" />}</>}>
                             <LinkItem to={PATHS.MY_ASSIGNMENTS}>My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
                             <LinkItem to={PATHS.MY_GAMEBOARDS}>My quizzes</LinkItem>
                             <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>

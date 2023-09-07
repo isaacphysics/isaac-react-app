@@ -33,6 +33,7 @@ import {GenderInput} from "../inputs/GenderInput";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {Link} from "react-router-dom";
 import {Immutable} from "immer";
+import { AccountTypeMessage } from "../AccountTypeMessage";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -94,16 +95,7 @@ const RequiredAccountInfoBody = () => {
             <div className="text-right text-muted required-before">
                 Required
             </div>
-            {!isTutorOrAbove(user) && <div className="text-left mb-4">
-                Account type: <b>{user?.loggedIn && user.role && UserFacingRole[user.role]}</b> <span>
-                    <small>(Are you a teacher or tutor? {" "}
-                        <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
-                            Upgrade your account
-                        </Link>{".)"}
-                    </small>
-                </span>
-            </div>}
-
+            <AccountTypeMessage role={userToUpdate?.role} />
             <RS.Row className="d-flex flex-wrap my-2">
                 {((isAda && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
                     {isAda && !validateUserGender(initialUserValue) && <div className="mb-3">

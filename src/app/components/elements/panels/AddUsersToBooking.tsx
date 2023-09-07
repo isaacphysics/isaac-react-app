@@ -2,24 +2,25 @@ import React, {useCallback, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
 import {
-    AppState,
     openActiveModal,
     useAppDispatch,
     useAppSelector,
-    useAdminSearchUsersMutation, selectors
+    useAdminSearchUsersMutation,
+    selectors
 } from "../../../state";
-import {atLeastOne, formatManageBookingActionButtonMessage, NOT_FOUND, zeroOrLess} from "../../../services";
+import {atLeastOne, formatManageBookingActionButtonMessage, zeroOrLess} from "../../../services";
 import {DateString} from "../DateString";
 import {userBookingModal} from "../modals/UserBookingModal";
 import {AdminSearchEndpointParams} from "../../../../IsaacApiTypes";
 import produce from "immer";
+import {AugmentedEvent} from "../../../../IsaacAppTypes";
 
-export const AddUsersToBooking = () => {
+interface AddUsersToBookingProps {
+    event: AugmentedEvent;
+    eventBookingUserIds: number[];
+}
+export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookingProps) => {
     const dispatch = useAppDispatch();
-    const selectedEvent = useAppSelector((state: AppState) => (state && state.currentEvent !== NOT_FOUND) ? state.currentEvent : null);
-    const userBookings = useAppSelector((state: AppState) =>
-        state && state.eventBookings && state.eventBookings.map(b => b.userBooked && b.userBooked.id) as number[] || []
-    );
 
     const [searchUsers, {isUninitialized}] = useAdminSearchUsersMutation();
     const userSearchResults = useAppSelector(selectors.admin.userSearch);
@@ -43,7 +44,7 @@ export const AddUsersToBooking = () => {
         }));
     }, [setQueryParams]);
 
-    return <Accordion trustedTitle="Add users to booking" disabled={selectedEvent?.isCancelled && "You cannot add users to a cancelled event"}>
+    return <Accordion trustedTitle="Add users to booking" disabled={event?.isCancelled && "You cannot add users to a cancelled event"}>
         <RS.Form onSubmit={userSearch}>
             <RS.Row>
                 <RS.Col md={6}>
@@ -90,7 +91,7 @@ export const AddUsersToBooking = () => {
         {searchRequested && <hr className="text-center my-4" />}
 
         {userSearchResults && atLeastOne(userSearchResults.length) && <div className="overflow-auto">
-            <RS.Table bordered className="mb-0 bg-white">
+            <RS.Table bordered className="mb-0 bg-white" data-testid="user-search-table">
                 <thead>
                     <tr>
                         <th className="align-middle">Actions</th>
@@ -103,14 +104,14 @@ export const AddUsersToBooking = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {selectedEvent && userSearchResults.map(result => <tr key={result.id}>
+                    {event && userSearchResults.map(result => <tr key={result.id}>
                         <td className="align-middle">
-                            {!userBookings.includes(result.id as number) &&
-                            <RS.Button color="primary" outline className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, selectedEvent, userBookings)))}>
-                                {formatManageBookingActionButtonMessage(selectedEvent)}
+                            {!eventBookingUserIds.includes(result.id as number) &&
+                            <RS.Button color="primary" outline className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, event, eventBookingUserIds)))}>
+                                {formatManageBookingActionButtonMessage(event)}
                             </RS.Button>
                             }
-                            {userBookings.includes(result.id as number) && <div className="text-center">Booking exists</div>}
+                            {eventBookingUserIds.includes(result.id as number) && <div className="text-center">Booking exists</div>}
                         </td>
                         <td className="align-middle">{result.familyName}, {result.givenName}</td>
                         <td className="align-middle">{result.email}</td>

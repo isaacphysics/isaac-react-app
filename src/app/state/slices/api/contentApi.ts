@@ -1,4 +1,4 @@
-import {IsaacConceptPageDTO, IsaacPodDTO} from "../../../../IsaacApiTypes";
+import {GameboardItem, IsaacConceptPageDTO, IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {FEATURED_NEWS_TAG} from "../../../services";
 import {onQueryLifecycleEvents} from "./utils";
 import {isaacApi} from "./baseApi";
@@ -35,7 +35,14 @@ const contentApi = isaacApi.injectEndpoints({
             }),
             keepUnusedDataFor: 60
         }),
+
+        getFasttrackConceptQuestions: build.query<GameboardItem[], {gameboardId: string; concept: string; upperQuestionId: string}>({
+            query: ({gameboardId, concept, upperQuestionId}) => ({
+                url: `/fasttrack/${gameboardId}/concepts`,
+                params: {concept, "upper_question_id": upperQuestionId}
+            })
+        }),
     })
 });
 
-export const {useGetNewsPodListQuery, useGetPageFragmentQuery} = contentApi;
+export const {useGetNewsPodListQuery, useGetPageFragmentQuery, useGetFasttrackConceptQuestionsQuery} = contentApi;

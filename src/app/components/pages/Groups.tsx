@@ -131,20 +131,22 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                 }
             </div>
         </div>
-        <div className="d-flex justify-content-between">
+        <div className="d-flex">
             {isTeacherOrAbove(user) && <>
-                <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)}
-                          className="text-right d-none d-sm-block">
-                    <Button color="link" size="sm" onClick={resetPassword}
+                <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-right d-none d-sm-block">
+                    <Button color="link" size="sm" className="mx-2" onClick={resetPassword}
                             disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
                         {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
                     </Button>
                 </Tooltip>
-                {"  "}
             </>}
-            {userHasAdditionalGroupPrivileges && <button className="ml-2 close" onClick={confirmDeleteMember} aria-label="Remove member">
-                ×
-            </button>}
+            {userHasAdditionalGroupPrivileges &&
+                <Tooltip tipText="Remove this user from the group." className="text-right d-none d-sm-block">
+                    <Button color="link" size="sm" className="mx-2" onClick={confirmDeleteMember} aria-label="Remove member">
+                        Remove
+                    </Button>
+                </Tooltip>
+            }
         </div>
     </div>;
 };
@@ -170,7 +172,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 
     function saveUpdatedGroup(event: React.FormEvent) {
         event?.preventDefault();
-        if (!newGroupName || newGroupName.length === 0) {
+        if (!newGroupName || newGroupName.length === 0 || newGroupName.trim().length === 0) {
             dispatch(showErrorToast(`Cannot ${group ? "rename" : "create"} group`, "The group name must be specified."));
             return;
         }
@@ -343,9 +345,14 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 };
 
 const MobileGroupCreatorComponent = ({className, createNewGroup}: GroupCreatorProps & {className: string}) => {
+    const dispatch = useAppDispatch();
     const [newGroupName, setNewGroupName] = useState("");
 
     function saveUpdatedGroup() {
+        if (!newGroupName || newGroupName.length === 0 || newGroupName.trim().length === 0) {
+            dispatch(showErrorToast("Cannot create group", "The group name must be specified."));
+            return;
+        }
         createNewGroup(newGroupName).then(success => {
             if (success) {
                 setNewGroupName("");
@@ -429,7 +436,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
 
     const confirmDeleteGroup = (groupToDelete: AppGroup) => {
         if (user.id === groupToDelete.ownerId) {
-            if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nTHIS ACTION CANNOT BE UNDONE!")) {
+            if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nThis action cannot be undone!")) {
                 deleteGroup(groupToDelete.id as number).then(result => {
                     if (mutationSucceeded(result)) {
                         setSelectedGroupId(undefined);
@@ -510,12 +517,13 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                                 <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link text-left" data-testid={"select-group"} className="px-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
                                                     {g.groupName}
                                                 </Button>
-                                                <button
-                                                    onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
-                                                    aria-label="Delete group" className="close ml-1" title={"Delete group"}
-                                                >
-                                                    ×
-                                                </button>
+                                                {showArchived &&
+                                                    <button
+                                                        onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
+                                                        aria-label="Delete group" className="bin-icon ml-1" title={"Delete group"}
+                                                    >
+                                                    </button>
+                                                }
                                             </div>
                                             {selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
                                                 <GroupEditor user={user} group={selectedGroup} createNewGroup={createNewGroup}/>

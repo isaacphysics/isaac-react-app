@@ -1,7 +1,7 @@
 import {AssignmentDTO} from "../../IsaacApiTypes";
 import orderBy from "lodash/orderBy";
 import {EnhancedAssignment} from "../../IsaacAppTypes";
-import {API_PATH, extractTeacherName} from "./";
+import {API_PATH, extractTeacherName, matchesAllWordsInAnyOrder} from "./";
 
 export function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedAssignment {
     return assignment.gameboard != undefined;
@@ -56,10 +56,9 @@ export const filterAssignmentsByProperties = (assignments: AssignmentDTO[], assi
         assignments.forEach(assignment => {
 
             const assignmentMatchesFilter =
-                assignment?.gameboard?.title?.toLowerCase().includes(assignmentTitleFilter.toLowerCase())
+                matchesAllWordsInAnyOrder(assignment.gameboard?.title, assignmentTitleFilter)
                 && (assignmentGroupFilter === "All" || assignment.groupName === assignmentGroupFilter)
-                && (assignmentSetByFilter === "All" || extractTeacherName(assignment.assignerSummary)
-                    === assignmentSetByFilter)
+                && (assignmentSetByFilter === "All" || extractTeacherName(assignment.assignerSummary) === assignmentSetByFilter)
 
             if (assignmentMatchesFilter){
                 filteredAssignments.push(assignment)

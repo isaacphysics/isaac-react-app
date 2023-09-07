@@ -183,7 +183,7 @@ def deploy_live(ctx):
     ).rstrip()
     ctx['old_api'] = previous_api_version
 
-    front_end_only_release = 'y' == input("Is this a front-end-only release? [y/n] ").lower()
+    front_end_only_release = 'front-end-only' == input("Is this a front-end-only release? [front-end-only / n] ").lower()
     if not front_end_only_release:
         print("# List possibly-unused live apis:")
         ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {previous_api_version}", expected_nonzero_exit_codes=[1])

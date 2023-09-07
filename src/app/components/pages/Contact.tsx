@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {AppState, selectors, submitMessage, useAppDispatch, useAppSelector} from "../../state";
+import {AppState, selectors, useAppDispatch, useAppSelector, useSubmitContactFormMutation} from "../../state";
 import {
     Alert,
     Card,
@@ -63,7 +63,6 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
 };
 
 export const Contact = () => {
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const errorMessage = useAppSelector((state: AppState) => state?.error || null);
     const [presetSubject, presetMessage, presetPlaceholder] = determineUrlQueryPresets(user);
@@ -74,6 +73,8 @@ export const Contact = () => {
     const [message, setMessage] = useState(presetMessage);
     const [messageSendAttempt, setMessageSendAttempt] = useState(false);
     const [messageSent, setMessageSent] = useState(false);
+
+    const [submitContactForm] = useSubmitContactFormMutation();
 
     // set subject and message if any of user, presetSubject or presetMessage change
     useEffect(() => {
@@ -134,7 +135,7 @@ export const Contact = () => {
                             <Form name="contact" onSubmit={e => {
                                 if (e) {e.preventDefault();}
                                 setMessageSendAttempt(true);
-                                dispatch(submitMessage({firstName, lastName, emailAddress: email, subject, message}));
+                                submitContactForm({firstName, lastName, emailAddress: email, subject, message});
                                 setMessageSent(true);
                             }}>
                                 <CardBody>

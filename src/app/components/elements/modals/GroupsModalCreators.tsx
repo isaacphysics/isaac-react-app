@@ -144,7 +144,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         }
         if (group?.id) {
             addGroupManager({groupId: group.id, managerEmail: newManagerEmail}).then((result) => {
-                if ("data" in result) {
+                if (mutationSucceeded(result)) {
                     // Successful addition, clear new manager email field
                     setNewManagerEmail("");
                 }

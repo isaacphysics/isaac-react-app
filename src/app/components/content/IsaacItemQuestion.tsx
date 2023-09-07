@@ -45,7 +45,7 @@ const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaac
                             onChange={(changeEvent: ChangeEvent<HTMLInputElement>) => updateItems(changeEvent, item)}
                             disabled={readonly}
                         />
-                        <div className="flex-fill overflow-auto">
+                        <div className="flex-fill overflow-x-auto">
                             <IsaacContentValueOrChildren value={item.value} encoding={doc.encoding} />
                         </div>
                     </Label>

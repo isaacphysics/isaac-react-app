@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useGetContentErrorsQuery} from "../../state";
 import {Col, Container, Input, Label, Row, Table} from "reactstrap";
-import {EDITOR_URL, selectOnChange} from "../../services";
+import {EDITOR_URL, matchesAllWordsInAnyOrder, selectOnChange} from "../../services";
 import {ContentErrorItem} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
@@ -38,7 +38,7 @@ export const AdminContentErrors = () => {
     const errorsQuery = useGetContentErrorsQuery();
 
     const [errorFilter, setErrorFilter] = useState<string>("");
-    const errorReducer = (show: boolean, errorStr: string) => show || errorStr.toLowerCase().includes(errorFilter.toLowerCase());
+    const errorReducer = (show: boolean, errorStr: string) => show || matchesAllWordsInAnyOrder(errorStr, errorFilter);
 
     const [publishedFilter, setPublishedFilter] = useState<PUBLISHED_FILTER[]>([PUBLISHED_FILTER.PUBLISHED, PUBLISHED_FILTER.UNPUBLISHED]);
 

@@ -1,13 +1,14 @@
 import {useEffect} from "react";
-import {logQuizSectionView, useAppDispatch} from "../../../state";
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {isDefined} from "../../../services";
+import {useLogQuizSectionViewMutation} from "../../../state";
 
 export function useSectionViewLogging(attempt: QuizAttemptDTO | undefined, pageNumber: number | null) {
-    const dispatch = useAppDispatch();
+    const [logQuizSectionView] = useLogQuizSectionViewMutation();
+    const attemptId = attempt?.id;
     useEffect(() => {
-        if (attempt && isDefined(attempt.id) && pageNumber !== null) {
-            dispatch(logQuizSectionView(attempt.id as number, pageNumber));
+        if (isDefined(attemptId) && pageNumber !== null) {
+            logQuizSectionView({quizAttemptId: attemptId, page: pageNumber});
         }
-    }, [dispatch, attempt, pageNumber]);
+    }, [attemptId, pageNumber]);
 }

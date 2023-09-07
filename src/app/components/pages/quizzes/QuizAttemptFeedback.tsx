@@ -1,14 +1,11 @@
 import React, {useCallback, useEffect} from "react";
 import {
     clearQuizAttempt,
-    clearStudentQuizAttempt,
-    loadQuizAttemptFeedback,
-    loadStudentQuizAttemptFeedback,
     useAppDispatch
 } from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {isDefined, useCurrentQuizAttempt} from "../../../services";
+import {isDefined, useCurrentQuizAttempt, useQuizAttemptFeedback} from "../../../services";
 import {
     myQuizzesCrumbs,
     QuizAttemptComponent,
@@ -51,24 +48,9 @@ const pageHelp = <span>
 export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const {quizAttemptId, page, studentId, quizAssignmentId} = useParams<{quizAttemptId?: string; page?: string; studentId?: string; quizAssignmentId?: string;}>();
     const numericStudentId = studentId ? parseInt(studentId, 10) : undefined;
-    const {attempt, studentUser, questions, sections, error} = useCurrentQuizAttempt(numericStudentId);
-
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        isDefined(quizAttemptId) && dispatch(loadQuizAttemptFeedback(parseInt(quizAttemptId, 10)));
-
-        if (isDefined(numericStudentId) && isDefined(quizAssignmentId)) {
-            dispatch(loadStudentQuizAttemptFeedback(parseInt(quizAssignmentId, 10), numericStudentId));
-        }
-
-        return () => {
-            dispatch(clearQuizAttempt());
-            if (isDefined(studentId)) {
-                dispatch(clearStudentQuizAttempt());
-            }
-        };
-    }, [dispatch, quizAttemptId, quizAssignmentId, studentId]);
+    const numericQuizAssignmentId = quizAssignmentId ? parseInt(quizAssignmentId, 10) : undefined;
+    const numericQuizAttemptId = quizAttemptId ? parseInt(quizAttemptId, 10) : undefined;
+    const {attempt, studentUser, questions, sections, error} = useQuizAttemptFeedback(numericQuizAttemptId, numericQuizAssignmentId, numericStudentId);
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 

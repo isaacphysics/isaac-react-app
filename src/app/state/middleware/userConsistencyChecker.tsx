@@ -1,7 +1,7 @@
-import {Dispatch, Middleware, MiddlewareAPI} from "redux";
+import {AnyAction, Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE, isDefined} from "../../services";
-import {redirectTo, getUserId, logAction, setUserId} from "../index";
+import {redirectTo, getUserId, logAction, setUserId, AppDispatch} from "../index";
 
 let timeoutHandle: number | undefined;
 
@@ -17,9 +17,10 @@ const scheduleNextCheck = (middleware: MiddlewareAPI) => {
 const checkUserConsistency = (middleware: MiddlewareAPI) => {
     const storedUserId = getUserId();
     const state = middleware.getState();
+    const dispatch = middleware.dispatch as AppDispatch;
     const appUserId = state?.user?._id;
     if (storedUserId != appUserId) {
-        middleware.dispatch(logAction({type: "USER_CONSISTENCY_WARNING_SHOWN", userAgent: navigator.userAgent}));
+        dispatch(logAction({type: "USER_CONSISTENCY_WARNING_SHOWN", userAgent: navigator.userAgent}));
         // Mark error after this check has finished, else the error will be snuffed by the error reducer.
         window.setTimeout(() => middleware.dispatch({type: ACTION_TYPE.USER_CONSISTENCY_ERROR}));
     } else {
@@ -29,6 +30,7 @@ const checkUserConsistency = (middleware: MiddlewareAPI) => {
 
 
 const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
+    const dispatch = api.dispatch as AppDispatch;
     clearTimeout(timeoutHandle);
     // Only start checking if we can successfully store the user id
     if (setUserId(user._id)) {
@@ -40,7 +42,7 @@ const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
             type: "USER_CONSISTENCY_CHECKING_FAILED",
             userAgent: navigator.userAgent,
         };
-        api.dispatch(logAction(eventDetails));
+        dispatch(logAction(eventDetails));
     }
 };
 

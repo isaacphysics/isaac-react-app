@@ -6,7 +6,7 @@ import {
     mockGameboards,
     mockGroups,
     mockMyAssignments,
-    mockNewsPods, mockPage,
+    mockNewsPods, buildMockPage,
     mockQuizAssignments, mockSchool,
     mockSetAssignments,
     mockUser,
@@ -160,7 +160,7 @@ export const handlers = [
         const {pageId} = req.params;
         return res(
             ctx.status(200),
-            ctx.json(mockPage(pageId as string))
+            ctx.json(buildMockPage(pageId as string))
         );
     }),
     rest.get(API_PATH + "/glossary/terms", (req, res, ctx) => {

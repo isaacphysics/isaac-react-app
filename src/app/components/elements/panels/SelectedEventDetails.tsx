@@ -1,49 +1,48 @@
-import React, {useEffect} from "react";
-import * as RS from "reactstrap";
-import {AppState, getEvent, useAppDispatch, useAppSelector} from "../../../state";
+import React from "react";
+import {Card, CardBody} from "reactstrap";
 import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
-import {NOT_FOUND, zeroOrLess} from "../../../services";
+import {zeroOrLess} from "../../../services";
+import {AugmentedEvent} from "../../../../IsaacAppTypes";
 
-export const SelectedEventDetails = ({eventId}: {eventId: string}) => {
-    const dispatch = useAppDispatch();
-    useEffect(() => {dispatch(getEvent(eventId))}, [dispatch, eventId]);
-    const selectedEvent = useAppSelector((state: AppState) => {return state && state.currentEvent;});
-
-    return <RS.Card>
-        <RS.CardBody>
+interface SelectedEventDetailsProps {
+    event: AugmentedEvent;
+}
+export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
+    return <Card>
+        <CardBody>
             <h3 className="h-subtitle mb-1">Selected event details</h3>
-            {selectedEvent && selectedEvent !== NOT_FOUND && <p className="m-0">
+            <p className="m-0">
                 <strong>Event: </strong>
-                <Link to={`/events/${selectedEvent.id}`} target="_blank">
-                    {selectedEvent.title} {selectedEvent.subtitle}
+                <Link to={`/events/${event.id}`} target="_blank">
+                    {event.title} {event.subtitle}
                 </Link>
                 <br />
 
-                {selectedEvent.location && selectedEvent.location.address && selectedEvent.location.address.addressLine1 &&
-                    <React.Fragment>
+                {event.location && event.location.address && event.location.address.addressLine1 &&
+                    <>
                         <strong>Location: </strong>
-                        {selectedEvent.location.address.addressLine1}{", "}
-                        {selectedEvent.location.address.town}{", "}
-                        {selectedEvent.location.address.postalCode}
+                        {event.location.address.addressLine1}{", "}
+                        {event.location.address.town}{", "}
+                        {event.location.address.postalCode}
                         <br />
-                    </React.Fragment>
+                    </>
                 }
 
                 <strong>Event status: </strong>
-                <span className={selectedEvent.isCancelled ? "text-danger font-weight-bold" : ""}>{selectedEvent.eventStatus}</span>
+                <span className={event.isCancelled ? "text-danger font-weight-bold" : ""}>{event.eventStatus}</span>
                 <br />
 
                 <strong>Event start: </strong>
-                <DateString>{selectedEvent.date}</DateString> - <DateString>{selectedEvent.endDate}</DateString>
+                <DateString>{event.date}</DateString> - <DateString>{event.endDate}</DateString>
                 <br />
 
                 <strong>Booking deadline: </strong>
-                <DateString>{selectedEvent.bookingDeadline}</DateString>
+                <DateString>{event.bookingDeadline}</DateString>
                 <br />
 
                 <strong>Prepwork deadline: </strong>
-                <DateString>{selectedEvent.prepWorkDeadline}</DateString>
+                <DateString>{event.prepWorkDeadline}</DateString>
                 <br />
 
                 {/* Group token is currently JSON Ignored by the API */}
@@ -51,11 +50,11 @@ export const SelectedEventDetails = ({eventId}: {eventId: string}) => {
                 {/*{selectedEvent.isaacGroupToken}*/}
                 {/*<br />*/}
 
-                <span className={zeroOrLess(selectedEvent.placesAvailable) ? "text-danger" : ""}>
+                <span className={zeroOrLess(event.placesAvailable) ? "text-danger" : ""}>
                     <strong>Number of places available: </strong>
-                    {selectedEvent.placesAvailable} / {selectedEvent.numberOfPlaces}
+                    {event.placesAvailable} / {event.numberOfPlaces}
                 </span>
-            </p>}
-        </RS.CardBody>
-    </RS.Card>
+            </p>
+        </CardBody>
+    </Card>
 };

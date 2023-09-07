@@ -1,11 +1,16 @@
 import {QuizAttemptProps, QuizPagination} from "./QuizAttemptComponent";
-import {markQuizAttemptAsComplete, showToast, useAppDispatch} from "../../../state";
+import {
+    mutationSucceeded,
+    showSuccessToast,
+    useAppDispatch,
+    useMarkQuizAttemptAsCompleteMutation
+} from "../../../state";
 import {Link, useHistory} from "react-router-dom";
-import React, {useState} from "react";
+import React from "react";
 import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
-import {siteSpecific} from "../../../services";
+import {confirmThen, siteSpecific} from "../../../services";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
@@ -16,19 +21,18 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
     const {attempt, page, sections, questions, pageLink} = props;
     const dispatch = useAppDispatch();
     const history = useHistory();
-    const [submitting, setSubmitting] = useState(false);
 
-    async function submitQuiz() {
-        try {
-            setSubmitting(true);
-            if (await dispatch(markQuizAttemptAsComplete(attempt.id as number))) {
-                dispatch(showToast({color: "success", title: "Test submitted successfully", body: "Your answers have been submitted successfully.", timeout: 5000}));
-                history.push(props.feedbackLink);
-            }
-        } finally {
-            setSubmitting(false);
-        }
-    }
+    const [markQuizAttemptAsComplete, {isLoading: submitting}] = useMarkQuizAttemptAsCompleteMutation();
+
+    const submitQuiz = () => {
+        markQuizAttemptAsComplete(attempt.id as number)
+            .then((result) => {
+                if (mutationSucceeded(result)) {
+                    dispatch(showSuccessToast("Test submitted successfully", "Your answers have been submitted successfully."));
+                    history.push(props.feedbackLink);
+                }
+            });
+    };
 
     const sectionCount = Object.keys(sections).length;
 
@@ -74,7 +78,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
             if (anyAnswered) {
                 controls = <>
                     <div className="text-center">
-                        <Button color="secondary" outline onClick={() => window.confirm("Are you sure? You haven't answered all of the questions!") && submitQuiz()}>{submitButton}</Button>
+                        <Button onClick={() => confirmThen("Are you sure? You haven't answered all of the questions", submitQuiz)}>{submitButton}</Button>
                     </div>
                     <Spacer/>
                     {totalCompleted} / {sectionCount} sections complete<br/>

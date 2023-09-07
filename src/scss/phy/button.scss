@@ -363,3 +363,12 @@ a.btn {
   outline: none !important;
   border-radius: 3px;
 }
+
+.bin-icon {
+  background-image: url("/assets/phy/bin-black.svg");
+  width: 48px;
+  height: 48px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-color: transparent;
+}

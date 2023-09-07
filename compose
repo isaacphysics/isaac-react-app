@@ -86,6 +86,7 @@ services:
       - /local/data/m2:/root/.m2:rw
       - /local/data/isaac-sops-config-decrypted/$ENV/$SITE:/local/data/config:ro
       - /local/data/$CONTENT_REPO:/local/data/$CONTENT_REPO:rw
+      - /local/data/maxmind-geolocation/geolite2-city.mmdb:/local/data/geolite2-city.mmdb:ro
       - /var/log/isaac/$SITE-$ENV:/isaac-logs:rw
     networks:
       default:

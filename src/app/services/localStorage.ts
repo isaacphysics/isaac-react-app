@@ -12,6 +12,7 @@ export enum KEY {
     MOST_RECENT_ALL_TOPICS_PATH = "mostRecentAllTopicsPath",
     FIRST_ANON_QUESTION = "firstAnonQuestion",
     ASSIGN_BOARD_PATH = "assignBoardPath",
+    INITIAL_DAILY_QUESTION_ATTEMPT_TIME = "initialQuestionAttemptedTime"
 }
 
 export const LOADING_FAILURE_VALUE = null;

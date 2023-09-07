@@ -1,4 +1,4 @@
-import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {ChangeEvent, lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {selectors, useAppSelector} from "../../state";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
@@ -96,13 +96,15 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         }
     }, [currentAttempt]);
 
-    const closeModal = (previousYPosition: number) => () => {
-        document.body.style.overflow = "initial";
-        setModalVisible(false);
-        if (isDefined(previousYPosition)) {
-            window.scrollTo(0, previousYPosition);
-        }
-    };
+    const closeModalAndReturnToScrollPosition = useCallback(function(previousYPosition: number) {
+        return function() {
+            document.body.style.overflow = "initial";
+            setModalVisible(false);
+            if (isDefined(previousYPosition)) {
+                window.scrollTo(0, previousYPosition);
+            }
+        };
+    }(window.scrollY), [modalVisible]);
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
@@ -221,7 +223,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your expression' }}
             />
             {modalVisible && <InequalityModal
-                close={closeModal(window.scrollY)}
+                close={closeModalAndReturnToScrollPosition}
                 onEditorStateChange={(state: any) => {
                     dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
                     initialEditorSymbols.current = state.symbols;
