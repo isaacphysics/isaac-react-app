@@ -783,9 +783,8 @@ export enum EventStatusFilter {
 }
 export enum EventTypeFilter {
     "All events" = "all",
-    "Student events" = "student",
-    "Teacher events" = "teacher",
-    "Online tutorials" = "virtual",
+    "Booster" = "booster",
+    "Discovery" = "discovery"
 }
 
 export enum EventStageFilter {

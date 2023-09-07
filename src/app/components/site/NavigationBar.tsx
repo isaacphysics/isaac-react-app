@@ -48,8 +48,7 @@ export const NavigationBar = () => {
 
         <NavigationSection title="Events">
             {isTeacherOrAbove(user) && <LinkItem to="/events?show_reservations_only=true">My event reservations</LinkItem>}
-            <LinkItem to="/events?types=student">Student events</LinkItem>
-            <LinkItem to="/events?types=teacher">Teacher events</LinkItem>
+            <LinkItem to="/events">Student events</LinkItem>
             <LinkItem to="/pages/event_types">Event formats</LinkItem>
             <LinkItem to="/safeguarding">Safeguarding</LinkItem>
         </NavigationSection>

@@ -29,7 +29,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
     const isaacEmailPreferenceDescriptions = {
         assignments: "Receive assignment notifications from your teacher.",
         news: "Be the first to know about new topics, new platform features, and our fantastic competition giveaways.",
-        events: "Get valuable updates on our free student workshops/teacher CPD events happening near you."
+        events: "Get valuable updates on our free student workshops happening near you."
     };
 
     let errorMessage = null;

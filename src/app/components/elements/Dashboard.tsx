@@ -131,10 +131,7 @@ export const Dashboard = ({
 
               <p className="mr-lg-n1">
                 {"We also offer free "}
-                <Link to="/events?types=teacher">teacher CPD events</Link>
-                {" and "}
-                <Link to="/events?types=student">student workshops</Link>
-                .<br />
+                <Link to="/events">student events</Link>.<br />
                 {
                   "Isaac Computer Science is proud to be part of the Department for Education's "
                 }

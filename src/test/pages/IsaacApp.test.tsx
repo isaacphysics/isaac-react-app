@@ -10,7 +10,7 @@ const myIsaacLinks = ["/assignments", "/my_gameboards", "/progress", "/tests"]
 const tutorLinks = ["/groups", "/set_assignments", "/my_markbook"];
 const teacherLinks = ["/groups", "/set_assignments", "/my_markbook", "/set_tests", "/teaching_order"];
 const learnLinks = ["/topics/gcse", "/topics/a_level", "/gameboards/new", "/pages/workbooks_2020", "/glossary", "/pages/computer_science_journeys_gallery"];
-const eventsLinks = ["/events?types=student", "/events?types=teacher", "/pages/event_types", "/safeguarding"];
+const eventsLinks = ["/events", "/pages/event_types", "/safeguarding"];
 const teacherEventLinks = ["/events?show_reservations_only=true"].concat(eventsLinks);
 const helpLinks = ["/support/teacher", "/support/student", "/contact"];
 

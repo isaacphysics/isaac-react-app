@@ -64,7 +64,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
         Follow the links below to find out more about our FREE events.
     </span>;
 
-    const metaDescriptionCS = "A level and GCSE Computer Science live online training. Free teacher CPD. Revision and extension workshops for students.";
+    const metaDescriptionCS = "A level and GCSE Computer Science live online training. Revision and extension workshops for students.";
 
     return <div>
         <RS.Container>
