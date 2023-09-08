@@ -297,30 +297,73 @@ const RuleBasedChoiceBuilder = ({questionChoices, setQuestionChoices, questionCh
 }
 
 const LlmPromptChoiceBuilder = ({questionChoices, setQuestionChoices, questionChoicesJson, setQuestionChoicesJson}: LlmPromptChoiceBuilder) => {
+    const [systemInstruction, setSystemInstruction] = useState("You are an expert secondary school physics teacher bot that marks free-text questions.");
+    const [questionContent, setQuestionContent] = useState("");
+    const [markScheme, setMarkScheme] = useState("");
+    const [examples, setExamples] = useState<{answer: string, correct: boolean}[]>([]);
+    
     const [jsonParseError, setJsonParseError] = useState(false);
-
+    
     const llmPromptChoice = questionChoices[0];
-    function setLlmPromptChoice(llmPromptChoice: LlmPrompt) {
-        setQuestionChoices([{...llmPromptChoice, choiceNumber: 0}]);
+    function updatePrompt() {
+        const prompt = systemInstruction +
+        `#### Free-Text Question:\n${questionContent}\n\n` +
+        `#### Mark Scheme:\n${markScheme}\n\n` +
+        examples.map(e => `#### Student Answer:\n${e.answer}\n\n#### Response:\n{ "correct": ${e.correct} }\n\n`).join("") +
+        `#### Student Answer:\n<$STUDENT_ANSWER>\n\n`;
+        setQuestionChoices([{...llmPromptChoice, value: prompt, choiceNumber: 0}]);
     }
+    useEffect(updatePrompt, [systemInstruction, questionContent, markScheme]);
 
     return <React.Fragment>
-        <h2 className="h3">Prompt Template</h2>
         <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
             {{
                 'GUI': <div className="mb-3">
-                    <RS.Label htmlFor="prompt-input">
-                        <strong>Prompt:</strong>
-                        <small id="prompt-help" className="form-text text-muted mt-0 d-inline ml-1">
-                            <code className="text-danger border">{`<$STUDENT_ANSWER>`}</code> will be replaced by the student's question attempt.
-                        </small>
-                    </RS.Label>
-                    <RS.Input
-                        id="prompt-input" aria-describedby="prompt-help"
-                        type="textarea" rows={8}
-                        value={llmPromptChoice.value}
-                        onChange={event => setLlmPromptChoice({...llmPromptChoice, value: event.target.value})}
-                    />
+                    <div className="mb-3">
+                        <RS.Label>
+                            <strong>System Instruction:</strong>
+                        </RS.Label>
+                        <RS.Input
+                            type="textarea" rows={1} value={systemInstruction}
+                            onChange={event => setSystemInstruction(event.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <RS.Label>
+                            <strong>Question Content:</strong>
+                        </RS.Label>                       
+                        <RS.Input
+                            type="textarea" rows={4} value={questionContent}
+                            onChange={event => setQuestionContent(event.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <RS.Label>
+                            <strong>Mark Scheme:</strong>
+                        </RS.Label>
+                        <RS.Input
+                            type="textarea" rows={4} value={markScheme}
+                            onChange={event => setMarkScheme(event.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <RS.Label className="d-block">
+                            <strong>Example Student Answers:</strong>
+                        </RS.Label>
+                        {examples.map((e, i) => <div className="mb-2" key={i}>
+                            <RS.InputGroup>
+                                <RS.Input type="text" value={e.answer} onChange={ev => setExamples(examples.map((ex, j) => i === j ? {...ex, answer: ev.target.value} : ex))} />
+                                <RS.InputGroupAddon addonType="append">
+                                    <RS.Button color="dark" outline size="sm" onClick={ev => setExamples(examples.map((ex, j) => i === j ? {...ex, correct: !ex.correct} : ex))}>
+                                        {e.correct ? "✔️" : "❌"}
+                                    </RS.Button>
+                                </RS.InputGroupAddon>
+                            </RS.InputGroup>
+                        </div>)}
+                        <RS.Button size="sm" color="primary" outline className="mt-2" onClick={() => {setExamples([...examples, {answer: "", correct: true}])}}>
+                            Add example
+                        </RS.Button>
+                    </div>
                 </div>,
                 'JSON': <div className="mb-3">
                     <p>JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion</p>
@@ -333,16 +376,14 @@ const LlmPromptChoiceBuilder = ({questionChoices, setQuestionChoices, questionCh
                         }}
                     />
                     <div className="text-center">
-                        <RS.Button
-                            className="my-2" onClick={() => {
+                        <RS.Button className="my-2" onClick={() => {
                             try {
                                 const convertedQuestionChoices = convertJsonToQuestionChoices(questionChoicesJson);
                                 if (areAllLlmPrompts(convertedQuestionChoices)) { setQuestionChoices(convertedQuestionChoices); }
                             } catch (e) {
                                 setJsonParseError(true);
                             }
-                        }}
-                        >
+                        }}>
                             Submit
                         </RS.Button>
                     </div>
