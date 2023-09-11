@@ -48,13 +48,13 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         }
     }, []);
 
-    useEffect(() => {
+    useEffect(function setupPreviewSketch() {
         const { sketch, p } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialState?.curves });
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
             setPreviewSketch(sketch);
         }
-        return () => {
+        return function teardownPreviewSketch() {
             previewSketch?.teardown();
             setPreviewSketch(null);
             if (previewRef.current) {
@@ -83,7 +83,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
-        <div className="sketch-preview text-center" onClick={openModal} onKeyUp={openModal} role={readonly ? undefined : "button"}
+        <div className="sketch-preview d-flex justify-content-center overflow-auto" onClick={openModal} onKeyUp={openModal} role={readonly ? undefined : "button"}
              tabIndex={readonly ? undefined : 0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
         </div>
