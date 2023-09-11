@@ -18,7 +18,7 @@ import {
     useGenerateAnswerSpecificationMutation
 } from "../../../state";
 import {PageFragment} from "../PageFragment";
-import {isStaff} from "../../../services";
+import {above, isStaff, useDeviceSize} from "../../../services";
 import {Immutable} from "immer";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
@@ -124,7 +124,8 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     const redo = () => modalSketch?.redo();
 
-    const hexagonSize = 74;
+    const deviceSize = useDeviceSize();
+    const hexagonSize = above['sm'](deviceSize) ? 74 : 48;
     const colourHexagon = calculateHexagonProportions(hexagonSize/4, 3);
 
     const copySpecificationToClipboard = useCallback(() => {

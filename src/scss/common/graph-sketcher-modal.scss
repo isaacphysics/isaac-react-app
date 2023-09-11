@@ -167,7 +167,7 @@
             }
         }
 
-        @media (min-height: 450px) {
+        @include respond-above(xs) {
             $button-size: 90px;
             $button-spacing: 10px;
 
@@ -239,7 +239,7 @@
             }
         }
 
-        @media (max-height: 451px) {
+        @include respond-below(xs) {
             $button-size: 61px;
             $button-spacing: 8px;
 
@@ -294,21 +294,25 @@
 
                 &#graph-sketcher-ui-bezier-button {
                     top: 2 * $button-spacing;
-                    right: 4 * $button-spacing + 1 * $button-size + 90px;
+                    left: 3 * $button-spacing + $button-size;
                 }
 
                 &#graph-sketcher-ui-linear-button {
                     top: 2 * $button-spacing;
-                    right: 5 * $button-spacing + 2 * $button-size + 90px;
+                    left: 2 * $button-spacing;
+                }    
+            }
+            div#graph-sketcher-ui-color-select-hexagons {
+                top: 2 * $button-spacing;
+                left: 4 * $button-spacing + 2 * $button-size;
+                width: $button-size;
+                height: $button-size;
+                svg {
+                    width: $button-size;
+                    height: $button-size;                        
                 }
             }
 
-            div#graph-sketcher-ui-color-select-hexagons {
-                top: 2 * $button-spacing;
-                right: 3 * $button-spacing + $button-size;
-                width: 90px;
-                height: 90px;
-            }
         }
 
 
