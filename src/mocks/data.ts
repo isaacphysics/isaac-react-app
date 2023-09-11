@@ -4812,11 +4812,11 @@ export const mockPromoPods = {
     results: [
 {
     id: "test-promo-pod",
-    title: "Test Promo Pod",
+    title: "Test Promo Pod for Teachers",
     type: "isaacPod",
     encoding: "markdown",
     children: [],
-    value: "This is a test promo pod.",
+    value: "This is a test promo pod for teachers.",
     tags: [
         "promo"
       ],
@@ -4830,9 +4830,30 @@ export const mockPromoPods = {
     url: "https://www.google.com",
     published: true,
     subtitle: "Custom link text",            
+  }, 
+  {
+    id: "test-promo-pod-public",
+    title: "Test Promo Pod for Public",
+    type: "isaacPod",
+    encoding: "markdown",
+    children: [],
+    value: "This is a test promo pod for public users.",
+    tags: [
+        "promo"
+      ],
+    image: {
+      type: "image",
+      children: [],
+      published: false,
+      src: "/assets/events/teacher.svg",
+      altText: "login to see this promo"
+    },
+    url: "/login",
+    published: true,
+    subtitle: "Custom link text",            
   }
 ],
-  totalResults: 1
+  totalResults: 2
 };
 
 export const mockFragment = (pageId: string) => ({

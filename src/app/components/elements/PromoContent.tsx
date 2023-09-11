@@ -27,7 +27,7 @@ export const PromoContent = ({ item }: { item: IsaacPodDTO }) => {
             </Col>
             <Col xs={12} md className="pt-3 pl-3">
               <h5>
-                <a href={url} target="_blank" rel="noopener noreferrer">
+                <a href={url}>
                   <b>{title}</b>
                 </a>
               </h5>
@@ -38,7 +38,7 @@ export const PromoContent = ({ item }: { item: IsaacPodDTO }) => {
                 />
               </div>
               <div>
-                <a href={url} target="_blank" rel="noopener noreferrer">
+                <a href={url}>
                   <b>{subtitle}</b>
                 </a>
               </div>

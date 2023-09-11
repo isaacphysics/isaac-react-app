@@ -31,7 +31,12 @@ export const Homepage = () => {
     orderDescending: true,
   });
 
-  const promoItem = promo ? promo[0] : undefined;
+  const [teacherPromoItem, loggedOutPromoItem] = promo
+    ? [
+        promo.find((item) => item && !item?.id?.includes("public")),
+        promo.find((item) => item && item?.id?.includes("public")),
+      ]
+    : [undefined, undefined];
 
   const featuredNewsItem = news && user?.loggedIn ? news[0] : undefined;
 
@@ -39,7 +44,7 @@ export const Homepage = () => {
 
   if (news) {
     if (
-      (user?.loggedIn && user?.role === "TEACHER" && promoItem) ||
+      (user?.loggedIn && user?.role === "TEACHER" && teacherPromoItem) ||
       user?.loggedIn === false
     ) {
       carouselNewsItems = news;
@@ -54,7 +59,7 @@ export const Homepage = () => {
         <section id="call-to-action" className="homepageHero">
           <Container className="pt-4 z1">
             <Dashboard
-              promoItem={promoItem}
+              promoItem={teacherPromoItem}
               featuredNewsItem={featuredNewsItem}
             />
           </Container>
@@ -79,7 +84,9 @@ export const Homepage = () => {
                 thenRender={() => (
                   <Container>
                     <Col className="py-5">
-                      {promoItem && <PromoContent item={promoItem} />}
+                      {loggedOutPromoItem && (
+                        <PromoContent item={loggedOutPromoItem} />
+                      )}
                     </Col>
                   </Container>
                 )}
