@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect, useRef, useCallback} from "react";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher";
@@ -29,8 +29,16 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         !readonly && setModalVisible(true);
     }
 
+    const returnToScrollYPosition = useCallback(function(previousYPosition: number) {
+        return function() {
+            document.body.style.overflow = "initial";
+            window.scrollTo(0, previousYPosition);
+        }
+    }(window.scrollY), [modalVisible]); // Capture y position whenever modalVisible changes.
+
     function closeModal() {
         dispatchSetCurrentAttempt({type: 'graphChoice', value: JSON.stringify(pendingAttemptState)});
+        returnToScrollYPosition();
         setModalVisible(false);
     }
 
