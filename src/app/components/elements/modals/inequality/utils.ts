@@ -367,6 +367,28 @@ export const generateDefaultMenuItems = (parsedAvailableSymbols: string[], logic
 
 // --- Callback/effect definitions ---
 
+export function fillScreenWithModal(fullScreen: boolean) {
+    if (fullScreen) {
+        document.documentElement.style.overflow = "hidden";
+        document.documentElement.style.width = '100vw';
+        document.documentElement.style.height = '100vh';
+        document.documentElement.style.touchAction = 'none';
+        document.body.style.overflow = "hidden";
+        document.body.style.width = '100vw';
+        document.body.style.height = '100vh';
+        document.body.style.touchAction = 'none';
+    } else {
+        document.documentElement.style.width = '';
+        document.documentElement.style.height = '';
+        document.documentElement.style.overflow = '';
+        document.documentElement.style.touchAction = 'auto';
+        document.body.style.width = '';
+        document.body.style.height = '';
+        document.body.style.overflow = '';
+        document.body.style.touchAction = 'auto';
+    }
+}
+
 interface InequalityHandlers {
     onTouchStart: (e: TouchEvent) => void;
     handleKeyPress: (ev: KeyboardEvent) => void;
@@ -388,14 +410,7 @@ export function setupAndTeardownDocStyleAndListeners({onCursorMoveEnd, onMouseMo
     document.body.addEventListener("mouseup", onCursorMoveEnd);
     document.body.addEventListener("touchend", onCursorMoveEnd);
 
-    document.documentElement.style.overflow = "hidden";
-    document.documentElement.style.width = '100vw';
-    document.documentElement.style.height = '100vh';
-    document.documentElement.style.touchAction = 'none';
-    document.body.style.overflow = "hidden";
-    document.body.style.width = '100vw';
-    document.body.style.height = '100vh';
-    document.body.style.touchAction = 'none';
+    fillScreenWithModal(true);
 
     return () => {
         window.removeEventListener("keyup", handleKeyPress);
@@ -410,14 +425,7 @@ export function setupAndTeardownDocStyleAndListeners({onCursorMoveEnd, onMouseMo
         document.body.removeEventListener("mouseup", onCursorMoveEnd);
         document.body.removeEventListener("touchend", onCursorMoveEnd);
 
-        document.documentElement.style.width = '';
-        document.documentElement.style.height = '';
-        document.documentElement.style.overflow = '';
-        document.documentElement.style.touchAction = 'auto';
-        document.body.style.width = '';
-        document.body.style.height = '';
-        document.body.style.overflow = '';
-        document.body.style.touchAction = 'auto';
+        fillScreenWithModal(false);
 
         const canvas = inequalityModalRef.current?.getElementsByTagName('canvas')[0];
         if (canvas) {
