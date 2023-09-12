@@ -300,8 +300,9 @@
                 &#graph-sketcher-ui-linear-button {
                     top: 2 * $button-spacing;
                     left: 2 * $button-spacing;
-                }    
+                }
             }
+
             div#graph-sketcher-ui-color-select-hexagons {
                 top: 2 * $button-spacing;
                 left: 4 * $button-spacing + 2 * $button-size;
@@ -312,7 +313,6 @@
                     height: $button-size;                        
                 }
             }
-
         }
 
 
