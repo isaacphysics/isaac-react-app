@@ -260,7 +260,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                         {/* Only teachers and above can add group managers */}
                         <Button outline={isAda} className="w-100 w-sm-auto d-inline-block text-nowrap" size="sm" color={siteSpecific("tertiary", "secondary")} onClick={() => dispatch(showGroupManagersModal({group, user}))}>
                             {isUserGroupOwner
-                                ? <>Add / remove<span className="d-none d-xl-inline">{" "}group managers</span></>
+                                ? <>Add {additionalManagers.length > 1 ? <>/ remove</> : <></>}<span className="d-none d-xl-inline">{" "}group managers</span></>
                                 : <>More info<span className="d-none d-sm-inline">rmation</span></>
                             }
                         </Button>
