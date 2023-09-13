@@ -48,10 +48,10 @@ export const AdminStats = () => {
                                 <strong>Users:</strong>
                                 <ul className="list-unstyled mb-5">
                                     <li>Last 6 months:&nbsp;
-                                        <strong>{(adminStats.activeUsersOverPrevious.sixMonths.TOTAL || 0).toLocaleString()}</strong>
+                                        <strong>{(adminStats.activeUsersOverPrevious.SIX_MONTHS.TOTAL || 0).toLocaleString()}</strong>
                                     </li>
                                     <li>Last 2 years:&nbsp;
-                                        <strong>{(adminStats.activeUsersOverPrevious.twoYears.TOTAL || 0).toLocaleString()}</strong>
+                                        <strong>{(adminStats.activeUsersOverPrevious.TWO_YEARS.TOTAL || 0).toLocaleString()}</strong>
                                     </li>
                                     <li>Total accounts: <strong>{(adminStats.userGenders.TOTAL || 0).toLocaleString()}</strong></li>
                                     <li className="mt-3">
@@ -112,23 +112,23 @@ export const AdminStats = () => {
                                 <ul className="list-unstyled">
                                     <li>Previous 7 days:
                                         <ul>
-                                            <li>All: {adminStats.activeUsersOverPrevious.sevenDays.TOTAL || 0}</li>
-                                            <li>Teachers: {adminStats.activeUsersOverPrevious.sevenDays.TEACHER || 0}</li>
-                                            <li>Students: {adminStats.activeUsersOverPrevious.sevenDays.STUDENT || 0}</li>
+                                            <li>All: {adminStats.activeUsersOverPrevious.SEVEN_DAYS.TOTAL || 0}</li>
+                                            <li>Teachers: {adminStats.activeUsersOverPrevious.SEVEN_DAYS.TEACHER || 0}</li>
+                                            <li>Students: {adminStats.activeUsersOverPrevious.SEVEN_DAYS.STUDENT || 0}</li>
                                         </ul>
                                     </li>
                                     <li>Previous 30 days:
                                         <ul>
-                                            <li>All: {adminStats.activeUsersOverPrevious.thirtyDays.TOTAL || 0}</li>
-                                            <li>Teachers: {adminStats.activeUsersOverPrevious.thirtyDays.TEACHER || 0}</li>
-                                            <li>Students: {adminStats.activeUsersOverPrevious.thirtyDays.STUDENT || 0}</li>
+                                            <li>All: {adminStats.activeUsersOverPrevious.THIRTY_DAYS.TOTAL || 0}</li>
+                                            <li>Teachers: {adminStats.activeUsersOverPrevious.THIRTY_DAYS.TEACHER || 0}</li>
+                                            <li>Students: {adminStats.activeUsersOverPrevious.THIRTY_DAYS.STUDENT || 0}</li>
                                         </ul>
                                     </li>
                                     <li>Previous 90 days:
                                         <ul>
-                                            <li>All: {adminStats.activeUsersOverPrevious.ninetyDays.TOTAL || 0}</li>
-                                            <li>Teachers: {adminStats.activeUsersOverPrevious.ninetyDays.TEACHER || 0}</li>
-                                            <li>Students: {adminStats.activeUsersOverPrevious.ninetyDays.STUDENT || 0}</li>
+                                            <li>All: {adminStats.activeUsersOverPrevious.NINETY_DAYS.TOTAL || 0}</li>
+                                            <li>Teachers: {adminStats.activeUsersOverPrevious.NINETY_DAYS.TEACHER || 0}</li>
+                                            <li>Students: {adminStats.activeUsersOverPrevious.NINETY_DAYS.STUDENT || 0}</li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -137,23 +137,23 @@ export const AdminStats = () => {
                                 <ul className="list-unstyled">
                                     <li>Previous 7 days:
                                         <ul>
-                                            <li>All: {adminStats.answeringUsersOverPrevious.sevenDays.TOTAL || 0}</li>
-                                            <li>Teachers: {adminStats.answeringUsersOverPrevious.sevenDays.TEACHER || 0}</li>
-                                            <li>Students: {adminStats.answeringUsersOverPrevious.sevenDays.STUDENT || 0}</li>
+                                            <li>All: {adminStats.answeringUsersOverPrevious.SEVEN_DAYS.TOTAL || 0}</li>
+                                            <li>Teachers: {adminStats.answeringUsersOverPrevious.SEVEN_DAYS.TEACHER || 0}</li>
+                                            <li>Students: {adminStats.answeringUsersOverPrevious.SEVEN_DAYS.STUDENT || 0}</li>
                                         </ul>
                                     </li>
                                     <li>Previous 30 days:
                                         <ul>
-                                            <li>All: {adminStats.answeringUsersOverPrevious.thirtyDays.TOTAL || 0}</li>
-                                            <li>Teachers: {adminStats.answeringUsersOverPrevious.thirtyDays.TEACHER || 0}</li>
-                                            <li>Students: {adminStats.answeringUsersOverPrevious.thirtyDays.STUDENT || 0}</li>
+                                            <li>All: {adminStats.answeringUsersOverPrevious.THIRTY_DAYS.TOTAL || 0}</li>
+                                            <li>Teachers: {adminStats.answeringUsersOverPrevious.THIRTY_DAYS.TEACHER || 0}</li>
+                                            <li>Students: {adminStats.answeringUsersOverPrevious.THIRTY_DAYS.STUDENT || 0}</li>
                                         </ul>
                                     </li>
                                     <li>Previous 90 days:
                                         <ul>
-                                            <li>All: {adminStats.answeringUsersOverPrevious.ninetyDays.TOTAL || 0}</li>
-                                            <li>Teachers: {adminStats.answeringUsersOverPrevious.ninetyDays.TEACHER || 0}</li>
-                                            <li>Students: {adminStats.answeringUsersOverPrevious.ninetyDays.STUDENT || 0}</li>
+                                            <li>All: {adminStats.answeringUsersOverPrevious.NINETY_DAYS.TOTAL || 0}</li>
+                                            <li>Teachers: {adminStats.answeringUsersOverPrevious.NINETY_DAYS.TEACHER || 0}</li>
+                                            <li>Students: {adminStats.answeringUsersOverPrevious.NINETY_DAYS.STUDENT || 0}</li>
                                         </ul>
                                     </li>
                                 </ul>
