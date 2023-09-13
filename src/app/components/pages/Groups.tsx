@@ -228,8 +228,8 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                             <Input
                                 innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
                                 onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !(isUserGroupOwner || group.additionalManagerPrivileges)}
-                                invalid={newGroupName !== undefined && newGroupName.length > 0 && allGroups?.some(g => g.groupName == newGroupName && (group ? group.id != g.id : true))}
-                                valid={newGroupName !== undefined && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName && (group ? group.id != g.id : true))}
+                                invalid={newGroupName !== undefined && newGroupName.length > 0 && allGroups?.some(g => g.groupName == newGroupName && (isDefined(group) ? group.id != g.id : true))}
+                                valid={newGroupName !== undefined && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName) && (isDefined(group) ? newGroupName !== group.groupName : true)}
                             />
                             {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
                                 <Button
