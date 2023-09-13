@@ -217,6 +217,10 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
     const canArchive = group && (isUserGroupOwner || group.additionalManagerPrivileges);
     const canEmailUsers = isStaff(user) && usersInGroup.length > 0;
 
+    const getNameConflictingGroup = allGroups?.find(g => g.groupName == newGroupName && (isDefined(group) ? group.id != g.id : true));
+    const isGroupNameInvalid = isDefined(newGroupName) && isDefined(getNameConflictingGroup);
+    const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName) && (isDefined(group) ? newGroupName !== group.groupName : true);
+    
     return <Card>
         <CardBody>
             <h4 className={"mb-2"}>{group ? "Manage group" : "Create group"}</h4>
@@ -228,8 +232,8 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                             <Input
                                 innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
                                 onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !(isUserGroupOwner || group.additionalManagerPrivileges)}
-                                invalid={newGroupName !== undefined && newGroupName.length > 0 && allGroups?.some(g => g.groupName == newGroupName && (isDefined(group) ? group.id != g.id : true))}
-                                valid={newGroupName !== undefined && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName) && (isDefined(group) ? newGroupName !== group.groupName : true)}
+                                invalid={isGroupNameInvalid}
+                                valid={isGroupNameValid}
                             />
                             {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
                                 <Button
@@ -241,7 +245,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                     {group ? "Update" : "Create"}
                                 </Button>
                             </InputGroupAddon>}
-                            <FormFeedback>A group with that name already exists.</FormFeedback>
+                            <FormFeedback>A{isGroupNameInvalid && getNameConflictingGroup?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
                         </InputGroup>
                     </Form>
                 </Col>
@@ -364,6 +368,11 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
             }
         });
     }
+
+    const getNameConflictingGroup = allGroups?.find(g => g.groupName == newGroupName);
+    const isGroupNameInvalid = isDefined(newGroupName) && isDefined(getNameConflictingGroup);
+    const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName);
+
     return <Row className={className}>
         <Col size={12} className={siteSpecific("mt-2", "")}>
             <h6 className={siteSpecific("", "font-weight-semi-bold")}>Create New Group</h6>
@@ -373,10 +382,10 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
                 <InputGroup>
                     <Input length={50} placeholder="Enter the name of your group here" value={newGroupName}
                         onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name"
-                        invalid={newGroupName !== undefined && newGroupName.length > 0 && allGroups?.some(g => g.groupName == newGroupName)}
-                        valid={newGroupName !== undefined && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName)}
+                        invalid={isGroupNameInvalid}
+                        valid={isGroupNameValid}
                         />
-                    <FormFeedback>A group with that name already exists.</FormFeedback>
+                    <FormFeedback>A{isGroupNameInvalid && getNameConflictingGroup?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
                 </InputGroup>
             </Form>
         </Col>
@@ -394,7 +403,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const groupQuery = useGetGroupsQuery(showArchived);
     const { currentData: groups, isLoading, isFetching } = groupQuery;
 
-    const allGroups = [...(useGetGroupsQuery(false).currentData ?? []) , ...(useGetGroupsQuery(true).currentData ?? [])];
+    const allGroups = [...(groups ?? []) , ...(useGetGroupsQuery(!showArchived).currentData ?? [])];
 
     const [createGroup] = useCreateGroupMutation();
     const [deleteGroup] = useDeleteGroupMutation();
