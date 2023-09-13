@@ -402,8 +402,9 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const [showArchived, setShowArchived] = useState(false);
     const groupQuery = useGetGroupsQuery(showArchived);
     const { currentData: groups, isLoading, isFetching } = groupQuery;
+    const otherGroups = useGetGroupsQuery(!showArchived);
 
-    const allGroups = [...(groups ?? []) , ...(useGetGroupsQuery(!showArchived).currentData ?? [])];
+    const allGroups = [...(groups ?? []) , ...(otherGroups.currentData ?? [])];
 
     const [createGroup] = useCreateGroupMutation();
     const [deleteGroup] = useDeleteGroupMutation();
