@@ -296,24 +296,82 @@ const RuleBasedChoiceBuilder = ({questionChoices, setQuestionChoices, questionCh
     </React.Fragment>
 }
 
+
+interface FeedbackOptions {id:string; feedback: string, correct: boolean};
+interface Example {answer: string; feedbackOption: string};
+
+function ExampleStudentAnswerEditor({example, setExample, feedbackOptions, i, deleteExample}: {example: Example, setExample: (example: Example) => void, i: number, feedbackOptions: FeedbackOptions[], deleteExample: () => void}) {
+    const [isOpen, setIsOpen] = useState(false);
+    return <RS.ListGroupItem className="border">
+        <RS.FormGroup>
+            <div className="d-flex">
+                <RS.Label htmlFor={`student-example-${i}`}>
+                    Student Answer:
+                </RS.Label>
+                <RS.Button className="p-0 m-1 text-muted ml-auto mt-n3 mr-n2" color="link" onClick={deleteExample}>
+                    ✖
+                </RS.Button>
+            </div>
+            <RS.Input id={`student-example-${i}`} type="textarea" row={2} value={example.answer} onChange={e => setExample({...example, answer: e.target.value})} />
+        </RS.FormGroup>
+        <RS.FormGroup row>
+            <RS.Label hymlFor={`student-example-feedback-option-${i}`} className="col-auto">
+                Feedback:
+            </RS.Label>
+            <RS.Col>
+                <RS.InputGroup>
+                    <RS.InputGroupButtonDropdown size="sm" addonType="prepend" isOpen={isOpen} toggle={() => setIsOpen(!isOpen)}>
+                        <RS.DropdownToggle color="dark" outline caret>
+                            {example.feedbackOption}
+                        </RS.DropdownToggle>
+                        <RS.DropdownMenu>
+                            {feedbackOptions.map(fo => <RS.DropdownItem key={fo.id} onClick={() => setExample({...example, feedbackOption: fo.id})}>
+                                {fo.id}
+                            </RS.DropdownItem>)}
+                        </RS.DropdownMenu>
+                    </RS.InputGroupButtonDropdown>
+                    <RS.Input disabled style={{textOverflow: "ellipsis"}} value={feedbackOptions.filter(fo => fo.id === example.feedbackOption).at(0)?.feedback} />
+                    <RS.InputGroupAddon addonType="append">
+                        <RS.InputGroupText className="border-dark" outline size="sm">
+                            {feedbackOptions.filter(fo => fo.id === example.feedbackOption).at(0)?.correct ? "✔️" : "❌"}
+                        </RS.InputGroupText>
+                    </RS.InputGroupAddon>
+                </RS.InputGroup>
+            </RS.Col>
+        </RS.FormGroup>
+    </RS.ListGroupItem>
+}
+
+function nextAvailableId(feedbackOptions: FeedbackOptions[]) {
+    const ids = feedbackOptions.map(fo => fo.id);
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    for (let character of alphabet) {
+        if (!ids.includes(character)) {
+            return character;
+        }
+    }
+    throw new Error("No more letters available");
+}
+
 const LlmPromptChoiceBuilder = ({questionChoices, setQuestionChoices, questionChoicesJson, setQuestionChoicesJson}: LlmPromptChoiceBuilder) => {
     const [systemInstruction, setSystemInstruction] = useState("You are an expert secondary school physics teacher bot that marks free-text questions.");
     const [questionContent, setQuestionContent] = useState("");
     const [markScheme, setMarkScheme] = useState("");
-    const [examples, setExamples] = useState<{answer: string, correct: boolean}[]>([]);
+    const [feedbackOptions, setFeedbackOptions] = useState<FeedbackOptions[]>([{id: "A", feedback: "Correct", correct: true}, {id: "B", feedback: "Incorrect", correct: false}]);
+    const [examples, setExamples] = useState<Example[]>([{answer: "", feedbackOption: "A"}]);
     
     const [jsonParseError, setJsonParseError] = useState(false);
     
     const llmPromptChoice = questionChoices[0];
-    function updatePrompt() {
+    useEffect(function updatePrompt() {
         const prompt = systemInstruction +
         `#### Free-Text Question:\n${questionContent}\n\n` +
         `#### Mark Scheme:\n${markScheme}\n\n` +
-        examples.map(e => `#### Student Answer:\n${e.answer}\n\n#### Response:\n{ "correct": ${e.correct} }\n\n`).join("") +
+        `#### Feedback Options:\n${feedbackOptions.map(fo => `[${fo.id}] { feedback: "${fo.feedback}", correct: ${fo.correct} }`).join("\n")}\n\n` +
+        examples.map(e => `#### Student Answer:\n${e.answer}\n\n#### Response:\n{ "feedbackOption": "${e.feedbackOption}", "correct": ${feedbackOptions.filter(fo => fo.id === e.feedbackOption).at(0)?.correct} }\n\n`).join("") +
         `#### Student Answer:\n<$STUDENT_ANSWER>\n\n`;
         setQuestionChoices([{...llmPromptChoice, value: prompt, choiceNumber: 0}]);
-    }
-    useEffect(updatePrompt, [systemInstruction, questionContent, markScheme]);
+    }, [systemInstruction, questionContent, markScheme, feedbackOptions, examples]);
 
     return <React.Fragment>
         <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
@@ -347,21 +405,44 @@ const LlmPromptChoiceBuilder = ({questionChoices, setQuestionChoices, questionCh
                         />
                     </div>
                     <div className="mb-3">
-                        <RS.Label className="d-block">
-                            <strong>Example Student Answers:</strong>
+                        <RS.Label>
+                            <strong>Feedback Options:</strong>
                         </RS.Label>
-                        {examples.map((e, i) => <div className="mb-2" key={i}>
+                        {feedbackOptions.map((feedbackOption, i) => <div className="mb-2 d-flex" key={feedbackOption.id}>
                             <RS.InputGroup>
-                                <RS.Input type="text" value={e.answer} onChange={ev => setExamples(examples.map((ex, j) => i === j ? {...ex, answer: ev.target.value} : ex))} />
+                                <RS.InputGroupAddon addonType="prepend">
+                                    <RS.InputGroupText className="border-dark" outline size="sm">
+                                        {feedbackOption.id}
+                                    </RS.InputGroupText>
+                                </RS.InputGroupAddon>
+                                <RS.Input type="text" value={feedbackOption.feedback} onChange={e => setFeedbackOptions(feedbackOptions.map((fo, j) => i === j ? {...fo, feedback: e.target.value} : fo))} />
                                 <RS.InputGroupAddon addonType="append">
-                                    <RS.Button color="dark" outline size="sm" onClick={ev => setExamples(examples.map((ex, j) => i === j ? {...ex, correct: !ex.correct} : ex))}>
-                                        {e.correct ? "✔️" : "❌"}
+                                    <RS.Button size="sm" color="dark" outline onClick={() => setFeedbackOptions(feedbackOptions.map((fo, j) => i === j ? {...fo, correct: !fo.correct} : fo))}>
+                                        {feedbackOption.correct ? "✔️" : "❌"}
                                     </RS.Button>
                                 </RS.InputGroupAddon>
                             </RS.InputGroup>
+                            <RS.Button className="p-0 m-1 ml-2 text-muted" color="link" onClick={() => setFeedbackOptions(feedbackOptions.filter(fo => fo !== feedbackOption))}>
+                                ✖
+                            </RS.Button>
                         </div>)}
-                        <RS.Button size="sm" color="primary" outline className="mt-2" onClick={() => {setExamples([...examples, {answer: "", correct: true}])}}>
-                            Add example
+                        <RS.Button color="link" className="d-block mx-auto mt-1" onClick={() => {setFeedbackOptions([...feedbackOptions, {id: nextAvailableId(feedbackOptions), feedback: "", correct: true}])}}>
+                            <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
+                        </RS.Button>
+                    </div>
+                    <div className="mb-3">
+                        <RS.Label className="d-block">
+                            <strong>Example Student Answers:</strong>
+                        </RS.Label>
+                        <RS.ListGroup>
+                            {examples.map((example, i) => <ExampleStudentAnswerEditor
+                                key={i} i={i} example={example} feedbackOptions={feedbackOptions}
+                                setExample={newExample => setExamples(examples.map((ex, j) => i === j ? newExample : ex))}
+                                deleteExample={() => setExamples(examples.filter((ex, j) => i !== j))}
+                            />)}
+                        </RS.ListGroup>
+                        <RS.Button color="link" className="d-block mx-auto mt-1" onClick={() => {setExamples([...examples, {answer: "", feedbackOption: "A"}])}}>
+                            <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
                         </RS.Button>
                     </div>
                 </div>,
