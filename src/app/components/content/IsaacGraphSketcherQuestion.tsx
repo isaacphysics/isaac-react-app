@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from "react";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher";
-import {useCurrentQuestionAttempt} from "../../services";
+import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {selectors, useAppSelector} from "../../state";
@@ -86,6 +86,9 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         <div className="sketch-preview text-center" onClick={openModal} onKeyUp={openModal} role={readonly ? undefined : "button"}
              tabIndex={readonly ? undefined : 0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
+            {!isDefined(currentAttempt?.value) && <div className="graph-sketcher-preview-overlay">
+                <div className="graph-sketcher-preview-overlay-text">Click here to sketch</div>
+            </div>}
         </div>
         {modalVisible && <GraphSketcherModal
             user={user}

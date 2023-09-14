@@ -10,7 +10,7 @@ import {
     makeGraphSketcher
 } from "isaac-graph-sketcher";
 import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
-import {isStaff} from "../../services";
+import {isDefined, isStaff} from "../../services";
 
 const GraphSketcherPage = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -89,6 +89,9 @@ const GraphSketcherPage = () => {
                     <div className="graph-sketcher-question">
                         <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
                             <div ref={previewRef} className={`graph-sketcher-preview`} />
+                            {!isDefined(currentAttempt?.value) && <div className="graph-sketcher-preview-overlay">
+                                <div className="graph-sketcher-preview-overlay-text">Click here to sketch</div>
+                            </div>}
                         </div>
                         {modalVisible && <GraphSketcherModal
                             user={user}
