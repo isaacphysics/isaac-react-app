@@ -183,8 +183,18 @@ def deploy_live(ctx):
     ).rstrip()
     ctx['old_api'] = previous_api_version
 
-    front_end_only_release = 'front-end-only' == input("Is this a front-end-only release? [front-end-only / n] ").lower()
-    if not front_end_only_release:
+    response = input("Is this a front-end-only release? [front-end-only / n] ").lower()
+    while response not in ["front-end-only", "n"]:
+        response = input("Please respond with one of:\n - front-end-only \n - n\n").lower()
+    front_end_only_release = response == "front-end-only"
+
+    if front_end_only_release:
+        print("# Front-end-only release - confirm which API this app image expects:")
+        expected_api = ask_to_run_command(f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' docker.isaacscience.org/isaac-{ctx['site']}-app:{ctx['app']}")
+
+        print("# Front-end-only release - confirm the expected API is running:")
+        ask_to_run_command(f"docker ps --format '{{{{.Names}}}}' | grep {ctx['site']}-api-live-{expected_api}")
+    else:
         print("# List possibly-unused live apis:")
         ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {previous_api_version}", expected_nonzero_exit_codes=[1])
         print("# Bring down and remove the penultimate live api(s), if that is sensible, using something like:")
@@ -200,7 +210,7 @@ def deploy_live(ctx):
         ask_to_run_command(f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-api-live-{ctx['api']}")
 
         print("# Wait until the api is up:")
-        api_endpoint = f"https://isaac{'computerscience' if ctx['site'] == Site.ADA else 'physics'}.org/api/{ctx['api']}/api/info/segue_environment"
+        api_endpoint = f"https://{'adacomputerscience' if ctx['site'] == Site.ADA else 'isaacphysics'}.org/api/{ctx['api']}/api/info/segue_environment"
         expected_response = '\'{"segueEnvironment":"PROD"}\''
         ask_to_run_command(f'while [ "$(curl --silent {api_endpoint})" != {expected_response} ]; do echo "Waiting for API..."; sleep 1; done && echo "The API is up!"')
 
