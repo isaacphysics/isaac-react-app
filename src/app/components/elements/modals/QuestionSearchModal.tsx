@@ -56,9 +56,10 @@ interface QuestionSearchModalProps {
     setPreviousQuestionOrder: (a: string[][]) => void;
     previousSelectedQuestions: Array<Map<string, ContentSummary>>;
     setPreviousSelectedQuestions: (m: Array<Map<string, ContentSummary>>) => void;
+    resetRedoStacks: () => void;
     eventLog: object[];
 }
-export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, previousQuestionOrder: previousQuestionOrderStack, setPreviousQuestionOrder: setPreviousQuestionOrderStack, previousSelectedQuestions: previousSelectedQuestionsStack, setPreviousSelectedQuestions: setPreviousSelectedQuestionsStack, eventLog}: QuestionSearchModalProps) => {
+export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, previousQuestionOrder: previousQuestionOrderStack, setPreviousQuestionOrder: setPreviousQuestionOrderStack, previousSelectedQuestions: previousSelectedQuestionsStack, setPreviousSelectedQuestions: setPreviousSelectedQuestionsStack, resetRedoStacks, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
 
@@ -167,6 +168,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     setPreviousQuestionOrderStack([...previousQuestionOrderStack, originalQuestionOrder]);
                     setOriginalSelectedQuestions(selectedQuestions);
                     setOriginalQuestionOrder(questionOrder);
+                    resetRedoStacks();
                     dispatch(closeActiveModal());
                 }}
             />
@@ -275,6 +277,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                             previousSelectedQuestionsStack={previousSelectedQuestionsStack} setPreviousSelectedQuestionsStack={setPreviousSelectedQuestionsStack} 
                             questionOrder={questionOrder} setQuestionOrder={setQuestionOrder} 
                             previousQuestionOrderStack={previousQuestionOrderStack} setPreviousQuestionOrderStack={setPreviousQuestionOrderStack} 
+                            resetRedoStacks={resetRedoStacks}
                             creationContext={creationContext}
                         />
                     )}

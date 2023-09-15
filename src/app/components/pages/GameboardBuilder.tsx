@@ -67,6 +67,9 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const [previousQuestionOrderStack, setPreviousQuestionOrderStack] = useState<string[][]>([]);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummary>());
     const [previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
+    const [redoQuestionOrderStack, setRedoQuestionOrderStack] = useState<string[][]>([]);
+    const [redoSelectedQuestionsStack, setRedoSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
+    const resetRedoStacks = () => {setRedoQuestionOrderStack([]); setRedoSelectedQuestionsStack([]);}
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
@@ -253,6 +256,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                             setQuestionOrder={setQuestionOrder}
                                                             previousQuestionOrderStack={previousQuestionOrderStack}
                                                             setPreviousQuestionOrderStack={setPreviousQuestionOrderStack}
+                                                            resetRedoStacks={resetRedoStacks}
                                                             creationContext={question.creationContext}
                                                         />)}
                                                 </Draggable>
@@ -269,6 +273,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                 onClick={() => {
                                                                     setQuestionOrder(previousQuestionOrderStack.pop() || []);
                                                                     setSelectedQuestions(previousSelectedQuestionsStack.pop() || new Map<string, ContentSummary>());
+                                                                    setRedoQuestionOrderStack([...redoQuestionOrderStack, questionOrder]);
+                                                                    setRedoSelectedQuestionsStack([...redoSelectedQuestionsStack, selectedQuestions]);
                                                                 }}
                                                             >
                                                                 Undo
@@ -300,6 +306,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                                 setPreviousQuestionOrder={setPreviousQuestionOrderStack}
                                                                                 previousSelectedQuestions={previousSelectedQuestionsStack}
                                                                                 setPreviousSelectedQuestions={setPreviousSelectedQuestionsStack}
+                                                                                resetRedoStacks={resetRedoStacks}
                                                                                 eventLog={eventLog}
                                                                             />
                                                                         }))
@@ -309,6 +316,20 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                     {isAda && <img className={"plus-icon"} src={"/assets/cs/icons/add-circle-outline-pink.svg"}/>}
                                                                 </Button>
                                                             </ShowLoading>
+                                                        </div>
+                                                        <div className="col-md-3 d-flex justify-content-center justify-content-md-start">
+                                                            {redoQuestionOrderStack.length > 0 && <Button
+                                                                className="mb-1 mb-md-0"
+                                                                color="primary" outline
+                                                                onClick={() => {
+                                                                    setQuestionOrder(redoQuestionOrderStack.pop() || []);
+                                                                    setSelectedQuestions(redoSelectedQuestionsStack.pop() || new Map<string, ContentSummary>());
+                                                                    setPreviousQuestionOrderStack([...previousQuestionOrderStack, questionOrder]);
+                                                                    setPreviousSelectedQuestionsStack([...previousSelectedQuestionsStack, selectedQuestions]);
+                                                                }}
+                                                            >
+                                                                Redo
+                                                            </Button>}
                                                         </div>
                                                     </div>
                                                 </div>

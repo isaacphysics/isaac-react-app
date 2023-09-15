@@ -34,11 +34,12 @@ interface GameboardBuilderRowInterface {
     setQuestionOrder: (a: string[]) => void;
     previousQuestionOrderStack: string[][];
     setPreviousQuestionOrderStack: (a: string[][]) => void;
+    resetRedoStacks: () => void;
     creationContext?: AudienceContext;
 }
 
 const GameboardBuilderRow = (
-    {provided, snapshot, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, previousQuestionOrderStack: previousQuestionOrderStack, setPreviousQuestionOrderStack: setPreviousQuestionOrderStack, previousSelectedQuestionsStack: previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack: setPreviousSelectedQuestionsStack, creationContext}: GameboardBuilderRowInterface
+    {provided, snapshot, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, previousQuestionOrderStack: previousQuestionOrderStack, setPreviousQuestionOrderStack: setPreviousQuestionOrderStack, previousSelectedQuestionsStack: previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack: setPreviousSelectedQuestionsStack, resetRedoStacks, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useAppDispatch();
 
@@ -95,6 +96,7 @@ const GameboardBuilderRow = (
                         if (provided) {
                             setPreviousQuestionOrderStack([...previousQuestionOrderStack, questionOrder]);
                             setPreviousSelectedQuestionsStack([...previousSelectedQuestionsStack, selectedQuestions]);
+                            resetRedoStacks();
                         }
                     }
                 }}
