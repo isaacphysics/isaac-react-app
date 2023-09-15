@@ -64,7 +64,9 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const [gameboardTags, setGameboardTags] = useState<Item<string>[]>([]);
     const [gameboardURL, setGameboardURL] = useState<string>();
     const [questionOrder, setQuestionOrder] = useState<string[]>([]);
+    const [previousQuestionOrderStack, setPreviousQuestionOrderStack] = useState<string[][]>([]);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummary>());
+    const [previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
@@ -245,8 +247,12 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                             key={`gameboard-builder-row-${question.id}`}
                                                             question={question} selectedQuestions={selectedQuestions}
                                                             setSelectedQuestions={setSelectedQuestions}
+                                                            previousSelectedQuestionsStack={previousSelectedQuestionsStack}
+                                                            setPreviousSelectedQuestionsStack={setPreviousSelectedQuestionsStack}
                                                             questionOrder={questionOrder}
                                                             setQuestionOrder={setQuestionOrder}
+                                                            previousQuestionOrderStack={previousQuestionOrderStack}
+                                                            setPreviousQuestionOrderStack={setPreviousQuestionOrderStack}
                                                             creationContext={question.creationContext}
                                                         />)}
                                                 </Draggable>
@@ -255,36 +261,56 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                         <tr>
                                             <td colSpan={20}>
                                                 <div className="img-center">
-                                                    <ShowLoading
-                                                        placeholder={<div className="text-center"><IsaacSpinner/></div>}
-                                                        until={!baseGameboardId || baseGameboard}
-                                                    >
-                                                        <Button
-                                                            className="plus-button"
-                                                            color="primary" outline
-                                                            onClick={() => {
-                                                                logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                                                dispatch(openActiveModal({
-                                                                    closeAction: () => {
-                                                                        dispatch(closeActiveModal())
-                                                                    },
-                                                                    closeLabelOverride: "Cancel",
-                                                                    size: "xl",
-                                                                    title: "Search questions",
-                                                                    body: <QuestionSearchModal
-                                                                        originalSelectedQuestions={selectedQuestions}
-                                                                        setOriginalSelectedQuestions={setSelectedQuestions}
-                                                                        originalQuestionOrder={questionOrder}
-                                                                        setOriginalQuestionOrder={setQuestionOrder}
-                                                                        eventLog={eventLog}
-                                                                    />
-                                                                }))
-                                                            }}
-                                                        >
-                                                            {siteSpecific("Add Questions", "Add questions")}
-                                                            {isAda && <img className={"plus-icon"} src={"/assets/cs/icons/add-circle-outline-pink.svg"}/>}
-                                                        </Button>
-                                                    </ShowLoading>
+                                                    <div className="row w-100">
+                                                        <div className="col-md-3 d-flex justify-content-center justify-content-md-start">
+                                                            {previousQuestionOrderStack.length > 0 && <Button
+                                                                className="mb-1 mb-md-0"
+                                                                color="primary" outline
+                                                                onClick={() => {
+                                                                    setQuestionOrder(previousQuestionOrderStack.pop() || []);
+                                                                    setSelectedQuestions(previousSelectedQuestionsStack.pop() || new Map<string, ContentSummary>());
+                                                                }}
+                                                            >
+                                                                Undo
+                                                            </Button>}
+                                                        </div>
+                                                        <div className="col-md-6 d-flex justify-content-center">
+                                                            <ShowLoading
+                                                                placeholder={<div className="text-center"><IsaacSpinner/></div>}
+                                                                until={!baseGameboardId || baseGameboard}
+                                                            >
+                                                                <Button
+                                                                    className="plus-button"
+                                                                    color="primary" outline
+                                                                    onClick={() => {
+                                                                        logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
+                                                                        dispatch(openActiveModal({
+                                                                            closeAction: () => {
+                                                                                dispatch(closeActiveModal())
+                                                                            },
+                                                                            closeLabelOverride: "Cancel",
+                                                                            size: "xl",
+                                                                            title: "Search questions",
+                                                                            body: <QuestionSearchModal
+                                                                                originalSelectedQuestions={selectedQuestions}
+                                                                                setOriginalSelectedQuestions={setSelectedQuestions}
+                                                                                originalQuestionOrder={questionOrder}
+                                                                                setOriginalQuestionOrder={setQuestionOrder}
+                                                                                previousQuestionOrder={previousQuestionOrderStack}
+                                                                                setPreviousQuestionOrder={setPreviousQuestionOrderStack}
+                                                                                previousSelectedQuestions={previousSelectedQuestionsStack}
+                                                                                setPreviousSelectedQuestions={setPreviousSelectedQuestionsStack}
+                                                                                eventLog={eventLog}
+                                                                            />
+                                                                        }))
+                                                                    }}
+                                                                >
+                                                                    {siteSpecific("Add Questions", "Add questions")}
+                                                                    {isAda && <img className={"plus-icon"} src={"/assets/cs/icons/add-circle-outline-pink.svg"}/>}
+                                                                </Button>
+                                                            </ShowLoading>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>

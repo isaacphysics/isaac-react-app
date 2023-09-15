@@ -28,13 +28,17 @@ interface GameboardBuilderRowInterface {
     question: ContentSummary;
     selectedQuestions: Map<string, ContentSummary>;
     setSelectedQuestions: (m: Map<string, ContentSummary>) => void;
+    previousSelectedQuestionsStack: Array<Map<string, ContentSummary>>;
+    setPreviousSelectedQuestionsStack: (m: Array<Map<string, ContentSummary>>) => void;
     questionOrder: string[];
     setQuestionOrder: (a: string[]) => void;
+    previousQuestionOrderStack: string[][];
+    setPreviousQuestionOrderStack: (a: string[][]) => void;
     creationContext?: AudienceContext;
 }
 
 const GameboardBuilderRow = (
-    {provided, snapshot, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, creationContext}: GameboardBuilderRowInterface
+    {provided, snapshot, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, previousQuestionOrderStack: previousQuestionOrderStack, setPreviousQuestionOrderStack: setPreviousQuestionOrderStack, previousSelectedQuestionsStack: previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack: setPreviousSelectedQuestionsStack, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useAppDispatch();
 
@@ -88,6 +92,10 @@ const GameboardBuilderRow = (
                         }
                         setSelectedQuestions(newSelectedQuestions);
                         setQuestionOrder(newQuestionOrder);
+                        if (provided) {
+                            setPreviousQuestionOrderStack([...previousQuestionOrderStack, questionOrder]);
+                            setPreviousSelectedQuestionsStack([...previousSelectedQuestionsStack, selectedQuestions]);
+                        }
                     }
                 }}
             />

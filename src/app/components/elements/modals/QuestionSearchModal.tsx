@@ -52,9 +52,13 @@ interface QuestionSearchModalProps {
     setOriginalSelectedQuestions: (m: Map<string, ContentSummary>) => void;
     originalQuestionOrder: string[];
     setOriginalQuestionOrder: (a: string[]) => void;
+    previousQuestionOrder: string[][];
+    setPreviousQuestionOrder: (a: string[][]) => void;
+    previousSelectedQuestions: Array<Map<string, ContentSummary>>;
+    setPreviousSelectedQuestions: (m: Array<Map<string, ContentSummary>>) => void;
     eventLog: object[];
 }
-export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
+export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, previousQuestionOrder: previousQuestionOrderStack, setPreviousQuestionOrder: setPreviousQuestionOrderStack, previousSelectedQuestions: previousSelectedQuestionsStack, setPreviousSelectedQuestions: setPreviousSelectedQuestionsStack, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
 
@@ -159,6 +163,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 disabled={isEqual(new Set(originalSelectedQuestions.keys()), new Set(selectedQuestions.keys()))}
                 className={"btn btn-block btn-secondary border-0"}
                 onClick={() => {
+                    setPreviousSelectedQuestionsStack([...previousSelectedQuestionsStack, originalSelectedQuestions]);
+                    setPreviousQuestionOrderStack([...previousQuestionOrderStack, originalQuestionOrder]);
                     setOriginalSelectedQuestions(selectedQuestions);
                     setOriginalQuestionOrder(questionOrder);
                     dispatch(closeActiveModal());
@@ -266,7 +272,10 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         <GameboardBuilderRow
                             key={`question-search-modal-row-${question.id}`} question={question}
                             selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
-                            questionOrder={questionOrder} setQuestionOrder={setQuestionOrder} creationContext={creationContext}
+                            previousSelectedQuestionsStack={previousSelectedQuestionsStack} setPreviousSelectedQuestionsStack={setPreviousSelectedQuestionsStack} 
+                            questionOrder={questionOrder} setQuestionOrder={setQuestionOrder} 
+                            previousQuestionOrderStack={previousQuestionOrderStack} setPreviousQuestionOrderStack={setPreviousQuestionOrderStack} 
+                            creationContext={creationContext}
                         />
                     )}
                 </tbody>
