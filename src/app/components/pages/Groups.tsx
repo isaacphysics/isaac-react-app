@@ -217,8 +217,8 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
     const canArchive = group && (isUserGroupOwner || group.additionalManagerPrivileges);
     const canEmailUsers = isStaff(user) && usersInGroup.length > 0;
 
-    const getNameConflictingGroup = allGroups?.find(g => g.groupName == newGroupName && (isDefined(group) ? group.id != g.id : true));
-    const isGroupNameInvalid = isDefined(newGroupName) && isDefined(getNameConflictingGroup);
+    const existingGroupWithConflictingName = allGroups?.find(g => g.groupName == newGroupName && (isDefined(group) ? group.id != g.id : true));
+    const isGroupNameInvalid = isDefined(newGroupName) && isDefined(existingGroupWithConflictingName);
     const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName) && (isDefined(group) ? newGroupName !== group.groupName : true);
     
     return <Card>
@@ -245,7 +245,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                     {group ? "Update" : "Create"}
                                 </Button>
                             </InputGroupAddon>}
-                            <FormFeedback>A{isGroupNameInvalid && getNameConflictingGroup?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
+                            <FormFeedback>A{existingGroupWithConflictingName?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
                         </InputGroup>
                     </Form>
                 </Col>
@@ -369,8 +369,8 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
         });
     }
 
-    const getNameConflictingGroup = allGroups?.find(g => g.groupName == newGroupName);
-    const isGroupNameInvalid = isDefined(newGroupName) && isDefined(getNameConflictingGroup);
+    const existingGroupWithConflictingName = allGroups?.find(g => g.groupName == newGroupName);
+    const isGroupNameInvalid = isDefined(newGroupName) && isDefined(existingGroupWithConflictingName);
     const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName);
 
     return <Row className={className}>
@@ -385,7 +385,7 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
                         invalid={isGroupNameInvalid}
                         valid={isGroupNameValid}
                         />
-                    <FormFeedback>A{isGroupNameInvalid && getNameConflictingGroup?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
+                    <FormFeedback>A{existingGroupWithConflictingName?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
                 </InputGroup>
             </Form>
         </Col>
