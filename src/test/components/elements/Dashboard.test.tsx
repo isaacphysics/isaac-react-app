@@ -1,14 +1,13 @@
 import { mockNewsPods, mockPromoPods } from "../../../mocks/data";
-import { UserRole } from "../../../IsaacApiTypes";
 import { Dashboard } from "../../../app/components/elements/Dashboard";
-import { renderTestEnvironment } from "../../utils";
+import { TestUserRole, renderTestEnvironment } from "../../utils";
 import { screen, waitFor } from "@testing-library/react";
 
 const mockPromoItem = mockPromoPods.results[0];
 const mockFeaturedNewsItem = mockNewsPods.results[1];
 
 describe("Dashboard", () => {
-  const setupTest = (role: UserRole | "ANONYMOUS", props = {}) => {
+  const setupTest = (role: TestUserRole, props = {}) => {
     renderTestEnvironment({
       role: role,
       PageComponent: Dashboard,
@@ -55,7 +54,7 @@ describe("Dashboard", () => {
     expect(featuredNewsTitle).toBeInTheDocument();
   });
 
-  let roles: UserRole[] = [
+  let roles: TestUserRole[] = [
     "STUDENT",
     "TUTOR",
     "EVENT_LEADER",

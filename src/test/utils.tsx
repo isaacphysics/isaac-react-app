@@ -18,8 +18,10 @@ export const augmentErrorMessage = (message?: string) => (e: Error) => {
   return new Error(`${e.message}\n${message ? "Extra info: " + message : ""}`);
 };
 
+export type TestUserRole = UserRole | "ANONYMOUS";
+
 interface RenderTestEnvironmentOptions {
-  role?: UserRole | "ANONYMOUS";
+  role?: TestUserRole;
   modifyUser?: (u: typeof mockUser) => typeof mockUser;
   PageComponent?: React.FC<any>;
   componentProps?: Record<string, any>;

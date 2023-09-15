@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { CustomInput, FormFeedback, FormGroup, Label, Row } from "reactstrap";
 import { DateInput } from "./DateInput";
 import { Immutable } from "immer";
