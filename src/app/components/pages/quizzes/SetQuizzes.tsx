@@ -144,10 +144,24 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                     {roleVisibilitySummary(quiz)}
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
-                                    <RS.Button className={below["md"](deviceSize) ? "btn-sm" : ""} onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))}>
+                                    <RS.Button className={`d-none d-md-block ${below["md"](deviceSize) ? "btn-sm" : ""}`} onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))}>
                                         {siteSpecific("Set Test", "Set test")}
                                     </RS.Button>
                                 </div>
+                                <RS.UncontrolledButtonDropdown className="d-flex d-md-none">
+                                    <RS.DropdownToggle caret size="xl" />
+                                    <RS.DropdownMenu>
+                                            <RS.DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))} style={{zIndex: '1'}}>
+                                                {siteSpecific("Set Test", "Set test")}
+                                            </RS.DropdownItem>
+                                            <RS.DropdownItem divider />
+                                            <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
+                                                <RS.DropdownItem>
+                                                    Preview
+                                                </RS.DropdownItem>
+                                            </Link>
+                                        </RS.DropdownMenu>
+                                </RS.UncontrolledButtonDropdown> 
                                 <div className="d-none d-md-flex align-items-center">
                                     <Link className="my-3 mr-2 pl-3 pr-4 quiz-list-separator" to={{pathname: `/test/preview/${quiz.id}`}}>
                                         <span>Preview</span>
