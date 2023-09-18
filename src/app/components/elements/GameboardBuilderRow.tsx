@@ -21,7 +21,6 @@ import {Question} from "../pages/Question";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
-import { set } from "lodash";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
