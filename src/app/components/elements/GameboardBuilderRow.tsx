@@ -21,6 +21,7 @@ import {Question} from "../pages/Question";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
+import { set } from "lodash";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -96,6 +97,10 @@ const GameboardBuilderRow = (
                         setSelectedQuestions(newSelectedQuestions);
                         setQuestionOrder(newQuestionOrder);
                         if (provided) {
+                            if (previousQuestionOrderStack.length > 9) {
+                                setPreviousQuestionOrderStack(previousQuestionOrderStack.slice(1));
+                                setPreviousSelectedQuestionsStack(previousSelectedQuestionsStack.slice(1));
+                            }
                             setPreviousQuestionOrderStack([...previousQuestionOrderStack, questionOrder]);
                             setPreviousSelectedQuestionsStack([...previousSelectedQuestionsStack, selectedQuestions]);
                             resetRedoStacks();

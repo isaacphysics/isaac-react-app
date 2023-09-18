@@ -167,6 +167,10 @@ export const QuestionSearchModal = (
                 disabled={isEqual(new Set(originalSelectedQuestions.keys()), new Set(selectedQuestions.keys()))}
                 className={"btn btn-block btn-secondary border-0"}
                 onClick={() => {
+                    if (previousQuestionOrderStack.length > 9) {
+                        setPreviousQuestionOrderStack(previousQuestionOrderStack.slice(1));
+                        setPreviousSelectedQuestionsStack(previousSelectedQuestionsStack.slice(1));
+                    }
                     setPreviousSelectedQuestionsStack([...previousSelectedQuestionsStack, originalSelectedQuestions]);
                     setPreviousQuestionOrderStack([...previousQuestionOrderStack, originalQuestionOrder]);
                     setOriginalSelectedQuestions(selectedQuestions);
