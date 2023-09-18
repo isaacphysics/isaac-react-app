@@ -185,6 +185,15 @@ export const checkPageTitle = (pageTitle: string) => {
   expect(title).toBeInTheDocument();
 };
 
+export const checkPasswordInputTypes = (expectedType: string) => {
+  const formFields = getFormFields();
+  const passwordInput = formFields.password() as HTMLInputElement;
+  const confirmPasswordInput = formFields.confirmPassword() as HTMLInputElement;
+  [passwordInput, confirmPasswordInput].forEach((input) =>
+    expect(input.type).toBe(expectedType)
+  );
+};
+
 export const clickButton = async (buttonName: string) => {
   const button = screen.getByRole("button", { name: buttonName });
   await userEvent.click(button);
