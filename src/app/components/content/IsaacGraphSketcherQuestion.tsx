@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect, useRef, useCallback} from "react";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher";
@@ -29,8 +29,16 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         !readonly && setModalVisible(true);
     }
 
+    const returnToScrollYPosition = useCallback(function(previousYPosition: number) {
+        return function() {
+            document.body.style.overflow = "initial";
+            window.scrollTo(0, previousYPosition);
+        }
+    }(window.scrollY), [modalVisible]); // Capture y position whenever modalVisible changes.
+
     function closeModal() {
         dispatchSetCurrentAttempt({type: 'graphChoice', value: JSON.stringify(pendingAttemptState)});
+        returnToScrollYPosition();
         setModalVisible(false);
     }
 
@@ -48,13 +56,13 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         }
     }, []);
 
-    useEffect(() => {
+    useEffect(function setupPreviewSketch() {
         const { sketch, p } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialState?.curves });
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
             setPreviewSketch(sketch);
         }
-        return () => {
+        return function teardownPreviewSketch() {
             previewSketch?.teardown();
             setPreviewSketch(null);
             if (previewRef.current) {
@@ -83,7 +91,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
-        <div className="sketch-preview text-center" onClick={openModal} onKeyUp={openModal} role={readonly ? undefined : "button"}
+        <div className="sketch-preview d-flex justify-content-center overflow-auto" onClick={openModal} onKeyUp={openModal} role={readonly ? undefined : "button"}
              tabIndex={readonly ? undefined : 0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
         </div>
