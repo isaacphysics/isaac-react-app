@@ -69,10 +69,6 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const [previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
     const [redoQuestionOrderStack, setRedoQuestionOrderStack] = useState<string[][]>([]);
     const [redoSelectedQuestionsStack, setRedoSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
-    const resetRedoStacks = () => {
-        setRedoQuestionOrderStack([]); 
-        setRedoSelectedQuestionsStack([]);
-    };
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
@@ -156,6 +152,11 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             initialise();
         }
         setTimeout(() => sentinel.current?.scrollIntoView(), 50);
+    };
+
+    const resetRedoStacks = () => {
+        setRedoQuestionOrderStack([]); 
+        setRedoSelectedQuestionsStack([]);
     };
 
     return <Container id="gameboard-builder" fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
