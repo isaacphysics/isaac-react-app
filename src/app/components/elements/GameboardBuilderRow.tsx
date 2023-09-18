@@ -39,7 +39,9 @@ interface GameboardBuilderRowInterface {
 }
 
 const GameboardBuilderRow = (
-    {provided, snapshot, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, previousQuestionOrderStack: previousQuestionOrderStack, setPreviousQuestionOrderStack: setPreviousQuestionOrderStack, previousSelectedQuestionsStack: previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack: setPreviousSelectedQuestionsStack, resetRedoStacks, creationContext}: GameboardBuilderRowInterface
+    {provided, snapshot, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, 
+        previousQuestionOrderStack, setPreviousQuestionOrderStack, previousSelectedQuestionsStack, 
+        setPreviousSelectedQuestionsStack, resetRedoStacks, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useAppDispatch();
 

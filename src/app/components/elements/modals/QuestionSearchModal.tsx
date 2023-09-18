@@ -52,14 +52,17 @@ interface QuestionSearchModalProps {
     setOriginalSelectedQuestions: (m: Map<string, ContentSummary>) => void;
     originalQuestionOrder: string[];
     setOriginalQuestionOrder: (a: string[]) => void;
-    previousQuestionOrder: string[][];
-    setPreviousQuestionOrder: (a: string[][]) => void;
-    previousSelectedQuestions: Array<Map<string, ContentSummary>>;
-    setPreviousSelectedQuestions: (m: Array<Map<string, ContentSummary>>) => void;
+    previousQuestionOrderStack: string[][];
+    setPreviousQuestionOrderStack: (a: string[][]) => void;
+    previousSelectedQuestionsStack: Array<Map<string, ContentSummary>>;
+    setPreviousSelectedQuestionsStack: (m: Array<Map<string, ContentSummary>>) => void;
     resetRedoStacks: () => void;
     eventLog: object[];
 }
-export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, previousQuestionOrder: previousQuestionOrderStack, setPreviousQuestionOrder: setPreviousQuestionOrderStack, previousSelectedQuestions: previousSelectedQuestionsStack, setPreviousSelectedQuestions: setPreviousSelectedQuestionsStack, resetRedoStacks, eventLog}: QuestionSearchModalProps) => {
+export const QuestionSearchModal = (
+    {originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, 
+    setOriginalQuestionOrder, previousQuestionOrderStack, setPreviousQuestionOrderStack, previousSelectedQuestionsStack, 
+    setPreviousSelectedQuestionsStack, resetRedoStacks, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
 

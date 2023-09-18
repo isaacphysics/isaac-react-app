@@ -69,7 +69,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const [previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
     const [redoQuestionOrderStack, setRedoQuestionOrderStack] = useState<string[][]>([]);
     const [redoSelectedQuestionsStack, setRedoSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
-    const resetRedoStacks = () => {setRedoQuestionOrderStack([]); setRedoSelectedQuestionsStack([]);}
+    const resetRedoStacks = () => {
+        setRedoQuestionOrderStack([]); 
+        setRedoSelectedQuestionsStack([]);
+    };
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
@@ -302,10 +305,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                                 setOriginalSelectedQuestions={setSelectedQuestions}
                                                                                 originalQuestionOrder={questionOrder}
                                                                                 setOriginalQuestionOrder={setQuestionOrder}
-                                                                                previousQuestionOrder={previousQuestionOrderStack}
-                                                                                setPreviousQuestionOrder={setPreviousQuestionOrderStack}
-                                                                                previousSelectedQuestions={previousSelectedQuestionsStack}
-                                                                                setPreviousSelectedQuestions={setPreviousSelectedQuestionsStack}
+                                                                                previousQuestionOrderStack={previousQuestionOrderStack}
+                                                                                setPreviousQuestionOrderStack={setPreviousQuestionOrderStack}
+                                                                                previousSelectedQuestionsStack={previousSelectedQuestionsStack}
+                                                                                setPreviousSelectedQuestionsStack={setPreviousSelectedQuestionsStack}
                                                                                 resetRedoStacks={resetRedoStacks}
                                                                                 eventLog={eventLog}
                                                                             />
