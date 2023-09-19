@@ -42,7 +42,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import sortBy from "lodash/sortBy";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isAda, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isAda, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific, useDeviceSize} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import classNames from "classnames";
@@ -91,6 +91,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
     const dispatch = useAppDispatch();
     const [passwordRequestSent, setPasswordRequestSent] = useState(false);
     const [deleteMember] = useDeleteGroupMemberMutation();
+    const deviceSize = useDeviceSize();
 
     function resetPassword() {
         setPasswordRequestSent(true);
@@ -133,21 +134,39 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
             </div>
         </div>
         <div className="d-flex">
-            {isTeacherOrAbove(user) && <>
-                <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-right d-none d-sm-block">
-                    <Button color="link" size="sm" className="mx-2" onClick={resetPassword}
-                            disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
-                        {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
-                    </Button>
-                </Tooltip>
+            {deviceSize == "xs" ? <>
+                <UncontrolledButtonDropdown size="sm">
+                    <DropdownToggle color="tertiary" className="border" caret size="lg">
+                        Manage
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        {isTeacherOrAbove(user) && 
+                            <DropdownItem onClick={resetPassword} disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
+                                {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
+                            </DropdownItem>
+                        }
+                        {userHasAdditionalGroupPrivileges && 
+                            <DropdownItem onClick={confirmDeleteMember} aria-label="Remove member">Remove</DropdownItem>
+                        }
+                    </DropdownMenu>
+                </UncontrolledButtonDropdown>
+            </> : <>
+                {isTeacherOrAbove(user) && <>
+                    <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-right d-none d-sm-block">
+                        <Button color="link" size="sm" className="mx-2" onClick={resetPassword}
+                                disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
+                            {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
+                        </Button>
+                    </Tooltip>
+                </>}
+                {userHasAdditionalGroupPrivileges &&
+                    <Tooltip tipText="Remove this user from the group." className="text-right d-none d-sm-block">
+                        <Button color="link" size="sm" className="mx-2" onClick={confirmDeleteMember} aria-label="Remove member">
+                            Remove
+                        </Button>
+                    </Tooltip>
+                }
             </>}
-            {userHasAdditionalGroupPrivileges &&
-                <Tooltip tipText="Remove this user from the group." className="text-right d-none d-sm-block">
-                    <Button color="link" size="sm" className="mx-2" onClick={confirmDeleteMember} aria-label="Remove member">
-                        Remove
-                    </Button>
-                </Tooltip>
-            }
         </div>
     </div>;
 };
