@@ -153,7 +153,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                 _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
             }
             if (operatorExpression.test(userInput)) {
-                _errors.push('Simplify your answer into a single decimal number.')
+                _errors.push('Simplify your answer into a single decimal number.');
             }
             if (/.*?[0-9][, ][0-9]{3}.*?/.test(userInput)) {
                 _errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
