@@ -139,7 +139,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                         {filteredQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
                         <RS.ListGroup className="mb-2 quiz-list">
                             {filteredQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                                <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
+                                <div className="d-flex flex-grow-1 flex-row align-items-center p-3">
                                     <span className="mb-2 mb-sm-0">{quiz.title}</span>
                                     {roleVisibilitySummary(quiz)}
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
@@ -149,7 +149,9 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                     </RS.Button>
                                 </div>
                                 <RS.UncontrolledButtonDropdown className="d-flex d-md-none">
-                                    <RS.DropdownToggle caret size="xl" />
+                                    <RS.DropdownToggle caret className="text-nowrap" size="sm" color="link">
+                                        Manage
+                                    </RS.DropdownToggle>
                                     <RS.DropdownMenu>
                                             <RS.DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))} style={{zIndex: '1'}}>
                                                 {siteSpecific("Set Test", "Set test")}
