@@ -137,7 +137,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
         debounceTimer.current = window.setTimeout(() => {
             const regexStr = "[^ 0-9A-Za-z,.+*/×÷-]+";
             const badCharacters = new RegExp(regexStr);
-            const operatorExpression = new RegExp(".*[0-9][+*/×÷-]\.?[0-9]+$");
+            const operatorExpression = new RegExp(".*[0-9][+*/×÷-]\\.?[0-9]+$");
             const _errors = [];
 
             if (badCharacters.test(userInput)) {
