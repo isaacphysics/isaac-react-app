@@ -155,7 +155,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
             if (operatorExpression.test(userInput)) {
                 _errors.push('Simplify your answer into a single decimal number.')
             }
-            if (/.*?[0-9][, ][0-9]{3}[, 0-9]*?/.test(userInput)) {
+            if (/.*?[0-9][, ][0-9]{3}.*?/.test(userInput)) {
                 _errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
             }
 
