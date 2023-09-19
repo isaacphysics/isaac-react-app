@@ -240,7 +240,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                 </Col>
             </Row>
             {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && 
-                <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
+                <div className="question-feedback-input-errors"><strong>Careful!</strong><ul>
                     {errors.map(e => (<li key={e}>{e}</li>))}
                 </ul></div>
             }
