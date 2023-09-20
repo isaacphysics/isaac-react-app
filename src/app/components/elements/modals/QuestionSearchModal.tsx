@@ -30,7 +30,8 @@ import {
     SortOrder,
     sortQuestions,
     STAGE,
-    useUserContext
+    useUserContext,
+    GAMEBOARD_UNDO_STACK_SIZE_LIMIT
 } from "../../../services";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -166,7 +167,7 @@ export const QuestionSearchModal = (
                 disabled={isEqual(new Set(originalSelectedQuestions.keys()), new Set(selectedQuestions.keys()))}
                 className={"btn btn-block btn-secondary border-0"}
                 onClick={() => {
-                    if (previousQuestionOrderStack.length > 9) {
+                    if (previousQuestionOrderStack.length >= GAMEBOARD_UNDO_STACK_SIZE_LIMIT) {
                         setPreviousQuestionOrderStack(p => p.slice(1));
                         setPreviousSelectedQuestionsStack(p => p.slice(1));
                     }

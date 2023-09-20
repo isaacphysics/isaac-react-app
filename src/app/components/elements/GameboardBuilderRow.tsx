@@ -11,7 +11,8 @@ import {
     siteSpecific,
     stageLabelMap,
     TAG_ID,
-    TAG_LEVEL
+    TAG_LEVEL,
+    GAMEBOARD_UNDO_STACK_SIZE_LIMIT
 } from "../../services";
 import React from "react";
 import {AudienceContext} from "../../../IsaacApiTypes";
@@ -94,7 +95,7 @@ const GameboardBuilderRow = (
                         setSelectedQuestions(newSelectedQuestions);
                         setQuestionOrder(newQuestionOrder);
                         if (provided) {
-                            if (previousQuestionOrderStack.length > 9) {
+                            if (previousQuestionOrderStack.length >= GAMEBOARD_UNDO_STACK_SIZE_LIMIT) {
                                 setPreviousQuestionOrderStack(p => p.slice(1));
                                 setPreviousSelectedQuestionsStack(p => p.slice(1));
                             }
