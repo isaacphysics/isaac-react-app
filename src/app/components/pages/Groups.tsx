@@ -136,7 +136,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
         <div className="d-flex">
             {deviceSize == "xs" ? <>
                 <UncontrolledButtonDropdown size="sm">
-                    <DropdownToggle color="tertiary" className="border" caret size="lg">
+                    <DropdownToggle caret className="text-nowrap" color="link" size="sm">
                         Manage
                     </DropdownToggle>
                     <DropdownMenu>
