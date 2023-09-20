@@ -277,7 +277,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
             <CustomInput
                 type="checkbox"
                 id="show-book-questions-checkbox"
-                label="Include textbook questions"
+                label="Include Isaac book questions"
                 checked={showBookQuestions}
                 onChange={() => {setShowBookQuestions(!showBookQuestions);}}
             />
