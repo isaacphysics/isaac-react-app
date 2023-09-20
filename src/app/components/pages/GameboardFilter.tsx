@@ -24,6 +24,7 @@ import {
     isPhy,
     Item,
     NOT_FOUND, PATHS,
+    QUESTION_CATEGORY,
     QUESTION_CATEGORY_ITEM_OPTIONS,
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
     selectOnChange,
@@ -59,7 +60,8 @@ import {
     Label,
     UncontrolledTooltip,
     CardFooter,
-    CardBody
+    CardBody,
+    CustomInput
 } from "reactstrap";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 
@@ -181,8 +183,10 @@ interface FilterProps {
 interface PhysicsFilterProps extends FilterProps {
     tiers: Tier[];
     choices: Item<TAG_ID>[][];
+    showBookQuestions : boolean;
+    setShowBookQuestions : React.Dispatch<React.SetStateAction<boolean>>;
 }
-const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setStages, difficulties, setDifficulties, refresh, scrollToQuestions, previousBoard} : PhysicsFilterProps) => {
+const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions, selections, setSelections, stages, setStages, difficulties, setDifficulties, refresh, scrollToQuestions, previousBoard} : PhysicsFilterProps) => {
 
     function setTierSelection(tierIndex: number) {
         return ((values: Item<TAG_ID>[]) => {
@@ -268,6 +272,16 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
                 <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
             </Col>
         </Row>
+
+        <Col className="mt-2">
+            <CustomInput
+                type="checkbox"
+                id="show-book-questions-checkbox"
+                label="Include Isaac book questions"
+                checked={showBookQuestions}
+                onChange={() => {setShowBookQuestions(!showBookQuestions);}}
+            />
+        </Col>
 
         {/* Buttons */}
         <Row className={filterExpanded ? "mt-4" : ""}>
@@ -505,6 +519,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     }, [userContext.stage]);
 
     const [difficulties, setDifficulties] = useState<Item<string>[]>(queryDifficulties);
+    const [showBookQuestions, setShowBookQuestions] = useState<boolean>(true);
 
     // const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
 
@@ -533,7 +548,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         if (difficulties.length) params.difficulties = toCSV(difficulties);
         if (concepts.length) params.concepts = toCSV(concepts);
         if (isAda && examBoards.length) params.examBoards = toCSV(examBoards);
-        if (isPhy) {params.questionCategories = "quick_quiz,learn_and_practice";}
+        if (isPhy) {params.questionCategories = `${QUESTION_CATEGORY.QUICK_QUIZ},${QUESTION_CATEGORY.PROBLEM_SOLVING}${showBookQuestions ? "," + QUESTION_CATEGORY.BOOK_QUESTIONS : ""}`;}
         params.title = boardTitle;
 
         // Populate query parameters with the selected subjects, fields, and topics
@@ -565,7 +580,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     // This is a leading debounced version of loadNewGameboard, used with the shuffle questions button - this stops
     // users from spamming the generateTemporaryGameboard endpoint by clicking the button fast
     const debouncedLeadingLoadGameboard = useCallback(debounce(loadNewGameboard, 200, {leading: true, trailing: false}),
-        [selections, stages, difficulties, concepts, examBoards]);
+        [selections, stages, difficulties, concepts, examBoards, showBookQuestions]);
 
     useEffect(() => {
         if (gameboardIdAnchor && (!isFound(gameboard) || gameboardIdAnchor !== gameboard.id)) {
@@ -575,7 +590,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             setBoardStack([]);
             loadNewGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history);
         }
-    }, [selections, stages, difficulties, concepts, examBoards]);
+    }, [selections, stages, difficulties, concepts, examBoards, showBookQuestions]);
 
     function refresh() {
         if (isFound(gameboard)) {
@@ -630,7 +645,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
         {/* The site-specific question filtering UI */}
         {siteSpecific(
-            <PhysicsFilter {...filterProps} tiers={tiers} choices={choices}/>,
+            <PhysicsFilter {...filterProps} tiers={tiers} choices={choices} showBookQuestions={showBookQuestions} setShowBookQuestions={setShowBookQuestions}/>,
             <CSFilter
                 {...filterProps}
                 examBoards={examBoards} setExamBoards={setExamBoards}
