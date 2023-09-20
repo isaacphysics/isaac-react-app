@@ -53,15 +53,14 @@ interface QuestionSearchModalProps {
     originalQuestionOrder: string[];
     setOriginalQuestionOrder: (a: string[]) => void;
     previousQuestionOrderStack: string[][];
-    setPreviousQuestionOrderStack: (a: string[][]) => void;
-    previousSelectedQuestionsStack: Array<Map<string, ContentSummary>>;
-    setPreviousSelectedQuestionsStack: (m: Array<Map<string, ContentSummary>>) => void;
+    setPreviousQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
+    setPreviousSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
     resetRedoStacks: () => void;
     eventLog: object[];
 }
 export const QuestionSearchModal = (
     {originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, 
-    setOriginalQuestionOrder, previousQuestionOrderStack, setPreviousQuestionOrderStack, previousSelectedQuestionsStack, 
+    setOriginalQuestionOrder, previousQuestionOrderStack, setPreviousQuestionOrderStack, 
     setPreviousSelectedQuestionsStack, resetRedoStacks, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
@@ -168,11 +167,11 @@ export const QuestionSearchModal = (
                 className={"btn btn-block btn-secondary border-0"}
                 onClick={() => {
                     if (previousQuestionOrderStack.length > 9) {
-                        setPreviousQuestionOrderStack(previousQuestionOrderStack.slice(1));
-                        setPreviousSelectedQuestionsStack(previousSelectedQuestionsStack.slice(1));
+                        setPreviousQuestionOrderStack(p => p.slice(1));
+                        setPreviousSelectedQuestionsStack(p => p.slice(1));
                     }
-                    setPreviousSelectedQuestionsStack([...previousSelectedQuestionsStack, originalSelectedQuestions]);
-                    setPreviousQuestionOrderStack([...previousQuestionOrderStack, originalQuestionOrder]);
+                    setPreviousSelectedQuestionsStack(p => [...p, originalSelectedQuestions]);
+                    setPreviousQuestionOrderStack(p => [...p, originalQuestionOrder]);
                     setOriginalSelectedQuestions(selectedQuestions);
                     setOriginalQuestionOrder(questionOrder);
                     resetRedoStacks();
@@ -281,9 +280,10 @@ export const QuestionSearchModal = (
                         <GameboardBuilderRow
                             key={`question-search-modal-row-${question.id}`} question={question}
                             selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
-                            previousSelectedQuestionsStack={previousSelectedQuestionsStack} setPreviousSelectedQuestionsStack={setPreviousSelectedQuestionsStack} 
+                            setPreviousSelectedQuestionsStack={setPreviousSelectedQuestionsStack} 
+                            previousQuestionOrderStack={previousQuestionOrderStack}
+                            setPreviousQuestionOrderStack={setPreviousQuestionOrderStack} 
                             questionOrder={questionOrder} setQuestionOrder={setQuestionOrder} 
-                            previousQuestionOrderStack={previousQuestionOrderStack} setPreviousQuestionOrderStack={setPreviousQuestionOrderStack} 
                             resetRedoStacks={resetRedoStacks}
                             creationContext={creationContext}
                         />

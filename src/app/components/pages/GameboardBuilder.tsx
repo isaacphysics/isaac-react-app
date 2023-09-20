@@ -254,7 +254,6 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                             key={`gameboard-builder-row-${question.id}`}
                                                             question={question} selectedQuestions={selectedQuestions}
                                                             setSelectedQuestions={setSelectedQuestions}
-                                                            previousSelectedQuestionsStack={previousSelectedQuestionsStack}
                                                             setPreviousSelectedQuestionsStack={setPreviousSelectedQuestionsStack}
                                                             questionOrder={questionOrder}
                                                             setQuestionOrder={setQuestionOrder}
@@ -275,10 +274,14 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                 className="mb-1 mb-md-0"
                                                                 color="primary" outline
                                                                 onClick={() => {
-                                                                    setQuestionOrder(previousQuestionOrderStack.pop() || []);
-                                                                    setSelectedQuestions(previousSelectedQuestionsStack.pop() || new Map<string, ContentSummary>());
-                                                                    setRedoQuestionOrderStack([...redoQuestionOrderStack, questionOrder]);
-                                                                    setRedoSelectedQuestionsStack([...redoSelectedQuestionsStack, selectedQuestions]);
+                                                                    const previousQuestionOrder = previousQuestionOrderStack.at(-1) || [];
+                                                                    const previousSelectedQuestions = previousSelectedQuestionsStack.at(-1) || new Map<string, ContentSummary>();
+                                                                    setPreviousQuestionOrderStack(previousQuestionOrderStack.slice(0, -1));
+                                                                    setPreviousSelectedQuestionsStack(previousSelectedQuestionsStack.slice(0, -1));
+                                                                    setQuestionOrder(previousQuestionOrder);
+                                                                    setSelectedQuestions(previousSelectedQuestions);
+                                                                    setRedoQuestionOrderStack(r => [...r, previousQuestionOrder]);
+                                                                    setRedoSelectedQuestionsStack(r => [...r, previousSelectedQuestions]);
                                                                 }}
                                                             >
                                                                 Undo
@@ -308,7 +311,6 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                                 setOriginalQuestionOrder={setQuestionOrder}
                                                                                 previousQuestionOrderStack={previousQuestionOrderStack}
                                                                                 setPreviousQuestionOrderStack={setPreviousQuestionOrderStack}
-                                                                                previousSelectedQuestionsStack={previousSelectedQuestionsStack}
                                                                                 setPreviousSelectedQuestionsStack={setPreviousSelectedQuestionsStack}
                                                                                 resetRedoStacks={resetRedoStacks}
                                                                                 eventLog={eventLog}

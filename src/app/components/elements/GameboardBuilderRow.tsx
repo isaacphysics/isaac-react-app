@@ -28,20 +28,18 @@ interface GameboardBuilderRowInterface {
     question: ContentSummary;
     selectedQuestions: Map<string, ContentSummary>;
     setSelectedQuestions: (m: Map<string, ContentSummary>) => void;
-    previousSelectedQuestionsStack: Array<Map<string, ContentSummary>>;
-    setPreviousSelectedQuestionsStack: (m: Array<Map<string, ContentSummary>>) => void;
+    setPreviousSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
     questionOrder: string[];
     setQuestionOrder: (a: string[]) => void;
     previousQuestionOrderStack: string[][];
-    setPreviousQuestionOrderStack: (a: string[][]) => void;
+    setPreviousQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
     resetRedoStacks: () => void;
     creationContext?: AudienceContext;
 }
 
 const GameboardBuilderRow = (
-    {provided, snapshot, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, 
-        previousQuestionOrderStack, setPreviousQuestionOrderStack, previousSelectedQuestionsStack, 
-        setPreviousSelectedQuestionsStack, resetRedoStacks, creationContext}: GameboardBuilderRowInterface
+    {provided, snapshot, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, previousQuestionOrderStack,
+        setPreviousQuestionOrderStack, setPreviousSelectedQuestionsStack, resetRedoStacks, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useAppDispatch();
 
@@ -97,11 +95,11 @@ const GameboardBuilderRow = (
                         setQuestionOrder(newQuestionOrder);
                         if (provided) {
                             if (previousQuestionOrderStack.length > 9) {
-                                setPreviousQuestionOrderStack(previousQuestionOrderStack.slice(1));
-                                setPreviousSelectedQuestionsStack(previousSelectedQuestionsStack.slice(1));
+                                setPreviousQuestionOrderStack(p => p.slice(1));
+                                setPreviousSelectedQuestionsStack(p => p.slice(1));
                             }
-                            setPreviousQuestionOrderStack([...previousQuestionOrderStack, questionOrder]);
-                            setPreviousSelectedQuestionsStack([...previousSelectedQuestionsStack, selectedQuestions]);
+                            setPreviousQuestionOrderStack(p => [...p, questionOrder]);
+                            setPreviousSelectedQuestionsStack(p => [...p, selectedQuestions]);
                             resetRedoStacks();
                         }
                     }
