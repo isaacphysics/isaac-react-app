@@ -65,6 +65,7 @@ export const RegistrationPasswordInputs = ({
               passwordDebounce(e.target.value, setPasswordFeedback);
             }}
             showToggleIcon={true}
+            required={true}
           />
           {passwordFeedback && (
             <span className="float-right small mt-1">
@@ -89,6 +90,7 @@ export const RegistrationPasswordInputs = ({
               setUserToUpdate({ ...userToUpdate, password: e.target.value });
             }}
             ariaDescribedBy="invalidPassword"
+            required={true}
           />
           {/* Feedback that appears for password match before submission */}
           <FormFeedback id="invalidPassword" className="always-show">

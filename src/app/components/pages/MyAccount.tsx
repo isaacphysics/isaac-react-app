@@ -215,39 +215,60 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
 
     // Form's submission method
     function updateAccount(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        setAttemptedAccountUpdate(true);
-        setSaving(true);
+      event.preventDefault();
+      setAttemptedAccountUpdate(true);
+      setSaving(true);
 
-        let newPreferences = {...myUserPreferences};
+      let newPreferences = { ...myUserPreferences };
 
-        // Only update email preferences on the email preferences tab
-        if (activeTab == ACCOUNT_TAB.emailpreferences) {
-            if (validateEmailPreferences(emailPreferences)) {
-                newPreferences = {...newPreferences, EMAIL_PREFERENCE: {...emailPreferences}};
-            } else {
-                return; // early exit
-            }
+      // Only update email preferences on the email preferences tab
+      if (activeTab == ACCOUNT_TAB.emailpreferences) {
+        if (validateEmailPreferences(emailPreferences)) {
+          newPreferences = {
+            ...newPreferences,
+            EMAIL_PREFERENCE: { ...emailPreferences },
+          };
+        } else {
+          return; // early exit
         }
-        if (userToUpdate.loggedIn &&
-            validateEmail(userToUpdate.email) &&
-            allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
-            (isDobOverThirteen(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
-            (!userToUpdate.password || isNewPasswordConfirmed))
-        {
-            dispatch(updateCurrentUser(
-                userToUpdate,
-                editingOtherUser ? {} : newPreferences,
-                contextsChanged ? userContextsToUpdate : undefined,
-                currentPassword,
-                user,
-                true
-            )).then(() => setSaving(false)).catch(() => setSaving(false));
-            return;
-        } else if (activeTab == ACCOUNT_TAB.emailpreferences || ACCOUNT_TAB.passwordreset) {
-            dispatch(showErrorToast("Account update failed", "Please make sure that all required fields in the \"Profile\" tab have been filled in."));
-        }
-        setSaving(false);
+      }
+      if (
+        userToUpdate.loggedIn &&
+        validateEmail(userToUpdate.email) &&
+        allRequiredInformationIsPresent(
+          userToUpdate,
+          { ...newPreferences, EMAIL_PREFERENCE: null },
+          userContextsToUpdate
+        ) &&
+        (isDobOverThirteen(userToUpdate.dateOfBirth) ||
+          !isDefined(userToUpdate.dateOfBirth)) &&
+        (!userToUpdate.password || isNewPasswordConfirmed)
+      ) {
+        dispatch(
+          updateCurrentUser(
+            userToUpdate,
+            editingOtherUser ? {} : newPreferences,
+            contextsChanged ? userContextsToUpdate : undefined,
+            currentPassword,
+            user,
+            true
+          )
+        )
+          .then(() => setSaving(false))
+          .catch(() => setSaving(false));
+        return;
+      } else if (
+        activeTab == ACCOUNT_TAB.emailpreferences ||
+        ACCOUNT_TAB.passwordreset
+      ) {
+        dispatch(
+          showErrorToast(
+            "Account update failed",
+            'Please make sure that all required fields in the "Profile" tab have been filled in.'
+          )
+        );
+      }
+      setSaving(false);
     }
 
     // Changing tab clears the email preferences - stops the user from modifying them when not explicitly on the

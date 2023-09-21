@@ -168,37 +168,57 @@ interface EmailPasswordInputsProps {
 }
 export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPassword, logInAttempted, passwordResetAttempted, errorMessage, displayLabels = true}: EmailPasswordInputsProps) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-    return <>
+    return (
+      <>
         <FormGroup>
-            {displayLabels && <Label htmlFor="email-input">Email address</Label>}
-            <Input
-                id="email-input" autoComplete="email" type="email" name="email"
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
-                invalid={!!errorMessage || (!validEmail && (logInAttempted || passwordResetAttempted))}
-                aria-describedby="emailValidationMessage"
-                required
-            />
-            <FormFeedback id="emailValidationMessage">
-                {!validEmail && "Please enter a valid email address"}
-            </FormFeedback>
+          {displayLabels && <Label htmlFor="email-input">Email address</Label>}
+          <Input
+            id="email-input"
+            autoComplete="email"
+            type="email"
+            name="email"
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setEmail(event.target.value)
+            }
+            invalid={
+              !!errorMessage ||
+              (!validEmail && (logInAttempted || passwordResetAttempted))
+            }
+            aria-describedby="emailValidationMessage"
+            required
+          />
+          <FormFeedback id="emailValidationMessage">
+            {!validEmail && "Please enter a valid email address"}
+          </FormFeedback>
         </FormGroup>
 
         <FormGroup className="mb-0">
-            {displayLabels && (<><Label htmlFor="current-password">Password</Label>
-            <span id={`password-help-tooltip`} className="icon-help ml-1" />
-            <UncontrolledTooltip target={`password-help-tooltip`} placement="bottom">
-            {PASSWORD_REQUIREMENTS}
-            </UncontrolledTooltip></>)}
-            <Password
-                passwordFieldType="Current"
-                isPasswordVisible={isPasswordVisible}
-                setIsPasswordVisible={setIsPasswordVisible} 
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
-                invalid={!!errorMessage || (!validPassword && (logInAttempted))}
-                showToggleIcon={true}
-            />
+          {displayLabels && (
+            <>
+              <Label htmlFor="current-password">Password</Label>
+              <span id={`password-help-tooltip`} className="icon-help ml-1" />
+              <UncontrolledTooltip
+                target={`password-help-tooltip`}
+                placement="bottom"
+              >
+                {PASSWORD_REQUIREMENTS}
+              </UncontrolledTooltip>
+            </>
+          )}
+          <Password
+            passwordFieldType="Current"
+            isPasswordVisible={isPasswordVisible}
+            setIsPasswordVisible={setIsPasswordVisible}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setPassword(event.target.value)
+            }
+            invalid={!!errorMessage || (!validPassword && logInAttempted)}
+            showToggleIcon={true}
+            required={true}
+          />
         </FormGroup>
-    </>;
+      </>
+    );
 }
 
 // Main login page component, utilises all of the components defined above

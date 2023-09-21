@@ -13,6 +13,7 @@ export interface PasswordProps {
   showToggleIcon?: boolean;
   defaultValue?: string;
   ariaDescribedBy?: string;
+  required?: boolean;
 }
 
 const Password: React.FC<PasswordProps> = (props) => {
@@ -28,6 +29,7 @@ const Password: React.FC<PasswordProps> = (props) => {
     showToggleIcon,
     defaultValue,
     ariaDescribedBy,
+    required,
   } = props;
 
   const eyeSlashIcon = (
@@ -83,7 +85,7 @@ const Password: React.FC<PasswordProps> = (props) => {
         id={name}
         type={type}
         name={name}
-        required
+        required={required}
         autoComplete={autoComplete}
         disabled={disabled}
         invalid={invalid}
