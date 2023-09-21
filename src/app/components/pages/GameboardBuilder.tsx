@@ -19,6 +19,7 @@ import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {
     convertContentSummaryToGameboardItem,
     EXAM_BOARD,
+    GAMEBOARD_UNDO_STACK_SIZE_LIMIT,
     getValue,
     history,
     isAda,
@@ -39,13 +40,56 @@ import {useLocation} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import intersection from "lodash/intersection";
-import {ContentSummary} from "../../../IsaacAppTypes";
+import {ContentSummary, GameboardBuilderQuestionsStackProps} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
 import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
+
+class GameboardBuilderQuestionsStack {
+    questionOrderStack: string[][];
+    setQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
+    setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
+    selectedQuestionsStack: Map<string, ContentSummary>[];
+
+    constructor(props: {questionOrderStack: string[][];
+            setQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
+            selectedQuestionsStack: Map<string, ContentSummary>[];
+            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>}) {
+        this.questionOrderStack = props.questionOrderStack;
+        this.setQuestionOrderStack = props.setQuestionOrderStack;
+        this.selectedQuestionsStack = props.selectedQuestionsStack;
+        this.setSelectedQuestionsStack = props.setSelectedQuestionsStack;
+    }
+    
+    public push({questionOrder, selectedQuestions} : {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>}) {
+        if (this.questionOrderStack.length >= GAMEBOARD_UNDO_STACK_SIZE_LIMIT) {
+            this.setSelectedQuestionsStack(p => p.slice(1));
+            this.setQuestionOrderStack(p => p.slice(1));
+        }
+        this.setQuestionOrderStack(p => [...p, questionOrder]);
+        this.setSelectedQuestionsStack(p => [...p, selectedQuestions]);
+    }
+
+    public pop() {
+        const questionOrder = this.questionOrderStack.at(-1) || [];
+        const selectedQuestions = this.selectedQuestionsStack.at(-1) || new Map<string, ContentSummary>();
+        this.setQuestionOrderStack(this.questionOrderStack.slice(0, -1));
+        this.setSelectedQuestionsStack(this.selectedQuestionsStack.slice(0, -1));
+        return {questionOrder, selectedQuestions};
+    }
+
+    public get length() {
+        return this.questionOrderStack.length;
+    }
+
+    public clear() {
+        this.setQuestionOrderStack([]);
+        this.setSelectedQuestionsStack([]);
+    }
+}
 
 const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const {search} = useLocation();
@@ -154,10 +198,19 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setTimeout(() => sentinel.current?.scrollIntoView(), 50);
     };
 
-    const resetRedoStacks = () => {
-        setRedoQuestionOrderStack([]); 
-        setRedoSelectedQuestionsStack([]);
-    };
+    const undoStack : GameboardBuilderQuestionsStackProps = new GameboardBuilderQuestionsStack({
+        questionOrderStack: previousQuestionOrderStack, 
+        setQuestionOrderStack: setPreviousQuestionOrderStack, 
+        selectedQuestionsStack: previousSelectedQuestionsStack,
+        setSelectedQuestionsStack: setPreviousSelectedQuestionsStack
+    });
+    const currentQuestions = {questionOrder, setQuestionOrder, selectedQuestions, setSelectedQuestions};
+    const redoStack : GameboardBuilderQuestionsStackProps = new GameboardBuilderQuestionsStack({
+        questionOrderStack: redoQuestionOrderStack, 
+        setQuestionOrderStack: setRedoQuestionOrderStack, 
+        selectedQuestionsStack: redoSelectedQuestionsStack,
+        setSelectedQuestionsStack: setRedoSelectedQuestionsStack
+    });
 
     return <Container id="gameboard-builder" fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
         <div ref={sentinel}/>
@@ -252,14 +305,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                             provided={provided}
                                                             snapshot={snapshot}
                                                             key={`gameboard-builder-row-${question.id}`}
-                                                            question={question} selectedQuestions={selectedQuestions}
-                                                            setSelectedQuestions={setSelectedQuestions}
-                                                            setPreviousSelectedQuestionsStack={setPreviousSelectedQuestionsStack}
-                                                            questionOrder={questionOrder}
-                                                            setQuestionOrder={setQuestionOrder}
-                                                            previousQuestionOrderStack={previousQuestionOrderStack}
-                                                            setPreviousQuestionOrderStack={setPreviousQuestionOrderStack}
-                                                            resetRedoStacks={resetRedoStacks}
+                                                            question={question}
+                                                            currentQuestions={currentQuestions}
+                                                            undoStack={undoStack}
+                                                            redoStack={redoStack}
                                                             creationContext={question.creationContext}
                                                         />)}
                                                 </Draggable>
@@ -270,18 +319,14 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                 <div className="img-center">
                                                     <div className="row w-100">
                                                         <div className="col-md-3 d-flex justify-content-center justify-content-md-start">
-                                                            {previousQuestionOrderStack.length > 0 && <Button
+                                                            {undoStack.length > 0 && <Button
                                                                 className="mb-1 mb-md-0"
                                                                 color="primary" outline
                                                                 onClick={() => {
-                                                                    const previousQuestionOrder = previousQuestionOrderStack.at(-1) || [];
-                                                                    const previousSelectedQuestions = previousSelectedQuestionsStack.at(-1) || new Map<string, ContentSummary>();
-                                                                    setPreviousQuestionOrderStack(previousQuestionOrderStack.slice(0, -1));
-                                                                    setPreviousSelectedQuestionsStack(previousSelectedQuestionsStack.slice(0, -1));
-                                                                    setQuestionOrder(previousQuestionOrder);
-                                                                    setSelectedQuestions(previousSelectedQuestions);
-                                                                    setRedoQuestionOrderStack(r => [...r, previousQuestionOrder]);
-                                                                    setRedoSelectedQuestionsStack(r => [...r, previousSelectedQuestions]);
+                                                                    const newQuestion = undoStack.pop();
+                                                                    redoStack.push(currentQuestions);
+                                                                    currentQuestions.setQuestionOrder(newQuestion.questionOrder);
+                                                                    currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
                                                                 }}
                                                             >
                                                                 Undo
@@ -305,14 +350,9 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                             size: "xl",
                                                                             title: "Search questions",
                                                                             body: <QuestionSearchModal
-                                                                                originalSelectedQuestions={selectedQuestions}
-                                                                                setOriginalSelectedQuestions={setSelectedQuestions}
-                                                                                originalQuestionOrder={questionOrder}
-                                                                                setOriginalQuestionOrder={setQuestionOrder}
-                                                                                previousQuestionOrderStack={previousQuestionOrderStack}
-                                                                                setPreviousQuestionOrderStack={setPreviousQuestionOrderStack}
-                                                                                setPreviousSelectedQuestionsStack={setPreviousSelectedQuestionsStack}
-                                                                                resetRedoStacks={resetRedoStacks}
+                                                                                currentQuestions={currentQuestions}
+                                                                                undoStack={undoStack}
+                                                                                redoStack={redoStack}
                                                                                 eventLog={eventLog}
                                                                             />
                                                                         }))
@@ -324,14 +364,14 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                             </ShowLoading>
                                                         </div>
                                                         <div className="col-md-3 d-flex justify-content-center justify-content-md-start">
-                                                            {redoQuestionOrderStack.length > 0 && <Button
+                                                            {redoStack.length > 0 && <Button
                                                                 className="mb-1 mb-md-0"
                                                                 color="primary" outline
                                                                 onClick={() => {
-                                                                    setQuestionOrder(redoQuestionOrderStack.pop() || []);
-                                                                    setSelectedQuestions(redoSelectedQuestionsStack.pop() || new Map<string, ContentSummary>());
-                                                                    setPreviousQuestionOrderStack([...previousQuestionOrderStack, questionOrder]);
-                                                                    setPreviousSelectedQuestionsStack([...previousSelectedQuestionsStack, selectedQuestions]);
+                                                                    const newQuestion = redoStack.pop();
+                                                                    undoStack.push(currentQuestions);
+                                                                    currentQuestions.setQuestionOrder(newQuestion.questionOrder);
+                                                                    currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
                                                                 }}
                                                             >
                                                                 Redo

@@ -651,6 +651,20 @@ export interface PageSettings {
     assignmentOrder?: AssignmentOrderSpec;
 }
 
+export interface GameboardBuilderQuestions {
+    questionOrder: string[];
+    setQuestionOrder: React.Dispatch<React.SetStateAction<string[]>>;
+    selectedQuestions: Map<string, ContentSummary>;
+    setSelectedQuestions: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>>>
+}
+
+export interface GameboardBuilderQuestionsStackProps {
+    push: ({questionOrder, selectedQuestions} : {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>}) => void;
+    pop: () => {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>};
+    length: number;
+    clear: () => void;
+};
+
 export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
     groupName: string;
 }

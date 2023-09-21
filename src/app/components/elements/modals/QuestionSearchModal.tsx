@@ -33,7 +33,7 @@ import {
     useUserContext,
     GAMEBOARD_UNDO_STACK_SIZE_LIMIT
 } from "../../../services";
-import {ContentSummary} from "../../../../IsaacAppTypes";
+import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {Loading} from "../../handlers/IsaacSpinner";
@@ -49,20 +49,13 @@ const selectStyle = {
 }
 
 interface QuestionSearchModalProps {
-    originalSelectedQuestions: Map<string, ContentSummary>;
-    setOriginalSelectedQuestions: (m: Map<string, ContentSummary>) => void;
-    originalQuestionOrder: string[];
-    setOriginalQuestionOrder: (a: string[]) => void;
-    previousQuestionOrderStack: string[][];
-    setPreviousQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
-    setPreviousSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
-    resetRedoStacks: () => void;
+    currentQuestions: GameboardBuilderQuestions;
+    undoStack: GameboardBuilderQuestionsStackProps;
+    redoStack: GameboardBuilderQuestionsStackProps;
     eventLog: object[];
 }
 export const QuestionSearchModal = (
-    {originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, 
-    setOriginalQuestionOrder, previousQuestionOrderStack, setPreviousQuestionOrderStack, 
-    setPreviousSelectedQuestionsStack, resetRedoStacks, eventLog}: QuestionSearchModalProps) => {
+    {currentQuestions, undoStack, redoStack, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
 
@@ -87,8 +80,10 @@ export const QuestionSearchModal = (
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
 
     const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({});
-    const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
-    const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
+    const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(currentQuestions.selectedQuestions));
+    const [questionOrder, setQuestionOrder] = useState([...currentQuestions.questionOrder]);
+
+    const modalQuestions : GameboardBuilderQuestions = {selectedQuestions, questionOrder, setSelectedQuestions, setQuestionOrder}
 
     const questions = useAppSelector((state: AppState) => state && state.questionSearchResult);
     const user = useAppSelector((state: AppState) => state && state.user);
@@ -164,18 +159,13 @@ export const QuestionSearchModal = (
             <RS.Input
                 type="button"
                 value={siteSpecific("Add Selections to Gameboard", "Add selections to quiz")}
-                disabled={isEqual(new Set(originalSelectedQuestions.keys()), new Set(selectedQuestions.keys()))}
+                disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
                 className={"btn btn-block btn-secondary border-0"}
                 onClick={() => {
-                    if (previousQuestionOrderStack.length >= GAMEBOARD_UNDO_STACK_SIZE_LIMIT) {
-                        setPreviousQuestionOrderStack(p => p.slice(1));
-                        setPreviousSelectedQuestionsStack(p => p.slice(1));
-                    }
-                    setPreviousSelectedQuestionsStack(p => [...p, originalSelectedQuestions]);
-                    setPreviousQuestionOrderStack(p => [...p, originalQuestionOrder]);
-                    setOriginalSelectedQuestions(selectedQuestions);
-                    setOriginalQuestionOrder(questionOrder);
-                    resetRedoStacks();
+                    undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
+                    currentQuestions.setSelectedQuestions(modalQuestions.selectedQuestions);
+                    currentQuestions.setQuestionOrder(modalQuestions.questionOrder);
+                    redoStack.clear();
                     dispatch(closeActiveModal());
                 }}
             />
@@ -279,13 +269,11 @@ export const QuestionSearchModal = (
                 <tbody>
                     {sortedQuestions?.map(question =>
                         <GameboardBuilderRow
-                            key={`question-search-modal-row-${question.id}`} question={question}
-                            selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
-                            setPreviousSelectedQuestionsStack={setPreviousSelectedQuestionsStack} 
-                            previousQuestionOrderStack={previousQuestionOrderStack}
-                            setPreviousQuestionOrderStack={setPreviousQuestionOrderStack} 
-                            questionOrder={questionOrder} setQuestionOrder={setQuestionOrder} 
-                            resetRedoStacks={resetRedoStacks}
+                            key={`question-search-modal-row-${question.id}`} 
+                            question={question}
+                            currentQuestions={modalQuestions}
+                            undoStack={undoStack}
+                            redoStack={redoStack}
                             creationContext={creationContext}
                         />
                     )}
