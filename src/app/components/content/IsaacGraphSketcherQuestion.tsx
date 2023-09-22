@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef, useCallback} from "react";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher";
-import {useCurrentQuestionAttempt} from "../../services";
+import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {selectors, useAppSelector} from "../../state";
@@ -53,7 +53,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
 
         return () => {
             window.removeEventListener('keyup', handleKeyPress);
-        }
+        };
     }, []);
 
     useEffect(function setupPreviewSketch() {
@@ -71,7 +71,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 }
             }
             p.remove();
-        }
+        };
     }, []);
 
     useEffect(() => {
@@ -102,6 +102,9 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             initialState={initialState}
             question={doc}
         />}
-    </div>
+        <div className="question-content d-flex justify-content-center d-print-none">
+            <div><i>{isDefined(currentAttempt?.value) ? "Click on the grid to edit your sketch." : "Click on the grid to start your sketch."}</i></div>
+        </div>
+    </div>;
 };
 export default IsaacGraphSketcherQuestion;
