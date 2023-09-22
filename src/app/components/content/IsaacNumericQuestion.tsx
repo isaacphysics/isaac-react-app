@@ -1,4 +1,4 @@
-import React, {FormEvent, useMemo, useState} from "react";
+import React, {ChangeEvent, FormEvent, useMemo, useRef, useState} from "react";
 import {AppState, useAppSelector, useGetConstantUnitsQuery} from "../../state";
 import Rand from 'rand-seed';
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -17,7 +17,7 @@ import {
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {isAda, siteSpecific, useCurrentQuestionAttempt} from "../../services";
+import {isAda, isDefined, siteSpecific, useCurrentQuestionAttempt} from "../../services";
 import {v4 as uuid_v4} from 'uuid';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
@@ -123,6 +123,46 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
         dispatchSetCurrentAttempt(attempt);
     }
 
+    const [errors, setErrors] = useState<string[]>();
+    const debounceTimer = useRef<number|null>(null);
+
+    const checkEquationForErrors = (e: ChangeEvent<HTMLInputElement>) => {
+        const userInput = e.target.value;
+
+        // Parse that thing
+        if (debounceTimer.current) {
+            window.clearTimeout(debounceTimer.current);
+            debounceTimer.current = null;
+        }
+        debounceTimer.current = window.setTimeout(() => {
+            const regexStr = "[^ 0-9A-Za-z,.+*/×÷-]+";
+            const badCharacters = new RegExp(regexStr);
+            const operatorExpression = new RegExp(".*[0-9][+*/×÷-]\\.?[0-9]+$");
+            const _errors = [];
+
+            if (badCharacters.test(userInput)) {
+                const usedBadChars: string[] = []; 
+                for(let i = 0; i < userInput.length; i++) {
+                    const char = userInput.charAt(i);
+                    if (badCharacters.test(char)) {
+                        if (!usedBadChars.includes(char)) {
+                            usedBadChars.push(char === ' ' ? 'space' : char);
+                        }
+                    }
+                }
+                _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+            }
+            if (operatorExpression.test(userInput)) {
+                _errors.push('Simplify your answer into a single decimal number.');
+            }
+            if (/.*?[0-9][, ][0-9]{3}.*?/.test(userInput)) {
+                _errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
+            }
+
+            setErrors(_errors);
+        }, 250);
+    };
+
     const [isOpen, setIsOpen] = useState(false);
 
     const helpTooltipId = useMemo(() => `numeric-input-help-${uuid_v4()}`, []);
@@ -143,7 +183,9 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                             Value <br />
                             <InputGroup className={"feedback-zone nq-feedback separate-input-group"}>
                                 <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
-                                       onChange={updateValue} readOnly={readonly}
+                                    onChange={e => {
+                                        updateValue(e); checkEquationForErrors(e);
+                                    }} readOnly={readonly}
                                 />
                                 {currentAttemptValueWrong && <div className={"feedback-box"}>
                                     <span className={"feedback incorrect"}><b>!</b></span>
@@ -197,6 +239,11 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     </div>}
                 </Col>
             </Row>
+            {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && 
+                <div className="question-feedback-input-errors"><strong>Careful!</strong><ul>
+                    {errors.map(e => (<li key={e}>{e}</li>))}
+                </ul></div>
+            }
         </div>
     );
 };
