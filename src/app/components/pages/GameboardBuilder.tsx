@@ -311,16 +311,16 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                             redoStack={redoStack}
                                                             creationContext={question.creationContext}
                                                         />)}
-                                                </Draggable>
+                                                </Draggable>;
                                         })}
                                         {provided.placeholder}
                                         <tr>
                                             <td colSpan={20}>
                                                 <div className="img-center">
-                                                    <div className="row w-100">
-                                                        <div className="col-md-3 d-flex justify-content-center justify-content-md-start">
+                                                    <div className="row w-100 justify-content-center">
+                                                        <div className={`${undoStack.length > 0 ? 'pl-1 pb-1' : ''} p-0 col-auto col-md-3 d-flex justify-content-center justify-content-md-start`}>
                                                             {undoStack.length > 0 && <Button
-                                                                className="mb-1 mb-md-0"
+                                                                className="btn-sm mb-1 mb-md-1 mt-md-1"
                                                                 color="primary" outline
                                                                 onClick={() => {
                                                                     const newQuestion = undoStack.pop();
@@ -332,7 +332,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                 Undo
                                                             </Button>}
                                                         </div>
-                                                        <div className="col-md-6 d-flex justify-content-center">
+                                                        <div className="col-md-6 d-flex justify-content-center order-2 order-md-1" >
                                                             <ShowLoading
                                                                 placeholder={<div className="text-center"><IsaacSpinner/></div>}
                                                                 until={!baseGameboardId || baseGameboard}
@@ -355,7 +355,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                                 redoStack={redoStack}
                                                                                 eventLog={eventLog}
                                                                             />
-                                                                        }))
+                                                                        }));
                                                                     }}
                                                                 >
                                                                     {siteSpecific("Add Questions", "Add questions")}
@@ -363,9 +363,9 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                 </Button>
                                                             </ShowLoading>
                                                         </div>
-                                                        <div className="col-md-3 d-flex justify-content-center justify-content-md-start">
+                                                        <div className={`${redoStack.length > 0 ? 'pl-1 pb-1' : ''} p-0 col-auto col-md-3 d-flex justify-content-center justify-content-md-end order-1 order-md-2`}>
                                                             {redoStack.length > 0 && <Button
-                                                                className="mb-1 mb-md-0"
+                                                                className="btn-sm mb-1 mb-md-1 mt-md-1"
                                                                 color="primary" outline
                                                                 onClick={() => {
                                                                     const newQuestion = redoStack.pop();
@@ -382,7 +382,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                             </td>
                                         </tr>
                                         </tbody>
-                                    )
+                                    );
                                 }}
                             </Droppable>
                         </Table>
