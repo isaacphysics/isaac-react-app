@@ -11,8 +11,7 @@ import {
     siteSpecific,
     stageLabelMap,
     TAG_ID,
-    TAG_LEVEL,
-    GAMEBOARD_UNDO_STACK_SIZE_LIMIT
+    TAG_LEVEL
 } from "../../services";
 import React from "react";
 import {AudienceContext} from "../../../IsaacApiTypes";

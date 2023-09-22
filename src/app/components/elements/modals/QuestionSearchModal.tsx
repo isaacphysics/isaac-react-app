@@ -30,8 +30,7 @@ import {
     SortOrder,
     sortQuestions,
     STAGE,
-    useUserContext,
-    GAMEBOARD_UNDO_STACK_SIZE_LIMIT
+    useUserContext
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -83,7 +82,7 @@ export const QuestionSearchModal = (
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(currentQuestions.selectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...currentQuestions.questionOrder]);
 
-    const modalQuestions : GameboardBuilderQuestions = {selectedQuestions, questionOrder, setSelectedQuestions, setQuestionOrder}
+    const modalQuestions : GameboardBuilderQuestions = {selectedQuestions, questionOrder, setSelectedQuestions, setQuestionOrder};
 
     const questions = useAppSelector((state: AppState) => state && state.questionSearchResult);
     const user = useAppSelector((state: AppState) => state && state.user);
