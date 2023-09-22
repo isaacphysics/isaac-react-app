@@ -18,7 +18,7 @@ import {AudienceContext} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal, useAppDispatch} from "../../state";
 import {DraggableProvided, DraggableStateSnapshot} from "react-beautiful-dnd";
 import {Question} from "../pages/Question";
-import {ContentSummary} from "../../../IsaacAppTypes";
+import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 
@@ -26,15 +26,14 @@ interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
     snapshot?: DraggableStateSnapshot;
     question: ContentSummary;
-    selectedQuestions: Map<string, ContentSummary>;
-    setSelectedQuestions: (m: Map<string, ContentSummary>) => void;
-    questionOrder: string[];
-    setQuestionOrder: (a: string[]) => void;
+    currentQuestions: GameboardBuilderQuestions;
+    undoStack: GameboardBuilderQuestionsStackProps;
+    redoStack: GameboardBuilderQuestionsStackProps;
     creationContext?: AudienceContext;
 }
 
 const GameboardBuilderRow = (
-    {provided, snapshot, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, creationContext}: GameboardBuilderRowInterface
+    {provided, snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useAppDispatch();
 
@@ -59,7 +58,7 @@ const GameboardBuilderRow = (
     );
 
     const cellClasses = "text-left align-middle";
-    const isSelected = question.id !== undefined && selectedQuestions.has(question.id);
+    const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
 
     return <tr
         key={question.id} ref={provided && provided.innerRef}
@@ -77,8 +76,8 @@ const GameboardBuilderRow = (
                 checked={isSelected}
                 onChange={() => {
                     if (question.id) {
-                        const newSelectedQuestions = new Map(selectedQuestions);
-                        const newQuestionOrder = [...questionOrder];
+                        const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
+                        const newQuestionOrder = [...currentQuestions.questionOrder];
                         if (newSelectedQuestions.has(question.id)) {
                             newSelectedQuestions.delete(question.id);
                             newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
@@ -86,8 +85,12 @@ const GameboardBuilderRow = (
                             newSelectedQuestions.set(question.id, {...question, creationContext});
                             newQuestionOrder.push(question.id);
                         }
-                        setSelectedQuestions(newSelectedQuestions);
-                        setQuestionOrder(newQuestionOrder);
+                        currentQuestions.setSelectedQuestions(newSelectedQuestions);
+                        currentQuestions.setQuestionOrder(newQuestionOrder);
+                        if (provided) {
+                            undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
+                            redoStack.clear();
+                        }
                     }
                 }}
             />

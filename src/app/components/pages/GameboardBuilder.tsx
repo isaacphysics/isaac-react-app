@@ -19,6 +19,7 @@ import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {
     convertContentSummaryToGameboardItem,
     EXAM_BOARD,
+    GAMEBOARD_UNDO_STACK_SIZE_LIMIT,
     getValue,
     history,
     isAda,
@@ -39,13 +40,56 @@ import {useLocation} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import intersection from "lodash/intersection";
-import {ContentSummary} from "../../../IsaacAppTypes";
+import {ContentSummary, GameboardBuilderQuestionsStackProps} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
 import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
+
+class GameboardBuilderQuestionsStack {
+    questionOrderStack: string[][];
+    setQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
+    setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
+    selectedQuestionsStack: Map<string, ContentSummary>[];
+
+    constructor(props: {questionOrderStack: string[][];
+            setQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
+            selectedQuestionsStack: Map<string, ContentSummary>[];
+            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>}) {
+        this.questionOrderStack = props.questionOrderStack;
+        this.setQuestionOrderStack = props.setQuestionOrderStack;
+        this.selectedQuestionsStack = props.selectedQuestionsStack;
+        this.setSelectedQuestionsStack = props.setSelectedQuestionsStack;
+    }
+    
+    public push({questionOrder, selectedQuestions} : {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>}) {
+        if (this.questionOrderStack.length >= GAMEBOARD_UNDO_STACK_SIZE_LIMIT) {
+            this.setSelectedQuestionsStack(p => p.slice(1));
+            this.setQuestionOrderStack(p => p.slice(1));
+        }
+        this.setQuestionOrderStack(p => [...p, questionOrder]);
+        this.setSelectedQuestionsStack(p => [...p, selectedQuestions]);
+    }
+
+    public pop() {
+        const questionOrder = this.questionOrderStack.at(-1) || [];
+        const selectedQuestions = this.selectedQuestionsStack.at(-1) || new Map<string, ContentSummary>();
+        this.setQuestionOrderStack(this.questionOrderStack.slice(0, -1));
+        this.setSelectedQuestionsStack(this.selectedQuestionsStack.slice(0, -1));
+        return {questionOrder, selectedQuestions};
+    }
+
+    public get length() {
+        return this.questionOrderStack.length;
+    }
+
+    public clear() {
+        this.setQuestionOrderStack([]);
+        this.setSelectedQuestionsStack([]);
+    }
+}
 
 const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const {search} = useLocation();
@@ -64,7 +108,11 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const [gameboardTags, setGameboardTags] = useState<Item<string>[]>([]);
     const [gameboardURL, setGameboardURL] = useState<string>();
     const [questionOrder, setQuestionOrder] = useState<string[]>([]);
+    const [previousQuestionOrderStack, setPreviousQuestionOrderStack] = useState<string[][]>([]);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummary>());
+    const [previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
+    const [redoQuestionOrderStack, setRedoQuestionOrderStack] = useState<string[][]>([]);
+    const [redoSelectedQuestionsStack, setRedoSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
@@ -149,6 +197,20 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         }
         setTimeout(() => sentinel.current?.scrollIntoView(), 50);
     };
+
+    const undoStack : GameboardBuilderQuestionsStackProps = new GameboardBuilderQuestionsStack({
+        questionOrderStack: previousQuestionOrderStack, 
+        setQuestionOrderStack: setPreviousQuestionOrderStack, 
+        selectedQuestionsStack: previousSelectedQuestionsStack,
+        setSelectedQuestionsStack: setPreviousSelectedQuestionsStack
+    });
+    const currentQuestions = {questionOrder, setQuestionOrder, selectedQuestions, setSelectedQuestions};
+    const redoStack : GameboardBuilderQuestionsStackProps = new GameboardBuilderQuestionsStack({
+        questionOrderStack: redoQuestionOrderStack, 
+        setQuestionOrderStack: setRedoQuestionOrderStack, 
+        selectedQuestionsStack: redoSelectedQuestionsStack,
+        setSelectedQuestionsStack: setRedoSelectedQuestionsStack
+    });
 
     return <Container id="gameboard-builder" fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
         <div ref={sentinel}/>
@@ -243,53 +305,84 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                             provided={provided}
                                                             snapshot={snapshot}
                                                             key={`gameboard-builder-row-${question.id}`}
-                                                            question={question} selectedQuestions={selectedQuestions}
-                                                            setSelectedQuestions={setSelectedQuestions}
-                                                            questionOrder={questionOrder}
-                                                            setQuestionOrder={setQuestionOrder}
+                                                            question={question}
+                                                            currentQuestions={currentQuestions}
+                                                            undoStack={undoStack}
+                                                            redoStack={redoStack}
                                                             creationContext={question.creationContext}
                                                         />)}
-                                                </Draggable>
+                                                </Draggable>;
                                         })}
                                         {provided.placeholder}
                                         <tr>
                                             <td colSpan={20}>
                                                 <div className="img-center">
-                                                    <ShowLoading
-                                                        placeholder={<div className="text-center"><IsaacSpinner/></div>}
-                                                        until={!baseGameboardId || baseGameboard}
-                                                    >
-                                                        <Button
-                                                            className="plus-button"
-                                                            color="primary" outline
-                                                            onClick={() => {
-                                                                logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                                                dispatch(openActiveModal({
-                                                                    closeAction: () => {
-                                                                        dispatch(closeActiveModal())
-                                                                    },
-                                                                    closeLabelOverride: "Cancel",
-                                                                    size: "xl",
-                                                                    title: "Search questions",
-                                                                    body: <QuestionSearchModal
-                                                                        originalSelectedQuestions={selectedQuestions}
-                                                                        setOriginalSelectedQuestions={setSelectedQuestions}
-                                                                        originalQuestionOrder={questionOrder}
-                                                                        setOriginalQuestionOrder={setQuestionOrder}
-                                                                        eventLog={eventLog}
-                                                                    />
-                                                                }))
-                                                            }}
-                                                        >
-                                                            {siteSpecific("Add Questions", "Add questions")}
-                                                            {isAda && <img className={"plus-icon"} src={"/assets/cs/icons/add-circle-outline-pink.svg"}/>}
-                                                        </Button>
-                                                    </ShowLoading>
+                                                    <div className="row w-100 justify-content-center">
+                                                        <div className={`${undoStack.length > 0 ? 'pl-1 pb-1' : ''} p-0 col-auto col-md-3 d-flex justify-content-center justify-content-md-start`}>
+                                                            {undoStack.length > 0 && <Button
+                                                                className="btn-sm mb-1 mb-md-1 mt-md-1"
+                                                                color="primary" outline
+                                                                onClick={() => {
+                                                                    const newQuestion = undoStack.pop();
+                                                                    redoStack.push(currentQuestions);
+                                                                    currentQuestions.setQuestionOrder(newQuestion.questionOrder);
+                                                                    currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
+                                                                }}
+                                                            >
+                                                                Undo
+                                                            </Button>}
+                                                        </div>
+                                                        <div className="col-md-6 d-flex justify-content-center order-2 order-md-1" >
+                                                            <ShowLoading
+                                                                placeholder={<div className="text-center"><IsaacSpinner/></div>}
+                                                                until={!baseGameboardId || baseGameboard}
+                                                            >
+                                                                <Button
+                                                                    className="plus-button"
+                                                                    color="primary" outline
+                                                                    onClick={() => {
+                                                                        logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
+                                                                        dispatch(openActiveModal({
+                                                                            closeAction: () => {
+                                                                                dispatch(closeActiveModal())
+                                                                            },
+                                                                            closeLabelOverride: "Cancel",
+                                                                            size: "xl",
+                                                                            title: "Search questions",
+                                                                            body: <QuestionSearchModal
+                                                                                currentQuestions={currentQuestions}
+                                                                                undoStack={undoStack}
+                                                                                redoStack={redoStack}
+                                                                                eventLog={eventLog}
+                                                                            />
+                                                                        }));
+                                                                    }}
+                                                                >
+                                                                    {siteSpecific("Add Questions", "Add questions")}
+                                                                    {isAda && <img className={"plus-icon"} src={"/assets/cs/icons/add-circle-outline-pink.svg"}/>}
+                                                                </Button>
+                                                            </ShowLoading>
+                                                        </div>
+                                                        <div className={`${redoStack.length > 0 ? 'pl-1 pb-1' : ''} p-0 col-auto col-md-3 d-flex justify-content-center justify-content-md-end order-1 order-md-2`}>
+                                                            {redoStack.length > 0 && <Button
+                                                                className="btn-sm mb-1 mb-md-1 mt-md-1"
+                                                                color="primary" outline
+                                                                onClick={() => {
+                                                                    const newQuestion = redoStack.pop();
+                                                                    undoStack.push(currentQuestions);
+                                                                    currentQuestions.setQuestionOrder(newQuestion.questionOrder);
+                                                                    currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
+                                                                }}
+                                                            >
+                                                                Redo
+                                                            </Button>}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
                                         </tbody>
-                                    )
+                                    );
                                 }}
                             </Droppable>
                         </Table>
