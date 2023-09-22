@@ -13,6 +13,7 @@
 // Greyscale
 $cs-black: #000000;
 $cs-jet: #333333;
+$cs-muted-grey: #595959; // minimum contrast ratio for grey WCAG AAA normal text
 $cs-dark-silver: #B9B9B9;
 $cs-silver: #C2C2C2;
 $cs-light-gray: #D6D6D6;
@@ -232,7 +233,7 @@ $question-padding: 3rem;
 $question-font-size: 1rem;
 $question-font-weight: 400;
 
-$text-muted: $cs-dark-silver;
+$text-muted: $cs-muted-grey;
 
 
 // Colour Overrides
