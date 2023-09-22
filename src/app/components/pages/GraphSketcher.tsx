@@ -89,9 +89,6 @@ const GraphSketcherPage = () => {
                     <div className="graph-sketcher-question">
                         <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role="button" tabIndex={0}>
                             <div ref={previewRef} className={`graph-sketcher-preview`} />
-                            {!isDefined(currentAttempt?.value) && <div className="graph-sketcher-preview-overlay">
-                                <div className="graph-sketcher-preview-overlay-text">Click here to sketch</div>
-                            </div>}
                         </div>
                         {modalVisible && <GraphSketcherModal
                             user={user}
@@ -103,6 +100,9 @@ const GraphSketcherPage = () => {
                     {graphSpec && graphSpec.map((spec, i) => <pre key={i}>{spec}</pre>)}
                 </Col>
             </Row>
+            <div className="question-content d-flex justify-content-center d-print-none">
+                <div><i>{isDefined(currentAttempt?.value) ? "Click on the grid to edit your sketch." : "Click on the grid to start your sketch."}</i></div>
+            </div>
         </Container>
     </div>;
 };

@@ -45,7 +45,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
 
         return () => {
             window.removeEventListener('keyup', handleKeyPress);
-        }
+        };
     }, []);
 
     useEffect(() => {
@@ -63,7 +63,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 }
             }
             p.remove();
-        }
+        };
     }, []);
 
     useEffect(() => {
@@ -86,9 +86,6 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         <div className="sketch-preview text-center" onClick={openModal} onKeyUp={openModal} role={readonly ? undefined : "button"}
              tabIndex={readonly ? undefined : 0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
-            {!isDefined(currentAttempt?.value) && <div className="graph-sketcher-preview-overlay">
-                <div className="graph-sketcher-preview-overlay-text">Click here to sketch</div>
-            </div>}
         </div>
         {modalVisible && <GraphSketcherModal
             user={user}
@@ -97,6 +94,9 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             initialState={initialState}
             question={doc}
         />}
-    </div>
+        <div className="question-content d-flex justify-content-center d-print-none">
+            <div><i>{isDefined(currentAttempt?.value) ? "Click on the grid to edit your sketch." : "Click on the grid to start your sketch."}</i></div>
+        </div>
+    </div>;
 };
 export default IsaacGraphSketcherQuestion;
