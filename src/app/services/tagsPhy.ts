@@ -117,7 +117,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
 
         // Inorganic
         {id: TAG_ID.periodicTable, title: "Periodic Table", parent: TAG_ID.inorganic},
-        {id: TAG_ID.bonding, title: "Bonding", parent: TAG_ID.inorganic},
+        {id: TAG_ID.bonding, title: "Bonding & IMFs", parent: TAG_ID.inorganic},
         {id: TAG_ID.redox, title: "Redox", parent: TAG_ID.inorganic},
         {id: TAG_ID.transitionMetals, title: `Transition Metals`, parent: TAG_ID.inorganic},
         // Physical
@@ -144,6 +144,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic},
         {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic},
         {id: TAG_ID.aromaticReactions, title: "Reactions (aromatics)", parent: TAG_ID.organic},
+        {id: TAG_ID.polymers, title: "Polymers", parent: TAG_ID.organic},
 
         // --- Biology Topics ---
 
