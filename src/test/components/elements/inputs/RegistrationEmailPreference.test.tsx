@@ -7,6 +7,22 @@ describe("RegistrationEmailPreference", () => {
   const mockSetEmailPreferences = jest.fn();
   const preferences = ["NEWS_AND_UPDATES", "ASSIGNMENTS", "EVENTS"];
 
+  const getOptions = {
+    assignments: () => screen.getByText("Assignments"),
+    news: () => screen.getByText("News"),
+    events: () => screen.getByText("Events"),
+    assignmentsDescription: () =>
+      screen.getByText("Receive assignment notifications from your teacher."),
+    newsDescription: () =>
+      screen.getByText(
+        "Be the first to know about new topics, new platform features, and our fantastic competition giveaways."
+      ),
+    eventsDescription: () =>
+      screen.getByText(
+        "Get valuable updates on our free student workshops happening near you."
+      ),
+  };
+
   const setupTest = (role: TestUserRole, props = {}) => {
     renderTestEnvironment({
       role: "ANONYMOUS",
@@ -24,40 +40,35 @@ describe("RegistrationEmailPreference", () => {
 
   it("renders correct options for student registration", () => {
     setupTest("STUDENT");
-    const assignmentsOption = screen.getByText("Assignments");
-    const newsOption = screen.getByText("News");
-    const eventsOption = screen.getByText("Events");
-    expect(assignmentsOption).toBeInTheDocument();
-    expect(newsOption).toBeInTheDocument();
-    expect(eventsOption).toBeInTheDocument();
-    const assignmentsDescription = screen.getByText(
-      "Receive assignment notifications from your teacher."
-    );
-    const newsDescription = screen.getByText(
-      "Be the first to know about new topics, new platform features, and our fantastic competition giveaways."
-    );
-    const eventsDescription = screen.getByText(
-      "Get valuable updates on our free student workshops/teacher CPD events happening near you."
-    );
-    expect(assignmentsDescription).toBeInTheDocument();
-    expect(newsDescription).toBeInTheDocument();
-    expect(eventsDescription).toBeInTheDocument();
+    const {
+      assignments,
+      news,
+      events,
+      assignmentsDescription,
+      newsDescription,
+      eventsDescription,
+    } = getOptions;
+    const allOptions = [
+      assignments(),
+      assignmentsDescription(),
+      news(),
+      newsDescription(),
+      events(),
+      eventsDescription(),
+    ];
+    allOptions.forEach((option) => {
+      expect(option).toBeInTheDocument();
+    });
   });
 
   it("renders correct options for teacher registration", () => {
     setupTest("TEACHER");
-    const newsOption = screen.getByText("News");
-    const eventsOption = screen.getByText("Events");
-    expect(newsOption).toBeInTheDocument();
-    expect(eventsOption).toBeInTheDocument();
-    const newsDescription = screen.getByText(
-      "Be the first to know about new topics, new platform features, and our fantastic competition giveaways."
+    const { news, newsDescription, events, eventsDescription } = getOptions;
+    [news(), newsDescription(), events(), eventsDescription()].forEach(
+      (option) => {
+        expect(option).toBeInTheDocument();
+      }
     );
-    const eventsDescription = screen.getByText(
-      "Get valuable updates on our free student workshops/teacher CPD events happening near you."
-    );
-    expect(newsDescription).toBeInTheDocument();
-    expect(eventsDescription).toBeInTheDocument();
     const assignmentsOption = screen.queryByText("Assignments");
     const assignmentsDescription = screen.queryByText(
       "Receive assignment notifications from your teacher."
@@ -115,14 +126,11 @@ describe("RegistrationEmailPreference", () => {
         NEWS_AND_UPDATES: true,
       },
     });
-
     preferences.forEach((option) => {
       const trueLabel = screen.getByLabelText(`Yes for ${option}`);
       const falseLabel = screen.getByLabelText(`No for ${option}`);
-
       expect(trueLabel).toBeValid();
       expect(falseLabel).toBeValid();
-
       const feedbackId = `#${option.toLowerCase()}-feedback`;
       const feedbackElement = screen.queryByText("required", {
         selector: feedbackId,
