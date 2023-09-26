@@ -39,11 +39,6 @@ import {Item} from "../elements/markup/portals/InlineDropZones";
 import {Immutable} from "immer";
 import {arraySwap, SortableContext} from "@dnd-kit/sortable";
 
-const composeCollisionAlgorithms = (first: CollisionDetection, second: CollisionDetection): CollisionDetection => (args) => {
-    const collisions = first(args);
-    return collisions.length > 0 ? collisions : second(args);
-};
-
 const isDropZone = (item: {id: UniqueIdentifier} | null) => item?.id === CLOZE_ITEM_SECTION_ID || String(item?.id).slice(0, 10) === CLOZE_DROP_ZONE_ID_PREFIX;
 
 const augmentInlineItemWithUniqueReplacementID = (idv: Immutable<ClozeItemDTO> | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}|${uuid_v4()}`}) : undefined;
@@ -388,6 +383,11 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                 return closestCenter({...args, droppableContainers: justNonSelectedItems});
             }
             return initialCollisions;
+        }
+        const collidingDropZones = initialCollisions.filter(c => isDropZone(c));
+        if (collidingDropZones.length > 0) {
+            const collidingDropZoneContainers = args.droppableContainers.filter(dc => collidingDropZones.findIndex(c => c.id === dc.id) !== -1);
+            return closestCenter({...args, droppableContainers: collidingDropZoneContainers});
         }
         const justDropZonesAndItemSection = args.droppableContainers.filter(c => isDropZone(c) || c.id === CLOZE_ITEM_SECTION_ID);
         return closestCenter({...args, droppableContainers: justDropZonesAndItemSection});
