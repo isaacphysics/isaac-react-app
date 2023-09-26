@@ -301,5 +301,5 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 </RS.Col>
             </RS.Row>
         </RS.Container>
-    </RS.CardBody>
+    </RS.CardBody>;
 };
