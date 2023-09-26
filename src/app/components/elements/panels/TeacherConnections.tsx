@@ -32,6 +32,10 @@ import {
     revocationConfirmationModal,
     tokenVerificationModal
 } from "../modals/TeacherConnectionModalCreators";
+import { FixedSizeList } from "react-window";
+
+const CONNECTIONS_ROW_HEIGHT = 35;
+const CONNECTIONS_MAX_VISIBLE_ROWS = 10;
 
 interface TeacherConnectionsProps {
     user: PotentialUser;
@@ -114,16 +118,21 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         <h3><span className={siteSpecific("icon-person-active", "icon-group-white")} />Teacher connections</h3>
                         <div className="connect-list-inner">
                             <ul className="teachers-connected list-unstyled">
-                                {activeAuthorisations && activeAuthorisations.map((teacherAuthorisation) =>
-                                    <React.Fragment key={teacherAuthorisation.id}>
-                                        <li>
+                                <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, activeAuthorisations?.length ?? 0))} itemCount={activeAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%">
+                                    {({index, style}) => {
+                                        const teacherAuthorisation = activeAuthorisations?.[index];
+                                        if (!teacherAuthorisation) {
+                                            return null;
+                                        }
+                                        return <React.Fragment key={teacherAuthorisation.id}>
+                                        <li style={style}>
                                             <span className="icon-person-active" />
                                             <span id={`teacher-authorisation-${teacherAuthorisation.id}`}>
                                                 {extractTeacherName(teacherAuthorisation)}
                                             </span>
                                             <RS.UncontrolledTooltip
                                                 placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
-                                            >
+                                                >
                                                 This user ({teacherAuthorisation.email}) has access to your data.
                                                 To remove this access, click &apos;Revoke&apos;.
                                             </RS.UncontrolledTooltip>
@@ -131,12 +140,13 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                 color="link" className="revoke-teacher"
                                                 disabled={editingOtherUser}
                                                 onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
-                                            >
+                                                >
                                                 Revoke
                                             </RS.Button>
                                         </li>
-                                    </React.Fragment>
-                                )}
+                                    </React.Fragment>;
+                                    }}
+                                </FixedSizeList>
                             </ul>
                             {activeAuthorisations && activeAuthorisations.length === 0 && <p className="teachers-connected">
                                 You have no active teacher connections.
@@ -168,26 +178,32 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
                             <div className="connect-list-inner">
                                 <ul className="teachers-connected list-unstyled">
-                                    {studentAuthorisations && studentAuthorisations.map(student => (
-                                        <li key={student.id}>
-                                            <span className="icon-person-active" />
-                                            <span id={`student-authorisation-${student.id}`}>
-                                                {student.givenName} {student.familyName}
-                                            </span>
-                                            <RS.UncontrolledTooltip
-                                                placement="bottom" target={`student-authorisation-${student.id}`}
-                                            >
-                                                You have access to this user&apos;s data and they can see your name and email address.
-                                                To remove this access, click &apos;Remove&apos;.
-                                            </RS.UncontrolledTooltip>
-                                            <RS.Button
-                                                color="link" className="revoke-teacher" disabled={editingOtherUser}
-                                                onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(releaseConfirmationModal(user.id, student)))}
-                                            >
-                                                Remove
-                                            </RS.Button>
-                                        </li>
-                                    ))}
+                                    <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_ROW_HEIGHT, studentAuthorisations?.length ?? 0))} itemCount={studentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%">
+                                        {({index, style}) => {
+                                            const student = studentAuthorisations?.[index];
+                                            if (!student) {
+                                                return null;
+                                            }
+                                            return <li key={student.id} style={style}>
+                                                <span className="icon-person-active" />
+                                                <span id={`student-authorisation-${student.id}`}>
+                                                    {student.givenName} {student.familyName}
+                                                </span>
+                                                <RS.UncontrolledTooltip
+                                                    placement="bottom" target={`student-authorisation-${student.id}`}
+                                                >
+                                                    You have access to this user&apos;s data and they can see your name and email address.
+                                                    To remove this access, click &apos;Remove&apos;.
+                                                </RS.UncontrolledTooltip>
+                                                <RS.Button
+                                                    color="link" className="revoke-teacher" disabled={editingOtherUser}
+                                                    onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(releaseConfirmationModal(user.id, student)))}
+                                                >
+                                                    Remove
+                                                </RS.Button>
+                                            </li>;
+                                        }}
+                                    </FixedSizeList>
                                 </ul>
 
                                 {studentAuthorisations && studentAuthorisations.length === 0 && <p className="teachers-connected">
