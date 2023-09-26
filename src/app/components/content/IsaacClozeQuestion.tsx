@@ -389,6 +389,11 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             }
             return initialCollisions;
         }
+        const collidingDropZones = initialCollisions.filter(c => isDropZone(c));
+        if (collidingDropZones.length > 0) {
+            const collidingDropZoneContainers = args.droppableContainers.filter(dc => collidingDropZones.findIndex(c => c.id === dc.id) !== -1);
+            return closestCenter({...args, droppableContainers: collidingDropZoneContainers});
+        }
         const justDropZonesAndItemSection = args.droppableContainers.filter(c => isDropZone(c) || c.id === CLOZE_ITEM_SECTION_ID);
         return closestCenter({...args, droppableContainers: justDropZonesAndItemSection});
     }, [nonSelectedItems, usingKeyboard]);
