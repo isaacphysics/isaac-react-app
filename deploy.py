@@ -56,7 +56,7 @@ def validate_args(args):
     return args
 
 
-def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: list = None, env_vars: dict = None):
+def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: list = None, env_vars: dict = None, chunk_size=1024):
     if not EXEC:
         return input(f"{command}\n")
 
@@ -71,20 +71,28 @@ def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: 
         print("Skipping command...")
         return
     if response in ["y", "yes"]:
-        process = subprocess.run(command, shell=True, universal_newlines=True, stdout=subprocess.PIPE, env=env_vars if env_vars else None)
-        output = process.stdout
+        output = ""
+        return_code = None
+        with subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, env=env_vars if env_vars else None) as proc:
+            while True:
+                stdout_data = []
+                chunk = proc.stdout.read(chunk_size)
+                if not chunk:
+                    break
+                decoded_chunk = chunk.decode('utf-8', errors='replace')
+                print(decoded_chunk, end='', flush=True)  # Print in real time
+                stdout_data.append(decoded_chunk)  # Store for later
 
-        if print_output:
-            print(f"{output if len(output) else '(No output)'}")
-
-        if process.returncode == 0:
+            return_code = proc.wait()
+            output = ''.join(stdout_data)
+        if return_code == 0:
             return output
-        elif expected_nonzero_exit_codes and process.returncode in expected_nonzero_exit_codes:
-            print(f"Command returned non-zero exit code {process.returncode} - this may not indicate an error (e.g. "
+        elif expected_nonzero_exit_codes and return_code in expected_nonzero_exit_codes:
+            print(f"Command returned non-zero exit code {return_code} - this may not indicate an error (e.g. "
                   f"in the case of grep or git diff), but you should check subsequent commands carefully.")
             return output
         else:
-            print(f"Command returned unexpected exit code {process.returncode}.")
+            print(f"Command returned unexpected exit code {return_code}.")
             print("! There was an unexpected error, please clean up after yourself !")
             response = input(f"Continue, or Abort?: [c/a] ")
 
