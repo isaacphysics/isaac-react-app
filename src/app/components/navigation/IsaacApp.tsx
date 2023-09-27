@@ -92,6 +92,7 @@ import { ExternalRedirect } from "../handlers/ExternalRedirect";
 import { TutorRequest } from "../pages/TutorRequest";
 import { StudentRegistration } from "../pages/StudentRegistration";
 import { TeacherRegistration } from "../pages/TeacherRegistration";
+import { WorkbookDownload } from "../pages/WorkbookDownload";
 
 const ContentEmails = lazy(() => import("../pages/ContentEmails"));
 const MyProgress = lazy(() => import("../pages/MyProgress"));
@@ -413,6 +414,12 @@ export const IsaacApp = () => {
                 path="/assignment_schedule"
                 ifUser={isTutorOrAbove}
                 component={AssignmentSchedule}
+              />
+              <TrackedRoute
+                exact
+                path="/workbook_download"
+                ifUser={isTutorOrAbove}
+                component={WorkbookDownload}
               />{" "}
               {/* Currently in beta, not yet advertised or listed on navigation menus */}
               <TrackedRoute
