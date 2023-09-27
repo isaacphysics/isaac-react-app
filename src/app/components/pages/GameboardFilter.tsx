@@ -226,76 +226,72 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
             </Col>
         </Row>
 
-        <Row className="mb-sm-4">
-            <Col xs={12}>
-                <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
-            </Col>
-            <Col lg={4}>
-                <div>
-                    <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
-                        I am interested in stage...
-                        <span id={`stage-help-tooltip`} className="icon-help ml-1" />
-                        <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
-                            {"Find questions that are suitable for this stage of school learning."} <br />
-                            {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
-                        </UncontrolledTooltip>
+        {filterExpanded && <>
+            <Row className="mb-sm-4">
+                <Col xs={12}>
+                    <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
+                </Col>
+                <Col lg={4}>
+                    <div>
+                        <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
+                            I am interested in stage...
+                            <span id={`stage-help-tooltip`} className="icon-help ml-1" />
+                            <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
+                                {"Find questions that are suitable for this stage of school learning."} <br />
+                                {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
+                            </UncontrolledTooltip>
+                        </Label>
+                        <StyledSelect id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
+                    </div>
+                    <div>
+                        <Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
+                            I would like questions for...
+                            <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
+                            <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
+                                Practice questions let you directly apply one idea -<br />
+                                P1 covers revision of a previous stage or topics near the beginning of a course,<br />
+                                P3 covers later topics.<br />
+                                Challenge questions are solved by combining multiple concepts and creativity.<br />
+                                C1 can be attempted near the beginning of your course,<br />
+                                C3 require more creativity and could be attempted later in a course.
+                            </UncontrolledTooltip>
+                        </Label>
+                        <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
+                        {/*<StyledSelect id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
+                    </div>
+                </Col>
+                <Col lg={8}>
+                    <Label className={`mt-4 mt-lg-0`}>
+                        Topics:
                     </Label>
-                    <StyledSelect id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
-                </div>
-                {/*<div>*/}
-                {/*    <Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
-                {/*        I would like some questions from Isaac to...*/}
-                {/*    </Label>*/}
-                {/*    <StyledSelect id="question-category-selector" isClearable onChange={selectOnChange(setQuestionCategories, false)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
-                {/*</div>*/}
-                <div>
-                    <Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
-                        I would like questions for...
-                        <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
-                        <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
-                            Practice questions let you directly apply one idea -<br />
-                            P1 covers revision of a previous stage or topics near the beginning of a course,<br />
-                            P3 covers later topics.<br />
-                            Challenge questions are solved by combining multiple concepts and creativity.<br />
-                            C1 can be attempted near the beginning of your course,<br />
-                            C3 require more creativity and could be attempted later in a course.
-                        </UncontrolledTooltip>
-                    </Label>
-                    <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
-                    {/*<StyledSelect id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
-                </div>
-            </Col>
-            <Col lg={8}>
-                <Label className={`mt-4 mt-lg-0`}>
-                    Topics:
-                </Label>
-                <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
-            </Col>
-        </Row>
+                    <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
+                </Col>
+            </Row>
 
-        <Col className="mt-2">
-            <CustomInput
-                type="checkbox"
-                id="show-book-questions-checkbox"
-                label="Include Isaac book questions"
-                checked={showBookQuestions}
-                onChange={() => {setShowBookQuestions(!showBookQuestions);}}
-            />
-        </Col>
-
-        {/* Buttons */}
-        <Row className={filterExpanded ? "mt-4" : ""}>
-            <Col>
-                {previousBoard && <Button size="sm" color="primary" outline onClick={previousBoard}>
-                    <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
-                </Button>}
+            <Col className="mt-2">
+                <CustomInput
+                    type="checkbox"
+                    id="show-book-questions-checkbox"
+                    label="Include Isaac book questions"
+                    checked={showBookQuestions}
+                    onChange={() => {setShowBookQuestions(!showBookQuestions);}}
+                />
             </Col>
-            <Col className="text-right">
-                <Button size="sm" color="primary" outline onClick={refresh}>
-                    <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
-                </Button>
-            </Col>
-        </Row>
+        
+            {/* Buttons */}
+            <Row className="mt-4">
+                <Col>
+                    {previousBoard && <Button size="sm" color="primary" outline onClick={previousBoard}>
+                        <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
+                    </Button>}
+                </Col>
+                <Col className="text-right">
+                    <Button size="sm" color="primary" outline onClick={refresh}>
+                        <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
+                    </Button>
+                </Col>
+            </Row>
+        </>}
         <Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
             Go to Questions...
         </Button>
