@@ -59,19 +59,19 @@ export const AdminStats = () => {
                                         <li className="mt-3">
                                             <strong>Gender</strong>
                                             <ul className="list-unstyled">
-                                                <li>Male: {adminStatsWithTotals.userGenders.MALE || 0} ({
+                                                <li>Male: {(adminStatsWithTotals.userGenders.MALE || 0).toLocaleString()} ({
                                                     asPercentage(adminStatsWithTotals.userGenders.MALE, adminStatsWithTotals.userGenders.TOTAL)}%)
                                                 </li>
-                                                <li>Female: {adminStatsWithTotals.userGenders.FEMALE || 0} ({
+                                                <li>Female: {(adminStatsWithTotals.userGenders.FEMALE || 0).toLocaleString()} ({
                                                     asPercentage(adminStatsWithTotals.userGenders.FEMALE, adminStatsWithTotals.userGenders.TOTAL)}%)
                                                 </li>
-                                                <li>Other: {adminStatsWithTotals.userGenders.OTHER || 0} ({
+                                                <li>Other: {(adminStatsWithTotals.userGenders.OTHER || 0).toLocaleString()} ({
                                                     asPercentage(adminStatsWithTotals.userGenders.OTHER, adminStatsWithTotals.userGenders.TOTAL)}%)
                                                 </li>
-                                                <li>Prefer not to say: {adminStatsWithTotals.userGenders.PREFER_NOT_TO_SAY || 0} ({
+                                                <li>Prefer not to say: {(adminStatsWithTotals.userGenders.PREFER_NOT_TO_SAY || 0).toLocaleString()} ({
                                                     asPercentage(adminStatsWithTotals.userGenders.PREFER_NOT_TO_SAY, adminStatsWithTotals.userGenders.TOTAL)}%)
                                                 </li>
-                                                <li>Missing data: {adminStatsWithTotals.userGenders.UNKNOWN || 0} ({
+                                                <li>Missing data: {(adminStatsWithTotals.userGenders.UNKNOWN || 0).toLocaleString()} ({
                                                     asPercentage(adminStatsWithTotals.userGenders.UNKNOWN, adminStatsWithTotals.userGenders.TOTAL)}%)
                                                 </li>
                                             </ul>
@@ -79,24 +79,24 @@ export const AdminStats = () => {
                                         <li className="mt-3">
                                             <strong>Role</strong>
                                             <ul className="list-unstyled">
-                                                <li>Student: {adminStatsWithTotals.userRoles.STUDENT || 0}</li>
-                                                <li>Tutor: {adminStatsWithTotals.userRoles.TUTOR || 0}</li>
-                                                <li>Teacher: {adminStatsWithTotals.userRoles.TEACHER || 0}</li>
-                                                <li>Event Leader: {adminStatsWithTotals.userRoles.EVENT_LEADER || 0}</li>
-                                                <li>Content Editor: {adminStatsWithTotals.userRoles.CONTENT_EDITOR || 0}</li>
-                                                <li>Event Manager: {adminStatsWithTotals.userRoles.EVENT_MANAGER || 0}</li>
-                                                <li>Admin: {adminStatsWithTotals.userRoles.ADMIN || 0}</li>
+                                                <li>Student: {(adminStatsWithTotals.userRoles.STUDENT || 0).toLocaleString()}</li>
+                                                <li>Tutor: {(adminStatsWithTotals.userRoles.TUTOR || 0).toLocaleString()}</li>
+                                                <li>Teacher: {(adminStatsWithTotals.userRoles.TEACHER || 0).toLocaleString()}</li>
+                                                <li>Event Leader: {(adminStatsWithTotals.userRoles.EVENT_LEADER || 0).toLocaleString()}</li>
+                                                <li>Content Editor: {(adminStatsWithTotals.userRoles.CONTENT_EDITOR || 0).toLocaleString()}</li>
+                                                <li>Event Manager: {(adminStatsWithTotals.userRoles.EVENT_MANAGER || 0).toLocaleString()}</li>
+                                                <li>Admin: {(adminStatsWithTotals.userRoles.ADMIN || 0).toLocaleString()}</li>
                                             </ul>
                                         </li>
                                         <li className="mt-3">
                                             <strong>Profile Completion</strong>
                                             <ul className="list-unstyled">
                                                 <li>UK/IE school provided: {
-                                                    (adminStatsWithTotals.userSchoolInfo.PROVIDED || 0) + (adminStatsWithTotals.userSchoolInfo.BOTH_PROVIDED || 0)
+                                                    ((adminStatsWithTotals.userSchoolInfo.PROVIDED || 0) + (adminStatsWithTotals.userSchoolInfo.BOTH_PROVIDED || 0)).toLocaleString()
                                                 }
                                                 </li>
-                                                <li>Other school provided: {adminStatsWithTotals.userSchoolInfo.OTHER_PROVIDED || 0}</li>
-                                                <li>No school provided: {adminStatsWithTotals.userSchoolInfo.NOT_PROVIDED || 0}</li>
+                                                <li>Other school provided: {(adminStatsWithTotals.userSchoolInfo.OTHER_PROVIDED || 0).toLocaleString()}</li>
+                                                <li>No school provided: {(adminStatsWithTotals.userSchoolInfo.NOT_PROVIDED || 0).toLocaleString()}</li>
                                             </ul>
                                         </li>
                                     </ul>
@@ -114,23 +114,23 @@ export const AdminStats = () => {
                                     <ul className="list-unstyled">
                                         <li>Previous 7 days:
                                             <ul>
-                                                <li>All: {adminStatsWithTotals.activeUsersOverPrevious.sevenDays.TOTAL || 0}</li>
-                                                <li>Teachers: {adminStatsWithTotals.activeUsersOverPrevious.sevenDays.TEACHER || 0}</li>
-                                                <li>Students: {adminStatsWithTotals.activeUsersOverPrevious.sevenDays.STUDENT || 0}</li>
+                                                <li>All: {(adminStatsWithTotals.activeUsersOverPrevious.sevenDays.TOTAL || 0).toLocaleString()}</li>
+                                                <li>Teachers: {(adminStatsWithTotals.activeUsersOverPrevious.sevenDays.TEACHER || 0).toLocaleString()}</li>
+                                                <li>Students: {(adminStatsWithTotals.activeUsersOverPrevious.sevenDays.STUDENT || 0).toLocaleString()}</li>
                                             </ul>
                                         </li>
                                         <li>Previous 30 days:
                                             <ul>
-                                                <li>All: {adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.TOTAL || 0}</li>
-                                                <li>Teachers: {adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.TEACHER || 0}</li>
-                                                <li>Students: {adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.STUDENT || 0}</li>
+                                                <li>All: {(adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.TOTAL || 0).toLocaleString()}</li>
+                                                <li>Teachers: {(adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.TEACHER || 0).toLocaleString()}</li>
+                                                <li>Students: {(adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.STUDENT || 0).toLocaleString()}</li>
                                             </ul>
                                         </li>
                                         <li>Previous 90 days:
                                             <ul>
-                                                <li>All: {adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.TOTAL || 0}</li>
-                                                <li>Teachers: {adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.TEACHER || 0}</li>
-                                                <li>Students: {adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.STUDENT || 0}</li>
+                                                <li>All: {(adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.TOTAL || 0).toLocaleString()}</li>
+                                                <li>Teachers: {(adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.TEACHER || 0).toLocaleString()}</li>
+                                                <li>Students: {(adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.STUDENT || 0).toLocaleString()}</li>
                                             </ul>
                                         </li>
                                     </ul>
@@ -139,23 +139,23 @@ export const AdminStats = () => {
                                     <ul className="list-unstyled">
                                         <li>Previous 7 days:
                                             <ul>
-                                                <li>All: {adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.TOTAL || 0}</li>
-                                                <li>Teachers: {adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.TEACHER || 0}</li>
-                                                <li>Students: {adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.STUDENT || 0}</li>
+                                                <li>All: {(adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.TOTAL || 0).toLocaleString()}</li>
+                                                <li>Teachers: {(adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.TEACHER || 0).toLocaleString()}</li>
+                                                <li>Students: {(adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.STUDENT || 0).toLocaleString()}</li>
                                             </ul>
                                         </li>
                                         <li>Previous 30 days:
                                             <ul>
-                                                <li>All: {adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.TOTAL || 0}</li>
-                                                <li>Teachers: {adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.TEACHER || 0}</li>
-                                                <li>Students: {adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.STUDENT || 0}</li>
+                                                <li>All: {(adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.TOTAL || 0).toLocaleString()}</li>
+                                                <li>Teachers: {(adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.TEACHER || 0).toLocaleString()}</li>
+                                                <li>Students: {(adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.STUDENT || 0).toLocaleString()}</li>
                                             </ul>
                                         </li>
                                         <li>Previous 90 days:
                                             <ul>
-                                                <li>All: {adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.TOTAL || 0}</li>
-                                                <li>Teachers: {adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.TEACHER || 0}</li>
-                                                <li>Students: {adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.STUDENT || 0}</li>
+                                                <li>All: {(adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.TOTAL || 0).toLocaleString()}</li>
+                                                <li>Teachers: {(adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.TEACHER || 0).toLocaleString()}</li>
+                                                <li>Students: {(adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.STUDENT || 0).toLocaleString()}</li>
                                             </ul>
                                         </li>
                                     </ul>
