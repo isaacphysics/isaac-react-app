@@ -65,7 +65,6 @@
 
 input {
   &.form-control {
-    @include placeholder($gray-500);
     border: solid 1px $black;
     padding: 0 1.2em;
   }

@@ -339,7 +339,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                     </Draggable>
                                 })}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0) &&
-                                    <div className="text-muted text-center">
+                                    <div className="text-center placeholder-text">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}
                                     </div>
                                 }

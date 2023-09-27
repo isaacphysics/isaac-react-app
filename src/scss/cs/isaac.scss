@@ -13,7 +13,7 @@
 // Greyscale
 $cs-black: #000000;
 $cs-jet: #333333;
-$cs-muted-grey: #595959; // minimum contrast ratio for grey WCAG AAA normal text
+$cs-muted: #595959; // minimum contrast ratio for grey WCAG AAA normal text
 $cs-dark-silver: #B9B9B9;
 $cs-silver: #C2C2C2;
 $cs-light-gray: #D6D6D6;
@@ -233,10 +233,10 @@ $question-padding: 3rem;
 $question-font-size: 1rem;
 $question-font-weight: 400;
 
-$text-muted: $cs-muted-grey;
-
-
 // Colour Overrides
+$text-muted: $cs-muted;
+$input-placeholder-color: $cs-dark-silver;
+
 // FIXME overriding base Bootstrap colour definitions is not the right way to go about this.
 //  These are shared with and redefined by Physics.
 $purple: $dark-pink-300; // Something to do with links

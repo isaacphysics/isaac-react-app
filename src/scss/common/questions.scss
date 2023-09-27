@@ -71,7 +71,7 @@
     padding: 0.15em 0.6em;
     cursor: default;
     &.empty {
-      color: $text-muted;
+      color: $input-placeholder-color;
     }
   }
 
@@ -108,6 +108,10 @@
 }
 
 .parsons-question {
+  .placeholder-text {
+    color: $input-placeholder-color;
+  }
+
   .parsons-items {
     border: solid 1px #00000021;
     padding: 0 0.5em;
