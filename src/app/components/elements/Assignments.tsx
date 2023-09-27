@@ -51,8 +51,8 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
 
     return <>
         <hr />
-        <Row className="board-card" data-testid={"my-assignment"}>
-            <Col xs={9} md={8} className="pl-lg-5">
+        <Row className="board-card" data-testid="my-assignment">
+            <Col xs={8} md={7} lg={8}>
                 <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
                     <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
                 </Link>
@@ -66,64 +66,67 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 <p className="mb-0"><strong>Group:</strong> {assignment.groupName}</p>
                 }
                 {isDefined(assignment.assignerSummary) &&
-                <p><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>
+                <p className="mb-0"><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>
                 }
+                {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
+                <div>
+                    {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100 &&
+                    <p><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>}
+                </div>
             </Col>
 
-            <Col xs={3} md={2}>
-                <Label className="text-center">
-                    %&nbsp;Attempted
-                    <div className="d-flex justify-content-center">
-                        <div className="board-subject-hexagon-container">
-                            {isDefined(assignment.gameboard) && ((boardPercentageAttempted === 100) ?
-                                <span className="board-subject-hexagon subject-complete"/> :
-                                <>
-                                    {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
-                                    <div className="board-percent-completed">{boardPercentageAttempted}</div>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </Label>
-            </Col>
-
-            <Col className="d-none d-md-block" md={2}>
-                <Label className="text-center">
-                    %&nbsp;Correct
-                    <div className="d-flex justify-content-center">
-                        <div className="board-subject-hexagon-container">
-                            {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCompleted === 100) ?
-                                <span className="board-subject-hexagon subject-complete"/> :
-                                <>
-                                    {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
-                                    <div className="board-percent-completed">{assignment.gameboard.percentageCompleted}</div>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </Label>
+            <Col xs={4} md={5} lg={4}>
+                <Row className="justify-content-end mr-0 mr-md-1">
+                    <Col xs="auto d-none d-md-block">
+                        <Label className="d-block w-100 text-center text-nowrap">
+                            %&nbsp;Attempted
+                            <div className="d-flex justify-content-center">
+                                <div className="board-subject-hexagon-container justify-content-center">
+                                    {isDefined(assignment.gameboard) && ((boardPercentageAttempted === 100) ?
+                                        <span className="board-subject-hexagon subject-complete"/> :
+                                        <>
+                                            {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
+                                            <div className="board-percent-completed">{boardPercentageAttempted}</div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </Label>
+                    </Col>
+                    <Col xs="auto">
+                        <Label className="d-block w-100 text-center text-nowrap">
+                            %&nbsp;Correct
+                            <div className="d-flex justify-content-center">
+                                <div className="board-subject-hexagon-container justify-content-center">
+                                    {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCompleted === 100) ?
+                                        <span className="board-subject-hexagon subject-complete"/> :
+                                        <>
+                                            {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
+                                            <div className="board-percent-completed">{assignment.gameboard.percentageCompleted}</div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </Label>
+                    </Col>
+                </Row>
             </Col>
         </Row>
         <Row>
-            <Button className="ml-3" color="link" onClick={() => setShowMore(!showMore)}>
+            <Button className="ml-3 my-2 btn-underline" color="link" onClick={() => setShowMore(!showMore)}>
                 {showMore ? "Show less" : "Show more"}
             </Button>
-
-            <Col xs={5} md={2} className="mt-sm-2 text-right">
-                <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
-                    View Assignment
-                </Link>
-                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100 &&
-                <p><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>}
-            </Col>
-
-            <Collapse isOpen={showMore} className="w-100">
-                <Col xs={7} md={5} className="mt-sm-2">
+        </Row>
+        <Collapse isOpen={showMore} className="w-100">
+            <Row>
+                <Col xs={12} md={8} className="mt-sm-2">
                     <p className="mb-0"><strong>Questions:</strong> {assignment.gameboard?.contents?.length || "0"}</p>
                     {isDefined(topics) && topics.length > 0 && <p className="mb-0">
                         <strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong>{" "}
                         {topics.join(", ")}
                     </p>}
+                </Col>
+                <Col xs={12} md={4} className="mt-sm-2">
                     {boardStagesAndDifficulties.length > 0 && <p className="mb-0">
                         <table className="w-100">
                             <thead>
@@ -148,10 +151,9 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                             </tbody>
                         </table>
                     </p>}
-                    {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
                 </Col>
-            </Collapse>
-        </Row>
+            </Row>
+        </Collapse>
     </>
 };
 
