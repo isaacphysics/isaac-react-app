@@ -69,7 +69,7 @@ function itemiseByValue<R extends {value: string}>(values: string[], options: R[
     return options.filter(option => values.includes(option.value));
 }
 function itemiseTag(tag: Tag) {
-    return {value: tag.id, label: tag.title}
+    return {value: tag.id, label: tag.title};
 }
 
 function itemiseConcepts(concepts: string[]): Item<string>[] {
@@ -106,7 +106,7 @@ function processQueryString(query: string): QueryStringResponse {
     const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties as Nullable<string[] | string>), siteSpecific(DIFFICULTY_ITEM_OPTIONS, DIFFICULTY_ICON_ITEM_OPTIONS));
     const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards as Nullable<string[] | string>), getFilteredExamBoardOptions({byStages: stageItems.map(item => item.value as STAGE)}));
     const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories as Nullable<string[] | string>), QUESTION_CATEGORY_ITEM_OPTIONS);
-    const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts as Nullable<string[] | string>))
+    const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts as Nullable<string[] | string>));
 
     const selectionItems: Item<TAG_ID>[][] = [];
     if (isPhy) {
@@ -132,7 +132,7 @@ function processQueryString(query: string): QueryStringResponse {
 
     return {
         querySelections: selectionItems, queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems, queryConcepts: conceptItems, queryExamBoards: examBoardItems
-    }
+    };
 }
 
 function generatePhyBoardName(selections: Item<TAG_ID>[][]) {
@@ -300,7 +300,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
             className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
         />
     </Card>;
-}
+};
 
 // Takes a list of "raw" concepts, and returns a map which takes a tag Item, and gives a GroupedOptionsType<Item<string>> containing itemised concepts which relate to that tag
 const itemiseAndGroupConceptsByTag = (conceptDTOs : ContentSummaryDTO[]) => ((tag : Item<TAG_ID>) => {
@@ -311,7 +311,7 @@ const itemiseAndGroupConceptsByTag = (conceptDTOs : ContentSummaryDTO[]) => ((ta
                 ? [...acc, {value: dto.id, label: dto.title}]
                 : acc,
             [])
-    }
+    };
 });
 interface CSFilterProps extends FilterProps {
     examBoards : Item<string>[];
@@ -358,7 +358,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
             }
         });
         // Selections always have all 3 tiers in CS
-        setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics])
+        setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics]);
     }
 
     return <Card id="filter-panel" className="mx-auto mt-4 mb-5">
@@ -418,7 +418,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     <Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</Label>
                     <StyledSelect
                         inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
-                        options={topicChoices} onChange={(v, {action}) => {
+                        options={topicChoices} onChange={(v, _) => {
                         if ((Array.isArray(v) && v.length === 0) || v === null) {
                             setConcepts([]);
                         }
@@ -456,10 +456,10 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         </CardBody>
 
         <CardFooter tag={Button} color="secondary" className="w-100" onClick={scrollToQuestions}>
-            Scroll straight to questions<img className={"ml-3"} src={"/assets/chevron_down_white.svg"}/>
+            Scroll straight to questions<img className={"ml-3"} src={"/assets/chevron_down_white.svg"} alt=""/>
         </CardFooter>
     </Card>;
-}
+};
 
 export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const userContext = useUserContext();
@@ -630,7 +630,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         previousBoard: boardStack.length > 0 ? previousBoard : undefined,
         scrollToQuestions,
         refresh
-    }
+    };
 
     const metaDescriptionCS = "Search for the perfect computer science questions to study. For revision. For homework. For the classroom.";
 
