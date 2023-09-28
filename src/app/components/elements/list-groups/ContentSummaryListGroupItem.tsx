@@ -139,6 +139,9 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                     {item.summary && <div className="small text-muted d-none d-md-block">
                         {item.summary}
                     </div>}
+                    {!item.summary && item.subtitle && <div className="small text-muted d-none d-md-block">
+                        {item.subtitle}
+                    </div>}
                 </div>
 
                 {!isContentsIntendedAudience && <div className="ml-auto mr-3 d-flex align-items-center">

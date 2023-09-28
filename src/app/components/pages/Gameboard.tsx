@@ -92,6 +92,9 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                         {generateQuestionTitle(question)}
                     </Markup>
                     {isPhy && message && <span className={"gameboard-item-message" + (isPhy ? "-phy " : " ") + messageClasses}>{message}</span>}
+                    {isPhy && question.subtitle && <div className="small text-muted d-none d-md-block mb-2">
+                        {question.subtitle}
+                    </div>}
                     {questionTags && <div className={classNames("hierarchy-tags", {"mt-2": isAda})}>
                         {questionTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
