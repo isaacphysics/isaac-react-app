@@ -7,7 +7,7 @@ interface QuestionInputValidationProps<T> {
     validator: (i: T) => string[];
 }
 
-const QuestionInputValidation = <T extends string | number>({userInput, validator}: QuestionInputValidationProps<T>) => {
+const QuestionInputValidation = <T,>({userInput, validator}: QuestionInputValidationProps<T>) => {
     const [errors, setErrors] = useState<string[]>([]);
     const debounceTimer = useRef<number|null>(null);
 
