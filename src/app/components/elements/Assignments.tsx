@@ -194,16 +194,12 @@ const AssignmentCard = siteSpecific(PhyAssignmentCard, CSAssignmentCard);
 
 interface AssignmentsProps {
     assignments: AssignmentDTO[];
-    showOld?: (event: MouseEvent) => void;
 }
-export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
+export const Assignments = ({assignments}: AssignmentsProps) => {
     return <>
         {assignments.map((assignment, index) => <AssignmentCard assignment={assignment} key={index}/>)}
         {assignments.length === 0 &&
-            (showOld
-                ? <p className="text-center py-4"><strong>You have <a href="#" onClick={showOld}>unfinished older {siteSpecific("assignments", "quizzes")}</a></strong></p>
-                : <p className="text-center py-4"><strong>There are no {siteSpecific("assignments", "quizzes")} to display.</strong></p>
-            )
+            <p className="text-center py-4"><strong>There are no {siteSpecific("assignments", "quizzes")} to display.</strong></p>
         }
     </>;
 };

@@ -48,11 +48,6 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                     thenRender={(assignments) => {
                         const myAssignments = filterAssignmentsByStatus(assignments);
 
-                        const showOld = myAssignments.inProgressRecent.length == 0 && myAssignments.inProgressOld.length > 0 && function(event: MouseEvent) {
-                            setAssignmentStateFilter("Older assignments");
-                            event.preventDefault();
-                        } || undefined;
-
                         const assignmentByStates: Record<AssignmentState, AssignmentDTO[]> = {
                             "All": [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld, ...myAssignments.allAttempted, ...myAssignments.completed],
                             "To do": myAssignments.inProgressRecent,
@@ -97,7 +92,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                             </Row>
                             <Row className={siteSpecific("", "mt-3")}>
                                 <Col sm="12">
-                                    <Assignments assignments={filterAssignmentsByProperties(assignmentByStates[assignmentStateFilter], assignmentTitleFilter, assignmentGroupFilter, assignmentSetByFilter)} showOld={showOld} />
+                                    <Assignments assignments={filterAssignmentsByProperties(assignmentByStates[assignmentStateFilter], assignmentTitleFilter, assignmentGroupFilter, assignmentSetByFilter)} />
                                 </Col>
                             </Row>
                         </>;
