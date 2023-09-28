@@ -230,7 +230,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
             <Button block color="tertiary" onClick={toggle}>Close</Button>
         </ModalFooter>}
     </Modal>;
-}
+};
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -421,7 +421,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </tbody>
         </Table>
     </div>;
-}
+};
 const SetAssignmentsTable = siteSpecific(PhyTable, CSTable);
 
 export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: string, redirectBackTo: string}) => {

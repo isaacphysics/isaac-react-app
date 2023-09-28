@@ -27,7 +27,6 @@ import {
     difficultiesOrdered,
     difficultyShortLabelMap,
     formatBoardOwner,
-    isAda,
     isMobile,
     isPhy, isTutorOrAbove, matchesAllWordsInAnyOrder, PATHS,
     siteSpecific,
@@ -36,7 +35,6 @@ import {
 } from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import classNames from "classnames";
 import {BoardCard} from "../elements/cards/BoardCard";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
@@ -186,7 +184,7 @@ const PhyTable = (props: GameboardsTableProps) => {
             </CardBody>
         </Card>
     </>;
-}
+};
 
 const CSTable = (props: GameboardsTableProps) => {
     const {
@@ -286,7 +284,7 @@ const CSTable = (props: GameboardsTableProps) => {
             </tbody>
         </Table>
     </div>;
-}
+};
 
 const GameboardsTable = siteSpecific(PhyTable, CSTable);
 

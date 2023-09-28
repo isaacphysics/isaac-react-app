@@ -164,7 +164,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             <td className="text-center align-middle border-0 p-1 w-50">
                                 {isAda && "("}{sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")}{isAda && ")"}
                             </td>
-                        </tr>
+                        </tr>;
                     })}
                     </tbody>
                 </table>}
@@ -192,7 +192,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         type="checkbox"
                         checked={board && selectedBoards?.some(e => e.id === board.id)}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            board && updateBoardSelection(board, event.target.checked)
+                            board && updateBoardSelection(board, event.target.checked);
                         }} aria-label="Delete gameboard"
                     />
                 </td>,
@@ -204,7 +204,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         className={"isaac-checkbox mr-n2"}
                         checked={board && selectedBoards?.some(e => e.id === board.id)}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            board && updateBoardSelection(board, event.target.checked)
+                            board && updateBoardSelection(board, event.target.checked);
                         }} aria-label="Delete gameboard"
                     />
                 </td>
@@ -279,7 +279,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         <Col>
                             <span data-testid={"created-date"}><b>Created</b>: {formatDate(board.creationDate)}</span><br/>
                             <span data-testid={"last-visited"}><b>Last visited</b>: {formatDate(board.lastVisited)}</span><br/>
-                            <b>Stages and difficulties</b>: {boardStagesAndDifficulties.map(([stage,difficulties], i) =>
+                            <b>Stages and difficulties</b>: {boardStagesAndDifficulties.map(([stage,difficulties], _) =>
                                 `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
                             ).join(", ") || "-"}<br/>
                         </Col>
