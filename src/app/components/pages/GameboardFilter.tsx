@@ -69,7 +69,7 @@ function itemiseByValue<R extends {value: string}>(values: string[], options: R[
     return options.filter(option => values.includes(option.value));
 }
 function itemiseTag(tag: Tag) {
-    return {value: tag.id, label: tag.title}
+    return {value: tag.id, label: tag.title};
 }
 
 function itemiseConcepts(concepts: string[]): Item<string>[] {
@@ -106,7 +106,7 @@ function processQueryString(query: string): QueryStringResponse {
     const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties as Nullable<string[] | string>), siteSpecific(DIFFICULTY_ITEM_OPTIONS, DIFFICULTY_ICON_ITEM_OPTIONS));
     const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards as Nullable<string[] | string>), getFilteredExamBoardOptions({byStages: stageItems.map(item => item.value as STAGE)}));
     const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories as Nullable<string[] | string>), QUESTION_CATEGORY_ITEM_OPTIONS);
-    const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts as Nullable<string[] | string>))
+    const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts as Nullable<string[] | string>));
 
     const selectionItems: Item<TAG_ID>[][] = [];
     if (isPhy) {
@@ -132,7 +132,7 @@ function processQueryString(query: string): QueryStringResponse {
 
     return {
         querySelections: selectionItems, queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems, queryConcepts: conceptItems, queryExamBoards: examBoardItems
-    }
+    };
 }
 
 function generatePhyBoardName(selections: Item<TAG_ID>[][]) {
@@ -226,76 +226,72 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
             </Col>
         </Row>
 
-        <Row className="mb-sm-4">
-            <Col xs={12}>
-                <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
-            </Col>
-            <Col lg={4}>
-                <div>
-                    <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
-                        I am interested in stage...
-                        <span id={`stage-help-tooltip`} className="icon-help ml-1" />
-                        <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
-                            {"Find questions that are suitable for this stage of school learning."} <br />
-                            {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
-                        </UncontrolledTooltip>
+        {filterExpanded && <>
+            <Row className="mb-sm-4">
+                <Col xs={12}>
+                    <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
+                </Col>
+                <Col lg={4}>
+                    <div>
+                        <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
+                            I am interested in stage...
+                            <span id={`stage-help-tooltip`} className="icon-help ml-1" />
+                            <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
+                                {"Find questions that are suitable for this stage of school learning."} <br />
+                                {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
+                            </UncontrolledTooltip>
+                        </Label>
+                        <StyledSelect id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
+                    </div>
+                    <div>
+                        <Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
+                            I would like questions for...
+                            <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
+                            <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
+                                Practice questions let you directly apply one idea -<br />
+                                P1 covers revision of a previous stage or topics near the beginning of a course,<br />
+                                P3 covers later topics.<br />
+                                Challenge questions are solved by combining multiple concepts and creativity.<br />
+                                C1 can be attempted near the beginning of your course,<br />
+                                C3 require more creativity and could be attempted later in a course.
+                            </UncontrolledTooltip>
+                        </Label>
+                        <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
+                        {/*<StyledSelect id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
+                    </div>
+                </Col>
+                <Col lg={8}>
+                    <Label className={`mt-4 mt-lg-0`}>
+                        Topics:
                     </Label>
-                    <StyledSelect id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
-                </div>
-                {/*<div>*/}
-                {/*    <Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
-                {/*        I would like some questions from Isaac to...*/}
-                {/*    </Label>*/}
-                {/*    <StyledSelect id="question-category-selector" isClearable onChange={selectOnChange(setQuestionCategories, false)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
-                {/*</div>*/}
-                <div>
-                    <Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
-                        I would like questions for...
-                        <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
-                        <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
-                            Practice questions let you directly apply one idea -<br />
-                            P1 covers revision of a previous stage or topics near the beginning of a course,<br />
-                            P3 covers later topics.<br />
-                            Challenge questions are solved by combining multiple concepts and creativity.<br />
-                            C1 can be attempted near the beginning of your course,<br />
-                            C3 require more creativity and could be attempted later in a course.
-                        </UncontrolledTooltip>
-                    </Label>
-                    <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
-                    {/*<StyledSelect id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
-                </div>
-            </Col>
-            <Col lg={8}>
-                <Label className={`mt-4 mt-lg-0`}>
-                    Topics:
-                </Label>
-                <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
-            </Col>
-        </Row>
+                    <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
+                </Col>
+            </Row>
 
-        <Col className="mt-2">
-            <CustomInput
-                type="checkbox"
-                id="show-book-questions-checkbox"
-                label="Include Isaac book questions"
-                checked={showBookQuestions}
-                onChange={() => {setShowBookQuestions(!showBookQuestions);}}
-            />
-        </Col>
-
-        {/* Buttons */}
-        <Row className={filterExpanded ? "mt-4" : ""}>
-            <Col>
-                {previousBoard && <Button size="sm" color="primary" outline onClick={previousBoard}>
-                    <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
-                </Button>}
+            <Col className="mt-2">
+                <CustomInput
+                    type="checkbox"
+                    id="show-book-questions-checkbox"
+                    label="Include Isaac book questions"
+                    checked={showBookQuestions}
+                    onChange={() => {setShowBookQuestions(!showBookQuestions);}}
+                />
             </Col>
-            <Col className="text-right">
-                <Button size="sm" color="primary" outline onClick={refresh}>
-                    <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
-                </Button>
-            </Col>
-        </Row>
+        
+            {/* Buttons */}
+            <Row className="mt-4">
+                <Col>
+                    {previousBoard && <Button size="sm" color="primary" outline onClick={previousBoard}>
+                        <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
+                    </Button>}
+                </Col>
+                <Col className="text-right">
+                    <Button size="sm" color="primary" outline onClick={refresh}>
+                        <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
+                    </Button>
+                </Col>
+            </Row>
+        </>}
         <Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
             Go to Questions...
         </Button>
@@ -304,7 +300,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
             className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
         />
     </Card>;
-}
+};
 
 // Takes a list of "raw" concepts, and returns a map which takes a tag Item, and gives a GroupedOptionsType<Item<string>> containing itemised concepts which relate to that tag
 const itemiseAndGroupConceptsByTag = (conceptDTOs : ContentSummaryDTO[]) => ((tag : Item<TAG_ID>) => {
@@ -315,7 +311,7 @@ const itemiseAndGroupConceptsByTag = (conceptDTOs : ContentSummaryDTO[]) => ((ta
                 ? [...acc, {value: dto.id, label: dto.title}]
                 : acc,
             [])
-    }
+    };
 });
 interface CSFilterProps extends FilterProps {
     examBoards : Item<string>[];
@@ -362,7 +358,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
             }
         });
         // Selections always have all 3 tiers in CS
-        setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics])
+        setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics]);
     }
 
     return <Card id="filter-panel" className="mx-auto mt-4 mb-5">
@@ -422,7 +418,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     <Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</Label>
                     <StyledSelect
                         inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
-                        options={topicChoices} onChange={(v, {action}) => {
+                        options={topicChoices} onChange={(v, _) => {
                         if ((Array.isArray(v) && v.length === 0) || v === null) {
                             setConcepts([]);
                         }
@@ -460,10 +456,10 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         </CardBody>
 
         <CardFooter tag={Button} color="secondary" className="w-100" onClick={scrollToQuestions}>
-            Scroll straight to questions<img className={"ml-3"} src={"/assets/chevron_down_white.svg"}/>
+            Scroll straight to questions<img className={"ml-3"} src={"/assets/chevron_down_white.svg"} alt=""/>
         </CardFooter>
     </Card>;
-}
+};
 
 export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const userContext = useUserContext();
@@ -634,7 +630,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         previousBoard: boardStack.length > 0 ? previousBoard : undefined,
         scrollToQuestions,
         refresh
-    }
+    };
 
     const metaDescriptionCS = "Search for the perfect computer science questions to study. For revision. For homework. For the classroom.";
 
