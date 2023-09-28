@@ -40,6 +40,7 @@ import classNames from "classnames";
 import {BoardCard} from "../elements/cards/BoardCard";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
+import { Spacer } from "../elements/Spacer";
 
 interface GameboardsTableProps {
     user: RegisteredUserDTO;
@@ -68,11 +69,11 @@ const PhyTable = (props: GameboardsTableProps) => {
     } = props;
     return <>
         <Row>
-            <Col sm={6} lg={3} xl={2}>
+            <Col sm={4} lg={3}>
                 <Label className="w-100">
                     Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected} className="p-2">
-                    {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
-                </Input>
+                        {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                    </Input>
                 </Label>
             </Col>
         </Row>
@@ -376,15 +377,15 @@ export const MyGameboards = () => {
                 </div>
                 <div>
                     {boardView !== BoardViews.table && <Row>
-                        <Col sm={6} lg={3} xl={2}>
+                        <Col sm={4} lg={3}>
                             <Label className="w-100">
                                 Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected}>
                                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                                 </Input>
                             </Label>
                         </Col>
-                        <div className="d-lg-none w-100" />
-                        <Col xs={6} lg={{size: 2, offset: 3}} xl={{size: 2, offset: 4}}>
+                        <Spacer />
+                        <Col xs={6} lg={2}>
                             <Label className="w-100">
                                 Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}

@@ -174,7 +174,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
             <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
             {isSetAssignments && <td className={"align-middle text-center"}>
                 <Button color={siteSpecific("tertiary", "secondary")} size="sm" style={{fontSize: 15}} onClick={toggleAssignModal}>
-                    Assign&nbsp;/ Unassign
+                    Assign{hasAssignedGroups && "\u00a0/ Unassign"}
                 </Button>
             </td>}
             <td className={basicCellClasses}>
@@ -261,7 +261,9 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </Row>
                 </CardBody>
                 {isSetAssignments && <CardFooter>
-                    <Button className={"mb-1"} block color="tertiary" onClick={toggleAssignModal}>Assign / Unassign</Button>
+                    <Button className={"mb-1"} block color="tertiary" onClick={toggleAssignModal}>
+                        Assign{hasAssignedGroups && " / Unassign"}
+                    </Button>
                 </CardFooter>}
             </Card>,
             <Card className={"board-card"} data-testid={"gameboard-card"}>
@@ -285,7 +287,9 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <CardFooter className={"text-right p-3"}>
                         <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
                         <Button outline color={"secondary"} className={"mr-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
-                        {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="secondary" onClick={toggleAssignModal}>Assign / Unassign</Button>}
+                        {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="secondary" onClick={toggleAssignModal}>
+                            Assign{hasAssignedGroups && " / Unassign"}
+                        </Button>}
                     </CardFooter>
                 </CardBody>
             </Card>

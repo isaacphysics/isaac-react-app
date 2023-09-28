@@ -69,6 +69,7 @@ import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
+import { Spacer } from "../elements/Spacer";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -568,17 +569,16 @@ export const SetAssignments = () => {
                     </h4>}
                 </>}
                 <Row>
-                    {(isPhy || boardView === BoardViews.card) && <Col sm={6} lg={3} xl={2}>
+                    {(isPhy || boardView === BoardViews.card) && <Col sm={6} lg={3}>
                         <Label className="w-100">
                             Display in <Input type="select" value={boardView} onChange={switchView}>
                                 {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                             </Input>
                         </Label>
                     </Col>}
-                    <div className="d-lg-none w-100"/>
-                    {boardView === BoardViews.card &&
-                    <>
-                        <Col xs={6} lg={{size: 2, offset: 3}} xl={{size: 2, offset: 4}}>
+                    <Spacer />
+                    {boardView === BoardViews.card && <>
+                        <Col xs={6} lg={2}>
                             <Label className="w-100">
                                 Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
