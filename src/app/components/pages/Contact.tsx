@@ -29,6 +29,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Immutable} from "immer";
+import { extractErrorMessage } from '../../services/errors';
 
 const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
     const urlQuery = queryString.parse(location.search);
@@ -64,7 +65,8 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
 
 export const Contact = () => {
     const user = useAppSelector(selectors.user.orNull);
-    const errorMessage = useAppSelector((state: AppState) => state?.error || null);
+    const error = useAppSelector((state: AppState) => state?.error);
+    const errorMessage = extractErrorMessage(error);
     const [presetSubject, presetMessage, presetPlaceholder] = determineUrlQueryPresets(user);
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");
