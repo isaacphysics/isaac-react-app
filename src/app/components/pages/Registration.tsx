@@ -40,11 +40,13 @@ import {Redirect, RouteComponentProps, withRouter} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
+import { extractErrorMessage } from '../../services/errors';
 
 export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const errorMessage = useAppSelector(selectors.error.general);
+    const error = useAppSelector((state) => state?.error);
+    const errorMessage = extractErrorMessage(error);
     const userEmail = location.state?.email || undefined;
     const userPassword = location.state?.password || undefined;
 

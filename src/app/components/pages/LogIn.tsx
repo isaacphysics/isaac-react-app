@@ -30,6 +30,7 @@ import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
+import { extractErrorMessage } from '../../services/errors';
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -41,7 +42,8 @@ export const useLoginLogic = () => {
     const dispatch = useAppDispatch();
 
     const totpChallengePending = useAppSelector((state: AppState) => state?.totpChallengePending);
-    const errorMessage = useAppSelector(selectors.error.general);
+    const error = useAppSelector((state: AppState) => state?.error);
+    const errorMessage = extractErrorMessage(error);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState<boolean>(false);
