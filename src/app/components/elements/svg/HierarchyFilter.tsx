@@ -69,7 +69,8 @@ function hexagonTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions,
 
 export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSelection}: HierarchyFilterProps) {
     const deviceSize = useDeviceSize();
-    const hexagon = calculateHexagonProportions(36, deviceSize === "xs" ? 10 : 8);
+    const leadingHexagon = calculateHexagonProportions(36, deviceSize === "xs" ? 2 : 8);
+    const hexagon = calculateHexagonProportions(36, deviceSize === "xs" ? 16 : 8);
     const focusPadding = 3;
 
     const maxOptions = choices.slice(1).map(c => c.length).reduce((a, b) => Math.max(a, b), 0);
@@ -88,7 +89,7 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                         sourceIndex={choices[i].map(c => c.value).indexOf(selections[i][0]?.value)}
                         optionIndices={[...choices[i+1].keys()]} // range from 0 to choices[i+1].length
                         targetIndices={selections[i+1]?.map(s => choices[i+1].map(c => c.value).indexOf(s.value)) || [-1]}
-                        hexagonProportions={hexagon} connectionProperties={connectionProperties}
+                        leadingHexagonProportions={leadingHexagon} hexagonProportions={hexagon} connectionProperties={connectionProperties}
                         rowIndex={i} mobile={deviceSize === "xs"} className={`connection ${subject}`}
                     />
                 </g>;
@@ -109,7 +110,7 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                         );
                     }
 
-                    return <g key={choice.value} transform={hexagonTranslation(deviceSize, hexagon, i, j)}>
+                    return <g key={choice.value} transform={hexagonTranslation(deviceSize, i === 0 ? leadingHexagon : hexagon, i, j)}>
                         <Hexagon {...hexagon} className={classNames("hex", subject, {"active": isSelected && !isComingSoon, "de-emph": isComingSoon})} />
                         <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
                             <div className={classNames("hexagon-tier-title", {"active": isSelected && !isComingSoon, "de-emph": isComingSoon, "small": longWordInLabel})}>
