@@ -34,13 +34,15 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
+import { extractErrorMessage } from '../../services/errors';
 
 const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
 export const TeacherRequest = () => {
     const user = useAppSelector(selectors.user.orNull);
-    const errorMessage = useAppSelector((state: AppState) => (state && state.error) || null);
+    const error = useAppSelector((state: AppState) => state?.error);
+    const errorMessage = extractErrorMessage(error);
     const {data: warningFragment} = useGetPageFragmentQuery(warningFragmentId);
     const [submitContactForm] = useSubmitContactFormMutation();
 
