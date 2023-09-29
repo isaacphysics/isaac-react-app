@@ -128,7 +128,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
     }
 
     const numericInputValidator = (input: string) => {
-        const regexStr = "[^ 0-9A-Za-z,.+*/×÷-]+";
+        const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]+";
         const badCharacters = new RegExp(regexStr);
         const operatorExpression = new RegExp(".*[0-9][+*/×÷-]\\.?[0-9]+$");
         const errors = [];
