@@ -64,6 +64,7 @@ import {
     CustomInput
 } from "reactstrap";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import { Spacer } from '../elements/Spacer';
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -199,7 +200,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
     const deviceSize = useDeviceSize();
     const [filterExpanded, setFilterExpanded] = useState(deviceSize != "xs");
 
-    return <Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
+    return <Card id="filter-panel" className="mt-4 px-1 py-3 p-sm-4 pb-5 pb-sm-5">
         <Row>
             <Col sm={8} lg={9}>
                 <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
@@ -281,18 +282,19 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
             {/* Buttons */}
             <Row className="mt-4">
                 <Col>
-                    {previousBoard && <Button size="sm" color="primary" outline onClick={previousBoard}>
-                        <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
+                    {previousBoard && <Button className="w-100 w-sm-auto h-100 h-sm-auto" size="sm" color="primary" outline onClick={previousBoard}>
+                        <span>Undo Shuffle&nbsp;&#9100;</span> 
                     </Button>}
                 </Col>
+                <Spacer width={10}/>
                 <Col className="text-right">
-                    <Button size="sm" color="primary" outline onClick={refresh}>
-                        <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
+                    <Button className="w-100 w-sm-auto h-100 h-sm-auto" size="sm" color="primary" outline onClick={refresh}>
+                        <span>Shuffle Questions&nbsp;⟳</span> 
                     </Button>
                 </Col>
             </Row>
         </>}
-        <Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
+        <Button color="link" className="filter-go-to-questions" style={{width: "max-content"}} onClick={scrollToQuestions}>
             Go to Questions...
         </Button>
         <Button
