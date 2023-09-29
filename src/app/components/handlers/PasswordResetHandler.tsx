@@ -4,11 +4,12 @@ import {Button, Card, CardBody, CardFooter, Container, Form, FormFeedback, FormG
 import {PasswordFeedback} from "../../../IsaacAppTypes";
 import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../services";
 import {RouteComponentProps} from "react-router";
+import { extractErrorMessage } from '../../services/errors';
 
 
 export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: string}>) => {
     const dispatch = useAppDispatch();
-    const errorMessage = useAppSelector((state: AppState) => state?.error || null);
+    const error = useAppSelector((state: AppState) => state?.error || null);
     const urlToken = match.params.token || null;
 
     const [isValidPassword, setValidPassword] = useState(true);
@@ -66,11 +67,11 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
                 </CardBody>
                 <CardFooter>
                     <h4 role="alert" className="text-danger text-center mb-0">
-                        {errorMessage && errorMessage.type === "generalError" && errorMessage.generalError}
+                        {extractErrorMessage(error)}
                     </h4>
                     <Button color="secondary" className="mb-2" block
                         onClick={() => {
-                            if (isValidPassword && !errorMessage && urlToken) {
+                            if (isValidPassword && !error && urlToken) {
                                 dispatch(handlePasswordReset({token: urlToken, password: currentPassword}));
                             }
                         }}

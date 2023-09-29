@@ -68,7 +68,7 @@ const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
     const searchParams = queryString.parse(search);
     return {
-        errorMessage: state?.error ?? null,
+        error: state?.error ?? null,
         userAuthSettings: state?.userAuthSettings ?? null,
         userPreferences: state?.userPreferences ?? null,
         firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
@@ -85,7 +85,7 @@ const dispatchToProps = {
 
 interface AccountPageProps {
     user: PotentialUser;
-    errorMessage: ErrorState;
+    error: ErrorState;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     getChosenUserAuthSettings: (userid: number) => void;
     userPreferences: UserPreferencesDTO | null;
@@ -107,7 +107,7 @@ function hashEqual<T>(current: NonNullable<T>, prev: NonNullable<T>, options?: N
     return equal;
 }
 
-const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
+const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthSettings, userPreferences, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
     const dispatch = useAppDispatch();
 
     const {data: adminUserToEdit} = useAdminGetUserQuery(userOfInterest ? Number(userOfInterest) : skipToken);
@@ -371,8 +371,8 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                         <CardFooter className="py-4">
                             <Row>
                                 <Col size={12} md={{size: 6, offset: 3}}>
-                                    {errorMessage?.type === "generalError" && <h3 role="alert" className="text-danger text-center">
-                                        {errorMessage.generalError}
+                                    {error?.type === "generalError" && <h3 role="alert" className="text-danger text-center">
+                                        {error.generalError}
                                     </h3>}
                                     {/* Teacher connections does not have a save */}
                                     <Input
