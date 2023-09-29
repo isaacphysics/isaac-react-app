@@ -7,9 +7,6 @@ import {
     mainContentIdSlice,
     printingSettingsSlice,
     transientUserContextSlice,
-    glossaryTerms,
-    concepts,
-    doc,
     questions,
     activeModals,
     notifications,
@@ -21,9 +18,6 @@ import {
     testQuestions,
     quizAttempt,
     groupMemberships,
-    currentTopic,
-    questionSearchResult,
-    search,
     isaacApi,
     gameboardsSlice,
     adminUserSearchSlice,
@@ -48,13 +42,6 @@ export const rootReducer = combineReducers({
     activeModals,
     notifications,
 
-    // Static Content
-    glossaryTerms,
-
-    // Content
-    doc,
-    concepts,
-
     // Question
     questions,
 
@@ -71,15 +58,8 @@ export const rootReducer = combineReducers({
     // Groups
     groupMemberships,
 
-    // Topics
-    currentTopic,
-
     // Gameboards
     boards: gameboardsSlice.reducer,
-    questionSearchResult,
-
-    // Search
-    search,
 
     // Quizzes
     quizAttempt,

@@ -1,4 +1,4 @@
-import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
+import {ContentDTO, ContentSummaryDTO, IsaacTopicSummaryPageDTO} from "../../IsaacApiTypes";
 import {
     ALL_TOPICS_CRUMB,
     DOCUMENT_TYPE,
@@ -6,11 +6,9 @@ import {
     isIntendedAudience,
     isPhy,
     LinkInfo,
-    NOT_FOUND,
     UseUserContextReturnType
 } from "./";
-import {NOT_FOUND_TYPE, PotentialUser} from "../../IsaacAppTypes";
-import {CurrentTopicState} from "../state";
+import {PotentialUser} from "../../IsaacAppTypes";
 import {Immutable} from "immer";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {
@@ -32,26 +30,26 @@ export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], u
     return [relatedConcepts, relatedQuestions];
 };
 
-export const getRelatedDocs = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
-    if (doc && doc != NOT_FOUND && doc.relatedContent) {
+export const getRelatedDocs = (doc: ContentDTO | undefined, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
+    if (doc && doc.relatedContent) {
         return filterAndSeparateRelatedContent(doc.relatedContent, userContext, user);
     }
     return [[], []];
 };
 
-export const getRelatedConcepts = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
+export const getRelatedConcepts = (doc: ContentDTO | undefined, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
     return getRelatedDocs(doc, userContext, user)[0];
 };
 
-const isValidIdForTopic = (contentId: string, currentTopic: CurrentTopicState) => {
-    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
+const isValidIdForTopic = (contentId: string, currentTopic: IsaacTopicSummaryPageDTO | undefined) => {
+    if (currentTopic && currentTopic.relatedContent) {
         return !!currentTopic.relatedContent.filter((content) => content.id === contentId);
     }
 };
 
-export const determineTopicHistory = (currentTopic: CurrentTopicState, currentDocId: string) => {
+export const determineTopicHistory = (currentTopic: IsaacTopicSummaryPageDTO | undefined, currentDocId: string) => {
     const result: LinkInfo[] = [];
-    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && currentTopic.title && currentTopic.relatedContent) {
+    if (currentTopic && currentTopic.id && currentTopic.title && currentTopic.relatedContent) {
         result.push(ALL_TOPICS_CRUMB);
         if (isValidIdForTopic(currentDocId, currentTopic)) {
             result.push({title: currentTopic.title, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`});
@@ -64,8 +62,8 @@ export const makeAttemptAtTopicHistory = () => {
     return [ALL_TOPICS_CRUMB]
 };
 
-export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
-    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
+export const determineNextTopicContentLink = (currentTopic: IsaacTopicSummaryPageDTO | undefined, contentId: string, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
+    if (currentTopic && currentTopic.relatedContent) {
         if (isValidIdForTopic(contentId, currentTopic)) {
             const [relatedConcepts, relatedQuestions] =
                 filterAndSeparateRelatedContent(currentTopic.relatedContent, userContext, user);

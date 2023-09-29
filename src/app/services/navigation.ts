@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
+import React from "react";
 import queryString from "query-string";
-import {fetchTopicSummary, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery} from "../state";
+import {selectors, useAppSelector, useGetGameboardByIdQuery, useGetTopicSummaryQuery} from "../state";
 import {
     determineCurrentCreationContext,
     determineGameboardHistory,
@@ -11,13 +11,12 @@ import {
     DOCUMENT_TYPE,
     fastTrackProgressEnabledBoards,
     makeAttemptAtTopicHistory,
-    NOT_FOUND, PATHS, siteSpecific,
+    PATHS, siteSpecific,
     TAG_ID,
     useQueryParams,
     useUserContext
 } from "./";
 import {AudienceContext, ContentDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {useLocation} from "react-router-dom";
 
@@ -36,22 +35,18 @@ export interface PageNavigation {
 
 const defaultPageNavigation = (currentGameboard?: GameboardDTO) => ({breadcrumbHistory: [], currentGameboard});
 
-export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavigation => {
+export const useNavigation = (doc: ContentDTO | undefined): PageNavigation => {
     const {search} = useLocation();
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
-    const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
-    const dispatch = useAppDispatch();
-    const {data: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
+    const currentDocId = doc ? doc.id as string : "";
 
-    useEffect(() => {
-        if (topic) dispatch(fetchTopicSummary(topic as TAG_ID));
-    }, [topic, currentDocId, dispatch]);
+    const {currentData: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
+    const {currentData: currentTopic} = useGetTopicSummaryQuery(topic ? topic as TAG_ID : skipToken);
 
-    const currentTopic = useAppSelector(selectors.topic.currentTopic);
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
-    if (doc === null || doc === NOT_FOUND) {
+    if (doc === undefined) {
         return defaultPageNavigation(currentGameboard);
     }
 

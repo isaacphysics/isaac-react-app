@@ -5,8 +5,9 @@ import {ContentDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {AppState, selectors, useAppSelector} from "../state";
 import queryString from "query-string";
 import {Location} from "history";
-import {PotentialUser} from "../../IsaacAppTypes";
+import {PageContext, PotentialUser} from "../../IsaacAppTypes";
 import {Immutable} from "immer";
+import {useContext} from "react";
 
 export function makeUrl(url: string, queryParams?: { [p: string]: string | undefined }) {
     function valueIsNotUndefined(v: [string, string | undefined]): v is [string, string] {
@@ -115,10 +116,11 @@ interface FastTrackPageProperties {
     isFastTrackPage: boolean;
     doc: QuestionDTO;
     correct: boolean;
-    page: ContentDTO | undefined;
     pageCompleted: boolean;
     questionHistory: string[];
     board: string | undefined;
+    pageId: string | undefined;
+    pageLevel: number | undefined;
     userContext: UseUserContextReturnType;
     user: Immutable<PotentialUser> | null;
     canSubmit: boolean;
@@ -131,13 +133,13 @@ export function useFastTrackInformation(
     const {board, questionHistory: questionHistoryUrl}: {board?: string; questionHistory?: string} = queryString.parse(location.search);
     const questionHistory = questionHistoryUrl?.split(",") || [];
 
-    const page = useAppSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
-    const isFastTrackPage = page?.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
+    const {id: pageId, type: pageType, level: pageLevel} = useContext(PageContext);
+    const isFastTrackPage = pageType === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
     const pageCompleted = useAppSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : false);
     const userContext = useUserContext();
     const user = useAppSelector(selectors.user.orNull);
 
-    return {isFastTrackPage, doc, correct, page, pageCompleted, questionHistory, board, userContext, user, canSubmit}
+    return {isFastTrackPage, doc, correct, pageCompleted, pageId, pageLevel, questionHistory, board, userContext, user, canSubmit}
 }
 
 export function determineFastTrackPrimaryAction(questionPart: FastTrackPageProperties) {
@@ -163,23 +165,23 @@ export function determineFastTrackPrimaryAction(questionPart: FastTrackPagePrope
 }
 
 export function determineFastTrackSecondaryAction(questionPart: FastTrackPageProperties) {
-    if (questionPart.page) {
+    if (questionPart.pageId) {
         if (!questionPart.correct) {
             const relatedUnansweredEasierQuestions =
-                getRelatedUnansweredEasierQuestions(questionPart.doc, questionPart.page.level || 0);
+                getRelatedUnansweredEasierQuestions(questionPart.doc, questionPart.pageLevel || 0);
             if (relatedUnansweredEasierQuestions.length > 0) {
                 const easierQuestion = relatedUnansweredEasierQuestions[0];
                 return tryEasierQuestion(
-                    easierQuestion, questionPart.page.id, questionPart.pageCompleted,
+                    easierQuestion, questionPart.pageId, questionPart.pageCompleted,
                     questionPart.questionHistory, questionPart.board);
             }
         }
         const relatedUnansweredSupportingQuestions =
-            getRelatedUnansweredSupportingQuestions(questionPart.doc, questionPart.page.level || 0);
+            getRelatedUnansweredSupportingQuestions(questionPart.doc, questionPart.pageLevel || 0);
         if (relatedUnansweredSupportingQuestions.length > 0) {
             const supportingQuestion = relatedUnansweredSupportingQuestions[0];
             return trySupportingQuestion(
-                supportingQuestion, questionPart.page.id, questionPart.pageCompleted,
+                supportingQuestion, questionPart.pageId, questionPart.pageCompleted,
                 questionPart.questionHistory, questionPart.board);
         }
     }

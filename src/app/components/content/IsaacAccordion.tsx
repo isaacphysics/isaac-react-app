@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {Accordion} from "../elements/Accordion";
 import {IsaacContent} from "./IsaacContent";
@@ -15,6 +15,7 @@ import {
 } from "../../services";
 import {AppState, selectors, useAppSelector} from "../../state";
 import {useLocation} from "react-router-dom";
+import {PageContext} from "../../../IsaacAppTypes";
 
 const defaultConceptDisplay = siteSpecific(
     {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
@@ -28,12 +29,12 @@ interface SectionWithDisplaySettings extends ContentDTO {
     hidden?: boolean;
 }
 export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
-    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
+    const {type: pageType} = useContext(PageContext);
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
     // Select different default display depending on page type
-    const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
+    const defaultDisplay = pageType === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
     const accordionDisplay = mergeDisplayOptions(defaultDisplay, doc.display);
 
     const location = useLocation();

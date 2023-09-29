@@ -1,7 +1,7 @@
 import React, {RefObject, useContext, useEffect} from 'react';
 import {AnvilAppDTO} from "../../../IsaacApiTypes";
 import {AppState, selectors, useAppSelector} from "../../state";
-import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
+import {AccordionSectionContext, PageContext, QuestionContext} from "../../../IsaacAppTypes";
 import {selectQuestionPart} from "../../services";
 
 interface AnvilAppProps {
@@ -13,7 +13,6 @@ const sessionIdentifier = Math.random();
 export const AnvilApp = ({doc}: AnvilAppProps) => {
     const baseURL = `https://${doc.appId}.anvil.app/${doc.appAccessKey}?s=new${sessionIdentifier}`;
     const title = doc.value || "Anvil app";
-    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
     const user = useAppSelector(selectors.user.orNull);
 
     const iframeRef = React.useRef() as RefObject<HTMLIFrameElement>;
@@ -52,13 +51,12 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
         appParams["accordion_section_id"] = accordionSectionId;
     }
 
-    if (page && page != 404) {
-        if (page.id != null) {
-            appParams["page_id"] = page.id;
-        }
-        if (page.type != null) {
-            appParams["page_type"] = page.type;
-        }
+    const {id, type} = useContext(PageContext);
+    if (id != null) {
+        appParams["page_id"] = id;
+    }
+    if (type != null) {
+        appParams["page_type"] = type;
     }
 
     const queryParams = Object.keys(appParams).map((key) => {

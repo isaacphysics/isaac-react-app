@@ -3,13 +3,13 @@ import {
     ACTION_TYPE,
     api,
     API_REQUEST_FAILURE_MESSAGE,
-    DOCUMENT_TYPE, FIRST_LOGIN_STATE,
+    FIRST_LOGIN_STATE,
     history,
     isFirstLoginInPersistence,
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    TAG_ID, trackEvent
+    trackEvent
 } from "../../services";
 import {
     Action,
@@ -17,7 +17,6 @@ import {
     CredentialsAuthDTO,
     FreeTextRule,
     PotentialUser,
-    QuestionSearchQuery,
     UserPreferencesDTO,
     UserSnapshot,
     ValidatedChoice,
@@ -26,20 +25,11 @@ import {
 import {
     AuthenticationProvider,
     ChoiceDTO,
-    GlossaryTermDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
     TestCaseDTO,
-    UserContext,
-    UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserContext
 } from "../../../IsaacApiTypes";
-import {
-    releaseAllConfirmationModal,
-    releaseConfirmationModal,
-    revocationConfirmationModal,
-    tokenVerificationModal
-} from "../../components/elements/modals/TeacherConnectionModalCreators";
 import {AxiosError} from "axios";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {
@@ -434,44 +424,6 @@ export const requestNotifications = () => async (dispatch: Dispatch<Action>) => 
     }
 }
 
-// Document & topic fetch
-export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
-    let apiEndpoint;
-    switch (documentType) {
-        case DOCUMENT_TYPE.CONCEPT: apiEndpoint = api.concepts; break;
-        case DOCUMENT_TYPE.QUESTION: apiEndpoint = api.questions; break;
-        case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
-    }
-    try {
-        const response = await apiEndpoint.get(pageId);
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
-    }
-};
-
-export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.TOPIC_REQUEST, topicName});
-    try {
-        const response = await api.topics.get(topicName);
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS, topic: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE});
-    }
-};
-
-// Glossary Terms
-export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST});
-    try {
-        const response = await api.glossary.getTerms();
-        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS, terms: response.data.results as GlossaryTermDTO[]});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE});
-    }
-};
-
 // Questions
 export const registerQuestions = (questions: QuestionDTO[], accordionClientId?: string, isQuiz?: boolean) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, questions, accordionClientId, isQuiz});
@@ -549,29 +501,6 @@ export function setCurrentAttempt<T extends ChoiceDTO>(questionId: string, attem
         attempt
     });
 }
-
-let questionSearchCounter = 0;
-
-export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: Dispatch<Action>) => {
-    const searchCount = ++questionSearchCounter;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
-    try {
-        const questionsResponse = await api.questions.search(query);
-        // Because some searches might take longer to return that others, check this is the most recent search still.
-        // Otherwise, we just discard the data.
-        if (searchCount === questionSearchCounter) {
-            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to search for questions", e));
-    }
-};
-
-export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
-    questionSearchCounter++;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: []});
-};
 
 export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST});
@@ -652,20 +581,6 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
     }
 };
 
-// Search
-export const fetchSearch = (query: string, types: string | undefined) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.SEARCH_REQUEST, query, types});
-    try {
-        if (query === "") {
-            return;
-        }
-        const searchResponse = await api.search.get(query, types);
-        dispatch({type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResponse.data});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Search failed", e));
-    }
-};
-
 // Admin
 
 export const resetMemberPassword = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
@@ -678,17 +593,6 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
         dispatch(showAxiosErrorToastIfNeeded("Failed to send password reset", e));
     }
 };
-
-// Concepts
-export const fetchConcepts = (conceptIds?: string, tagIds?: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONCEPTS_REQUEST});
-    try {
-        const concepts = await api.concepts.list(conceptIds, tagIds);
-        dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS, concepts: concepts.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Loading Concepts Failed", e));
-    }};
 
 // SERVICE ACTIONS (w/o dispatch)
 

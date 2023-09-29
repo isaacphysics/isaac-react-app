@@ -64,11 +64,6 @@ export const apiHelper = {
 };
 
 export const api = {
-    search: {
-        get: (query: string, types: string | undefined): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
-            return endpoint.get(`/search`, {params: {query, types}});
-        }
-    },
     users: {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
@@ -142,27 +137,7 @@ export const api = {
             return endpoint.post(`/notifications/${id}/${response}`)
         }
     },
-    glossary: {
-        getTerms: (): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.GlossaryTermDTO>> => {
-            // FIXME: Magic number. This needs to go through pagination with
-            // limit and start_index query parameters.
-            return endpoint.get('/glossary/terms', {
-                params: { limit: 10000 }
-            });
-        },
-        getTermById: (id: string): AxiosPromise<ApiTypes.GlossaryTermDTO> => {
-            return endpoint.get(`/glossary/terms/${id}`);
-        }
-    },
     questions: {
-        get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
-            return endpoint.get(`/pages/questions/${id}`);
-        },
-        search: (query: QuestionSearchQuery): AxiosPromise<QuestionSearchResponse> => {
-            return endpoint.get(`/pages/questions/`, {
-                params: query,
-            });
-        },
         answer: (id: string, answer: Immutable<ApiTypes.ChoiceDTO>): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
         },
@@ -177,26 +152,6 @@ export const api = {
         },
         testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
             return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
-        }
-    },
-    concepts: {
-        list: (conceptIds?: string, tagIds?: string): AxiosPromise<Concepts> => {
-            return endpoint.get('/pages/concepts', {
-                params: { limit: 999 , ids: conceptIds, tags: tagIds }
-            });
-        },
-        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
-            return endpoint.get(`/pages/concepts/${id}`);
-        },
-    },
-    pages: {
-        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
-            return endpoint.get(`/pages/${id}`);
-        },
-    },
-    topics: {
-        get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
-            return endpoint.get(`/pages/topics/${topicName}`);
         }
     },
     websockets: {
