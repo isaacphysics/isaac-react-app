@@ -25,14 +25,16 @@ const midnightOf = (date: Date | number) => {
     return d;
 };
 
-const CSCircle = ({assignment}: {assignment: AssignmentDTO}) => {
-    if (!isDefined(assignment.gameboard)) return null;
-    return <svg className={"board-circle"} width={48} height={48}>
-        <Circle radius={24} properties={{fill: "#000"}}/>
-        <foreignObject className={"board-percent-completed"} x={0} y={0} width={48} height={48}>
-            {assignment.gameboard.percentageCompleted}%
-        </foreignObject>
-    </svg>;
+const CSCircle = ({label, percentage}: {percentage: number | unknown, label: string}) => {
+    return <Label>
+        <span className="d-block">{label}</span>
+        <svg className={"board-circle mt-1"} width={48} height={48}>
+            <Circle radius={24} properties={{fill: "#000"}}/>
+            <foreignObject className={"board-percent-completed"} x={0} y={0} width={48} height={48}>
+                {`${percentage ?? 0}%`}
+            </foreignObject>
+        </svg>
+    </Label>;
 };
 
 const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
@@ -158,34 +160,34 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
 };
 
 const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
+    const boardPercentageAttempted = useMemo(() => determineGameboardPercentageAttempted(assignment.gameboard), [assignment.gameboard]);
     const now = new Date();
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
     return <Row data-testid={"my-assignment"} className={"pt-3 mb-3 border-top"}>
-        <Col xs={2} lg={1} className={"text-center px-3 pt-3"}>
-            <CSCircle assignment={assignment}/>
-        </Col>
-        <Col xs={10} md={4}>
+        <Col xs={{size: 8, order: 1}} sm={9} md={4}>
             <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
                 <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
             </Link>
             {isDefined(assignment.groupName) && <p className="mb-0"><strong>Group:</strong> {assignment.groupName}</p>}
             {isDefined(assignment.assignerSummary) && <p><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>}
         </Col>
-        <Col xs={6} md={4}>
+        <Col xs={{size: 6, order: 3}} md={{size: 4, order: 2}}>
             {isDefined(assignmentStartDate) && <p className="mb-0" data-testid={"gameboard-assigned"}><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>}
             {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100
                 ? <p><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>
                 : <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>
             }
             {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
-            <Button className={"text-nowrap mt-2 d-none d-md-block d-lg-none"} size={"sm"} outline tag={Link} to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
-                View quiz
-            </Button>
         </Col>
-        <Col className={"ml-auto text-right d-lg-block d-md-none d-block"}>
-            <Button className={"text-nowrap vertical-center-transform"} size={"sm"} outline tag={Link} to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
-                View quiz
-            </Button>
+        <Col xs={{size: 4, order: 2}} sm={3} md={{size: 4, order: 3}} >
+            <Row className="justify-content-end">
+                <Col xs="auto d-none d-lg-block" className={"text-center px-3"}>
+                    {assignment.gameboard && <CSCircle percentage={boardPercentageAttempted} label="%&nbsp;attempted"/>}
+                </Col>
+                <Col xs="auto" className={"text-center px-3"}>
+                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageCompleted} label="%&nbsp;correct"/>}
+                </Col>
+            </Row>
         </Col>
     </Row>;
 };
