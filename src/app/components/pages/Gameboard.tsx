@@ -50,7 +50,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
     let iconHref = siteSpecific("/assets/question-hex.svg#icon", "/assets/cs/icons/question-not-started.svg");
     let message = siteSpecific("", "Not started");
-    let messageClasses = "";
+    const messageClasses = "";
 
     switch (question.state) {
         case "PERFECT":
@@ -80,7 +80,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 {siteSpecific(
                     <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg>,
                     <div className={"inner-progress-icon"}>
-                        <img src={iconHref} /><br/>
+                        <img src={iconHref} alt="" /><br/>
                         <span className={"icon-title"}>{message}</span>
                     </div>
                 )}
