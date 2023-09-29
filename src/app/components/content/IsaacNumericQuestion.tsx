@@ -135,13 +135,13 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
             debounceTimer.current = null;
         }
         debounceTimer.current = window.setTimeout(() => {
-            const regexStr = "[^ 0-9A-Za-z,.+*/×÷-]+";
+            const regexStr = "[^ 0-9EXex(){},.+*//^×÷-]+";
             const badCharacters = new RegExp(regexStr);
             const operatorExpression = new RegExp(".*[0-9][+*/×÷-]\\.?[0-9]+$");
             const _errors = [];
 
             if (badCharacters.test(userInput)) {
-                const usedBadChars: string[] = []; 
+                const usedBadChars: string[] = [];
                 for(let i = 0; i < userInput.length; i++) {
                     const char = userInput.charAt(i);
                     if (badCharacters.test(char)) {
@@ -239,7 +239,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     </div>}
                 </Col>
             </Row>
-            {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && 
+            {isDefined(errors) && Array.isArray(errors) && errors.length > 0 &&
                 <div className="question-feedback-input-errors"><strong>Careful!</strong><ul>
                     {errors.map(e => (<li key={e}>{e}</li>))}
                 </ul></div>
