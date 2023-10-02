@@ -34,7 +34,7 @@ import {
 } from "../modals/TeacherConnectionModalCreators";
 import { FixedSizeList } from "react-window";
 
-const CONNECTIONS_ROW_HEIGHT = 35;
+const CONNECTIONS_ROW_HEIGHT = 40;
 const CONNECTIONS_MAX_VISIBLE_ROWS = 10;
 
 interface TeacherConnectionsProps {
@@ -117,15 +117,15 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     <div className="connect-list">
                         <h3><span className={siteSpecific("icon-person-active", "icon-group-white")} />Teacher connections</h3>
                         <div className="connect-list-inner">
-                            <ul className="teachers-connected list-unstyled">
-                                <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, activeAuthorisations?.length ?? 0))} itemCount={activeAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%">
+                            <ul className="teachers-connected list-unstyled ml-3 my-0 mr-0">
+                                <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, activeAuthorisations?.length ?? 0))} itemCount={activeAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                                     {({index, style}) => {
                                         const teacherAuthorisation = activeAuthorisations?.[index];
                                         if (!teacherAuthorisation) {
                                             return null;
                                         }
                                         return <React.Fragment key={teacherAuthorisation.id}>
-                                        <li style={style}>
+                                        <li style={style} className="py-2">
                                             <span className="icon-person-active" />
                                             <span id={`teacher-authorisation-${teacherAuthorisation.id}`}>
                                                 {extractTeacherName(teacherAuthorisation)}
@@ -137,7 +137,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                 To remove this access, click &apos;Revoke&apos;.
                                             </RS.UncontrolledTooltip>
                                             <RS.Button
-                                                color="link" className="revoke-teacher"
+                                                color="link" className="revoke-teacher pr-1"
                                                 disabled={editingOtherUser}
                                                 onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
                                                 >
@@ -177,14 +177,14 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                             <h3><span className={siteSpecific("icon-person-active", "icon-group-white")} /> Student connections </h3>
 
                             <div className="connect-list-inner">
-                                <ul className="teachers-connected list-unstyled">
-                                    <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_ROW_HEIGHT, studentAuthorisations?.length ?? 0))} itemCount={studentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%">
+                                <ul className="teachers-connected list-unstyled ml-3 mt-0 mb-0 mr-0">
+                                    <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, studentAuthorisations?.length ?? 0))} itemCount={studentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                                         {({index, style}) => {
                                             const student = studentAuthorisations?.[index];
                                             if (!student) {
                                                 return null;
                                             }
-                                            return <li key={student.id} style={style}>
+                                            return <li key={student.id} style={style} className="py-2">
                                                 <span className="icon-person-active" />
                                                 <span id={`student-authorisation-${student.id}`}>
                                                     {student.givenName} {student.familyName}
@@ -196,7 +196,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     To remove this access, click &apos;Remove&apos;.
                                                 </RS.UncontrolledTooltip>
                                                 <RS.Button
-                                                    color="link" className="revoke-teacher" disabled={editingOtherUser}
+                                                    color="link" className="revoke-teacher pr-1" disabled={editingOtherUser}
                                                     onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(releaseConfirmationModal(user.id, student)))}
                                                 >
                                                     Remove
