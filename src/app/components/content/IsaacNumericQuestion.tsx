@@ -96,6 +96,7 @@ export const numericInputValidator = (input: string) => {
     const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]+";
     const badCharacters = new RegExp(regexStr);
     const operatorExpression = new RegExp(".*[0-9][+/÷-]\\.?[0-9]+");
+    const missingExponentSymbol = new RegExp(".*?10-([0-9]+).*?");
     const errors = [];
 
     if (badCharacters.test(input)) {
@@ -110,7 +111,9 @@ export const numericInputValidator = (input: string) => {
         }
         errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
     }
-    if (operatorExpression.test(input)) {
+    if (missingExponentSymbol.test(input)) {
+        errors.push('Use a correct exponent symbol, e.g. 10^-3 or 10**-3.');
+    } else if (operatorExpression.test(input)) {
         errors.push('Simplify your answer into a single decimal number.');
     }
     if (/.*?[0-9][, ][0-9]{3}.*?/.test(input)) {
