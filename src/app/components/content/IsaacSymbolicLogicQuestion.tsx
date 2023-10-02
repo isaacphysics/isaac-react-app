@@ -48,6 +48,34 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
+export const symbolicLogicInputValidator = (input: string) => {
+    const openBracketsCount = input.split('(').length - 1;
+    const closeBracketsCount = input.split(')').length - 1;
+    const regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+";
+    const badCharacters = new RegExp(regexStr);
+
+    const errors = [];
+    if (/\\[a-zA-Z()]|[{}]/.test(input)) {
+        errors.push('LaTeX syntax is not supported.');
+    }
+    if (badCharacters.test(input)) {
+        const usedBadChars: string[] = [];
+        for(let i = 0; i < input.length; i++) {
+            const char = input.charAt(i);
+            if (badCharacters.test(char)) {
+                if (!usedBadChars.includes(char)) {
+                    usedBadChars.push(char);
+                }
+            }
+        }
+        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+    }
+    if (openBracketsCount !== closeBracketsCount) {
+        errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+    }
+    return errors;
+};
+
 const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
@@ -152,34 +180,10 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
     };
 
-    const symbolicLogicQuestionValidation = (input: string) => {
+    const validateAndSetSketch = (input: string) => {
         const parsedExpression = parseBooleanExpression(input);
         if (isError(parsedExpression) || (parsedExpression.length === 0 && input !== '')) {
-            const openBracketsCount = input.split('(').length - 1;
-            const closeBracketsCount = input.split(')').length - 1;
-            const regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+";
-            const badCharacters = new RegExp(regexStr);
-
-            const errors = [];
-            if (/\\[a-zA-Z()]|[{}]/.test(input)) {
-                errors.push('LaTeX syntax is not supported.');
-            }
-            if (badCharacters.test(input)) {
-                const usedBadChars: string[] = [];
-                for(let i = 0; i < input.length; i++) {
-                    const char = input.charAt(i);
-                    if (badCharacters.test(char)) {
-                        if (!usedBadChars.includes(char)) {
-                            usedBadChars.push(char);
-                        }
-                    }
-                }
-                errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-            }
-            if (openBracketsCount !== closeBracketsCount) {
-                errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
-            }
-            return errors;
+            return symbolicLogicInputValidator(input);
         } else {
             if (input === '') {
                 const state = {result: {tex: "", python: "", mathml: ""}};
@@ -248,7 +252,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                         </UncontrolledTooltip>
                     </InputGroupAddon>
                 </InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={symbolicLogicQuestionValidation} />
+                <QuestionInputValidation userInput={textInput} validator={validateAndSetSketch} />
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}

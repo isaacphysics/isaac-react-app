@@ -46,6 +46,44 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
+export const symbolicInputValidator = (input: string) => {
+    console.log(input);
+    const openBracketsCount = input.split('(').length - 1;
+    const closeBracketsCount = input.split(')').length - 1;
+    const regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
+    const badCharacters = new RegExp(regexStr);
+    const errors = [];
+    if (/\\[a-zA-Z()]|[{}]/.test(input)) {
+        errors.push('LaTeX syntax is not supported.');
+    }
+    if (/\|.+?\|/.test(input)) {
+        errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
+    }
+    if (badCharacters.test(input)) {
+        const usedBadChars: string[] = [];
+        for(let i = 0; i < input.length; i++) {
+            const char = input.charAt(i);
+            if (badCharacters.test(char)) {
+                if (!usedBadChars.includes(char)) {
+                    usedBadChars.push(char);
+                }
+            }
+        }
+        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+    }
+    if (openBracketsCount !== closeBracketsCount) {
+        errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+    }
+    if (/\.[0-9]/.test(input)) {
+        errors.push('Please convert decimal numbers to fractions.');
+    }
+    if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
+        // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
+        return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
+    } 
+    return errors;
+};
+
 const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<FormulaDTO>(questionId);
@@ -142,40 +180,9 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
     };
 
-    const symbolicQuestionValidation = (input: string) => {
+    const validateAndSetSketch = (input: string) => {
         const parsedExpression = parseMathsExpression(input);
-        if (isError(parsedExpression) || (parsedExpression.length === 0 && input !== '')) {
-            const openBracketsCount = input.split('(').length - 1;
-            const closeBracketsCount = input.split(')').length - 1;
-            const regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
-            const badCharacters = new RegExp(regexStr);
-            const errors = [];
-            if (/\\[a-zA-Z()]|[{}]/.test(input)) {
-                errors.push('LaTeX syntax is not supported.');
-            }
-            if (/\|.+?\|/.test(input)) {
-                errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
-            }
-            if (badCharacters.test(input)) {
-                const usedBadChars: string[] = [];
-                for(let i = 0; i < input.length; i++) {
-                    const char = input.charAt(i);
-                    if (badCharacters.test(char)) {
-                        if (!usedBadChars.includes(char)) {
-                            usedBadChars.push(char);
-                        }
-                    }
-                }
-                errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-            }
-            if (openBracketsCount !== closeBracketsCount) {
-                errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
-            }
-            if (/\.[0-9]/.test(input)) {
-                errors.push('Please convert decimal numbers to fractions.');
-            }
-            return errors;
-        } else {
+        if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
             if (input === '') {
                 const state = {result: {tex: "", python: "", mathml: ""}};
                 dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
@@ -189,13 +196,8 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 const i = sizes.indexOf(Math.max.apply(null, sizes));
                 sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, input);
             }
-            if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
-                // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
-                return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
-            } else {
-                return [];
-            }
         }
+        return symbolicInputValidator(input);
     };
 
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
@@ -240,7 +242,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                         </RS.UncontrolledTooltip>
                     </RS.InputGroupAddon>
                 </RS.InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={symbolicQuestionValidation} />
+                <QuestionInputValidation userInput={textInput} validator={validateAndSetSketch} />
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}

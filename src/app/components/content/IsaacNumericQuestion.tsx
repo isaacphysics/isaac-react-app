@@ -92,6 +92,34 @@ function wrapUnitForSelect(unit?: string): string {
     }
 }
 
+export const numericInputValidator = (input: string) => {
+    const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]+";
+    const badCharacters = new RegExp(regexStr);
+    const operatorExpression = new RegExp(".*[0-9][+/÷-]\\.?[0-9]+");
+    const errors = [];
+
+    if (badCharacters.test(input)) {
+        const usedBadChars: string[] = []; 
+        for(let i = 0; i < input.length; i++) {
+            const char = input.charAt(i);
+            if (badCharacters.test(char)) {
+                if (!usedBadChars.includes(char)) {
+                    usedBadChars.push(char === ' ' ? 'space' : char);
+                }
+            }
+        }
+        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+    }
+    if (operatorExpression.test(input)) {
+        errors.push('Simplify your answer into a single decimal number.');
+    }
+    if (/.*?[0-9][, ][0-9]{3}.*?/.test(input)) {
+        errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
+    }
+
+    return errors;
+};
+
 const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacQuestionProps<IsaacNumericQuestionDTO, QuantityValidationResponseDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
@@ -126,34 +154,6 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
         };
         dispatchSetCurrentAttempt(attempt);
     }
-
-    const numericInputValidator = (input: string) => {
-        const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]+";
-        const badCharacters = new RegExp(regexStr);
-        const operatorExpression = new RegExp(".*[0-9][+*/×÷-]\\.?[0-9]+$");
-        const errors = [];
-
-        if (badCharacters.test(input)) {
-            const usedBadChars: string[] = []; 
-            for(let i = 0; i < input.length; i++) {
-                const char = input.charAt(i);
-                if (badCharacters.test(char)) {
-                    if (!usedBadChars.includes(char)) {
-                        usedBadChars.push(char === ' ' ? 'space' : char);
-                    }
-                }
-            }
-            errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-        }
-        if (operatorExpression.test(input)) {
-            errors.push('Simplify your answer into a single decimal number.');
-        }
-        if (/.*?[0-9][, ][0-9]{3}.*?/.test(input)) {
-            errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
-        }
-
-        return errors;
-    };
 
     const [isOpen, setIsOpen] = useState(false);
 
