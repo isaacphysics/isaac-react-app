@@ -221,7 +221,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             {modalVisible && <InequalityModal
                 close={closeModalAndReturnToScrollPosition}
                 onEditorStateChange={(state: any) => {
-                    dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
+                    dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" });
                     initialEditorSymbols.current = state.symbols;
                 }}
                 availableSymbols={doc.availableSymbols}
