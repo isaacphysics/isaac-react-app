@@ -141,7 +141,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Organic
         {id: TAG_ID.functionalGroups, title: "Functional Groups", parent: TAG_ID.organic},
         {id: TAG_ID.isomerism, title: "Isomerism", parent: TAG_ID.organic},
-        {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic},
+        {id: TAG_ID.organicReactions, title: "Reactions", parent: TAG_ID.organic},
         {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic},
         {id: TAG_ID.aromaticReactions, title: "Reactions (aromatics)", parent: TAG_ID.organic},
         {id: TAG_ID.polymers, title: "Polymers", parent: TAG_ID.organic},
