@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import {
   checkPageTitle,
+  checkPasswordInputTypes,
   fillFormCorrectly,
   getFormFields,
   renderTestEnvironment,
@@ -12,12 +13,9 @@ import { rest } from "msw";
 import { API_PATH } from "../../app/services";
 import { registrationMockUser, registrationUserData } from "../../mocks/data";
 
-
 const registerUserSpy = jest.spyOn(actions, "registerUser");
 
-
 describe("Student Registration", () => {
-
   const renderStudentRegistration = () => {
     renderTestEnvironment({
       role: "ANONYMOUS",
@@ -46,7 +44,7 @@ describe("Student Registration", () => {
       newsPreferences,
       events,
       submitButton,
-      recaptcha
+      recaptcha,
     } = formFields;
 
     [
@@ -64,7 +62,7 @@ describe("Student Registration", () => {
       newsPreferences(),
       events(),
       submitButton(),
-      recaptcha()
+      recaptcha(),
     ].forEach((each) => expect(each).toBeVisible());
     expect(form).toHaveTextContent("I am studying");
     // student should not have the option to select all stages
@@ -131,7 +129,7 @@ describe("Student Registration", () => {
       "mocked-recaptcha-token"
     );
   });
-  
+
   it("Register button is disabled until recaptcha checkbox is ticked", async () => {
     renderStudentRegistration();
     checkPageTitle("Register as a student");
@@ -140,5 +138,20 @@ describe("Student Registration", () => {
     expect(submitButton()).toBeDisabled();
     await userEvent.click(recaptcha());
     expect(submitButton()).toBeEnabled();
-  })
+  });
+
+  it("Clicking the show password icon will make the text of password field visible, and the icon change", async () => {
+    renderStudentRegistration();
+    checkPageTitle("Register as a student");
+    checkPasswordInputTypes("password");
+    const showPasswordToggle = screen.queryByTestId("show-password-icon");
+    if (showPasswordToggle) {
+      await userEvent.click(showPasswordToggle);
+    } else {
+      fail("Show password icon not found");
+    }
+    checkPasswordInputTypes("text");
+    const hidePasswordToggle = await screen.findByTestId("hide-password-icon");
+    expect(hidePasswordToggle).toBeInTheDocument();
+  });
 });

@@ -27,7 +27,8 @@ import {
 import {history, PASSWORD_REQUIREMENTS, SITE_SUBJECT_TITLE, validatePassword} from "../../services";
 import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
-import {Loading} from "../handlers/IsaacSpinner";
+import {Loading} from "../handlers/IsaacSpinner"; 
+import Password from '../elements/inputs/Password';
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -166,39 +167,58 @@ interface EmailPasswordInputsProps {
     displayLabels?: boolean;
 }
 export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPassword, logInAttempted, passwordResetAttempted, errorMessage, displayLabels = true}: EmailPasswordInputsProps) => {
-    return <>
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    return (
+      <>
         <FormGroup>
-            {displayLabels && <Label htmlFor="email-input">Email address</Label>}
-            <Input
-                id="email-input" autoComplete="email" type="email" name="email" placeholder="Email address"
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value)}
-                invalid={!!errorMessage || (!validEmail && (logInAttempted || passwordResetAttempted))}
-                aria-describedby="emailValidationMessage"
-                required
-            />
-            <FormFeedback id="emailValidationMessage">
-                {!validEmail && "Please enter a valid email address"}
-            </FormFeedback>
+          {displayLabels && <Label htmlFor="email-input">Email address</Label>}
+          <Input
+            id="email-input"
+            autoComplete="email"
+            type="email"
+            name="email"
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setEmail(event.target.value)
+            }
+            invalid={
+              !!errorMessage ||
+              (!validEmail && (logInAttempted || passwordResetAttempted))
+            }
+            aria-describedby="emailValidationMessage"
+            required
+          />
+          <FormFeedback id="emailValidationMessage">
+            {!validEmail && "Please enter a valid email address"}
+          </FormFeedback>
         </FormGroup>
 
         <FormGroup className="mb-0">
-            {displayLabels && (<><Label htmlFor="password-input">Password</Label>
-            <span id={`password-help-tooltip`} className="icon-help ml-1" />
-            <UncontrolledTooltip target={`password-help-tooltip`} placement="bottom">
-            {PASSWORD_REQUIREMENTS}
-            </UncontrolledTooltip></>)}
-            <Input
-                id="password-input" autoComplete="current-password" type="password" name="password" placeholder="Password"
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
-                invalid={!!errorMessage || (!validPassword && (logInAttempted))}
-                aria-describedby="passwordValidationMessage"
-                required
-            />
-            <FormFeedback id="passwordValidationMessage">
-                {!validPassword && PASSWORD_REQUIREMENTS}
-            </FormFeedback>
+          {displayLabels && (
+            <>
+              <Label htmlFor="current-password">Password</Label>
+              <span id={`password-help-tooltip`} className="icon-help ml-1" />
+              <UncontrolledTooltip
+                target={`password-help-tooltip`}
+                placement="bottom"
+              >
+                {PASSWORD_REQUIREMENTS}
+              </UncontrolledTooltip>
+            </>
+          )}
+          <Password
+            passwordFieldType="Current"
+            isPasswordVisible={isPasswordVisible}
+            setIsPasswordVisible={setIsPasswordVisible}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setPassword(event.target.value)
+            }
+            invalid={!!errorMessage || (!validPassword && logInAttempted)}
+            showToggleIcon={true}
+            required={true}
+          />
         </FormGroup>
-    </>;
+      </>
+    );
 }
 
 // Main login page component, utilises all of the components defined above
@@ -250,10 +270,14 @@ export const LogIn = () => {
                                 :
                                 <React.Fragment>
                                     <EmailPasswordInputs
-                                        setEmail={setEmail} setPassword={setPassword}
-                                        validEmail={isValidEmail} logInAttempted={logInAttempted}
-                                        passwordResetAttempted={passwordResetAttempted} validPassword={isValidPassword}
-                                        errorMessage={errorMessage} displayLabels={true} />
+                                        setEmail={setEmail}
+                                        setPassword={setPassword}
+                                        validEmail={isValidEmail} 
+                                        logInAttempted={logInAttempted}
+                                        passwordResetAttempted={passwordResetAttempted} 
+                                        validPassword={isValidPassword}
+                                        errorMessage={errorMessage} 
+                                        displayLabels={true} />
 
                                     <Row className="mb-4">
                                         <Col className={"col-5 mt-1"}>

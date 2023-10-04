@@ -229,3 +229,15 @@ select.form-control {
 select.form-control.is-invalid {
   padding-right: 0 !important;
 }
+
+.password-group {
+  position: relative;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  z-index: 1000;
+  cursor: pointer;
+}

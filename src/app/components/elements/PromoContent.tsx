@@ -4,6 +4,7 @@ import { apiHelper } from "../../services";
 import { Col, Row } from "reactstrap";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 import { Tabs } from "./Tabs";
+import { Link } from "react-router-dom";
 
 export const PromoContent = ({ item }: { item: IsaacPodDTO }) => {
   const { title, subtitle, value, image, url, encoding } = item;
@@ -11,6 +12,29 @@ export const PromoContent = ({ item }: { item: IsaacPodDTO }) => {
   const path = image?.src
     ? apiHelper.determineImageUrl(image.src)
     : apiHelper.determineImageUrl(defaultImage);
+
+  interface LinkOrAnchorProps {
+    url: string | undefined;
+    internalLink: boolean;
+    children: React.ReactNode;
+  }
+
+  const LinkOrAnchor = ({ url, internalLink, children }: LinkOrAnchorProps) => {
+    if (internalLink && url) {
+      return <Link to={url}>{children}</Link>;
+    } else if (url) {
+      return (
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          {children}
+        </a>
+      );
+    } else {
+      return <>{children}</>;
+    }
+  };
+
+  const internalLink = url ? url.startsWith("/") : false;
+
   return (
     <Tabs tabContentClass="mt-3 mt-md-5" activeTabOverride={1}>
       {{
@@ -27,9 +51,9 @@ export const PromoContent = ({ item }: { item: IsaacPodDTO }) => {
             </Col>
             <Col xs={12} md className="pt-3 pl-3">
               <h5>
-                <a href={url}>
+                <LinkOrAnchor url={url} internalLink={internalLink}>
                   <b>{title}</b>
-                </a>
+                </LinkOrAnchor>
               </h5>
               <div className="text-left">
                 <IsaacContentValueOrChildren
@@ -38,9 +62,9 @@ export const PromoContent = ({ item }: { item: IsaacPodDTO }) => {
                 />
               </div>
               <div>
-                <a href={url}>
+                <LinkOrAnchor url={url} internalLink={internalLink}>
                   <b>{subtitle}</b>
-                </a>
+                </LinkOrAnchor>
               </div>
             </Col>
           </Row>

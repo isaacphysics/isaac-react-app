@@ -18,8 +18,10 @@ export const augmentErrorMessage = (message?: string) => (e: Error) => {
   return new Error(`${e.message}\n${message ? "Extra info: " + message : ""}`);
 };
 
+export type TestUserRole = UserRole | "ANONYMOUS";
+
 interface RenderTestEnvironmentOptions {
-  role?: UserRole | "ANONYMOUS";
+  role?: TestUserRole;
   modifyUser?: (u: typeof mockUser) => typeof mockUser;
   PageComponent?: React.FC<any>;
   componentProps?: Record<string, any>;
@@ -183,6 +185,15 @@ export const checkPageTitle = (pageTitle: string) => {
   expect(title).toBeInTheDocument();
 };
 
+export const checkPasswordInputTypes = (expectedType: string) => {
+  const formFields = getFormFields();
+  const passwordInput = formFields.password() as HTMLInputElement;
+  const confirmPasswordInput = formFields.confirmPassword() as HTMLInputElement;
+  [passwordInput, confirmPasswordInput].forEach((input) =>
+    expect(input.type).toBe(expectedType)
+  );
+};
+
 export const clickButton = async (buttonName: string) => {
   const button = screen.getByRole("button", { name: buttonName });
   await userEvent.click(button);
@@ -319,4 +330,96 @@ export const fillFormCorrectly = async (
       break;
     }
   }
+};
+
+export const extraDownloadEndpoints = {
+  working: [
+    rest.get(
+      API_PATH +
+        `/documents/content/books/gcse_book_23/isaac_cs_gcse_book_2023.pdf`,
+      (req, res, ctx) => {
+        return res(ctx.status(200), ctx.json({ data: "this is a book" }));
+      }
+    ),
+    rest.get(
+      API_PATH +
+        `/documents/content/books/workbook_20_aqa/isaac_cs_aqa_book_2022.pdf`,
+      (req, res, ctx) => {
+        return res(ctx.status(200), ctx.json({ data: "this is a book" }));
+      }
+    ),
+    rest.get(
+      API_PATH +
+        `/documents/content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.pdf`,
+      (req, res, ctx) => {
+        return res(ctx.status(200), ctx.json({ data: "this is a book" }));
+      }
+    ),
+  ],
+  broken: [
+    rest.get(
+      API_PATH +
+        `/documents/content/books/gcse_book_23/isaac_cs_gcse_book_2023.pdf`,
+      (req, res, ctx) => {
+        return res(
+          ctx.status(404),
+          ctx.json({
+            responseCode: 404,
+            responseCodeType: "Not Found",
+            errorMessage:
+              "Unable to locate the file: content/books/gcse_book_23/isaac_cs_gcse_book_2023.pdf.",
+            bypassGenericSiteErrorPage: false,
+          })
+        );
+      }
+    ),
+    rest.get(
+      API_PATH +
+        `/documents/content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.pdf`,
+      (req, res, ctx) => {
+        return res(
+          ctx.status(404),
+          ctx.json({
+            responseCode: 404,
+            responseCodeType: "Not Found",
+            errorMessage:
+              "Unable to locate the file: content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.pdf.",
+            bypassGenericSiteErrorPage: false,
+          })
+        );
+      }
+    ),
+    rest.get(
+      API_PATH +
+        `/documents/content/books/workbook_20_ocr/isaac_cs_ocr_book_2022`,
+      (req, res, ctx) => {
+        return res(
+          ctx.status(404),
+          ctx.json({
+            responseCode: 404,
+            responseCodeType: "Not Found",
+            errorMessage:
+              "Unable to locate the file: /content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.",
+            bypassGenericSiteErrorPage: false,
+          })
+        );
+      }
+    ),
+  ],
+};
+
+export const getDownloadButtons = () => {
+  const gcseButton = () =>
+    screen.getByRole("button", {
+      name: /download gcse workbook/i,
+    });
+  const aqaButton = () =>
+    screen.getByRole("button", {
+      name: /download aqa workbook/i,
+    });
+  const ocrButton = () =>
+    screen.getByRole("button", {
+      name: /download ocr workbook/i,
+    });
+  return { gcseButton, aqaButton, ocrButton };
 };

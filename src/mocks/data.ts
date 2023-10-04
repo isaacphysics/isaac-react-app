@@ -61,6 +61,17 @@ export const registrationMockUser = {
     id: 1 as const
 };
 
+export const mockUserToUpdate = {
+    email: undefined,
+    dateOfBirth: undefined,
+    password: null,
+    familyName: undefined,
+    givenName: undefined,
+    gender: undefined,
+    schoolId: undefined,
+    schoolOther: undefined,
+  };
+
 export const buildMockStudent = <T extends number>(id: T extends (typeof mockUser.id) ? `Student ID cannot be the same as the mockUser: ${typeof mockUser.id}` : T) => {
     if (id === mockUser.id) throw Error("A mock student cannot have the same ID as the mockUser");
     return {

@@ -56,7 +56,7 @@ describe("My Account", () => {
     // Find the confirm password field and enter a password
     const confirmPasswordField = screen.getByLabelText("Re-enter new password");
     await userEvent.type(confirmPasswordField, wrongPassword);
-    const errorMessage = getById("passwordConfirmationValidationMessage")
+    const errorMessage = getById("invalidPassword")
     expect(saveButton).toBeDisabled();
     expect(errorMessage).toHaveTextContent(noMatchError);
   });
@@ -82,7 +82,7 @@ describe("My Account", () => {
     // Find the confirm password field and enter a password
     const confirmPasswordField = screen.getByLabelText("Re-enter new password");
     await userEvent.type(confirmPasswordField, invalidPassword);
-    const errorMessage = getById("passwordConfirmationValidationMessage")
+    const errorMessage = getById("invalidPassword")
     expect(saveButton).toBeDisabled();
     expect(errorMessage).toHaveTextContent(invalidPasswordError);
   });

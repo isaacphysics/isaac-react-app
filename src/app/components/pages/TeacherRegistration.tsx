@@ -36,7 +36,7 @@ import { GenderInput } from "../elements/inputs/GenderInput";
 import { EmailInput } from "../elements/inputs/EmailInput";
 import { RegistrationNameInput } from "../elements/inputs/RegistrationNameInput";
 import { RegistrationDobInput } from "../elements/inputs/RegistrationDobInput";
-import { PasswordInputs } from "../elements/inputs/PasswordInput";
+import { RegistrationPasswordInputs } from "../elements/inputs/RegistrationPasswordInputs";
 import TeacherVerification from "../elements/inputs/TeacherVerification";
 import useRegistration from "../hooks/useRegistration";
 import { RegistrationSubmit } from "../elements/inputs/RegistrationSubmit";
@@ -310,7 +310,7 @@ export const TeacherRegistrationBody = () => {
               </Col>
             </Row>
 
-            <PasswordInputs
+            <RegistrationPasswordInputs
               userToUpdate={registrationUser}
               setUserToUpdate={setRegistrationUser}
               submissionAttempted={attemptedSignUp}

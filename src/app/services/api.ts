@@ -418,6 +418,11 @@ export const api = {
             return endpoint.get(`/events/${eventId}/bookings/download`);
         }
     },
+    documents: {
+        getWorkbooks: (pdfLocation: string) => {
+            return endpoint.get(`/documents/${pdfLocation}`, { responseType: 'arraybuffer' })
+        }
+    },  
     logger: {
         log : (eventDetails: object): AxiosPromise<void> => {
             return endpoint.post(`/log`, eventDetails);
