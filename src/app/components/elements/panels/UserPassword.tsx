@@ -98,6 +98,7 @@ export const UserPassword = (
                       onFocus={loadZxcvbnIfNotPresent}
                       invalid={!!newPasswordConfirm && !isNewPasswordConfirmed}
                       disabled={!editingOtherUser && currentPassword === ""}
+                      showToggleIcon={editingOtherUser}
                     />
                     {passwordFeedback && (
                       <span className="float-right small mt-1">

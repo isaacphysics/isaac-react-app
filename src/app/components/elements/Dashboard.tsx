@@ -108,58 +108,56 @@ export const Dashboard = ({
 
   const loggedOutContent = (
     <Row>
-      <Row>
-        <Col lg="5" className="order-first pb-3">
-          <Row>
-            <Col>
-              <h1>Computer science learning</h1>
-              <p className="mt-4">
-                Welcome to Isaac Computer Science, the free online platform for
-                students and teachers.
-              </p>
-              <ul>
-                <li>
-                  Use it in the <strong>classroom</strong>
-                </li>
-                <li>
-                  Use it for <strong>homework</strong>
-                </li>
-                <li>
-                  Use it for <strong>revision</strong>
-                </li>
-              </ul>
+      <Col lg="5" className="order-first pb-3">
+        <Row>
+          <Col>
+            <h1>Computer science learning</h1>
+            <p className="mt-4">
+              Welcome to Isaac Computer Science, the free online platform for
+              students and teachers.
+            </p>
+            <ul>
+              <li>
+                Use it in the <strong>classroom</strong>
+              </li>
+              <li>
+                Use it for <strong>homework</strong>
+              </li>
+              <li>
+                Use it for <strong>revision</strong>
+              </li>
+            </ul>
 
-              <p className="mr-lg-n1">
-                {"We also offer free "}
-                <Link to="/events">student events</Link>.<br />
-                {
-                  "Isaac Computer Science is proud to be part of the Department for Education's "
-                }
-                <Link to="/teachcomputing">
-                  National Centre for Computing Education
-                </Link>
-                .
-              </p>
-            </Col>
-          </Row>
-        </Col>
-        <Col
-          lg="7"
-          className="order-last order-lg-1 px-lg-5 align-self-center text-center pattern-03"
-        >
-          <iframe
-            title="Isaac Computer Science introduction video"
-            width="640"
-            height="345"
-            className="mw-100 pt-lg-4 no-border"
-            src="https://www.youtube-nocookie.com/embed/ci6_Du_NHZA?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
-            allowFullScreen
-          />
-        </Col>
-        <Col className="order-lg-last pb-5 pb-lg-3">
-          <ShowMeButtons />
-        </Col>
-      </Row>
+            <p className="mr-lg-n1">
+              {"We also offer free "}
+              <Link to="/events">student events</Link>.<br />
+              {
+                "Isaac Computer Science is proud to be part of the Department for Education's "
+              }
+              <Link to="/teachcomputing">
+                National Centre for Computing Education
+              </Link>
+              .
+            </p>
+          </Col>
+        </Row>
+      </Col>
+      <Col
+        lg="7"
+        className="order-last order-lg-1 px-lg-5 align-self-center text-center pattern-03"
+      >
+        <iframe
+          title="Isaac Computer Science introduction video"
+          width="640"
+          height="345"
+          className="mw-100 pt-lg-4 no-border"
+          src="https://www.youtube-nocookie.com/embed/ci6_Du_NHZA?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
+          allowFullScreen
+        />
+      </Col>
+      <Col className="order-lg-last pb-5 pb-lg-3">
+        <ShowMeButtons />
+      </Col>
     </Row>
   );
 

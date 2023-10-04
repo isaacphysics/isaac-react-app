@@ -230,6 +230,12 @@ select.form-control.is-invalid {
   padding-right: 0 !important;
 }
 
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+  background-image: none !important;
+  border-width: 2px;
+}
+
 .password-group {
   position: relative;
 }

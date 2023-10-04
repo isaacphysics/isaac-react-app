@@ -169,11 +169,13 @@ button.btn.btn-link.login-b,
   }
 
   a {
+    color: $black;
+    font-family: $primary-font;
     font-size: 0.875rem;
+    font-weight: 400;
     text-decoration: none;
     text-transform: uppercase;
-    position: initial !important;
-    display: unset !important;
+    display: block;
 
     &:hover {
       @include respond-above(sm) {
