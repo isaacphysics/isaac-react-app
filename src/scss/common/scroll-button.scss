@@ -1,0 +1,37 @@
+$width: 50px;
+$height: 50px;
+$color: #ffffff;
+
+.scroll-btn {
+  display: grid;
+  box-shadow: 0 2px 24px 0 rgb(0 0 0 / 15%);
+  background-color: $color !important;
+  border-radius: 50%;
+  height: $height;
+  width: $width;
+  justify-content: center;
+  align-content: center;
+}
+
+.scroll-btn img {
+  height: 0.75 * $height;
+  width: 0.75 * $width;
+  align-self: center;
+}
+
+.scroll-btn button {
+  // Alpha channel 0 to make transparent
+  background: #00000000;
+}
+
+.is-sticky {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 999;
+  box-shadow: 0 2px 24px 0 rgb(0 0 0 / 15%);
+  background-color: $color !important;
+  animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
+  padding-top: 0;
+  padding-bottom: 0;
+}

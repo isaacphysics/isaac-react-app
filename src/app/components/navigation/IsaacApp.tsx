@@ -1,4 +1,4 @@
-import React, {lazy, Suspense, useEffect} from 'react';
+import React, {lazy, Suspense, useEffect, useRef} from 'react';
 import {
     AppState,
     fetchGlossaryTerms,
@@ -39,7 +39,7 @@ import {
     KEY,
     showNotification,
     isTutorOrAbove,
-    PATHS
+    PATHS, isAda
 } from "../../services"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -77,6 +77,7 @@ import {TutorRequest} from "../pages/TutorRequest";
 import {AssignmentProgress} from "../pages/AssignmentProgress";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardFilter} from "../pages/GameboardFilter";
+import {ScrollToTop} from "../site/ScrollToTop";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -90,6 +91,7 @@ export const IsaacApp = () => {
     const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
     const notifications = useAppSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
     const user = useAppSelector(selectors.user.orNull);
+    const mainContentRef = useRef(null);
 
     // Run once on component mount
     useEffect(() => {
@@ -132,7 +134,7 @@ export const IsaacApp = () => {
         <UnsupportedBrowserBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
-        <main id="main" data-testid="main" role="main" className="flex-fill content-body">
+        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <Suspense fallback={<Loading/>}>
                     <Switch>
@@ -220,6 +222,7 @@ export const IsaacApp = () => {
                 </Suspense>
             </ErrorBoundary>
         </main>
+        {isAda && <ScrollToTop mainContent={mainContentRef}/>}
         <SiteSpecific.Footer />
     </Router>;
 };
