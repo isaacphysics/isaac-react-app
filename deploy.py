@@ -74,8 +74,8 @@ def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: 
         output = ""
         return_code = None
         with subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, env=env_vars if env_vars else None) as proc:
+            stdout_data = []
             while True:
-                stdout_data = []
                 chunk = proc.stdout.read(chunk_size)
                 if not chunk:
                     break
