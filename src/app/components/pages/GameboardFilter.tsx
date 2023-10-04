@@ -65,6 +65,7 @@ import {
 } from "reactstrap";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { Spacer } from '../elements/Spacer';
+import { useHistoryState } from '../../state/actions/historyState';
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -476,16 +477,16 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         if (isFound(gameboard) && gameboard.id !== gameboardIdAnchor) {
-            history.replace({search: location.search, hash: gameboard.id});
+            history.replace({hash: gameboard.id, state: location.state});
         } else if (gameboardIdAnchor && gameboard === NOT_FOUND) {
             // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
-            history.replace({search: location.search});
+            history.replace({search: location.search, state: location.state});
         }
     }, [gameboard, gameboardIdAnchor]);
 
     const gameboardRef = useRef<HTMLDivElement>(null);
 
-    const [selections, setSelections] = useState<Item<TAG_ID>[][]>(querySelections);
+    const [selections, setSelections] = useHistoryState<Item<TAG_ID>[][]>("selections", querySelections);
 
     const choices = [tags.allSubjectTags.map(itemiseTag)];
     let i;
@@ -510,24 +511,24 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             {id: "topics", name: "Topic"},
         ]).map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
 
-    const [stages, setStages] = useState<Item<string>[]>(
+    const [stages, setStages] = useHistoryState<Item<string>[]>("stages",
         queryStages.length > 0 ? queryStages : itemiseByValue([userContext.stage], getFilteredStageOptions()));
     useEffect(function keepStagesInSyncWithUserContext() {
         if (stages.length === 0) setStages(itemiseByValue([userContext.stage], getFilteredStageOptions()));
     }, [userContext.stage]);
 
-    const [difficulties, setDifficulties] = useState<Item<string>[]>(queryDifficulties);
-    const [showBookQuestions, setShowBookQuestions] = useState<boolean>(true);
+    const [difficulties, setDifficulties] = useHistoryState<Item<string>[]>("difficulties", queryDifficulties);
+    const [showBookQuestions, setShowBookQuestions] = useHistoryState<boolean>("bookQuestions", true);
 
     // const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
 
-    const [examBoards, setExamBoards] = useState<Item<string>[]>(
+    const [examBoards, setExamBoards] = useHistoryState<Item<string>[]>("examBoards",
         queryExamBoards.length > 0 ? queryExamBoards : itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
     useEffect(function keepExamBoardsInSyncWithUserContext() {
         if (examBoards.length === 0) setExamBoards(itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
     }, [userContext.examBoard]);
 
-    const [concepts, setConcepts] = useState<Item<string>[]>(queryConcepts);
+    const [concepts, setConcepts] = useHistoryState<Item<string>[]>("concepts", queryConcepts);
 
     const [boardStack, setBoardStack] = useState<string[]>([]);
 
@@ -571,7 +572,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                 if (tiers[1]?.id) delete params[tiers[1].id];
             }
             delete params.questionCategories;
-            history.replace({search: queryString.stringify(params, {encode: false})});
+            history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
         });
     }
 
