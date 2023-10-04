@@ -12,8 +12,14 @@ import {
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
-import {useDispatch, useSelector} from "react-redux";
-import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
+import { useSelector } from "react-redux";
+import {
+  closeActiveModal,
+  logAction,
+  selectors,
+  updateCurrentUser,
+  useAppDispatch,
+} from "../../../state";
 import {Immutable} from "immer";
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode) => ({
@@ -32,52 +38,104 @@ const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode)
 });
 
 const UserContextReconfirmationModalBody = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const user = useSelector(selectors.user.orNull);
     const userPreferences = useSelector(selectors.user.preferences);
 
-    const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>({...user, password: null});
-    const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
-    const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
+    const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>(
+      { ...user, password: null }
+    );
+    const [booleanNotation, setBooleanNotation] = useState<
+      BooleanNotation | undefined
+    >();
+    const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({
+      ...userPreferences?.DISPLAY_SETTING,
+    });
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
-    const initialUserContexts = useMemo(() =>
-        user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : []
-    , [user]);
-    const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
+    const initialUserContexts = useMemo(
+      () =>
+        user?.loggedIn && isDefined(user.registeredContexts)
+          ? [...user.registeredContexts]
+          : [],
+      [user]
+    );
+    const [userContexts, setUserContexts] = useState(
+      initialUserContexts.length ? initialUserContexts : [{}]
+    );
 
-    const allFieldsAreValid = useMemo(() =>
-        validateUserContexts(userContexts) && validateUserSchool(userToUpdate)
-    , [userContexts, userToUpdate]);
+    const allFieldsAreValid = useMemo(
+      () =>
+        validateUserContexts(userContexts) && validateUserSchool(userToUpdate),
+      [userContexts, userToUpdate]
+    );
 
     const logReviewTeacherConnections = () =>
-        dispatch(logAction({
-            type: "REVIEW_TEACHER_CONNECTIONS"
-        }));
+      dispatch(
+        logAction({
+          type: "REVIEW_TEACHER_CONNECTIONS",
+        })
+      );
 
-    const modalText = useMemo(() => buildModalText(
-        function buildConnectionsLink(text: string) {
-            return <a className="d-inline" target={"_blank"} onClick={logReviewTeacherConnections} rel={"noopener noreferrer"}
-                      href={"/account#teacherconnections"}>
-                {text}
-                <span className={"sr-only"}> (opens in new tab) </span>
-            </a>;
-        })[isTutorOrAbove(user) ? (isTeacherOrAbove(user) ? "teacher" : "tutor") : "student"]
-    , [user]);
+    const modalText = useMemo(
+      () =>
+        buildModalText(function buildConnectionsLink(text: string) {
+          return (
+            <a
+              className="d-inline"
+              target={"_blank"}
+              onClick={logReviewTeacherConnections}
+              rel={"noopener noreferrer"}
+              href={"/account#teacherconnections"}
+            >
+              {text}
+              <span className={"sr-only"}> (opens in new tab) </span>
+            </a>
+          );
+        })[
+          isTutorOrAbove(user)
+            ? isTeacherOrAbove(user)
+              ? "teacher"
+              : "tutor"
+            : "student"
+        ],
+      [user]
+    );
 
     // Form submission
-    const formSubmission = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+    const formSubmission = useCallback(
+      (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSubmissionAttempted(true);
         if (user && isLoggedIn(user) && allFieldsAreValid) {
-            const userPreferencesToUpdate = {
-                BOOLEAN_NOTATION: booleanNotation,
-                DISPLAY_SETTING: displaySettings
-            };
-            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false));
-            dispatch(closeActiveModal());
+          const userPreferencesToUpdate = {
+            BOOLEAN_NOTATION: booleanNotation,
+            DISPLAY_SETTING: displaySettings,
+          };
+          dispatch(
+            updateCurrentUser(
+              userToUpdate,
+              userPreferencesToUpdate,
+              userContexts,
+              null,
+              user,
+              false
+            )
+          );
+          dispatch(closeActiveModal());
         }
-    }, [dispatch, setSubmissionAttempted, userToUpdate, allFieldsAreValid, userContexts, booleanNotation, displaySettings, user]);
+      },
+      [
+        dispatch,
+        setSubmissionAttempted,
+        userToUpdate,
+        allFieldsAreValid,
+        userContexts,
+        booleanNotation,
+        displaySettings,
+        user,
+      ]
+    );
 
     return <Form onSubmit={formSubmission} className={"mb-2"}>
         <p>{modalText.intro}</p>

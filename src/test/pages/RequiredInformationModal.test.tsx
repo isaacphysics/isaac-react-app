@@ -1,5 +1,5 @@
 import {screen} from "@testing-library/react";
-import produce from "immer";
+import { produce } from "immer";
 import {renderTestEnvironment} from "../utils";
 import { API_PATH } from "../../app/services";
 import {rest} from "msw";
@@ -19,6 +19,7 @@ describe("RequiredInformationModal", () => {
 
     it('should not show if the user has all required account information', async () => {
         renderTestEnvironment({role: "STUDENT"});
+        await screen.findByTestId("main");
         const modals = screen.queryAllByTestId("active-modal");
         if (modals.length > 0) {
             // If there is another modal, it shouldn't be the required info one

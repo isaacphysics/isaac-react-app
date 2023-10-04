@@ -120,10 +120,8 @@ export const IsaacApp = () => {
       (state && state.constants && state.constants.segueEnvironment) ||
       "unknown"
   );
-  const notifications = useAppSelector(
-    (state: AppState) =>
-      (state && state.notifications && state.notifications.notifications) || []
-  );
+  const notifications = useAppSelector(selectors.notifications.notifications);
+  
   const user = useAppSelector(selectors.user.orNull);
 
   // Run once on component mount

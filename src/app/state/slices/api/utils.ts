@@ -1,5 +1,5 @@
 import {isDefined, KEY, persistence, NOT_FOUND} from "../../../services";
-import produce from "immer";
+import { produce } from "immer";
 import {
     AppAssignmentProgress,
     AppGroup,

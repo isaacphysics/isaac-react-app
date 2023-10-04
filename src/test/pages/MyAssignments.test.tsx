@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
 import {mockMyAssignments, mockUser} from "../../mocks/data";
 import {augmentErrorMessage, dayMonthYearStringToDate, DDMMYYYY_REGEX, renderTestEnvironment, DAYS_AGO} from "../utils";
-import produce from "immer";
+import { produce } from "immer";
 
 describe("MyAssignments", () => {
 

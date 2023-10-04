@@ -1,5 +1,5 @@
 import { screen, waitFor, within } from "@testing-library/react";
-import produce from "immer";
+import { produce } from "immer";
 import { renderTestEnvironment } from "../utils";
 import userEvent from "@testing-library/user-event";
 import * as actions from "../../app/state/actions";

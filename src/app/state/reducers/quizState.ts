@@ -8,7 +8,7 @@ import {
     QuizAttemptFeedbackDTO,
     QuizSummaryDTO
 } from "../../../IsaacApiTypes";
-import produce, {Immutable} from "immer";
+import {produce, Immutable} from "immer";
 
 type QuizState = {quizzes: QuizSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {

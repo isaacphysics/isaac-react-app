@@ -2,94 +2,160 @@ import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith
 import {KEY, persistence, NOT_FOUND, isDefined} from "../services";
 import {QuizAssignmentDTO} from "../../IsaacApiTypes";
 import {AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import { createSelector } from "@reduxjs/toolkit";
 
 export const selectors = {
+  notifications: {
+    notifications: createSelector(
+      [(state: AppState) => state?.notifications?.notifications || []],
+      (notifications) => notifications
+    ),
+  },
 
-    topic: {
-        currentTopic: (state: AppState) => {
-            if (!state) return null;
-            if (!state.currentTopic) return null;
-            if (state.currentTopic === NOT_FOUND) return null;
-            return state.currentTopic;
+  toasts: {
+    toasts: createSelector(
+      [(state: AppState) => state?.toasts || []],
+      (toasts) => toasts
+    ),
+  },
+
+  topic: {
+    currentTopic: createSelector(
+      [(state: AppState) => state?.currentTopic],
+      (currentTopic) => {
+        if (currentTopic != null && currentTopic !== NOT_FOUND) {
+          return currentTopic;
         }
-    },
+        return null;
+      }
+    ),
+  },
 
-    boards: {
-        boards: (state: AppState) => state?.boards ?? null
-    },
+  boards: {
+    boards: (state: AppState) => state?.boards ?? null,
+  },
 
-    doc: {
-        get: (state: AppState) => state?.doc || null,
-    },
+  doc: {
+    get: (state: AppState) => state?.doc || null,
+  },
 
-    questions: {
-        getQuestions: (state: AppState) => state?.questions?.questions,
-        allQuestionsAttempted: (state: AppState) => {
-            return !!state && !!state.questions && state.questions.questions.map(q => !!q.currentAttempt).reduce((prev, current) => prev && current);
-        },
-        anyQuestionPreviouslyAttempted: (state: AppState) => {
-            return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
-        },
-    },
+  questions: {
+    getQuestions: (state: AppState) => state?.questions?.questions,
+    allQuestionsAttempted: createSelector(
+      [(state: AppState) => state?.questions?.questions],
+      (questions) => {
+        return !!questions && questions.every((q) => !!q.currentAttempt);
+      }
+    ),
+    anyQuestionPreviouslyAttempted: createSelector(
+      [(state: AppState) => state?.questions?.questions],
+      (questions) => {
+        return !!questions && questions.some((q) => !!q.bestAttempt);
+      }
+    ),
+  },
 
-    segue: {
-        contentVersion: (state: AppState) => state?.contentVersion || null,
-        versionOrUnknown: (state: AppState) => state?.constants?.segueVersion || "unknown",
-        environmentOrUnknown: (state: AppState) => state?.constants?.segueEnvironment || "unknown",
-    },
+  segue: {
+    contentVersion: (state: AppState) => state?.contentVersion || null,
+    versionOrUnknown: (state: AppState) =>
+      state?.constants?.segueVersion || "unknown",
+    environmentOrUnknown: (state: AppState) =>
+      state?.constants?.segueEnvironment || "unknown",
+  },
 
-    error: {
-        general: (state: AppState) => state?.error && state.error.type == "generalError" && state.error.generalError || null,
-    },
+  error: {
+    general: createSelector([(state: AppState) => state?.error], (error) => {
+      return (error?.type === "generalError" && error.generalError) || null;
+    }),
+  },
 
-    user:  {
-        orNull: (state: AppState) => state?.user || null,
-        loggedInOrNull: (state: AppState) => state?.user?.loggedIn && state.user || null,
-        progress: (state: AppState) => state?.myProgress,
-        snapshot: (state: AppState) => state?.myProgress?.userSnapshot,
-        achievementsRecord: (state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord,
-        answeredQuestionsByDate: (state: AppState) => state?.myAnsweredQuestionsByDate,
-        preferences: (state: AppState) => state?.userPreferences
-    },
+  user: {
+    orNull: (state: AppState) => state?.user || null,
+    loggedInOrNull: (state: AppState) =>
+      (state?.user?.loggedIn && state.user) || null,
+    progress: (state: AppState) => state?.myProgress,
+    snapshot: (state: AppState) => state?.myProgress?.userSnapshot,
+    achievementsRecord: (state: AppState) =>
+      state?.myProgress?.userSnapshot?.achievementsRecord,
+    answeredQuestionsByDate: (state: AppState) =>
+      state?.myAnsweredQuestionsByDate,
+    preferences: (state: AppState) => state?.userPreferences,
+  },
 
-    mainContentId: {
-        orDefault: (state: AppState) => state?.mainContentId || "main",
-    },
+  mainContentId: {
+    orDefault: (state: AppState) => state?.mainContentId || "main",
+  },
 
-    teacher: {
-        userProgress: (state: AppState) => state?.userProgress && anonymiseIfNeededWith(anonymisationFunctions.userProgress)(state.userProgress),
-        userAnsweredQuestionsByDate: (state: AppState) => state?.userAnsweredQuestionsByDate
-    },
+  teacher: {
+    userProgress: (state: AppState) =>
+      state?.userProgress &&
+      anonymiseIfNeededWith(anonymisationFunctions.userProgress)(
+        state.userProgress
+      ),
+    userAnsweredQuestionsByDate: (state: AppState) =>
+      state?.userAnsweredQuestionsByDate,
+  },
 
-    admin: {
-        userSearch: (state: AppState) => state?.adminUserSearch || null,
-        userSchoolLookup: (state: AppState) => state?.userSchoolLookup,
-    },
+  admin: {
+    userSearch: (state: AppState) => state?.adminUserSearch || null,
+    userSchoolLookup: (state: AppState) => state?.userSchoolLookup,
+  },
 
-    connections: {
-        activeAuthorisations: (state: AppState) => state?.activeAuthorisations && anonymiseIfNeededWith(anonymisationFunctions.activeAuthorisations)(state?.activeAuthorisations),
-        otherUserAuthorisations: (state: AppState) => state?.otherUserAuthorisations && anonymiseIfNeededWith(anonymisationFunctions.otherUserAuthorisations)(state?.otherUserAuthorisations),
-        groupMemberships: (state: AppState) => state?.groupMemberships && anonymiseListIfNeededWith(anonymisationFunctions.groupMembershipDetail)(state?.groupMemberships)
-    },
+  connections: {
+    activeAuthorisations: (state: AppState) =>
+      state?.activeAuthorisations &&
+      anonymiseIfNeededWith(anonymisationFunctions.activeAuthorisations)(
+        state?.activeAuthorisations
+      ),
+    otherUserAuthorisations: (state: AppState) =>
+      state?.otherUserAuthorisations &&
+      anonymiseIfNeededWith(anonymisationFunctions.otherUserAuthorisations)(
+        state?.otherUserAuthorisations
+      ),
+    groupMemberships: (state: AppState) =>
+      state?.groupMemberships &&
+      anonymiseListIfNeededWith(anonymisationFunctions.groupMembershipDetail)(
+        state?.groupMemberships
+      ),
+  },
 
-    quizzes: {
-        preview: (state: AppState) => {
-            const qp = state?.quizPreview;
-            return {
-                quiz: qp && 'quiz' in qp ? qp.quiz : null,
-                error: qp && 'error' in qp ? qp.error : null,
-            };
-        },
-        assignedToMe: (state: AppState) => state?.quizAssignedToMe,
-        available: (state: AppState) => state?.quizzes?.quizzes,
-        assignments: (state: AppState) => state?.quizAssignments && (persistence.load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignments(state?.quizAssignments) : augmentWithGroupNameIfInCache(state, state?.quizAssignments)),
-        /* Retrieves the current users most recent attempt at the current quiz being viewed */
-        currentQuizAttempt: (state: AppState) => state?.quizAttempt,
-        /* Retrieves the quiz attempt for the current student being looked at (this is used to render /test/attempt/feedback/[group id]/[student id]) */
-        currentStudentQuizAttempt: (state: AppState) => state?.studentQuizAttempt && 'studentAttempt' in state?.studentQuizAttempt ? anonymiseIfNeededWith(anonymisationFunctions.quizAttempt)(state.studentQuizAttempt) : state?.studentQuizAttempt,
-        assignment: (state: AppState) => state?.quizAssignment && anonymiseIfNeededWith(anonymisationFunctions.assignment)(state.quizAssignment),
-        attemptedFreelyByMe: (state: AppState) => state?.quizAttemptedFreelyByMe,
+  quizzes: {
+    preview: (state: AppState) => {
+      const qp = state?.quizPreview;
+      return {
+        quiz: qp && "quiz" in qp ? qp.quiz : null,
+        error: qp && "error" in qp ? qp.error : null,
+      };
     },
+    assignedToMe: (state: AppState) => state?.quizAssignedToMe,
+    available: (state: AppState) => state?.quizzes?.quizzes,
+    assignments: createSelector(
+      [(state: AppState) => state?.quizAssignments, (state: AppState) => state],
+      (quizAssignments, state) => {
+        const anonymiseUsers = persistence.load(KEY.ANONYMISE_USERS);
+        if (quizAssignments && anonymiseUsers === "YES") {
+          return anonymisationFunctions.assignments(quizAssignments);
+        } else {
+          return augmentWithGroupNameIfInCache(state, quizAssignments);
+        }
+      }
+    ),
+    /* Retrieves the current users most recent attempt at the current quiz being viewed */
+    currentQuizAttempt: (state: AppState) => state?.quizAttempt,
+    /* Retrieves the quiz attempt for the current student being looked at (this is used to render /test/attempt/feedback/[group id]/[student id]) */
+    currentStudentQuizAttempt: (state: AppState) =>
+      state?.studentQuizAttempt && "studentAttempt" in state?.studentQuizAttempt
+        ? anonymiseIfNeededWith(anonymisationFunctions.quizAttempt)(
+            state.studentQuizAttempt
+          )
+        : state?.studentQuizAttempt,
+    assignment: (state: AppState) =>
+      state?.quizAssignment &&
+      anonymiseIfNeededWith(anonymisationFunctions.assignment)(
+        state.quizAssignment
+      ),
+    attemptedFreelyByMe: (state: AppState) => state?.quizAttemptedFreelyByMe,
+  },
 };
 
 // TODO make sure this works!!!

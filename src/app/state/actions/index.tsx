@@ -76,10 +76,11 @@ function isAxiosError(e: Error): e is AxiosError {
 }
 
 export function extractMessage(e: Error) {
-    if (isAxiosError(e) && e.response && e.response.data && e.response.data.errorMessage) {
-        return e.response.data.errorMessage;
-    }
-    return API_REQUEST_FAILURE_MESSAGE;
+  if (isAxiosError(e) && e.response?.data?.hasOwnProperty("errorMessage")) {
+    const responseData = e.response.data as any;
+    return responseData.errorMessage;
+  }
+  return API_REQUEST_FAILURE_MESSAGE;
 }
 
 export function showAxiosErrorToastIfNeeded(error: string, e: any) {
@@ -218,57 +219,81 @@ export const updateCurrentUser = (
     redirect: boolean
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
-    if (currentUser.loggedIn && currentUser.id == updatedUser.id && currentUser.email !== updatedUser.email) {
-       const emailChangeConfirmed = window.confirm(
-            "You have edited your email address. Your current address will continue to work until you verify your " +
-            "new address by following the verification link sent to it via email. Continue?"
+    if (
+      currentUser.loggedIn &&
+      currentUser.id == updatedUser.id &&
+      currentUser.email !== updatedUser.email
+    ) {
+      const emailChangeConfirmed = window.confirm(
+        "You have edited your email address. Your current address will continue to work until you verify your " +
+          "new address by following the verification link sent to it via email. Continue?"
+      );
+      if (!emailChangeConfirmed) {
+        dispatch(
+          showToast({
+            title: "Account settings not updated",
+            body: "Your account settings update was cancelled.",
+            color: "danger",
+            timeout: 5000,
+            closable: false,
+          }) as any
         );
-        if (!emailChangeConfirmed) {
-            dispatch(showToast({
-                title: "Account settings not updated",
-                body: "Your account settings update was cancelled.",
-                color: "danger",
-                timeout: 5000,
-                closable: false,
-                }) as any);
-            return; //early
-        }
+        return; //early
+      }
     }
 
-    const editingOtherUser = currentUser.loggedIn && currentUser.id != updatedUser.id;
+    const editingOtherUser =
+      currentUser.loggedIn && currentUser.id != updatedUser.id;
 
     try {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-        const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        dispatch(requestCurrentUser() as any);
+      dispatch({ type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST });
+      const currentUser = await api.users.updateCurrent(
+        updatedUser,
+        updatedUserPreferences,
+        passwordCurrent,
+        userContexts
+      );
+      dispatch({
+        type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS,
+        user: currentUser.data,
+      });
+      dispatch(requestCurrentUser() as any);
 
-        const isFirstLogin = isFirstLoginInPersistence() || false;
-        if (isFirstLogin) {
-            persistence.session.remove(KEY.FIRST_LOGIN);
-            if (redirect) {
-                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/', {firstLogin: isFirstLogin});
-            }
-        } else if (!editingOtherUser) {
-            dispatch(showToast({
-                title: "Account settings updated",
-                body: "Your account settings were updated successfully.",
-                color: "success",
-                timeout: 5000,
-                closable: false,
-            }) as any);
-        } else if (editingOtherUser) {
-            redirect && history.push('/');
-            dispatch(showToast({
-                title: "Account settings updated",
-                body: "The user's account settings were updated successfully.",
-                color: "success",
-                timeout: 5000,
-                closable: false,
-            }) as any);
+      const isFirstLogin = isFirstLoginInPersistence() || false;
+      if (isFirstLogin) {
+        persistence.session.remove(KEY.FIRST_LOGIN);
+        if (redirect) {
+          history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || "/", {
+            firstLogin: isFirstLogin,
+          });
         }
+      } else if (!editingOtherUser) {
+        dispatch(
+          showToast({
+            title: "Account settings updated",
+            body: "Your account settings were updated successfully.",
+            color: "success",
+            timeout: 5000,
+            closable: false,
+          }) as any
+        );
+      } else if (editingOtherUser) {
+        redirect && history.push("/");
+        dispatch(
+          showToast({
+            title: "Account settings updated",
+            body: "The user's account settings were updated successfully.",
+            color: "success",
+            timeout: 5000,
+            closable: false,
+          }) as any
+        );
+      }
     } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+      dispatch({
+        type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE,
+        errorMessage: extractMessage(e),
+      });
     }
 };
 
