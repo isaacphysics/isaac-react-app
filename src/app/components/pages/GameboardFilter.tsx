@@ -477,7 +477,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         if (isFound(gameboard) && gameboard.id !== gameboardIdAnchor) {
-            history.replace({hash: gameboard.id, state: location.state});
+            history.replace({search: location.search, hash: gameboard.id, state: location.state});
         } else if (gameboardIdAnchor && gameboard === NOT_FOUND) {
             // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
             history.replace({search: location.search, state: location.state});
