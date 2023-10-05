@@ -153,8 +153,25 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     }
 
     function promoteManager(manager: UserSummaryWithEmailAddressDTO) {
+        let confirm_text = "";
+        if (group?.additionalManagerPrivileges) {
+            confirm_text = `
+Are you sure you want to promote this manager to group owner?
+They will inherit the ability to add additional managers to, archive and delete this group.
+You will be demoted to an additional group manager.
+You will no longer be able to add or remove other managers, but you will still be able to modify or delete assignments, archive or rename the group or remove group members.
+            `
+        } else {
+            confirm_text = `
+Are you sure you want to promote this manager to group owner?
+They will inherit the ability to add additional managers to, archive and delete this group.
+You will be demoted to an additional group manager, and will not be able to modify or delete assignments, archive or rename the group or remove group members.
+If you wish to retain these privileges, but transfer ownership, click 'cancel' here and then tick the box to give additional managers extra privileges before transferring ownership.
+            `
+        }
+
         if (group?.id) {
-            if (confirm("Are you sure you want to promote this manager to group owner?\nThey will inherit the ability to add additional managers to, archive and delete this group.\nYou will be demoted to an additional group manager.")) {
+            if (confirm(confirm_text)) {
                 promoteGroupManager({groupId: group.id, managerUserId: manager.id as number}).then(response => {
                     if (mutationSucceeded(response)) {
                         dispatch(closeActiveModal());
@@ -210,6 +227,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                         <li>Archive the group</li>
                         <li>Rename the group</li>
                     </ul>
+                    Additional managers cannot add or remove other managers.
                 </>
                 : "Additional managers cannot modify or delete each others assignments by default, archive and rename the group, or remove group members, but these features can be enabled by the group owner."
             }
@@ -272,6 +290,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                     <span className={"font-weight-bold"}>Caution</span>: All other group managers are allowed delete
                     and modify any assignments set to this group (by any other manager including the owner), remove
                     group members, and archive and rename the group. <br/>
+                    Additional managers cannot add or remove other managers. <br/>
                     Un-tick the above box if you would like to remove these additional privileges.
                 </>
                 : <>Enabling this allows other group managers to delete and modify <b>all assignments</b> set to this group
