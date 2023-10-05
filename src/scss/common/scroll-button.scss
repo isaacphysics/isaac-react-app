@@ -3,12 +3,11 @@ $height: 50px;
 $color: #ffffff;
 
 .scroll-btn {
+  visibility: hidden; // If not in use hide
+  height: 0;
   display: grid;
   box-shadow: 0 2px 24px 0 rgb(0 0 0 / 15%);
   background-color: $color !important;
-  border-radius: 50%;
-  height: $height;
-  width: $width;
   justify-content: center;
   align-content: center;
 }
@@ -25,12 +24,16 @@ $color: #ffffff;
 }
 
 .is-sticky {
+  visibility: visible;
   position: fixed;
   bottom: 10px;
   right: 10px;
   z-index: 999;
   box-shadow: 0 2px 24px 0 rgb(0 0 0 / 15%);
   background-color: $color !important;
+  border-radius: 50%;
+  height: $height;
+  width: $width;
   animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
   padding-top: 0;
   padding-bottom: 0;
