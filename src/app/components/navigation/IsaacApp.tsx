@@ -222,7 +222,7 @@ export const IsaacApp = () => {
                 </Suspense>
             </ErrorBoundary>
         </main>
-        {isAda && <ScrollToTop mainContent={mainContentRef}/>}
+        <ScrollToTop mainContent={mainContentRef}/>
         <SiteSpecific.Footer />
     </Router>;
 };
