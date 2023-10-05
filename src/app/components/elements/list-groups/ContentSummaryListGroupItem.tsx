@@ -136,7 +136,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                     {displayTopicTitle && hierarchyTags && <div className={"hierarchy-tags"}>
                         {hierarchyTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
-                    {item.summary && <div className="small text-muted d-none d-md-block">
+                    {(isPhy && item.summary) && <div className="small text-muted d-none d-md-block">
                         {item.summary}
                     </div>}
                 </div>
