@@ -19,6 +19,7 @@ import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
+import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -47,6 +48,34 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
+const symbolicLogicQuestionValidator = (input: string) => {
+    const openBracketsCount = input.split('(').length - 1;
+    const closeBracketsCount = input.split(')').length - 1;
+    const regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+";
+    const badCharacters = new RegExp(regexStr);
+
+    const errors = [];
+    if (/\\[a-zA-Z()]|[{}]/.test(input)) {
+        errors.push('LaTeX syntax is not supported.');
+    }
+    if (badCharacters.test(input)) {
+        const usedBadChars: string[] = [];
+        for(let i = 0; i < input.length; i++) {
+            const char = input.charAt(i);
+            if (badCharacters.test(char)) {
+                if (!usedBadChars.includes(char)) {
+                    usedBadChars.push(char);
+                }
+            }
+        }
+        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+    }
+    if (openBracketsCount !== closeBracketsCount) {
+        errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+    }
+    return errors;
+};
+
 const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
@@ -73,7 +102,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         const newState = sanitiseInequalityState(state);
         const pythonExpression = newState?.result?.python || "";
         const previousPythonExpression = currentAttemptValue?.result?.python || "";
-        if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
+        if (!previousPythonExpression) {
             dispatchSetCurrentAttempt({type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
         }
         initialEditorSymbols.current = state.symbols;
@@ -145,65 +174,27 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         };
     }, [hiddenEditorRef.current]);
 
-    const [errors, setErrors] = useState<string[]>();
-
-    const debounceTimer = useRef<number|null>(null);
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const pycode = e.target.value;
-        setTextInput(pycode);
-        setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
+        const input = e.target.value;
+        setTextInput(input);
+        setInputState({...inputState, pythonExpression: input, userInput: textInput});
 
-        // Parse that thing
-        if (debounceTimer.current) {
-            window.clearTimeout(debounceTimer.current);
-            debounceTimer.current = null;
-        }
-        debounceTimer.current = window.setTimeout(() => {
-            const parsedExpression = parseBooleanExpression(pycode);
-
-            if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
-                const openBracketsCount = pycode.split('(').length - 1;
-                const closeBracketsCount = pycode.split(')').length - 1;
-                const regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+"
-                const badCharacters = new RegExp(regexStr);
-
-                const _errors = [];
-                if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
-                    _errors.push('LaTeX syntax is not supported.');
-                }
-                if (badCharacters.test(pycode)) {
-                    const usedBadChars: string[] = [];
-                    for(let i = 0; i < pycode.length; i++) {
-                        const char = pycode.charAt(i);
-                        if (badCharacters.test(char)) {
-                            if (!usedBadChars.includes(char)) {
-                                usedBadChars.push(char);
-                            }
-                        }
-                    }
-                    _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-                }
-                if (openBracketsCount !== closeBracketsCount) {
-                    _errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
-                }
-                setErrors(_errors);
+        const parsedExpression = parseBooleanExpression(input);
+        if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
+            if (input === '') {
+                const state = {result: {tex: "", python: "", mathml: ""}};
+                dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
+                initialEditorSymbols.current = [];
+            } else if (parsedExpression.length === 1) {
+                // This and the next one are using input instead of textInput because React will update the state whenever it sees fit
+                // so textInput will almost certainly be out of sync with input which is the current content of the text box.
+                sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, input);
             } else {
-                setErrors(undefined);
-                if (pycode === '') {
-                    const state = {result: {tex: "", python: "", mathml: ""}};
-                    dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
-                    initialEditorSymbols.current = [];
-                } else if (parsedExpression.length === 1) {
-                    // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
-                    // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
-                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
-                } else {
-                    const sizes = parsedExpression.map(countChildren);
-                    const i = sizes.indexOf(Math.max.apply(null, sizes));
-                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
-                }
+                const sizes = parsedExpression.map(countChildren);
+                const i = sizes.indexOf(Math.max.apply(null, sizes));
+                sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, input);
             }
-        }, 250);
+        }
     };
 
     const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid_v4()}`);
@@ -256,9 +247,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                         </UncontrolledTooltip>
                     </InputGroupAddon>
                 </InputGroup>
-                {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
-                    {errors.map(e => (<li key={e}>{e}</li>))}
-                </ul></div>}
+                <QuestionInputValidation userInput={textInput} validator={symbolicLogicQuestionValidator} />
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}

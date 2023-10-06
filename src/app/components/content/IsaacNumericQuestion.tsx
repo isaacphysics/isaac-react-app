@@ -22,6 +22,7 @@ import {v4 as uuid_v4} from 'uuid';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
+import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
     const seedValue = userId + "|" + questionId;
@@ -91,6 +92,34 @@ function wrapUnitForSelect(unit?: string): string {
     }
 }
 
+const numericValidation = (userInput: string) => {
+    const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]+";
+    const badCharacters = new RegExp(regexStr);
+    const operatorExpression = new RegExp(".*[0-9][+*/×÷-]\\.?[0-9]+$");
+    const _errors = [];
+
+    if (badCharacters.test(userInput)) {
+        const usedBadChars: string[] = []; 
+        for(let i = 0; i < userInput.length; i++) {
+            const char = userInput.charAt(i);
+            if (badCharacters.test(char)) {
+                if (!usedBadChars.includes(char)) {
+                    usedBadChars.push(char === ' ' ? 'space' : char);
+                }
+            }
+        }
+        _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+    }
+    if (operatorExpression.test(userInput)) {
+        _errors.push('Simplify your answer into a single decimal number.');
+    }
+    if (/.*?[0-9][, ][0-9]{3}.*?/.test(userInput)) {
+        _errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
+    }
+
+    return _errors;
+};
+
 const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacQuestionProps<IsaacNumericQuestionDTO, QuantityValidationResponseDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
@@ -123,46 +152,6 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
         dispatchSetCurrentAttempt(attempt);
     }
 
-    const [errors, setErrors] = useState<string[]>();
-    const debounceTimer = useRef<number|null>(null);
-
-    const checkEquationForErrors = (e: ChangeEvent<HTMLInputElement>) => {
-        const userInput = e.target.value;
-
-        // Parse that thing
-        if (debounceTimer.current) {
-            window.clearTimeout(debounceTimer.current);
-            debounceTimer.current = null;
-        }
-        debounceTimer.current = window.setTimeout(() => {
-            const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]+";
-            const badCharacters = new RegExp(regexStr);
-            const operatorExpression = new RegExp(".*[0-9][+*/×÷-]\\.?[0-9]+$");
-            const _errors = [];
-
-            if (badCharacters.test(userInput)) {
-                const usedBadChars: string[] = []; 
-                for(let i = 0; i < userInput.length; i++) {
-                    const char = userInput.charAt(i);
-                    if (badCharacters.test(char)) {
-                        if (!usedBadChars.includes(char)) {
-                            usedBadChars.push(char === ' ' ? 'space' : char);
-                        }
-                    }
-                }
-                _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-            }
-            if (operatorExpression.test(userInput)) {
-                _errors.push('Simplify your answer into a single decimal number.');
-            }
-            if (/.*?[0-9][, ][0-9]{3}.*?/.test(userInput)) {
-                _errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
-            }
-
-            setErrors(_errors);
-        }, 250);
-    };
-
     const [isOpen, setIsOpen] = useState(false);
 
     const helpTooltipId = useMemo(() => `numeric-input-help-${uuid_v4()}`, []);
@@ -184,7 +173,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                             <InputGroup className={"feedback-zone nq-feedback separate-input-group"}>
                                 <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
                                     onChange={e => {
-                                        updateValue(e); checkEquationForErrors(e);
+                                        updateValue(e);
                                     }} readOnly={readonly}
                                 />
                                 {currentAttemptValueWrong && <div className={"feedback-box"}>
@@ -239,11 +228,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     </div>}
                 </Col>
             </Row>
-            {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && 
-                <div className="question-feedback-input-errors"><strong>Careful!</strong><ul>
-                    {errors.map(e => (<li key={e}>{e}</li>))}
-                </ul></div>
-            }
+            <QuestionInputValidation userInput={currentAttemptValue ?? ""} validator={numericValidation} />
         </div>
     );
 };
