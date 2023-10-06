@@ -17,7 +17,6 @@ import _flattenDeep from 'lodash/flatMapDeep';
 import {v4 as uuid_v4} from "uuid";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
-import QuestionInputValidation from "./IsaacQuestionValidator";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -121,7 +120,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         sketch.onCloseMenus = () => undefined;
         sketch.isUserPrivileged = () => true;
         sketch.onNotifySymbolDrag = () => undefined;
-        sketch.isTrashActive = () => false;
+        sketch.isTrashActive = () => false
 
         sketchRef.current = sketch;
 
@@ -136,66 +135,75 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         };
     }, [hiddenEditorRef.current]);
 
+    const [errors, setErrors] = useState<string[]>();
+
+    const debounceTimer = useRef<number|null>(null);
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
         const pycode = e.target.value;
         setTextInput(pycode);
         setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
-    };
 
-    const symbolicQuestionValidation = (input: string) => {
-        const parsedExpression = parseMathsExpression(input);
-        if (isError(parsedExpression) || (parsedExpression.length === 0 && input !== '')) {
-            const openBracketsCount = input.split('(').length - 1;
-            const closeBracketsCount = input.split(')').length - 1;
+        // Parse that thing
+        if (debounceTimer.current) {
+            window.clearTimeout(debounceTimer.current);
+            debounceTimer.current = null;
+        }
+        debounceTimer.current = window.setTimeout(() => {
+            const parsedExpression = parseMathsExpression(pycode);
+
+            if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
+            const openBracketsCount = pycode.split('(').length - 1;
+            const closeBracketsCount = pycode.split(')').length - 1;
             const regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
             const badCharacters = new RegExp(regexStr);
-            const errors = [];
-            if (/\\[a-zA-Z()]|[{}]/.test(input)) {
-                errors.push('LaTeX syntax is not supported.');
-            }
-            if (/\|.+?\|/.test(input)) {
-                errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
-            }
-            if (badCharacters.test(input)) {
-                const usedBadChars: string[] = [];
-                for(let i = 0; i < input.length; i++) {
-                    const char = input.charAt(i);
-                    if (badCharacters.test(char)) {
-                        if (!usedBadChars.includes(char)) {
-                            usedBadChars.push(char);
+                const _errors = [];
+                if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
+                    _errors.push('LaTeX syntax is not supported.');
+                }
+                if (/\|.+?\|/.test(pycode)) {
+                    _errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
+                }
+                if (badCharacters.test(pycode)) {
+                    const usedBadChars: string[] = [];
+                    for(let i = 0; i < pycode.length; i++) {
+                        const char = pycode.charAt(i);
+                        if (badCharacters.test(char)) {
+                            if (!usedBadChars.includes(char)) {
+                                usedBadChars.push(char);
+                            }
                         }
                     }
+                    _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
                 }
-                errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-            }
-            if (openBracketsCount !== closeBracketsCount) {
-                errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
-            }
-            if (/\.[0-9]/.test(input)) {
-                errors.push('Please convert decimal numbers to fractions.');
-            }
-            return errors;
-        } else {
-            if (input === '') {
-                const state = {result: {tex: "", python: "", mathml: ""}};
-                dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
-                initialEditorSymbols.current = [];
-            } else if (parsedExpression.length === 1) {
-                // This and the next one are using input instead of textInput because React will update the state whenever it sees fit
-                // so textInput will almost certainly be out of sync with input which is the current content of the text box.
-                sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, input);
+                if (openBracketsCount !== closeBracketsCount) {
+                    _errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+                }
+                if (/\.[0-9]/.test(pycode)) {
+                    _errors.push('Please convert decimal numbers to fractions.');
+                }
+                setErrors(_errors);
             } else {
-                const sizes = parsedExpression.map(countChildren);
-                const i = sizes.indexOf(Math.max.apply(null, sizes));
-                sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, input);
+                if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(pycode)) {
+                    // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
+                    setErrors(["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"])
+                } else {
+                    setErrors(undefined);
+                }
+                if (pycode === '') {
+                    const state = {result: {tex: "", python: "", mathml: ""}};
+                    dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
+                    initialEditorSymbols.current = [];
+                } else if (parsedExpression.length === 1) {
+                    // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
+                    // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
+                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
+                } else {
+                    const sizes = parsedExpression.map(countChildren);
+                    const i = sizes.indexOf(Math.max.apply(null, sizes));
+                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
+                }
             }
-            if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
-                // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
-                return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
-            } else {
-                return [];
-            }
-        }
+        }, 250);
     };
 
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
@@ -240,7 +248,9 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                         </RS.UncontrolledTooltip>
                     </RS.InputGroupAddon>
                 </RS.InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={symbolicQuestionValidation} />
+                {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
+                    {errors.map(e => (<li key={e}>{e}</li>))}
+                </ul></div>}
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}

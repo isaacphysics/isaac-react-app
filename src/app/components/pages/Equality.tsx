@@ -10,7 +10,6 @@ import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, parseMathsExpression, ParsingError} from 'inequality-grammar';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
-import QuestionInputValidation from "../content/IsaacQuestionValidator";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -76,77 +75,82 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
         // const pycode = e.target.value;
         setTextInput(pycode);
         setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
-    };
 
-    const validateEquality = (input: string) => {
-        let parsedExpression: any[] | ParsingError | undefined;
-        if (editorMode === 'maths') {
-            parsedExpression = parseMathsExpression(input);
-        } else if (editorMode === 'logic') {
-            parsedExpression = parseBooleanExpression(input);
+        // Parse that thing
+        if (debounceTimer.current) {
+            window.clearTimeout(debounceTimer.current);
+            debounceTimer.current = null;
         }
-        const errors = [];
-
-        if (isDefined(parsedExpression) && (isError(parsedExpression) || (parsedExpression.length === 0 && input !== ''))) {
-            const openBracketsCount = input.split('(').length - 1;
-            const closeBracketsCount = input.split(')').length - 1;
-            let regexStr = '';
+        debounceTimer.current = window.setTimeout(() => {
+            let parsedExpression: any[] | ParsingError | undefined;
             if (editorMode === 'maths') {
-                regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
-            } else {
-                regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+";
+                parsedExpression = parseMathsExpression(pycode);
+            } else if (editorMode === 'logic') {
+                parsedExpression = parseBooleanExpression(pycode);
             }
-            const badCharacters = new RegExp(regexStr);
-            setErrors([]);
+            const _errors = [];
 
-            if (isError(parsedExpression) && parsedExpression.error) {
-                errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
-            }
-            if (/\\[a-zA-Z()]|[{}]/.test(input)) {
-                errors.push('LaTeX syntax is not supported.');
-            }
-            if (/\|.+?\|/.test(input)) {
-                errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
-            }
-            if (badCharacters.test(input)) {
-                const usedBadChars: string[] = [];
-                for(let i = 0; i < input.length; i++) {
-                    const char = input.charAt(i);
-                    if (badCharacters.test(char)) {
-                        if (!usedBadChars.includes(char)) {
-                            usedBadChars.push(char);
+            if (isDefined(parsedExpression) && (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== ''))) {
+                const openBracketsCount = pycode.split('(').length - 1;
+                const closeBracketsCount = pycode.split(')').length - 1;
+                let regexStr = '';
+                if (editorMode === 'maths') {
+                    regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
+                } else {
+                    regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+"
+                }
+                const badCharacters = new RegExp(regexStr);
+                setErrors([]);
+
+                if (isError(parsedExpression) && parsedExpression.error) {
+                    _errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`)
+                }
+                if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
+                    _errors.push('LaTeX syntax is not supported.');
+                }
+                if (/\|.+?\|/.test(pycode)) {
+                    _errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
+                }
+                if (badCharacters.test(pycode)) {
+                    const usedBadChars: string[] = [];
+                    for(let i = 0; i < pycode.length; i++) {
+                        const char = pycode.charAt(i);
+                        if (badCharacters.test(char)) {
+                            if (!usedBadChars.includes(char)) {
+                                usedBadChars.push(char);
+                            }
                         }
                     }
+                    _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
                 }
-                errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-            }
-            if (openBracketsCount !== closeBracketsCount) {
-                errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
-            }
-            if (/\.[0-9]/.test(input)) {
-                errors.push('Please convert decimal numbers to fractions.');
-            }
-            return errors;
-        } else {
-            if (input === '') {
-                const state = {result: {tex: "", python: "", mathml: ""}};
-                setCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
-                initialEditorSymbols.current = [];
-            } else if (isDefined(parsedExpression) && parsedExpression.length === 1) {
-                // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
-                // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
-                if (sketchRef.current) {
-                    sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, input);
+                if (openBracketsCount !== closeBracketsCount) {
+                    _errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
                 }
-            } else if (isDefined(parsedExpression)) {
-                if (sketchRef.current) {
-                    const sizes = parsedExpression.map(countChildren);
-                    const i = sizes.indexOf(Math.max.apply(null, sizes));
-                    sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, input);
+                if (/\.[0-9]/.test(pycode)) {
+                    _errors.push('Please convert decimal numbers to fractions.');
+                }
+                setErrors(_errors);
+            } else {
+                setErrors(undefined);
+                if (pycode === '') {
+                    const state = {result: {tex: "", python: "", mathml: ""}};
+                    setCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
+                    initialEditorSymbols.current = [];
+                } else if (isDefined(parsedExpression) && parsedExpression.length === 1) {
+                    // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
+                    // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
+                    if (sketchRef.current) {
+                        sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
+                    }
+                } else if (isDefined(parsedExpression)) {
+                    if (sketchRef.current) {
+                        const sizes = parsedExpression.map(countChildren);
+                        const i = sizes.indexOf(Math.max.apply(null, sizes));
+                        sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
+                    }
                 }
             }
-            return [];
-        }
+        }, 250);
     };
 
     useEffect(() => {
@@ -293,7 +297,6 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                             logicSyntax={editorSyntax}
                         />}
                     </div>
-                    <QuestionInputValidation userInput={textInput} validator={validateEquality} />
                 </Col>
             </Row>
             {currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex && <Row>
