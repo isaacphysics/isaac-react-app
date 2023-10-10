@@ -155,7 +155,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         sketch.onCloseMenus = () => undefined;
         sketch.isUserPrivileged = () => true;
         sketch.onNotifySymbolDrag = () => undefined;
-        sketch.isTrashActive = () => false
+        sketch.isTrashActive = () => false;
 
         sketchRef.current = sketch;
 

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FormEvent, useMemo, useRef, useState} from "react";
+import React, {FormEvent, useMemo, useState} from "react";
 import {AppState, useAppSelector, useGetConstantUnitsQuery} from "../../state";
 import Rand from 'rand-seed';
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -17,7 +17,7 @@ import {
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {isAda, isDefined, siteSpecific, useCurrentQuestionAttempt} from "../../services";
+import {isAda, siteSpecific, useCurrentQuestionAttempt} from "../../services";
 import {v4 as uuid_v4} from 'uuid';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
