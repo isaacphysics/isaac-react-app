@@ -101,10 +101,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const updateState = (state: any) => {
         const newState = sanitiseInequalityState(state);
         const pythonExpression = newState?.result?.python || "";
-        const previousPythonExpression = currentAttemptValue?.result?.python || "";
-        if (!previousPythonExpression) {
-            dispatchSetCurrentAttempt({type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
-        }
+        dispatchSetCurrentAttempt({type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
         initialEditorSymbols.current = state.symbols;
     };
 
