@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {PotentialUser} from "../../../../IsaacAppTypes";
@@ -92,7 +92,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             // TODO highlight teachers who have already been granted access? (see verification modal code)
             dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
         }
-    }
+    };
 
     useEffect(() => {
         if (authToken && user.loggedIn && user.id) {
