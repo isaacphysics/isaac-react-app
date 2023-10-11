@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { isDefined } from "../../services";
+import { useEffect, useRef, useState } from "react";
+import { isDefined } from "../../../services";
 import React from "react";
 
 interface QuestionInputValidationProps<T> {
@@ -11,13 +11,15 @@ const QuestionInputValidation = <T,>({userInput, validator}: QuestionInputValida
     const [errors, setErrors] = useState<string[]>([]);
     const debounceTimer = useRef<number|null>(null);
 
-    if (debounceTimer.current) {
-        window.clearTimeout(debounceTimer.current);
-        debounceTimer.current = null;
-    }
-    debounceTimer.current = window.setTimeout(() => {
-        setErrors(validator(userInput));
-    }, 250);
+    useEffect(() => {
+        if (debounceTimer.current) {
+            window.clearTimeout(debounceTimer.current);
+            debounceTimer.current = null;
+        }
+        debounceTimer.current = window.setTimeout(() => {
+            setErrors(validator(userInput));
+        }, 250);
+    }, [userInput, validator]);
 
     return <>
         {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && 
