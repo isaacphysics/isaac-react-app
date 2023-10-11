@@ -112,8 +112,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     const basicCellClasses = `align-middle ${siteSpecific("text-center", "text-left")}`;
 
     const isTable = boardView === BoardViews.table;
-    const phyHexagon = <div className={classNames("board-subject-hexagon-container", {"table-view": isTable})} 
-            style={{right: `${isTable ? "" : "45px"}`}}>
+    const phyHexagon = <div className={classNames("board-subject-hexagon-container", isTable ? "table-view" : "card-view")}>
         {isSetAssignments
             ? <HexagonGroupsButton toggleAssignModal={toggleAssignModal} boardSubjects={boardSubjects} assignees={assignees} id={hexagonId} />
             : ((board.percentageCompleted === 100)
