@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {PotentialUser} from "../../../../IsaacAppTypes";
@@ -14,12 +14,15 @@ import {
 import classnames from "classnames";
 import {
     extractTeacherName,
+    isAda,
     isLoggedIn,
     isPhy,
     isStudent,
     isTutorOrAbove,
+    matchesNameSubstring,
     MEMBERSHIP_STATUS,
-    siteSpecific
+    siteSpecific,
+    useDeviceSize
 } from "../../../services";
 import classNames from "classnames";
 import {PageFragment} from "../PageFragment";
@@ -33,6 +36,7 @@ import {
     tokenVerificationModal
 } from "../modals/TeacherConnectionModalCreators";
 import { FixedSizeList } from "react-window";
+import { Spacer } from "../Spacer";
 
 const CONNECTIONS_ROW_HEIGHT = 40;
 const CONNECTIONS_MAX_VISIBLE_ROWS = 10;
@@ -50,6 +54,27 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     const [changeMyMembershipStatus] = useChangeMyMembershipStatusMutation();
     const {data: activeAuthorisations} = useGetActiveAuthorisationsQuery((editingOtherUser && userToEdit?.id) || undefined);
     const {data: studentAuthorisations} = useGetOtherUserAuthorisationsQuery((editingOtherUser && userToEdit?.id) || undefined);
+    let filteredActiveAuthorisations = activeAuthorisations;
+    let filteredStudentAuthorisations = studentAuthorisations;
+
+    const [teacherSearchText, setTeacherSearchText] = useState<string>("");
+    const [studentSearchText, setStudentSearchText] = useState<string>("");
+    const [enableTeacherSearch, setEnableTeacherSearch] = useState<boolean>(false);
+    const [enableStudentSearch, setEnableStudentSearch] = useState<boolean>(false);
+
+    if (enableTeacherSearch && teacherSearchText) {
+        filteredActiveAuthorisations = activeAuthorisations?.filter(teacher => {
+            return matchesNameSubstring(teacher?.givenName, teacher?.familyName, teacherSearchText);
+        });
+    }
+
+    if (enableStudentSearch && studentSearchText) {
+        filteredStudentAuthorisations = studentAuthorisations?.filter(student => {
+            return matchesNameSubstring(student?.givenName, student?.familyName, studentSearchText);
+        });
+    }
+
+    const deviceSize = useDeviceSize();
 
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
     const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
@@ -115,12 +140,36 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
                 <RS.Col lg={5} className="mt-4 mt-lg-0">
                     <div className="connect-list">
-                        <h3><span className={siteSpecific("icon-person-active", "icon-group-white")} />Teacher connections</h3>
+                        <div className="connect-list-header">
+                            {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ? 
+                                <>{enableTeacherSearch ? 
+                                    <>
+                                        <RS.Input type="text" autoFocus placeholder="Search teachers" className="connections-search" onChange={e => setTeacherSearchText(e.target.value)}/>
+                                        <Spacer />
+                                    </> : 
+                                    <h4 className={classNames("d-flex", {"pl-0" : isAda})}>
+                                        <span className={siteSpecific("icon-person-active", "icon-group-white")} />
+                                        Teacher connections
+                                    </h4>
+                                }</>
+                                :
+                                <>
+                                    <h4 className={classNames("d-flex", {"pl-0" : isAda})}>
+                                        <span className={siteSpecific("icon-person-active", "icon-group-white")} />
+                                        Teacher connections
+                                    </h4>
+                                    <Spacer />
+                                    {enableTeacherSearch && <RS.Input type="text" autoFocus style={{width: "200px"}} placeholder="Search teachers" className="connections-search" onChange={e => setTeacherSearchText(e.target.value)}/>}
+                                </>
+                            }
+                            {!enableTeacherSearch && <Spacer />}
+                            <button className="search-toggler-icon" onClick={_ => setEnableTeacherSearch(c => !c)}/>
+                        </div>
                         <div className="connect-list-inner">
-                            <ul className="teachers-connected list-unstyled ml-3 my-0 mr-0">
-                                <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, activeAuthorisations?.length ?? 0))} itemCount={activeAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
+                            <ul className={classNames("teachers-connected list-unstyled my-0", {"ml-3 mr-2": isPhy}, {"ml-1 mr-2": isAda})}>
+                                <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredActiveAuthorisations?.length ?? 0))} itemCount={filteredActiveAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                                     {({index, style}) => {
-                                        const teacherAuthorisation = activeAuthorisations?.[index];
+                                        const teacherAuthorisation = filteredActiveAuthorisations?.[index];
                                         if (!teacherAuthorisation) {
                                             return null;
                                         }
@@ -174,13 +223,37 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     </RS.Col>
                     <RS.Col lg={5}>
                         <div className="connect-list">
-                            <h3><span className={siteSpecific("icon-person-active", "icon-group-white")} /> Student connections </h3>
+                        <div className="connect-list-header">
+                            {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ? 
+                                <>{enableStudentSearch ? 
+                                    <>
+                                        <RS.Input autoFocus type="text" placeholder="Search students" className="connections-search" onChange={e => setStudentSearchText(e.target.value)}/>
+                                        <Spacer />
+                                    </> :                                     
+                                    <h4 className={classNames("d-flex", {"pl-0" : isAda})}>
+                                        <span className={siteSpecific("icon-person-active", "icon-group-white")} />
+                                        Student connections
+                                    </h4>
+                                }</>
+                                :
+                                <>
+                                    <h4 className={classNames("d-flex", {"pl-0" : isAda})}>
+                                        <span className={siteSpecific("icon-person-active", "icon-group-white")} />
+                                        Student connections
+                                    </h4>
+                                    <Spacer />
+                                    {enableStudentSearch && <RS.Input autoFocus type="text" style={{width: "200px"}} placeholder="Search students" className="connections-search" onChange={e => setStudentSearchText(e.target.value)}/>}
+                                </>
+                            }
+                            {!enableStudentSearch && <Spacer />}
+                            <button className="search-toggler-icon" onClick={_ => setEnableStudentSearch(c => !c)}/>
+                        </div>
 
                             <div className="connect-list-inner">
-                                <ul className="teachers-connected list-unstyled ml-3 mt-0 mb-0 mr-0">
-                                    <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, studentAuthorisations?.length ?? 0))} itemCount={studentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
+                                <ul className={classNames("teachers-connected list-unstyled my-0", {"ml-3 mr-2": isPhy}, {"ml-1 mr-2": isAda})}>
+                                    <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredStudentAuthorisations?.length ?? 0))} itemCount={filteredStudentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                                         {({index, style}) => {
-                                            const student = studentAuthorisations?.[index];
+                                            const student = filteredStudentAuthorisations?.[index];
                                             if (!student) {
                                                 return null;
                                             }
