@@ -164,24 +164,22 @@ const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     const now = new Date();
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
     return <Row data-testid={"my-assignment"} className={"pt-3 mb-3 border-top"}>
-        <Col xs={{size: 8, order: 1}} sm={9} md={4}>
+        <Col xs={8} sm={9} md={7} lg={8}>
             <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
                 <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
             </Link>
-            {isDefined(assignment.groupName) && <p className="mb-0"><strong>Group:</strong> {assignment.groupName}</p>}
-            {isDefined(assignment.assignerSummary) && <p><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>}
-        </Col>
-        <Col xs={{size: 6, order: 3}} md={{size: 4, order: 2}}>
             {isDefined(assignmentStartDate) && <p className="mb-0" data-testid={"gameboard-assigned"}><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>}
             {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100
-                ? <p><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>
-                : <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>
+                ? <p className="mb-0"><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>
+                : <>{assignment.dueDate && <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>}</>
             }
+            {isDefined(assignment.groupName) && <p className="mb-0"><strong>Group:</strong> {assignment.groupName}</p>}
+            {isDefined(assignment.assignerSummary) && <p><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>}
             {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
         </Col>
-        <Col xs={{size: 4, order: 2}} sm={3} md={{size: 4, order: 3}} >
+        <Col xs={4} sm={3} md={5} lg={4} >
             <Row className="justify-content-end">
-                <Col xs="auto d-none d-lg-block" className={"text-center px-3"}>
+                <Col xs="auto d-none d-md-block" className={"text-center px-3"}>
                     {assignment.gameboard && <CSCircle percentage={boardPercentageAttempted} label="%&nbsp;attempted"/>}
                 </Col>
                 <Col xs="auto" className={"text-center px-3"}>
