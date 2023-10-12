@@ -39,7 +39,7 @@ import {
     KEY,
     showNotification,
     isTutorOrAbove,
-    PATHS, isAda
+    PATHS
 } from "../../services"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
