@@ -367,6 +367,7 @@ export interface ContentDTO extends ContentBaseDTO {
 export interface ContentSummaryDTO {
     id?: string;
     title?: string;
+    subtitle?: string;
     summary?: string;
     type?: string;
     level?: string;
@@ -613,6 +614,7 @@ export interface GameboardItem {
     id?: string;
     contentType?: string;
     title?: string;
+    subtitle?: string;
     description?: string;
     uri?: string;
     tags?: string[];
