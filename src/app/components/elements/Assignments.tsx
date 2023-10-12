@@ -115,7 +115,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 <p><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>}
             </Col>
         </Row>
-    </>
+    </>;
 };
 
 const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
