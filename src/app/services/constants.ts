@@ -611,6 +611,7 @@ export enum TAG_ID {
     shapes = "shapes",
     trigonometry = "trigonometry",
     planes = "planes",
+    coordinates = "coordinates",
     // Algebra
     manipulation = "manipulation",
     quadratics = "quadratics",
