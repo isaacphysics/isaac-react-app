@@ -60,7 +60,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
             </Col>
             <Col xs={8} md={3} lg={4} className="pl-lg-5">
                 <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
-                    <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
+                    <h4 className="text-break">{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
                 </Link>
                 {isDefined(assignmentStartDate) &&
                 <p className="mb-0" data-testid={"gameboard-assigned"}><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>
