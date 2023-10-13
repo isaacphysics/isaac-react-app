@@ -17,7 +17,7 @@ import _flattenDeep from 'lodash/flatMapDeep';
 import {v4 as uuid_v4} from "uuid";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
-import QuestionInputValidation from "./IsaacQuestionValidator";
+import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -47,7 +47,6 @@ function isError(p: ParsingError | any[]): p is ParsingError {
 }
 
 export const symbolicInputValidator = (input: string) => {
-    console.log(input);
     const openBracketsCount = input.split('(').length - 1;
     const closeBracketsCount = input.split(')').length - 1;
     const regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
@@ -107,10 +106,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const updateState = (state: any) => {
         const newState = sanitiseInequalityState(state);
         const pythonExpression = newState?.result?.python || "";
-        const previousPythonExpression = currentAttemptValue?.result?.python || "";
-        if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
-            dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
-        }
+        dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
         initialEditorSymbols.current = state.symbols;
     };
 
@@ -175,12 +171,10 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     }, [hiddenEditorRef.current]);
 
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const pycode = e.target.value;
-        setTextInput(pycode);
-        setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
-    };
+        const input = e.target.value;
+        setTextInput(input);
+        setInputState({...inputState, pythonExpression: input, userInput: textInput});
 
-    const validateAndSetSketch = (input: string) => {
         const parsedExpression = parseMathsExpression(input);
         if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
             if (input === '') {
@@ -197,7 +191,6 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, input);
             }
         }
-        return symbolicInputValidator(input);
     };
 
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
@@ -242,7 +235,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                         </RS.UncontrolledTooltip>
                     </RS.InputGroupAddon>
                 </RS.InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={validateAndSetSketch} />
+                <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}

@@ -19,7 +19,7 @@ import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
-import QuestionInputValidation from "./IsaacQuestionValidator";
+import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -101,10 +101,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const updateState = (state: any) => {
         const newState = sanitiseInequalityState(state);
         const pythonExpression = newState?.result?.python || "";
-        const previousPythonExpression = currentAttemptValue?.result?.python || "";
-        if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
-            dispatchSetCurrentAttempt({type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
-        }
+        dispatchSetCurrentAttempt({type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
         initialEditorSymbols.current = state.symbols;
     };
 
@@ -175,16 +172,12 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     }, [hiddenEditorRef.current]);
 
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
-        const pycode = e.target.value;
-        setTextInput(pycode);
-        setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
-    };
+        const input = e.target.value;
+        setTextInput(input);
+        setInputState({...inputState, pythonExpression: input, userInput: textInput});
 
-    const validateAndSetSketch = (input: string) => {
         const parsedExpression = parseBooleanExpression(input);
-        if (isError(parsedExpression) || (parsedExpression.length === 0 && input !== '')) {
-            return symbolicLogicInputValidator(input);
-        } else {
+        if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
             if (input === '') {
                 const state = {result: {tex: "", python: "", mathml: ""}};
                 dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
@@ -198,7 +191,6 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 const i = sizes.indexOf(Math.max.apply(null, sizes));
                 sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, input);
             }
-            return [];
         }
     };
 
@@ -252,7 +244,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                         </UncontrolledTooltip>
                     </InputGroupAddon>
                 </InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={validateAndSetSketch} />
+                <QuestionInputValidation userInput={textInput} validator={symbolicLogicQuestionValidator} />
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}

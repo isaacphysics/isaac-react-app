@@ -22,7 +22,7 @@ import {v4 as uuid_v4} from 'uuid';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
-import QuestionInputValidation from "./IsaacQuestionValidator";
+import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
     const seedValue = userId + "|" + questionId;
@@ -132,15 +132,12 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
     const currentAttemptValueWrong = validationResponse && validationResponse.correctValue === false;
     const currentAttemptUnitsWrong = validationResponse && validationResponse.correctUnits === false;
 
-    const [userInput, setUserInput] = useState<string>("");
-
     const userId = useAppSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
     const {data: units} = useGetConstantUnitsQuery();
 
     const selectedUnits = selectUnits(doc, questionId, units, userId);
 
     function updateValue(event: FormEvent<HTMLInputElement>) {
-        setUserInput(event.currentTarget.value); 
         const attempt = {
             type: "quantity",
             value: event.currentTarget.value,
@@ -232,7 +229,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     </div>}
                 </Col>
             </Row>
-            <QuestionInputValidation userInput={userInput} validator={numericInputValidator} />
+            <QuestionInputValidation userInput={currentAttemptValue ?? ""} validator={numericInputValidator} />
         </div>
     );
 };
