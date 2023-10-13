@@ -150,10 +150,12 @@ export function useUserContext(): UseUserContextReturnType {
         const actualParams = queryString.parse(window.location.search);
         if (stage !== actualParams.stage || (!isPhy && examBoard !== actualParams.examBoard)) {
             try {
+                const previousParams = queryString.parse(window.location.search);
                 history.replace({
-                    ...existingLocation,
+                    ...existingLocation, 
                     search: queryString.stringify({
                         ...queryParams,
+                        previousParams,
                         stage,
                         examBoard: isAda ? examBoard : undefined,
                     }, {encode: false})
