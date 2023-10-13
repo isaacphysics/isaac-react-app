@@ -150,12 +150,11 @@ export function useUserContext(): UseUserContextReturnType {
         const actualParams = queryString.parse(window.location.search);
         if (stage !== actualParams.stage || (!isPhy && examBoard !== actualParams.examBoard)) {
             try {
-                const previousParams = queryString.parse(window.location.search);
                 history.replace({
-                    ...existingLocation, 
+                    ...window.location, // keeps the hash
                     search: queryString.stringify({
                         ...queryParams,
-                        previousParams,
+                        ...actualParams, // keeps the gameboard filters
                         stage,
                         examBoard: isAda ? examBoard : undefined,
                     }, {encode: false})
