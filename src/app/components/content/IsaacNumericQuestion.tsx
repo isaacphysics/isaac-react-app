@@ -119,6 +119,7 @@ export const numericInputValidator = (input: string) => {
     if (/.*?[0-9][, ][0-9]{3}.*?/.test(input)) {
         errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
     }
+    return errors;
 };
 
 const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacQuestionProps<IsaacNumericQuestionDTO, QuantityValidationResponseDTO>) => {
