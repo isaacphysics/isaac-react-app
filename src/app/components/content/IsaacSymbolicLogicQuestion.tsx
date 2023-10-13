@@ -244,7 +244,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                         </UncontrolledTooltip>
                     </InputGroupAddon>
                 </InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={symbolicLogicQuestionValidator} />
+                <QuestionInputValidation userInput={textInput} validator={symbolicLogicInputValidator} />
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}
