@@ -58,22 +58,12 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
                         return <>
                             <Row>
-                                <Col sm="12">
-                                    <Label className="w-100">
-                                        Assignments by state
-                                        <Input type="select" data-testid="assignment-type-filter" value={assignmentStateFilter} onChange={e => setAssignmentStateFilter(e.target.value)}>
-                                            {assignmentStates.map(state => <option key={state} value={state}>{state}</option>)}
-                                        </Input>
-                                    </Label>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col lg={4}>
+                                <Col md={8} lg={4}>
                                     <Label className="w-100">
                                         {siteSpecific("Filter assignments", "Filter quizzes by name")} <Input type="text" onChange={(e) => setAssignmentTitleFilter(e.target.value)} placeholder={siteSpecific("Filter assignments by name", undefined)}/>
                                     </Label>
                                 </Col>
-                                <Col sm={6} lg={{size: 2, offset: 4}}>
+                                <Col sm={6} lg={2} className="ml-lg-auto">
                                     <Label className="w-100">
                                         Group
                                         <Input type="select" value={assignmentGroupFilter} onChange={e => setAssignmentGroupFilter(e.target.value)}>
@@ -86,6 +76,14 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                         Set by
                                         <Input type="select" value={assignmentSetByFilter} onChange={e => setAssignmentSetByFilter(e.target.value)}>
                                             {["All", ...getDistinctAssignmentSetters(assignments)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
+                                        </Input>
+                                    </Label>
+                                </Col>
+                                <Col md={4} lg="auto">
+                                    <Label className="w-100">
+                                        Completion
+                                        <Input type="select" data-testid="assignment-type-filter" value={assignmentStateFilter} onChange={e => setAssignmentStateFilter(e.target.value)}>
+                                            {assignmentStates.map(state => <option key={state} value={state}>{state}</option>)}
                                         </Input>
                                     </Label>
                                 </Col>
