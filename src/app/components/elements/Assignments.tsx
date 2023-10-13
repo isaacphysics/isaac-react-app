@@ -61,8 +61,9 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 {isDefined(assignmentStartDate) &&
                 <p className="mb-0" data-testid={"gameboard-assigned"}><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>
                 }
-                {isDefined(assignment.dueDate) &&
-                <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>
+                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100
+                    ? <p className="mb-0"><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>
+                    : <>{assignment.dueDate && <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>}</>
                 }
                 {isDefined(assignment.groupName) &&
                 <p className="mb-0"><strong>Group:</strong> {assignment.groupName}</p>
@@ -70,11 +71,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 {isDefined(assignment.assignerSummary) &&
                 <p className="mb-0"><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>
                 }
-                {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
-                <div>
-                    {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100 &&
-                    <p><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>}
-                </div>
+                {isDefined(assignment.notes) && <p className="mb-0"><strong>Notes:</strong> {assignment.notes}</p>}
             </Col>
 
             <Col xs={4} md={5} lg={4}>
