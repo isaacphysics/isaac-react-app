@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "3.4.2-SNAPSHOT",
+  "version": "3.4.4-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=18",
@@ -47,6 +47,7 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
     "react-select": "^5.4.0",
+    "react-window": "^1.8.9",
     "reactstrap": "^8.10.1",
     "redux": "^4.1.2",
     "redux-logger": "^3.0.6",
@@ -88,8 +89,18 @@
     "rules": {
       "no-prototype-builtins": "off",
       "prefer-const": "warn",
+      "semi": "warn",
+      "jsx-a11y/no-static-element-interactions": "warn",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          "argsIgnorePattern": "^_",
+          "varsIgnorePattern": "^_"
+        }
+      ],
+      "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/no-empty-interface": "warn",
       "@typescript-eslint/explicit-module-boundary-types": "off"
@@ -136,6 +147,7 @@
     "@types/react-leaflet": "^2.8.2",
     "@types/react-router": "^5.1.17",
     "@types/react-router-dom": "^5.3.2",
+    "@types/react-window": "^1.8.5",
     "@types/redux-logger": "^3.0.9",
     "@types/redux-mock-store": "^1.0.3",
     "@types/remarkable": "^1.7.5",

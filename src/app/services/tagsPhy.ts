@@ -100,6 +100,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.trigonometry, title: `Trigon${softHyphen}ometry`, parent: TAG_ID.geometry},
         {id: TAG_ID.vectors, title: "Vectors", parent: TAG_ID.geometry},
         {id: TAG_ID.planes, title: "Planes", parent: TAG_ID.geometry},
+        {id: TAG_ID.coordinates, title: "Coordinates", parent: TAG_ID.geometry},
         // Functions
         {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},
         {id: TAG_ID.graphSketching, title: "Graph Sketching", parent: TAG_ID.functions},
@@ -141,7 +142,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Organic
         {id: TAG_ID.functionalGroups, title: "Functional Groups", parent: TAG_ID.organic},
         {id: TAG_ID.isomerism, title: "Isomerism", parent: TAG_ID.organic},
-        {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic},
+        {id: TAG_ID.organicReactions, title: "Reactions", parent: TAG_ID.organic},
         {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic},
         {id: TAG_ID.aromaticReactions, title: "Reactions (aromatics)", parent: TAG_ID.organic},
         {id: TAG_ID.polymers, title: "Polymers", parent: TAG_ID.organic},

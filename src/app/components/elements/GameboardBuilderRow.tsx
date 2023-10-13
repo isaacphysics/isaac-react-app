@@ -104,6 +104,10 @@ const GameboardBuilderRow = (
                 type="image" src="/assets/new-tab.svg" alt="Preview question" title="Preview question in modal"
                 className="pointer-cursor align-middle new-tab" onClick={() => {question.id && openQuestionModal(question.id)}}
             />
+            {question.subtitle && <>
+                <br/>
+                <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
+            </>}
         </td>
         <td className={classNames(cellClasses, siteSpecific("w-25", "w-20"))}>
             {topicTag()}

@@ -10,9 +10,59 @@ import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, parseMathsExpression, ParsingError} from 'inequality-grammar';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
-import QuestionInputValidation from "../content/IsaacQuestionValidator";
+import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
+
+function isError(p: ParsingError | any[]): p is ParsingError {
+    return p.hasOwnProperty("error");
+}
+
+const equalityValidator = (input: string, editorMode: string) => {
+    const openBracketsCount = input.split('(').length - 1;
+    const closeBracketsCount = input.split(')').length - 1;
+    let regexStr = '';
+    const errors = [];
+
+    let parsedExpression: ParsingError | any[];
+    if (editorMode === 'maths') {
+        regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
+        parsedExpression = parseMathsExpression(input);
+    } else {
+        regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+";
+        parsedExpression = parseBooleanExpression(input);
+    }
+    const badCharacters = new RegExp(regexStr);
+
+    if (isError(parsedExpression) && parsedExpression.error) {
+        errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
+    }
+    if (/\\[a-zA-Z()]|[{}]/.test(input)) {
+        errors.push('LaTeX syntax is not supported.');
+    }
+    if (/\|.+?\|/.test(input)) {
+        errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
+    }
+    if (badCharacters.test(input)) {
+        const usedBadChars: string[] = [];
+        for(let i = 0; i < input.length; i++) {
+            const char = input.charAt(i);
+            if (badCharacters.test(char)) {
+                if (!usedBadChars.includes(char)) {
+                    usedBadChars.push(char);
+                }
+            }
+        }
+        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+    }
+    if (openBracketsCount !== closeBracketsCount) {
+        errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+    }
+    if (/\.[0-9]/.test(input)) {
+        errors.push('Please convert decimal numbers to fractions.');
+    }
+    return errors;
+}
 
 const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);
@@ -22,7 +72,6 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     const [currentAttempt, setCurrentAttempt] = useState<any>({type: 'formula', value: {}, pythonExpression: ''});
     const [editorSyntax, setEditorSyntax] = useState<LogicSyntax>('logic');
     const [textInput, setTextInput] = useState('');
-    const [errors, setErrors] = useState<string[]>();
     const user = useAppSelector(selectors.user.orNull);
     // Does this really need to be a state variable if it is immutable?
     const [editorMode, setEditorMode] = useState<EditorMode>((queryParams.mode as EditorMode) || siteSpecific('maths', 'logic'));
@@ -31,12 +80,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     /*** Text based input stuff */
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
-    const debounceTimer = useRef<number|null>(null);
     const [inputState, setInputState] = useState(() => ({pythonExpression: '', userInput: '', valid: true}));
-
-    function isError(p: ParsingError | any[]): p is ParsingError {
-        return p.hasOwnProperty("error");
-    }
 
     interface ChildrenMap {
         children: {[key: string]: ChildrenMap};
@@ -72,62 +116,19 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
         _updateEquation(e.target.value);
     }
 
-    const _updateEquation = (pycode: string) => {
+    const _updateEquation = (input: string) => {
         // const pycode = e.target.value;
-        setTextInput(pycode);
-        setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
-    };
+        setTextInput(input);
+        setInputState({...inputState, pythonExpression: input, userInput: textInput});
 
-    const validateEquality = (input: string) => {
         let parsedExpression: any[] | ParsingError | undefined;
         if (editorMode === 'maths') {
             parsedExpression = parseMathsExpression(input);
         } else if (editorMode === 'logic') {
             parsedExpression = parseBooleanExpression(input);
         }
-        const errors = [];
 
-        if (isDefined(parsedExpression) && (isError(parsedExpression) || (parsedExpression.length === 0 && input !== ''))) {
-            const openBracketsCount = input.split('(').length - 1;
-            const closeBracketsCount = input.split(')').length - 1;
-            let regexStr = '';
-            if (editorMode === 'maths') {
-                regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
-            } else {
-                regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+";
-            }
-            const badCharacters = new RegExp(regexStr);
-            setErrors([]);
-
-            if (isError(parsedExpression) && parsedExpression.error) {
-                errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
-            }
-            if (/\\[a-zA-Z()]|[{}]/.test(input)) {
-                errors.push('LaTeX syntax is not supported.');
-            }
-            if (/\|.+?\|/.test(input)) {
-                errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
-            }
-            if (badCharacters.test(input)) {
-                const usedBadChars: string[] = [];
-                for(let i = 0; i < input.length; i++) {
-                    const char = input.charAt(i);
-                    if (badCharacters.test(char)) {
-                        if (!usedBadChars.includes(char)) {
-                            usedBadChars.push(char);
-                        }
-                    }
-                }
-                errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-            }
-            if (openBracketsCount !== closeBracketsCount) {
-                errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
-            }
-            if (/\.[0-9]/.test(input)) {
-                errors.push('Please convert decimal numbers to fractions.');
-            }
-            return errors;
-        } else {
+        if (!isDefined(parsedExpression) || !(isError(parsedExpression) || (parsedExpression.length === 0 && input !== ''))) {
             if (input === '') {
                 const state = {result: {tex: "", python: "", mathml: ""}};
                 setCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
@@ -145,7 +146,6 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                     sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, input);
                 }
             }
-            return [];
         }
     };
 
@@ -265,9 +265,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                                 </UncontrolledTooltip>}
                             </InputGroupAddon>
                         </InputGroup>
-                        {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
-                            {errors.map(e => (<li key={e}>{e}</li>))}
-                        </ul></div>}
+                        <QuestionInputValidation userInput={textInput} validator={(i: string) => equalityValidator(i, editorMode)} />
                     </div>}
                     <div className="equality-page">
                         <div
@@ -293,7 +291,6 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                             logicSyntax={editorSyntax}
                         />}
                     </div>
-                    <QuestionInputValidation userInput={textInput} validator={validateEquality} />
                 </Col>
             </Row>
             {currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex && <Row>

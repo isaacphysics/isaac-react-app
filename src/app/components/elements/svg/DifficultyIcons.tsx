@@ -27,7 +27,7 @@ function SingleDifficultyIconShape({difficultyCategory, difficultyCategoryLevel,
             <Rectangle {...miniSquare} className={"square difficulty challenge " + classnames({active})} />
         }
         {<foreignObject width={difficultyIconWidth} height={difficultyIconWidth + (difficultyCategory === "P" && isPhy ? yPadding + 2 : siteSpecific(0, 1))}>
-            <div className={`difficulty-title difficulty-icon-title ${classnames({active})} difficulty-${difficultyCategoryLevel}`}>
+            <div aria-hidden={"true"} className={`difficulty-title difficulty-icon-title ${classnames({active})} difficulty-${difficultyCategoryLevel}`}>
                 {difficultyCategory}
             </div>
         </foreignObject>}
@@ -41,6 +41,7 @@ export function DifficultyIcons({difficulty} : {difficulty : Difficulty}) {
 
     return <div>
         <svg
+            role={"img"}
             width={`${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding}px`}
             height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`}
         >

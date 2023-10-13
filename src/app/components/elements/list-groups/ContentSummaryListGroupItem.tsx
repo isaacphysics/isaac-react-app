@@ -15,6 +15,7 @@ import {
     TAG_ID,
     TAG_LEVEL,
     tags,
+    useDeviceSize,
     useUserContext
 } from "../../../services";
 import {Link} from "react-router-dom";
@@ -58,6 +59,8 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             <img src="/assets/cs/icons/question-correct.svg" alt={questionIconLabel}/> :
             <img src="/assets/cs/icons/question-not-started.svg" alt={questionIconLabel}/>
     );
+
+    const deviceSize = useDeviceSize();
 
     let typeLabel;
 
@@ -136,8 +139,11 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                     {displayTopicTitle && hierarchyTags && <div className={"hierarchy-tags"}>
                         {hierarchyTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
-                    {item.summary && <div className="small text-muted d-none d-md-block">
+                    {(isPhy && item.summary) && <div className="small text-muted d-none d-md-block">
                         {item.summary}
+                    </div>}
+                    {(!item.summary || deviceSize === "sm") && item.subtitle && <div className="small text-muted d-none d-sm-block">
+                        {item.subtitle}
                     </div>}
                 </div>
 
