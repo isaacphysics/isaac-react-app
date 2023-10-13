@@ -181,9 +181,6 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                                     {trustedTitle}
                                 </Markup>
                             </h2>
-                            <Markup encoding={"latex"}>
-                                {trustedTitle + " (old title)"}
-                            </Markup>
                         </div>}
                         {isAda && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
