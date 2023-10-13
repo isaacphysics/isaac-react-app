@@ -116,7 +116,10 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         {isSetAssignments
             ? <HexagonGroupsButton toggleAssignModal={toggleAssignModal} boardSubjects={boardSubjects} assignees={assignees} id={hexagonId} />
             : ((board.percentageCompleted === 100)
-                ? <span className="board-subject-hexagon subject-complete"/>
+                ? <>
+                    <span className="board-subject-hexagon subject-complete"/>
+                    <span className="sr-only">Complete</span>
+                </>
                 : <>
                     {generateGameboardSubjectHexagons(boardSubjects)}
                     <div className="board-percent-completed">{board.percentageCompleted}</div>
