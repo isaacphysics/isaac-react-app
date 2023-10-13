@@ -47,7 +47,6 @@ const gameboardMessage = `${siteSpecific("gameboard", "quiz")} settings`;
 
 export function useUserContext(): UseUserContextReturnType {
     const dispatch = useAppDispatch();
-    const existingLocation = useLocation();
     const queryParams = useQueryParams(true);
 
     const user = useAppSelector((state: AppState) => state && state.user);
@@ -83,7 +82,7 @@ export function useUserContext(): UseUserContextReturnType {
 
     // Exam Board
     let examBoard: EXAM_BOARD;
-    const examBoardQueryParam = queryParams.examBoard as EXAM_BOARD | undefined
+    const examBoardQueryParam = queryParams.examBoard as EXAM_BOARD | undefined;
     if (isPhy) {
         examBoard = EXAM_BOARD.ALL;
     } else if (examBoardQueryParam && Object.values(EXAM_BOARD).includes(examBoardQueryParam) && !EXAM_BOARD_NULL_OPTIONS.has(examBoardQueryParam)) {
@@ -151,10 +150,10 @@ export function useUserContext(): UseUserContextReturnType {
         if (stage !== actualParams.stage || (!isPhy && examBoard !== actualParams.examBoard)) {
             try {
                 history.replace({
-                    ...window.location, // keeps the hash
+                    ...window.location,
                     search: queryString.stringify({
                         ...queryParams,
-                        ...actualParams, // keeps the gameboard filters
+                        ...actualParams,
                         stage,
                         examBoard: isAda ? examBoard : undefined,
                     }, {encode: false})
@@ -323,7 +322,7 @@ export function determineAudienceViews(audience?: AudienceContext[], creationCon
                 viableView = viableView && creationContext.difficulty.includes(viewingContext.difficulty);
             }
             return viableView;
-        })
+        });
     }
 
     const viewsToDisplay = viewsFilteredByCreationContext.length > 0 ? viewsFilteredByCreationContext : allViews;
@@ -421,7 +420,7 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
         message.push(examBoardLabelMap[userContext.examBoard]);
     }
     if (message.length === 0) { // should never happen...
-        message.push("your account settings" /* "anyone!" */)
+        message.push("your account settings" /* "anyone!" */);
     }
     return `not been marked for ${message.join(" ")}`;
 }
@@ -466,5 +465,5 @@ export function makeIntendedAudienceComparator(user: Immutable<PotentialUser> | 
         const isAudienceA = isIntendedAudience(sectionA.audience, userContext, user);
         const isAudienceB = isIntendedAudience(sectionB.audience, userContext, user);
         return isAudienceA === isAudienceB ? 0 : isAudienceB ? 1 : -1;
-    }
+    };
 }
