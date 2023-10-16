@@ -5,6 +5,12 @@ import {AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import { createSelector } from "@reduxjs/toolkit";
 
 export const selectors = {
+  events: {
+    eventBookings: createSelector(
+      [(state: AppState) => (state && state.eventBookings) || []],
+      (eventBookings) => eventBookings
+    ),
+  },
   notifications: {
     notifications: createSelector(
       [(state: AppState) => state?.notifications?.notifications || []],

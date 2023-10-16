@@ -1,6 +1,222 @@
 import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO} from "../test/utils";
 import {UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
+import { EventBookingDTO } from "../IsaacApiTypes";
+
+export const mockEventBookings: EventBookingDTO[] = [
+        {
+            bookingId: 1000,
+            userBooked: {
+                givenName: "Test",
+                familyName: "Teacher",
+                role: "TEACHER",
+                authorisedFullAccess: false,
+                emailVerificationStatus: "VERIFIED",
+                teacherPending: false,
+                registeredContexts: [
+                    {
+                        stage: "all",
+                        examBoard: "ocr"
+                    }
+                ],
+                email: "test_teacher@test.com",
+                id: 200
+            },
+            reservedById: 0,
+            eventId: "example_event",
+            eventTitle: "Example Event",
+            eventDate: 1698850800000 as unknown as Date,
+            bookingStatus: "CONFIRMED",
+            bookingDate: 1695897589235 as unknown as Date,
+            additionalInformation: {
+                experienceLevel: "Lots of teaching experience",
+                jobTitle: "Teacher of Computer Science"
+            },
+            updated: 1695897589235 as unknown as Date
+        },
+        {
+            bookingId: 1001,
+            userBooked: {
+                givenName: "Test",
+                familyName: "Student",
+                role: "STUDENT",
+                authorisedFullAccess: false,
+                emailVerificationStatus: "VERIFIED",
+                teacherPending: false,
+                registeredContexts: [
+                    {
+                        stage: "all",
+                        examBoard: "all"
+                    }
+                ],
+                email: "test_student@test.com",
+                id: 201
+            },
+            reservedById: 0,
+            eventId: "example_event",
+            eventTitle: "Example Event",
+            eventDate: 1698850800000 as unknown as Date,
+            bookingStatus: "CONFIRMED",
+            bookingDate: 1695900107575 as unknown as Date,
+            additionalInformation: {
+                yearGroup: "12"
+            },
+            updated: 1695900107575 as unknown as Date
+        },
+        {
+            bookingId: 1002,
+            userBooked: {
+                givenName: "Another",
+                familyName: "Student",
+                role: "STUDENT",
+                authorisedFullAccess: false,
+                emailVerificationStatus: "VERIFIED",
+                teacherPending: false,
+                registeredContexts: [
+                    {
+                        stage: "a_level",
+                        examBoard: "aqa"
+                    }
+                ],
+                email: "another_student@test.com",
+                id: 202
+            },
+            reservedById: 0,
+            eventId: "example_event",
+            eventTitle: "Example Event",
+            eventDate: 1698850800000 as unknown as Date,
+            bookingStatus: "CONFIRMED",
+            bookingDate: 1695935815666 as unknown as Date,
+            additionalInformation: {
+                yearGroup: "12"
+            },
+            updated: 1695935815666 as unknown as Date
+        },
+        {
+            bookingId: 1003,
+            userBooked: {
+                givenName: "Another",
+                familyName: "Teacher",
+                role: "TEACHER",
+                authorisedFullAccess: false,
+                emailVerificationStatus: "VERIFIED",
+                teacherPending: false,
+                registeredContexts: [
+                    {
+                        stage: "all",
+                        examBoard: "ocr"
+                    }
+                ],
+                email: "another_teacher@test.com",
+                id: 203
+            },
+            reservedById: 0,
+            eventId: "example_event",
+            eventTitle: "Example Event",
+            eventDate: 1698850800000 as unknown as Date,
+            bookingStatus: "CONFIRMED",
+            bookingDate: 1695889960207 as unknown as Date,
+            additionalInformation: {
+                experienceLevel: "GCSE and A Level",
+                jobTitle: "Head of CS"
+            },
+            updated: 1695889960207 as unknown as Date
+        },
+        {
+            bookingId: 1004,
+            userBooked: {
+                givenName: "Extra",
+                familyName: "Student",
+                role: "STUDENT",
+                authorisedFullAccess: false,
+                emailVerificationStatus: "VERIFIED",
+                teacherPending: false,
+                registeredContexts: [
+                    {
+                        stage: "a_level",
+                        examBoard: "all"
+                    },
+                ],
+                email: "extra_student@test.com",
+                id: 204
+            },
+            reservedById: 0,
+            eventId: "example_event",
+            eventTitle: "Example Event",
+            eventDate: 1698850800000 as unknown as Date,
+            bookingStatus: "CONFIRMED",
+            bookingDate: 1695892050721 as unknown as Date,
+            additionalInformation: {
+                yearGroup: "13"
+            },
+            updated: 1695892050721 as unknown as Date
+        },
+    ]
+
+export const mockEvent = {
+    id: "example_event",
+    title: "Example Event",
+    subtitle: "Example Subtitle",
+    type: "isaacEventPage",
+    encoding: "markdown",
+    canonicalSourceFile: "content/events/2023/11_november/example_event.json",
+    layout: "1-col",
+    children: [
+        {
+            type: "content",
+            encoding: "markdown",
+            children: [],
+            value: "Example Event Details",
+            published: false,
+            tags: []
+        }
+    ],
+    tags: [
+        "virtual",
+        "student",
+        "booster"
+    ],
+    date: 1698850800000 as unknown as Date,
+    bookingDeadline: 1698840000000 as unknown as Date,
+    location: {
+        address: {
+            addressLine1: "",
+            addressLine2: "",
+            town: "",
+            county: "",
+            postalCode: ""
+        }
+    },
+    eventThumbnail: {
+        id: "eventThumbnail",
+        type: "image",
+        children: [],
+        published: false,
+        src: "/assets/events/booster.svg",
+        altText: ""
+    },
+    numberOfPlaces: 200,
+    groupReservationLimit: 10,
+    allowGroupReservations: true,
+    audience: [
+        {
+            stage: [
+                "a_level"
+            ],
+            examBoard: [
+                "aqa",
+                "cie",
+                "eduqas",
+                "ocr",
+                "wjec"
+            ]
+        }
+    ],
+    published: true,
+    endDate: 1698854400000 as unknown as Date,
+    eventStatus: "OPEN",
+    placesAvailable: 195
+}
 
 export const mockFutureEventOverviews = {
     results: [

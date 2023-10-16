@@ -252,16 +252,16 @@ export interface UserGameboardProgressSummaryDTO {
 }
 
 export interface EventBookingDTO {
-    bookingId?: number;
-    userBooked?: UserSummaryDTO;
-    reservedById?: number;
-    eventId?: string;
-    eventTitle?: string;
-    eventDate?: Date;
-    bookingStatus?: BookingStatus;
-    bookingDate?: Date;
-    additionalInformation?: { [index: string]: string };
-    updated?: Date;
+  bookingId?: number;
+  userBooked?: UserSummaryWithEmailAddressDTO;
+  reservedById?: number;
+  eventId?: string;
+  eventTitle?: string;
+  eventDate?: Date;
+  bookingStatus?: BookingStatus;
+  bookingDate?: Date;
+  additionalInformation?: { [index: string]: string };
+  updated?: Date;
 }
 
 export interface FormulaValidationResponseDTO extends QuestionValidationResponseDTO {

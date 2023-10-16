@@ -1,14 +1,15 @@
-import { EventOverviews } from "../../../../app/components/elements/panels/EventOverviews";
-import { TestUserRole, renderTestEnvironment } from "../../../utils";
+import { EventOverviews } from "../../../../../app/components/elements/panels/EventOverviews";
+import { TestUserRole, renderTestEnvironment } from "../../../../utils"
 import { screen, within } from "@testing-library/react";
 import {
   mockUser,
   mockFutureEventOverviews,
   mockPastEventOverviews,
-} from "../../../../mocks/data";
+} from "../../../../../mocks/data";
 import { rest } from "msw";
-import { API_PATH } from "../../../../app/services";
+import { API_PATH } from "../../../../../app/services";
 import userEvent from "@testing-library/user-event";
+
 
 const getFirstEventDetails = () => {
   const table = screen.getByRole("table");
