@@ -298,7 +298,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "../common/media";
 @import "table";
 @import "tabs";
-@import "../common/accordions";
+@import "accordions";
 @import "cards";
 @import "list-groups";
 @import "inequality-modal";
@@ -340,7 +340,6 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "../common/events";
 @import "../common/glossary";
 @import "../common/quiz";
-@import "accordions";
 @import "../common/callout";
 
 @import "parsons-layout";

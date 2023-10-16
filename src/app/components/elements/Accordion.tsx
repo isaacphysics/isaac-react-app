@@ -176,9 +176,11 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                         {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
                         <span className="accordion-part p-3 text-secondary">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
                         {trustedTitle && <div className="p-3">
-                            <Markup encoding={"latex"}>
-                                {trustedTitle}
-                            </Markup>
+                            <h2>
+                                <Markup encoding={"latex"}>
+                                    {trustedTitle}
+                                </Markup>
+                            </h2>
                         </div>}
                         {isAda && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
