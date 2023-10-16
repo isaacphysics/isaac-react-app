@@ -19,24 +19,36 @@ export const EventManager = ({user}: {user: PotentialUser}) => {
         }
     }, [selectedEventId]);
 
-    return  <RS.Container>
-        <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin"/>
-        <div className="my-5">
-            <EventOverviews user={user} setSelectedEventId={setSelectedEventId} />
-            {selectedEventId !== null && <React.Fragment>
-                <div ref={selectedEventRef} className="mb-3">
-                    <SelectedEventDetails eventId={selectedEventId} />
-                </div>
+    return (
+      <RS.Container>
+        <TitleAndBreadcrumb
+          intermediateCrumbs={[ADMIN_CRUMB]}
+          currentPageTitle="Event booking admin"
+        />
+        <div className="my-5 mx-n4 mx-sm-n5">
+          <EventOverviews user={user} setSelectedEventId={setSelectedEventId} />
+          {selectedEventId !== null && (
+            <React.Fragment>
+              <div ref={selectedEventRef} className="mb-3">
+                <SelectedEventDetails eventId={selectedEventId} />
+              </div>
+              <div>
+                <ManageExistingBookings
+                  user={user}
+                  eventBookingId={selectedEventId}
+                />
+              </div>
+              {!isEventLeader(user) && (
                 <div>
-                    <ManageExistingBookings user={user} eventBookingId={selectedEventId} />
+                  <AddUsersToBooking />
                 </div>
-                {!isEventLeader(user) && <div>
-                    <AddUsersToBooking />
-                </div>}
-                <div>
-                    <EventAttendance user={user} eventId={selectedEventId} />
-                </div>
-            </React.Fragment>}
+              )}
+              <div>
+                <EventAttendance user={user} eventId={selectedEventId} />
+              </div>
+            </React.Fragment>
+          )}
         </div>
-    </RS.Container>
+      </RS.Container>
+    );
 };

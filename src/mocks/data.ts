@@ -2,6 +2,62 @@ import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO} from "../test/utils";
 import {UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
 
+export const mockFutureEventOverviews = {
+    results: [
+        {
+            "id": "another_test_event",
+            "title": "Another Test Event",
+            "subtitle": "Another subtitle",
+            "date": 253392519600000,
+            "bookingDeadline": 253392519600000,
+            "eventStatus": "OPEN",
+            "location": {
+                "address": {
+                    "addressLine1": "Address Line 1",
+                    "addressLine2": "",
+                    "town": "FakeTown",
+                    "county": "",
+                    "postalCode": "ABC 123"
+                }
+            },
+            "numberOfConfirmedBookings": 200,
+            "numberOfWaitingListBookings": 10,
+            "numberAttended": 0,
+            "numberAbsent": 0,
+            "numberOfPlaces": 200
+        },
+    ],
+    totalResults: 1
+}
+
+export const mockPastEventOverviews = {
+    results:[
+        {
+            "id": "test_event",
+            "title": "Test Event",
+            "subtitle": "Subtitle here",
+            "date": 1694532600000,
+            "bookingDeadline": 1694446200000,
+            "eventStatus": "CLOSED",
+            "location": {
+                "address": {
+                    "addressLine1": "Online",
+                    "addressLine2": "",
+                    "town": "",
+                    "county": "",
+                    "postalCode": ""
+                }
+            },
+            "numberOfConfirmedBookings": 0,
+            "numberOfWaitingListBookings": 0,
+            "numberAttended": 180,
+            "numberAbsent": 20,
+            "numberOfPlaces": 200
+        }        
+    ],
+    totalResults: 1
+}
+
 export const registrationUserData = {
     givenName: "Test",
     familyName: "User",
