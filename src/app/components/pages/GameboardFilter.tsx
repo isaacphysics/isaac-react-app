@@ -475,11 +475,9 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const [ loadGameboard ] = useLazyGetGameboardByIdQuery();
 
     useEffect(() => {
-        if (isFound(gameboard) && gameboard.id !== gameboardIdAnchor) {
-            history.replace({search: location.search, hash: gameboard.id});
-        } else if (gameboardIdAnchor && gameboard === NOT_FOUND) {
+        if (gameboardIdAnchor && gameboard === NOT_FOUND) {
             // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
-            history.replace({search: location.search});
+            history.replace({search: location.search, state: location.state});
         }
     }, [gameboard, gameboardIdAnchor]);
 
@@ -510,8 +508,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             {id: "topics", name: "Topic"},
         ]).map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
 
-    const [stages, setStages] = useState<Item<string>[]>(
-        queryStages.length > 0 ? queryStages : itemiseByValue([userContext.stage], getFilteredStageOptions()));
+    const [stages, setStages] = useState<Item<string>[]>(queryStages.length > 0 ? queryStages : itemiseByValue([userContext.stage], getFilteredStageOptions()));
     useEffect(function keepStagesInSyncWithUserContext() {
         if (stages.length === 0) setStages(itemiseByValue([userContext.stage], getFilteredStageOptions()));
     }, [userContext.stage]);
@@ -521,8 +518,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
     // const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
 
-    const [examBoards, setExamBoards] = useState<Item<string>[]>(
-        queryExamBoards.length > 0 ? queryExamBoards : itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
+    const [examBoards, setExamBoards] = useState<Item<string>[]>(queryExamBoards.length > 0 ? queryExamBoards : itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
     useEffect(function keepExamBoardsInSyncWithUserContext() {
         if (examBoards.length === 0) setExamBoards(itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
     }, [userContext.examBoard]);
@@ -549,14 +545,16 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         if (isPhy) {params.questionCategories = `${QUESTION_CATEGORY.QUICK_QUIZ},${QUESTION_CATEGORY.PROBLEM_SOLVING}${showBookQuestions ? "," + QUESTION_CATEGORY.BOOK_QUESTIONS : ""}`;}
         params.title = boardTitle;
 
+        const allTags = siteSpecific(
+            TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry + "," + TAG_ID.biology,
+            TAG_ID.computerScience
+        );
+
         // Populate query parameters with the selected subjects, fields, and topics
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
-                    params[tier.id] = siteSpecific(
-                        TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry + "," + TAG_ID.biology,
-                        TAG_ID.computerScience
-                    );
+                    params[tier.id] = allTags;
                 }
                 return;
             }
@@ -571,7 +569,13 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                 if (tiers[1]?.id) delete params[tiers[1].id];
             }
             delete params.questionCategories;
-            history.replace({search: queryString.stringify(params, {encode: false})});
+            delete params.title;
+            if (params.subjects === allTags) delete params.subjects;
+            if (isFound(gameboard)) {
+                history.replace({search: queryString.stringify(params, {encode: false}), hash: gameboard.id, state: location.state});
+            } else {
+                history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
+            }
         });
     }
 
