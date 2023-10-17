@@ -1,6 +1,7 @@
-import {SEARCH_RESULT_TYPE, SITE_TITLE} from "./";
+import {SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific} from "./";
+import {SearchShortcut} from "../../IsaacAppTypes";
 
-export const searchList = [
+export const searchList: SearchShortcut[] = [
     {
         id: "assignments",
         title: "My assignments",
@@ -12,7 +13,7 @@ export const searchList = [
         id: "join_group",
         title: "Teacher connections",
         terms: ["join group", "join class", "teacher connections", "teacher connection", "class code", "join a class",
-            "classes", "share token", "groups", "group", "join", "group code", "code", "token", "teacher code",
+            "classes", "class", "share token", "groups", "group", "join", "group code", "code", "token", "teacher code",
             "teachers connections", "join a group", "teacher conections", "teacher connect", "teachers connection"],
         summary: "Join groups and manage your teacher connections.",
         url: "/account",
@@ -49,22 +50,28 @@ export const searchList = [
     },  {
         id: "teacher_support",
         title: "Teacher support",
-        terms: ["teacher", "teacher support", "teaching", "teachers", "help", "support", "tutor", "tutor support", "tutors", "tutoring"],
+        terms: ["teacher", "teacher support", "teaching", "teachers", "help", "teacher account",
+                "support", "tutor", "tutor support", "tutors", "tutoring"],
         summary: `View teacher FAQs for using ${SITE_TITLE}.`,
-        url: "/support/teacher/assignments",
+        url: "/support/teacher/general",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "my_account",
         title: "My account",
         terms: ["my account", "account", "settings", "account settings", "password", "emails", "email preferences",
-            "preferences", "my isaac"],
+            "preferences", "my isaac", "my ada"],
         summary: "Click here to view and edit your account details.",
         url: "/account",
         type: SEARCH_RESULT_TYPE.SHORTCUT
-    }, {
+    }
+];
+
+const siteShortcuts: SearchShortcut[] = siteSpecific([
+    // Physics:
+    {
         id: "ambassador",
         title: "Ambassador",
-        terms: ["ambassador"],
+        terms: ["ambassador", "ambassadors", "isaac ambassador"],
         summary: "View ambassador information",
         url: "/support/teacher/partner",
         hash: "ambassadors",
@@ -104,7 +111,7 @@ export const searchList = [
     }, {
         id: "spreadsheet_of_questions",
         title: "Spreadsheet of questions",
-        terms: ["spreadsheet of questions"],
+        terms: ["spreadsheet of questions", "spreadsheet"],
         summary: "View a spreadsheet of questions",
         url: "/support/teacher/suggestions",
         hash: "spreadsheet",
@@ -133,15 +140,26 @@ export const searchList = [
         url: "/solving_problems",
         hash: "acc_solving_problems_sig_figs",
         type: SEARCH_RESULT_TYPE.SHORTCUT
-    }
+    }, {
+        id: "answers",
+        title: "Answers",
+        terms: ["answers", "book answers", "physics answers"],
+        summary: "Where are the answers?",
+        url: "/support/student/questions",
+        hash: "answers",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }],
+    [
+        // Ada:
+    ]
+);
+searchList.push(...siteShortcuts);
 
-];
-
-let group = /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6}$/;
+const group = /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6}$/;
 
 export function shortcuts(term: string) {
-    let lterm = term.toLowerCase();
-    let response = [];
+    const lterm = term.toLowerCase();
+    const response = [];
     if (group.test(term)) {
         response.push({
             id: "teacher_connections",
@@ -151,10 +169,9 @@ export function shortcuts(term: string) {
             url: ("/account?authToken=" + term),
             type: SEARCH_RESULT_TYPE.SHORTCUT
         });
-    }
-    else {
-        for (let i in searchList) {
-            for (let j in searchList[i].terms) {
+    } else {
+        for (const i in searchList) {
+            for (const j in searchList[i].terms) {
                 if (searchList[i].terms[j] === lterm) {
                     response.push(searchList[i]);
                 }

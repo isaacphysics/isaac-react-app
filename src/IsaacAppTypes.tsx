@@ -23,7 +23,9 @@ import {
     DOCUMENT_TYPE,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
-    PROGRAMMING_LANGUAGE, SortOrder,
+    PROGRAMMING_LANGUAGE,
+    SEARCH_RESULT_TYPE,
+    SortOrder,
     STAGE,
     TAG_ID,
     TAG_LEVEL
@@ -678,4 +680,14 @@ export interface ClozeItemDTO extends ItemDTO {
 export interface NewsItemProps {
     subject: "news" | "physics";
     orderDecending?: boolean;
+}
+
+export interface SearchShortcut {
+    id: string;
+    title: string;
+    terms: string[];
+    summary: string;
+    url: string;
+    type: SEARCH_RESULT_TYPE;
+    hash?: string;
 }
