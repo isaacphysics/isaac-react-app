@@ -1,367 +1,42 @@
-import React, {useState} from 'react';
-import {errorSlice, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
-import {Link} from "react-router-dom";
-import {
-    Alert,
-    Card,
-    CardBody,
-    CardTitle,
-    Col,
-    Container,
-    CustomInput,
-    Form,
-    FormFeedback,
-    FormGroup,
-    Input,
-    Label,
-    Row
-} from "reactstrap";
-import {PasswordFeedback} from "../../../IsaacAppTypes";
-import {
-    FIRST_LOGIN_STATE,
-    isAda,
-    isDefined, isDobOldEnoughForSite,
-    isDobOverTen,
-    isDobOverThirteen,
-    isPhy,
-    KEY,
-    loadZxcvbnIfNotPresent,
-    passwordDebounce,
-    persistence,
-    SITE_TITLE, SITE_TITLE_SHORT,
-    siteSpecific, trackEvent,
-    validateEmail,
-    validateName,
-    validatePassword
-} from "../../services";
+import React from "react";
+import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {DateInput} from "../elements/inputs/DateInput";
-import {Redirect, RouteComponentProps, withRouter} from "react-router";
-import {MetaDescription} from "../elements/MetaDescription";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
-import { extractErrorMessage } from '../../services/errors';
+import {isAda, SITE_TITLE} from "../../services";
 
-export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
-    const dispatch = useAppDispatch();
-    const user = useAppSelector(selectors.user.orNull);
-    const error = useAppSelector((state) => state?.error);
-    const errorMessage = extractErrorMessage(error);
-    const userEmail = location.state?.email || undefined;
-    const userPassword = location.state?.password || undefined;
-
-    // Inputs which trigger re-render
-    const [registrationUser, setRegistrationUser] = useState(
-        Object.assign({}, user,{
-            email: userEmail,
-            dateOfBirth: undefined,
-            password: null,
-            familyName: undefined,
-            givenName: undefined
-        })
-    );
-
-    loadZxcvbnIfNotPresent();
-
-    const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword);
-    const [dobOver13CheckboxChecked, setDobOver13CheckboxChecked] = useState(false);
-    const [dob10To12CheckboxChecked, setDob10To12CheckboxChecked] = useState(false);
-    const [parentalConsentCheckboxChecked, setParentalConsentCheckboxChecked] = useState(false);
-    const [attemptedSignUp, setAttemptedSignUp] = useState(false);
-    const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
-
-
-    // Values derived from inputs (props and state)
-    const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
-    const givenNameIsValid = validateName(registrationUser.givenName);
-    const familyNameIsValid = validateName(registrationUser.familyName);
-    const passwordIsValid =
-        (registrationUser.password == unverifiedPassword) && validatePassword(registrationUser.password || "");
-    const confirmedOverThirteen = dobOver13CheckboxChecked || isDobOverThirteen(registrationUser.dateOfBirth);
-    const confirmedOverTen = dob10To12CheckboxChecked || isDobOverTen(registrationUser.dateOfBirth) || confirmedOverThirteen;
-    const confirmedTenToTwelve = confirmedOverTen && !confirmedOverThirteen;
-    const confirmedOldEnoughForSite = siteSpecific(confirmedOverTen, confirmedOverThirteen);
-    const consentGivenOrNotRequired = isAda || (confirmedTenToTwelve === parentalConsentCheckboxChecked);
-    const dobTooYoung = isDefined(registrationUser.dateOfBirth) && !isDobOldEnoughForSite(registrationUser.dateOfBirth);
-
-    // Form's submission method
-    const register = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setAttemptedSignUp(true);
-
-        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && confirmedOldEnoughForSite && consentGivenOrNotRequired) {
-            persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
-            Object.assign(registrationUser, {loggedIn: false});
-            dispatch(errorSlice.actions.clearError());
-            dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true})), true));
-            // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
-            trackEvent("registration", {props:
-                    {
-                        provider: "SEGUE"
-                    }
-                }
-            )
-        }
-    };
-
-
-    // Convenience method
-    const assignToRegistrationUser = (updates: {}) => {
-        // Create new object to trigger re-render
-        setRegistrationUser(Object.assign({}, registrationUser, updates));
-    };
-
-    if (user && user.loggedIn) {
-        return <Redirect to="/" />;
-    }
-
-    const metaDescriptionCS = "Sign up for an Ada Computer Science account to access hundreds of computer science topics and questions.";
-
-    // Render
-    return <Container id="registration-page" className="mb-5">
-
-        <TitleAndBreadcrumb currentPageTitle="Registration" className="mb-4" />
-        {isAda && <MetaDescription description={metaDescriptionCS} />}
-
-        <Card>
+export const Registration = () => {
+    return <Container>
+        <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
+        <Card className="my-5">
             <CardBody>
-
-                <CardTitle tag="h2">
-                    <small className="text-muted">
-                        Sign up to {" "}
-                        <Link to="/">
-                            <span className="d-inline d-md-none">{SITE_TITLE_SHORT}</span>
-                            <span className="d-none d-md-inline">{SITE_TITLE}</span>
-                        </Link>
-                    </small>
-                </CardTitle>
-
-                <Form name="register" onSubmit={register} className="mt-3">
-
-                    {/* Name */}
-                    <Row>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label htmlFor="first-name-input" className="form-required">
-                                    First name
-                                </Label>
-                                <Input
-                                    id="first-name-input" type="text" name="givenName"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        assignToRegistrationUser({givenName: e.target.value});
-                                    }}
-                                    invalid={(attemptedSignUp && !givenNameIsValid)}
-                                    aria-describedby="firstNameValidationMessage" required
-                                />
-                                <FormFeedback id="firstNameValidationMessage">
-                                    {(attemptedSignUp && !givenNameIsValid) ? "Enter a valid name" : null}
-                                </FormFeedback>
-                            </FormGroup>
-                        </Col>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label htmlFor="last-name-input" className="form-required">
-                                    Last name
-                                </Label>
-                                <Input
-                                    id="last-name-input" type="text" name="familyName"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        assignToRegistrationUser({familyName: e.target.value});
-                                    }}
-                                    invalid={(attemptedSignUp && !familyNameIsValid)}
-                                    aria-describedby="lastNameValidationMessage" required
-                                />
-                                <FormFeedback id="lastNameValidationMessage">
-                                    {(attemptedSignUp && !familyNameIsValid) ? "Enter a valid name" : null}
-                                </FormFeedback>
-                            </FormGroup>
-                        </Col>
-                    </Row>
-
-                    {/* Password */}
-                    <Row>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label htmlFor="password-input" className="form-required">
-                                    Password
-                                </Label>
-                                <Input
-                                    id="password-input" type="password" name="password" required
-                                    defaultValue={userPassword}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setUnverifiedPassword(e.target.value);
-                                        passwordDebounce(e.target.value, setPasswordFeedback);
-                                    }}
-                                    onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        passwordDebounce(e.target.value, setPasswordFeedback);
-                                    }}
-                                />
-                                {passwordFeedback &&
-                                    <span className='float-right small mt-1'>
-                                        <strong>Password strength: </strong>
-                                        <span id="password-strength-feedback">
-                                            {passwordFeedback.feedbackText}
-                                        </span>
-                                    </span>
-                                }
-                            </FormGroup>
-                        </Col>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label htmlFor="password-confirm" className="form-required">
-                                    Re-enter password
-                                </Label>
-                                <Input
-                                    id="password-confirm" name="password" type="password"
-                                    required aria-describedby="invalidPassword"
-                                    disabled={!unverifiedPassword}
-                                    invalid={attemptedSignUp && !passwordIsValid}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        assignToRegistrationUser({password: e.target.value});
-                                    }}
-                                />
-                                <FormFeedback id="password-validation-feedback">
-                                    {attemptedSignUp && !passwordIsValid &&
-                                            "Passwords must match and be at least 6 characters long"}
-                                </FormFeedback>
-                            </FormGroup>
-                        </Col>
-                    </Row>
-
-                    {/* Email and DOB */}
-                    <Row>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label htmlFor="email-input" className="form-required">
-                                    Email address
-                                </Label>
-                                <Input
-                                    id="email-input" name="email" type="email"
-                                    aria-describedby="email-validation-feedback" required
-                                    defaultValue={userEmail}
-                                    invalid={attemptedSignUp && !emailIsValid}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        assignToRegistrationUser({email: e.target.value});
-                                    }}
-                                />
-                                <FormFeedback id="email-validation-feedback">
-                                    {(attemptedSignUp && !emailIsValid) && "Enter a valid email address"}
-                                </FormFeedback>
-                            </FormGroup>
-                        </Col>
-                        <Col md={6}>
-                            <FormGroup>
-                                <Label htmlFor="dob-input">
-                                    Date of birth
-                                </Label>
-                                <Row>
-                                    <Col lg={siteSpecific(12, 6)} xs={12}>
-                                        <DateInput
-                                            id="dob-input" name="date-of-birth"
-                                            invalid={
-                                                dobTooYoung || (attemptedSignUp && !confirmedOldEnoughForSite)
-                                            }
-                                            disableDefaults
-                                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                assignToRegistrationUser({dateOfBirth: event.target.valueAsDate});
-                                                // DOB takes priority over age confirmation
-                                                setDobOver13CheckboxChecked(false);
-                                                setDob10To12CheckboxChecked(false);
-                                            }}
-                                            labelSuffix=" of birth"
-                                        />
-                                    </Col>
-                                    <Col lg={siteSpecific(12, 6)} xs={12} className="pt-2">
-                                        <CustomInput
-                                            id="age-over-13-confirmation-input" name="age-over-13-confirmation" type="checkbox"
-                                            className="ml-1 ml-md-0"
-                                            checked={confirmedOverThirteen}
-                                            required
-                                            label="I am at least 13 years old"
-                                            disabled={(isPhy && dob10To12CheckboxChecked) || registrationUser.dateOfBirth}
-                                            onChange={(e) => setDobOver13CheckboxChecked(e?.target.checked)}
-                                            invalid={dobTooYoung}
-                                        />
-                                        {isPhy && <CustomInput
-                                            id="age-10-to-12-confirmation-input" name="age-10-to-12-confirmation" type="checkbox"
-                                            className="ml-1 ml-md-0"
-                                            checked={confirmedTenToTwelve}
-                                            required
-                                            label="I am aged 10 to 12 years old"
-                                            disabled={dobOver13CheckboxChecked || registrationUser.dateOfBirth}
-                                            onChange={(e) => setDob10To12CheckboxChecked(e?.target.checked)}
-                                            invalid={dobTooYoung}
-                                        />}
-                                    </Col>
-                                </Row>
-                            </FormGroup>
-                        </Col>
-                    </Row>
-
-                    {/* Form Error */}
-                    <Row>
-                        <Col>
-                            {attemptedSignUp &&
-                                (!givenNameIsValid || !familyNameIsValid || !passwordIsValid || !emailIsValid) &&
-                                <h4 role="alert" className="text-danger text-left">
-                                    Not all required fields have been correctly filled.
-                                </h4>
-                            }
-                            <h4 role="alert" className="text-danger text-left">
-                                {attemptedSignUp && !confirmedOldEnoughForSite ?
-                                    `You must be over ${siteSpecific("10", "13")} years old to create an account.` :
-                                    errorMessage}
-                            </h4>
-                        </Col>
-                    </Row>
-
-                    {/* 10-12 parental consent box */}
-                    {isPhy && confirmedTenToTwelve && <Alert color={"warning"}>
-                        <p>
-                            Before signing up to any online programme or website you should ask for permission from a
-                            parent or carer so they may check that it is appropriate for you to use. Often websites
-                            store some information about you to give you the best possible experience on the site but
-                            you should always check what data is being kept to do this - you can read how we use your
-                            data to provide our service <Link to="/privacy" target="_blank">here</Link>.
-                        </p>
-                        <CustomInput
-                            id="consent-checkbox" name="consent-checkbox" type="checkbox"
-                            checked={parentalConsentCheckboxChecked}
-                            label="Please check the box to confirm that you have read and understood this message."
-                            onChange={(e) => setParentalConsentCheckboxChecked(e?.target.checked)}
-                        />
-                    </Alert>}
-
-                    <Row>
-                        <Col className="text-center">
-                            By clicking Register now, you accept our <Link to="/terms" target="_blank">Terms of Use</Link>.
-                            Find out about our <Link to="/privacy" target="_blank">Privacy Policy</Link>.
-                        </Col>
-                    </Row>
-
-                    {/* Submit */}
-                    <Row className="mt-4 mb-4">
-                        <Col md={{size: 6, offset: 3}}>
-                            <Input disabled={!consentGivenOrNotRequired} type="submit" value="Register now" className="btn btn-block btn-secondary border-0" />
-                        </Col>
-                    </Row>
-
-                </Form>
-                <hr className="text-center mb-4" />
-                <h3 className="text-left mb-3">Sign up with:</h3>
-                {isAda &&
-                    <Row className={"mb-3 justify-content-center"}>
-                        <Col md={{size: 7}} lg={{size: 5}}>
-                            <RaspberryPiSignInButton isSignup={true} />
-                        </Col>
-                    </Row>
-                }
-                <Row className={"mb-3 justify-content-center"}>
-                    <Col md={{size: 7}} lg={{size: 5}}>
-                        <GoogleSignInButton />
+                <Row className="align-items-center">
+                    <Col xs={12} lg={6}>
+                        <div className="mb-5">
+                            <h2>How would you like to sign up?</h2>
+                            <p>You will have access to the same content no matter how you sign up.</p>
+                        </div>
+                        <div className="my-5">
+                            <h3>Create a new account with your email:</h3>
+                            <Button block href="/register/role">Continue with email</Button>
+                        </div>
+                        <div className="my-5">
+                            <h3>Or log in with:</h3>
+                            {isAda && <RaspberryPiSignInButton />}
+                            <GoogleSignInButton />
+                        </div>
+                        <hr />
+                        <div className="mt-5">
+                            <h3>Already have an account?</h3>
+                            <Button color="secondary" outline block href="/login">Log in</Button>
+                        </div>
+                    </Col>
+                    <Col xs={12} lg={6}>
+                        <img className="d-none d-lg-block img-fluid mx-auto" src={"/assets/cs/decor/register-3x4.png"} alt="" />
+                        <img className="d-block d-lg-none img-fluid mt-4 mx-auto " src={"/assets/cs/decor/register-4x3.png"} alt="" />
                     </Col>
                 </Row>
             </CardBody>
         </Card>
-    </Container>;
-});
+    </Container>
+}
