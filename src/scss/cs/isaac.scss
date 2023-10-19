@@ -3,7 +3,7 @@
 $cs-mustard: #ffc000;
 $cs-hot-pink: #ff4aa0;
 $cs-reddish: #d7335f; // Used as an active colour on secondary buttons
-$focus-blue: #3E59A3; // Used as focus indicator colour on inputs
+$focus-blue: #3e59a3; // Used as focus indicator colour on inputs
 
 // Colour Overrides
 $purple: #9148bc;
@@ -14,34 +14,34 @@ $green: #208838;
 $primary: $cs-mustard;
 $secondary: $cs-hot-pink;
 $theme-colors: (
-    "primary": $primary,
-    "secondary": $secondary
+  "primary": $primary,
+  "secondary": $secondary,
 );
 
 // Stage colours
-$gcse-colour: #C40E50;
-$gcse-colour-50: #E186A7;
-$gcse-colour-25: #F0C3D3;
-$all-stages-colour: #9148BC;
-$all-stages-colour-50: #C8A3DD;
-$all-stages-colour-25: #E3D1EE;
-$a-level-colour: #2146AD;
-$a-level-colour-50: #90A2D6;
-$a-level-colour-25: #C7D1EA;
+$gcse-colour: #c40e50;
+$gcse-colour-50: #e186a7;
+$gcse-colour-25: #f0c3d3;
+$all-stages-colour: #9148bc;
+$all-stages-colour-50: #c8a3dd;
+$all-stages-colour-25: #e3d1ee;
+$a-level-colour: #2146ad;
+$a-level-colour-50: #90a2d6;
+$a-level-colour-25: #c7d1ea;
 
 // Highlighting colours
-$highlight-pink: #E72C62;
-$highlight-pink-50: #F395B0;
-$highlight-pink-25: #F9CAD8;
-$highlight-navy: #07174F;
-$highlight-navy-50: #838BA7;
-$highlight-navy-25: #C1C5D3;
-$highlight-teal: #0F8294;
-$highlight-teal-50: #87C0C9;
-$highlight-teal-25: #C3E0E4;
-$highlight-mustard: #E09220;
-$highlight-mustard-50: #EFC88F;
-$highlight-mustard-25: #F7E4C7;
+$highlight-pink: #e72c62;
+$highlight-pink-50: #f395b0;
+$highlight-pink-25: #f9cad8;
+$highlight-navy: #07174f;
+$highlight-navy-50: #838ba7;
+$highlight-navy-25: #c1c5d3;
+$highlight-teal: #0f8294;
+$highlight-teal-50: #87c0c9;
+$highlight-teal-25: #c3e0e4;
+$highlight-mustard: #e09220;
+$highlight-mustard-50: #efc88f;
+$highlight-mustard-25: #f7e4c7;
 
 //Greys
 $gray-103: #f8f8f8;
@@ -68,12 +68,12 @@ $input-btn-padding-x-lg: 3rem;
 $border-radius-lg: 0.25rem;
 
 // fonts
-$primary-font: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-$secondary-font: 'exo_2regular', sans-serif;
-$secondary-font-bold: 'exo_2bold', sans-serif;
-$secondary-font-semi-bold: 'exo_2semi_bold', sans-serif;
-$secondary-font-medium: 'exo_2medium', sans-serif;
-$tertiary-font: 'arconrounded-regular', sans-serif;
+$primary-font: Arial, "Helvetica Neue", Helvetica, sans-serif;
+$secondary-font: "exo_2regular", sans-serif;
+$secondary-font-bold: "exo_2bold", sans-serif;
+$secondary-font-semi-bold: "exo_2semi_bold", sans-serif;
+$secondary-font-medium: "exo_2medium", sans-serif;
+$tertiary-font: "arconrounded-regular", sans-serif;
 
 // ISAAC
 // Node module imports
@@ -158,192 +158,193 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "highlight";
 
 a.disabled {
-    color: $gray-600;
-    pointer-events: none;
-    cursor: default;
+  color: $gray-600;
+  pointer-events: none;
+  cursor: default;
 }
 
 .list-group-item {
-    border-width: 0;
-    width: 100%;
+  border-width: 0;
+  width: 100%;
 }
 
 p small {
-    border: 0;
+  border: 0;
 }
 
 .bg-light-grey {
-    > div {
-        background: rgba(#f7f7f7, 0.9);
-        position: relative;
-        z-index: 1;
-    }
+  > div {
+    background: rgba(#f7f7f7, 0.9);
+    position: relative;
+    z-index: 1;
+  }
 }
 
 // Double class to give this more specifity
-.katex.katex { font-size: 1.1em; }
-
+.katex.katex {
+  font-size: 1.1em;
+}
 
 body {
-    color: $black;
-    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-    line-height: 1.625;
-    display: -ms-flexbox;
-    -ms-flex-direction: column;
-    flex-direction: column;
+  color: $black;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  line-height: 1.625;
+  display: -ms-flexbox;
+  -ms-flex-direction: column;
+  flex-direction: column;
 }
 
 .content-body {
-    background-color: rgba($gray-107, 0.4);
+  background-color: rgba($gray-107, 0.4);
 }
 .pattern-01 {
-    background-image: url('/assets/pattern_sm.svg');
-    background-position: left top;
-    background-repeat: repeat;
+  background-image: url("/assets/pattern_sm.svg");
+  background-position: left top;
+  background-repeat: repeat;
+  @include respond-above(md) {
+    background-image: none;
+  }
+  > .container {
     @include respond-above(md) {
-        background-image: none;
+      background-image: url("/assets/pattern01a.svg");
+      background-position: left top;
+      background-repeat: repeat-y;
     }
-    > .container {
-        @include respond-above(md) {
-            background-image: url('/assets/pattern01a.svg');
-            background-position: left top;
-            background-repeat: repeat-y;
-        }
-    }
+  }
 }
 
 .pattern-02 {
-    position: relative;
+  position: relative;
 
-    &:after,
-    &:before {
-        @include pseudo-element;
-        background-image: url('/assets/pattern01.svg');
-        background-position: 0 0;
-        background-repeat: no-repeat;
-        display: none;
-        width: 600px;
-        height: 600px;
-        z-index: 0;
-    }
+  &:after,
+  &:before {
+    @include pseudo-element;
+    background-image: url("/assets/pattern01.svg");
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    display: none;
+    width: 600px;
+    height: 600px;
+    z-index: 0;
+  }
 
-    &:after {
-        @include respond-above(sm) {
-            display: block;
-            right: -9%;
-            top: 250px;
-        }
+  &:after {
+    @include respond-above(sm) {
+      display: block;
+      right: -9%;
+      top: 250px;
     }
+  }
 
-    &:before {
-        @include respond-above(sm) {
-            display: block;
-            left: -9%;
-            top: 800px;
-        }
+  &:before {
+    @include respond-above(sm) {
+      display: block;
+      left: -9%;
+      top: 800px;
     }
+  }
 }
 
 .pattern-03 {
-    background-image: url('/assets/pattern04.svg');
-    background-position: 0 63%;
-    background-repeat: repeat-x;
+  background-image: url("/assets/pattern04.svg");
+  background-position: 0 63%;
+  background-repeat: repeat-x;
 
-    @include respond-above(sm) {
-        background-image: url('/assets/pattern03.svg');
-        background-position: left 0;
-        background-repeat: no-repeat;
-    }
-    @include respond-above(md) {
-        background-image: url('/assets/pattern03.svg');
-        background-position: left 0;
-        background-repeat: no-repeat;
-    }
+  @include respond-above(sm) {
+    background-image: url("/assets/pattern03.svg");
+    background-position: left 0;
+    background-repeat: no-repeat;
+  }
+  @include respond-above(md) {
+    background-image: url("/assets/pattern03.svg");
+    background-position: left 0;
+    background-repeat: no-repeat;
+  }
 }
 
 .pattern-03-reverse {
-    background-image: url('/assets/pattern01.svg');
-    background-position: right top;
-    background-repeat: repeat-y;
+  background-image: url("/assets/pattern01.svg");
+  background-position: right top;
+  background-repeat: repeat-y;
 
-    @include respond-above(sm) {
-        background-image: url('/assets/pattern01.svg');
-        background-position: right 0;
-        background-repeat: no-repeat;
-    }
-    @include respond-above(md) {
-        background-image: url('/assets/pattern01.svg');
-        background-position: right 8px;
-        background-repeat: no-repeat;
-    }
+  @include respond-above(sm) {
+    background-image: url("/assets/pattern01.svg");
+    background-position: right 0;
+    background-repeat: no-repeat;
+  }
+  @include respond-above(md) {
+    background-image: url("/assets/pattern01.svg");
+    background-position: right 8px;
+    background-repeat: no-repeat;
+  }
 }
 
 .pattern-04 {
-    background-image: url('/assets/pattern04.svg');
-    background-position: center 164px;
-    background-repeat: repeat-x;
+  background-image: url("/assets/pattern04.svg");
+  background-position: center 164px;
+  background-repeat: repeat-x;
 
-    @include respond-above(md) {
-        background-image: url('/assets/pattern04a.svg');
-        background-position: right 187px;
-        background-repeat: no-repeat;
-    }
+  @include respond-above(md) {
+    background-image: url("/assets/pattern04a.svg");
+    background-position: right 187px;
+    background-repeat: no-repeat;
+  }
 }
 
 .pattern-05 {
-    background-image: url('/assets/pattern05.svg');
-    background-position: left top;
-    background-repeat: repeat-x;
+  background-image: url("/assets/pattern05.svg");
+  background-position: left top;
+  background-repeat: repeat-x;
 }
 
 .pattern-06 {
-    background-image: url('/assets/pattern06.svg');
-    background-position: 96.5% 65%;
-    background-repeat: no-repeat;
-    margin: auto -15px;
-    padding: 0 15px;
-    @include respond-above(sm) {
-        background-position: 96.5% 87%;
-        margin: 0;
-        padding: 0;
-    }
+  background-image: url("/assets/pattern06.svg");
+  background-position: 96.5% 65%;
+  background-repeat: no-repeat;
+  margin: auto -15px;
+  padding: 0 15px;
+  @include respond-above(sm) {
+    background-position: 96.5% 87%;
+    margin: 0;
+    padding: 0;
+  }
 }
 .pattern-06-inverted {
-    background-image: url('/assets/pattern06-inverted.svg');
-    background-position: 96.5% bottom;
-    background-repeat: no-repeat;
+  background-image: url("/assets/pattern06-inverted.svg");
+  background-position: 96.5% bottom;
+  background-repeat: no-repeat;
 }
 .pattern-07 {
-    background-image: url('/assets/pattern06.svg');
-    background-position: 0 24px;
-    background-repeat: no-repeat;
-    margin: auto -15px;
-    padding: 0 15px;
-    @include respond-above(sm) {
-        background-position: 0.3rem 1.6rem;
-        margin: 0;
-        padding: 0;
-    }
+  background-image: url("/assets/pattern06.svg");
+  background-position: 0 24px;
+  background-repeat: no-repeat;
+  margin: auto -15px;
+  padding: 0 15px;
+  @include respond-above(sm) {
+    background-position: 0.3rem 1.6rem;
+    margin: 0;
+    padding: 0;
+  }
 }
 .pattern-08 {
-    @include respond-above(md) {
-        background-image: url('/assets/pattern04a.svg');
-        background-position: right 39px;
-        background-repeat: no-repeat;
-    }
+  @include respond-above(md) {
+    background-image: url("/assets/pattern04a.svg");
+    background-position: right 39px;
+    background-repeat: no-repeat;
+  }
 }
 
 .isaac-spinner-sm {
-    width: 1.5rem;
-    height: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .isaac-spinner-md {
-    width: 2.5rem;
-    height: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .isaac-spinner-lg {
-    width: 3.5rem;
-    height: 3.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
 }

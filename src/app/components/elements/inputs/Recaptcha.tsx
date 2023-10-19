@@ -6,10 +6,7 @@ interface RecaptchaComponentProps {
   recaptchaRef: React.RefObject<ReCAPTCHA> | null;
 }
 
-export const Recaptcha: React.FC<RecaptchaComponentProps> = ({
-  setIsRecaptchaTicked,
-  recaptchaRef,
-}) => {
+export const Recaptcha: React.FC<RecaptchaComponentProps> = ({ setIsRecaptchaTicked, recaptchaRef }) => {
   const handleRecaptchaChange = () => {
     setIsRecaptchaTicked(true);
   };

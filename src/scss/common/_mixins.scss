@@ -6,15 +6,14 @@
 // $display: when playing with pseudo element, you mainly use `display: block` (default value).
 @use "sass:math";
 
-@mixin pseudo-element($content: '', $position: absolute, $display: block) {
+@mixin pseudo-element($content: "", $position: absolute, $display: block) {
   content: $content;
   display: $display;
   position: $position;
 }
 // Detect IE10 and IE11
 @mixin ie() {
-  @media screen and (-ms-high-contrast: active),
-  screen and (-ms-high-contrast: none) {
+  @media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
     @content;
   }
 }
@@ -23,10 +22,10 @@
 //––––––––––––––––––––––––––––––––––––––––––––––––––
 // A map of breakpoints.
 $breakpoints: (
-        xs: 576px,
-        sm: 768px,
-        md: 992px,
-        lg: 1200px,
+  xs: 576px,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px,
 ); //
 //  RESPOND ABOVE
 //––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -259,7 +258,7 @@ $breakpoints: (
   position: relative;
   &:before {
     display: block;
-    content: '';
+    content: "";
     width: 100%;
     padding-top: math.div($height, $width) * 100%;
   }

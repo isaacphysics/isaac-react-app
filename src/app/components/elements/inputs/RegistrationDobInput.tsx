@@ -20,12 +20,9 @@ export const RegistrationDobInput = ({
   dobOver13CheckboxChecked,
   setDobOver13CheckboxChecked,
 }: RegistrationDobProps) => {
-  const dobTooYoung =
-    isDefined(userToUpdate.dateOfBirth) &&
-    !isDobOverThirteen(userToUpdate.dateOfBirth);
+  const dobTooYoung = isDefined(userToUpdate.dateOfBirth) && !isDobOverThirteen(userToUpdate.dateOfBirth);
 
-  const confirmedOverThirteen =
-    dobOver13CheckboxChecked || isDobOverThirteen(userToUpdate.dateOfBirth);
+  const confirmedOverThirteen = dobOver13CheckboxChecked || isDobOverThirteen(userToUpdate.dateOfBirth);
 
   const teacherRegistration = window.location.pathname.includes("/teacher");
 
@@ -41,10 +38,7 @@ export const RegistrationDobInput = ({
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setUserToUpdate({
               ...userToUpdate,
-              dateOfBirth:
-                event.target.valueAsDate !== null
-                  ? event.target.valueAsDate
-                  : undefined,
+              dateOfBirth: event.target.valueAsDate !== null ? event.target.valueAsDate : undefined,
             });
             // DOB takes priority over age confirmation
             setDobOver13CheckboxChecked(false);

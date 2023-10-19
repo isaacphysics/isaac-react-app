@@ -1,12 +1,6 @@
 import React, { useEffect } from "react";
 import * as RS from "reactstrap";
-import {
-  AppState,
-  getEvent,
-  selectors,
-  useAppDispatch,
-  useAppSelector,
-} from "../../../state";
+import { AppState, getEvent, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
 import { DateString } from "../DateString";
 import { NOT_FOUND, zeroOrLess } from "../../../services";
@@ -40,13 +34,7 @@ export const formatAddress = (location: Location | undefined) => {
   return addressComponents.join(", ");
 };
 
-export const LocationDetails = ({
-  isVirtual,
-  location,
-}: {
-  isVirtual?: boolean;
-  location?: Location;
-}) => {
+export const LocationDetails = ({ isVirtual, location }: { isVirtual?: boolean; location?: Location }) => {
   formatAddress(location);
   return (
     <>
@@ -69,8 +57,7 @@ export const SelectedEventDetails = ({ eventId }: { eventId: string }) => {
   });
   const eventBookings = useAppSelector(selectors.events.eventBookings);
 
-  const { studentCount, teacherCount } =
-    countStudentsAndTeachers(eventBookings);
+  const { studentCount, teacherCount } = countStudentsAndTeachers(eventBookings);
 
   return (
     <RS.Card>
@@ -83,22 +70,14 @@ export const SelectedEventDetails = ({ eventId }: { eventId: string }) => {
               {selectedEvent.title} {selectedEvent.subtitle}
             </Link>
             <br />
-            <LocationDetails
-              isVirtual={selectedEvent.isVirtual}
-              location={selectedEvent.location}
-            />
+            <LocationDetails isVirtual={selectedEvent.isVirtual} location={selectedEvent.location} />
             <strong>Event status: </strong>
-            <span
-              className={
-                selectedEvent.isCancelled ? "text-danger font-weight-bold" : ""
-              }
-            >
+            <span className={selectedEvent.isCancelled ? "text-danger font-weight-bold" : ""}>
               {selectedEvent.eventStatus}
             </span>
             <br />
             <strong>Event Date & Time: </strong>
-            <DateString>{selectedEvent.date}</DateString> -{" "}
-            <DateString>{selectedEvent.endDate}</DateString>
+            <DateString>{selectedEvent.date}</DateString> - <DateString>{selectedEvent.endDate}</DateString>
             <br />
             <strong>Booking deadline: </strong>
             <DateString>{selectedEvent.bookingDeadline}</DateString>
@@ -114,11 +93,7 @@ export const SelectedEventDetails = ({ eventId }: { eventId: string }) => {
             {/*<strong>Group Auth Code:</strong>*/}
             {/*{selectedEvent.isaacGroupToken}*/}
             {/*<br />*/}
-            <span
-              className={
-                zeroOrLess(selectedEvent.placesAvailable) ? "text-danger" : ""
-              }
-            >
+            <span className={zeroOrLess(selectedEvent.placesAvailable) ? "text-danger" : ""}>
               <strong>Number of places available: </strong>
               {selectedEvent.placesAvailable} / {selectedEvent.numberOfPlaces}
             </span>

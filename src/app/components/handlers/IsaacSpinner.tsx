@@ -2,21 +2,33 @@ import React from "react";
 import classNames from "classnames";
 
 export interface IsaacSpinnerProps {
-    size?: "sm" | "md" | "lg";
-    className?: string;
-    color?: "primary" | "secondary";
-    inline?: boolean;
-    displayText?: string;
+  size?: "sm" | "md" | "lg";
+  className?: string;
+  color?: "primary" | "secondary";
+  inline?: boolean;
+  displayText?: string;
 }
 
 // TODO: investigate and improve accessibility of both CS and default spinners. (The "Loading..." is copied from Bootstrap).
-export const IsaacSpinner = ({size = "md", className, color = "primary", inline = false, displayText = "Loading..."} : IsaacSpinnerProps) => {
-    const styling = classNames(className, 'spinner-border', `isaac-spinner-${size}`)
-    const sr = <span className="sr-only">{displayText}</span>
-     
-    return inline
-        ? <span role="status" className={styling}>{sr}</span>
-        : <div role="status" className={`${styling} pb-1`}>{sr}</div>;
+export const IsaacSpinner = ({
+  size = "md",
+  className,
+  color = "primary",
+  inline = false,
+  displayText = "Loading...",
+}: IsaacSpinnerProps) => {
+  const styling = classNames(className, "spinner-border", `isaac-spinner-${size}`);
+  const sr = <span className="sr-only">{displayText}</span>;
+
+  return inline ? (
+    <span role="status" className={styling}>
+      {sr}
+    </span>
+  ) : (
+    <div role="status" className={`${styling} pb-1`}>
+      {sr}
+    </div>
+  );
 };
 
 export const Loading = ({ noText }: { noText?: boolean }) => (

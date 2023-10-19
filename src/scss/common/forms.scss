@@ -2,7 +2,7 @@
 
 .input-group.is-invalid {
   &:after {
-    content: ' ';
+    content: " ";
     position: absolute;
     left: 0;
     right: 0;
@@ -20,7 +20,7 @@
 
 .input-group.is-valid {
   &:after {
-    content: ' ';
+    content: " ";
     position: absolute;
     left: 0;
     right: 0;
@@ -36,7 +36,8 @@
   }
 }
 
-.date-input .is-invalid, .date-input .is-valid {
+.date-input .is-invalid,
+.date-input .is-valid {
   background: unset;
 }
 
@@ -77,7 +78,7 @@ select {
     height: 48px;
     padding: 0 1.2em;
 
-    &[name='selectMulti'] {
+    &[name="selectMulti"] {
       padding: 1rem 1.2rem 1.5rem;
     }
   }
@@ -86,7 +87,7 @@ select {
 textarea {
   &.form-control {
     border: solid 1px $black;
-    padding: 0.7rem 1.2rem;// 0;  // TextAreas look wrong with this 0 for bottom padding. Remove it.
+    padding: 0.7rem 1.2rem; // 0;  // TextAreas look wrong with this 0 for bottom padding. Remove it.
 
     &.answer {
       height: 48px;
@@ -94,7 +95,7 @@ textarea {
   }
 }
 
-[type='search'] {
+[type="search"] {
   @include placeholder($black);
   border: 0;
   border-radius: ($border-radius * 10);
@@ -162,8 +163,6 @@ button {
   }
 }
 
-
-
 // ISAAC
 
 label.label-radio > div {
@@ -173,7 +172,7 @@ label.label-radio > div {
 
 .form-required {
   &:after {
-    content: '*';
+    content: "*";
     padding-left: 6px;
     font-weight: 600;
     color: $secondary;
@@ -182,7 +181,7 @@ label.label-radio > div {
 
 .required-before {
   &:before {
-    content: '* ';
+    content: "* ";
     padding-left: 6px;
     font-weight: 600;
     color: $secondary;
@@ -199,8 +198,8 @@ label.label-radio > div {
 }
 
 // Remove spinner from date picker
-input[type=date]::-webkit-inner-spin-button,
-input[type=date]::-webkit-outer-spin-button {
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -213,7 +212,8 @@ select.form-control {
   .select__control.select__control--is-focused {
     box-shadow: 0 0 0 0.2rem $focus-blue;
   }
-  .select__control, .select__control:hover {
+  .select__control,
+  .select__control:hover {
     border-color: $black;
   }
 

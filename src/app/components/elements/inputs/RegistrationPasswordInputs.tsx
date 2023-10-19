@@ -1,19 +1,8 @@
 import React, { useState } from "react";
-import {
-  Col,
-  FormFeedback,
-  FormGroup,
-  Label,
-  Row,
-  UncontrolledTooltip,
-} from "reactstrap";
+import { Col, FormFeedback, FormGroup, Label, Row, UncontrolledTooltip } from "reactstrap";
 import { PasswordFeedback, ValidationUser } from "../../../../IsaacAppTypes";
 import { Immutable } from "immer";
-import {
-  PASSWORD_REQUIREMENTS,
-  passwordDebounce,
-  validatePassword,
-} from "../../../services";
+import { PASSWORD_REQUIREMENTS, passwordDebounce, validatePassword } from "../../../services";
 import Password from "./Password";
 interface PasswordInputProps {
   userToUpdate: Immutable<ValidationUser>;
@@ -33,12 +22,9 @@ export const RegistrationPasswordInputs = ({
   defaultPassword,
 }: PasswordInputProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [passwordFeedback, setPasswordFeedback] =
-    useState<PasswordFeedback | null>(null);
+  const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
 
-  const passwordIsValid =
-    userToUpdate.password == unverifiedPassword &&
-    validatePassword(userToUpdate.password || "");
+  const passwordIsValid = userToUpdate.password == unverifiedPassword && validatePassword(userToUpdate.password || "");
 
   return (
     <Row>
@@ -46,10 +32,7 @@ export const RegistrationPasswordInputs = ({
         <FormGroup>
           <Label htmlFor="new-password">Password</Label>
           <span id={`password-help-tooltip`} className="icon-help ml-1" />
-          <UncontrolledTooltip
-            target={`password-help-tooltip`}
-            placement="bottom"
-          >
+          <UncontrolledTooltip target={`password-help-tooltip`} placement="bottom">
             {PASSWORD_REQUIREMENTS}
           </UncontrolledTooltip>
           <Password
@@ -70,9 +53,7 @@ export const RegistrationPasswordInputs = ({
           {passwordFeedback && (
             <span className="float-right small mt-1">
               <strong>Password strength: </strong>
-              <span id="password-strength-feedback">
-                {passwordFeedback.feedbackText}
-              </span>
+              <span id="password-strength-feedback">{passwordFeedback.feedbackText}</span>
             </span>
           )}
         </FormGroup>
@@ -97,8 +78,7 @@ export const RegistrationPasswordInputs = ({
             {userToUpdate.password &&
               (!(userToUpdate.password == unverifiedPassword)
                 ? "Passwords don't match."
-                : !validatePassword(userToUpdate.password || "") &&
-                  PASSWORD_REQUIREMENTS)}
+                : !validatePassword(userToUpdate.password || "") && PASSWORD_REQUIREMENTS)}
           </FormFeedback>
         </FormGroup>
       </Col>

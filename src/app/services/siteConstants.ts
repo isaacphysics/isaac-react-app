@@ -1,4 +1,6 @@
-export enum SITE {CS = "cs"}
+export enum SITE {
+  CS = "cs",
+}
 
 export const SITE_SUBJECT = ISAAC_SITE as SITE;
 

@@ -17,10 +17,10 @@ export const EmailInput = ({
   userToUpdate,
   setUserToUpdate,
   emailDefault,
-  teacherRegistration
+  teacherRegistration,
 }: EmailInputProps) => {
   const emailIsValid = userToUpdate.email && validateEmail(userToUpdate.email);
-  
+
   return (
     <FormGroup>
       <Label htmlFor="email-input">Email address</Label>
@@ -39,7 +39,10 @@ export const EmailInput = ({
       />
       <FormFeedback id="email-validation-feedback" className="always-show">
         {submissionAttempted && !emailIsValid && "Enter a valid email address"}
-        {submissionAttempted && teacherRegistration === true && !allowedDomain(userToUpdate.email) && "Not a valid email address for a teacher account"}
+        {submissionAttempted &&
+          teacherRegistration === true &&
+          !allowedDomain(userToUpdate.email) &&
+          "Not a valid email address for a teacher account"}
       </FormFeedback>
     </FormGroup>
   );

@@ -81,7 +81,6 @@
   padding: 1rem;
 }
 
-
 /*
     My progress styles
 */
@@ -93,48 +92,102 @@ $default-name-fill: #888;
 
 // COMPLETED
 $perfect-fill: $green;
-$completed-bg-img: linear-gradient(to right, rgba($perfect-fill, $status-opacity), rgba($perfect-fill, $status-opacity));
-$completed-total-bg-img: linear-gradient(to right, rgba($perfect-fill, $total-status-opacity), rgba($perfect-fill, $total-status-opacity));
+$completed-bg-img: linear-gradient(
+  to right,
+  rgba($perfect-fill, $status-opacity),
+  rgba($perfect-fill, $status-opacity)
+);
+$completed-total-bg-img: linear-gradient(
+  to right,
+  rgba($perfect-fill, $total-status-opacity),
+  rgba($perfect-fill, $total-status-opacity)
+);
 $completed-cb-bg-img: linear-gradient(
-                to right, rgba($perfect-fill, $status-opacity), rgba($perfect-fill, $status-opacity));
+  to right,
+  rgba($perfect-fill, $status-opacity),
+  rgba($perfect-fill, $status-opacity)
+);
 $completed-bg-size: 100%;
 
 // PASSED
-$passed-fill: #2C2C2C;
+$passed-fill: #2c2c2c;
 $passed-bg-img: linear-gradient(to right, rgba($passed-fill, $status-opacity), rgba($passed-fill, $status-opacity));
-$passed-total-bg-img: linear-gradient(to right, rgba($passed-fill, $total-status-opacity), rgba($passed-fill, $total-status-opacity));
+$passed-total-bg-img: linear-gradient(
+  to right,
+  rgba($passed-fill, $total-status-opacity),
+  rgba($passed-fill, $total-status-opacity)
+);
 $passed-cb-bg-img: linear-gradient(
-                to bottom left, rgba($passed-fill, math.div($status-opacity, 1.5)) 25%,
-                rgba($passed-fill, $status-opacity * 0.5) 25%, rgba($passed-fill, $status-opacity * 0.5) 50%,
-                rgba($passed-fill, math.div($status-opacity, 1.5)) 50%, rgba($passed-fill, math.div($status-opacity, 1.5)) 75%,
-                rgba($passed-fill, $status-opacity * 0.5) 75%, rgba($passed-fill, $status-opacity * 0.5));
+  to bottom left,
+  rgba($passed-fill, math.div($status-opacity, 1.5)) 25%,
+  rgba($passed-fill, $status-opacity * 0.5) 25%,
+  rgba($passed-fill, $status-opacity * 0.5) 50%,
+  rgba($passed-fill, math.div($status-opacity, 1.5)) 50%,
+  rgba($passed-fill, math.div($status-opacity, 1.5)) 75%,
+  rgba($passed-fill, $status-opacity * 0.5) 75%,
+  rgba($passed-fill, $status-opacity * 0.5)
+);
 $passed-bg-size: 50%;
 
 // IN-PROGRESS
 $in-progress-fill: #555;
-$in-progress-bg-img: linear-gradient(to right, rgba($in-progress-fill, $status-opacity * 0.5), rgba($in-progress-fill, $status-opacity * 0.5));
-$in-progress-total-bg-img: linear-gradient(to right, rgba($in-progress-fill, $total-status-opacity * 0.5), rgba($in-progress-fill, $total-status-opacity * 0.5));
+$in-progress-bg-img: linear-gradient(
+  to right,
+  rgba($in-progress-fill, $status-opacity * 0.5),
+  rgba($in-progress-fill, $status-opacity * 0.5)
+);
+$in-progress-total-bg-img: linear-gradient(
+  to right,
+  rgba($in-progress-fill, $total-status-opacity * 0.5),
+  rgba($in-progress-fill, $total-status-opacity * 0.5)
+);
 $in-progress-cb-bg-img: linear-gradient(
-                to bottom left, rgba($in-progress-fill, math.div($status-opacity, 1.5)) 25%,
-                rgba($in-progress-fill, $status-opacity * 0.25) 25%, rgba($in-progress-fill, $status-opacity * 0.25) 50%,
-                rgba($in-progress-fill, math.div($status-opacity, 1.5)) 50%, rgba($in-progress-fill, math.div($status-opacity, 1.5)) 75%,
-                rgba($in-progress-fill, $status-opacity * 0.25) 75%, rgba($in-progress-fill, $status-opacity * 0.25));
+  to bottom left,
+  rgba($in-progress-fill, math.div($status-opacity, 1.5)) 25%,
+  rgba($in-progress-fill, $status-opacity * 0.25) 25%,
+  rgba($in-progress-fill, $status-opacity * 0.25) 50%,
+  rgba($in-progress-fill, math.div($status-opacity, 1.5)) 50%,
+  rgba($in-progress-fill, math.div($status-opacity, 1.5)) 75%,
+  rgba($in-progress-fill, $status-opacity * 0.25) 75%,
+  rgba($in-progress-fill, $status-opacity * 0.25)
+);
 $in-progress-bg-size: 100%;
 
 // FAILED
 $failed-fill: $red;
 $failed-bg-img: linear-gradient(to right, rgba($failed-fill, $status-opacity), rgba($failed-fill, $status-opacity));
-$failed-total-bg-img: linear-gradient(to right, rgba($failed-fill, $total-status-opacity), rgba($failed-fill, $total-status-opacity));
-$failed-cb-bg-img:
-        linear-gradient(135deg, rgba($failed-fill, math.div($status-opacity, 1.5)) 25%, rgba($failed-fill, math.div($status-opacity, 6)) 25%),
-        linear-gradient(225deg, rgba($failed-fill, math.div($status-opacity, 1.5)) 25%, rgba($failed-fill, math.div($status-opacity, 6)) 25%),
-        linear-gradient(315deg, rgba($failed-fill, math.div($status-opacity, 1.5)) 25%, rgba($failed-fill, math.div($status-opacity, 6)) 25%),
-        linear-gradient( 45deg, rgba($failed-fill, math.div($status-opacity, 1.5)) 25%, rgba($failed-fill, math.div($status-opacity, 6)) 25%);
+$failed-total-bg-img: linear-gradient(
+  to right,
+  rgba($failed-fill, $total-status-opacity),
+  rgba($failed-fill, $total-status-opacity)
+);
+$failed-cb-bg-img: linear-gradient(
+    135deg,
+    rgba($failed-fill, math.div($status-opacity, 1.5)) 25%,
+    rgba($failed-fill, math.div($status-opacity, 6)) 25%
+  ),
+  linear-gradient(
+    225deg,
+    rgba($failed-fill, math.div($status-opacity, 1.5)) 25%,
+    rgba($failed-fill, math.div($status-opacity, 6)) 25%
+  ),
+  linear-gradient(
+    315deg,
+    rgba($failed-fill, math.div($status-opacity, 1.5)) 25%,
+    rgba($failed-fill, math.div($status-opacity, 6)) 25%
+  ),
+  linear-gradient(
+    45deg,
+    rgba($failed-fill, math.div($status-opacity, 1.5)) 25%,
+    rgba($failed-fill, math.div($status-opacity, 6)) 25%
+  );
 $failed-bg-size: 25%;
 
-
-.assignment-progress-details, .group-progress-summary {
-  td, .key-cell, tr {
+.assignment-progress-details,
+.group-progress-summary {
+  td,
+  .key-cell,
+  tr {
     .completed {
       background-image: $completed-bg-img;
       background-size: $completed-bg-size;
@@ -154,7 +207,10 @@ $failed-bg-size: 25%;
   }
 
   .completed th {
-    &:first-child, .icon-person { color: rgba($perfect-fill, 1); }
+    &:first-child,
+    .icon-person {
+      color: rgba($perfect-fill, 1);
+    }
     &.total-column {
       background-image: $completed-total-bg-img;
       background-size: $completed-bg-size;
@@ -162,7 +218,10 @@ $failed-bg-size: 25%;
   }
 
   .passed th {
-    &:first-child, .icon-person { color: rgba($passed-fill, 1); }
+    &:first-child,
+    .icon-person {
+      color: rgba($passed-fill, 1);
+    }
     &.total-column {
       background-image: $passed-total-bg-img;
       background-size: $passed-bg-size;
@@ -170,7 +229,10 @@ $failed-bg-size: 25%;
   }
 
   .in-progress th {
-    &:first-child, .icon-person  { color: rgba($default-name-fill, 1); }
+    &:first-child,
+    .icon-person {
+      color: rgba($default-name-fill, 1);
+    }
     &.total-column {
       background-image: $in-progress-total-bg-img;
       background-size: $in-progress-bg-size;
@@ -178,7 +240,10 @@ $failed-bg-size: 25%;
   }
 
   .failed th {
-    &:first-child, .icon-person { color: rgba($failed-fill, 1); }
+    &:first-child,
+    .icon-person {
+      color: rgba($failed-fill, 1);
+    }
     &.total-column {
       background-image: $failed-total-bg-img;
       background-size: $failed-bg-size;
@@ -187,12 +252,16 @@ $failed-bg-size: 25%;
 
   .not-attempted {
     th {
-      &:first-child, .icon-person  { color: rgba($default-name-fill, 1); }
+      &:first-child,
+      .icon-person {
+        color: rgba($default-name-fill, 1);
+      }
     }
   }
   .revoked {
     th {
-      &:first-child, .icon-person {
+      &:first-child,
+      .icon-person {
         color: gray;
       }
     }
@@ -218,7 +287,9 @@ $failed-bg-size: 25%;
 
 .assignment-progress-details.colour-blind,
 .group-progress-summary.colour-blind {
-  td, .key-cell, tr {
+  td,
+  .key-cell,
+  tr {
     .completed {
       background-image: $completed-cb-bg-img;
     }
@@ -233,10 +304,18 @@ $failed-bg-size: 25%;
     }
   }
 
-  .completed th.total-column { background-image: $completed-cb-bg-img;}
-  .passed th.total-column { background-image: $passed-cb-bg-img; }
-  .in-progress th.total-column { background-image: $in-progress-cb-bg-img; }
-  .failed th.total-column { background-image: $failed-cb-bg-img; }
+  .completed th.total-column {
+    background-image: $completed-cb-bg-img;
+  }
+  .passed th.total-column {
+    background-image: $passed-cb-bg-img;
+  }
+  .in-progress th.total-column {
+    background-image: $in-progress-cb-bg-img;
+  }
+  .failed th.total-column {
+    background-image: $failed-cb-bg-img;
+  }
 }
 
 .assignment-progress-options {
@@ -350,13 +429,13 @@ $failed-bg-size: 25%;
 @mixin table-sticky() {
   position: sticky !important;
   position: -webkit-sticky !important;
-  background-clip:  padding-box !important;
+  background-clip: padding-box !important;
   background: $gray-103;
   z-index: 2;
 }
 
 @mixin after-border() {
-  content: '';
+  content: "";
   position: absolute;
   margin: -0.5px -0.5px;
   left: 0;
@@ -380,12 +459,13 @@ $failed-bg-size: 25%;
 
 // Safari 10.1+
 // https://stackoverflow.com/questions/16348489/is-there-a-css-hack-for-safari-only-not-chrome
-@media not all and (min-resolution:.001dpcm)
-{ @supports (-webkit-appearance:none) {
-  .progress-table-container {
-    overflow-x: scroll !important;
+@media not all and (min-resolution: 0.001dpcm) {
+  @supports (-webkit-appearance: none) {
+    .progress-table-container {
+      overflow-x: scroll !important;
+    }
   }
-}}
+}
 
 .progress-table {
   padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders
@@ -410,7 +490,8 @@ $failed-bg-size: 25%;
   }
 
   font-size: 12px;
-  tbody td, tbody th {
+  tbody td,
+  tbody th {
     min-width: 40px;
     z-index: 1;
   }
@@ -420,7 +501,8 @@ $failed-bg-size: 25%;
 
   @include respond-above(sm) {
     font-size: 17px;
-    tbody td, tbody th {
+    tbody td,
+    tbody th {
       min-width: 65px;
     }
     .total-column.left {
@@ -477,11 +559,13 @@ $failed-bg-size: 25%;
     }
   }
 
-  .progress-table-header-footer .sorted.forward .up, .progress-table-header-footer .sorted.reverse .down {
+  .progress-table-header-footer .sorted.forward .up,
+  .progress-table-header-footer .sorted.reverse .down {
     opacity: 1;
   }
 
-  td, th {
+  td,
+  th {
     vertical-align: middle;
     text-align: center;
     line-height: 1.3rem;
@@ -500,7 +584,8 @@ $failed-bg-size: 25%;
     font-weight: normal;
   }
 
-  td.selected, td.total-column {
+  td.selected,
+  td.total-column {
     font-weight: bold;
   }
 
@@ -536,4 +621,3 @@ $failed-bg-size: 25%;
     }
   }
 }
-

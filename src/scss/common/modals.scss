@@ -44,11 +44,13 @@
 
   .modal-footer {
     @include respond-below(sm) {
-      button, a {
+      button,
+      a {
         font-family: $secondary-font-medium;
         margin: 0 0.25rem 1rem;
 
-        + button, +a {
+        + button,
+        + a {
           margin: 0 0 1rem;
         }
       }

@@ -1,7 +1,7 @@
-import {Dispatch, Middleware, MiddlewareAPI} from "redux";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {ACTION_TYPE, isDefined} from "../../services";
-import {changePage, getUserId, logAction, setUserId} from "../index";
+import { Dispatch, Middleware, MiddlewareAPI } from "redux";
+import { RegisteredUserDTO } from "../../../IsaacApiTypes";
+import { ACTION_TYPE, isDefined } from "../../services";
+import { changePage, getUserId, logAction, setUserId } from "../index";
 
 let timeoutHandle: number | undefined;
 
@@ -10,74 +10,73 @@ let timeoutHandle: number | undefined;
 // use it asynchronously, so that is what we do.
 
 const scheduleNextCheck = (middleware: MiddlewareAPI) => {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    timeoutHandle = window.setTimeout(() => checkUserConsistency(middleware), 1000);
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  timeoutHandle = window.setTimeout(() => checkUserConsistency(middleware), 1000);
 };
 
 const checkUserConsistency = (middleware: MiddlewareAPI) => {
-    const storedUserId = getUserId();
-    const state = middleware.getState();
-    const appUserId = state?.user?._id;
-    if (storedUserId != appUserId) {
-        middleware.dispatch(logAction({type: "USER_CONSISTENCY_WARNING_SHOWN", userAgent: navigator.userAgent}));
-        // Mark error after this check has finished, else the error will be snuffed by the error reducer.
-        setImmediate(() => middleware.dispatch({type: ACTION_TYPE.USER_CONSISTENCY_ERROR}));
-    } else {
-        scheduleNextCheck(middleware);
-    }
+  const storedUserId = getUserId();
+  const state = middleware.getState();
+  const appUserId = state?.user?._id;
+  if (storedUserId != appUserId) {
+    middleware.dispatch(logAction({ type: "USER_CONSISTENCY_WARNING_SHOWN", userAgent: navigator.userAgent }));
+    // Mark error after this check has finished, else the error will be snuffed by the error reducer.
+    setImmediate(() => middleware.dispatch({ type: ACTION_TYPE.USER_CONSISTENCY_ERROR }));
+  } else {
+    scheduleNextCheck(middleware);
+  }
 };
 
-
 const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
-    clearTimeout(timeoutHandle);
-    // Only start checking if we can successfully store the user id
-    if (setUserId(user._id)) {
-        scheduleNextCheck(api);
-    } else {
-        // eslint-disable-next-line no-console
-        console.error("Cannot perform user consistency checking!");
-        const eventDetails = {
-            type: "USER_CONSISTENCY_CHECKING_FAILED",
-            userAgent: navigator.userAgent,
-        };
-        api.dispatch(logAction(eventDetails));
-    }
+  clearTimeout(timeoutHandle);
+  // Only start checking if we can successfully store the user id
+  if (setUserId(user._id)) {
+    scheduleNextCheck(api);
+  } else {
+    // eslint-disable-next-line no-console
+    console.error("Cannot perform user consistency checking!");
+    const eventDetails = {
+      type: "USER_CONSISTENCY_CHECKING_FAILED",
+      userAgent: navigator.userAgent,
+    };
+    api.dispatch(logAction(eventDetails));
+  }
 };
 
 function clearCurrentUser() {
-    if (isDefined(timeoutHandle)) {
-        clearTimeout(timeoutHandle);
-    }
-    setUserId(undefined);
+  if (isDefined(timeoutHandle)) {
+    clearTimeout(timeoutHandle);
+  }
+  setUserId(undefined);
 }
 
-export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
-    let userLoggedOut = false;
-    switch (action.type) {
-        case ACTION_TYPE.USER_CONSISTENCY_ERROR:
-        case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
-            userLoggedOut = true;
-            clearCurrentUser();
-            break;
-        case ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE:
-            // If the current user request returns an error we assume the user is not logged in.
-            // We should therefore, remove any data in local and session storage that might be related to the user.
-            // We do not redirect to the homepage as that would happen to anonymous users after following any hard link.
-            clearCurrentUser();
-            break;
-        case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
-        case ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS:
-            setCurrentUser(action.user, api);
-            break;
-    }
+export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => (action) => {
+  let userLoggedOut = false;
+  switch (action.type) {
+    case ACTION_TYPE.USER_CONSISTENCY_ERROR:
+    case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
+      userLoggedOut = true;
+      clearCurrentUser();
+      break;
+    case ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE:
+      // If the current user request returns an error we assume the user is not logged in.
+      // We should therefore, remove any data in local and session storage that might be related to the user.
+      // We do not redirect to the homepage as that would happen to anonymous users after following any hard link.
+      clearCurrentUser();
+      break;
+    case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
+    case ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS:
+      setCurrentUser(action.user, api);
+      break;
+  }
 
-    const result = next(action);
+  const result = next(action);
 
-    if (userLoggedOut) {
-        // Redirect after action has been processed so that the notificationManager sees a logged-out user when deciding
-        // whether to show the "required fields" modal and recording that in local storage.
-        changePage("/");
-    }
+  if (userLoggedOut) {
+    // Redirect after action has been processed so that the notificationManager sees a logged-out user when deciding
+    // whether to show the "required fields" modal and recording that in local storage.
+    changePage("/");
+  }
 
-    return result;
+  return result;
 };

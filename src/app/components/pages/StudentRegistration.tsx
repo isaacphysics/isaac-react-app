@@ -1,26 +1,8 @@
 import React, { useRef, useState } from "react";
 import { selectors, useAppSelector } from "../../state";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Col,
-  Container,
-  Form,
-  FormFeedback,
-  Row,
-} from "reactstrap";
-import {
-  BooleanNotation,
-  DisplaySettings,
-  UserEmailPreferences,
-  ValidationUser,
-} from "../../../IsaacAppTypes";
-import {
-  loadZxcvbnIfNotPresent,
-  REGISTER_CRUMB,
-  validateForm,
-} from "../../services";
+import { Card, CardBody, CardTitle, Col, Container, Form, FormFeedback, Row } from "reactstrap";
+import { BooleanNotation, DisplaySettings, UserEmailPreferences, ValidationUser } from "../../../IsaacAppTypes";
+import { loadZxcvbnIfNotPresent, REGISTER_CRUMB, validateForm } from "../../services";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Redirect } from "react-router";
 import { MetaDescription } from "../elements/MetaDescription";
@@ -45,23 +27,15 @@ export const StudentRegistration = () => {
   const errorMessage = useAppSelector(selectors.error.general);
   const { register, attemptedSignUp } = useRegistration({ isTeacher: false });
 
-  const [booleanNotation, setBooleanNotation] = useState<
-    BooleanNotation | undefined
-  >();
-  const [displaySettings, setDisplaySettings] = useState<
-    DisplaySettings | undefined
-  >();
+  const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
+  const [displaySettings, setDisplaySettings] = useState<DisplaySettings | undefined>();
   const [userContexts, setUserContexts] = useState<UserContext[]>([{}]);
-  const [emailPreferences, setEmailPreferences] = useState<
-    UserEmailPreferences | undefined
-  >({ ASSIGNMENTS: true });
+  const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences | undefined>({ ASSIGNMENTS: true });
   const [isRecaptchaTicked, setIsRecaptchaTicked] = useState(false);
   const recaptchaRef = useRef<ReCAPTCHA | null>(null);
 
   // Inputs which trigger re-render
-  const [registrationUser, setRegistrationUser] = useState<
-    Immutable<ValidationUser>
-  >({
+  const [registrationUser, setRegistrationUser] = useState<Immutable<ValidationUser>>({
     ...user,
     email: undefined,
     dateOfBirth: undefined,
@@ -75,11 +49,8 @@ export const StudentRegistration = () => {
 
   loadZxcvbnIfNotPresent();
 
-  const [unverifiedPassword, setUnverifiedPassword] = useState<
-    string | undefined
-  >();
-  const [dobOver13CheckboxChecked, setDobOver13CheckboxChecked] =
-    useState(false);
+  const [unverifiedPassword, setUnverifiedPassword] = useState<string | undefined>();
+  const [dobOver13CheckboxChecked, setDobOver13CheckboxChecked] = useState(false);
 
   if (user && user.loggedIn) {
     return <Redirect to="/" />;
@@ -210,7 +181,7 @@ export const StudentRegistration = () => {
                       unverifiedPassword,
                       userContexts,
                       dobOver13CheckboxChecked,
-                      emailPreferences
+                      emailPreferences,
                     ) && <h5>Please fill out all fields</h5>}
                 </FormFeedback>
                 <h4 role="alert" className="text-danger text-center">
@@ -218,10 +189,7 @@ export const StudentRegistration = () => {
                 </h4>
               </Col>
             </Row>
-            <Recaptcha
-              setIsRecaptchaTicked={setIsRecaptchaTicked}
-              recaptchaRef={recaptchaRef}
-            />
+            <Recaptcha setIsRecaptchaTicked={setIsRecaptchaTicked} recaptchaRef={recaptchaRef} />
             <RegistrationSubmit isRecaptchaTicked={isRecaptchaTicked} />
           </Form>
         </CardBody>

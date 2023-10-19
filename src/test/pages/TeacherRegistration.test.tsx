@@ -28,12 +28,11 @@ describe("Teacher Registration", () => {
     });
   };
 
-
   it("On page load the teacher conditions are visible and accept button needs to be pressed in order to view the form", async () => {
     renderTeacherRegistration();
     checkPageTitle("Conditions for teacher accounts");
     await clickButton("Continue to a teacher account");
-    checkPageTitle("Register as a teacher")
+    checkPageTitle("Register as a teacher");
   });
 
   it("On teacher registration page all expected fields are present and only teacher options are available", async () => {
@@ -60,7 +59,7 @@ describe("Teacher Registration", () => {
       addAnotherStage,
       assignmentPreferences,
       otherInfo,
-      recaptcha
+      recaptcha,
     } = formFields;
 
     // expect each to be visible
@@ -82,14 +81,12 @@ describe("Teacher Registration", () => {
       additionalInfo(),
       addAnotherStage(),
       otherInfo(),
-      recaptcha()
+      recaptcha(),
     ].forEach((each) => expect(each).toBeVisible());
     expect(assignmentPreferences()).not.toBeInTheDocument();
     expect(form).toHaveTextContent("I am teaching");
     // teacher should have the option to select all stages
-    const allOption = Array.from(stage().options).find(
-      (option) => option.value === "all"
-    );
+    const allOption = Array.from(stage().options).find((option) => option.value === "all");
     expect(allOption).toBeInTheDocument();
   });
 
@@ -98,11 +95,8 @@ describe("Teacher Registration", () => {
     await clickButton("Continue to a teacher account");
     await fillFormCorrectly(false, "teacher");
     const formFields = getFormFields();
-    const { password, confirmPassword, submitButton, stage, noSchool, email } =
-      formFields;
-    const pwErrorMessage = screen.getByText(
-      /Passwords must be at least 12 characters/i
-    );
+    const { password, confirmPassword, submitButton, stage, noSchool, email } = formFields;
+    const pwErrorMessage = screen.getByText(/Passwords must be at least 12 characters/i);
     expect(pwErrorMessage).toBeVisible();
     // update PW to meet requirements but not match the confirmation, and observe error changes
     await fillTextField(confirmPassword(), registrationUserData.password);
@@ -111,14 +105,10 @@ describe("Teacher Registration", () => {
     // update PW to meet requirements and try to submit, observe error messages for school, stage and email address
     await fillTextField(password(), registrationUserData.password);
     await userEvent.click(submitButton());
-    const schoolErrorMessage = screen.getByText(
-      /Please specify a school or college/i
-    );
+    const schoolErrorMessage = screen.getByText(/Please specify a school or college/i);
     const stageErrorMessage = getById("user-context-feedback");
     const emailErrorMessage = screen.getByText(/Not a valid email address for a teacher account/i);
-    [schoolErrorMessage, stageErrorMessage, emailErrorMessage].forEach((each) =>
-      expect(each).toBeVisible()
-    );
+    [schoolErrorMessage, stageErrorMessage, emailErrorMessage].forEach((each) => expect(each).toBeVisible());
     // select a stage and no school, change email to a valid one and submit again
     await selectOption(stage(), registrationUserData.stage);
     await userEvent.click(noSchool());
@@ -130,7 +120,6 @@ describe("Teacher Registration", () => {
       name: /please fill out all fields/i,
     });
     expect(generalError).toBeVisible();
-   
   });
 
   it("If fields are filled in correctly, pressing submit will attempt to create a user, and submit an account upgrade request", async () => {
@@ -172,18 +161,16 @@ describe("Teacher Registration", () => {
         {
           stage: registrationUserData.stage,
           examBoard: "aqa",
-        }]),
-      "mocked-recaptcha-token"
+        },
+      ]),
+      "mocked-recaptcha-token",
     );
     expect(submitMessageSpy).toHaveBeenCalledWith({
       firstName: registrationUserData.givenName,
       lastName: registrationUserData.familyName,
       emailAddress: registrationUserData.email,
       subject: "Teacher Account Request",
-      message: expect.stringMatching(
-        /extra information/
-      ),
+      message: expect.stringMatching(/extra information/),
     });
   });
-
 });

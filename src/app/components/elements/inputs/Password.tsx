@@ -76,8 +76,7 @@ const Password: React.FC<PasswordProps> = (props) => {
       break;
   }
 
-  const autoComplete =
-    passwordFieldType === "Current" ? "current-password" : "new-password";
+  const autoComplete = passwordFieldType === "Current" ? "current-password" : "new-password";
 
   return (
     <div className="password-group">

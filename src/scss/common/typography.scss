@@ -36,7 +36,7 @@ code {
 
 ul {
   list-style-position: outside;
-  list-style-image: url('/assets/hexagon-bullet.svg');
+  list-style-image: url("/assets/hexagon-bullet.svg");
   &.no-bullet {
     list-style-type: none;
     list-style-image: none;
@@ -52,7 +52,8 @@ p {
   }
 }
 
-a, div.isaac-nav-link {
+a,
+div.isaac-nav-link {
   color: $gray-194;
   display: inline-block;
   text-decoration: underline;
@@ -80,7 +81,7 @@ a, div.isaac-nav-link {
 
   &.next-link {
     padding-right: 1.2rem;
-    background-image: url('/assets/chevron_right.svg');
+    background-image: url("/assets/chevron_right.svg");
     background-repeat: no-repeat;
     background-position: center right;
     clear: right;
@@ -88,7 +89,7 @@ a, div.isaac-nav-link {
   }
   &.previous-link {
     padding-left: 1.2rem;
-    background-image: url('/assets/chevron_left.svg');
+    background-image: url("/assets/chevron_left.svg");
     background-repeat: no-repeat;
     background-position: center left;
     clear: left;

@@ -54,37 +54,19 @@ describe("Dashboard", () => {
     expect(featuredNewsTitle).toBeInTheDocument();
   });
 
-  let roles: TestUserRole[] = [
-    "STUDENT",
-    "TUTOR",
-    "EVENT_LEADER",
-    "CONTENT_EDITOR",
-    "EVENT_MANAGER",
-    "ADMIN",
-  ];
+  let roles: TestUserRole[] = ["STUDENT", "TUTOR", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"];
 
-  it.each(roles)(
-    "if %s user is logged in, featured news tile is displayed, and no promo",
-    async (role) => {
-      setupTest(role);
-      const featuredNewsTile = await screen.findByTestId("featured-news-item");
-      const promoTile = screen.queryByTestId("promo-tile");
-      expect(featuredNewsTile).toBeInTheDocument();
-      expect(promoTile).toBeNull();
-      const featuredNewsTitle = screen.getByText(mockFeaturedNewsItem.title);
-      expect(featuredNewsTitle).toBeInTheDocument();
-    }
-  );
+  it.each(roles)("if %s user is logged in, featured news tile is displayed, and no promo", async (role) => {
+    setupTest(role);
+    const featuredNewsTile = await screen.findByTestId("featured-news-item");
+    const promoTile = screen.queryByTestId("promo-tile");
+    expect(featuredNewsTile).toBeInTheDocument();
+    expect(promoTile).toBeNull();
+    const featuredNewsTitle = screen.getByText(mockFeaturedNewsItem.title);
+    expect(featuredNewsTitle).toBeInTheDocument();
+  });
 
-  roles = [
-    "STUDENT",
-    "TEACHER",
-    "TUTOR",
-    "EVENT_LEADER",
-    "CONTENT_EDITOR",
-    "EVENT_MANAGER",
-    "ADMIN",
-  ];
+  roles = ["STUDENT", "TEACHER", "TUTOR", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"];
 
   it.each(roles)(
     "if neither promo item nor featured news item are provided, loading spinner will appear for %s users",
@@ -99,6 +81,6 @@ describe("Dashboard", () => {
         const loadingMessage = screen.getByTestId("loading-spinner");
         expect(loadingMessage).toBeVisible();
       });
-    }
+    },
   );
 });

@@ -1,11 +1,17 @@
 import React from "react";
-import {useRenderKatex} from "./latexRendering";
-import {renderRemarkableMarkdown, regexProcessMarkdown, renderInlineGlossaryTerms, renderGlossaryBlocks, renderClozeDropZones} from "./markdownRendering";
+import { useRenderKatex } from "./latexRendering";
+import {
+  renderRemarkableMarkdown,
+  regexProcessMarkdown,
+  renderInlineGlossaryTerms,
+  renderGlossaryBlocks,
+  renderClozeDropZones,
+} from "./markdownRendering";
 // @ts-ignore
-import {utils} from "remarkable";
-import {usePortalsInHtml, useStatefulElementRef} from "./portals/utils";
-import {compose} from "redux";
-import {isDefined} from "../../../services";
+import { utils } from "remarkable";
+import { usePortalsInHtml, useStatefulElementRef } from "./portals/utils";
+import { compose } from "redux";
+import { isDefined } from "../../../services";
 
 // This component renders the HTML given to it inside a React element.
 //
@@ -13,55 +19,55 @@ import {isDefined} from "../../../services";
 // glossary terms). The component produced by an element is rendered alongside the component that contains the
 // html of that element (i.e. in this case `tooltips` are rendered next to `ElementType`, whose `dangerouslySetInnerHTML`
 // contains the `span`s that those `UncontrolledTooltip`s refer to).
-const TrustedHtml = ({html, className}: {html: string; className?: string}) => {
-    const [htmlRef, updateHtmlRef] = useStatefulElementRef<HTMLDivElement>();
+const TrustedHtml = ({ html, className }: { html: string; className?: string }) => {
+  const [htmlRef, updateHtmlRef] = useStatefulElementRef<HTMLDivElement>();
 
-    const [modifiedHtml, renderPortalElements] = usePortalsInHtml(html);
+  const [modifiedHtml, renderPortalElements] = usePortalsInHtml(html);
 
-    return <>
-        <div ref={updateHtmlRef} className={className} dangerouslySetInnerHTML={{__html: modifiedHtml}} />
-        {renderPortalElements(htmlRef)}
-    </>;
+  return (
+    <>
+      <div ref={updateHtmlRef} className={className} dangerouslySetInnerHTML={{ __html: modifiedHtml }} />
+      {renderPortalElements(htmlRef)}
+    </>
+  );
 };
 
 // The job of this component is to render standard and Isaac-specific markdown (glossary terms, cloze question
 // drop zones) into HTML, which is then passed to `TrustedHTML`. The Isaac-specific markdown must be processed first,
 // so that it doesn't get incorrectly rendered with Remarkable (the markdown renderer we use).
-const TrustedMarkdown = ({markdown}: {markdown: string, renderParagraphs?: boolean}) => {
-    const renderKatex = useRenderKatex();
+const TrustedMarkdown = ({ markdown }: { markdown: string; renderParagraphs?: boolean }) => {
+  const renderKatex = useRenderKatex();
 
-    // This combines all of the above functions for markdown processing.
-    const html = compose<string>(
-        renderClozeDropZones,      // ^
-        renderKatex,               // |
-        renderRemarkableMarkdown,  // | Remarkable markdown renderer, processes standard markdown syntax
-        regexProcessMarkdown,      // |
-        renderInlineGlossaryTerms, // |
-        renderGlossaryBlocks       // |
-    )(markdown);                   // control flow
+  // This combines all of the above functions for markdown processing.
+  const html = compose<string>(
+    renderClozeDropZones, // ^
+    renderKatex, // |
+    renderRemarkableMarkdown, // | Remarkable markdown renderer, processes standard markdown syntax
+    regexProcessMarkdown, // |
+    renderInlineGlossaryTerms, // |
+    renderGlossaryBlocks, // |
+  )(markdown); // control flow
 
-    return <TrustedHtml html={html}/>;
+  return <TrustedHtml html={html} />;
 };
 
 // --- Types for the Markup component ---
 
-type StringNot<X extends string, Y> =
-    X extends Y ? never :
-        string extends X ? never : X;
+type StringNot<X extends string, Y> = X extends Y ? never : string extends X ? never : X;
 
 interface BaseMarkupProps {
-    className?: string;
-    children: string | undefined;
+  className?: string;
+  children: string | undefined;
 }
 
 type MarkupProps<T extends string> = {
-    encoding: StringNot<T, "markdown" | "html"> | undefined;
-    "trusted-markup-encoding"?: never;
-} & BaseMarkupProps
+  encoding: StringNot<T, "markdown" | "html"> | undefined;
+  "trusted-markup-encoding"?: never;
+} & BaseMarkupProps;
 
 type TrustedMarkupProps = {
-    encoding?: never;
-    "trusted-markup-encoding": string | undefined;
+  encoding?: never;
+  "trusted-markup-encoding": string | undefined;
 } & BaseMarkupProps;
 
 // Encodings:
@@ -73,23 +79,36 @@ type TrustedMarkupProps = {
 //  - `unknown`:   HTML is escaped, and markup is rendered alongside a warning that the encoding is unknown.
 //
 // You can pass in an encoding other than these, and the encoding will be treated the same as as `unknown`.
-export function Markup<T extends string>({encoding, "trusted-markup-encoding": trustedMarkupEncoding, className, children}: MarkupProps<T> | TrustedMarkupProps) {
-    const renderKaTeX = useRenderKatex();
+export function Markup<T extends string>({
+  encoding,
+  "trusted-markup-encoding": trustedMarkupEncoding,
+  className,
+  children,
+}: MarkupProps<T> | TrustedMarkupProps) {
+  const renderKaTeX = useRenderKatex();
 
-    if (!isDefined(children)) return null;
+  if (!isDefined(children)) return null;
 
-    switch (encoding ?? trustedMarkupEncoding) {
-        case "html":
-            return <TrustedHtml html={renderKaTeX(children)}/>;
-        case "markdown":
-            return <TrustedMarkdown markdown={children}/>;
-        case "latex":
-            const escapedMarkup = utils.escapeHtml(children);
-            return <span dangerouslySetInnerHTML={{__html: renderKaTeX(escapedMarkup)}} className={className} />;
-        case "plaintext":
-            return <span className={className}>{utils.escapeHtml(children)}</span>;
-        case "unknown":
-        default:
-            return <div>[CONTENT WITH UNKNOWN ENCODING: <i>{encoding} | {utils.escapeHtml(children)} </i>]</div>;
-    }
+  switch (encoding ?? trustedMarkupEncoding) {
+    case "html":
+      return <TrustedHtml html={renderKaTeX(children)} />;
+    case "markdown":
+      return <TrustedMarkdown markdown={children} />;
+    case "latex":
+      const escapedMarkup = utils.escapeHtml(children);
+      return <span dangerouslySetInnerHTML={{ __html: renderKaTeX(escapedMarkup) }} className={className} />;
+    case "plaintext":
+      return <span className={className}>{utils.escapeHtml(children)}</span>;
+    case "unknown":
+    default:
+      return (
+        <div>
+          [CONTENT WITH UNKNOWN ENCODING:{" "}
+          <i>
+            {encoding} | {utils.escapeHtml(children)}{" "}
+          </i>
+          ]
+        </div>
+      );
+  }
 }

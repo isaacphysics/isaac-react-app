@@ -4,18 +4,11 @@ import {
   countStudentsAndTeachers,
   formatAddress,
 } from "../../../../../app/components/elements/panels/SelectedEventDetails";
-import {
-  ACTION_TYPE,
-  API_PATH,
-  augmentEvent,
-} from "../../../../../app/services";
+import { ACTION_TYPE, API_PATH, augmentEvent } from "../../../../../app/services";
 import { renderTestEnvironment } from "../../../../utils";
 import { mockEvent, mockEventBookings } from "../../../../../mocks/data";
 import { AugmentedEvent } from "../../../../../IsaacAppTypes";
-import {
-  EventBookingDTO,
-  IsaacEventPageDTO,
-} from "../../../../../IsaacApiTypes";
+import { EventBookingDTO, IsaacEventPageDTO } from "../../../../../IsaacApiTypes";
 import { FRIENDLY_DATE_AND_TIME } from "../../../../../app/components/elements/DateString";
 import { store } from "../../../../../app/state";
 import { rest } from "msw";
@@ -40,35 +33,18 @@ describe("SelectedEventDetails", () => {
     });
   };
 
-  const findExpectedValues = (
-    event: AugmentedEvent,
-    eventBookings: EventBookingDTO[]
-  ) => {
+  const findExpectedValues = (event: AugmentedEvent, eventBookings: EventBookingDTO[]) => {
     const title = `${event.title as string} ${event.subtitle as string}`;
     const location = event.isVirtual ? "Online" : formatAddress(event.location);
     const status = event.eventStatus as string;
-    const date = `${FRIENDLY_DATE_AND_TIME.format(
-      event.date
-    )} - ${FRIENDLY_DATE_AND_TIME.format(event.endDate)}`;
-    const bookingDeadline = FRIENDLY_DATE_AND_TIME.format(
-      event.bookingDeadline
-    );
-    const { studentCount, teacherCount } =
-      countStudentsAndTeachers(eventBookings);
+    const date = `${FRIENDLY_DATE_AND_TIME.format(event.date)} - ${FRIENDLY_DATE_AND_TIME.format(event.endDate)}`;
+    const bookingDeadline = FRIENDLY_DATE_AND_TIME.format(event.bookingDeadline);
+    const { studentCount, teacherCount } = countStudentsAndTeachers(eventBookings);
     const placesAvailable = `${event.placesAvailable} / ${event.numberOfPlaces}`;
     const numberOfStudents = `${studentCount} / ${event.numberOfPlaces}`;
     const numberOfTeachers = `${teacherCount} / ${event.numberOfPlaces}`;
 
-    return [
-      title,
-      location,
-      status,
-      date,
-      bookingDeadline,
-      placesAvailable,
-      numberOfStudents,
-      numberOfTeachers,
-    ];
+    return [title, location, status, date, bookingDeadline, placesAvailable, numberOfStudents, numberOfTeachers];
   };
 
   it("renders all event details when event is selected", async () => {
@@ -76,13 +52,8 @@ describe("SelectedEventDetails", () => {
     const augmentedEvent = augmentEvent(eventDetails);
     setupTest(eventDetails);
     const eventInfo = await screen.findByTestId("event-details");
-    const expectedValues = findExpectedValues(
-      augmentedEvent,
-      mockEventBookings
-    );
-    expectedValues.forEach((each) =>
-      expect(eventInfo.textContent).toContain(each)
-    );
+    const expectedValues = findExpectedValues(augmentedEvent, mockEventBookings);
+    expectedValues.forEach((each) => expect(eventInfo.textContent).toContain(each));
     const title = screen.getByText("Selected event details");
     expect(title).toBeInTheDocument();
   });
@@ -113,9 +84,7 @@ describe("SelectedEventDetails", () => {
     } as IsaacEventPageDTO;
     setupTest(eventDetails);
     const eventInfo = await screen.findByTestId("event-details");
-    const prepWorkDeadline = FRIENDLY_DATE_AND_TIME.format(
-      eventDetails.prepWorkDeadline
-    );
+    const prepWorkDeadline = FRIENDLY_DATE_AND_TIME.format(eventDetails.prepWorkDeadline);
     expect(eventInfo.textContent).toContain(prepWorkDeadline);
     expect(eventInfo.textContent).toContain("Prepwork deadline");
   });

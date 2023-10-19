@@ -6,10 +6,7 @@ import * as actions from "../../app/state/actions";
 import { rest } from "msw";
 import { API_PATH } from "../../app/services";
 
-const requestEmailVerificationSpy = jest.spyOn(
-  actions,
-  "requestEmailVerification"
-);
+const requestEmailVerificationSpy = jest.spyOn(actions, "requestEmailVerification");
 
 describe("EmailConfirmationModal", () => {
   it("If the user does not have a teacherPending: true flag, the modal will not appear", async () => {
@@ -21,8 +18,8 @@ describe("EmailConfirmationModal", () => {
         }),
     });
     await waitFor(() => {
-    const modal = screen.queryByTestId("active-modal");
-    expect(modal).toBeNull();
+      const modal = screen.queryByTestId("active-modal");
+      expect(modal).toBeNull();
     });
   });
 
@@ -36,8 +33,8 @@ describe("EmailConfirmationModal", () => {
         }),
     });
     await waitFor(() => {
-    const modal = screen.queryByTestId("active-modal");
-    expect(modal).toBeNull();
+      const modal = screen.queryByTestId("active-modal");
+      expect(modal).toBeNull();
     });
   });
 
@@ -84,14 +81,14 @@ describe("EmailConfirmationModal", () => {
 
   it("If user has teacherPending: true and email status 'DELIVERY_FAILED' the modal displays with different text", async () => {
     renderTestEnvironment({
-        modifyUser: (user) =>
-          produce(user, (u) => {
-            u.role = "STUDENT";
-            u.emailVerificationStatus = "DELIVERY_FAILED";
-            u.teacherPending = true;
-          }),
-      });
-      const modal = await screen.findByTestId("active-modal");
-      expect(modal).toHaveTextContent("One or more email(s) sent to your email address failed.");
+      modifyUser: (user) =>
+        produce(user, (u) => {
+          u.role = "STUDENT";
+          u.emailVerificationStatus = "DELIVERY_FAILED";
+          u.teacherPending = true;
+        }),
+    });
+    const modal = await screen.findByTestId("active-modal");
+    expect(modal).toHaveTextContent("One or more email(s) sent to your email address failed.");
   });
 });

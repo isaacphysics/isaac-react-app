@@ -1,506 +1,510 @@
 #inequality-modal,
 #inequality-modal canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #ffffff;
-    z-index: 250;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  z-index: 250;
 }
 
 #inequality-modal {
-    * {
-        cursor: default;
+  * {
+    cursor: default;
+  }
+
+  .question-reminder {
+    position: absolute;
+    bottom: 30px;
+    left: 250px;
+    right: 250px;
+    text-align: justify;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 1.25rem;
+    pointer-events: none;
+    z-index: 255 !important;
+
+    .reminder-toggle {
+      position: relative;
+      text-transform: uppercase;
+      font-weight: bold;
+      text-align: center;
+      pointer-events: all;
+      background: white;
+      color: black;
+      width: 200px;
+      margin: 0 auto;
+      padding: 6px;
+      border-radius: 6px;
     }
 
+    code {
+      background: none;
+    }
+  }
+
+  @media screen and (orientation: portrait) {
     .question-reminder {
-        position: absolute;
-        bottom: 30px;
-        left: 250px;
-        right: 250px;
-        text-align: justify;
-        border-radius: 20px;
-        background-color: rgba(0, 0, 0, 0.6);
-        color: white;
-        padding: 1.25rem;
-        pointer-events: none;
-        z-index: 255 !important;
-
-        .reminder-toggle {
-            position: relative;
-            text-transform: uppercase;
-            font-weight: bold;
-            text-align: center;
-            pointer-events: all;
-            background: white;
-            color: black;
-            width: 200px;
-            margin: 0 auto;
-            padding: 6px;
-            border-radius: 6px;
-        }
-
-        code {
-            background: none;
-        }
+      display: none;
     }
+  }
 
-    @media screen and (orientation: portrait) {
-        .question-reminder {
-            display: none;
-        }
+  @media screen and (max-width: 1023px) {
+    .question-reminder {
+      left: 100px;
+      right: 100px;
     }
+  }
 
-    @media screen and (max-width: 1023px) {
-        .question-reminder {
-            left: 100px;
-            right: 100px;
-        }
-    }
+  .orientation-warning {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 40%;
+    padding: 1em;
+    text-align: center;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding-top: 1.25rem;
+    pointer-events: none;
+    z-index: 255 !important;
+  }
 
+  @media screen and (orientation: landscape) {
     .orientation-warning {
-        position: absolute;
-        left: 10%;
-        right: 10%;
-        top: 40%;
-        padding: 1em;
-        text-align: center;
-        border-radius: 20px;
-        background-color: rgba(0, 0, 0, 0.6);
-        color: white;
-        padding-top: 1.25rem;
-        pointer-events: none;
-        z-index: 255 !important;
+      display: none;
     }
+  }
 
-    @media screen and (orientation: landscape) {
-        .orientation-warning {
-            display: none;
-        }
-    }
+  .inequality-ui {
+    position: absolute;
+    width: 100%;
+    z-index: 255;
 
-    .inequality-ui {
-        position: absolute;
-        width: 100%;
+    &.button {
+      background: $primary;
+      text-indent: -1000px;
+      overflow: hidden;
+      cursor: pointer;
+      width: 70px;
+      height: 70px;
+
+      &.confirm {
+        bottom: 25px;
+        right: 5px;
+        background-color: transparent;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position-y: center;
         z-index: 255;
+      }
 
-        &.button {
-            background: $primary;
-            text-indent: -1000px;
-            overflow: hidden;
-            cursor: pointer;
-            width: 70px;
-            height: 70px;
+      &.show-question {
+        bottom: 25px;
+        left: 95px;
+        background-color: transparent;
+        background-image: url("/assets/inequality-togglequestion-cs.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position-y: center;
+        z-index: 255;
+      }
 
-            &.confirm {
-                bottom: 25px;
-                right: 5px;
-                background-color: transparent;
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position-y: center;
-                z-index: 255;
-            }
+      &.centre {
+        bottom: 15px;
+        left: 5px;
+        background-color: transparent;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position-y: center;
+      }
 
-            &.show-question {
-                bottom: 25px;
-                left: 95px;
-                background-color: transparent;
-                background-image: url('/assets/inequality-togglequestion-cs.svg');
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position-y: center;
-                z-index: 255;
-            }
+      &.help {
+        bottom: 95px;
+        left: 5px;
+        background-color: transparent;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position-y: center;
+        z-index: 255;
+      }
 
-            &.centre {
-                bottom: 15px;
-                left: 5px;
-                background-color: transparent;
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position-y: center;
-            }
+      &.trash {
+        bottom: max(105px, 45%);
+        right: 5px;
+        background-color: transparent;
+        background-image: url("/assets/inequality-trash.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position-y: center;
+        opacity: 0.5;
+        cursor: default;
 
-            &.help {
-                bottom: 95px;
-                left: 5px;
-                background-color: transparent;
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position-y: center;
-                z-index: 255;
-            }
-
-            &.trash {
-                bottom: max(105px, 45%);
-                right: 5px;
-                background-color: transparent;
-                background-image: url('/assets/inequality-trash.svg');
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position-y: center;
-                opacity: 0.5;
-                cursor: default;
-
-                &:hover, &.active {
-                    opacity: 1.0;
-                }
-            }
-
-            &.trash-with-reset {
-                bottom: max(105px, 40%) !important;
-            }
-
-            &.reset {
-                bottom: calc(max(105px, 40%) + 80px);
-                right: 5px;
-                background-color: transparent;
-                background-image: url('/assets/inequality-reset.svg');
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position-y: center;
-            }
+        &:hover,
+        &.active {
+          opacity: 1;
         }
+      }
 
-        &.katex-preview {
-            border-right: 0;
-            border-top-left-radius: 45px;
-            border-bottom-left-radius: 45px;
-            bottom: 25px;
-            right: 40px;
-            height: 70px;
-            padding: 0 60px 0 30px;
-            width: auto;
-            vertical-align: middle;
-            line-height: 65px;
-            font-size: 1.8em;
-            z-index: 254;
+      &.trash-with-reset {
+        bottom: max(105px, 40%) !important;
+      }
 
-            &.empty {
-                padding: 0;
-                width: 0;
-                border: 0;
-            }
-        }
-
-        &.menu-bar {
-            position: relative;
-            width: 100%;
-            display: block;
-            right: 0;
-            left: 0;
-            overflow: visible;
-            background: $secondary;
-
-            &.closed {
-                height: 0;
-                overflow: hidden;
-            }
-
-            div.top-menu {
-                &.chemistry.elements.text-entry {
-                    display: flex;
-                    flex-direction: row;
-                    max-width: 66%;
-                    margin: 0 auto;
-                    padding: 16px 0;
-
-                    & > div {
-                        &.input-box {
-                            min-width: 25%;
-                            position: relative;
-                            padding: 16px 0;
-
-                            input {
-                                font-size: 1.5rem;
-                                padding: 12px;
-
-                                &::placeholder {
-                                    font-size: 0.8em;
-                                }
-                            }
-
-                            p.uppercase-warning {
-                                font-weight: bold;
-                                color: white;
-                                position: absolute;
-                                overflow: visible;
-                                width: 200%;
-                                left: 1ex;
-                                padding-top: 4px;
-                                z-index: 255;
-                            }
-                        }
-
-                        &.items-box {
-                            margin-left: 18px;
-                        }
-                    }
-                }
-
-                &.numbers {
-                    display: flex;
-                    flex-direction: row;
-                    max-width: 450px;
-                    margin: 0 auto;
-                    padding: 16px 0;
-
-                    & > div {
-                        &.input-box {
-                            position: relative;
-
-                            .menu-item {
-                                &.inactive {
-                                    opacity: 0.5;
-                                }
-
-                                position: relative;
-                                display: inline-block;
-                                text-align: center;
-                                font-size: 1.8em;
-                                top: 6px;
-
-                                .katex {
-                                    text-align: center;
-                                    display: block;
-                                    line-height: 90px;
-                                    height: 90px;
-                                    width: 78px;
-                                    margin: 0 auto;
-                                    overflow: visible;
-                                }
-
-                                svg.v-hexagon {
-                                    position: absolute;
-                                    height: 90px;
-                                    left: 0;
-                                    top: 0;
-                                    overflow: visible;
-                                    fill: white;
-                                    stroke: darken($primary, 10%);
-                                    stroke-width: 8px;
-                                    margin: 0 auto;
-                                }
-                            }
-
-                            .clear-number {
-                                position: absolute;
-                                top: -10px;
-                                right: -15px;
-                                width: 30px;
-                                height: 30px;
-                                background: url('/assets/inequality-clear.svg');
-                                background-size: 30px;
-                            }
-                        }
-
-                        &.keypad-box {
-                            padding-right: 16px;
-
-                            .bottom-row {
-                                padding-left: 26px;
-                                margin-top: -12px;
-                            }
-
-                            .key {
-                                position: relative;
-                                display: inline-block;
-                                width: 52px;
-                                height: 57px;
-                                text-align: center;
-                                font-size: 1.8em;
-
-                                .katex {
-                                    text-align: center;
-                                    display: block;
-                                    line-height: 57px;
-                                    height: 57px;
-                                    width: 100%;
-                                    margin: 0 auto;
-                                    overflow: visible;
-                                }
-
-                                svg.v-hexagon {
-                                    position: absolute;
-                                    padding-left: 2px;
-                                    width: 50px;
-                                    left: 0px;
-                                    top: 0px;
-                                    overflow: visible;
-                                    fill: white;
-                                    stroke: darken($primary, 10%);
-                                    stroke-width: 8px;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                ul {
-                    position: relative;
-                    padding: 0;
-                    list-style-type: none;
-                    white-space: nowrap;
-                    margin: 0 auto;
-                    background: darken($primary, 20%);
-
-                    li {
-                        position: relative;
-                        display: inline-block;
-                        box-sizing: content-box;
-                        padding: 8px;
-                        text-indent: 0;
-                        width: 64px;
-                        height: 70px;
-                        text-align: center;
-                        font-size: 1.8em;
-
-                        &.active {
-                            background: $primary;
-                        }
-
-                        .katex {
-                            display: block;
-                            padding-top: 5px;
-                            line-height: 52px;
-                            max-height: 52px;
-                            overflow: visible;
-
-                            span.base {
-                                max-height: 38px;
-                                vertical-align: top;
-                            }
-                        }
-
-                        &.radix, &.fraction, &.derivative, &.has-subscript {
-                            .katex span.base {
-                                line-height: 36px;
-                            }
-                        }
-
-                        svg.v-hexagon {
-                            position: absolute;
-                            width: 64px;
-                            left: 8px;
-                            top: 4px;
-                            overflow: visible;
-                            fill: white;
-                            stroke: darken($primary, 10%);
-                            stroke-width: 8px;
-                        }
-                    }
-
-                    &.sub-menu {
-                        background: $primary;
-                    }
-                }
-
-                .sub-menu-tabs {
-                    li {
-                        font-size: 1.4em;
-
-                        .katex {
-                            padding-top: 8px;
-                        }
-
-                        &.derivatives {
-                            .katex span.base {
-                                line-height: 32px;
-                            }
-                        }
-
-                        &.inactive {
-                            svg.v-hexagon {
-                                fill: $primary;
-                                stroke-width: 0;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        .menu-tabs {
-            position: relative;
-            height: 40px;
-            text-align: center;
-
-            ul {
-                list-style-type: none;
-                padding: 0;
-                margin: 0;
-
-                li {
-                    display: inline-block;
-                    box-sizing: content-box;
-                    padding: 0px 8px;
-                    text-indent: 0;
-                    width: 120px;
-                    height: 36px;
-                    text-align: center;
-                    font-size: 1.6em;
-                    background: black;
-                    color: white;
-                    position: relative;
-
-                    &.active {
-                        color: black;
-                        background: $primary;
-
-                        svg.tab-triangle {
-                            fill: $primary;
-                        }
-                    }
-
-                    svg.tab-triangle {
-                        position: absolute;
-                        width: 136px;
-                        height: 23px;
-                        left: 0;
-                        top: 36px;
-                        overflow: visible;
-                        fill: black;
-                    }
-                }
-            }
-        }
+      &.reset {
+        bottom: calc(max(105px, 40%) + 80px);
+        right: 5px;
+        background-color: transparent;
+        background-image: url("/assets/inequality-reset.svg");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position-y: center;
+      }
     }
+
+    &.katex-preview {
+      border-right: 0;
+      border-top-left-radius: 45px;
+      border-bottom-left-radius: 45px;
+      bottom: 25px;
+      right: 40px;
+      height: 70px;
+      padding: 0 60px 0 30px;
+      width: auto;
+      vertical-align: middle;
+      line-height: 65px;
+      font-size: 1.8em;
+      z-index: 254;
+
+      &.empty {
+        padding: 0;
+        width: 0;
+        border: 0;
+      }
+    }
+
+    &.menu-bar {
+      position: relative;
+      width: 100%;
+      display: block;
+      right: 0;
+      left: 0;
+      overflow: visible;
+      background: $secondary;
+
+      &.closed {
+        height: 0;
+        overflow: hidden;
+      }
+
+      div.top-menu {
+        &.chemistry.elements.text-entry {
+          display: flex;
+          flex-direction: row;
+          max-width: 66%;
+          margin: 0 auto;
+          padding: 16px 0;
+
+          & > div {
+            &.input-box {
+              min-width: 25%;
+              position: relative;
+              padding: 16px 0;
+
+              input {
+                font-size: 1.5rem;
+                padding: 12px;
+
+                &::placeholder {
+                  font-size: 0.8em;
+                }
+              }
+
+              p.uppercase-warning {
+                font-weight: bold;
+                color: white;
+                position: absolute;
+                overflow: visible;
+                width: 200%;
+                left: 1ex;
+                padding-top: 4px;
+                z-index: 255;
+              }
+            }
+
+            &.items-box {
+              margin-left: 18px;
+            }
+          }
+        }
+
+        &.numbers {
+          display: flex;
+          flex-direction: row;
+          max-width: 450px;
+          margin: 0 auto;
+          padding: 16px 0;
+
+          & > div {
+            &.input-box {
+              position: relative;
+
+              .menu-item {
+                &.inactive {
+                  opacity: 0.5;
+                }
+
+                position: relative;
+                display: inline-block;
+                text-align: center;
+                font-size: 1.8em;
+                top: 6px;
+
+                .katex {
+                  text-align: center;
+                  display: block;
+                  line-height: 90px;
+                  height: 90px;
+                  width: 78px;
+                  margin: 0 auto;
+                  overflow: visible;
+                }
+
+                svg.v-hexagon {
+                  position: absolute;
+                  height: 90px;
+                  left: 0;
+                  top: 0;
+                  overflow: visible;
+                  fill: white;
+                  stroke: darken($primary, 10%);
+                  stroke-width: 8px;
+                  margin: 0 auto;
+                }
+              }
+
+              .clear-number {
+                position: absolute;
+                top: -10px;
+                right: -15px;
+                width: 30px;
+                height: 30px;
+                background: url("/assets/inequality-clear.svg");
+                background-size: 30px;
+              }
+            }
+
+            &.keypad-box {
+              padding-right: 16px;
+
+              .bottom-row {
+                padding-left: 26px;
+                margin-top: -12px;
+              }
+
+              .key {
+                position: relative;
+                display: inline-block;
+                width: 52px;
+                height: 57px;
+                text-align: center;
+                font-size: 1.8em;
+
+                .katex {
+                  text-align: center;
+                  display: block;
+                  line-height: 57px;
+                  height: 57px;
+                  width: 100%;
+                  margin: 0 auto;
+                  overflow: visible;
+                }
+
+                svg.v-hexagon {
+                  position: absolute;
+                  padding-left: 2px;
+                  width: 50px;
+                  left: 0px;
+                  top: 0px;
+                  overflow: visible;
+                  fill: white;
+                  stroke: darken($primary, 10%);
+                  stroke-width: 8px;
+                }
+              }
+            }
+          }
+        }
+
+        ul {
+          position: relative;
+          padding: 0;
+          list-style-type: none;
+          white-space: nowrap;
+          margin: 0 auto;
+          background: darken($primary, 20%);
+
+          li {
+            position: relative;
+            display: inline-block;
+            box-sizing: content-box;
+            padding: 8px;
+            text-indent: 0;
+            width: 64px;
+            height: 70px;
+            text-align: center;
+            font-size: 1.8em;
+
+            &.active {
+              background: $primary;
+            }
+
+            .katex {
+              display: block;
+              padding-top: 5px;
+              line-height: 52px;
+              max-height: 52px;
+              overflow: visible;
+
+              span.base {
+                max-height: 38px;
+                vertical-align: top;
+              }
+            }
+
+            &.radix,
+            &.fraction,
+            &.derivative,
+            &.has-subscript {
+              .katex span.base {
+                line-height: 36px;
+              }
+            }
+
+            svg.v-hexagon {
+              position: absolute;
+              width: 64px;
+              left: 8px;
+              top: 4px;
+              overflow: visible;
+              fill: white;
+              stroke: darken($primary, 10%);
+              stroke-width: 8px;
+            }
+          }
+
+          &.sub-menu {
+            background: $primary;
+          }
+        }
+
+        .sub-menu-tabs {
+          li {
+            font-size: 1.4em;
+
+            .katex {
+              padding-top: 8px;
+            }
+
+            &.derivatives {
+              .katex span.base {
+                line-height: 32px;
+              }
+            }
+
+            &.inactive {
+              svg.v-hexagon {
+                fill: $primary;
+                stroke-width: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .menu-tabs {
+      position: relative;
+      height: 40px;
+      text-align: center;
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          display: inline-block;
+          box-sizing: content-box;
+          padding: 0px 8px;
+          text-indent: 0;
+          width: 120px;
+          height: 36px;
+          text-align: center;
+          font-size: 1.6em;
+          background: black;
+          color: white;
+          position: relative;
+
+          &.active {
+            color: black;
+            background: $primary;
+
+            svg.tab-triangle {
+              fill: $primary;
+            }
+          }
+
+          svg.tab-triangle {
+            position: absolute;
+            width: 136px;
+            height: 23px;
+            left: 0;
+            top: 36px;
+            overflow: visible;
+            fill: black;
+          }
+        }
+      }
+    }
+  }
 }
 
 // TODO: Find a better way to unify this and the identical above (around line 137)
 // ... yeah, this is going to be a lost cause.
 #moving-menu-item {
-    position: relative; // this will become absolute in InequalityModal.tsx
-    display: inline-block;
-    box-sizing: content-box;
-    padding: 8px;
-    text-indent: 0;
-    width: 48px;
-    height: 48px;
-    text-align: center;
-    font-size: 1.8em;
+  position: relative; // this will become absolute in InequalityModal.tsx
+  display: inline-block;
+  box-sizing: content-box;
+  padding: 8px;
+  text-indent: 0;
+  width: 48px;
+  height: 48px;
+  text-align: center;
+  font-size: 1.8em;
+  overflow: visible;
+
+  * {
     overflow: visible;
+  }
 
-    * {
-        overflow: visible;
-    }
+  .katex {
+    display: block;
+    padding-top: 5px;
+    overflow: hidden;
+  }
 
-    .katex {
-        display: block;
-        padding-top: 5px;
-        overflow: hidden;
-    }
-
-    svg.v-hexagon {
-        position: absolute;
-        width: 48px;
-        left: 8px;
-        top: 4px;
-        overflow: visible;
-        fill: white;
-        stroke: darken($primary, 10%);
-        stroke-width: 8px;
-    }
+  svg.v-hexagon {
+    position: absolute;
+    width: 48px;
+    left: 8px;
+    top: 4px;
+    overflow: visible;
+    fill: white;
+    stroke: darken($primary, 10%);
+    stroke-width: 8px;
+  }
 }

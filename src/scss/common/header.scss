@@ -27,7 +27,11 @@
   z-index: 10000;
 
   .fade {
-    transition: opacity 0.4s linear, max-height 0.3s ease-out, margin-bottom 0.3s linear, border-width 0.3s linear;
+    transition:
+      opacity 0.4s linear,
+      max-height 0.3s ease-out,
+      margin-bottom 0.3s linear,
+      border-width 0.3s linear;
     max-height: 200px;
   }
   .toast:not(.show) {
@@ -76,27 +80,28 @@ header {
 }
 
 a.skip-main {
-  left:-999px;
-  position:absolute;
-  top:auto;
-  width:1px;
-  height:1px;
-  overflow:hidden;
-  z-index:-999;
+  left: -999px;
+  position: absolute;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: -999;
 }
-a.skip-main:focus, a.skip-main:active {
+a.skip-main:focus,
+a.skip-main:active {
   color: #000;
-  background-color:#fff;
+  background-color: #fff;
   left: 5%;
   top: 60px;
   width: 175px;
   height: auto;
   overflow: auto;
   margin: 10px;
-  text-align:center;
+  text-align: center;
   font-family: $secondary-font-medium;
   font-size: 1rem;
-  z-index:999;
+  z-index: 999;
 }
 
 // reverse final element in the navigation bar to keep options on the screen
@@ -142,7 +147,7 @@ header {
     @include respond-below(xs) {
       padding-right: 20% !important;
     }
-    @include respond-above(xs){
+    @include respond-above(xs) {
       padding-right: 28% !important;
     }
     @include respond-above(sm) {

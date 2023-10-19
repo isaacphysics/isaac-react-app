@@ -1,5 +1,4 @@
 .group-item {
-
   + .group-item {
     border-top: $gray-107 solid 1px;
   }
@@ -25,8 +24,8 @@
   -webkit-filter: grayscale(100%);
   -webkit-filter: grayscale(1);
   filter: grayscale(100%);
-  filter:gray;
-  opacity: .5;
+  filter: gray;
+  opacity: 0.5;
   .struck-out {
     text-decoration: line-through;
   }

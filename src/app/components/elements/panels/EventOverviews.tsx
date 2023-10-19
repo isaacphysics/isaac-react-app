@@ -1,21 +1,11 @@
-import {
-  AppState,
-  getEventOverviews,
-  useAppDispatch,
-  useAppSelector,
-} from "../../../state";
+import { AppState, getEventOverviews, useAppDispatch, useAppSelector } from "../../../state";
 import React, { useEffect, useState } from "react";
 import { Accordion } from "../Accordion";
 import * as RS from "reactstrap";
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { Link } from "react-router-dom";
 import { DateString } from "../DateString";
-import {
-  atLeastOne,
-  isEventLeader,
-  sortOnPredicateAndReverse,
-  zeroOrLess,
-} from "../../../services";
+import { atLeastOne, isEventLeader, sortOnPredicateAndReverse, zeroOrLess } from "../../../services";
 import { EventOverview, PotentialUser } from "../../../../IsaacAppTypes";
 
 export enum EventOverviewFilter {
@@ -25,10 +15,7 @@ export enum EventOverviewFilter {
   "Past events" = "PAST",
 }
 
-export function eventAttendancePercentage(
-  numberAttended: number,
-  numberAbsent: number
-) {
+export function eventAttendancePercentage(numberAttended: number, numberAbsent: number) {
   const percentage = (numberAttended / (numberAttended + numberAbsent)) * 100;
   if (isNaN(percentage)) return "-";
   else if (percentage % 1 === 0) return percentage.toFixed(0) + "%";
@@ -38,13 +25,7 @@ export function eventAttendancePercentage(
   }
 }
 
-const EventTableRow = ({
-  eventData,
-  onClick,
-}: {
-  eventData: EventOverview;
-  onClick: (eventId: string) => void;
-}) => {
+const EventTableRow = ({ eventData, onClick }: { eventData: EventOverview; onClick: (eventId: string) => void }) => {
   const {
     id,
     subtitle,
@@ -62,11 +43,7 @@ const EventTableRow = ({
   return (
     <tr>
       <td className="align-middle">
-        <RS.Button
-          color="secondary"
-          className="btn-sm mx-2"
-          onClick={() => onClick(id as string)}
-        >
+        <RS.Button color="secondary" className="btn-sm mx-2" onClick={() => onClick(id as string)}>
           Manage
         </RS.Button>
       </td>
@@ -81,9 +58,7 @@ const EventTableRow = ({
       <td className="small-centered-td">
         <DateString>{bookingDeadline}</DateString>
       </td>
-      <td className="small-centered-td">
-        {location && location.address && location.address.town}
-      </td>
+      <td className="small-centered-td">{location && location.address && location.address.town}</td>
       <td className="small-centered-td">{eventStatus?.replace(/_/g, " ")}</td>
       <td className="small-centered-td">
         {numberOfConfirmedBookings} / {numberOfPlaces}
@@ -91,9 +66,7 @@ const EventTableRow = ({
       <td className="small-centered-td">{numberOfWaitingListBookings}</td>
       <td className="small-centered-td">{numberAttended}</td>
       <td className="small-centered-td">{numberAbsent}</td>
-      <td className="small-centered-td">
-        {eventAttendancePercentage(numberAttended, numberAbsent)}
-      </td>
+      <td className="small-centered-td">{eventAttendancePercentage(numberAttended, numberAbsent)}</td>
     </tr>
   );
 };
@@ -106,13 +79,9 @@ export const EventOverviews = ({
   setSelectedEventId: (eventId: string | null) => void;
 }) => {
   const dispatch = useAppDispatch();
-  const eventOverviews = useAppSelector(
-    (state: AppState) => state && state.eventOverviews
-  );
+  const eventOverviews = useAppSelector((state: AppState) => state && state.eventOverviews);
 
-  const [overviewFilter, setOverviewFilter] = useState(
-    EventOverviewFilter["Upcoming events"]
-  );
+  const [overviewFilter, setOverviewFilter] = useState(EventOverviewFilter["Upcoming events"]);
   const [sortPredicate, setSortPredicate] = useState("date");
   const [reverse, setReverse] = useState(false);
 
@@ -154,8 +123,7 @@ export const EventOverviews = ({
     <Accordion trustedTitle="Events overview" index={0}>
       {isEventLeader(user) && (
         <div className="bg-grey p-2 mb-4 text-center">
-          As an event leader, you are only able to see the details of events
-          which you manage.
+          As an event leader, you are only able to see the details of events which you manage.
         </div>
       )}
       <div className="clearfix">
@@ -172,13 +140,11 @@ export const EventOverviews = ({
                 setOverviewFilter(e.target.value as EventOverviewFilter);
               }}
             >
-              {Object.entries(EventOverviewFilter).map(
-                ([filterLabel, filterValue]) => (
-                  <option key={filterValue} value={filterValue}>
-                    {filterLabel}
-                  </option>
-                )
-              )}
+              {Object.entries(EventOverviewFilter).map(([filterLabel, filterValue]) => (
+                <option key={filterValue} value={filterValue}>
+                  {filterLabel}
+                </option>
+              ))}
             </RS.Input>
           </RS.Label>
         </div>
@@ -190,44 +156,24 @@ export const EventOverviews = ({
           <React.Fragment>
             {atLeastOne(eventOverviews.length) && (
               <div className="overflow-auto">
-                <RS.Table
-                  bordered
-                  className="mb-0 bg-white table-hover table-sm"
-                  style={{ maxWidth: "100%" }}
-                >
+                <RS.Table bordered className="mb-0 bg-white table-hover table-sm" style={{ maxWidth: "100%" }}>
                   <thead>
                     <tr>
-                      <th
-                        className="align-middle text-center"
-                        style={{ minWidth: "80px" }}
-                      >
+                      <th className="align-middle text-center" style={{ minWidth: "80px" }}>
                         Actions
                       </th>
                       {eventTableHeaderButtons.map((button) => (
-                        <EventTableButton
-                          key={button.text}
-                          sort={button.sort}
-                          text={button.text}
-                        />
+                        <EventTableButton key={button.text} sort={button.sort} text={button.text} />
                       ))}
-                      <th
-                        className="align-middle text-center"
-                        style={{ minWidth: "80px" }}
-                      >
+                      <th className="align-middle text-center" style={{ minWidth: "80px" }}>
                         Attendance
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {eventOverviews
-                      .sort(sortOnPredicateAndReverse(sortPredicate, reverse))
-                      .map((eventData) => (
-                        <EventTableRow
-                          key={eventData.id}
-                          eventData={eventData}
-                          onClick={setSelectedEventId}
-                        />
-                      ))}
+                    {eventOverviews.sort(sortOnPredicateAndReverse(sortPredicate, reverse)).map((eventData) => (
+                      <EventTableRow key={eventData.id} eventData={eventData} onClick={setSelectedEventId} />
+                    ))}
                   </tbody>
                 </RS.Table>
               </div>

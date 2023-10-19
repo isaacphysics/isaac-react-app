@@ -35,8 +35,7 @@ export const RegistrationEmailPreference = ({
   const isaacEmailPreferenceDescriptions: EmailPreferenceDescriptions = {
     assignments: "Receive assignment notifications from your teacher.",
     news: "Be the first to know about new topics, new platform features, and our fantastic competition giveaways.",
-    events:
-      "Get valuable updates on our free student workshops happening near you.",
+    events: "Get valuable updates on our free student workshops happening near you.",
   };
 
   return (
@@ -46,17 +45,10 @@ export const RegistrationEmailPreference = ({
         <Table className="mb-0">
           <tbody>
             {preferences.map((preference, index) => {
-              const description =
-                isaacEmailPreferenceDescriptions[
-                  preference.key as keyof EmailPreferenceDescriptions
-                ];
-              return preference.condition === undefined ||
-                preference.condition ? (
+              const description = isaacEmailPreferenceDescriptions[preference.key as keyof EmailPreferenceDescriptions];
+              return preference.condition === undefined || preference.condition ? (
                 <tr key={index}>
-                  <td>
-                    {preference.key.charAt(0).toUpperCase() +
-                      preference.key.slice(1)}
-                  </td>
+                  <td>{preference.key.charAt(0).toUpperCase() + preference.key.slice(1)}</td>
                   <td className="d-none d-sm-table-cell">{description}</td>
                   <td className="text-center">
                     <TrueFalseRadioInput

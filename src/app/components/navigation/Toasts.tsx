@@ -1,10 +1,5 @@
-import React from 'react';
-import {
-  hideToast,
-  selectors,
-  useAppDispatch,
-  useAppSelector,
-} from "../../state";
+import React from "react";
+import { hideToast, selectors, useAppDispatch, useAppSelector } from "../../state";
 import * as RS from "reactstrap";
 import { Toast } from "../../../IsaacAppTypes";
 
@@ -31,22 +26,14 @@ export const Toasts = () => {
           <RS.ToastHeader
             icon={toast.color}
             className="py-2 px-3"
-            toggle={
-              toast.closable
-                ? () => toast.id && dispatch(hideToast(toast.id))
-                : undefined
-            }
+            toggle={toast.closable ? () => toast.id && dispatch(hideToast(toast.id)) : undefined}
           >
-            <span className={`pl-1 toast-heading text-${toast.color}`}>
-              {toast.title}
-            </span>
+            <span className={`pl-1 toast-heading text-${toast.color}`}>{toast.title}</span>
           </RS.ToastHeader>
           {toast.body && (
             <RS.ToastBody className="p-3">
               {toast.body}
-              {toast.buttons && (
-                <div className="text-right">{toast.buttons}</div>
-              )}
+              {toast.buttons && <div className="text-right">{toast.buttons}</div>}
             </RS.ToastBody>
           )}
         </RS.Toast>

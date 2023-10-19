@@ -7,20 +7,10 @@
   width: 4px;
   border-left: solid 4px;
   opacity: 0.5;
-  border-image:
-          linear-gradient(
-                          to bottom,
-                          $secondary 0 calc(100% - 20px),
-                          rgba(0, 0, 0, 0)
-          ) 1 100%;
+  border-image: linear-gradient(to bottom, $secondary 0 calc(100% - 20px), rgba(0, 0, 0, 0)) 1 100%;
   &.fade-in {
-    border-image:
-            linear-gradient(
-                            to bottom,
-                            rgba(0, 0, 0, 0),
-                            $secondary 60px calc(100% - 20px),
-                            rgba(0, 0, 0, 0)
-            ) 1 100% !important;
+    border-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), $secondary 60px calc(100% - 20px), rgba(0, 0, 0, 0)) 1
+      100% !important;
   }
 }
 
@@ -31,7 +21,9 @@
   //.month-label {
   //  padding-left: 32px;
   //}
-  .year-label, .month-label, .hexagon-date {
+  .year-label,
+  .month-label,
+  .hexagon-date {
     position: relative;
     background-color: transparent;
     z-index: 4;
@@ -40,21 +32,22 @@
     position: relative;
     z-index: 4;
   }
-  .month-label:hover, .hexagon-date:hover, .month-label:focus, .hexagon-date:focus {
+  .month-label:hover,
+  .hexagon-date:hover,
+  .month-label:focus,
+  .hexagon-date:focus {
     outline: none;
-    background: linear-gradient(
-                    to left,
-                    transparent 0,
-                    rgba(#636c73, 0.1) 90%,
-                    transparent 100%
-    );
-    .date-assignment-count, .date-toggle-arrow {
+    background: linear-gradient(to left, transparent 0, rgba(#636c73, 0.1) 90%, transparent 100%);
+    .date-assignment-count,
+    .date-toggle-arrow {
       opacity: 1 !important;
       color: black !important;
     }
   }
-  .month-label:focus, .hexagon-date:focus {
-    .date-assignment-count, .month-assignment-count {
+  .month-label:focus,
+  .hexagon-date:focus {
+    .date-assignment-count,
+    .month-assignment-count {
       font-weight: bold;
     }
   }
@@ -93,7 +86,7 @@
   &.active {
     display: flex;
     .container {
-      box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+      box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
     }
   }
 }

@@ -9,11 +9,16 @@
     width: 100%;
   }
 
-  thead, tbody, th, td, tr {
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
     display: block;
   }
 
-  tbody td, th {
+  tbody td,
+  th {
     float: left;
     //border-bottom-width: 0;
   }

@@ -26,7 +26,7 @@ export const GenderInput = ({
         type="select"
         name="gender"
         id={`${idPrefix}-gender-select`}
-        value={userToUpdate.gender || "" }
+        value={userToUpdate.gender || ""}
         invalid={submissionAttempted && !validateUserGender(userToUpdate)}
         onChange={(e: ChangeEvent<HTMLInputElement>) =>
           setUserToUpdate({ ...userToUpdate, gender: e.target.value as Gender })

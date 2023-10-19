@@ -11,16 +11,12 @@ describe("RegistrationEmailPreference", () => {
     assignments: () => screen.getByText("Assignments"),
     news: () => screen.getByText("News"),
     events: () => screen.getByText("Events"),
-    assignmentsDescription: () =>
-      screen.getByText("Receive assignment notifications from your teacher."),
+    assignmentsDescription: () => screen.getByText("Receive assignment notifications from your teacher."),
     newsDescription: () =>
       screen.getByText(
-        "Be the first to know about new topics, new platform features, and our fantastic competition giveaways."
+        "Be the first to know about new topics, new platform features, and our fantastic competition giveaways.",
       ),
-    eventsDescription: () =>
-      screen.getByText(
-        "Get valuable updates on our free student workshops happening near you."
-      ),
+    eventsDescription: () => screen.getByText("Get valuable updates on our free student workshops happening near you."),
   };
 
   const setupTest = (role: TestUserRole, props = {}) => {
@@ -40,14 +36,7 @@ describe("RegistrationEmailPreference", () => {
 
   it("renders correct options for student registration", () => {
     setupTest("STUDENT");
-    const {
-      assignments,
-      news,
-      events,
-      assignmentsDescription,
-      newsDescription,
-      eventsDescription,
-    } = getOptions;
+    const { assignments, news, events, assignmentsDescription, newsDescription, eventsDescription } = getOptions;
     const allOptions = [
       assignments(),
       assignmentsDescription(),
@@ -64,51 +53,36 @@ describe("RegistrationEmailPreference", () => {
   it("renders correct options for teacher registration", () => {
     setupTest("TEACHER");
     const { news, newsDescription, events, eventsDescription } = getOptions;
-    [news(), newsDescription(), events(), eventsDescription()].forEach(
-      (option) => {
-        expect(option).toBeInTheDocument();
-      }
-    );
+    [news(), newsDescription(), events(), eventsDescription()].forEach((option) => {
+      expect(option).toBeInTheDocument();
+    });
     const assignmentsOption = screen.queryByText("Assignments");
-    const assignmentsDescription = screen.queryByText(
-      "Receive assignment notifications from your teacher."
-    );
+    const assignmentsDescription = screen.queryByText("Receive assignment notifications from your teacher.");
     expect(assignmentsOption).not.toBeInTheDocument();
     expect(assignmentsDescription).not.toBeInTheDocument();
   });
 
-  it.each(preferences)(
-    "handles preference changes for %s correctly",
-    async (option) => {
-      setupTest("STUDENT");
-      const falseOption = new RegExp(`No.*for ${option}`);
-      const trueOption = new RegExp(`Yes.*for ${option}`);
-      const preferenceFalseLabel = screen.getByLabelText(falseOption);
-      await userEvent.click(preferenceFalseLabel);
-      const expectedFalse = { [option]: false };
-      expect(mockSetEmailPreferences).toHaveBeenCalledWith(
-        expect.objectContaining(expectedFalse)
-      );
-      const preferenceTrueLabel = screen.getByLabelText(trueOption);
-      await userEvent.click(preferenceTrueLabel);
-      const expectedTrue = { [option]: true };
-      expect(mockSetEmailPreferences).toHaveBeenCalledWith(
-        expect.objectContaining(expectedTrue)
-      );
-    }
-  );
+  it.each(preferences)("handles preference changes for %s correctly", async (option) => {
+    setupTest("STUDENT");
+    const falseOption = new RegExp(`No.*for ${option}`);
+    const trueOption = new RegExp(`Yes.*for ${option}`);
+    const preferenceFalseLabel = screen.getByLabelText(falseOption);
+    await userEvent.click(preferenceFalseLabel);
+    const expectedFalse = { [option]: false };
+    expect(mockSetEmailPreferences).toHaveBeenCalledWith(expect.objectContaining(expectedFalse));
+    const preferenceTrueLabel = screen.getByLabelText(trueOption);
+    await userEvent.click(preferenceTrueLabel);
+    const expectedTrue = { [option]: true };
+    expect(mockSetEmailPreferences).toHaveBeenCalledWith(expect.objectContaining(expectedTrue));
+  });
 
   it("if form submission is attempted but not all preferences are selected, affected options are marked as invalid, and 'required' feedback shows", () => {
     setupTest("STUDENT", {
       submissionAttempted: true,
       emailPreferences: { ASSIGNMENTS: false, EVENTS: true },
     });
-    const newsPreferenceTrueLabel = screen.getByLabelText(
-      /Yes.*for NEWS_AND_UPDATES/
-    );
-    const newsPreferenceFalseLabel = screen.getByLabelText(
-      /No.*for NEWS_AND_UPDATES/
-    );
+    const newsPreferenceTrueLabel = screen.getByLabelText(/Yes.*for NEWS_AND_UPDATES/);
+    const newsPreferenceFalseLabel = screen.getByLabelText(/No.*for NEWS_AND_UPDATES/);
     expect(newsPreferenceTrueLabel).toBeInvalid();
     expect(newsPreferenceFalseLabel).toBeInvalid();
     const emailPreferenceFeedback = screen.getByText("required", {

@@ -8,7 +8,7 @@
     border-color: $gray-118;
   }
 
-  .selection-area{
+  .selection-area {
     overflow: auto;
     max-height: 180px;
   }
@@ -134,14 +134,14 @@
     border-collapse: collapse;
     border: solid 1px #333;
     margin-bottom: 0;
-    th{
+    th {
       background-color: #333;
-      color:#fff;
-      font-size:1rem;
+      color: #fff;
+      font-size: 1rem;
     }
     td li {
       color: #858585;
-      font-size: .875rem;
+      font-size: 0.875rem;
       text-align: left;
     }
   }

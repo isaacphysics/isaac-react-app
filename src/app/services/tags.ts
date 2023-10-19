@@ -1,3 +1,3 @@
-import {CsTagService} from "./";
+import { CsTagService } from "./";
 
 export const tags = new CsTagService();

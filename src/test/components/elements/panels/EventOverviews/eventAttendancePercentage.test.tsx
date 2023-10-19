@@ -1,4 +1,4 @@
-import { eventAttendancePercentage } from "../../../../../app/components/elements/panels/EventOverviews"
+import { eventAttendancePercentage } from "../../../../../app/components/elements/panels/EventOverviews";
 
 describe("eventAttendancePercentage", () => {
   it("returns '-' if the percentage is NaN", () => {

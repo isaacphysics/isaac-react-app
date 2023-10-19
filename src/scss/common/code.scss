@@ -1,7 +1,7 @@
 // Adapt the PrismJS code for line numbering:
 // https://github.com/PrismJS/prism/blob/v1.24.1/plugins/line-numbers/prism-line-numbers.css
 
-$code-indent: 3em;  // Want ~1em per character, so this is good for 999 lines!
+$code-indent: 3em; // Want ~1em per character, so this is good for 999 lines!
 $line-num-width: $code-indent - 1em;
 
 // Prevent this from affecting any other code/pre blocks:
@@ -34,7 +34,6 @@ $line-num-width: $code-indent - 1em;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-
   }
 
   .line-numbers-rows > span {

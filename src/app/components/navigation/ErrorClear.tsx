@@ -8,11 +8,10 @@ const ErrorClear = () => {
   const location = useLocation();
 
   useEffect(() => {
-      clearError();
+    clearError();
   }, [location.pathname]);
 
   return null;
-
 };
 
 export default ErrorClear;

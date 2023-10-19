@@ -76,8 +76,9 @@ main {
     padding-left: 18px;
     text-decoration: none;
   }
-  td:hover:before, td:focus-within:before {
-    content: '';
+  td:hover:before,
+  td:focus-within:before {
+    content: "";
     border-top: 30px solid #ececec;
     border-left: 15px solid #ececec;
     border-bottom: 30px solid #ececec;
@@ -93,7 +94,8 @@ main {
   th {
     background: $secondary;
   }
-  td:hover:before, td:focus-within:before {
+  td:hover:before,
+  td:focus-within:before {
     border-left-color: $secondary;
   }
 }
@@ -102,7 +104,8 @@ main {
   th {
     background: $black;
   }
-  td:hover:before, td:focus-within:before {
+  td:hover:before,
+  td:focus-within:before {
     border-left-color: $black;
   }
 }

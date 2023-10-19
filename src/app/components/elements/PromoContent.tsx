@@ -9,9 +9,7 @@ import { Link } from "react-router-dom";
 export const PromoContent = ({ item }: { item: IsaacPodDTO }) => {
   const { title, subtitle, value, image, url, encoding } = item;
   const defaultImage = "/assets/ics_hero.svg";
-  const path = image?.src
-    ? apiHelper.determineImageUrl(image.src)
-    : apiHelper.determineImageUrl(defaultImage);
+  const path = image?.src ? apiHelper.determineImageUrl(image.src) : apiHelper.determineImageUrl(defaultImage);
 
   interface LinkOrAnchorProps {
     url: string | undefined;
@@ -40,13 +38,7 @@ export const PromoContent = ({ item }: { item: IsaacPodDTO }) => {
       {{
         "I Belong in Computer Science": (
           <Row className="d-flex align-items-center justify-content-center">
-            <Col
-              xs={12}
-              md={6}
-              lg={5}
-              xl={4}
-              className="d-flex align-items-center justify-content-center"
-            >
+            <Col xs={12} md={6} lg={5} xl={4} className="d-flex align-items-center justify-content-center">
               <img src={path} alt={image?.altText || "promo image"} />
             </Col>
             <Col xs={12} md className="pt-3 pl-3">
@@ -56,10 +48,7 @@ export const PromoContent = ({ item }: { item: IsaacPodDTO }) => {
                 </LinkOrAnchor>
               </h5>
               <div className="text-left">
-                <IsaacContentValueOrChildren
-                  encoding={encoding}
-                  value={value}
-                />
+                <IsaacContentValueOrChildren encoding={encoding} value={value} />
               </div>
               <div>
                 <LinkOrAnchor url={url} internalLink={internalLink}>

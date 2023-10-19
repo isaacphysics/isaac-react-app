@@ -1,4 +1,4 @@
-@use 'sass:math';
+@use "sass:math";
 
 // NOMENSA breadcrumbs.scss
 .bread {
@@ -33,10 +33,10 @@
   }
 
   .breadcrumb-item + .breadcrumb-item::before {
-    background-image: url('/assets/chevron_right.svg');
+    background-image: url("/assets/chevron_right.svg");
     background-repeat: no-repeat;
     background-size: contain;
-    content: '';
+    content: "";
     height: 14px;
     left: 20px;
     margin-bottom: -2px;

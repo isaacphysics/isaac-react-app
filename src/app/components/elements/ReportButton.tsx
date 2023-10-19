@@ -1,26 +1,29 @@
 import React from "react";
-import {logAction, useAppDispatch} from "../../state";
+import { logAction, useAppDispatch } from "../../state";
 
-export const ReportButton = ({pageId} : {pageId?: string}) => {
-    const dispatch = useAppDispatch();
+export const ReportButton = ({ pageId }: { pageId?: string }) => {
+  const dispatch = useAppDispatch();
 
-    function logPageReport() {
-        let eventDetails = {
-            type: "REPORT_CONTENT_PAGE",
-            pageId: pageId
-        };
-        dispatch(logAction(eventDetails))
-    }
+  function logPageReport() {
+    let eventDetails = {
+      type: "REPORT_CONTENT_PAGE",
+      pageId: pageId,
+    };
+    dispatch(logAction(eventDetails));
+  }
 
-    return <button
-        className="report-icon btn-action"
-        aria-label="Report a problem (opens in new tab)"
-        title="Report a problem (opens in new tab)"
-        onClick={(event) => {
-            logPageReport()
-            window.open(pageId ? `/contact?preset=contentProblem&page=${pageId}` : "/contact?preset=contentProblem",
-                "_blank")
-            }
-        }
+  return (
+    <button
+      className="report-icon btn-action"
+      aria-label="Report a problem (opens in new tab)"
+      title="Report a problem (opens in new tab)"
+      onClick={(event) => {
+        logPageReport();
+        window.open(
+          pageId ? `/contact?preset=contentProblem&page=${pageId}` : "/contact?preset=contentProblem",
+          "_blank",
+        );
+      }}
     />
-}
+  );
+};

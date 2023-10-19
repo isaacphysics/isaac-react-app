@@ -1,14 +1,14 @@
 @mixin table-sticky() {
   position: sticky !important;
-  background-clip:  padding-box !important;
+  background-clip: padding-box !important;
   background: $gray-103;
   z-index: 1;
   top: 0;
 }
 
 @mixin after-border() {
-  content:'';
-  position:absolute;
+  content: "";
+  position: absolute;
   left: 0px;
   top: 0px;
   right: 0px;
@@ -57,7 +57,7 @@
       background-image: url(/assets/chevron_right.svg);
       background-repeat: no-repeat;
       background-size: contain;
-      content: ' ';
+      content: " ";
       height: 10px;
       margin-left: -9px;
       margin-top: 6px;
@@ -102,7 +102,8 @@
 
       td {
         .custom-control-label {
-          &:before, &:after {
+          &:before,
+          &:after {
             width: 1.5rem;
             height: 1.5rem;
             margin-top: -0.25rem;

@@ -1,5 +1,6 @@
 // NOMENSA button.scss
-.btn, input.btn {
+.btn,
+input.btn {
   border-radius: 0.25rem;
   font-family: $secondary-font-bold;
   font-size: 1.125rem;
@@ -8,7 +9,12 @@
   padding: 0.5rem 2.1rem;
   white-space: normal;
 
-  &.btn-negative, &.btn-neutral, &.btn-positive, &.btn-negative-answer, &.btn-neutral-answer, &.btn-positive-answer {
+  &.btn-negative,
+  &.btn-neutral,
+  &.btn-positive,
+  &.btn-negative-answer,
+  &.btn-neutral-answer,
+  &.btn-positive-answer {
     border: 1px solid transparent;
     color: $black;
     min-width: 100px !important;
@@ -22,9 +28,12 @@
     }
   }
 
-  &.btn-positive:not(:disabled):not(.disabled):active, &.btn-neutral:not(:disabled):not(.disabled):active,
-  &.btn-negative:not(:disabled):not(.disabled):active, &.btn-negative-answer:not(:disabled):not(.disabled):active,
-  &.btn-neutral-answer:not(:disabled):not(.disabled):active, &.btn-positive-answer:not(:disabled):not(.disabled):active {
+  &.btn-positive:not(:disabled):not(.disabled):active,
+  &.btn-neutral:not(:disabled):not(.disabled):active,
+  &.btn-negative:not(:disabled):not(.disabled):active,
+  &.btn-negative-answer:not(:disabled):not(.disabled):active,
+  &.btn-neutral-answer:not(:disabled):not(.disabled):active,
+  &.btn-positive-answer:not(:disabled):not(.disabled):active {
     border: 1px solid transparent;
     color: $black;
     text-decoration: underline;
@@ -157,7 +166,6 @@
     }
   }
 }
-
 
 // ISAAC
 .btn-underline {

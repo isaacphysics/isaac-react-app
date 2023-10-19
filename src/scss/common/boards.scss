@@ -111,7 +111,7 @@ tr.board-card {
     text-align: center;
     &:after {
       font-size: 0.5em;
-      content: '%';
+      content: "%";
       position: relative;
       top: -15px;
     }
@@ -149,15 +149,15 @@ tr.board-card {
 }
 
 .table-button {
-  background: none!important;
+  background: none !important;
   border: none;
-  padding: 0!important;
+  padding: 0 !important;
   font-weight: bold;
 }
 
 .input-options {
   float: right;
-  @media only screen and (max-width:800px) {
+  @media only screen and (max-width: 800px) {
     float: unset !important;
     flex-direction: column;
   }
@@ -167,6 +167,7 @@ tr.board-card {
   top: -50px;
 }
 
-.table-share-link, .card-share-link {
+.table-share-link,
+.card-share-link {
   position: relative;
 }

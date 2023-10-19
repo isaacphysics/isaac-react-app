@@ -37,9 +37,9 @@
 }
 
 .email-preview-frame {
-  width:100%;
-  height:800px;
-  border:solid thin #e3e3e3;
+  width: 100%;
+  height: 800px;
+  border: solid thin #e3e3e3;
 }
 
 .vertical-center {
@@ -128,7 +128,6 @@ button.btn.btn-link.login-b,
     position: relative;
     width: initial;
   }
-
 }
 
 .my-account a {
@@ -158,7 +157,6 @@ button.btn.btn-link.login-b,
     position: relative;
     width: initial;
   }
-
 }
 
 .logout {
@@ -198,7 +196,6 @@ button.btn.btn-link.login-b,
 }
 
 .share-link-icon {
-
   @extend .hex-icon;
 
   button {
@@ -303,14 +300,15 @@ iframe.email-html {
   opacity: 1;
 }
 
-.larger-checkbox .custom-control-label::before, .larger-checkbox .custom-control-label::after {
+.larger-checkbox .custom-control-label::before,
+.larger-checkbox .custom-control-label::after {
   transform: scale(2);
   margin-left: 0.5rem;
-};
+}
 
 .larger-checkbox .custom-control-label {
   padding-left: 1rem;
-};
+}
 
 // OLD NOMENSA TO ALTER INTO ISAAC
 //a, button {

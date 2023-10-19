@@ -38,11 +38,17 @@
   }
   .filter-action {
     text-decoration: underline;
-    &:hover, &:focus {text-decoration: none;}
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
   }
 }
 
-.hexagon-tier-title, .hexagon-level-title, .hexagon-tier-summary, .difficulty-title {
+.hexagon-tier-title,
+.hexagon-level-title,
+.hexagon-tier-summary,
+.difficulty-title {
   pointer-events: none;
   height: 100%;
   display: flex;
@@ -54,14 +60,18 @@
 .hexagon-level-title {
   font-weight: 600;
   font-size: 1rem;
-  &.active {color: white;}
+  &.active {
+    color: white;
+  }
 }
 .hexagon-tier-title {
   //font-weight: 600;
   font-size: 0.8rem;
   color: #333;
   hyphens: manual;
-  &.active {color: white;}
+  &.active {
+    color: white;
+  }
   &.small {
     font-size: 0.75rem;
     overflow-wrap: anywhere;
@@ -82,10 +92,11 @@
 .difficulty-title {
   font-weight: 400;
   font-size: 0.92rem;
-  &.active {color: white;}
+  &.active {
+    color: white;
+  }
   &.difficulty-icon-title {
     font-weight: 600;
     font-size: 0.8rem;
   }
 }
-

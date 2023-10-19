@@ -8,20 +8,11 @@ import { downloadWorkbook } from "../handlers/downloadWorkbook";
 export const WorkbookDownload = () => {
   const dispatch: AppDispatch = useAppDispatch();
 
-  const WorkbookDownloadButton = ({
-    workbookType,
-  }: {
-    workbookType: "GCSE" | "OCR" | "AQA";
-  }) => {
+  const WorkbookDownloadButton = ({ workbookType }: { workbookType: "GCSE" | "OCR" | "AQA" }) => {
     return (
       <Row className="justify-content-center">
         <Col xs={12} lg={6} className="py-2">
-          <Button
-            size="lg"
-            onClick={() => downloadWorkbook(dispatch, workbookType)}
-            color="secondary"
-            block
-          >
+          <Button size="lg" onClick={() => downloadWorkbook(dispatch, workbookType)} color="secondary" block>
             Download {workbookType} workbook
           </Button>
         </Col>
@@ -37,14 +28,12 @@ export const WorkbookDownload = () => {
           <Col>
             <Row className="pb-4">
               <p>
-                Below are links to download the PDF versions of our AQA and OCR
-                workbooks. These are only available to users with a Teacher
-                account.
+                Below are links to download the PDF versions of our AQA and OCR workbooks. These are only available to
+                users with a Teacher account.
               </p>
               <p>
-                If you require accessible versions of the questions please use
-                the online versions, you can find them by using our new{" "}
-                <Link to="/gameboards/new">Question Finder</Link>.
+                If you require accessible versions of the questions please use the online versions, you can find them by
+                using our new <Link to="/gameboards/new">Question Finder</Link>.
               </p>
             </Row>
             <Col xs={12} md={10} className="mx-auto">

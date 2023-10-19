@@ -1,90 +1,106 @@
-import React, {ReactNode, useEffect, useState} from "react";
-import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
-import {pauseAllVideos} from "../content/IsaacVideo";
-import {isDefined} from "../../services";
+import React, { ReactNode, useEffect, useState } from "react";
+import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
+import { pauseAllVideos } from "../content/IsaacVideo";
+import { isDefined } from "../../services";
 import classNames from "classnames";
-import {useStatefulElementRef} from "./markup/portals/utils";
-import {useExpandContent} from "./markup/portals/Tables";
-import {ExpandableParentContext} from "../../../IsaacAppTypes";
-import {Markup} from "./markup";
+import { useStatefulElementRef } from "./markup/portals/utils";
+import { useExpandContent } from "./markup/portals/Tables";
+import { ExpandableParentContext } from "../../../IsaacAppTypes";
+import { Markup } from "./markup";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
 interface TabsProps {
-    className?: string;
-    tabTitleClass?: StringOrTabFunction;
-    tabContentClass?: string;
-    children: {};
-    activeTabOverride?: number;
-    onActiveTabChange?: (tabIndex: number) => void;
-    deselectable?: boolean;
-    refreshHash?: string;
-    expandable?: boolean;
+  className?: string;
+  tabTitleClass?: StringOrTabFunction;
+  tabContentClass?: string;
+  children: {};
+  activeTabOverride?: number;
+  onActiveTabChange?: (tabIndex: number) => void;
+  deselectable?: boolean;
+  refreshHash?: string;
+  expandable?: boolean;
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string, tabIndex: number) {
-    if (typeof stringOrTabFunction == 'string') return stringOrTabFunction;
-    return stringOrTabFunction(tabTitle, tabIndex);
+  if (typeof stringOrTabFunction == "string") return stringOrTabFunction;
+  return stringOrTabFunction(tabTitle, tabIndex);
 }
 
 export const Tabs = (props: TabsProps) => {
-    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange, deselectable=false, refreshHash, expandable} = props;
-    const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
+  const {
+    className = "",
+    tabTitleClass = "",
+    tabContentClass = "",
+    children,
+    activeTabOverride,
+    onActiveTabChange,
+    deselectable = false,
+    refreshHash,
+    expandable,
+  } = props;
+  const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
-    useEffect(() => {
-        if (isDefined(activeTabOverride)) {
-            setActiveTab(activeTabOverride);
-        }
-    }, [activeTabOverride, refreshHash]);
-
-    function changeTab(tabIndex: number) {
-        pauseAllVideos();
-        let nextTabIndex = tabIndex;
-        if (deselectable && activeTab === tabIndex) {
-            nextTabIndex = -1;
-        }
-        setActiveTab(nextTabIndex);
-        if (onActiveTabChange && activeTab !== nextTabIndex) {
-            onActiveTabChange(nextTabIndex);
-        }
+  useEffect(() => {
+    if (isDefined(activeTabOverride)) {
+      setActiveTab(activeTabOverride);
     }
+  }, [activeTabOverride, refreshHash]);
 
-    const [expandRef, updateExpandRef] = useStatefulElementRef<HTMLDivElement>();
-    const {expandButton, innerClasses, outerClasses} = useExpandContent(expandable ?? false, expandRef);
+  function changeTab(tabIndex: number) {
+    pauseAllVideos();
+    let nextTabIndex = tabIndex;
+    if (deselectable && activeTab === tabIndex) {
+      nextTabIndex = -1;
+    }
+    setActiveTab(nextTabIndex);
+    if (onActiveTabChange && activeTab !== nextTabIndex) {
+      onActiveTabChange(nextTabIndex);
+    }
+  }
 
-    return <div className={classNames({"mt-4": isDefined(expandButton)}, outerClasses)} ref={updateExpandRef}>
-        {expandButton}
-        <div
-            className={classNames(className, innerClasses, "position-relative")}
-        >
-            <Nav tabs className="flex-wrap">
-                {Object.keys(children).map((tabTitle, mapIndex) => {
-                    const tabIndex = mapIndex + 1;
-                    const c = callOrString(tabTitleClass, tabTitle, tabIndex);
-                    const classes = activeTab === tabIndex ? `${c} active` : c;
-                    return <NavItem key={tabTitle} className="px-3 text-center">
-                        <NavLink
-                            tag="button" type="button" name={tabTitle.replace(" ", "_")}
-                            tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}
-                        >
-                            <Markup encoding={"latex"}>
-                                {tabTitle}
-                            </Markup>
-                        </NavLink>
-                    </NavItem>;
-                })}
-            </Nav>
+  const [expandRef, updateExpandRef] = useStatefulElementRef<HTMLDivElement>();
+  const { expandButton, innerClasses, outerClasses } = useExpandContent(expandable ?? false, expandRef);
 
-            <ExpandableParentContext.Provider value={true}>
-                <TabContent activeTab={activeTab} className={tabContentClass}>
-                    {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
-                        const tabIndex = mapIndex + 1;
-                        return <TabPane key={tabTitle} tabId={tabIndex}>
-                            {tabBody as ReactNode}
-                        </TabPane>;
-                    })}
-                </TabContent>
-            </ExpandableParentContext.Provider>
-        </div>
-    </div>;
+  return (
+    <div className={classNames({ "mt-4": isDefined(expandButton) }, outerClasses)} ref={updateExpandRef}>
+      {expandButton}
+      <div className={classNames(className, innerClasses, "position-relative")}>
+        <Nav tabs className="flex-wrap">
+          {Object.keys(children).map((tabTitle, mapIndex) => {
+            const tabIndex = mapIndex + 1;
+            const c = callOrString(tabTitleClass, tabTitle, tabIndex);
+            const classes = activeTab === tabIndex ? `${c} active` : c;
+            return (
+              <NavItem key={tabTitle} className="px-3 text-center">
+                <NavLink
+                  tag="button"
+                  type="button"
+                  name={tabTitle.replace(" ", "_")}
+                  tabIndex={0}
+                  className={classes}
+                  onClick={() => changeTab(tabIndex)}
+                >
+                  <Markup encoding={"latex"}>{tabTitle}</Markup>
+                </NavLink>
+              </NavItem>
+            );
+          })}
+        </Nav>
+
+        <ExpandableParentContext.Provider value={true}>
+          <TabContent activeTab={activeTab} className={tabContentClass}>
+            {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
+              const tabIndex = mapIndex + 1;
+              return (
+                <TabPane key={tabTitle} tabId={tabIndex}>
+                  {tabBody as ReactNode}
+                </TabPane>
+              );
+            })}
+          </TabContent>
+        </ExpandableParentContext.Provider>
+      </div>
+    </div>
+  );
 };

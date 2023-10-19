@@ -1,7 +1,4 @@
-import {
-  needToUpdateUserContextDetails,
-  needToVerifyEmail,
-} from "../../app/state";
+import { needToUpdateUserContextDetails, needToVerifyEmail } from "../../app/state";
 
 jest.useFakeTimers();
 

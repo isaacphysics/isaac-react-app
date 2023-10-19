@@ -12,7 +12,8 @@
     white-space: nowrap;
   }
 
-  .progress-bar-inner, .progress-bar-secondary {
+  .progress-bar-inner,
+  .progress-bar-secondary {
     position: absolute;
     background: $primary;
     height: 100%;

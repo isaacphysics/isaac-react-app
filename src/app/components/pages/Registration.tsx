@@ -90,17 +90,9 @@ export const Registration = () => {
                 />
                 <Label htmlFor="teacher-input">
                   Teacher
-                  <span
-                    id={`registration-tooltip`}
-                    className="icon-help ml-2"
-                  />
-                  <UncontrolledTooltip
-                    target={`registration-tooltip`}
-                    placement="bottom"
-                  >
-                    {
-                      "You will be required to provide evidence of being a teacher."
-                    }
+                  <span id={`registration-tooltip`} className="icon-help ml-2" />
+                  <UncontrolledTooltip target={`registration-tooltip`} placement="bottom">
+                    {"You will be required to provide evidence of being a teacher."}
                   </UncontrolledTooltip>
                 </Label>
               </Row>
@@ -111,10 +103,7 @@ export const Registration = () => {
               )}
               <Row className="m-0">
                 <Col md={5} className="p-0 mt-4">
-                  <Button
-                    onClick={handleContinue}
-                    className="btn btn-block btn-secondary border-0"
-                  >
+                  <Button onClick={handleContinue} className="btn btn-block btn-secondary border-0">
                     Continue
                   </Button>
                 </Col>

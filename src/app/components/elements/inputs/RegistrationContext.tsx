@@ -22,27 +22,21 @@ interface UserContextRowProps {
   submissionAttempted: boolean;
   existingUserContexts: UserContext[];
   setBooleanNotation: (bn: BooleanNotation) => void;
-  setDisplaySettings: (
-    ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)
-  ) => void;
+  setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
 }
 interface RegistrationContextProps {
   userContexts: UserContext[];
   setUserContexts: (ucs: UserContext[]) => void;
   setBooleanNotation: (bn: BooleanNotation) => void;
   displaySettings: Nullable<DisplaySettings>;
-  setDisplaySettings: (
-    ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)
-  ) => void;
+  setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
   submissionAttempted: boolean;
   userRole?: UserRole;
 }
 
 interface ShowOtherContentProps {
   displaySettings: Nullable<DisplaySettings>;
-  setDisplaySettings: (
-    ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)
-  ) => void;
+  setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
   isStudent?: boolean;
 }
 
@@ -56,9 +50,7 @@ function UserContextRow({
   setBooleanNotation,
   setDisplaySettings,
 }: UserContextRowProps) {
-  const onlyUCWithThisStage =
-    existingUserContexts.filter((uc) => uc.stage === userContext.stage)
-      .length === 1;
+  const onlyUCWithThisStage = existingUserContexts.filter((uc) => uc.stage === userContext.stage).length === 1;
   return (
     <>
       <Col xs={5} md={5} lg={5} className="pr-1 pl-0">
@@ -68,16 +60,11 @@ function UserContextRow({
           type="select"
           aria-label="Stage"
           value={userContext.stage || ""}
-          invalid={
-            submissionAttempted &&
-            !Object.values(STAGE).includes(userContext.stage as STAGE)
-          }
+          invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
           onChange={(e) => {
             const stage = e.target.value as STAGE;
             // Set exam board to something sensible (for CS)
-            const onlyOneAtThisStage =
-              existingUserContexts.filter((uc) => uc.stage === e.target.value)
-                .length === 1;
+            const onlyOneAtThisStage = existingUserContexts.filter((uc) => uc.stage === e.target.value).length === 1;
             const examBoard =
               getFilteredExamBoardOptions({
                 byStages: [stage || STAGE.ALL],
@@ -102,11 +89,7 @@ function UserContextRow({
           </option>
           {getFilteredStageOptions({
             byUserContexts: existingUserContexts.filter(
-              (uc) =>
-                !(
-                  uc.stage === userContext.stage &&
-                  uc.examBoard === userContext.examBoard
-                )
+              (uc) => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard),
             ),
             includeNullOptions: showNullStageOption,
             hideFurtherA: true,
@@ -125,12 +108,7 @@ function UserContextRow({
           type="select"
           aria-label="Exam Board"
           value={userContext.examBoard || ""}
-          invalid={
-            submissionAttempted &&
-            !Object.values(EXAM_BOARD).includes(
-              userContext.examBoard as EXAM_BOARD
-            )
-          }
+          invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
           onChange={(e) => {
             setUserContext({
               ...userContext,
@@ -139,8 +117,7 @@ function UserContextRow({
             if (e.target.value) {
               setBooleanNotation({
                 ...EMPTY_BOOLEAN_NOTATION_RECORD,
-                [examBoardBooleanNotationMap[e.target.value as EXAM_BOARD]]:
-                  true,
+                [examBoardBooleanNotationMap[e.target.value as EXAM_BOARD]]: true,
               });
             }
           }}
@@ -152,11 +129,7 @@ function UserContextRow({
             byStages: [(userContext.stage as STAGE) || STAGE.ALL],
             includeNullOptions: onlyUCWithThisStage,
             byUserContexts: existingUserContexts.filter(
-              (uc) =>
-                !(
-                  uc.stage === userContext.stage &&
-                  uc.examBoard === userContext.examBoard
-                )
+              (uc) => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard),
             ),
           }).map((item) => (
             <option key={item.value} value={item.value}>
@@ -169,11 +142,7 @@ function UserContextRow({
   );
 }
 
-const ShowOtherContent = ({
-  displaySettings,
-  setDisplaySettings,
-  isStudent,
-}: ShowOtherContentProps) => {
+const ShowOtherContent = ({ displaySettings, setDisplaySettings, isStudent }: ShowOtherContentProps) => {
   return (
     <Label className={`m-0 pt-3 ${isStudent ? "pt-md-1" : ""}`}>
       <CustomInput
@@ -181,9 +150,7 @@ const ShowOtherContent = ({
         id={`hide-content-check`}
         className="d-inline-block larger-checkbox"
         checked={
-          isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT)
-            ? !displaySettings?.HIDE_NON_AUDIENCE_CONTENT
-            : true
+          isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings?.HIDE_NON_AUDIENCE_CONTENT : true
         }
         onChange={(e) =>
           setDisplaySettings((oldDs) => ({
@@ -220,16 +187,11 @@ const TeacherContext = ({
       </Label>
       <React.Fragment>
         <span id={`show-me-content`} className="icon-help" />
-        <UncontrolledTooltip
-          placement={"left-start"}
-          target={`show-me-content`}
-        >
-          Add a stage and examination board for each qualification you are
-          teaching.
+        <UncontrolledTooltip placement={"left-start"} target={`show-me-content`}>
+          Add a stage and examination board for each qualification you are teaching.
           <br />
-          On content pages, this will allow you to quickly switch between your
-          personalised views of the content, depending on which class you are
-          currently teaching.
+          On content pages, this will allow you to quickly switch between your personalised views of the content,
+          depending on which class you are currently teaching.
         </UncontrolledTooltip>
       </React.Fragment>
       {userContexts.map((userContext, index) => {
@@ -240,9 +202,7 @@ const TeacherContext = ({
             byUserContexts: userContexts,
             hideFurtherA: true,
           }).length > 0 &&
-          userContexts.findIndex(
-            (p) => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL
-          ) === -1;
+          userContexts.findIndex((p) => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1;
 
         return (
           <React.Fragment key={index}>
@@ -251,11 +211,7 @@ const TeacherContext = ({
                 userContext={userContext}
                 showNullStageOption={userContexts.length <= 1}
                 submissionAttempted={submissionAttempted}
-                setUserContext={(newUc) =>
-                  setUserContexts(
-                    userContexts.map((uc, i) => (i === index ? newUc : uc))
-                  )
-                }
+                setUserContext={(newUc) => setUserContexts(userContexts.map((uc, i) => (i === index ? newUc : uc)))}
                 existingUserContexts={userContexts}
                 setBooleanNotation={setBooleanNotation}
                 setDisplaySettings={setDisplaySettings}
@@ -266,9 +222,7 @@ const TeacherContext = ({
                   type="button"
                   className="mx-2 close float-none align-middle"
                   aria-label="clear stage row"
-                  onClick={() =>
-                    setUserContexts(userContexts.filter((uc, i) => i !== index))
-                  }
+                  onClick={() => setUserContexts(userContexts.filter((uc, i) => i !== index))}
                 >
                   ×
                 </button>
@@ -296,21 +250,14 @@ const TeacherContext = ({
                       <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                     </svg>
                   </button>
-                  <span className="ml-2 mt-1 pointer-cursor">
-                    Add another stage
-                  </span>
+                  <span className="ml-2 mt-1 pointer-cursor">Add another stage</span>
                 </Label>
               </Row>
             )}
 
             {index === userContexts.length - 1 &&
-              userContexts.findIndex(
-                (p) => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL
-              ) === -1 && (
-                <ShowOtherContent
-                  displaySettings={displaySettings}
-                  setDisplaySettings={setDisplaySettings}
-                />
+              userContexts.findIndex((p) => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1 && (
+                <ShowOtherContent displaySettings={displaySettings} setDisplaySettings={setDisplaySettings} />
               )}
 
             {submissionAttempted && !validateUserContexts(userContexts) && (
@@ -340,13 +287,9 @@ const StudentContext = ({
       </Label>
       <React.Fragment>
         <span id={`show-me-content`} className="icon-help" />
-        <UncontrolledTooltip
-          placement={"left-start"}
-          target={`show-me-content`}
-        >
-          Select a stage and examination board here to filter the content so
-          that you will only see material that is relevant for the qualification
-          you have chosen.
+        <UncontrolledTooltip placement={"left-start"} target={`show-me-content`}>
+          Select a stage and examination board here to filter the content so that you will only see material that is
+          relevant for the qualification you have chosen.
         </UncontrolledTooltip>
       </React.Fragment>
       {userContexts.map((userContext, index) => {
@@ -359,11 +302,7 @@ const StudentContext = ({
                   userContext={userContext}
                   showNullStageOption={userContexts.length <= 1}
                   submissionAttempted={submissionAttempted}
-                  setUserContext={(newUc) =>
-                    setUserContexts(
-                      userContexts.map((uc, i) => (i === index ? newUc : uc))
-                    )
-                  }
+                  setUserContext={(newUc) => setUserContexts(userContexts.map((uc, i) => (i === index ? newUc : uc)))}
                   existingUserContexts={userContexts}
                   setBooleanNotation={setBooleanNotation}
                   setDisplaySettings={setDisplaySettings}
@@ -373,9 +312,7 @@ const StudentContext = ({
 
             <Col md={6} className="px-0 px-md-3">
               {index === userContexts.length - 1 &&
-                userContexts.findIndex(
-                  (p) => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL
-                ) === -1 && (
+                userContexts.findIndex((p) => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1 && (
                   <ShowOtherContent
                     displaySettings={displaySettings}
                     setDisplaySettings={setDisplaySettings}
@@ -396,13 +333,6 @@ const StudentContext = ({
   );
 };
 
-export const RegistrationContext = ({
-  userRole,
-  ...otherProps
-}: RegistrationContextProps) => {
-  return userRole === "STUDENT" ? (
-    <StudentContext {...otherProps} />
-  ) : (
-    <TeacherContext {...otherProps} />
-  );
+export const RegistrationContext = ({ userRole, ...otherProps }: RegistrationContextProps) => {
+  return userRole === "STUDENT" ? <StudentContext {...otherProps} /> : <TeacherContext {...otherProps} />;
 };

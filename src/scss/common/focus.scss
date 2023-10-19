@@ -127,15 +127,18 @@
   outline: 0.2rem solid $focus-blue;
 }
 
-::placeholder { // Firefox, Chrome, Opera
+::placeholder {
+  // Firefox, Chrome, Opera
   color: $gray-160 !important;
 }
 
-:-ms-input-placeholder { // Internet Explorer 10-11
+:-ms-input-placeholder {
+  // Internet Explorer 10-11
   color: $gray-160 !important;
 }
 
-::-ms-input-placeholder { // Microsoft Edge
+::-ms-input-placeholder {
+  // Microsoft Edge
   color: $gray-160 !important;
 }
 

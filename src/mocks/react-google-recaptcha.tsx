@@ -1,22 +1,19 @@
-import React, { useRef } from 'react';
+import React, { useRef } from "react";
 
 interface MockReCAPTCHAProps {
-    onChange: () => void;
+  onChange: () => void;
 }
 
 export interface MockReCAPTCHARef {
-    getValue: () => string | null;
-  }
+  getValue: () => string | null;
+}
 
-const MockReCAPTCHA:React.ForwardRefRenderFunction<MockReCAPTCHARef, MockReCAPTCHAProps> = ({
-  onChange,
-},
-ref) => {
+const MockReCAPTCHA: React.ForwardRefRenderFunction<MockReCAPTCHARef, MockReCAPTCHAProps> = ({ onChange }, ref) => {
   const valueRef = useRef<string | null>(null);
 
   const handleCheckboxChange = () => {
-    valueRef.current = 'mocked-recaptcha-token'
-    onChange(); 
+    valueRef.current = "mocked-recaptcha-token";
+    onChange();
   };
 
   React.useImperativeHandle(ref, () => ({
@@ -26,8 +23,8 @@ ref) => {
   return (
     <div data-testid="mock-recaptcha">
       <label>
-        <input type="checkbox" onChange={handleCheckboxChange} data-testid="mock-recaptcha-checkbox"/>
-        I am a mock reCAPTCHA checkbox
+        <input type="checkbox" onChange={handleCheckboxChange} data-testid="mock-recaptcha-checkbox" />I am a mock
+        reCAPTCHA checkbox
       </label>
     </div>
   );

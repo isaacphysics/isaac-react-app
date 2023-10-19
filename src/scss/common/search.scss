@@ -1,7 +1,8 @@
 // ISAAC
 // Search page
 
-#search-page, #progress-questions {
+#search-page,
+#progress-questions {
   .search-header {
     display: flex;
     flex-wrap: wrap;
@@ -28,7 +29,6 @@
     }
   }
 }
-
 
 // NOMENSA search.scss
 // REMEMBER TO REPLACE ./assets/ WITH /assets/
@@ -64,12 +64,12 @@ nav.search {
     }
 
     .navbar-toggler-icon {
-      background-image: url('/assets/search-icon.svg');
+      background-image: url("/assets/search-icon.svg");
     }
 
     &.open {
       .navbar-toggler-icon {
-        background-image: url('/assets/cross.svg');
+        background-image: url("/assets/cross.svg");
       }
     }
   }

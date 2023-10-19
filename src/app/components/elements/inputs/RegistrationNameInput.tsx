@@ -10,12 +10,7 @@ interface RegistrationNameProps {
   attemptedSignUp: boolean;
 }
 
-export const RegistrationNameInput = ({
-  userToUpdate,
-  setUserToUpdate,
-  attemptedSignUp,
-}: RegistrationNameProps) => {
-
+export const RegistrationNameInput = ({ userToUpdate, setUserToUpdate, attemptedSignUp }: RegistrationNameProps) => {
   const nameFields = [
     {
       label: "First name",

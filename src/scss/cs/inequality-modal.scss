@@ -1,50 +1,50 @@
 @import "../common/inequality-modal.scss";
 
 #inequality-modal {
-    .inequality-ui {
-        &.button {
-            &.confirm {
-                background-image: url('/assets/inequality-confirm-cs.svg');
-            }
-            &.centre {
-                background-image: url('/assets/inequality-centre-cs.svg');
-            }
-            &.help {
-                background-image: url('/assets/inequality-help-cs.svg');
-            }
-            &.show-question {
-                background-image: url('/assets/inequality-togglequestion-cs.svg');
-            }
-        }
-
-        &.katex-preview {
-            border: 1px solid darken(theme-color('primary'), 10%);
-        }
-
-        &.menu-bar {
-            background: theme-color('primary');
-
-            div.top-menu {
-                &.numbers {
-                    & > div {
-                        &.input-box {
-                            .menu-item {
-                                svg.v-hexagon {
-                                    stroke: darken(theme-color('primary'), 10%);
-                                }
-                            }
-                        }
-
-                        &.keypad-box {
-                            .key {
-                                svg.v-hexagon {
-                                    stroke: darken(theme-color('primary'), 10%);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+  .inequality-ui {
+    &.button {
+      &.confirm {
+        background-image: url("/assets/inequality-confirm-cs.svg");
+      }
+      &.centre {
+        background-image: url("/assets/inequality-centre-cs.svg");
+      }
+      &.help {
+        background-image: url("/assets/inequality-help-cs.svg");
+      }
+      &.show-question {
+        background-image: url("/assets/inequality-togglequestion-cs.svg");
+      }
     }
+
+    &.katex-preview {
+      border: 1px solid darken(theme-color("primary"), 10%);
+    }
+
+    &.menu-bar {
+      background: theme-color("primary");
+
+      div.top-menu {
+        &.numbers {
+          & > div {
+            &.input-box {
+              .menu-item {
+                svg.v-hexagon {
+                  stroke: darken(theme-color("primary"), 10%);
+                }
+              }
+            }
+
+            &.keypad-box {
+              .key {
+                svg.v-hexagon {
+                  stroke: darken(theme-color("primary"), 10%);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

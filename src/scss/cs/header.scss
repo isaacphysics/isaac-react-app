@@ -2,9 +2,9 @@
 
 header {
   z-index: 20;
-  background-image: url('/assets/Line.svg');
+  background-image: url("/assets/Line.svg");
   @include respond-above(sm) {
-    background-image: url('/assets/Line-alt.svg');
+    background-image: url("/assets/Line-alt.svg");
     background-size: 100% 60%;
   }
 }
@@ -15,5 +15,5 @@ div.header-progress {
 }
 
 .header-links {
-  margin-top: .7rem;
+  margin-top: 0.7rem;
 }

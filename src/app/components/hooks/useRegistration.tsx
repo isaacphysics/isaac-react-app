@@ -1,18 +1,7 @@
 import { useState } from "react";
-import {
-  FIRST_LOGIN_STATE,
-  KEY,
-  allowedDomain,
-  persistence,
-  validateForm,
-} from "../../services";
+import { FIRST_LOGIN_STATE, KEY, allowedDomain, persistence, validateForm } from "../../services";
 import { useAppDispatch, registerUser, submitMessage } from "../../state";
-import {
-  BooleanNotation,
-  DisplaySettings,
-  UserEmailPreferences,
-  ValidationUser,
-} from "../../../IsaacAppTypes";
+import { BooleanNotation, DisplaySettings, UserEmailPreferences, ValidationUser } from "../../../IsaacAppTypes";
 import { UserContext } from "../../../IsaacApiTypes";
 import ReactGA from "react-ga4";
 import { Immutable } from "immer";
@@ -28,7 +17,7 @@ interface RegisterProps {
   verificationDetails?: string | undefined;
   otherInformation?: string | undefined;
   school?: string | undefined;
-  recaptchaToken: string
+  recaptchaToken: string;
 }
 
 interface RegistrationOptions {
@@ -50,7 +39,7 @@ const useRegistration = ({ isTeacher }: RegistrationOptions) => {
     verificationDetails,
     otherInformation,
     school,
-    recaptchaToken
+    recaptchaToken,
   }: RegisterProps) => {
     setAttemptedSignUp(true);
 
@@ -59,7 +48,7 @@ const useRegistration = ({ isTeacher }: RegistrationOptions) => {
       unverifiedPassword,
       userContexts,
       dobOver13CheckboxChecked,
-      emailPreferences
+      emailPreferences,
     );
 
     const userPreferencesToUpdate = {
@@ -71,20 +60,9 @@ const useRegistration = ({ isTeacher }: RegistrationOptions) => {
     const newUser = { ...registrationUser, loggedIn: false };
 
     const handleTeacherRegistration = () => {
-      if (
-        isValidForm &&
-        allowedDomain(registrationUser.email) &&
-        verificationDetails
-      ) {
+      if (isValidForm && allowedDomain(registrationUser.email) && verificationDetails) {
         // create account
-        dispatch(
-          registerUser(
-            newUser,
-            userPreferencesToUpdate,
-            userContexts,
-            recaptchaToken
-          )
-        );
+        dispatch(registerUser(newUser, userPreferencesToUpdate, userContexts, recaptchaToken));
         ReactGA.event({
           category: "user",
           action: "registration",
@@ -119,26 +97,16 @@ const useRegistration = ({ isTeacher }: RegistrationOptions) => {
             emailAddress,
             subject,
             message,
-          })
+          }),
         );
       }
     };
 
     const handleStudentRegistration = () => {
       if (isValidForm) {
-        persistence.session.save(
-          KEY.FIRST_LOGIN,
-          FIRST_LOGIN_STATE.FIRST_LOGIN
-        );
+        persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
-        dispatch(
-          registerUser(
-            newUser,
-            userPreferencesToUpdate,
-            userContexts,
-            recaptchaToken
-          )
-        );
+        dispatch(registerUser(newUser, userPreferencesToUpdate, userContexts, recaptchaToken));
         ReactGA.event({
           category: "user",
           action: "registration",

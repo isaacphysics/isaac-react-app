@@ -10,7 +10,7 @@ const getDateOfBirthInputs = () => {
   return ["day", "month", "year"].map((unit) =>
     screen.getByRole("combobox", {
       name: new RegExp(`${unit} of birth`, "i"),
-    })
+    }),
   );
 };
 
@@ -29,10 +29,7 @@ describe("RegistrationDobInput", () => {
     jest.clearAllMocks();
   });
 
-  const setupTest = (
-    path: "/register/student" | "/register/teacher",
-    props = {}
-  ) => {
+  const setupTest = (path: "/register/student" | "/register/teacher", props = {}) => {
     Object.defineProperty(window, "location", {
       value: {
         pathname: path,
@@ -82,7 +79,7 @@ describe("RegistrationDobInput", () => {
     expect(mockSetUserToUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
         dateOfBirth: expectedDate,
-      })
+      }),
     );
   });
 
@@ -133,9 +130,7 @@ describe("RegistrationDobInput", () => {
     const over13Checkbox = getOver13Checkbox();
     expect(over13Checkbox).toBeInvalid();
     const dobValidationFeedbackElement = getDobFeedbackElement();
-    expect(dobValidationFeedbackElement.textContent).toContain(
-      "Please enter a valid date of birth"
-    );
+    expect(dobValidationFeedbackElement.textContent).toContain("Please enter a valid date of birth");
   });
 
   it("if date of birth is selected, user can clear it using X button", () => {
@@ -154,7 +149,7 @@ describe("RegistrationDobInput", () => {
     expect(mockSetUserToUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
         dateOfBirth: undefined,
-      })
+      }),
     );
     expect(mockSetDobOver13CheckboxChecked).toHaveBeenCalledTimes(1);
     expect(mockSetDobOver13CheckboxChecked).toHaveBeenCalledWith(false);
@@ -168,8 +163,6 @@ describe("RegistrationDobInput", () => {
       },
     });
     const dobValidationFeedbackElement = getDobFeedbackElement();
-    expect(dobValidationFeedbackElement.textContent).toContain(
-      "Please enter a valid date of birth"
-    );
+    expect(dobValidationFeedbackElement.textContent).toContain("Please enter a valid date of birth");
   });
 });

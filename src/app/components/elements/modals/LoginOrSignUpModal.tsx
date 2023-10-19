@@ -1,12 +1,6 @@
 import React, { useEffect } from "react";
 import { Button, Col, CustomInput, Form, Row } from "reactstrap";
-import {
-  closeActiveModal,
-  selectors,
-  store,
-  useAppDispatch,
-  useAppSelector,
-} from "../../../state";
+import { closeActiveModal, selectors, store, useAppDispatch, useAppSelector } from "../../../state";
 import { useLocation } from "react-router-dom";
 import {
   EmailPasswordInputs,
@@ -26,8 +20,7 @@ const LoginOrSignUpBody = () => {
 
   const { loginFunctions, setStateFunctions, loginValues } = useLoginLogic();
   const { attemptLogIn, signUp, validateAndLogIn } = loginFunctions;
-  const { setEmail, setPassword, setRememberMe, setPasswordResetAttempted } =
-    setStateFunctions;
+  const { setEmail, setPassword, setRememberMe, setPasswordResetAttempted } = setStateFunctions;
   const {
     email,
     totpChallengePending,
@@ -41,10 +34,7 @@ const LoginOrSignUpBody = () => {
 
   // When modal is first shown, record the current question page to redirect back to after successful auth
   useEffect(() => {
-    persistence.save(
-      KEY.AFTER_AUTH_PATH,
-      location.pathname + location.search + location.hash
-    );
+    persistence.save(KEY.AFTER_AUTH_PATH, location.pathname + location.search + location.hash);
   }, []);
 
   useEffect(() => {
@@ -69,8 +59,7 @@ const LoginOrSignUpBody = () => {
             <br />
           </h1>
           <p>
-            You need to be logged in to your account to{" "}
-            <b>save your answers and progress</b>. If you don&apos;t have an
+            You need to be logged in to your account to <b>save your answers and progress</b>. If you don&apos;t have an
             account, you can <b>sign up today for free</b>.
           </p>
           <br />

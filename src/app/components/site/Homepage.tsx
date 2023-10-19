@@ -43,10 +43,7 @@ export const Homepage = () => {
   let carouselNewsItems: IsaacPodDTO[] = [];
 
   if (news) {
-    if (
-      (user?.loggedIn && user?.role === "TEACHER" && teacherPromoItem) ||
-      user?.loggedIn === false
-    ) {
+    if ((user?.loggedIn && user?.role === "TEACHER" && teacherPromoItem) || user?.loggedIn === false) {
       carouselNewsItems = news;
     } else {
       carouselNewsItems = news.slice(1);
@@ -58,10 +55,7 @@ export const Homepage = () => {
       <div id="homepage">
         <section id="call-to-action" className="homepageHero">
           <Container className="pt-4 z1">
-            <Dashboard
-              promoItem={teacherPromoItem}
-              featuredNewsItem={featuredNewsItem}
-            />
+            <Dashboard promoItem={teacherPromoItem} featuredNewsItem={featuredNewsItem} />
           </Container>
         </section>
 
@@ -83,11 +77,7 @@ export const Homepage = () => {
                 until={promo}
                 thenRender={() => (
                   <Container>
-                    <Col className="py-5">
-                      {loggedOutPromoItem && (
-                        <PromoContent item={loggedOutPromoItem} />
-                      )}
-                    </Col>
+                    <Col className="py-5">{loggedOutPromoItem && <PromoContent item={loggedOutPromoItem} />}</Col>
                   </Container>
                 )}
               />
@@ -101,10 +91,7 @@ export const Homepage = () => {
               "mt-lg-n5 pt-lg-0": user?.loggedIn ?? false,
             })}
           >
-            <div
-              data-testid={"news-carousel"}
-              className="eventList pt-5 pattern-03-reverse"
-            >
+            <div data-testid={"news-carousel"} className="eventList pt-5 pattern-03-reverse">
               <h2 className="h-title mb-4">News</h2>
               {user?.loggedIn && user.role !== "TEACHER" && (
                 <div className="d-block d-lg-none mb-4 mb-lg-0">
@@ -146,12 +133,7 @@ export const Homepage = () => {
                 <h3 className="text-center text-md-left mr-md-4 mr-lg-0 mb-3 mb-md-0">
                   Sign up to track your progress
                 </h3>
-                <Button
-                  tag={Link}
-                  size="lg"
-                  className="ml-md-auto mr-md-3 mr-lg-5 btn-xl"
-                  to={"/register"}
-                >
+                <Button tag={Link} size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-xl" to={"/register"}>
                   Sign up
                 </Button>
               </Col>

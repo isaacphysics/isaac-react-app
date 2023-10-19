@@ -64,14 +64,16 @@
     "build-stats": "webpack --env prod --config config/webpack.config.cs.js --profile --json > bundle-stats.json",
     "analyse-bundle": "webpack-bundle-analyzer bundle-stats.json build-cs",
     "build-cs-renderer": "webpack --env prod --config config/webpack.config.cs.renderer.js",
-    "start-renderer": "webpack-dev-server --hot --port 3001 --history-api-fallback --config config/webpack.config.cs.renderer.js --allowed-hosts=true"
+    "start-renderer": "webpack-dev-server --hot --port 3001 --history-api-fallback --config config/webpack.config.cs.renderer.js --allowed-hosts=true",
+    "format": "prettier . --write"
   },
   "eslintConfig": {
     "extends": [
       "eslint:recommended",
       "plugin:react/recommended",
       "plugin:@typescript-eslint/recommended",
-      "plugin:jsx-a11y/strict"
+      "plugin:jsx-a11y/strict",
+      "plugin:prettier/recommended"
     ],
     "plugins": [
       "react-hooks",
@@ -149,7 +151,9 @@
     "css-loader": "^6.8.1",
     "dotenv": "^16.3.1",
     "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "file-loader": "^6.2.0",
@@ -159,6 +163,7 @@
     "jest-watch-typeahead": "^2.2.2",
     "mini-css-extract-plugin": "^2.7.6",
     "msw": "^1.3.1",
+    "prettier": "^3.0.3",
     "react-app-polyfill": "^3.0.0",
     "react-leaflet": "^3.2.5",
     "react-remove-props-loader": "^1.2.3",

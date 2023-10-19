@@ -1,15 +1,10 @@
 import { EventOverviews } from "../../../../../app/components/elements/panels/EventOverviews";
-import { TestUserRole, renderTestEnvironment } from "../../../../utils"
+import { TestUserRole, renderTestEnvironment } from "../../../../utils";
 import { screen, within } from "@testing-library/react";
-import {
-  mockUser,
-  mockFutureEventOverviews,
-  mockPastEventOverviews,
-} from "../../../../../mocks/data";
+import { mockUser, mockFutureEventOverviews, mockPastEventOverviews } from "../../../../../mocks/data";
 import { rest } from "msw";
 import { API_PATH } from "../../../../../app/services";
 import userEvent from "@testing-library/user-event";
-
 
 const getFirstEventDetails = () => {
   const table = screen.getByRole("table");
@@ -39,10 +34,7 @@ const getExpectedValues = ({
         event.numberOfWaitingListBookings,
         event.numberAttended,
         event.numberAbsent,
-        `${
-          (event.numberAttended / (event.numberAttended + event.numberAbsent)) *
-          100
-        }%`,
+        `${(event.numberAttended / (event.numberAttended + event.numberAbsent)) * 100}%`,
       ];
     case "Future":
     default:
@@ -96,7 +88,7 @@ describe("Admin Event Manager", () => {
   it("renders warning for Event Leader user", () => {
     setupTest("EVENT_LEADER");
     const eventLeaderWarning = screen.getByText(
-      "As an event leader, you are only able to see the details of events which you manage."
+      "As an event leader, you are only able to see the details of events which you manage.",
     );
     expect(eventLeaderWarning).toBeInTheDocument();
   });
@@ -121,7 +113,7 @@ describe("Admin Event Manager", () => {
       expect(
         screen.getByRole("columnheader", {
           name: header,
-        })
+        }),
       ).toBeInTheDocument();
     });
   });
@@ -133,7 +125,7 @@ describe("Admin Event Manager", () => {
     const rows = screen.getAllByRole("row", table);
     expect(rows).toHaveLength(2);
     const futureEvent = screen.getByText(
-      `${mockFutureEventOverviews.results[0].title} - ${mockFutureEventOverviews.results[0].subtitle}`
+      `${mockFutureEventOverviews.results[0].title} - ${mockFutureEventOverviews.results[0].subtitle}`,
     );
     expect(futureEvent).toBeInTheDocument();
   });
@@ -144,7 +136,7 @@ describe("Admin Event Manager", () => {
     const filterSelection = screen.getByRole("combobox");
     await userEvent.selectOptions(filterSelection, ["PAST"]);
     const pastEvent = await screen.findByText(
-      `${mockPastEventOverviews.results[0].title} - ${mockPastEventOverviews.results[0].subtitle}`
+      `${mockPastEventOverviews.results[0].title} - ${mockPastEventOverviews.results[0].subtitle}`,
     );
     expect(pastEvent).toBeInTheDocument();
     const table = screen.getByRole("table");
@@ -186,9 +178,7 @@ describe("Admin Event Manager", () => {
       name: "Manage",
     });
     await userEvent.click(manageButton);
-    expect(mockSetSelectedEventId).toHaveBeenCalledWith(
-      mockFutureEventOverviews.results[0].id
-    );
+    expect(mockSetSelectedEventId).toHaveBeenCalledWith(mockFutureEventOverviews.results[0].id);
   });
 
   it("if no matching events are found, a message is displayed", async () => {
@@ -202,16 +192,11 @@ describe("Admin Event Manager", () => {
       initialRouteEntries: ["/admin/events"],
       extraEndpoints: [
         rest.get(API_PATH + "/events/overview", (req, res, ctx) => {
-          return res(
-            ctx.status(200),
-            ctx.json({ results: [], totalResults: 0 })
-          );
+          return res(ctx.status(200), ctx.json({ results: [], totalResults: 0 }));
         }),
       ],
     });
-    const noEventsMessage = await screen.findByText(
-      "No events to display with this filter setting"
-    );
+    const noEventsMessage = await screen.findByText("No events to display with this filter setting");
     expect(noEventsMessage).toBeInTheDocument();
   });
 });

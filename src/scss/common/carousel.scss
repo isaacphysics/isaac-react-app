@@ -22,7 +22,7 @@
       }
     }
   }
-  > a[class^='carousel-control-'] {
+  > a[class^="carousel-control-"] {
     display: block;
     cursor: pointer;
     width: 16px;
@@ -30,7 +30,8 @@
     background-size: contain;
     background-position-y: center;
     opacity: 1;
-    &:focus, &:hover {
+    &:focus,
+    &:hover {
       height: 10%;
       display: block;
       margin-top: auto;
@@ -43,12 +44,12 @@
       opacity: 0;
     }
   }
-  > a[class*='next'] {
+  > a[class*="next"] {
     right: 3px;
-    background-image: url('/assets/chevron_right.svg');
+    background-image: url("/assets/chevron_right.svg");
   }
-  > a[class*='prev'] {
+  > a[class*="prev"] {
     left: 3px;
-    background-image: url('/assets/chevron_left.svg');
+    background-image: url("/assets/chevron_left.svg");
   }
 }

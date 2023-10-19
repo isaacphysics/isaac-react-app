@@ -3,252 +3,246 @@
 
 // Manually added/modified parts
 
-import {EXAM_BOARD} from "./app/services";
-import {Immutable} from "immer";
+import { EXAM_BOARD } from "./app/services";
+import { Immutable } from "immer";
 
 export interface IsaacCardDTO extends ContentDTO {
-    image?: ImageDTO;
-    clickUrl?: string;
-    disabled?: boolean;
-    verticalContent?: boolean;
+  image?: ImageDTO;
+  clickUrl?: string;
+  disabled?: boolean;
+  verticalContent?: boolean;
 }
 
 export interface IsaacCardDeckDTO extends ContentDTO {
-    cards?: IsaacCardDTO[];
+  cards?: IsaacCardDTO[];
 }
 
 export interface TestCaseDTO extends QuestionValidationResponseDTO {
-    expected?: boolean;
+  expected?: boolean;
 }
 
 export interface TestQuestionDTO extends ChoiceQuestionDTO {
-    testCases?: TestCaseDTO[];
+  testCases?: TestCaseDTO[];
 }
 
 // Generated using typescript-generator version 2.12.476 on 2021-03-01 09:58:17.
 
 export interface AssignmentDTO extends IAssignmentLike {
-    gameboardId?: string;
-    gameboard?: GameboardDTO;
-    groupId?: number;
-    groupName?: string;
-    ownerUserId?: number;
-    assignerSummary?: UserSummaryDTO;
-    notes?: string;
-    creationDate?: Date;
-    dueDate?: Date;
-    scheduledStartDate?: Date;
+  gameboardId?: string;
+  gameboard?: GameboardDTO;
+  groupId?: number;
+  groupName?: string;
+  ownerUserId?: number;
+  assignerSummary?: UserSummaryDTO;
+  notes?: string;
+  creationDate?: Date;
+  dueDate?: Date;
+  scheduledStartDate?: Date;
 }
 
 export interface AssignmentFeedbackDTO {
-    groupId: number;
-    assignmentId?: number;
-    errorMessage?: string;
+  groupId: number;
+  assignmentId?: number;
+  errorMessage?: string;
 }
 
 export interface GameboardDTO extends HasTitleOrId {
-    contents?: GameboardItem[];
-    wildCard?: IsaacWildcard;
-    wildCardPosition?: number;
-    creationDate?: Date;
-    gameFilter?: GameFilter;
-    ownerUserId?: number;
-    ownerUserInformation?: UserSummaryDTO;
-    tags?: string[];
-    creationMethod?: GameboardCreationMethod;
-    percentageCompleted?: number;
-    lastVisited?: Date;
-    startedQuestion?: boolean;
-    savedToCurrentUser?: boolean;
+  contents?: GameboardItem[];
+  wildCard?: IsaacWildcard;
+  wildCardPosition?: number;
+  creationDate?: Date;
+  gameFilter?: GameFilter;
+  ownerUserId?: number;
+  ownerUserInformation?: UserSummaryDTO;
+  tags?: string[];
+  creationMethod?: GameboardCreationMethod;
+  percentageCompleted?: number;
+  lastVisited?: Date;
+  startedQuestion?: boolean;
+  savedToCurrentUser?: boolean;
 }
 
 export interface GameboardListDTO extends ResultsWrapper<GameboardDTO> {
-    totalNotStarted?: number;
-    totalInProgress?: number;
-    totalCompleted?: number;
+  totalNotStarted?: number;
+  totalInProgress?: number;
+  totalCompleted?: number;
 }
 
 export interface GameboardProgressSummaryDTO {
-    assignmentId?: number;
-    gameboardId?: string;
-    gameboardTitle?: string;
-    dueDate?: Date;
-    creationDate?: Date;
-    questionPartsCorrect?: number;
-    questionPartsIncorrect?: number;
-    questionPartsNotAttempted?: number;
-    questionPartsTotal?: number;
-    passMark?: number;
-    questionPagesPerfect?: number;
-    questionPagesTotal?: number;
+  assignmentId?: number;
+  gameboardId?: string;
+  gameboardTitle?: string;
+  dueDate?: Date;
+  creationDate?: Date;
+  questionPartsCorrect?: number;
+  questionPartsIncorrect?: number;
+  questionPartsNotAttempted?: number;
+  questionPartsTotal?: number;
+  passMark?: number;
+  questionPagesPerfect?: number;
+  questionPagesTotal?: number;
 }
 
 export interface IsaacAnvilQuestionDTO extends QuestionDTO {
-    anvilApp?: AnvilAppDTO;
+  anvilApp?: AnvilAppDTO;
 }
 
-export interface IsaacConceptPageDTO extends SeguePageDTO {
-}
+export interface IsaacConceptPageDTO extends SeguePageDTO {}
 
 export interface IsaacEventPageDTO extends ContentDTO {
-    date?: Date;
-    bookingDeadline?: Date;
-    prepWorkDeadline?: Date;
-    location?: Location;
-    eventThumbnail?: Omit<ImageDTO, "altText">; // We don't want to use event thumbnail alt text for WCAG compliance (it's a decorative image, and conveys no meaning)
-    numberOfPlaces?: number;
-    groupReservationLimit?: number;
-    allowGroupReservations?: boolean;
-    eventStatus?: EventStatus;
-    placesAvailable?: number;
-    endDate?: Date;
+  date?: Date;
+  bookingDeadline?: Date;
+  prepWorkDeadline?: Date;
+  location?: Location;
+  eventThumbnail?: Omit<ImageDTO, "altText">; // We don't want to use event thumbnail alt text for WCAG compliance (it's a decorative image, and conveys no meaning)
+  numberOfPlaces?: number;
+  groupReservationLimit?: number;
+  allowGroupReservations?: boolean;
+  eventStatus?: EventStatus;
+  placesAvailable?: number;
+  endDate?: Date;
 }
 
-export interface IsaacFastTrackQuestionPageDTO extends IsaacQuestionPageDTO {
-}
+export interface IsaacFastTrackQuestionPageDTO extends IsaacQuestionPageDTO {}
 
 export interface IsaacFeaturedProfileDTO extends ContentDTO {
-    emailAddress?: string;
-    image?: ImageDTO;
-    homepage?: string;
+  emailAddress?: string;
+  image?: ImageDTO;
+  homepage?: string;
 }
 
-export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
-}
+export interface IsaacFreeTextQuestionDTO extends QuestionDTO {}
 
 export interface IsaacItemQuestionDTO extends QuestionDTO {
-    items?: ItemDTO[];
+  items?: ItemDTO[];
 }
 
 export interface IsaacMultiChoiceQuestionDTO extends QuestionDTO {
-    choices?: ChoiceDTO[];
+  choices?: ChoiceDTO[];
 }
 
 export interface IsaacNumericQuestionDTO extends QuestionDTO {
-    requireUnits?: boolean;
-    availableUnits?: string[];
-    knownUnits?: string[];
-    displayUnit?: string;
+  requireUnits?: boolean;
+  availableUnits?: string[];
+  knownUnits?: string[];
+  displayUnit?: string;
 }
 
 export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
-    disableIndentation?: boolean;
+  disableIndentation?: boolean;
 }
 
 export interface IsaacReorderQuestionDTO extends IsaacItemQuestionDTO {}
 
 export interface IsaacClozeQuestionDTO extends IsaacItemQuestionDTO {
-    withReplacement?: boolean;
+  withReplacement?: boolean;
 }
 
 export interface IsaacPodDTO extends ContentDTO {
-    image?: ImageDTO;
-    url?: string;
+  image?: ImageDTO;
+  url?: string;
 }
 
 export interface IsaacQuestionPageDTO extends SeguePageDTO {
-    difficulty?: number;
-    passMark?: number;
-    supersededBy?: string;
+  difficulty?: number;
+  passMark?: number;
+  supersededBy?: string;
 }
 
 export interface IsaacQuestionSummaryPageDTO extends SeguePageDTO {
-    featuredQuestions?: GameboardItem[];
-    topBoards?: GameboardDTO[];
-    extraordinaryQuestions?: ExternalReference[];
+  featuredQuestions?: GameboardItem[];
+  topBoards?: GameboardDTO[];
+  extraordinaryQuestions?: ExternalReference[];
 }
 
 export interface IsaacQuickQuestionDTO extends QuestionDTO {
-    answer?: ContentBaseDTO;
-    showConfidence?: boolean;
+  answer?: ContentBaseDTO;
+  showConfidence?: boolean;
 }
 
 export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
-    rubric?: ContentDTO;
-    visibleToStudents?: boolean;
-    hiddenFromRoles?: UserRole[];
-    defaultFeedbackMode?: QuizFeedbackMode;
-    total?: number;
-    sectionTotals?: { [index: string]: number };
-    individualFeedback?: QuizFeedbackDTO;
+  rubric?: ContentDTO;
+  visibleToStudents?: boolean;
+  hiddenFromRoles?: UserRole[];
+  defaultFeedbackMode?: QuizFeedbackMode;
+  total?: number;
+  sectionTotals?: { [index: string]: number };
+  individualFeedback?: QuizFeedbackDTO;
 }
 
-export interface IsaacQuizSectionDTO extends SeguePageDTO {
-}
+export interface IsaacQuizSectionDTO extends SeguePageDTO {}
 
 export interface IsaacStringMatchQuestionDTO extends QuestionDTO {
-    multiLineEntry?: boolean;
-    preserveTrailingWhitespace?: boolean;
+  multiLineEntry?: boolean;
+  preserveTrailingWhitespace?: boolean;
 }
 
 export interface IsaacRegexMatchQuestionDTO extends QuestionDTO {
-    multiLineEntry?: boolean;
+  multiLineEntry?: boolean;
 }
 
-
-export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO {
-}
+export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO {}
 
 export interface IsaacSymbolicQuestionDTO extends QuestionDTO {
-    formulaSeed?: string;
-    availableSymbols?: string[];
+  formulaSeed?: string;
+  availableSymbols?: string[];
 }
 
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
-    linkedGameboards?: GameboardDTO[];
+  linkedGameboards?: GameboardDTO[];
 }
 
 export interface IsaacWildcardDTO extends ContentDTO {
-    description?: string;
-    url?: string;
+  description?: string;
+  url?: string;
 }
 
 export interface QuestionPartConceptDTO {
-    title?: string;
-    bestLevel?: FastTrackConceptState;
-    upperQuestions?: GameboardItem[];
-    lowerQuestions?: GameboardItem[];
+  title?: string;
+  bestLevel?: FastTrackConceptState;
+  upperQuestions?: GameboardItem[];
+  lowerQuestions?: GameboardItem[];
 }
 
 export interface QuizAssignmentDTO extends IAssignmentLike, IHasQuizSummary {
-    assignerSummary?: UserSummaryDTO;
-    quizFeedbackMode?: QuizFeedbackMode;
-    attempt?: QuizAttemptDTO;
-    userFeedback?: QuizUserFeedbackDTO[];
-    quiz?: IsaacQuizDTO;
+  assignerSummary?: UserSummaryDTO;
+  quizFeedbackMode?: QuizFeedbackMode;
+  attempt?: QuizAttemptDTO;
+  userFeedback?: QuizUserFeedbackDTO[];
+  quiz?: IsaacQuizDTO;
 }
 
 export interface QuizAttemptDTO extends IHasQuizSummary {
-    id?: number;
-    userId?: number;
-    quizAssignmentId?: number;
-    startDate?: Date;
-    completedDate?: Date;
-    quiz?: IsaacQuizDTO;
-    quizAssignment?: QuizAssignmentDTO;
-    feedbackMode?: QuizFeedbackMode;
+  id?: number;
+  userId?: number;
+  quizAssignmentId?: number;
+  startDate?: Date;
+  completedDate?: Date;
+  quiz?: IsaacQuizDTO;
+  quizAssignment?: QuizAssignmentDTO;
+  feedbackMode?: QuizFeedbackMode;
 }
 
 export interface QuizFeedbackDTO {
-    complete?: boolean;
-    overallMark?: Mark;
-    sectionMarks?: { [index: string]: Mark };
-    questionMarks?: { [index: string]: Mark };
+  complete?: boolean;
+  overallMark?: Mark;
+  sectionMarks?: { [index: string]: Mark };
+  questionMarks?: { [index: string]: Mark };
 }
 
 export interface QuizUserFeedbackDTO {
-    user?: UserSummaryDTO;
-    feedback?: QuizFeedbackDTO;
+  user?: UserSummaryDTO;
+  feedback?: QuizFeedbackDTO;
 }
 
 export interface QuizAttemptFeedbackDTO {
-    user?: UserSummaryDTO;
-    attempt?: QuizAttemptDTO;
+  user?: UserSummaryDTO;
+  attempt?: QuizAttemptDTO;
 }
 
 export interface UserGameboardProgressSummaryDTO {
-    user?: UserSummaryDTO;
-    progress?: GameboardProgressSummaryDTO[];
+  user?: UserSummaryDTO;
+  progress?: GameboardProgressSummaryDTO[];
 }
 
 export interface EventBookingDTO {
@@ -265,186 +259,183 @@ export interface EventBookingDTO {
 }
 
 export interface FormulaValidationResponseDTO extends QuestionValidationResponseDTO {
-    correctExact?: boolean;
-    correctSymbolic?: boolean;
-    correctNumeric?: boolean;
+  correctExact?: boolean;
+  correctSymbolic?: boolean;
+  correctNumeric?: boolean;
 }
 
 export interface LocalAuthDTO {
-    email?: string;
-    password?: string;
-    rememberMe?: boolean;
-    _randomPadding?: string;
+  email?: string;
+  password?: string;
+  rememberMe?: boolean;
+  _randomPadding?: string;
 }
 
 export interface MFAResponseDTO {
-    mfaVerificationCode?: string;
-    rememberMe?: boolean;
+  mfaVerificationCode?: string;
+  rememberMe?: boolean;
 }
 
 export interface QuantityValidationResponseDTO extends QuestionValidationResponseDTO {
-    correctValue?: boolean;
-    correctUnits?: boolean;
+  correctValue?: boolean;
+  correctUnits?: boolean;
 }
 
 export interface QuestionValidationResponseDTO {
-    questionId?: string;
-    answer?: ChoiceDTO;
-    correct?: boolean;
-    explanation?: ContentDTO;
-    dateAttempted?: Date;
+  questionId?: string;
+  answer?: ChoiceDTO;
+  correct?: boolean;
+  explanation?: ContentDTO;
+  dateAttempted?: Date;
 }
 
 export interface ItemValidationResponseDTO extends QuestionValidationResponseDTO {
-    itemsCorrect?: boolean[];
+  itemsCorrect?: boolean[];
 }
 
 export interface UserGroupDTO {
-    id?: number;
-    groupName?: string;
-    ownerId?: number;
-    created?: Date;
-    lastUpdated?: Date;
-    token?: string;
-    archived?: boolean;
-    additionalManagerPrivileges?: boolean;
-    ownerSummary?: UserSummaryWithEmailAddressDTO;
-    additionalManagers?: UserSummaryWithEmailAddressDTO[];
-    _id?: number;
+  id?: number;
+  groupName?: string;
+  ownerId?: number;
+  created?: Date;
+  lastUpdated?: Date;
+  token?: string;
+  archived?: boolean;
+  additionalManagerPrivileges?: boolean;
+  ownerSummary?: UserSummaryWithEmailAddressDTO;
+  additionalManagers?: UserSummaryWithEmailAddressDTO[];
+  _id?: number;
 }
 
 export interface AnvilAppDTO extends ContentDTO {
-    appId?: string;
-    appAccessKey?: string;
+  appId?: string;
+  appAccessKey?: string;
 }
-export interface ChoiceDTO extends ContentDTO {
-}
+export interface ChoiceDTO extends ContentDTO {}
 
-export interface ChoiceQuestionDTO extends QuestionDTO {
-}
+export interface ChoiceQuestionDTO extends QuestionDTO {}
 
 export interface ContentBaseDTO {
-    id?: string;
-    type?: string;
-    tags?: string[];
-    version?: string;
-    audience?: AudienceContext[];
-    display?: { [index: string]: string[] };
+  id?: string;
+  type?: string;
+  tags?: string[];
+  version?: string;
+  audience?: AudienceContext[];
+  display?: { [index: string]: string[] };
 }
 
 export interface ContentDTO extends ContentBaseDTO {
-    title?: string;
-    subtitle?: string;
-    encoding?: string;
-    layout?: string;
-    expandable?: boolean;
-    children?: ContentBaseDTO[];
-    value?: string;
-    attribution?: string;
-    relatedContent?: ContentSummaryDTO[];
-    published?: boolean;
-    deprecated?: boolean;
-    level?: number;
+  title?: string;
+  subtitle?: string;
+  encoding?: string;
+  layout?: string;
+  expandable?: boolean;
+  children?: ContentBaseDTO[];
+  value?: string;
+  attribution?: string;
+  relatedContent?: ContentSummaryDTO[];
+  published?: boolean;
+  deprecated?: boolean;
+  level?: number;
 }
 
 export interface ContentSummaryDTO {
-    id?: string;
-    title?: string;
-    summary?: string;
-    type?: string;
-    level?: string;
-    tags?: string[];
-    url?: string;
-    correct?: boolean;
-    supersededBy?: string;
-    deprecated?: boolean;
-    difficulty?: string;
-    audience?: AudienceContext[];
+  id?: string;
+  title?: string;
+  summary?: string;
+  type?: string;
+  level?: string;
+  tags?: string[];
+  url?: string;
+  correct?: boolean;
+  supersededBy?: string;
+  deprecated?: boolean;
+  difficulty?: string;
+  audience?: AudienceContext[];
 }
 
 export interface QuizSummaryDTO extends ContentSummaryDTO {
-    visibleToStudents?: boolean;
-    hiddenFromRoles?: UserRole[];
+  visibleToStudents?: boolean;
+  hiddenFromRoles?: UserRole[];
 }
 
 export interface EmailTemplateDTO extends ContentDTO {
-    subject?: string;
-    plainTextContent?: string;
-    htmlContent?: string;
-    overrideFromAddress?: string;
-    overrideFromName?: string;
-    overrideEnvelopeFrom?: string;
-    replyToEmailAddress?: string;
-    replyToName?: string;
+  subject?: string;
+  plainTextContent?: string;
+  htmlContent?: string;
+  overrideFromAddress?: string;
+  overrideFromName?: string;
+  overrideEnvelopeFrom?: string;
+  replyToEmailAddress?: string;
+  replyToName?: string;
 }
 
-export interface FigureDTO extends ImageDTO {
-}
+export interface FigureDTO extends ImageDTO {}
 
 export interface FormulaDTO extends ChoiceDTO {
-    pythonExpression?: string;
+  pythonExpression?: string;
 }
 
 export interface FreeTextRuleDTO extends ChoiceDTO {
-    wordProximity?: number;
+  wordProximity?: number;
 }
 
 export interface GlossaryTermDTO extends ContentDTO {
-    explanation?: ContentDTO;
-    examBoard?: EXAM_BOARD | "";
+  explanation?: ContentDTO;
+  examBoard?: EXAM_BOARD | "";
 }
 
 export interface CodeSnippetDTO extends ContentDTO {
-    language?: string;
-    code?: string;
-    disableHighlighting?: boolean;
-    url?: string;
+  language?: string;
+  code?: string;
+  disableHighlighting?: boolean;
+  url?: string;
 }
 
 export interface InteractiveCodeSnippetDTO extends CodeSnippetDTO {
-    setupCode?: string;
-    testCode?: string;
-    expectedResult?: string;
-    wrapCodeInMain?: boolean;
+  setupCode?: string;
+  testCode?: string;
+  expectedResult?: string;
+  wrapCodeInMain?: boolean;
 }
 
 export interface ImageDTO extends MediaDTO {
-    clickUrl?: string;
-    clickTarget?: string;
+  clickUrl?: string;
+  clickTarget?: string;
 }
 
 export interface ItemChoiceDTO extends ChoiceDTO {
-    items?: ItemDTO[];
+  items?: ItemDTO[];
 }
 
 export interface LogicFormulaDTO extends ChoiceDTO {
-    pythonExpression?: string;
+  pythonExpression?: string;
 }
 
 export interface MediaDTO extends ContentDTO {
-    src?: string;
-    altText?: string;
+  src?: string;
+  altText?: string;
 }
 
 export interface NotificationDTO extends ContentDTO {
-    externalReference?: ExternalReference;
-    expiry?: Date;
+  externalReference?: ExternalReference;
+  expiry?: Date;
 }
 
 export interface ParsonsChoiceDTO extends ItemChoiceDTO {
-    items?: ParsonsItemDTO[];
+  items?: ParsonsItemDTO[];
 }
 
 export interface ItemDTO extends ContentDTO {
-    altText?: string;
+  altText?: string;
 }
 
 export interface ParsonsItemDTO extends ItemDTO {
-    indentation?: number;
+  indentation?: number;
 }
 
 export interface QuantityDTO extends ChoiceDTO {
-    units?: string;
+  units?: string;
 }
 
 // TODO move hiding past bast attempts into the backend for more flexibility
@@ -455,38 +446,36 @@ export interface QuantityDTO extends ChoiceDTO {
 export type BestAttemptHidden = null;
 export const BEST_ATTEMPT_HIDDEN: BestAttemptHidden = null;
 export interface QuestionDTO extends ContentDTO {
-    hints?: ContentBaseDTO[];
-    bestAttempt?: Immutable<QuestionValidationResponseDTO> | BestAttemptHidden;
+  hints?: ContentBaseDTO[];
+  bestAttempt?: Immutable<QuestionValidationResponseDTO> | BestAttemptHidden;
 }
 
 export interface SeguePageDTO extends ContentDTO {
-    canonicalSourceFile?: string;
-    summary?: string;
+  canonicalSourceFile?: string;
+  summary?: string;
 }
 
 export interface StringChoiceDTO extends ChoiceDTO {
-    caseInsensitive?: boolean;
+  caseInsensitive?: boolean;
 }
 
-export interface VideoDTO extends MediaDTO {
-}
+export interface VideoDTO extends MediaDTO {}
 
-export interface AbstractSegueUserDTO {
-}
+export interface AbstractSegueUserDTO {}
 
 export interface AnonymousUserDTO extends AbstractSegueUserDTO {
-    sessionId?: string;
-    temporaryQuestionAttempts?: { [index: string]: { [index: string]: QuestionValidationResponseDTO[] } };
-    dateCreated?: Date;
-    lastUpdated?: Date;
+  sessionId?: string;
+  temporaryQuestionAttempts?: { [index: string]: { [index: string]: QuestionValidationResponseDTO[] } };
+  dateCreated?: Date;
+  lastUpdated?: Date;
 }
 
 export interface GroupMembershipDTO {
-    groupId?: number;
-    userId?: number;
-    status?: GroupMembershipStatus;
-    updated?: Date;
-    created?: Date;
+  groupId?: number;
+  userId?: number;
+  status?: GroupMembershipStatus;
+  updated?: Date;
+  created?: Date;
 }
 
 export type Stage = "gcse" | "a_level" | "all";
@@ -497,204 +486,202 @@ export type Difficulty = "practice_1" | "practice_2" | "practice_3" | "challenge
 
 export type RoleRequirement = "logged_in" | "teacher";
 
-
 export interface UserContext {
-    stage?: Stage;
-    examBoard?: ExamBoard;
+  stage?: Stage;
+  examBoard?: ExamBoard;
 }
 
 export interface AudienceContext {
-    stage?: Stage[];
-    examBoard?: ExamBoard[];
-    difficulty?: Difficulty[];
-    role?: RoleRequirement[];
+  stage?: Stage[];
+  examBoard?: ExamBoard[];
+  difficulty?: Difficulty[];
+  role?: RoleRequirement[];
 }
 
 export interface RegisteredUserDTO extends AbstractSegueUserDTO {
-    givenName?: string;
-    familyName?: string;
-    email?: string;
-    dateOfBirth?: Date;
-    gender?: Gender;
-    registrationDate?: Date;
-    schoolId?: string;
-    role?: UserRole;
-    schoolOther?: string;
-    registeredContexts?: UserContext[];
-    registeredContextsLastConfirmed?: Date;
-    firstLogin?: boolean;
-    lastUpdated?: Date;
-    lastSeen?: Date;
-    emailVerificationStatus?: EmailVerificationStatus;
-    id?: number;
-    _id?: number;
-    teacherPending?: boolean;
+  givenName?: string;
+  familyName?: string;
+  email?: string;
+  dateOfBirth?: Date;
+  gender?: Gender;
+  registrationDate?: Date;
+  schoolId?: string;
+  role?: UserRole;
+  schoolOther?: string;
+  registeredContexts?: UserContext[];
+  registeredContextsLastConfirmed?: Date;
+  firstLogin?: boolean;
+  lastUpdated?: Date;
+  lastSeen?: Date;
+  emailVerificationStatus?: EmailVerificationStatus;
+  id?: number;
+  _id?: number;
+  teacherPending?: boolean;
 }
 
 export interface UserAuthenticationSettingsDTO extends AbstractSegueUserDTO {
-    linkedAccounts?: AuthenticationProvider[];
-    hasSegueAccount?: boolean;
-    mfaStatus?: boolean;
-    id?: number;
+  linkedAccounts?: AuthenticationProvider[];
+  hasSegueAccount?: boolean;
+  mfaStatus?: boolean;
+  id?: number;
 }
 
 export interface UserIdMergeDTO {
-    targetId?: number;
-    sourceId?: number;
+  targetId?: number;
+  sourceId?: number;
 }
 
 export interface UserSummaryDTO extends AbstractSegueUserDTO {
-    givenName?: string;
-    familyName?: string;
-    role?: UserRole;
-    authorisedFullAccess?: boolean;
-    emailVerificationStatus?: EmailVerificationStatus;
-    registeredContexts?: UserContext[];
-    id?: number;
-    teacherPending?: boolean;
+  givenName?: string;
+  familyName?: string;
+  role?: UserRole;
+  authorisedFullAccess?: boolean;
+  emailVerificationStatus?: EmailVerificationStatus;
+  registeredContexts?: UserContext[];
+  id?: number;
+  teacherPending?: boolean;
 }
 
 export interface UserSummaryForAdminUsersDTO extends UserSummaryWithEmailAddressDTO {
-    lastUpdated?: Date;
-    lastSeen?: Date;
-    registrationDate?: Date;
-    schoolId?: string;
-    schoolOther?: string;
+  lastUpdated?: Date;
+  lastSeen?: Date;
+  registrationDate?: Date;
+  schoolId?: string;
+  schoolOther?: string;
 }
 
 export interface UserSummaryWithEmailAddressDTO extends UserSummaryDTO {
-    email?: string;
+  email?: string;
 }
 
 export interface UserSummaryWithGroupMembershipDTO extends UserSummaryDTO {
-    groupMembershipInformation?: GroupMembershipDTO;
+  groupMembershipInformation?: GroupMembershipDTO;
 }
 
 export interface IAssignmentLike {
-    groupId?: number;
-    id?: number;
-    creationDate?: Date;
-    dueDate?: Date;
-    ownerUserId?: number;
+  groupId?: number;
+  id?: number;
+  creationDate?: Date;
+  dueDate?: Date;
+  ownerUserId?: number;
 }
 
 export interface GameboardItem {
-    id?: string;
-    contentType?: string;
-    title?: string;
-    description?: string;
-    uri?: string;
-    tags?: string[];
-    audience?: AudienceContext[];
-    creationContext?: AudienceContext;
-    questionPartsCorrect?: number;
-    questionPartsIncorrect?: number;
-    questionPartsNotAttempted?: number;
-    questionPartsTotal?: number;
-    passMark?: number;
-    state?: GameboardItemState;
-    questionPartStates?: QuestionPartState[];
-    boardId?: string;
-    supersededBy?: string;
+  id?: string;
+  contentType?: string;
+  title?: string;
+  description?: string;
+  uri?: string;
+  tags?: string[];
+  audience?: AudienceContext[];
+  creationContext?: AudienceContext;
+  questionPartsCorrect?: number;
+  questionPartsIncorrect?: number;
+  questionPartsNotAttempted?: number;
+  questionPartsTotal?: number;
+  passMark?: number;
+  state?: GameboardItemState;
+  questionPartStates?: QuestionPartState[];
+  boardId?: string;
+  supersededBy?: string;
 }
 
 export interface IsaacWildcard extends Content {
-    description?: string;
-    url?: string;
+  description?: string;
+  url?: string;
 }
 
 export interface GameFilter {
-    subjects?: string[];
-    fields?: string[];
-    topics?: string[];
-    levels?: number[];
-    concepts?: string[];
+  subjects?: string[];
+  fields?: string[];
+  topics?: string[];
+  levels?: number[];
+  concepts?: string[];
 }
 
 export interface HasTitleOrId {
-    title?: string;
-    id?: string;
+  title?: string;
+  id?: string;
 }
 
 export interface Location {
-    address?: Address;
-    latitude?: number;
-    longitude?: number;
+  address?: Address;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface IHasQuizSummary {
-    quizId?: string;
-    quizSummary?: ContentSummaryDTO;
+  quizId?: string;
+  quizSummary?: ContentSummaryDTO;
 }
 
 export interface Mark {
-    correct?: number;
-    incorrect?: number;
-    notAttempted?: number;
+  correct?: number;
+  incorrect?: number;
+  notAttempted?: number;
 }
 
 export interface ExternalReference {
-    title?: string;
-    url?: string;
+  title?: string;
+  url?: string;
 }
 
 export interface ContentBase {
-    id?: string;
-    type?: string;
-    tags?: string[];
-    canonicalSourceFile?: string;
-    version?: string;
-    audience?: AudienceContext[];
-    display?: { [index: string]: string[] };
+  id?: string;
+  type?: string;
+  tags?: string[];
+  canonicalSourceFile?: string;
+  version?: string;
+  audience?: AudienceContext[];
+  display?: { [index: string]: string[] };
 }
 
-
 export interface Content extends ContentBase {
-    title?: string;
-    subtitle?: string;
-    author?: string;
-    encoding?: string;
-    layout?: string;
-    children?: ContentBase[];
-    value?: string;
-    attribution?: string;
-    relatedContent?: string[];
-    published?: boolean;
-    level?: number;
-    searchableContent?: string;
+  title?: string;
+  subtitle?: string;
+  author?: string;
+  encoding?: string;
+  layout?: string;
+  children?: ContentBase[];
+  value?: string;
+  attribution?: string;
+  relatedContent?: string[];
+  published?: boolean;
+  level?: number;
+  searchableContent?: string;
 }
 
 export interface ResultsWrapper<T> {
-    results?: T[];
-    totalResults?: number;
+  results?: T[];
+  totalResults?: number;
 }
 
 export interface Address {
-    addressLine1?: string;
-    addressLine2?: string;
-    town?: string;
-    county?: string;
-    postalCode?: string;
-    country?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  town?: string;
+  county?: string;
+  postalCode?: string;
+  country?: string;
 }
 
 export interface AnsweredQuestionsByDate {
-    [date: string]: number;
+  [date: string]: number;
 }
 
 export interface TOTPSharedSecretDTO {
-    userId: number;
-    sharedSecret: string;
-    created: Date;
+  userId: number;
+  sharedSecret: string;
+  created: Date;
 }
 
 export interface MisuseStatisticDTO {
-    agentIdentifier: string;
-    eventType: string;
-    isMisused: boolean;
-    isOverSoftThreshold: boolean;
-    lastEventTimestamp?: number;
-    currentCounter: number;
+  agentIdentifier: string;
+  eventType: string;
+  isMisused: boolean;
+  isOverSoftThreshold: boolean;
+  lastEventTimestamp?: number;
+  currentCounter: number;
 }
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
@@ -705,7 +692,15 @@ export type FastTrackConceptState = "ft_top_ten" | "ft_upper" | "ft_lower";
 
 export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
 
-export const USER_ROLES = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"] as const;
+export const USER_ROLES = [
+  "STUDENT",
+  "TUTOR",
+  "TEACHER",
+  "EVENT_LEADER",
+  "CONTENT_EDITOR",
+  "EVENT_MANAGER",
+  "ADMIN",
+] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
 export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED";

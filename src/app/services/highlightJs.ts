@@ -1,197 +1,185 @@
-import javascript from 'highlight.js/lib/languages/javascript';
-import python from 'highlight.js/lib/languages/python'
-import php from 'highlight.js/lib/languages/php'
-import csharp from 'highlight.js/lib/languages/csharp'
-import plaintext from 'highlight.js/lib/languages/plaintext'
-import sql from 'highlight.js/lib/languages/sql'
-import {LanguageFn} from "highlight.js";
+import javascript from "highlight.js/lib/languages/javascript";
+import python from "highlight.js/lib/languages/python";
+import php from "highlight.js/lib/languages/php";
+import csharp from "highlight.js/lib/languages/csharp";
+import plaintext from "highlight.js/lib/languages/plaintext";
+import sql from "highlight.js/lib/languages/sql";
+import { LanguageFn } from "highlight.js";
 const importHljsCore = import("highlight.js/lib/core");
 
 function registerLanguages() {
-    importHljsCore.then(({default: hljs}) => {
-        hljs.registerLanguage('javascript', javascript);
-        hljs.registerLanguage('python', python);
-        hljs.registerLanguage('php', php);
-        hljs.registerLanguage('csharp', csharp);
-        hljs.registerLanguage('plaintext', plaintext);
-        hljs.registerLanguage('assembly', plaintext);
-        hljs.registerLanguage('sql', sql);
-        hljs.registerLanguage('pseudocode', isaacPseudocodeHighlightDefinition);
-    });
+  importHljsCore.then(({ default: hljs }) => {
+    hljs.registerLanguage("javascript", javascript);
+    hljs.registerLanguage("python", python);
+    hljs.registerLanguage("php", php);
+    hljs.registerLanguage("csharp", csharp);
+    hljs.registerLanguage("plaintext", plaintext);
+    hljs.registerLanguage("assembly", plaintext);
+    hljs.registerLanguage("sql", sql);
+    hljs.registerLanguage("pseudocode", isaacPseudocodeHighlightDefinition);
+  });
 }
 
 function addLineNumbers(code: Element) {
-    // Adapt the PrismJS code for line numbering:
-    // https://github.com/PrismJS/prism/blob/v1.24.1/plugins/line-numbers/prism-line-numbers.js
-    // This will not work for code that is wrapped onto multiple lines; see the PrismJS
-    // code above for a (horrid!) method for dealing with wrapped lines.
+  // Adapt the PrismJS code for line numbering:
+  // https://github.com/PrismJS/prism/blob/v1.24.1/plugins/line-numbers/prism-line-numbers.js
+  // This will not work for code that is wrapped onto multiple lines; see the PrismJS
+  // code above for a (horrid!) method for dealing with wrapped lines.
 
-    const pre = code.parentElement;
+  const pre = code.parentElement;
 
-    // This works only for <code> wrapped inside <pre> and not inline code.
-    if (!pre || !/pre/i.test(pre.nodeName)) {
-        return;
-    }
+  // This works only for <code> wrapped inside <pre> and not inline code.
+  if (!pre || !/pre/i.test(pre.nodeName)) {
+    return;
+  }
 
-    // Abort if line numbers already exists
-    if (code.querySelector('.line-numbers-rows')) {
-        return;
-    }
+  // Abort if line numbers already exists
+  if (code.querySelector(".line-numbers-rows")) {
+    return;
+  }
 
-    const newlines = code.textContent?.match(/\n(?!$)/g);
-    const numberOfLines = newlines ? newlines.length + 1 : 1;
+  const newlines = code.textContent?.match(/\n(?!$)/g);
+  const numberOfLines = newlines ? newlines.length + 1 : 1;
 
-    // Add blank spans, one per line, that will be numbered using a CSS counter:
-    const lineNumberSpans = new Array(numberOfLines + 1).join('<span></span>');
+  // Add blank spans, one per line, that will be numbered using a CSS counter:
+  const lineNumberSpans = new Array(numberOfLines + 1).join("<span></span>");
 
-    const lineNumbersWrapper = document.createElement('span');
-    lineNumbersWrapper.setAttribute('aria-hidden', 'true');
-    lineNumbersWrapper.className = 'line-numbers-rows';
-    lineNumbersWrapper.innerHTML = lineNumberSpans;
+  const lineNumbersWrapper = document.createElement("span");
+  lineNumbersWrapper.setAttribute("aria-hidden", "true");
+  lineNumbersWrapper.className = "line-numbers-rows";
+  lineNumbersWrapper.innerHTML = lineNumberSpans;
 
-    if (pre.hasAttribute('data-start')) {
-        pre.style.counterReset = 'linenumber ' + (parseInt(pre.getAttribute('data-start') as string, 10) - 1);
-    }
+  if (pre.hasAttribute("data-start")) {
+    pre.style.counterReset = "linenumber " + (parseInt(pre.getAttribute("data-start") as string, 10) - 1);
+  }
 
-    code.appendChild(lineNumbersWrapper);
+  code.appendChild(lineNumbersWrapper);
 }
 
-const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
+const isaacPseudocodeHighlightDefinition: LanguageFn = function (hljsLib) {
+  const KEYWORDS = [
+    "GLOBAL",
+    "MOD",
+    "DIV",
+    "AND",
+    "OR",
+    "NOT",
+    "IF",
+    "THEN",
+    "ELSEIF",
+    "ELSE",
+    "ENDIF",
+    "SWITCH",
+    "CASE",
+    "DEFAULT",
+    "ENDSWITCH",
+    "FOR",
+    "FOREACH",
+    "IN",
+    "TO",
+    "NEXT",
+    "WHILE",
+    "ENDWHILE",
+    "DO",
+    "REPEAT",
+    "UNTIL",
+    "FUNCTION",
+    "RETURN",
+    "ENDFUNCTION",
+    "PROCEDURE",
+    "ENDPROCEDURE",
+    "TRY",
+    "CATCH",
+    "FINALLY",
+    "ENDTRY",
+    "BYREF",
+    "BYVAL",
+    "RECORD",
+    "ENDRECORD",
+    "ARRAY",
+    "CLASS",
+    "ENDCLASS",
+    "PRIVATE",
+    "PUBLIC",
+    "PROTECTED",
+    "NEW",
+    "EXTENDS",
+    "SUPER",
+    "DICTIONARY",
+    "LIST",
+  ];
 
-    const KEYWORDS = [
-        "GLOBAL",
-        "MOD",
-        "DIV",
-        "AND",
-        "OR",
-        "NOT",
-        "IF",
-        "THEN",
-        "ELSEIF",
-        "ELSE",
-        "ENDIF",
-        "SWITCH",
-        "CASE",
-        "DEFAULT",
-        "ENDSWITCH",
-        "FOR",
-        "FOREACH",
-        "IN",
-        "TO",
-        "NEXT",
-        "WHILE",
-        "ENDWHILE",
-        "DO",
-        "REPEAT",
-        "UNTIL",
-        "FUNCTION",
-        "RETURN",
-        "ENDFUNCTION",
-        "PROCEDURE",
-        "ENDPROCEDURE",
-        "TRY",
-        "CATCH",
-        "FINALLY",
-        "ENDTRY",
-        "BYREF",
-        "BYVAL",
-        "RECORD",
-        "ENDRECORD",
-        "ARRAY",
-        "CLASS",
-        "ENDCLASS",
-        "PRIVATE",
-        "PUBLIC",
-        "PROTECTED",
-        "NEW",
-        "EXTENDS",
-        "SUPER",
-        "DICTIONARY",
-        "LIST",
-    ];
+  const LITERALS = ["False", "True", "Null"];
 
-    const LITERALS = [
-        "False",
-        "True",
-        "Null",
-    ]
+  const BUILT_INS = [
+    "STR",
+    "INT",
+    "FLOAT",
+    "INPUT",
+    "PRINT",
+    "LEN",
+    "UPPER",
+    "LOWER",
+    "SPLIT",
+    "MID",
+    "LEFT",
+    "RIGHT",
+    "INDEXOF",
+    "STRIP",
+    "CONTAINS",
+    "DELETE",
+    "APPEND",
+    "POP",
+    "CREATE_FILE",
+    "OPEN_READ",
+    "OPEN_WRITE",
+    "OPEN_APPEND",
+    "READ_LINE",
+    "READ_ALL",
+    "WRITE_LINE",
+    "WRITE_ALL",
+    "CLOSE",
+    "END_OF_FILE",
+    "ASC",
+    "CHR",
+    "RANDOM_INT",
+    "STR_TO_DATE",
+    "STR_TO_TIME",
+  ];
 
-    const BUILT_INS = [
-        "STR",
-        "INT",
-        "FLOAT",
-        "INPUT",
-        "PRINT",
-        "LEN",
-        "UPPER",
-        "LOWER",
-        "SPLIT",
-        "MID",
-        "LEFT",
-        "RIGHT",
-        "INDEXOF",
-        "STRIP",
-        "CONTAINS",
-        "DELETE",
-        "APPEND",
-        "POP",
-        "CREATE_FILE",
-        "OPEN_READ",
-        "OPEN_WRITE",
-        "OPEN_APPEND",
-        "READ_LINE",
-        "READ_ALL",
-        "WRITE_LINE",
-        "WRITE_ALL",
-        "CLOSE",
-        "END_OF_FILE",
-        "ASC",
-        "CHR",
-        "RANDOM_INT",
-        "STR_TO_DATE",
-        "STR_TO_TIME",
-    ]
+  const FUNCTION_DEFINITION = {
+    match: [/FUNCTION|PROCEDURE/, / +/, hljsLib.UNDERSCORE_IDENT_RE, /(?=\()/],
+    scope: {
+      1: "keyword",
+      3: "title.function",
+    },
+    contains: [],
+  };
 
-    const FUNCTION_DEFINITION = {
-        match: [
-            /FUNCTION|PROCEDURE/,
-            / +/,
-            hljsLib.UNDERSCORE_IDENT_RE,
-            /(?=\()/
-        ],
-        scope: {
-            1: "keyword",
-            3: "title.function"
-        },
-        contains: [],
-    };
-
-    return {
-        name: 'pseudocode',
-        aliases: [
-            'isaacPseudocode',
-        ],
-        keywords: {
-           $pattern: hljsLib.UNDERSCORE_IDENT_RE,
-            keyword: KEYWORDS,
-            literal: LITERALS,
-            built_in: BUILT_INS,
-        },
-        contains: [
-            hljsLib.QUOTE_STRING_MODE,
-            // C-style comments:
-            hljsLib.C_LINE_COMMENT_MODE,
-            hljsLib.C_BLOCK_COMMENT_MODE,
-            // Or Python-style comments:
-            hljsLib.HASH_COMMENT_MODE,
-            // Other nice things to highlight:
-            hljsLib.NUMBER_MODE,
-            FUNCTION_DEFINITION,
-        ]
-    };
-}
+  return {
+    name: "pseudocode",
+    aliases: ["isaacPseudocode"],
+    keywords: {
+      $pattern: hljsLib.UNDERSCORE_IDENT_RE,
+      keyword: KEYWORDS,
+      literal: LITERALS,
+      built_in: BUILT_INS,
+    },
+    contains: [
+      hljsLib.QUOTE_STRING_MODE,
+      // C-style comments:
+      hljsLib.C_LINE_COMMENT_MODE,
+      hljsLib.C_BLOCK_COMMENT_MODE,
+      // Or Python-style comments:
+      hljsLib.HASH_COMMENT_MODE,
+      // Other nice things to highlight:
+      hljsLib.NUMBER_MODE,
+      FUNCTION_DEFINITION,
+    ],
+  };
+};
 
 export const highlightJsService = {
-    registerLanguages,
-    addLineNumbers
+  registerLanguages,
+  addLineNumbers,
 };

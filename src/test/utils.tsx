@@ -38,17 +38,8 @@ interface RenderTestEnvironmentOptions {
 // Provider with the global store.
 // When called, the Redux store will be cleaned completely, and other the MSW server handlers will be reset to
 // defaults (those in handlers.ts).
-export const renderTestEnvironment = (
-  options?: RenderTestEnvironmentOptions
-) => {
-  const {
-    role,
-    modifyUser,
-    PageComponent,
-    componentProps,
-    initialRouteEntries,
-    extraEndpoints,
-  } = options ?? {};
+export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
+  const { role, modifyUser, PageComponent, componentProps, initialRouteEntries, extraEndpoints } = options ?? {};
   store.dispatch({ type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS });
   store.dispatch(isaacApi.util.resetApiState());
   server.resetHandlers();
@@ -63,17 +54,14 @@ export const renderTestEnvironment = (
               responseCodeType: "Unauthorized",
               errorMessage: "You must be logged in to access this resource.",
               bypassGenericSiteErrorPage: false,
-            })
+            }),
           );
         }
         const userWithRole = produce(mockUser, (user) => {
           user.role = role ?? mockUser.role;
         });
-        return res(
-          ctx.status(200),
-          ctx.json(modifyUser ? modifyUser(userWithRole) : userWithRole)
-        );
-      })
+        return res(ctx.status(200), ctx.json(modifyUser ? modifyUser(userWithRole) : userWithRole));
+      }),
     );
   }
   if (extraEndpoints) {
@@ -91,17 +79,11 @@ export const renderTestEnvironment = (
       ) : (
         <IsaacApp />
       )}
-    </Provider>
+    </Provider>,
   );
 };
 
-export type NavBarMenus =
-  | "My Isaac"
-  | "Teach"
-  | "Learn"
-  | "Events"
-  | "Help"
-  | "Admin";
+export type NavBarMenus = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
 export const NAV_BAR_MENU_TITLE: { [menu in NavBarMenus]: string } = {
   "My Isaac": "My Isaac",
   Teach: "Teachers",
@@ -112,10 +94,7 @@ export const NAV_BAR_MENU_TITLE: { [menu in NavBarMenus]: string } = {
 };
 
 // Clicks on the given navigation menu entry, allowing navigation around the app as a user would
-export const followHeaderNavLink = async (
-  menu: NavBarMenus,
-  linkName: string
-) => {
+export const followHeaderNavLink = async (menu: NavBarMenus, linkName: string) => {
   const header = await screen.findByTestId("header");
   const navLink = await within(header).findByRole("link", {
     name: NAV_BAR_MENU_TITLE[menu],
@@ -123,13 +102,9 @@ export const followHeaderNavLink = async (
   await userEvent.click(navLink);
   // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
   // related to a given title
-  const adminMenuSectionParent = navLink.closest(
-    "li[class*='nav-item']"
-  ) as HTMLLIElement | null;
+  const adminMenuSectionParent = navLink.closest("li[class*='nav-item']") as HTMLLIElement | null;
   if (!adminMenuSectionParent)
-    fail(
-      `Missing NavigationSection parent - cannot locate entries in ${menu} navigation menu.`
-    );
+    fail(`Missing NavigationSection parent - cannot locate entries in ${menu} navigation menu.`);
   const link = await within(adminMenuSectionParent).findByRole("menuitem", {
     name: linkName,
     exact: false,
@@ -162,18 +137,12 @@ export const getById = (id: string) => {
   return element;
 };
 
-export const fillTextField = async (
-  field: HTMLElement,
-  value: string
-): Promise<void> => {
+export const fillTextField = async (field: HTMLElement, value: string): Promise<void> => {
   await userEvent.click(field);
   await userEvent.type(field, value);
 };
 
-export const selectOption = async (
-  selectElement: HTMLElement,
-  optionValue: string
-): Promise<void> => {
+export const selectOption = async (selectElement: HTMLElement, optionValue: string): Promise<void> => {
   await userEvent.click(selectElement);
   await userEvent.selectOptions(selectElement, optionValue);
 };
@@ -189,9 +158,7 @@ export const checkPasswordInputTypes = (expectedType: string) => {
   const formFields = getFormFields();
   const passwordInput = formFields.password() as HTMLInputElement;
   const confirmPasswordInput = formFields.confirmPassword() as HTMLInputElement;
-  [passwordInput, confirmPasswordInput].forEach((input) =>
-    expect(input.type).toBe(expectedType)
-  );
+  [passwordInput, confirmPasswordInput].forEach((input) => expect(input.type).toBe(expectedType));
 };
 
 export const clickButton = async (buttonName: string) => {
@@ -204,34 +171,24 @@ export const getFormFields = () => {
   const formFields = {
     givenName: () => screen.getByRole("textbox", { name: "First name" }),
     familyName: () => screen.getByRole("textbox", { name: "Last name" }),
-    currentSchool: () =>
-      screen.getByRole("combobox", { name: "My current school or college" }),
+    currentSchool: () => screen.getByRole("combobox", { name: "My current school or college" }),
     dob: () => screen.getByText(/Date of birth/i),
     overThirteen: () => screen.getByRole("checkbox", { name: /13 years old/i }),
-    noSchool: () =>
-      screen.getByRole("checkbox", { name: /not associated with a school/i }),
+    noSchool: () => screen.getByRole("checkbox", { name: /not associated with a school/i }),
     email: () => screen.getByRole("textbox", { name: "Email address" }),
     gender: () => screen.getByRole("combobox", { name: "Gender" }),
     password: () => screen.getByLabelText("Password", { selector: "input" }),
-    confirmPassword: () =>
-      screen.getByLabelText("Re-enter password", { selector: "input" }),
-    stage: () =>
-      screen.getByRole("combobox", { name: "Stage" }) as HTMLSelectElement,
+    confirmPassword: () => screen.getByLabelText("Re-enter password", { selector: "input" }),
+    stage: () => screen.getByRole("combobox", { name: "Stage" }) as HTMLSelectElement,
     examBoard: () => screen.getByRole("combobox", { name: "Exam Board" }),
     addAnotherStage: () => screen.getByRole("button", { name: /add stage/i }),
-    verificationInfo: () =>
-      screen.getByRole("textbox", { name: /url of a page/i }),
-    assignmentPreferences: () =>
-      screen.queryByRole("cell", { name: /receive assignment/i }),
-    newsPreferences: () =>
-      screen.getByRole("radio", { name: /no for news_and_updates/i }),
+    verificationInfo: () => screen.getByRole("textbox", { name: /url of a page/i }),
+    assignmentPreferences: () => screen.queryByRole("cell", { name: /receive assignment/i }),
+    newsPreferences: () => screen.getByRole("radio", { name: /no for news_and_updates/i }),
     events: () => screen.getByRole("radio", { name: /no for events/i }),
-    additionalInfo: () =>
-      screen.getByRole("textbox", { name: /any other information/i }),
-    otherInfo: () =>
-      screen.getByRole("textbox", { name: /other information/i }),
-    submitButton: () =>
-      screen.getByRole("button", { name: "Register my account" }),
+    additionalInfo: () => screen.getByRole("textbox", { name: /any other information/i }),
+    otherInfo: () => screen.getByRole("textbox", { name: /other information/i }),
+    submitButton: () => screen.getByRole("button", { name: "Register my account" }),
     recaptcha: () => screen.getByTestId("mock-recaptcha-checkbox"),
   };
 
@@ -239,10 +196,7 @@ export const getFormFields = () => {
 };
 
 // helper for filling in registration forms
-export const fillFormCorrectly = async (
-  correctly: boolean,
-  role: "teacher" | "student"
-) => {
+export const fillFormCorrectly = async (correctly: boolean, role: "teacher" | "student") => {
   const formFields = getFormFields();
 
   switch (role) {
@@ -266,10 +220,7 @@ export const fillFormCorrectly = async (
       await fillTextField(givenName(), registrationUserData.givenName);
       await fillTextField(familyName(), registrationUserData.familyName);
       await selectOption(gender(), registrationUserData.gender);
-      await fillTextField(
-        verificationInfo(),
-        registrationUserData.verificationInfo
-      );
+      await fillTextField(verificationInfo(), registrationUserData.verificationInfo);
 
       if (correctly) {
         await fillTextField(password(), registrationUserData.password);
@@ -282,10 +233,7 @@ export const fillFormCorrectly = async (
         await fillTextField(email(), registrationUserData.email);
       } else {
         await fillTextField(password(), registrationUserData.wrongPassword);
-        await fillTextField(
-          confirmPassword(),
-          registrationUserData.wrongPassword
-        );
+        await fillTextField(confirmPassword(), registrationUserData.wrongPassword);
         await fillTextField(email(), registrationUserData.wrongEmail);
       }
       await userEvent.click(recaptcha());
@@ -321,10 +269,7 @@ export const fillFormCorrectly = async (
         await userEvent.click(events());
       } else {
         await fillTextField(password(), registrationUserData.wrongPassword);
-        await fillTextField(
-          confirmPassword(),
-          registrationUserData.wrongPassword
-        );
+        await fillTextField(confirmPassword(), registrationUserData.wrongPassword);
       }
       await userEvent.click(recaptcha());
       break;
@@ -334,77 +279,50 @@ export const fillFormCorrectly = async (
 
 export const extraDownloadEndpoints = {
   working: [
-    rest.get(
-      API_PATH +
-        `/documents/content/books/gcse_book_23/isaac_cs_gcse_book_2023.pdf`,
-      (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json({ data: "this is a book" }));
-      }
-    ),
-    rest.get(
-      API_PATH +
-        `/documents/content/books/workbook_20_aqa/isaac_cs_aqa_book_2022.pdf`,
-      (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json({ data: "this is a book" }));
-      }
-    ),
-    rest.get(
-      API_PATH +
-        `/documents/content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.pdf`,
-      (req, res, ctx) => {
-        return res(ctx.status(200), ctx.json({ data: "this is a book" }));
-      }
-    ),
+    rest.get(API_PATH + `/documents/content/books/gcse_book_23/isaac_cs_gcse_book_2023.pdf`, (req, res, ctx) => {
+      return res(ctx.status(200), ctx.json({ data: "this is a book" }));
+    }),
+    rest.get(API_PATH + `/documents/content/books/workbook_20_aqa/isaac_cs_aqa_book_2022.pdf`, (req, res, ctx) => {
+      return res(ctx.status(200), ctx.json({ data: "this is a book" }));
+    }),
+    rest.get(API_PATH + `/documents/content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.pdf`, (req, res, ctx) => {
+      return res(ctx.status(200), ctx.json({ data: "this is a book" }));
+    }),
   ],
   broken: [
-    rest.get(
-      API_PATH +
-        `/documents/content/books/gcse_book_23/isaac_cs_gcse_book_2023.pdf`,
-      (req, res, ctx) => {
-        return res(
-          ctx.status(404),
-          ctx.json({
-            responseCode: 404,
-            responseCodeType: "Not Found",
-            errorMessage:
-              "Unable to locate the file: content/books/gcse_book_23/isaac_cs_gcse_book_2023.pdf.",
-            bypassGenericSiteErrorPage: false,
-          })
-        );
-      }
-    ),
-    rest.get(
-      API_PATH +
-        `/documents/content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.pdf`,
-      (req, res, ctx) => {
-        return res(
-          ctx.status(404),
-          ctx.json({
-            responseCode: 404,
-            responseCodeType: "Not Found",
-            errorMessage:
-              "Unable to locate the file: content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.pdf.",
-            bypassGenericSiteErrorPage: false,
-          })
-        );
-      }
-    ),
-    rest.get(
-      API_PATH +
-        `/documents/content/books/workbook_20_ocr/isaac_cs_ocr_book_2022`,
-      (req, res, ctx) => {
-        return res(
-          ctx.status(404),
-          ctx.json({
-            responseCode: 404,
-            responseCodeType: "Not Found",
-            errorMessage:
-              "Unable to locate the file: /content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.",
-            bypassGenericSiteErrorPage: false,
-          })
-        );
-      }
-    ),
+    rest.get(API_PATH + `/documents/content/books/gcse_book_23/isaac_cs_gcse_book_2023.pdf`, (req, res, ctx) => {
+      return res(
+        ctx.status(404),
+        ctx.json({
+          responseCode: 404,
+          responseCodeType: "Not Found",
+          errorMessage: "Unable to locate the file: content/books/gcse_book_23/isaac_cs_gcse_book_2023.pdf.",
+          bypassGenericSiteErrorPage: false,
+        }),
+      );
+    }),
+    rest.get(API_PATH + `/documents/content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.pdf`, (req, res, ctx) => {
+      return res(
+        ctx.status(404),
+        ctx.json({
+          responseCode: 404,
+          responseCodeType: "Not Found",
+          errorMessage: "Unable to locate the file: content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.pdf.",
+          bypassGenericSiteErrorPage: false,
+        }),
+      );
+    }),
+    rest.get(API_PATH + `/documents/content/books/workbook_20_ocr/isaac_cs_ocr_book_2022`, (req, res, ctx) => {
+      return res(
+        ctx.status(404),
+        ctx.json({
+          responseCode: 404,
+          responseCodeType: "Not Found",
+          errorMessage: "Unable to locate the file: /content/books/workbook_20_ocr/isaac_cs_ocr_book_2022.",
+          bypassGenericSiteErrorPage: false,
+        }),
+      );
+    }),
   ],
 };
 

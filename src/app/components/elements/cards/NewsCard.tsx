@@ -1,20 +1,16 @@
 import React from "react";
-import {Link} from "react-router-dom";
-import {Card, CardBody, CardImg, CardText} from "reactstrap";
-import {IsaacPodDTO} from "../../../../IsaacApiTypes";
-import {apiHelper} from "../../../services";
+import { Link } from "react-router-dom";
+import { Card, CardBody, CardImg, CardText } from "reactstrap";
+import { IsaacPodDTO } from "../../../../IsaacApiTypes";
+import { apiHelper } from "../../../services";
 
 interface NewsCardProps {
-    newsItem: IsaacPodDTO;
-    showTitle?: boolean;
-    linkText?: string;
+  newsItem: IsaacPodDTO;
+  showTitle?: boolean;
+  linkText?: string;
 }
 
-export const NewsCard = ({
-  newsItem,
-  showTitle,
-  linkText = "Find out more",
-}: NewsCardProps) => {
+export const NewsCard = ({ newsItem, showTitle, linkText = "Find out more" }: NewsCardProps) => {
   const { title, value, image, url } = newsItem;
 
   return (
@@ -49,12 +45,7 @@ export const NewsCard = ({
             </Link>
           ) : (
             // eslint-disable-next-line react/jsx-no-target-blank
-            <a
-              className="focus-target"
-              href={url}
-              target="_blank"
-              rel="noopener"
-            >
+            <a className="focus-target" href={url} target="_blank" rel="noopener">
               {linkText}
             </a>
           )}

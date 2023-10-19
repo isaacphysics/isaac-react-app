@@ -2,7 +2,12 @@
   //section {padding: 2rem 0;}
 
   h1#homepageName {
-    text-shadow: 0 0 4px $gray-103, 0 0 5px $gray-103, 0 0 10px $gray-103, 0 0 10px $gray-103, 0 0 20px $gray-103;
+    text-shadow:
+      0 0 4px $gray-103,
+      0 0 5px $gray-103,
+      0 0 10px $gray-103,
+      0 0 10px $gray-103,
+      0 0 20px $gray-103;
   }
 
   img#homepageHeroImg {
@@ -61,7 +66,7 @@
         color: black;
         border-bottom: none;
       }
-      @include  media-breakpoint-up(md) {
+      @include media-breakpoint-up(md) {
         img {
           max-width: 50%;
           padding: 0;
@@ -106,8 +111,10 @@
         font-size: inherit;
         color: inherit;
       }
-      .profile-title, .profile-subtitle, .profile-description {
-        @extend .text-left
+      .profile-title,
+      .profile-subtitle,
+      .profile-description {
+        @extend .text-left;
       }
     }
   }

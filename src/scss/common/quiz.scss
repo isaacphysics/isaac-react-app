@@ -13,7 +13,7 @@
       border-left: 1px solid $gray-107;
       &:after {
         @include pseudo-element;
-        background-image: url('/assets/chevron_right.svg');
+        background-image: url("/assets/chevron_right.svg");
         background-repeat: no-repeat;
         background-size: contain;
         background-position-y: center;

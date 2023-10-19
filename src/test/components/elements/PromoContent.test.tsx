@@ -17,9 +17,7 @@ describe("PromoContent", () => {
     const imageAltText = screen.getByAltText(mockItem.image.altText);
     const value = screen.getByText(mockItem.value);
     const titleLink = screen.getByRole("link", { name: mockItem.title });
-    const imageSrc = screen
-      .getByRole("img", { name: mockItem.image.altText })
-      .getAttribute("src");
+    const imageSrc = screen.getByRole("img", { name: mockItem.image.altText }).getAttribute("src");
     expect(title).toBeInTheDocument();
     expect(subtitle).toBeInTheDocument();
     expect(imageAltText).toBeInTheDocument();

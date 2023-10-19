@@ -24,11 +24,7 @@ export const Dashboard = ({
     }
   }, [user]);
 
-  const PromoOrFeaturedNews = ({
-    contentType,
-  }: {
-    contentType: "promo" | "news";
-  }) => {
+  const PromoOrFeaturedNews = ({ contentType }: { contentType: "promo" | "news" }) => {
     const { dataTestId, className, content } = {
       promo: {
         dataTestId: "promo-tile",
@@ -50,31 +46,16 @@ export const Dashboard = ({
   };
 
   const ShowMeButtons = ({ className }: { className?: string }) => (
-    <Container
-      id="homepageButtons"
-      className={`${className} ${!user?.loggedIn ? "pt-0 px-lg-0" : ""}`}
-    >
+    <Container id="homepageButtons" className={`${className} ${!user?.loggedIn ? "pt-0 px-lg-0" : ""}`}>
       <h3>Show me</h3>
       <Row>
         <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
-          <Button
-            size="lg"
-            tag={Link}
-            to={"/topics/gcse"}
-            color="secondary"
-            block
-          >
+          <Button size="lg" tag={Link} to={"/topics/gcse"} color="secondary" block>
             GCSE resources
           </Button>
         </Col>
         <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
-          <Button
-            size="lg"
-            tag={Link}
-            to={"/topics/a_level"}
-            color="secondary"
-            block
-          >
+          <Button size="lg" tag={Link} to={"/topics/a_level"} color="secondary" block>
             A Level resources
           </Button>
         </Col>
@@ -96,13 +77,7 @@ export const Dashboard = ({
         <ShowMeButtons className={"pt-xl-2"} />
         {/*<img id="homepageHeroImg" className="img-fluid" alt="Three Computer Science students studying with two laptops, one with code on the screen" src="/assets/ics_hero.svg" />*/}
       </Col>
-      <PromoOrFeaturedNews
-        contentType={
-          user?.loggedIn && user.role === "TEACHER" && promoItem
-            ? "promo"
-            : "news"
-        }
-      />
+      <PromoOrFeaturedNews contentType={user?.loggedIn && user.role === "TEACHER" && promoItem ? "promo" : "news"} />
     </Row>
   );
 
@@ -113,8 +88,7 @@ export const Dashboard = ({
           <Col>
             <h1>Computer science learning</h1>
             <p className="mt-4">
-              Welcome to Isaac Computer Science, the free online platform for
-              students and teachers.
+              Welcome to Isaac Computer Science, the free online platform for students and teachers.
             </p>
             <ul>
               <li>
@@ -131,21 +105,13 @@ export const Dashboard = ({
             <p className="mr-lg-n1">
               {"We also offer free "}
               <Link to="/events">student events</Link>.<br />
-              {
-                "Isaac Computer Science is proud to be part of the Department for Education's "
-              }
-              <Link to="/teachcomputing">
-                National Centre for Computing Education
-              </Link>
-              .
+              {"Isaac Computer Science is proud to be part of the Department for Education's "}
+              <Link to="/teachcomputing">National Centre for Computing Education</Link>.
             </p>
           </Col>
         </Row>
       </Col>
-      <Col
-        lg="7"
-        className="order-last order-lg-1 px-lg-5 align-self-center text-center pattern-03"
-      >
+      <Col lg="7" className="order-last order-lg-1 px-lg-5 align-self-center text-center pattern-03">
         <iframe
           title="Isaac Computer Science introduction video"
           width="640"
