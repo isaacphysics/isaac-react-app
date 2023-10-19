@@ -40,10 +40,10 @@ export const AdminUserManager = () => {
   const [mergeSourceId, setMergeSourceId] = useState<string>("");
   const userIdToSchoolMapping = useAppSelector(selectors.admin.userSchoolLookup);
   const currentUser = useAppSelector((state: AppState) => (state?.user?.loggedIn && state.user) || null);
-  let promotableRoles: UserRole[] = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
+  let promotableRoles: UserRole[] = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
   const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVERY_FAILED"];
   if (currentUser && currentUser.role == "ADMIN") {
-    promotableRoles = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"];
+    promotableRoles = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER"];
   }
 
   useEffect(() => {

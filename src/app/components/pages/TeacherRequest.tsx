@@ -274,11 +274,13 @@ export const TeacherRequest = () => {
                           <Col>
                             <small className="text-danger text-left">
                               You have not provided your school — please add your school on your{" "}
-                              <Link to="/account">My Account</Link> page. If you are a private tutor or parent, you can{" "}
+                              <Link to="/account">My Account</Link> page.
+                              {/*   REMOVED UNTIL TUTOR ROLE IS AVAILABLE
+                               If you are a private tutor or parent, you can{" "}
                               <Link to="/tutor_account_request">
                                 request an Isaac {SITE_SUBJECT_TITLE} Tutor account
                               </Link>
-                              .
+                              . */}
                             </small>
                           </Col>
                         </Row>
