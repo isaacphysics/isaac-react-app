@@ -7,9 +7,7 @@ import {
   difficultiesOrdered,
   difficultyLabelMap,
   doughnutColours,
-  Item,
   STAGE,
-  stageLabelMap,
   TAG_ID,
   tags,
 } from "../../../services";
@@ -51,24 +49,18 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
   const defaultSearchChoiceTag = tags.getSpecifiedTags(searchTagLevel, tags.allTagIds)[0];
   const [searchChoice, setSearchChoice] = useState(defaultSearchChoiceTag.id);
-  const [stageChoices, setStageChoices] = useState<Item<STAGE>[]>([
-    { value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL] },
-  ]);
+  const stageChoice = STAGE.A_LEVEL;
 
   const isAllZero = (arr: (string | number)[][]) => arr.filter((elem) => elem[1] > 0).length == 0;
   const categoryColumns = tags
     .getSpecifiedTags(topTagLevel, tags.allTagIds)
     .map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
   const topicColumns = tags.getDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
-  const difficultyColumns =
-    stageChoices && questionsByStageAndDifficulty[stageChoices[0].value]
-      ? Object.keys(questionsByStageAndDifficulty[stageChoices[0].value])
-          .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
-          .map((key) => [
-            difficultyLabelMap[key as Difficulty],
-            questionsByStageAndDifficulty[stageChoices[0].value][key],
-          ])
-      : [];
+  const difficultyColumns = questionsByStageAndDifficulty[stageChoice]
+    ? Object.keys(questionsByStageAndDifficulty[stageChoice])
+        .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
+        .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoice][key]])
+    : [];
 
   useEffect(() => {
     const charts: Chart[] = [];
@@ -82,7 +74,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         },
         donut: {
           title: isAllZero(topicColumns) ? "No Data" : "By Topic",
-          label: { format: (value, ratio, id) => `${value}` },
+          label: { format: (value) => `${value}` },
         },
         bindto: `#${subId}-topicChart`,
         ...OPTIONS,

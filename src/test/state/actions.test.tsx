@@ -274,7 +274,7 @@ describe("toasts actions", () => {
 
   it("does not register any actions related to the toast if a timeout is not set", async () => {
     const store = mockStore();
-    const toastId: string = await store.dispatch(showToast(someUnTimedToast) as any);
+    await store.dispatch(showToast(someUnTimedToast) as any);
     const expectedActions: Action[] = [{ type: ACTION_TYPE.TOASTS_SHOW, toast: someUnTimedToast }];
     let actualActions = store.getActions();
     let actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);

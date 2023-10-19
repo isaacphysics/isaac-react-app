@@ -24,12 +24,11 @@ function q(questions: AppQuestionDTO[]): { questions: AppQuestionDTO[]; pageComp
   return { questions, pageCompleted: false };
 }
 
-function removeRTKProperties(state: AppState) {
+function removeRTKProperties(state: Partial<AppState>) {
   if (state) {
-    // @ts-ignore
     delete state["isaacApi"];
   }
-  return state ?? ({} as any);
+  return state ?? {};
 }
 
 describe("root reducer", () => {

@@ -188,7 +188,7 @@ export const api = {
   },
   admin: {
     userSearch: {
-      get: (queryParams: {}): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
+      get: (queryParams: object): AxiosPromise<ApiTypes.UserSummaryForAdminUsersDTO[]> => {
         return endpoint.get(`/admin/users/`, { params: queryParams });
       },
     },

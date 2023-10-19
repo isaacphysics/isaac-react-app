@@ -21,7 +21,7 @@ export const defaultPlaceholder = (
   </div>
 );
 
-export const ShowLoading = <T extends {}>({
+export const ShowLoading = <T extends unknown>({
   until,
   children,
   thenRender,

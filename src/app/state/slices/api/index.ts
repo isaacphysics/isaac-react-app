@@ -57,7 +57,7 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
   const baseQueryArgs: FetchBaseQueryArgs = {
     baseUrl: API_PATH,
     credentials: "include",
-    prepareHeaders: (headers, { getState }) => {
+    prepareHeaders: (headers) => {
       headers.set("accept", "application/json, text/plain, */*");
       return headers;
     },
@@ -123,7 +123,7 @@ const onQueryLifecycleEvents =
     }: {
       dispatch: Dispatch<any>;
       getState: () => any;
-      queryFulfilled: PromiseWithKnownReason<{ data: R; meta: {} | undefined }, any>;
+      queryFulfilled: PromiseWithKnownReason<{ data: R; meta: object | undefined }, any>;
     },
   ) => {
     const queryStartCallbacks = onQueryStart?.(arg, { dispatch, getState });

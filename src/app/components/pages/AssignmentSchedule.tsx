@@ -50,7 +50,7 @@ interface AssignmentListEntryProps {
 }
 const AssignmentListEntry = ({ assignment }: AssignmentListEntryProps) => {
   const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-  const { openAssignmentModal, viewBy } = useContext(AssignmentScheduleContext);
+  const { openAssignmentModal } = useContext(AssignmentScheduleContext);
   const [unassignGameboard] = isaacApi.endpoints.unassignGameboard.useMutation();
   const deleteAssignment = () => {
     if (
@@ -652,7 +652,7 @@ export const AssignmentSchedule = ({ user }: { user: RegisteredUserDTO }) => {
   const headerScrollerObserver = useRef<IntersectionObserver>();
   const stickyHeaderListContainer = useRef<HTMLDivElement>(null);
 
-  const headerScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+  const headerScrollerCallback = (entries: IntersectionObserverEntry[]) => {
     for (const entry of entries) {
       if (entry.target.id === "header-sentinel") {
         if (entry.isIntersecting) {

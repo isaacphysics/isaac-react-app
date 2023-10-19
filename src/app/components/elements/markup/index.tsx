@@ -94,9 +94,10 @@ export function Markup<T extends string>({
       return <TrustedHtml html={renderKaTeX(children)} />;
     case "markdown":
       return <TrustedMarkdown markdown={children} />;
-    case "latex":
+    case "latex": {
       const escapedMarkup = utils.escapeHtml(children);
       return <span dangerouslySetInnerHTML={{ __html: renderKaTeX(escapedMarkup) }} className={className} />;
+    }
     case "plaintext":
       return <span className={className}>{utils.escapeHtml(children)}</span>;
     case "unknown":

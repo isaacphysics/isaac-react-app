@@ -19,7 +19,7 @@ const openNotificationSocket = function (): void {
   // Set up websocket and connect to notification endpoint:
   notificationWebSocket = api.websockets.userAlerts();
 
-  notificationWebSocket.onopen = function (_event) {
+  notificationWebSocket.onopen = function () {
     if (webSocketCheckTimeout !== null) {
       clearTimeout(webSocketCheckTimeout);
     }

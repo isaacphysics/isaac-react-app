@@ -17,7 +17,7 @@ export const ReportButton = ({ pageId }: { pageId?: string }) => {
       className="report-icon btn-action"
       aria-label="Report a problem (opens in new tab)"
       title="Report a problem (opens in new tab)"
-      onClick={(event) => {
+      onClick={() => {
         logPageReport();
         window.open(
           pageId ? `/contact?preset=contentProblem&page=${pageId}` : "/contact?preset=contentProblem",

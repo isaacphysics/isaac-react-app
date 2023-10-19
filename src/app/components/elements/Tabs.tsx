@@ -14,7 +14,7 @@ interface TabsProps {
   className?: string;
   tabTitleClass?: StringOrTabFunction;
   tabContentClass?: string;
-  children: {};
+  children: object;
   activeTabOverride?: number;
   onActiveTabChange?: (tabIndex: number) => void;
   deselectable?: boolean;

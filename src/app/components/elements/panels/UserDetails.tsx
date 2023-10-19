@@ -206,7 +206,7 @@ export const UserDetails = (props: UserDetailsProps) => {
               )}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
                 const newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce(
-                  (acc, [k, v]) => ({ ...acc, [k]: false }),
+                  (acc, [k]) => ({ ...acc, [k]: false }),
                   {},
                 );
                 setProgrammingLanguage(

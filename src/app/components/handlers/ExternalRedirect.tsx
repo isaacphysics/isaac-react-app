@@ -21,7 +21,7 @@ type ExternalRedirectProps<Params extends { [K in keyof Params]: string }> = Ext
         ifUser: (user: Immutable<PotentialUser>) => boolean;
       }
   );
-export function ExternalRedirect<Params extends { [K in keyof Params]: string } = {}>({
+export function ExternalRedirect<Params extends { [K in keyof Params]: string } = object>({
   from,
   to,
   ifUser,

@@ -26,7 +26,9 @@ export const IsaacCallout = ({ doc }: { doc: ContentDTO }) => (
         src={calloutStyle.src}
         alt="callout"
       />
-      <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value} children={doc.children} />
+      <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value}>
+        {doc.children}
+      </IsaacContentValueOrChildren>
     </Col>
   </Row>
 );

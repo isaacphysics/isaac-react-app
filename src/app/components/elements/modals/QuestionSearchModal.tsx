@@ -83,7 +83,7 @@ export const QuestionSearchModal = ({
       }
     : {};
 
-  const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
+  const searchFastTrack = false;
 
   const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({ difficulty: SortOrder.ASC });
   const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(
@@ -148,7 +148,11 @@ export const QuestionSearchModal = ({
   );
 
   const sortableTableHeaderUpdateState =
-    (sortState: { [s: string]: string }, setSortState: React.Dispatch<React.SetStateAction<{}>>, key: string) =>
+    (
+      sortState: { [s: string]: string },
+      setSortState: React.Dispatch<React.SetStateAction<NonNullable<unknown>>>,
+      key: string,
+    ) =>
     (order: string) => {
       const newSortState = { ...sortState };
       newSortState[key] = order;

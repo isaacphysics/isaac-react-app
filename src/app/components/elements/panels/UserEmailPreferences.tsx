@@ -2,7 +2,7 @@ import { CardBody, FormGroup, Table } from "reactstrap";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { UserEmailPreferences } from "../../../../IsaacAppTypes";
 import { TrueFalseRadioInput } from "../inputs/TrueFalseRadioInput";
-import { AppState, selectors, useAppSelector } from "../../../state";
+import { selectors, useAppSelector } from "../../../state";
 import { SITE_SUBJECT_TITLE, isStudent, validateEmailPreferences } from "../../../services";
 
 // Extended useState hook for email preferences, enforcing a default of {ASSIGNMENTS: true}

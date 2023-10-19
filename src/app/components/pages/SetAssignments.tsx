@@ -53,7 +53,6 @@ import {
   sortIcon,
   stageLabelMap,
   useGameboards,
-  GAMEBOARD_SUBJECT,
 } from "../../services";
 import { formatDate } from "../elements/DateString";
 import { ShareLink } from "../elements/ShareLink";
@@ -494,7 +493,6 @@ const Board = ({ user, board, assignees, boardView, toggleAssignModal }: BoardPr
 };
 
 export const AddGameboardButtons = ({ className, redirectBackTo }: { className: string; redirectBackTo: string }) => {
-  const dispatch = useAppDispatch();
   return (
     <Row className={className}>
       <Col md={6} lg={4} className="pt-1">

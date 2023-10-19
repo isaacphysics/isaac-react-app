@@ -1126,7 +1126,7 @@ export const fetchSearch = (query: string, types: string | undefined) => async (
 
 // Admin
 export const adminUserSearchRequest =
-  (queryParams: {}) => async (dispatch: Dispatch<Action | ((d: Dispatch<Action>) => void)>) => {
+  (queryParams: object) => async (dispatch: Dispatch<Action | ((d: Dispatch<Action>) => void)>) => {
     dispatch({ type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST });
     try {
       const searchResponse = await api.admin.userSearch.get(queryParams);
@@ -1735,8 +1735,7 @@ export const fetchConcepts = (conceptIds?: string, tagIds?: string) => async (di
 
 // Fasttrack concepts
 export const fetchFasttrackConcepts =
-  (gameboardId: string, concept: string, upperQuestionId: string) =>
-  async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+  (gameboardId: string, concept: string, upperQuestionId: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({ type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST });
     try {
       const concepts = await api.fasttrack.concepts(gameboardId, concept, upperQuestionId);

@@ -1,6 +1,4 @@
-// @ts-ignore
 import { Remarkable } from "remarkable";
-// @ts-ignore
 import { linkify } from "remarkable/linkify";
 import { BooleanNotation, NOT_FOUND_TYPE } from "../../IsaacAppTypes";
 import {

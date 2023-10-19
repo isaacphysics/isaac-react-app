@@ -2,9 +2,7 @@ import { AbstractBaseTagService, STAGE, SUBJECTS, TAG_ID, TAG_LEVEL } from "./";
 import { BaseTag } from "../../IsaacAppTypes";
 import { ContentDTO } from "../../IsaacApiTypes";
 
-const GCSE_COMING_2022 = { [STAGE.GCSE]: { comingSoonDate: "2022" } };
 const GCSE_HIDDEN = { [STAGE.GCSE]: { hidden: true } };
-const GCSE_NEW = { [STAGE.GCSE]: { new: true } };
 
 export class CsTagService extends AbstractBaseTagService {
   private static readonly tagHierarchy = [TAG_LEVEL.category, TAG_LEVEL.subcategory, TAG_LEVEL.topic];

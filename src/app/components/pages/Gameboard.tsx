@@ -37,7 +37,6 @@ function extractFilterQueryString(gameboard: GameboardDTO): string {
 const GameboardItemComponent = ({ gameboard, question }: { gameboard: GameboardDTO; question: GameboardItem }) => {
   let itemClasses = "p-3 content-summary-link text-info bg-transparent";
   const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
-  const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
   let iconHref = "/assets/question.svg";
   let message = "";
   const messageClasses = "";

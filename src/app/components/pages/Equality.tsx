@@ -24,7 +24,7 @@ import { EditorMode, LogicSyntax } from "../elements/modals/inequality/constants
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 const Equality = withRouter(
-  ({ location }: RouteComponentProps<{}, {}, { board?: string; mode?: string; symbols?: string }>) => {
+  ({ location }: RouteComponentProps<object, object, { board?: string; mode?: string; symbols?: string }>) => {
     const queryParams = queryString.parse(location.search);
 
     const [modalVisible, setModalVisible] = useState(false);

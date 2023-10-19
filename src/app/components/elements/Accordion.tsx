@@ -11,7 +11,7 @@ import {
   scrollVerticallyIntoView,
   useUserContext,
 } from "../../services";
-import { AppState, logAction, selectors, useAppDispatch, useAppSelector } from "../../state";
+import { AppState, logAction, useAppDispatch, useAppSelector } from "../../state";
 import { AccordionSectionContext } from "../../../IsaacAppTypes";
 import { pauseAllVideos } from "../content/IsaacVideo";
 import { v4 as uuid_v4 } from "uuid";
@@ -126,30 +126,6 @@ export const Accordion = withRouter(
 
     // Question result summarization
     const clientId = useRef("c" + nextClientId++);
-
-    // Check results of questions in this accordion
-    let accordionIcon;
-    const questionsOnPage = useAppSelector(selectors.questions.getQuestions) || [];
-    const questionsInsideAccordionSection = questionsOnPage?.filter((q) => q.accordionClientId === clientId.current);
-    if (questionsInsideAccordionSection.length > 0) {
-      let allCorrect = true;
-      let allWrong = true;
-      let allValidated = true;
-      questionsInsideAccordionSection.forEach((question) => {
-        if (question.validationResponse) {
-          const correct = question.validationResponse.correct;
-          if (correct) {
-            allWrong = false;
-          } else {
-            allCorrect = false;
-          }
-        } else {
-          allValidated = false;
-        }
-      });
-      if (allValidated && allCorrect) accordionIcon = "tick";
-      if (allValidated && allWrong) accordionIcon = "cross";
-    }
 
     const isConceptPage = page && page != NOT_FOUND && page.type === DOCUMENT_TYPE.CONCEPT;
 

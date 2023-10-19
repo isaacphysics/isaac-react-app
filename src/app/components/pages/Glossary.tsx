@@ -129,7 +129,7 @@ export const Glossary = () => {
   const alphabetScrollerObserver = useRef<IntersectionObserver>();
   const stickyAlphabetListContainer = useRef<HTMLDivElement>(null);
 
-  const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+  const alphabetScrollerCallback = (entries: IntersectionObserverEntry[]) => {
     for (const entry of entries) {
       if (entry.target.id === "sentinel") {
         if (entry.isIntersecting) {

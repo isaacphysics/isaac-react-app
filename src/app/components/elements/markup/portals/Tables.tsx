@@ -48,7 +48,7 @@ const Table = ({ id, html, classes, rootElement }: TableData & { rootElement: HT
 export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpandedInnerClasses = "") => {
   const [expanded, setExpanded] = useState(false);
 
-  const toggleExpanded: MouseEventHandler = (event) => {
+  const toggleExpanded: MouseEventHandler = () => {
     const newExpanded = !expanded;
     if (newExpanded) {
       el?.scrollIntoView({

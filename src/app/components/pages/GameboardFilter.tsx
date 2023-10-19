@@ -27,7 +27,6 @@ import {
   STAGE,
   TAG_ID,
   tags,
-  useDeviceSize,
   useUserContext,
 } from "../../services";
 import { NOT_FOUND_TYPE, Tag } from "../../../IsaacAppTypes";
@@ -296,7 +295,7 @@ const CSFilter = ({
             placeholder="Any"
             value={selections[2]}
             options={topicChoices}
-            onChange={(v, { action }) => {
+            onChange={(v) => {
               if ((Array.isArray(v) && v.length === 0) || v === null) {
                 setConcepts([]);
               }
@@ -331,8 +330,6 @@ const CSFilter = ({
 };
 
 export const GameboardFilter = withRouter(({ location }: RouteComponentProps) => {
-  const deviceSize = useDeviceSize();
-
   const userContext = useUserContext();
   const { querySelections, queryStages, queryDifficulties, queryConcepts, queryExamBoards } = processQueryString(
     location.search,
@@ -358,8 +355,6 @@ export const GameboardFilter = withRouter(({ location }: RouteComponentProps) =>
   const gameboardRef = useRef<HTMLDivElement>(null);
 
   const [selections, setSelections] = useState<Item<TAG_ID>[][]>(querySelections);
-
-  const choices = [tags.allSubjectTags.map(itemiseTag)];
 
   const tiers: Tier[] = [
     { id: "subjects", name: "Category" },

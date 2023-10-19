@@ -2,8 +2,6 @@ import React, { Ref } from "react";
 import { Col, Row } from "reactstrap";
 import { GlossaryTermDTO } from "../../../IsaacApiTypes";
 import { IsaacContent } from "./IsaacContent";
-import { isDefined, TAG_ID, tags } from "../../services";
-import { Tag } from "../../../IsaacAppTypes";
 import { formatGlossaryTermId } from "../pages/Glossary";
 
 interface IsaacGlossaryTermProps {
@@ -13,11 +11,6 @@ interface IsaacGlossaryTermProps {
 }
 
 const IsaacGlossaryTermComponent = ({ doc, inPortal, linkToGlossary }: IsaacGlossaryTermProps, ref: Ref<any>) => {
-  let _tags: Tag[] = [];
-  if (doc.tags) {
-    _tags = doc.tags.map((id) => tags.getById(id as TAG_ID)).filter((tag) => isDefined(tag));
-  }
-
   const termContents = (
     <>
       <Col md={3} className="glossary_term_name">

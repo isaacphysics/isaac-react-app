@@ -191,12 +191,13 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
         return updateQuizAttemptQuestion(action.questionId, questionAttempt)(possibleAttempt);
       }
       return possibleAttempt;
-    case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
+    case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS: {
       const questionAttempt = action.response.answer;
       if (questionAttempt && possibleAttempt && "attempt" in possibleAttempt) {
         return updateQuizAttemptQuestion(action.questionId, questionAttempt)(possibleAttempt);
       }
       return possibleAttempt;
+    }
     default:
       return possibleAttempt;
   }

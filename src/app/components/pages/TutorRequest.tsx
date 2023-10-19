@@ -38,7 +38,6 @@ export const TutorRequest = () => {
   const [firstName, setFirstName] = useState((user?.loggedIn && user.givenName) || "");
   const [lastName, setLastName] = useState((user?.loggedIn && user.familyName) || "");
   const [emailAddress, setEmailAddress] = useState((user?.loggedIn && user.email) || "");
-  const [subjects, setSubjects] = useState<string[]>([]);
   const [reason, setReason] = useState<string>("");
   const [messageSent, setMessageSent] = useState(false);
   const [emailVerified, setEmailVerified] = useState(user?.loggedIn && user.emailVerificationStatus === "VERIFIED");
@@ -47,7 +46,6 @@ export const TutorRequest = () => {
   const message =
     "Hello,\n\n" +
     "Please could you convert my Isaac account into a tutor account.\n\n" +
-    (subjects.length > 0 ? "I would like to teach subjects: " + subjects.join(", ") + "\n\n" : "") +
     (reason ? "I would like to upgrade because: " + reason + "\n\n" : "") +
     "Thanks, \n\n" +
     firstName +
