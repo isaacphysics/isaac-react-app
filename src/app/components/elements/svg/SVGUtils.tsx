@@ -19,12 +19,12 @@ export function calculateDashArray<T>(
   if (elements === undefined) {
     return null;
   }
-  let sectionLength = perimeterLength / elements.length;
+  const sectionLength = perimeterLength / elements.length;
   let recordingDash = true;
   let lengthCollector = 0;
-  let dashArray = [];
-  for (let element of elements) {
-    let shouldRecordDash = evaluator(element);
+  const dashArray = [];
+  for (const element of elements) {
+    const shouldRecordDash = evaluator(element);
     if (shouldRecordDash === recordingDash) {
       lengthCollector += sectionLength;
     } else {

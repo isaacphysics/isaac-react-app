@@ -5,7 +5,7 @@ export const ReportButton = ({ pageId }: { pageId?: string }) => {
   const dispatch = useAppDispatch();
 
   function logPageReport() {
-    let eventDetails = {
+    const eventDetails = {
       type: "REPORT_CONTENT_PAGE",
       pageId: pageId,
     };

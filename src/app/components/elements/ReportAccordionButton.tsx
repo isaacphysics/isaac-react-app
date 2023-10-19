@@ -32,7 +32,7 @@ export const ReportAccordionButton = ({
   };
 
   function logAccordionReport() {
-    let eventDetails = {
+    const eventDetails = {
       type: "REPORT_CONTENT_ACCORDION_SECTION",
       pageId: pageId,
       accordionId: sectionId,

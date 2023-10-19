@@ -48,7 +48,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
     setReverse(!reverse);
   };
 
-  let augmentedEventBookings = eventBookings.map((booking: EventBookingDTO & { schoolName?: string }) => {
+  const augmentedEventBookings = eventBookings.map((booking: EventBookingDTO & { schoolName?: string }) => {
     if (booking.userBooked && booking.userBooked.id) {
       const schoolDetails = userIdToSchoolMapping[booking.userBooked.id];
       booking.schoolName = schoolDetails ? schoolDetails.name : "UNKNOWN";
@@ -57,7 +57,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
   });
 
   function relevantUsers(bookingType: string) {
-    let idsToReturn: number[] = [];
+    const idsToReturn: number[] = [];
     augmentedEventBookings.map((booking: EventBookingDTO & { schoolName?: string }) => {
       if (booking.userBooked?.id && booking.bookingStatus == bookingType) {
         idsToReturn.push(booking.userBooked.id);
@@ -248,7 +248,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
               </RS.DropdownToggle>
               <RS.DropdownMenu>
                 {Object.keys(bookingStatusMap).map((key, index) => {
-                  let usersWithStatus = relevantUsers(key);
+                  const usersWithStatus = relevantUsers(key);
                   if (atLeastOne(usersWithStatus.length)) {
                     return (
                       <RS.DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(usersWithStatus))}>

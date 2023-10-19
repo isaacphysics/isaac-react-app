@@ -70,7 +70,7 @@ describe("MyAssignments", () => {
   it('should contain assignments with undefined due date and older than a month in the "Older Assignments" tab', async () => {
     renderMyAssignments([
       rest.get(API_PATH + "/assignments", (req, res, ctx) => {
-        let d = new Date();
+        const d = new Date();
         d.setUTCDate(d.getUTCDate() - 1);
         d.setUTCMonth(d.getUTCMonth() - 1);
         const assignmentsWithOneOld = produce<any[]>(mockMyAssignments, (as) => {

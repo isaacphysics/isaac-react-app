@@ -29,8 +29,8 @@ function goToUrl(url: string, queryParams?: { [key: string]: string | undefined 
 
 function retryPreviousQuestion(questionHistory: string[], board?: string) {
   questionHistory = questionHistory.slice();
-  let previousQuestionId = questionHistory.pop();
-  let commaSeparatedQuestionHistory = questionHistory.join(",");
+  const previousQuestionId = questionHistory.pop();
+  const commaSeparatedQuestionHistory = questionHistory.join(",");
 
   return {
     value: "Retry previous question page",
@@ -113,12 +113,12 @@ function trySupportingQuestion(
 function getRelatedUnansweredEasierQuestions(doc: ApiTypes.QuestionDTO, level: number) {
   return doc.relatedContent
     ? doc.relatedContent.filter((relatedContent) => {
-        let isQuestionPage =
+        const isQuestionPage =
           relatedContent.type &&
           [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].indexOf(relatedContent.type as DOCUMENT_TYPE) >=
             0;
-        let isEasier = relatedContent.level && parseInt(relatedContent.level, 10) < level;
-        let isUnanswered = !relatedContent.correct;
+        const isEasier = relatedContent.level && parseInt(relatedContent.level, 10) < level;
+        const isUnanswered = !relatedContent.correct;
         return isQuestionPage && isEasier && isUnanswered;
       })
     : [];
@@ -127,12 +127,12 @@ function getRelatedUnansweredEasierQuestions(doc: ApiTypes.QuestionDTO, level: n
 function getRelatedUnansweredSupportingQuestions(doc: ApiTypes.QuestionDTO, level: number) {
   return doc.relatedContent
     ? doc.relatedContent.filter((relatedContent) => {
-        let isQuestionPage =
+        const isQuestionPage =
           relatedContent.type &&
           [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].indexOf(relatedContent.type as DOCUMENT_TYPE) >=
             0;
-        let isEqualOrHarder = relatedContent.level && parseInt(relatedContent.level, 10) >= level;
-        let isUnanswered = !relatedContent.correct;
+        const isEqualOrHarder = relatedContent.level && parseInt(relatedContent.level, 10) >= level;
+        const isUnanswered = !relatedContent.correct;
         return isQuestionPage && isEqualOrHarder && isUnanswered;
       })
     : [];

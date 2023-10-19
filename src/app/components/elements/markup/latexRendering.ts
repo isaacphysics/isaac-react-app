@@ -188,7 +188,7 @@ interface Search {
 function startMatch(match: RegExpMatchArray): Search {
   const key: string = match[0];
   // @ts-ignore
-  var delim = matchers[key];
+  const delim = matchers[key];
   if (delim != null) {
     // a start delimiter
     return {
@@ -200,7 +200,7 @@ function startMatch(match: RegExpMatchArray): Search {
     };
   } else if (match[0].substr(0, 6) === "\\begin") {
     // \begin{...}
-    let end = "\\end{" + match[1] + "}";
+    const end = "\\end{" + match[1] + "}";
     return {
       end: end,
       mode: "display",
@@ -270,7 +270,7 @@ export function katexify(
     index = match.index;
 
     // Find blocks of LaTeX
-    let search = startMatch(match);
+    const search = startMatch(match);
     if (search.just) {
       output += search.just;
       index = match.index + match[0].length;

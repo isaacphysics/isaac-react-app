@@ -97,7 +97,7 @@ export const AdminUserManager = () => {
     }
   };
   const modifyUserRolesAndUpdateResults = async (role: UserRole) => {
-    let confirmed = role === "STUDENT" || confirmUnverifiedUserPromotions();
+    const confirmed = role === "STUDENT" || confirmUnverifiedUserPromotions();
     if (confirmed) {
       setUserUpdating(true);
       await dispatch(adminModifyUserRoles(role, selectedUserIds));

@@ -26,7 +26,7 @@ function rewrite(src: string) {
 
 function onPlayerStateChange(event: any, wrappedLogAction: (eventDetails: object) => void, pageId?: string) {
   const YT = (window as any).YT;
-  let logEventDetails: any = {
+  const logEventDetails: any = {
     videoUrl: event.target.getVideoUrl(),
     videoPosition: event.target.getCurrentTime(),
   };

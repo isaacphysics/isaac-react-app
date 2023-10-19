@@ -51,7 +51,7 @@ const ControlledCarouselInstance = ({ children, collectionTag }: any) => {
       "carousel-control-next": ifKeyIsEnter(next),
     };
     if (carouselContainer.current) {
-      for (let [cssClass, callback] of Object.entries(classToCallback)) {
+      for (const [cssClass, callback] of Object.entries(classToCallback)) {
         const elements = carouselContainer.current.getElementsByClassName(cssClass);
         if (elements.length) {
           elements[0].addEventListener("keypress", callback as any);
@@ -60,7 +60,7 @@ const ControlledCarouselInstance = ({ children, collectionTag }: any) => {
     }
     return function cleanUp() {
       if (carouselContainer.current) {
-        for (let [cssClass, callback] of Object.entries(classToCallback)) {
+        for (const [cssClass, callback] of Object.entries(classToCallback)) {
           const elements = carouselContainer.current.getElementsByClassName(cssClass);
           if (elements.length) {
             elements[0].removeEventListener("keypress", callback as any);

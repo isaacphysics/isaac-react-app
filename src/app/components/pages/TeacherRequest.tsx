@@ -74,7 +74,7 @@ export const TeacherRequest = () => {
   const isValidEmail = validateEmail(emailAddress);
 
   function isEmailDomainAllowed(email: string) {
-    for (let domain in nonSchoolDomains) {
+    for (const domain in nonSchoolDomains) {
       if (email.includes(nonSchoolDomains[domain])) {
         setAllowedDomain(false);
       }

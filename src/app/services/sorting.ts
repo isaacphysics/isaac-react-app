@@ -1,7 +1,7 @@
 function valueFromObject(object: object, predicate: string) {
   const levels = predicate.split(".");
   let value = object;
-  for (let level of levels) {
+  for (const level of levels) {
     // @ts-ignore
     value = value[level];
   }

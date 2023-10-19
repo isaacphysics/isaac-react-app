@@ -91,7 +91,7 @@ const ReservationsModal = () => {
     const bookedUserIds = modifiedBookingsForAllGroups
       .filter((booking) => booking.bookingStatus !== "CANCELLED")
       .map((booking) => booking.userBooked && booking.userBooked.id);
-    let newCancelReservationCheckboxes: boolean[] = [];
+    const newCancelReservationCheckboxes: boolean[] = [];
     for (const userId of bookedUserIds) {
       if (userId) {
         newCancelReservationCheckboxes[userId] = false;
@@ -107,7 +107,7 @@ const ReservationsModal = () => {
       ["authorisedFullAccess", "familyName", "givenName"],
       ["desc", "asc", "asc"],
     );
-    let newUserCheckboxes: boolean[] = [];
+    const newUserCheckboxes: boolean[] = [];
     for (const user of newUnbookedUsers) {
       if (!user.userBooked?.id || !user.userBooked?.authorisedFullAccess) continue;
       newUserCheckboxes[user.userBooked?.id] = false;
@@ -121,7 +121,7 @@ const ReservationsModal = () => {
       const bookedUserIds = eventBookingsForGroup
         .filter((booking) => booking.bookingStatus !== "CANCELLED")
         .map((booking) => booking.userBooked && booking.userBooked.id);
-      let newCancelReservationCheckboxes: boolean[] = [];
+      const newCancelReservationCheckboxes: boolean[] = [];
       for (const userId of bookedUserIds) {
         if (userId) {
           newCancelReservationCheckboxes[userId] = false;
@@ -137,7 +137,7 @@ const ReservationsModal = () => {
         ["authorisedFullAccess", "familyName", "givenName"],
         ["desc", "asc", "asc"],
       );
-      let newUserCheckboxes: boolean[] = [];
+      const newUserCheckboxes: boolean[] = [];
       for (const user of newUnbookedUsers) {
         if (!user.id || !user.authorisedFullAccess) continue;
         newUserCheckboxes[user.id] = false;
@@ -150,7 +150,7 @@ const ReservationsModal = () => {
 
   const toggleCheckboxForUser = (userId?: number) => {
     if (!userId) return;
-    let checkboxes = { ...userCheckboxes };
+    const checkboxes = { ...userCheckboxes };
     checkboxes[userId] = !checkboxes[userId];
     setUserCheckboxes(checkboxes);
     if (!Object.values(checkboxes).every((v) => v)) {
@@ -160,7 +160,7 @@ const ReservationsModal = () => {
 
   const toggleAllUnbooked = () => {
     setCheckAllCheckbox(!checkAllCheckbox);
-    let checkboxes = { ...userCheckboxes };
+    const checkboxes = { ...userCheckboxes };
     for (const id in userCheckboxes) {
       if (unbookedUsersById[id].emailVerificationStatus === "VERIFIED") {
         checkboxes[id] = !checkAllCheckbox;
@@ -171,7 +171,7 @@ const ReservationsModal = () => {
 
   const toggleCancelReservationCheckboxForUser = (userId?: number) => {
     if (!userId) return;
-    let checkboxes = { ...cancelReservationCheckboxes };
+    const checkboxes = { ...cancelReservationCheckboxes };
     checkboxes[userId] = !checkboxes[userId];
     setCancelReservationCheckboxes(checkboxes);
     if (!Object.values(checkboxes).every((v) => v)) {
@@ -181,7 +181,7 @@ const ReservationsModal = () => {
 
   const toggleAllCancelReservationCheckboxes = () => {
     setCheckAllCancelReservationsCheckbox(!checkAllCancelReservationsCheckbox);
-    let checkboxes = { ...cancelReservationCheckboxes };
+    const checkboxes = { ...cancelReservationCheckboxes };
     for (const id in cancelReservationCheckboxes) {
       checkboxes[id] = !checkAllCancelReservationsCheckbox;
     }

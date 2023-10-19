@@ -110,7 +110,7 @@ export const Admin = ({ user }: { user: RegisteredUserDTO }) => {
                                 })}
                                 href={`${EDITOR_COMPARE_URL}/${contentVersion?.liveVersion}/${displayVersion}`}
                                 target="_blank"
-                                rel="noopener"
+                                rel="noopener noreferrer"
                               >
                                 Preview Changes
                               </a>

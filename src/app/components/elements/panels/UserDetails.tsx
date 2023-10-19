@@ -205,7 +205,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 PROGRAMMING_LANGUAGE.NONE,
               )}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                let newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce(
+                const newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce(
                   (acc, [k, v]) => ({ ...acc, [k]: false }),
                   {},
                 );

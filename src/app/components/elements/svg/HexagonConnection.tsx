@@ -60,7 +60,7 @@ function mobileConnectionLine(
 ) {
   const hexagon = addHexagonKeyPoints(hexagonProperties);
   let result = "";
-  let hexagonWidth = hexagon.x.right + 2 * hexagon.padding;
+  const hexagonWidth = hexagon.x.right + 2 * hexagon.padding;
 
   if (rowIndex === 0) {
     const sourceHexagonX = sourceIndex * hexagonWidth;

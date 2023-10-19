@@ -93,7 +93,7 @@ export const Accordion = withRouter(
     }
 
     function logAccordionOpen() {
-      let currentPage = getPage();
+      const currentPage = getPage();
       if (currentPage) {
         let eventDetails;
         if (isAQuestionLikeDoc(currentPage)) {

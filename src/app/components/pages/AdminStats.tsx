@@ -22,13 +22,13 @@ export const AdminStats = () => {
 
   if (adminStats != null) {
     // Add total value to each of the active user ranges
-    for (let timeRange in adminStats.activeUsersOverPrevious) {
+    for (const timeRange in adminStats.activeUsersOverPrevious) {
       if (adminStats.activeUsersOverPrevious.hasOwnProperty(timeRange)) {
         addTotalToMapOfCounts(adminStats.activeUsersOverPrevious[timeRange]);
       }
     }
     // Add total value to each of the answered user ranges
-    for (let timeRange in adminStats.answeringUsersOverPrevious) {
+    for (const timeRange in adminStats.answeringUsersOverPrevious) {
       if (adminStats.answeringUsersOverPrevious.hasOwnProperty(timeRange)) {
         addTotalToMapOfCounts(adminStats.answeringUsersOverPrevious[timeRange]);
       }

@@ -23,10 +23,10 @@ export const WithFigureNumbering = ({ doc, children }: WithFigureNumberingProps)
       }
     } else {
       // Walk all the things that might possibly contain figures. Doesn't blow up if they don't exist.
-      for (let c of d.children || []) {
+      for (const c of d.children || []) {
         walk(c);
       }
-      for (let h of d.hints || []) {
+      for (const h of d.hints || []) {
         walk(h);
       }
       walk(d.answer);

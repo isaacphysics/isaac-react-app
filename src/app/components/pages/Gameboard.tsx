@@ -40,7 +40,7 @@ const GameboardItemComponent = ({ gameboard, question }: { gameboard: GameboardD
   const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
   let iconHref = "/assets/question.svg";
   let message = "";
-  let messageClasses = "";
+  const messageClasses = "";
 
   switch (question.state) {
     case "PERFECT":

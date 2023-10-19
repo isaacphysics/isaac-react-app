@@ -10,7 +10,7 @@ export abstract class AbstractBaseTagService {
   // Augment base allTags
   public allTags: Tag[] = this.getBaseTags().map((baseTag) => {
     let depth = 0;
-    let parentId = baseTag.parent;
+    const parentId = baseTag.parent;
     if (parentId) {
       let parent = this.getBaseTagById(parentId);
       depth++;
@@ -35,8 +35,8 @@ export abstract class AbstractBaseTagService {
   public getSpecifiedTag(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
     // Return the first (as ordered in TAG_ID) TAG_ID an object has of a given type!
     if (tagArray != null) {
-      for (let i in tagArray) {
-        let tag = this.getById(tagArray[i]);
+      for (const i in tagArray) {
+        const tag = this.getById(tagArray[i]);
         if (tag != null && tag.type === tagType) {
           return tag;
         }
@@ -66,8 +66,8 @@ export abstract class AbstractBaseTagService {
   public allTopicTags = this.getTopicTags(this.allTagIds);
 
   public getChildren(tagId: TAG_ID) {
-    let children: Tag[] = [];
-    for (let i in this.allTags) {
+    const children: Tag[] = [];
+    for (const i in this.allTags) {
       if (this.allTags[i].parent == tagId) {
         children.push(this.allTags[i]);
       }
@@ -77,7 +77,7 @@ export abstract class AbstractBaseTagService {
 
   public getDescendents(tagId: TAG_ID) {
     let descendents: Tag[] = [];
-    for (let i in this.allTags) {
+    for (const i in this.allTags) {
       if (this.allTags[i].parent == tagId) {
         descendents.push(this.allTags[i]);
         descendents = descendents.concat(this.getDescendents(this.allTags[i].id));
@@ -89,9 +89,9 @@ export abstract class AbstractBaseTagService {
   public getSpecifiedTags(tagType: TAG_LEVEL, tagArray: TAG_ID[], getHidden = false) {
     // Return all TAG_ID an object has of a given type!
     if (tagArray == null) return [];
-    let tags = [];
+    const tags = [];
     for (const i in tagArray) {
-      let tag = this.getById(tagArray[i]);
+      const tag = this.getById(tagArray[i]);
       if (tag != null && tag.type === tagType && (getHidden || !tag.hidden)) {
         tags.push(tag);
       }
@@ -106,7 +106,7 @@ export abstract class AbstractBaseTagService {
 
   private getDeepestTag(tagArray: Tag[]): Tag | null {
     let deepestTag = null;
-    for (let tag of tagArray) {
+    for (const tag of tagArray) {
       if (tag != null && (deepestTag == null || tag.level > deepestTag.level)) {
         deepestTag = tag;
       }

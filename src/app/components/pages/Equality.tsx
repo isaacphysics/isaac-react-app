@@ -56,10 +56,10 @@ const Equality = withRouter(
       let q = [root];
       let count = 1;
       while (q.length > 0) {
-        let e = q.shift();
+        const e = q.shift();
         if (!e) continue;
 
-        let c = Object.keys(e.children).length;
+        const c = Object.keys(e.children).length;
         if (c > 0) {
           count = count + c;
           q = q.concat(Object.values(e.children));

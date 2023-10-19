@@ -199,11 +199,11 @@ export const searchList = [
   },
 ];
 
-let group = /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6}$/;
+const group = /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6}$/;
 
 export function shortcuts(term: string) {
-  let lterm = term.toLowerCase();
-  let response = [];
+  const lterm = term.toLowerCase();
+  const response = [];
   if (group.test(term)) {
     response.push({
       id: "teacher_connections",
@@ -214,8 +214,8 @@ export function shortcuts(term: string) {
       type: SEARCH_RESULT_TYPE.SHORTCUT,
     });
   } else {
-    for (let i in searchList) {
-      for (let j in searchList[i].terms) {
+    for (const i in searchList) {
+      for (const j in searchList[i].terms) {
         if (searchList[i].terms[j] === lterm) {
           response.push(searchList[i]);
         }

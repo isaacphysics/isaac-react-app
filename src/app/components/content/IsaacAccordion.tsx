@@ -49,7 +49,7 @@ export const IsaacAccordion = ({ doc }: { doc: ContentDTO }) => {
 
         // Handle conditional display settings
         .map((section) => {
-          let sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
+          const sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
           const sectionDisplaySettings = isIntendedAudience(section.audience, userContext, user)
             ? sectionDisplay?.["audience"]
             : sectionDisplay?.["nonAudience"];

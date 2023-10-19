@@ -547,7 +547,7 @@ export const AssignmentSchedule = ({ user }: { user: RegisteredUserDTO }) => {
   // Logic to handle showing older assignments - we show the "load older assignments" button if we haven't shown
   // the oldest assignment yet
   const [earliestShowDate, setEarliestShowDate] = useState<Date>(() => {
-    let d = new Date();
+    const d = new Date();
     d.setMonth(d.getMonth() - 1);
     d.setDate(1);
     d.setHours(0, 0, 0, 0);

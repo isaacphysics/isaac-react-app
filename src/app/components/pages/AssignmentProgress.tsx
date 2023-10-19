@@ -769,7 +769,7 @@ export const GroupAssignmentProgress = ({ group }: { group: AppGroup }) => {
           <a
             href={getGroupProgressCSVDownloadLink(group.id as number)}
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             onClick={openDownloadLink}
           >
             (Download Group Assignments CSV)
@@ -780,7 +780,7 @@ export const GroupAssignmentProgress = ({ group }: { group: AppGroup }) => {
             <a
               href={getGroupQuizProgressCSVDownloadLink(group.id as number)}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               onClick={openDownloadLink}
             >
               (Download Group Test CSV)
