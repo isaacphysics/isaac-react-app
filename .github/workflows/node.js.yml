@@ -1,43 +1,36 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
 name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build-and-test:
+    name: Build and Test
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
-    - name: Cache node modules
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-node-modules
+        node-version: 18
+        cache: yarn
+    - name: Install dependencies
+      run: yarn --frozen-lockfile
+    - name: Build application
+      run: yarn build-cs
+    - name: Run tests
+      run: yarn test --silent
+    - name: Find pull request number
+      uses: jwalton/gh-find-current-pr@v1
+      id: findPr
+    - name: Code coverage
+      uses: ArtiomTr/jest-coverage-report-action@v2
       with:
-        # yarn cache files are stored in `~/.yarn` on Linux/macOS
-        path: ~/.yarn
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
-    - run: yarn --frozen-lockfile
-    - run: yarn run build-cs
-    - run: yarn run test --silent --coverage
-    - uses: codecov/codecov-action@v2
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        package-manager: yarn
+        test-script: yarn test
+        prnumber: ${{ steps.findPr.outputs.number }}
