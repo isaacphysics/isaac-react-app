@@ -128,6 +128,7 @@ const InequalityMenuTab = ({
   const active = activeMenu === menu && (isSubMenu ? activeSubMenu === subMenu : true);
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <li className={classNames(active ? "active" : "inactive", className)} onClick={navigate} onKeyUp={navigate}>
       {isSubMenu ? <VHexagon /> : <TabTriangle />}
       <Markup encoding={"latex"}>{`$${latexTitle}$`}</Markup>
@@ -287,6 +288,7 @@ interface InequalityMenuProps {
   menuItems: MenuItems;
   availableSymbols: string[] | undefined;
 }
+// eslint-disable-next-line react/display-name
 const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(
   ({ open, setOpen, editorMode, logicSyntax, defaultMenu, disableLetters, menuItems, availableSymbols }, menuRef) => {
     // Logic for what menu tab is currently open

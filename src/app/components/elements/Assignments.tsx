@@ -148,7 +148,7 @@ export const Assignments = ({ assignments, showOld }: AssignmentsProps) => {
         (showOld ? (
           <p className="text-center py-4">
             <strong>
-              You have{" "}
+              You have {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a href="#" onClick={showOld}>
                 unfinished older assignments
               </a>

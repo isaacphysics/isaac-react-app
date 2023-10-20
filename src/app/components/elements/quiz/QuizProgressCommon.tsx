@@ -128,6 +128,7 @@ export function ResultRow({ row, assignment }: ResultRowProps) {
         {valid ? (
           <>
             <Button color="link" onClick={toggle} disabled={working}>
+              {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
               <div tabIndex={0} className="btn quiz-student-menu" data-toggle="dropdown" aria-expanded={dropdownOpen}>
                 {row.user?.givenName}
                 <span className="d-none d-lg-inline"> {row.user?.familyName}</span>

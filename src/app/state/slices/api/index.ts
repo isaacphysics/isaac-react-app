@@ -163,6 +163,7 @@ export const getRTKQueryErrorMessage = (
   e: FetchBaseQueryError | SerializedError | undefined,
 ): { status?: number | string; message: string } => {
   if (e?.hasOwnProperty("data")) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return { status: e.status, message: e?.data?.errorMessage ?? API_REQUEST_FAILURE_MESSAGE };
   }
@@ -410,8 +411,10 @@ const isaacApi = createApi({
           );
           return {
             resetOptimisticUpdates: () => {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore These ".undo()"s definitely exist: https://redux-toolkit.js.org/rtk-query/usage/manual-cache-updates#optimistic-updates
               allAssignmentsPromise.undo();
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore These ".undo()"s definitely exist: https://redux-toolkit.js.org/rtk-query/usage/manual-cache-updates#optimistic-updates
               groupAssignmentsPromise.undo();
             },

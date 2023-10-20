@@ -451,6 +451,7 @@ const AssignmentDetails = ({ assignment }: { assignment: EnhancedAssignment }) =
 
   return (
     <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
       <div
         className={classNames("gameboard-header", { "text-muted": assignmentHasNotStarted })}
         onClick={() => setIsExpanded(!isExpanded)}
@@ -638,6 +639,7 @@ const QuizDetails = ({ quizAssignment }: { quizAssignment: QuizAssignmentDTO }) 
 
   return isDefined(quizAssignment.id) && quizAssignment.id > 0 ? (
     <div className="assignment-progress-gameboard" key={quizAssignment.id}>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
       <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
         <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
           <span>
@@ -748,6 +750,7 @@ export const GroupAssignmentProgress = ({ group }: { group: AppGroup }) => {
 
   return (
     <>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
       <div
         onClick={() => setExpanded(!isExpanded)}
         className={

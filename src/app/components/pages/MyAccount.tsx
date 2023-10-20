@@ -219,6 +219,7 @@ const AccountPageComponent = ({
   // Set active tab using hash anchor
   const [activeTab, setActiveTab] = useState(ACCOUNT_TAB.account);
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const tab: ACCOUNT_TAB =
       (authToken && ACCOUNT_TAB.teacherconnections) ||

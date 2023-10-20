@@ -22,6 +22,7 @@ const delimiters: [string, boolean, string][] = [
 
 describe("TrustedHtml LaTeX locator", () => {
   beforeEach(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     katex.renderToString.mockImplementation(() => LATEX);
   });
@@ -36,10 +37,12 @@ describe("TrustedHtml LaTeX locator", () => {
       const result = katexify(testcase, null, undefined, false, {});
 
       expect(result).toEqual(html[0] + LATEX + html[1]);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const callArgs = katex.renderToString.mock.calls.pop();
       expect(callArgs[0]).toBe(math[0]);
       expect(callArgs[1]).toMatchObject({ displayMode: displayMode });
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore katex.__parse is mocked, so katex-a11y can't generate screenreader text - this means
       // katex.renderToString is called again to generate MathML, so we need to pop a second call off of the
       // call stack
@@ -64,10 +67,12 @@ describe("TrustedHtml LaTeX locator", () => {
         const result = katexify(testcase, null, undefined, false, {});
 
         expect(result).toEqual(html[0] + LATEX + html[1]);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const callArgs = katex.renderToString.mock.calls.pop();
         expect(callArgs[0]).toBe(dollarMath);
         expect(callArgs[1]).toMatchObject({ displayMode: displayMode });
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore katex.__parse is mocked, so katex-a11y can't generate screenreader text - this means
         // katex.renderToString is called again to generate MathML, so we need to pop a second call off of the
         // call stack
@@ -82,10 +87,12 @@ describe("TrustedHtml LaTeX locator", () => {
     const result = katexify(testcase, null, undefined, false, {});
 
     expect(result).toEqual(html[0] + LATEX + html[1]);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const callArgs = katex.renderToString.mock.calls.pop();
     expect(callArgs[0]).toBe(env);
     expect(callArgs[1]).toMatchObject({ displayMode: true });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore katex.__parse is mocked, so katex-a11y can't generate screenreader text - this means
     // katex.renderToString is called again to generate MathML, so we need to pop a second call off of the
     // call stack

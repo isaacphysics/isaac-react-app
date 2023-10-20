@@ -19,6 +19,7 @@ export const IsaacCard = ({ doc, imageClassName }: IsaacCardProps) => {
     clickUrl && isAppLink(clickUrl) ? (
       <Link to={clickUrl} className={classes + " stretched-link"} aria-disabled={disabled} />
     ) : (
+      // eslint-disable-next-line jsx-a11y/anchor-has-content
       <a href={clickUrl} className={classes + " stretched-link"} aria-disabled={disabled} />
     );
 

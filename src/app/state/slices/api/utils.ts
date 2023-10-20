@@ -66,11 +66,13 @@ export const anonymisationFunctions = {
     if (!isDefined(quizAssignments) || quizAssignments === NOT_FOUND) {
       return quizAssignments;
     }
-    return quizAssignments.map((assignment) => {
-      const groupName = `Demo Group ${assignment.groupId}`;
+    return quizAssignments.map((quizAssignment) => {
+      const groupName = `Demo Group ${quizAssignment.groupId}`;
+      const { assignment } = anonymisationFunctions.assignment({ assignment: quizAssignment }) as {
+        assignment: QuizAssignmentDTO;
+      };
       return {
-        // @ts-ignore we know an assignment will be returned from this, since we pass in an assignment
-        ...anonymisationFunctions.assignment({ assignment: assignment }).assignment,
+        ...assignment,
         groupName,
       } as AppQuizAssignment;
     });

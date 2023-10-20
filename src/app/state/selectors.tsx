@@ -123,6 +123,7 @@ export const selectors = {
     currentQuizAttempt: (state: AppState) => state?.quizAttempt,
     /* Retrieves the quiz attempt for the current student being looked at (this is used to render /test/attempt/feedback/[group id]/[student id]) */
     currentStudentQuizAttempt: (state: AppState) =>
+      // eslint-disable-next-line no-unsafe-optional-chaining
       state?.studentQuizAttempt && "studentAttempt" in state?.studentQuizAttempt
         ? anonymiseIfNeededWith(anonymisationFunctions.quizAttempt)(state.studentQuizAttempt)
         : state?.studentQuizAttempt,

@@ -96,6 +96,7 @@ export const IsaacInteractiveCodeSnippet = ({ doc }: IsaacInteractiveCodeProps) 
     }
   }, [receivedData, segueEnvironment]);
 
+  /* eslint-disable react/no-unknown-property */
   return (
     <iframe
       title={"Code Sandbox"}
@@ -116,4 +117,5 @@ export const IsaacInteractiveCodeSnippet = ({ doc }: IsaacInteractiveCodeProps) 
       allow={"clipboard-read; clipboard-write"}
     />
   );
+  /* eslint-enable react/no-unknown-property */
 };

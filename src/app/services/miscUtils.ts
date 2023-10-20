@@ -37,6 +37,7 @@ export function useIFrameMessages(
       if (typeof iFrameRef === "object" && iFrameRef?.current) {
         iFrameRef.current.contentWindow?.postMessage(obj, iFrameRef.current.src);
       } else if (undefined !== targetDomainSource && undefined !== targetDomainOrigin) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         targetDomainSource.postMessage(obj, targetDomainOrigin);
       } else {

@@ -60,7 +60,7 @@
     "build-dev": "webpack --config config/webpack.config.cs.js",
     "start": "webpack-dev-server --hot --port 8003 --history-api-fallback --config config/webpack.config.cs.js --allowed-hosts=true",
     "test": "jest --config config/jest/jest.config.cs.js",
-    "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
+    "lint": "eslint src/",
     "build-stats": "webpack --env prod --config config/webpack.config.cs.js --profile --json > bundle-stats.json",
     "analyse-bundle": "webpack-bundle-analyzer bundle-stats.json build-cs",
     "build-cs-renderer": "webpack --env prod --config config/webpack.config.cs.renderer.js",
@@ -82,7 +82,6 @@
     ],
     "rules": {
       "no-prototype-builtins": "off",
-      "prefer-const": "warn",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
       "@typescript-eslint/explicit-function-return-type": "off",

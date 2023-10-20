@@ -125,6 +125,7 @@ const SetQuizzesPageComponent = ({ user, location }: SetQuizzesPageProps) => {
 
   // Set active tab using hash anchor
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const tab: MANAGE_QUIZ_TAB = (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) || MANAGE_QUIZ_TAB.set;
     setActiveTab(tab);

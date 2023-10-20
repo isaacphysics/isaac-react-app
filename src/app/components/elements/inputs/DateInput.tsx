@@ -2,6 +2,7 @@ import React, { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "rea
 import { Button, Input, InputGroup, InputProps } from "reactstrap";
 import { range } from "lodash";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore This value definition is a bit dodgy but should work.
 export interface DateInputProps extends InputProps {
   labelSuffix?: string;
@@ -27,6 +28,7 @@ const MONTHS = [
 ];
 
 function useWrappedState<T>(initialValue?: T) {
+  // eslint-disable-next-line prefer-const
   let [value, setValue] = useState<T | undefined>(initialValue);
   function set(newValue: T | undefined) {
     if (typeof newValue == "number" && isNaN(newValue)) {
@@ -216,11 +218,13 @@ export const DateInput = (props: DateInputProps) => {
     if (props.onChange) {
       props.onChange({
         ...e,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore <- I am NOT sure this is a good idea...
         currentTarget: {
           ...(e.currentTarget || hiddenRef.current),
           valueAsDate: timestamp || null,
         },
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         target: {
           ...(e.target || hiddenRef.current),

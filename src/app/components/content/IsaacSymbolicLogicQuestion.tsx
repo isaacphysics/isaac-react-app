@@ -226,6 +226,7 @@ const IsaacSymbolicLogicQuestion = ({
         </IsaacContentValueOrChildren>
       </div>
       {/* TODO Accessibility */}
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
         role={readonly ? undefined : "button"}
         className={`eqn-editor-preview rounded ${!previewText ? "empty" : ""}`}

@@ -20,8 +20,8 @@ const EventMisuseTable = ({ topMisuses }: { topMisuses: MisuseStatisticDTO[] }) 
         </tr>
       </thead>
       <tbody>
-        {topMisuses.map((m) => (
-          <tr>
+        {topMisuses.map((m, index) => (
+          <tr key={index}>
             <td>{m.agentIdentifier}</td>
             <td>
               {m.currentCounter}{" "}

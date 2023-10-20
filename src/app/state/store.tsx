@@ -28,6 +28,7 @@ export const store = configureStore({
   // See https://redux-toolkit.js.org/api/getDefaultMiddleware#customizing-the-included-middleware
   middleware: (getDefaultMiddleware) => {
     const newMiddleware = getDefaultMiddleware(defaultMiddlewareOptions).concat(middleware);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (process.env.NODE_ENV !== "production" && !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
       newMiddleware.concat([reduxLogger]);

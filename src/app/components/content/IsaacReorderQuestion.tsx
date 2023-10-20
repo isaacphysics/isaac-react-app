@@ -174,7 +174,13 @@ const IsaacReorderQuestion = ({ doc, questionId, readonly }: IsaacQuestionProps<
                 >
                   {availableItems &&
                     availableItems.map((item, index) => (
-                      <ReorderDraggableItem item={item} index={index} inAvailableItems readonly={readonly} />
+                      <ReorderDraggableItem
+                        item={item}
+                        index={index}
+                        key={index}
+                        inAvailableItems
+                        readonly={readonly}
+                      />
                     ))}
                   {!availableItems || availableItems.length === 0 ? <div>&nbsp;</div> : provided.placeholder}
                 </div>
@@ -196,7 +202,7 @@ const IsaacReorderQuestion = ({ doc, questionId, readonly }: IsaacQuestionProps<
                   {currentAttempt &&
                     currentAttempt.items &&
                     currentAttempt.items.map((item, index) => (
-                      <ReorderDraggableItem item={item} index={index} readonly={readonly} />
+                      <ReorderDraggableItem item={item} index={index} key={index} readonly={readonly} />
                     ))}
                   {!currentAttempt || currentAttempt?.items?.length === 0 ? (
                     <div className="text-muted text-center">

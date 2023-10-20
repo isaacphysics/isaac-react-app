@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react";
 import matchAll from "string.prototype.matchall";
 
@@ -20,3 +21,4 @@ if (!Element.prototype.closest) {
     return null;
   };
 }
+/* eslint-enable */

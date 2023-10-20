@@ -36,8 +36,7 @@ const ControlledCarouselInstance = ({ children, collectionTag }: any) => {
   const onEntered = (element: HTMLElement) => {
     const focusTargets = element.getElementsByClassName("focus-target");
     if (focusTargets.length > 0) {
-      // @ts-ignore we should only mark focusable elements with the focus-target class
-      focusTargets[0].focus();
+      (focusTargets[0] as HTMLElement).focus();
     }
   };
 

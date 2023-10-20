@@ -7,6 +7,7 @@ import {
   renderGlossaryBlocks,
   renderClozeDropZones,
 } from "./markdownRendering";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { utils } from "remarkable";
 import { usePortalsInHtml, useStatefulElementRef } from "./portals/utils";

@@ -364,8 +364,8 @@ const IsaacParsonsQuestion = ({ doc, questionId, readonly }: IsaacQuestionProps<
                             isDragDisabled={readonly}
                           >
                             {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => {
-                              // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                               return (
+                                // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                                 <div
                                   onMouseEnter={(e) => (e.target as HTMLElement).classList.add("show-controls")}
                                   onMouseLeave={(e) => (e.target as HTMLElement).classList.remove("show-controls")}

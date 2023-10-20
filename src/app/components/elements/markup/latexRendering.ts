@@ -74,13 +74,12 @@ const BooleanLogicEngineeringMacros: { [key: string]: MathJaxMacro } = {
 };
 
 function mathjaxToKatex(macros: { [key: string]: MathJaxMacro }) {
-  return Object.keys(macros).reduce((acc, key) => {
+  return Object.keys(macros).reduce((acc: Record<string, unknown>, key) => {
     const name = "\\" + key;
     let value: MathJaxMacro = macros[key];
     if (typeof value != "string") {
       value = value[0];
     }
-    // @ts-ignore
     acc[name] = value;
     return acc;
   }, {});
@@ -186,7 +185,6 @@ interface Search {
 
 function startMatch(match: RegExpMatchArray): Search {
   const key: string = match[0];
-  // @ts-ignore
   const delim = matchers[key];
   if (delim != null) {
     // a start delimiter

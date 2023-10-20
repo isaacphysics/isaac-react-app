@@ -72,7 +72,7 @@ export const QuestionSearchModal = ({
     [userContext.examBoard],
   );
 
-  const [searchBook, setSearchBook] = useState<string[]>([]);
+  const searchBook: string[] = [];
   const isBookSearch = searchBook.length > 0;
 
   const creationContext: AudienceContext = !isBookSearch

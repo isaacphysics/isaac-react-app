@@ -89,7 +89,6 @@ import { GameboardFilter } from "../pages/GameboardFilter";
 import { Loading } from "../handlers/IsaacSpinner";
 import { AssignmentSchedule } from "../pages/AssignmentSchedule";
 import { ExternalRedirect } from "../handlers/ExternalRedirect";
-import { TutorRequest } from "../pages/TutorRequest";
 import { StudentRegistration } from "../pages/StudentRegistration";
 import { TeacherRegistration } from "../pages/TeacherRegistration";
 import { WorkbookDownload } from "../pages/WorkbookDownload";

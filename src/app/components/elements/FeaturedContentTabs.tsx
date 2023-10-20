@@ -26,7 +26,7 @@ export function FeaturedContentTabs() {
               }}
               ifNotFound={
                 <div className="computer-scientist-of-the-month mt-4 mb-5 text-center">
-                  Unfortunately, we don't currently have a Computer Science Journey to display.
+                  Unfortunately, we don&apos;t currently have a Computer Science Journey to display.
                   <br />
                   Please check back later!
                 </div>

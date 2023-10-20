@@ -281,6 +281,7 @@ const IsaacSymbolicQuestion = ({ doc, questionId, readonly }: IsaacQuestionProps
           )}
         </div>
       )}
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
         role={readonly ? undefined : "button"}
         className={`eqn-editor-preview rounded ${!previewText ? "empty" : ""}`}

@@ -48,8 +48,10 @@ export function generatePolygon<T>(props: SVGShapeProps<T>, points: string, peri
     strokeDasharray:
       calculateDashArray(props.states, props.selector || (() => true), perimeter) || props.strokeDasharray,
   };
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore Remove invalid polygon element properties to stop loads of console errors
   delete polygonAttributes.quarterHeight;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore Remove invalid polygon element properties to stop loads of console errors
   delete polygonAttributes.halfWidth;
   return <polygon {...polygonAttributes}>{props.children}</polygon>;

@@ -157,6 +157,7 @@ const EventDetails = ({
         // WARNING 2022-03-01 - This will need to be reconsidered when we upgrade the front-end dependencies
         // ¯¯¯¯¯¯¯
         const icon = L.icon({
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
           iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png").default,
           iconUrl: require("leaflet/dist/images/marker-icon.png"),
           shadowUrl: require("leaflet/dist/images/marker-shadow.png"),

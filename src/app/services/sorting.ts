@@ -2,6 +2,7 @@ function valueFromObject(object: object, predicate: string) {
   const levels = predicate.split(".");
   let value = object;
   for (const level of levels) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     value = value[level];
   }

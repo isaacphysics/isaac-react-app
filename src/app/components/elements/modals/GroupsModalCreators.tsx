@@ -377,6 +377,7 @@ const CurrentGroupManagersModal = ({
             <p>
               <small>
                 <strong>Remember:</strong> Students may need to reuse the{" "}
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid,jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
                 <a onClick={() => dispatch(showGroupInvitationModal({ group, user, firstTime: false }))}>group link</a>{" "}
                 to approve access to their data for any new teachers.
               </small>

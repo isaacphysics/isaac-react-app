@@ -115,6 +115,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
   }
 
   if (layout && classBasedLayouts.hasOwnProperty(layout)) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore because we do the check with hasOwnProperty
     return <div className={classBasedLayouts[layout]}>{selectedComponent}</div>;
   } else {

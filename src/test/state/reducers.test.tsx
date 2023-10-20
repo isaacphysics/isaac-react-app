@@ -46,6 +46,7 @@ describe("root reducer", () => {
     const previousStates = [{ questions: q([{ id: "a_toboggan" }]) }, { questions: null }, undefined];
     previousStates.map((previousState) => {
       const actualNextState = removeRTKProperties(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore initial state so that we don't need to keep updating the test unnecessarily
         rootReducer(previousState, { type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS }),
       );
@@ -237,6 +238,7 @@ describe("boards reducer", () => {
     expect(actualState).toBe(null);
   });
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore It's not a complete state
   const selector = mapValues(selectors.boards, (f) => (boardsState: BoardsState) => f({ boards: boardsState }));
 
