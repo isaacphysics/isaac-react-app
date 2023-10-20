@@ -112,8 +112,6 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         });
     }
 
-    const deviceSize = useDeviceSize();
-
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
     const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
         // Some users paste the URL in the token box, so remove the token from the end if they do.
