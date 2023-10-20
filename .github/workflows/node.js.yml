@@ -22,15 +22,9 @@ jobs:
       run: yarn --frozen-lockfile
     - name: Build application
       run: yarn build-cs
-    - name: Run tests
-      run: yarn test --silent
-    - name: Find pull request number
-      uses: jwalton/gh-find-current-pr@v1
-      id: findPr
-    - name: Code coverage
-      uses: ArtiomTr/jest-coverage-report-action@v2
+    - name: Run tests (with code coverage)
+      run: yarn test --coverage --coverageReporters json-summary
+    - name: Print code coverage in PR
+      uses: MishaKav/jest-coverage-comment@main
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        package-manager: yarn
-        test-script: yarn test
-        prnumber: ${{ steps.findPr.outputs.number }}
