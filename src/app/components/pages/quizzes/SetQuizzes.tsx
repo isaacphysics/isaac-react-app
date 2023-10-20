@@ -186,7 +186,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                     ? `Demo Group ${assignment.groupId}`
                                     : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
                                 return {...assignment, groupName};
-                            });
+                            }).reverse();
                             return <>
                                 {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
                                 {quizAssignments.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-xl-3 my-2">
