@@ -91,11 +91,11 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
                 {/* Tutors are considered students w.r.t. events currently, so cannot see teacher-only events */}
                 {Object.entries(EventStatusFilter)
                   .filter(
-                    ([statusLabel, statusValue]) =>
+                    ([_, statusValue]) =>
                       (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"],
                   )
                   .filter(
-                    ([statusLabel, statusValue]) =>
+                    ([_, statusValue]) =>
                       (user && user.loggedIn && isTeacherOrAbove(user)) ||
                       statusValue !== EventStatusFilter["My event reservations"],
                   )

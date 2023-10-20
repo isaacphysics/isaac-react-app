@@ -239,7 +239,7 @@ export const QuestionSearchModal = ({
             placeholder="Any"
             {...selectStyle}
             options={groupBaseTagOptions}
-            onChange={(x: readonly Item<string>[], { action }) => {
+            onChange={(x: readonly Item<string>[], _) => {
               selectOnChange(setSearchTopics, true)(x);
             }}
           />
