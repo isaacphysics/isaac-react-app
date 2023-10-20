@@ -7,8 +7,8 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
-    name: Build and Test
+  build-lint-and-test:
+    name: Build, Lint and Test
 
     runs-on: ubuntu-latest
 
@@ -22,6 +22,8 @@ jobs:
       run: yarn --frozen-lockfile
     - name: Build application
       run: yarn build-cs
+    - name: Run the linter
+      run: yarn lint
     - name: Run tests (with code coverage)
       run: yarn test --coverage --coverageReporters json-summary
     - name: Print code coverage in PR
