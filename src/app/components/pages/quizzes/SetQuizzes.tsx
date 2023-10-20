@@ -12,7 +12,7 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Spacer} from "../../elements/Spacer";
-import {formatDate} from "../../elements/DateString";
+import {formatDate, formatISODateOnly} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     below, confirmThen,
@@ -64,7 +64,7 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
                 <h4 className="border-bottom pb-3 mb-3">{quizTitle}</h4>
 
                 <p>Set to: <strong>{assignment.groupName ?? "Unknown"}</strong></p>
-                <p>Set on: <strong>{formatDate(assignment.creationDate)} by {formatAssignmentOwner(user, assignment)}</strong></p>
+                <p>Set on: <strong>{formatDate(assignment.creationDate)}</strong> by <strong>{formatAssignmentOwner(user, assignment)}</strong></p>
                 <RS.Row>
                     {assignment.scheduledStartDate && <RS.Col>
                         <p>Start date: <strong>{formatDate(assignment.scheduledStartDate)}</strong></p>
@@ -97,6 +97,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
     const quizAssignmentsQuery = useGetQuizAssignmentsSetByMeQuery();
 
+
     // Set active tab using hash anchor
     useEffect(() => {
         // @ts-ignore
@@ -108,6 +109,14 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
     const {titleFilter, setTitleFilter, filteredQuizzes} = useFilteredQuizzes(user);
 
+    const [showFilters, setShowFilters] = useState(false);
+    const [manageQuizzesTitleFilter, setManageQuizzesTitleFilter] = useState("");
+    const [manageQuizzesGroupNameFilter, setManageQuizzesGroupNameFilter] = useState("");
+    const [quizSetDateFilterType, setQuizSetDateFilterType] = useState('after');
+    const [quizDueDateFilterType, setQuizDueDateFilterType] = useState('before');
+    const [quizSetDate, setQuizSetDate] = useState<Date | undefined>(undefined);
+    const [quizDueDate, setQuizDueDate] = useState<Date | undefined>(undefined);
+    
     const pageTitle= siteSpecific("Set / Manage Tests", "Manage tests");
     const pageHelp = <span>
         Use this page to manage and set tests to your groups. You can assign any test the {siteSpecific("Isaac", "Ada")} team have built.
@@ -177,16 +186,122 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                 </ShowLoading>,
 
                 [siteSpecific("Manage Tests", "Previously set tests")]:
+                <>
+                    <div className="d-none d-md-flex justify-content-center">
+                        <RS.Button color="tertiary" size="sm" onClick={() => setShowFilters(s => !s)}>
+                            {showFilters ? "Hide filters" : "Show filters"}
+                        </RS.Button>
+                    </div>
+                    {showFilters && <RS.Row>
+                        <RS.Col xs={6} className="d-flex flex-column align-items-center">
+                            <RS.Row>
+                                <RS.Input
+                                    id="manage-quizzes-title-filter" type="search" className="mb-4"
+                                    value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
+                                    placeholder="Filter by title" aria-label="Filter by title"
+                                />
+                            </RS.Row>
+                            <RS.Row className="d-flex align-items-baseline">      
+                                <span className="mb-4 quiz-filter-date-span">Set</span>                  
+                                <RS.UncontrolledDropdown className="mb-4 quiz-date-filter-type">
+                                    <RS.DropdownToggle className="p-0 m-1" color="tertiary" caret>{quizSetDateFilterType}</RS.DropdownToggle>
+                                    <RS.DropdownMenu>
+                                        <RS.DropdownItem onClick={() => setQuizSetDateFilterType('after')}>
+                                            after
+                                        </RS.DropdownItem>
+                                        <RS.DropdownItem onClick={() => setQuizSetDateFilterType('before')}>
+                                            before
+                                        </RS.DropdownItem>
+                                        <RS.DropdownItem onClick={() => setQuizSetDateFilterType('on')}>
+                                            on
+                                        </RS.DropdownItem>
+                                    </RS.DropdownMenu>
+                                </RS.UncontrolledDropdown>
+                                <RS.Input
+                                    id="manage-quizzes-set-date-filter" type="date" className="mb-4 p-1 quiz-filter-date-input"
+                                    value={quizSetDate && !isNaN(quizSetDate.valueOf()) ? formatISODateOnly(quizSetDate) : undefined} onChange={event => setQuizSetDate(new Date(event.target.value))}
+                                    placeholder="Filter by set date" aria-label="Filter by set date"
+                                />
+                            </RS.Row>
+                        </RS.Col>
+                        <RS.Col xs={6} className="d-flex flex-column align-items-center">
+                            <RS.Row>
+                                <RS.Input
+                                    id="manage-quizzes-group-name-filter" type="search" className="mb-4"
+                                    value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
+                                    placeholder="Filter by group name" aria-label="Filter by group name"
+                                />
+                            </RS.Row>
+                            <RS.Row className="d-flex align-items-baseline">    
+                                <span className="mb-4 p-1 quiz-filter-date-span">Due</span>
+                                <RS.UncontrolledDropdown className="mb-4 quiz-date-filter-type">
+                                    <RS.DropdownToggle className="p-0 m-1" color="tertiary" caret>{quizDueDateFilterType}</RS.DropdownToggle>
+                                    <RS.DropdownMenu>
+                                        <RS.DropdownItem onClick={() => setQuizDueDateFilterType('after')}>
+                                            after
+                                        </RS.DropdownItem>
+                                        <RS.DropdownItem onClick={() => setQuizDueDateFilterType('before')}>
+                                            before
+                                        </RS.DropdownItem>
+                                        <RS.DropdownItem onClick={() => setQuizDueDateFilterType('on')}>
+                                            on
+                                        </RS.DropdownItem>
+                                    </RS.DropdownMenu>
+                                </RS.UncontrolledDropdown>
+                                <RS.Input
+                                    id="manage-quizzes-due-date-filter" type="date" className="mb-4 p-1 quiz-filter-date-input"
+                                    value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
+                                    placeholder="Filter by due date" aria-label="Filter by due date"
+                                />
+                            </RS.Row>
+                        </RS.Col>
+                    </RS.Row>}
                     <ShowLoadingQuery
                         query={quizAssignmentsQuery}
                         ifError={() => <RS.Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</RS.Alert>}
                         thenRender={quizAssignments => {
-                            const quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
+                            let quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
                                 const groupName = persistence.load(KEY.ANONYMISE_GROUPS) === "YES"
-                                    ? `Demo Group ${assignment.groupId}`
-                                    : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
+                                ? `Demo Group ${assignment.groupId}`
+                                : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
                                 return {...assignment, groupName};
                             });
+                            if (showFilters) {
+                                const filters = [];
+                                if (manageQuizzesTitleFilter !== "") {
+                                    filters.push((assignment : AppQuizAssignment) => assignment.quizSummary?.title?.toLowerCase().includes(manageQuizzesTitleFilter.toLowerCase()));
+                                }
+                                if (manageQuizzesGroupNameFilter !== "") {
+                                    filters.push((assignment : AppQuizAssignment) => assignment.groupName?.toLowerCase().includes(manageQuizzesGroupNameFilter.toLowerCase()));
+                                }
+                                if (quizSetDate && !isNaN(quizSetDate.valueOf())) {
+                                    filters.push((assignment : AppQuizAssignment) => {
+                                        if (!assignment.creationDate) return false;
+                                        switch (quizSetDateFilterType) {
+                                            case 'after':
+                                                return assignment.creationDate >= nthHourOf(24, quizSetDate);
+                                            case 'before':
+                                                return assignment.creationDate <= nthHourOf(0, quizSetDate);
+                                            case 'on':
+                                                return assignment.creationDate >= nthHourOf(0, quizSetDate) && assignment.creationDate <= nthHourOf(24, quizSetDate);
+                                        }
+                                    });
+                                }
+                                if (quizDueDate && !isNaN(quizDueDate.valueOf())) {
+                                    filters.push((assignment : AppQuizAssignment) => {
+                                        if (!assignment.creationDate) return false;
+                                        switch (quizDueDateFilterType) {
+                                            case 'after':
+                                                return assignment.creationDate >= nthHourOf(24, quizDueDate);
+                                            case 'before':
+                                                return assignment.creationDate <= nthHourOf(0, quizDueDate);
+                                            case 'on':
+                                                return assignment.creationDate >= nthHourOf(0, quizDueDate) && assignment.creationDate <= nthHourOf(24, quizDueDate);
+                                        }
+                                    });
+                                }
+                                quizAssignmentsWithGroupNames = quizAssignmentsWithGroupNames.filter(filters.reduce((acc, filter) => (assignment) => acc(assignment) && filter(assignment), () => true));
+                            }
                             return <>
                                 {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
                                 {quizAssignments.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-xl-3 my-2">
@@ -195,6 +310,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                             </>;
                         }}
                     />
+                </>
             }}
         </Tabs>
     </RS.Container>;
