@@ -12,13 +12,18 @@ export const countStudentsAndTeachers = (eventBookings: EventBookingDTO[]) => {
 
   eventBookings.forEach((booking) => {
     const role = booking.userBooked?.role;
-    if (role === "STUDENT") {
-      studentCount++;
-    } else if (role === "TEACHER") {
-      teacherCount++;
+    const bookingStatus = booking.bookingStatus;
+
+    if (role && bookingStatus) {
+      const validStatus = ["CONFIRMED", "ATTENDED", "ABSENT"].includes(bookingStatus);
+
+      if (role === "STUDENT" && validStatus) {
+        studentCount++;
+      } else if (role === "TEACHER" && validStatus) {
+        teacherCount++;
+      }
     }
   });
-
   return {
     studentCount,
     teacherCount,

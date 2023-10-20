@@ -153,6 +153,37 @@ export const mockEventBookings: EventBookingDTO[] = [
   },
 ];
 
+export const mockCancelledEventBooking = {
+  bookingId: 1005,
+  userBooked: {
+    givenName: "Cancelled",
+    familyName: "Teacher",
+    role: "TEACHER",
+    authorisedFullAccess: false,
+    emailVerificationStatus: "VERIFIED",
+    teacherPending: false,
+    registeredContexts: [
+      {
+        stage: "all",
+        examBoard: "ocr",
+      },
+    ],
+    email: "cancelled_teacher@test.com",
+    id: 202,
+  },
+  reservedById: 0,
+  eventId: "example_event",
+  eventTitle: "Example Event",
+  eventDate: 1698850800000 as unknown as Date,
+  bookingStatus: "CANCELLED",
+  bookingDate: 1695897589235 as unknown as Date,
+  additionalInformation: {
+    experienceLevel: "teacher",
+    jobTitle: "CS Teacher",
+  },
+  updated: 1695897589235 as unknown as Date,
+};
+
 export const mockEvent = {
   id: "example_event",
   title: "Example Event",
