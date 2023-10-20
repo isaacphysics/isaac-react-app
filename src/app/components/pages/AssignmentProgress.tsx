@@ -828,7 +828,6 @@ export function AssignmentProgress({ user }: { user: RegisteredUserDTO }) {
           currentPageTitle="My markbook"
           subTitle="Track your group performance by question"
           help={pageHelp}
-          modalId="assignment_progress_help"
         />
         <Row className="align-items-center d-none d-md-flex">
           <Col className="text-right">

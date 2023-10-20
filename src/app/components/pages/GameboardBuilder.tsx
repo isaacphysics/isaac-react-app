@@ -165,7 +165,7 @@ const GameboardBuilder = ({ user }: { user: RegisteredUserDTO }) => {
   return (
     <Container id="gameboard-builder">
       <div ref={sentinel} />
-      <TitleAndBreadcrumb currentPageTitle="Gameboard builder" help={pageHelp} modalId="gameboard_builder_help" />
+      <TitleAndBreadcrumb currentPageTitle="Gameboard builder" help={pageHelp} />
 
       <Card className="p-3 mt-4 mb-5">
         <CardBody>

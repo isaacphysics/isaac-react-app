@@ -516,7 +516,7 @@ export const Groups = ({ user }: { user: RegisteredUserDTO }) => {
 
   return (
     <Container>
-      <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="groups_help" />
+      <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} />
       <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
         <Row className="mb-5">
           <Col md={4}>

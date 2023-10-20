@@ -625,7 +625,7 @@ export const SetAssignments = () => {
         assignees={(isDefined(modalBoard) && isDefined(modalBoard?.id) && groupsByGameboard[modalBoard.id]) || []}
       />
 
-      <TitleAndBreadcrumb currentPageTitle="Set assignments" help={pageHelp} modalId="set_assignments_help" />
+      <TitleAndBreadcrumb currentPageTitle="Set assignments" help={pageHelp} />
       <h4 className="mt-4 mb-3">Add a gameboard from ...</h4>
       <AddGameboardButtons className={"mb-4"} redirectBackTo={"/set_assignments"} />
       {groups && groups.length === 0 && (

@@ -77,7 +77,7 @@ export const MyAssignments = () => {
 
   return (
     <Container>
-      <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} modalId="my_assignments_help" />
+      <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} />
       <Card className="my-5">
         <CardBody className="pt-0">
           <ShowLoading until={assignments}>

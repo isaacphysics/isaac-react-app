@@ -527,7 +527,7 @@ export const GameboardFilter = withRouter(({ location }: RouteComponentProps) =>
 
   return (
     <RS.Container id="gameboard-generator" className="mb-5">
-      <TitleAndBreadcrumb currentPageTitle="Question Finder" help={pageHelp} modalId="gameboard_filter_help" />
+      <TitleAndBreadcrumb currentPageTitle="Question Finder" help={pageHelp} />
       <CanonicalHrefElement />
 
       <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">

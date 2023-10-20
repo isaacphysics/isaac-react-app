@@ -47,7 +47,6 @@ export interface PageTitleProps {
   help?: ReactElement;
   className?: string;
   audienceViews?: ViewingContext[];
-  modalId?: string;
 }
 export const PageTitle = ({
   currentPageTitle,
@@ -56,7 +55,6 @@ export const PageTitle = ({
   help,
   className,
   audienceViews,
-  modalId,
 }: PageTitleProps) => {
   const dispatch = useAppDispatch();
   const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));

@@ -4,7 +4,6 @@ import classNames from "classnames";
 export interface IsaacSpinnerProps {
   size?: "sm" | "md" | "lg";
   className?: string;
-  color?: "primary" | "secondary";
   inline?: boolean;
   displayText?: string;
 }
@@ -13,7 +12,6 @@ export interface IsaacSpinnerProps {
 export const IsaacSpinner = ({
   size = "md",
   className,
-  color = "primary",
   inline = false,
   displayText = "Loading...",
 }: IsaacSpinnerProps) => {
