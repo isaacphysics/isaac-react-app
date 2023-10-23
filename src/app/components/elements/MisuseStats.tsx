@@ -20,8 +20,9 @@ const EventMisuseTable = ({ topMisuses }: { topMisuses: MisuseStatisticDTO[] }) 
         </tr>
       </thead>
       <tbody>
-        {topMisuses.map((m, index) => (
-          <tr key={index}>
+        {topMisuses.map((m) => (
+          // eslint-disable-next-line react/jsx-key
+          <tr>
             <td>{m.agentIdentifier}</td>
             <td>
               {m.currentCounter}{" "}

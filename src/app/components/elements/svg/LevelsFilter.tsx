@@ -57,8 +57,8 @@ export function LevelsFilterHexagonal({ levelOptions, levels, setLevels }: Level
       <g transform={`translate(${focusPadding},${focusPadding})`}>
         {[levelOptionsFirstRow, levelOptionsSecondRow].map((levelOptionsRow, i) => {
           return (
+            // eslint-disable-next-line react/jsx-key
             <g
-              key={i}
               transform={`translate(${i * (hexagon.halfWidth + hexagon.padding)}, ${
                 i * (3 * hexagon.quarterHeight + 2 * hexagon.padding)
               })`}
@@ -73,7 +73,8 @@ export function LevelsFilterHexagonal({ levelOptions, levels, setLevels }: Level
                   );
                 }
                 return (
-                  <g key={i + "-" + j} transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`}>
+                  // eslint-disable-next-line react/jsx-key
+                  <g transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`}>
                     <Hexagon {...hexagon} className={`hex level ${isSelected ? "active" : ""}`} />
                     <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
                       <div

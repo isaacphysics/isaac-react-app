@@ -22,12 +22,7 @@ const ReorderDraggableItem = ({
   readonly?: boolean;
 }) => {
   return (
-    <Draggable
-      key={item.id}
-      draggableId={`${item.id || index}|reorder-item-choice`}
-      index={index}
-      isDragDisabled={readonly}
-    >
+    <Draggable draggableId={`${item.id || index}|reorder-item-choice`} index={index} isDragDisabled={readonly}>
       {(provided) => {
         return (
           <div
@@ -177,7 +172,7 @@ const IsaacReorderQuestion = ({ doc, questionId, readonly }: IsaacQuestionProps<
                       <ReorderDraggableItem
                         item={item}
                         index={index}
-                        key={index}
+                        key={item.id}
                         inAvailableItems
                         readonly={readonly}
                       />
@@ -202,7 +197,7 @@ const IsaacReorderQuestion = ({ doc, questionId, readonly }: IsaacQuestionProps<
                   {currentAttempt &&
                     currentAttempt.items &&
                     currentAttempt.items.map((item, index) => (
-                      <ReorderDraggableItem item={item} index={index} key={index} readonly={readonly} />
+                      <ReorderDraggableItem item={item} index={index} key={item.id} readonly={readonly} />
                     ))}
                   {!currentAttempt || currentAttempt?.items?.length === 0 ? (
                     <div className="text-muted text-center">
