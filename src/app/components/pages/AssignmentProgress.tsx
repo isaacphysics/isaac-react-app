@@ -309,7 +309,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
                                         questions.length,
                                         pageSettings.formatAsPercentage) : ""}
                                 </th>
-                            </tr>;
+                            </tr>
                         })}
                     </tbody>
                     <tfoot>

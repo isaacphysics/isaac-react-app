@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useMemo, useState} from "react";
 import {closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation} from "../../../state";
 import {Button} from "reactstrap";
 import {
@@ -184,6 +184,36 @@ export function ResultsTable({assignment, userFeedback}: ResultsTableProps) {
     const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
     const quiz: IsaacQuizDTO | undefined = assignment.quiz;
 
+    const fractionCorrect = (questionId: string) => {
+        const mark = assignment.userFeedback?.map(row => row.feedback?.questionMarks?.[questionId] || {} as Mark);
+        const correct = mark?.reduce((p, c) => p + (c.correct || 0), 0) || 0;
+        const total = mark?.reduce((p, c) => p + (c.correct || 0) + (c.incorrect || 0) + (c.notAttempted || 0), 0) || 0;
+        return {correct, total};
+    };
+
+    const formatPercentage = ({correct, total} : {correct: number, total: number}) => {
+        return total > 0 ? `${Math.round(100 * correct / total)}%` : "0%";
+    };
+
+    const quizAverages = sections.map(section => {
+        return section.children?.reduce((acc, question) => {
+            const {correct, total} = fractionCorrect(question.id ?? "");
+            return acc + (total > 0 ? correct / total : 0);
+        }, 0) ?? 0;
+    });
+
+    const tableHeaderFooter = (isFooter = false) => {
+        return <tr>
+            {isFooter ? <th className="bg-white border-bottom student-name"/> : <></>}
+            {questionsInQuiz(quiz).map((question, index) => <th key={index + "" + question.id} className="border">
+                {formatPercentage(fractionCorrect(question.id ?? ""))}
+            </th>).flat()}
+            <th className="border-bottom total-column">
+                {quizAverages.reduce((p, c) => p + c, 0) * 100 + "%"}
+            </th>
+        </tr>;
+    };
+
     return <>
         <div className="progress-header">
             {userFeedback
@@ -198,10 +228,10 @@ export function ResultsTable({assignment, userFeedback}: ResultsTableProps) {
             <table className="progress-table border w-100">
                 <tbody>
                     <tr className="bg-white">
-                        <th rowSpan={2} className="bg-white border-bottom student-name">&nbsp;</th>
-                        {sections.map(section => <th key={section.id} colSpan={questionsInSection(section).length} className="border font-weight-bold">
-                            {section.title}
-                        </th>)}
+                        <th rowSpan={3} className="bg-white border-bottom student-name">&nbsp;</th>
+                            {sections.map(section => <th key={section.id} colSpan={questionsInSection(section).length} className="border font-weight-bold">
+                                {section.title}
+                            </th>)}
                         <th rowSpan={2} className="border-bottom total-column">Overall</th>
                     </tr>
                     <tr className="bg-white">
@@ -209,9 +239,11 @@ export function ResultsTable({assignment, userFeedback}: ResultsTableProps) {
                             {`Q${index + 1}`}
                         </th>).flat()}
                     </tr>
+                    {tableHeaderFooter()}
                     {assignment.userFeedback?.map(row =>
                         <ResultRow key={row.user?.id} row={row} assignment={assignment} />
                     )}
+                    {tableHeaderFooter(true)}
                 </tbody>
             </table>
         </div>
