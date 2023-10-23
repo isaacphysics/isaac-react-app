@@ -274,7 +274,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
                     onClick={() => setSelectedQuestion(selectedQuestionNumber + 1)}>►</Button>
             </div>
             <div className="progress-table">
-                <table ref={tableRef}>
+                <table ref={tableRef} className="w-100">
                     <thead>
                         {tableHeaderFooter}
                     </thead>
@@ -445,12 +445,13 @@ export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: b
 const QuizProgressLoader = ({quizAssignmentId}: { quizAssignmentId: number }) => {
     const quizAssignmentFeedbackQuery = useGetQuizAssignmentWithFeedbackQuery(quizAssignmentId);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
+    const quizUserFeedback = quizAssignmentFeedbackQuery.data?.userFeedback;
     return <ShowLoadingQuery
         query={quizAssignmentFeedbackQuery}
         defaultErrorTitle={"Error loading test assignment feedback"}
-        thenRender={quizAssignmentWithFeedback =>
+        thenRender={quizAssignmentWithFeedback => 
             <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
-                <ResultsTable assignment={quizAssignmentWithFeedback} />
+                <ResultsTable assignment={quizAssignmentWithFeedback} userFeedback={quizUserFeedback} />
             </div>
         }
     />

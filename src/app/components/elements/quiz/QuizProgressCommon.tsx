@@ -10,7 +10,7 @@ import {
     QuizUserFeedbackDTO
 } from "../../../../IsaacApiTypes";
 import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
-import {isDefined, isQuestion, QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP, siteSpecific} from "../../../services";
+import {isDefined, isQuestion, PATHS, QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP, siteSpecific} from "../../../services";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Link} from "react-router-dom";
 
@@ -29,6 +29,7 @@ export const ICON = siteSpecific(
 
 interface ResultsTableProps {
     assignment: QuizAssignmentDTO;
+    userFeedback: QuizUserFeedbackDTO[] | undefined;
 }
 
 interface ResultRowProps {
@@ -179,28 +180,40 @@ export function ResultRow({row, assignment}: ResultRowProps) {
     </tr>;
 }
 
-export function ResultsTable({assignment}: ResultsTableProps) {
+export function ResultsTable({assignment, userFeedback}: ResultsTableProps) {
     const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
     const quiz: IsaacQuizDTO | undefined = assignment.quiz;
-    return <div className={"progress-table-container mb-5"}>
-        <table className="progress-table border">
-            <tbody>
-                <tr className="bg-white">
-                    <th rowSpan={2} className="bg-white border-bottom student-name">&nbsp;</th>
-                    {sections.map(section => <th key={section.id} colSpan={questionsInSection(section).length} className="border font-weight-bold">
-                        {section.title}
-                    </th>)}
-                    <th rowSpan={2} className="border-bottom total-column">Overall</th>
-                </tr>
-                <tr className="bg-white">
-                    {questionsInQuiz(quiz).map((question, index) => <th key={question.id} className="border">
-                        {`Q${index + 1}`}
-                    </th>).flat()}
-                </tr>
-                {assignment.userFeedback?.map(row =>
-                    <ResultRow key={row.user?.id} row={row} assignment={assignment} />
-                )}
-            </tbody>
-        </table>
-    </div> ;
+
+    return <>
+        <div className="progress-header">
+            {userFeedback
+            ? <>
+                <strong>{userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{userFeedback.length}</strong>
+                {` students have completed the test `}
+            </>
+            : 'Preview '}
+            <Link to={`${PATHS.PREVIEW_TEST}/${assignment.quizId}/page/1`}>{assignment.quiz?.title}</Link>.
+        </div>
+        <div className={"progress-table-container mb-5"}>
+            <table className="progress-table border w-100">
+                <tbody>
+                    <tr className="bg-white">
+                        <th rowSpan={2} className="bg-white border-bottom student-name">&nbsp;</th>
+                        {sections.map(section => <th key={section.id} colSpan={questionsInSection(section).length} className="border font-weight-bold">
+                            {section.title}
+                        </th>)}
+                        <th rowSpan={2} className="border-bottom total-column">Overall</th>
+                    </tr>
+                    <tr className="bg-white">
+                        {questionsInQuiz(quiz).map((question, index) => <th key={question.id} className="border">
+                            {`Q${index + 1}`}
+                        </th>).flat()}
+                    </tr>
+                    {assignment.userFeedback?.map(row =>
+                        <ResultRow key={row.user?.id} row={row} assignment={assignment} />
+                    )}
+                </tbody>
+            </table>
+        </div>
+    </>;
 }
