@@ -20,6 +20,22 @@ export function matchesAllWordsInAnyOrder(text: string | undefined, searchPhrase
 }
 
 /**
+ * This function is used to match a string against a search phrase, in a case-insensitive manner.
+ * 
+ * @param text The text to check.
+ * @param searchPhrase The search phrase to check for in the text.
+ * @returns Whether the text contains the search phrase or not.
+ */
+export function matchesNameSubstring(firstName: string | undefined, lastName: string | undefined, searchPhrase: string): boolean {
+    const search = searchPhrase.toLowerCase().replaceAll(" ", "").replaceAll(".", "");
+    if (firstName) {
+        return (firstName.toLowerCase() + lastName?.toLowerCase()).includes(search) ||
+            (firstName[0].toLowerCase() + lastName?.toLowerCase()).includes(search);
+    }
+    return lastName?.toLowerCase().includes(searchPhrase.toLowerCase()) ?? false;
+}
+
+/**
  * This provides a simple interface for post message passing in-between domains.
  *
  * @param uid               Unique identifier of this particular message conversation
@@ -114,7 +130,7 @@ export function useOutsideCallback(ref: RefObject<any>, callback : () => void, d
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-export function noop(x: never) {}
+export function noop(_: never) {}
 
 // Confirms (currently using `window.confirm`, but we could change that to a more Isaac/Ada-themed thing moving
 // forwards) that the user would like to perform an action, given a particular prompt.
