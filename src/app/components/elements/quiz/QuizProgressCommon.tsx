@@ -185,19 +185,18 @@ export function ResultsTable({assignment, userFeedback}: ResultsTableProps) {
     const quiz: IsaacQuizDTO | undefined = assignment.quiz;
 
     const fractionCorrect = (questionId: string) => {
-        const mark = assignment.userFeedback?.map(row => row.feedback?.questionMarks?.[questionId] || {} as Mark);
-        const correct = mark?.reduce((p, c) => p + (c.correct || 0), 0) || 0;
-        const total = mark?.reduce((p, c) => p + (c.correct || 0) + (c.incorrect || 0) + (c.notAttempted || 0), 0) || 0;
-        return {correct, total};
-    };
-
-    const formatPercentage = ({correct, total} : {correct: number, total: number}) => {
-        return total > 0 ? `${Math.round(100 * correct / total)}%` : "0%";
+        if (!assignment.userFeedback) return [0, 0];
+        const marks = assignment.userFeedback.map(row => row.feedback?.questionMarks?.[questionId]);
+        const definedMarks = marks?.filter(isDefined);
+        if (!definedMarks || definedMarks.length === 0) return [0, 0];
+        const correct = definedMarks.reduce((p, c) => p + (c.correct ?? 0), 0);
+        const total = assignment.userFeedback.length * ((definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) + (definedMarks[0].notAttempted ?? 0));
+        return [correct, total];
     };
 
     const quizAverages = sections.map(section => {
         return section.children?.reduce((acc, question) => {
-            const {correct, total} = fractionCorrect(question.id ?? "");
+            const [correct, total] = fractionCorrect(question.id ?? "");
             return acc + (total > 0 ? correct / total : 0);
         }, 0) ?? 0;
     });
@@ -205,11 +204,14 @@ export function ResultsTable({assignment, userFeedback}: ResultsTableProps) {
     const tableHeaderFooter = (isFooter = false) => {
         return <tr>
             {isFooter ? <th className="bg-white border-bottom student-name"/> : <></>}
-            {questionsInQuiz(quiz).map((question, index) => <th key={index + "" + question.id} className="border">
-                {formatPercentage(fractionCorrect(question.id ?? ""))}
-            </th>).flat()}
+            {questionsInQuiz(quiz).map((question, index) => {
+                const [correct, total] = fractionCorrect(question.id ?? "");
+                return <th key={index + "" + question.id} className="border">
+                    {formatMark(correct, total, true)}
+                </th>;
+            }).flat()}
             <th className="border-bottom total-column">
-                {quizAverages.reduce((p, c) => p + c, 0) * 100 + "%"}
+                {(quizAverages && quiz?.total) ? formatMark(quizAverages.reduce((p, c) => p + c, 0), quiz?.total, true) : "N/A"}
             </th>
         </tr>;
     };
