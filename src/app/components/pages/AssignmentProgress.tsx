@@ -51,7 +51,6 @@ import {
     getAssignmentStartDate,
     getQuizAssignmentCSVDownloadLink,
     hasAssignmentStarted,
-    isAda,
     isDefined,
     isPhy,
     MARKBOOK_TYPE_TAB,
@@ -94,7 +93,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
             correctQuestionPartsCount: 0,
             incorrectQuestionPartsCount: 0,
             notAttemptedPartResults: []
-        }
+        };
         const ret = p.results.reduce<AppAssignmentProgress>((oldP, results, i) => {
                 const tickCount = ["PASSED", "PERFECT"].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
                 const questions = assignment.gameboard.contents;
@@ -158,7 +157,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
     function toggleSort(itemOrder: SortOrder) {
         setSortOrder(itemOrder);
         if (typeof itemOrder === "number") {
-            setSingleQuestionSort(true)
+            setSingleQuestionSort(true);
         } else {
             setSingleQuestionSort(false);
         }
@@ -309,7 +308,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
                                         questions.length,
                                         pageSettings.formatAsPercentage) : ""}
                                 </th>
-                            </tr>
+                            </tr>;
                         })}
                     </tbody>
                     <tfoot>
@@ -380,7 +379,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
             </div>
         </div>
         {isExpanded && <ProgressLoader assignment={assignment} />}
-    </div>
+    </div>;
 };
 
 export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: boolean}) => {
@@ -439,7 +438,7 @@ export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: b
             <label>Colour-blind&nbsp;<input type="checkbox" checked={pageSettings.colourBlind} onChange={e => pageSettings.setColourBlind(e.target.checked)}/></label>
             <label>Percent view&nbsp;<input type="checkbox" checked={pageSettings.formatAsPercentage} onChange={e => pageSettings.setFormatAsPercentage(e.target.checked)}/></label>
         </div>
-    </div></div>
+    </div></div>;
 };
 
 const QuizProgressLoader = ({quizAssignmentId}: { quizAssignmentId: number }) => {
@@ -454,7 +453,7 @@ const QuizProgressLoader = ({quizAssignmentId}: { quizAssignmentId: number }) =>
                 <ResultsTable assignment={quizAssignmentWithFeedback} userFeedback={quizUserFeedback} />
             </div>
         }
-    />
+    />;
 };
 
 const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) => {

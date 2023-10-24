@@ -1,4 +1,4 @@
-import React, {useContext, useMemo, useState} from "react";
+import React, {useContext, useState} from "react";
 import {closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation} from "../../../state";
 import {Button} from "reactstrap";
 import {
@@ -42,12 +42,12 @@ export function questionsInSection(section?: IsaacQuizSectionDTO) {
 }
 
 export function questionsInQuiz(quiz?: IsaacQuizDTO) {
-    const questions: ContentBaseDTO[] = []
+    const questions: ContentBaseDTO[] = [];
     quiz?.children?.forEach(
         section => {
-            questions.push(...questionsInSection(section))
+            questions.push(...questionsInSection(section));
         }
-    )
+    );
     return questions;
 }
 
@@ -170,8 +170,8 @@ export function ResultRow({row, assignment}: ResultRowProps) {
                         /* default */ ICON.notAttempted;
                     return <td key={question.id} className={markQuestionClasses(row, mark, outOf)}>
                         {icon}
-                    </td>
-                }).flat()
+                    </td>;
+                }).flat();
             })}
             <th className="total-column">
                 {formatMark(row.feedback?.overallMark?.correct as number, quiz?.total as number, pageSettings.formatAsPercentage)}
