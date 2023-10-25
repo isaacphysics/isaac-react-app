@@ -280,6 +280,7 @@ export const QuizProgressDetails = ({assignment, userFeedback}: {assignment: Qui
         {`Q${questions.indexOf(question) + 1}`}
     </div>;
     
-    return <ResultsTable<QuizQuestion> progress={progress} questions={questions} header={header} getQuestionTitle={getQuestionTitle}
-    assignmentAverages={quizAverages} assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}/>;
+    return <ResultsTable<QuizQuestion> assignmentId={assignment.id} progress={progress} questions={questions} header={header} getQuestionTitle={getQuestionTitle}
+    assignmentAverages={quizAverages} assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
+    isQuiz={true}/>;
 };

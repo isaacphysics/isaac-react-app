@@ -4,6 +4,8 @@ import {AppAssignmentProgress, AssignmentProgressPageSettingsContext} from "../.
 import {siteSpecific} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
+import { IsaacSpinner } from "../../handlers/IsaacSpinner";
+import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation } from "../../../state";
 
 export const ICON = siteSpecific(
     {
@@ -37,6 +39,7 @@ export interface QuestionType {
 }
 
 export interface ResultsTableProps<Q extends QuestionType> {
+    assignmentId?: number;
     progress?: AppAssignmentProgress[];
     questions: Q[];
     header: JSX.Element;
@@ -45,14 +48,40 @@ export interface ResultsTableProps<Q extends QuestionType> {
     assignmentTotalQuestionParts: number;
     markClasses: (row: AppAssignmentProgress, assignmentTotalQuestionParts: number) => string;
     markQuestionClasses: (row: AppAssignmentProgress, questionIndex: number) => string;
-    showQuestionPartBreakdown?: boolean;
+    isQuiz?: boolean;
 }
 
-export function ResultsTable<Q extends QuestionType>({progress, questions, header, getQuestionTitle, assignmentAverages, assignmentTotalQuestionParts, markClasses, markQuestionClasses, showQuestionPartBreakdown} : ResultsTableProps<Q>) {
+export function ResultsTable<Q extends QuestionType>({assignmentId, progress, questions, header, getQuestionTitle, assignmentAverages, assignmentTotalQuestionParts, markClasses, markQuestionClasses, isQuiz} : ResultsTableProps<Q>) {
     const [selectedQuestionNumber, setSelectedQuestion] = useState(0);
     const selectedQuestion: Q | undefined = questions[selectedQuestionNumber];
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
+
+    const dispatch = useAppDispatch();
+
+    const [dropdownOpen, setDropdownOpen] = useState(progress?.map(() => false));
+    const toggle = (index: number) => setDropdownOpen(dropdownOpen?.map((value, i) => i === index ? !value : value));
+
+    const [returnQuizToStudent, {isLoading: returningQuizToStudent}] = useReturnQuizToStudentMutation();
+    const returnToStudent = (userId?: number) => {
+        const confirm = () => {
+            returnQuizToStudent({quizAssignmentId: assignmentId as number, userId: userId as number})
+                .then(() => dispatch(closeActiveModal()));
+        };
+        dispatch(openActiveModal({
+            closeAction: () => dispatch(closeActiveModal()),
+            title: "Allow another attempt?",
+            body: "This will allow the student to attempt the test again.",
+            buttons: [
+                <Button key={1} color="primary" outline target="_blank" onClick={() => dispatch(closeActiveModal())}>
+                    Cancel
+                </Button>,
+                <Button key={0} color="primary" target="_blank" onClick={confirm}>
+                    Confirm
+                </Button>,
+        ]
+        }));
+    };
 
     type SortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
     const [sortOrder, setSortOrder] = useState<SortOrder>("name");
@@ -115,7 +144,7 @@ export function ResultsTable<Q extends QuestionType>({progress, questions, heade
         {questions.map((q, index) =>
             sortItem({key: q.id, itemOrder: index, className: isSelected(q), children: `${assignmentAverages[index]}%`})
         )}
-        {showQuestionPartBreakdown ? <>
+        {isQuiz ? <>
             {sortItem({key: "totalQuestionPartPercentage", itemOrder: "totalQuestionPartPercentage", className:"total-column left", children: "Total Parts"})}
             {sortItem({key: "totalQuestionPercentage", itemOrder: "totalQuestionPercentage", className:"total-column right", children: "Total Qs"})}
         </> : 
@@ -175,16 +204,39 @@ export function ResultsTable<Q extends QuestionType>({progress, questions, heade
                     {tableHeaderFooter}
                 </thead>
                 <tbody>
-                    {sortedProgress.map((studentProgress) => {
+                    {sortedProgress.map((studentProgress, index) => {
                         const fullAccess = studentProgress.user.authorisedFullAccess;
                         return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
                             <th className="student-name">
                                 {fullAccess && pageSettings.isTeacher ?
-                                    <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
-                                        {studentProgress.user.givenName}
-                                        <span
-                                            className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
-                                    </Link> :
+                                    (
+                                        isQuiz ?
+                                        <>
+                                            <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
+                                                <div
+                                                    className="quiz-student-name"
+                                                >
+                                                    {studentProgress.user.givenName}
+                                                    <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                                </div>
+                                                <div className="quiz-student-menu-icon">
+                                                    {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
+                                                </div>
+                                            </Button>
+                                            {!returningQuizToStudent && dropdownOpen?.[index] && <>
+                                                <div className="py-2 px-3">
+                                                    <Button size="sm" onClick={() => returnToStudent(studentProgress.user.id)}>Allow another attempt</Button>
+                                                </div>
+                                                <div className="py-2 px-3">
+                                                    <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user.id}`}>View answers</Button>
+                                                </div>
+                                            </>}
+                                        </>
+                                        : <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
+                                            {studentProgress.user.givenName}
+                                            <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                        </Link>
+                                    ) :
                                     <span>{studentProgress.user.givenName} {studentProgress.user.familyName}</span>
                                 }
                             </th>
@@ -201,7 +253,7 @@ export function ResultsTable<Q extends QuestionType>({progress, questions, heade
                                     }
                                 </td> 
                             )}
-                            {showQuestionPartBreakdown ? <>
+                            {isQuiz ? <>
                                 <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
                                     {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
                                         assignmentTotalQuestionParts,

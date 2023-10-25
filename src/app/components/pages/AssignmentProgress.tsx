@@ -159,9 +159,9 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         </Link>;
     };
 
-    return <ResultsTable<GameboardItem> progress={progress} questions={questions} header={tableHeader} getQuestionTitle={getQuestionTitle} 
+    return <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} header={tableHeader} getQuestionTitle={getQuestionTitle} 
     assignmentAverages={assignmentAverages} assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
-    showQuestionPartBreakdown={true}/>;
+    isQuiz={false}/>;
 };
 
 const ProgressLoader = ({assignment}: {assignment: EnhancedAssignment}) => {
