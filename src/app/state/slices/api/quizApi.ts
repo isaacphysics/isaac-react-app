@@ -1,5 +1,6 @@
 import {isaacApi} from "./baseApi";
 import {
+    AssignmentFeedbackDTO,
     ChoiceDTO,
     IsaacQuizDTO,
     QuestionValidationResponseDTO,
@@ -165,9 +166,9 @@ export const quizApi = isaacApi.enhanceEndpoints({
             })
         }),
 
-        assignQuiz: build.mutation<QuizAssignmentDTO, QuizAssignmentDTO>({
+        assignQuiz: build.mutation<AssignmentFeedbackDTO[], QuizAssignmentDTO[]>({
             query: (assignment) => ({
-                url: "/quiz/assignment",
+                url: "/quiz/assign_bulk",
                 method: "POST",
                 body: assignment,
             }),

@@ -6,9 +6,9 @@ import {
     useGetGroupsQuery,
     useAssignQuizMutation,
     showSuccessToast,
-    mutationSucceeded, closeActiveModal
+    mutationSucceeded, closeActiveModal, useAppSelector, selectors
 } from "../../../state";
-import {isDefined, Item, nthHourOf, selectOnChange, TODAY} from "../../../services";
+import {assignMultipleQuiz, isDefined, Item, nthHourOf, selectOnChange, TODAY} from "../../../services";
 import range from "lodash/range";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -48,6 +48,7 @@ interface QuizSettingModalProps {
 export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
+    const user = useAppSelector(selectors.user.loggedInOrNull);
 
     const [assignQuiz, {isLoading: isAssigning}] = useAssignQuizMutation();
 
@@ -55,13 +56,32 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date | null>(initialDueDate ?? null);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date | null>(initialScheduledStartDate ?? null);
-    const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | null>(initialFeedbackMode ?? null);
+    const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode>();
 
     const yearRange = range(currentYear, currentYear + 5);
 
     function addValidated(what: ControlName) {
         setValidated(validated => {
             return new Set([...validated, what]);
+        });
+    }
+
+    function assign() {
+        dispatch(assignMultipleQuiz({
+            quizId: quiz?.id as string,
+            groups: selectedGroups,
+            dueDate: dueDate ?? undefined,
+            scheduledStartDate: scheduledStartDate ?? undefined,
+            quizFeedbackMode: feedbackMode,
+            userId: user?.id
+        })).then(success => {
+            if (success) {
+                setValidated(new Set());
+                setSelectedGroups([]);
+                setDueDate(null);
+                setScheduledStartDate(null);
+                setFeedbackMode(undefined);
+            }
         });
     }
 
@@ -79,7 +99,7 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
                 defaultErrorTitle={"Error fetching groups"}
                 thenRender={groups => {
                     const groupOptions: Item<number>[] = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
-                    return <StyledSelect
+                    return <StyledSelect isMulti placeholder="None"
                         options={groupOptions}
                         onChange={(s) => {
                             selectOnChange(setSelectedGroups, false)(s);
@@ -149,26 +169,7 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
                 className={"float-right mb-4"}
                 disabled={selectedGroups.length === 0 || !feedbackMode || isAssigning || dueDateInvalid || scheduledStartDateInvalid}
                 onMouseEnter={() => setValidated(new Set(['group', 'feedbackMode']))}
-                onClick={() => {
-                    const assignment = {
-                        quizId: quiz.id,
-                        groupId: selectedGroups[0].value,
-                        dueDate: dueDate ?? undefined,
-                        scheduledStartDate: scheduledStartDate ? nthHourOf(7, scheduledStartDate) : undefined,
-                        quizFeedbackMode: feedbackMode ?? undefined,
-                    };
-                    if (!allowedToSchedule) {
-                        delete assignment.scheduledStartDate;
-                    }
-                    assignQuiz(assignment)
-                        .then((result) => {
-                            if (mutationSucceeded(result)) {
-                                dispatch(showSuccessToast("Test set", "Test set to " + selectedGroups[0].label + " successfully"));
-                                setSelectedGroups([]);
-                                setValidated(new Set());
-                            }
-                        });
-                }}
+                onClick={assign}
             >
                 {isAssigning ? <IsaacSpinner size={"sm"} /> : "Set test"}
             </Button>
