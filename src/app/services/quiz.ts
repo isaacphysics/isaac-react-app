@@ -1,27 +1,36 @@
 import {useEffect, useMemo, useState} from "react";
 import {
+    AppDispatch,
+    assignmentsApi,
     deregisterQuestions,
     getRTKQueryErrorMessage,
+    mutationSucceeded,
+    quizApi,
     registerQuestions,
     selectors,
+    showErrorToast,
+    showRTKQueryErrorToastIfNeeded,
+    showSuccessToast,
+    showToast,
     useAppDispatch,
     useAppSelector,
-    useGetStudentQuizAttemptWithFeedbackQuery,
     useGetAvailableQuizzesQuery,
     useGetMyQuizAttemptWithFeedbackQuery,
-    AppDispatch,
-    quizApi,
-    mutationSucceeded,
-    showToast, showErrorToast, showSuccessToast, showRTKQueryErrorToastIfNeeded, assignmentsApi
+    useGetStudentQuizAttemptWithFeedbackQuery
 } from "../state";
 import {
-    API_PATH, getValue,
+    API_PATH,
+    getValue,
     isDefined,
     isEventLeaderOrStaff,
     isQuestion,
     Item,
-    matchesAllWordsInAnyOrder, nthHourOf, siteSpecific,
-    tags, TODAY, toTuple,
+    matchesAllWordsInAnyOrder,
+    nthHourOf,
+    siteSpecific,
+    tags,
+    TODAY,
+    toTuple,
     useQueryParams
 } from "./";
 import {
@@ -29,14 +38,14 @@ import {
     IsaacQuizSectionDTO,
     QuestionDTO,
     QuizAssignmentDTO,
-    QuizAttemptDTO, QuizFeedbackMode,
+    QuizAttemptDTO,
+    QuizFeedbackMode,
     QuizSummaryDTO,
     RegisteredUserDTO
 } from "../../IsaacApiTypes";
 import partition from "lodash/partition";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {QuizFeedbackModes} from "../../IsaacAppTypes";
 
 export interface QuizSpec {
     quizId: string;
@@ -96,7 +105,7 @@ export const assignMultipleQuiz = createAsyncThunk(
             dueDate: dueDate,
             scheduledStartDate: scheduledStartDate,
             quizFeedbackMode: quizFeedbackMode
-        }))
+        }));
 
         const response = await dispatch(quizApi.endpoints.assignQuiz.initiate(quizzes));
         if (mutationSucceeded(response)) {
@@ -320,5 +329,5 @@ export function isAttempt(a: QuizAttemptOrAssignment): a is QuizAttemptDTO {
 }
 
 export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAttemptOrAssignment[]): [QuizAttemptOrAssignment[], QuizAttemptOrAssignment[]] {
-    return partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate))
+    return partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate));
 }

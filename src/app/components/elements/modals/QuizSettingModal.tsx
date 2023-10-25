@@ -2,13 +2,14 @@ import React, {ChangeEvent, useState} from "react";
 import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {
     AppDispatch,
+    closeActiveModal,
+    selectors,
     useAppDispatch,
-    useGetGroupsQuery,
+    useAppSelector,
     useAssignQuizMutation,
-    showSuccessToast,
-    mutationSucceeded, closeActiveModal, useAppSelector, selectors
+    useGetGroupsQuery
 } from "../../../state";
-import {assignMultipleQuiz, isDefined, Item, nthHourOf, selectOnChange, TODAY} from "../../../services";
+import {assignMultipleQuiz, isDefined, Item, selectOnChange, TODAY} from "../../../services";
 import range from "lodash/range";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -45,12 +46,12 @@ interface QuizSettingModalProps {
     feedbackMode?: QuizFeedbackMode | null;
 }
 
-export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
+export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: _initialFeedbackMode}: QuizSettingModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
     const user = useAppSelector(selectors.user.loggedInOrNull);
 
-    const [assignQuiz, {isLoading: isAssigning}] = useAssignQuizMutation();
+    const [_assignQuiz, {isLoading: isAssigning}] = useAssignQuizMutation();
 
     const [validated, setValidated] = useState<Set<ControlName>>(new Set());
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
@@ -113,7 +114,7 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
                             control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
                             menuPortal: base => ({...base, zIndex: 9999}),
                         }}
-                    />
+                    />;
                 }}
             />
             {groupInvalid && <FormFeedback className="d-block" valid={false}>You must select a group</FormFeedback>}
