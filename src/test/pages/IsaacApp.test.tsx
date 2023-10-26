@@ -17,7 +17,7 @@ const learnLinks = [
   "/glossary",
   "/pages/computer_science_journeys_gallery",
 ];
-const eventsLinks = ["/events", "/pages/event_types", "/safeguarding"];
+const eventsLinks = ["/events", "/safeguarding"];
 const teacherEventLinks = ["/events?show_reservations_only=true"].concat(eventsLinks);
 const helpLinks = ["/support/teacher", "/support/student", "/contact"];
 
