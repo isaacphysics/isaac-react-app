@@ -156,7 +156,20 @@ export function ResultsTable<Q extends QuestionType>({assignmentId, progress, qu
     }
     </tr>;
 
+export function ResultsTable({assignment}: {assignment: QuizAssignmentDTO}) {
+    const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
+    const quiz: IsaacQuizDTO | undefined = assignment.quiz;
     const tableRef = useRef<HTMLTableElement>(null);
+
+    const fractionCorrect = (questionId: string) => {
+        if (!assignment.userFeedback) return [0, 0];
+        const marks = assignment.userFeedback.map(row => row.feedback?.questionMarks?.[questionId]);
+        const definedMarks = marks?.filter(isDefined);
+        if (!definedMarks || definedMarks.length === 0) return [0, 0];
+        const correct = definedMarks.reduce((p, c) => p + (c.correct ?? 0), 0);
+        const total = assignment.userFeedback.length * ((definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) + (definedMarks[0].notAttempted ?? 0));
+        return [correct, total];
+    };
 
     useLayoutEffect(() => {
         const table = tableRef.current;

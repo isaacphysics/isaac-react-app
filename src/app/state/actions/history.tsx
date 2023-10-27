@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 
 export function useHistoryState<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
     const history = useHistory();
-    console.log(history.location.state);
     const existingState = (history.location.state as object)?.[key as keyof typeof history.location.state];
     const [state, setState] = useState<T>(existingState ?? initialValue);
 

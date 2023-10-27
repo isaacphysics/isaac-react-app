@@ -91,6 +91,7 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
 const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
+    const hashAnchor = location.hash?.slice(1) ?? null;
     const [activeTab, setActiveTab] = useHistoryState("currentTab", MANAGE_QUIZ_TAB.set);
 
     const { data: groups } = useGetGroupsQuery(false);
@@ -112,6 +113,15 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ml-2">hidden from teachers</div>}
         {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ml-2">visible to students</div>}
     </>;
+
+    // Set active tab using hash anchor
+    useEffect(() => {
+        // @ts-ignore
+        const tab: MANAGE_QUIZ_TAB =
+            (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) ||
+            MANAGE_QUIZ_TAB.set;
+        setActiveTab(tab);
+    }, [hashAnchor]);
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "set_tests_help" : undefined} />
