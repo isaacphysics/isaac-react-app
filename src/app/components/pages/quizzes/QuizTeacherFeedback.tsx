@@ -170,7 +170,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                         <AssignmentProgressLegend showQuestionKey />
-                        <ResultsTable assignment={quizAssignment} userFeedback={quizAssignmentQuery.data?.userFeedback} />
+                        <ResultsTable assignment={quizAssignment} />
                     </AssignmentProgressPageSettingsContext.Provider>
                 </div>
             </>

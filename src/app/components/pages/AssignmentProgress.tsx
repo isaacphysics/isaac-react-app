@@ -444,13 +444,12 @@ export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: b
 const QuizProgressLoader = ({quizAssignmentId}: { quizAssignmentId: number }) => {
     const quizAssignmentFeedbackQuery = useGetQuizAssignmentWithFeedbackQuery(quizAssignmentId);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
-    const quizUserFeedback = quizAssignmentFeedbackQuery.data?.userFeedback;
     return <ShowLoadingQuery
         query={quizAssignmentFeedbackQuery}
         defaultErrorTitle={"Error loading test assignment feedback"}
         thenRender={quizAssignmentWithFeedback => 
             <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
-                <ResultsTable assignment={quizAssignmentWithFeedback} userFeedback={quizUserFeedback} />
+                <ResultsTable assignment={quizAssignmentWithFeedback} />
             </div>
         }
     />;

@@ -27,11 +27,6 @@ export const ICON = siteSpecific(
     }
 );
 
-interface ResultsTableProps {
-    assignment: QuizAssignmentDTO;
-    userFeedback: QuizUserFeedbackDTO[] | undefined;
-}
-
 interface ResultRowProps {
     row: QuizUserFeedbackDTO;
     assignment: QuizAssignmentDTO;
@@ -180,7 +175,7 @@ export function ResultRow({row, assignment}: ResultRowProps) {
     </tr>;
 }
 
-export function ResultsTable({assignment, userFeedback}: ResultsTableProps) {
+export function ResultsTable({assignment}: {assignment: QuizAssignmentDTO}) {
     const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
     const quiz: IsaacQuizDTO | undefined = assignment.quiz;
 
@@ -218,9 +213,9 @@ export function ResultsTable({assignment, userFeedback}: ResultsTableProps) {
 
     return <>
         <div className="progress-header">
-            {userFeedback
+            {assignment.userFeedback
             ? <>
-                <strong>{userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{userFeedback.length}</strong>
+                <strong>{assignment.userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{assignment.userFeedback.length}</strong>
                 {` students have completed the test `}
             </>
             : 'Preview '}
