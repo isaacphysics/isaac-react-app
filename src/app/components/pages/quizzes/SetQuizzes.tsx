@@ -15,7 +15,9 @@ import {Spacer} from "../../elements/Spacer";
 import {formatDate, formatISODateOnly} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
+    above,
     below, confirmThen,
+    isAda,
     isEventLeaderOrStaff,
     isPhy, isStaff, KEY,
     MANAGE_QUIZ_TAB,
@@ -30,6 +32,7 @@ import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {PageFragment} from "../../elements/PageFragment";
 import {RenderNothing} from "../../elements/RenderNothing";
+import classNames from "classnames";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -131,6 +134,82 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
         {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ml-2">visible to students</div>}
     </>;
 
+    const filterByDate = (dateFilterType: string, assignmentDate: Date | number | undefined, comparisonDate: Date | number) => {
+        if (!assignmentDate) return false;
+        switch (dateFilterType) {
+            case 'after':
+                return assignmentDate >= nthHourOf(24, comparisonDate);
+            case 'before':
+                return assignmentDate <= nthHourOf(0, comparisonDate);
+            case 'on':
+                return assignmentDate >= nthHourOf(0, comparisonDate) && assignmentDate <= nthHourOf(24, comparisonDate);
+        }
+    };
+
+    const rowFiltersView = ((isPhy && above["sm"](deviceSize)) || (isAda && above["md"](deviceSize)));
+
+    const titleFilterInput = <RS.Row>
+        <RS.Input
+            id="manage-quizzes-title-filter" type="search" className={rowFiltersView ? "mb-4" : "mb-2"}
+            value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
+            placeholder="Filter by title" aria-label="Filter by title"
+        />
+    </RS.Row>;
+
+    const groupFilterInput = <RS.Row>
+        <RS.Input
+            id="manage-quizzes-group-name-filter" type="search" className={rowFiltersView ? "mb-4" : "mb-2"}
+            value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
+            placeholder="Filter by group" aria-label="Filter by group"
+        />
+    </RS.Row>;
+
+    const setDateFilterInput = <RS.Row className="d-flex align-items-baseline">
+        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Set</span>
+        <RS.UncontrolledDropdown className={classNames("quiz-date-filter-type", rowFiltersView ? "mb-4" : "mb-2")}>
+            <RS.DropdownToggle className={"p-0 m-1"} color="tertiary" caret>{quizSetDateFilterType}</RS.DropdownToggle>
+            <RS.DropdownMenu>
+                <RS.DropdownItem onClick={() => setQuizSetDateFilterType('after')}>
+                    after
+                </RS.DropdownItem>
+                <RS.DropdownItem onClick={() => setQuizSetDateFilterType('before')}>
+                    before
+                </RS.DropdownItem>
+                <RS.DropdownItem onClick={() => setQuizSetDateFilterType('on')}>
+                    on
+                </RS.DropdownItem>
+            </RS.DropdownMenu>
+        </RS.UncontrolledDropdown>
+        <RS.Input
+            id="manage-quizzes-set-date-filter" type="date" className={classNames("quiz-filter-date-input p-1", rowFiltersView ? "mb-4" : "mb-2")}
+            value={quizSetDate && !isNaN(quizSetDate.valueOf()) ? formatISODateOnly(quizSetDate) : undefined} onChange={event => setQuizSetDate(new Date(event.target.value))}
+            placeholder="Filter by set date" aria-label="Filter by set date"
+        />
+    </RS.Row>;
+
+    const dueDateFilterInput = <RS.Row className="d-flex align-items-baseline">
+        <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Due</span>
+        <RS.UncontrolledDropdown className={classNames("quiz-date-filter-type", rowFiltersView ? "mb-4" : "mb-2")}>
+            <RS.DropdownToggle className="p-0 m-1" color="tertiary" caret>{quizDueDateFilterType}</RS.DropdownToggle>
+            <RS.DropdownMenu>
+                <RS.DropdownItem onClick={() => setQuizDueDateFilterType('after')}>
+                    after
+                </RS.DropdownItem>
+                <RS.DropdownItem onClick={() => setQuizDueDateFilterType('before')}>
+                    before
+                </RS.DropdownItem>
+                <RS.DropdownItem onClick={() => setQuizDueDateFilterType('on')}>
+                    on
+                </RS.DropdownItem>
+            </RS.DropdownMenu>
+        </RS.UncontrolledDropdown>
+        <RS.Input
+            id="manage-quizzes-due-date-filter" type="date" className={classNames("quiz-filter-date-input p-1", rowFiltersView ? "mb-4" : "mb-2")}
+            value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
+            placeholder="Filter by due date" aria-label="Filter by due date"
+        />
+    </RS.Row>;
+
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "set_tests_help" : undefined} />
         <PageFragment fragmentId={"set_tests_help"} ifNotFound={RenderNothing} />
@@ -187,75 +266,29 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
                 [siteSpecific("Manage Tests", "Previously set tests")]:
                 <>
-                    <div className="d-none d-md-flex justify-content-center">
+                    <div className="d-flex justify-content-center mb-4">
                         <RS.Button color="tertiary" size="sm" onClick={() => setShowFilters(s => !s)}>
                             {showFilters ? "Hide filters" : "Show filters"}
                         </RS.Button>
                     </div>
-                    {showFilters && <RS.Row>
-                        <RS.Col xs={6} className="d-flex flex-column align-items-center">
-                            <RS.Row>
-                                <RS.Input
-                                    id="manage-quizzes-title-filter" type="search" className="mb-4"
-                                    value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
-                                    placeholder="Filter by title" aria-label="Filter by title"
-                                />
-                            </RS.Row>
-                            <RS.Row className="d-flex align-items-baseline">      
-                                <span className="mb-4 quiz-filter-date-span">Set</span>                  
-                                <RS.UncontrolledDropdown className="mb-4 quiz-date-filter-type">
-                                    <RS.DropdownToggle className="p-0 m-1" color="tertiary" caret>{quizSetDateFilterType}</RS.DropdownToggle>
-                                    <RS.DropdownMenu>
-                                        <RS.DropdownItem onClick={() => setQuizSetDateFilterType('after')}>
-                                            after
-                                        </RS.DropdownItem>
-                                        <RS.DropdownItem onClick={() => setQuizSetDateFilterType('before')}>
-                                            before
-                                        </RS.DropdownItem>
-                                        <RS.DropdownItem onClick={() => setQuizSetDateFilterType('on')}>
-                                            on
-                                        </RS.DropdownItem>
-                                    </RS.DropdownMenu>
-                                </RS.UncontrolledDropdown>
-                                <RS.Input
-                                    id="manage-quizzes-set-date-filter" type="date" className="mb-4 p-1 quiz-filter-date-input"
-                                    value={quizSetDate && !isNaN(quizSetDate.valueOf()) ? formatISODateOnly(quizSetDate) : undefined} onChange={event => setQuizSetDate(new Date(event.target.value))}
-                                    placeholder="Filter by set date" aria-label="Filter by set date"
-                                />
-                            </RS.Row>
-                        </RS.Col>
-                        <RS.Col xs={6} className="d-flex flex-column align-items-center">
-                            <RS.Row>
-                                <RS.Input
-                                    id="manage-quizzes-group-name-filter" type="search" className="mb-4"
-                                    value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
-                                    placeholder="Filter by group name" aria-label="Filter by group name"
-                                />
-                            </RS.Row>
-                            <RS.Row className="d-flex align-items-baseline">    
-                                <span className="mb-4 p-1 quiz-filter-date-span">Due</span>
-                                <RS.UncontrolledDropdown className="mb-4 quiz-date-filter-type">
-                                    <RS.DropdownToggle className="p-0 m-1" color="tertiary" caret>{quizDueDateFilterType}</RS.DropdownToggle>
-                                    <RS.DropdownMenu>
-                                        <RS.DropdownItem onClick={() => setQuizDueDateFilterType('after')}>
-                                            after
-                                        </RS.DropdownItem>
-                                        <RS.DropdownItem onClick={() => setQuizDueDateFilterType('before')}>
-                                            before
-                                        </RS.DropdownItem>
-                                        <RS.DropdownItem onClick={() => setQuizDueDateFilterType('on')}>
-                                            on
-                                        </RS.DropdownItem>
-                                    </RS.DropdownMenu>
-                                </RS.UncontrolledDropdown>
-                                <RS.Input
-                                    id="manage-quizzes-due-date-filter" type="date" className="mb-4 p-1 quiz-filter-date-input"
-                                    value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
-                                    placeholder="Filter by due date" aria-label="Filter by due date"
-                                />
-                            </RS.Row>
-                        </RS.Col>
-                    </RS.Row>}
+                    {showFilters && (rowFiltersView
+                        ? <RS.Row>
+                            <RS.Col xs={6} className="d-flex flex-column align-items-center">
+                                {titleFilterInput}
+                                {setDateFilterInput}
+                            </RS.Col>
+                            <RS.Col xs={6} className="d-flex flex-column align-items-center">
+                                {groupFilterInput}
+                                {dueDateFilterInput}
+                            </RS.Col>
+                        </RS.Row>
+                        : <RS.Col className="d-flex flex-column align-items-center">
+                            {titleFilterInput}
+                            {groupFilterInput}
+                            {setDateFilterInput}
+                            {dueDateFilterInput}
+                        </RS.Col>)
+                    }
                     <ShowLoadingQuery
                         query={quizAssignmentsQuery}
                         ifError={() => <RS.Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</RS.Alert>}
@@ -276,28 +309,12 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                 }
                                 if (quizSetDate && !isNaN(quizSetDate.valueOf())) {
                                     filters.push((assignment : AppQuizAssignment) => {
-                                        if (!assignment.creationDate) return false;
-                                        switch (quizSetDateFilterType) {
-                                            case 'after':
-                                                return assignment.creationDate >= nthHourOf(24, quizSetDate);
-                                            case 'before':
-                                                return assignment.creationDate <= nthHourOf(0, quizSetDate);
-                                            case 'on':
-                                                return assignment.creationDate >= nthHourOf(0, quizSetDate) && assignment.creationDate <= nthHourOf(24, quizSetDate);
-                                        }
+                                        return filterByDate(quizSetDateFilterType, assignment.creationDate, quizSetDate);
                                     });
                                 }
                                 if (quizDueDate && !isNaN(quizDueDate.valueOf())) {
                                     filters.push((assignment : AppQuizAssignment) => {
-                                        if (!assignment.creationDate) return false;
-                                        switch (quizDueDateFilterType) {
-                                            case 'after':
-                                                return assignment.creationDate >= nthHourOf(24, quizDueDate);
-                                            case 'before':
-                                                return assignment.creationDate <= nthHourOf(0, quizDueDate);
-                                            case 'on':
-                                                return assignment.creationDate >= nthHourOf(0, quizDueDate) && assignment.creationDate <= nthHourOf(24, quizDueDate);
-                                        }
+                                        return filterByDate(quizDueDateFilterType, assignment.dueDate, quizDueDate);
                                     });
                                 }
                                 quizAssignmentsWithGroupNames = quizAssignmentsWithGroupNames.filter(filters.reduce((acc, filter) => (assignment) => acc(assignment) && filter(assignment), () => true));
