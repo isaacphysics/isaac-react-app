@@ -56,11 +56,14 @@ export const renderGlossaryBlocks = (markdown: string) => {
 // This is used to produce a hoverable element showing the glossary term, and its definition in a tooltip.
 export const renderInlineGlossaryTerms = (markdown: string) => {
     // Matches strings such as [glossary-inline:glossary-demo|boolean-algebra] and
-    // [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"] which CAN be inlined.
-    const glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z0-9-|]+?)\s*(?:"(?<text>[A-Za-z0-9-()/,'\\. ]+)")?\]/g;
-    return markdown.replace(glossaryInlineRegexp, (_match, id, text, _offset) => {
+    // [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"] which CAN be inlined and
+    // [glossary-inline:glossary-demo-titled|boolean-algebra "boolean algebra"] which include their title.
+    const glossaryInlineRegexp = /\[glossary-inline(?<titled>-titled)?:(?<id>[a-z0-9-|]+?)\s*(?:"(?<text>[A-Za-z0-9-()/,'\\. ]+)")?\]/g;
+    return markdown.replace(glossaryInlineRegexp, (_match, titled, id, text, _offset) => {
         const cssFriendlyTermId = id.replace(/\|/g, '-');
-        return `<span data-type="inline" class="inline-glossary-term" ${text ? `data-text="${text}"` : ""} id="glossary-term-${cssFriendlyTermId}">Loading glossary...</span>`;
+        return titled !== undefined ?
+            `<span data-type="inline" class="inline-glossary-term" ${text ? `data-text="${text}"` : ""} id="glossary-term-yestitled-${cssFriendlyTermId}">Loading glossary...</span>` :
+            `<span data-type="inline" class="inline-glossary-term" ${text ? `data-text="${text}"` : ""} id="glossary-term-nottitled-${cssFriendlyTermId}">Loading glossary...</span>`;
     });
 };
 

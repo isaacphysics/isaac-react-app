@@ -47,8 +47,9 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
     if (termElements.length === 0) return [html, () => []];
 
     for (let i = 0; i < termElements.length; i++) {
-        const termId = termElements[i].id.slice(14); // Remove "glossary-term-" prefix
+        const termId = termElements[i].id.slice(24); // Remove "glossary-term-[yes,not]titled-" prefix
         const term = getTermFromCandidateTerms(glossaryTerms.filter(term => term.id?.replace(/\|/g, '-') === termId));
+        const titled = termElements[i].id.slice(14, 23) === "yestitled";
 
         if (term) {
             const uniqueId = `${termId}-${componentUuid}-${i}`;
@@ -65,7 +66,10 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
                 tooltips.push(
                     <UncontrolledTooltip key={uniqueId} placement="bottom" target={uniqueId}>
                         <Markup trusted-markup-encoding={"markdown"}>
-                            {"**" + term.value + "**: " + term.explanation?.value}
+                            {titled ?
+                                "**" + term.value + "**: " + term.explanation?.value :
+                                term.explanation?.value
+                            }
                         </Markup>
                     </UncontrolledTooltip>
                 );
