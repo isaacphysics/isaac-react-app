@@ -52,8 +52,8 @@ export interface ResultsTableProps<Q extends QuestionType> {
 }
 
 export function ResultsTable<Q extends QuestionType>({assignmentId, progress, questions, header, getQuestionTitle, assignmentAverages, assignmentTotalQuestionParts, markClasses, markQuestionClasses, isQuiz} : ResultsTableProps<Q>) {
-    const [selectedQuestionNumber, setSelectedQuestion] = useState(0);
-    const selectedQuestion: Q | undefined = questions[selectedQuestionNumber];
+    const [selectedQuestionNumber, setSelectedQuestionNumber] = useState(0);
+    const selectedQuestion: Q = questions[selectedQuestionNumber];
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
@@ -111,7 +111,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId, progress, qu
     function sortItem(props: ComponentProps<"th"> & {itemOrder: SortOrder}) {
         const {itemOrder, ...rest} = props;
         const className = (props.className || "") + " " + sortClasses(itemOrder);
-        const clickToSelect = typeof itemOrder === "number" ? (() => setSelectedQuestion(itemOrder)) : undefined;
+        const clickToSelect = typeof itemOrder === "number" ? (() => setSelectedQuestionNumber(itemOrder)) : undefined;
         const sortArrows = (typeof itemOrder !== "number" || itemOrder === selectedQuestionNumber) ?
             <button className="sort" onClick={() => {toggleSort(itemOrder);}}>
                 <span className="up" >▲</span>
@@ -156,20 +156,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId, progress, qu
     }
     </tr>;
 
-export function ResultsTable({assignment}: {assignment: QuizAssignmentDTO}) {
-    const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
-    const quiz: IsaacQuizDTO | undefined = assignment.quiz;
     const tableRef = useRef<HTMLTableElement>(null);
-
-    const fractionCorrect = (questionId: string) => {
-        if (!assignment.userFeedback) return [0, 0];
-        const marks = assignment.userFeedback.map(row => row.feedback?.questionMarks?.[questionId]);
-        const definedMarks = marks?.filter(isDefined);
-        if (!definedMarks || definedMarks.length === 0) return [0, 0];
-        const correct = definedMarks.reduce((p, c) => p + (c.correct ?? 0), 0);
-        const total = assignment.userFeedback.length * ((definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) + (definedMarks[0].notAttempted ?? 0));
-        return [correct, total];
-    };
 
     useLayoutEffect(() => {
         const table = tableRef.current;
@@ -205,12 +192,12 @@ export function ResultsTable({assignment}: {assignment: QuizAssignmentDTO}) {
         {progress && progress.length > 0 && <>
             <div className="progress-questions">
                 <Button color="tertiary" disabled={selectedQuestionNumber == 0}
-                    onClick={() => setSelectedQuestion(selectedQuestionNumber - 1)}>◄</Button>
+                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber - 1)}>◄</Button>
                 <div>
                     {getQuestionTitle(selectedQuestion)}
                 </div>
                 <Button color="tertiary" disabled={selectedQuestionNumber === questions.length - 1}
-                    onClick={() => setSelectedQuestion(selectedQuestionNumber + 1)}>►</Button>
+                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber + 1)}>►</Button>
             </div>
             <table ref={tableRef} className="progress-table w-100">
                 <thead>
@@ -254,7 +241,7 @@ export function ResultsTable({assignment}: {assignment: QuizAssignmentDTO}) {
                                 }
                             </th>
                             {questions.map((q, index) =>
-                                <td key={q.id} className={isSelected(questions[index]) + " " + markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestion(index)}>
+                                <td key={q.id} className={isSelected(questions[index]) + " " + markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestionNumber(index)}>
                                     {(assignmentTotalQuestionParts === questions.length) ?
                                         studentProgress.correctPartResults[index] === 1 ? ICON.correct :
                                         studentProgress.incorrectPartResults[index] === 1 ? ICON.incorrect :

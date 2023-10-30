@@ -9,7 +9,7 @@ import {
 } from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, QuizUserFeedbackDTO, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
+import {ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
     confirmThen,
@@ -184,7 +184,7 @@ interface QuizQuestion extends ContentBaseDTO {
     questionPartsTotal?: number | undefined;
 }
 
-export const QuizProgressDetails = ({assignment, userFeedback}: {assignment: QuizAssignmentDTO, userFeedback?: QuizUserFeedbackDTO[]}) => {
+export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO}) => {
 
     const questions : QuizQuestion[] = questionsInQuiz(assignment.quiz).map(q => ({...q, questionPartsTotal: 1} as QuizQuestion));
 
@@ -252,7 +252,7 @@ export const QuizProgressDetails = ({assignment, userFeedback}: {assignment: Qui
 
     const totalParts = questions.length;
 
-    const progress : AppAssignmentProgress[] = !userFeedback ? [] : userFeedback.map(user => {
+    const progress : AppAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
         return {
             user: user.user as UserSummaryDTO,
             // a list of the correct parts of an answer, one list for each question
@@ -267,9 +267,9 @@ export const QuizProgressDetails = ({assignment, userFeedback}: {assignment: Qui
     });
 
     const header = <div className="progress-header">
-        {userFeedback
+        {assignment.userFeedback
         ? <>
-            <strong>{userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{userFeedback.length}</strong>
+            <strong>{assignment.userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{assignment.userFeedback.length}</strong>
             {` students have completed the test `}
         </>
         : 'Preview '}
