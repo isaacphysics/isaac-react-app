@@ -65,7 +65,7 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
                 tooltips.push(
                     <UncontrolledTooltip key={uniqueId} placement="bottom" target={uniqueId}>
                         <Markup trusted-markup-encoding={"markdown"}>
-                            {term.explanation?.value}
+                            {"**" + term.value + "**: " + term.explanation?.value}
                         </Markup>
                     </UncontrolledTooltip>
                 );
