@@ -17,7 +17,7 @@ const GlossaryTerm = ({term, id, rootElement}: {term: GlossaryTermDTO, id: strin
         );
     }
     return null;
-}
+};
 
 function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
     if (candidateTerms.length === 0) {
@@ -81,4 +81,4 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
         htmlDom.innerHTML,
         (ref?: HTMLElement) => ref ? [...tooltips, ...fullTermContainers.map(({id, term}) => <GlossaryTerm key={id} id={id} term={term} rootElement={ref}/>)] : tooltips
     ];
-}
+};
