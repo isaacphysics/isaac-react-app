@@ -46,7 +46,7 @@ interface QuizSettingModalProps {
     feedbackMode?: QuizFeedbackMode | null;
 }
 
-export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: _initialFeedbackMode}: QuizSettingModalProps) {
+export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
     const user = useAppSelector(selectors.user.loggedInOrNull);
@@ -57,7 +57,7 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date | null>(initialDueDate ?? null);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date | null>(initialScheduledStartDate ?? null);
-    const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode>();
+    const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | null>(initialFeedbackMode ?? null);
 
     const yearRange = range(currentYear, currentYear + 5);
 
@@ -73,7 +73,7 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
             groups: selectedGroups,
             dueDate: dueDate ?? undefined,
             scheduledStartDate: scheduledStartDate ?? undefined,
-            quizFeedbackMode: feedbackMode,
+            quizFeedbackMode: feedbackMode ?? undefined,
             userId: user?.id
         })).then(success => {
             if (success) {
@@ -81,7 +81,7 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
                 setSelectedGroups([]);
                 setDueDate(null);
                 setScheduledStartDate(null);
-                setFeedbackMode(undefined);
+                setFeedbackMode(null);
             }
         });
     }
@@ -100,7 +100,7 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
                 defaultErrorTitle={"Error fetching groups"}
                 thenRender={groups => {
                     const groupOptions: Item<number>[] = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
-                    return <StyledSelect isMulti placeholder="None"
+                    return <StyledSelect isMulti placeholder="Select groups"
                         options={groupOptions}
                         onChange={(s) => {
                             selectOnChange(setSelectedGroups, false)(s);
