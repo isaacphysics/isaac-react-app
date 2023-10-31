@@ -38,6 +38,7 @@ const EventTableRow = ({ eventData, onClick }: { eventData: EventOverview; onCli
     numberAttended,
     numberAbsent,
     numberOfPlaces,
+    privateEvent,
   } = eventData;
 
   return (
@@ -59,7 +60,10 @@ const EventTableRow = ({ eventData, onClick }: { eventData: EventOverview; onCli
         <DateString>{bookingDeadline}</DateString>
       </td>
       <td className="small-centered-td">{location && location.address && location.address.town}</td>
-      <td className="small-centered-td">{eventStatus?.replace(/_/g, " ")}</td>
+      <td className="small-centered-td">
+        {privateEvent && <RS.Badge color="primary">Private Event</RS.Badge>}
+        {eventStatus?.replace(/_/g, " ")}
+      </td>
       <td className="small-centered-td">
         {numberOfConfirmedBookings} / {numberOfPlaces}
       </td>

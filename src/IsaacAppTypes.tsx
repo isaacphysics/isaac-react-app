@@ -645,6 +645,7 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
   isNotClosed?: boolean;
   isCancelled?: boolean;
   userBookingStatus?: ApiTypes.BookingStatus;
+  isPrivateEvent?: boolean;
 }
 
 export interface EventOverview {
@@ -660,6 +661,7 @@ export interface EventOverview {
   numberAttended: number;
   numberAbsent: number;
   numberOfPlaces: number;
+  privateEvent?: boolean;
 }
 
 export interface EventMapData {

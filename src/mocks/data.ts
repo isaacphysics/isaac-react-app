@@ -1,6 +1,6 @@
 import { FEATURED_NEWS_TAG } from "../app/services";
 import { DAYS_AGO } from "../test/utils";
-import { UserSummaryWithGroupMembershipDTO } from "../IsaacApiTypes";
+import { IsaacEventPageDTO, UserSummaryWithGroupMembershipDTO } from "../IsaacApiTypes";
 import { EventBookingDTO } from "../IsaacApiTypes";
 
 export const mockEventBookings: EventBookingDTO[] = [
@@ -184,7 +184,7 @@ export const mockCancelledEventBooking = {
   updated: 1695897589235 as unknown as Date,
 };
 
-export const mockEvent = {
+export const mockEvent: IsaacEventPageDTO = {
   id: "example_event",
   title: "Example Event",
   subtitle: "Example Subtitle",
@@ -220,7 +220,6 @@ export const mockEvent = {
     children: [],
     published: false,
     src: "/assets/events/booster.svg",
-    altText: "",
   },
   numberOfPlaces: 200,
   groupReservationLimit: 10,
@@ -235,6 +234,7 @@ export const mockEvent = {
   endDate: 1698854400000 as unknown as Date,
   eventStatus: "OPEN",
   placesAvailable: 195,
+  privateEvent: false,
 };
 
 export const mockFutureEventOverviews = {

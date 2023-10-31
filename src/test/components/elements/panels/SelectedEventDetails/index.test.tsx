@@ -2,9 +2,8 @@ import { screen } from "@testing-library/react";
 import {
   SelectedEventDetails,
   countStudentsAndTeachers,
-  formatAddress,
 } from "../../../../../app/components/elements/panels/SelectedEventDetails";
-import { ACTION_TYPE, API_PATH, augmentEvent } from "../../../../../app/services";
+import { ACTION_TYPE, API_PATH, augmentEvent, formatAddress } from "../../../../../app/services";
 import { renderTestEnvironment } from "../../../../utils";
 import { mockEvent, mockEventBookings } from "../../../../../mocks/data";
 import { AugmentedEvent } from "../../../../../IsaacAppTypes";
@@ -48,7 +47,7 @@ describe("SelectedEventDetails", () => {
   };
 
   it("renders all event details when event is selected", async () => {
-    const eventDetails = mockEvent as IsaacEventPageDTO;
+    const eventDetails = mockEvent;
     const augmentedEvent = augmentEvent(eventDetails);
     setupTest(eventDetails);
     const eventInfo = await screen.findByTestId("event-details");
@@ -69,7 +68,7 @@ describe("SelectedEventDetails", () => {
           postalCode: "FAKE 123",
         },
       },
-    } as IsaacEventPageDTO;
+    };
     const augmentedEvent = augmentEvent(eventDetails);
     setupTest(eventDetails);
     const eventInfo = await screen.findByTestId("event-details");
@@ -81,7 +80,7 @@ describe("SelectedEventDetails", () => {
     const eventDetails = {
       ...mockEvent,
       prepWorkDeadline: 1695897589235 as unknown as Date,
-    } as IsaacEventPageDTO;
+    };
     setupTest(eventDetails);
     const eventInfo = await screen.findByTestId("event-details");
     const prepWorkDeadline = FRIENDLY_DATE_AND_TIME.format(eventDetails.prepWorkDeadline);
@@ -90,9 +89,21 @@ describe("SelectedEventDetails", () => {
   });
 
   it("does not show Prepwork deadline if not present in the event details", async () => {
-    setupTest(mockEvent as IsaacEventPageDTO);
+    setupTest(mockEvent);
     const eventInfo = await screen.findByTestId("event-details");
     expect(eventInfo.textContent).not.toContain("Prepwork deadline");
+  });
+
+  it("shows private event badge if event is private", async () => {
+    setupTest({ ...mockEvent, privateEvent: true });
+    const eventInfo = await screen.findByTestId("event-details");
+    expect(eventInfo.textContent).toContain("Private Event");
+  });
+
+  it("does not show private event badge if event is not private", async () => {
+    setupTest(mockEvent);
+    const eventInfo = await screen.findByTestId("event-details");
+    expect(eventInfo.textContent).not.toContain("Private Event");
   });
 
   it("shows message if event details are not found", async () => {

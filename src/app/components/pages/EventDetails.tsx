@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Table, Alert } from "reactstrap";
-import dayjs from "dayjs";
+import { Badge, Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Table, Alert } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import {
   addMyselfToWaitingList,
@@ -31,7 +30,6 @@ import {
   isStaff,
   isTeacherOrAbove,
   KEY,
-  NOT_FOUND,
   SITE_SUBJECT_TITLE,
   studentOnlyEventMessage,
   userCanBeAddedToEventWaitingList,
@@ -42,6 +40,8 @@ import {
   zeroOrLess,
   isAdminOrEventManager,
   isEventLeader,
+  googleCalendarTemplate,
+  formatAddress,
 } from "../../services";
 import { AdditionalInformation } from "../../../IsaacAppTypes";
 import { DateString } from "../elements/DateString";
@@ -52,10 +52,6 @@ import { IsaacContent } from "../content/IsaacContent";
 import { EditContentButton } from "../elements/EditContentButton";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import * as L from "leaflet";
-
-function formatDate(date: Date | number) {
-  return dayjs(date).format("YYYYMMDD[T]HHmmss");
-}
 
 interface EventDetailsProps {
   match: { params: { eventId: string } };
@@ -85,36 +81,6 @@ const EventDetails = ({
   function loginAndReturn() {
     persistence.save(KEY.AFTER_AUTH_PATH, pathname);
     history.push("/login");
-  }
-
-  function googleCalendarTemplate() {
-    if (event && event !== NOT_FOUND) {
-      // https://calendar.google.com/calendar/event?action=TEMPLATE&text=[event_name]&dates=[start_date as YYYYMMDDTHHMMSS or YYYYMMDD]/[end_date as YYYYMMDDTHHMMSS or YYYYMMDD]&details=[extra_info]&location=[full_address_here]
-      const address =
-        event.location && event.location.address
-          ? [
-              event.location.address.addressLine1,
-              event.location.address.addressLine2,
-              event.location.address.town,
-              event.location.address.county,
-              event.location.address.postalCode,
-              event.location.address.country,
-            ]
-          : [];
-
-      const calendarTemplateUrl = [
-        "https://calendar.google.com/calendar/event?action=TEMPLATE",
-        event.title && "text=" + encodeURI(event.title),
-        event.date &&
-          "dates=" +
-            encodeURI(formatDate(event.date)) +
-            (event.endDate ? "/" + encodeURI(formatDate(event.endDate)) : ""),
-        event.subtitle && "details=" + encodeURI(event.subtitle),
-        "location=" + encodeURI(address.filter((s) => !!s).join(", ")),
-      ];
-
-      window.open(calendarTemplateUrl.filter((s) => !!s).join("&"), "_blank");
-    }
   }
 
   return (
@@ -187,14 +153,22 @@ const EventDetails = ({
                           className="m-auto restrict-height"
                           top
                           src={event.eventThumbnail.src}
+                          data-testid="event-details-image"
                         />
-                        <div className="border px-2 py-1 mt-3 bg-light">
+                        <div className="border px-2 py-1 mt-3 bg-light" data-testid="event-details-title">
                           <strong>{event.title}</strong>
+                          {event.isPrivateEvent && (
+                            <Row className="mx-0 mt-2">
+                              <Badge color="primary" className="mr-1">
+                                Private Event
+                              </Badge>
+                            </Row>
+                          )}
                         </div>
                         {isDefined(event.location) &&
                           isDefined(event.location?.latitude) &&
                           isDefined(event.location?.longitude) && (
-                            <div className="border px-2 py-1 mt-3 bg-light">
+                            <div className="border px-2 py-1 mt-3 bg-light" data-testid="event-map">
                               <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13}>
                                 <TileLayer
                                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -222,7 +196,7 @@ const EventDetails = ({
                     {isStaff(user) && (
                       <Button
                         color="link"
-                        onClick={googleCalendarTemplate}
+                        onClick={() => googleCalendarTemplate(event)}
                         className="calendar-img mx-2"
                         title="Add to Google Calendar"
                       >
@@ -235,55 +209,38 @@ const EventDetails = ({
                       <tbody>
                         <tr>
                           <td>When:</td>
-                          <td>
+                          <td data-testid="event-date">
                             {formatEventDetailsDate(event)}
                             {event.hasExpired && (
                               <div className="alert-danger text-center">This event is in the past.</div>
                             )}
                           </td>
                         </tr>
-                        {event.location &&
-                          event.location.address &&
-                          event.location.address.addressLine1 &&
-                          !isVirtual && (
-                            <tr>
-                              <td>Location:</td>
-                              <td>
-                                {event.location.address.addressLine1}, {event.location.address.addressLine2},{" "}
-                                {event.location.address.town}, {event.location.address.postalCode}
-                              </td>
-                            </tr>
-                          )}
-                        {isVirtual && (
-                          <tr>
-                            <td>Location:</td>
-                            <td>Online</td>
-                          </tr>
-                        )}
+                        <tr>
+                          <td>Location:</td>
+                          <td data-testid="event-location">{isVirtual ? "Online" : formatAddress(event.location)}</td>
+                        </tr>
                         {event.isNotClosed && !event.hasExpired && (
                           <tr>
                             <td>Availability:</td>
-                            <td>
+                            <td data-testid="event-availability">
                               {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
                               {zeroOrLess(event.placesAvailable) && (
-                                <div>
-                                  <strong className="text-danger">FULL</strong>
+                                <>
+                                  <Badge className="mr-1">Full</Badge>
                                   {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
-                                  {event.isAStudentEvent && isTeacherOrAbove(user) && (
-                                    <span> - for student bookings</span>
-                                  )}
-                                </div>
+                                  {event.isAStudentEvent && isTeacherOrAbove(user) && <span>for student bookings</span>}
+                                </>
                               )}
                               {event.userBookingStatus === "CONFIRMED" && (
                                 <span>
-                                  {" "}
-                                  - <span className="text-success">You are booked on this event!</span>
+                                  {" - "}
+                                  <span className="text-success">You are booked on this event!</span>
                                 </span>
                               )}
                               {event.userBookingStatus === "RESERVED" && (
                                 <span>
-                                  {" "}
-                                  -{" "}
+                                  {" - "}
                                   <span className="text-success">
                                     You have been reserved a place on this event!
                                     <Button color="link text-success" onClick={openAndScrollToBookingForm}>
@@ -342,25 +299,23 @@ const EventDetails = ({
                               <div>
                                 <p className="mb-3">
                                   <small>
-                                    By requesting to book on this event, you are granting event organisers access to the
-                                    information provided in the form above. You are also giving them permission to set
-                                    you pre-event work and view your progress. You can manage access to your progress
-                                    data in your{" "}
+                                    {
+                                      "By requesting to book on this event, you are granting event organisers access to the information provided in the form above. You are also giving them permission to set you pre-event work and view your progress. You can manage access to your progress data in your "
+                                    }
                                     <Link to="/account#teacherconnections" target="_blank">
                                       account settings
                                     </Link>
                                     .
                                     <br />
-                                    Your data will be processed in accordance with Isaac {
-                                      SITE_SUBJECT_TITLE
-                                    }&apos;s{" "}
+                                    {`Your data will be processed in accordance with Isaac ${SITE_SUBJECT_TITLE}'s `}
                                     <Link to="/privacy" target="_blank">
                                       privacy policy
                                     </Link>
                                     .
                                     <br />
-                                    If you have unsubscribed from assignment email notifications you may miss out on
-                                    pre-work set for the event. You can enable this in your{" "}
+                                    {
+                                      "If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event. You can enable this in your "
+                                    }
                                     <Link to="/account#emailpreferences" target="_blank">
                                       account settings
                                     </Link>

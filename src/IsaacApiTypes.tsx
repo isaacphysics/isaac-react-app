@@ -93,6 +93,7 @@ export interface IsaacEventPageDTO extends ContentDTO {
   date?: Date;
   bookingDeadline?: Date;
   prepWorkDeadline?: Date;
+  canonicalSourceFile?: string;
   location?: Location;
   eventThumbnail?: Omit<ImageDTO, "altText">; // We don't want to use event thumbnail alt text for WCAG compliance (it's a decorative image, and conveys no meaning)
   numberOfPlaces?: number;
@@ -101,6 +102,7 @@ export interface IsaacEventPageDTO extends ContentDTO {
   eventStatus?: EventStatus;
   placesAvailable?: number;
   endDate?: Date;
+  privateEvent?: boolean;
 }
 
 export interface IsaacFastTrackQuestionPageDTO extends IsaacQuestionPageDTO {}
@@ -330,7 +332,7 @@ export interface ContentDTO extends ContentBaseDTO {
   encoding?: string;
   layout?: string;
   expandable?: boolean;
-  children?: ContentBaseDTO[];
+  children?: ContentDTO[];
   value?: string;
   attribution?: string;
   relatedContent?: ContentSummaryDTO[];

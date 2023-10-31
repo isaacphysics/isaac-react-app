@@ -3,7 +3,7 @@ import * as RS from "reactstrap";
 import { AppState, getEvent, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
 import { DateString } from "../DateString";
-import { NOT_FOUND, zeroOrLess } from "../../../services";
+import { NOT_FOUND, formatAddress, zeroOrLess } from "../../../services";
 import { EventBookingDTO, Location } from "../../../../IsaacApiTypes";
 
 export const countStudentsAndTeachers = (eventBookings: EventBookingDTO[]) => {
@@ -30,17 +30,7 @@ export const countStudentsAndTeachers = (eventBookings: EventBookingDTO[]) => {
   };
 };
 
-export const formatAddress = (location: Location | undefined) => {
-  if (!location) return "Unknown Location";
-  const addressLine1 = location.address?.addressLine1 || "";
-  const town = location.address?.town || "";
-  const postalCode = location.address?.postalCode || "";
-  const addressComponents = [addressLine1, town, postalCode].filter(Boolean);
-  return addressComponents.join(", ");
-};
-
 export const LocationDetails = ({ isVirtual, location }: { isVirtual?: boolean; location?: Location }) => {
-  formatAddress(location);
   return (
     <>
       <strong>Location: </strong>
@@ -74,6 +64,11 @@ export const SelectedEventDetails = ({ eventId }: { eventId: string }) => {
             <Link to={`/events/${selectedEvent.id}`} target="_blank">
               {selectedEvent.title} {selectedEvent.subtitle}
             </Link>
+            {selectedEvent.isPrivateEvent && (
+              <RS.Badge className="ml-2" color="primary">
+                Private Event
+              </RS.Badge>
+            )}
             <br />
             <LocationDetails isVirtual={selectedEvent.isVirtual} location={selectedEvent.location} />
             <strong>Event status: </strong>
