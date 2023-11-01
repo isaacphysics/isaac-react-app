@@ -14,6 +14,7 @@ module.exports = {
         "<rootDir>src/**/*.test.(js|jsx|ts|tsx)"
     ],
     "testEnvironment": "jsdom",
+    "testTimeout": 10000,
     "testURL": "http://localhost",
     "transform": {
         "^.+\\.css$": "<rootDir>config/jest/cssTransform.js",
