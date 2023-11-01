@@ -27,19 +27,18 @@ import {
     difficultiesOrdered,
     difficultyShortLabelMap,
     formatBoardOwner,
-    isAda,
     isMobile,
-    isPhy, isTutorOrAbove, PATHS,
+    isPhy, isTutorOrAbove, matchesAllWordsInAnyOrder, PATHS,
     siteSpecific,
     sortIcon,
     useGameboards
 } from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import classNames from "classnames";
 import {BoardCard} from "../elements/cards/BoardCard";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
+import { Spacer } from "../elements/Spacer";
 
 interface GameboardsTableProps {
     user: RegisteredUserDTO;
@@ -68,11 +67,11 @@ const PhyTable = (props: GameboardsTableProps) => {
     } = props;
     return <>
         <Row>
-            <Col sm={6} lg={3} xl={2}>
+            <Col sm={4} lg={3}>
                 <Label className="w-100">
                     Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected} className="p-2">
-                    {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
-                </Input>
+                        {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                    </Input>
                 </Label>
             </Col>
         </Row>
@@ -81,7 +80,7 @@ const PhyTable = (props: GameboardsTableProps) => {
                 <Row>
                     <Col lg={4}>
                         <Label className="w-100">
-                            Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
+                            Filter boards <Input type="text" data-testid="title-filter" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
                         </Label>
                     </Col>
                     {/* TODO MT add stage selector */}
@@ -165,9 +164,9 @@ const PhyTable = (props: GameboardsTableProps) => {
                         </thead>
                         <tbody>
                         {boards?.boards
-                            .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
-                                && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                                && (boardCompletionSelection(board, boardCompletion)))
+                            .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                            .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                            .filter(board => boardCompletionSelection(board, boardCompletion))
                             .map(board =>
                                 <BoardCard
                                     key={board.id}
@@ -185,7 +184,7 @@ const PhyTable = (props: GameboardsTableProps) => {
             </CardBody>
         </Card>
     </>;
-}
+};
 
 const CSTable = (props: GameboardsTableProps) => {
     const {
@@ -206,7 +205,7 @@ const CSTable = (props: GameboardsTableProps) => {
             </Col>
             <Col xs={6} md={3} lg={4} xl={{size: 3, offset: 3}}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter boards by name</span><Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} />
+                    <span className={"text-nowrap"}>Filter boards by name</span><Input type="text" data-testid="title-filter" onChange={(e) => setBoardTitleFilter(e.target.value)} />
                 </Label>
             </Col>
             <Col xs={6} md={3} lg={2} xl={2}>
@@ -268,9 +267,9 @@ const CSTable = (props: GameboardsTableProps) => {
             </thead>
             <tbody>
             {boards?.boards
-                .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
-                    && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                    && (boardCompletionSelection(board, boardCompletion)))
+                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                .filter(board => boardCompletionSelection(board, boardCompletion))
                 .map(board =>
                     <BoardCard
                         key={board.id}
@@ -285,7 +284,7 @@ const CSTable = (props: GameboardsTableProps) => {
             </tbody>
         </Table>
     </div>;
-}
+};
 
 const GameboardsTable = siteSpecific(PhyTable, CSTable);
 
@@ -376,15 +375,15 @@ export const MyGameboards = () => {
                 </div>
                 <div>
                     {boardView !== BoardViews.table && <Row>
-                        <Col sm={6} lg={3} xl={2}>
+                        <Col sm={4} lg={3}>
                             <Label className="w-100">
                                 Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected}>
                                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                                 </Input>
                             </Label>
                         </Col>
-                        <div className="d-lg-none w-100" />
-                        <Col xs={6} lg={{size: 2, offset: 3}} xl={{size: 2, offset: 4}}>
+                        <Spacer />
+                        <Col xs={6} lg={2}>
                             <Label className="w-100">
                                 Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}

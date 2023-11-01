@@ -22,6 +22,7 @@ import {v4 as uuid_v4} from 'uuid';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
+import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
     const seedValue = userId + "|" + questionId;
@@ -91,6 +92,36 @@ function wrapUnitForSelect(unit?: string): string {
     }
 }
 
+export const numericInputValidator = (input: string) => {
+    const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]+";
+    const badCharacters = new RegExp(regexStr);
+    const operatorExpression = new RegExp(".*[0-9][+/÷-]\\.?[0-9]+");
+    const missingExponentSymbol = new RegExp(".*?10-([0-9]+).*?");
+    const errors = [];
+
+    if (badCharacters.test(input)) {
+        const usedBadChars: string[] = []; 
+        for(let i = 0; i < input.length; i++) {
+            const char = input.charAt(i);
+            if (badCharacters.test(char)) {
+                if (!usedBadChars.includes(char)) {
+                    usedBadChars.push(char === ' ' ? 'space' : char);
+                }
+            }
+        }
+        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+    }
+    if (missingExponentSymbol.test(input)) {
+        errors.push('Use a correct exponent symbol, e.g. 10^-3 or 10**-3.');
+    } else if (operatorExpression.test(input)) {
+        errors.push('Simplify your answer into a single decimal number.');
+    }
+    if (/.*?[0-9][, ][0-9]{3}.*?/.test(input)) {
+        errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
+    }
+    return errors;
+};
+
 const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacQuestionProps<IsaacNumericQuestionDTO, QuantityValidationResponseDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
@@ -143,7 +174,9 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                             Value <br />
                             <InputGroup className={"feedback-zone nq-feedback separate-input-group"}>
                                 <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
-                                       onChange={updateValue} readOnly={readonly}
+                                    onChange={e => {
+                                        updateValue(e);
+                                    }} readOnly={readonly}
                                 />
                                 {currentAttemptValueWrong && <div className={"feedback-box"}>
                                     <span className={"feedback incorrect"}><b>!</b></span>
@@ -197,6 +230,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     </div>}
                 </Col>
             </Row>
+            <QuestionInputValidation userInput={currentAttemptValue ?? ""} validator={numericInputValidator} />
         </div>
     );
 };

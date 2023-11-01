@@ -345,7 +345,7 @@ describe("Groups", () => {
             const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
             await userEvent.click(selectGroupButton);
             const groupEditor = await screen.findByTestId("group-editor");
-            const addManagersButton = within(groupEditor).getByRole("button", {name: "Add / remove group managers"});
+            const addManagersButton = within(groupEditor).getByRole("button", {name: "Add group managers"});
             await userEvent.click(addManagersButton);
             await testAddAdditionalManagerInModal(existingGroupManagerHandler, mockNewManager);
         });
@@ -368,7 +368,7 @@ describe("Groups", () => {
             await userEvent.click(selectGroupButton);
             const groupEditor = await screen.findByTestId("group-editor");
             // Neither variant of the button should show
-            const addManagersButton = within(groupEditor).queryByRole("button", {name: "Add / remove group managers"});
+            const addManagersButton = within(groupEditor).queryByRole("button", {name: "Add group managers"});
             const viewManagersButton = within(groupEditor).queryByRole("button", {name: "More information"});
             expect(addManagersButton).toBeNull();
             expect(viewManagersButton).toBeNull();

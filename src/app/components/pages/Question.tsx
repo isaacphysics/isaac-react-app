@@ -76,6 +76,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
                       currentPageTitle={generateQuestionTitle(doc)}
+                      subTitle={doc.subtitle}
                       intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
                       collectionType={navigation.collectionType}
                       audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}

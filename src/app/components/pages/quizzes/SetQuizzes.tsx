@@ -118,8 +118,8 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     // If the user is event admin or above, and the quiz is hidden from teachers, then show that
     // Otherwise, show if the quiz is visible to students
     const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
-        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-none d-md-block ml-2">hidden from teachers</div>}
-        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-none d-md-block ml-2">visible to students</div>}
+        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ml-2">hidden from teachers</div>}
+        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ml-2">visible to students</div>}
     </>;
 
     return <RS.Container>
@@ -139,15 +139,33 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                         {filteredQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
                         <RS.ListGroup className="mb-2 quiz-list">
                             {filteredQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                                <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
-                                    <span className="mb-2 mb-sm-0">{quiz.title}</span>
-                                    {roleVisibilitySummary(quiz)}
+                                <div className="d-flex flex-grow-1 flex-row align-items-center p-3">
+                                    <div className="d-flex flex-column">
+                                        <span className="mb-2 mb-sm-0 pr-2">{quiz.title}</span>
+                                        {roleVisibilitySummary(quiz)}
+                                    </div>
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
-                                    <RS.Button className={below["md"](deviceSize) ? "btn-sm" : ""} onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))}>
+                                    <RS.Button className={`d-none d-md-block h-4 ${below["md"](deviceSize) ? "btn-sm" : ""}`} style={{minWidth: `${below["md"](deviceSize) ? "90px" : "140px"}`}} onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))}>
                                         {siteSpecific("Set Test", "Set test")}
                                     </RS.Button>
                                 </div>
+                                <RS.UncontrolledButtonDropdown className="d-flex d-md-none">
+                                    <RS.DropdownToggle caret className="text-nowrap" size="sm" color="link">
+                                        Actions
+                                    </RS.DropdownToggle>
+                                    <RS.DropdownMenu>
+                                            <RS.DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))} style={{zIndex: '1'}}>
+                                                {siteSpecific("Set Test", "Set test")}
+                                            </RS.DropdownItem>
+                                            <RS.DropdownItem divider />
+                                            <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
+                                                <RS.DropdownItem>
+                                                    Preview
+                                                </RS.DropdownItem>
+                                            </Link>
+                                        </RS.DropdownMenu>
+                                </RS.UncontrolledButtonDropdown> 
                                 <div className="d-none d-md-flex align-items-center">
                                     <Link className="my-3 mr-2 pl-3 pr-4 quiz-list-separator" to={{pathname: `/test/preview/${quiz.id}`}}>
                                         <span>Preview</span>
@@ -174,7 +192,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                 {quizAssignments.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-xl-3 my-2">
                                     {quizAssignmentsWithGroupNames.map(assignment => <QuizAssignment key={assignment.id} user={user} assignment={assignment} />)}
                                 </div>}
-                            </>
+                            </>;
                         }}
                     />
             }}

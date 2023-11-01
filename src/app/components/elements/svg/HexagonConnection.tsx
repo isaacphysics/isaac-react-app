@@ -2,11 +2,13 @@ import React from "react";
 import {addHexagonKeyPoints, svgLine, svgMoveTo} from "../../../services";
 import {HexagonProportions} from "./Hexagon";
 
-function rightAngledConnectionLine(hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
+function rightAngledConnectionLine(leadingHexagonProperties: HexagonProportions, hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
+    const leadingHexagon = addHexagonKeyPoints(leadingHexagonProperties);
     const hexagon = addHexagonKeyPoints(hexagonProperties);
     let result = '';
+    const leadingHexagonWidth = 2 * (leadingHexagon.halfWidth + leadingHexagon.padding);
     const hexagonWidth = 2 * (hexagon.halfWidth + hexagon.padding);
-    const sourceHexagonX = (sourceIndex - 1) * hexagonWidth;
+    const sourceHexagonX = (sourceIndex - 1) * leadingHexagonWidth;
     const targetHexagonX = (targetIndex - 1) * hexagonWidth;
 
     // First stroke
@@ -20,11 +22,13 @@ function rightAngledConnectionLine(hexagonProperties: HexagonProportions, source
     return result;
 }
 
-function fastTrackConnectionLine(hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
+function fastTrackConnectionLine(leadingHexagonProperties: HexagonProportions, hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
+    const leadingHexagon = addHexagonKeyPoints(leadingHexagonProperties);
     const hexagon = addHexagonKeyPoints(hexagonProperties);
     let result = '';
+    const leadingHexagonWidth = 2 * (leadingHexagon.halfWidth + leadingHexagon.padding);
     const hexagonWidth = 2 * (hexagon.halfWidth + hexagon.padding);
-    const sourceHexagonX = (sourceIndex <= targetIndex ? sourceIndex * hexagonWidth : Math.max(sourceIndex - 1, 0) * hexagonWidth);
+    const sourceHexagonX = (sourceIndex <= targetIndex ? sourceIndex * leadingHexagonWidth : Math.max(sourceIndex - 1, 0) * leadingHexagonWidth);
     const targetHexagonX = (targetIndex <= sourceIndex ? targetIndex * hexagonWidth : Math.max(targetIndex - 1, 0) * hexagonWidth);
 
     // First stroke
@@ -50,13 +54,15 @@ function fastTrackConnectionLine(hexagonProperties: HexagonProportions, sourceIn
     return result;
 }
 
-function mobileConnectionLine(rowIndex: number | undefined, hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
+function mobileConnectionLine(rowIndex: number | undefined, leadingHexagonProperties: HexagonProportions, hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {
+    const leadingHexagon = addHexagonKeyPoints(leadingHexagonProperties);
     const hexagon = addHexagonKeyPoints(hexagonProperties);
     let result = '';
-    let hexagonWidth = hexagon.x.right + 2 * hexagon.padding;
+    const leadingHexagonWidth = leadingHexagon.x.right + 2 * leadingHexagon.padding;
+    const hexagonWidth = hexagon.x.right + 2 * hexagon.padding;
 
     if (rowIndex === 0) {
-        const sourceHexagonX = sourceIndex * hexagonWidth;
+        const sourceHexagonX = sourceIndex * leadingHexagonWidth;
         const targetHexagonY = hexagon.y.bottom + 2 * hexagon.padding + (targetIndex * (hexagon.y.bottom + hexagon.padding));
         result += svgMoveTo(sourceHexagonX + hexagon.x.center, hexagon.y.bottom);
 
@@ -90,6 +96,7 @@ interface HexagonConnectionProps {
     sourceIndex: number;
     optionIndices?: number[];
     targetIndices: number[];
+    leadingHexagonProportions?: HexagonProportions;
     hexagonProportions: HexagonProportions;
     connectionProperties: React.SVGProps<SVGPathElement> & {optionStrokeColour?: string;};
     className?: string;
@@ -98,7 +105,7 @@ interface HexagonConnectionProps {
     rowIndex?: number;
 }
 export function HexagonConnection({
-    sourceIndex, targetIndices, optionIndices=[], hexagonProportions,
+    sourceIndex, targetIndices, optionIndices=[], leadingHexagonProportions, hexagonProportions,
     connectionProperties, className, fastTrack=false, mobile=false, rowIndex
 }: HexagonConnectionProps) {
     const filteredTargetIndices = targetIndices.filter(i => ![sourceIndex, i].includes(-1)); // Filter "not found" selections
@@ -111,12 +118,12 @@ export function HexagonConnection({
     return <g>
         {optionIndices.filter(o => !targetIndices.includes(o)).map(optionIndex => <path
             className={`${className ?? ""}`}
-            d={connectionFunction(hexagonProportions, sourceIndex, optionIndex)}
+            d={connectionFunction(leadingHexagonProportions ?? hexagonProportions, hexagonProportions, sourceIndex, optionIndex)}
             {...{...pathProperties, stroke: optionStrokeColour}} key={`${sourceIndex}->${optionIndex}`}
         />)}
         {filteredTargetIndices.map(targetIndex => <path
             className={`active ${className ?? ""}`}
-            d={connectionFunction(hexagonProportions, sourceIndex, targetIndex)}
+            d={connectionFunction(leadingHexagonProportions ?? hexagonProportions, hexagonProportions, sourceIndex, targetIndex)}
             {...pathProperties} key={`${sourceIndex}->${targetIndex}`}
         />)}
     </g>;

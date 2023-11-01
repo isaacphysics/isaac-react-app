@@ -32,7 +32,7 @@ import {
     STAGE,
     useUserContext
 } from "../../../services";
-import {ContentSummary} from "../../../../IsaacAppTypes";
+import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {Loading} from "../../handlers/IsaacSpinner";
@@ -48,13 +48,13 @@ const selectStyle = {
 }
 
 interface QuestionSearchModalProps {
-    originalSelectedQuestions: Map<string, ContentSummary>;
-    setOriginalSelectedQuestions: (m: Map<string, ContentSummary>) => void;
-    originalQuestionOrder: string[];
-    setOriginalQuestionOrder: (a: string[]) => void;
+    currentQuestions: GameboardBuilderQuestions;
+    undoStack: GameboardBuilderQuestionsStackProps;
+    redoStack: GameboardBuilderQuestionsStackProps;
     eventLog: object[];
 }
-export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
+export const QuestionSearchModal = (
+    {currentQuestions, undoStack, redoStack, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
 
@@ -79,8 +79,10 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
 
     const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({});
-    const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
-    const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
+    const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(currentQuestions.selectedQuestions));
+    const [questionOrder, setQuestionOrder] = useState([...currentQuestions.questionOrder]);
+
+    const modalQuestions : GameboardBuilderQuestions = {selectedQuestions, questionOrder, setSelectedQuestions, setQuestionOrder};
 
     const questions = useAppSelector((state: AppState) => state && state.questionSearchResult);
     const user = useAppSelector((state: AppState) => state && state.user);
@@ -156,11 +158,13 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
             <RS.Input
                 type="button"
                 value={siteSpecific("Add Selections to Gameboard", "Add selections to quiz")}
-                disabled={isEqual(new Set(originalSelectedQuestions.keys()), new Set(selectedQuestions.keys()))}
+                disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
                 className={"btn btn-block btn-secondary border-0"}
                 onClick={() => {
-                    setOriginalSelectedQuestions(selectedQuestions);
-                    setOriginalQuestionOrder(questionOrder);
+                    undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
+                    currentQuestions.setSelectedQuestions(modalQuestions.selectedQuestions);
+                    currentQuestions.setQuestionOrder(modalQuestions.questionOrder);
+                    redoStack.clear();
                     dispatch(closeActiveModal());
                 }}
             />
@@ -264,9 +268,12 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <tbody>
                     {sortedQuestions?.map(question =>
                         <GameboardBuilderRow
-                            key={`question-search-modal-row-${question.id}`} question={question}
-                            selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
-                            questionOrder={questionOrder} setQuestionOrder={setQuestionOrder} creationContext={creationContext}
+                            key={`question-search-modal-row-${question.id}`} 
+                            question={question}
+                            currentQuestions={modalQuestions}
+                            undoStack={undoStack}
+                            redoStack={redoStack}
+                            creationContext={creationContext}
                         />
                     )}
                 </tbody>

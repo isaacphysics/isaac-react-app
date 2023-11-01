@@ -56,7 +56,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
         <Row className="board-card" data-testid="my-assignment">
             <Col xs={8} md={7} lg={8}>
                 <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
-                    <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
+                    <h4 className="text-break">{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
                 </Link>
                 {isDefined(assignmentStartDate) &&
                 <p className="mb-0" data-testid={"gameboard-assigned"}><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>
@@ -153,7 +153,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 </Col>
             </Row>
         </Collapse>
-    </>
+    </>;
 };
 
 const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {

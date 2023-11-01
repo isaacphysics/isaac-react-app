@@ -72,6 +72,14 @@
 
       .accordion-title {
         flex-grow: 1;
+
+        h2 {
+          font-size: inherit;
+          font-family: inherit;
+          font-weight: inherit;
+          line-height: inherit;
+          margin-bottom: inherit;
+        }
       }
 
       &:after {

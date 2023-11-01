@@ -18,10 +18,11 @@ import {
     useGenerateAnswerSpecificationMutation
 } from "../../../state";
 import {PageFragment} from "../PageFragment";
-import {isStaff} from "../../../services";
+import {above, isStaff, useDeviceSize} from "../../../services";
 import {Immutable} from "immer";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
+import {fillScreenWithModal} from "./inequality/utils";
 
 interface GraphSketcherModalProps {
     user: Immutable<PotentialUser> | null;
@@ -72,17 +73,20 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     }, [modalSketch, updateGraphSketcherState]);
 
     // Setup and teardown of the graph sketcher p5 instance
-    useEffect(() => {
+    useEffect(function setupOfGraphSketcherP5Instance() {
         const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions: isStaff(user) });
 
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
             setModalSketch(sketch);
         }
+        fillScreenWithModal(true);
 
-        return () => {
+        return function teardown() {
+            fillScreenWithModal(false);
             sketch?.teardown();
             setModalSketch(null);
+
             if (graphSketcherContainer.current) {
                 for (const canvas of graphSketcherContainer.current.getElementsByTagName('canvas')) {
                     graphSketcherContainer.current.removeChild(canvas);
@@ -120,7 +124,8 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     const redo = () => modalSketch?.redo();
 
-    const hexagonSize = 74;
+    const deviceSize = useDeviceSize();
+    const hexagonSize = above['sm'](deviceSize) ? 74 : 48;
     const colourHexagon = calculateHexagonProportions(hexagonSize/4, 3);
 
     const copySpecificationToClipboard = useCallback(() => {

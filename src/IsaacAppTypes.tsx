@@ -23,7 +23,9 @@ import {
     DOCUMENT_TYPE,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
-    PROGRAMMING_LANGUAGE, SortOrder,
+    PROGRAMMING_LANGUAGE,
+    SEARCH_RESULT_TYPE,
+    SortOrder,
     STAGE,
     TAG_ID,
     TAG_LEVEL
@@ -651,6 +653,20 @@ export interface PageSettings {
     assignmentOrder?: AssignmentOrderSpec;
 }
 
+export interface GameboardBuilderQuestions {
+    questionOrder: string[];
+    setQuestionOrder: React.Dispatch<React.SetStateAction<string[]>>;
+    selectedQuestions: Map<string, ContentSummary>;
+    setSelectedQuestions: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>>>
+}
+
+export interface GameboardBuilderQuestionsStackProps {
+    push: ({questionOrder, selectedQuestions} : {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>}) => void;
+    pop: () => {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>};
+    length: number;
+    clear: () => void;
+};
+
 export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
     groupName: string;
 }
@@ -664,4 +680,14 @@ export interface ClozeItemDTO extends ItemDTO {
 export interface NewsItemProps {
     subject: "news" | "physics";
     orderDecending?: boolean;
+}
+
+export interface SearchShortcut {
+    id: string;
+    title: string;
+    terms: string[];
+    summary: string;
+    url: string;
+    type: SEARCH_RESULT_TYPE;
+    hash?: string;
 }

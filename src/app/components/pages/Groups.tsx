@@ -10,6 +10,7 @@ import {
     DropdownMenu,
     DropdownToggle,
     Form,
+    FormFeedback,
     Input,
     InputGroup,
     InputGroupAddon,
@@ -41,7 +42,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import sortBy from "lodash/sortBy";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isAda, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isAda, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific, useDeviceSize} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import classNames from "classnames";
@@ -90,6 +91,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
     const dispatch = useAppDispatch();
     const [passwordRequestSent, setPasswordRequestSent] = useState(false);
     const [deleteMember] = useDeleteGroupMemberMutation();
+    const deviceSize = useDeviceSize();
 
     function resetPassword() {
         setPasswordRequestSent(true);
@@ -132,21 +134,39 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
             </div>
         </div>
         <div className="d-flex">
-            {isTeacherOrAbove(user) && <>
-                <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-right d-none d-sm-block">
-                    <Button color="link" size="sm" className="mx-2" onClick={resetPassword}
-                            disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
-                        {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
-                    </Button>
-                </Tooltip>
+            {deviceSize == "xs" ? <>
+                <UncontrolledButtonDropdown size="sm">
+                    <DropdownToggle caret className="text-nowrap" color="link" size="sm">
+                        Manage
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        {isTeacherOrAbove(user) && 
+                            <DropdownItem onClick={resetPassword} disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
+                                {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
+                            </DropdownItem>
+                        }
+                        {userHasAdditionalGroupPrivileges && 
+                            <DropdownItem onClick={confirmDeleteMember} aria-label="Remove member">Remove</DropdownItem>
+                        }
+                    </DropdownMenu>
+                </UncontrolledButtonDropdown>
+            </> : <>
+                {isTeacherOrAbove(user) && <>
+                    <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-right d-none d-sm-block">
+                        <Button color="link" size="sm" className="mx-2" onClick={resetPassword}
+                                disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
+                            {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
+                        </Button>
+                    </Tooltip>
+                </>}
+                {userHasAdditionalGroupPrivileges &&
+                    <Tooltip tipText="Remove this user from the group." className="text-right d-none d-sm-block">
+                        <Button color="link" size="sm" className="mx-2" onClick={confirmDeleteMember} aria-label="Remove member">
+                            Remove
+                        </Button>
+                    </Tooltip>
+                }
             </>}
-            {userHasAdditionalGroupPrivileges &&
-                <Tooltip tipText="Remove this user from the group." className="text-right d-none d-sm-block">
-                    <Button color="link" size="sm" className="mx-2" onClick={confirmDeleteMember} aria-label="Remove member">
-                        Remove
-                    </Button>
-                </Tooltip>
-            }
         </div>
     </div>;
 };
@@ -154,9 +174,10 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
 interface GroupEditorProps {
     user: RegisteredUserDTO;
     group?: AppGroup;
+    allGroups?: AppGroup[];
     groupNameInputRef?: MutableRefObject<HTMLInputElement | null>;
 }
-const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCreatorProps & GroupEditorProps) => {
+const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}: GroupCreatorProps & GroupEditorProps) => {
     const dispatch = useAppDispatch();
 
     const [updateGroup] = useUpdateGroupMutation();
@@ -215,6 +236,10 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
     const canArchive = group && (isUserGroupOwner || group.additionalManagerPrivileges);
     const canEmailUsers = isStaff(user) && usersInGroup.length > 0;
 
+    const existingGroupWithConflictingName = allGroups?.find(g => g.groupName == newGroupName && (isDefined(group) ? group.id != g.id : true));
+    const isGroupNameInvalid = isDefined(newGroupName) && isDefined(existingGroupWithConflictingName);
+    const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName) && (isDefined(group) ? newGroupName !== group.groupName : true);
+    
     return <Card>
         <CardBody>
             <h4 className={"mb-2"}>{group ? "Manage group" : "Create group"}</h4>
@@ -226,6 +251,8 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                             <Input
                                 innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
                                 onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !(isUserGroupOwner || group.additionalManagerPrivileges)}
+                                invalid={isGroupNameInvalid}
+                                valid={isGroupNameValid}
                             />
                             {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
                                 <Button
@@ -237,6 +264,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                                     {group ? "Update" : "Create"}
                                 </Button>
                             </InputGroupAddon>}
+                            <FormFeedback>A{existingGroupWithConflictingName?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
                         </InputGroup>
                     </Form>
                 </Col>
@@ -260,7 +288,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                         {/* Only teachers and above can add group managers */}
                         <Button outline={isAda} className="w-100 w-sm-auto d-inline-block text-nowrap" size="sm" color={siteSpecific("tertiary", "secondary")} onClick={() => dispatch(showGroupManagersModal({group, user}))}>
                             {isUserGroupOwner
-                                ? <>Add / remove<span className="d-none d-xl-inline">{" "}group managers</span></>
+                                ? <>Add {additionalManagers.length > 1 ? <>/ remove</> : <></>}<span className="d-none d-xl-inline">{" "}group managers</span></>
                                 : <>More info<span className="d-none d-sm-inline">rmation</span></>
                             }
                         </Button>
@@ -344,7 +372,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
     </Card>;
 };
 
-const MobileGroupCreatorComponent = ({className, createNewGroup}: GroupCreatorProps & {className: string}) => {
+const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: GroupCreatorProps & {className: string, allGroups: AppGroup[]}) => {
     const dispatch = useAppDispatch();
     const [newGroupName, setNewGroupName] = useState("");
 
@@ -359,13 +387,26 @@ const MobileGroupCreatorComponent = ({className, createNewGroup}: GroupCreatorPr
             }
         });
     }
+
+    const existingGroupWithConflictingName = allGroups?.find(g => g.groupName == newGroupName);
+    const isGroupNameInvalid = isDefined(newGroupName) && isDefined(existingGroupWithConflictingName);
+    const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName);
+
     return <Row className={className}>
         <Col size={12} className={siteSpecific("mt-2", "")}>
             <h6 className={siteSpecific("", "font-weight-semi-bold")}>Create New Group</h6>
         </Col>
         <Col size={12} className="mb-2">
-            <Input length={50} placeholder="Enter the name of your group here" value={newGroupName}
-                onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name"/>
+            <Form>
+                <InputGroup>
+                    <Input length={50} placeholder="Enter the name of your group here" value={newGroupName}
+                        onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name"
+                        invalid={isGroupNameInvalid}
+                        valid={isGroupNameValid}
+                        />
+                    <FormFeedback>A{existingGroupWithConflictingName?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
+                </InputGroup>
+            </Form>
         </Col>
         <Col size={12} className={siteSpecific("", "mt-2")}>
             <Button block color="primary" outline={isAda} onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
@@ -380,6 +421,9 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const [showArchived, setShowArchived] = useState(false);
     const groupQuery = useGetGroupsQuery(showArchived);
     const { currentData: groups, isLoading, isFetching } = groupQuery;
+    const otherGroups = useGetGroupsQuery(!showArchived);
+
+    const allGroups = [...(groups ?? []) , ...(otherGroups.currentData ?? [])];
 
     const [createGroup] = useCreateGroupMutation();
     const [deleteGroup] = useDeleteGroupMutation();
@@ -467,14 +511,14 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="groups_help" />
+        <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="groups_help_modal" />
         <PageFragment fragmentId={"groups_help"} ifNotFound={RenderNothing} />
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <Row className="mb-5">
                 <Col lg={4}>
                     <Card>
                         <CardBody>
-                            <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup}/>
+                            <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
                             <div className="d-none d-lg-block mb-3">
                                 <Button block color="primary" outline onClick={() => {
                                     setSelectedGroupId(undefined);
@@ -526,7 +570,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                                 }
                                             </div>
                                             {selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
-                                                <GroupEditor user={user} group={selectedGroup} createNewGroup={createNewGroup}/>
+                                                <GroupEditor user={user} group={selectedGroup} allGroups={allGroups} createNewGroup={createNewGroup}/>
                                             </div>}
                                         </div>)
                                     : <div className={"group-item p-2"}>No {showArchived ? "archived" : "active"} groups</div>
@@ -536,7 +580,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                     </Card>
                 </Col>
                 <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
-                    <GroupEditor group={selectedGroup} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
+                    <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
                 </Col>
             </Row>
         </ShowLoadingQuery>

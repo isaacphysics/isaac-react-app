@@ -493,11 +493,11 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
     </div> : null;
 };
 
-const GroupDetails = ({group}: {group: AppGroup}) => {
+const GroupDetails = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
     const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.assignments);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
-    const {groupBoardAssignments, groupQuizAssignments} = useGroupAssignments(group.id, pageSettings.assignmentOrder);
+    const {groupBoardAssignments, groupQuizAssignments} = useGroupAssignments(user, group.id, pageSettings.assignmentOrder);
     const assignments = groupBoardAssignments ?? [];
     const quizAssignments = groupQuizAssignments ?? [];
 
@@ -531,7 +531,7 @@ function getGroupQuizProgressCSVDownloadLink(groupId: number) {
     return API_PATH + "/quiz/group/" + groupId + "/download";
 }
 
-export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
+export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
     const [isExpanded, setExpanded] = useState(false);
 
@@ -542,7 +542,7 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
     }, [dispatch]);
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
-    const {assignmentCount} = useGroupAssignmentSummary(group.id);
+    const {assignmentCount} = useGroupAssignmentSummary(user, group.id);
 
     return <>
         <div  onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
@@ -560,7 +560,7 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
             </Button>
         </div>
-        {isExpanded && <GroupDetails group={group} />}
+        {isExpanded && <GroupDetails group={group} user={user} />}
     </>;
 };
 
@@ -627,7 +627,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                     : sortBy(groups, g => g.created).reverse();
                 return <div className="assignment-progress-container mb-5">
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-                        {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group}/>)}
+                        {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} user={user} />)}
                     </AssignmentProgressPageSettingsContext.Provider>
                     {sortedGroups.length === 0 && <Container className="py-5">
                         <h3 className="text-center">

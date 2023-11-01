@@ -1,3 +1,4 @@
+@import "../common/accordions";
 
 .stage-label-gcse, .stage-label-alevel, .stage-label-all {
   color: black;
@@ -25,9 +26,25 @@
   span, button, button:hover {
     color: black !important;
   }
+
+  h2 {
+    font-size: inherit !important;
+  }
 }
 
 .accordion {
   background: $cs-white;
   border-top: 1px solid $cs-cultured;
+
+  .content-value {
+    h3 {
+      border-bottom: 2px solid #00000010;
+    }
+
+    h3, h4 {
+      font-size: 1.25rem !important;
+      font-weight: inherit;
+      line-height: inherit;
+    }
+  }
 }

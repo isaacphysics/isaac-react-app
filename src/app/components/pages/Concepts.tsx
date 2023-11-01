@@ -6,7 +6,7 @@ import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID} from "../../services";
+import {matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -66,8 +66,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
 
     const searchResults = concepts
         ?.filter(c =>
-            c?.title?.toLowerCase().includes((searchText || "").toLowerCase()) ||
-            c?.summary?.toLowerCase().includes((searchText || "").toLowerCase())
+            matchesAllWordsInAnyOrder(c.title, searchText || "") ||
+            matchesAllWordsInAnyOrder(c.summary, searchText || "")
         );
 
     const filteredSearchResults = searchResults

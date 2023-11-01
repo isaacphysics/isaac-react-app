@@ -14,12 +14,15 @@ import {
 import classnames from "classnames";
 import {
     extractTeacherName,
+    isAda,
     isLoggedIn,
     isPhy,
     isStudent,
     isTutorOrAbove,
+    matchesNameSubstring,
     MEMBERSHIP_STATUS,
-    siteSpecific
+    siteSpecific,
+    useDeviceSize
 } from "../../../services";
 import classNames from "classnames";
 import {PageFragment} from "../PageFragment";
@@ -32,6 +35,11 @@ import {
     revocationConfirmationModal,
     tokenVerificationModal
 } from "../modals/TeacherConnectionModalCreators";
+import { FixedSizeList } from "react-window";
+import { Spacer } from "../Spacer";
+
+const CONNECTIONS_ROW_HEIGHT = 40;
+const CONNECTIONS_MAX_VISIBLE_ROWS = 10;
 
 interface TeacherConnectionsProps {
     user: PotentialUser;
@@ -39,6 +47,44 @@ interface TeacherConnectionsProps {
     editingOtherUser: boolean;
     userToEdit: RegisteredUserDTO;
 }
+
+interface ConnectionsHeaderProps {
+    enableSearch: boolean;
+    setEnableSearch: React.Dispatch<React.SetStateAction<boolean>>;
+    setSearchText: React.Dispatch<React.SetStateAction<string>>;
+    title: string;
+}
+
+const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title}: ConnectionsHeaderProps) => {
+    const deviceSize = useDeviceSize();
+
+    return <div className="connect-list-header">
+        {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ? 
+            <>{enableSearch ? 
+                <>
+                    <RS.Input type="text" autoFocus placeholder="Search teachers" className="connections-search" onChange={e => setSearchText(e.target.value)}/>
+                    <Spacer />
+                </> : 
+                <h4 className={classNames("d-flex", {"pl-0" : isAda})}>
+                    <span className={siteSpecific("icon-person-active", "icon-group-white")} />
+                    {title}
+                </h4>
+            }</>
+            :
+            <>
+                <h4 className={classNames("d-flex", {"pl-0" : isAda})}>
+                    <span className={siteSpecific("icon-person-active", "icon-group-white")} />
+                    {title}
+                </h4>
+                <Spacer />
+                {enableSearch && <RS.Input type="text" autoFocus style={{width: "200px"}} placeholder="Search teachers" className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
+            </>
+        }
+        {!enableSearch && <Spacer />}
+        <button type="button" className="search-toggler-icon" onClick={_ => setEnableSearch(c => !c)}/>
+    </div>;
+};
+
 export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdit}: TeacherConnectionsProps) => {
     const dispatch = useAppDispatch();
     const groupQuery = (user.loggedIn && user.id) ? ((editingOtherUser && userToEdit?.id) || undefined) : skipToken;
@@ -46,6 +92,25 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     const [changeMyMembershipStatus] = useChangeMyMembershipStatusMutation();
     const {data: activeAuthorisations} = useGetActiveAuthorisationsQuery((editingOtherUser && userToEdit?.id) || undefined);
     const {data: studentAuthorisations} = useGetOtherUserAuthorisationsQuery((editingOtherUser && userToEdit?.id) || undefined);
+    let filteredActiveAuthorisations = activeAuthorisations;
+    let filteredStudentAuthorisations = studentAuthorisations;
+
+    const [teacherSearchText, setTeacherSearchText] = useState<string>("");
+    const [studentSearchText, setStudentSearchText] = useState<string>("");
+    const [enableTeacherSearch, setEnableTeacherSearch] = useState<boolean>(false);
+    const [enableStudentSearch, setEnableStudentSearch] = useState<boolean>(false);
+
+    if (enableTeacherSearch && teacherSearchText) {
+        filteredActiveAuthorisations = activeAuthorisations?.filter(teacher => {
+            return matchesNameSubstring(teacher?.givenName, teacher?.familyName, teacherSearchText);
+        });
+    }
+
+    if (enableStudentSearch && studentSearchText) {
+        filteredStudentAuthorisations = studentAuthorisations?.filter(student => {
+            return matchesNameSubstring(student?.givenName, student?.familyName, studentSearchText);
+        });
+    }
 
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
     const authenticateWithTokenAfterPrompt = async (userId: number, token: string | null) => {
@@ -63,7 +128,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             // TODO highlight teachers who have already been granted access? (see verification modal code)
             dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
         }
-    }
+    };
 
     useEffect(() => {
         if (authToken && user.loggedIn && user.id) {
@@ -111,32 +176,38 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
                 <RS.Col lg={5} className="mt-4 mt-lg-0">
                     <div className="connect-list">
-                        <h3><span className={siteSpecific("icon-person-active", "icon-group-white")} />Teacher connections</h3>
+                        <ConnectionsHeader title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch} setSearchText={setTeacherSearchText}/>
                         <div className="connect-list-inner">
-                            <ul className="teachers-connected list-unstyled">
-                                {activeAuthorisations && activeAuthorisations.map((teacherAuthorisation) =>
-                                    <React.Fragment key={teacherAuthorisation.id}>
-                                        <li>
+                            <ul className={classNames("teachers-connected list-unstyled my-0", {"ml-3 mr-2": isPhy}, {"ml-1 mr-2": isAda})}>
+                                <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredActiveAuthorisations?.length ?? 0))} itemCount={filteredActiveAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
+                                    {({index, style}) => {
+                                        const teacherAuthorisation = filteredActiveAuthorisations?.[index];
+                                        if (!teacherAuthorisation) {
+                                            return null;
+                                        }
+                                        return <React.Fragment key={teacherAuthorisation.id}>
+                                        <li style={style} className="py-2">
                                             <span className="icon-person-active" />
                                             <span id={`teacher-authorisation-${teacherAuthorisation.id}`}>
                                                 {extractTeacherName(teacherAuthorisation)}
                                             </span>
                                             <RS.UncontrolledTooltip
                                                 placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
-                                            >
+                                                >
                                                 This user ({teacherAuthorisation.email}) has access to your data.
                                                 To remove this access, click &apos;Revoke&apos;.
                                             </RS.UncontrolledTooltip>
                                             <RS.Button
-                                                color="link" className="revoke-teacher"
+                                                color="link" className="revoke-teacher pr-1"
                                                 disabled={editingOtherUser}
                                                 onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
-                                            >
+                                                >
                                                 Revoke
                                             </RS.Button>
                                         </li>
-                                    </React.Fragment>
-                                )}
+                                    </React.Fragment>;
+                                    }}
+                                </FixedSizeList>
                             </ul>
                             {activeAuthorisations && activeAuthorisations.length === 0 && <p className="teachers-connected">
                                 You have no active teacher connections.
@@ -164,30 +235,35 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     </RS.Col>
                     <RS.Col lg={5}>
                         <div className="connect-list">
-                            <h3><span className={siteSpecific("icon-person-active", "icon-group-white")} /> Student connections </h3>
-
+                            <ConnectionsHeader title="Student connections" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch} setSearchText={setStudentSearchText}/>
                             <div className="connect-list-inner">
-                                <ul className="teachers-connected list-unstyled">
-                                    {studentAuthorisations && studentAuthorisations.map(student => (
-                                        <li key={student.id}>
-                                            <span className="icon-person-active" />
-                                            <span id={`student-authorisation-${student.id}`}>
-                                                {student.givenName} {student.familyName}
-                                            </span>
-                                            <RS.UncontrolledTooltip
-                                                placement="bottom" target={`student-authorisation-${student.id}`}
-                                            >
-                                                You have access to this user&apos;s data and they can see your name and email address.
-                                                To remove this access, click &apos;Remove&apos;.
-                                            </RS.UncontrolledTooltip>
-                                            <RS.Button
-                                                color="link" className="revoke-teacher" disabled={editingOtherUser}
-                                                onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(releaseConfirmationModal(user.id, student)))}
-                                            >
-                                                Remove
-                                            </RS.Button>
-                                        </li>
-                                    ))}
+                                <ul className={classNames("teachers-connected list-unstyled my-0", {"ml-3 mr-2": isPhy}, {"ml-1 mr-2": isAda})}>
+                                    <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredStudentAuthorisations?.length ?? 0))} itemCount={filteredStudentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
+                                        {({index, style}) => {
+                                            const student = filteredStudentAuthorisations?.[index];
+                                            if (!student) {
+                                                return null;
+                                            }
+                                            return <li key={student.id} style={style} className="py-2">
+                                                <span className="icon-person-active" />
+                                                <span id={`student-authorisation-${student.id}`}>
+                                                    {student.givenName} {student.familyName}
+                                                </span>
+                                                <RS.UncontrolledTooltip
+                                                    placement="bottom" target={`student-authorisation-${student.id}`}
+                                                >
+                                                    You have access to this user&apos;s data and they can see your name and email address.
+                                                    To remove this access, click &apos;Remove&apos;.
+                                                </RS.UncontrolledTooltip>
+                                                <RS.Button
+                                                    color="link" className="revoke-teacher pr-1" disabled={editingOtherUser}
+                                                    onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(releaseConfirmationModal(user.id, student)))}
+                                                >
+                                                    Remove
+                                                </RS.Button>
+                                            </li>;
+                                        }}
+                                    </FixedSizeList>
                                 </ul>
 
                                 {studentAuthorisations && studentAuthorisations.length === 0 && <p className="teachers-connected">
@@ -285,5 +361,5 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 </RS.Col>
             </RS.Row>
         </RS.Container>
-    </RS.CardBody>
+    </RS.CardBody>;
 };

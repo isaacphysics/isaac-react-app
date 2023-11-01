@@ -57,7 +57,7 @@ export const renderGlossaryBlocks = (markdown: string) => {
 export const renderInlineGlossaryTerms = (markdown: string) => {
     // Matches strings such as [glossary-inline:glossary-demo|boolean-algebra] and
     // [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"] which CAN be inlined.
-    const glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z0-9-|]+?)\s*(?:"(?<text>[A-Za-z0-9-() ]+)")?\]/g;
+    const glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z0-9-|]+?)\s*(?:"(?<text>[A-Za-z0-9-()/,'\\. ]+)")?\]/g;
     return markdown.replace(glossaryInlineRegexp, (_match, id, text, offset) => {
         const cssFriendlyTermId = id.replace(/\|/g, '-');
         return `<span data-type="inline" class="inline-glossary-term" ${text ? `data-text="${text}"` : ""} id="glossary-term-${cssFriendlyTermId}">Loading glossary...</span>`;

@@ -34,12 +34,14 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import { extractErrorMessage } from '../../services/errors';
 
 const warningFragmentId = "teacher_registration_warning_message"; // TUTOR have decided to keep this message
 
 export const TutorRequest = () => {
     const user = useAppSelector(selectors.user.orNull);
-    const errorMessage = useAppSelector((state: AppState) => (state && state.error) || null);
+    const error = useAppSelector((state: AppState) => state?.error);
+    const errorMessage = extractErrorMessage(error);
     const {data: warningFragment} = useGetPageFragmentQuery(warningFragmentId);
     const [submitContactForm] = useSubmitContactFormMutation();
 

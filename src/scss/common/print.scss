@@ -1,4 +1,9 @@
 @media print {
+
+  @page {
+    size: A4;
+  }
+
   div#root {
     display: block !important;
     overflow: visible !important;

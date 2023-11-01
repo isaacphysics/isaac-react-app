@@ -52,6 +52,7 @@ import {
     isStaff,
     Item,
     itemise,
+    matchesAllWordsInAnyOrder,
     nthHourOf,
     PATHS,
     selectOnChange,
@@ -68,6 +69,7 @@ import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
+import { Spacer } from "../elements/Spacer";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -228,7 +230,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
             <Button block color="tertiary" onClick={toggle}>Close</Button>
         </ModalFooter>}
     </Modal>;
-}
+};
 
 interface SetAssignmentsTableProps {
     user: RegisteredUserDTO;
@@ -320,9 +322,9 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                     </thead>
                     <tbody>
                     {boards?.boards
-                        .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
-                            && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                            && (boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))))
+                        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                        .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                        .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
                         .map(board =>
                             <BoardCard
                                 key={board.id}
@@ -404,7 +406,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </thead>
             <tbody>
             {boards?.boards
-                .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
+                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter)
                     && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All"))
                 .map(board =>
                     <BoardCard
@@ -419,7 +421,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </tbody>
         </Table>
     </div>;
-}
+};
 const SetAssignmentsTable = siteSpecific(PhyTable, CSTable);
 
 export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: string, redirectBackTo: string}) => {
@@ -567,17 +569,16 @@ export const SetAssignments = () => {
                     </h4>}
                 </>}
                 <Row>
-                    {(isPhy || boardView === BoardViews.card) && <Col sm={6} lg={3} xl={2}>
+                    {(isPhy || boardView === BoardViews.card) && <Col sm={6} lg={3}>
                         <Label className="w-100">
                             Display in <Input type="select" value={boardView} onChange={switchView}>
                                 {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                             </Input>
                         </Label>
                     </Col>}
-                    <div className="d-lg-none w-100"/>
-                    {boardView === BoardViews.card &&
-                    <>
-                        <Col xs={6} lg={{size: 2, offset: 3}} xl={{size: 2, offset: 4}}>
+                    <Spacer />
+                    {boardView === BoardViews.card && <>
+                        <Col xs={6} lg={2}>
                             <Label className="w-100">
                                 Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}

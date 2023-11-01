@@ -1,20 +1,22 @@
 import {useGetMySetAssignmentsQuery, useGetQuizAssignmentsSetByMeQuery} from "../../index";
-import {isFound, SortOrder, sortStringsNumerically} from "../../../services";
+import {isFound, isTeacherOrAbove, SortOrder, sortStringsNumerically} from "../../../services";
 import {
     AppQuizAssignment,
     AssignmentOrderSpec,
     AssignmentOrderType,
     EnhancedAssignment
 } from "../../../../IsaacAppTypes";
-import {GameboardDTO, IsaacQuizDTO} from "../../../../IsaacApiTypes";
+import {GameboardDTO, IsaacQuizDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import sortBy from "lodash/sortBy";
 import produce from "immer";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 // Returns summary assignment objects without data on gameboard contents - much faster to request these from the API
 // than those returned from useGroupAssignments
-export const useGroupAssignmentSummary = (groupId?: number) => {
+export const useGroupAssignmentSummary = (user: RegisteredUserDTO, groupId?: number) => {
     const {data: assignments} = useGetMySetAssignmentsQuery(undefined);
-    const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery();
+    // Tutors can't set quizzes, so we skip the query in that case
+    const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery(isTeacherOrAbove(user) ? undefined : skipToken);
 
     const groupBoardAssignments = assignments?.filter(a => a.groupId === groupId);
     const groupQuizAssignments = isFound(quizAssignments)
@@ -53,9 +55,10 @@ const sortAssignments = (assignments: SortFuncInputType[] | undefined, sortOrder
 }
 
 // Returns assignment objects with full gameboard and question part data
-export const useGroupAssignments = (groupId?: number, sortOrder?: AssignmentOrderSpec) => {
+export const useGroupAssignments = (user: RegisteredUserDTO, groupId?: number, sortOrder?: AssignmentOrderSpec) => {
     const {data: assignments} = useGetMySetAssignmentsQuery(groupId);
-    const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery();
+    // Tutors can't set quizzes, so we skip the query in that case
+    const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery(isTeacherOrAbove(user) ? undefined : skipToken);
 
     const groupBoardAssignments = sortAssignments(assignments, sortOrder) as EnhancedAssignment[] | undefined;
     const groupQuizAssignments = isFound(quizAssignments)

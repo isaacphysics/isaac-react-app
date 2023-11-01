@@ -30,10 +30,6 @@ export const selectors = {
         }
     },
 
-    error: {
-        general: (state: AppState) => state?.error && state.error.type == "generalError" && state.error.generalError || null,
-    },
-
     user:  {
         orNull: (state: AppState) => state?.user || null,
         loggedInOrNull: (state: AppState) => state?.user?.loggedIn && state.user || null,

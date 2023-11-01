@@ -65,11 +65,11 @@ export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
     envSpecific("G-HQ3BM12YB3", "G-EQPHX0WKJ7", "G-W7YJPSQTKP", "G-1Q8QGL0D5J"),
 );
 
- export const { trackPageview, trackEvent } = Plausible(
+export const { trackPageview, trackEvent } = Plausible(
     {
         apiHost: siteSpecific("https://plausible.isaacphysics.org", "https://plausible.adacomputerscience.org"),
     }
-)
+);
 
 export const SOCIAL_LINKS = siteSpecific(
     {
@@ -294,7 +294,7 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
     [EXAM_BOARD.ALL]: "All exam boards",
-}
+};
 export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.ALL]);
 export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
 export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.OCR, EXAM_BOARD.WJEC]);
@@ -308,7 +308,7 @@ export enum BOOLEAN_NOTATION {
 }
 export const EMPTY_BOOLEAN_NOTATION_RECORD: {[bn in BOOLEAN_NOTATION]: false} & BooleanNotation = {
     [BOOLEAN_NOTATION.ENG]: false, [BOOLEAN_NOTATION.MATH]: false
-}
+};
 export const examBoardBooleanNotationMap: {[examBoard in ExamBoard]: BOOLEAN_NOTATION} = {
     [EXAM_BOARD.AQA]: BOOLEAN_NOTATION.ENG,
     [EXAM_BOARD.EDUQAS]: BOOLEAN_NOTATION.ENG,
@@ -341,7 +341,7 @@ export const stageLabelMap: {[stage in Stage]: string} = {
     further_a: "Further\u00A0A",
     university: "University",
     all: "All stages",
-}
+};
 
 // DIFFICULTIES
 export const difficultyShortLabelMap: {[difficulty in Difficulty]: string} = {
@@ -351,7 +351,7 @@ export const difficultyShortLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_1: "C1",
     challenge_2: "C2",
     challenge_3: "C3",
-}
+};
 export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     practice_1: "Practice\u00A0(P1)",
     practice_2: "Practice\u00A0(P2)",
@@ -359,7 +359,7 @@ export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_1: "Challenge\u00A0(C1)",
     challenge_2: "Challenge\u00A0(C2)",
     challenge_3: "Challenge\u00A0(C3)",
-}
+};
 export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
     practice_1: `Practice (P1) ${siteSpecific("\u2B22\u2B21\u2B21", "\u25CF\u25CB")}`,
     practice_2: `Practice (P2) ${siteSpecific("\u2B22\u2B22\u2B21", "\u25CF\u25CF")}`,
@@ -367,7 +367,7 @@ export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_1: `Challenge (C1) \u25A0\u25A1${siteSpecific("\u25A1", "")}`,
     challenge_2: `Challenge (C2) \u25A0\u25A0${siteSpecific("\u25A1", "")}`,
     challenge_3: "Challenge (C3) \u25A0\u25A0\u25A0",
-}
+};
 export const difficultiesOrdered: Difficulty[] = siteSpecific(
     ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"],
     ["practice_1", "practice_2", "challenge_1", "challenge_2"]
@@ -611,6 +611,7 @@ export enum TAG_ID {
     shapes = "shapes",
     trigonometry = "trigonometry",
     planes = "planes",
+    coordinates = "coordinates",
     // Algebra
     manipulation = "manipulation",
     quadratics = "quadratics",
@@ -661,6 +662,7 @@ export enum TAG_ID {
     organicReactions = "organic_reactions",
     isomerism = "isomerism",
     aromaticReactions = "aromatic_reactions",
+    polymers = "polymers",
 
     // Biology Topics ---
 
@@ -784,7 +786,7 @@ export const bookingStatusMap: {[status in BookingStatus]: string} = {
     "CONFIRMED": "Booking confirmed",
     "RESERVED": "Place reserved",
     "WAITING_LIST": "In waiting list"
-}
+};
 
 export enum sortIcon {
     "sortable" = '⇕',
@@ -907,6 +909,8 @@ export const GRAY_120 = '#c9cad1';
 
 export const SEARCH_CHAR_LENGTH_LIMIT = 255;
 
+export const GAMEBOARD_UNDO_STACK_SIZE_LIMIT = 10;
+
 export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 
 export const FEATURED_NEWS_TAG = "featured";
@@ -944,5 +948,5 @@ export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "RAVEN": "Raven",
     "TEST": "Test",
     "SEGUE": "your email address and password"
-}
+};
 export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023

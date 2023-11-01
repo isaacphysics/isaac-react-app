@@ -5,6 +5,10 @@
   position: absolute;
   width: 63px;
 
+  &.card-view {
+    right: 45px;
+  }
+
   &.table-view {
     position: relative;
     top: -5px;

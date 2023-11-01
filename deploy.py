@@ -56,7 +56,7 @@ def validate_args(args):
     return args
 
 
-def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: list = None, env_vars: dict = None):
+def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: list = None, env_vars: dict = None, chunk_size=1024):
     if not EXEC:
         return input(f"{command}\n")
 
@@ -71,20 +71,28 @@ def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: 
         print("Skipping command...")
         return
     if response in ["y", "yes"]:
-        process = subprocess.run(command, shell=True, universal_newlines=True, stdout=subprocess.PIPE, env=env_vars if env_vars else None)
-        output = process.stdout
+        output = ""
+        return_code = None
+        with subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, env=env_vars if env_vars else None) as proc:
+            stdout_data = []
+            while True:
+                chunk = proc.stdout.read(chunk_size)
+                if not chunk:
+                    break
+                decoded_chunk = chunk.decode('utf-8', errors='replace')
+                print(decoded_chunk, end='', flush=True)  # Print in real time
+                stdout_data.append(decoded_chunk)  # Store for later
 
-        if print_output:
-            print(f"{output if len(output) else '(No output)'}")
-
-        if process.returncode == 0:
+            return_code = proc.wait()
+            output = ''.join(stdout_data)
+        if return_code == 0:
             return output
-        elif expected_nonzero_exit_codes and process.returncode in expected_nonzero_exit_codes:
-            print(f"Command returned non-zero exit code {process.returncode} - this may not indicate an error (e.g. "
+        elif expected_nonzero_exit_codes and return_code in expected_nonzero_exit_codes:
+            print(f"Command returned non-zero exit code {return_code} - this may not indicate an error (e.g. "
                   f"in the case of grep or git diff), but you should check subsequent commands carefully.")
             return output
         else:
-            print(f"Command returned unexpected exit code {process.returncode}.")
+            print(f"Command returned unexpected exit code {return_code}.")
             print("! There was an unexpected error, please clean up after yourself !")
             response = input(f"Continue, or Abort?: [c/a] ")
 
@@ -183,8 +191,18 @@ def deploy_live(ctx):
     ).rstrip()
     ctx['old_api'] = previous_api_version
 
-    front_end_only_release = 'front-end-only' == input("Is this a front-end-only release? [front-end-only / n] ").lower()
-    if not front_end_only_release:
+    response = input("Is this a front-end-only release? [front-end-only / n] ").lower()
+    while response not in ["front-end-only", "n"]:
+        response = input("Please respond with one of:\n - front-end-only \n - n\n").lower()
+    front_end_only_release = response == "front-end-only"
+
+    if front_end_only_release:
+        print("# Front-end-only release - confirm which API this app image expects:")
+        expected_api = ask_to_run_command(f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' docker.isaacscience.org/isaac-{ctx['site']}-app:{ctx['app']}")
+
+        print("# Front-end-only release - confirm the expected API is running:")
+        ask_to_run_command(f"docker ps --format '{{{{.Names}}}}' | grep {ctx['site']}-api-live-{expected_api}")
+    else:
         print("# List possibly-unused live apis:")
         ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {previous_api_version}", expected_nonzero_exit_codes=[1])
         print("# Bring down and remove the penultimate live api(s), if that is sensible, using something like:")
@@ -200,7 +218,7 @@ def deploy_live(ctx):
         ask_to_run_command(f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-api-live-{ctx['api']}")
 
         print("# Wait until the api is up:")
-        api_endpoint = f"https://isaac{'computerscience' if ctx['site'] == Site.ADA else 'physics'}.org/api/{ctx['api']}/api/info/segue_environment"
+        api_endpoint = f"https://{'adacomputerscience' if ctx['site'] == Site.ADA else 'isaacphysics'}.org/api/{ctx['api']}/api/info/segue_environment"
         expected_response = '\'{"segueEnvironment":"PROD"}\''
         ask_to_run_command(f'while [ "$(curl --silent {api_endpoint})" != {expected_response} ]; do echo "Waiting for API..."; sleep 1; done && echo "The API is up!"')
 

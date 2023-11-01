@@ -9,7 +9,7 @@ import {
     useGetStudentQuizAttemptWithFeedbackQuery,
     useGetAvailableQuizzesQuery, useGetMyQuizAttemptWithFeedbackQuery
 } from "../state";
-import {API_PATH, isDefined, isEventLeaderOrStaff, isQuestion, tags, useQueryParams} from "./";
+import {API_PATH, isDefined, isEventLeaderOrStaff, isQuestion, matchesAllWordsInAnyOrder, tags, useQueryParams} from "./";
 import {
     ContentDTO,
     IsaacQuizSectionDTO,
@@ -68,7 +68,7 @@ export function useFilteredQuizzes(user: RegisteredUserDTO) {
     useEffect(() => {
         if (isDefined(titleFilter) && isDefined(quizzes)) {
             const results = quizzes
-                .filter(quiz => quiz.title?.toLowerCase().match(titleFilter.toLowerCase()) || quiz.id?.toLowerCase().match(titleFilter.toLowerCase()))
+                .filter(quiz => matchesAllWordsInAnyOrder(quiz.title, titleFilter))
                 .filter(quiz => isEventLeaderOrStaff(user) || (quiz.hiddenFromRoles ? !quiz.hiddenFromRoles?.includes("TEACHER") : true));
 
             if (isDefined(results) && results.length > 0) {

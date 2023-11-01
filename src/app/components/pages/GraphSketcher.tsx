@@ -10,7 +10,7 @@ import {
     makeGraphSketcher
 } from "isaac-graph-sketcher";
 import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
-import {isStaff} from "../../services";
+import {isDefined, isStaff} from "../../services";
 
 const GraphSketcherPage = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -100,6 +100,9 @@ const GraphSketcherPage = () => {
                     {graphSpec && graphSpec.map((spec, i) => <pre key={i}>{spec}</pre>)}
                 </Col>
             </Row>
+            <div className="question-content d-flex justify-content-center d-print-none">
+                <div><i>{isDefined(currentAttempt?.value) ? "Click on the grid to edit your sketch." : "Click on the grid to start your sketch."}</i></div>
+            </div>
         </Container>
     </div>;
 };
