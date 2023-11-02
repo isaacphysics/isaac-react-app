@@ -41,7 +41,7 @@ const PhysicsNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
             </div>
             <CardText>
                 {!url?.startsWith("http") ?
-                    <Link className="focus-target" to={`${url}`}>
+                    <Link aria-label={`${title} read more`} className="focus-target" to={`${url}`}>
                         Read more
                     </Link> :
                     // eslint-disable-next-line react/jsx-no-target-blank
@@ -51,7 +51,7 @@ const PhysicsNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
                 }
             </CardText>
         </CardBody>
-    </Card>
+    </Card>;
 };
 
 export const AdaNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
