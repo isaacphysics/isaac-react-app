@@ -94,7 +94,7 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
     const scheduledQuizHelpTooltipId = "scheduled-quiz-help-tooltip";
 
     return <div className="mb-4">
-        <Label className="w-100 mb-4">Set test to the following group:<br/>
+        <Label className="w-100 mb-4">Set test to the following group(s):<br/>
             <ShowLoadingQuery
                 query={groupsQuery}
                 defaultErrorTitle={"Error fetching groups"}
