@@ -1,0 +1,11 @@
+@import "../common/quiz.scss";
+
+.quiz-date-filter-type {
+  button {
+    min-width: unset;
+  }
+}
+
+.quiz-filter-date-span {
+  transform: translateY(3px);
+}
