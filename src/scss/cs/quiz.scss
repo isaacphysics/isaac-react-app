@@ -1,0 +1,29 @@
+@import "../common/quiz.scss";
+
+.group-counter {
+    text-align: center;
+    background-color: $primary;
+    border-radius: 15px 0 0 15px;
+    
+    span {
+        color: $white;
+    }
+}
+
+.set-quiz-table-border {
+    border-bottom: 1px solid $cs-cultured;
+}  
+
+.set-quiz-table-inner thead tr th .sort {
+    height: 0;
+    margin-top: -6px;
+    .down {
+        margin-top: -10px;
+    }
+}
+
+.set-quiz-table-dropdown {
+    cursor: pointer;
+    user-select: none;
+
+}
