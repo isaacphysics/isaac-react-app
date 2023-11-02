@@ -70,7 +70,6 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
         .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoices[0].value][key]]) : [];
 
-    console.log(categoryColumns, topicColumns, difficultyColumns);
 
     useEffect(() => {
         const charts: Chart[] = [];
