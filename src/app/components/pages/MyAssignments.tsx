@@ -1,7 +1,7 @@
-import React, {MouseEvent, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {logAction, useAppDispatch, useGetMyAssignmentsQuery} from "../../state";
 import {AssignmentDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {Card, CardBody, Col, Container, Input, Label, Row} from 'reactstrap';
+import {Button, Card, CardBody, Col, Container, Input, Label, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     filterAssignmentsByProperties,
@@ -16,6 +16,8 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {PageFragment} from "../elements/PageFragment";
 
 
+const INITIAL_NO_ASSIGNMENTS = 10;
+const NO_ASSIGNMENTS_INCREMENT = 10;
 const assignmentStates = ["All", "To do", "Older", "All attempted", "All correct"];
 type AssignmentState = typeof assignmentStates[number];
 
@@ -31,6 +33,8 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
     const [assignmentSetByFilter, setAssignmentSetByFilter] = useState<string>("All");
     const [assignmentGroupFilter, setAssignmentGroupFilter] = useState<string>("All");
+
+    const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
 
     const pageHelp = <span>
         Any {siteSpecific("assignments", "quizzes")} you have been set will appear here.<br />
@@ -55,6 +59,8 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                             "All attempted": myAssignments.allAttempted,
                             "All correct": myAssignments.completed
                         };
+
+                        const filteredAssignments = filterAssignmentsByProperties(assignmentByStates[assignmentStateFilter], assignmentTitleFilter, assignmentGroupFilter, assignmentSetByFilter);
 
                         return <>
                             <Row>
@@ -90,9 +96,18 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                             </Row>
                             <Row className={siteSpecific("", "mt-3")}>
                                 <Col sm="12">
-                                    <Assignments assignments={filterAssignmentsByProperties(assignmentByStates[assignmentStateFilter], assignmentTitleFilter, assignmentGroupFilter, assignmentSetByFilter)} />
+                                    <Assignments assignments={filteredAssignments.slice(0, limit)} />
                                 </Col>
                             </Row>
+                            {limit < filteredAssignments.length && <div className="text-center">
+                                <hr className="text-center" />
+                                <p className="mt-4">
+                                    Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered assignments.
+                                </p>
+                                <Button color="primary" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
+                                    Show more
+                                </Button>
+                            </div>}
                         </>;
                     }}
                 />
