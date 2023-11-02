@@ -155,12 +155,13 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         No data
                     </span> :
                     <table className={"sr-only"}>
-                    <tbody>
+                    <thead>
                     <tr>
                         <th>Subject</th>
                         <th>{subId}</th>
                     </tr>
-                    </tbody>
+                    </thead>
+					<tbody>
                     {categoryColumns.map((val, key) => {
                         return (
                             <tr key={key}>
@@ -169,6 +170,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                             </tr>
                         );
                     })}
+					</tbody>
                 </table>}
             </div>
         </RS.Col>}
@@ -195,12 +197,13 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         No data
                     </span> :
                     <table className={"sr-only"}>
-                        <tbody>
+                        <thead>
                         <tr>
                             <th>Topic</th>
                             <th>{subId}</th>
                         </tr>
-                        </tbody>
+                        </thead>
+						<tbody>
                         {topicColumns.map((val, key) => {
                             return (
                                 <tr key={key}>
@@ -209,6 +212,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                                 </tr>
                             );
                         })}
+						</tbody>
                     </table>}
             </div>
         </RS.Col>
@@ -235,12 +239,13 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         No data
                     </span> :
                     <table className={"sr-only"}>
-                        <tbody>
+                        <thead>
                         <tr>
                             <th>Stage</th>
                             <th>{subId}</th>
                         </tr>
-                        </tbody>
+                        </thead>
+						<tbody>
                         {difficultyColumns.map((val, key) => {
                             return (
                                 <tr key={key}>
@@ -249,6 +254,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                                 </tr>
                             );
                         })}
+						</tbody>
                     </table>}
             </div>
         </RS.Col>}
