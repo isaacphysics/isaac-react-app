@@ -52,23 +52,35 @@ interface QuizAssignmentProps {
     index: number;
 }
 
+const filterByDate = (dateFilterType: string, assignmentDate: Date | number | undefined, comparisonDate: Date | number) => {
+    if (!assignmentDate) return false;
+    switch (dateFilterType) {
+        case 'after':
+            return assignmentDate >= nthHourOf(24, comparisonDate);
+        case 'before':
+            return assignmentDate <= nthHourOf(0, comparisonDate);
+        case 'on':
+            return assignmentDate >= nthHourOf(0, comparisonDate) && assignmentDate <= nthHourOf(24, comparisonDate);
+    }
+};
+
+const _compareStrings = (a: string | undefined, b: string | undefined): number => {
+    // sorts by string ascending (A-Z), then undefined
+    if (!a && !b) return 0;
+    if (!a) return -1;
+    if (!b) return 1;
+    return a.localeCompare(b);
+};
+
+const _compareDates = (a: Date | undefined, b: Date | undefined): number => {
+    // sorts by date descending (most recent first), then undefined
+    if (!a && !b) return 0;
+    if (!a) return 1;
+    if (!b) return -1;
+    return b.valueOf() - a.valueOf();
+};
+
 function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
-
-    const _compareStrings = (a: string | undefined, b: string | undefined): number => {
-        // sorts by string ascending (A-Z), then undefined
-        if (!a && !b) return 0;
-        if (!a) return -1;
-        if (!b) return 1;
-        return a.localeCompare(b);
-    };
-
-    const _compareDates = (a: Date | undefined, b: Date | undefined): number => {
-        // sorts by date descending (most recent first), then undefined
-        if (!a && !b) return 0;
-        if (!a) return 1;
-        if (!b) return -1;
-        return b.valueOf() - a.valueOf();
-    };
 
     const compareGroupNames = (a: AssignedGroup, b: AssignedGroup) => _compareStrings(a?.group, b?.group);
     const compareCreationDates = (a: AssignedGroup, b: AssignedGroup) => _compareDates(a?.assignment?.creationDate, b?.assignment?.creationDate);
@@ -253,18 +265,6 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
         {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ml-2">hidden from teachers</div>}
         {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ml-2">visible to students</div>}
     </>;
-
-    const filterByDate = (dateFilterType: string, assignmentDate: Date | number | undefined, comparisonDate: Date | number) => {
-        if (!assignmentDate) return false;
-        switch (dateFilterType) {
-            case 'after':
-                return assignmentDate >= nthHourOf(24, comparisonDate);
-            case 'before':
-                return assignmentDate <= nthHourOf(0, comparisonDate);
-            case 'on':
-                return assignmentDate >= nthHourOf(0, comparisonDate) && assignmentDate <= nthHourOf(24, comparisonDate);
-        }
-    };
 
     const rowFiltersView = ((isPhy && above["sm"](deviceSize)) || (isAda && above["md"](deviceSize)));
 
