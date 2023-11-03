@@ -924,6 +924,7 @@ export const PATHS = siteSpecific({
     SET_ASSIGNMENTS: "/set_assignments",
     GAMEBOARD_BUILDER: "/gameboard_builder",
     ADD_GAMEBOARD: "/add_gameboard",
+    PREVIEW_TEST: "/test/preview",
 }, {
     ASSIGNMENT_PROGRESS: "/my_markbook",
     MY_GAMEBOARDS: "/quizzes",
@@ -933,6 +934,7 @@ export const PATHS = siteSpecific({
     SET_ASSIGNMENTS: "/quizzes/set",
     GAMEBOARD_BUILDER: "/quizzes/builder",
     ADD_GAMEBOARD: "/quizzes/add",
+    PREVIEW_TEST: "/test/preview",
 });
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";

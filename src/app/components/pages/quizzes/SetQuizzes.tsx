@@ -32,6 +32,7 @@ import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {PageFragment} from "../../elements/PageFragment";
 import {RenderNothing} from "../../elements/RenderNothing";
+import { useHistoryState } from "../../../state/actions/history";
 import classNames from "classnames";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
@@ -90,16 +91,15 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
     </div>;
 }
 
-const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
+const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
-    const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
+    const [activeTab, setActiveTab] = useHistoryState("currentTab", MANAGE_QUIZ_TAB.set);
 
     const { data: groups } = useGetGroupsQuery(false);
     const groupIdToName = useMemo<{[id: number]: string | undefined}>(() => groups?.reduce((acc, group) => group?.id ? {...acc, [group.id]: group.groupName} : acc, {} as {[id: number]: string | undefined}) ?? {}, [groups]);
     const quizAssignmentsQuery = useGetQuizAssignmentsSetByMeQuery();
-
 
     // Set active tab using hash anchor
     useEffect(() => {
@@ -213,7 +213,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "set_tests_help" : undefined} />
         <PageFragment fragmentId={"set_tests_help"} ifNotFound={RenderNothing} />
-        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab}>
+        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
             {{
                 [siteSpecific("Set Tests", "Available tests")]:
                 <ShowLoading until={filteredQuizzes}>
@@ -298,7 +298,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                 ? `Demo Group ${assignment.groupId}`
                                 : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
                                 return {...assignment, groupName};
-                            });
+                            }).reverse();
                             if (showFilters) {
                                 const filters = [];
                                 if (manageQuizzesTitleFilter !== "") {

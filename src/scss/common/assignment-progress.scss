@@ -516,7 +516,6 @@ $failed-bg-size: 25%;
 
   .total-column {
     @include table-sticky;
-    width: 65px;
     right: 0;
     top: 0;
     &:after {
