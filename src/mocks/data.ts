@@ -203,8 +203,8 @@ export const mockEvent: IsaacEventPageDTO = {
     },
   ],
   tags: ["virtual", "student", "booster"],
-  date: 1698850800000 as unknown as Date,
-  bookingDeadline: 1698840000000 as unknown as Date,
+  date: 253399842000000 as unknown as Date,
+  bookingDeadline: 253399755600000 as unknown as Date,
   location: {
     address: {
       addressLine1: "",
@@ -231,7 +231,7 @@ export const mockEvent: IsaacEventPageDTO = {
     },
   ],
   published: true,
-  endDate: 1698854400000 as unknown as Date,
+  endDate: 253399845600000 as unknown as Date,
   eventStatus: "OPEN",
   placesAvailable: 195,
   privateEvent: false,
