@@ -80,6 +80,7 @@ import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
 import {RegistrationRoleSelect} from "../pages/RegistrationRoleSelect";
 import {RegistrationTeacherDetails} from "../pages/RegistrationTeacherDetails";
+import {RegistrationVerifyEmail} from "../pages/RegistrationVerifyEmail";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -197,6 +198,7 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/register" component={Registration} />
                         <TrackedRoute exact path="/register/role" component={RegistrationRoleSelect} />
                         <TrackedRoute exact path="/register/teacher/details" component={RegistrationTeacherDetails} />
+                        <TrackedRoute exact path="/register/verify" component={RegistrationVerifyEmail} />
 
                         {/* Static pages */}
                         <TrackedRoute exact path="/contact" component={Contact}/>

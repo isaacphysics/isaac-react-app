@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
+import {Button, Card, CardBody, CardFooter, CardText, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {isAda, SITE_TITLE} from "../../services";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
@@ -15,37 +15,41 @@ export const RegistrationRoleSelect = () => {
                 <Row>
                     <Col xs={12} lg={6}>
                         <Card className="h-100">
-                            <CardBody>
+                            <CardBody className="d-flex flex-column">
                                 <CardTitle>
                                     <h3>Student</h3>
                                 </CardTitle>
-                                <p>With a student account you can:</p>
-                                <ul>
-                                    <li>Lorem ipsum dolor sit amet consectetur.</li>
-                                    <li>Lorem ipsum dolor sit amet consectetur.</li>
-                                    <li>Lorem ipsum dolor sit amet consectetur.</li>
-                                </ul>
+                                <CardText>
+                                    <p>With a student account you can:</p>
+                                    <ul>
+                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
+                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
+                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
+                                    </ul>
+                                </CardText>
                                 {/* todo: this button should be at the bottom of the card */}
-                                <Button block disabled>I am a student</Button>
+                                <Button block disabled className="align-self-end mt-auto">I am a student</Button>
                             </CardBody>
                         </Card>
                     </Col>
                     <Col xs={12} lg={6}>
                         <Card className="h-100">
-                            <CardBody>
+                            <CardBody className="d-flex flex-column">
                                 <CardTitle>
                                     <h3>Teacher</h3>
                                 </CardTitle>
-                                <p>With a teacher account you can:</p>
-                                <ul>
-                                    <li>Lorem ipsum dolor sit amet consectetur.</li>
-                                    <li>Lorem ipsum dolor sit amet consectetur.</li>
-                                    <li>Lorem ipsum dolor sit amet consectetur.</li>
-                                </ul>
-                                <p>
-                                    Teacher accounts do not give you access to the answers. <a href="/support/teacher/general">Learn more</a>
-                                </p>
-                                <Button block href="/register/teacher/details">I am a teacher</Button>
+                                <CardText>
+                                    <p>With a teacher account you can:</p>
+                                    <ul>
+                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
+                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
+                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
+                                    </ul>
+                                    <p>
+                                        Teacher accounts do not give you access to the answers. <a href="/support/teacher/general">Learn more</a>
+                                    </p>
+                                </CardText>
+                                <Button block className="align-self-end mt-auto" href="/register/teacher/details">I am a teacher</Button>
                             </CardBody>
                         </Card>
                     </Col>

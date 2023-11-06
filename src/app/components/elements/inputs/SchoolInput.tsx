@@ -7,6 +7,7 @@ import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {useLazyGetSchoolByUrnQuery, useLazySearchSchoolsQuery} from "../../../state";
+import {Label} from "reactstrap";
 
 interface SchoolInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -97,7 +98,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
     return <RS.FormGroup className={`school ${className}`}>
-        <RS.Label htmlFor={`school-input-${randomNumber}`} className={classNames({"form-required": required})}>School</RS.Label>
+        <Label className={"font-weight-bold"}>{"School (Optional)"}</Label>
+        <p className="d-block">This helps us personalise the platform for you.</p>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect
                 isClearable

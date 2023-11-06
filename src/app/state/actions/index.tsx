@@ -198,7 +198,28 @@ export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => as
     dispatch({type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE, userSnapshot: newUserSnapshot});
 };
 
-// TODO scope for pulling out a separate registerUser method from this
+export const registerNewUser = (
+    newUser: Immutable<ValidationUser>,
+    newUserPreferences: UserPreferencesDTO,
+    newUserContexts: UserContext[] | undefined,
+    passwordCurrent: string | null,
+) => async (dispatch: Dispatch<Action>) => {
+
+    try {
+        // Create the user
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
+        const currentUser = await api.users.updateCurrent(newUser, newUserPreferences, passwordCurrent, newUserContexts);
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
+        await dispatch(requestCurrentUser() as any);
+
+        // Redirect to email verification page
+        history.push('/register/verify');
+
+    } catch (e: any) {
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+    }
+};
+
 export const updateCurrentUser = (
     updatedUser: Immutable<ValidationUser>,
     updatedUserPreferences: UserPreferencesDTO,
@@ -239,7 +260,7 @@ export const updateCurrentUser = (
         if (isFirstLogin) {
             persistence.session.remove(KEY.FIRST_LOGIN);
             if (redirect) {
-                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
+                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/register/verify', {firstLogin: isFirstLogin});
             }
         } else if (!editingOtherUser) {
             dispatch(showToast({
