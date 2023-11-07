@@ -55,7 +55,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     const generateSpecFromStateIfDebug = useCallback((state?: GraphSketcherState) => {
         if (state && debugModeEnabled) {
-            generateGraphSpec({type: 'graphChoice', value: JSON.stringify(state)});
+            generateGraphSpec({type: 'graphChoice', value: JSON.stringify(GraphSketcher.toExternalState(state))});
         }
     }, [user, debugModeEnabled, generateGraphSpec]);
 
