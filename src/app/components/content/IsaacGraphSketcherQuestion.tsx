@@ -19,7 +19,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     // with the question page data.
     // ! If this becomes no longer true ! then we will need a useEffect with [initialState] dependency to set the initial
     // state once the currentAttempt is loaded in.
-    const initialState: GraphSketcherState | undefined = currentAttempt?.value ? JSON.parse(currentAttempt?.value) : undefined;
+    const initialState: GraphSketcherState | undefined = currentAttempt?.value ? GraphSketcher.toInternalState(JSON.parse(currentAttempt?.value)) : undefined;
     const previewRef = useRef<HTMLDivElement>(null);
 
     // This is used to defer the updating of the current attempt until the user closes the modal.
@@ -37,7 +37,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     }(window.scrollY), [modalVisible]); // Capture y position whenever modalVisible changes.
 
     function closeModal() {
-        dispatchSetCurrentAttempt({type: 'graphChoice', value: JSON.stringify(pendingAttemptState)});
+        dispatchSetCurrentAttempt({type: 'graphChoice', value: JSON.stringify(pendingAttemptState ? GraphSketcher.toExternalState(pendingAttemptState) : undefined)});
         returnToScrollYPosition();
         setModalVisible(false);
     }
@@ -77,7 +77,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     useEffect(() => {
         // Set the state of the preview box whenever currentAttempt changes
         if (previewSketch && currentAttempt?.value) {
-            const data: GraphSketcherState = JSON.parse(currentAttempt.value);
+            const data: GraphSketcherState = GraphSketcher.toInternalState(JSON.parse(currentAttempt.value));
             data.canvasWidth = 600;
             data.canvasHeight = 400;
             data.curves = data.curves || initialState?.curves || [];

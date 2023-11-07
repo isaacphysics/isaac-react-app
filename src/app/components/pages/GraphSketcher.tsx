@@ -48,7 +48,7 @@ const GraphSketcherPage = () => {
 
     const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
         setInitialState(newState);
-        setCurrentAttempt({type: 'graphChoice', value: JSON.stringify(newState)});
+        setCurrentAttempt({type: 'graphChoice', value: JSON.stringify(GraphSketcher.toExternalState(newState))});
         if (previewSketch) {
             previewSketch.state = newState;
             previewSketch.state.curves = previewSketch.state.curves || [];
