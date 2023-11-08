@@ -1,6 +1,6 @@
 import { FEATURED_NEWS_TAG } from "../app/services";
 import { DAYS_AGO } from "../test/utils";
-import { IsaacEventPageDTO, UserSummaryWithGroupMembershipDTO } from "../IsaacApiTypes";
+import { RegisteredUserDTO, IsaacEventPageDTO, UserSummaryWithGroupMembershipDTO } from "../IsaacApiTypes";
 import { EventBookingDTO } from "../IsaacApiTypes";
 
 export const mockEventBookings: EventBookingDTO[] = [
@@ -25,14 +25,14 @@ export const mockEventBookings: EventBookingDTO[] = [
     reservedById: 0,
     eventId: "example_event",
     eventTitle: "Example Event",
-    eventDate: 1698850800000 as unknown as Date,
+    eventDate: 1698850800000,
     bookingStatus: "CONFIRMED",
-    bookingDate: 1695897589235 as unknown as Date,
+    bookingDate: 1695897589235,
     additionalInformation: {
       experienceLevel: "Lots of teaching experience",
       jobTitle: "Teacher of Computer Science",
     },
-    updated: 1695897589235 as unknown as Date,
+    updated: 1695897589235,
   },
   {
     bookingId: 1001,
@@ -55,13 +55,13 @@ export const mockEventBookings: EventBookingDTO[] = [
     reservedById: 0,
     eventId: "example_event",
     eventTitle: "Example Event",
-    eventDate: 1698850800000 as unknown as Date,
+    eventDate: 1698850800000,
     bookingStatus: "CONFIRMED",
-    bookingDate: 1695900107575 as unknown as Date,
+    bookingDate: 1695900107575,
     additionalInformation: {
       yearGroup: "12",
     },
-    updated: 1695900107575 as unknown as Date,
+    updated: 1695900107575,
   },
   {
     bookingId: 1002,
@@ -84,13 +84,13 @@ export const mockEventBookings: EventBookingDTO[] = [
     reservedById: 0,
     eventId: "example_event",
     eventTitle: "Example Event",
-    eventDate: 1698850800000 as unknown as Date,
+    eventDate: 1698850800000,
     bookingStatus: "CONFIRMED",
-    bookingDate: 1695935815666 as unknown as Date,
+    bookingDate: 1695935815666,
     additionalInformation: {
       yearGroup: "12",
     },
-    updated: 1695935815666 as unknown as Date,
+    updated: 1695935815666,
   },
   {
     bookingId: 1003,
@@ -113,14 +113,14 @@ export const mockEventBookings: EventBookingDTO[] = [
     reservedById: 0,
     eventId: "example_event",
     eventTitle: "Example Event",
-    eventDate: 1698850800000 as unknown as Date,
+    eventDate: 1698850800000,
     bookingStatus: "CONFIRMED",
-    bookingDate: 1695889960207 as unknown as Date,
+    bookingDate: 1695889960207,
     additionalInformation: {
       experienceLevel: "GCSE and A Level",
       jobTitle: "Head of CS",
     },
-    updated: 1695889960207 as unknown as Date,
+    updated: 1695889960207,
   },
   {
     bookingId: 1004,
@@ -143,17 +143,17 @@ export const mockEventBookings: EventBookingDTO[] = [
     reservedById: 0,
     eventId: "example_event",
     eventTitle: "Example Event",
-    eventDate: 1698850800000 as unknown as Date,
+    eventDate: 1698850800000,
     bookingStatus: "CONFIRMED",
-    bookingDate: 1695892050721 as unknown as Date,
+    bookingDate: 1695892050721,
     additionalInformation: {
       yearGroup: "13",
     },
-    updated: 1695892050721 as unknown as Date,
+    updated: 1695892050721,
   },
 ];
 
-export const mockCancelledEventBooking = {
+export const mockCancelledEventBooking: EventBookingDTO = {
   bookingId: 1005,
   userBooked: {
     givenName: "Cancelled",
@@ -174,14 +174,14 @@ export const mockCancelledEventBooking = {
   reservedById: 0,
   eventId: "example_event",
   eventTitle: "Example Event",
-  eventDate: 1698850800000 as unknown as Date,
+  eventDate: 1698850800000,
   bookingStatus: "CANCELLED",
-  bookingDate: 1695897589235 as unknown as Date,
+  bookingDate: 1695897589235,
   additionalInformation: {
     experienceLevel: "teacher",
     jobTitle: "CS Teacher",
   },
-  updated: 1695897589235 as unknown as Date,
+  updated: 1695897589235,
 };
 
 export const mockEvent: IsaacEventPageDTO = {
@@ -305,11 +305,11 @@ export const registrationUserData = {
   verificationInfo: "www.website.com",
 };
 
-export const mockUser = {
+export const mockUser: RegisteredUserDTO = {
   givenName: "Test",
   familyName: "Admin",
   email: "test-admin@test.com",
-  dateOfBirth: 777777777777,
+  dateOfBirth: 777777777777 as unknown as Date,
   gender: "MALE",
   registrationDate: DAYS_AGO(100),
   role: "ADMIN",
@@ -320,7 +320,7 @@ export const mockUser = {
       examBoard: "all",
     },
   ],
-  registeredContextsLastConfirmed: DAYS_AGO(0),
+  registeredContextsLastConfirmed: DAYS_AGO(0) as unknown as Date,
   firstLogin: false,
   lastUpdated: DAYS_AGO(1),
   lastSeen: DAYS_AGO(1),
@@ -349,7 +349,7 @@ export const registrationMockUser = {
   lastUpdated: DAYS_AGO(0),
   lastSeen: DAYS_AGO(0),
   emailVerificationStatus: "UNVERIFIED",
-  id: 1 as const,
+  id: 1,
 };
 
 export const mockUserToUpdate = {
@@ -363,15 +363,15 @@ export const mockUserToUpdate = {
   schoolOther: undefined,
 };
 
-export const buildMockStudent = <T extends number>(
-  id: T extends typeof mockUser.id ? `Student ID cannot be the same as the mockUser: ${typeof mockUser.id}` : T,
-) => {
-  if (id === mockUser.id) throw Error("A mock student cannot have the same ID as the mockUser");
+export const buildMockStudent = (id: number) => {
+  if (id === mockUser.id) {
+    throw Error("A mock student cannot have the same ID as the mockUser");
+  }
   return {
     givenName: "Test",
     familyName: `Student ${id}`,
     email: `test-student-${id}@test.com`,
-    dateOfBirth: 888888888888,
+    dateOfBirth: 888888888888 as unknown as Date,
     gender: id % 2 === 0 ? "MALE" : "FEMALE",
     registrationDate: DAYS_AGO(50),
     role: "STUDENT",
@@ -382,7 +382,7 @@ export const buildMockStudent = <T extends number>(
         examBoard: "all",
       },
     ],
-    registeredContextsLastConfirmed: DAYS_AGO(0),
+    registeredContextsLastConfirmed: DAYS_AGO(0) as unknown as Date,
     firstLogin: false,
     lastUpdated: DAYS_AGO(1),
     lastSeen: DAYS_AGO(1),
@@ -391,15 +391,13 @@ export const buildMockStudent = <T extends number>(
   };
 };
 
-export const buildMockTeacher = <T extends number>(
-  id: T extends typeof mockUser.id ? `Teacher ID cannot be the same as the mockUser: ${typeof mockUser.id}` : T,
-) => {
+export const buildMockTeacher = (id: number) => {
   if (id === mockUser.id) throw Error("A mock teacher cannot have the same ID as the mockUser");
   return {
     givenName: "Test",
     familyName: `Teacher ${id}`,
     email: `test-teacher-${id}@test.com`,
-    dateOfBirth: 888888888888,
+    dateOfBirth: 888888888888 as unknown as Date,
     gender: id % 2 === 0 ? "MALE" : "FEMALE",
     registrationDate: DAYS_AGO(50),
     role: "TEACHER",
@@ -410,7 +408,7 @@ export const buildMockTeacher = <T extends number>(
         examBoard: "all",
       },
     ],
-    registeredContextsLastConfirmed: DAYS_AGO(0),
+    registeredContextsLastConfirmed: DAYS_AGO(0) as unknown as Date,
     firstLogin: false,
     lastUpdated: DAYS_AGO(1),
     lastSeen: DAYS_AGO(1),

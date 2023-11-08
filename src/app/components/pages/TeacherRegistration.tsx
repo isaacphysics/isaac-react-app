@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { selectors, useAppSelector } from "../../state";
 import { Button, Card, CardBody, CardTitle, Col, Container, Form, FormFeedback, Row } from "reactstrap";
 import { BooleanNotation, DisplaySettings, UserEmailPreferences, ValidationUser } from "../../../IsaacAppTypes";
-import { api, loadZxcvbnIfNotPresent, REGISTER_CRUMB, schoolNameWithPostcode, validateForm } from "../../services";
+import { loadZxcvbnIfNotPresent, REGISTER_CRUMB, validateForm } from "../../services";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Redirect } from "react-router";
 import { MetaDescription } from "../elements/MetaDescription";
@@ -121,7 +121,6 @@ export const TeacherRegistrationBody = () => {
   // states & functions for teacher verification
   const [otherInformation, setOtherInformation] = useState("");
   const [verificationDetails, setVerificationDetails] = useState<string>();
-  const [school, setSchool] = useState<string | undefined>();
 
   // Inputs which trigger re-render
   const [registrationUser, setRegistrationUser] = useState<Immutable<ValidationUser>>({
@@ -134,7 +133,6 @@ export const TeacherRegistrationBody = () => {
     gender: undefined,
     schoolId: undefined,
     schoolOther: undefined,
-    teacherPending: true,
   });
 
   loadZxcvbnIfNotPresent();
@@ -144,22 +142,6 @@ export const TeacherRegistrationBody = () => {
   const [isRecaptchaTicked, setIsRecaptchaTicked] = useState(false);
 
   const recaptchaRef = useRef<ReCAPTCHA | null>(null);
-
-  useEffect(() => {
-    function fetchSchool(urn: string) {
-      if (urn !== "") {
-        api.schools.getByUrn(urn).then(({ data }) => {
-          setSchool(schoolNameWithPostcode(data[0]));
-        });
-      } else if (registrationUser.schoolOther) {
-        setSchool(registrationUser.schoolOther);
-      } else {
-        setSchool(undefined);
-      }
-    }
-
-    fetchSchool(registrationUser.schoolId || "");
-  }, [registrationUser.schoolOther, registrationUser.schoolId]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -175,7 +157,6 @@ export const TeacherRegistrationBody = () => {
         displaySettings: displaySettings,
         verificationDetails: verificationDetails,
         otherInformation: otherInformation,
-        school: school,
         recaptchaToken: recaptchaToken,
       });
     }

@@ -17,7 +17,7 @@ import { API_PATH } from "../../app/services";
 import { registrationMockUser, registrationUserData } from "../../mocks/data";
 
 const registerUserSpy = jest.spyOn(actions, "registerUser");
-const submitMessageSpy = jest.spyOn(actions, "submitMessage");
+const upgradeAccountSpy = jest.spyOn(actions, "upgradeAccount");
 
 describe("Teacher Registration", () => {
   const renderTeacherRegistration = () => {
@@ -131,8 +131,8 @@ describe("Teacher Registration", () => {
         rest.post(API_PATH + "/users", (req, res, ctx) => {
           return res(ctx.status(200), ctx.json(registrationMockUser));
         }),
-        rest.post(API_PATH + "/contact", (req, res, ctx) => {
-          return res(ctx.status(200), ctx.json({}));
+        rest.post(API_PATH + "/users/request_role_change", (req, res, ctx) => {
+          return res(ctx.status(200), ctx.json({ ...registrationMockUser, teacherPending: true }));
         }),
       ],
     });
@@ -147,7 +147,6 @@ describe("Teacher Registration", () => {
         familyName: registrationUserData.familyName,
         email: registrationUserData.email,
         gender: registrationUserData.gender,
-        teacherPending: true,
         loggedIn: false,
       }),
       expect.objectContaining({
@@ -165,12 +164,11 @@ describe("Teacher Registration", () => {
       ]),
       "mocked-recaptcha-token",
     );
-    expect(submitMessageSpy).toHaveBeenCalledWith({
-      firstName: registrationUserData.givenName,
-      lastName: registrationUserData.familyName,
-      emailAddress: registrationUserData.email,
-      subject: "Teacher Account Request",
-      message: expect.stringMatching(/extra information/),
-    });
+    expect(upgradeAccountSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        verificationDetails: registrationUserData.verificationInfo,
+        otherInformation: "extra information",
+      }),
+    );
   });
 });

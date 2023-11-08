@@ -616,7 +616,7 @@ describe("Groups", () => {
     expect(otherRemoveButton).toBeNull();
 
     // "Remove" button should be visible and work as expected for us (mock user)
-    const selfManagerElement = additionalManagerElements.find((e) => e.textContent?.includes(mockUser.email));
+    const selfManagerElement = additionalManagerElements.find((e) => e.textContent?.includes(mockUser.email!));
     if (!selfManagerElement) fail("Mock users additional manager entry not shown on modal, cannot continue test!");
     const selfRemoveButton = within(selfManagerElement as HTMLElement).getByRole("button", {
       name: "Remove",

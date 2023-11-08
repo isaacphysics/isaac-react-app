@@ -253,11 +253,11 @@ export interface EventBookingDTO {
   reservedById?: number;
   eventId?: string;
   eventTitle?: string;
-  eventDate?: Date;
+  eventDate?: EpochTimeStamp;
   bookingStatus?: BookingStatus;
-  bookingDate?: Date;
+  bookingDate?: EpochTimeStamp;
   additionalInformation?: { [index: string]: string };
-  updated?: Date;
+  updated?: EpochTimeStamp;
 }
 
 export interface FormulaValidationResponseDTO extends QuestionValidationResponseDTO {
@@ -300,7 +300,7 @@ export interface UserGroupDTO {
   groupName?: string;
   ownerId?: number;
   created?: Date;
-  lastUpdated?: Date;
+  lastUpdated?: EpochTimeStamp;
   token?: string;
   archived?: boolean;
   additionalManagerPrivileges?: boolean;
@@ -468,8 +468,8 @@ export interface AbstractSegueUserDTO {}
 export interface AnonymousUserDTO extends AbstractSegueUserDTO {
   sessionId?: string;
   temporaryQuestionAttempts?: { [index: string]: { [index: string]: QuestionValidationResponseDTO[] } };
-  dateCreated?: Date;
-  lastUpdated?: Date;
+  dateCreated?: EpochTimeStamp;
+  lastUpdated?: EpochTimeStamp;
 }
 
 export interface GroupMembershipDTO {
@@ -506,15 +506,15 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
   email?: string;
   dateOfBirth?: Date;
   gender?: Gender;
-  registrationDate?: Date;
+  registrationDate?: EpochTimeStamp;
   schoolId?: string;
   role?: UserRole;
   schoolOther?: string;
   registeredContexts?: UserContext[];
   registeredContextsLastConfirmed?: Date;
   firstLogin?: boolean;
-  lastUpdated?: Date;
-  lastSeen?: Date;
+  lastUpdated?: EpochTimeStamp;
+  lastSeen?: EpochTimeStamp;
   emailVerificationStatus?: EmailVerificationStatus;
   id?: number;
   _id?: number;
@@ -545,9 +545,9 @@ export interface UserSummaryDTO extends AbstractSegueUserDTO {
 }
 
 export interface UserSummaryForAdminUsersDTO extends UserSummaryWithEmailAddressDTO {
-  lastUpdated?: Date;
-  lastSeen?: Date;
-  registrationDate?: Date;
+  lastUpdated?: EpochTimeStamp;
+  lastSeen?: EpochTimeStamp;
+  registrationDate?: EpochTimeStamp;
   schoolId?: string;
   schoolOther?: string;
 }

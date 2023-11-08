@@ -112,6 +112,14 @@ export const api = {
         recaptchaToken,
       });
     },
+
+    upgradeAccount: (params: {
+      verificationDetails: string;
+      otherInformation?: string;
+    }): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
+      return endpoint.post(`/users/request_role_change`, params);
+    },
+
     passwordResetById: (id: number) => {
       return endpoint.post(`/users/${id}/resetpassword`);
     },

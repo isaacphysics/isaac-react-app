@@ -1,4 +1,3 @@
-import { EventBookingDTO } from "../../../../../IsaacApiTypes";
 import { countStudentsAndTeachers } from "../../../../../app/components/elements/panels/SelectedEventDetails";
 import { mockCancelledEventBooking, mockEventBookings } from "../../../../../mocks/data";
 
@@ -42,7 +41,7 @@ describe("countStudentsAndTeachers", () => {
   });
 
   it("should not count bookings with invalid bookingStatus", () => {
-    const results = countStudentsAndTeachers([...mockEventBookings, mockCancelledEventBooking] as EventBookingDTO[]);
+    const results = countStudentsAndTeachers([...mockEventBookings, mockCancelledEventBooking]);
     expect(results).toEqual({ studentCount: 3, teacherCount: 2 });
   });
 });

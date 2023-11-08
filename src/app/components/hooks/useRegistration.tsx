@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FIRST_LOGIN_STATE, KEY, allowedDomain, persistence, validateForm } from "../../services";
-import { useAppDispatch, registerUser, submitMessage } from "../../state";
+import { useAppDispatch, registerUser, upgradeAccount, requestCurrentUser } from "../../state";
 import { BooleanNotation, DisplaySettings, UserEmailPreferences, ValidationUser } from "../../../IsaacAppTypes";
 import { UserContext } from "../../../IsaacApiTypes";
 import ReactGA from "react-ga4";
@@ -38,7 +38,6 @@ const useRegistration = ({ isTeacher }: RegistrationOptions) => {
     displaySettings,
     verificationDetails,
     otherInformation,
-    school,
     recaptchaToken,
   }: RegisterProps) => {
     setAttemptedSignUp(true);
@@ -59,46 +58,18 @@ const useRegistration = ({ isTeacher }: RegistrationOptions) => {
 
     const newUser = { ...registrationUser, loggedIn: false };
 
-    const handleTeacherRegistration = () => {
+    const handleTeacherRegistration = async () => {
       if (isValidForm && allowedDomain(registrationUser.email) && verificationDetails) {
         // create account
-        dispatch(registerUser(newUser, userPreferencesToUpdate, userContexts, recaptchaToken));
+        await dispatch(registerUser(newUser, userPreferencesToUpdate, userContexts, recaptchaToken));
         ReactGA.event({
           category: "user",
           action: "registration",
           label: "Create Account (SEGUE)",
         });
-
-        const subject = "Teacher Account Request";
-        const firstName = registrationUser.givenName || "";
-        const lastName = registrationUser.familyName || "";
-        const emailAddress = registrationUser.email || "";
-        const message =
-          "Hello,\n\n" +
-          "Please could you convert my Isaac account into a teacher account.\n\n" +
-          "My school is: " +
-          school +
-          "\n" +
-          "A link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " +
-          verificationDetails +
-          "\n\n" +
-          "Any other information: " +
-          otherInformation +
-          "\n\n" +
-          "Thanks, \n\n" +
-          firstName +
-          " " +
-          lastName;
         // send email for account upgrade request
-        dispatch(
-          submitMessage({
-            firstName,
-            lastName,
-            emailAddress,
-            subject,
-            message,
-          }),
-        );
+        await dispatch(upgradeAccount({ verificationDetails, otherInformation }));
+        await dispatch(requestCurrentUser());
       }
     };
 
