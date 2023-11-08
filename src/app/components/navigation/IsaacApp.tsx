@@ -178,8 +178,8 @@ export const IsaacApp = () => {
               <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
               <TrackedRoute exact path="/search" component={Search} />
               <TrackedRoute exact path="/pages/:pageId" component={Generic} />
-              <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
-              <TrackedRoute exact path="/questions/:questionId" component={Question} />
+              <TrackedRoute exact path="/concepts/:conceptId" ifUser={isLoggedIn} component={Concept} />
+              <TrackedRoute exact path="/questions/:questionId" ifUser={isLoggedIn} component={Question} />
               <TrackedRoute exact path="/gameboards" component={Gameboard} />
               <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
               <TrackedRoute exact path="/gameboard_builder" ifUser={isTutorOrAbove} component={GameboardBuilder} />
@@ -190,7 +190,7 @@ export const IsaacApp = () => {
                 ifUser={isLoggedIn}
                 component={AddGameboard}
               />
-              <TrackedRoute exact path="/gameboards/new" component={GameboardFilter} />
+              <TrackedRoute exact path="/gameboards/new" ifUser={isLoggedIn} component={GameboardFilter} />
               <TrackedRoute exact path="/events" component={Events} />
               <TrackedRoute exact path="/events/:eventId" component={EventDetails} />
               <TrackedRoute exact path="/eventbooking/:eventId" ifUser={isLoggedIn} component={RedirectToEvent} />

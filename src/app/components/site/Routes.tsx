@@ -8,7 +8,7 @@ import { Students } from "../pages/Students";
 import { TeacherTools } from "../pages/TeacherTools";
 import { AssignmentProgress } from "../pages/AssignmentProgress";
 import { Redirect } from "react-router";
-import { isEventLeaderOrStaff, isTutorOrAbove, STAGE } from "../../services";
+import { isEventLeaderOrStaff, isLoggedIn, isTutorOrAbove, STAGE } from "../../services";
 import { SingleAssignmentProgress } from "../pages/SingleAssignmentProgress";
 import { Glossary } from "../pages/Glossary";
 
@@ -40,18 +40,26 @@ export const Routes = [
   <Redirect key={key++} from="/topics/string_manipulation" to="/topics/string_handling" />,
 
   <TrackedRoute key={key++} exact path="/topics" component={AllTopicsWithoutAStage} />,
-  <TrackedRoute key={key++} exact path="/topics/gcse" component={AllTopics} componentProps={{ stage: STAGE.GCSE }} />,
+  <TrackedRoute
+    key={key++}
+    exact
+    path="/topics/gcse"
+    component={AllTopics}
+    ifUser={isLoggedIn}
+    componentProps={{ stage: STAGE.GCSE }}
+  />,
   <TrackedRoute
     key={key++}
     exact
     path="/topics/a_level"
+    ifUser={isLoggedIn}
     component={AllTopics}
     componentProps={{ stage: STAGE.A_LEVEL }}
   />,
-  <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
+  <TrackedRoute key={key++} exact path="/topics/:topicName" ifUser={isLoggedIn} component={Topic} />,
 
   // Glossary:
-  <TrackedRoute key={key++} exact path="/glossary" component={Glossary} />,
+  <TrackedRoute key={key++} exact path="/glossary" ifUser={isLoggedIn} component={Glossary} />,
 
   // Static pages:
   <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
