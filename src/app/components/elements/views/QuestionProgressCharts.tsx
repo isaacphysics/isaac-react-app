@@ -50,7 +50,7 @@ const colourPicker = (names: string[]): { [key: string]: string } => {
         }
     }
     return selected;
-}
+};
 
 export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const {subId, questionsByTag, questionsByLevel, questionsByStageAndDifficulty, flushRef} = props;
@@ -70,6 +70,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
         .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoices[0].value][key]]) : [];
 
+
     useEffect(() => {
         const charts: Chart[] = [];
         if (isPhy && !isAllZero(categoryColumns)) {
@@ -81,7 +82,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 },
                 donut: {
                     title: "By " + topTagLevel,
-                    label: {format: (value, ratio, id) => `${value}`}
+                    label: {format: (value) => `${value}`}
                 },
                 bindto: `#${subId}-categoryChart`,
                 ...OPTIONS
@@ -97,7 +98,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             },
             donut: {
                 title: isAllZero(topicColumns) ? "No Data" : "By Topic",
-                label: {format: (value, ratio, id) => `${value}`}
+                label: {format: (value) => `${value}`}
             },
             bindto: `#${subId}-topicChart`,
             ...OPTIONS
@@ -113,7 +114,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 },
                 donut: {
                     title: isAllZero(difficultyColumns) ? "No data" : "By Difficulty",
-                    label: {format: (value, ratio, id) => `${value}`}
+                    label: {format: (value) => `${value}`}
                 },
                 bindto: `#${subId}-stageChart`,
                 ...OPTIONS
@@ -134,7 +135,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         };
         return () => {
             flushRef.current = undefined;
-        }
+        };
     }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns]);
 
     const numberOfCharts = siteSpecific(3, 2);
@@ -145,9 +146,31 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 Questions by {topTagLevel}
             </div>
             <div className="d-flex flex-grow-1">
-                <div id={`${subId}-categoryChart`} className="text-center-width doughnut-binding align-self-center">
+                <div aria-hidden={"true"} id={`${subId}-categoryChart`} className="text-center-width doughnut-binding align-self-center">
                     <strong>{isAllZero(categoryColumns) ? "No data" : ""}</strong>
                 </div>
+                {isAllZero(categoryColumns) ?
+                    <span className={"sr-only"}>
+                        No data
+                    </span> :
+                    <table className={"sr-only"}>
+                    <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>{subId}</th>
+                    </tr>
+                    </thead>
+					<tbody>
+                    {categoryColumns.map((val, key) => {
+                        return (
+                            <tr key={key}>
+                                <td>{val[0]}</td>
+                                <td>{val[1]}</td>
+                            </tr>
+                        );
+                    })}
+					</tbody>
+                </table>}
             </div>
         </RS.Col>}
         {isAda && <RS.Col md={3}/>}
@@ -159,15 +182,37 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     className="d-inline-block text-left pr-2 w-50"
                     classNamePrefix="select"
                     defaultValue={{value: defaultSearchChoiceTag.id, label: defaultSearchChoiceTag.title}}
-                    options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title}})}
+                    options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title};})}
                     onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
                 />
                 <span className={siteSpecific("", "d-inline-block ml-2")}>questions</span>
             </div>
             <div className="d-flex flex-grow-1">
-                <div id={`${subId}-topicChart`} className="text-center-width doughnut-binding  align-self-center">
+                <div aria-hidden={"true"} id={`${subId}-topicChart`} className="text-center-width doughnut-binding  align-self-center">
                     <strong>{isAllZero(topicColumns) ? "No data" : ""}</strong>
                 </div>
+                {isAllZero(topicColumns) ?
+                    <span className={"sr-only"}>
+                        No data
+                    </span> :
+                    <table className={"sr-only"}>
+                        <thead>
+                        <tr>
+                            <th>Topic</th>
+                            <th>{subId}</th>
+                        </tr>
+                        </thead>
+						<tbody>
+                        {topicColumns.map((val, key) => {
+                            return (
+                                <tr key={key}>
+                                    <td>{val[0]}</td>
+                                    <td>{val[1]}</td>
+                                </tr>
+                            );
+                        })}
+						</tbody>
+                    </table>}
             </div>
         </RS.Col>
         {isAda && <RS.Col md={3}/>}
@@ -185,9 +230,31 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 questions
             </div>
             <div className="d-flex flex-grow-1">
-                <div id={`${subId}-stageChart`} className="text-center-width doughnut-binding  align-self-center">
+                <div aria-hidden={"true"} id={`${subId}-stageChart`} className="text-center-width doughnut-binding  align-self-center">
                     <strong>{isAllZero(difficultyColumns) ? "No data" : ""}</strong>
                 </div>
+                {isAllZero(difficultyColumns) ?
+                    <span className={"sr-only"}>
+                        No data
+                    </span> :
+                    <table className={"sr-only"}>
+                        <thead>
+                        <tr>
+                            <th>Stage</th>
+                            <th>{subId}</th>
+                        </tr>
+                        </thead>
+						<tbody>
+                        {difficultyColumns.map((val, key) => {
+                            return (
+                                <tr key={key}>
+                                    <td>{val[0]}</td>
+                                    <td>{val[1]}</td>
+                                </tr>
+                            );
+                        })}
+						</tbody>
+                    </table>}
             </div>
         </RS.Col>}
     </RS.Row>;

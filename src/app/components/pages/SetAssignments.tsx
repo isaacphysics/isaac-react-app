@@ -297,7 +297,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                             <button className="table-button"
                                     onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
                                 Board
-                                name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
+                                name&nbsp;{boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                             </button>
                         </th>
                         <th className="text-center align-middle">Stages</th>
@@ -305,15 +305,9 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                         <th className="text-center align-middle">Creator</th>
                         <th className="text-center align-middle pointer-cursor">
                             <button className="table-button"
-                                    onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
-                                Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
-                            </button>
-                        </th>
-                        <th className="text-center align-middle pointer-cursor">
-                            <button className="table-button"
                                     onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
                                 Last
-                                viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
+                                viewed&nbsp;{boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
                             </button>
                         </th>
                         <th className="text-center align-middle">Assignments</th>
@@ -389,11 +383,6 @@ const CSTable = (props: SetAssignmentsTableProps) => {
                     </RS.UncontrolledTooltip>
                 </th>
                 <th>Creator</th>
-                <th>
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
-                        Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
                 <th>
                     <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
                         Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}

@@ -175,10 +175,9 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 </table>}
             </td>
             <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>
-            <td className={basicCellClasses} data-testid={"created-date"}>{formatDate(board.creationDate)}</td>
             <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
             {isSetAssignments && <td className={"align-middle text-center"}>
-                <Button color={siteSpecific("tertiary", "secondary")} size="sm" style={{fontSize: 15}} onClick={toggleAssignModal}>
+                <Button className="set-assignments-button" color={siteSpecific("tertiary", "secondary")} size="sm" onClick={toggleAssignModal}>
                     Assign{hasAssignedGroups && "\u00a0/ Unassign"}
                 </Button>
             </td>}

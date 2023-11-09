@@ -38,6 +38,11 @@
                 white-space: -o-pre-wrap;    /* Opera 7 */
                 word-wrap: break-word;       /* Internet Explorer 5.5+ */
             }
+            #graph-sketcher-ui-show-slop, label {
+                pointer-events: all;
+                touch-action: all;
+                cursor: pointer;
+            }
         }
 
         .button {
@@ -288,7 +293,7 @@
                 }
 
                 &#graph-sketcher-ui-debug-button {
-                    top: 2 * $button-spacing;
+                    top: 3 * $button-spacing + $button-size;
                     left: 2 * $button-spacing;
                 }
 

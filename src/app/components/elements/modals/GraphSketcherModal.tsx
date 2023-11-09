@@ -40,6 +40,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const [generateGraphSpec, {data: graphSpec}] = useGenerateAnswerSpecificationMutation();
     const [debugSketch, setDebugSketch] = useState<boolean>(false);
     const debugModeEnabled = isStaff(user) && debugSketch;
+    const [showSlop, setShowSlop] = useState<boolean>(false);
 
     const [modalSketch, setModalSketch] = useState<GraphSketcher | undefined | null>();
     const graphSketcherContainer = useRef<HTMLDivElement>(null);
@@ -55,7 +56,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     const generateSpecFromStateIfDebug = useCallback((state?: GraphSketcherState) => {
         if (state && debugModeEnabled) {
-            generateGraphSpec({type: 'graphChoice', value: JSON.stringify(state)});
+            generateGraphSpec({type: 'graphChoice', value: JSON.stringify(GraphSketcher.toExternalState(state))});
         }
     }, [user, debugModeEnabled, generateGraphSpec]);
 
@@ -107,6 +108,10 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
             modalSketch.selectedLineType = lineType;
         }
     }, [modalSketch, lineType]);
+
+    useEffect(() => {
+        modalSketch?.setSlopVisible(showSlop);
+    }, [modalSketch, showSlop]);
 
     const toggleDebugMode = () => {
         setDebugSketch(db => !db);
@@ -169,6 +174,9 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                     </>
                     : "Please update the graph to generate a specification."
                 }
+                <br/><br/>
+                <input type="checkbox" id="graph-sketcher-ui-show-slop" tabIndex={0} checked={showSlop} onChange={() => setShowSlop(s => !s)} />
+                <label htmlFor="graph-sketcher-ui-show-slop" className="ml-2">Show slop</label>
             </code>}
 
             <input className={"d-none"} id="graph-sketcher-ui-color-select" value={drawingColorName} readOnly />
