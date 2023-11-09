@@ -61,9 +61,7 @@ export const renderInlineGlossaryTerms = (markdown: string) => {
     const glossaryInlineRegexp = /\[glossary-inline(?<titled>-titled)?:(?<id>[a-z0-9-|]+?)\s*(?:"(?<text>[A-Za-z0-9-()/,'\\. ]+)")?\]/g;
     return markdown.replace(glossaryInlineRegexp, (_match, titled, id, text, _offset) => {
         const cssFriendlyTermId = id.replace(/\|/g, '-');
-        return titled !== undefined ?
-            `<span data-type="inline" class="inline-glossary-term" ${text ? `data-text="${text}"` : ""} id="glossary-term-yestitled-${cssFriendlyTermId}">Loading glossary...</span>` :
-            `<span data-type="inline" class="inline-glossary-term" ${text ? `data-text="${text}"` : ""} id="glossary-term-nottitled-${cssFriendlyTermId}">Loading glossary...</span>`;
+        return `<span data-type="inline" class="inline-glossary-term" ${text ? `data-text="${text}"` : ""} id="glossary-term-${cssFriendlyTermId}" ${titled !== undefined ? "data-titled" : ""}>Loading glossary...</span>`;
     });
 };
 
