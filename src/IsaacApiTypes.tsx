@@ -249,7 +249,7 @@ export interface UserGameboardProgressSummaryDTO {
 
 export interface EventBookingDTO {
   bookingId?: number;
-  userBooked?: UserSummaryWithEmailAddressDTO;
+  userBooked?: UserSummaryWithEmailAddressAndGenderDTO;
   reservedById?: number;
   eventId?: string;
   eventTitle?: string;
@@ -554,6 +554,10 @@ export interface UserSummaryForAdminUsersDTO extends UserSummaryWithEmailAddress
 
 export interface UserSummaryWithEmailAddressDTO extends UserSummaryDTO {
   email?: string;
+}
+
+export interface UserSummaryWithEmailAddressAndGenderDTO extends UserSummaryWithEmailAddressDTO {
+  gender?: Gender;
 }
 
 export interface UserSummaryWithGroupMembershipDTO extends UserSummaryDTO {

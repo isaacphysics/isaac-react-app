@@ -268,3 +268,8 @@ export const formatAddress = (location: Location | undefined) => {
   const addressComponents = [addressLine1, addressLine2, town, postalCode].filter(Boolean);
   return addressComponents.join(", ");
 };
+
+export function asPercentage(value: number | undefined, total: number) {
+  const result = value !== undefined ? Math.round((100 * value) / total) : 0;
+  return isNaN(result) ? 0 : result;
+}

@@ -1,5 +1,6 @@
+import { EventBookingDTO } from "../../../../../IsaacApiTypes";
 import { countStudentsAndTeachers } from "../../../../../app/components/elements/panels/SelectedEventDetails";
-import { mockCancelledEventBooking, mockEventBookings } from "../../../../../mocks/data";
+import { mockEventBooking, mockEventBookings } from "../../../../../mocks/data";
 
 describe("countStudentsAndTeachers", () => {
   it("returns an object with studentCount and teacherCount both set to 0 when passed an empty array", () => {
@@ -16,32 +17,17 @@ describe("countStudentsAndTeachers", () => {
     const results = countStudentsAndTeachers([
       ...mockEventBookings,
       {
-        userBooked: {
-          givenName: "Test",
-          familyName: "Event Leader",
-          role: "EVENT_LEADER",
-          authorisedFullAccess: false,
-          emailVerificationStatus: "VERIFIED",
-          teacherPending: false,
-          registeredContexts: [
-            {
-              stage: "all",
-              examBoard: "ocr",
-            },
-          ],
-          email: "test_eventleader@test.com",
-          id: 300,
-        },
-        eventId: "example_event",
-        eventTitle: "Example Event",
+        ...mockEventBooking,
         bookingStatus: "CONFIRMED",
+        userBooked: { ...mockEventBooking.userBooked, role: "EVENT_LEADER" },
       },
     ]);
     expect(results).toEqual({ studentCount: 3, teacherCount: 2 });
   });
 
   it("should not count bookings with invalid bookingStatus", () => {
-    const results = countStudentsAndTeachers([...mockEventBookings, mockCancelledEventBooking]);
+    const cancelledBooking: EventBookingDTO = { ...mockEventBooking, bookingStatus: "CANCELLED" };
+    const results = countStudentsAndTeachers([...mockEventBookings, cancelledBooking]);
     expect(results).toEqual({ studentCount: 3, teacherCount: 2 });
   });
 });

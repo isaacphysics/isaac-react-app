@@ -19,6 +19,7 @@ export const mockEventBookings: EventBookingDTO[] = [
           examBoard: "ocr",
         },
       ],
+      gender: "FEMALE",
       email: "test_teacher@test.com",
       id: 200,
     },
@@ -49,6 +50,7 @@ export const mockEventBookings: EventBookingDTO[] = [
           examBoard: "all",
         },
       ],
+      gender: "MALE",
       email: "test_student@test.com",
       id: 201,
     },
@@ -78,6 +80,7 @@ export const mockEventBookings: EventBookingDTO[] = [
           examBoard: "aqa",
         },
       ],
+      gender: "OTHER",
       email: "another_student@test.com",
       id: 202,
     },
@@ -107,6 +110,7 @@ export const mockEventBookings: EventBookingDTO[] = [
           examBoard: "ocr",
         },
       ],
+      gender: "PREFER_NOT_TO_SAY",
       email: "another_teacher@test.com",
       id: 203,
     },
@@ -137,6 +141,7 @@ export const mockEventBookings: EventBookingDTO[] = [
           examBoard: "all",
         },
       ],
+      gender: "UNKNOWN",
       email: "extra_student@test.com",
       id: 204,
     },
@@ -153,7 +158,7 @@ export const mockEventBookings: EventBookingDTO[] = [
   },
 ];
 
-export const mockCancelledEventBooking: EventBookingDTO = {
+export const mockEventBooking: EventBookingDTO = {
   bookingId: 1005,
   userBooked: {
     givenName: "Cancelled",
@@ -168,6 +173,7 @@ export const mockCancelledEventBooking: EventBookingDTO = {
         examBoard: "ocr",
       },
     ],
+    gender: "MALE",
     email: "cancelled_teacher@test.com",
     id: 202,
   },

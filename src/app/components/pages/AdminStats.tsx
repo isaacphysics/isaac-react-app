@@ -3,10 +3,7 @@ import { AppState, getAdminSiteStats, useAppDispatch, useAppSelector } from "../
 import * as RS from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { ShowLoading } from "../handlers/ShowLoading";
-
-function asPercentage(value: number | undefined, total: number) {
-  return value !== undefined ? Math.round((100 * value) / total) : 0;
-}
+import { asPercentage } from "../../services";
 
 function addTotalToMapOfCounts(counts: { [key: string]: number }) {
   counts["TOTAL"] = 0;

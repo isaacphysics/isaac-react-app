@@ -3,7 +3,7 @@ import * as RS from "reactstrap";
 import { Accordion } from "../Accordion";
 import { AppState, recordEventAttendance, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { atLeastOne, isEventLeader, NOT_FOUND, sortOnPredicateAndReverse } from "../../../services";
-import { EventBookingDTO, UserSummaryWithEmailAddressDTO } from "../../../../IsaacApiTypes";
+import { EventBookingDTO, UserSummaryWithEmailAddressAndGenderDTO } from "../../../../IsaacApiTypes";
 import { DateString } from "../DateString";
 import { ATTENDANCE, PotentialUser } from "../../../../IsaacAppTypes";
 
@@ -138,7 +138,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                   .sort(sortOnPredicateAndReverse(sortPredicate, reverse))
                   .filter(filterOnSurname)
                   .map((booking) => {
-                    const userBooked = booking.userBooked as UserSummaryWithEmailAddressDTO;
+                    const userBooked = booking.userBooked as UserSummaryWithEmailAddressAndGenderDTO;
                     const additionalInformation = booking.additionalInformation;
                     const userSchool = booking.userBooked && userIdToSchoolMapping[booking.userBooked.id as number];
 

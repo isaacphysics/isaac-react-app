@@ -26,7 +26,7 @@ import {
   zeroOrLess,
 } from "../../../services";
 import { PotentialUser } from "../../../../IsaacAppTypes";
-import { BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO } from "../../../../IsaacApiTypes";
+import { BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressAndGenderDTO } from "../../../../IsaacApiTypes";
 import { DateString } from "../DateString";
 
 export const ManageExistingBookings = ({ user, eventBookingId }: { user: PotentialUser; eventBookingId: string }) => {
@@ -188,7 +188,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                         )}
                       </td>
                       <td className="align-middle">
-                        {booking.userBooked && (booking.userBooked as UserSummaryWithEmailAddressDTO).email}
+                        {booking.userBooked && (booking.userBooked as UserSummaryWithEmailAddressAndGenderDTO).email}
                       </td>
                       <td className="align-middle">{booking.userBooked && booking.userBooked.role}</td>
                       {/*TODO When full stats functionality works <Link to={`/admin/stats/schools/${userSchool.urn}/user_list`}>{userSchool.name}</Link>*/}

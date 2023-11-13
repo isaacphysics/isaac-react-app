@@ -3,13 +3,13 @@ import * as RS from "reactstrap";
 import { AdditionalInformation, AugmentedEvent } from "../../../IsaacAppTypes";
 import { SchoolInput } from "./inputs/SchoolInput";
 import { requestEmailVerification, selectors, useAppDispatch, useAppSelector } from "../../state";
-import { UserSummaryWithEmailAddressDTO } from "../../../IsaacApiTypes";
+import { UserSummaryWithEmailAddressAndGenderDTO } from "../../../IsaacApiTypes";
 import { examBoardLabelMap, isTutor, stageLabelMap, studentOnlyEventMessage } from "../../services";
 import { Immutable } from "immer";
 
 interface EventBookingFormProps {
   event: AugmentedEvent;
-  targetUser: Immutable<UserSummaryWithEmailAddressDTO>;
+  targetUser: Immutable<UserSummaryWithEmailAddressAndGenderDTO>;
   additionalInformation: AdditionalInformation;
   updateAdditionalInformation: (update: AdditionalInformation) => void;
 }

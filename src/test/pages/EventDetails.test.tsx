@@ -21,6 +21,7 @@ const googleCalendarButton = () => screen.queryByText("Add to Calendar");
 const eventDate = () => screen.getByTestId("event-date");
 const placesAvailable = () => screen.queryByTestId("event-availability");
 const privateBadge = () => screen.queryByText("Private Event");
+const bookingDeadline = () => screen.queryByTestId("event-booking-deadline");
 
 describe("EventDetails", () => {
   const setupTest = async ({ role, event }: { role: TestUserRole; event: IsaacEventPageDTO }) => {
@@ -126,6 +127,26 @@ describe("EventDetails", () => {
       event: futureEvent,
     });
     expect(eventDate()).not.toHaveTextContent("This event is in the past.");
+  });
+
+  it("if booking deadline has passed, message is shown", async () => {
+    const date = new Date(new Date().setMonth(new Date().getMonth() - 2));
+    const pastBookingDeadlineEvent = { ...mockEvent, bookingDeadline: date };
+    await setupTest({
+      role: "STUDENT",
+      event: pastBookingDeadlineEvent,
+    });
+    const deadlineWarning = within(bookingDeadline() as HTMLElement).getByTestId("deadline-warning");
+    expect(deadlineWarning).toHaveTextContent("The booking deadline for this event has passed.");
+  });
+
+  it("if no booking deadline is specified, no Booking Deadline section appears", async () => {
+    const event = { ...mockEvent, bookingDeadline: undefined };
+    await setupTest({
+      role: "STUDENT",
+      event: event,
+    });
+    expect(bookingDeadline()).not.toBeInTheDocument();
   });
 
   it("if event has available places, number of available spaces is shown, and `book a place` button is shown for logged in users", async () => {

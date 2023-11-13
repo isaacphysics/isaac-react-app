@@ -263,10 +263,10 @@ const EventDetails = ({
                           event.bookingDeadline && (
                             <tr>
                               <td>Booking Deadline:</td>
-                              <td>
+                              <td data-testid="event-booking-deadline">
                                 <DateString>{event.bookingDeadline}</DateString>
                                 {!event.isWithinBookingDeadline && !event.hasExpired && (
-                                  <div className="alert-danger text-center">
+                                  <div className="alert-danger text-center" data-testid="deadline-warning">
                                     The booking deadline for this event has passed.
                                   </div>
                                 )}
