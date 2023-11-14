@@ -6,7 +6,8 @@ import { isLoggedIn, isTutorOrAbove } from "../../services";
 import { Link } from "react-router-dom";
 import { IsaacCard } from "../content/IsaacCard";
 
-// A version of the "teacher features" page to showcase tutor account features
+// NOTE: This is a Physics component that is not currently in use. May be used when Tutor role available.  See ticket #213 for more details.
+
 export const TutorFeatures = () => {
   const user = useAppSelector(selectors.user.orNull);
 

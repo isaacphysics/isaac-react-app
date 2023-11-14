@@ -1,26 +1,14 @@
-import React, {
-  FormEvent,
-  useCallback,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Inequality, WidgetSpec } from "inequality";
 import { isDefined, parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState } from "../../../../services";
 import { IsaacContentValueOrChildren } from "../../../content/IsaacContentValueOrChildren";
 import { ContentDTO } from "../../../../../IsaacApiTypes";
-import { Input } from "reactstrap";
 import classNames from "classnames";
 import { Markup } from "../../markup";
-import { CHEMICAL_ELEMENTS, EditorMode, LogicSyntax, MenuItemProps, MenuItems } from "./constants";
+import { EditorMode, LogicSyntax, MenuItemProps, MenuItems } from "./constants";
 import { closeActiveModal, openActiveModal, store, useAppDispatch } from "../../../../state";
 import { PageFragment } from "../../PageFragment";
-import { uniq } from "lodash";
 import {
-  generateChemicalElementMenuItem,
   generateMenuItems,
   handleMoveCallback,
   onCursorMoveEndCallback,
@@ -290,7 +278,7 @@ interface InequalityMenuProps {
 }
 // eslint-disable-next-line react/display-name
 const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(
-  ({ open, setOpen, editorMode, logicSyntax, defaultMenu, disableLetters, menuItems, availableSymbols }, menuRef) => {
+  ({ open, setOpen, editorMode, logicSyntax, defaultMenu, disableLetters, menuItems }, menuRef) => {
     // Logic for what menu tab is currently open
     const [[activeMenu, activeSubMenu], setActiveMenu] = useState<
       [InequalityMenuTabType, InequalityMenuSubMenuTabType]
@@ -317,23 +305,6 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(
     };
     const flipNumberInputValueSign = () => setNumberInputValue(-(numberInputValue ?? 0));
     const clearNumberInputValue = () => setNumberInputValue(undefined);
-
-    // Logic for parsing chemical elements from the chemical element input box and turning them into menu items
-    const [unparsedChemicalElements, setUnparsedChemicalElements] = useState<string>();
-    const onUnparsedChemicalElementsChange = (event: FormEvent<HTMLInputElement>) =>
-      setUnparsedChemicalElements(event.currentTarget.value);
-    const [parsedChemicalElements, upperCaseWarning] = useMemo<[MenuItemProps[] | undefined, boolean]>(() => {
-      if (isDefined(unparsedChemicalElements)) {
-        const splitUnparsed = unparsedChemicalElements
-          .replace(/[^a-z]+/gim, ",")
-          .split(",")
-          .filter((s) => s !== "");
-        const splitChemicalElements = splitUnparsed.filter((s) => CHEMICAL_ELEMENTS.includes(s));
-        const upperCaseWarning = splitUnparsed.some((e) => e[0] !== e[0].toUpperCase());
-        return [uniq(splitChemicalElements).map(generateChemicalElementMenuItem).filter(isDefined), upperCaseWarning];
-      }
-      return [undefined, false];
-    }, [unparsedChemicalElements]);
 
     let functionsTabLabel = "";
     if (editorMode === "maths") {
@@ -425,97 +396,24 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(
             {editorMode === "maths" && activeMenu === "mathsOtherFunctions" && (
               <MathOtherFunctionsMenu activeSubMenu={activeSubMenu} menuItems={menuItems} defaultMenu={defaultMenu} />
             )}
-
-            {editorMode === "chemistry" && (
-              <>
-                {activeMenu === "elements" &&
-                  (isDefined(availableSymbols) && availableSymbols.length > 0 ? (
-                    <div className="top-menu chemistry elements">
-                      <ul className="sub-menu elements">{menuItems.chemicalElements.map(buildIndexedMenuItem)}</ul>
-                    </div>
-                  ) : (
-                    <div className="top-menu chemistry elements text-entry">
-                      <div className="input-box">
-                        <Input
-                          id="chem-text-entry-box"
-                          type="text"
-                          placeholder="Type chemical elements here"
-                          onMouseDown={(e) => e.currentTarget.focus()}
-                          value={unparsedChemicalElements || ""}
-                          onChange={onUnparsedChemicalElementsChange}
-                        />
-                        {upperCaseWarning && (
-                          <p className="uppercase-warning">
-                            Careful: chemical element names start with an upper-case letter.
-                          </p>
-                        )}
-                      </div>
-                      <div className="items-box">
-                        <ul className="sub-menu elements">{parsedChemicalElements?.map(buildIndexedMenuItem)}</ul>
-                      </div>
-                    </div>
-                  ))}
-                {activeMenu === "particles" &&
-                  (!isDefined(availableSymbols) || (isDefined(availableSymbols) && availableSymbols.length === 0)) && (
-                    <div className="top-menu chemistry particles">
-                      <ul className="sub-menu particles">{menuItems.chemicalParticles.map(buildIndexedMenuItem)}</ul>
-                    </div>
-                  )}
-                {activeMenu === "states" && (
-                  <div className="top-menu chemistry states">
-                    <ul className="sub-menu states">{menuItems.chemicalStates.map(buildIndexedMenuItem)}</ul>
-                  </div>
-                )}
-                {editorMode === "chemistry" && activeMenu === "operations" && (
-                  <div className="top-menu chemistry operations">
-                    <ul className="sub-menu operations">{menuItems.chemicalOperations.map(buildIndexedMenuItem)}</ul>
-                  </div>
-                )}
-              </>
-            )}
           </div>
           <div id="inequality-menu-tabs" className="menu-tabs">
             <ul>
-              {["maths", "chemistry"].includes(editorMode) && (
-                <InequalityMenuTab menu={"numbers"} latexTitle={"1\\, 2\\, 3"} />
+              {editorMode === "maths" && <InequalityMenuTab menu={"numbers"} latexTitle={"1\\, 2\\, 3"} />}
+              {!disableLetters && (
+                <InequalityMenuTab
+                  menu={"letters"}
+                  subMenu={editorMode === "logic" ? "upperCaseLetters" : "lowerCaseLetters"}
+                  latexTitle={"Ab\\ \\Delta \\gamma"}
+                />
               )}
-              {["maths", "logic"].includes(editorMode) && (
-                <>
-                  {!disableLetters && (
-                    <InequalityMenuTab
-                      menu={"letters"}
-                      subMenu={editorMode === "logic" ? "upperCaseLetters" : "lowerCaseLetters"}
-                      latexTitle={"Ab\\ \\Delta \\gamma"}
-                    />
-                  )}
-                  <InequalityMenuTab menu={"basicFunctions"} latexTitle={functionsTabLabel} />
-                </>
-              )}
+              <InequalityMenuTab menu={"basicFunctions"} latexTitle={functionsTabLabel} />
               {editorMode === "maths" && (
                 <InequalityMenuTab
                   menu={"mathsOtherFunctions"}
                   subMenu={"trigFunctions"}
                   latexTitle={"\\sin\\ \\int"}
                 />
-              )}
-              {editorMode === "chemistry" && (
-                <>
-                  <InequalityMenuTab
-                    menu={"elements"}
-                    latexTitle={
-                      isDefined(availableSymbols) &&
-                      availableSymbols.length > 0 &&
-                      menuItems.chemicalElements.map((i) => i.type).includes("Particle")
-                        ? "\\text{He Li}\\ \\alpha"
-                        : "\\text{H He Li}"
-                    }
-                  />
-                  {menuItems.chemicalParticles.length > 0 && (
-                    <InequalityMenuTab menu={"particles"} latexTitle={"\\alpha\\ \\gamma\\ \\text{e}"} />
-                  )}
-                  <InequalityMenuTab menu={"states"} latexTitle={"(aq)\\, (g)\\, (l)"} />
-                  <InequalityMenuTab menu={"operations"} latexTitle={"\\rightarrow\\, \\rightleftharpoons\\, +"} />
-                </>
               )}
             </ul>
           </div>

@@ -3,6 +3,7 @@ import { UserSnapshot } from "../../../../IsaacAppTypes";
 import { buildStyles, CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { GRAY_120, progressColour } from "../../../services";
 
+// NOTE: Physics feature, currently unused
 interface StreakGaugeProps {
   streakRecord: UserSnapshot | null | undefined;
 }

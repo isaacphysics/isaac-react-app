@@ -27,6 +27,8 @@ import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Link } from "react-router-dom";
 import { IsaacContent } from "../content/IsaacContent";
 
+// NOTE: This component is not in use while Tutor accounts are not available. See ticket #213 for more details.
+
 const warningFragmentId = "teacher_registration_warning_message"; // TUTOR have decided to keep this message
 
 export const TutorRequest = () => {

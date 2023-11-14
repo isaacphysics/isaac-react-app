@@ -3,6 +3,8 @@ import { StreakGauge } from "../views/StreakGauge";
 import React from "react";
 import { UserProgress } from "../../../../IsaacAppTypes";
 
+// NOTE: Physics feature, currently unused
+
 export const StreakPanel = ({ userProgress }: { userProgress?: UserProgress | null }) => {
   const largestWeeklyStreak = userProgress?.userSnapshot?.weeklyStreakRecord?.largestStreak || 0;
   const currentDailyStreak = userProgress?.userSnapshot?.dailyStreakRecord?.currentStreak || 0;

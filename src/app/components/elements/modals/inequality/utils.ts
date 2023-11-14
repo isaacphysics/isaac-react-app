@@ -1,6 +1,4 @@
 import {
-  CHEMICAL_ELEMENTS,
-  CHEMICAL_PARTICLES,
   DIFFERENTIAL_REGEX,
   TRIG_FUNCTION_NAMES,
   HYP_FUNCTION_NAMES,
@@ -459,100 +457,6 @@ export function generateMathsDifferentialAndLetters(symbol: string): {
   }
 }
 
-export function generateChemicalStatesMenuItems() {
-  return [
-    {
-      type: "StateSymbol",
-      properties: { state: "gas" },
-      menu: { label: "\\text{(g)}", texLabel: true, className: "chemical-state gas" },
-    },
-    {
-      type: "StateSymbol",
-      properties: { state: "liquid" },
-      menu: { label: "\\text{(l)}", texLabel: true, className: "chemical-state liquid" },
-    },
-    {
-      type: "StateSymbol",
-      properties: { state: "aqueous" },
-      menu: { label: "\\text{(aq)}", texLabel: true, className: "chemical-state aqueous" },
-    },
-    {
-      type: "StateSymbol",
-      properties: { state: "solid" },
-      menu: { label: "\\text{(s)}", texLabel: true, className: "chemical-state solid" },
-    },
-    {
-      type: "StateSymbol",
-      properties: { state: "metal" },
-      menu: { label: "\\text{(m)}", texLabel: true, className: "chemical-state metal" },
-    },
-  ];
-}
-
-export function generateChemicalOperationsMenuItems() {
-  return [
-    {
-      type: "BinaryOperation",
-      properties: { operation: "+" },
-      menu: { label: "+", texLabel: true, className: "chemical-operations plus" },
-    },
-    {
-      type: "BinaryOperation",
-      properties: { operation: "-" },
-      menu: { label: "-", texLabel: true, className: "chemical-operations minus" },
-    },
-    {
-      type: "Fraction",
-      properties: {},
-      menu: { label: "\\frac{a}{b}", texLabel: true, className: "chemical-operations fraction" },
-    },
-    {
-      type: "Relation",
-      properties: { relation: "rightarrow" },
-      menu: { label: "\\rightarrow", texLabel: true, className: "chemical-operations rightarrow" },
-    },
-    {
-      type: "Relation",
-      properties: { relation: "equilibrium" },
-      menu: { label: "\\rightleftharpoons", texLabel: true, className: "chemical-operations equilibrium" },
-    },
-    {
-      type: "Brackets",
-      properties: { type: "round", mode: "chemistry" },
-      menu: { label: "(x)", texLabel: true, className: "chemical-operations brackets round" },
-    },
-    {
-      type: "Brackets",
-      properties: { type: "square", mode: "chemistry" },
-      menu: { label: "[x]", texLabel: true, className: "chemical-operations brackets square" },
-    },
-    {
-      type: "Relation",
-      properties: { relation: "." },
-      menu: { label: "\\cdot", texLabel: true, className: "chemical-operations dot" },
-    },
-  ];
-}
-
-export function generateChemicalElementMenuItem(symbol: string): MenuItemProps | undefined {
-  if (CHEMICAL_ELEMENTS.includes(symbol)) {
-    return {
-      type: "ChemicalElement",
-      properties: {
-        element: symbol,
-      },
-      menu: { label: `\\text{${symbol}}`, texLabel: true, className: `chemical-element ${symbol}` },
-    };
-  } else if (CHEMICAL_PARTICLES.hasOwnProperty(symbol)) {
-    return {
-      type: "Particle",
-      properties: CHEMICAL_PARTICLES[symbol].properties,
-      menu: { ...CHEMICAL_PARTICLES[symbol].menu, className: `chemical-particle ${symbol}` },
-    };
-  }
-  return undefined;
-}
-
 export const generateDefaultMenuItems = (parsedAvailableSymbols: string[], logicSyntax?: LogicSyntax): MenuItems => ({
   upperCaseLetters: [],
   lowerCaseLetters: [],
@@ -564,14 +468,9 @@ export const generateDefaultMenuItems = (parsedAvailableSymbols: string[], logic
   mathsHypFunctions: generateMathsHypFunctionsItems(),
   mathsLogFunctions: generateMathsLogFunctionsItems(),
   mathsDerivatives: generateMathsDefaultDerivativesItems(parsedAvailableSymbols),
-  chemicalStates: generateChemicalStatesMenuItems(),
-  chemicalOperations: generateChemicalOperationsMenuItems(),
   // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
   letters: [],
   otherFunctions: [],
-  chemicalElements: [],
-  chemicalParticles: [],
-  parsedChemicalElements: [],
 });
 
 // --- Callback/effect definitions ---
@@ -705,18 +604,9 @@ export function generateMenuItems({
           customMenuItems.letters.push(...items.letters);
         }
       } else {
-        // Everything else is a letter, unless we are doing chemistry
-        if (editorMode === "chemistry") {
-          // Available chemical elements
-          const item = generateChemicalElementMenuItem(availableSymbol);
-          if (item) {
-            customMenuItems.chemicalElements.push(item);
-          }
-        } else {
-          const item = generateLetterMenuItem(availableSymbol);
-          if (isDefined(item)) {
-            customMenuItems.letters.push(item);
-          }
+        const item = generateLetterMenuItem(availableSymbol);
+        if (isDefined(item)) {
+          customMenuItems.letters.push(item);
         }
       }
     });
@@ -743,7 +633,6 @@ export function generateMenuItems({
                         return 0;
                     })*/,
         otherFunctions: [...baseItems.otherFunctions, ...customMenuItems.otherFunctions],
-        chemicalElements: [...baseItems.chemicalElements, ...customMenuItems.chemicalElements],
       },
       false,
     ] as [MenuItems, boolean];
@@ -755,15 +644,6 @@ export function generateMenuItems({
           ...baseItems,
           upperCaseLetters: "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map((letter) => generateSingleLetterMenuItem(letter)),
           lowerCaseLetters: "abcdeghijklmnopqrsuvwxyz".split("").map((letter) => generateSingleLetterMenuItem(letter)),
-        },
-        true,
-      ] as [MenuItems, boolean];
-    } else if (editorMode === "chemistry") {
-      return [
-        {
-          ...baseItems,
-          chemicalElements: CHEMICAL_ELEMENTS.map(generateChemicalElementMenuItem),
-          chemicalParticles: Object.keys(CHEMICAL_PARTICLES).map(generateChemicalElementMenuItem),
         },
         true,
       ] as [MenuItems, boolean];

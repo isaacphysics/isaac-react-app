@@ -5,6 +5,8 @@ import { apiHelper, isAppLink } from "../../services";
 import { Link } from "react-router-dom";
 import { IsaacCardDTO } from "../../../IsaacApiTypes";
 
+// NOTE: Currently not in use by CS. See ticket #212 for more details.
+
 interface IsaacCardProps {
   doc: IsaacCardDTO;
   imageClassName?: string;
