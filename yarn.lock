@@ -5538,10 +5538,10 @@ is-wsl@^2.2.0:
   dependencies:
     is-docker "^2.0.0"
 
-isaac-graph-sketcher@0.13.1:
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/isaac-graph-sketcher/-/isaac-graph-sketcher-0.13.1.tgz#e8e4d7bcbf588a2988a1e3865320b24ed129ed5b"
-  integrity sha512-PZ6nUjoYz9H5WqhQ+NUhPz69Eh1n0fBFAehkcM8YJ8mbzfiXYHDYeIe9WeC7Ea4rn3fO4p0HimeidSDvktQV0w==
+isaac-graph-sketcher@0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/isaac-graph-sketcher/-/isaac-graph-sketcher-0.13.2.tgz#2496aa3c2dc92a00bd79601afdee5c31122fdb0c"
+  integrity sha512-PyTwUQmBF0qCZeD9iwGIQ7/hzsyUxLst7Gv4o6zyOGIlAc9B72+vPiRTBOuoSzCp/eGvC6HBkkGWZcNxhuUjJw==
   dependencies:
     eslint "^8.0.1"
 
