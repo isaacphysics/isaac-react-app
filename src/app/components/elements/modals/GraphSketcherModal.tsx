@@ -7,7 +7,6 @@ import {
 } from "isaac-graph-sketcher";
 import debounce from "lodash/debounce";
 import {IsaacGraphSketcherQuestionDTO} from "../../../../IsaacApiTypes";
-import {Markup} from "../markup";
 import {calculateHexagonProportions, Hexagon} from "../svg/Hexagon";
 import classNames from "classnames";
 import {
@@ -18,7 +17,7 @@ import {
     useGenerateAnswerSpecificationMutation
 } from "../../../state";
 import {PageFragment} from "../PageFragment";
-import {above, isStaff, useDeviceSize} from "../../../services";
+import {above, isStaff, useDeviceSize, useDeviceHeight} from "../../../services";
 import {Immutable} from "immer";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
@@ -130,7 +129,9 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const redo = () => modalSketch?.redo();
 
     const deviceSize = useDeviceSize();
-    const hexagonSize = above['sm'](deviceSize) ? 74 : 48;
+    const deviceHeight = useDeviceHeight();
+    const hexagonSize = above['sm'](deviceSize) && above['sm'](deviceHeight) ? 74 : 48;
+    console.log(hexagonSize);
     const colourHexagon = calculateHexagonProportions(hexagonSize/4, 3);
 
     const copySpecificationToClipboard = useCallback(() => {
