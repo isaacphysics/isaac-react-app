@@ -131,7 +131,6 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const deviceSize = useDeviceSize();
     const deviceHeight = useDeviceHeight();
     const hexagonSize = above['sm'](deviceSize) && above['sm'](deviceHeight) ? 74 : 48;
-    console.log(hexagonSize);
     const colourHexagon = calculateHexagonProportions(hexagonSize/4, 3);
 
     const copySpecificationToClipboard = useCallback(() => {
