@@ -26,7 +26,9 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
      - `valueWhileWaiting` while waiting
      - `valueWhenFound` any time *after the first time* `waitingFor` becomes truthy
  */
-export function useUntilFound<T, U>(waitingFor: T | NOT_FOUND_TYPE | null | undefined, valueWhenFound: U, valueWhileWaiting: any = undefined) {
+export function useUntilFound<T, U>(waitingFor: T | NOT_FOUND_TYPE | null | undefined,
+                                    valueWhenFound: U,
+                                    valueWhileWaiting: any = undefined) {
     const [waiting, setWaiting] = useState(true);
     useEffect( () => {
         if (waiting) {
@@ -98,7 +100,7 @@ export const Glossary = () => {
             (searchText === ''
                 ? [...rawGlossaryTerms ?? []]
                 : rawGlossaryTerms?.filter(e => e.value?.match(regex))
-            )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0)
+            )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
         return groupTerms(sortedAndFilteredTerms);
     }, [rawGlossaryTerms, filterTopic, searchText]);
 
@@ -131,14 +133,14 @@ export const Glossary = () => {
         for (const link of links) {
             (link as HTMLElement)?.blur();
         }
-    }
+    };
 
     const onKeyUpScrollTo = ({currentTarget, key}: React.KeyboardEvent) => {
         if (key === "Enter") {
             const letter = currentTarget.getAttribute('data-key');
             if (letter) scrollToKey({currentTarget});
         }
-    }
+    };
 
     /* "Horror lies ahead. Sorry."
      * This code deals with showing or hiding the sticky alphabet header UI depending
@@ -150,7 +152,7 @@ export const Glossary = () => {
     const alphabetScrollerObserver = useRef<IntersectionObserver>();
     const stickyAlphabetListContainer = useRef<HTMLDivElement>(null);
 
-    const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+    const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], _observer: IntersectionObserver) => {
         for (const entry of entries) {
             if (entry.target.id === 'sentinel') {
                 if (entry.isIntersecting) {
@@ -166,7 +168,7 @@ export const Glossary = () => {
                 }
             }
         }
-    }
+    };
 
     useEffect(() => {
         if (alphabetScrollerSentinel.current && !alphabetScrollerObserver.current && !alphabetScrollerFlag.current) {
@@ -174,7 +176,7 @@ export const Glossary = () => {
                 root: null,
                 rootMargin: '0px',
                 threshold: 1.0,
-            }
+            };
 
             alphabetScrollerObserver.current = new IntersectionObserver(alphabetScrollerCallback, options);
             alphabetScrollerObserver.current.observe(alphabetScrollerSentinel.current);
@@ -190,11 +192,11 @@ export const Glossary = () => {
         if (glossaryTerms.hasOwnProperty(k)) {
             return <div className={`key alphascroller-key-${k}`} data-key={k} key={k} role="button" tabIndex={0} onKeyUp={onKeyUpScrollTo} onClick={scrollToKey}>
                 {k}
-            </div>
+            </div>;
         } else {
             return <div className="key unavailable" data-key={k} key={k}>
                 {k}
-            </div>
+            </div>;
         }
     });
 
