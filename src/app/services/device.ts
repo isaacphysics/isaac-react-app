@@ -9,7 +9,8 @@ export const isNotMobile = !isMobile();
 
 export const isTouchDevice = () => {
     return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-}
+};
+
 export const isNotTouchDevice = () => !isTouchDevice();
 
 export enum DeviceSize {
@@ -18,6 +19,11 @@ export enum DeviceSize {
     MD = "md",
     SM = "sm",
     XS = "xs",
+}
+
+export enum DeviceOrientation {
+    PORTRAIT = "portrait",
+    LANDSCAPE = "landscape",
 }
 
 const descDeviceSizes = [DeviceSize.XL, DeviceSize.LG, DeviceSize.MD, DeviceSize.SM, DeviceSize.XS];
@@ -35,12 +41,33 @@ export const useDeviceSize = () => {
     const [windowSize, setWindowSize] = useState(getSize);
 
     useEffect(() => {
-        const handleResize = () => {setWindowSize(getSize())};
+        const handleResize = () => {setWindowSize(getSize());};
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     return windowSize;
+};
+
+export const useDeviceHeight = () => {
+    const getHeight = (): DeviceSize => {
+        const height = window.innerHeight;
+        if (height >= 1200) return DeviceSize.XL;
+        else if (height >= 992) return DeviceSize.LG;
+        else if (height >= 768) return DeviceSize.MD;
+        else if (height >= 576) return DeviceSize.SM;
+        else return DeviceSize.XS;
+    };
+
+    const [windowHeight, setWindowHeight] = useState(getHeight);
+
+    useEffect(() => {
+        const handleResize = () => {setWindowHeight(getHeight());};
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return windowHeight;
 };
 
 // above(ds) and below(ds) return true if device size === ds to match the scss functions respond-above(ds) and respond-below(ds)
