@@ -67,7 +67,16 @@ export const Glossary = () => {
     const [searchText, setSearchText] = useState("");
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
-    const rawGlossaryTerms = useAppSelector((state: AppState) => state && state.glossaryTerms);
+    const rawGlossaryTerms = useAppSelector(
+        (state: AppState) => state && state.glossaryTerms?.map(
+            // TODO: convert the glossary JSON files rather than processing them here
+            gt => {
+                const value: string = gt.value ?? "";
+                gt.value = value.charAt(0).toUpperCase() + value.slice(1);
+                return gt;
+            }
+        )
+    );
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } | undefined {
@@ -75,7 +84,8 @@ export const Glossary = () => {
                 const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
                 for (const term of sortedTerms) {
                     if (isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
-                    const k = term?.value?.[0] || '#';
+                    const value = term?.value?.[0] ?? '#';
+                    const k = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.includes(value) ? value : '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
                 }
                 return groupedTerms;
