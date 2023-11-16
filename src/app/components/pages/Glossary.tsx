@@ -15,7 +15,8 @@ import {
     scrollVerticallyIntoView,
     TAG_ID,
     tags,
-    useUrlHashValue
+    useUrlHashValue,
+    isPhy
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
@@ -68,6 +69,8 @@ const ALPHABET_HEADER_OFFSET = -65;
 export const Glossary = () => {
     const [searchText, setSearchText] = useState("");
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
+    const subjects = tags.allSubjectTags.sort((a,b) => a.title.localeCompare(b.title));
+    const [filterSubject, setFilterSubject] = useState<Tag>();
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useAppSelector(
         (state: AppState) => state && state.glossaryTerms?.map(
@@ -85,7 +88,10 @@ export const Glossary = () => {
             if (sortedTerms) {
                 const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
                 for (const term of sortedTerms) {
-                    if (isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
+                    // Only show physics glossary terms when a subject has been selected
+                    if (isPhy && !isDefined(filterSubject)) continue;
+                    if (isAda && isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
+                    if (isPhy && isDefined(filterSubject) && !term.tags?.includes(filterSubject.id)) continue;
                     const value = term?.value?.[0] ?? '#';
                     const k = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.includes(value) ? value : '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
@@ -102,7 +108,7 @@ export const Glossary = () => {
                 : rawGlossaryTerms?.filter(e => e.value?.match(regex))
             )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
         return groupTerms(sortedAndFilteredTerms);
-    }, [rawGlossaryTerms, filterTopic, searchText]);
+    }, [rawGlossaryTerms, filterTopic, filterSubject, searchText]);
 
     /* Stores a reference to each glossary term component (specifically their inner paragraph tags) */
     const glossaryTermRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());
@@ -225,7 +231,7 @@ export const Glossary = () => {
                                 value={searchText} onChange={e => setSearchText(e.target.value)}
                             />
                         </Col>
-                        <Col className="mt-3 mt-md-0">
+                        {isAda && <Col className="mt-3 mt-md-0">
                             <Label for='topic-select' className='sr-only'>Topic</Label>
                             <StyledSelect inputId="topic-select"
                                 options={ topics.map(e => ({ value: e.id, label: e.title})) }
@@ -235,7 +241,18 @@ export const Glossary = () => {
                                 onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                 isClearable
                             />
-                        </Col>
+                        </Col>}
+                        {isPhy && <Col className="mt-3 mt-md-0">
+                            <Label for='subject-select' className='sr-only'>Subject</Label>
+                            <StyledSelect inputId="subject-select"
+                                options={ subjects.map(e => ({ value: e.id, label: e.title})) }
+                                name="subject-select"
+                                classNamePrefix="select"
+                                placeholder="Select a subject"
+                                onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
+                                isClearable
+                            />
+                        </Col>}
                     </Row>
                     <Row className="only-print">
                         <Col>
@@ -247,7 +264,9 @@ export const Glossary = () => {
             </Row>
             {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
                 <Col md={{size: 8, offset: 2}} className="py-4">
-                    {searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
+                    {/* Let users know that they need to select a subject */}
+                    {isPhy && !isDefined(filterSubject) && <p>Please select a subject.</p>}
+                    {(isAda || isDefined(filterSubject)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
                     {searchText !== "" && <p>We could not find glossary terms to match your search criteria.</p>}
                 </Col>
             </Row>}
