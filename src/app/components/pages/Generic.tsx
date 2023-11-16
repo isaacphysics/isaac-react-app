@@ -39,7 +39,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
         return <Container className={doc.subjectId || ""}>
-            <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
+            <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} />
             <MetaDescription description={doc.summary} />
             <div className="no-print d-flex align-items-center">
                 <EditContentButton doc={doc} />
