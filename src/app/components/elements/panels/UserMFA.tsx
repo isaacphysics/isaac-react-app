@@ -2,7 +2,7 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isDefined, SITE_TITLE} from "../../../services";
+import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isDefined, SITE_TITLE, siteSpecific} from "../../../services";
 import {
     useGetSegueEnvironmentQuery,
     useDisableAccountMFAMutation,
@@ -67,7 +67,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
 
     return <CardBody className="pt-0">
         <Row>
-            <Col md={{size: 6, offset: 3}}>
+            <Col xs={siteSpecific({size: 6, offset: 3}, {size: 10, offset: 1})} lg={siteSpecific({size: 6, offset: 3}, {size: 8, offset: 2})}>
                 <hr className="text-center" />
                 <h4>Two-factor Authentication (2FA)</h4>
             </Col>
@@ -76,14 +76,14 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
             <Row>
                 <Col>
                     <Row>
-                        <Col md={{size: 6, offset: 3}}>
+                        <Col xs={siteSpecific({size: 6, offset: 3}, {size: 10, offset: 1})} lg={siteSpecific({size: 6, offset: 3}, {size: 8, offset: 2})}>
                             <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
                         </Col>
                     </Row>
                     {isDefined(totpSharedSecret) && isDefined(totpSharedSecret.sharedSecret) ?
                         <Form onSubmit={setupMFA}>
                             <Row>
-                                <Col md={{size: 6, offset: 3}}>
+                                <Col xs={siteSpecific({size: 6, offset: 3}, {size: 10, offset: 1})} lg={siteSpecific({size: 6, offset: 3}, {size: 8, offset: 2})}>
                                     <h5>Configure Two-factor Authentication (2FA)</h5>
                                     <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
                                     <div className="qrcode-mfa vertical-center">
@@ -116,8 +116,8 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                         </Form>
                         :
                         <Row>
-                            <Col md={{size: 6, offset: 3}}>
-                                <FormGroup>
+                            <Col xs={siteSpecific({size: 6, offset: 3}, {size: 10, offset: 1})} lg={siteSpecific({size: 6, offset: 3}, {size: 8, offset: 2})}>
+                                <FormGroup className="d-flex flex-row justify-content-center">
                                     <Button
                                         className="btn-secondary"
                                         onClick={() => newMFASecret()}

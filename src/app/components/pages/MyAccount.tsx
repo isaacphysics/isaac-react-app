@@ -46,6 +46,7 @@ import {
     isAda,
     isDefined,
     isDobOldEnoughForSite,
+    isPhy,
     isStaff,
     SITE_TITLE, siteSpecific,
     validateEmail,
@@ -375,10 +376,10 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                         {error.generalError}
                                     </h3>}
                                     {/* Teacher connections does not have a save */}
-                                    <Input
+                                    {isPhy && <Input
                                         type="submit" value="Save" className="btn btn-block btn-secondary border-0"
                                         disabled={!accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections}
-                                    />
+                                    />}
                                 </Col>
                             </Row>
                         </CardFooter>

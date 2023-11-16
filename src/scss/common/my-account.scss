@@ -176,13 +176,21 @@
   }
 }
 
+.show-password-button {
+  min-width: 60px;
+  margin-left: 5px;
+  padding-top: 7px;
+  border-radius: 4px;
+}
+
 .linked-account-button {
   border: none;
   width: 46px;
   height: 46px;
 
   &.google-button {
-    background: url("/assets/logos/btn_google_light_normal_ios.svg") no-repeat;
+    padding: 10px;
+    background: url("/assets/logos/google-g-icon-light.svg") center no-repeat content-box;
   }
 }
 
