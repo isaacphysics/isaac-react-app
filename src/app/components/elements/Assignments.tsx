@@ -1,5 +1,5 @@
 import {AssignmentDTO} from "../../../IsaacApiTypes";
-import React, {MouseEvent, useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {Button, Col, Collapse, Label, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {
