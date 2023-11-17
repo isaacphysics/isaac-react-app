@@ -65,9 +65,9 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
         }
     }
 
-    return <CardBody className="pt-0">
+    return <CardBody className="pt-0 px-0">
         <Row>
-            <Col xs={siteSpecific({size: 6, offset: 3}, {size: 10, offset: 1})} lg={siteSpecific({size: 6, offset: 3}, {size: 8, offset: 2})}>
+            <Col lg={siteSpecific({size: 6, offset: 3}, {size: 12})}>
                 <hr className="text-center" />
                 <h4>Two-factor Authentication (2FA)</h4>
             </Col>
@@ -76,14 +76,14 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
             <Row>
                 <Col>
                     <Row>
-                        <Col xs={siteSpecific({size: 6, offset: 3}, {size: 10, offset: 1})} lg={siteSpecific({size: 6, offset: 3}, {size: 8, offset: 2})}>
+                        <Col lg={siteSpecific({size: 6, offset: 3}, {size: 12})}>
                             <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
                         </Col>
                     </Row>
                     {isDefined(totpSharedSecret) && isDefined(totpSharedSecret.sharedSecret) ?
                         <Form onSubmit={setupMFA}>
                             <Row>
-                                <Col xs={siteSpecific({size: 6, offset: 3}, {size: 10, offset: 1})} lg={siteSpecific({size: 6, offset: 3}, {size: 8, offset: 2})}>
+                                <Col lg={siteSpecific({size: 6, offset: 3}, {size: 12})}>
                                     <h5>Configure Two-factor Authentication (2FA)</h5>
                                     <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
                                     <div className="qrcode-mfa vertical-center">
@@ -104,7 +104,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                     </FormGroup>
                                     <FormGroup>
                                         <Button
-                                            className="btn-secondary"
+                                            className="btn-secondary w-100"
                                             disabled={!mfaVerificationCode}
                                             onClick={setupMFA}
                                         >
@@ -116,10 +116,10 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                         </Form>
                         :
                         <Row>
-                            <Col xs={siteSpecific({size: 6, offset: 3}, {size: 10, offset: 1})} lg={siteSpecific({size: 6, offset: 3}, {size: 8, offset: 2})}>
-                                <FormGroup className="d-flex flex-row justify-content-center">
+                            <Col>
+                                <FormGroup>
                                     <Button
-                                        className="btn-secondary"
+                                        className="btn-secondary w-100"
                                         onClick={() => newMFASecret()}
                                     >
                                         {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
