@@ -29,6 +29,9 @@ const footerLinks = {
     <FooterLink key={key++} linkTo="/accessibility">
       Accessibility <span className="d-none d-md-inline">statement</span>
     </FooterLink>,
+    <FooterLink key={key++} linkTo="/safeguarding">
+      Safeguarding
+    </FooterLink>,
   ],
   right: [
     <FooterLink key={key++} linkTo="/privacy">
