@@ -119,8 +119,7 @@
     }
   }
 }
-.teachers-connected,
-.teachers-disconnected {
+.teachers-connected {
   margin: 1rem;
   padding-bottom: 0;
 
@@ -134,14 +133,15 @@
     margin-top: 2px;
   }
 }
-.teachers-disconnected li {
-  color: #999;
-}
 .revoke-teacher {
   float: right;
 }
 .reconnect-teacher {
   float: right;
+}
+
+.membership-status-help-button {
+  left: 25px;
 }
 
 .my-groups-table-section {
