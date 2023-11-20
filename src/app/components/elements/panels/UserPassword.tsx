@@ -223,7 +223,7 @@ export const UserPassword = (
                             {"If you forgot to log out on a device you no longer have access to, you can " +
                             "log your account out on all devices, including this one."}
                         </small>
-                        <Col className="text-center mt-2">
+                        <Col className="text-center mt-2 px-0">
                             {isPhy && 
                             <div className="vertical-center ml-2">
                                 <Button onClick={() => dispatch(logOutUserEverywhere())}>

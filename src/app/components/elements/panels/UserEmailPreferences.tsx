@@ -74,7 +74,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     />
                     <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.events}</span>
 
-                    {/* <StyledCheckbox id={`${idPrefix}assignments`} type={"checkbox"} checked={emailPreferences?.RESEARCH} 
+                    {/* <StyledCheckbox initialValue={emailPreferences?.RESEARCH} id={`${idPrefix}research`}
                         changeFunction={(checked) => setEmailPreferences({...emailPreferences, RESEARCH: checked})}
                         label=<span><b>Assignments</b></span>
                         />

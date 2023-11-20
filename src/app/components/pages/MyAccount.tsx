@@ -150,7 +150,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     const [currentPassword, setCurrentPassword] = useState("");
 
     // - User preferences
-    const [emailPreferences, setEmailPreferences] = useEmailPreferenceState();
+    const [emailPreferences, setEmailPreferences] = useEmailPreferenceState(userPreferences?.EMAIL_PREFERENCE);
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO | null | undefined>({});
     const emailPreferencesChanged = useMemo(() => !hashEqual(userPreferences?.EMAIL_PREFERENCE ?? {}, emailPreferences ?? myUserPreferences?.EMAIL_PREFERENCE ?? {}), [emailPreferences, myUserPreferences, userPreferences]);
     const otherPreferencesChanged = useMemo(() => !hashEqual(userPreferences ?? {}, myUserPreferences ?? {}, {excludeKeys: k => k === "EMAIL_PREFERENCE"}), [myUserPreferences, userPreferences]);

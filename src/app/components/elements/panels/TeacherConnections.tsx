@@ -157,10 +157,10 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     return <RS.CardBody>
         <RS.Container>
             <RS.Row>
-                <RS.Col lg={6}>
+                <RS.Col lg={isAda ? 6 : 12}>
                     <PageFragment fragmentId={`teacher_connections_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
                 </RS.Col>
-                <RS.Col lg={6} className="mt-4 mt-lg-0">
+                <RS.Col lg={isAda ? 6 : 12} className="mt-4 mt-lg-0">
                     <h3>
                         <span>Teacher connections<span id="teacher-connections-title" className="icon-help" /></span>
                         <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
@@ -224,7 +224,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     </div>
 
                     {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
-                        <hr className="my-5" />
+                        <hr className={siteSpecific("my-5", "my-4")} />
                         <h3>
                             <span>Your student connections<span id="student-connections-title" className="icon-help" /></span>
                             <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
@@ -280,7 +280,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         </div>
                     </React.Fragment>}
 
-                    <hr className="my-5" />
+                    <hr className={siteSpecific("my-5", "my-4")} />
                     <h3>
                         <span>
                             Your group memberships

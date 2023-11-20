@@ -67,7 +67,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
 
     return <CardBody className="pt-0 px-0">
         <Row>
-            <Col lg={siteSpecific({size: 6, offset: 3}, {size: 12})}>
+            <Col>
                 <hr className="text-center" />
                 <h4>Two-factor Authentication (2FA)</h4>
             </Col>
@@ -76,14 +76,14 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
             <Row>
                 <Col>
                     <Row>
-                        <Col lg={siteSpecific({size: 6, offset: 3}, {size: 12})}>
+                        <Col>
                             <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
                         </Col>
                     </Row>
                     {isDefined(totpSharedSecret) && isDefined(totpSharedSecret.sharedSecret) ?
                         <Form onSubmit={setupMFA}>
                             <Row>
-                                <Col lg={siteSpecific({size: 6, offset: 3}, {size: 12})}>
+                                <Col>
                                     <h5>Configure Two-factor Authentication (2FA)</h5>
                                     <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
                                     <div className="qrcode-mfa vertical-center">
