@@ -120,6 +120,40 @@ export const AccessibilityAndMedicalRequirements = ({
   );
 };
 
+const InputWithLabel = ({
+  type,
+  additionalInformation,
+  updateAdditionalInformation,
+}: {
+  type: "emergencyNumber" | "emergencyName" | "experienceLevel" | "jobTitle";
+  additionalInformation: AdditionalInformation;
+  updateAdditionalInformation: (update: AdditionalInformation) => void;
+}) => {
+  const fields = {
+    emergencyNumber: { label: "Contact telephone number", id: "emergency-number" },
+    emergencyName: { label: "Contact name", id: "emergency-name" },
+    experienceLevel: { label: "Level of teaching experience", id: "experience-level" },
+    jobTitle: { label: "Job title", id: "job-title" },
+  };
+
+  const { label, id } = fields[type];
+
+  return (
+    <>
+      <RS.Label htmlFor={id} className="form-required">
+        {label}
+      </RS.Label>
+      <RS.Input
+        id={id}
+        name={id}
+        type="text"
+        value={additionalInformation[type] || ""}
+        onChange={(event) => updateAdditionalInformation({ [`${type}`]: event.target.value })}
+      />
+    </>
+  );
+};
+
 export const EventBookingForm = ({
   event,
   targetUser,
@@ -132,32 +166,6 @@ export const EventBookingForm = ({
 
   const [verifyEmailRequestSent, setVerifyEmailRequestSent] = useState(false);
   const notVerifiedEmail = targetUser.emailVerificationStatus !== "VERIFIED";
-
-  const InputWithLabel = ({ type }: { type: "emergencyNumber" | "emergencyName" | "experienceLevel" | "jobTitle" }) => {
-    const fields = {
-      emergencyNumber: { label: "Contact telephone number", id: "emergency-number" },
-      emergencyName: { label: "Contact name", id: "emergency-name" },
-      experienceLevel: { label: "Level of teaching experience", id: "experience-level" },
-      jobTitle: { label: "Job title", id: "job-title" },
-    };
-
-    const { label, id } = fields[type];
-
-    return (
-      <>
-        <RS.Label htmlFor={id} className="form-required">
-          {label}
-        </RS.Label>
-        <RS.Input
-          id={id}
-          name={id}
-          type="text"
-          value={additionalInformation[type] || ""}
-          onChange={(event) => updateAdditionalInformation({ [`${type}`]: event.target.value })}
-        />
-      </>
-    );
-  };
 
   const DisabledInputWithLabel = ({
     type,
@@ -296,7 +304,13 @@ export const EventBookingForm = ({
           <legend>Event booking details</legend>
 
           <div>
-            {targetUser.role != "STUDENT" && <InputWithLabel type="jobTitle" />}
+            {targetUser.role != "STUDENT" && (
+              <InputWithLabel
+                type="jobTitle"
+                additionalInformation={additionalInformation}
+                updateAdditionalInformation={updateAdditionalInformation}
+              />
+            )}
             {targetUser.role == "STUDENT" && (
               <SchoolYearGroup
                 event={event}
@@ -319,10 +333,18 @@ export const EventBookingForm = ({
                     <h3>Emergency contact details</h3>
                   </RS.Col>
                   <RS.Col md={6}>
-                    <InputWithLabel type="emergencyName" />
+                    <InputWithLabel
+                      type="emergencyName"
+                      additionalInformation={additionalInformation}
+                      updateAdditionalInformation={updateAdditionalInformation}
+                    />
                   </RS.Col>
                   <RS.Col md={6}>
-                    <InputWithLabel type="emergencyNumber" />
+                    <InputWithLabel
+                      type="emergencyNumber"
+                      additionalInformation={additionalInformation}
+                      updateAdditionalInformation={updateAdditionalInformation}
+                    />
                   </RS.Col>
                 </RS.Row>
               )}
@@ -333,7 +355,13 @@ export const EventBookingForm = ({
               </div>
             </div>
           )}
-          {targetUser.role != "STUDENT" && <InputWithLabel type="experienceLevel" />}
+          {targetUser.role != "STUDENT" && (
+            <InputWithLabel
+              type="experienceLevel"
+              additionalInformation={additionalInformation}
+              updateAdditionalInformation={updateAdditionalInformation}
+            />
+          )}
         </RS.CardBody>
       </RS.Card>
     </>

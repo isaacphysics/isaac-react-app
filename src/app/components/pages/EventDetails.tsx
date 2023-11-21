@@ -249,7 +249,9 @@ const EventDetails = ({
                                   </span>
                                 </span>
                               )}
-                              {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
+                              {canBeAddedToWaitingList && event.isWithinBookingDeadline && (
+                                <span> - {formatAvailabilityMessage(event)}</span>
+                              )}
                               {event.userBookingStatus === "WAITING_LIST" && (
                                 <span> - {formatWaitingListBookingStatusMessage(event)}</span>
                               )}
@@ -352,6 +354,7 @@ const EventDetails = ({
                       {isLoggedIn(user) && !event.hasExpired && (
                         <React.Fragment>
                           {(canMakeABooking || canBeAddedToWaitingList) &&
+                            event.isWithinBookingDeadline &&
                             !bookingFormOpen &&
                             !["CONFIRMED"].includes(event.userBookingStatus || "") && (
                               <Button
