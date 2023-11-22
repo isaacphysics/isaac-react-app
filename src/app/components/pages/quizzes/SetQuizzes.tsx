@@ -52,6 +52,11 @@ interface QuizAssignmentProps {
     index: number;
 }
 
+interface InnerTableHeader {
+    title: string;
+    sort: (a: AssignedGroup, b: AssignedGroup) => number;
+}
+
 const filterByDate = (dateFilterType: string, assignmentDate: Date | number | undefined, comparisonDate: Date | number) => {
     if (!assignmentDate) return false;
     switch (dateFilterType) {
@@ -109,9 +114,9 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
         return reverseSort ? t.reverse() : t;
     }
 
-    const reverseSortButtons = <div className="sort">
-        <span className={classNames("up", {"active": reverseSort})} >▲</span>
-        <span className={classNames("down", {"active": !reverseSort})}>▼</span>
+    const ReverseSortButtons = ({active} : {active: boolean}) => <div className="sort">
+        <span className={classNames("up", {"active": active && !reverseSort})} >▲</span>
+        <span className={classNames("down", {"active": active && reverseSort})}>▼</span>
     </div>;
     
     // assignedGroups[n].assignment is the same for all n *with the exception of the quizId*.
@@ -129,12 +134,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
 
     const subjects = determineQuizSubjects(assignment.quizSummary) || "subject-physics";
 
-    interface innerTableHeader {
-        title: string;
-        sort: (a: AssignedGroup, b: AssignedGroup) => number;
-    }
-
-    const innerTableHeaders : innerTableHeader[] = [
+    const innerTableHeaders : InnerTableHeader[] = [
         {title: "Group name", sort: compareGroupNames},
         above["md"](deviceSize) ? {title: "Creation date", sort: compareCreationDates} : undefined,
         above["sm"](deviceSize) ? {title: "Start date", sort: compareStartDates} : undefined,
@@ -142,21 +142,24 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
     ].filter(isDefined);
     
     return <>
-        <tr className="bg-white set-quiz-table-dropdown" onClick={() => setIsExpanded(e => !e)}>
-            {/* <td className="p-2">{assignedGroups.length ?? "Unknown"}</td> */}
-            {isPhy && <td id={"group-hex-" + index} className={classNames("board-subject-hexagon-container", {"set-quiz-table-border" : !isExpanded})}>
-                <div className={`board-subject-hexagon ${subjects} d-flex justify-content-center align-items-center`}>    
-                    <span className="set-quiz-table-group-hex" title={"Number of groups assigned"}>
-                        <strong>{assignedGroups.length}</strong>
-                        group{(!assignedGroups || assignedGroups.length != 1) && "s"}
-                        <RS.UncontrolledTooltip placement={"top"} target={"#group-hex-" + index}>{assignedGroups.length === 0 ?
-                            "No groups have been assigned."
-                            : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
-                        </RS.UncontrolledTooltip>
-                    </span>
+        <tr className={`bg-white set-quiz-table-dropdown p-0 border-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0} 
+            onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))} 
+        >
+            {isPhy && <td className="p-0">
+                <div id={"group-hex-" + index} className="board-subject-hexagon-container">
+                    <div className={`board-subject-hexagon ${subjects} d-flex justify-content-center align-items-center`}>    
+                        <span className="set-quiz-table-group-hex" title={"Number of groups assigned"}>
+                            <strong>{assignedGroups.length}</strong>
+                            group{(!assignedGroups || assignedGroups.length != 1) && "s"}
+                            <RS.UncontrolledTooltip placement={"top"} target={"#group-hex-" + index}>{assignedGroups.length === 0 ?
+                                "No groups have been assigned."
+                                : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
+                            </RS.UncontrolledTooltip>
+                        </span>
+                    </div>
                 </div>
             </td>}
-            {isAda && <td id={"group-td-" + index} className={classNames("group-counter", {"set-quiz-table-border" : !isExpanded})}>
+            {isAda && <td id={"group-td-" + index} className="group-counter">
                 <span><strong>{assignedGroups.length}</strong>&nbsp;</span><br/>
                 <span>group{(!assignedGroups || assignedGroups.length != 1) && "s"}</span>
                 <RS.UncontrolledTooltip placement={"top"} target={"#group-td-" + index}>{assignedGroups.length === 0 ?
@@ -164,10 +167,9 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                     : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
                 </RS.UncontrolledTooltip>
             </td>}
-            <td className={classNames("set-quiz-table-title set-quiz-table-border", {"pl-4": isAda})}>{quizTitle}</td>
-            <td className="set-quiz-table-border">
-                <RS.Button className={`d-block h-4 ${below["sm"](deviceSize) ? "btn-sm" : ""}`} 
-                    style={{minWidth: `${below["md"](deviceSize) ? "90px" : "140px"}`, zIndex: '100'}} 
+            <td className={classNames("set-quiz-table-title align-middle ", {"pl-4": isAda})}>{quizTitle}</td>
+            <td className="align-middle pr-0">
+                <RS.Button className={`d-block h-4 ${below["sm"](deviceSize) ? "btn-sm" : ""}`}
                     onClick={(e) => {
                         assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary, isStaff(user)));
                         e.stopPropagation();
@@ -176,22 +178,23 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                     {siteSpecific("Set Test", "Set test")}
                 </RS.Button>
             </td>
+            <td className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
         </tr>
-        {isExpanded && <tr className="set-quiz-table-border">
-            <td colSpan={3} className={classNames("bg-white", {"pl-2": isPhy})}>
-                <table className="w-100 set-quiz-table-inner">
+        {isExpanded && <tr>
+            <td colSpan={4} className={classNames("bg-white border-0", {"px-2 pb-2": isPhy})}>
+                <RS.Table striped className="w-100 set-quiz-table-inner">
                     <thead>
                         <tr>
-                            {innerTableHeaders.map(header => <th key={header.title} onClick={() => setSort(header.sort)} className="pb-1 pt-1">
+                            {innerTableHeaders.map(header => <th key={header.title} onClick={() => setSort(header.sort)} className="px-1 py-1">
                                 <div className="d-flex flex-row">
                                     <span role="button" tabIndex={0} onKeyDown={ifKeyIsEnter(() => setSort(header.sort))} onClick={(e) => {
                                         e.stopPropagation();
                                         setSort(header.sort);
                                     }}>{header.title}</span>
-                                    {currentSort.name === header.sort.name && reverseSortButtons}
+                                    <ReverseSortButtons active={currentSort.name === header.sort.name} />
                                 </div>
                             </th>)}
-                            <th colSpan={2}/>
+                            <th className="px-1 py-1" colSpan={2}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -202,21 +205,20 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                             {above["md"](deviceSize) ? <td>{formatDate(assignedGroup.assignment.creationDate)}</td> : <></>}
                             <td>{formatDate(assignedGroup.assignment.scheduledStartDate ?? assignedGroup.assignment.creationDate)}</td>
                             {above["sm"](deviceSize) ? <td>{assignedGroup.assignment.dueDate ? formatDate(assignedGroup.assignment.dueDate) : "-"}</td> : <></>}
-                            <td colSpan={2}>
-                                <div className="d-flex justify-content-end">
-                                    <RS.Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className="ml-1 bg-transparent">
-                                        View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
-                                    </RS.Button>
-                                    <Spacer width={5} />
-                                    <RS.Button color="tertiary" size="sm" onClick={cancel} disabled={isCancelling} className="mr-1 bg-transparent">
-                                        {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
-                                    </RS.Button>
-                                </div>
+                            <td>
+                                <RS.Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className="w-100 bg-transparent">
+                                    View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
+                                </RS.Button>
+                            </td>
+                            <td>
+                                <RS.Button color="tertiary" size="sm" onClick={cancel} disabled={isCancelling} className="w-100 bg-transparent">
+                                    {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
+                                </RS.Button>
                             </td>
                         </tr>;
                         })}
                     </tbody>
-                </table>
+                </RS.Table>
             </td>
         </tr>}
     </>;
@@ -343,7 +345,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                     </div>
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
-                                    <RS.Button className={`d-none d-md-block h-4 ${below["md"](deviceSize) ? "btn-sm" : ""}`} style={{minWidth: `${below["md"](deviceSize) ? "90px" : "140px"}`}} onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))}>
+                                    <RS.Button className={`d-none d-md-block h-4  ${below["md"](deviceSize) ? "btn-sm" : ""}`} onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))}>
                                         {siteSpecific("Set Test", "Set test")}
                                     </RS.Button>
                                 </div>
@@ -445,16 +447,17 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
                             return <>
                                 {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
-                                {quizAssignments.length > 0 && <table className="w-100 set-quiz-table">
+                                {quizAssignments.length > 0 && <RS.Table borderless={isAda} className="w-100 set-quiz-table">
                                     <colgroup>
                                         <col width={isPhy ? "90px" : isAda ? "120px" : "auto"}/>
                                         <col width={"auto"}/>
                                         <col width={"160px"}/>
+                                        <col width={"60px"}/>
                                     </colgroup>
                                     <tbody>
                                         {quizAssignment.map((g, i) => <QuizAssignment key={g.assignedGroups?.[0].assignment.id ?? 0} user={g.user} assignedGroups={g.assignedGroups} index={i} />)}
                                     </tbody>    
-                                </table>}
+                                </RS.Table>}
                             </>;
                         }}
                     />

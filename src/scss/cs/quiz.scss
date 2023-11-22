@@ -2,17 +2,17 @@
 
 .group-counter {
     text-align: center;
-    background-color: $primary;
-    border-radius: 15px 0 0 15px;
+    background-color: $primary !important;
+    border-radius: 5px 0 0 5px;
     
     span {
         color: $white;
     }
 }
 
-.set-quiz-table-border {
-    border-bottom: 1px solid $cs-cultured;
-}  
+.set-quiz-table tr:not(:first-child) td {
+    border-top: 1px solid $cs-dark-silver;
+}
 
 .set-quiz-table-inner thead tr th .sort {
     height: 0;
@@ -20,10 +20,4 @@
     .down {
         margin-top: -10px;
     }
-}
-
-.set-quiz-table-dropdown {
-    cursor: pointer;
-    user-select: none;
-
 }
