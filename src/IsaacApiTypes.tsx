@@ -120,6 +120,8 @@ export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
+    axisLabelX?: string;
+    axisLabelY?: string;
 }
 
 export interface IsaacItemQuestionDTO extends QuestionDTO {
