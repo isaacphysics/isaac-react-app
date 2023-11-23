@@ -200,7 +200,7 @@ export type Action =
       questionId: string;
       response: ApiTypes.QuestionValidationResponseDTO;
     }
-  | { type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE; questionId: string; lock?: Date }
+  | { type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE; questionId: string; lock?: EpochTimeStamp }
   | { type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string }
   | {
       type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT;
@@ -390,7 +390,7 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
   validationResponse?: Immutable<ApiTypes.QuestionValidationResponseDTO>;
   currentAttempt?: Immutable<ApiTypes.ChoiceDTO>;
   canSubmit?: boolean;
-  locked?: Date;
+  locked?: EpochTimeStamp;
   accordionClientId?: string;
 }
 
@@ -655,8 +655,8 @@ export interface EventOverview {
   id?: string;
   title?: string;
   subtitle?: string;
-  date?: Date;
-  bookingDeadline?: Date;
+  date?: EpochTimeStamp;
+  bookingDeadline?: EpochTimeStamp;
   eventStatus?: ApiTypes.EventStatus;
   location?: ApiTypes.Location;
   numberOfConfirmedBookings: number;
@@ -671,13 +671,13 @@ export interface EventMapData {
   id?: string;
   title?: string;
   subtitle?: string;
-  date?: Date;
-  bookingDeadline?: Date;
+  date?: EpochTimeStamp;
+  bookingDeadline?: EpochTimeStamp;
   status?: ApiTypes.EventStatus;
   address?: ApiTypes.Address;
   latitude?: number;
   longitude?: number;
-  deadline?: Date;
+  deadline?: EpochTimeStamp;
 }
 
 export interface AdditionalInformation {

@@ -1,4 +1,4 @@
-import { TestUserRole, checkPageTitle, renderTestEnvironment } from "../utils";
+import { DAYS_AGO, DAYS_IN_FUTURE, TestUserRole, checkPageTitle, renderTestEnvironment } from "../utils";
 import { mockEvent } from "../../mocks/data";
 import { rest } from "msw";
 import { API_PATH, formatAddress } from "../../app/services";
@@ -105,23 +105,23 @@ describe("EventDetails", () => {
   });
 
   it("shows event date and time, and message if event was in the past", async () => {
-    const startDate = new Date(new Date().setMonth(new Date().getMonth() - 2));
-    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
-    const pastEvent = { ...mockEvent, date: startDate, endDate: endDate };
+    const twoDaysAgo = DAYS_AGO(2);
+    const twoHoursLater = twoDaysAgo + 2 * 60 * 60 * 1000;
+    const pastEvent = { ...mockEvent, date: twoDaysAgo, endDate: twoHoursLater };
     await setupTest({
       role: "STUDENT",
       event: pastEvent,
     });
-    const eventDateText = `${FRIENDLY_DATE_AND_TIME.format(startDate)} — ${TIME_ONLY.format(endDate)}`;
+    const eventDateText = `${FRIENDLY_DATE_AND_TIME.format(twoDaysAgo)} — ${TIME_ONLY.format(twoHoursLater)}`;
     const date = eventDate();
     expect(date).toHaveTextContent(eventDateText);
     expect(date).toHaveTextContent("This event is in the past.");
   });
 
   it("if event is in the future, no past event warning shows", async () => {
-    const startDate = new Date(new Date().setMonth(new Date().getMonth() + 2));
-    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
-    const futureEvent = { ...mockEvent, date: startDate, endDate: endDate };
+    const twoDaysInFuture = DAYS_IN_FUTURE(2);
+    const twoHoursLater = twoDaysInFuture + 2 * 60 * 60 * 1000;
+    const futureEvent = { ...mockEvent, date: twoDaysInFuture, endDate: twoHoursLater };
     await setupTest({
       role: "STUDENT",
       event: futureEvent,
@@ -130,8 +130,8 @@ describe("EventDetails", () => {
   });
 
   it("if booking deadline has passed, message is shown", async () => {
-    const date = new Date(new Date().setMonth(new Date().getMonth() - 2));
-    const pastBookingDeadlineEvent = { ...mockEvent, bookingDeadline: date };
+    const twoDaysAgo = DAYS_AGO(2);
+    const pastBookingDeadlineEvent = { ...mockEvent, bookingDeadline: twoDaysAgo };
     await setupTest({
       role: "STUDENT",
       event: pastBookingDeadlineEvent,

@@ -36,7 +36,7 @@ export const setQuiz = (assignment: QuizAssignmentDTO) => async (dispatch: Dispa
 };
 
 export const showQuizSettingModal =
-  (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) =>
+  (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: EpochTimeStamp | null, feedbackMode?: QuizFeedbackMode | null) =>
   (dispatch: AppDispatch) => {
     dispatch(
       openActiveModal({
@@ -236,7 +236,7 @@ export const updateQuizAssignmentFeedbackMode =
   };
 
 export const updateQuizAssignmentDueDate =
-  (quizAssignmentId: number, dueDate: Date) => async (dispatch: Dispatch<Action>) => {
+  (quizAssignmentId: number, dueDate: EpochTimeStamp) => async (dispatch: Dispatch<Action>) => {
     dispatch({ type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_REQUEST });
     try {
       const update = { dueDate };

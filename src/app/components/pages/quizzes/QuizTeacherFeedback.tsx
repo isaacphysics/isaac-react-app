@@ -82,13 +82,13 @@ export const QuizTeacherFeedback = ({ user }: { user: RegisteredUserDTO }) => {
   const yearRange = range(currentYear, currentYear + 5);
 
   const [settingDueDate, setSettingDueDate] = useState<boolean>(false);
-  const [dueDate, setDueDate] = useState<Date | null>(null);
+  const [dueDate, setDueDate] = useState<EpochTimeStamp | null>(null);
 
   useEffect(() => {
     setDueDate(assignment?.dueDate ?? null);
   }, [assignment?.dueDate]);
 
-  const setValidDueDate = async (newDate: Date | null) => {
+  const setValidDueDate = async (newDate: EpochTimeStamp | null) => {
     if (settingDueDate || !newDate || assignment?.dueDate == newDate) {
       return;
     }
@@ -106,7 +106,7 @@ export const QuizTeacherFeedback = ({ user }: { user: RegisteredUserDTO }) => {
                 showToast({
                   color: "success",
                   title: "Due date extended successfully",
-                  body: `This test is now due ${newDate.toLocaleDateString()}.`,
+                  body: `This test is now due ${new Date(newDate).toLocaleDateString()}.`,
                   timeout: 5000,
                 }),
               );
@@ -151,10 +151,10 @@ export const QuizTeacherFeedback = ({ user }: { user: RegisteredUserDTO }) => {
                     <DateInput
                       id="dueDate"
                       value={dueDate ?? undefined}
-                      invalid={(dueDate && dueDate < assignment.dueDate) ?? undefined}
+                      invalid={dueDate ? dueDate < assignment.dueDate : undefined}
                       yearRange={yearRange}
                       noClear
-                      onChange={(e) => setDueDate(e.target.valueAsDate)}
+                      onChange={(e) => e.target.value && setDueDate(parseInt(e.target.value, 10))}
                     />
                   </Label>
                   <div className={"mt-2 w-100 text-center mb-2"}>

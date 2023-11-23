@@ -277,8 +277,8 @@ interface AssignmentModalProps {
 const AssignmentModal = ({ user, showAssignmentModal, toggleAssignModal, assignmentToCopy }: AssignmentModalProps) => {
   const dispatch = useAppDispatch();
   const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
-  const [dueDate, setDueDate] = useState<Date>();
-  const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
+  const [dueDate, setDueDate] = useState<EpochTimeStamp>();
+  const [scheduledStartDate, setScheduledStartDate] = useState<EpochTimeStamp>();
   const [assignmentNotes, setAssignmentNotes] = useState<string>();
 
   const [showGameboardPreview, setShowGameboardPreview] = useState<boolean>(false);
@@ -298,10 +298,8 @@ const AssignmentModal = ({ user, showAssignmentModal, toggleAssignModal, assignm
           label: boardsById[assignmentToCopy.gameboardId]?.title ?? "No gameboard title",
         },
       ]);
-      setScheduledStartDate(
-        assignmentToCopy.scheduledStartDate ? new Date(assignmentToCopy.scheduledStartDate.valueOf()) : undefined,
-      );
-      setDueDate(assignmentToCopy.dueDate ? new Date(assignmentToCopy.dueDate.valueOf()) : undefined);
+      setScheduledStartDate(assignmentToCopy.scheduledStartDate ? assignmentToCopy.scheduledStartDate : undefined);
+      setDueDate(assignmentToCopy.dueDate ? assignmentToCopy.dueDate : undefined);
       setAssignmentNotes(assignmentToCopy.notes);
     } else {
       // Create from scratch
@@ -319,7 +317,7 @@ const AssignmentModal = ({ user, showAssignmentModal, toggleAssignModal, assignm
         boardId: selectedGameboard[0]?.value,
         groups: [...selectedGroups],
         dueDate,
-        scheduledStartDate: scheduledStartDate && nthHourOf(7, scheduledStartDate),
+        scheduledStartDate: scheduledStartDate && nthHourOf(7, scheduledStartDate).valueOf(),
         notes: assignmentNotes,
       }),
     ).then((result) => {
@@ -345,7 +343,7 @@ const AssignmentModal = ({ user, showAssignmentModal, toggleAssignModal, assignm
 
   const yearRange = range(currentYear, currentYear + 5);
 
-  const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false;
+  const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate > dueDate : false;
 
   useEffect(() => {
     if (showAssignmentModal) setShowGameboardPreview(false);
@@ -432,7 +430,9 @@ const AssignmentModal = ({ user, showAssignmentModal, toggleAssignModal, assignm
             value={scheduledStartDate}
             placeholder="Select your scheduled start date..."
             yearRange={yearRange}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              e.target.value && setScheduledStartDate(parseInt(e.target.value, 10))
+            }
           />
         </Label>
         <Label className="w-100 pb-2">
@@ -441,7 +441,7 @@ const AssignmentModal = ({ user, showAssignmentModal, toggleAssignModal, assignm
             value={dueDate}
             placeholder="Select your due date..."
             yearRange={yearRange}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => e.target.value && setDueDate(parseInt(e.target.value, 10))}
           />
           {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
         </Label>
@@ -566,7 +566,7 @@ export const AssignmentSchedule = ({ user }: { user: RegisteredUserDTO }) => {
               (viewBy === "startDate" || isDefined(a.dueDate)),
           )
           .reduce((oldest, a) => {
-            const assignmentTimestamp = a.scheduledStartDate?.valueOf() ?? a.creationDate?.valueOf() ?? Date.now();
+            const assignmentTimestamp = a.scheduledStartDate ?? a.creationDate ?? Date.now();
             return assignmentTimestamp < oldest ? assignmentTimestamp : oldest;
           }, Date.now()) ?? Date.now(),
       ),

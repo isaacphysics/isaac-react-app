@@ -74,7 +74,7 @@ describe("RegistrationDobInput", () => {
     fireEvent.change(dateOfBirthInputs[0], { target: { value: "15" } });
     fireEvent.change(dateOfBirthInputs[1], { target: { value: "3" } });
     fireEvent.change(dateOfBirthInputs[2], { target: { value: "2006" } });
-    const expectedDate = new Date("2006-03-15");
+    const expectedDate = new Date("2006-03-15").getTime();
     expect(mockSetUserToUpdate).toHaveBeenCalledTimes(3);
     expect(mockSetUserToUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -106,7 +106,7 @@ describe("RegistrationDobInput", () => {
     setupTest("/register/student", {
       userToUpdate: {
         ...mockUserToUpdate,
-        dateOfBirth: new Date("2006-03-15"),
+        dateOfBirth: new Date("2006-03-15").getTime(),
       },
       dobOver13CheckboxChecked: true,
     });
@@ -122,7 +122,7 @@ describe("RegistrationDobInput", () => {
     setupTest("/register/student", {
       userToUpdate: {
         ...mockUserToUpdate,
-        dateOfBirth: elevenYearsAgo,
+        dateOfBirth: elevenYearsAgo.getTime(),
       },
     });
     const dateOfBirthInputs = getDateOfBirthInputs();
@@ -159,7 +159,7 @@ describe("RegistrationDobInput", () => {
     setupTest("/register/student", {
       userToUpdate: {
         ...mockUserToUpdate,
-        dateOfBirth: new Date("2023-02-29"),
+        dateOfBirth: new Date("2023-02-29").getTime(),
       },
     });
     const dobValidationFeedbackElement = getDobFeedbackElement();

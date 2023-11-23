@@ -30,8 +30,8 @@ import { Immutable } from "immer";
 export interface AssignmentSpec {
   boardId: string;
   groups: Item<number>[];
-  dueDate?: Date;
-  scheduledStartDate?: Date;
+  dueDate?: EpochTimeStamp;
+  scheduledStartDate?: EpochTimeStamp;
   notes?: string;
 }
 
@@ -44,12 +44,11 @@ export const assignGameboard = createAsyncThunk(
       return rejectWithValue(null);
     }
 
-    const today = TODAY();
-
     // TODO think about whether this can be done in the back-end too?
     if (dueDate !== undefined) {
-      dueDate?.setHours(0, 0, 0, 0);
-      if (dueDate.valueOf() - today.valueOf() < 0) {
+      const startOfDayDueDate = new Date(dueDate).setHours(0, 0, 0, 0);
+      const dueDateInPast = startOfDayDueDate - TODAY().valueOf() < 0;
+      if (dueDateInPast) {
         appDispatch(
           showToast({
             color: "danger",
@@ -78,7 +77,7 @@ export const assignGameboard = createAsyncThunk(
     }
 
     if (dueDate !== undefined && scheduledStartDate !== undefined) {
-      if (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) {
+      if (nthHourOf(0, scheduledStartDate).valueOf() > dueDate) {
         appDispatch(
           showToast({
             color: "danger",
@@ -111,12 +110,9 @@ export const assignGameboard = createAsyncThunk(
           groupId: a.groupId,
           gameboardId: boardId,
           groupName: groupLookUp.get(a.groupId),
-          // FIXME we *really* need to make sure that we only expect objects in Redux to contain timestamps and not
-          //  full-blown Date objects, because these are what the API returns, and also serializable.
-          //  Will require a medium-sized refactor.
-          creationDate: new Date().valueOf() as unknown as Date,
-          dueDate: dueDate?.valueOf() as unknown as Date | undefined,
-          scheduledStartDate: scheduledStartDate?.valueOf() as unknown as Date | undefined,
+          creationDate: new Date().valueOf(),
+          dueDate: dueDate,
+          scheduledStartDate: scheduledStartDate,
           notes,
         }));
       const successfulIds = newAssignments.map((a) => a.groupId);

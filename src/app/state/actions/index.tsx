@@ -922,7 +922,7 @@ export const attemptQuestion =
     } catch (e: any) {
       if (e.response && e.response.status === 429) {
         const errorMessage = e.response?.data?.errorMessage || QUESTION_ATTEMPT_THROTTLED_MESSAGE;
-        const lock = new Date(new Date().getTime() + timePeriod);
+        const lock = new Date().getTime() + timePeriod;
 
         dispatch({ type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock });
         dispatch(

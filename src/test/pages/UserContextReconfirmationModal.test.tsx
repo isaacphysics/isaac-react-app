@@ -24,7 +24,7 @@ describe("UserContextReconfirmationModal", () => {
     renderTestEnvironment({
       modifyUser: (user) =>
         produce(user, (u) => {
-          u.registeredContextsLastConfirmed = (MOST_RECENT_AUGUST().valueOf() - 10000000) as unknown as Date;
+          u.registeredContextsLastConfirmed = MOST_RECENT_AUGUST();
         }),
     });
     const modal = await screen.findByTestId("active-modal");
@@ -36,7 +36,7 @@ describe("UserContextReconfirmationModal", () => {
       role: "STUDENT",
       modifyUser: (user) =>
         produce(user, (u) => {
-          u.registeredContextsLastConfirmed = (MOST_RECENT_AUGUST().valueOf() - 10000000) as unknown as Date;
+          u.registeredContextsLastConfirmed = MOST_RECENT_AUGUST();
         }),
     });
     // wait for modal content to be loaded
@@ -61,7 +61,7 @@ describe("UserContextReconfirmationModal", () => {
       role: "TEACHER",
       modifyUser: (user) =>
         produce(user, (u) => {
-          u.registeredContextsLastConfirmed = (MOST_RECENT_AUGUST().valueOf() - 10000000) as unknown as Date;
+          u.registeredContextsLastConfirmed = MOST_RECENT_AUGUST();
         }),
     });
     // wait for modal content to be loaded

@@ -31,8 +31,9 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
     assignments.forEach((assignment) => {
       if (assignment?.gameboard?.percentageCompleted === undefined || assignment.gameboard.percentageCompleted < 100) {
         const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
-        const noDueDateButRecent = !assignment.dueDate && assignmentStartDate && assignmentStartDate > fourWeeksAgo;
-        const dueDateAndCurrent = assignment.dueDate && assignment.dueDate >= fiveDaysAgo;
+        const noDueDateButRecent =
+          !assignment.dueDate && assignmentStartDate && assignmentStartDate > fourWeeksAgo.valueOf();
+        const dueDateAndCurrent = assignment.dueDate && assignment.dueDate >= fiveDaysAgo.valueOf();
         if (noDueDateButRecent || dueDateAndCurrent) {
           // Assignment either not/only just overdue, or else set within last month but no due date.
           myAssignments.inProgressRecent.push(assignment);

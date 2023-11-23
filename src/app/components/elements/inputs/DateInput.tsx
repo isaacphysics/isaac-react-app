@@ -143,7 +143,7 @@ export const DateInput = (props: DateInputProps) => {
   function calculateHiddenValue(): string {
     const timestamp = calculateDate();
     if (timestamp) {
-      return timestamp.toISOString().substr(0, 10);
+      return timestamp.toISOString().substring(0, 10);
     }
     return "";
   }

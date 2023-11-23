@@ -106,7 +106,7 @@ describe("SelectedEventDetails", () => {
   it("shows Prepwork deadline if present in the event details", async () => {
     const eventDetails = {
       ...mockEvent,
-      prepWorkDeadline: 1695897589235 as unknown as Date,
+      prepWorkDeadline: 1695897589235,
     };
     setupTest(eventDetails);
     const eventInfo = await screen.findByTestId("event-details");

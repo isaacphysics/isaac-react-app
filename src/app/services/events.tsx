@@ -231,7 +231,7 @@ export const userCanReserveEventSpaces = (user: Immutable<PotentialUser> | null,
 };
 
 export function googleCalendarTemplate(event: AugmentedEvent) {
-  function formatDate(date: Date) {
+  function formatDate(date: EpochTimeStamp) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
   }
   // https://calendar.google.com/calendar/event?action=TEMPLATE&text=[event_name]&dates=[start_date as YYYYMMDDTHHMMSS or YYYYMMDD]/[end_date as YYYYMMDDTHHMMSS or YYYYMMDD]&details=[extra_info]&location=[full_address_here]

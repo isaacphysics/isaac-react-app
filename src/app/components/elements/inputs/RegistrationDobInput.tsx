@@ -38,7 +38,7 @@ export const RegistrationDobInput = ({
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setUserToUpdate({
               ...userToUpdate,
-              dateOfBirth: event.target.valueAsDate !== null ? event.target.valueAsDate : undefined,
+              dateOfBirth: event.target.value ? parseInt(event.target.value, 10) : undefined,
             });
             // DOB takes priority over age confirmation
             setDobOver13CheckboxChecked(false);

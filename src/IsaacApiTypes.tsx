@@ -35,9 +35,9 @@ export interface AssignmentDTO extends IAssignmentLike {
   ownerUserId?: number;
   assignerSummary?: UserSummaryDTO;
   notes?: string;
-  creationDate?: Date;
-  dueDate?: Date;
-  scheduledStartDate?: Date;
+  creationDate?: EpochTimeStamp;
+  dueDate?: EpochTimeStamp;
+  scheduledStartDate?: EpochTimeStamp;
 }
 
 export interface AssignmentFeedbackDTO {
@@ -50,14 +50,14 @@ export interface GameboardDTO extends HasTitleOrId {
   contents?: GameboardItem[];
   wildCard?: IsaacWildcard;
   wildCardPosition?: number;
-  creationDate?: Date;
+  creationDate?: EpochTimeStamp;
   gameFilter?: GameFilter;
   ownerUserId?: number;
   ownerUserInformation?: UserSummaryDTO;
   tags?: string[];
   creationMethod?: GameboardCreationMethod;
   percentageCompleted?: number;
-  lastVisited?: Date;
+  lastVisited?: EpochTimeStamp;
   startedQuestion?: boolean;
   savedToCurrentUser?: boolean;
 }
@@ -72,8 +72,8 @@ export interface GameboardProgressSummaryDTO {
   assignmentId?: number;
   gameboardId?: string;
   gameboardTitle?: string;
-  dueDate?: Date;
-  creationDate?: Date;
+  dueDate?: EpochTimeStamp;
+  creationDate?: EpochTimeStamp;
   questionPartsCorrect?: number;
   questionPartsIncorrect?: number;
   questionPartsNotAttempted?: number;
@@ -90,9 +90,9 @@ export interface IsaacAnvilQuestionDTO extends QuestionDTO {
 export interface IsaacConceptPageDTO extends SeguePageDTO {}
 
 export interface IsaacEventPageDTO extends ContentDTO {
-  date?: Date;
-  bookingDeadline?: Date;
-  prepWorkDeadline?: Date;
+  date?: EpochTimeStamp;
+  bookingDeadline?: EpochTimeStamp;
+  prepWorkDeadline?: EpochTimeStamp;
   canonicalSourceFile?: string;
   location?: Location;
   eventThumbnail?: Omit<ImageDTO, "altText">; // We don't want to use event thumbnail alt text for WCAG compliance (it's a decorative image, and conveys no meaning)
@@ -101,7 +101,7 @@ export interface IsaacEventPageDTO extends ContentDTO {
   allowGroupReservations?: boolean;
   eventStatus?: EventStatus;
   placesAvailable?: number;
-  endDate?: Date;
+  endDate?: EpochTimeStamp;
   privateEvent?: boolean;
 }
 
@@ -218,8 +218,8 @@ export interface QuizAttemptDTO extends IHasQuizSummary {
   id?: number;
   userId?: number;
   quizAssignmentId?: number;
-  startDate?: Date;
-  completedDate?: Date;
+  startDate?: EpochTimeStamp;
+  completedDate?: EpochTimeStamp;
   quiz?: IsaacQuizDTO;
   quizAssignment?: QuizAssignmentDTO;
   feedbackMode?: QuizFeedbackMode;
@@ -288,7 +288,7 @@ export interface QuestionValidationResponseDTO {
   answer?: ChoiceDTO;
   correct?: boolean;
   explanation?: ContentDTO;
-  dateAttempted?: Date;
+  dateAttempted?: EpochTimeStamp;
 }
 
 export interface ItemValidationResponseDTO extends QuestionValidationResponseDTO {
@@ -299,7 +299,7 @@ export interface UserGroupDTO {
   id?: number;
   groupName?: string;
   ownerId?: number;
-  created?: Date;
+  created?: EpochTimeStamp;
   lastUpdated?: EpochTimeStamp;
   token?: string;
   archived?: boolean;
@@ -421,7 +421,7 @@ export interface MediaDTO extends ContentDTO {
 
 export interface NotificationDTO extends ContentDTO {
   externalReference?: ExternalReference;
-  expiry?: Date;
+  expiry?: EpochTimeStamp;
 }
 
 export interface ParsonsChoiceDTO extends ItemChoiceDTO {
@@ -476,8 +476,8 @@ export interface GroupMembershipDTO {
   groupId?: number;
   userId?: number;
   status?: GroupMembershipStatus;
-  updated?: Date;
-  created?: Date;
+  updated?: EpochTimeStamp;
+  created?: EpochTimeStamp;
 }
 
 export type Stage = "gcse" | "a_level" | "all";
@@ -504,14 +504,14 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
   givenName?: string;
   familyName?: string;
   email?: string;
-  dateOfBirth?: Date;
+  dateOfBirth?: EpochTimeStamp;
   gender?: Gender;
   registrationDate?: EpochTimeStamp;
   schoolId?: string;
   role?: UserRole;
   schoolOther?: string;
   registeredContexts?: UserContext[];
-  registeredContextsLastConfirmed?: Date;
+  registeredContextsLastConfirmed?: EpochTimeStamp;
   firstLogin?: boolean;
   lastUpdated?: EpochTimeStamp;
   lastSeen?: EpochTimeStamp;
@@ -567,8 +567,8 @@ export interface UserSummaryWithGroupMembershipDTO extends UserSummaryDTO {
 export interface IAssignmentLike {
   groupId?: number;
   id?: number;
-  creationDate?: Date;
-  dueDate?: Date;
+  creationDate?: EpochTimeStamp;
+  dueDate?: EpochTimeStamp;
   ownerUserId?: number;
 }
 
@@ -678,7 +678,7 @@ export interface AnsweredQuestionsByDate {
 export interface TOTPSharedSecretDTO {
   userId: number;
   sharedSecret: string;
-  created: Date;
+  created: EpochTimeStamp;
 }
 
 export interface MisuseStatisticDTO {

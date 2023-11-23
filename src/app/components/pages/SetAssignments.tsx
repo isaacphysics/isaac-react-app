@@ -68,8 +68,8 @@ interface AssignGroupProps {
 }
 const AssignGroup = ({ groups, board, allowScheduling }: AssignGroupProps) => {
   const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
-  const [dueDate, setDueDate] = useState<Date>();
-  const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
+  const [dueDate, setDueDate] = useState<EpochTimeStamp>();
+  const [scheduledStartDate, setScheduledStartDate] = useState<EpochTimeStamp>();
   const [assignmentNotes, setAssignmentNotes] = useState<string>();
   const user = useAppSelector(selectors.user.orNull);
   const dispatch = useAppDispatch();
@@ -104,12 +104,9 @@ const AssignGroup = ({ groups, board, allowScheduling }: AssignGroupProps) => {
     if (utcDate) {
       const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
       // Sets the scheduled date to 7AM in the timezone of the browser.
-      setScheduledStartDate(scheduledDate);
+      setScheduledStartDate(scheduledDate.valueOf());
     } else {
-      setScheduledStartDate(null as unknown as Date);
-      {
-        /* DANGER here with force-casting Date|null to Date */
-      }
+      setScheduledStartDate(undefined);
     }
   }
 
@@ -147,9 +144,10 @@ const AssignGroup = ({ groups, board, allowScheduling }: AssignGroupProps) => {
           value={dueDate}
           placeholder="Select your due date..."
           yearRange={yearRange}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            e.target.value ? setDueDate(parseInt(e.target.value, 10)) : setDueDate(undefined)
+          }
         />{" "}
-        {/* DANGER here with force-casting Date|null to Date */}
         {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
       </Label>
       {isStaff(user) && (
