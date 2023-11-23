@@ -10,7 +10,7 @@
 }
 
 #graph-sketcher-modal {
-    min-height: 375px;
+    min-height: 310px;
     min-width: 310px;
     .graph-sketcher-ui {
         position: absolute;
@@ -179,8 +179,8 @@
             $button-spacing: 10px;
 
             #graph-sketcher-ui-debug-window {
-                top: 3 * $button-spacing + $button-size;
-                left: 2 * $button-spacing;
+                top: 2 * $button-spacing;
+                left: 3 * $button-spacing + $button-size;
             }
 
             .button {
@@ -252,8 +252,9 @@
                 $button-spacing: 8px;
 
                 #graph-sketcher-ui-debug-window {
-                    top: 3 * $button-spacing + $button-size;
-                    left: 2 * $button-spacing;
+                    display: none;
+                    top: 2 * $button-spacing;
+                    left: 3 * $button-spacing + $button-size;
                 }
 
                 .button {
@@ -296,6 +297,7 @@
                     }
 
                     &#graph-sketcher-ui-debug-button {
+                        display: none;
                         top: 3 * $button-spacing + $button-size;
                         left: 2 * $button-spacing;
                     }
@@ -329,8 +331,8 @@
             $button-spacing: 10px;
 
             #graph-sketcher-ui-debug-window {
-                top: 3 * $button-spacing + $button-size;
-                left: 2 * $button-spacing;
+                top: 2 * $button-spacing;
+                left: 3 * $button-spacing + $button-size;
             }
 
             .button {
@@ -373,9 +375,9 @@
                 }
 
                 &#graph-sketcher-ui-debug-button {
-                    top: unset;
-                    bottom: 3 * $button-spacing + $button-size;
-                    left: 2 * $button-spacing;
+                    top: 2 * $button-spacing;
+                    left: unset;
+                    right: 3 * $button-spacing + $button-size;
                 }
 
                 &#graph-sketcher-ui-bezier-button {
@@ -401,13 +403,14 @@
             }
         }
 
-        @media screen and (orientation:landscape) and (max-height: 576px) {
+        @media screen and (orientation:landscape) and (max-height: 575px) {
             $button-size: 61px;
             $button-spacing: 8px;
 
             #graph-sketcher-ui-debug-window {
-                top: 3 * $button-spacing + $button-size;
-                left: 2 * $button-spacing;
+                display: none;
+                top: 2 * $button-spacing;
+                left: 3 * $button-spacing + $button-size;
             }
 
             .button {
@@ -450,6 +453,7 @@
                 }
 
                 &#graph-sketcher-ui-debug-button {
+                    display: none;
                     top: unset;
                     bottom: 3 * $button-spacing + $button-size;
                     left: 2 * $button-spacing;
@@ -467,8 +471,8 @@
             }
 
             div#graph-sketcher-ui-color-select-hexagons {
-                top: 4 * $button-spacing + 2 * $button-size;
-                left: 2 * $button-spacing;
+                top: 2 * $button-spacing;
+                left: 3 * $button-spacing + $button-size;
                 width: $button-size;
                 height: $button-size;
                 svg {
