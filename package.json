@@ -25,6 +25,7 @@
     "immer": "^9.0.15",
     "inequality": "1.0.1",
     "inequality-grammar": "1.0.0",
+    "isaac-graph-sketcher": "0.13.4",
     "js-cookie": "^3.0.1",
     "katex": "^0.16.2",
     "leaflet": "^1.7.1",
