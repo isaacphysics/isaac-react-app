@@ -182,7 +182,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
         </tr>
         {isExpanded && <tr>
             <td colSpan={4} className={classNames("bg-white border-0", {"px-2 pb-2": isPhy})}>
-                <RS.Table striped className="w-100 set-quiz-table-inner">
+                <RS.Table striped className="w-100 set-quiz-table-inner mb-1">
                     <thead>
                         <tr>
                             {innerTableHeaders.map(header => <th key={header.title} onClick={() => setSort(header.sort)} className="px-1 py-1">
