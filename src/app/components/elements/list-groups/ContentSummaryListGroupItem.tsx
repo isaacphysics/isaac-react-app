@@ -1,6 +1,7 @@
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {
     AUDIENCE_DISPLAY_FIELDS,
+    below,
     determineAudienceViews,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
@@ -136,14 +137,14 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                             ({typeLabel})
                         </span>}
                     </div>
-                    {displayTopicTitle && hierarchyTags && <div className={"hierarchy-tags"}>
-                        {hierarchyTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
-                    </div>}
-                    {(isPhy && item.summary) && <div className="small text-muted d-none d-md-block">
+                    {(isPhy && item.summary) && <div className="small text-muted d-none d-sm-block">
                         {item.summary}
                     </div>}
-                    {(!item.summary || deviceSize === "sm") && item.subtitle && <div className="small text-muted d-none d-sm-block">
+                    {(!item.summary || deviceSize === "xs") && item.subtitle && <div className="small text-muted d-block">
                         {item.subtitle}
+                    </div>}
+                    {displayTopicTitle && hierarchyTags && <div className={"hierarchy-tags d-none d-md-block"}>
+                        {hierarchyTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
                 </div>
 
