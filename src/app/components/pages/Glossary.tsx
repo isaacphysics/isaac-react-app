@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Col, Container, Input, Label, Row} from "reactstrap";
+import queryString from "query-string";
 import {AppState, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -9,6 +10,7 @@ import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {
     isAda,
+    isPhy,
     isDefined,
     Item,
     NOT_FOUND,
@@ -16,11 +18,11 @@ import {
     TAG_ID,
     tags,
     useUrlHashValue,
-    isPhy
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import { useHistory, useLocation } from "react-router";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -63,14 +65,48 @@ export function formatGlossaryTermId(rawTermId: string) {
         .replace(/[^a-z0-9]/g, '-');
 }
 
+// Might be an idea to export these functions from GameBoardFilter.tsx
+function arrayFromPossibleCsv(queryParamValue: string[] | string | null | undefined) {
+    if (queryParamValue) {
+        return queryParamValue instanceof Array ? queryParamValue : queryParamValue.split(",");
+    } else {
+        return [];
+    }
+}
+
+function tagByValue(values: string[], tags: Tag[]) {
+    return tags.filter(option => values.includes(option.id)).at(0);
+}
+
+interface QueryStringResponse {
+    queryStages: Tag | undefined;
+    querySubjects: Tag | undefined;
+}
+function processQueryString(query: string): QueryStringResponse {
+    const {subjects, stages} = queryString.parse(query);
+
+    const subjectItems = tagByValue(arrayFromPossibleCsv(subjects as Nullable<string[] | string>), tags.allSubjectTags);
+    // FIXME: either make a centralised stage tag list or change the response interface
+//    const stageItems = tagByValue(arrayFromPossibleCsv(stages as Nullable<string[] | string>), getFilteredStageOptions());
+
+    return {
+        queryStages: undefined, querySubjects: subjectItems
+    };
+}
+
 /* An offset applied when scrolling to a glossary term, so the term isn't hidden under the alphabet header */
 const ALPHABET_HEADER_OFFSET = -65;
 
 export const Glossary = () => {
+    const location = useLocation();
+    const history = useHistory();
+    // query stages not used recently
+    const {queryStages, querySubjects} = processQueryString(location.search);
+
     const [searchText, setSearchText] = useState("");
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const subjects = tags.allSubjectTags.sort((a,b) => a.title.localeCompare(b.title));
-    const [filterSubject, setFilterSubject] = useState<Tag>();
+    const [filterSubject, setFilterSubject] = useState<Tag | undefined>(querySubjects);
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useAppSelector(
         (state: AppState) => state && state.glossaryTerms?.map(
@@ -82,6 +118,13 @@ export const Glossary = () => {
             }
         )
     );
+
+    // Update url 
+    useEffect(() => {
+        const params: {[key: string]: string} = {};
+        if (filterSubject) params.subjects = filterSubject.id;
+        history.replace({search: queryString.stringify(params, {encode: false}), state:location.state});
+    }, [filterSubject]);
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } | undefined {
@@ -236,7 +279,6 @@ export const Glossary = () => {
                             <StyledSelect inputId="topic-select"
                                 options={ topics.map(e => ({ value: e.id, label: e.title})) }
                                 name="topic-select"
-                                classNamePrefix="select"
                                 placeholder="All topics"
                                 onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                 isClearable
@@ -246,8 +288,8 @@ export const Glossary = () => {
                             <Label for='subject-select' className='sr-only'>Subject</Label>
                             <StyledSelect inputId="subject-select"
                                 options={ subjects.map(e => ({ value: e.id, label: e.title})) }
+                                value={({value: querySubjects?.id, label: querySubjects?.title })}
                                 name="subject-select"
-                                classNamePrefix="select"
                                 placeholder="Select a subject"
                                 onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                 isClearable
