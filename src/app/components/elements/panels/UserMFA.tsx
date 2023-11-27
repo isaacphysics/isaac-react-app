@@ -2,7 +2,7 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isDefined, SITE_TITLE, siteSpecific} from "../../../services";
+import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isDefined, SITE_TITLE} from "../../../services";
 import {
     useGetSegueEnvironmentQuery,
     useDisableAccountMFAMutation,
@@ -67,14 +67,14 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
 
     return <CardBody className="pt-0 px-0">
         <Row>
-            <Col>
+            <Col xs={{size: 6, offset: 3}} className="px-4">
                 <hr className="text-center" />
                 <h4>Two-factor Authentication (2FA)</h4>
             </Col>
         </Row>
         {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
             <Row>
-                <Col>
+                <Col xs={{size: 6, offset: 3}} className="px-4">
                     <Row>
                         <Col>
                             <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
@@ -104,9 +104,9 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                     </FormGroup>
                                     <FormGroup>
                                         <Button
+                                            type="submit"
                                             className="btn-secondary w-100"
                                             disabled={!mfaVerificationCode}
-                                            onClick={setupMFA}
                                         >
                                             {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
                                         </Button>
@@ -119,6 +119,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                             <Col>
                                 <FormGroup>
                                     <Button
+                                        type="button"
                                         className="btn-secondary w-100"
                                         onClick={() => newMFASecret()}
                                     >
@@ -131,7 +132,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                 </Col>
             </Row>
             : <Row className="pt-4">
-                <Col className="text-center">
+                <Col xs={{size: 6, offset: 3}} className="text-center px-4">
                     {!editingOtherUser && userAuthSettings && userAuthSettings.linkedAccounts && <p>
                         You do not currently have a password set for this account; you
                         sign in using {" "}
@@ -146,7 +147,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
         }
         {editingOtherUser &&
             <Row className="pt-4">
-                <Col className="text-center">
+                <Col xs={{size: 6, offset: 3}} className="text-center px-4">
                     {userAuthSettings && <p>
                         <FormGroup>
                             <Button
@@ -161,6 +162,6 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
             </Row>
         }
 
-    </CardBody>
+    </CardBody>;
 };
 export default UserMFA;

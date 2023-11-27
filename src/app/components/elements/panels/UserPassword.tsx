@@ -1,5 +1,5 @@
 import {Button, CardBody, Col, FormFeedback, FormGroup, Input, InputProps, Label, Row} from "reactstrap";
-import React, {Suspense, lazy, useState} from "react";
+import React, {useState} from "react";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {
@@ -7,7 +7,6 @@ import {
     AUTHENTICATOR_PROVIDERS,
     isAda,
     isPhy,
-    isStaff,
     loadZxcvbnIfNotPresent,
     MINIMUM_PASSWORD_LENGTH,
     passwordDebounce,
@@ -16,9 +15,6 @@ import {
 } from "../../../services";
 import classNames from "classnames";
 import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
-import { Loading } from "../../handlers/IsaacSpinner";
-
-const UserMFA = lazy(() => import("./UserMFA"));
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -237,16 +233,6 @@ export const UserPassword = (
                         </Col>
                     </FormGroup>
                 </React.Fragment>
-                {isStaff(myUser) && !editingOtherUser &&
-                    // Currently staff only
-                    <Suspense fallback={<Loading/>}>
-                        <UserMFA
-                            userAuthSettings={userAuthSettings}
-                            userToUpdate={myUser}
-                            editingOtherUser={editingOtherUser}
-                        />
-                    </Suspense>
-                }
             </Col>
         </Row>
     </CardBody>;
