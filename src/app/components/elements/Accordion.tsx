@@ -75,13 +75,13 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     function getPage() {
         if (page && page != NOT_FOUND) {
-            return page
+            return page;
         }
-        return null
+        return null;
     }
 
     function logAccordionOpen() {
-        let currentPage = getPage()
+        const currentPage = getPage();
         if (currentPage) {
             let eventDetails : any;
             if (isAQuestionLikeDoc(currentPage)) {
@@ -154,7 +154,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     }
                 }}
                 className={"d-flex align-items-stretch " + classNames({"de-emphasised": deEmphasised || disabled, "active": isOpen})}
-                onClick={(event: any) => {
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                     if (disabled) {
                         return;
                     }
@@ -163,7 +163,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     setOpen(nextState);
                     if (nextState) {
                         logAccordionOpen();
-                        scrollVerticallyIntoView(event.target);
+                        scrollVerticallyIntoView(event.target as HTMLElement);
                     }
                 }}
                 aria-expanded={isOpen ? "true" : "false"}
