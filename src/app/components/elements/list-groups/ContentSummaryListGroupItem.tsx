@@ -1,7 +1,6 @@
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {
     AUDIENCE_DISPLAY_FIELDS,
-    below,
     determineAudienceViews,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
