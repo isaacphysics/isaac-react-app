@@ -32,7 +32,7 @@ interface GraphSketcherModalProps {
 }
 
 const GraphSketcherModal = (props: GraphSketcherModalProps) => {
-    const { onGraphSketcherStateChange, close, initialState, user } = props;
+    const { onGraphSketcherStateChange, close, initialState, user, question } = props;
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
 
@@ -74,7 +74,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     // Setup and teardown of the graph sketcher p5 instance
     useEffect(function setupOfGraphSketcherP5Instance() {
-        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions: isStaff(user) });
+        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions: isStaff(user), axisLabelX: question?.axisLabelX, axisLabelY: question?.axisLabelY });
 
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;

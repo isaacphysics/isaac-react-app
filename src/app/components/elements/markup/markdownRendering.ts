@@ -46,7 +46,7 @@ export const renderClozeDropZones = (markdown: string) => {
 // This is used to render the full version of a glossary term using the IsaacGlossaryTerm component.
 export const renderGlossaryBlocks = (markdown: string) => {
     // Matches strings such as [glossary:glossary-demo|boolean-algebra] which MUST be at the beginning of the line.
-    const glossaryBlockRegexp = /^\[glossary:(?<id>[a-z0-9-|]+?)\]/gm;
+    const glossaryBlockRegexp = /^\[glossary:(?<id>[a-z0-9-|_]+?)\]/gm;
     return markdown.replace(glossaryBlockRegexp, (_match, id) => {
         const cssFriendlyTermId = id.replace(/\|/g, '-');
         return `<div data-type="full" id="glossary-term-${cssFriendlyTermId}">Loading glossary...</div>`;
@@ -57,8 +57,9 @@ export const renderGlossaryBlocks = (markdown: string) => {
 export const renderInlineGlossaryTerms = (markdown: string) => {
     // Matches strings such as [glossary-inline:glossary-demo|boolean-algebra] and
     // [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"] which CAN be inlined and
-    // [glossary-inline:glossary-demo-titled|boolean-algebra "boolean algebra"] which include their title.
-    const glossaryInlineRegexp = /\[glossary-inline(?<titled>-titled)?:(?<id>[a-z0-9-|]+?)\s*(?:"(?<text>[A-Za-z0-9-()/,'\\. ]+)")?\]/g;
+    // [glossary-inline-titled:glossary-demo|boolean-algebra "boolean algebra"] which include their title.
+    // Now matches [glossary-inline:glossary-demo|boolean_algebra]
+    const glossaryInlineRegexp = /\[glossary-inline(?<titled>-titled)?:(?<id>[a-z0-9-|_]+?)\s*(?:"(?<text>[A-Za-z0-9-()/,'\\. ]+)")?\]/g;
     return markdown.replace(glossaryInlineRegexp, (_match, titled, id, text, _offset) => {
         const cssFriendlyTermId = id.replace(/\|/g, '-');
         return `<span data-type="inline" class="inline-glossary-term" ${text ? `data-text="${text}"` : ""} id="glossary-term-${cssFriendlyTermId}" ${titled !== undefined ? "data-titled" : ""}>Loading glossary...</span>`;
