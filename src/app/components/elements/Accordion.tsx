@@ -20,6 +20,7 @@ import {v4 as uuid_v4} from "uuid";
 import classNames from "classnames";
 import {Markup} from "./markup";
 import {ReportAccordionButton} from "./ReportAccordionButton";
+import { debounce } from "lodash";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -82,7 +83,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     function logAccordionOpen() {
         let currentPage = getPage()
         if (currentPage) {
-            let eventDetails;
+            let eventDetails : any;
             if (isAQuestionLikeDoc(currentPage)) {
                 eventDetails = {
                     type: "QUESTION_PART_OPEN",
@@ -107,7 +108,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     accordionIndex: index
                 };
             }
-            dispatch(logAction(eventDetails));
+            debounce(() => dispatch(logAction(eventDetails)), 200, {leading: true, trailing: false});
         }
     }
 
