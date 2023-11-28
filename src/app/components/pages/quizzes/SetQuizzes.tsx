@@ -327,8 +327,8 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     </RS.Row>;
 
     return <RS.Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "set_tests_help" : undefined} />
-        <PageFragment fragmentId={"set_tests_help"} ifNotFound={RenderNothing} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} />
+        <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab}>
             {{
                 [siteSpecific("Set Tests", "Available tests")]:
