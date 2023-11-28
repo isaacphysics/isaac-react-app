@@ -123,7 +123,7 @@ export const Glossary = () => {
     useEffect(() => {
         const params: {[key: string]: string} = {};
         if (filterSubject) params.subjects = filterSubject.id;
-        history.replace({search: queryString.stringify(params, {encode: false}), state:location.state});
+        history.replace({search: queryString.stringify(params, {encode: false}), state: location.state, hash: location.hash});
     }, [filterSubject]);
 
     const glossaryTerms = useMemo(() => {
@@ -144,11 +144,11 @@ export const Glossary = () => {
             return undefined;
         }
 
-        const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
+        const searchTerms = searchText.split(' ').map(t => t.toLowerCase());
         const sortedAndFilteredTerms =
             (searchText === ''
                 ? [...rawGlossaryTerms ?? []]
-                : rawGlossaryTerms?.filter(e => e.value?.match(regex))
+                : rawGlossaryTerms?.filter(e => searchTerms.some(t => e.value?.toLowerCase().includes(t)))
             )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
         return groupTerms(sortedAndFilteredTerms);
     }, [rawGlossaryTerms, filterTopic, filterSubject, searchText]);
@@ -330,6 +330,7 @@ export const Glossary = () => {
                     </Col>
                     <Col>
                         {terms.map(term => <IsaacGlossaryTerm
+                                key={term.id}
                                 ref={(el: HTMLElement) => {
                                     glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
                                 }}
