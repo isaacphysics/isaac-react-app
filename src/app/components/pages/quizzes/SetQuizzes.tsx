@@ -97,6 +97,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [currentSort, setCurrentSort] = useState(() => compareCreationDates);
     const [reverseSort, setReverseSort] = useState(false);
+    const [selectedCol, setSelectedCol] = useState<string | undefined>(undefined);
     const [markQuizAsCancelled, {isLoading: isCancelling}] = useCancelQuizAssignmentMutation();
     
     if (assignedGroups.length === 0) return <></>;
@@ -168,7 +169,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                 </RS.UncontrolledTooltip>
             </td>}
             <td className={classNames("set-quiz-table-title align-middle ", {"pl-4": isAda})}>{quizTitle}</td>
-            <td className="align-middle pr-0">
+            <td className="align-middle pr-0 d-none d-sm-table-cell">
                 <RS.Button className={`d-block h-4 ${below["sm"](deviceSize) ? "btn-sm" : ""}`}
                     onClick={(e) => {
                         assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary, isStaff(user)));
@@ -185,13 +186,17 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                 <RS.Table striped className="w-100 set-quiz-table-inner mb-1">
                     <thead>
                         <tr>
-                            {innerTableHeaders.map(header => <th key={header.title} onClick={() => setSort(header.sort)} className="px-1 py-1">
+                            {innerTableHeaders.map(header => <th key={header.title} onClick={() => {
+                                setSort(header.sort);
+                                setSelectedCol(header.title);
+                            }} className="px-1 py-1">
                                 <div className="d-flex flex-row">
                                     <span role="button" tabIndex={0} onKeyDown={ifKeyIsEnter(() => setSort(header.sort))} onClick={(e) => {
                                         e.stopPropagation();
                                         setSort(header.sort);
+                                        setSelectedCol(header.title);
                                     }}>{header.title}</span>
-                                    <ReverseSortButtons active={currentSort.name === header.sort.name} />
+                                    <ReverseSortButtons active={(selectedCol ?? "Creation date") === header.title && currentSort.name === header.sort.name} />
                                 </div>
                             </th>)}
                             <th className="px-1 py-1" colSpan={2}>Actions</th>
@@ -268,7 +273,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
         {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ml-2">visible to students</div>}
     </>;
 
-    const rowFiltersView = ((isPhy && above["sm"](deviceSize)) || (isAda && above["md"](deviceSize)));
+    const rowFiltersView = above["md"](deviceSize);
 
     const titleFilterInput = <RS.Row>
         <RS.Input
@@ -451,7 +456,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                     <colgroup>
                                         <col width={isPhy ? "90px" : isAda ? "120px" : "auto"}/>
                                         <col width={"auto"}/>
-                                        <col width={"160px"}/>
+                                        {below["xs"](deviceSize) ? <></> : below["lg"](deviceSize) ? <col width="90px"/> : <col width="160px"/>}
                                         <col width={"60px"}/>
                                     </colgroup>
                                     <tbody>
