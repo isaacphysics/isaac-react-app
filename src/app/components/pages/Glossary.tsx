@@ -308,7 +308,7 @@ export const Glossary = () => {
                         {isPhy && <Col className="mt-3 mt-md-0">
                             <Label for='stage-select' className='sr-only'>Stage</Label>
                             <StyledSelect inputId="stage-select"
-                                options={ stages.map(e => ({ value: e, label: stageLabelMap[e]})) }
+                                options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
                                 value={queryStages ? ({value: queryStages, label: stageLabelMap[queryStages]}) : undefined}
                                 name="stage-select"
                                 placeholder="Select a stage"
