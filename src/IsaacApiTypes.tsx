@@ -412,7 +412,7 @@ export interface FreeTextRuleDTO extends ChoiceDTO {
 export interface GlossaryTermDTO extends ContentDTO {
     explanation?: ContentDTO;
     examBoard?: EXAM_BOARD | "";
-    stage?: string[]
+    stages?: string[]
 }
 
 export interface CodeSnippetDTO extends ContentDTO {
