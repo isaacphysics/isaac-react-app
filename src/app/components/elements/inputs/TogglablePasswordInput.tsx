@@ -1,6 +1,6 @@
 import {Form, FormFeedback, FormGroup, Input, InputGroup, InputGroupAddon, Label} from "reactstrap";
 import React, {useState} from "react";
-import {passwordDebounce} from "../../../services";
+import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../../services";
 import {Immutable} from "immer";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 
@@ -17,6 +17,8 @@ export const TogglablePasswordInput = ({userToUpdate, setUserToUpdate, submissio
 
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
     const [showPassword, setShowPassword] = useState(false);
+
+    loadZxcvbnIfNotPresent();
 
     return <FormGroup>
         <Label className={"font-weight-bold"}>Password</Label>

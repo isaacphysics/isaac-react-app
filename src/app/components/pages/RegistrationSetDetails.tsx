@@ -27,7 +27,7 @@ import {CountryInput} from "../elements/inputs/CountryInput";
 import {TogglablePasswordInput} from "../elements/inputs/TogglablePasswordInput";
 import {USER_ROLES} from "../../../IsaacApiTypes";
 
-export const RegistrationTeacherDetails = () => {
+export const RegistrationSetDetails = () => {
     const dispatch = useAppDispatch();
 
     // todo: before, this was probably used to keep the details from the initial login screen (if any). Possibly still useful for SSO. Remove?
@@ -40,7 +40,7 @@ export const RegistrationTeacherDetails = () => {
             password: null,
             familyName: undefined,
             givenName: undefined,
-            role: USER_ROLES[2]
+            role: USER_ROLES[2]  // todo: not this
         })
     );
     const [tosAccepted, setTosAccepted] = useState(false);
@@ -63,6 +63,8 @@ export const RegistrationTeacherDetails = () => {
             // todo: this used to set the FIRST_LOGIN value in persistence. Was that important, or just to disentangle
             //  registration from login in the Redux action?
 
+            // todo: handle API-side validation errors (e.g. duplicate registration attempt)
+
             setAttemptedSignUp(true)
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(errorSlice.actions.clearError());
@@ -76,8 +78,6 @@ export const RegistrationTeacherDetails = () => {
             )
         }
     }
-
-    loadZxcvbnIfNotPresent();
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />

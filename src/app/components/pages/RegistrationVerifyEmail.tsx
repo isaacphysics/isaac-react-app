@@ -1,54 +1,127 @@
 import React, {useEffect, useState} from "react";
 import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
-import classNames from "classnames";
-import {selectors, useAppSelector} from "../../state";
+import {
+    errorSlice,
+    getRTKQueryErrorMessage,
+    selectors,
+    showErrorToast, useAppDispatch,
+    useAppSelector,
+    useRequestEmailVerificationMutation,
+    useVerifyEmailMutation
+} from "../../state";
+import {useQueryParams} from "../../services";
+import {Link} from "react-router-dom";
 
 
 export const RegistrationVerifyEmail = () => {
-    // todo: repeatedly check for verification status for current user
-    // todo: redirect away if either not logged in at all or fully logged-in
-
-    const [emailVerified, setEmailVerified] = useState(true);
+    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
+    const {userid: userIdFromParams, token: tokenFromParams} = useQueryParams(true);
+
+    const [sendVerificationEmail, {isUninitialized: verificationNotResent}] = useRequestEmailVerificationMutation();
+    const [verifyEmail, {isSuccess: userFromParamVerificationSucceeded, isError: userFromParamVerificationFailed, error: userFromParamVerificationErrored}] = useVerifyEmailMutation();
+    // Is the currently logged-in user the same user referenced in the query params?
+    const verifyingCurrentUser = user && user.loggedIn && (user.id === Number(userIdFromParams) || userIdFromParams == undefined);
+    const currentUserAlreadyVerified = user != null && user.loggedIn && (user.emailVerificationStatus === "VERIFIED");
+    const emailVerified = (currentUserAlreadyVerified || userFromParamVerificationSucceeded);
 
     useEffect(() => {
-        console.log(user);
-    }, [user])
+        if (!emailVerified && userIdFromParams && tokenFromParams) {
+            dispatch(errorSlice.actions.clearError());
+            verifyEmail({userid: userIdFromParams, token: tokenFromParams});
+        }
+    }, [verifyEmail, userIdFromParams, tokenFromParams, emailVerified, errorSlice])
+
+    const requestNewVerificationEmail = () => {
+        if (user?.loggedIn) {
+            if (!user?.email) {
+                dispatch(showErrorToast(
+                    "Email verification request failed.",
+                    "You are not logged in or don't have an e-mail address to verify."
+                ));
+            } else {
+                sendVerificationEmail({email: user?.email});
+            }
+        }
+    };
 
     return <Container className="text-center">
         <Card className="my-5">
             <CardBody>
                 <Row className="justify-content-center">
                     <Col>
-                        <h3>Verify your teacher account</h3>
+                        <h3>Verify your account</h3>
                     </Col>
                 </Row>
                 <Row className="justify-content-center">
                     <Col>
-                        <p>Check your email for a link to verify your account.</p>
-                    </Col>
-                </Row>
-                <Row className="justify-content-center">
-                    <Col className={classNames({"d-none": emailVerified})}>
-                        <img className="img-fluid mx-auto my-5" src={"/assets/cs/decor/verify_request.svg"} alt="" />
-                    </Col>
-                    <Col className={classNames({"d-none": !emailVerified})}>
-                        <img className="img-fluid mx-auto my-5" src={"/assets/cs/decor/verify_done.svg"} alt="" />
+                        {emailVerified ?
+                            userFromParamVerificationSucceeded ?
+                                <p>Account verified and created!</p>
+                                :
+                                <p>Your email is already verified.</p>
+                            :
+                            <p>Check your email for a link to verify your account.</p>
+                        }
                     </Col>
                 </Row>
                 <Row className="justify-content-center">
                     <Col>
-                        <a>Resend verification email</a>
+                        {emailVerified ?
+                            <img className="img-fluid mx-auto my-5" src={"/assets/cs/decor/verify_done.svg"} alt="" />
+                            :
+                            <img className="img-fluid mx-auto my-5" src={"/assets/cs/decor/verify_request.svg"} alt="" />
+                        }
                     </Col>
                 </Row>
-                <Row className={classNames({"d-none": !emailVerified}, "justify-content-center")}>
-                    <Col xs={3}>
-                        <Button outline color="secondary">My Account</Button>
-                    </Col>
-                    <Col xs={3}>
-                        <Button>Continue</Button>
-                    </Col>
-                </Row>
+                {!emailVerified &&
+                    <Row className="justify-content-center">
+                        {verifyingCurrentUser ?
+                            <p>
+                                {verificationNotResent ?
+                                    <Button onClick={requestNewVerificationEmail}>
+                                        Resend verification email
+                                    </Button>
+                                    :
+                                    "Verification email sent to " + (user && user.loggedIn && user.email)
+                                }
+                            </p>
+                            :
+                            <p>If you need a new verification email, please <Link to="/login">log in</Link> first.</p>
+                        }
+                    </Row>
+                }
+
+                {
+                    //todo: improve the presentation of these errors
+                }
+                {userFromParamVerificationFailed &&
+                    <Row className="justify-content-center">
+                        <Col>
+                            <p>Couldn&apos;t verify email address!</p>
+                            <p>{(!userIdFromParams || !tokenFromParams) && "This page received bad parameters."}</p>
+                            <p>{getRTKQueryErrorMessage(userFromParamVerificationErrored).message}</p>
+                        </Col>
+                    </Row>
+                }
+                {verifyingCurrentUser ?
+                    emailVerified &&
+                        <Row className="justify-content-center">
+                            <Col xs={3}>
+                                <Button outline color="secondary" tag={Link} to={"/account"}>My Account</Button>
+                            </Col>
+                            <Col xs={3}>
+                                <Button tag={Link} to={"/register/preferences"}>Continue</Button>
+                            </Col>
+                        </Row>
+                    :
+                    emailVerified &&
+                        <Row className="justify-content-center">
+                            <Col xs={3}>
+                                <p>Please <Link to="/login">log in</Link> to continue.</p>
+                            </Col>
+                        </Row>
+                }
             </CardBody>
         </Card>
     </Container>

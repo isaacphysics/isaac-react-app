@@ -342,9 +342,16 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         const result = await api.authentication.login(provider, credentials);
 
         if (result.status === 202) {
-            // indicates MFA is required for this user and user isn't logged in yet.
-            dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
-            return;
+            // We haven't been fully authenticated, some additional action is required
+            if (result.data.MFA_REQUIRED) {
+                // MFA is required for this user and user isn't logged in yet.
+                dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
+                return;
+            } else if (result.data.EMAIL_VERIFICATION_REQUIRED) {
+                // Email verification is required for this user
+                history.push("/register/verify")
+                return;
+            }
         }
         // Request user preferences, as we do in the requestCurrentUser action:
         await Promise.all([
