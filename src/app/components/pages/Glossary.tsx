@@ -312,7 +312,7 @@ export const Glossary = () => {
                                 value={queryStages ? ({value: queryStages, label: stageLabelMap[queryStages]}) : undefined}
                                 name="stage-select"
                                 placeholder="Select a stage"
-                                onChange={e => setFilterStage(stages.find(v => v === e?.value)) }
+                                onChange={e => setFilterStage(stages.find(s => s === e?.value)) }
                                 isClearable
                             />
                         </Col>}
