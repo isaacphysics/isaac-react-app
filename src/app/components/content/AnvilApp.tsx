@@ -3,6 +3,7 @@ import {AnvilAppDTO} from "../../../IsaacApiTypes";
 import {AppState, selectors, useAppSelector} from "../../state";
 import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
 import {selectQuestionPart} from "../../services";
+import { GenericAnvilCookieHandler } from '../handlers/InterstitialCookieHandler';
 
 interface AnvilAppProps {
     doc: AnvilAppDTO;
@@ -87,5 +88,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
         };
     }, [onMessage]);
 
-    return <iframe ref={iframeRef} src={iframeSrc} title={title} className="anvil-app"/>;
+    return <GenericAnvilCookieHandler afterAcceptedElement={
+        <iframe ref={iframeRef} src={iframeSrc} title={title} className="anvil-app"/>
+    } />;
 };

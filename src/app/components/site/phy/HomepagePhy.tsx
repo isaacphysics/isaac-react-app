@@ -5,6 +5,7 @@ import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {above, SITE_TITLE, useDeviceSize} from "../../../services";
 import {WarningBanner} from "../../navigation/WarningBanner";
+import { HomepageYoutubeCookieHandler } from "../../handlers/InterstitialCookieHandler";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
@@ -44,13 +45,9 @@ export const HomepagePhy = () => {
                                     </Button>
                                 </Col>
                             </Row>}
-                            <div className={`h-100 pl-lg-4 ${user?.loggedIn ? "pt-1 pt-sm-2 pt-lg-5" : "pt-4 pt-lg-3"}`}>
-                                <div className="yt-video-container">
-                                    <iframe
-                                        title="Isaac Physics introduction video"
-                                        src="https://www.youtube-nocookie.com/embed/kWA2AISiHXQ?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
-                                        frameBorder="0" allowFullScreen className="mw-100"
-                                    />
+                            <div className={`h-100 pl-lg-4 ${user?.loggedIn ? "pt-1 pt-sm-2 pt-lg-2" : "pt-4 pt-lg-3"}`}>
+                                <div className="yt-video-container p-0 w-100 h-100">
+                                    <HomepageYoutubeCookieHandler />
                                 </div>
                             </div>
                         </Col>
