@@ -1,0 +1,45 @@
+@import "../common/glossary";
+
+.biology {
+    .select__control {
+        background-color: $phy_biology !important;
+    }
+
+    .select__single-value {
+        color: #fff;
+    }
+}
+
+.chemistry {
+    .select__control {
+        background-color: $phy_chemistry !important;
+        color: white;
+    }
+
+    .select__single-value {
+        color: #fff;
+    }
+}
+
+.maths {
+    .select__control {
+        background-color: $phy_maths !important;
+        color: white;
+    }
+
+    .select__single-value {
+        color: #fff;
+    }
+}
+
+.physics {
+    .select__control {
+        background-color: $phy_physics !important;
+        color: white;
+    }
+
+    .select__single-value {
+        color: #fff;
+    }
+}
+

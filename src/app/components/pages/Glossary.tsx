@@ -23,6 +23,7 @@ import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { useHistory, useLocation } from "react-router";
+import Select from "react-select";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -286,13 +287,15 @@ export const Glossary = () => {
                         </Col>}
                         {isPhy && <Col className="mt-3 mt-md-0">
                             <Label for='subject-select' className='sr-only'>Subject</Label>
-                            <StyledSelect inputId="subject-select"
+                            <Select inputId="subject-select"
                                 options={ subjects.map(e => ({ value: e.id, label: e.title})) }
                                 value={({value: querySubjects?.id, label: querySubjects?.title })}
                                 name="subject-select"
                                 placeholder="Select a subject"
                                 onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                 isClearable
+                                className={`basic-multi-select ${filterSubject?.id ?? ""}`}
+                                classNamePrefix="select"
                             />
                         </Col>}
                     </Row>
