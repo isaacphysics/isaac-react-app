@@ -5,7 +5,7 @@ export const searchList: SearchShortcut[] = [
     {
         id: "assignments",
         title: "My assignments",
-        terms: ["my assignments", "assignments", "homework", "hw", "my assignment", "assign", "my isaac"],
+        terms: ["my assignments", "assignments", "assignment", "homework", "hw", "my assignment", "assign", "my isaac", ...(siteSpecific(["quiz", "quizzes"], []))],
         summary: "View your assignments.",
         url: "/assignments",
         type: SEARCH_RESULT_TYPE.SHORTCUT
@@ -62,6 +62,34 @@ export const searchList: SearchShortcut[] = [
             "preferences", "my isaac", "my ada"],
         summary: "Click here to view and edit your account details.",
         url: "/account",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "glossary",
+        title: "Glossary",
+        terms: ["glossary"],
+        summary: "View the definitions of technical terms used on the site.",
+        url: "/glossary",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "question_finder",
+        title: "Question finder",
+        terms: ["question finder", "questions", "question search"],
+        summary: "Search for questions on the site.",
+        url: siteSpecific("/gameboards/new", "/quizzes/new"),
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "a_level",
+        title: "A Level Resources",
+        terms: ["a level", "alevel", "a-level", "pre uni", "pre-uni"],
+        summary: "Resources for A Level or equivalent.",
+        url: siteSpecific("/alevel", "/topics#a_level"),
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "my_progress",
+        title: "My progress",
+        terms: ["progress", "my progress", siteSpecific("my isaac", "my ada")],
+        summary: `View your progress in ${SITE_TITLE}.`,
+        url: "/progress",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }
 ];
@@ -148,10 +176,73 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         url: "/support/student/questions",
         hash: "answers",
         type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "my_gameboards",
+        title: "My Gameboards",
+        terms: ["gameboards", "gameboard", "my gameboards"],
+        summary: "View your saved gameboards.",
+        url: "/my_gameboards",
+        hash: "my_gameboards",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "events",
+        title: "Events",
+        terms: ["events", "classes"],
+        summary: "Our events for students and teachers.",
+        url: "/events",
+        hash: "events",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "essential_pre_uni_physics",
+        title: "Mastering Essential Pre-University Physics",
+        terms: ["essential pre-uni physics", "essential pre uni physics", "pre-uni physics", "pre uni physics"],
+        summary: "The online version of our pre-uni physics book.",
+        url: "/books/physics_skills_19",
+        hash: "essential_pre_uni_physics",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "essential_gcse_physics",
+        title: "Mastering Essential GCSE Physics",
+        terms: ["essential gcse physics", "gcse physics"],
+        summary: "The online version of our GCSE physics book.",
+        url: "/books/phys_book_gcse",
+        hash: "essential_gcse_physics",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "senior_physics_challenge",
+        title: "Senior Physics Challenge (SPC)",
+        terms: ["senior physics challenge", "spc"],
+        summary: "The Senior Physics Challenge summer school.",
+        url: "/pages/spc",
+        hash: "senior_physics_challenge",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "essential_books",
+        title: "Order Isaac Books",
+        terms: ["essential", "books", "isaac books"],
+        summary: "Including the Essential series workbooks.",
+        url: "/pages/order_books",
+        hash: "essential_books",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "quantum_primer",
+        title: "Quantum Mechanics Primer",
+        terms: ["quantum mechanics primer", "quantum primer"],
+        summary: "Interactive questions from a first-year uni introduction.",
+        url: "/books/quantum_mechanics_primer",
+        hash: "quantum_primer",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
     }],
-    [
-        // Ada:
-    ]
+    // Ada:
+    [{
+        id: "quiz",
+        title: "My quizzes",
+        terms: ["quiz", "quizzes"],
+        summary: "View the quizzes that you have made.",
+        url: "/quizzes",
+        hash: "quizzes",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }]
 );
 searchList.push(...siteShortcuts);
 
