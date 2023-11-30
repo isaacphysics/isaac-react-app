@@ -7,7 +7,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
-import {GlossaryTermDTO} from "../../../IsaacApiTypes";
+import {GlossaryTermDTO, Stage} from "../../../IsaacApiTypes";
 import {
     isAda,
     isPhy,
@@ -18,6 +18,8 @@ import {
     TAG_ID,
     tags,
     useUrlHashValue,
+    stagesOrdered,
+    stageLabelMap,
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
@@ -77,20 +79,22 @@ function arrayFromPossibleCsv(queryParamValue: string[] | string | null | undefi
 function tagByValue(values: string[], tags: Tag[]) {
     return tags.filter(option => values.includes(option.id)).at(0);
 }
+function stageByValue(values: string[], tags: Stage[]) {
+    return tags.filter(option => values.includes(option)).at(0);
+}
 
 interface QueryStringResponse {
-    queryStages: Tag | undefined;
+    queryStages: Stage | undefined;
     querySubjects: Tag | undefined;
 }
 function processQueryString(query: string): QueryStringResponse {
     const {subjects, stages} = queryString.parse(query);
 
     const subjectItems = tagByValue(arrayFromPossibleCsv(subjects as Nullable<string[] | string>), tags.allSubjectTags);
-    // FIXME: either make a centralised stage tag list or change the response interface
-//    const stageItems = tagByValue(arrayFromPossibleCsv(stages as Nullable<string[] | string>), getFilteredStageOptions());
+    const stageItems = stageByValue(arrayFromPossibleCsv(stages as Nullable<string[] | string>), stagesOrdered.slice(0,-1));
 
     return {
-        queryStages: undefined, querySubjects: subjectItems
+        queryStages: stageItems, querySubjects: subjectItems
     };
 }
 
@@ -106,7 +110,9 @@ export const Glossary = () => {
     const [searchText, setSearchText] = useState("");
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const subjects = tags.allSubjectTags.sort((a,b) => a.title.localeCompare(b.title));
+    const stages: Stage[] = stagesOrdered.slice(0,-1);
     const [filterSubject, setFilterSubject] = useState<Tag | undefined>(querySubjects);
+    const [filterStage, setFilterStage] = useState<Stage | undefined>(queryStages);
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useAppSelector(
         (state: AppState) => state && state.glossaryTerms?.map(
@@ -123,8 +129,9 @@ export const Glossary = () => {
     useEffect(() => {
         const params: {[key: string]: string} = {};
         if (filterSubject) params.subjects = filterSubject.id;
+        if (filterStage) params.stages = filterStage;
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state, hash: location.hash});
-    }, [filterSubject]);
+    }, [filterSubject, filterStage]);
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } | undefined {
@@ -133,8 +140,11 @@ export const Glossary = () => {
                 for (const term of sortedTerms) {
                     // Only show physics glossary terms when a subject has been selected
                     if (isPhy && !isDefined(filterSubject)) continue;
+
                     if (isAda && isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
                     if (isPhy && isDefined(filterSubject) && !term.tags?.includes(filterSubject.id)) continue;
+                    if (isPhy && isDefined(filterStage) && !term.stages?.includes(filterStage)) continue;
+
                     const value = term?.value?.[0] ?? '#';
                     const k = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.includes(value) ? value : '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
@@ -151,7 +161,7 @@ export const Glossary = () => {
                 : rawGlossaryTerms?.filter(e => searchTerms.some(t => e.value?.toLowerCase().includes(t)))
             )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
         return groupTerms(sortedAndFilteredTerms);
-    }, [rawGlossaryTerms, filterTopic, filterSubject, searchText]);
+    }, [rawGlossaryTerms, filterTopic, filterSubject, filterStage, searchText]);
 
     /* Stores a reference to each glossary term component (specifically their inner paragraph tags) */
     const glossaryTermRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());
@@ -164,7 +174,6 @@ export const Glossary = () => {
         const el = glossaryTermRefs.current?.get(hash);
         if (isDefined(el)) scrollVerticallyIntoView(el, ALPHABET_HEADER_OFFSET);
     }, [hash]);
-
 
     /* Stores a reference to each alphabet header (to the h2 element) - these are the headers alongside the glossary
      * terms, NOT the letters that exist in the clickable sticky header (or the other non-sticky one)
@@ -267,6 +276,17 @@ export const Glossary = () => {
             <Row>
                 <Col md={{size: 9}} className="py-4">
                     <Row className="no-print">
+                        {isPhy && <Col className="mt-3 mt-md-0">
+                            <Label for='subject-select' className='sr-only'>Subject</Label>
+                            <StyledSelect inputId="subject-select"
+                                options={ subjects.map(e => ({ value: e.id, label: e.title})) }
+                                value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title }) : undefined}
+                                name="subject-select"
+                                placeholder="Select a subject"
+                                onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
+                                isClearable
+                            />
+                        </Col>}
                         <Col md={{size: 4}}>
                             <Label for='terms-search' className='sr-only'>Search by term</Label>
                             <Input
@@ -277,7 +297,7 @@ export const Glossary = () => {
                         {isAda && <Col className="mt-3 mt-md-0">
                             <Label for='topic-select' className='sr-only'>Topic</Label>
                             <StyledSelect inputId="topic-select"
-                                options={ topics.map(e => ({ value: e.id, label: e.title})) }
+                                options={ topics.map(e => ({ value: e.id, label: e.title}))}
                                 name="topic-select"
                                 placeholder="All topics"
                                 onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
@@ -285,13 +305,13 @@ export const Glossary = () => {
                             />
                         </Col>}
                         {isPhy && <Col className="mt-3 mt-md-0">
-                            <Label for='subject-select' className='sr-only'>Subject</Label>
-                            <StyledSelect inputId="subject-select"
-                                options={ subjects.map(e => ({ value: e.id, label: e.title})) }
-                                value={({value: querySubjects?.id, label: querySubjects?.title })}
-                                name="subject-select"
-                                placeholder="Select a subject"
-                                onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
+                            <Label for='stage-select' className='sr-only'>Stage</Label>
+                            <StyledSelect inputId="stage-select"
+                                options={ stages.map(e => ({ value: e, label: stageLabelMap[e]})) }
+                                value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
+                                name="stage-select"
+                                placeholder="Select a stage"
+                                onChange={e => setFilterStage(stages.find(s => s === e?.value))}
                                 isClearable
                             />
                         </Col>}
