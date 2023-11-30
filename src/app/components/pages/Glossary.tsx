@@ -175,7 +175,6 @@ export const Glossary = () => {
         if (isDefined(el)) scrollVerticallyIntoView(el, ALPHABET_HEADER_OFFSET);
     }, [hash]);
 
-
     /* Stores a reference to each alphabet header (to the h2 element) - these are the headers alongside the glossary
      * terms, NOT the letters that exist in the clickable sticky header (or the other non-sticky one)
      */
@@ -298,7 +297,7 @@ export const Glossary = () => {
                         {isAda && <Col className="mt-3 mt-md-0">
                             <Label for='topic-select' className='sr-only'>Topic</Label>
                             <StyledSelect inputId="topic-select"
-                                options={ topics.map(e => ({ value: e.id, label: e.title})) }
+                                options={ topics.map(e => ({ value: e.id, label: e.title}))}
                                 name="topic-select"
                                 placeholder="All topics"
                                 onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
@@ -312,7 +311,7 @@ export const Glossary = () => {
                                 value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
                                 name="stage-select"
                                 placeholder="Select a stage"
-                                onChange={e => setFilterStage(stages.find(s => s === e?.value)) }
+                                onChange={e => setFilterStage(stages.find(s => s === e?.value))}
                                 isClearable
                             />
                         </Col>}
