@@ -78,17 +78,17 @@ export const GenericYoutubeCookieHandler = ({afterAcceptedElement} : {afterAccep
 export const GenericAnvilCookieHandler = ({afterAcceptedElement} : {afterAcceptedElement: JSX.Element}) => {
     const [accepted, setAccepted] = React.useState(isCookieSet(ANVIL_COOKIE));
 
-    console.log(accepted);
-
     return <InterstitialCookieHandler
         accepted={accepted}
         beforeAccepted={<div className="interstitial-cookie-page">
             <h3>Allow Anvil content?</h3>
             {anvilCookieText}
-            <Button onClick={() => {
-                setCookie(ANVIL_COOKIE);
-                setAccepted(true);
-            }}>Accept</Button>
+            <div className="w-100 d-flex justify-content-center">
+                <Button onClick={() => {
+                    setCookie(ANVIL_COOKIE);
+                    setAccepted(true);
+                }}>Accept</Button>
+            </div>
         </div>}
         afterAccepted={<>{afterAcceptedElement}</>}
     />;
