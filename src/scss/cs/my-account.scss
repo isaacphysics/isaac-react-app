@@ -1,10 +1,12 @@
 @import "../common/my-account";
 
+.linked-account-button-outer {
+  border: 3px $cs-cultured solid;
+  border-radius: 10px;
+}
+
 .linked-account-button {
   &.rpf-button {
-    border: 1px $cs-cultured solid;
-    border-bottom: 2px $cs-cultured solid;
-    border-radius: 5px;
     padding: 5px;
     background: url("/assets/logos/raspberry-pi.png") center no-repeat content-box;
     background-size: contain !important;

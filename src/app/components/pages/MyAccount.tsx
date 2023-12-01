@@ -1,4 +1,4 @@
-import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState, Suspense, lazy} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import classNames from "classnames";
@@ -46,6 +46,7 @@ import {
     isAda,
     isDefined,
     isDobOldEnoughForSite,
+    isPhy,
     isStaff,
     SITE_TITLE, siteSpecific,
     validateEmail,
@@ -57,10 +58,10 @@ import {Link, withRouter} from "react-router-dom";
 import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {Loading} from "../handlers/IsaacSpinner";
 import {UserBetaFeatures} from "../elements/panels/UserBetaFeatures";
 import hash, {NormalOption} from "object-hash";
 import {skipToken} from "@reduxjs/toolkit/query";
+import { Loading } from "../handlers/IsaacSpinner";
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -153,7 +154,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     const [currentPassword, setCurrentPassword] = useState("");
 
     // - User preferences
-    const [emailPreferences, setEmailPreferences] = useEmailPreferenceState();
+    const [emailPreferences, setEmailPreferences] = useEmailPreferenceState(userPreferences?.EMAIL_PREFERENCE);
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO | null | undefined>({});
     const emailPreferencesChanged = useMemo(() => !hashEqual(userPreferences?.EMAIL_PREFERENCE ?? {}, emailPreferences ?? myUserPreferences?.EMAIL_PREFERENCE ?? {}), [emailPreferences, myUserPreferences, userPreferences]);
     const otherPreferencesChanged = useMemo(() => !hashEqual(userPreferences ?? {}, myUserPreferences ?? {}, {excludeKeys: k => k === "EMAIL_PREFERENCE"}), [myUserPreferences, userPreferences]);
@@ -339,16 +340,6 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                     isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
-                                {isStaff(user) && !editingOtherUser &&
-                                    // Currently staff only
-                                    <Suspense fallback={<Loading/>}>
-                                        <UserMFA
-                                            userAuthSettings={userAuthSettings}
-                                            userToUpdate={userToUpdate}
-                                            editingOtherUser={editingOtherUser}
-                                        />
-                                    </Suspense>
-                                }
                             </TabPane>
 
                             <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
@@ -375,14 +366,24 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                         {error.generalError}
                                     </h3>}
                                     {/* Teacher connections does not have a save */}
-                                    <Input
+                                    {isPhy && <Input
                                         type="submit" value="Save" className="btn btn-block btn-secondary border-0"
                                         disabled={!accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections}
-                                    />
+                                    />}
                                 </Col>
                             </Row>
                         </CardFooter>
                     </Form>
+                    {activeTab === ACCOUNT_TAB.passwordreset && isStaff(userToUpdate) && !editingOtherUser &&
+                        // Currently staff only. This is outside the main Form as they cannot be nested.
+                        <Suspense fallback={<Loading/>}>
+                            <UserMFA
+                                userAuthSettings={userAuthSettings}
+                                userToUpdate={userToUpdate}
+                                editingOtherUser={editingOtherUser}
+                            />
+                        </Suspense>
+                    }
                 </Card>
             }
         </ShowLoading>

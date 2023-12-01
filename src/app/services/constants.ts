@@ -4,6 +4,7 @@ import {Remarkable} from "remarkable";
 import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {
+    AuthenticationProvider,
     BookingStatus,
     ContentDTO,
     Difficulty,
@@ -951,4 +952,7 @@ export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "TEST": "Test",
     "SEGUE": "your email address and password"
 };
+
+export const AUTHENTICATOR_PROVIDERS : AuthenticationProvider[] = siteSpecific(["GOOGLE"], ["RASPBERRYPI", "GOOGLE"]);
+
 export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023
