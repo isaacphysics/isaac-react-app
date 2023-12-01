@@ -7,7 +7,6 @@ import {
 } from "isaac-graph-sketcher";
 import debounce from "lodash/debounce";
 import {IsaacGraphSketcherQuestionDTO} from "../../../../IsaacApiTypes";
-import {Markup} from "../markup";
 import {calculateHexagonProportions, Hexagon} from "../svg/Hexagon";
 import classNames from "classnames";
 import {
@@ -18,7 +17,7 @@ import {
     useGenerateAnswerSpecificationMutation
 } from "../../../state";
 import {PageFragment} from "../PageFragment";
-import {above, isStaff, useDeviceSize} from "../../../services";
+import {above, isStaff, useDeviceSize, useDeviceHeight} from "../../../services";
 import {Immutable} from "immer";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
@@ -33,13 +32,14 @@ interface GraphSketcherModalProps {
 }
 
 const GraphSketcherModal = (props: GraphSketcherModalProps) => {
-    const { onGraphSketcherStateChange, close, initialState, user } = props;
+    const { onGraphSketcherStateChange, close, initialState, user, question } = props;
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
 
     const [generateGraphSpec, {data: graphSpec}] = useGenerateAnswerSpecificationMutation();
     const [debugSketch, setDebugSketch] = useState<boolean>(false);
     const debugModeEnabled = isStaff(user) && debugSketch;
+    const [showSlop, setShowSlop] = useState<boolean>(false);
 
     const [modalSketch, setModalSketch] = useState<GraphSketcher | undefined | null>();
     const graphSketcherContainer = useRef<HTMLDivElement>(null);
@@ -55,7 +55,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     const generateSpecFromStateIfDebug = useCallback((state?: GraphSketcherState) => {
         if (state && debugModeEnabled) {
-            generateGraphSpec({type: 'graphChoice', value: JSON.stringify(state)});
+            generateGraphSpec({type: 'graphChoice', value: JSON.stringify(GraphSketcher.toExternalState(state))});
         }
     }, [user, debugModeEnabled, generateGraphSpec]);
 
@@ -74,7 +74,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     // Setup and teardown of the graph sketcher p5 instance
     useEffect(function setupOfGraphSketcherP5Instance() {
-        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions: isStaff(user) });
+        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions: isStaff(user), axisLabelX: question?.axisLabelX, axisLabelY: question?.axisLabelY });
 
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
@@ -108,6 +108,10 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
         }
     }, [modalSketch, lineType]);
 
+    useEffect(() => {
+        modalSketch?.setSlopVisible(showSlop);
+    }, [modalSketch, showSlop]);
+
     const toggleDebugMode = () => {
         setDebugSketch(db => !db);
     };
@@ -125,7 +129,8 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const redo = () => modalSketch?.redo();
 
     const deviceSize = useDeviceSize();
-    const hexagonSize = above['sm'](deviceSize) ? 74 : 48;
+    const deviceHeight = useDeviceHeight();
+    const hexagonSize = above['sm'](deviceSize) && above['sm'](deviceHeight) ? 74 : 48;
     const colourHexagon = calculateHexagonProportions(hexagonSize/4, 3);
 
     const copySpecificationToClipboard = useCallback(() => {
@@ -169,6 +174,9 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                     </>
                     : "Please update the graph to generate a specification."
                 }
+                <br/><br/>
+                <input type="checkbox" id="graph-sketcher-ui-show-slop" tabIndex={0} checked={showSlop} onChange={() => setShowSlop(s => !s)} />
+                <label htmlFor="graph-sketcher-ui-show-slop" className="ml-2">Show slop</label>
             </code>}
 
             <input className={"d-none"} id="graph-sketcher-ui-color-select" value={drawingColorName} readOnly />

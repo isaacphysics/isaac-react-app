@@ -120,6 +120,8 @@ export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
+    axisLabelX?: string;
+    axisLabelY?: string;
 }
 
 export interface IsaacItemQuestionDTO extends QuestionDTO {
@@ -410,6 +412,7 @@ export interface FreeTextRuleDTO extends ChoiceDTO {
 export interface GlossaryTermDTO extends ContentDTO {
     explanation?: ContentDTO;
     examBoard?: EXAM_BOARD | "";
+    stages?: string[]
 }
 
 export interface CodeSnippetDTO extends ContentDTO {

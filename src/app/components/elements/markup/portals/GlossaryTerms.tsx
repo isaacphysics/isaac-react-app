@@ -17,7 +17,7 @@ const GlossaryTerm = ({term, id, rootElement}: {term: GlossaryTermDTO, id: strin
         );
     }
     return null;
-}
+};
 
 function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
     if (candidateTerms.length === 0) {
@@ -49,6 +49,7 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
     for (let i = 0; i < termElements.length; i++) {
         const termId = termElements[i].id.slice(14); // Remove "glossary-term-" prefix
         const term = getTermFromCandidateTerms(glossaryTerms.filter(term => term.id?.replace(/\|/g, '-') === termId));
+        const titled = termElements[i].hasAttribute("data-titled");
 
         if (term) {
             const uniqueId = `${termId}-${componentUuid}-${i}`;
@@ -65,7 +66,10 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
                 tooltips.push(
                     <UncontrolledTooltip key={uniqueId} placement="bottom" target={uniqueId}>
                         <Markup trusted-markup-encoding={"markdown"}>
-                            {term.explanation?.value}
+                            {titled ?
+                                "**" + term.value + "**: " + term.explanation?.value :
+                                term.explanation?.value
+                            }
                         </Markup>
                     </UncontrolledTooltip>
                 );
@@ -81,4 +85,4 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
         htmlDom.innerHTML,
         (ref?: HTMLElement) => ref ? [...tooltips, ...fullTermContainers.map(({id, term}) => <GlossaryTerm key={id} id={id} term={term} rootElement={ref}/>)] : tooltips
     ];
-}
+};

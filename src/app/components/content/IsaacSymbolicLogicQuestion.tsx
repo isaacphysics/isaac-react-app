@@ -48,10 +48,10 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-const symbolicLogicQuestionValidator = (input: string) => {
+export const symbolicLogicInputValidator = (input: string) => {
     const openBracketsCount = input.split('(').length - 1;
     const closeBracketsCount = input.split(')').length - 1;
-    const regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+";
+    const regexStr = "[^ A-Za-z&|01()~¬∧∨^⊻+.!=]+";
     const badCharacters = new RegExp(regexStr);
 
     const errors = [];
@@ -213,7 +213,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             {modalVisible && <InequalityModal
                 close={closeModalAndReturnToScrollPosition}
                 onEditorStateChange={(state: any) => {
-                    dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
+                    dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" });
                     initialEditorSymbols.current = state.symbols;
                 }}
                 availableSymbols={doc.availableSymbols}
@@ -244,7 +244,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                         </UncontrolledTooltip>
                     </InputGroupAddon>
                 </InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={symbolicLogicQuestionValidator} />
+                <QuestionInputValidation userInput={textInput} validator={symbolicLogicInputValidator} />
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}

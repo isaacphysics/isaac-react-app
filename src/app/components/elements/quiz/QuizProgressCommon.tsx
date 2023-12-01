@@ -1,18 +1,11 @@
-import React, {useContext, useState} from "react";
-import {closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation} from "../../../state";
+import React, {ComponentProps, useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
-import {
-    ContentBaseDTO,
-    IsaacQuizDTO,
-    IsaacQuizSectionDTO,
-    Mark,
-    QuizAssignmentDTO,
-    QuizUserFeedbackDTO
-} from "../../../../IsaacApiTypes";
-import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
-import {isDefined, isQuestion, QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP, siteSpecific} from "../../../services";
-import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {AppAssignmentProgress, AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
+import {siteSpecific} from "../../../services";
 import {Link} from "react-router-dom";
+import orderBy from "lodash/orderBy";
+import { IsaacSpinner } from "../../handlers/IsaacSpinner";
+import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation } from "../../../state";
 
 export const ICON = siteSpecific(
     {
@@ -27,52 +20,7 @@ export const ICON = siteSpecific(
     }
 );
 
-interface ResultsTableProps {
-    assignment: QuizAssignmentDTO;
-}
-
-interface ResultRowProps {
-    row: QuizUserFeedbackDTO;
-    assignment: QuizAssignmentDTO;
-}
-
-export function questionsInSection(section?: IsaacQuizSectionDTO) {
-    return section?.children?.filter(isQuestion) || [];
-}
-
-export function questionsInQuiz(quiz?: IsaacQuizDTO) {
-    const questions: ContentBaseDTO[] = []
-    quiz?.children?.forEach(
-        section => {
-            questions.push(...questionsInSection(section))
-        }
-    )
-    return questions;
-}
-
 export const passMark = 0.75;
-
-export function markQuestionClasses(row: QuizUserFeedbackDTO, mark: Mark | undefined, totalOrUndefined: number | undefined) {
-    if (!row.user?.authorisedFullAccess) {
-        return "revoked";
-    }
-
-    const correct = mark?.correct as number;
-    const incorrect = mark?.incorrect as number;
-    const total = totalOrUndefined as number;
-
-    if (correct === total) {
-        return "completed";
-    } else if ((correct / total) >= passMark) {
-        return "passed";
-    } else if ((incorrect / total) > (1 - passMark)) {
-        return "failed";
-    } else if (correct > 0 || incorrect > 0) {
-        return "in-progress";
-    } else {
-        return "not-attempted";
-    }
-}
 
 export function formatMark(numerator: number, denominator: number, formatAsPercentage: boolean) {
     let result;
@@ -84,17 +32,40 @@ export function formatMark(numerator: number, denominator: number, formatAsPerce
     return result;
 }
 
-export function ResultRow({row, assignment}: ResultRowProps) {
-    const dispatch = useAppDispatch();
+export interface QuestionType {
+    id?: string | undefined;
+    title?: string | undefined;
+    questionPartsTotal?: number | undefined;
+}
+
+export interface ResultsTableProps<Q extends QuestionType> {
+    assignmentId?: number;
+    progress?: AppAssignmentProgress[];
+    questions: Q[];
+    header: JSX.Element;
+    getQuestionTitle: (question: Q) => JSX.Element;
+    assignmentAverages: number[];
+    assignmentTotalQuestionParts: number;
+    markClasses: (row: AppAssignmentProgress, assignmentTotalQuestionParts: number) => string;
+    markQuestionClasses: (row: AppAssignmentProgress, questionIndex: number) => string;
+    isQuiz?: boolean;
+}
+
+export function ResultsTable<Q extends QuestionType>({assignmentId, progress, questions, header, getQuestionTitle, assignmentAverages, assignmentTotalQuestionParts, markClasses, markQuestionClasses, isQuiz} : ResultsTableProps<Q>) {
+    const [selectedQuestionNumber, setSelectedQuestionNumber] = useState(0);
+    const selectedQuestion: Q = questions[selectedQuestionNumber];
+
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const toggle = () => setDropdownOpen(prevState => !prevState);
+    const dispatch = useAppDispatch();
+
+    const [dropdownOpen, setDropdownOpen] = useState(progress?.map(() => false));
+    const toggle = (index: number) => setDropdownOpen(dropdownOpen?.map((value, i) => i === index ? !value : value));
 
     const [returnQuizToStudent, {isLoading: returningQuizToStudent}] = useReturnQuizToStudentMutation();
-    const returnToStudent = () => {
+    const returnToStudent = (userId?: number) => {
         const confirm = () => {
-            returnQuizToStudent({quizAssignmentId: assignment.id as number, userId: row.user?.id as number})
+            returnQuizToStudent({quizAssignmentId: assignmentId as number, userId: userId as number})
                 .then(() => dispatch(closeActiveModal()));
         };
         dispatch(openActiveModal({
@@ -112,95 +83,201 @@ export function ResultRow({row, assignment}: ResultRowProps) {
         }));
     };
 
-    const quiz = assignment?.quiz;
-    const sections: IsaacQuizSectionDTO[] = quiz?.children || [];
-
-    let message;
-    if (!row.user?.authorisedFullAccess) {
-        message = "Not sharing";
-    } else if (!row.feedback?.complete) {
-        message = "Not completed";
+    type SortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
+    const [sortOrder, setSortOrder] = useState<SortOrder>("name");
+    const [reverseOrder, setReverseOrder] = useState(false);
+    
+    function isSelected(q: Q) {
+        return q == selectedQuestion ? "selected" : "";
     }
-    const authorisedAccessAndComplete = message === undefined;
 
-    const viewAnswersLink = `/test/attempt/feedback/${assignment?.id}/${row.user?.id}`;
-    const canViewQuizAnswers = isDefined(assignment?.creationDate) && (assignment?.creationDate?.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP);
+    function sortClasses(q: SortOrder) {
+        if (q == sortOrder) {
+            return "sorted" + (reverseOrder ? " reverse" : " forward");
+        } else {
+            return "";
+        }
+    }
 
-    return <tr className={`${row.user?.authorisedFullAccess ? "" : " not-authorised"}`} title={`${row.user?.givenName} ${row.user?.familyName}`}>
-        <td className="student-name">
-            {authorisedAccessAndComplete ?
-                <>
-                    <Button className="quiz-student-menu" color="link" onClick={toggle} disabled={returningQuizToStudent}>
-                        <div
-                            className="quiz-student-name"
-                        >
-                            {row.user?.givenName}
-                            <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
-                        </div>
-                        <div className="quiz-student-menu-icon">
-                            {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
-                        </div>
-                    </Button>
-                    {!returningQuizToStudent && dropdownOpen && <>
-                        <div className="py-2 px-3">
-                            <Button size="sm" onClick={returnToStudent}>Allow another attempt</Button>
-                        </div>
-                        {canViewQuizAnswers && <div className="py-2 px-3">
-                            <Button size="sm" tag={Link} to={viewAnswersLink}>View answers</Button>
-                        </div>}
-                    </>}
-                </>
-            :   <>
-                    {row.user?.givenName}
-                    <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
-                </>
+    function toggleSort(itemOrder: SortOrder) {
+        setSortOrder(itemOrder);
+        if (sortOrder == itemOrder) {
+            setReverseOrder(!reverseOrder);
+        } else {
+            setReverseOrder(false);
+        }
+    }
+
+    function sortItem(props: ComponentProps<"th"> & {itemOrder: SortOrder}) {
+        const {itemOrder, ...rest} = props;
+        const className = (props.className || "") + " " + sortClasses(itemOrder);
+        const clickToSelect = typeof itemOrder === "number" ? (() => setSelectedQuestionNumber(itemOrder)) : undefined;
+        const sortArrows = (typeof itemOrder !== "number" || itemOrder === selectedQuestionNumber) ?
+            <button className="sort" onClick={() => {toggleSort(itemOrder);}}>
+                <span className="up" >▲</span>
+                <span className="down">▼</span>
+            </button>
+            : undefined;
+        return <th key={props.key} {...rest} className={className} onClick={clickToSelect}>{props.children}{sortArrows}</th>;
+    }
+
+    const semiSortedProgress = useMemo(() => orderBy(progress, (item) => {
+        return item.user.authorisedFullAccess && -item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
+    }, [reverseOrder ? "desc" : "asc"]), [progress, reverseOrder]);
+
+    const sortedProgress = useMemo(() => orderBy((semiSortedProgress), (item) => {
+            switch (sortOrder) {
+                case "name":
+                    return (item.user.familyName + ", " + item.user.givenName).toLowerCase();
+                case "totalQuestionPartPercentage":
+                    return -item.correctQuestionPartsCount;
+                case "totalQuestionPercentage":
+                    return -item.tickCount;
+                default:
+                    return -item.correctPartResults[sortOrder];
             }
-        </td>
-        {!authorisedAccessAndComplete && <td colSpan={sections.map(questionsInSection).flat().length + 1}>{message}</td>}
-        {authorisedAccessAndComplete && <>
-            {sections.map(section => {
-                const mark = row.feedback?.sectionMarks?.[section.id as string];
-                const outOf = quiz?.sectionTotals?.[section.id as string];
-                return questionsInSection(section).map(question => {
-                    const questionMark = row.feedback?.questionMarks?.[question.id as string] || {} as Mark;
-                    const icon =
-                        questionMark.correct === 1 ? ICON.correct :
-                        questionMark.incorrect === 1 ? ICON.incorrect :
-                        /* default */ ICON.notAttempted;
-                    return <td key={question.id} className={markQuestionClasses(row, mark, outOf)}>
-                        {icon}
-                    </td>
-                }).flat()
-            })}
-            <th className="total-column">
-                {formatMark(row.feedback?.overallMark?.correct as number, quiz?.total as number, pageSettings.formatAsPercentage)}
-            </th>
-        </>}
-    </tr>;
-}
+        }, [reverseOrder ? "desc" : "asc"])
+    , [semiSortedProgress, reverseOrder, sortOrder]);
 
-export function ResultsTable({assignment}: ResultsTableProps) {
-    const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
-    const quiz: IsaacQuizDTO | undefined = assignment.quiz;
-    return <div className={"progress-table-container mb-5"}>
-        <table className="progress-table border">
-            <tbody>
-                <tr className="bg-white">
-                    <th rowSpan={2} className="bg-white border-bottom student-name">&nbsp;</th>
-                    {sections.map(section => <th key={section.id} colSpan={questionsInSection(section).length} className="border font-weight-bold">
-                        {section.title}
-                    </th>)}
-                    <th rowSpan={2} className="border-bottom total-column">Overall</th>
-                </tr>
-                <tr className="bg-white">
-                    {questionsInQuiz(quiz).map((question, index) => <th key={question.id} className="border">
-                        {`Q${index + 1}`}
-                    </th>).flat()}
-                </tr>
-                {assignment.userFeedback?.map(row =>
-                    <ResultRow key={row.user?.id} row={row} assignment={assignment} />
-                )}
-            </tbody>
-        </table>
-    </div> ;
+    const tableHeaderFooter = <tr className="progress-table-header-footer">
+        {sortItem({key: "name", itemOrder: "name"})}
+        {questions.map((q, index) =>
+            sortItem({key: q.id, itemOrder: index, className: isSelected(q), children: `${assignmentAverages[index]}%`})
+        )}
+        {isQuiz ? <>
+            {sortItem({key: "totalQuestionPartPercentage", itemOrder: "totalQuestionPartPercentage", className:"total-column left", children: "Total Parts"})}
+            {sortItem({key: "totalQuestionPercentage", itemOrder: "totalQuestionPercentage", className:"total-column right", children: "Total Qs"})}
+        </> : 
+        <>
+            {sortItem({key: "totalQuestionPartPercentage", itemOrder: "totalQuestionPartPercentage", className:"total-column", children: "Overall"})}
+        </>
+            
+        
+    }
+    </tr>;
+
+    const tableRef = useRef<HTMLTableElement>(null);
+
+    useLayoutEffect(() => {
+        const table = tableRef.current;
+        if (table) {
+            const parentElement = table.parentElement as HTMLElement;
+            const firstRow = (table.firstChild as HTMLTableSectionElement).firstChild as HTMLTableRowElement;
+            const questionTH = firstRow.children[selectedQuestionNumber + 1] as HTMLTableHeaderCellElement;
+
+            const offsetLeft = questionTH.offsetLeft;
+            const parentScrollLeft = parentElement.scrollLeft;
+            const parentLeft = parentScrollLeft + parentElement.offsetLeft + 130;
+            const width = questionTH.offsetWidth;
+
+            let newScrollLeft;
+
+            if (offsetLeft < parentLeft) {
+                newScrollLeft = parentScrollLeft + offsetLeft - parentLeft - width / 2;
+            } else {
+                const offsetRight = offsetLeft + width;
+                const parentRight = parentLeft + parentElement.offsetWidth - 260;
+                if (offsetRight > parentRight) {
+                    newScrollLeft = parentScrollLeft + offsetRight - parentRight + width / 2;
+                }
+            }
+            if (newScrollLeft != undefined) {
+                parentElement.scrollLeft = newScrollLeft;
+            }
+        }
+    }, [selectedQuestionNumber]);
+
+    return <div className="assignment-progress-progress">
+        {header}
+        {progress && progress.length > 0 && <>
+            <div className="progress-questions">
+                <Button color="tertiary" disabled={selectedQuestionNumber == 0}
+                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber - 1)}>◄</Button>
+                <div>
+                    {getQuestionTitle(selectedQuestion)}
+                </div>
+                <Button color="tertiary" disabled={selectedQuestionNumber === questions.length - 1}
+                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber + 1)}>►</Button>
+            </div>
+            <table ref={tableRef} className="progress-table w-100">
+                <thead>
+                    {tableHeaderFooter}
+                </thead>
+                <tbody>
+                    {sortedProgress.map((studentProgress, index) => {
+                        const fullAccess = studentProgress.user.authorisedFullAccess;
+                        return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
+                            <th className="student-name">
+                                {fullAccess && pageSettings.isTeacher ?
+                                    (
+                                        isQuiz ?
+                                        <>
+                                            <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
+                                                <div
+                                                    className="quiz-student-name"
+                                                >
+                                                    {studentProgress.user.givenName}
+                                                    <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                                </div>
+                                                <div className="quiz-student-menu-icon">
+                                                    {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
+                                                </div>
+                                            </Button>
+                                            {!returningQuizToStudent && dropdownOpen?.[index] && <>
+                                                <div className="py-2 px-3">
+                                                    <Button size="sm" onClick={() => returnToStudent(studentProgress.user.id)}>Allow another attempt</Button>
+                                                </div>
+                                                <div className="py-2 px-3">
+                                                    <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user.id}`}>View answers</Button>
+                                                </div>
+                                            </>}
+                                        </>
+                                        : <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
+                                            {studentProgress.user.givenName}
+                                            <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                        </Link>
+                                    ) :
+                                    <span>{studentProgress.user.givenName} {studentProgress.user.familyName}</span>
+                                }
+                            </th>
+                            {questions.map((q, index) =>
+                                <td key={q.id} className={isSelected(questions[index]) + " " + markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestionNumber(index)}>
+                                    {(assignmentTotalQuestionParts === questions.length) ?
+                                        studentProgress.correctPartResults[index] === 1 ? ICON.correct :
+                                        studentProgress.incorrectPartResults[index] === 1 ? ICON.incorrect :
+                                        /* default */ ICON.notAttempted
+                                    : 
+                                    fullAccess ? formatMark(studentProgress.correctPartResults[index],
+                                        questions[index].questionPartsTotal as number,
+                                        pageSettings.formatAsPercentage) : ""
+                                    }
+                                </td> 
+                            )}
+                            {isQuiz ? <>
+                                <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
+                                    {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
+                                        assignmentTotalQuestionParts,
+                                        pageSettings.formatAsPercentage) : ""}
+                                </th>
+                                <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
+                                    {fullAccess ? formatMark(studentProgress.tickCount,
+                                        questions.length,
+                                        pageSettings.formatAsPercentage) : ""}
+                                </th>
+                            </> : 
+                                <th className="total-column" title={fullAccess ? undefined : "Not Sharing"}>
+                                    {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
+                                        assignmentTotalQuestionParts,
+                                        pageSettings.formatAsPercentage) : ""}
+                                </th>
+                            }
+                        </tr>;
+                    })}
+                </tbody>
+                <tfoot>
+                    {tableHeaderFooter}
+                </tfoot>
+            </table>
+        </>}
+    </div>;
 }

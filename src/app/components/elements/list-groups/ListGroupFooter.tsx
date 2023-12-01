@@ -14,7 +14,7 @@ const FooterLink = ({linkTo, children}: FooterLinkProps ) => {
         <Link className="footer-link" to={linkTo}>
             {children}
         </Link>
-    </ListGroupItem>
+    </ListGroupItem>;
 };
 
 let key = 0;
@@ -33,7 +33,6 @@ const footerLinks = siteSpecific(
             <FooterLink key={key++} linkTo="/why_physics">Why Physics?</FooterLink>,
             <FooterLink key={key++} linkTo="/bios">Biographies</FooterLink>,
             <FooterLink key={key++} linkTo="/publications">Publications</FooterLink>,
-            <FooterLink key={key++} linkTo="/extraordinary_problems">Extraordinary Problems</FooterLink>,
             <FooterLink key={key++} linkTo="/chemistry">Isaac Chemistry</FooterLink>,
         ]
     },

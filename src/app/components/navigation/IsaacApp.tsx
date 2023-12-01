@@ -14,6 +14,7 @@ import {Route, Router, Switch} from "react-router-dom";
 import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
+import {Glossary} from "../pages/Glossary";
 import {TeacherRequest} from "../pages/TeacherRequest";
 import {LogIn} from "../pages/LogIn";
 import {Registration} from "../pages/Registration";
@@ -160,6 +161,7 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                         <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute exact path="/questions/:questionId" component={Question} />
+                        <TrackedRoute exact path="/glossary" component={Glossary} />,
 
                         <TrackedRoute exact path={PATHS.GAMEBOARD} component={Gameboard} />
                         <TrackedRoute exact path={PATHS.GAMEBOARD_BUILDER} ifUser={isTutorOrAbove} component={GameboardBuilder} />

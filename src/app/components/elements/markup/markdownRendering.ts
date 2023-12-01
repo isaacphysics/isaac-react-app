@@ -27,7 +27,7 @@ export const renderClozeDropZones = (markdown: string) => {
     }
 
     let nonReservedIndex = 0;
-    return markdown.replace(dropZoneRegex, (_match, params, indexMatch, widthMatch, heightMatch) => {
+    return markdown.replace(dropZoneRegex, (_match, _params, indexMatch, widthMatch, heightMatch) => {
         const width = widthMatch ? widthMatch.slice("w-".length) : "100";
         const height = heightMatch ? heightMatch.slice("h-".length) : "27";
         const manualIndex: number | undefined = indexMatch ? parseInt(indexMatch.slice("i-".length)) : undefined;
@@ -41,28 +41,30 @@ export const renderClozeDropZones = (markdown: string) => {
         const dropId = `drop-region-${index}`;
         return `<span data-index="${index}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
     });
-}
+};
 
 // This is used to render the full version of a glossary term using the IsaacGlossaryTerm component.
 export const renderGlossaryBlocks = (markdown: string) => {
     // Matches strings such as [glossary:glossary-demo|boolean-algebra] which MUST be at the beginning of the line.
-    const glossaryBlockRegexp = /^\[glossary:(?<id>[a-z0-9-|]+?)\]/gm;
+    const glossaryBlockRegexp = /^\[glossary:(?<id>[a-z0-9-|_]+?)\]/gm;
     return markdown.replace(glossaryBlockRegexp, (_match, id) => {
         const cssFriendlyTermId = id.replace(/\|/g, '-');
         return `<div data-type="full" id="glossary-term-${cssFriendlyTermId}">Loading glossary...</div>`;
     });
-}
+};
 
 // This is used to produce a hoverable element showing the glossary term, and its definition in a tooltip.
 export const renderInlineGlossaryTerms = (markdown: string) => {
     // Matches strings such as [glossary-inline:glossary-demo|boolean-algebra] and
-    // [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"] which CAN be inlined.
-    const glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z0-9-|]+?)\s*(?:"(?<text>[A-Za-z0-9-()/,'\\. ]+)")?\]/g;
-    return markdown.replace(glossaryInlineRegexp, (_match, id, text, offset) => {
+    // [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"] which CAN be inlined and
+    // [glossary-inline-titled:glossary-demo|boolean-algebra "boolean algebra"] which include their title.
+    // Now matches [glossary-inline:glossary-demo|boolean_algebra]
+    const glossaryInlineRegexp = /\[glossary-inline(?<titled>-titled)?:(?<id>[a-z0-9-|_]+?)\s*(?:"(?<text>[A-Za-z0-9-()/,'\\. ]+)")?\]/g;
+    return markdown.replace(glossaryInlineRegexp, (_match, titled, id, text, _offset) => {
         const cssFriendlyTermId = id.replace(/\|/g, '-');
-        return `<span data-type="inline" class="inline-glossary-term" ${text ? `data-text="${text}"` : ""} id="glossary-term-${cssFriendlyTermId}">Loading glossary...</span>`;
+        return `<span data-type="inline" class="inline-glossary-term" ${text ? `data-text="${text}"` : ""} id="glossary-term-${cssFriendlyTermId}" ${titled !== undefined ? "data-titled" : ""}>Loading glossary...</span>`;
     });
-}
+};
 
 // RegEx replacements to match Latex inspired Isaac Physics functionality
 export const regexProcessMarkdown = (markdown: string) => {
@@ -79,4 +81,4 @@ export const regexProcessMarkdown = (markdown: string) => {
         markdown = markdown.replace(rule, replacement)
     );
     return markdown;
-}
+};

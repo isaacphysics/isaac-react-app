@@ -1,10 +1,7 @@
 import React, {
-    ComponentProps,
     useCallback,
     useContext,
-    useLayoutEffect,
     useMemo,
-    useRef,
     useState
 } from "react";
 import {
@@ -25,8 +22,7 @@ import {
     InputGroup,
     Label,
     UncontrolledButtonDropdown
-} from "reactstrap"
-import orderBy from "lodash/orderBy";
+} from "reactstrap";
 import sortBy from "lodash/sortBy";
 import {
     AppAssignmentProgress,
@@ -51,7 +47,6 @@ import {
     getAssignmentStartDate,
     getQuizAssignmentCSVDownloadLink,
     hasAssignmentStarted,
-    isAda,
     isDefined,
     isPhy,
     MARKBOOK_TYPE_TAB,
@@ -63,11 +58,12 @@ import {
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
 import {Tabs} from "../elements/Tabs";
-import {formatMark, ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
+import {ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
+import { QuizProgressDetails } from "./quizzes/QuizTeacherFeedback";
 
 enum GroupSortOrder {
     Alphabetical = "Alphabetical",
@@ -75,17 +71,9 @@ enum GroupSortOrder {
 }
 
 export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
-    const [selectedQuestionNumber, setSelectedQuestion] = useState(0);
-    const selectedQuestion: GameboardItem | undefined = assignment.gameboard.contents[selectedQuestionNumber];
-
-    type SortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
-    const [sortOrder, setSortOrder] = useState<SortOrder>("name");
-    const [reverseOrder, setReverseOrder] = useState(false);
-    const [singleQuestionSort, setSingleQuestionSort] = useState(false);
-
-    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     const questions = assignment.gameboard.contents;
+
     const progressData = useMemo<[AppAssignmentProgress, boolean][]>(() => assignment.progress.map(p => {
         if (!p.user.authorisedFullAccess) return [p, false];
         const initialState = {
@@ -94,7 +82,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
             correctQuestionPartsCount: 0,
             incorrectQuestionPartsCount: 0,
             notAttemptedPartResults: []
-        }
+        };
         const ret = p.results.reduce<AppAssignmentProgress>((oldP, results, i) => {
                 const tickCount = ["PASSED", "PERFECT"].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
                 const questions = assignment.gameboard.contents;
@@ -110,7 +98,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
                 };
             }, initialState);
         return [ret, questions.length === ret.tickCount];
-    }), [assignment]);
+    }), [assignment.gameboard.contents, assignment.progress, questions.length]);
 
     const progress = progressData.map(pd => pd[0]);
     const studentsCorrect = progressData.reduce((sc, pd) => sc + (pd[1] ? 1 : 0), 0);
@@ -122,74 +110,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
             const tickPercent = Math.round(100 * (tickCount / progress.length));
             return [[...aAvg, tickPercent], aTQP + (q.questionPartsTotal ?? 0)];
         }, [[] as number[], 0]) ?? [[], 0];
-    }, [questions, assignment, progress]);
-
-    const semiSortedProgress = useMemo(() => orderBy(progress, (item) => {
-            return item.user.authorisedFullAccess && item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
-        }, [reverseOrder ? "desc" : "asc"])
-    , [progress]);
-
-    const sortedProgress = useMemo(() => orderBy((singleQuestionSort ? progress : semiSortedProgress), (item) => {
-            switch (sortOrder) {
-                case "name":
-                    return (item.user.familyName + ", " + item.user.givenName).toLowerCase();
-                case "totalQuestionPartPercentage":
-                    return -item.correctQuestionPartsCount;
-                case "totalQuestionPercentage":
-                    return -item.tickCount;
-                default:
-                    return -item.correctPartResults[sortOrder];
-            }
-        }, [reverseOrder ? "desc" : "asc"])
-    , [singleQuestionSort, progress, semiSortedProgress]);
-
-    function isSelected(q: GameboardItem) {
-        return q == selectedQuestion ? "selected" : "";
-    }
-
-    function sortClasses(q: SortOrder) {
-        if (q == sortOrder) {
-            return "sorted" + (reverseOrder ? " reverse" : " forward");
-        } else {
-            return "";
-        }
-    }
-
-    function toggleSort(itemOrder: SortOrder) {
-        setSortOrder(itemOrder);
-        if (typeof itemOrder === "number") {
-            setSingleQuestionSort(true)
-        } else {
-            setSingleQuestionSort(false);
-        }
-        if (sortOrder == itemOrder) {
-            setReverseOrder(!reverseOrder);
-        } else {
-            setReverseOrder(false);
-        }
-    }
-
-    function sortItem(props: ComponentProps<"th"> & {itemOrder: SortOrder}) {
-        const {itemOrder, ...rest} = props;
-        const className = (props.className || "") + " " + sortClasses(itemOrder);
-        const clickToSelect = typeof itemOrder === "number" ? (() => setSelectedQuestion(itemOrder)) : undefined;
-        const sortArrows = (typeof itemOrder !== "number" || itemOrder === selectedQuestionNumber) ?
-            <button className="sort" onClick={() => {toggleSort(itemOrder);}}>
-                <span className="up" >▲</span>
-                <span className="down">▼</span>
-            </button>
-            : undefined;
-        return <th key={props.key} {...rest} className={className} onClick={clickToSelect}>{props.children}{sortArrows}</th>;
-    }
-
-    const tableHeaderFooter = <tr className="progress-table-header-footer">
-        {sortItem({key: "name", itemOrder: "name"})}
-        {questions.map((q, index) =>
-            sortItem({key: q.id, itemOrder: index, className: isSelected(q), children: `${assignmentAverages[index]}%`})
-        )}
-        {sortItem({key: "totalQuestionPartPercentage", itemOrder: "totalQuestionPartPercentage", className:"total-column left", children: "Total Parts"})}
-        {sortItem({key: "totalQuestionPercentage", itemOrder: "totalQuestionPercentage", className:"total-column right", children: "Total Qs"})}
-    </tr>;
+    }, [questions, progress]);
 
     function markClassesInternal(studentProgress: AppAssignmentProgress, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
         if (!studentProgress.user.authorisedFullAccess) {
@@ -223,102 +144,24 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         const incorrectParts = studentProgress.incorrectPartResults[index];
         const status = studentProgress.results[index];
 
-        return isSelected(question) + " " + markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
+        return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }
 
-    const tableRef = useRef<HTMLTableElement>(null);
-
-    useLayoutEffect(() => {
-        const table = tableRef.current;
-        if (table) {
-            const parentElement = table.parentElement as HTMLElement;
-            const firstRow = (table.firstChild as HTMLTableSectionElement).firstChild as HTMLTableRowElement;
-            const questionTH = firstRow.children[selectedQuestionNumber + 1] as HTMLTableHeaderCellElement;
-
-            const offsetLeft = questionTH.offsetLeft;
-            const parentScrollLeft = parentElement.scrollLeft;
-            const parentLeft = parentScrollLeft + parentElement.offsetLeft + 130;
-            const width = questionTH.offsetWidth;
-
-            let newScrollLeft;
-
-            if (offsetLeft < parentLeft) {
-                newScrollLeft = parentScrollLeft + offsetLeft - parentLeft - width / 2;
-            } else {
-                const offsetRight = offsetLeft + width;
-                const parentRight = parentLeft + parentElement.offsetWidth - 260;
-                if (offsetRight > parentRight) {
-                    newScrollLeft = parentScrollLeft + offsetRight - parentRight + width / 2;
-                }
-            }
-            if (newScrollLeft != undefined) {
-                parentElement.scrollLeft = newScrollLeft;
-            }
-        }
-    }, [selectedQuestionNumber]);
-
-    return <div className="assignment-progress-progress">
-        <div className="progress-header">
-            <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong>
-            {` students have completed the assignment `}
-            <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link>.
-        </div>
-        {progress.length > 0 && <>
-            <div className="progress-questions">
-                <Button color="tertiary" disabled={selectedQuestionNumber == 0}
-                    onClick={() => setSelectedQuestion(selectedQuestionNumber - 1)}>◄</Button>
-                <div><Link
-                    to={`/questions/${selectedQuestion.id}?board=${assignment.gameboardId}`}><strong>Q<span className="d-none d-md-inline">uestion</span>: </strong>{selectedQuestion.title}
-                </Link></div>
-                <Button color="tertiary" disabled={selectedQuestionNumber === questions.length - 1}
-                    onClick={() => setSelectedQuestion(selectedQuestionNumber + 1)}>►</Button>
-            </div>
-            <div className="progress-table">
-                <table ref={tableRef}>
-                    <thead>
-                        {tableHeaderFooter}
-                    </thead>
-                    <tbody>
-                        {sortedProgress.map((studentProgress) => {
-                            const fullAccess = studentProgress.user.authorisedFullAccess;
-                            return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
-                                <th className="student-name">
-                                    {fullAccess && pageSettings.isTeacher ?
-                                        <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
-                                            {studentProgress.user.givenName}
-                                            <span
-                                                className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
-                                        </Link> :
-                                        <span>{studentProgress.user.givenName} {studentProgress.user.familyName}</span>
-                                    }
-                                </th>
-                                {questions.map((q, index) =>
-                                    <td key={q.id} className={markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestion(index)}>
-                                        {fullAccess ? formatMark(studentProgress.correctPartResults[index],
-                                            questions[index].questionPartsTotal,
-                                            pageSettings.formatAsPercentage) : ""}
-                                    </td>
-                                )}
-                                <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
-                                    {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
-                                        assignmentTotalQuestionParts,
-                                        pageSettings.formatAsPercentage) : ""}
-                                </th>
-                                <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
-                                    {fullAccess ? formatMark(studentProgress.tickCount,
-                                        questions.length,
-                                        pageSettings.formatAsPercentage) : ""}
-                                </th>
-                            </tr>;
-                        })}
-                    </tbody>
-                    <tfoot>
-                        {tableHeaderFooter}
-                    </tfoot>
-                </table>
-            </div>
-        </>}
+    const tableHeader = <div className="progress-header">
+        <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong>
+        {` students have completed the assignment `}
+        <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link>.
     </div>;
+        
+    const getQuestionTitle = (question: GameboardItem) => {
+        return <Link to={`/questions/${question.id}?board=${assignment.gameboardId}`}>
+            <strong>Q<span className="d-none d-md-inline">uestion</span>: </strong>{question.title}
+        </Link>;
+    };
+
+    return <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} header={tableHeader} getQuestionTitle={getQuestionTitle} 
+    assignmentAverages={assignmentAverages} assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
+    isQuiz={false}/>;
 };
 
 const ProgressLoader = ({assignment}: {assignment: EnhancedAssignment}) => {
@@ -380,7 +223,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
             </div>
         </div>
         {isExpanded && <ProgressLoader assignment={assignment} />}
-    </div>
+    </div>;
 };
 
 export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: boolean}) => {
@@ -439,7 +282,7 @@ export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: b
             <label>Colour-blind&nbsp;<input type="checkbox" checked={pageSettings.colourBlind} onChange={e => pageSettings.setColourBlind(e.target.checked)}/></label>
             <label>Percent view&nbsp;<input type="checkbox" checked={pageSettings.formatAsPercentage} onChange={e => pageSettings.setFormatAsPercentage(e.target.checked)}/></label>
         </div>
-    </div></div>
+    </div></div>;
 };
 
 const QuizProgressLoader = ({quizAssignmentId}: { quizAssignmentId: number }) => {
@@ -448,12 +291,12 @@ const QuizProgressLoader = ({quizAssignmentId}: { quizAssignmentId: number }) =>
     return <ShowLoadingQuery
         query={quizAssignmentFeedbackQuery}
         defaultErrorTitle={"Error loading test assignment feedback"}
-        thenRender={quizAssignmentWithFeedback =>
+        thenRender={quizAssignmentWithFeedback => 
             <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
-                <ResultsTable assignment={quizAssignmentWithFeedback} />
+                <QuizProgressDetails assignment={quizAssignmentWithFeedback} />
             </div>
         }
-    />
+    />;
 };
 
 const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) => {

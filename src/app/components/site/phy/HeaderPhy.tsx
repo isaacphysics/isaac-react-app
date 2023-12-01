@@ -19,8 +19,8 @@ export const HeaderPhy = () => {
                     <div className="header-bar mx-3 mx-md-0 d-md-flex">
                         <div className="header-logo">
                             <Link to="/">
-                                <img src="/assets/phy/logo.svg" alt="Isaac Physics" className="d-none d-md-block"/>
-                                <img src="/assets/phy/logo-small.svg" alt="Isaac Physics" className="d-sm-block d-md-none"/>
+                                <img src="/assets/phy/logo.svg" alt="Isaac Physics" className="d-none d-md-block d-print-block"/>
+                                <img src="/assets/phy/logo-small.svg" alt="Isaac Physics" className="d-sm-block d-md-none d-print-none"/>
                             </Link>
                         </div>
 

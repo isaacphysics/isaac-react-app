@@ -92,32 +92,34 @@ function wrapUnitForSelect(unit?: string): string {
     }
 }
 
-const numericValidation = (userInput: string) => {
+export const numericInputValidator = (input: string) => {
     const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]+";
     const badCharacters = new RegExp(regexStr);
-    const operatorExpression = new RegExp(".*[0-9][+*/×÷-]\\.?[0-9]+$");
-    const _errors = [];
+    const operatorExpression = new RegExp(".*[0-9][+/÷-]\\.?[0-9]+");
+    const missingExponentSymbol = new RegExp(".*?10-([0-9]+).*?");
+    const errors = [];
 
-    if (badCharacters.test(userInput)) {
+    if (badCharacters.test(input)) {
         const usedBadChars: string[] = []; 
-        for(let i = 0; i < userInput.length; i++) {
-            const char = userInput.charAt(i);
+        for(let i = 0; i < input.length; i++) {
+            const char = input.charAt(i);
             if (badCharacters.test(char)) {
                 if (!usedBadChars.includes(char)) {
                     usedBadChars.push(char === ' ' ? 'space' : char);
                 }
             }
         }
-        _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
     }
-    if (operatorExpression.test(userInput)) {
-        _errors.push('Simplify your answer into a single decimal number.');
+    if (missingExponentSymbol.test(input)) {
+        errors.push('Use a correct exponent symbol, e.g. 10^-3 or 10**-3.');
+    } else if (operatorExpression.test(input)) {
+        errors.push('Simplify your answer into a single decimal number.');
     }
-    if (/.*?[0-9][, ][0-9]{3}.*?/.test(userInput)) {
-        _errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
+    if (/.*?[0-9][, ][0-9]{3}.*?/.test(input)) {
+        errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
     }
-
-    return _errors;
+    return errors;
 };
 
 const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacQuestionProps<IsaacNumericQuestionDTO, QuantityValidationResponseDTO>) => {
@@ -228,7 +230,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     </div>}
                 </Col>
             </Row>
-            <QuestionInputValidation userInput={currentAttemptValue ?? ""} validator={numericValidation} />
+            <QuestionInputValidation userInput={currentAttemptValue ?? ""} validator={numericInputValidator} />
         </div>
     );
 };
