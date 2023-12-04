@@ -31,7 +31,8 @@ export const InterstitialCookieHandler = (props: InterstitialCookieHandlerProps)
 export const HomepageYoutubeCookieHandler = () => {
     const [accepted, setAccepted] = useState(isCookieSet(YOUTUBE_COOKIE));
     const [autoplay, setAutoplay] = useState(false);
-    const [active, setActive] = useState(false);
+    const [videoActive, setVideoActive] = useState(false);
+    const [copyActive, setCopyActive] = useState(false);
     const [linkCopied, setLinkCopied] = useState(false);
 
     return <InterstitialCookieHandler
@@ -46,18 +47,19 @@ export const HomepageYoutubeCookieHandler = () => {
                         <a className="video-name" href="https://www.youtube.com/watch?v=kWA2AISiHXQ">Why use Isaac Physics?</a>
                     </div>
                     <div className="copy-container d-flex flex-column align-items-center">
-                        <button className={`copy-link m-0 ${linkCopied ? "copied" : ""}`} onClick={() => {
+                        <button className={classNames("copy-link m-0", {"copied" : linkCopied}, {"selected" : copyActive})} onClick={() => {
                             navigator.clipboard.writeText("https://www.youtube.com/watch?v=kWA2AISiHXQ");
                             setLinkCopied(true);
-                        }} onMouseLeave={() => setLinkCopied(false)}/>
+                        }} onMouseLeave={() => setLinkCopied(false)}
+                        onFocus={() => setCopyActive(true)} onBlur={() => setCopyActive(false)}/>
                         <div className="copy-text">{linkCopied ? "Copied!" : "Copy Link"}</div>
                     </div>
                 </div>
-                <button className={`youtube-play w-100 h-100 p-0 m-0 ${active ? "selected" : ""}`} type="button" onClick={() => {
+                <button className={`youtube-play w-100 h-100 p-0 m-0 ${videoActive ? "selected" : ""}`} type="button" onClick={() => {
                     setCookie(YOUTUBE_COOKIE);
                     setAccepted(true);
                     setAutoplay(true);
-                }} onFocus={() => setActive(true)} onBlur={() => setActive(false)}>
+                }} onFocus={() => setVideoActive(true)} onBlur={() => setVideoActive(false)}>
                     {/* <img src="" alt="" className="w-100 h-100 youtube-play"/> */}
                 </button>
                 <img src="/assets/phy/isaac-homepage-video-thumbnail.jpeg" alt="A group of students solving problems at an in-person Isaac event." className="w-100 h-100"/>  
