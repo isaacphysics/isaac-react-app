@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import { Button } from 'reactstrap';
 
@@ -29,14 +29,30 @@ export const InterstitialCookieHandler = (props: InterstitialCookieHandlerProps)
 
 // TODO: image alt text
 export const HomepageYoutubeCookieHandler = () => {
-    const [accepted, setAccepted] = React.useState(isCookieSet(YOUTUBE_COOKIE));
-    const [autoplay, setAutoplay] = React.useState(false);
-    const [active, setActive] = React.useState(false);
+    const [accepted, setAccepted] = useState(isCookieSet(YOUTUBE_COOKIE));
+    const [autoplay, setAutoplay] = useState(false);
+    const [active, setActive] = useState(false);
+    const [linkCopied, setLinkCopied] = useState(false);
 
     return <InterstitialCookieHandler
         accepted={accepted}
         beforeAccepted={<div className="homepage-video">
             <div className="position-relative">
+                <div className="youtube-fade" />
+                <div className="youtube-header w-100">
+                    <div className="d-flex align-items-center">
+                        {/* eslint-disable-next-line jsx-a11y/anchor-has-content -- content in css */}
+                        <a className="channel-icon" href="https://www.youtube.com/@isaacphysics"/>
+                        <a className="video-name" href="https://www.youtube.com/watch?v=kWA2AISiHXQ">Why use Isaac Physics?</a>
+                    </div>
+                    <div className="copy-container d-flex flex-column align-items-center">
+                        <button className={`copy-link m-0 ${linkCopied ? "copied" : ""}`} onClick={() => {
+                            navigator.clipboard.writeText("https://www.youtube.com/watch?v=kWA2AISiHXQ");
+                            setLinkCopied(true);
+                        }} onMouseLeave={() => setLinkCopied(false)}/>
+                        <div className="copy-text">{linkCopied ? "Copied!" : "Copy Link"}</div>
+                    </div>
+                </div>
                 <button className={`youtube-play w-100 h-100 p-0 m-0 ${active ? "selected" : ""}`} type="button" onClick={() => {
                     setCookie(YOUTUBE_COOKIE);
                     setAccepted(true);
@@ -44,7 +60,7 @@ export const HomepageYoutubeCookieHandler = () => {
                 }} onFocus={() => setActive(true)} onBlur={() => setActive(false)}>
                     {/* <img src="" alt="" className="w-100 h-100 youtube-play"/> */}
                 </button>
-                <img src="/assets/phy/isaac-homepage-video-thumbnail.jpeg" alt="" className="w-100 h-100"/>  
+                <img src="/assets/phy/isaac-homepage-video-thumbnail.jpeg" alt="A group of students solving problems at an in-person Isaac event." className="w-100 h-100"/>  
             </div>
             {youtubeHomepageCookieText}
         </div>}
