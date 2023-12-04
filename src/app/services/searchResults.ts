@@ -88,7 +88,7 @@ export const searchList: SearchShortcut[] = [
         id: "my_progress",
         title: "My progress",
         terms: ["progress", "my progress", siteSpecific("my isaac", "my ada")],
-        summary: `View your progress in ${SITE_TITLE}.`,
+        summary: `View your ${SITE_TITLE} progress.`,
         url: "/progress",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }
