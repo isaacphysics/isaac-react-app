@@ -255,6 +255,7 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
     const progress : AppAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
         return {
             user: user.user as UserSummaryDTO,
+            completed: user.feedback?.complete ?? false,
             // a list of the correct parts of an answer, one list for each question
             correctPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.correct ?? 0),
             incorrectPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0),
@@ -279,8 +280,9 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
     const getQuestionTitle = (question: QuizQuestion) => <div key={question.id} className="border">
         {`Q${questions.indexOf(question) + 1}`}
     </div>;
-    
-    return <ResultsTable<QuizQuestion> assignmentId={assignment.id} progress={progress} questions={questions} header={header} getQuestionTitle={getQuestionTitle}
-    assignmentAverages={quizAverages} assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
-    isQuiz={true}/>;
+
+    return <ResultsTable<QuizQuestion> assignmentId={assignment.id} duedate={assignment.dueDate} progress={progress}
+        questions={questions} header={header} getQuestionTitle={getQuestionTitle} assignmentAverages={quizAverages}
+        assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
+        isQuiz={true}/>;
 };
