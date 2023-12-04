@@ -45,10 +45,8 @@ export const HomepagePhy = () => {
                                     </Button>
                                 </Col>
                             </Row>}
-                            <div className={`h-100 pl-lg-4 ${user?.loggedIn ? "pt-1 pt-sm-2 pt-lg-2" : "pt-4 pt-lg-3"}`}>
-                                <div className="yt-video-container p-0 w-100 h-100">
-                                    <HomepageYoutubeCookieHandler />
-                                </div>
+                            <div className={`h-100 pl-lg-4 yt-video-container w-100 ${user?.loggedIn ? "pt-1 pt-sm-2 pt-lg-2" : "pt-4 pt-lg-3"}`}>
+                                <HomepageYoutubeCookieHandler />
                             </div>
                         </Col>
                     </Row>

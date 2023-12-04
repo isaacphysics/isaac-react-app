@@ -33,6 +33,7 @@
         align-items: start;
         justify-content: space-between;
         padding: 15px;
+        margin-top: -2px;
         position: absolute;
         color: #ddd;
         
@@ -81,6 +82,10 @@
 
                 &.copied {
                     background-image: url("/assets/action-done.svg")
+                }
+
+                &.selected {
+                    padding: 1px;
                 }
             }
 

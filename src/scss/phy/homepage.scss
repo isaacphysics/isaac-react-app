@@ -12,7 +12,7 @@
 .yt-video-container {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%;
+  aspect-ratio: 16/9;
   iframe {
     position: absolute;
     top: 0;

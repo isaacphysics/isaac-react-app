@@ -9,7 +9,7 @@ const isCookieSet = (name: string) => {
 };
 
 const setCookie = (name: string) => {
-    Cookies.set(name, "1", { expires: 720 /* days*/ });
+    Cookies.set(name, "1", { expires: 720 /* days*/, sameSite: "strict" });
 };
 
 export const interstitialCookieSlice = createSlice({
