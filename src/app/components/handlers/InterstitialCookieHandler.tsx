@@ -18,7 +18,6 @@ export const InterstitialCookieHandler = (props: InterstitialCookieHandlerProps)
     return props.accepted ? <>{props.afterAccepted}</> : <>{props.beforeAccepted}</>;
 };
 
-// TODO: image alt text
 export const HomepageYoutubeCookieHandler = () => {
     const [autoplay, setAutoplay] = useState(false);
     const [videoActive, setVideoActive] = useState(false);
@@ -51,7 +50,6 @@ export const HomepageYoutubeCookieHandler = () => {
                     dispatch(interstitialCookieSlice.actions.acceptYoutubeCookies());
                     setAutoplay(true);
                 }} onFocus={() => setVideoActive(true)} onBlur={() => setVideoActive(false)}>
-                    {/* <img src="" alt="" className="w-100 h-100 youtube-play"/> */}
                 </button>
                 <img src="/assets/phy/isaac-homepage-video-thumbnail.jpeg" alt="A group of students solving problems at an in-person Isaac event." className="w-100 h-100"/>  
             </div>
