@@ -40,6 +40,7 @@ export interface UseUserContextReturnType {
     preferredProgrammingLanguage?: PROGRAMMING_LANGUAGE;
     preferredBooleanNotation?: BOOLEAN_NOTATION;
     explanation: {stage?: string, examBoard?: string};
+    cookieConsent?: {youtubeCookieAccepted: boolean, anvilCookieAccepted: boolean};
 }
 
 const urlMessage = "URL query parameters";
@@ -52,6 +53,8 @@ export function useUserContext(): UseUserContextReturnType {
     const user = useAppSelector((state: AppState) => state && state.user);
     const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} =
         useAppSelector((state: AppState) => state?.userPreferences) || {};
+
+    const cookieConsent = useAppSelector((state: AppState) => state?.cookieConsent);
 
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext) || {};
 
@@ -168,7 +171,8 @@ export function useUserContext(): UseUserContextReturnType {
 
     return {
         stage, setStage, examBoard, setExamBoard, explanation,
-        showOtherContent, preferredProgrammingLanguage, preferredBooleanNotation
+        showOtherContent, preferredProgrammingLanguage, preferredBooleanNotation,
+        cookieConsent
     };
 }
 
