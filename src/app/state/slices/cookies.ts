@@ -12,19 +12,23 @@ const setCookie = (name: string) => {
     Cookies.set(name, "1", { expires: 720 /* days*/, sameSite: "strict" });
 };
 
+export type InterstitialCookieState = {
+    youtubeCookieAccepted: boolean;
+    anvilCookieAccepted: boolean;
+} | null;
+
 export const interstitialCookieSlice = createSlice({
     name: 'interstitialCookie',
-    initialState: {
-        youtubeCookieAccepted: isCookieSet(YOUTUBE_COOKIE),
-        anvilCookieAccepted: isCookieSet(ANVIL_COOKIE),
-    },
+    initialState: null as InterstitialCookieState,
     reducers: {
+        setDefault: () => ({youtubeCookieAccepted: isCookieSet(YOUTUBE_COOKIE), anvilCookieAccepted: isCookieSet(ANVIL_COOKIE)}),
         acceptYoutubeCookies: (state) => {
-            state.youtubeCookieAccepted = true;
+            if (state) state.youtubeCookieAccepted = true;
             setCookie(YOUTUBE_COOKIE);
         },
         acceptAnvilCookies: (state) => {
-            state.anvilCookieAccepted = true;
+            if (state) state.anvilCookieAccepted = true;
+            setCookie(ANVIL_COOKIE);
         },
     },
 });

@@ -25,7 +25,7 @@ import {
 } from "./";
 import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
-import {AppState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
+import {AppState, InterstitialCookieState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {useContext, useEffect} from "react";
@@ -40,7 +40,7 @@ export interface UseUserContextReturnType {
     preferredProgrammingLanguage?: PROGRAMMING_LANGUAGE;
     preferredBooleanNotation?: BOOLEAN_NOTATION;
     explanation: {stage?: string, examBoard?: string};
-    cookieConsent?: {youtubeCookieAccepted: boolean, anvilCookieAccepted: boolean};
+    cookieConsent: InterstitialCookieState;
 }
 
 const urlMessage = "URL query parameters";
@@ -54,7 +54,7 @@ export function useUserContext(): UseUserContextReturnType {
     const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} =
         useAppSelector((state: AppState) => state?.userPreferences) || {};
 
-    const cookieConsent = useAppSelector((state: AppState) => state?.cookieConsent);
+    const cookieConsent = useAppSelector((state: AppState) => state?.cookieConsent ?? null);
 
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext) || {};
 

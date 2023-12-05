@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import classNames from 'classnames';
 import { interstitialCookieSlice, useAppDispatch } from '../../state';
@@ -14,7 +14,12 @@ export interface InterstitialCookieHandlerProps {
     afterAccepted: JSX.Element;
 }
 
-export const InterstitialCookieHandler = (props: InterstitialCookieHandlerProps) => {
+export const InterstitialCookieHandler = (props: InterstitialCookieHandlerProps) => {    
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(interstitialCookieSlice.actions.setDefault());
+    }, []);
+
     return props.accepted ? <>{props.afterAccepted}</> : <>{props.beforeAccepted}</>;
 };
 
