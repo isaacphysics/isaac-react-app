@@ -9,6 +9,12 @@ import { ManageExistingBookings } from "../elements/panels/ManageExistingBooking
 import { AddUsersToBooking } from "../elements/panels/AddUsersToBooking";
 import { EventAttendance } from "../elements/panels/EventAttendance";
 
+const EventButton = ({ link, text }: { link: string; text: string }) => (
+  <RS.Button color="primary" size="md" href={link} className="mx-3" target="_blank" rel="noopener noreferrer">
+    {text}
+  </RS.Button>
+);
+
 export const EventManager = ({ user }: { user: PotentialUser }) => {
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const selectedEventRef = useRef<HTMLDivElement>(null);
@@ -22,7 +28,14 @@ export const EventManager = ({ user }: { user: PotentialUser }) => {
   return (
     <RS.Container>
       <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin" />
-      <div className="my-5 mx-n4 mx-sm-n5">
+      <div className="my-3 float-right">
+        <EventButton link="https://forms.office.com/e/ZrijWx8gcw" text="Event listing form" />
+        <EventButton
+          link="https://myscience.atlassian.net/wiki/spaces/NN/pages/4119658517/Events+toolkit"
+          text="Events toolkit"
+        />
+      </div>
+      <div className="mt-5 mb-5 mx-n4 mx-sm-n5 pt-5">
         <EventOverviews user={user} setSelectedEventId={setSelectedEventId} />
         {selectedEventId !== null && (
           <React.Fragment>

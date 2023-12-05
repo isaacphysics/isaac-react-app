@@ -131,10 +131,6 @@ export const EventOverviews = ({
         </div>
       )}
       <div className="clearfix">
-        {/* temporary removal during handover to STEM */}
-        {/* <div className="mb-3 float-left">
-                <RS.Button color="primary" size="sm" tag={Link} to="/events_toolkit">Events toolkit</RS.Button>
-            </div> */}
         <div className="float-right mb-4">
           <RS.Label>
             <RS.Input
