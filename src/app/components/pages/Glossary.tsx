@@ -25,6 +25,7 @@ import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { useHistory, useLocation } from "react-router";
+import Select from "react-select";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -278,13 +279,15 @@ export const Glossary = () => {
                     <Row className="no-print">
                         {isPhy && <Col className="mt-3 mt-md-0">
                             <Label for='subject-select' className='sr-only'>Subject</Label>
-                            <StyledSelect inputId="subject-select"
-                                options={ subjects.map(e => ({ value: e.id, label: e.title})) }
-                                value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title }) : undefined}
+                            <Select inputId="subject-select"
+                                options={subjects.map(s => ({ value: s.id, label: s.title}))}
+                                value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title}) : undefined}
                                 name="subject-select"
                                 placeholder="Select a subject"
                                 onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                 isClearable
+                                className={`basic-multi-select glossary-select ${filterSubject?.id ?? ""}`}
+                                classNamePrefix="select"
                             />
                         </Col>}
                         <Col md={{size: 4}}>
@@ -297,7 +300,7 @@ export const Glossary = () => {
                         {isAda && <Col className="mt-3 mt-md-0">
                             <Label for='topic-select' className='sr-only'>Topic</Label>
                             <StyledSelect inputId="topic-select"
-                                options={ topics.map(e => ({ value: e.id, label: e.title}))}
+                                options={ topics.map(t => ({ value: t.id, label: t.title}))}
                                 name="topic-select"
                                 placeholder="All topics"
                                 onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
@@ -307,7 +310,7 @@ export const Glossary = () => {
                         {isPhy && <Col className="mt-3 mt-md-0">
                             <Label for='stage-select' className='sr-only'>Stage</Label>
                             <StyledSelect inputId="stage-select"
-                                options={ stages.map(e => ({ value: e, label: stageLabelMap[e]})) }
+                                options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
                                 value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
                                 name="stage-select"
                                 placeholder="Select a stage"
