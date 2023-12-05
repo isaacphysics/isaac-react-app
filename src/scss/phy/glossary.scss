@@ -1,7 +1,7 @@
 @import "../common/glossary";
 
 .glossary-select { 
-    .biology {
+    &.biology {
         .select__control {
             background-color: $phy_biology !important;
         }
@@ -11,7 +11,7 @@
         }
     }
 
-    .chemistry {
+    &.chemistry {
         .select__control {
             background-color: $phy_chemistry !important;
             color: white;
@@ -22,7 +22,7 @@
         }
     }
 
-    .maths {
+    &.maths {
         .select__control {
             background-color: $phy_maths !important;
             color: white;
@@ -33,7 +33,7 @@
         }
     }
 
-    .physics {
+    &.physics {
         .select__control {
             background-color: $phy_physics !important;
             color: white;
