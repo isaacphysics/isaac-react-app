@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {
+    closeActiveModal,
     getRTKQueryErrorMessage,
     mutationSucceeded,
     showSuccessToast,
@@ -12,11 +13,12 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
-    confirmThen,
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
     siteSpecific,
-    isDefined, nthHourOf, TODAY,
+    isDefined,
+    nthHourOf,
+    TODAY,
     useAssignmentProgressAccessibilitySettings,
     isQuestion,
     PATHS
@@ -37,6 +39,9 @@ import {
     DropdownMenu,
     DropdownToggle,
     Label,
+    Modal,
+    ModalBody,
+    ModalHeader,
     Row,
     UncontrolledButtonDropdown
 } from "reactstrap";
@@ -55,15 +60,81 @@ const feedbackNames: Record<QuizFeedbackMode, string> = {
     DETAILED_FEEDBACK: "Detailed feedback on each question",
 };
 
+type ExtendDueDateModalProps = {
+    isOpen: boolean;
+    toggle: () => void;
+    currDueDate: Date;
+    numericQuizAssignmentId: number;
+}
+const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
+    const {isOpen, toggle, currDueDate, numericQuizAssignmentId} = props;
+    const yearRange = range(currentYear, currentYear + 5);
+    const [dueDate, setDueDate] = useState<Date>(currDueDate);
+    const [updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
+    const dispatch = useAppDispatch();
+
+    const setValidDueDate = () => {
+        if (isUpdatingQuiz || !numericQuizAssignmentId || !dueDate || currDueDate == dueDate) {
+            return;
+        }
+
+        if (currDueDate && (dueDate > currDueDate || dueDate > TODAY())) {
+            updateQuiz({quizAssignmentId: numericQuizAssignmentId, update: {dueDate: dueDate}})
+                .then((result) => {
+                    if (mutationSucceeded(result)) {
+                        dispatch(showSuccessToast(
+                            "Due date extended successfully", `This test is now due ${dueDate.toLocaleDateString()}.`
+                        ));
+                    }
+                    dispatch(closeActiveModal());
+                });
+        }
+    };
+
+    return <Modal isOpen={isOpen} toggle={toggle}>
+        <ModalHeader role={"heading"} className={"text-break"} close={
+            <button className={"text-nowrap close"} onClick={toggle}>
+                Close
+            </button>
+        }>
+            Extend due date?
+        </ModalHeader>
+        <ModalBody>
+            <p className="px-1">{`Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to. ${dueDate <= TODAY()}`}</p>
+            <hr className="text-center"/>
+            <Container className="py-2">
+                <Label for="dueDate" className="pr-1">Extend the due date:
+                <DateInput id="dueDate" value={dueDate} invalid={dueDate && ((dueDate < currDueDate) || dueDate <= TODAY())}
+                    yearRange={yearRange} noClear disabled={isUpdatingQuiz} className="text-center"
+                    onChange={(e) => e.target.valueAsDate && setDueDate(e.target.valueAsDate)}
+                           />
+                </Label>
+                {dueDate && (dueDate < currDueDate || dueDate <= TODAY()) && 
+                <p className={"text-danger"}>
+                    You cannot set the due date to be earlier than the current due date or today.
+                </p>}
+                <Button
+                    className="mt-2 mb-2"
+                    block color="secondary"
+                    onClick={setValidDueDate}
+                    role={"button"}
+                    disabled={isUpdatingQuiz && dueDate && (dueDate < currDueDate)}>
+                    Extend due date
+                </Button>
+            </Container>
+        </ModalBody>
+    </Modal>;
+};
+
 export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const {quizAssignmentId} = useParams<{quizAssignmentId: string}>();
-    const dispatch = useAppDispatch();
     const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
     const numericQuizAssignmentId = parseInt(quizAssignmentId, 10);
     const quizAssignmentQuery = useGetQuizAssignmentWithFeedbackQuery(numericQuizAssignmentId);
     const {data: quizAssignment} = quizAssignmentQuery;
     const [updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     const setFeedbackMode = (mode: QuizFeedbackMode) => {
         if (mode !== quizAssignment?.quizFeedbackMode) {
@@ -75,32 +146,6 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const assignmentNotYetStarted = assignmentStartDate && nthHourOf(0, assignmentStartDate) > TODAY();
     const quizTitle = (quizAssignment?.quiz?.title || quizAssignment?.quiz?.id || "Test") + (assignmentNotYetStarted ? ` (starts ${formatDate(assignmentStartDate)})` : " results");
 
-    // Date input variables
-    const yearRange = range(currentYear, currentYear + 5);
-    const [dueDate, setDueDate] = useState<Date>();
-
-    useEffect(() => {
-        setDueDate(quizAssignment?.dueDate);
-    }, [quizAssignment?.dueDate]);
-
-    const setValidDueDate = (newDate : Date) => {
-        if (isUpdatingQuiz || !newDate || quizAssignment?.dueDate == newDate) {
-            return;
-        }
-        if (quizAssignment?.dueDate && newDate > quizAssignment.dueDate) {
-            confirmThen(
-                "Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.",
-                () => updateQuiz({quizAssignmentId: numericQuizAssignmentId, update: {dueDate: newDate}})
-                    .then((result) => {
-                        if (mutationSucceeded(result)) {
-                            dispatch(showSuccessToast("Due date extended successfully", `This test is now due ${newDate.toLocaleDateString()}.`));
-                        }
-                    }),
-                () => setDueDate(quizAssignment.dueDate)
-            );
-        }
-    };
-
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
         <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
         <Alert color="danger">
@@ -110,6 +155,12 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     </>;
 
     return <Container>
+        {quizAssignment?.dueDate && <ExtendDueDateModal
+            isOpen={isModalOpen}
+            toggle={() => setIsModalOpen(false)}
+            currDueDate={quizAssignment.dueDate}
+            numericQuizAssignmentId={numericQuizAssignmentId}
+        />}
         <ShowLoadingQuery
             query={quizAssignmentQuery}
             ifError={buildErrorComponent}
@@ -127,20 +178,10 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 </div>}
                 <Row>
                     {quizAssignment.dueDate && <Col xs={12} sm={6} md={4}>
-                        <Label for="dueDate" className="pr-1">Extend the due date:
-                            <DateInput id="dueDate" value={dueDate} invalid={dueDate && (dueDate < quizAssignment.dueDate)}
-                                       yearRange={yearRange} noClear onChange={(e) => setDueDate(e.target.valueAsDate ?? undefined)}
-                                       disabled={isUpdatingQuiz}
-                            />
-                        </Label>
-                        {dueDate && (dueDate < quizAssignment.dueDate) && <small className={"text-danger"}>
-                            You cannot set the due date to be earlier than the current due date.
-                        </small>}
-                        <div className={"mt-2 w-100 text-center mb-2"}>
-                            {dueDate && (dueDate > quizAssignment.dueDate) && <Button disabled={isUpdatingQuiz} color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
-                                Extend due date
-                            </Button>}
-                        </div>
+                        <p>Due date: {formatDate(quizAssignment.dueDate)}</p>
+                        <Button disabled={isUpdatingQuiz} onClick={() => setIsModalOpen(true)}>
+                            Extend due Date
+                        </Button>
                     </Col>}
                     <Col>
                         <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br/>
