@@ -286,7 +286,7 @@ export const Glossary = () => {
                                 placeholder="Select a subject"
                                 onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                 isClearable
-                                className={`basic-multi-select ${filterSubject?.id ?? ""}`}
+                                className={`basic-multi-select glossary-select ${filterSubject?.id ?? ""}`}
                                 classNamePrefix="select"
                             />
                         </Col>}
