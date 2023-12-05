@@ -1,7 +1,7 @@
 import React from "react";
 import * as RS from "reactstrap";
 import {ContentBaseDTO} from "../../../IsaacApiTypes";
-import {isAda, isPhy, isIntendedAudience, notRelevantMessage, useUserContext} from "../../services";
+import {isIntendedAudience, notRelevantMessage, useUserContext} from "../../services";
 import {selectors, useAppSelector} from "../../state";
 import {RenderNothing} from "../elements/RenderNothing";
 
