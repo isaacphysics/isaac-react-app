@@ -33,8 +33,9 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
     const [searchSchools] = useLazySearchSchoolsQuery();
-    const searchSchoolsFn = useCallback(throttledSchoolSearch((school: string) => {
-        return searchSchools(school).then(({data, error}) => {
+    const searchSchoolsFn = useCallback(() => 
+        throttledSchoolSearch(async (school: string) => {
+            const { data, error } = await searchSchools(school);
             if (data && data.length > 0) {
                 return data;
             }
