@@ -15,6 +15,19 @@
   text-align: center;
 }
 
+.dynamic-x-padding .pad {
+  &:first-of-type {
+      padding-left: 0;
+  }
+
+  &:last-of-type {
+      padding-right: 0;
+  }
+
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
 .accordion-icon {
   background-repeat: no-repeat;
   background-size: contain;
