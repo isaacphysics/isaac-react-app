@@ -21,11 +21,39 @@ import useRegistration from "../hooks/useRegistration";
 import { RegistrationSubmit } from "../elements/inputs/RegistrationSubmit";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Recaptcha } from "../elements/inputs/Recaptcha";
+import { Link } from "react-router-dom";
 
 const metaDescriptionCS =
   "Sign up for a free account and get powerful GCSE and A Level Computer Science resources and questions. For classwork, homework, and revision.";
 
-export const TeacherRegistrationTerms = ({ acceptConditions }: { acceptConditions: (arg0: boolean) => void }) => {
+const AreYouATeacher = ({ onTeacherConfirmed }: { onTeacherConfirmed: () => void }) => {
+  return (
+    <Container id="confirm-teacher" className="mb-5">
+      <TitleAndBreadcrumb
+        currentPageTitle="Are you a Teacher?"
+        breadcrumbTitleOverride="Teacher"
+        intermediateCrumbs={[REGISTER_CRUMB]}
+        className="mb-4"
+      />
+      <Col>
+        <p className="mt-5 mx-auto col-lg-10">
+          You will be required to provide evidence of being a teacher before your teacher account will be activated. If
+          you are not listed on your school&apos;s website we will be required to contact your school directly.
+        </p>
+        <div className="text-center mb-1 mt-4">
+          <Button onClick={() => onTeacherConfirmed()} className="m-2 m-lg-4 btn btn-success border-0">
+            Yes, I am a teacher
+          </Button>
+          <Link to="/register/student">
+            <Button className="m-2 m-lg-4 btn btn-danger border-0">No, I am a student</Button>
+          </Link>
+        </div>
+      </Col>
+    </Container>
+  );
+};
+
+const TeacherRegistrationTerms = ({ acceptConditions }: { acceptConditions: () => void }) => {
   return (
     <Container id="teacher-conditions" className="mb-5">
       <TitleAndBreadcrumb
@@ -99,7 +127,7 @@ export const TeacherRegistrationTerms = ({ acceptConditions }: { acceptCondition
         <a href="https://isaaccomputerscience.org/support/teacher/general">FAQ section</a>.
       </p>
       <p className="text-center mb-1 mt-4">
-        <Button onClick={() => acceptConditions(true)} className="btn btn-secondary border-0">
+        <Button onClick={() => acceptConditions()} className="btn btn-secondary border-0">
           Continue to a teacher account
         </Button>
       </p>
@@ -108,7 +136,7 @@ export const TeacherRegistrationTerms = ({ acceptConditions }: { acceptCondition
 };
 
 // TODO: useLocation hook to retrieve email/password when upgrading react router to v6+
-export const TeacherRegistrationBody = () => {
+const TeacherRegistrationForm = () => {
   const user = useAppSelector(selectors.user.orNull);
   const errorMessage = useAppSelector(selectors.error.general);
   const { register, attemptedSignUp } = useRegistration({ isTeacher: true });
@@ -300,11 +328,14 @@ export const TeacherRegistrationBody = () => {
 };
 
 export const TeacherRegistration = () => {
-  const [conditionsAccepted, setConditionsAccepted] = useState(false);
+  const [registrationStep, setRegistrationStep] = useState(0);
 
-  return conditionsAccepted ? (
-    <TeacherRegistrationBody />
-  ) : (
-    <TeacherRegistrationTerms acceptConditions={setConditionsAccepted} />
-  );
+  switch (registrationStep) {
+    case 1:
+      return <TeacherRegistrationTerms acceptConditions={() => setRegistrationStep(2)} />;
+    case 2:
+      return <TeacherRegistrationForm />;
+    default:
+      return <AreYouATeacher onTeacherConfirmed={() => setRegistrationStep(1)} />;
+  }
 };

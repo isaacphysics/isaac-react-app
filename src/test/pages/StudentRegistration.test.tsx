@@ -24,7 +24,7 @@ describe("Student Registration", () => {
     });
   };
 
-  it("On student registration page all expected fields are present and only student options are available", async () => {
+  it("displays all expected fields and only student options are available", async () => {
     renderStudentRegistration();
     const form = screen.getByRole("form");
     checkPageTitle("Register as a student");
@@ -70,7 +70,7 @@ describe("Student Registration", () => {
     expect(allOption).toBeUndefined();
   });
 
-  it("If fields are filled in wrong, error messages are displayed", async () => {
+  it("displays error messages if fields are filled in wrong", async () => {
     renderStudentRegistration();
     await fillFormCorrectly(false, "student");
     const formFields = getFormFields();
@@ -84,7 +84,7 @@ describe("Student Registration", () => {
     expect(generalError).toBeVisible();
   });
 
-  it("If fields are filled in correctly, pressing submit will attempt to create a user", async () => {
+  it("attempts to create a user when submit is pressed, if fields are filled in correctly", async () => {
     renderTestEnvironment({
       role: "ANONYMOUS",
       PageComponent: StudentRegistration,
@@ -126,7 +126,7 @@ describe("Student Registration", () => {
     );
   });
 
-  it("Register button is disabled until recaptcha checkbox is ticked", async () => {
+  it("should disable register button until recaptcha checkbox is ticked", async () => {
     renderStudentRegistration();
     checkPageTitle("Register as a student");
     const formFields = getFormFields();
@@ -136,7 +136,7 @@ describe("Student Registration", () => {
     expect(submitButton()).toBeEnabled();
   });
 
-  it("Clicking the show password icon will make the text of password field visible, and the icon change", async () => {
+  it("makes the text of password field visible, and the icon change if the show password icon is clicked", async () => {
     renderStudentRegistration();
     checkPageTitle("Register as a student");
     checkPasswordInputTypes("password");

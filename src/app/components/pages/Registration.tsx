@@ -91,7 +91,7 @@ export const Registration = () => {
                 <Label htmlFor="teacher-input">
                   Teacher
                   <span id={`registration-tooltip`} className="icon-help ml-2" />
-                  <UncontrolledTooltip target={`registration-tooltip`} placement="bottom">
+                  <UncontrolledTooltip target={`registration-tooltip`} placement="right">
                     {"You will be required to provide evidence of being a teacher."}
                   </UncontrolledTooltip>
                 </Label>

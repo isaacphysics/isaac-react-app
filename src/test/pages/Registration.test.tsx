@@ -6,7 +6,7 @@ describe("Registration", () => {
   it.each([
     ["Student", "register/student"],
     ["Teacher", "register/teacher"],
-  ])("Selecting %s then pressing submit redirects to relevant Registration page", async (option, expectedUrl) => {
+  ])("redirects to relevant Registration page when selecting %s then pressing submit", async (option, expectedUrl) => {
     renderTestEnvironment({ role: "ANONYMOUS" });
     // Locate "Sign Up" in the header and click on it
     const header = await screen.findByTestId("header");
@@ -27,7 +27,7 @@ describe("Registration", () => {
     expect(window.location.href).toContain(expectedUrl);
   });
 
-  it("Selecting neither Student nor Teacher and pressing submit shows an error", async () => {
+  it("shows an error when selecting neither Student nor Teacher and pressing submit", async () => {
     renderTestEnvironment({ role: "ANONYMOUS" });
     // Locate "Sign Up" in the header and click on it
     const header = await screen.findByTestId("header");
