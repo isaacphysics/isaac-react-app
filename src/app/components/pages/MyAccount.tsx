@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import classnames from "classnames";
 import classNames from "classnames";
 import {
+    Button,
     Card,
     CardFooter,
     Col,
@@ -18,10 +19,13 @@ import {
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {
+    AppDispatch,
     AppState,
+    closeActiveModal,
     errorSlice,
     ErrorState,
     getChosenUserAuthSettings,
+    openActiveModal,
     resetPassword,
     showErrorToast,
     updateCurrentUser,
@@ -33,7 +37,7 @@ import {
     DisplaySettings,
     PotentialUser,
     ProgrammingLanguage,
-    UserPreferencesDTO
+    UserPreferencesDTO,
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
@@ -106,6 +110,23 @@ function hashEqual<T>(current: NonNullable<T>, prev: NonNullable<T>, options?: N
     if (debug) console.log("Equal?:", equal);
     return equal;
 }
+
+const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
+    dispatch(openActiveModal({
+        closeAction: () => {
+            dispatch(closeActiveModal());
+        },
+        title: "Changing schools?",
+        body: <p className="px-1">
+            When you change schools, check your <strong><a target="_blank" href="/groups">groups</a></strong> and your <strong><a target="_blank" href="/account#teacherconnections">connections</a></strong>. Delete any groups that you will no longer teach and remove any connections with old colleagues and students.
+        </p>,
+        buttons: [
+            <Button key={1} color="primary" onClick={() => dispatch(closeActiveModal())}>
+                Continue
+            </Button>
+        ]
+    }));
+};
 
 const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthSettings, userPreferences, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
     const dispatch = useAppDispatch();
@@ -210,6 +231,16 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
             return history.block("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?");
         }
     }, [accountInfoChanged, saving]);
+
+    // Handling teachers changing school
+    useEffect(() => {
+        const originalSchool: string | undefined = "schoolId" in user ? user.schoolId : undefined; 
+        const newSchool: string | undefined = userToUpdate.schoolId;
+        if (newSchool && (!originalSchool || originalSchool !== newSchool)) {
+            dispatch(showChangeSchoolModal());
+        }
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [userToUpdate, user]);
 
     // Form's submission method
     function updateAccount(event: React.FormEvent<HTMLFormElement>) {
