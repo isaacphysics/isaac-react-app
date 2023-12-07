@@ -21,9 +21,12 @@
   }
 }
 
+.ratio-16x9 {
+  aspect-ratio: 16/9;
+}
+
 .content-video-container {
   position: relative;
-  aspect-ratio: 16/9;
   margin-bottom: 1rem;
   iframe {
     position: absolute;

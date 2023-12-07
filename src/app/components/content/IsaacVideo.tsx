@@ -1,9 +1,10 @@
 import React, {useCallback, useContext} from 'react';
 import {VideoDTO} from "../../../IsaacApiTypes";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {NOT_FOUND, trackEvent} from "../../services";
+import {NOT_FOUND, trackEvent, useUserContext} from "../../services";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import { GenericYoutubeCookieHandler } from '../handlers/InterstitialCookieHandler';
+import classNames from "classnames";
 
 interface IsaacVideoProps {
     doc: VideoDTO;
@@ -62,6 +63,7 @@ export function pauseAllVideos() {
 
 export function IsaacVideo(props: IsaacVideoProps) {
     const dispatch = useAppDispatch();
+    const userContext = useUserContext();
     const {doc: {src, altText}} = props;
     const page = useAppSelector(selectors.doc.get);
     const pageId = page && page !== NOT_FOUND && page.id || undefined;
@@ -106,10 +108,11 @@ export function IsaacVideo(props: IsaacVideoProps) {
         return detailsForPrintOut;
     }
 
+
     return <div>
         <div className="no-print content-value text-center">
             { embedSrc ?
-                <div className="content-video-container">
+                <div className={classNames("content-video-container", {"ratio-16x9" : userContext.cookieConsent?.youtubeCookieAccepted ?? false})}>
                     <GenericYoutubeCookieHandler afterAcceptedElement={
                         <iframe ref={videoRef} className="mw-100" title={altTextToUse} src={embedSrc} allowFullScreen/>
                     } />
