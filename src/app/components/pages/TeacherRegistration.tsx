@@ -64,46 +64,37 @@ const TeacherRegistrationTerms = ({ acceptConditions }: { acceptConditions: () =
       />
       <MetaDescription description={metaDescriptionCS} />
       <p className="mt-5">
-        To be eligible to upgrade your Isaac Computer Science account to a teacher account, you must meet the following
-        criteria:
+        To be eligible for an Isaac Computer Science teacher account, you must meet the following criteria:
       </p>
       <ul>
         <li>You must be at least 18 years of age</li>
-        <li>You must be a qualified teacher or professional tutor</li>
+        <li>You must be a qualified teacher</li>
         <li>
           Your profile on the Isaac platform must be set up under your own full name, not the name of your department
         </li>
-        <li>
-          Your profile on the Isaac platform must include the name of your school, unless you are applying as a private
-          tutor
-        </li>
-        <li>
-          You must use the email address given to you by your school or institution, or used for your private tuition
-          services.
-        </li>
+        <li>Your profile on the Isaac platform must include the name of your school</li>
+        <li>You must use the email address given to you by your school or institution</li>
         <li>You must have verified your email address by clicking on the link that we sent to you by email</li>
       </ul>
       <h3>Verification of teacher accounts</h3>
-      <p>Isaac Computer Science accounts are upgraded to teacher accounts following a manual verification process:</p>
+      <p>Isaac Computer Science teacher accounts are verified following a manual process:</p>
       <ul>
         <li>
           If your school&apos;s website features a staff list, we will check that your verified email domain matches the
           URL of your school&apos;s website, and that you are listed as a member of staff.
         </li>
         <li>
-          If your school&apos;s website does not feature a staff list, we will contact your school&apos;s reception by
-          telephone to verify that you are a member of staff.
-        </li>
-        <li>
-          If you are a private tutor we ask that you provide a reference from a former colleague at a school, evidence
-          of your tutoring services and a DBS certificate.
+          If your school&apos;s website does not feature a staff list, we will ask your school to confirm that you are a
+          staff member by sending an email to{" "}
+          <a href="mailto:contact@isaaccomputerscience.org">contact@isaaccomputerscience.org</a>.
         </li>
       </ul>
       <p>
         We process all requests as quickly as possible, however, please note that the initial stage can take up to 5
         working days. To help us process your request quickly, please provide a link to a page on your school&apos;s
         website on which you are listed as a member of staff, or if you know that you are not listed on the school
-        website, please inform your school reception team that they may receive a call from us.
+        website, please ask your school to confirm that you are a staff member by sending an email to{" "}
+        <a href="mailto:contact@isaaccomputerscience.org">contact@isaaccomputerscience.org</a>.
       </p>
       <h3>What does a teacher account give you?</h3>
       <p>

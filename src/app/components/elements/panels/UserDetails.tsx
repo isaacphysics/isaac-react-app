@@ -67,9 +67,9 @@ export const UserDetails = (props: UserDetailsProps) => {
             ) : (
               <span>
                 <small>
-                  (Are you a teacher or tutor?{" "}
+                  (Are you a teacher?{" "}
                   <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
-                    Upgrade your account
+                    Apply for a teacher account
                   </Link>
                   .)
                 </small>
