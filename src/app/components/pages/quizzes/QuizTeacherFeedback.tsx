@@ -19,7 +19,6 @@ import {
     isQuestion,
     PATHS
 } from "../../../services";
-import {ExtendDueDateModal} from "../../elements/modals/ExtendDueDateModal";
 import {AppAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
 import {formatDate} from "../../elements/DateString";
@@ -60,7 +59,6 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const quizAssignmentQuery = useGetQuizAssignmentWithFeedbackQuery(numericQuizAssignmentId);
     const {data: quizAssignment} = quizAssignmentQuery;
     const [updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     const setFeedbackMode = (mode: QuizFeedbackMode) => {
         if (mode !== quizAssignment?.quizFeedbackMode) {
@@ -81,12 +79,6 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     </>;
 
     return <Container>
-        {quizAssignment?.dueDate && <ExtendDueDateModal
-            isOpen={isModalOpen}
-            toggle={() => setIsModalOpen(false)}
-            currDueDate={quizAssignment.dueDate}
-            numericQuizAssignmentId={numericQuizAssignmentId}
-        />}
         <ShowLoadingQuery
             query={quizAssignmentQuery}
             ifError={buildErrorComponent}
@@ -105,9 +97,6 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 <Row>
                     {quizAssignment.dueDate && <Col xs={12} sm={6} md={4}>
                         <p>Due date: {formatDate(quizAssignment.dueDate)}</p>
-                        <Button disabled={isUpdatingQuiz} onClick={() => setIsModalOpen(true)}>
-                            Extend due Date
-                        </Button>
                     </Col>}
                     <Col>
                         <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br/>

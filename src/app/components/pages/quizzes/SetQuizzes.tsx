@@ -4,7 +4,8 @@ import {
     useAppDispatch,
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
-    useCancelQuizAssignmentMutation
+    useCancelQuizAssignmentMutation,
+    useUpdateQuizAssignmentMutation
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -34,6 +35,7 @@ import {PageFragment} from "../../elements/PageFragment";
 import {RenderNothing} from "../../elements/RenderNothing";
 import { useHistoryState } from "../../../state/actions/history";
 import classNames from "classnames";
+import { ExtendDueDateModal } from "../../elements/modals/ExtendDueDateModal";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -56,13 +58,23 @@ function formatAssignmentOwner(user: RegisteredUserDTO, assignment: QuizAssignme
 
 function QuizAssignment({user, assignment}: QuizAssignmentProps) {
     const [markQuizAsCancelled, {isLoading: isCancelling}] = useCancelQuizAssignmentMutation();
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [_updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
     const cancel = () => confirmThen(
         "Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.",
         () => markQuizAsCancelled(assignment.id as number)
     );
     const assignmentNotYetStarted = assignment?.scheduledStartDate && nthHourOf(0, assignment?.scheduledStartDate) > TODAY();
     const quizTitle = (assignment.quizSummary?.title || assignment.quizId) + (assignmentNotYetStarted ? ` (starts ${formatDate(assignment?.scheduledStartDate)})` : "");
-    return <div className="p-2">
+
+    return <RS.Container>
+        {assignment?.dueDate && <ExtendDueDateModal
+            isOpen={isModalOpen}
+            toggle={() => setIsModalOpen(false)}
+            currDueDate={assignment.dueDate}
+            numericQuizAssignmentId={assignment.id as number}
+        />}
+        <div className="p-2">
         <RS.Card className="card-neat">
             <RS.CardBody>
                 <h4 className="border-bottom pb-3 mb-3">{quizTitle}</h4>
@@ -79,6 +91,9 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
                 </RS.Row>
 
                 <div className="mt-4 text-right">
+                    <RS.Button color="tertiary" outline className="float-left mr-1 bg-light" size="sm" disabled={isUpdatingQuiz} onClick={() => setIsModalOpen(true)}>
+                        Extend due date
+                    </RS.Button>
                     <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1 bg-light">
                         {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
                     </RS.Button>
@@ -88,7 +103,8 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
                 </div>
             </RS.CardBody>
         </RS.Card>
-    </div>;
+    </div>
+    </RS.Container>;
 }
 
 const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {

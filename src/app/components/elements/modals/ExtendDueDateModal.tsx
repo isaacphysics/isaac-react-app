@@ -33,6 +33,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
     const dispatch = useAppDispatch();
 
     const setValidDueDate = () => {
+        console.log(isUpdatingQuiz, numericQuizAssignmentId, !dueDate, currDueDate == dueDate);
         if (isUpdatingQuiz || !numericQuizAssignmentId || !dueDate || currDueDate == dueDate) {
             return;
         }
@@ -42,7 +43,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
                 .then((result) => {
                     if (mutationSucceeded(result)) {
                         dispatch(showSuccessToast(
-                            "Due date extended successfully", `This test is now due ${dueDate.toLocaleDateString()}.`
+                            "Due date extended successfully", `This test is now due by ${dueDate.toLocaleDateString()}.`
                         ));
                         toggle();
                     }
@@ -78,7 +79,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
                     onClick={setValidDueDate}
                     role={"button"}
                     disabled={isUpdatingQuiz && dueDate && (dueDate < currDueDate)}>
-                    Extend due date
+                    {`Extend due date`}
                 </Button>
             </Container>
         </ModalBody>
