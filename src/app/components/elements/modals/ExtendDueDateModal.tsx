@@ -59,7 +59,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
             Extend due date?
         </ModalHeader>
         <ModalBody>
-            <p className="px-1">{`Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.</p>
+            <p className="px-1">{`Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.`}</p>
             <hr className="text-center"/>
             <Container className="py-2">
                 <Label for="dueDate" className="pr-1">Extend the due date:
