@@ -82,8 +82,8 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsPr
 
 export const Tabs = (props: TabsProps) => {
     const {
-        className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange,
-        deselectable=false, refreshHash, expandable, singleLine=false, style="tabs"
+        className="", tabTitleClass: _tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange,
+        deselectable=false, refreshHash, expandable, singleLine: _singleLine=false, style="tabs"
     } = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
