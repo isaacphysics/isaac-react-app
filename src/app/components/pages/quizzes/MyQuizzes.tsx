@@ -12,7 +12,7 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
-    extractTeacherName, isAda,
+    extractTeacherName,
     isAttempt,
     isFound,
     isTutorOrAbove,
@@ -23,6 +23,7 @@ import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
 import {useGetAvailableQuizzesQuery} from "../../../state";
 import {PageFragment} from "../../elements/PageFragment";
+import { CardGrid } from "../../elements/CardGrid";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -44,12 +45,12 @@ function QuizItem({item}: QuizAssignmentProps) {
     const status: Status = !attempt ? Status.Unstarted : !attempt.completedDate ? Status.Started : Status.Complete;
     const assignmentStartDate = assignment?.scheduledStartDate ?? assignment?.creationDate;
     return <div className="p-2">
-        <RS.Card className="card-neat">
-            <RS.CardBody>
+        <RS.Card className="card-neat my-quizzes-card">
+            <RS.CardBody className="d-flex flex-column">
                 <h4 className="border-bottom pb-3 mb-3">{item.quizSummary?.title || item.quizId }</h4>
 
                 {assignment
-                    ? <p>{assignment.dueDate && <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></>}</p>
+                    ? assignment.dueDate && <p>Due date: <strong>{formatDate(assignment.dueDate)}</strong></p>
                     : attempt && siteSpecific(
                         <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>,
                         <p>{status === Status.Started ? "Attempting" : "Attempted"} independently</p>
@@ -65,6 +66,8 @@ function QuizItem({item}: QuizAssignmentProps) {
                         : `Started: ${formatDate(attempt.startDate)}`
                     }
                 </p>}
+
+                <Spacer/>
 
                 <div className="text-center mt-4">
                     {assignment ? <>
@@ -109,9 +112,9 @@ interface AssignmentGridProps {
 function QuizGrid({quizzes, empty}: AssignmentGridProps) {
     return <>
         {quizzes.length === 0 && <p>{empty}</p>}
-        {quizzes.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
+        {quizzes.length > 0 && <CardGrid>
             {quizzes.map(item => <QuizItem key={(isAttempt(item) ? 'at' : 'as') + item.id} item={item}/>)}
-        </div>}
+        </CardGrid>}
     </>;
 }
 
