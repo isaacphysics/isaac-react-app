@@ -1,19 +1,19 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Button, Card, CardBody, CardFooter, CardImg, CardText, CardTitle} from "reactstrap";
+import {Button, Card, CardBody, CardFooter, CardImg, CardProps, CardText, CardTitle} from "reactstrap";
 import {IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper, isAppLink, siteSpecific} from "../../../services";
 import classNames from "classnames";
 
-interface NewsCardProps {
+interface NewsCardProps extends CardProps {
     newsItem: IsaacPodDTO;
     showTitle?: boolean;
 }
 
-const PhysicsNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
+const PhysicsNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
 
-    return <Card data-testid={"news-pod"} className={"card-neat news-card"}>
+    return <Card data-testid={"news-pod"} className={"card-neat news-card"} {...props}>
         {image && <a href={url}>
             <CardImg
                 top
@@ -23,7 +23,7 @@ const PhysicsNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
         </a>}
         <CardBody className="d-flex flex-column">
             <div className="m-0 mb-auto">
-                <span className="d-block my-2">
+                <span className="d-block mb-2 news-card-text">
                     {showTitle ?
                         <div>
                             <h3 className="card-title">
@@ -54,9 +54,9 @@ const PhysicsNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
     </Card>;
 };
 
-export const AdaNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
+export const AdaNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
-    return <Card data-testid={"news-pod"} className={classNames("news-card border-0 pb-3 my-3 my-xl-0")}>
+    return <Card data-testid={"news-pod"} className={classNames("news-card border-0 pb-3 my-3 my-xl-0")} {...props}>
         {image && <a href={url} className={"w-100"}>
             <CardImg
                 className={"news-card-image"}
