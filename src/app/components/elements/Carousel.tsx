@@ -1,69 +1,67 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {ReactNode, useCallback, useEffect, useRef, useState} from 'react';
 import {Carousel, CarouselControl, CarouselIndicators, CarouselItem} from 'reactstrap';
-import {ifKeyIsEnter} from "../../services";
+import {below, ifKeyIsEnter, useDeviceSize} from "../../services";
+import { Spacer } from './Spacer';
 
-const ControlledCarouselInstance = ({children, collectionTag}: any) => {
-    const items = children;
+interface ControlledCarouselInstanceProps {
+    children: any;
+}
+
+const ControlledCarouselInstance = (props: ControlledCarouselInstanceProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
 
-    const gotoIndex = (newIndex: any) => {
-        if (!animating) {
-            setActiveIndex(newIndex);
-        }
+    const gotoIndex = (newIndex: number) => {
+        if (!animating) setActiveIndex(newIndex);
     };
 
-    const next = () => {
-        if (!animating) {
-            setActiveIndex(activeIndex + 1);
-        }
-    };
-    useEffect(() => {if (activeIndex >= items.length) setActiveIndex(0)}, [activeIndex, setActiveIndex]);
+    const next = useCallback(() => {
+        if (!animating) setActiveIndex(activeIndex + 1);
+    }, [activeIndex, animating]);
 
-    const previous = () => {
-        if (!animating) {
-            setActiveIndex(activeIndex - 1);
-        }
-    };
-    useEffect(() => {if (activeIndex == -1) setActiveIndex(items.length - 1)}, [activeIndex, setActiveIndex]);
+    const previous = useCallback(() => {
+        if (!animating) setActiveIndex(activeIndex - 1);
+    }, [activeIndex, animating]);
+    
+    useEffect(() => {
+        if (activeIndex >= props.children.length) setActiveIndex(0);
+    }, [activeIndex, props.children.length, setActiveIndex]);
+    
+    useEffect(() => {
+        if (activeIndex == -1) setActiveIndex(props.children.length - 1);
+    }, [activeIndex, props.children.length, setActiveIndex]);
 
     const onExiting = () => setAnimating(true);
     const onExited = () => setAnimating(false);
-    const onEntered = (element: HTMLElement) => {
-        const focusTargets = element.getElementsByClassName('focus-target');
-        if (focusTargets.length > 0) {
-            // @ts-ignore we should only mark focusable elements with the focus-target class
-            focusTargets[0].focus();
-        }
-    };
-
-    const CollectionTag = collectionTag;
 
     // Manually set up event listeners until ReactStrap becomes more extensible
-    const carouselContainer = useRef<HTMLDivElement>(null)
+    const carouselContainer = useRef<HTMLDivElement>(null);
     useEffect(() => {
+        const ref = carouselContainer.current;
         const classToCallback = {
             "carousel-control-prev": ifKeyIsEnter(previous),
             "carousel-control-next": ifKeyIsEnter(next)
         };
-        if (carouselContainer.current) {
-            for (let [cssClass, callback] of Object.entries(classToCallback)) {
+
+        if (ref) {
+            for (const [cssClass, callback] of Object.entries(classToCallback)) {
                 const elements = carouselContainer.current.getElementsByClassName(cssClass);
                 if (elements.length) {
                     elements[0].addEventListener("keypress", callback as any);
                 }
             }
         }
+
         return function cleanUp() {
-            if (carouselContainer.current) {
-                for (let [cssClass, callback] of Object.entries(classToCallback)) {
-                    const elements = carouselContainer.current.getElementsByClassName(cssClass);
+            if (ref) {
+                for (const [cssClass, callback] of Object.entries(classToCallback)) {
+                    const elements = ref.getElementsByClassName(cssClass);
                     if (elements.length) {
                         elements[0].removeEventListener("keypress", callback as any);
                     }
                 }
             }
-        }
+        };
     }, [next, previous]);
 
     return (
@@ -73,16 +71,18 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
                 previous={previous} previousLabel="Previous" next={next} nextLabel="Next"
             >
                 <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
-                {children.map((child: any, index: number) => (
-                    <CarouselItem key={index} onEntered={onEntered as any} onExiting={onExiting} onExited={onExited}>
-                        <CollectionTag>
+                {props.children.map((child: ReactNode, index: number) => (
+                    <CarouselItem key={index} onExiting={onExiting} onExited={onExited}>
+                        <div>
+                            <Spacer />
                             {child}
-                        </CollectionTag>
+                            <Spacer />
+                        </div>
                     </CarouselItem>
                 ))}
                 <CarouselControl direction="next" directionText="Next" onClickHandler={next} onKeyPress={next} />
                 <CarouselIndicators
-                    items={items.map((item: any, index: number) => ({key: index}))}
+                    items={props.children.map((_child: ReactNode, index: number) => ({key: index}))}
                     activeIndex={activeIndex}
                     onClickHandler={gotoIndex}
                 />
@@ -91,33 +91,25 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
     );
 };
 
-export const ResponsiveCarousel = ({groupingLimit, children, collectionTag = 'div', className}: any) => {
-    const tuple: any = [];
+export const ResponsiveCarousel = ({...props}: React.HTMLAttributes<HTMLElement>) => {
+    const podGroups: Element[][] = [];
+    const deviceSize = useDeviceSize();
+    const groupingLimit = below['sm'](deviceSize) ? 1 : below['md'](deviceSize) ? 2 : 3;
 
-    if (!groupingLimit || groupingLimit == 0) {
-        groupingLimit = 3
-    }
+    if (!props.children || !Array.isArray(props.children)) return null;
 
-    children.forEach((child: any, index: number) => {
+    props.children?.forEach((child: HTMLElement, index: number) => {
         if (index % groupingLimit === 0) {
-            tuple.push([]);
+            podGroups.push([]);
         }
-        tuple[Math.floor(index / groupingLimit)].push (child);
+        podGroups[Math.floor(index / groupingLimit)].push(child);
     });
 
     return (
-        <React.Fragment>
-            <div className={`d-md-none ${className ?? ""}`}>
-                <ControlledCarouselInstance collectionTag={collectionTag}>
-                    {children}
-                </ControlledCarouselInstance>
-            </div>
-            <div data-testid={"carousel-inner"} className={`d-none d-md-block ${className ?? ""}`}>
-                <ControlledCarouselInstance collectionTag={collectionTag}>
-                    {tuple}
-                </ControlledCarouselInstance>
-            </div>
-        </React.Fragment>
+        <ControlledCarouselInstance data-testid={"carousel-inner"} className={`d-block`} {...props}>
+            {...podGroups}
+        </ControlledCarouselInstance>
     );
 };
 export default ResponsiveCarousel;
+
