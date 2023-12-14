@@ -62,7 +62,6 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     }, [userToUpdate]);
 
     // Set schoolId or schoolOther
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function setUserSchool(school: any) {
         const {schoolId: _schoolId, schoolOther: _schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
         if (school.urn) {
