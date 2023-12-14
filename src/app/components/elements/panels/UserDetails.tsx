@@ -4,8 +4,7 @@ import {
     isAda,
     isTutor,
     PROGRAMMING_LANGUAGE,
-    programmingLanguagesMap, TEACHER_REQUEST_ROUTE,
-    UserFacingRole,
+    programmingLanguagesMap,
     validateEmail,
     validateName
 } from "../../../services";
@@ -15,7 +14,6 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
-import {Link} from "react-router-dom";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
 import {CountryInput} from "../inputs/CountryInput";
@@ -23,6 +21,7 @@ import {AccountTypeMessage} from "../AccountTypeMessage";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setUserToUpdate: (user: any) => void;
     userContexts: UserContext[];
     setUserContexts: (uc: UserContext[]) => void;
@@ -154,7 +153,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                         type="select" name="select" id="programming-language-select"
                         value={Object.values(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage?.[key as keyof ProgrammingLanguage] ? key : val, PROGRAMMING_LANGUAGE.NONE)}
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                            let newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce((acc, [k, v]) => ({...acc, [k]: false}), {});
+                            const newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce((acc, [k, _v]) => ({...acc, [k]: false}), {});
                             setProgrammingLanguage(event.target.value ? {...newProgrammingLanguage, [event.target.value]: true} : newProgrammingLanguage);
                         }}
                     >
@@ -175,5 +174,5 @@ export const UserDetails = (props: UserDetailsProps) => {
         {submissionAttempted && !allRequiredFieldsValid && <h4 role="alert" className="text-danger text-center mt-4 mb-3">
             Not all required fields have been correctly filled.
         </h4>}
-    </CardBody>
+    </CardBody>;
 };
