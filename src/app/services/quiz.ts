@@ -11,7 +11,6 @@ import {
     showErrorToast,
     showRTKQueryErrorToastIfNeeded,
     showSuccessToast,
-    showToast,
     useAppDispatch,
     useAppSelector,
     useGetAvailableQuizzesQuery,
@@ -26,10 +25,8 @@ import {
     isQuestion,
     Item,
     matchesAllWordsInAnyOrder,
-    nthHourOf,
     siteSpecific,
     tags,
-    TODAY,
     toTuple,
     useQueryParams
 } from "./";
@@ -63,40 +60,6 @@ export const assignMultipleQuiz = createAsyncThunk(
         {dispatch, rejectWithValue}
     ) => {
         const appDispatch = dispatch as AppDispatch;
-        if (groups.length === 0) {
-            appDispatch(showErrorToast(
-                `${siteSpecific("Quiz", "Test")} assignment failed`,
-                "Error: Please choose one or more groups."
-            ));
-            return rejectWithValue(null);
-        }
-
-        const today =  TODAY();
-        const isDue = dueDate !== undefined;
-        const isScheduled = scheduledStartDate !== undefined;
-
-        if (isDue) {
-            dueDate?.setHours(0, 0, 0, 0);
-            if ((dueDate.valueOf() - today.valueOf()) < 0) {
-                appDispatch(showToast({color: "danger", title: `${siteSpecific("Quiz", "Test")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}));
-                return rejectWithValue(null);
-            }
-        }
-
-        if (isScheduled) {
-            // Start date can be today, in which case the assignment will be immediately set (if it is past 7am)
-            if (nthHourOf(0, scheduledStartDate).valueOf() < nthHourOf(0, new Date()).valueOf()) {
-                appDispatch(showToast({color: "danger", title: `${siteSpecific("Quiz", "Test")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}));
-                return rejectWithValue(null);
-            }
-        }
-
-        if (isDue && isScheduled) {
-            if (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) {
-                appDispatch(showToast({color: "danger", title: `${siteSpecific("Quiz", "Test")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be on or after scheduled start date.", timeout: 5000}));
-                return rejectWithValue(null);
-            }
-        }
 
         const groupIds = groups.map(getValue);
         const quizzes: QuizAssignmentDTO[] = groupIds.map(id => ({

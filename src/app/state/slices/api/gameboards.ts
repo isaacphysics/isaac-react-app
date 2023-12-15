@@ -6,9 +6,8 @@ import {
     isTutorOrAbove,
     Item,
     KEY,
-    nthHourOf, PATHS,
+    PATHS,
     persistence, siteSpecific,
-    TODAY,
     toTuple
 } from "../../../services";
 import {createAsyncThunk} from "@reduxjs/toolkit";
@@ -23,7 +22,6 @@ import {
     showErrorToast,
     showRTKQueryErrorToastIfNeeded,
     showSuccessToast,
-    showToast
 } from "../../index";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {Immutable} from "immer";
@@ -47,32 +45,6 @@ export const assignGameboard = createAsyncThunk(
                 "Error: Please choose one or more groups."
             ));
             return rejectWithValue(null);
-        }
-
-        const today = TODAY();
-
-        // TODO think about whether this can be done in the back-end too?
-        if (dueDate !== undefined) {
-            dueDate?.setHours(0, 0, 0, 0);
-            if ((dueDate.valueOf() - today.valueOf()) < 0) {
-                appDispatch(showToast({color: "danger", title: `${siteSpecific("Gameboard", "Quiz")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}));
-                return rejectWithValue(null);
-            }
-        }
-
-        if (scheduledStartDate !== undefined) {
-            // Start date can be today, in which case the assignment will be immediately set (if it is past 7am)
-            if (nthHourOf(0, scheduledStartDate).valueOf() < nthHourOf(0, new Date()).valueOf()) {
-                appDispatch(showToast({color: "danger", title: `${siteSpecific("Gameboard", "Quiz")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}));
-                return rejectWithValue(null);
-            }
-        }
-
-        if (dueDate !== undefined && scheduledStartDate !== undefined) {
-            if (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) {
-                appDispatch(showToast({color: "danger", title: `${siteSpecific("Gameboard", "Quiz")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be on or after scheduled start date.", timeout: 5000}));
-                return rejectWithValue(null);
-            }
         }
 
         const groupIds = groups.map(getValue);
