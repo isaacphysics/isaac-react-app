@@ -688,6 +688,9 @@ export enum TAG_ID {
     biotechnology = "biotechnology",
     // Physiology
     plants = "plants",
+    breathingAndCirculation = "breathing_circulation",
+    hormones = "hormones",
+    digestionAndExcretion = "digestion_excretion",
     // Ecology
     populations = "populations",
     ecosystems = "ecosystems",
