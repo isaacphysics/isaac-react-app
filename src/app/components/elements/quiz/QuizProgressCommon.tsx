@@ -198,7 +198,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId, progress, qu
                     onClick={() => setSelectedQuestionNumber(selectedQuestionNumber + 1)}>►</Button>
             </div>
             <div className="assignment-progress-table-wrapper">
-                <table ref={tableRef} className="progress-table w-100">
+                <table ref={tableRef} className="progress-table w-100 border">
                     <thead>
                         {tableHeaderFooter}
                     </thead>
