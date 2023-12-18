@@ -92,7 +92,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId, progress, qu
     }
 
     function sortClasses(q: SortOrder) {
-        if (q == sortOrder) {
+        if (q === sortOrder) {
             return "sorted" + (reverseOrder ? " reverse" : " forward");
         } else {
             return "";
@@ -101,7 +101,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId, progress, qu
 
     function toggleSort(itemOrder: SortOrder) {
         setSortOrder(itemOrder);
-        if (sortOrder == itemOrder) {
+        if (sortOrder === itemOrder) {
             setReverseOrder(!reverseOrder);
         } else {
             setReverseOrder(false);
@@ -140,7 +140,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId, progress, qu
     , [semiSortedProgress, reverseOrder, sortOrder]);
 
     const tableHeaderFooter = <tr className="progress-table-header-footer">
-        {sortItem({key: "name", itemOrder: "name"})}
+        {sortItem({key: "name", itemOrder: "name", className: "student-name"})}
         {questions.map((q, index) =>
             sortItem({key: q.id, itemOrder: index, className: isSelected(q), children: `${assignmentAverages[index]}%`})
         )}
@@ -151,8 +151,6 @@ export function ResultsTable<Q extends QuestionType>({assignmentId, progress, qu
         <>
             {sortItem({key: "totalQuestionPartPercentage", itemOrder: "totalQuestionPartPercentage", className:"total-column", children: "Overall"})}
         </>
-            
-        
     }
     </tr>;
 
@@ -199,85 +197,87 @@ export function ResultsTable<Q extends QuestionType>({assignmentId, progress, qu
                 <Button color="tertiary" disabled={selectedQuestionNumber === questions.length - 1}
                     onClick={() => setSelectedQuestionNumber(selectedQuestionNumber + 1)}>►</Button>
             </div>
-            <table ref={tableRef} className="progress-table w-100">
-                <thead>
-                    {tableHeaderFooter}
-                </thead>
-                <tbody>
-                    {sortedProgress.map((studentProgress, index) => {
-                        const fullAccess = studentProgress.user.authorisedFullAccess;
-                        return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
-                            <th className="student-name">
-                                {fullAccess && pageSettings.isTeacher ?
-                                    (
-                                        isQuiz ?
-                                        <>
-                                            <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
-                                                <div
-                                                    className="quiz-student-name"
-                                                >
-                                                    {studentProgress.user.givenName}
-                                                    <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
-                                                </div>
-                                                <div className="quiz-student-menu-icon">
-                                                    {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
-                                                </div>
-                                            </Button>
-                                            {!returningQuizToStudent && dropdownOpen?.[index] && <>
-                                                <div className="py-2 px-3">
-                                                    <Button size="sm" onClick={() => returnToStudent(studentProgress.user.id)}>Allow another attempt</Button>
-                                                </div>
-                                                <div className="py-2 px-3">
-                                                    <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user.id}`}>View answers</Button>
-                                                </div>
-                                            </>}
-                                        </>
-                                        : <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
-                                            {studentProgress.user.givenName}
-                                            <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
-                                        </Link>
-                                    ) :
-                                    <span>{studentProgress.user.givenName} {studentProgress.user.familyName}</span>
-                                }
-                            </th>
-                            {questions.map((q, index) =>
-                                <td key={q.id} className={isSelected(questions[index]) + " " + markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestionNumber(index)}>
-                                    {(assignmentTotalQuestionParts === questions.length) ?
-                                        studentProgress.correctPartResults[index] === 1 ? ICON.correct :
-                                        studentProgress.incorrectPartResults[index] === 1 ? ICON.incorrect :
-                                        /* default */ ICON.notAttempted
-                                    : 
-                                    fullAccess ? formatMark(studentProgress.correctPartResults[index],
-                                        questions[index].questionPartsTotal as number,
-                                        pageSettings.formatAsPercentage) : ""
+            <div className="assignment-progress-table-wrapper">
+                <table ref={tableRef} className="progress-table w-100 border">
+                    <thead>
+                        {tableHeaderFooter}
+                    </thead>
+                    <tbody>
+                        {sortedProgress.map((studentProgress, index) => {
+                            const fullAccess = studentProgress.user.authorisedFullAccess;
+                            return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
+                                <th className="student-name">
+                                    {fullAccess && pageSettings.isTeacher ?
+                                        (
+                                            isQuiz ?
+                                            <>
+                                                <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
+                                                    <div
+                                                        className="quiz-student-name"
+                                                    >
+                                                        {studentProgress.user.givenName}
+                                                        <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                                    </div>
+                                                    <div className="quiz-student-menu-icon">
+                                                        {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
+                                                    </div>
+                                                </Button>
+                                                {!returningQuizToStudent && dropdownOpen?.[index] && <>
+                                                    <div className="py-2 px-3">
+                                                        <Button size="sm" onClick={() => returnToStudent(studentProgress.user.id)}>Allow another attempt</Button>
+                                                    </div>
+                                                    <div className="py-2 px-3">
+                                                        <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user.id}`}>View answers</Button>
+                                                    </div>
+                                                </>}
+                                            </>
+                                            : <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
+                                                {studentProgress.user.givenName}
+                                                <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                            </Link>
+                                        ) :
+                                        <span>{studentProgress.user.givenName} {studentProgress.user.familyName}</span>
                                     }
-                                </td> 
-                            )}
-                            {isQuiz ? <>
-                                <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
-                                    {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
-                                        assignmentTotalQuestionParts,
-                                        pageSettings.formatAsPercentage) : ""}
                                 </th>
-                                <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
-                                    {fullAccess ? formatMark(studentProgress.tickCount,
-                                        questions.length,
-                                        pageSettings.formatAsPercentage) : ""}
-                                </th>
-                            </> : 
-                                <th className="total-column" title={fullAccess ? undefined : "Not Sharing"}>
-                                    {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
-                                        assignmentTotalQuestionParts,
-                                        pageSettings.formatAsPercentage) : ""}
-                                </th>
-                            }
-                        </tr>;
-                    })}
-                </tbody>
-                <tfoot>
-                    {tableHeaderFooter}
-                </tfoot>
-            </table>
+                                {questions.map((q, index) =>
+                                    <td key={q.id} className={isSelected(questions[index]) + " " + markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestionNumber(index)}>
+                                        {(assignmentTotalQuestionParts === questions.length) ?
+                                            studentProgress.correctPartResults[index] === 1 ? ICON.correct :
+                                            studentProgress.incorrectPartResults[index] === 1 ? ICON.incorrect :
+                                            /* default */ ICON.notAttempted
+                                        : 
+                                        fullAccess ? formatMark(studentProgress.correctPartResults[index],
+                                            questions[index].questionPartsTotal as number,
+                                            pageSettings.formatAsPercentage) : ""
+                                        }
+                                    </td> 
+                                )}
+                                {isQuiz ? <>
+                                    <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
+                                        {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
+                                            assignmentTotalQuestionParts,
+                                            pageSettings.formatAsPercentage) : ""}
+                                    </th>
+                                    <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
+                                        {fullAccess ? formatMark(studentProgress.tickCount,
+                                            questions.length,
+                                            pageSettings.formatAsPercentage) : ""}
+                                    </th>
+                                </> : 
+                                    <th className="total-column" title={fullAccess ? undefined : "Not Sharing"}>
+                                        {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
+                                            assignmentTotalQuestionParts,
+                                            pageSettings.formatAsPercentage) : ""}
+                                    </th>
+                                }
+                            </tr>;
+                        })}
+                    </tbody>
+                    <tfoot>
+                        {tableHeaderFooter}
+                    </tfoot>
+                </table>
+            </div>
         </>}
     </div>;
 }
