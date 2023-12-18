@@ -191,7 +191,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 <Button outline color={"secondary"} className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
             </td>}
             {!isSetAssignments && siteSpecific(
-                <td className={"text-cemter align-middle"}>
+                <td className={"text-center align-middle"}>
                     <CustomInput
                         id={`board-delete-${board.id}`}
                         type="checkbox"
