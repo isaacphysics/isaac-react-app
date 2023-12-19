@@ -1,11 +1,5 @@
 import { screen } from "@testing-library/react";
-import {
-  checkPageTitle,
-  checkPasswordInputTypes,
-  fillFormCorrectly,
-  getFormFields,
-  renderTestEnvironment,
-} from "../utils";
+import { checkPageTitle, clickButton, fillFormCorrectly, getFormFields, renderTestEnvironment } from "../utils";
 import userEvent from "@testing-library/user-event";
 import { StudentRegistration } from "../../app/components/pages/StudentRegistration";
 import * as actions from "../../app/state/actions";
@@ -14,6 +8,13 @@ import { API_PATH } from "../../app/services";
 import { registrationMockUser, registrationUserData } from "../../mocks/data";
 
 const registerUserSpy = jest.spyOn(actions, "registerUser");
+
+const checkPasswordInputTypes = (expectedType: string) => {
+  const formFields = getFormFields();
+  const passwordInput = formFields.password() as HTMLInputElement;
+  const confirmPasswordInput = formFields.confirmPassword() as HTMLInputElement;
+  [passwordInput, confirmPasswordInput].forEach((input) => expect(input.type).toBe(expectedType));
+};
 
 describe("Student Registration", () => {
   const renderStudentRegistration = () => {
@@ -73,9 +74,7 @@ describe("Student Registration", () => {
   it("displays error messages if fields are filled in wrong", async () => {
     renderStudentRegistration();
     await fillFormCorrectly(false, "student");
-    const formFields = getFormFields();
-    const { submitButton } = formFields;
-    await userEvent.click(submitButton());
+    await clickButton("Register my account");
     const pwErrorMessage = screen.getByText(/Passwords must be at least 12 characters/i);
     expect(pwErrorMessage).toBeVisible();
     const generalError = screen.getByRole("heading", {
@@ -97,9 +96,7 @@ describe("Student Registration", () => {
     });
 
     await fillFormCorrectly(true, "student");
-    const formFields = getFormFields();
-    const { submitButton } = formFields;
-    await userEvent.click(submitButton());
+    await clickButton("Register my account");
 
     expect(registerUserSpy).toHaveBeenCalledWith(
       expect.objectContaining({

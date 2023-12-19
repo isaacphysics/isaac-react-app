@@ -1,4 +1,4 @@
-import { checkPageTitle, renderTestEnvironment } from "../utils";
+import { checkPageTitle, clickButton, renderTestEnvironment } from "../utils";
 import { TeacherRequest } from "../../app/components/pages/TeacherRequest";
 import { RestHandler, rest } from "msw";
 import { API_PATH } from "../../app/services";
@@ -173,8 +173,7 @@ describe("TeacherRequest", () => {
 
   it("if no Verification Details are specified, form does not submit", async () => {
     setupTest({ role: "STUDENT" });
-    const submitButton = await screen.findByRole("button", { name: "Submit" });
-    await userEvent.click(submitButton);
+    await clickButton("Submit");
     expect(upgradeAccountSpy).not.toHaveBeenCalled();
   });
 
@@ -185,12 +184,11 @@ describe("TeacherRequest", () => {
       }),
     ];
     setupTest({ role: "STUDENT", extraEndpoints });
-    const submitButton = await screen.findByRole("button", { name: "Submit" });
     const verificationDetailsInput = screen.getByLabelText(/URL of a page on your school website/);
     const otherInformationInput = screen.getByLabelText(/Any other information/);
     await userEvent.type(verificationDetailsInput, "https://example.com");
     await userEvent.type(otherInformationInput, "Test other information");
-    await userEvent.click(submitButton);
+    await clickButton("Submit");
     expect(upgradeAccountSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         verificationDetails: "https://example.com",

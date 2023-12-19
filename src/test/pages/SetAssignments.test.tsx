@@ -2,7 +2,7 @@ import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SetAssignments } from "../../app/components/pages/SetAssignments";
 import { mockActiveGroups, mockGameboards, mockSetAssignments } from "../../mocks/data";
-import { dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, renderTestEnvironment } from "../utils";
+import { clickButton, dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, renderTestEnvironment } from "../utils";
 import { API_PATH } from "../../app/services";
 import { rest } from "msw";
 
@@ -161,9 +161,7 @@ describe("SetAssignments", () => {
     expect(allAssignments).toHaveLength(1);
     expect(allAssignments[0].textContent).toContain(mockActiveGroups[0].groupName);
 
-    // Click button
-    const assignButton = within(modal).getByRole("button", { name: "Assign to group" });
-    await userEvent.click(assignButton);
+    await clickButton("Assign to group");
 
     // Expect request to be sent off with expected parameters
     await waitFor(() => {

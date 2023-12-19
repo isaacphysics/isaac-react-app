@@ -51,8 +51,7 @@ describe("Teacher Registration", () => {
     await userEvent.click(radioButton);
     await clickButton("Continue");
     checkPageTitle("Are you a teacher?");
-    const notTeacherButton = screen.getByRole("link", { name: /no, I am a student/i });
-    await userEvent.click(notTeacherButton);
+    await clickButton("No, I am a student");
     checkPageTitle("Register as a student");
   });
 
@@ -116,7 +115,7 @@ describe("Teacher Registration", () => {
     await confirmTeacherAndAcceptTerms();
     await fillFormCorrectly(false, "teacher");
     const formFields = getFormFields();
-    const { password, confirmPassword, submitButton, stage, noSchool, email } = formFields;
+    const { password, confirmPassword, stage, noSchool, email } = formFields;
     const pwErrorMessage = screen.getByText(/Passwords must be at least 12 characters/i);
     expect(pwErrorMessage).toBeVisible();
     // update PW to meet requirements but not match the confirmation, and observe error changes
@@ -125,7 +124,7 @@ describe("Teacher Registration", () => {
     expect(newPwErrorMessage).toBeVisible();
     // update PW to meet requirements and try to submit, observe error messages for school, stage and email address
     await fillTextField(password(), registrationUserData.password);
-    await userEvent.click(submitButton());
+    await clickButton("Register my account");
     const schoolErrorMessage = screen.getByText(/Please specify a school or college/i);
     const stageErrorMessage = getById("user-context-feedback");
     const emailErrorMessage = screen.getByText(/Not a valid email address for a teacher account/i);
@@ -135,7 +134,7 @@ describe("Teacher Registration", () => {
     await userEvent.click(noSchool());
     await userEvent.clear(email());
     await fillTextField(email(), registrationUserData.email);
-    await userEvent.click(submitButton());
+    await clickButton("Register my account");
     // observe general error message as email preferences are not filled in
     const generalError = screen.getByRole("heading", {
       name: /please fill out all fields/i,
@@ -159,9 +158,7 @@ describe("Teacher Registration", () => {
     });
     await confirmTeacherAndAcceptTerms();
     await fillFormCorrectly(true, "teacher");
-    const formFields = getFormFields();
-    const { submitButton } = formFields;
-    await userEvent.click(submitButton());
+    await clickButton("Register my account");
     expect(registerUserSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         givenName: registrationUserData.givenName,

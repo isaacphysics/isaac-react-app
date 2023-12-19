@@ -3,20 +3,29 @@ import { LoggedInUser, PotentialUser, School } from "../../IsaacAppTypes";
 import { UserRole } from "../../IsaacApiTypes";
 import { Immutable } from "immer";
 
+export type UserRoleAndLoggedInStatus = {
+  readonly role?: UserRole;
+  readonly loggedIn?: boolean;
+};
+
 export function isLoggedIn(user?: Immutable<PotentialUser> | null): user is Immutable<LoggedInUser> {
   return user ? user.loggedIn : false;
 }
 
-export function isStudent(user?: { readonly role?: UserRole; readonly loggedIn?: boolean } | null): boolean {
+export function isStudent(user?: UserRoleAndLoggedInStatus | null): boolean {
   return isDefined(user) && user.role === "STUDENT" && (user.loggedIn ?? true);
 }
 
-export function isTutor(user?: { readonly role?: UserRole; readonly loggedIn?: boolean } | null): boolean {
+export function isTutor(user?: UserRoleAndLoggedInStatus | null): boolean {
   return isDefined(user) && user.role === "TUTOR" && (user.loggedIn ?? true);
 }
 
-export function isTutorOrAbove(user?: { readonly role?: UserRole; readonly loggedIn?: boolean } | null): boolean {
+export function isTutorOrAbove(user?: UserRoleAndLoggedInStatus | null): boolean {
   return isDefined(user) && user.role !== "STUDENT" && (user.loggedIn ?? true);
+}
+
+export function isTeacher(user?: UserRoleAndLoggedInStatus | null): boolean {
+  return isDefined(user) && user.role === "TEACHER" && (user.loggedIn ?? true);
 }
 
 export function isTeacherPending(
@@ -25,19 +34,19 @@ export function isTeacherPending(
   return isDefined(user) && user.teacherPending === true && (user.loggedIn ?? true);
 }
 
-export function isTeacherOrAbove(user?: { readonly role?: UserRole; readonly loggedIn?: boolean } | null): boolean {
+export function isTeacherOrAbove(user?: UserRoleAndLoggedInStatus | null): boolean {
   return isDefined(user) && user.role !== "STUDENT" && user.role !== "TUTOR" && (user.loggedIn ?? true);
 }
 
-export function isAdmin(user?: { readonly role?: UserRole; readonly loggedIn?: boolean } | null): boolean {
+export function isAdmin(user?: UserRoleAndLoggedInStatus | null): boolean {
   return isDefined(user) && user.role === "ADMIN" && (user.loggedIn ?? true);
 }
 
-export function isEventManager(user?: { readonly role?: UserRole; readonly loggedIn?: boolean } | null): boolean {
+export function isEventManager(user?: UserRoleAndLoggedInStatus | null): boolean {
   return isDefined(user) && user.role === "EVENT_MANAGER" && (user.loggedIn ?? true);
 }
 
-export function isStaff(user?: { readonly role?: UserRole; readonly loggedIn?: boolean } | null): boolean {
+export function isStaff(user?: UserRoleAndLoggedInStatus | null): boolean {
   return (
     isDefined(user) &&
     (user.role === "ADMIN" || user.role === "EVENT_MANAGER" || user.role === "CONTENT_EDITOR") &&
@@ -45,24 +54,19 @@ export function isStaff(user?: { readonly role?: UserRole; readonly loggedIn?: b
   );
 }
 
-export function isEventLeader(user?: { readonly role?: UserRole; readonly loggedIn?: boolean } | null): boolean {
+export function isEventLeader(user?: UserRoleAndLoggedInStatus | null): boolean {
   return isDefined(user) && user.role === "EVENT_LEADER" && (user.loggedIn ?? true);
 }
 
-export function isEventLeaderOrStaff(user?: { readonly role?: UserRole; readonly loggedIn?: boolean } | null): boolean {
+export function isEventLeaderOrStaff(user?: UserRoleAndLoggedInStatus | null): boolean {
   return isEventLeader(user) || isStaff(user);
 }
 
-export function isAdminOrEventManager(
-  user?: { readonly role?: UserRole; readonly loggedIn?: boolean } | null,
-): boolean {
+export function isAdminOrEventManager(user?: UserRoleAndLoggedInStatus | null): boolean {
   return isAdmin(user) || isEventManager(user);
 }
 
-export const roleRequirements: Record<
-  UserRole,
-  (u: { readonly role?: UserRole; readonly loggedIn?: boolean } | null) => boolean
-> = {
+export const roleRequirements: Record<UserRole, (u: UserRoleAndLoggedInStatus | null) => boolean> = {
   STUDENT: isStudent,
   TUTOR: isTutorOrAbove,
   TEACHER: isTeacherOrAbove,

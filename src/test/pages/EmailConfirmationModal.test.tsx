@@ -1,7 +1,6 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import { produce } from "immer";
-import { renderTestEnvironment } from "../utils";
-import userEvent from "@testing-library/user-event";
+import { clickButton, renderTestEnvironment } from "../utils";
 import * as actions from "../../app/state/actions";
 import { rest } from "msw";
 import { API_PATH } from "../../app/services";
@@ -72,10 +71,7 @@ describe("EmailConfirmationModal", () => {
     });
     const modal = await screen.findByTestId("active-modal");
     expect(modal).toHaveModalTitle("Verify your email address");
-    const resetEmailButton = within(modal).getByRole("button", {
-      name: "Re-send email",
-    });
-    await userEvent.click(resetEmailButton);
+    await clickButton("Re-send email");
     expect(requestEmailVerificationSpy).toBeCalled();
   });
 

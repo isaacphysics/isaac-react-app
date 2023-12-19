@@ -1,5 +1,5 @@
 import { screen, within } from "@testing-library/react";
-import { renderTestEnvironment } from "../utils";
+import { clickButton, renderTestEnvironment } from "../utils";
 import userEvent from "@testing-library/user-event";
 
 describe("Registration", () => {
@@ -17,12 +17,10 @@ describe("Registration", () => {
       name: "Register for a free account",
     });
     expect(title).toBeInTheDocument();
-    // Locate the radio button for teacher or student and click on it
+    // Locate the radio button for teacher or student and click on it, then press Continue
     const radioButton = screen.getByLabelText(option);
     await userEvent.click(radioButton);
-    // Locate the "Submit" button and click on it
-    const submitButton = screen.getByRole("button", { name: "Continue" });
-    await userEvent.click(submitButton);
+    await clickButton("Continue");
     // Wait for the corresponding registration page to load and check that the URL is correct
     expect(window.location.href).toContain(expectedUrl);
   });
@@ -33,14 +31,12 @@ describe("Registration", () => {
     const header = await screen.findByTestId("header");
     const signUp = within(header).getByRole("link", { name: "SIGN UP" });
     await userEvent.click(signUp);
-    // Wait for Sign Up page to load and check that the page title is correct
+    // Wait for Sign Up page to load and check that the page title is correct, then press Continue
     const title = screen.getByRole("heading", {
       name: "Register for a free account",
     });
     expect(title).toBeInTheDocument();
-    // Locate the "Submit" button and click on it
-    const submitButton = screen.getByRole("button", { name: "Continue" });
-    await userEvent.click(submitButton);
+    await clickButton("Continue");
     // Check that the error message is displayed
     const errorMessage = screen.getByRole("alert");
     expect(errorMessage).toHaveTextContent("Please select an option.");

@@ -53,7 +53,7 @@ export const Homepage = () => {
   return (
     <>
       <div id="homepage">
-        <section id="call-to-action" className="homepageHero">
+        <section id="call-to-action" className={`homepageHero ${user?.loggedIn ? "pb-lg-4" : ""}`}>
           <Container className="pt-4 z1">
             <Dashboard promoItem={teacherPromoItem} featuredNewsItem={featuredNewsItem} />
           </Container>
