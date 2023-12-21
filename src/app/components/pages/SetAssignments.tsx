@@ -124,13 +124,13 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
         <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
                        onChange={setScheduledStartDateAtSevenAM} />
+            {startDateInvalid && <small className={"pt-2 text-danger"}>Start date must be in the future.</small>}
         </Label>
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
             {dueDateInvalid && startDateInvalid && <br/>}
-            {startDateInvalid && <small className={"pt-2 text-danger"}>Start date must be in the future.</small>}
         </Label>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
