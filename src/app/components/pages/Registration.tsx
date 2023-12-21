@@ -3,9 +3,20 @@ import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
-import {isAda, SITE_TITLE} from "../../services";
+import {history, isAda, SITE_TITLE} from "../../services";
 
 export const Registration = () => {
+
+    const emailSignUp = (event: React.MouseEvent) => {
+        event.preventDefault();
+        history.push("/register/role");
+    };
+
+    const login = (event: React.MouseEvent) => {
+        event.preventDefault()
+        history.push("/login");
+    }
+
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
         <Card className="my-5">
@@ -18,7 +29,7 @@ export const Registration = () => {
                         </div>
                         <div className="my-5">
                             <h3>Create a new account with your email:</h3>
-                            <Button block href="/register/role">Continue with email</Button>
+                            <Button block onClick={emailSignUp}>Continue with email</Button>
                         </div>
                         <div className="my-5">
                             <h3>Or log in with:</h3>
@@ -28,7 +39,7 @@ export const Registration = () => {
                         <hr />
                         <div className="mt-5">
                             <h3>Already have an account?</h3>
-                            <Button color="secondary" outline block href="/login">Log in</Button>
+                            <Button color="secondary" outline block onClick={login}>Log in</Button>
                         </div>
                     </Col>
                     <Col xs={12} lg={6}>

@@ -15,7 +15,7 @@ import {
     TEACHER_REQUEST_ROUTE
 } from "../../../services";
 import * as RS from "reactstrap";
-import {CustomInput, Input} from "reactstrap";
+import {CustomInput, Input, Label} from "reactstrap";
 import {UserContext} from "../../../../IsaacApiTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Link} from "react-router-dom";
@@ -113,10 +113,10 @@ export function UserContextAccountInput({
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
 
     return <div>
-        <RS.Label htmlFor="user-context-selector" className="form-required">
+        <RS.Label htmlFor="user-context-selector" className="font-weight-bold">
             {siteSpecific(
                 <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
-                <span>Show me content for:</span>
+                <span>Show me content for...</span>
             )}
         </RS.Label>
         {siteSpecific(

@@ -260,7 +260,7 @@ export const updateCurrentUser = (
         if (isFirstLogin) {
             persistence.session.remove(KEY.FIRST_LOGIN);
             if (redirect) {
-                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/register/verify', {firstLogin: isFirstLogin});
+                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
             }
         } else if (!editingOtherUser) {
             dispatch(showToast({

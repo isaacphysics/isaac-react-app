@@ -158,6 +158,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         <RS.Container>
             <RS.Row>
                 <RS.Col lg={isAda ? 6 : 12}>
+                    <h3>Connect to your teacher</h3>
                     <PageFragment fragmentId={`teacher_connections_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
                 </RS.Col>
                 <RS.Col lg={isAda ? 6 : 12} className="mt-4 mt-lg-0">

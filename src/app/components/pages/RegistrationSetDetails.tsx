@@ -10,22 +10,26 @@ import {
     FormFeedback,
     FormGroup,
     Input,
-    Label,
     Row
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    loadZxcvbnIfNotPresent,
+    FIRST_LOGIN_STATE,
+    history, KEY,
+    persistence,
     SITE_TITLE,
     trackEvent, validateEmail, validateName, validatePassword
 } from "../../services";
-import {errorSlice, registerNewUser, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
+import {errorSlice, registerNewUser, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../IsaacAppTypes";
 import {SchoolInput} from "../elements/inputs/SchoolInput";
 import {CountryInput} from "../elements/inputs/CountryInput";
-import {TogglablePasswordInput} from "../elements/inputs/TogglablePasswordInput";
+import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 import {USER_ROLES} from "../../../IsaacApiTypes";
+import {LastNameInput, FirstNameInput} from "../elements/inputs/NameInput";
+import {EmailInput} from "../elements/inputs/EmailInput";
+import {GenderInput} from "../elements/inputs/GenderInput";
 
 export const RegistrationSetDetails = () => {
     const dispatch = useAppDispatch();
@@ -43,6 +47,7 @@ export const RegistrationSetDetails = () => {
             role: USER_ROLES[2]  // todo: not this
         })
     );
+
     const [tosAccepted, setTosAccepted] = useState(false);
 
     const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
@@ -50,21 +55,14 @@ export const RegistrationSetDetails = () => {
     const familyNameIsValid = validateName(registrationUser.familyName);
     const passwordIsValid = validatePassword(registrationUser.password || "");
 
-    const assignToRegistrationUser = (updates: {}) => {
-        // Create new object to trigger re-render
-        setRegistrationUser(Object.assign({}, registrationUser, updates));
-    };
-
     const register = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setAttemptedSignUp(true);
 
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && tosAccepted) {
-            // todo: this used to set the FIRST_LOGIN value in persistence. Was that important, or just to disentangle
-            //  registration from login in the Redux action?
+            persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
             // todo: handle API-side validation errors (e.g. duplicate registration attempt)
-
             setAttemptedSignUp(true)
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(errorSlice.actions.clearError());
@@ -89,41 +87,28 @@ export const RegistrationSetDetails = () => {
                     </Col>
                     <Col xs={12} lg={5}>
                         <Form onSubmit={register}>
-                            <FormGroup>
-                                <Label className={"font-weight-bold"}>First name</Label>
-                                <Input
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        assignToRegistrationUser({givenName: e.target.value});}}
-                                    invalid={attemptedSignUp && !givenNameIsValid}
-                                />
-                                <FormFeedback>
-                                    Please enter a valid name.
-                                </FormFeedback>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label className={"font-weight-bold"}>Last name</Label>
-                                <Input
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    assignToRegistrationUser({familyName: e.target.value});}}
-                                    invalid={attemptedSignUp && !familyNameIsValid}
-                                />
-                                <FormFeedback>
-                                    Please enter a valid name.
-                                </FormFeedback>
-                            </FormGroup>
-                            <FormGroup>
-                                <Label className={"font-weight-bold"}>Email address</Label>
-                                <p className="d-block">This will be visible to your students. We recommend using your school email address.</p>
-                                <Input
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    assignToRegistrationUser({email: e.target.value});}}
-                                    invalid={attemptedSignUp && !emailIsValid}
-                                />
-                                <FormFeedback>
-                                    Please enter a valid email address.
-                                </FormFeedback>
-                            </FormGroup>
-                            <TogglablePasswordInput
+                            <FirstNameInput
+                                userToUpdate={registrationUser}
+                                setUserToUpdate={setRegistrationUser}
+                                nameValid={!!givenNameIsValid}
+                                submissionAttempted={attemptedSignUp}
+                                required={true}
+                            />
+                            <LastNameInput
+                                userToUpdate={registrationUser}
+                                setUserToUpdate={setRegistrationUser}
+                                nameValid={!!familyNameIsValid}
+                                submissionAttempted={attemptedSignUp}
+                                required={true}
+                            />
+                            <EmailInput
+                                userToUpdate={registrationUser}
+                                setUserToUpdate={setRegistrationUser}
+                                submissionAttempted={attemptedSignUp}
+                                emailIsValid={!!emailIsValid}
+                                required={true}
+                            />
+                            <SetPasswordInput
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 passwordValid={passwordIsValid}
@@ -137,6 +122,12 @@ export const RegistrationSetDetails = () => {
                                 required={true}
                             />
                             <hr />
+                            <GenderInput
+                                userToUpdate={registrationUser}
+                                setUserToUpdate={setRegistrationUser}
+                                submissionAttempted={attemptedSignUp}
+                                required={false}
+                            />
                             <SchoolInput
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
@@ -161,7 +152,7 @@ export const RegistrationSetDetails = () => {
                             <hr />
                             <Row>
                                 <Col>
-                                    <Button outline color="secondary" href="/register/role">Back</Button>
+                                    <Button outline color="secondary" onClick={history.goBack}>Back</Button>
                                 </Col>
                                 <Col>
                                     <Input type="submit" value="Continue" className="btn btn-primary" />

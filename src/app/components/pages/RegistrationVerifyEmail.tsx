@@ -9,7 +9,7 @@ import {
     useRequestEmailVerificationMutation,
     useVerifyEmailMutation
 } from "../../state";
-import {useQueryParams} from "../../services";
+import {history, useQueryParams} from "../../services";
 import {Link} from "react-router-dom";
 
 
@@ -43,6 +43,16 @@ export const RegistrationVerifyEmail = () => {
                 sendVerificationEmail({email: user?.email});
             }
         }
+    };
+
+    const myAccount = (event: React.MouseEvent) => {
+        event.preventDefault();
+        history.push("/account");
+    };
+
+    const continueToPreferences = (event: React.MouseEvent) => {
+        event.preventDefault();
+        history.push("/register/preferences");
     };
 
     return <Container className="text-center">
@@ -108,10 +118,10 @@ export const RegistrationVerifyEmail = () => {
                     emailVerified &&
                         <Row className="justify-content-center">
                             <Col xs={3}>
-                                <Button outline color="secondary" tag={Link} to={"/account"}>My Account</Button>
+                                <Button outline color="secondary" onClick={myAccount}>Your account</Button>
                             </Col>
                             <Col xs={3}>
-                                <Button tag={Link} to={"/register/preferences"}>Continue</Button>
+                                <Button onClick={continueToPreferences}>Continue</Button>
                             </Col>
                         </Row>
                     :

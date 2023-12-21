@@ -12,7 +12,7 @@ interface DobInputProps {
 }
 export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, editingOtherUser}: DobInputProps) => {
     return <RS.FormGroup>
-        <RS.Label htmlFor="dob-input">Date of birth</RS.Label>
+        <RS.Label className="font-weight-bold" htmlFor="dob-input">Date of birth</RS.Label>
         <DateInput
             invalid={isDefined(userToUpdate.dateOfBirth) && !isDobOldEnoughForSite(userToUpdate.dateOfBirth)}
             id="dob-input"

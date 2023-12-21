@@ -15,6 +15,7 @@ import {
 } from "../../../services";
 import classNames from "classnames";
 import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
+import {TogglablePasswordInput} from "../inputs/TogglablePasswordInput";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -22,12 +23,12 @@ interface UserPasswordProps {
     setCurrentPassword: (e: React.SetStateAction<string>) => void;
     myUser: ValidationUser;
     setMyUser: (e: any) => void;
-    isNewPasswordConfirmed: boolean;
+    isNewPasswordValid: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     setNewPassword: (e: React.SetStateAction<string>) => void;
-    setNewPasswordConfirm: (e: React.SetStateAction<string>) => void;
-    newPasswordConfirm: string;
+    newPassword: string;
     editingOtherUser: boolean;
+    submissionAttempted: boolean;
 }
 
 const ThirdPartyAccount = ({provider, isLinked, imgCss} : {provider: AuthenticationProvider, isLinked: boolean, imgCss: string}) => {
@@ -48,18 +49,8 @@ const ThirdPartyAccount = ({provider, isLinked, imgCss} : {provider: Authenticat
     </Row>;
 };
 
-const PasswordInput = (props: InputProps) => {
-    const [isVisible, setIsVisible] = useState(false);
-    return <div className="d-flex flex-row">
-        <Input {...props} id="password-input-field" type={isVisible ? "text" : "password"}/>
-        <button type="button" className="show-password-button"  onClick={() => setIsVisible(v => !v)}>
-            {isVisible ? <span>Hide</span> : <span>Show</span>}
-        </button>
-    </div>;
-};
-
 export const UserPassword = (
-    {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm, editingOtherUser}: UserPasswordProps) => {
+    {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordValid, userAuthSettings, setNewPassword, newPassword, editingOtherUser, submissionAttempted}: UserPasswordProps) => {
 
     const dispatch = useAppDispatch();
     const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
@@ -94,6 +85,7 @@ export const UserPassword = (
         <Row>
             {isAda && 
             <Col xs={{size: 12}} lg={{size: 6}} className={classNames({"px-5 mb-4 mb-lg-0" : isAda})}>
+                <h3>Account security</h3>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mi sit amet mauris commodo quis imperdiet massa tincidunt.
             </Col>}
             <Col xs = {isPhy ? {size: 6, offset: 3} : {size: 12}} lg={isPhy ? {size: 6, offset: 3} : {size: 6}} className={classNames({"px-5" : isAda})}>
@@ -105,7 +97,7 @@ export const UserPassword = (
                             {!editingOtherUser && 
                             <FormGroup>
                                 <Label htmlFor="password-current">Current password</Label>
-                                <PasswordInput
+                                <TogglablePasswordInput
                                     id="password-current" type="password" name="current-password"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                         setCurrentPassword(e.target.value)
@@ -114,11 +106,12 @@ export const UserPassword = (
                             </FormGroup>}
                             <FormGroup>
                                 <Label htmlFor="new-password">New password</Label>
-                                <PasswordInput
-                                    invalid={!!newPasswordConfirm && !isNewPasswordConfirmed}
+                                <TogglablePasswordInput
+                                    invalid={submissionAttempted && !isNewPasswordValid}
                                     id="new-password" type="password" name="new-password"
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setNewPassword(e.target.value);
+                                        setMyUser(Object.assign({}, myUser, {password: e.target.value}));
                                         passwordDebounce(e.target.value, setPasswordFeedback);
                                     }}
                                     onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,27 +130,6 @@ export const UserPassword = (
                                 </span>
                                 }
                             </FormGroup>
-                            <FormGroup>
-                                <Label htmlFor="password-confirm">Re-enter new password</Label>
-                                <PasswordInput
-                                    invalid={!!currentPassword && !isNewPasswordConfirmed}
-                                    id="password-confirm"
-                                    type="password" name="password-confirmation"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setNewPasswordConfirm(e.target.value);
-                                        setMyUser(Object.assign({}, myUser, {password: e.target.value}));
-                                    }} aria-describedby="passwordConfirmationValidationMessage"
-                                    disabled={!editingOtherUser && currentPassword == ""}
-                                />
-                                {currentPassword && !isNewPasswordConfirmed && 
-                                    <FormFeedback id="passwordConfirmationValidationMessage">
-                                        New passwords must match and be at least {MINIMUM_PASSWORD_LENGTH} characters long.
-                                    </FormFeedback>
-                                }
-                            </FormGroup>
-                            {isAda && <>
-                                <Input id="submit-password" type="submit" className="btn btn-primary" value="Save new password" />
-                            </>}
                         </>}
                         {isAda && !showPasswordFields && <Button className="w-100 py-2 mt-3 mb-2" outline onClick={() => setShowPasswordFields(true)}>Change password</Button>}
                     </>
@@ -215,10 +187,10 @@ export const UserPassword = (
                     <hr className="text-center"/>
                     <FormGroup>
                         <h4>Log Out</h4>
-                        <small>
+                        <p>
                             {"If you forgot to log out on a device you no longer have access to, you can " +
                             "log your account out on all devices, including this one."}
-                        </small>
+                        </p>
                         <Col className="text-center mt-2 px-0">
                             {isPhy && 
                             <div className="vertical-center ml-2">

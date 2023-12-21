@@ -1,11 +1,17 @@
 import React from "react";
 import {Button, Card, CardBody, CardFooter, CardText, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {isAda, SITE_TITLE} from "../../services";
+import {history, isAda, SITE_TITLE} from "../../services";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 
 export const RegistrationRoleSelect = () => {
+
+    const teacherSignUp = (event: React.MouseEvent) => {
+        event.preventDefault();
+        history.push("/register/teacher/details");
+    };
+
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
         <Card className="my-5">
@@ -49,7 +55,7 @@ export const RegistrationRoleSelect = () => {
                                         Teacher accounts do not give you access to the answers. <a href="/support/teacher/general">Learn more</a>
                                     </p>
                                 </CardText>
-                                <Button block className="align-self-end mt-auto" href="/register/teacher/details">I am a teacher</Button>
+                                <Button block className="align-self-end mt-auto" onClick={teacherSignUp}>I am a teacher</Button>
                             </CardBody>
                         </Card>
                     </Col>

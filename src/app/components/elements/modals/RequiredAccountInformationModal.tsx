@@ -9,7 +9,7 @@ import {
 } from "../../../state";
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
-import {useEmailPreferenceState, UserEmailPreference} from "../panels/UserEmailPreferences";
+import {UserEmailPreferencesPanel} from "../panels/UserEmailPreferencesPanel";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
@@ -18,11 +18,8 @@ import {
     isLoggedIn,
     isMobile,
     isTutor,
-    isTutorOrAbove,
     SITE_TITLE,
     siteSpecific,
-    TEACHER_REQUEST_ROUTE,
-    UserFacingRole,
     validateEmailPreferences,
     validateUserContexts,
     validateUserGender,
@@ -34,6 +31,7 @@ import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {Link} from "react-router-dom";
 import {Immutable} from "immer";
 import { AccountTypeMessage } from "../AccountTypeMessage";
+import {useEmailPreferenceState} from "../inputs/UserEmailPreferencesInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -132,7 +130,7 @@ const RequiredAccountInfoBody = () => {
         </RS.CardBody>}
 
         {!validateEmailPreferences(initialEmailPreferencesValue) && <div>
-            <UserEmailPreference
+            <UserEmailPreferencesPanel
                 emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                 submissionAttempted={submissionAttempted} idPrefix="modal-"
             />

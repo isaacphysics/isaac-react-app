@@ -5,46 +5,81 @@ import {
     CardBody,
     Col,
     Container,
-    CustomInput,
     Form,
-    FormFeedback,
-    FormGroup,
     Input,
     Label,
     Row
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {
-    SITE_TITLE,
-} from "../../services";
+
 import {Immutable} from "immer";
-import {ValidationUser} from "../../../IsaacAppTypes";
-import {USER_ROLES} from "../../../IsaacApiTypes";
-import {selectors, useAppSelector} from "../../state";
+import {
+    BooleanNotation,
+    DisplaySettings,
+    ProgrammingLanguage,
+    ValidationUser
+} from "../../../IsaacAppTypes";
+import {
+    AppState,
+    closeActiveModal,
+    errorSlice,
+    selectors,
+    updateCurrentUser,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
+import {UserContextAccountInput} from "../elements/inputs/UserContextAccountInput";
+import {
+    allRequiredInformationIsPresent,
+    history,
+    isDefined,
+    isLoggedIn,
+    KEY,
+    persistence, SITE_TITLE, siteSpecific,
+} from "../../services";
+import {BooleanNotationInput} from "../elements/inputs/BooleanNotationInput";
+import {ProgrammingLanguageInput} from "../elements/inputs/ProgrammingLanguageInput";
+import {useEmailPreferenceState, UserEmailPreferencesInput} from "../elements/inputs/UserEmailPreferencesInput";
 
 export const RegistrationSetPreferences = () => {
 
+    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
+    const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
 
-    function setPreferences() {
+    const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
+    const initialUserValue = {...user, password: null};
+    const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>(initialUserValue);
+
+    const initialEmailPreferencesValue =  {...userPreferences?.EMAIL_PREFERENCE};
+    const [emailPreferences, setEmailPreferences] = useEmailPreferenceState(initialEmailPreferencesValue);
+
+    const initialUserContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
+    const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
+
+    const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
+    const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
+    const [programmingLanguage, setProgrammingLanguage] = useState<ProgrammingLanguage>({...userPreferences?.PROGRAMMING_LANGUAGE});
+
+    function continueToAfterAuthPath() {
+        history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
     }
 
-    const [registrationUser, setRegistrationUser] = useState<Immutable<ValidationUser>>(
-        Object.assign({}, user,{
-            email: undefined,
-            dateOfBirth: undefined,
-            password: null,
-            familyName: undefined,
-            givenName: undefined,
-            role: USER_ROLES[2]  // todo: not this
-        })
-    );
+    const userPreferencesToUpdate = {
+        EMAIL_PREFERENCE: emailPreferences, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings
+    }
 
-    const assignToRegistrationUser = (updates: {}) => {
-        // Create new object to trigger re-render
-        setRegistrationUser(Object.assign({}, registrationUser, updates));
-    };
+    function submit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        setSubmissionAttempted(true);
+
+        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
+            dispatch(errorSlice.actions.clearError());
+            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, true));
+            dispatch(closeActiveModal());
+        }
+    }
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Customise your account`} className="mb-4" />
@@ -58,26 +93,27 @@ export const RegistrationSetPreferences = () => {
                             or change your answers at any time under My Account.
                         </p>
                     </Col>
-                    <Col xs={12} lg={5}>
-                        <Form onSubmit={setPreferences}>
-                            <FormGroup>
-                                <Label className={"font-weight-bold"}>Customise what you see</Label>
-                                <Input
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        assignToRegistrationUser({givenName: e.target.value});}}
-                                />
-                                <FormFeedback>
-                                    Please enter a valid name.
-                                </FormFeedback>
-                            </FormGroup>
+                    <Col xs={12} lg={6}>
+                        <Form onSubmit={submit}>
+                            <UserContextAccountInput user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} setBooleanNotation={setBooleanNotation} displaySettings={displaySettings} setDisplaySettings={setDisplaySettings} submissionAttempted={submissionAttempted} />
+                            <hr />
 
+                            <ProgrammingLanguageInput programmingLanguage={programmingLanguage} setProgrammingLanguage={setProgrammingLanguage} />
+
+                            <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation} />
+                            <hr />
+
+                            <Label className={"font-weight-bold"}>Set your email notification preferences</Label>
+                            <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
+                            <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
+                            <UserEmailPreferencesInput emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}></UserEmailPreferencesInput>
                             <hr />
                             <Row>
                                 <Col>
-                                    <Button outline color="secondary" href="/register/role">Back</Button>
+                                    <Button outline color="secondary" onClick={continueToAfterAuthPath}>I'll do this later</Button>
                                 </Col>
                                 <Col>
-                                    <Input type="submit" value="Continue" className="btn btn-primary" />
+                                    <Input type="submit" value="Save preferences" className="btn btn-primary" />
                                 </Col>
                             </Row>
                         </Form>

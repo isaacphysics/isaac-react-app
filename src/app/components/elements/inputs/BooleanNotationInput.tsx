@@ -2,6 +2,7 @@ import {FormGroup, Input, Label} from "reactstrap";
 import {BOOLEAN_NOTATION, EMPTY_BOOLEAN_NOTATION_RECORD} from "../../../services";
 import {BooleanNotation} from "../../../../IsaacAppTypes";
 import React, {ChangeEvent} from "react";
+import classNames from "classnames";
 
 interface BooleanNotationInputProps {
     booleanNotation: Nullable<BooleanNotation>;
@@ -11,9 +12,8 @@ interface BooleanNotationInputProps {
 export const BooleanNotationInput = ({booleanNotation, setBooleanNotation, isRequired = false} : BooleanNotationInputProps) => {
 
     return <FormGroup>
-        <Label className={`d-inline-block pr-2 ${isRequired ? "form-required" : ""}`} htmlFor="boolean-notation-preference">
-            Preferred Boolean logic notation
-        </Label>
+        <Label className={classNames({"form-optional": !isRequired}, "font-weight-bold")}
+               htmlFor="boolean-notation-preference">Preferred logic notation</Label>
         <Input
             type="select" name="select" id="boolean-notation-preference"
             value={

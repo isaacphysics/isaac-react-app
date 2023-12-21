@@ -1,25 +1,24 @@
-import React, {ChangeEvent} from "react";
+import React from "react";
 import {
     allRequiredInformationIsPresent,
     isAda,
     isTutor,
-    PROGRAMMING_LANGUAGE,
-    programmingLanguagesMap, TEACHER_REQUEST_ROUTE,
-    UserFacingRole,
     validateEmail,
     validateName
 } from "../../../services";
-import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {CardBody, Col, FormGroup, Row} from "reactstrap";
 import {BooleanNotation, DisplaySettings, ProgrammingLanguage, ValidationUser} from "../../../../IsaacAppTypes";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
-import {Link} from "react-router-dom";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
 import {CountryInput} from "../inputs/CountryInput";
 import {AccountTypeMessage} from "../AccountTypeMessage";
+import {ProgrammingLanguageInput} from "../inputs/ProgrammingLanguageInput";
+import {LastNameInput, FirstNameInput} from "../inputs/NameInput";
+import {EmailInput} from "../inputs/EmailInput";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -65,50 +64,33 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>
         <Row>
             <Col md={6}>
-                <FormGroup>
-                    <Label htmlFor="first-name-input" className="form-required">First name</Label>
-                    <Input
-                        invalid={!validateName(userToUpdate.givenName)} id="first-name-input" type="text"
-                        name="givenName" defaultValue={userToUpdate.givenName}
-                        onChange={e => setUserToUpdate({...userToUpdate, givenName: e.target.value})}
-                        aria-describedby="firstNameValidationMessage" required
-                    />
-                    <FormFeedback id="firstNameValidationMessage">
-                        {(submissionAttempted && !validateName(userToUpdate.givenName))
-                            ? "Enter a valid name" : null}
-                    </FormFeedback>
-                </FormGroup>
+                <FirstNameInput
+                    userToUpdate={userToUpdate}
+                    setUserToUpdate={setUserToUpdate}
+                    nameValid={!!validateName(userToUpdate.givenName)}
+                    submissionAttempted={submissionAttempted}
+                    required={true}
+                />
             </Col>
             <Col md={6}>
-                <FormGroup>
-                    <Label htmlFor="last-name-input" className="form-required">Last name</Label>
-                    <Input
-                        invalid={!validateName(userToUpdate.familyName)} id="last-name-input" type="text"
-                        name="last-name" defaultValue={userToUpdate.familyName}
-                        onChange={e => setUserToUpdate({...userToUpdate, familyName: e.target.value})}
-                        aria-describedby="lastNameValidationMessage" required
-                    />
-                    <FormFeedback id="lastNameValidationMessage">
-                        {(submissionAttempted && !validateName(userToUpdate.familyName))
-                            ? "Enter a valid name" : null}
-                    </FormFeedback>
-                </FormGroup>
+                <LastNameInput
+                    userToUpdate={userToUpdate}
+                    setUserToUpdate={setUserToUpdate}
+                    nameValid={!!validateName(userToUpdate.familyName)}
+                    submissionAttempted={submissionAttempted}
+                    required={true}
+                />
             </Col>
         </Row>
         <Row>
             <Col md={6}>
-                <FormGroup>
-                    <Label htmlFor="email-input" className="form-required">Email address</Label>
-                    <Input
-                        invalid={!validateEmail(userToUpdate.email)} id="email-input" type="email"
-                        name="email" defaultValue={userToUpdate.email}
-                        onChange={event => setUserToUpdate({...userToUpdate, email: event.target.value})}
-                        aria-describedby="emailValidationMessage" required
-                    />
-                    <FormFeedback id="emailValidationMessage">
-                        {(!validateEmail(userToUpdate.email)) ? "Enter a valid email address" : null}
-                    </FormFeedback>
-                </FormGroup>
+                <EmailInput
+                    userToUpdate={userToUpdate}
+                    setUserToUpdate={setUserToUpdate}
+                    emailIsValid={!!validateEmail(userToUpdate.email)}
+                    submissionAttempted={submissionAttempted}
+                    required={true}
+            />
             </Col>
             <Col md={6}>
                 <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} editingOtherUser={editingOtherUser}/>
@@ -116,7 +98,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required={isAda}/>
+                                 required={false}/>
                 </FormGroup>
             </Col>
             {
@@ -146,26 +128,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>
         {isAda && <Row>
             <Col md={6}>
-                <FormGroup>
-                    <Label className="d-inline-block pr-2" htmlFor="programming-language-select">
-                        Preferred programming language
-                    </Label>
-                    <Input
-                        type="select" name="select" id="programming-language-select"
-                        value={Object.values(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage?.[key as keyof ProgrammingLanguage] ? key : val, PROGRAMMING_LANGUAGE.NONE)}
-                        onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                            let newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce((acc, [k, v]) => ({...acc, [k]: false}), {});
-                            setProgrammingLanguage(event.target.value ? {...newProgrammingLanguage, [event.target.value]: true} : newProgrammingLanguage);
-                        }}
-                    >
-                        <option />
-                        <option value={PROGRAMMING_LANGUAGE.PSEUDOCODE}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PSEUDOCODE]}</option>
-                        <option value={PROGRAMMING_LANGUAGE.PYTHON}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PYTHON]}</option>
-                        <option value={PROGRAMMING_LANGUAGE.CSHARP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.CSHARP]}</option>
-                        <option value={PROGRAMMING_LANGUAGE.VBA}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.VBA]}</option>
-                        <option value={PROGRAMMING_LANGUAGE.JAVA}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.JAVA]}</option>
-                    </Input>
-                </FormGroup>
+                <ProgrammingLanguageInput programmingLanguage={programmingLanguage} setProgrammingLanguage={setProgrammingLanguage}/>
             </Col>
             <Col md={6}>
                 <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation} />

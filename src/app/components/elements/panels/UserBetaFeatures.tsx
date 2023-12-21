@@ -27,8 +27,5 @@ export const UserBetaFeatures = ({displaySettings, setDisplaySettings}: UserBeta
             </>}
             id={"hide-previous-q-attempts"}
         />
-        {isAda && <div className="d-flex flex-row justify-content-center">
-            <Button type="submit" color="primary" className="mt-4 w-50">Save</Button>
-        </div>}
     </CardBody>;
 };
