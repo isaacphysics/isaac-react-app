@@ -211,9 +211,10 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
         id="teacher-courses"
         title="Computing events for teachers"
         subtitle="Looking for teacher events?"
-        src="/assets/ncce-teachers.png"
         link="https://teachcomputing.org/courses"
-        alt="teachers on a course"
+        imageSource="/assets/ncce-teachers.png"
+        imageDescription="teachers on a course"
+        color="secondary"
       >
         <TeacherEventsDescription />
       </Banner>

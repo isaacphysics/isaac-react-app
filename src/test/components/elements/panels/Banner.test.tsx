@@ -9,9 +9,10 @@ const mockBannerProps: PropsWithChildren<BannerProps> = {
   id: "test-banner",
   title: "Test Banner",
   subtitle: "Here is a test subtitle",
-  src: "testimage.png",
   link: "https://examplelink.com",
-  alt: "description of image",
+  color: "primary",
+  imageSource: "testimage.png",
+  imageDescription: "description of image",
   children: testBannerDescription,
 };
 
@@ -37,15 +38,22 @@ describe("Banner", () => {
     [banner, title, subtitle, link, description, image].forEach((element) => {
       expect(element).toBeInTheDocument();
     });
-    expect(image).toHaveAttribute("src", mockBannerProps.src);
-    expect(image).toHaveAttribute("alt", mockBannerProps.alt);
+    expect(image).toHaveAttribute("src", mockBannerProps.imageSource);
+    expect(image).toHaveAttribute("alt", mockBannerProps.imageDescription);
     expect(description).toHaveTextContent(/test description/i);
     expect(link).toHaveAttribute("href", mockBannerProps.link);
+    expect(banner).toHaveClass("banner-primary");
   });
 
   it("uses a default alt text if none is provided", () => {
-    setupTest({ ...mockBannerProps, alt: undefined });
+    setupTest({ ...mockBannerProps, imageDescription: undefined });
     const image = screen.getByRole("img");
     expect(image).toHaveAttribute("alt", "banner image");
+  });
+
+  it("changes the background colour to dark blue if color prop is changed to secondary", () => {
+    setupTest({ ...mockBannerProps, color: "secondary" });
+    const banner = getById(mockBannerProps.id);
+    expect(banner).toHaveClass("banner-secondary");
   });
 });

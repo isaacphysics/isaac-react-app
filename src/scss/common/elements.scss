@@ -310,6 +310,23 @@ iframe.email-html {
   padding-left: 1rem;
 }
 
+.banner-secondary {
+  color: white;
+  background-color: #07174f;
+  a {
+    color: white;
+  }
+}
+
+.banner-primary {
+  background-color: $primary;
+  color: black;
+  button {
+    background-color: black;
+    color: white;
+  }
+}
+
 // OLD NOMENSA TO ALTER INTO ISAAC
 //a, button {
 //  &.btn.btn-link.login-b {
