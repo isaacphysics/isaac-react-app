@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import * as RS from "reactstrap";
 import { Accordion } from "../Accordion";
 import {
-  AppState,
   cancelUserBooking,
   deleteUserBooking,
   getEventBookingCSV,
@@ -26,15 +25,17 @@ import {
   zeroOrLess,
 } from "../../../services";
 import { PotentialUser } from "../../../../IsaacAppTypes";
-import { BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressAndGenderDTO } from "../../../../IsaacApiTypes";
+import { BookingStatus, EventBookingDTO } from "../../../../IsaacApiTypes";
 import { DateString } from "../DateString";
 
 export const ManageExistingBookings = ({ user, eventBookingId }: { user: PotentialUser; eventBookingId: string }) => {
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     dispatch(getEventBookings(eventBookingId));
-  }, [eventBookingId]);
-  const eventBookings = useAppSelector((state: AppState) => (state && state.eventBookings) || []);
+  }, [dispatch, eventBookingId]);
+
+  const eventBookings = useAppSelector(selectors.events.eventBookings);
   const userIdToSchoolMapping = useAppSelector(selectors.admin.userSchoolLookup) || {};
 
   const [sortPredicate, setSortPredicate] = useState("date");
@@ -66,6 +67,16 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
     return idsToReturn;
   }
 
+  const BookingHeaderButton = ({ sort, children }: PropsWithChildren<{ sort: string }>) => {
+    return (
+      <th>
+        <RS.Button color="link" onClick={setSortPredicateAndDirection(sort)}>
+          {children}
+        </RS.Button>
+      </th>
+    );
+  };
+
   return (
     <Accordion trustedTitle="Manage current bookings">
       {isEventLeader(user) && (
@@ -77,58 +88,28 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
       {atLeastOne(eventBookings.length) && (
         <div>
           <div className="overflow-auto">
-            <RS.Table bordered className="mb-0 bg-white">
+            <RS.Table bordered className="mb-0 bg-white table-hover table-sm">
               <thead>
                 <tr>
-                  <th className="align-middle text-center">Actions</th>
-                  <th className="align-middle">
-                    <RS.Button color="link" onClick={setSortPredicateAndDirection("userBooked.familyName")}>
-                      Name
-                    </RS.Button>
+                  <th>Actions</th>
+                  <BookingHeaderButton sort="userBooked.familyName">Name</BookingHeaderButton>
+                  <BookingHeaderButton sort="userBooked.email">Email</BookingHeaderButton>
+                  <BookingHeaderButton sort="userBooked.role">Account type</BookingHeaderButton>
+                  <BookingHeaderButton sort="schoolName">School</BookingHeaderButton>
+                  <th>
+                    Job / <span className="text-nowrap">Year Group</span>
                   </th>
-                  <th className="align-middle">
-                    <RS.Button color="link" onClick={setSortPredicateAndDirection("userBooked.email")}>
-                      Email
-                    </RS.Button>
-                  </th>
-                  <th className="align-middle">
-                    <RS.Button color="link" onClick={setSortPredicateAndDirection("userBooked.role")}>
-                      Account type
-                    </RS.Button>
-                  </th>
-                  <th className="align-middle">
-                    <RS.Button color="link" onClick={setSortPredicateAndDirection("schoolName")}>
-                      School
-                    </RS.Button>
-                  </th>
-                  <th className="align-middle">Job / year group</th>
-                  <th className="align-middle">
-                    <RS.Button color="link" onClick={setSortPredicateAndDirection("bookingStatus")}>
-                      Booking status
-                    </RS.Button>
-                  </th>
-                  <th className="align-middle">
-                    <RS.Button color="link" onClick={setSortPredicateAndDirection("bookingDate")}>
-                      Booking created
-                    </RS.Button>
-                  </th>
-                  <th className="align-middle">
-                    <RS.Button color="link" onClick={setSortPredicateAndDirection("updated")}>
-                      Booking updated
-                    </RS.Button>
-                  </th>
-                  <th className="align-middle">Stage</th>
-                  <th className="align-middle">Exam board</th>
-                  <th className="align-middle">
-                    <RS.Button color="link" onClick={setSortPredicateAndDirection("reservedById")}>
-                      Reserved by ID
-                    </RS.Button>
-                  </th>
-                  <th className="align-middle">Level of teaching experience</th>
-                  <th className="align-middle">Accessibility requirements</th>
-                  <th className="align-middle">Medical / dietary</th>
-                  <th className="align-middle">Emergency name</th>
-                  <th className="align-middle">Emergency telephone</th>
+                  <BookingHeaderButton sort="bookingStatus">Booking status</BookingHeaderButton>
+                  <th>Gender</th>
+                  <BookingHeaderButton sort="bookingDate">Booking created</BookingHeaderButton>
+                  <BookingHeaderButton sort="updated">Booking updated</BookingHeaderButton>
+                  <th style={{ minWidth: "70px" }}>Stage</th>
+                  <th style={{ minWidth: "100px" }}>Exam board</th>
+                  <BookingHeaderButton sort="reservedById">Reserved by ID</BookingHeaderButton>
+                  <th>Accessibility requirements</th>
+                  <th style={{ minWidth: "120px" }}>Medical / Dietary</th>
+                  <th>Emergency name</th>
+                  <th>Emergency telephone</th>
                 </tr>
               </thead>
               <tbody>
@@ -136,10 +117,10 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                   const userId = booking.userBooked && booking.userBooked.id;
                   return (
                     <tr key={booking.bookingId}>
-                      <td className="align-middle">
+                      <td>
                         {["WAITING_LIST", "CANCELLED"].includes(booking.bookingStatus as string) && (
                           <RS.Button
-                            color="primary"
+                            color="success"
                             outline
                             block
                             className="btn-sm mb-1"
@@ -153,7 +134,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                             color="primary"
                             outline
                             block
-                            className="btn-sm mb-1"
+                            className="btn-sm mb-1 primary-button-hover"
                             onClick={() => dispatch(cancelUserBooking(eventBookingId, userId))}
                           >
                             Cancel
@@ -161,7 +142,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                         )}
                         {isAdmin(user) && (
                           <RS.Button
-                            color="primary"
+                            color="danger"
                             outline
                             block
                             className="btn-sm mb-1"
@@ -171,7 +152,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                           </RS.Button>
                         )}
                         <RS.Button
-                          color="primary"
+                          color="success"
                           outline
                           block
                           className="btn-sm mb-1"
@@ -180,58 +161,52 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                           Resend email
                         </RS.Button>
                       </td>
-                      <td className="align-middle text-center">
+                      <td className="text-nowrap">
                         {booking.userBooked && (
                           <React.Fragment>
                             {booking.userBooked.familyName}, {booking.userBooked.givenName}
                           </React.Fragment>
                         )}
                       </td>
-                      <td className="align-middle">
-                        {booking.userBooked && (booking.userBooked as UserSummaryWithEmailAddressAndGenderDTO).email}
-                      </td>
-                      <td className="align-middle">{booking.userBooked && booking.userBooked.role}</td>
+                      <td className="py-2 text-nowrap">{booking.userBooked && booking.userBooked.email}</td>
+                      <td>{booking.userBooked && booking.userBooked.role}</td>
                       {/*TODO When full stats functionality works <Link to={`/admin/stats/schools/${userSchool.urn}/user_list`}>{userSchool.name}</Link>*/}
-                      <td className="align-middle">{booking.schoolName}</td>
-                      <td className="align-middle">
+                      <td style={{ minWidth: "200px" }}>{booking.schoolName}</td>
+                      <td>
                         {booking.additionalInformation &&
                           (booking.additionalInformation.jobTitle
                             ? booking.additionalInformation.jobTitle
                             : booking.additionalInformation.yearGroup)}
                       </td>
-                      <td className="align-middle">{booking.bookingStatus}</td>
-                      <td className="align-middle">
+                      <td>{booking.bookingStatus}</td>
+                      <td>{booking.userBooked && booking.userBooked.gender}</td>
+                      <td>
                         <DateString>{booking.bookingDate}</DateString>
                       </td>
-                      <td className="align-middle">
+                      <td>
                         <DateString>{booking.updated}</DateString>
                       </td>
-                      <td className="align-middle">
+                      <td>
                         {Array.from(
                           new Set(booking.userBooked?.registeredContexts?.map((rc) => stageLabelMap[rc.stage!])),
                         ).join(", ")}
                       </td>
-                      <td className="align-middle">
+                      <td>
                         {Array.from(
                           new Set(
                             booking.userBooked?.registeredContexts?.map((rc) => examBoardLabelMap[rc.examBoard!]),
                           ),
                         ).join(", ")}
                       </td>
-                      <td className="align-middle text-center">{booking.reservedById || "-"}</td>
-                      <td className="align-middle">
-                        {booking.additionalInformation && booking.additionalInformation.experienceLevel}
-                      </td>
-                      <td className="align-middle">
+                      <td>{booking.reservedById || "-"}</td>
+                      <td>
                         {booking.additionalInformation && booking.additionalInformation.accessibilityRequirements}
                       </td>
-                      <td className="align-middle">
-                        {booking.additionalInformation && booking.additionalInformation.medicalRequirements}
-                      </td>
-                      <td className="align-middle">
+                      <td>{booking.additionalInformation && booking.additionalInformation.medicalRequirements}</td>
+                      <td className=" text-nowrap">
                         {booking.additionalInformation && booking.additionalInformation.emergencyName}
                       </td>
-                      <td className="align-middle">
+                      <td className=" text-nowrap">
                         {booking.additionalInformation && booking.additionalInformation.emergencyNumber}
                       </td>
                     </tr>

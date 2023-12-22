@@ -54,10 +54,23 @@
   margin: 0;
 }
 
-.small-centered-td {
-  vertical-align: middle !important;
-  font-size: 0.8rem;
-  text-align: center;
-  padding-top: 1rem !important;
-  padding-bottom: 1rem !important;
+#event-admin {
+  td,
+  th {
+    vertical-align: middle !important;
+    text-align: center;
+  }
+  td {
+    font-size: 0.8rem;
+    min-width: 80px;
+  }
+  th {
+    padding-left: 0.6rem !important;
+    padding-right: 0.6rem !important;
+  }
+  .primary-button-hover:hover {
+    background-color: $gray-160 !important;
+    border-color: $gray-160;
+    color: white;
+  }
 }

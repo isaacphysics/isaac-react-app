@@ -51,7 +51,7 @@ describe("Banner", () => {
     expect(image).toHaveAttribute("alt", "banner image");
   });
 
-  it("changes the background colour to dark blue if color prop is changed to secondary", () => {
+  it("changes the classname if color prop is changed to secondary", () => {
     setupTest({ ...mockBannerProps, color: "secondary" });
     const banner = getById(mockBannerProps.id);
     expect(banner).toHaveClass("banner-secondary");

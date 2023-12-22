@@ -1,14 +1,9 @@
 import { screen } from "@testing-library/react";
-import {
-  SelectedEventDetails,
-  countGenders,
-  countStudentsAndTeachers,
-} from "../../../../../app/components/elements/panels/SelectedEventDetails";
-import { ACTION_TYPE, API_PATH, asPercentage, augmentEvent, formatAddress } from "../../../../../app/services";
+import { SelectedEventDetails } from "../../../../../app/components/elements/panels/SelectedEventDetails";
+import { ACTION_TYPE, API_PATH, augmentEvent } from "../../../../../app/services";
 import { renderTestEnvironment } from "../../../../utils";
 import { mockEvent, mockEventBookings } from "../../../../../mocks/data";
-import { AugmentedEvent } from "../../../../../IsaacAppTypes";
-import { EventBookingDTO, IsaacEventPageDTO } from "../../../../../IsaacApiTypes";
+import { IsaacEventPageDTO } from "../../../../../IsaacApiTypes";
 import { FRIENDLY_DATE_AND_TIME } from "../../../../../app/components/elements/DateString";
 import { store } from "../../../../../app/state";
 import { rest } from "msw";
@@ -33,52 +28,33 @@ describe("SelectedEventDetails", () => {
     });
   };
 
-  const findExpectedValues = (event: AugmentedEvent, eventBookings: EventBookingDTO[]) => {
-    const { male, female, other, preferNotToSay, unknown } = countGenders(eventBookings);
-    const numberOfConfirmedOrAttendedBookings = eventBookings.filter((eventBooking) => {
-      return eventBooking.bookingStatus === "CONFIRMED" || eventBooking.bookingStatus === "ATTENDED";
-    }).length;
-    const title = `${event.title as string} - ${event.subtitle as string}`;
-    const location = event.isVirtual ? "Online" : formatAddress(event.location);
-    const status = event.eventStatus as string;
-    const date = `${FRIENDLY_DATE_AND_TIME.format(event.date)} - ${FRIENDLY_DATE_AND_TIME.format(event.endDate)}`;
-    const bookingDeadline = FRIENDLY_DATE_AND_TIME.format(event.bookingDeadline);
-    const { studentCount, teacherCount } = countStudentsAndTeachers(eventBookings);
-    const placesAvailable = `${event.placesAvailable} / ${event.numberOfPlaces}`;
-    const numberOfStudents = `${studentCount} / ${event.numberOfPlaces}`;
-    const numberOfTeachers = `${teacherCount} / ${event.numberOfPlaces}`;
-    const maleGender = `Male: ${male} (${asPercentage(male, numberOfConfirmedOrAttendedBookings)}%)`;
-    const femaleGender = `Female: ${female} (${asPercentage(female, numberOfConfirmedOrAttendedBookings)}%)`;
-    const otherGender = `Other: ${other} (${asPercentage(other, numberOfConfirmedOrAttendedBookings)}%)`;
-    const preferNotToSayGender = `Prefer not to say: ${preferNotToSay} (${asPercentage(
-      preferNotToSay,
-      numberOfConfirmedOrAttendedBookings,
-    )}%)`;
-    const unknownGender = `Unknown: ${unknown} (${asPercentage(unknown, numberOfConfirmedOrAttendedBookings)}%)`;
-
-    return [
-      title,
-      location,
-      status,
-      date,
-      bookingDeadline,
-      placesAvailable,
-      numberOfStudents,
-      numberOfTeachers,
-      maleGender,
-      femaleGender,
-      otherGender,
-      preferNotToSayGender,
-      unknownGender,
-    ];
-  };
-
   it("renders all event details when event is selected", async () => {
     const eventDetails = mockEvent;
     const augmentedEvent = augmentEvent(eventDetails);
     setupTest(eventDetails);
     const eventInfo = await screen.findByTestId("event-details");
-    const expectedValues = findExpectedValues(augmentedEvent, mockEventBookings);
+    const expectedValues = [
+      "Example Event - Example Subtitle",
+      "Online",
+      "OPEN",
+      `${FRIENDLY_DATE_AND_TIME.format(augmentedEvent.date)} - ${FRIENDLY_DATE_AND_TIME.format(
+        augmentedEvent.endDate,
+      )}`,
+      FRIENDLY_DATE_AND_TIME.format(augmentedEvent.bookingDeadline),
+      "195 / 200",
+      "3 / 200",
+      "2 / 200",
+      "1 (33%)",
+      "0 (0%)",
+      "1 (33%)",
+      "0 (0%)",
+      "1 (33%)",
+      "0 (0%)",
+      "1 (50%)",
+      "0 (0%)",
+      "1 (50%)",
+      "0 (0%)",
+    ];
     expectedValues.forEach((each) => expect(eventInfo).toHaveTextContent(each));
     const title = screen.getByText("Selected event details");
     expect(title).toBeInTheDocument();
@@ -96,10 +72,9 @@ describe("SelectedEventDetails", () => {
         },
       },
     };
-    const augmentedEvent = augmentEvent(eventDetails);
     setupTest(eventDetails);
     const eventInfo = await screen.findByTestId("event-details");
-    const location = findExpectedValues(augmentedEvent, mockEventBookings)[1];
+    const location = "Fake Street, Fake Town, FAKE 123";
     expect(eventInfo).toHaveTextContent(location);
   });
 
