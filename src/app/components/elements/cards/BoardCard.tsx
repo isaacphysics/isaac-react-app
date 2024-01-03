@@ -175,6 +175,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 </table>}
             </td>
             <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>
+            {!isSetAssignments && <td className={"align-middle text-center"}>{formatDate(board.creationDate)}</td>}
             <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
             {isSetAssignments && <td className={"align-middle text-center"}>
                 <Button className="set-assignments-button" color={siteSpecific("tertiary", "secondary")} size="sm" onClick={toggleAssignModal}>
@@ -190,7 +191,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 <Button outline color={"secondary"} className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
             </td>}
             {!isSetAssignments && siteSpecific(
-                <td>
+                <td className={"text-center align-middle"}>
                     <CustomInput
                         id={`board-delete-${board.id}`}
                         type="checkbox"
@@ -209,7 +210,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         checked={board && selectedBoards?.some(e => e.id === board.id)}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             board && updateBoardSelection(board, event.target.checked);
-                        }} aria-label="Delete gameboard"
+                        }} aria-label="Delete quiz"
                     />
                 </td>
             )}

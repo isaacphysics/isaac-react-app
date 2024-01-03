@@ -233,8 +233,8 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         <Link to={`${PATHS.PREVIEW_TEST}/${assignment.quizId}/page/1`}>{assignment.quiz?.title}</Link>.
     </div>;
 
-    const getQuestionTitle = (question: QuizQuestion) => <div key={question.id} className="border">
-        {`Q${questions.indexOf(question) + 1}`}
+    const getQuestionTitle = (question: QuizQuestion) => <div key={question.id}>
+        {`Question ${questions.indexOf(question) + 1}`}
     </div>;
 
     return <ResultsTable<QuizQuestion> assignmentId={assignment.id} duedate={assignment.dueDate} progress={progress}

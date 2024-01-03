@@ -1,5 +1,5 @@
 import {isaacApi} from "./baseApi";
-import {AssignmentDTO, AssignmentFeedbackDTO, QuizAssignmentDTO} from "../../../../IsaacApiTypes";
+import {AssignmentDTO, AssignmentStatusDTO, QuizAssignmentDTO} from "../../../../IsaacApiTypes";
 import {AppAssignmentProgress, EnhancedAssignment} from "../../../../IsaacAppTypes";
 import {anonymisationFunctions, anonymiseIfNeededWith, onQueryLifecycleEvents} from "./utils";
 import {siteSpecific} from "../../../services";
@@ -47,7 +47,7 @@ export const assignmentsApi = isaacApi.injectEndpoints({
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.progressState)
         }),
 
-        assignGameboard: build.mutation<AssignmentFeedbackDTO[], AssignmentDTO[]>({
+        assignGameboard: build.mutation<AssignmentStatusDTO[], AssignmentDTO[]>({
             query: (assignments) => ({
                 url: "/assignments/assign_bulk",
                 method: "POST",

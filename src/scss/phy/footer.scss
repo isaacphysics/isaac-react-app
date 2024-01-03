@@ -1,5 +1,14 @@
 @import "../common/footer";
 
+.footer-links {
+  a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
 .footer-link:focus {
   box-shadow: 0 0 0 2pt white;
   border-radius: 3px;

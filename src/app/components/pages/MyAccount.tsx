@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import classnames from "classnames";
 import classNames from "classnames";
 import {
+    Button,
     Card,
     CardFooter,
     Col,
@@ -18,10 +19,13 @@ import {
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {
+    AppDispatch,
     AppState,
+    closeActiveModal,
     errorSlice,
     ErrorState,
     getChosenUserAuthSettings,
+    openActiveModal,
     resetPassword,
     showErrorToast,
     updateCurrentUser,
@@ -33,7 +37,7 @@ import {
     DisplaySettings,
     PotentialUser,
     ProgrammingLanguage,
-    UserPreferencesDTO
+    UserPreferencesDTO,
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
@@ -64,6 +68,8 @@ import {skipToken} from "@reduxjs/toolkit/query";
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
+// TODO: work out which of these `any`s can be specified
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
     const searchParams = queryString.parse(search);
@@ -71,11 +77,12 @@ const stateToProps = (state: AppState, props: any) => {
         error: state?.error ?? null,
         userAuthSettings: state?.userAuthSettings ?? null,
         userPreferences: state?.userPreferences ?? null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
         hashAnchor: hash?.slice(1) ?? null,
         authToken: searchParams?.authToken as string ?? null,
         userOfInterest: searchParams?.userId as string ?? null
-    }
+    };
 };
 
 const dispatchToProps = {
@@ -107,6 +114,23 @@ function hashEqual<T>(current: NonNullable<T>, prev: NonNullable<T>, options?: N
     return equal;
 }
 
+const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
+    dispatch(openActiveModal({
+        closeAction: () => {
+            dispatch(closeActiveModal());
+        },
+        title: "Changing schools?",
+        body: <p className="px-1">
+            When you change schools, check your <strong><a target="_blank" href="/groups">groups</a></strong> and your <strong><a target="_blank" href="/account#teacherconnections">connections</a></strong>. Delete any groups that you will no longer teach and remove any connections with old colleagues and students.
+        </p>,
+        buttons: [
+            <Button key={1} color="primary" onClick={() => dispatch(closeActiveModal())}>
+                Continue
+            </Button>
+        ]
+    }));
+};
+
 const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthSettings, userPreferences, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
     const dispatch = useAppDispatch();
 
@@ -114,19 +138,21 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     // Memoising this derived field is necessary so that it can be used as a dependency to a useEffect later.
     // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
     const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
-        return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false}
+        return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false};
     }, [adminUserToEdit]);
 
     useEffect(() => {
         if (userOfInterest) {
             getChosenUserAuthSettings(Number(userOfInterest));
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userOfInterest]);
 
     // - Admin user modification
     const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
 
     // - Copy of user to store changes before saving
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [userToUpdate, setUserToUpdate] = useState<any>(
         editingOtherUser && userToEdit ?
             {...userToEdit, loggedIn: true, password: ""} :
@@ -171,6 +197,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     useEffect(() => {
         setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
         setMyUserPreferences(userPreferences);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userPreferences]);
 
     // Set active tab using hash anchor
@@ -179,6 +206,8 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
         // @ts-ignore
         const tab: ACCOUNT_TAB =
             (authToken && ACCOUNT_TAB.teacherconnections) ||
+            // This feel particularly bad
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
             ACCOUNT_TAB.account;
         setActiveTab(tab);
@@ -210,6 +239,16 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
             return history.block("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?");
         }
     }, [accountInfoChanged, saving]);
+
+    // Handling teachers changing school
+    useEffect(() => {
+        const originalSchool: string | undefined = "schoolId" in user ? user.schoolId : undefined; 
+        const newSchool: string | undefined = userToUpdate.schoolId;
+        if (newSchool && (!originalSchool || originalSchool !== newSchool)) {
+            dispatch(showChangeSchoolModal());
+        }
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [userToUpdate, user]);
 
     // Form's submission method
     function updateAccount(event: React.FormEvent<HTMLFormElement>) {
@@ -254,6 +293,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     // email preferences tab
     useEffect(() => {
         setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab]);
 
     return <Container id="account-page" className="mb-5">

@@ -48,7 +48,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/alevel">A Level Resources</LinkItem>
             <LinkItem to={PATHS.QUESTION_FINDER}>Question Finder</LinkItem>
             <LinkItem to="/concepts">Concepts</LinkItem>
-            {/* <LinkItem to="/glossary">Glossary</LinkItem> */}
+            <LinkItem to="/glossary">Glossary</LinkItem>
         </NavigationSection>
 
         <NavigationSection title="Events">
@@ -75,5 +75,5 @@ export const NavigationBarPhy = () => {
             {isStaff(user) && <LinkItem to="/admin/stats">Site Statistics</LinkItem>}
             {isStaff(user) && <LinkItem to="/admin/content_errors">Content Errors</LinkItem>}
         </NavigationSection>}
-    </NavigationBar>
+    </NavigationBar>;
 };
