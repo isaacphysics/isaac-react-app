@@ -90,17 +90,26 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
                     </RS.Col>
                 </RS.Row>
 
-                <div className="mt-4 text-right">
-                    <RS.Button color="tertiary" outline className="float-left mr-1 bg-light" size="sm" disabled={isUpdatingQuiz} onClick={() => setIsModalOpen(true)}>
-                        Extend due date
-                    </RS.Button>
-                    <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1 bg-light">
-                        {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
-                    </RS.Button>
-                    <RS.Button tag={Link} to={`/test/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
-                        View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
-                    </RS.Button>
-                </div>
+                <RS.Row className="manage-tests-btns">
+                    <RS.Col>
+                            <RS.Button color="tertiary" outline className="bg-light" size="sm" disabled={isUpdatingQuiz || !assignment?.dueDate} onClick={() => setIsModalOpen(true)}>
+                                Extend due date
+                            </RS.Button>
+                            {!assignment?.dueDate && <p className={"text-danger me-auto d-none d-sm-block"}>
+                                Cannot extend non-existant due date.
+                            </p>}
+                    </RS.Col>
+                    <RS.Col className="col-sm-auto">
+                        <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="bg-light">
+                            {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
+                        </RS.Button>
+                    </RS.Col>
+                    <RS.Col className="col-sm-auto">
+                        <RS.Button tag={Link} to={`/test/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm">
+                            View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
+                        </RS.Button>
+                    </RS.Col>
+                </RS.Row>
             </RS.CardBody>
         </RS.Card>
     </div>
