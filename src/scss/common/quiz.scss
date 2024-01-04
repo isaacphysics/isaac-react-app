@@ -27,6 +27,22 @@
   }
 }
 
+.my-quizzes-card {
+  min-height: 100%;
+}
+
+.card-grid-sm *, .card-grid-xs * {
+  flex-basis: 100%;
+}
+
+.card-grid-md *, .card-grid-lg * {
+  flex-basis: 50%;
+}
+
+.card-grid-xl * {
+  flex-basis: 33.333333%;
+}
+
 .quiz-marks-table td {
   padding-left: 16px;
 }
