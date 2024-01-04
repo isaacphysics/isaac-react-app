@@ -4,8 +4,10 @@ import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors, useAppSelector} from "../../state";
 import {
+    isAda,
     isTeacherOrAbove,
     isTutorOrAbove,
+    isVerified,
     KEY,
     persistence,
     TEACHER_REQUEST_ROUTE,
@@ -41,18 +43,20 @@ export const TrackedRoute = function({component, componentProps, ...rest}: Track
                 const propsWithUser = {user, ...props};
                 const userNeedsToBeTutorOrTeacher = rest.ifUser && [isTutorOrAbove.name, isTeacherOrAbove.name].includes(rest.ifUser.name); // TODO we should try to find a more robust way than this
                 return <ShowLoading until={user}>
-                    {user && ifUser(user) ?
-                        <WrapperComponent component={component} {...propsWithUser} {...componentProps} /> :
-                        user && !user.loggedIn && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
-                            persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
-                            :
-                            user && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
-                                <Redirect to={TEACHER_REQUEST_ROUTE}/>
+                    {isAda && user && isTeacherOrAbove(user) && !isVerified(user) && ifUser.name ? 
+                        <Redirect to="/register/verify"/> :
+                        user && ifUser(user) ?
+                            <WrapperComponent component={component} {...propsWithUser} {...componentProps} /> :
+                            user && !user.loggedIn && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
+                                persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                                 :
-                                user && user.loggedIn && !ifUser(user) ?
-                                    <Unauthorised/>
+                                user && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
+                                    <Redirect to={TEACHER_REQUEST_ROUTE}/>
                                     :
-                                    persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search + props.location.hash) && <Redirect to="/login"/>
+                                    user && user.loggedIn && !ifUser(user) ?
+                                        <Unauthorised/>
+                                        :
+                                        persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search + props.location.hash) && <Redirect to="/login"/>
                     }
                 </ShowLoading>;
             }}/>;

@@ -26,7 +26,9 @@ import {
     partitionCompleteAndIncompleteQuizzes,
     isLoggedIn,
     isPhy,
-    siteSpecific
+    siteSpecific,
+    isTeacherOrAbove,
+    isVerified
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
@@ -87,8 +89,9 @@ export function MenuBadge({count, message, ...rest}: {count: number, message: st
 export function useAssignmentsCount() {
     const user = useAppSelector(selectors.user.orNull);
 
-    // Only fetches assignments if the user is logged in, and refetch on login/logout, reconnect.
-    const queryArg = user?.loggedIn ? undefined : skipToken;
+    // Only fetches assignments if the user is logged in (not including Ada partial logins), and refetch on login/logout, reconnect.
+    const requiresVerification = isAda ? isTeacherOrAbove(user) && !isVerified(user) : false;
+    const queryArg = user?.loggedIn && !requiresVerification ? undefined : skipToken;
     // We should add refetchOnFocus: true if we want to refetch on browser focus - hard to say if this is a good idea or not.
     const queryOptions = {refetchOnMountOrArgChange: true, refetchOnReconnect: true};
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery(queryArg, queryOptions);

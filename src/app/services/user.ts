@@ -47,6 +47,10 @@ export function isAdminOrEventManager(user?: {readonly role?: UserRole, readonly
     return isAdmin(user) || isEventManager(user);
 }
 
+export function isVerified(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly emailVerificationStatus?: string} | null): boolean {
+    return isDefined(user) && (user.emailVerificationStatus === "VERIFIED");
+}
+
 export const roleRequirements: Record<UserRole, (u: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => boolean> = {
     "STUDENT": isStudent,
     "TUTOR": isTutorOrAbove,

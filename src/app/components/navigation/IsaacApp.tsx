@@ -40,7 +40,10 @@ import {
     KEY,
     showNotification,
     isTutorOrAbove,
-    PATHS
+    PATHS,
+    isAda,
+    isTeacherOrAbove,
+    isVerified
 } from "../../services"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -110,7 +113,8 @@ export const IsaacApp = () => {
         dispatch(fetchGlossaryTerms());
     }, [dispatch]);
 
-    const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
+    const requiresVerification = isAda ? isTeacherOrAbove(user) && !isVerified(user) : false;
+    const loggedInUserId = isLoggedIn(user) && !requiresVerification ? user.id : undefined;
     useEffect(() => {
         if (loggedInUserId) {
             dispatch(requestNotifications());
