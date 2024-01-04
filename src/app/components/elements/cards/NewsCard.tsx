@@ -14,7 +14,7 @@ const PhysicsNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
 
     return <Card data-testid={"news-pod"} className={"card-neat news-card"} {...props}>
-        {image && <a href={url}>
+        {image && <a href={url} className="focus-target">
             <CardImg
                 top
                 src={image.src && apiHelper.determineImageUrl(image.src)}

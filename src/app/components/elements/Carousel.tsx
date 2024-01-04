@@ -33,6 +33,13 @@ const ControlledCarouselInstance = (props: ControlledCarouselInstanceProps) => {
 
     const onExiting = () => setAnimating(true);
     const onExited = () => setAnimating(false);
+    const onEntered = (element: HTMLElement) => {
+        const focusTargets = element.getElementsByClassName('focus-target');
+        if (focusTargets.length > 0) {
+            // @ts-ignore we should only mark focusable elements with the focus-target class
+            focusTargets[0].focus();
+        }
+    };
 
     // Manually set up event listeners until ReactStrap becomes more extensible
     const carouselContainer = useRef<HTMLDivElement>(null);
@@ -72,7 +79,7 @@ const ControlledCarouselInstance = (props: ControlledCarouselInstanceProps) => {
             >
                 <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
                 {props.children.map((child: ReactNode, index: number) => (
-                    <CarouselItem key={index} onExiting={onExiting} onExited={onExited}>
+                    <CarouselItem key={index} onEntered={onEntered as any} onExiting={onExiting} onExited={onExited}>
                         <div>
                             <Spacer />
                             {child}
