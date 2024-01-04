@@ -153,6 +153,7 @@ const PhyTable = (props: GameboardsTableProps) => {
                                     Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
                                 </button>
                             </th>
+                            <th className="text-center align-middle">Share</th>
                             <th colSpan={2}>
                                 <div className="text-right align-middle">
                                     <Button disabled={selectedBoards.length == 0} size="sm" color="link" onClick={confirmDeleteMultipleBoards}>

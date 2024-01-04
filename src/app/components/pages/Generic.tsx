@@ -4,7 +4,7 @@ import {AppState, fetchDoc, useAppDispatch, useAppSelector} from "../../state";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {DOCUMENT_TYPE, isAda} from "../../services";
+import {DOCUMENT_TYPE, isAda, useUrlHashValue} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -15,6 +15,7 @@ import {PrintButton} from "../elements/PrintButton";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
+import { useUntilFound } from "./Glossary";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -36,10 +37,21 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.GENERIC, pageId))}, [dispatch, pageId]);
     const doc = useAppSelector((state: AppState) => state?.doc || null);
 
+    const hash = useUntilFound(doc, useUrlHashValue());
+
+    useEffect(() => {
+        if (hash) {
+            // location.hash is correct when we load the page, but since nothing is loaded yet it doesn't scroll anywhere.
+            // this waits until doc is loaded (see 'hash' definition) and then unsets/resets the hash to trigger the scroll again.
+            location.hash = '';
+            location.hash = hash;
+        }
+    }, [hash]);
+
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
         return <Container className={doc.subjectId || ""}>
-            <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
+            <TitleAndBreadcrumb currentPageTitle={doc.title as string} subTitle={doc.subtitle} />
             <MetaDescription description={doc.summary} />
             <div className="no-print d-flex align-items-center">
                 <EditContentButton doc={doc} />

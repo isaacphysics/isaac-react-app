@@ -10,6 +10,8 @@
 }
 
 #graph-sketcher-modal {
+    min-height: 310px;
+    min-width: 310px;
     .graph-sketcher-ui {
         position: absolute;
         width: 100%;
@@ -37,6 +39,11 @@
                 white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
                 white-space: -o-pre-wrap;    /* Opera 7 */
                 word-wrap: break-word;       /* Internet Explorer 5.5+ */
+            }
+            #graph-sketcher-ui-show-slop, label {
+                pointer-events: all;
+                touch-action: all;
+                cursor: pointer;
             }
         }
 
@@ -167,13 +174,13 @@
             }
         }
 
-        @include respond-above(xs) {
+        @include respond-above(lg) {
             $button-size: 90px;
             $button-spacing: 10px;
 
             #graph-sketcher-ui-debug-window {
-                top: 3 * $button-spacing + $button-size;
-                left: 2 * $button-spacing;
+                top: 2 * $button-spacing;
+                left: 3 * $button-spacing + $button-size;
             }
 
             .button {
@@ -239,13 +246,93 @@
             }
         }
 
-        @include respond-below(xs) {
-            $button-size: 61px;
-            $button-spacing: 8px;
+        @media (orientation:portrait) {
+            @include respond-below(xs) {
+                $button-size: 61px;
+                $button-spacing: 8px;
+
+                #graph-sketcher-ui-debug-window {
+                    display: none;
+                    top: 2 * $button-spacing;
+                    left: 3 * $button-spacing + $button-size;
+                }
+
+                .button {
+                    width: $button-size;
+                    height: $button-size;
+
+                    &#graph-sketcher-ui-trash-button {
+                        top: 2 * $button-spacing;
+                        right: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-reset-button {
+                        top: 3 * $button-spacing + $button-size;
+                        right: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-question-button {
+                        bottom: 3 * $button-spacing + $button-size;
+                        left: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-undo-button {
+                        bottom: 2 * $button-spacing;
+                        left: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-redo-button {
+                        bottom: 2 * $button-spacing;
+                        left: 3 * $button-spacing + $button-size;
+                    }
+
+                    &#graph-sketcher-ui-submit-button {
+                        bottom: 2 * $button-spacing;
+                        right: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-help-button {
+                        bottom: 3 * $button-spacing + $button-size;
+                        right: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-debug-button {
+                        display: none;
+                        top: 3 * $button-spacing + $button-size;
+                        left: 2 * $button-spacing;
+                    }
+
+                    &#graph-sketcher-ui-bezier-button {
+                        top: 2 * $button-spacing;
+                        left: 3 * $button-spacing + $button-size;
+                    }
+
+                    &#graph-sketcher-ui-linear-button {
+                        top: 2 * $button-spacing;
+                        left: 2 * $button-spacing;
+                    }
+                }
+
+                div#graph-sketcher-ui-color-select-hexagons {
+                    top: 2 * $button-spacing;
+                    left: 4 * $button-spacing + 2 * $button-size;
+                    width: $button-size;
+                    height: $button-size;
+                    svg {
+                        width: $button-size;
+                        height: $button-size;                        
+                    }
+                }
+            }
+        }
+
+        @include respond-above(xs) {
+            $button-size: 90px;
+            $button-spacing: 10px;
 
             #graph-sketcher-ui-debug-window {
-                top: 3 * $button-spacing + $button-size;
-                left: 2 * $button-spacing;
+                top: 2 * $button-spacing;
+                left: 3 * $button-spacing + $button-size;
             }
 
             .button {
@@ -289,12 +376,92 @@
 
                 &#graph-sketcher-ui-debug-button {
                     top: 2 * $button-spacing;
+                    left: unset;
+                    right: 3 * $button-spacing + $button-size;
+                }
+
+                &#graph-sketcher-ui-bezier-button {
+                    top: 3 * $button-spacing + $button-size;
+                    left: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-linear-button {
+                    top: 2 * $button-spacing;
+                    left: 2 * $button-spacing;
+                }
+            }
+
+            div#graph-sketcher-ui-color-select-hexagons {
+                top: 4 * $button-spacing + 2 * $button-size;
+                left: 2 * $button-spacing;
+                width: $button-size;
+                height: $button-size;
+                svg {
+                    width: $button-size;
+                    height: $button-size;                        
+                }
+            }
+        }
+
+        @media screen and (orientation:landscape) and (max-height: 575px) {
+            $button-size: 61px;
+            $button-spacing: 8px;
+
+            #graph-sketcher-ui-debug-window {
+                display: none;
+                top: 2 * $button-spacing;
+                left: 3 * $button-spacing + $button-size;
+            }
+
+            .button {
+                width: $button-size;
+                height: $button-size;
+
+                &#graph-sketcher-ui-trash-button {
+                    top: 2 * $button-spacing;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-reset-button {
+                    top: 3 * $button-spacing + $button-size;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-question-button {
+                    bottom: 3 * $button-spacing + $button-size;
+                    left: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-undo-button {
+                    bottom: 2 * $button-spacing;
+                    left: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-redo-button {
+                    bottom: 2 * $button-spacing;
+                    left: 3 * $button-spacing + $button-size;
+                }
+
+                &#graph-sketcher-ui-submit-button {
+                    bottom: 2 * $button-spacing;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-help-button {
+                    bottom: 3 * $button-spacing + $button-size;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-debug-button {
+                    display: none;
+                    top: unset;
+                    bottom: 3 * $button-spacing + $button-size;
                     left: 2 * $button-spacing;
                 }
 
                 &#graph-sketcher-ui-bezier-button {
-                    top: 2 * $button-spacing;
-                    left: 3 * $button-spacing + $button-size;
+                    top: 3 * $button-spacing + $button-size;
+                    left: 2 * $button-spacing;
                 }
 
                 &#graph-sketcher-ui-linear-button {
@@ -305,7 +472,7 @@
 
             div#graph-sketcher-ui-color-select-hexagons {
                 top: 2 * $button-spacing;
-                left: 4 * $button-spacing + 2 * $button-size;
+                left: 3 * $button-spacing + $button-size;
                 width: $button-size;
                 height: $button-size;
                 svg {
@@ -314,7 +481,6 @@
                 }
             }
         }
-
 
     }
 }

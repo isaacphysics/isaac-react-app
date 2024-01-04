@@ -20,7 +20,7 @@ const teacherLinks = siteSpecific(
     ["/groups", PATHS.SET_ASSIGNMENTS, "/set_tests", PATHS.ASSIGNMENT_PROGRESS, "/teaching_order"]
 );
 const learnLinks = siteSpecific(
-    ["/11_14", "/gcse", "/alevel", PATHS.QUESTION_FINDER, "/concepts"],
+    ["/11_14", "/gcse", "/alevel", PATHS.QUESTION_FINDER, "/concepts", "/glossary"],
     ["/topics", PATHS.QUESTION_FINDER, "/glossary", "/pages/computer_science_stories"]
 );
 const eventsLinks = siteSpecific(

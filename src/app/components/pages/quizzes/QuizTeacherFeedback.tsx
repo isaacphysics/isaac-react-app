@@ -7,9 +7,9 @@ import {
     useGetQuizAssignmentWithFeedbackQuery,
     useUpdateQuizAssignmentMutation
 } from "../../../state";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {QuizFeedbackMode, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
     confirmThen,
@@ -17,15 +17,17 @@ import {
     getQuizAssignmentCSVDownloadLink,
     siteSpecific,
     isDefined, nthHourOf, TODAY,
-    useAssignmentProgressAccessibilitySettings
+    useAssignmentProgressAccessibilitySettings,
+    isQuestion,
+    PATHS
 } from "../../../services";
-import {AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
+import {AppAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
 import {currentYear, DateInput} from "../../elements/inputs/DateInput";
 import range from "lodash/range";
-import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
+import {ResultsTable, passMark} from "../../elements/quiz/QuizProgressCommon";
 import {
     Alert,
     Button,
@@ -97,7 +99,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 () => setDueDate(quizAssignment.dueDate)
             );
         }
-    }
+    };
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
         <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
@@ -170,10 +172,115 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                         <AssignmentProgressLegend showQuestionKey />
-                        <ResultsTable assignment={quizAssignment} />
+                        <QuizProgressDetails assignment={quizAssignment} />
                     </AssignmentProgressPageSettingsContext.Provider>
                 </div>
             </>
         }/>
     </Container>;
+};
+
+interface QuizQuestion extends ContentBaseDTO {
+    questionPartsTotal?: number | undefined;
+}
+
+export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO}) => {
+
+    const questions : QuizQuestion[] = questionsInQuiz(assignment.quiz).map(q => ({...q, questionPartsTotal: 1} as QuizQuestion));
+
+    function questionsInSection(section?: IsaacQuizSectionDTO) {
+        return section?.children?.filter(isQuestion) || [];
+    }
+
+    function questionsInQuiz(quiz?: IsaacQuizDTO) {
+        const questions: QuizQuestion[] = [];
+        quiz?.children?.forEach(
+            section => {
+                questions.push(...questionsInSection(section));
+            }
+        );
+        return questions;
+    }
+
+    function markClassesInternal(studentProgress: AppAssignmentProgress, correctParts: number, incorrectParts: number, totalParts: number) {
+        if (!studentProgress.user.authorisedFullAccess) {
+            return "revoked";
+        } else if (correctParts === totalParts) {
+            return "completed";
+        } else if ((correctParts / totalParts) >= passMark) {
+            return "passed";
+        } else if ((incorrectParts / totalParts) > (1 - passMark)) {
+            return "failed";
+        } else if (correctParts > 0 || incorrectParts > 0) {
+            return "in-progress";
+        } else {
+            return "not-attempted";
+        }
+    }
+
+    function markClasses(studentProgress: AppAssignmentProgress) {
+        const correctParts = studentProgress.correctQuestionPartsCount;
+        const incorrectParts = studentProgress.incorrectQuestionPartsCount;
+        const total = questions.reduce((acc, q) => acc + (q.questionPartsTotal ?? 0), 0);
+
+        return markClassesInternal(studentProgress, correctParts, incorrectParts, total);
+    }
+
+    function markQuestionClasses(studentProgress: AppAssignmentProgress, index: number) {
+        const correctParts = studentProgress.correctPartResults[index];
+        const incorrectParts = studentProgress.incorrectPartResults[index];
+        const totalParts = questions[index].questionPartsTotal ?? 0;
+
+        return markClassesInternal(studentProgress, correctParts, incorrectParts, totalParts);
+    }
+
+    const fractionCorrect = (questionId: string) => {
+        if (!assignment.userFeedback) return [0, 0];
+        const marks = assignment.userFeedback.map(row => row.feedback?.questionMarks?.[questionId]);
+        const definedMarks = marks?.filter(isDefined);
+        if (!definedMarks || definedMarks.length === 0) return [0, 0];
+        const correct = definedMarks.reduce((p, c) => p + (c.correct ?? 0), 0);
+        const total = assignment.userFeedback.length * ((definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) + (definedMarks[0].notAttempted ?? 0));
+        return [correct, total];
+    };
+
+    const quizAverages = questions.map(q => {
+        if (!q.id) return 0;
+        const [correct, total] = fractionCorrect(q.id);
+        return total ? Math.round(100 * correct / total) : 0;
+    });
+
+    const totalParts = questions.length;
+
+    const progress : AppAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
+        return {
+            user: user.user as UserSummaryDTO,
+            // a list of the correct parts of an answer, one list for each question
+            correctPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.correct ?? 0),
+            incorrectPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0),
+            notAttemptedPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.notAttempted ?? 0),
+            results: [],
+            tickCount: user.feedback?.questionMarks?.[0]?.correct ?? 0,
+            correctQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? 0]?.correct ?? 0), 0),
+            incorrectQuestionPartsCount: questions.reduce((acc, q) => acc + (user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0), 0),
+        };
+    });
+
+    const header = <div className="progress-header">
+        {assignment.userFeedback
+        ? <>
+            <strong>{assignment.userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{assignment.userFeedback.length}</strong>
+            {` students have completed the test `}
+        </>
+        : 'Preview '}
+        <Link to={`${PATHS.PREVIEW_TEST}/${assignment.quizId}/page/1`}>{assignment.quiz?.title}</Link>.
+    </div>;
+
+    const getQuestionTitle = (question: QuizQuestion) => <div key={question.id}>
+        {`Question ${questions.indexOf(question) + 1}`}
+    </div>;
+    
+    return <ResultsTable<QuizQuestion> assignmentId={assignment.id} progress={progress} questions={questions} header={header} getQuestionTitle={getQuestionTitle}
+    assignmentAverages={quizAverages} assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
+    isQuiz={false}/>;
 };

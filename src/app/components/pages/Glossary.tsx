@@ -1,32 +1,40 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Col, Container, Input, Label, Row} from "reactstrap";
+import queryString from "query-string";
 import {AppState, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
-import {GlossaryTermDTO} from "../../../IsaacApiTypes";
+import {GlossaryTermDTO, Stage} from "../../../IsaacApiTypes";
 import {
     isAda,
+    isPhy,
     isDefined,
     Item,
     NOT_FOUND,
     scrollVerticallyIntoView,
     TAG_ID,
     tags,
-    useUrlHashValue
+    useUrlHashValue,
+    stagesOrdered,
+    stageLabelMap,
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import { useHistory, useLocation } from "react-router";
+import Select from "react-select";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
      - `valueWhileWaiting` while waiting
      - `valueWhenFound` any time *after the first time* `waitingFor` becomes truthy
  */
-export function useUntilFound<T, U>(waitingFor: T | NOT_FOUND_TYPE | null | undefined, valueWhenFound: U, valueWhileWaiting: any = undefined) {
+export function useUntilFound<T, U>(waitingFor: T | NOT_FOUND_TYPE | null | undefined,
+                                    valueWhenFound: U,
+                                    valueWhileWaiting: any = undefined) {
     const [waiting, setWaiting] = useState(true);
     useEffect( () => {
         if (waiting) {
@@ -60,22 +68,86 @@ export function formatGlossaryTermId(rawTermId: string) {
         .replace(/[^a-z0-9]/g, '-');
 }
 
+// Might be an idea to export these functions from GameBoardFilter.tsx
+function arrayFromPossibleCsv(queryParamValue: string[] | string | null | undefined) {
+    if (queryParamValue) {
+        return queryParamValue instanceof Array ? queryParamValue : queryParamValue.split(",");
+    } else {
+        return [];
+    }
+}
+
+function tagByValue(values: string[], tags: Tag[]) {
+    return tags.filter(option => values.includes(option.id)).at(0);
+}
+function stageByValue(values: string[], tags: Stage[]) {
+    return tags.filter(option => values.includes(option)).at(0);
+}
+
+interface QueryStringResponse {
+    queryStages: Stage | undefined;
+    querySubjects: Tag | undefined;
+}
+function processQueryString(query: string): QueryStringResponse {
+    const {subjects, stages} = queryString.parse(query);
+
+    const subjectItems = tagByValue(arrayFromPossibleCsv(subjects as Nullable<string[] | string>), tags.allSubjectTags);
+    const stageItems = stageByValue(arrayFromPossibleCsv(stages as Nullable<string[] | string>), stagesOrdered.slice(0,-1));
+
+    return {
+        queryStages: stageItems, querySubjects: subjectItems
+    };
+}
+
 /* An offset applied when scrolling to a glossary term, so the term isn't hidden under the alphabet header */
 const ALPHABET_HEADER_OFFSET = -65;
 
 export const Glossary = () => {
+    const location = useLocation();
+    const history = useHistory();
+    // query stages not used recently
+    const {queryStages, querySubjects} = processQueryString(location.search);
+
     const [searchText, setSearchText] = useState("");
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
+    const subjects = tags.allSubjectTags.sort((a,b) => a.title.localeCompare(b.title));
+    const stages: Stage[] = stagesOrdered.slice(0,-1);
+    const [filterSubject, setFilterSubject] = useState<Tag | undefined>(querySubjects);
+    const [filterStage, setFilterStage] = useState<Stage | undefined>(queryStages);
     const [filterTopic, setFilterTopic] = useState<Tag>();
-    const rawGlossaryTerms = useAppSelector((state: AppState) => state && state.glossaryTerms);
+    const rawGlossaryTerms = useAppSelector(
+        (state: AppState) => state && state.glossaryTerms?.map(
+            // TODO: convert the glossary JSON files rather than processing them here
+            gt => {
+                const value: string = gt.value ?? "";
+                gt.value = value.charAt(0).toUpperCase() + value.slice(1);
+                return gt;
+            }
+        )
+    );
+
+    // Update url 
+    useEffect(() => {
+        const params: {[key: string]: string} = {};
+        if (filterSubject) params.subjects = filterSubject.id;
+        if (filterStage) params.stages = filterStage;
+        history.replace({search: queryString.stringify(params, {encode: false}), state: location.state, hash: location.hash});
+    }, [filterSubject, filterStage]);
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } | undefined {
             if (sortedTerms) {
                 const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
                 for (const term of sortedTerms) {
-                    if (isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
-                    const k = term?.value?.[0] || '#';
+                    // Only show physics glossary terms when a subject has been selected
+                    if (isPhy && !isDefined(filterSubject)) continue;
+
+                    if (isAda && isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
+                    if (isPhy && isDefined(filterSubject) && !term.tags?.includes(filterSubject.id)) continue;
+                    if (isPhy && isDefined(filterStage) && !term.stages?.includes(filterStage)) continue;
+
+                    const value = term?.value?.[0] ?? '#';
+                    const k = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.includes(value) ? value : '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
                 }
                 return groupedTerms;
@@ -83,14 +155,14 @@ export const Glossary = () => {
             return undefined;
         }
 
-        const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
+        const searchTerms = searchText.split(' ').map(t => t.toLowerCase());
         const sortedAndFilteredTerms =
             (searchText === ''
                 ? [...rawGlossaryTerms ?? []]
-                : rawGlossaryTerms?.filter(e => e.value?.match(regex))
-            )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0)
+                : rawGlossaryTerms?.filter(e => searchTerms.some(t => e.value?.toLowerCase().includes(t)))
+            )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
         return groupTerms(sortedAndFilteredTerms);
-    }, [rawGlossaryTerms, filterTopic, searchText]);
+    }, [rawGlossaryTerms, filterTopic, filterSubject, filterStage, searchText]);
 
     /* Stores a reference to each glossary term component (specifically their inner paragraph tags) */
     const glossaryTermRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());
@@ -103,7 +175,6 @@ export const Glossary = () => {
         const el = glossaryTermRefs.current?.get(hash);
         if (isDefined(el)) scrollVerticallyIntoView(el, ALPHABET_HEADER_OFFSET);
     }, [hash]);
-
 
     /* Stores a reference to each alphabet header (to the h2 element) - these are the headers alongside the glossary
      * terms, NOT the letters that exist in the clickable sticky header (or the other non-sticky one)
@@ -121,14 +192,14 @@ export const Glossary = () => {
         for (const link of links) {
             (link as HTMLElement)?.blur();
         }
-    }
+    };
 
     const onKeyUpScrollTo = ({currentTarget, key}: React.KeyboardEvent) => {
         if (key === "Enter") {
             const letter = currentTarget.getAttribute('data-key');
             if (letter) scrollToKey({currentTarget});
         }
-    }
+    };
 
     /* "Horror lies ahead. Sorry."
      * This code deals with showing or hiding the sticky alphabet header UI depending
@@ -140,7 +211,7 @@ export const Glossary = () => {
     const alphabetScrollerObserver = useRef<IntersectionObserver>();
     const stickyAlphabetListContainer = useRef<HTMLDivElement>(null);
 
-    const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+    const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], _observer: IntersectionObserver) => {
         for (const entry of entries) {
             if (entry.target.id === 'sentinel') {
                 if (entry.isIntersecting) {
@@ -156,7 +227,7 @@ export const Glossary = () => {
                 }
             }
         }
-    }
+    };
 
     useEffect(() => {
         if (alphabetScrollerSentinel.current && !alphabetScrollerObserver.current && !alphabetScrollerFlag.current) {
@@ -164,7 +235,7 @@ export const Glossary = () => {
                 root: null,
                 rootMargin: '0px',
                 threshold: 1.0,
-            }
+            };
 
             alphabetScrollerObserver.current = new IntersectionObserver(alphabetScrollerCallback, options);
             alphabetScrollerObserver.current.observe(alphabetScrollerSentinel.current);
@@ -180,11 +251,11 @@ export const Glossary = () => {
         if (glossaryTerms.hasOwnProperty(k)) {
             return <div className={`key alphascroller-key-${k}`} data-key={k} key={k} role="button" tabIndex={0} onKeyUp={onKeyUpScrollTo} onClick={scrollToKey}>
                 {k}
-            </div>
+            </div>;
         } else {
             return <div className="key unavailable" data-key={k} key={k}>
                 {k}
-            </div>
+            </div>;
         }
     });
 
@@ -206,6 +277,19 @@ export const Glossary = () => {
             <Row>
                 <Col md={{size: 9}} className="py-4">
                     <Row className="no-print">
+                        {isPhy && <Col className="mt-3 mt-md-0">
+                            <Label for='subject-select' className='sr-only'>Subject</Label>
+                            <Select inputId="subject-select"
+                                options={subjects.map(s => ({ value: s.id, label: s.title}))}
+                                value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title}) : undefined}
+                                name="subject-select"
+                                placeholder="Select a subject"
+                                onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
+                                isClearable
+                                className={`basic-multi-select glossary-select ${filterSubject?.id ?? ""}`}
+                                classNamePrefix="select"
+                            />
+                        </Col>}
                         <Col md={{size: 4}}>
                             <Label for='terms-search' className='sr-only'>Search by term</Label>
                             <Input
@@ -213,17 +297,27 @@ export const Glossary = () => {
                                 value={searchText} onChange={e => setSearchText(e.target.value)}
                             />
                         </Col>
-                        <Col className="mt-3 mt-md-0">
+                        {isAda && <Col className="mt-3 mt-md-0">
                             <Label for='topic-select' className='sr-only'>Topic</Label>
                             <StyledSelect inputId="topic-select"
-                                options={ topics.map(e => ({ value: e.id, label: e.title})) }
+                                options={ topics.map(t => ({ value: t.id, label: t.title}))}
                                 name="topic-select"
-                                classNamePrefix="select"
                                 placeholder="All topics"
                                 onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                 isClearable
                             />
-                        </Col>
+                        </Col>}
+                        {isPhy && <Col className="mt-3 mt-md-0">
+                            <Label for='stage-select' className='sr-only'>Stage</Label>
+                            <StyledSelect inputId="stage-select"
+                                options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
+                                value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
+                                name="stage-select"
+                                placeholder="Select a stage"
+                                onChange={e => setFilterStage(stages.find(s => s === e?.value))}
+                                isClearable
+                            />
+                        </Col>}
                     </Row>
                     <Row className="only-print">
                         <Col>
@@ -235,7 +329,9 @@ export const Glossary = () => {
             </Row>
             {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
                 <Col md={{size: 8, offset: 2}} className="py-4">
-                    {searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
+                    {/* Let users know that they need to select a subject */}
+                    {isPhy && !isDefined(filterSubject) && <p>Please select a subject.</p>}
+                    {(isAda || isDefined(filterSubject)) && searchText === "" && <p>There are no glossary terms in the glossary yet! Please try again later.</p>}
                     {searchText !== "" && <p>We could not find glossary terms to match your search criteria.</p>}
                 </Col>
             </Row>}
@@ -257,6 +353,7 @@ export const Glossary = () => {
                     </Col>
                     <Col>
                         {terms.map(term => <IsaacGlossaryTerm
+                                key={term.id}
                                 ref={(el: HTMLElement) => {
                                     glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
                                 }}

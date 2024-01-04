@@ -6,7 +6,6 @@ import {Topic} from "../../pages/Topic";
 import {Redirect} from "react-router";
 import {isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
-import {Glossary} from "../../pages/Glossary";
 import {ExamSpecifications} from "../../pages/ExamSpecifications";
 import {News} from "../../pages/News";
 import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
@@ -63,9 +62,6 @@ export const RoutesCS = [
     // Books: FIXME ADA are we going to include these?
     // <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
     // <TrackedRoute key={key++} exact path="/books/workbook_20_ocr" component={Workbook20OCR}/>,
-
-    // Glossary:
-    <TrackedRoute key={key++} exact path="/glossary" component={Glossary} />,
 
     // Static pages:
     <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,

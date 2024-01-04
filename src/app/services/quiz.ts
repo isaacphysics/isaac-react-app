@@ -1,26 +1,155 @@
 import {useEffect, useMemo, useState} from "react";
 import {
+    AppDispatch,
+    assignmentsApi,
     deregisterQuestions,
     getRTKQueryErrorMessage,
+    mutationSucceeded,
+    quizApi,
     registerQuestions,
     selectors,
+    showErrorToast,
+    showRTKQueryErrorToastIfNeeded,
+    showSuccessToast,
     useAppDispatch,
     useAppSelector,
-    useGetStudentQuizAttemptWithFeedbackQuery,
-    useGetAvailableQuizzesQuery, useGetMyQuizAttemptWithFeedbackQuery
+    useGetAvailableQuizzesQuery,
+    useGetMyQuizAttemptWithFeedbackQuery,
+    useGetStudentQuizAttemptWithFeedbackQuery
 } from "../state";
-import {API_PATH, isDefined, isEventLeaderOrStaff, isQuestion, matchesAllWordsInAnyOrder, tags, useQueryParams} from "./";
+import {
+    API_PATH,
+    getValue,
+    isDefined,
+    isEventLeaderOrStaff,
+    isQuestion,
+    Item,
+    matchesAllWordsInAnyOrder,
+    siteSpecific,
+    tags,
+    toTuple,
+    useQueryParams
+} from "./";
 import {
     ContentDTO,
     IsaacQuizSectionDTO,
     QuestionDTO,
     QuizAssignmentDTO,
     QuizAttemptDTO,
+    QuizFeedbackMode,
     QuizSummaryDTO,
     RegisteredUserDTO
 } from "../../IsaacApiTypes";
 import partition from "lodash/partition";
 import {skipToken} from "@reduxjs/toolkit/query";
+import {createAsyncThunk} from "@reduxjs/toolkit";
+
+export interface QuizSpec {
+    quizId: string;
+    groups: Item<number>[];
+    dueDate?: Date;
+    scheduledStartDate?: Date;
+    quizFeedbackMode?: QuizFeedbackMode;
+    userId?: number;
+}
+
+export const assignMultipleQuiz = createAsyncThunk(
+    "quiz/assignQuiz",
+    async (
+        {quizId, groups, dueDate, scheduledStartDate, quizFeedbackMode, userId}: QuizSpec,
+        {dispatch, rejectWithValue}
+    ) => {
+        const appDispatch = dispatch as AppDispatch;
+
+        const groupIds = groups.map(getValue);
+        const quizzes: QuizAssignmentDTO[] = groupIds.map(id => ({
+            quizId: quizId,
+            groupId: id,
+            dueDate: dueDate,
+            scheduledStartDate: scheduledStartDate,
+            quizFeedbackMode: quizFeedbackMode
+        }));
+
+        const response = await dispatch(quizApi.endpoints.assignQuiz.initiate(quizzes));
+        if (mutationSucceeded(response)) {
+            const groupLookUp = new Map(groups.map(toTuple));
+            const quizStatuses = response.data;
+            const newQuizAssignments: QuizAssignmentDTO[] = quizStatuses.filter(q => isDefined(q.assignmentId)).map(q => ({
+                id: q.assignmentId as number,
+                groupId: q.groupId,
+                quizId: quizId,
+                // FIXME see gameboard.ts [96:17] about timestamps
+                creationDate: (new Date()).valueOf() as unknown as Date,
+                dueDate: dueDate?.valueOf() as unknown as Date | undefined,
+                scheduledStartDate: scheduledStartDate?.valueOf() as unknown as Date | undefined,
+                ownerUserId: userId,
+            }));
+            const successfulIds = newQuizAssignments.map(q => q.groupId);
+            const failedIds = quizStatuses.filter(q => isDefined(q.errorMessage));
+            if (failedIds.length === 0) {
+                appDispatch(showSuccessToast(
+                    siteSpecific(
+                        `Quiz${successfulIds.length > 1 ? "zes" : ""} saved`,
+                        `Test${successfulIds.length > 1 ? "s" : ""} assigned`
+                    ),
+                    siteSpecific(
+                        `${successfulIds.length > 1 ? "All quizzes have" : "This quiz has"} been saved successfully.`,
+                        `${successfulIds.length > 1 ? "All tests have" : "This test has"} been saved successfully.`,
+                    )
+                ));
+            } else {
+                // Show each group assignment error in a separate toast
+                failedIds.forEach(({groupId, errorMessage}) => {
+                    appDispatch(showErrorToast(
+                        `${siteSpecific("Quiz", "Test")} assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`,
+                        errorMessage as string
+                    ));
+                });
+                // Check whether some group assignments succeeded, if so show "partial success" toast
+                if (failedIds.length === quizStatuses.length) {
+                    return rejectWithValue(null);
+                } else {
+                    const partialSuccessMessage = siteSpecific(
+                        successfulIds.length > 1
+                            ? "Some quizzes were saved successfully."
+                            : `Quiz assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`,
+                        successfulIds.length > 1
+                            ? "Some tests were saved successfully."
+                            : `Test assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`,
+                    );
+                    appDispatch(showSuccessToast(
+                        siteSpecific(
+                            `Quiz${successfulIds.length > 1 ? "zes" : ""} saved`,
+                            `Test${successfulIds.length > 1 ? "s" : ""} saved`,
+                        ),
+                        partialSuccessMessage
+                    ));
+                }
+            }
+            appDispatch(quizApi.util.updateQueryData(
+                "getQuizAssignmentsSetByMe",
+                undefined,
+                (quizzesByMe) => quizzesByMe.concat(newQuizAssignments)
+            ));
+            successfulIds.forEach(groupId => {
+                appDispatch(assignmentsApi.util.updateQueryData(
+                   "getMySetAssignments",
+                    groupId,
+                    (quizzesByMe => quizzesByMe.concat(
+                        newQuizAssignments.filter(q => q.groupId === groupId)
+                    ))
+                ));
+            });
+            return newQuizAssignments;
+        } else {
+            appDispatch(showRTKQueryErrorToastIfNeeded(
+                `${siteSpecific("Quiz", "Test")} assignment${groups.length > 1 ? "(s)" : ""} failed`,
+                response
+            ));
+            return rejectWithValue(null);
+        }
+    }
+);
 
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     const qs: QuestionDTO[] = [];
@@ -163,5 +292,5 @@ export function isAttempt(a: QuizAttemptOrAssignment): a is QuizAttemptDTO {
 }
 
 export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAttemptOrAssignment[]): [QuizAttemptOrAssignment[], QuizAttemptOrAssignment[]] {
-    return partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate))
+    return partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate));
 }

@@ -59,7 +59,8 @@ import {
     siteSpecific,
     sortIcon,
     useDeviceSize,
-    useGameboards
+    useGameboards,
+    TODAY
 } from "../../services";
 import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
@@ -97,7 +98,8 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
     }
 
     const yearRange = range(currentYear, currentYear + 5);
-    const dueDateInvalid = dueDate && scheduledStartDate ? nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf() : false;
+    const dueDateInvalid = dueDate && scheduledStartDate ? (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf() || TODAY().valueOf() > dueDate.valueOf()) : false;
+    const startDateInvalid = scheduledStartDate ? TODAY().valueOf() > scheduledStartDate.valueOf() : false;
 
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
         const utcDate = e.target.valueAsDate;
@@ -122,11 +124,13 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
         <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
                        onChange={setScheduledStartDateAtSevenAM} />
+            {startDateInvalid && <small className={"pt-2 text-danger"}>Start date must be in the future.</small>}
         </Label>
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
-            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
+            {dueDateInvalid && startDateInvalid && <br/>}
         </Label>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
@@ -145,7 +149,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
             block color={siteSpecific("secondary", "primary")}
             onClick={assign}
             role={"button"}
-            disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
+            disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || dueDateInvalid || startDateInvalid}
         >Assign to group{selectedGroups.length > 1 ? "s" : ""}</Button>
     </Container>;
 };
@@ -297,7 +301,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                             <button className="table-button"
                                     onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
                                 Board
-                                name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
+                                name&nbsp;{boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                             </button>
                         </th>
                         <th className="text-center align-middle">Stages</th>
@@ -305,15 +309,9 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                         <th className="text-center align-middle">Creator</th>
                         <th className="text-center align-middle pointer-cursor">
                             <button className="table-button"
-                                    onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
-                                Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
-                            </button>
-                        </th>
-                        <th className="text-center align-middle pointer-cursor">
-                            <button className="table-button"
                                     onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
                                 Last
-                                viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
+                                viewed&nbsp;{boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
                             </button>
                         </th>
                         <th className="text-center align-middle">Assignments</th>
@@ -389,11 +387,6 @@ const CSTable = (props: SetAssignmentsTableProps) => {
                     </RS.UncontrolledTooltip>
                 </th>
                 <th>Creator</th>
-                <th>
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
-                        Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
                 <th>
                     <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
                         Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
