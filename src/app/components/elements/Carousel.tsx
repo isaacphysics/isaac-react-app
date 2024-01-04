@@ -10,6 +10,7 @@ interface ControlledCarouselInstanceProps {
 const ControlledCarouselInstance = (props: ControlledCarouselInstanceProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [animating, setAnimating] = useState(false);
+    const [usingKeyboard, setUsingKeyboard] = useState(false);
 
     const gotoIndex = (newIndex: number) => {
         if (!animating) setActiveIndex(newIndex);
@@ -35,7 +36,7 @@ const ControlledCarouselInstance = (props: ControlledCarouselInstanceProps) => {
     const onExited = () => setAnimating(false);
     const onEntered = (element: HTMLElement) => {
         const focusTargets = element.getElementsByClassName('focus-target');
-        if (focusTargets.length > 0) {
+        if (focusTargets.length > 0 && usingKeyboard) {
             // @ts-ignore we should only mark focusable elements with the focus-target class
             focusTargets[0].focus();
         }
@@ -46,8 +47,14 @@ const ControlledCarouselInstance = (props: ControlledCarouselInstanceProps) => {
     useEffect(() => {
         const ref = carouselContainer.current;
         const classToCallback = {
-            "carousel-control-prev": ifKeyIsEnter(previous),
-            "carousel-control-next": ifKeyIsEnter(next)
+            "carousel-control-prev": ifKeyIsEnter(() => {
+                setUsingKeyboard(true); 
+                previous();
+            }),
+            "carousel-control-next": ifKeyIsEnter(() => {
+                setUsingKeyboard(true); 
+                next();
+            })
         };
 
         if (ref) {
@@ -87,7 +94,10 @@ const ControlledCarouselInstance = (props: ControlledCarouselInstanceProps) => {
                         </div>
                     </CarouselItem>
                 ))}
-                <CarouselControl direction="next" directionText="Next" onClickHandler={next} onKeyPress={next} />
+                <CarouselControl direction="next" directionText="Next" onClickHandler={() => {
+                    setUsingKeyboard(false);
+                    next();
+                }} />
                 <CarouselIndicators
                     items={props.children.map((_child: ReactNode, index: number) => ({key: index}))}
                     activeIndex={activeIndex}
