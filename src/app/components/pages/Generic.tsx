@@ -41,10 +41,11 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
 
     useEffect(() => {
         if (hash) {
-            // location.hash is correct when we load the page, but since nothing is loaded yet it doesn't scroll anywhere.
+            // location.hash is correct when we load the page, but if nothing is loaded yet it doesn't scroll anywhere.
             // this waits until doc is loaded (see 'hash' definition) and then unsets/resets the hash to trigger the scroll again.
-            location.hash = '';
-            location.hash = hash;
+            // we use history.replaceState to avoid adding a browser history entry.
+            history.replaceState(undefined, '', '#');
+            history.replaceState(undefined, '', `#${hash}`);
         }
     }, [hash]);
 
