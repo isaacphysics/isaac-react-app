@@ -40,12 +40,17 @@ import {
 import {BooleanNotationInput} from "../elements/inputs/BooleanNotationInput";
 import {ProgrammingLanguageInput} from "../elements/inputs/ProgrammingLanguageInput";
 import {useEmailPreferenceState, UserEmailPreferencesInput} from "../elements/inputs/UserEmailPreferencesInput";
+import {Alert} from "../elements/Alert";
+import {extractErrorMessage} from "../../services/errors";
 
 export const RegistrationSetPreferences = () => {
 
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
+
+    const error = useAppSelector((state) => state?.error);
+    const errorMessage = extractErrorMessage(error);
 
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
@@ -77,7 +82,6 @@ export const RegistrationSetPreferences = () => {
         if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
             dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, true));
-            dispatch(closeActiveModal());
         }
     }
 
@@ -85,6 +89,7 @@ export const RegistrationSetPreferences = () => {
         <TitleAndBreadcrumb currentPageTitle={`Customise your account`} className="mb-4" />
         <Card className="my-5">
             <CardBody>
+                {errorMessage && <Alert title="Unable to update your account" body={errorMessage} />}
                 <Row>
                     <Col xs={12} lg={6}>
                         <h3>Set your preferences</h3>

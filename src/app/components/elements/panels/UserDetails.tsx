@@ -19,6 +19,7 @@ import {AccountTypeMessage} from "../AccountTypeMessage";
 import {ProgrammingLanguageInput} from "../inputs/ProgrammingLanguageInput";
 import {LastNameInput, FirstNameInput} from "../inputs/NameInput";
 import {EmailInput} from "../inputs/EmailInput";
+import {Alert} from "../Alert";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -50,6 +51,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         userToUpdate?.email && allRequiredInformationIsPresent(userToUpdate, {EMAIL_PREFERENCE: null}, userContexts);
 
     return <CardBody className="pt-0">
+        {submissionAttempted && !allRequiredFieldsValid &&
+            <Alert title="Unable to update your account" body="Please ensure you have completed all required fields." />}
         <Row>
             <Col>
                 <span className="d-block pb-0 text-right text-muted required-before">
@@ -134,9 +137,5 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation} />
             </Col>
         </Row>}
-
-        {submissionAttempted && !allRequiredFieldsValid && <h4 role="alert" className="text-danger text-center mt-4 mb-3">
-            Not all required fields have been correctly filled.
-        </h4>}
     </CardBody>
 };

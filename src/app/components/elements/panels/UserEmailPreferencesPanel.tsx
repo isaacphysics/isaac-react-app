@@ -4,6 +4,7 @@ import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {AppState, useAppSelector} from "../../../state";
 import {SITE_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
 import {UserEmailPreferencesInput} from "../inputs/UserEmailPreferencesInput";
+import {Alert} from "../Alert";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences | null | undefined;
@@ -22,6 +23,7 @@ export const UserEmailPreferencesPanel = ({emailPreferences, setEmailPreferences
     }
 
     return <CardBody className="pb-0">
+        {error?.type == "generalError" && <Alert title="Unable to update your account" body={error.generalError} />}
         <Row>
             <Col xs={12} lg={6} className="mb-4">
                 <h3>Set your email notification preferences</h3>
@@ -32,11 +34,6 @@ export const UserEmailPreferencesPanel = ({emailPreferences, setEmailPreferences
                 <UserEmailPreferencesInput emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences} idPrefix={idPrefix}/>
             </Col>
         </Row>
-        {errorMessage && <>
-            <hr />
-            <h4 role="alert" className="text-danger text-center">
-                {errorMessage}
-            </h4>
-        </>}
+
     </CardBody>;
 };

@@ -11,6 +11,7 @@ import {
 } from "../../state";
 import {history, useQueryParams} from "../../services";
 import {Link} from "react-router-dom";
+import {Alert} from "../elements/Alert";
 
 
 export const RegistrationVerifyEmail = () => {
@@ -26,8 +27,8 @@ export const RegistrationVerifyEmail = () => {
     const emailVerified = (currentUserAlreadyVerified || userFromParamVerificationSucceeded);
 
     useEffect(() => {
+        dispatch(errorSlice.actions.clearError());
         if (!emailVerified && userIdFromParams && tokenFromParams) {
-            dispatch(errorSlice.actions.clearError());
             verifyEmail({userid: userIdFromParams, token: tokenFromParams});
         }
     }, [verifyEmail, userIdFromParams, tokenFromParams, emailVerified, errorSlice])
@@ -58,6 +59,12 @@ export const RegistrationVerifyEmail = () => {
     return <Container className="text-center">
         <Card className="my-5">
             <CardBody>
+                {!emailVerified && userFromParamVerificationFailed &&
+                    <Alert
+                        title="Unable to verify your email address"
+                        body={getRTKQueryErrorMessage(userFromParamVerificationErrored).message}
+                    />
+                }
                 <Row className="justify-content-center">
                     <Col>
                         <h3>Verify your account</h3>
@@ -99,19 +106,6 @@ export const RegistrationVerifyEmail = () => {
                             :
                             <p>If you need a new verification email, please <Link to="/login">log in</Link> first.</p>
                         }
-                    </Row>
-                }
-
-                {
-                    //todo: improve the presentation of these errors
-                }
-                {userFromParamVerificationFailed &&
-                    <Row className="justify-content-center">
-                        <Col>
-                            <p>Couldn&apos;t verify email address!</p>
-                            <p>{(!userIdFromParams || !tokenFromParams) && "This page received bad parameters."}</p>
-                            <p>{getRTKQueryErrorMessage(userFromParamVerificationErrored).message}</p>
-                        </Col>
                     </Row>
                 }
                 {verifyingCurrentUser ?

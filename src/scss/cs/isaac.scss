@@ -351,6 +351,9 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 // Difficulty icons
 @import "filter";
 
+//  RPF design system
+@import "https://static.raspberrypi.org/styles/design-system-core/branches/main/design-system-core.css";
+
 a.disabled {
     color: $gray-600;
     pointer-events: none;

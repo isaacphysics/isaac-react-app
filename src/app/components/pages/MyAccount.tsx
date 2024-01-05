@@ -62,6 +62,7 @@ import hash, {NormalOption} from "object-hash";
 import {skipToken} from "@reduxjs/toolkit/query";
 import { Loading } from "../handlers/IsaacSpinner";
 import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesInput";
+import {Alert} from "../elements/Alert";
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -315,6 +316,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                     </Nav>
 
                     <Form name="my-account" onSubmit={updateAccount}>
+                        {error?.type == "generalError" && <Alert title="Unable to update your account" body={error.generalError} />}
                         <TabContent activeTab={activeTab}>
                             <TabPane tabId={ACCOUNT_TAB.account}>
                                 <UserDetails
@@ -358,9 +360,6 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                         <CardFooter className="py-4">
                             <Row>
                                 <Col size={12} md={{size: 6, offset: 3}}>
-                                    {error?.type === "generalError" && <h3 role="alert" className="text-danger text-center">
-                                        {error.generalError}
-                                    </h3>}
                                     {/* Teacher connections does not have a save */}
                                     <Input
                                         type="submit" value="Save" className="btn btn-secondary border-0"

@@ -30,6 +30,8 @@ import {USER_ROLES} from "../../../IsaacApiTypes";
 import {LastNameInput, FirstNameInput} from "../elements/inputs/NameInput";
 import {EmailInput} from "../elements/inputs/EmailInput";
 import {GenderInput} from "../elements/inputs/GenderInput";
+import {extractErrorMessage} from "../../services/errors";
+import {Alert} from "../elements/Alert";
 
 export const RegistrationSetDetails = () => {
     const dispatch = useAppDispatch();
@@ -54,6 +56,8 @@ export const RegistrationSetDetails = () => {
     const givenNameIsValid = validateName(registrationUser.givenName);
     const familyNameIsValid = validateName(registrationUser.familyName);
     const passwordIsValid = validatePassword(registrationUser.password || "");
+    const error = useAppSelector((state) => state?.error);
+    const errorMessage = extractErrorMessage(error);
 
     const register = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -62,7 +66,6 @@ export const RegistrationSetDetails = () => {
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && tosAccepted) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
-            // todo: handle API-side validation errors (e.g. duplicate registration attempt)
             setAttemptedSignUp(true)
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(errorSlice.actions.clearError());
@@ -81,6 +84,7 @@ export const RegistrationSetDetails = () => {
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
         <Card className="my-5">
             <CardBody>
+                {errorMessage && <Alert title="Unable to create your account" body={errorMessage} />}
                 <Row>
                     <Col xs={12} lg={6}>
                         <h3>Create your teacher account</h3>
