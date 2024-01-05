@@ -19,7 +19,7 @@ import {
     below, confirmThen,
     isAda,
     isEventLeaderOrStaff,
-    isPhy, isStaff, KEY,
+    isPhy, KEY,
     MANAGE_QUIZ_TAB,
     nthHourOf, persistence,
     siteSpecific,
@@ -108,6 +108,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
             (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) ||
             MANAGE_QUIZ_TAB.set;
         setActiveTab(tab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hashAnchor]);
 
     const {titleFilter, setTitleFilter, filteredQuizzes} = useFilteredQuizzes(user);
@@ -234,7 +235,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                     </div>
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
-                                    <RS.Button className={`d-none d-md-block h-4 ${below["md"](deviceSize) ? "btn-sm" : ""}`} style={{minWidth: `${below["md"](deviceSize) ? "90px" : "140px"}`}} onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))}>
+                                    <RS.Button className={`d-none d-md-block h-4 ${below["md"](deviceSize) ? "btn-sm" : ""}`} style={{minWidth: `${below["md"](deviceSize) ? "90px" : "140px"}`}} onClick={() => dispatch(showQuizSettingModal(quiz))}>
                                         {siteSpecific("Set Test", "Set test")}
                                     </RS.Button>
                                 </div>
@@ -243,7 +244,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                         Actions
                                     </RS.DropdownToggle>
                                     <RS.DropdownMenu>
-                                            <RS.DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))} style={{zIndex: '1'}}>
+                                            <RS.DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz))} style={{zIndex: '1'}}>
                                                 {siteSpecific("Set Test", "Set test")}
                                             </RS.DropdownItem>
                                             <RS.DropdownItem divider />
