@@ -53,6 +53,7 @@ import {
   search,
   isaacApi,
   gameboardsSlice,
+  randomQuestions,
 } from "../index";
 
 const appReducer = combineReducers({
@@ -84,6 +85,7 @@ const appReducer = combineReducers({
 
   // Question
   questions,
+  randomQuestions,
 
   // Progress
   myProgress,

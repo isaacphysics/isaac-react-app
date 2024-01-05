@@ -1,6 +1,6 @@
 import { Action, AppQuestionDTO, isValidatedChoice } from "../../../IsaacAppTypes";
-import { ACTION_TYPE } from "../../services";
-import { BEST_ATTEMPT_HIDDEN } from "../../../IsaacApiTypes";
+import { ACTION_TYPE, NOT_FOUND } from "../../services";
+import { BEST_ATTEMPT_HIDDEN, IsaacQuestionPageDTO } from "../../../IsaacApiTypes";
 
 export const question = (question: AppQuestionDTO, action: Action) => {
   switch (action.type) {
@@ -90,6 +90,21 @@ export const questions = (qs: QuestionsState = null, action: Action) => {
       return qs;
     default: {
       return qs;
+    }
+  }
+};
+
+type RandomQuestionsState = IsaacQuestionPageDTO[] | null;
+export const randomQuestions = (randomQuestions: RandomQuestionsState = null, action: Action) => {
+  switch (action.type) {
+    case ACTION_TYPE.QUESTION_RANDOM_QUESTIONS_RESPONSE_FAILURE: {
+      return NOT_FOUND;
+    }
+    case ACTION_TYPE.QUESTION_RANDOM_QUESTIONS_RESPONSE_SUCCESS: {
+      return action.randomQuestions;
+    }
+    default: {
+      return randomQuestions;
     }
   }
 };

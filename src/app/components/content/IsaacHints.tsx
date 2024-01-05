@@ -27,7 +27,7 @@ interface HintsProps {
 export const IsaacLinkHints = ({ hints, questionPartId }: HintsProps) => {
   return (
     <div>
-      <ListGroup className="question-hints mb-1 pt-3 mt-3 no-print">
+      <ListGroup className="question-hints mb-1 no-print">
         {hints?.map((hint, index) => (
           <ListGroupItem key={index} className="pl-0 py-1">
             <IsaacHintModal

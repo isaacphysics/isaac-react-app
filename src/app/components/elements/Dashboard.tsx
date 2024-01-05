@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Col, Container, Row } from "reactstrap";
-import { selectors, useAppSelector } from "../../state";
+import { getRandomQuestions, selectors, useAppDispatch, useAppSelector } from "../../state";
 import { TeacherPromoItem } from "./TeacherPromoItem";
 import { FeaturedNewsItem } from "./FeaturedNewsItem";
-import { IsaacPodDTO } from "../../../IsaacApiTypes";
-import { defaultPlaceholder } from "../handlers/ShowLoading";
-import { isTeacher } from "../../services";
+import { IsaacPodDTO, IsaacQuestionPageDTO } from "../../../IsaacApiTypes";
+import { ShowLoading, defaultPlaceholder } from "../handlers/ShowLoading";
+import QuestionCard from "./cards/QuestionCard";
+import { isStudent, isTeacher, isTutorOrAbove } from "../../services";
 
 const ShowMeButtons = ({ loggedIn }: { loggedIn: boolean | undefined }) => {
   const showMeButtons = [
@@ -71,14 +72,20 @@ export const Dashboard = ({
   promoItem?: IsaacPodDTO | undefined;
 }) => {
   const user = useAppSelector(selectors.user.orNull);
-
+  const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const dispatch = useAppDispatch();
+  const questionData = useAppSelector(selectors.questions.randomQuestions);
 
   useEffect(() => {
     if (user !== null) {
       setLoading(false);
     }
-  }, [user]);
+    if (isStudent(user)) {
+      dispatch(getRandomQuestions());
+    }
+  }, [dispatch, user]);
 
   const PromoOrFeaturedNews = ({ contentType }: { contentType: "promo" | "news" }) => {
     const { dataTestId, className, content } = {
@@ -112,14 +119,28 @@ export const Dashboard = ({
   };
 
   const loggedInContent = (
-    <Row className="pt-4">
-      <Col md="12" lg="5" className={"pt-lg-4"}>
-        <Container className={"mb-4"}>
-          <h1 id="homepageName">Welcome {user?.loggedIn && user.givenName}</h1>
-        </Container>
-        <DashboardButtons className={"pt-xl-2"} />
-      </Col>
-      <PromoOrFeaturedNews contentType={user?.loggedIn && user.role === "TEACHER" && promoItem ? "promo" : "news"} />
+    <Row className="py-4">
+      {!expanded && (
+        <Col md="12" lg="5" className={"pt-lg-4"}>
+          <Container className={"mb-4"}>
+            <h1 id="homepageName">Welcome {user?.loggedIn && user.givenName}</h1>
+          </Container>
+          <DashboardButtons className={"pt-xl-2"} />
+        </Col>
+      )}
+      {isTutorOrAbove(user) ? (
+        <PromoOrFeaturedNews contentType={promoItem ? "promo" : "news"} />
+      ) : (
+        <ShowLoading
+          until={questionData}
+          thenRender={(questionData: IsaacQuestionPageDTO[]) => (
+            <Col md="12" lg={expanded ? "12" : "7"}>
+              <QuestionCard setExpanded={setExpanded} questionData={questionData} />
+            </Col>
+          )}
+          ifNotFound={<PromoOrFeaturedNews contentType="news" />}
+        />
+      )}
     </Row>
   );
 

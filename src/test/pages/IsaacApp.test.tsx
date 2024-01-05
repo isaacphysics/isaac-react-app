@@ -1,10 +1,10 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { reverse, zip } from "lodash";
-import { USER_ROLES } from "../../IsaacApiTypes";
+import { zip } from "lodash";
+import { USER_ROLES, UserRole } from "../../IsaacApiTypes";
 import { renderTestEnvironment, NavBarMenus, NAV_BAR_MENU_TITLE, TestUserRole } from "../utils";
-import { FEATURED_NEWS_TAG, history } from "../../app/services";
-import { mockNewsPods, mockPromoPods } from "../../mocks/data";
+import { history } from "../../app/services";
+import { mockPromoPods } from "../../mocks/data";
 
 const myIsaacLinks = ["/assignments", "/my_gameboards", "/progress", "/tests"];
 const tutorLinks = ["/groups", "/set_assignments", "/my_markbook"];
@@ -131,26 +131,6 @@ describe("IsaacApp", () => {
   });
   it.todo("should show the users number of current assignments in the navigation menu");
 
-  it("should show featured news pods before non-featured ones, and order pods correctly based on id (CS only)", async () => {
-    renderTestEnvironment();
-    const transformPodList = (ps: any[]) => reverse(ps);
-    const newsCarousel = await screen.findByTestId("carousel-inner");
-    const featuredNewsSection = await screen.findByTestId("featured-news-item");
-    const featuredNewsPod = await within(featuredNewsSection).findByTestId("news-pod");
-    const newsCarouselPods = await within(newsCarousel).findAllByTestId("news-pod");
-    const allNewsPodsInOrder = [featuredNewsPod].concat(newsCarouselPods);
-    const newsPodLinks = allNewsPodsInOrder.map((p) => within(p).queryAllByRole("link")[0]?.getAttribute("href"));
-    expect(allNewsPodsInOrder).toHaveLength(5);
-    const featuredNewsPodLinks = transformPodList(
-      mockNewsPods.results.filter((p) => p.tags.includes(FEATURED_NEWS_TAG)).map((p) => p.url),
-    );
-    expect(newsPodLinks.slice(0, featuredNewsPodLinks.length)).toEqual(featuredNewsPodLinks);
-    const nonFeaturedNewsPodLinks = transformPodList(
-      mockNewsPods.results.filter((p) => !p.tags.includes(FEATURED_NEWS_TAG)).map((p) => p.url),
-    );
-    expect(newsPodLinks.slice(featuredNewsPodLinks.length)).toEqual(nonFeaturedNewsPodLinks);
-  });
-
   it("should show the promo content banner for anonymous users", async () => {
     renderTestEnvironment({ role: "ANONYMOUS" });
     await screen.findByTestId("main");
@@ -162,7 +142,7 @@ describe("IsaacApp", () => {
     });
   });
 
-  let roles = [
+  const roles = [
     "STUDENT",
     "TUTOR",
     "TEACHER",
@@ -170,33 +150,12 @@ describe("IsaacApp", () => {
     "EVENT_MANAGER",
     "CONTENT_EDITOR",
     "ADMIN",
-  ] as TestUserRole[];
+  ] as UserRole[];
 
   it.each(roles)("should not show the promo content banner for %s users", async (role) => {
     renderTestEnvironment({ role });
     await screen.findByTestId("main");
     const promoContent = document.querySelector("#promo-content");
-    expect(promoContent).not.toBeInTheDocument();
-  });
-
-  it("should show the teacher promo tile for logged in teachers, and not show featured news", async () => {
-    renderTestEnvironment({ role: "TEACHER" });
-    await screen.findByTestId("main");
-    const promoTile = await screen.findByTestId("promo-tile");
-    expect(promoTile).toBeInTheDocument();
-    const featuredNewsSection = screen.queryByTestId("featured-news-item");
-    expect(featuredNewsSection).not.toBeInTheDocument();
-    await waitFor(() => {
-      const teacherPromoItem = screen.queryByText(mockPromoPods.results[0].title);
-      expect(teacherPromoItem).toBeInTheDocument();
-    });
-  });
-
-  roles = ["STUDENT", "TUTOR", "EVENT_LEADER", "EVENT_MANAGER", "CONTENT_EDITOR", "ADMIN", "ANONYMOUS"];
-  it.each(roles)("should not show the promo tile for %s users", async (role) => {
-    renderTestEnvironment({ role });
-    await screen.findByTestId("main");
-    const promoContent = screen.queryByTestId("promo-tile");
     expect(promoContent).not.toBeInTheDocument();
   });
 });

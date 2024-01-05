@@ -62,7 +62,9 @@ export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpand
   const expandableParent = useContext(ExpandableParentContext);
   const deviceSize = useDeviceSize();
 
-  const show = expandable && !isMobile() && above["md"](deviceSize) && !expandableParent;
+  const shouldNotApplyExpandBgClass = el?.id.includes("question-body");
+
+  const show = expandable && !isMobile() && above["sm"](deviceSize) && !expandableParent;
 
   const expandButton =
     (show && (
@@ -78,11 +80,11 @@ export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpand
     )) ||
     null;
 
-  // If screen size goes below md, then the `isaac-expand-bg` class no longer applies (the screen is too thin)
+  // If screen size goes below sm, then the `isaac-expand-bg` class no longer applies (the screen is too thin)
   const innerClasses = expanded && show ? "" : unexpandedInnerClasses;
-  const outerClasses = show ? (expanded ? "isaac-expand-bg expand-outer" : "expand-outer") : "";
+  const outerClasses = show ? (shouldNotApplyExpandBgClass ? "expand-outer" : "isaac-expand-bg expand-outer") : "";
 
-  return { expandButton, innerClasses, outerClasses };
+  return { expandButton, innerClasses, outerClasses, expanded };
 };
 
 interface TableData {

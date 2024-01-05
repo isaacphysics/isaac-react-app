@@ -2,7 +2,9 @@ import { mockNewsPods, mockPromoPods } from "../../../mocks/data";
 import { Dashboard } from "../../../app/components/elements/Dashboard";
 import { TestUserRole, renderTestEnvironment } from "../../utils";
 import { screen, waitFor, within } from "@testing-library/react";
-import { USER_ROLES, UserRole } from "../../../IsaacApiTypes";
+import { IsaacQuestionPageDTO, UserRole, USER_ROLES } from "../../../IsaacApiTypes";
+import { MockedRequest, RestHandler, rest } from "msw";
+import { API_PATH } from "../../../app/services";
 
 const mockPromoItem = mockPromoPods.results[0];
 const mockFeaturedNewsItem = mockNewsPods.results[1];
@@ -57,7 +59,11 @@ const checkDashboardButtons = (role?: "TEACHER") => {
 };
 
 describe("Dashboard", () => {
-  const setupTest = (role: TestUserRole, props = {}) => {
+  const setupTest = (
+    role: TestUserRole,
+    props = {},
+    extraEndpoints?: RestHandler<MockedRequest<IsaacQuestionPageDTO[]>>[] | undefined,
+  ) => {
     renderTestEnvironment({
       role: role,
       PageComponent: Dashboard,
@@ -67,10 +73,11 @@ describe("Dashboard", () => {
         ...props,
       },
       initialRouteEntries: ["/"],
+      extraEndpoints: extraEndpoints,
     });
   };
 
-  it("logged out content is shown if no user is logged in", async () => {
+  it("shows logged out content if no user is logged in", async () => {
     setupTest("ANONYMOUS");
     const loggedOutTitle = await screen.findByRole("heading", {
       name: /computer science learning/i,
@@ -114,19 +121,23 @@ describe("Dashboard", () => {
     expect(featuredNewsTitle).toBeInTheDocument();
   });
 
-  const nonTeacherRoles: UserRole[] = USER_ROLES.filter((role) => role !== "TEACHER");
+  const nonTeacherOrStudentRoles: UserRole[] = USER_ROLES.filter((role) => role !== "TEACHER" && role !== "STUDENT");
 
-  it.each(nonTeacherRoles)("shows featured news tile if %s user is logged in", async (role) => {
+  it.each(nonTeacherOrStudentRoles)("shows featured news tile if %s user is logged in", async (role) => {
     setupTest(role);
-    const featuredNewsTile = await screen.findByTestId("featured-news-item");
-    const promoTile = screen.queryByTestId("promo-tile");
-    expect(featuredNewsTile).toBeInTheDocument();
-    expect(promoTile).toBeNull();
-    const featuredNewsTitle = screen.getByText(mockFeaturedNewsItem.title);
-    expect(featuredNewsTitle).toBeInTheDocument();
+    const promoTile = await screen.findByTestId("promo-tile");
+    const featuredNewsTile = screen.queryByTestId("featured-news-item");
+    const questionTile = screen.queryByTestId("question-tile");
+    expect(promoTile).toBeInTheDocument();
+    expect(featuredNewsTile).toBeNull();
+    expect(questionTile).toBeNull();
+    const promoTitle = screen.getByText(mockPromoItem.title);
+    expect(promoTitle).toBeInTheDocument();
   });
 
-  it.each(USER_ROLES)(
+  const nonStudentRoles: UserRole[] = USER_ROLES.filter((role) => role !== "STUDENT");
+
+  it.each(nonStudentRoles)(
     "shows loading spinner for %s users if neither promo item nor featured news item are provided",
     async (role) => {
       setupTest(role, {
@@ -141,4 +152,26 @@ describe("Dashboard", () => {
       });
     },
   );
+
+  it("shows question tile for students if logged in and question data is available", async () => {
+    setupTest("STUDENT");
+    const questionTile = await screen.findByTestId("question-tile");
+    const promoTile = screen.queryByTestId("promo-tile");
+    const featuredNewsTile = screen.queryByTestId("featured-news-item");
+    expect(questionTile).toBeInTheDocument();
+    expect(promoTile).toBeNull();
+    expect(featuredNewsTile).toBeNull();
+  });
+
+  it("shows featured news instead of question tile for students if no questions comes back from the API", async () => {
+    setupTest("STUDENT", {}, [
+      rest.get(API_PATH + "/questions/random", (req, res, ctx) => {
+        return res(ctx.status(200), ctx.json([]));
+      }),
+    ]);
+    const featuredNewsTile = await screen.findByTestId("featured-news-item");
+    expect(featuredNewsTile).toBeInTheDocument();
+    const questionTile = screen.queryByTestId("question-tile");
+    expect(questionTile).toBeNull();
+  });
 });

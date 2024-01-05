@@ -40,6 +40,7 @@ export const selectors = {
   },
 
   questions: {
+    randomQuestions: (state: AppState) => state?.randomQuestions,
     getQuestions: (state: AppState) => state?.questions?.questions,
     allQuestionsAttempted: createSelector([(state: AppState) => state?.questions?.questions], (questions) => {
       return !!questions && questions.every((q) => !!q.currentAttempt);

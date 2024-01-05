@@ -1014,6 +1014,23 @@ export const getUserAnsweredQuestionsByDate =
     }
   };
 
+export const getRandomQuestions = () => async (dispatch: Dispatch<Action>) => {
+  dispatch({ type: ACTION_TYPE.QUESTION_RANDOM_QUESTIONS_REQUEST });
+  try {
+    const randomQuestions = await api.questions.randomQuestions();
+    if (randomQuestions.data.length === 0) {
+      dispatch({ type: ACTION_TYPE.QUESTION_RANDOM_QUESTIONS_RESPONSE_FAILURE });
+    } else
+      dispatch({
+        type: ACTION_TYPE.QUESTION_RANDOM_QUESTIONS_RESPONSE_SUCCESS,
+        randomQuestions: randomQuestions.data,
+      });
+  } catch (e) {
+    dispatch({ type: ACTION_TYPE.QUESTION_RANDOM_QUESTIONS_RESPONSE_FAILURE });
+    dispatch(showAxiosErrorToastIfNeeded("Failed to fetch random questions", e));
+  }
+};
+
 export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (dispatch: Dispatch<Action>) => {
   if (page.supersededBy) {
     dispatch(

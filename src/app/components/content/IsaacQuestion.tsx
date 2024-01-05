@@ -123,7 +123,7 @@ export const IsaacQuestion = withRouter(({ doc, location }: { doc: ApiTypes.Ques
         }}
       >
         <div
-          className={classNames("question-component p-md-5", doc.type, {
+          className={classNames("question-component p-md-3", doc.type, {
             "parsons-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string),
           })}
         >

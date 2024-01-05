@@ -3,6 +3,689 @@ import { DAYS_AGO } from "../test/utils";
 import { RegisteredUserDTO, IsaacEventPageDTO, UserSummaryWithGroupMembershipDTO } from "../IsaacApiTypes";
 import { EventBookingDTO } from "../IsaacApiTypes";
 
+export const mockRandomQuestions = [
+  {
+    id: "question_01",
+    title: "Mock Question 1",
+    type: "isaacQuestionPage",
+    encoding: "markdown",
+    canonicalSourceFile: "content/computer_science/computer_systems/software/questions/mockquestion1.json",
+    children: [
+      {
+        type: "content",
+        encoding: "markdown",
+        children: [],
+        value: "This is a mock question 1",
+        published: false,
+        tags: [],
+      },
+      {
+        id: "question_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6",
+        type: "isaacMultiChoiceQuestion",
+        encoding: "markdown",
+        children: [
+          {
+            type: "content",
+            encoding: "markdown",
+            children: [],
+            value: "Answer here?",
+            published: false,
+            tags: [],
+          },
+        ],
+        published: true,
+        hints: [
+          {
+            type: "content",
+            children: [
+              {
+                type: "content",
+                encoding: "markdown",
+                children: [],
+                value:
+                  "#### Key terms\n\n[glossary:glossary-page-a|application-software]\n\n#### Knowledge assumed\n\n* [The different types of software and their suitability to performing different tasks.](/concepts/sys_os_application_software)\n",
+                published: false,
+                tags: [],
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+          {
+            type: "content",
+            children: [
+              {
+                type: "content",
+                encoding: "markdown",
+                children: [],
+                value:
+                  "#### Goal and information given\n\nIdentify which of the examples would require the use of application software.\n\n- List of tasks that could be carried out on a computer device.\n- Context for how the tasks are carried out.",
+                published: false,
+                tags: [],
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+          {
+            type: "content",
+            children: [
+              {
+                id: "question_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6|sys_os_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6|aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1yQTY3ZUNmc2c0Zw==",
+                type: "video",
+                encoding: "markdown",
+                children: [],
+                value: "_Add video caption here_",
+                published: true,
+                src: "https://www.youtube.com/watch?v=rA67eCfsg4g",
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+        ],
+        choices: [
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer A",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer B",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer C",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer D",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer E",
+            published: false,
+          },
+        ],
+      },
+    ],
+    relatedContent: [
+      {
+        id: "sys_os_application_software",
+        tags: [],
+      },
+    ],
+    published: true,
+    tags: ["computer_systems", "software", "computer_science"],
+    level: 1,
+    audience: [
+      {
+        stage: ["a_level"],
+        examBoard: ["aqa", "ocr", "wjec", "eduqas"],
+        difficulty: ["practice_1"],
+      },
+    ],
+  },
+  {
+    id: "question_02",
+    title: "Mock Question 2",
+    type: "isaacQuestionPage",
+    encoding: "markdown",
+    canonicalSourceFile: "content/computer_science/computer_systems/software/questions/mockquestion2.json",
+    children: [
+      {
+        type: "content",
+        encoding: "markdown",
+        children: [],
+        value: "This is a mock question 2",
+        published: false,
+        tags: [],
+      },
+      {
+        id: "question_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6",
+        type: "isaacMultiChoiceQuestion",
+        encoding: "markdown",
+        children: [
+          {
+            type: "content",
+            encoding: "markdown",
+            children: [],
+            value: "Answer here?",
+            published: false,
+            tags: [],
+          },
+        ],
+        published: true,
+        hints: [
+          {
+            type: "content",
+            children: [
+              {
+                type: "content",
+                encoding: "markdown",
+                children: [],
+                value:
+                  "#### Key terms\n\n[glossary:glossary-page-a|application-software]\n\n#### Knowledge assumed\n\n* [The different types of software and their suitability to performing different tasks.](/concepts/sys_os_application_software)\n",
+                published: false,
+                tags: [],
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+          {
+            type: "content",
+            children: [
+              {
+                type: "content",
+                encoding: "markdown",
+                children: [],
+                value:
+                  "#### Goal and information given\n\nIdentify which of the examples would require the use of application software.\n\n- List of tasks that could be carried out on a computer device.\n- Context for how the tasks are carried out.",
+                published: false,
+                tags: [],
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+          {
+            type: "content",
+            children: [
+              {
+                id: "question_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6|sys_os_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6|aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1yQTY3ZUNmc2c0Zw==",
+                type: "video",
+                encoding: "markdown",
+                children: [],
+                value: "_Add video caption here_",
+                published: true,
+                src: "https://www.youtube.com/watch?v=rA67eCfsg4g",
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+        ],
+        choices: [
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer A",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer B",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer C",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer D",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer E",
+            published: false,
+          },
+        ],
+      },
+    ],
+    relatedContent: [
+      {
+        id: "sys_os_application_software",
+        tags: [],
+      },
+    ],
+    published: true,
+    tags: ["computer_systems", "software", "computer_science"],
+    level: 1,
+    audience: [
+      {
+        stage: ["a_level"],
+        examBoard: ["aqa", "ocr", "wjec", "eduqas"],
+        difficulty: ["practice_1"],
+      },
+    ],
+  },
+  {
+    id: "question_03",
+    title: "Mock Question 3",
+    type: "isaacQuestionPage",
+    encoding: "markdown",
+    canonicalSourceFile: "content/computer_science/computer_systems/software/questions/mockquestion3.json",
+    children: [
+      {
+        type: "content",
+        encoding: "markdown",
+        children: [],
+        value: "This is a mock question 3",
+        published: false,
+        tags: [],
+      },
+      {
+        id: "question_03|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6",
+        type: "isaacMultiChoiceQuestion",
+        encoding: "markdown",
+        children: [
+          {
+            type: "content",
+            encoding: "markdown",
+            children: [],
+            value: "Answer here?",
+            published: false,
+            tags: [],
+          },
+        ],
+        published: true,
+        hints: [
+          {
+            type: "content",
+            children: [
+              {
+                type: "content",
+                encoding: "markdown",
+                children: [],
+                value:
+                  "#### Key terms\n\n[glossary:glossary-page-a|application-software]\n\n#### Knowledge assumed\n\n* [The different types of software and their suitability to performing different tasks.](/concepts/sys_os_application_software)\n",
+                published: false,
+                tags: [],
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+          {
+            type: "content",
+            children: [
+              {
+                type: "content",
+                encoding: "markdown",
+                children: [],
+                value:
+                  "#### Goal and information given\n\nIdentify which of the examples would require the use of application software.\n\n- List of tasks that could be carried out on a computer device.\n- Context for how the tasks are carried out.",
+                published: false,
+                tags: [],
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+          {
+            type: "content",
+            children: [
+              {
+                id: "question_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6|sys_os_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6|aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1yQTY3ZUNmc2c0Zw==",
+                type: "video",
+                encoding: "markdown",
+                children: [],
+                value: "_Add video caption here_",
+                published: true,
+                src: "https://www.youtube.com/watch?v=rA67eCfsg4g",
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+        ],
+        choices: [
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer A",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer B",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer C",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer D",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer E",
+            published: false,
+          },
+        ],
+      },
+    ],
+    relatedContent: [
+      {
+        id: "sys_os_application_software",
+        tags: [],
+      },
+    ],
+    published: true,
+    tags: ["computer_systems", "software", "computer_science"],
+    level: 1,
+    audience: [
+      {
+        stage: ["a_level"],
+        examBoard: ["aqa", "ocr", "wjec", "eduqas"],
+        difficulty: ["practice_1"],
+      },
+    ],
+  },
+  {
+    id: "question_04",
+    title: "Mock Question 4",
+    type: "isaacQuestionPage",
+    encoding: "markdown",
+    canonicalSourceFile: "content/computer_science/computer_systems/software/questions/mockquestion4.json",
+    children: [
+      {
+        type: "content",
+        encoding: "markdown",
+        children: [],
+        value: "This is a mock question 4",
+        published: false,
+        tags: [],
+      },
+      {
+        id: "question_04|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6",
+        type: "isaacMultiChoiceQuestion",
+        encoding: "markdown",
+        children: [
+          {
+            type: "content",
+            encoding: "markdown",
+            children: [],
+            value: "Answer here?",
+            published: false,
+            tags: [],
+          },
+        ],
+        published: true,
+        hints: [
+          {
+            type: "content",
+            children: [
+              {
+                type: "content",
+                encoding: "markdown",
+                children: [],
+                value:
+                  "#### Key terms\n\n[glossary:glossary-page-a|application-software]\n\n#### Knowledge assumed\n\n* [The different types of software and their suitability to performing different tasks.](/concepts/sys_os_application_software)\n",
+                published: false,
+                tags: [],
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+          {
+            type: "content",
+            children: [
+              {
+                type: "content",
+                encoding: "markdown",
+                children: [],
+                value:
+                  "#### Goal and information given\n\nIdentify which of the examples would require the use of application software.\n\n- List of tasks that could be carried out on a computer device.\n- Context for how the tasks are carried out.",
+                published: false,
+                tags: [],
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+          {
+            type: "content",
+            children: [
+              {
+                id: "question_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6|sys_os_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6|aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1yQTY3ZUNmc2c0Zw==",
+                type: "video",
+                encoding: "markdown",
+                children: [],
+                value: "_Add video caption here_",
+                published: true,
+                src: "https://www.youtube.com/watch?v=rA67eCfsg4g",
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+        ],
+        choices: [
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer A",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer B",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer C",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer D",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer E",
+            published: false,
+          },
+        ],
+      },
+    ],
+    relatedContent: [
+      {
+        id: "sys_os_application_software",
+        tags: [],
+      },
+    ],
+    published: true,
+    tags: ["computer_systems", "software", "computer_science"],
+    level: 1,
+    audience: [
+      {
+        stage: ["a_level"],
+        examBoard: ["aqa", "ocr", "wjec", "eduqas"],
+        difficulty: ["practice_1"],
+      },
+    ],
+  },
+  {
+    id: "question_05",
+    title: "Mock Question 5",
+    type: "isaacQuestionPage",
+    encoding: "markdown",
+    canonicalSourceFile: "content/computer_science/computer_systems/software/questions/mockquestion5.json",
+    children: [
+      {
+        type: "content",
+        encoding: "markdown",
+        children: [],
+        value: "This is a mock question 5",
+        published: false,
+        tags: [],
+      },
+      {
+        id: "question_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6",
+        type: "isaacMultiChoiceQuestion",
+        encoding: "markdown",
+        children: [
+          {
+            type: "content",
+            encoding: "markdown",
+            children: [],
+            value: "Answer here?",
+            published: false,
+            tags: [],
+          },
+        ],
+        published: true,
+        hints: [
+          {
+            type: "content",
+            children: [
+              {
+                type: "content",
+                encoding: "markdown",
+                children: [],
+                value:
+                  "#### Key terms\n\n[glossary:glossary-page-a|application-software]\n\n#### Knowledge assumed\n\n* [The different types of software and their suitability to performing different tasks.](/concepts/sys_os_application_software)\n",
+                published: false,
+                tags: [],
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+          {
+            type: "content",
+            children: [
+              {
+                type: "content",
+                encoding: "markdown",
+                children: [],
+                value:
+                  "#### Goal and information given\n\nIdentify which of the examples would require the use of application software.\n\n- List of tasks that could be carried out on a computer device.\n- Context for how the tasks are carried out.",
+                published: false,
+                tags: [],
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+          {
+            type: "content",
+            children: [
+              {
+                id: "question_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6|sys_os_01|d5d0fd29-dbc3-41aa-afa7-fb1b909064c6|aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1yQTY3ZUNmc2c0Zw==",
+                type: "video",
+                encoding: "markdown",
+                children: [],
+                value: "_Add video caption here_",
+                published: true,
+                src: "https://www.youtube.com/watch?v=rA67eCfsg4g",
+              },
+            ],
+            published: false,
+            tags: [],
+          },
+        ],
+        choices: [
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer A",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer B",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer C",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer D",
+            published: false,
+          },
+          {
+            type: "choice",
+            encoding: "markdown",
+            children: [],
+            value: "answer E",
+            published: false,
+          },
+        ],
+      },
+    ],
+    relatedContent: [
+      {
+        id: "sys_os_application_software",
+        tags: [],
+      },
+    ],
+    published: true,
+    tags: ["computer_systems", "software", "computer_science"],
+    level: 1,
+    audience: [
+      {
+        stage: ["a_level"],
+        examBoard: ["aqa", "ocr", "wjec", "eduqas"],
+        difficulty: ["practice_1"],
+      },
+    ],
+  },
+];
+
 export const mockEventBookings: EventBookingDTO[] = [
   {
     bookingId: 1000,

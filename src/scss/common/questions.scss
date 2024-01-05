@@ -63,7 +63,7 @@ button {
 }
 
 .question-component {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   clear: both;
 
   .question-content {
@@ -86,6 +86,7 @@ button {
 .numeric-question {
   .numeric-help {
     min-width: 4rem !important;
+    margin-top: 0 !important;
   }
 
   .unit-selection {
@@ -286,8 +287,8 @@ button {
   &.correct {
     background: $primary;
     color: black;
-    margin-left: -3rem;
-    margin-right: -3rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
     margin-bottom: -3rem;
     padding-left: 1.5rem !important;
     padding-right: 1.5rem !important;

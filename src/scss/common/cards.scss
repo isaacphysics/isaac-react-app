@@ -57,6 +57,73 @@
   }
 }
 
+.question-tile {
+  max-width: 100%;
+  border: solid 1px #f8f8f8;
+  margin: 1.5rem 1rem 1rem 1rem;
+  img {
+    max-width: 70%;
+  }
+}
+
+.next-question {
+  display: flex;
+  align-self: baseline;
+  margin-left: auto;
+  padding: 0 !important;
+  font-family: $secondary-font !important;
+}
+
+.random-question-panel.isaac-expand-bg {
+  overflow: hidden;
+}
+
+.random-question-panel {
+  @include media-breakpoint-up(sm) {
+    max-width: 750px;
+    img {
+      max-width: 90%;
+    }
+  }
+
+  @include media-breakpoint-up(md) {
+    max-width: 800px;
+    img {
+      max-width: 70%;
+    }
+  }
+
+  @include media-breakpoint-up(lg) {
+    max-width: 1140px;
+    img {
+      max-width: 50%;
+    }
+  }
+}
+
+.hidden-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .question-tile,
+  .random-question-panel {
+    .parsons-layout {
+      width: 100%;
+      @include make-col-offset(0, 0);
+    }
+  }
+}
+
+.question-tile,
+.random-question-panel {
+  .question-component {
+    box-shadow: none;
+  }
+}
+
 .featured-news-item {
   background: #dddddd55;
   max-width: 450px;
