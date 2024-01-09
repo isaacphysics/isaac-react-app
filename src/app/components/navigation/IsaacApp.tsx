@@ -79,6 +79,7 @@ import {AssignmentProgress} from "../pages/AssignmentProgress";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
+import { ChatWindow } from './ChatWindow';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -224,6 +225,7 @@ export const IsaacApp = () => {
                 </Suspense>
             </ErrorBoundary>
         </main>
+        <ChatWindow />
         <ScrollToTop mainContent={mainContentRef}/>
         <SiteSpecific.Footer />
     </Router>;
