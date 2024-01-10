@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { tempChatHandlerEndpoint } from "../../services";
 
 interface Message {
     message: string;
@@ -18,15 +19,24 @@ function ChatMessage({message, sender}: Message) {
 export function ChatWindow() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentMessage, setCurrentMessage] = useState<string>("");
+    const [threadId, setThreadId] = useState<string>();
+    const [error, setError] = useState<string>();
+
+    useEffect(function initialiseNewThread() {
+        tempChatHandlerEndpoint.get("/threads/new")
+        .then(response => { setThreadId(response.data); })
+        .catch(error => { setError(error.message); });
+    }, []);
 
     return <div className="chat-window">
-        <div className="chat-header">Talk to Ada</div>
+        <div className="chat-header">Talk to Ada ({threadId})</div>
         <div className="chat-body">
             <ul>
                 {messages.map((message, index) => <li key={index} className="chat-message">
                     <ChatMessage {...message} />
                 </li>)}
             </ul>
+            {error && <div className="error">{error}</div>}
         </div>
         <form onSubmit={e => {
             e.preventDefault();
