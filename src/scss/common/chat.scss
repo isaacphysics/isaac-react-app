@@ -2,11 +2,104 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 300px;
+    width: 350px;
     height: 400px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 0 5px #ccc;
+    border: 1px solid #555;
+    box-shadow: 0 0 5px #555;
     z-index: 9999;
+
+    display: flex;
+    flex-direction: column;
+    background-color: #282c34;
+    
+    .chat-header {
+        background-color: #181717;
+        color: white;
+        padding: 10px;
+    }
+    
+    .chat-body {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        background-color: rgb(40, 37, 53);
+    }
+    
+    
+    form {
+        display: flex;
+        background-color: rgb(24, 23, 23);
+    }
+
+    input {
+        width: 100%;
+        background: rgb(58, 58, 58);
+        color: white;
+        outline: none;
+        border: none;
+        padding: 0 10px;
+    }
+
+    button {
+        background-color: rgb(56, 56, 143);
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+    }
+    
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    
+    ul {
+        padding: 0.5rem;
+    }
+    ul, li {
+        text-align: left;
+        list-style: none;
+    }
+    
+    p {
+        max-width: 500px;
+        margin-bottom: 12px;
+        line-height: 24px;
+        padding: 10px 20px;
+        border-radius: 25px;
+        position: relative;
+        color: white;
+        text-align: center;
+    }
+    
+    .message {
+        display: flex;
+        align-items: center;
+    }
+    
+    
+    .sent {
+        flex-direction: row-reverse;
+    }
+    
+    .sent p {
+        color: white;
+        background: #0b93f6;
+        align-self: flex-end;
+    }
+    .received p {
+        background: #e5e5ea;
+        color: black;
+    }
+    
+    img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin: 2px 5px;
+    }
 }
