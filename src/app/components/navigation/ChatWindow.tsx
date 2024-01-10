@@ -23,7 +23,7 @@ export function ChatWindow() {
     const [chatError, setChatError] = useState<string>();
 
     useEffect(function initialiseNewThread() {
-        tempChatHandlerEndpoint.get("/threads/new")
+        tempChatHandlerEndpoint.post("/threads")
         .then(response => { setThreadId(response.data); })
         .catch(error => { setChatError(error.message); });
     }, []);
