@@ -2,30 +2,30 @@ import React, { useEffect, useState } from "react";
 import { tempChatHandlerEndpoint } from "../../services";
 
 interface Message {
-    message: string;
+    content: string;
     sender: "user" | "ada";
 }
 
-function ChatMessage({message, sender}: Message) {
+function ChatMessage({content, sender}: Message) {
     const senderStatus = sender === "ada" ? "received" : "sent";
     const senderImage = sender === "ada" ? "/assets/logos/ada_logo_stamp_aqua.svg" : "/assets/card02.png";
     return <div className={`message ${senderStatus}`}>
       <img src={senderImage} alt="Avatar Icon" />
-      <p>{message}</p>
+      <p>{content}</p>
     </div>;
 }
 
 
 export function ChatWindow() {
     const [messages, setMessages] = useState<Message[]>([]);
-    const [currentMessage, setCurrentMessage] = useState<string>("");
+    const [currentMessageContent, setCurrentMessageContent] = useState<string>("");
     const [threadId, setThreadId] = useState<string>();
-    const [error, setError] = useState<string>();
+    const [chatError, setChatError] = useState<string>();
 
     useEffect(function initialiseNewThread() {
         tempChatHandlerEndpoint.get("/threads/new")
         .then(response => { setThreadId(response.data); })
-        .catch(error => { setError(error.message); });
+        .catch(error => { setChatError(error.message); });
     }, []);
 
     return <div className="chat-window">
@@ -36,14 +36,16 @@ export function ChatWindow() {
                     <ChatMessage {...message} />
                 </li>)}
             </ul>
-            {error && <div className="error">{error}</div>}
+            {chatError && <div className="alert alert-warning mx-4">
+                <strong>Error:</strong> {chatError}
+            </div>}
         </div>
         <form onSubmit={e => {
             e.preventDefault();
-            setMessages([...messages, {message: currentMessage, sender: "user"}]);
             setCurrentMessage("");
+            setMessages([...messages, {content: currentMessageContent, sender: "user"}]);
         }}>
-            <input type="text" placeholder="Type your message here" value={currentMessage} onChange={e => setCurrentMessage(e.target.value)}/>
+            <input type="text" placeholder="Type your message here" value={currentMessageContent} onChange={e => setCurrentMessageContent(e.target.value)}/>
             <button>Send</button>
         </form>
     </div>;
