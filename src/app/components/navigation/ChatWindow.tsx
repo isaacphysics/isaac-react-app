@@ -43,7 +43,15 @@ export function ChatWindow() {
                 if (["completed", "cancelled", "failed", "expired"].includes(returned_run.status)) {
                     setRunId(undefined);
                     if (returned_run.status === "completed") {
-                        // TODO request messages from the server
+                        tempChatHandlerEndpoint.get(`/threads/${threadId}/messages`)
+                        .then(response => {
+                            const latestMessages = response.data.data.slice().reverse();
+                            setMessages(latestMessages.map((message: any) => ({
+                                id: message.id,
+                                content: message.content[0].text.value,
+                                sender: message.role === 'assistant' ? 'ada' : 'user'
+                            })));
+                        });
                     }
                 }
             })
@@ -64,9 +72,7 @@ export function ChatWindow() {
         setMessages([...messages, {content: currentMessageContent, sender: "user"}]);
 
         tempChatHandlerEndpoint.post(`/threads/${threadId}/messages`, { content: currentMessageContent, role: "user" })
-        .then(response => {
-            setRunId(response.data);
-        })
+        .then(response => { setRunId(response.data); })
         .catch(error => { setChatError(error.message); });
 
         setCurrentMessageContent("");
