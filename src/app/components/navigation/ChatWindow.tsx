@@ -28,6 +28,22 @@ export function ChatWindow() {
         .catch(error => { setChatError(error.message); });
     }, []);
 
+    function sendCurrentMessage() {
+        if (!threadId) return;
+        setChatError(undefined);
+
+        // Optimistically add the message to the list of messages
+        setMessages([...messages, {content: currentMessageContent, sender: "user"}]);
+
+        tempChatHandlerEndpoint.post(`/threads/${threadId}/messages`, { content: currentMessageContent, role: "user" })
+        .then(response => {
+            debugger;
+        })
+        .catch(error => { setChatError(error.message); });
+
+        setCurrentMessageContent("");
+    }
+
     return <div className="chat-window">
         <div className="chat-header">Talk to Ada ({threadId})</div>
         <div className="chat-body">
@@ -42,8 +58,8 @@ export function ChatWindow() {
         </div>
         <form onSubmit={e => {
             e.preventDefault();
-            setCurrentMessage("");
             setMessages([...messages, {content: currentMessageContent, sender: "user"}]);
+            sendCurrentMessage();
         }}>
             <input type="text" placeholder="Type your message here" value={currentMessageContent} onChange={e => setCurrentMessageContent(e.target.value)}/>
             <button>Send</button>
