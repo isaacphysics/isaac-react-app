@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { tempChatHandlerEndpoint } from "../../services";
+import { Spinner } from "reactstrap";
 
 interface Message {
     content: string;
@@ -20,6 +21,7 @@ export function ChatWindow() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentMessageContent, setCurrentMessageContent] = useState<string>("");
     const [threadId, setThreadId] = useState<string>();
+    const [runId, setRunId] = useState<string>();
     const [chatError, setChatError] = useState<string>();
 
     useEffect(function initialiseNewThread() {
@@ -27,6 +29,32 @@ export function ChatWindow() {
         .then(response => { setThreadId(response.data); })
         .catch(error => { setChatError(error.message); });
     }, []);
+
+    useEffect(function pollForMessages() {
+        if (!runId) return;
+
+        const interval = setInterval(() => {
+            const currentRunId = runId;
+            tempChatHandlerEndpoint.get(`/threads/${threadId}/runs/${runId}`)
+            .then(response => {
+                const returned_run = response.data;
+                if (returned_run.id !== runId) return;
+                console.log(returned_run);
+                if (["completed", "cancelled", "failed", "expired"].includes(returned_run.status)) {
+                    setRunId(undefined);
+                    if (returned_run.status === "completed") {
+                        // TODO request messages from the server
+                    }
+                }
+            })
+            .catch(error => {
+                if (currentRunId === runId) setRunId(undefined);
+                setChatError(error.message);
+            });
+        }, 1000);
+
+        return function clearPoll()  { if (interval) clearInterval(interval); };
+    }, [runId, setRunId, threadId]);
 
     function sendCurrentMessage() {
         if (!threadId) return;
@@ -37,7 +65,7 @@ export function ChatWindow() {
 
         tempChatHandlerEndpoint.post(`/threads/${threadId}/messages`, { content: currentMessageContent, role: "user" })
         .then(response => {
-            debugger;
+            setRunId(response.data);
         })
         .catch(error => { setChatError(error.message); });
 
@@ -52,6 +80,9 @@ export function ChatWindow() {
                     <ChatMessage {...message} />
                 </li>)}
             </ul>
+            {runId && <div className="text-light">
+                Ada is typing... <Spinner />
+            </div>}
             {chatError && <div className="alert alert-warning mx-4">
                 <strong>Error:</strong> {chatError}
             </div>}
