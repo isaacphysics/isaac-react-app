@@ -18,6 +18,7 @@ function ChatMessage({content, sender}: Message) {
 
 
 export function ChatWindow() {
+    const [isCollapsed, setIsCollapsed] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentMessageContent, setCurrentMessageContent] = useState<string>("");
     const [threadId, setThreadId] = useState<string>();
@@ -87,10 +88,18 @@ export function ChatWindow() {
         setCurrentMessageContent("");
     }
 
-    return <div className="chat-window">
+    return <div className={`chat-window ${isCollapsed ? "collapsed" : ""}`}>
         <div className="chat-header h5">
-            AskAda
-            <div className={`chat-indicator ${threadId ? "active" : ""}`} />
+            <div className="d-flex align-items-center">
+                <button className="avatar" onClick={() => setIsCollapsed(!isCollapsed)}>
+                    {isCollapsed ? "show" : "hide"}
+                </button>
+                <span className="chatbot-name ml-2">AskAda</span>
+            </div>
+            <div className="d-flex align-items-center">
+                <div className={`chat-indicator ${threadId ? "active" : ""}`} />
+                <button className="close text-white-50 ml-2" onClick={() => setIsCollapsed(true)}>×</button>
+            </div>
         </div>
         <div className="chat-body">
             <ul ref={chatListRef}>
