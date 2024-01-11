@@ -9,7 +9,7 @@ interface Message {
 
 function ChatMessage({content, sender}: Message) {
     const senderStatus = sender === "ada" ? "received" : "sent";
-    const senderImage = sender === "ada" ? "/assets/logos/ada_logo_stamp_aqua.svg" : "/assets/card02.png";
+    const senderImage = sender === "ada" ? "/assets/cs/chat/avatar-ada.png" : "/assets/cs/chat/avatar-user.png";
     return <div className={`message ${senderStatus}`}>
       <img src={senderImage} alt="Avatar Icon" />
       <p>{content}</p>
@@ -79,7 +79,9 @@ export function ChatWindow() {
     }
 
     return <div className="chat-window">
-        <div className="chat-header">Talk to Ada ({threadId})</div>
+        <div className="chat-header h5">
+            AskAda
+        </div>
         <div className="chat-body">
             <ul>
                 {messages.map((message, index) => <li key={index} className="chat-message">
