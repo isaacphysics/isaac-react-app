@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { tempChatHandlerEndpoint } from "../../services";
 import { Spinner } from "reactstrap";
+import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 
 interface Message {
     content: string;
@@ -12,7 +13,7 @@ function ChatMessage({content, sender}: Message) {
     const senderImage = sender === "ada" ? "/assets/cs/chat/avatar-ada.png" : "/assets/cs/chat/avatar-user.png";
     return <div className={`message ${senderStatus}`}>
       <img src={senderImage} alt="Avatar Icon" />
-      <p>{content}</p>
+      <IsaacContentValueOrChildren encoding="markdown" value={content} />
     </div>;
 }
 
