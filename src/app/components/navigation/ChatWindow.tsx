@@ -90,6 +90,7 @@ export function ChatWindow() {
     return <div className="chat-window">
         <div className="chat-header h5">
             AskAda
+            <div className={`chat-indicator ${threadId ? "active" : ""}`} />
         </div>
         <div className="chat-body">
             <ul ref={chatListRef}>

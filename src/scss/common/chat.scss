@@ -19,8 +19,25 @@
         padding: 10px;
         margin-bottom: 0;
         border-radius: $border-radius $border-radius 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
-    
+
+    .chat-indicator {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        border: 2px solid $dark;
+        background-color: $danger;
+        box-shadow: 0 0 3px $danger;
+        &.active {
+            background-color: $success;
+            box-shadow: 0 0 5px $success;
+            transition: all 0.5s ease-in-out;
+        } 
+    }
+
     .chat-body {
         display: flex;
         flex-grow: 1;
