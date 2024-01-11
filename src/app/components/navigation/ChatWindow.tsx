@@ -18,7 +18,7 @@ function ChatMessage({content, sender}: Message) {
 
 
 export function ChatWindow() {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentMessageContent, setCurrentMessageContent] = useState<string>("");
     const [threadId, setThreadId] = useState<string>();
@@ -52,7 +52,6 @@ export function ChatWindow() {
                                 content: message.content[0].text.value,
                                 sender: message.role === 'assistant' ? 'ada' : 'user'
                             })));
-                            console.log(latestMessages);
                         });
                     }
                 }
