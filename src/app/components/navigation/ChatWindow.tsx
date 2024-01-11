@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { tempChatHandlerEndpoint } from "../../services";
 import { Spinner } from "reactstrap";
 
@@ -23,6 +23,7 @@ export function ChatWindow() {
     const [threadId, setThreadId] = useState<string>();
     const [runId, setRunId] = useState<string>();
     const [chatError, setChatError] = useState<string>();
+    const chatListRef = useRef<HTMLUListElement>(null);
 
     useEffect(function initialiseNewThread() {
         tempChatHandlerEndpoint.post("/threads")
@@ -39,7 +40,6 @@ export function ChatWindow() {
             .then(response => {
                 const returned_run = response.data;
                 if (returned_run.id !== runId) return;
-                console.log(returned_run);
                 if (["completed", "cancelled", "failed", "expired"].includes(returned_run.status)) {
                     setRunId(undefined);
                     if (returned_run.status === "completed") {
@@ -51,6 +51,7 @@ export function ChatWindow() {
                                 content: message.content[0].text.value,
                                 sender: message.role === 'assistant' ? 'ada' : 'user'
                             })));
+                            console.log(latestMessages);
                         });
                     }
                 }
@@ -63,6 +64,14 @@ export function ChatWindow() {
 
         return function clearPoll()  { if (interval) clearInterval(interval); };
     }, [runId, setRunId, threadId]);
+
+    useEffect(function scrollToLatestMessage() {
+        const chatList = chatListRef.current;
+        if (chatList) {
+            const lastMessage = chatList.childNodes[chatList.childElementCount - 1] as HTMLLIElement;
+            lastMessage?.scrollIntoView({behavior: "smooth"});
+        }
+    }, [messages]);
 
     function sendCurrentMessage() {
         if (!threadId) return;
@@ -83,7 +92,7 @@ export function ChatWindow() {
             AskAda
         </div>
         <div className="chat-body">
-            <ul>
+            <ul ref={chatListRef}>
                 {messages.map((message, index) => <li key={index} className="chat-message">
                     <ChatMessage {...message} />
                 </li>)}
