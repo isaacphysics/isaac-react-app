@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { tempChatHandlerEndpoint } from "../../services";
-import { Spinner } from "reactstrap";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 
 interface Message {
@@ -64,7 +63,7 @@ export function ChatWindow() {
         }, 1000);
 
         return function clearPoll()  { if (interval) clearInterval(interval); };
-    }, [runId, setRunId, threadId]);
+    }, [runId, threadId]);
 
     useEffect(function scrollToLatestMessage() {
         const chatList = chatListRef.current;
@@ -72,7 +71,7 @@ export function ChatWindow() {
             const lastMessage = chatList.childNodes[chatList.childElementCount - 1] as HTMLLIElement;
             lastMessage?.scrollIntoView({behavior: "smooth"});
         }
-    }, [messages]);
+    }, [messages, runId]); // runId is included to scroll to the "Ada is typing..." message
 
     function sendCurrentMessage() {
         if (!threadId) return;
@@ -97,10 +96,10 @@ export function ChatWindow() {
                 {messages.map((message, index) => <li key={index} className="chat-message">
                     <ChatMessage {...message} />
                 </li>)}
+                {runId && <li className="chat-message">
+                    <ChatMessage sender="ada" content="_Ada is typing..._" />
+                </li>}
             </ul>
-            {runId && <div className="text-light">
-                Ada is typing... <Spinner />
-            </div>}
             {chatError && <div className="alert alert-warning mx-4">
                 <strong>Error:</strong> {chatError}
             </div>}
