@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { tempChatHandlerEndpoint } from "../../services";
+import { endpoint, tempChatHandlerEndpoint } from "../../services";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 
 interface Message {
@@ -27,8 +27,8 @@ export function ChatWindow() {
     const chatListRef = useRef<HTMLUListElement>(null);
 
     useEffect(function initialiseNewThread() {
-        tempChatHandlerEndpoint.post("/threads")
-        .then(response => { setThreadId(response.data); })
+        endpoint.post("/tutor/threads")
+        .then(response => { setThreadId(response.data.id); })
         .catch(error => { setChatError(error.message); });
     }, []);
 
