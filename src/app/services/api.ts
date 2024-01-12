@@ -31,10 +31,6 @@ export const endpoint = axios.create({
     withCredentials: true,
 });
 
-export const tempChatHandlerEndpoint = axios.create({
-    baseURL: "http://127.0.0.1:5000",
-});
-
 endpoint.interceptors.response.use((response) => {
     if (response.status >= 500) {
         // eslint-disable-next-line no-console

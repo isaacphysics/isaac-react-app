@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { endpoint, tempChatHandlerEndpoint } from "../../services";
+import { endpoint } from "../../services";
 import { IsaacContentValueOrChildren } from "../content/IsaacContentValueOrChildren";
 
 interface Message {
@@ -37,14 +37,14 @@ export function ChatWindow() {
 
         const interval = setInterval(() => {
             const currentRunId = runId;
-            tempChatHandlerEndpoint.get(`/threads/${threadId}/runs/${runId}`)
+            endpoint.get(`/tutor/threads/${threadId}/runs/${runId}`)
             .then(response => {
                 const returned_run = response.data;
                 if (returned_run.id !== runId) return;
                 if (["completed", "cancelled", "failed", "expired"].includes(returned_run.status)) {
                     setRunId(undefined);
                     if (returned_run.status === "completed") {
-                        tempChatHandlerEndpoint.get(`/threads/${threadId}/messages`)
+                        endpoint.get(`/tutor/threads/${threadId}/messages`)
                         .then(response => {
                             const latestMessages = response.data.data.slice().reverse();
                             setMessages(latestMessages.map((message: any) => ({
@@ -80,8 +80,8 @@ export function ChatWindow() {
         // Optimistically add the message to the list of messages
         setMessages([...messages, {content: currentMessageContent, sender: "user"}]);
 
-        tempChatHandlerEndpoint.post(`/threads/${threadId}/messages`, { content: currentMessageContent, role: "user" })
-        .then(response => { setRunId(response.data); })
+        endpoint.post(`/tutor/threads/${threadId}/messages`, { content: currentMessageContent, role: "user" })
+        .then(response => { setRunId(response.data.id); })
         .catch(error => { setChatError(error.message); });
 
         setCurrentMessageContent("");
