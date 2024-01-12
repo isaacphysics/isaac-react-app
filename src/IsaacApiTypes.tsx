@@ -730,6 +730,10 @@ export interface AnsweredQuestionsByDate {
     [date: string]: number;
 }
 
+export interface AnsweredQuestionsIds {
+    questionIds?: string[];
+}
+
 export interface TOTPSharedSecretDTO {
     userId: number;
     sharedSecret: string;

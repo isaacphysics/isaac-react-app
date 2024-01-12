@@ -173,7 +173,10 @@ export const api = {
                     "to_date": toDate,
                     "per_day": perDay
                 }
-            })
+            });
+        },
+        answeredQuestionIds: (userId: number | string): AxiosPromise<ApiTypes.AnsweredQuestionsIds> => {
+            return endpoint.get(`/questions/answered_question_ids/${userId}`);
         },
         testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
             return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});

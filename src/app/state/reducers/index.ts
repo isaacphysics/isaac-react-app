@@ -18,6 +18,7 @@ import {
     myProgress,
     userAnsweredQuestionsByDate,
     userProgress,
+    myAnsweredQuestionsIds,
     testQuestions,
     quizAttempt,
     groupMemberships,
@@ -63,6 +64,7 @@ export const rootReducer = combineReducers({
     myAnsweredQuestionsByDate,
     userProgress,
     userAnsweredQuestionsByDate,
+    myAnsweredQuestionsIds,
 
     // Admin
     adminUserSeach: adminUserSearchSlice.reducer,

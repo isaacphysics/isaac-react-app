@@ -37,6 +37,7 @@ export const selectors = {
         snapshot: (state: AppState) => state?.myProgress?.userSnapshot,
         achievementsRecord: (state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord,
         answeredQuestionsByDate: (state: AppState) => state?.myAnsweredQuestionsByDate,
+        answeredQuestionsIds: (state: AppState) => state?.myAnsweredQuestionsIds,
         preferences: (state: AppState) => state?.userPreferences
     },
 

@@ -584,6 +584,17 @@ export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: 
     }
 };
 
+export const getMyAnsweredQuestionIds = (userId: number | string) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_IDS_REQUEST});
+    try {
+        const myAnsweredQuestionIds = await api.questions.answeredQuestionIds(userId);
+        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_IDS_RESPONSE_SUCCESS, myAnsweredQuestionsIds: myAnsweredQuestionIds.data});
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_IDS_RESPONSE_FAILURE});
+        dispatch(showAxiosErrorToastIfNeeded("Failed to get my answered question ids", e));
+    }
+};
+
 export const getUserAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST});
     try {
