@@ -94,6 +94,7 @@ $question-font-weight: 600;
 @import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 @import "~billboard.js/dist/theme/insight.css";
 @import "~leaflet/dist/leaflet.css";
+@import "~reactflow/dist/style.css";
 
 @import "../common/isaac";
 
@@ -162,6 +163,7 @@ $question-font-weight: 600;
 @import "menu-page-phy";
 @import "quiz";
 @import "glossary";
+@import "concept-map";
 
 @import "parsons-layout";
 @import "../common/callout";

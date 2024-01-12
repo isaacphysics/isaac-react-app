@@ -79,6 +79,7 @@ import {AssignmentProgress} from "../pages/AssignmentProgress";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
+import { ConceptMap } from '../pages/ConceptMap';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -157,7 +158,8 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                         <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute exact path="/questions/:questionId" component={Question} />
-                        <TrackedRoute exact path="/glossary" component={Glossary} />,
+                        <TrackedRoute exact path="/glossary" component={Glossary} />
+                        <TrackedRoute exact path="/concept_map" component={ConceptMap} />
 
                         <TrackedRoute exact path={PATHS.GAMEBOARD} component={Gameboard} />
                         <TrackedRoute exact path={PATHS.GAMEBOARD_BUILDER} ifUser={isTutorOrAbove} component={GameboardBuilder} />

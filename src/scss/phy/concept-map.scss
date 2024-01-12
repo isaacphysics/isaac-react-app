@@ -1,0 +1,132 @@
+$concept-map-opacity : 0.2;
+// todo: fix massive over-scoping
+
+.concept-map-node {
+    border-radius: 50%;
+    padding: 14px;
+    height: 40px; 
+    width: 40px; 
+    text-align: center;
+    background-color: #ccc;
+    opacity: $concept-map-opacity;
+
+    &.physics-node {
+        background-color: $phy_physics;
+    }
+    
+    &.maths-node {
+        background-color: $phy_maths;
+    }
+    
+    &.chemistry-node {
+        background-color: $phy_chemistry;
+    }
+    
+    &.biology-node {
+        background-color: $phy_biology;
+    }
+
+    &:hover:not(.active) {
+        opacity: 0.9;
+    }
+
+    &.active {
+        opacity: 1;
+    }
+
+    &.active::before {
+        position: absolute;
+        content: '';
+        width: calc(100% + 6px);
+        height: calc(100% + 6px);
+        border: 3px dashed #000;
+        border-radius: 50%;
+        left: -3px;
+        top: -3px;
+        animation: border-dance 10s infinite linear;
+
+        @keyframes border-dance {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    }
+
+    &.adjacent {
+        opacity: 0.6;
+    }
+
+    &.answered {
+        opacity: 1;
+    }
+}
+
+.react-flow__edge-path:not(.active), .react-flow__handle:not(.active) {
+    opacity: calc(2 * $concept-map-opacity);
+}
+
+.react-flow .react-flow__handle {
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    visibility: hidden;
+  }
+
+.concept-map-text-container {
+    position: relative;
+    width: calc(200% + 100px); 
+    height: 100%;
+    z-index: 1000;
+    margin-left: calc(-50% - 50px);
+    border-radius: 10px;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.concept-map-bounding-box {
+    width: 100%;
+    height: 80vh;
+    background-color: #fff;
+}
+
+.concept-map-related-content {
+    display: flex;
+    height: 80%;
+    flex-direction: column;
+    padding: 20px;
+    border-left: 1px solid #ccc;
+
+    .related-content-container {
+        flex-grow: 1;
+        overflow: auto;
+    }
+}
+
+.concept-map-side-help-text {
+    text-align: center;
+    color: $text-muted;
+}
+
+.concept-map-filters {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+
+    .concept-map-filter {
+        margin-bottom: 10px;
+    }
+}
+
+.concept-map-suggested-content {
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+}
