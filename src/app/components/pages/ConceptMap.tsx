@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Col, Container, Input, Row } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import ReactFlow, { Background, BackgroundVariant, Controls, Edge, Handle, Node, NodeChange, NodeProps, Position, applyNodeChanges } from "reactflow";
+import ReactFlow, { Background, BackgroundVariant, Controls, Edge, Handle, MiniMap, Node, NodeChange, NodeProps, Position, applyNodeChanges } from "reactflow";
 import { SimulationNodeDatum, forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY } from "d3";
 import { Link } from "react-router-dom";
 import { getMyAnsweredQuestionIds, selectors, useAppDispatch, useAppSelector } from "../../state";
@@ -408,7 +408,7 @@ export const ConceptMap = () => {
                         }} 
                     >
                         <Controls />
-                        {/* <MiniMap /> */}
+                        <MiniMap />
                         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
                     </ReactFlow>
                 </div>
@@ -449,11 +449,11 @@ export const ConceptMap = () => {
                         </div>
                         <div className="ml-4">
                             <Input type="checkbox" disabled={!filterByProgress} id="only-answered-filter" name="only-answered-filter" onChange={() => setShowOnlyAnswered(a => !a)} className="mr-1" checked={showOnlyAnswered}/>
-                            <label htmlFor="only-answered-filter">Only show your answered questions</label>
+                            <label htmlFor="only-answered-filter" className={!filterByProgress ? "text-muted" : ""}>Only show your answered questions</label>
                         </div>
                         <div className="ml-4">
                             <Input type="checkbox" disabled={true} id="bidirectional-filter" name="bidirectional-filter" onChange={() => setBidirectionalConceptRelations(b => !b)} className="mr-1" checked={bidirectionalConceptRelations}/>
-                            <label htmlFor="bidirectional-filter">Bidirectional concept relations</label>
+                            <label htmlFor="bidirectional-filter" className="text-muted">(todo) Bidirectional concept relations</label>
                         </div>
                         
                     </div>
@@ -462,7 +462,7 @@ export const ConceptMap = () => {
         </Row>
         <Row className="concept-map-suggested-content">
             <Col>
-                <h3>Suggested Content</h3>
+                <h3 className="mt-2">Suggested Content</h3>
                 {/* 
                     "revise a topic" -> suggest a question page that's:
                          - not in the user's question attempts
