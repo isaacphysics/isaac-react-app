@@ -62,6 +62,14 @@ module.exports = (env) => {
                             include: /node_modules/,
                             type: 'javascript/auto'
                         },
+                        { 
+                            test: /\.css$/, 
+                            use: [
+                                {
+                                    loader: 'css-loader'
+                                }
+                            ]
+                        },
                         {
                             test: /\.[jt]sx?$/,
                             exclude: /node_modules/,
@@ -88,7 +96,7 @@ module.exports = (env) => {
                             ].concat(isProd ? [removeTestPropsLoader] : []),
                         },
                         {
-                            test: /node_modules[\/\\](query-string|split-on-first|strict-uri-encode|d3.*)[\/\\].*\.js$/,
+                            test: /node_modules[\/\\](query-string|split-on-first|strict-uri-encode)[\/\\].*\.js$/,
                             use: [
                                 {
                                     loader: 'babel-loader',
