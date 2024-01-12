@@ -5,6 +5,7 @@ import { Button, Card, CardBody, Row } from "reactstrap";
 import classnames from "classnames";
 import { IsaacContent } from "../../content/IsaacContent";
 import { IsaacQuestionPageDTO } from "../../../../IsaacApiTypes";
+import ReactGA from "react-ga4";
 
 const GoToQuestionFinder = () => (
   <div className="p-2 text-center">
@@ -12,7 +13,16 @@ const GoToQuestionFinder = () => (
       <strong>All done! Want more questions?</strong>
     </h3>
     <Row className="w-75 mx-auto mt-4 mb-3">
-      <Button href="/gameboards/new" className="btn-block btn-lg btn-primary">
+      <Button
+        href="/gameboards/new"
+        className="btn-block btn-lg btn-primary"
+        onClick={() =>
+          ReactGA.event({
+            action: "question_finder",
+            category: "go to question finder click",
+          })
+        }
+      >
         Go to Question Finder
       </Button>
     </Row>
@@ -40,7 +50,13 @@ const QuestionCard = ({ setExpanded, questionData }: QuestionCardProps) => {
         {moreQuestionsAvailable && (
           <Button
             className="next-question bg-transparent border-0 btn-link"
-            onClick={() => setQuestionIndex(questionIndex + 1)}
+            onClick={() => {
+              ReactGA.event({
+                action: "question_finder",
+                category: "next question click",
+              });
+              setQuestionIndex(questionIndex + 1);
+            }}
           >
             Next question
           </Button>
