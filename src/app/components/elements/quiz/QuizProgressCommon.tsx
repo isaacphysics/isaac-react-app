@@ -222,7 +222,11 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                     {fullAccess && pageSettings.isTeacher ?
                                         (
                                             isQuiz ?
-                                            <>
+                                            <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
+                                                {studentProgress.user.givenName}
+                                                <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                            </Link>
+                                            : <>
                                                 <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
                                                     <div
                                                         className="quiz-student-name"
@@ -245,10 +249,6 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                                     </div>
                                                 </>}
                                             </>
-                                            : <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
-                                                {studentProgress.user.givenName}
-                                                <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
-                                            </Link>
                                         ) :
                                         <span>{studentProgress.user.givenName} {studentProgress.user.familyName}</span>
                                     }
