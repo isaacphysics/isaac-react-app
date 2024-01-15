@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {ComponentProps, useCallback, useEffect, useState} from "react";
 import {selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import * as RS from 'reactstrap';
@@ -65,6 +65,7 @@ const PhyTable = (props: GameboardsTableProps) => {
         boardCompletion, setBoardCompletion, boardCreator, setBoardCreator,
         boardOrder, setBoardOrder
     } = props;
+
     return <>
         <Row>
             <Col sm={4} lg={3}>
@@ -195,6 +196,60 @@ const CSTable = (props: GameboardsTableProps) => {
         boardCompletion, setBoardCompletion, boardCreator, setBoardCreator,
         boardOrder, setBoardOrder
     } = props;
+
+    // TODO: Better method, similar to QuizProgressCommon
+    function toggleSort(itemOrder: BoardOrder, reverseOrder: BoardOrder) {
+        if (boardOrder === itemOrder) {
+            setBoardOrder(reverseOrder);
+        } else {
+            setBoardOrder(itemOrder);
+        }
+    }
+
+    function sortClass(itemOrder: BoardOrder, reverseOrder: BoardOrder) {
+        if (boardOrder === itemOrder) {
+            return " sorted forward";
+        } else if (boardOrder === reverseOrder) {
+            return " sorted reverse";
+        } else {
+            return "";
+        }
+    }
+
+    function sortItem(props: ComponentProps<"th"> & {title: string, itemOrder: BoardOrder, reverseOrder: BoardOrder}) {
+        const {title, itemOrder, reverseOrder, ...rest} = props;
+        const className = (props.className || "") + sortClass(itemOrder, reverseOrder);
+        const sortArrows = <button className="sort" onClick={() => {toggleSort(itemOrder, reverseOrder);}}>
+                <span className="up">▲</span>
+                <span className="down">▼</span>
+            </button>;
+        return <th key={props.key} {...rest} className={className}>{title}{sortArrows}</th>;
+    }
+
+    const tableHeader = <tr className="my-gameboard-table-header">
+        {sortItem({key: "completion", title: "Completion", className: "completion-column", itemOrder: BoardOrder.completion, reverseOrder: BoardOrder["-completion"]})}
+        {sortItem({colSpan: 4, key: "title", title: "Quiz name", className: "title-column", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]})}
+        <th colSpan={2} className="long-titled-col">
+            Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
+            <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+                Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
+            </RS.UncontrolledTooltip>
+        </th>
+        <th>Creator</th>
+        {sortItem({key: "created", title: "Created", className: "created-column", itemOrder: BoardOrder.created, reverseOrder: BoardOrder["-created"]})}
+        {sortItem({key: "visited", title: "Last viewed", className: "visited-column", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]})}
+        <th>Share</th>
+        <th>
+            {selectedBoards.length
+                ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
+                    Delete ({selectedBoards.length})
+                </Button>
+                : "Delete"
+            }
+        </th>
+    </tr>;
+
     return <div className={"mb-5 mb-md-6 mt-4"}>
         <Row>
             <Col xs={6} md={3} xl={2}>
@@ -226,45 +281,7 @@ const CSTable = (props: GameboardsTableProps) => {
         </Row>
         <Table className="mt-3 my-gameboard-table" responsive>
             <thead>
-            <tr>
-                <th>
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.completion ? setBoardOrder(BoardOrder["-completion"]) : setBoardOrder(BoardOrder.completion)}>
-                        Completion {boardOrder == BoardOrder.completion ? sortIcon.ascending : boardOrder == BoardOrder["-completion"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
-                <th colSpan={4} className="w-100">
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
-                        Quiz name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
-                <th colSpan={2} className="long-titled-col">
-                    Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
-                    <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                        Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
-                        Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
-                    </RS.UncontrolledTooltip>
-                </th>
-                <th>Creator</th>
-                <th>
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
-                        Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
-                <th>
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
-                        Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
-                <th>Share</th>
-                <th>
-                    {selectedBoards.length
-                        ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
-                            Delete ({selectedBoards.length})
-                        </Button>
-                        : "Delete"
-                    }
-                </th>
-            </tr>
+                {tableHeader}
             </thead>
             <tbody>
             {boards?.boards
