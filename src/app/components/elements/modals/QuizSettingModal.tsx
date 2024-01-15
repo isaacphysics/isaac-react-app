@@ -46,7 +46,7 @@ interface QuizSettingModalProps {
     feedbackMode?: QuizFeedbackMode | null;
 }
 
-export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
+export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
     const user = useAppSelector(selectors.user.loggedInOrNull);
@@ -88,7 +88,7 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
 
     const groupInvalid = validated.has('group') && selectedGroups.length === 0;
     const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false) || dueDate.valueOf() < Date.now());
-    const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() <= TODAY().valueOf();
+    const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() < TODAY().valueOf();
     const feedbackModeInvalid = validated.has('feedbackMode') && feedbackMode === null;
 
     const scheduledQuizHelpTooltipId = "scheduled-quiz-help-tooltip";
@@ -139,7 +139,7 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
             />
             {feedbackModeInvalid && <FormFeedback className="d-block" valid={false}>You must select a feedback mode</FormFeedback>}
         </Label>
-        {allowedToSchedule && <Label className="w-100 mb-4">Set an optional start date:<span id={scheduledQuizHelpTooltipId} className="icon-help"/><br/>
+        <Label className="w-100 mb-4">Set an optional start date:<span id={scheduledQuizHelpTooltipId} className="icon-help"/><br/>
             <DateInput value={scheduledStartDate ?? undefined} invalid={scheduledStartDateInvalid || undefined}
                        yearRange={yearRange}
                        onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate)}
@@ -149,12 +149,12 @@ export function QuizSettingModal({allowedToSchedule, quiz, dueDate: initialDueDa
                 The test will be visible to students from this date onwards.<br/>
                 If you do not set a start date, the test will be visible immediately.
             </UncontrolledTooltip>
-            {scheduledStartDateInvalid && <small className={"pt-2 text-danger"}>Start date must be today, or in the future.</small>}
-        </Label>}
+            {scheduledStartDateInvalid && <small className={"pt-2 text-danger"}>Start date must be today or in the future.</small>}
+        </Label>
         <Label className="w-100 mb-4">Set an optional due date:<br/>
             <DateInput invalid={dueDateInvalid || undefined} value={dueDate ?? undefined} yearRange={yearRange}
                        onChange={(e) => setDueDate(e.target.valueAsDate)}/>
-            {dueDateInvalid && <small className={"pt-2 text-danger"}>{allowedToSchedule ? "Due date must be on, or after the start date." : "Due date must be after today."}</small>}
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>{dueDate.valueOf() > TODAY().valueOf() ? "Due date must be on or after the start date." : `Due date must be after today.`}</small>}
         </Label>
 
         <div className="w-100">

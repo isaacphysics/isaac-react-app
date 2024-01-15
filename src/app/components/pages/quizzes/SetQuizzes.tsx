@@ -21,7 +21,7 @@ import {
     isAda,
     isDefined,
     isEventLeaderOrStaff,
-    isPhy, isStaff, KEY,
+    isPhy, KEY,
     MANAGE_QUIZ_TAB,
     nthHourOf, persistence,
     siteSpecific,
@@ -171,9 +171,9 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
             </td>}
             <td className={classNames("set-quiz-table-title align-middle ", {"pl-4": isAda})}>{quizTitle}</td>
             <td className="align-middle pr-0 d-none d-sm-table-cell">
-                <RS.Button className={`d-block h-4 ${below["sm"](deviceSize) ? "btn-sm" : ""}`}
+                <RS.Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
                     onClick={(e) => {
-                        assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary, isStaff(user)));
+                        assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
                         e.stopPropagation();
                     }}
                 >
@@ -247,6 +247,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
             (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) ||
             MANAGE_QUIZ_TAB.set;
         setActiveTab(tab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hashAnchor]);
 
     const {titleFilter, setTitleFilter, filteredQuizzes} = useFilteredQuizzes(user);
@@ -350,7 +351,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                     </div>
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
-                                    <RS.Button className={`d-none d-md-block h-4  ${below["md"](deviceSize) ? "btn-sm" : ""}`} onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))}>
+                                    <RS.Button className={`d-none d-md-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`} onClick={() => dispatch(showQuizSettingModal(quiz))}>
                                         {siteSpecific("Set Test", "Set test")}
                                     </RS.Button>
                                 </div>
@@ -359,7 +360,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                         Actions
                                     </RS.DropdownToggle>
                                     <RS.DropdownMenu>
-                                            <RS.DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz, isStaff(user)))} style={{zIndex: '1'}}>
+                                            <RS.DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz))} style={{zIndex: '1'}}>
                                                 {siteSpecific("Set Test", "Set test")}
                                             </RS.DropdownItem>
                                             <RS.DropdownItem divider />
