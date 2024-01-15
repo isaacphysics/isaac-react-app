@@ -19,6 +19,8 @@ import {
     isAda,
     isLoggedIn,
     isPhy,
+    isTeacherOrAbove,
+    isVerified,
     KEY,
     persistence,
     QUESTION_TYPES,
@@ -115,7 +117,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 }
 
                 dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt, currentGameboard?.id));
-                if (isLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+                const requiresVerification = isAda ? isTeacherOrAbove(currentUser) && !isVerified(currentUser) : false;
+                if (isLoggedIn(currentUser) && !requiresVerification && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
                     dispatch(saveGameboard({
                         boardId: currentGameboard.id,
                         user: currentUser,
