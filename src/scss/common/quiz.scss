@@ -24,6 +24,14 @@
         width: 9px;
       }
     }
+
+    .set-quiz-button-md {
+      min-width: 140px;
+    }
+
+    .set-quiz-button-sm {
+      min-width: 90px;
+    }
   }
 }
 
@@ -79,4 +87,92 @@
 
 .quiz-filter-date-span {
   font-size: 1.111rem;
+}
+
+.set-quiz-table-inner {
+  background: $gray-103;
+  table-layout: fixed;
+
+  tbody tr td {
+    padding: 0.25rem;
+    vertical-align: middle;
+  }
+
+  thead tr th {
+    user-select: none;
+    vertical-align: middle;
+    
+    .sort {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.5rem;
+      margin-left: 4px;
+      margin-top: 3px;
+
+      span {
+        color: #bbb;
+      }
+
+      .up {
+        margin-bottom: -4px;
+      }
+
+      .active {
+        color: #333;
+      }
+    }
+  }
+}
+
+.set-quiz-table-title {
+  height: 86px;
+  font-size: 1.25rem;
+  font-family: $secondary-font-medium;
+}
+
+.set-quiz-table-group-hex {
+  font-size: 12pt;
+  line-height: 110%;
+  font-weight: bold;
+  z-index: 10;
+  top: 28px;
+  left: 0.7rem;
+  color: #fff;
+  text-align: center;
+  strong {
+    display: block;
+    font-size: 20pt;
+    font-weight: 600;
+    padding-bottom: 4px;
+    margin-top: -6px;
+  }
+}
+
+.set-quiz-table-dropdown {
+  cursor: pointer;
+  user-select: none;
+  
+  .dropdown-arrow {
+    content: "";
+    background-image: url('/assets/chevron_down.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 20px;
+    height: 10px;
+    margin-right: 1rem;
+    margin-top: auto;
+    margin-bottom: auto;
+
+    &.active {
+        background-image: url('/assets/chevron_up.svg');
+    }
+  }
+
+  button {
+    min-width: 150px !important;
+  
+    &.btn-sm {
+      min-width: 100px !important;
+    }
+  }
 }
