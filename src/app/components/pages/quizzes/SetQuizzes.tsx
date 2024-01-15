@@ -26,6 +26,7 @@ import {
     MANAGE_QUIZ_TAB,
     nthHourOf, persistence,
     siteSpecific,
+    tags,
     TODAY,
     useDeviceSize,
     useFilteredQuizzes
@@ -136,7 +137,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
     );
 
     const determineQuizSubjects = (quizSummary?: QuizSummaryDTO) => {
-        return quizSummary?.tags?.filter(tag => ["physics", "chemistry", "maths", "biology"].includes(tag.toLowerCase())).reduce((acc, tag) => acc + `subject-${tag.toLowerCase()} `, "");
+        return quizSummary?.tags?.filter(tag => tags.allSubjectTags.map(t => t.id.valueOf()).includes(tag.toLowerCase())).reduce((acc, tag) => acc + `subject-${tag.toLowerCase()} `, "");
     };
 
     const subjects = determineQuizSubjects(assignment.quizSummary) || "subject-physics";
@@ -218,7 +219,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                         {conditionalReverse(assignedGroups.sort(currentSort)).map(assignedGroup => {
                         const assignmentNotYetStarted = assignedGroup.assignment?.scheduledStartDate && nthHourOf(0, assignedGroup.assignment?.scheduledStartDate) > TODAY();
                         return <tr key={assignedGroup.group}>
-                            <td className="text-center">{assignedGroup.group}</td>
+                            <td className="text-center text-break">{assignedGroup.group}</td>
                             {above["md"](deviceSize) ? <td className="text-center">{formatDate(assignedGroup.assignment.creationDate)}</td> : <></>}
                             <td className="text-center">{formatDate(assignedGroup.assignment.scheduledStartDate ?? assignedGroup.assignment.creationDate)}</td>
                             {above["sm"](deviceSize) ? 
@@ -319,7 +320,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </RS.Row>;
 
     const dateFilterTypeSelector = (dateFilterType: string, setDateFilterType: React.Dispatch<React.SetStateAction<string>>) => <RS.UncontrolledDropdown className={classNames("quiz-date-filter-type", rowFiltersView ? "mb-4" : "mb-2")}>
-        <RS.DropdownToggle className="p-0 m-1" color="tertiary" caret>{dateFilterType}</RS.DropdownToggle>
+        <RS.DropdownToggle className="p-0 m-1 bg-transparent" color="tertiary" caret>{dateFilterType}</RS.DropdownToggle>
         <RS.DropdownMenu>
             <RS.DropdownItem onClick={() => setDateFilterType('after')}>
                 after
