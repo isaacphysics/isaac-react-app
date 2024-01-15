@@ -66,6 +66,59 @@ const PhyTable = (props: GameboardsTableProps) => {
         boardOrder, setBoardOrder
     } = props;
 
+    // TODO: Better method, similar to QuizProgressCommon
+    function toggleSort(itemOrder: BoardOrder, reverseOrder: BoardOrder) {
+        if (boardOrder === itemOrder) {
+            setBoardOrder(reverseOrder);
+        } else {
+            setBoardOrder(itemOrder);
+        }
+    }
+
+    function sortClass(itemOrder: BoardOrder, reverseOrder: BoardOrder) {
+        if (boardOrder === itemOrder) {
+            return " sorted forward";
+        } else if (boardOrder === reverseOrder) {
+            return " sorted reverse";
+        } else {
+            return "";
+        }
+    }
+
+    function sortItem(props: ComponentProps<"th"> & {title: string, itemOrder: BoardOrder, reverseOrder: BoardOrder}) {
+        const {title, itemOrder, reverseOrder, ...rest} = props;
+        const className = (props.className || "text-center align-middle") + sortClass(itemOrder, reverseOrder);
+        const sortArrows = <button className="sort physics" onClick={() => {toggleSort(itemOrder, reverseOrder);}}>
+                <span className="up">▲</span>
+                <span className="down">▼</span>
+            </button>;
+        return <th key={props.key} {...rest} className={className}>{title}{sortArrows}</th>;
+    }
+
+    const tableHeader = <tr className="my-gameboard-table-header">
+        {sortItem({key: "completion", title: "Completion", itemOrder: BoardOrder.completion, reverseOrder: BoardOrder["-completion"]})}
+        {sortItem({key: "title", title: "Board name", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]})}
+        <th className="text-center align-middle">Stages</th>
+        <th className="text-center align-middle" style={{whiteSpace: "nowrap"}}>
+            Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
+            <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+                Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
+            </RS.UncontrolledTooltip>
+        </th>
+        <th className="text-center align-middle">Creator</th>
+        {sortItem({key: "created", title: "Created", itemOrder: BoardOrder.created, reverseOrder: BoardOrder["-created"]})}
+        {sortItem({key: "visited", title: "Last viewed", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]})}
+        <th className="text-center align-middle">Share</th>
+        <th colSpan={2}>
+            <div className="text-right align-middle">
+                <Button disabled={selectedBoards.length == 0} size="sm" color="link" onClick={confirmDeleteMultipleBoards}>
+                    {`Delete (${selectedBoards.length})`}
+                </Button>
+            </div>
+        </th>
+    </tr>;
+
     return <>
         <Row>
             <Col sm={4} lg={3}>
@@ -124,45 +177,7 @@ const PhyTable = (props: GameboardsTableProps) => {
                 <div className="overflow-auto mt-3">
                     <Table className="mb-0">
                         <thead>
-                        <tr>
-                            <th className="align-middle pointer-cursor">
-                                <button className="table-button" onClick={() => boardOrder == BoardOrder.completion ? setBoardOrder(BoardOrder["-completion"]) : setBoardOrder(BoardOrder.completion)}>
-                                    Completion {boardOrder == BoardOrder.completion ? sortIcon.ascending : boardOrder == BoardOrder["-completion"] ? sortIcon.descending : sortIcon.sortable}
-                                </button>
-                            </th>
-                            <th className="align-middle pointer-cursor">
-                                <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
-                                    Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
-                                </button>
-                            </th>
-                            <th className="text-center align-middle">Stages</th>
-                            <th className="text-center align-middle" style={{whiteSpace: "nowrap"}}>
-                                Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
-                                <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                                    Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
-                                    Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
-                                </RS.UncontrolledTooltip>
-                            </th>
-                            <th className="text-center align-middle">Creator</th>
-                            <th className="text-center align-middle pointer-cursor">
-                                <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
-                                    Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
-                                </button>
-                            </th>
-                            <th className="text-center align-middle pointer-cursor">
-                                <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
-                                    Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
-                                </button>
-                            </th>
-                            <th className="text-center align-middle">Share</th>
-                            <th colSpan={2}>
-                                <div className="text-right align-middle">
-                                    <Button disabled={selectedBoards.length == 0} size="sm" color="link" onClick={confirmDeleteMultipleBoards}>
-                                        {`Delete (${selectedBoards.length})`}
-                                    </Button>
-                                </div>
-                            </th>
-                        </tr>
+                            {tableHeader}
                         </thead>
                         <tbody>
                         {boards?.boards
