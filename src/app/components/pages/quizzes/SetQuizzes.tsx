@@ -223,30 +223,36 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                             {above["md"](deviceSize) ? <td className="text-center">{formatDate(assignedGroup.assignment.creationDate)}</td> : <></>}
                             <td className="text-center">{formatDate(assignedGroup.assignment.scheduledStartDate ?? assignedGroup.assignment.creationDate)}</td>
                             {above["sm"](deviceSize) ? 
-                                <td>
-                                    <div className={`d-flex flex-${below["md"](deviceSize) ? "column" : "row"} justify-content-center align-items-center`}>
-                                        {assignedGroup.assignment.dueDate ? <>
-                                            <span>{formatDate(assignedGroup.assignment.dueDate)}</span>
-                                            <RS.Button color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignment?.dueDate} className="p-0 bg-transparent" onClick={() => {
-                                                setSelectedQuiz(assignedGroup.assignment);
-                                                setIsModalOpen(true);
-                                            }}>
-                                                (extend)
-                                            </RS.Button>
-                                        </> : "-"}
-                                    </div>
+                                <td className="text-center">
+                                    {assignedGroup.assignment.dueDate ? <>
+                                        <span>{formatDate(assignedGroup.assignment.dueDate)}</span>
+                                    </> : "-"}
                                 </td> :
                                 <></>
                             }
-                            <td className="text-right">
-                                <RS.Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className={`px-1 bg-transparent text-center ${below["md"](deviceSize) ? "btn-collapsed" : ""}`}>
+                            <td className={isPhy ? "text-right" : "text-center"}>
+                                <RS.Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className={`px-1 bg-transparent text-center ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`}>
                                     View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
                                 </RS.Button>
                             </td>
-                            <td>
-                                <RS.Button color="tertiary" size="sm" onClick={cancel} disabled={isCancelling} className={`px-1 bg-transparent text-center ${below["md"](deviceSize) ? "btn-collapsed" : ""}`}>
-                                    {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
-                                </RS.Button>
+
+                            <td className={isPhy ? "text-left" : "text-center"}>
+                                <RS.UncontrolledButtonDropdown>
+                                    <RS.DropdownToggle caret className={`text-nowrap ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`} size="sm" color="link">
+                                        More
+                                    </RS.DropdownToggle>
+                                    <RS.DropdownMenu>
+                                        <RS.DropdownItem color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignment?.dueDate} onClick={() => {
+                                            setSelectedQuiz(assignedGroup.assignment);
+                                            setIsModalOpen(true);
+                                        }}>
+                                            Extend Due Date
+                                        </RS.DropdownItem>
+                                        <RS.DropdownItem color="tertiary" size="sm" onClick={cancel} disabled={isCancelling}>
+                                            {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
+                                        </RS.DropdownItem>
+                                    </RS.DropdownMenu>
+                                </RS.UncontrolledButtonDropdown>
                             </td>
                         </tr>;
                         })}
