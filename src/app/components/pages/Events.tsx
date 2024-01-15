@@ -207,17 +207,19 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
           </div>
         </RS.Container>
       </div>
-      <Banner
-        id="teacher-courses"
-        title="Computing events for teachers"
-        subtitle="Looking for teacher events?"
-        link="https://teachcomputing.org/courses"
-        imageSource="/assets/ncce-teachers.png"
-        imageDescription="teachers on a course"
-        color="secondary"
-      >
-        <TeacherEventsDescription />
-      </Banner>
+      {isTeacherOrAbove(user) && (
+        <Banner
+          id="teacher-courses"
+          title="Computing events for teachers"
+          subtitle="Looking for teacher events?"
+          link="https://teachcomputing.org/courses"
+          imageSource="/assets/ncce-teachers.png"
+          imageDescription="teachers on a course"
+          color="secondary"
+        >
+          <TeacherEventsDescription />
+        </Banner>
+      )}
     </>
   );
 });
