@@ -67,14 +67,14 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
 
     return <CardBody className="pt-0 px-0">
         <Row>
-            <Col xs={{size: 6, offset: 3}} className="px-4">
+            <Col xs={{size: 8, offset: 2}} lg={{size: 6, offset: 3}} className="px-4">
                 <hr className="text-center" />
                 <h4>Two-factor Authentication (2FA)</h4>
             </Col>
         </Row>
         {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
             <Row>
-                <Col xs={{size: 6, offset: 3}} className="px-4">
+                <Col xs={{size: 8, offset: 2}} lg={{size: 6, offset: 3}} className="px-4">
                     <Row>
                         <Col>
                             <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Input, InputProps } from "reactstrap";
 import { v4 } from "uuid";
 import { Spacer } from "../Spacer";
-
+import { isPhy } from "../../../services";
 
 export interface StyledCheckboxProps extends InputProps {
     initialValue: boolean;
@@ -20,7 +20,7 @@ export const StyledCheckbox = ({initialValue, ...props} : StyledCheckboxProps) =
                 setChecked(c => !c);
             }}/>
         </div>
-        {props.label && <label htmlFor={id} {...props.label.props}/>}
+        {props.label && <label htmlFor={id} className={isPhy ? "pt-1" : ""} {...props.label.props}/>}
         <Spacer/>
     </div>;
 };
