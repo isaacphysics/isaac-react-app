@@ -106,7 +106,11 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const updateState = (state: any) => {
         const newState = sanitiseInequalityState(state);
         const pythonExpression = newState?.result?.python || "";
-        dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
+        if (state.userInput !== "" || modalVisible) {
+            // Only call dispatch if the user has inputted text or is interacting with the modal
+            // Otherwise this causes the response to reset on reload removing the banner
+            dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
+        }
         initialEditorSymbols.current = state.symbols;
     };
 
