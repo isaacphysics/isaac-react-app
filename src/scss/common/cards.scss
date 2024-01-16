@@ -180,14 +180,29 @@
 }
 .carousel {
   .news-card {
-    max-width: 322px;
+    max-width: 308px;
     @include respond-above(sm) {
-      margin: 1.5rem;
+      margin: 0.75rem;
     }
-    @include respond-below(sm) {
-      left: 50%;
-      transform: translate(-50%);
+    &:first-of-type {
+      margin-left: 1.75rem;
     }
+    &:last-of-type {
+      margin-right: 1.75rem;
+    }
+
+    a img {
+      height: 180px;
+      object-fit: cover;
+    }
+  }
+  .news-card-text p {
+    max-height: 182px;
+    overflow: hidden;
+    // truncates longer news text with ... at the end. if not supported (IE + Opera Mini at time of writing), overflow still hidden.
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
   }
 }
 .news-card + a,
