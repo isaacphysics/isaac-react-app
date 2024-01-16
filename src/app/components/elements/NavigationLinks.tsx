@@ -41,7 +41,7 @@ export const NavigationLinks = ({ navigation }: { navigation: PageNavigation }) 
 
   return (
     <>
-      <div className="mt-4 d-flex justify-content-between align-items-stretch no-print">
+      <div className="mt-4 mt-md-5 d-flex justify-content-between align-items-stretch no-print">
         {previousItemLink}
         <span className={threeLinks ? "d-none d-xl-block" : ""}>{backToCollectionLink}</span>
         {nextItemLink}
