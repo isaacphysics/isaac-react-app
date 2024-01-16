@@ -4,7 +4,8 @@ import {
     useAppDispatch,
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
-    useCancelQuizAssignmentMutation
+    useCancelQuizAssignmentMutation,
+    useUpdateQuizAssignmentMutation
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -37,6 +38,7 @@ import {PageFragment} from "../../elements/PageFragment";
 import {RenderNothing} from "../../elements/RenderNothing";
 import { useHistoryState } from "../../../state/actions/history";
 import classNames from "classnames";
+import { ExtendDueDateModal } from "../../elements/modals/ExtendDueDateModal";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -101,6 +103,9 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
     const [reverseSort, setReverseSort] = useState(false);
     const [selectedCol, setSelectedCol] = useState<string | undefined>(undefined);
     const [markQuizAsCancelled, {isLoading: isCancelling}] = useCancelQuizAssignmentMutation();
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [selectedQuiz, setSelectedQuiz] = useState<QuizAssignmentDTO | undefined>(undefined);
+    const [_updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
     
     if (assignedGroups.length === 0) return <></>;
 
@@ -145,6 +150,12 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
     ].filter(isDefined);
     
     return <>
+        {selectedQuiz && selectedQuiz.dueDate && <ExtendDueDateModal
+            isOpen={isModalOpen}
+            toggle={() => setIsModalOpen(false)}
+            currDueDate={selectedQuiz.dueDate}
+            numericQuizAssignmentId={selectedQuiz.id as number}
+        />}
         <tr className={`bg-white set-quiz-table-dropdown p-0 border-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0} 
             onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))} 
         >
@@ -192,7 +203,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                                 setSort(header.sort);
                                 setSelectedCol(header.title);
                             }} className="px-1 py-1">
-                                <div className="d-flex flex-row">
+                                <div className="d-flex flex-row justify-content-center">
                                     <span role="button" tabIndex={0} onKeyDown={ifKeyIsEnter(() => setSort(header.sort))} onClick={(e) => {
                                         e.stopPropagation();
                                         setSort(header.sort);
@@ -201,26 +212,47 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                                     <ReverseSortButtons active={(selectedCol ?? "Creation date") === header.title && currentSort.name === header.sort.name} />
                                 </div>
                             </th>)}
-                            <th className="px-1 py-1" colSpan={2}>Actions</th>
+                            <th className={`px-1 py-1 text-center ${below["md"](deviceSize) ? "actions-header-sm" : ""}`} colSpan={2}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {conditionalReverse(assignedGroups.sort(currentSort)).map(assignedGroup => {
                         const assignmentNotYetStarted = assignedGroup.assignment?.scheduledStartDate && nthHourOf(0, assignedGroup.assignment?.scheduledStartDate) > TODAY();
                         return <tr key={assignedGroup.group}>
-                            <td className="text-break">{assignedGroup.group}</td>
-                            {above["md"](deviceSize) ? <td>{formatDate(assignedGroup.assignment.creationDate)}</td> : <></>}
-                            <td>{formatDate(assignedGroup.assignment.scheduledStartDate ?? assignedGroup.assignment.creationDate)}</td>
-                            {above["sm"](deviceSize) ? <td>{assignedGroup.assignment.dueDate ? formatDate(assignedGroup.assignment.dueDate) : "-"}</td> : <></>}
-                            <td>
-                                <RS.Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className="w-100 bg-transparent">
+                            <td className="text-center text-break">{assignedGroup.group}</td>
+                            {above["md"](deviceSize) ? <td className="text-center">{formatDate(assignedGroup.assignment.creationDate)}</td> : <></>}
+                            <td className="text-center">{formatDate(assignedGroup.assignment.scheduledStartDate ?? assignedGroup.assignment.creationDate)}</td>
+                            {above["sm"](deviceSize) ? 
+                                <td className="text-center">
+                                    {assignedGroup.assignment.dueDate ? <>
+                                        <span>{formatDate(assignedGroup.assignment.dueDate)}</span>
+                                    </> : "-"}
+                                </td> :
+                                <></>
+                            }
+                            <td className={isPhy ? "text-right" : "text-center"}>
+                                <RS.Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className={`px-1 bg-transparent text-center ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`}>
                                     View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
                                 </RS.Button>
                             </td>
-                            <td>
-                                <RS.Button color="tertiary" size="sm" onClick={cancel} disabled={isCancelling} className="w-100 bg-transparent">
-                                    {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
-                                </RS.Button>
+
+                            <td className={isPhy ? "text-left" : "text-center"}>
+                                <RS.UncontrolledButtonDropdown>
+                                    <RS.DropdownToggle caret className={`text-nowrap ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`} size="sm" color="link">
+                                        More
+                                    </RS.DropdownToggle>
+                                    <RS.DropdownMenu>
+                                        <RS.DropdownItem color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignment?.dueDate} onClick={() => {
+                                            setSelectedQuiz(assignedGroup.assignment);
+                                            setIsModalOpen(true);
+                                        }}>
+                                            Extend Due Date
+                                        </RS.DropdownItem>
+                                        <RS.DropdownItem color="tertiary" size="sm" onClick={cancel} disabled={isCancelling}>
+                                            {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
+                                        </RS.DropdownItem>
+                                    </RS.DropdownMenu>
+                                </RS.UncontrolledButtonDropdown>
                             </td>
                         </tr>;
                         })}

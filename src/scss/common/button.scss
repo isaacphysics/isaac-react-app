@@ -24,6 +24,21 @@
   border-color: grey !important;
 }
 
+// When reactstrap hides the warning text
+@media (max-width:575px) {
+    .manage-tests-btns {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        text-align: center !important;
+
+        button, a {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+    }
+}
+
 // What on earth does this do and why when I remove it does it break input addon buttons?
 button {
   -webkit-appearance: none;

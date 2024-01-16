@@ -415,6 +415,7 @@ export const AssignmentScheduleContext = React.createContext<{
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;
+    completed: boolean;
     correctPartResults: number[];
     incorrectPartResults: number[];
     results: ApiTypes.GameboardItemState[];

@@ -122,6 +122,18 @@
       }
     }
   }
+
+  .actions-header-sm {
+    width: 200px;
+  }
+
+  .btn-collapsed {
+    max-width: 80px;
+  }
+
+  .btn-full {
+    min-width: 120px;
+  }
 }
 
 .set-quiz-table-title {
