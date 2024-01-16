@@ -28,6 +28,8 @@ const MONTHS = [
 ];
 
 function useWrappedState<T>(initialValue?: T) {
+    // To avoid race conditions value needs to be set and setValue needs to be used
+    // eslint-disable-next-line prefer-const
     let [value, setValue] = useState<T | undefined>(initialValue);
     function set(newValue: T | undefined) {
         if (typeof newValue == 'number' && isNaN(newValue)) {
@@ -120,6 +122,7 @@ export const DateInput = (props: DateInputProps) => {
         values.day.reset();
         values.month.reset();
         values.year.reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [valueAsDate]);
 
     function lastInMonth() {
