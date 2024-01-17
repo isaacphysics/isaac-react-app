@@ -3,6 +3,7 @@ import React from "react";
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
+import { isAda } from "../../../services";
 
 interface EmailInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -16,7 +17,7 @@ export const EmailInput = ({userToUpdate, setUserToUpdate, emailIsValid, submiss
     return <FormGroup>
         <Label className={classNames({"form-optional": !required}, "font-weight-bold")}
                htmlFor="email-input">Email address</Label>
-        <p className="d-block">This will be visible to your students. We recommend using your school email address.</p>
+        <p className={classNames("d-block", {"text-gray" : isAda})}>This will be visible to your students. We recommend using your school email address.</p>
         <Input
             id="email-input"
             type="email"
@@ -31,5 +32,5 @@ export const EmailInput = ({userToUpdate, setUserToUpdate, emailIsValid, submiss
         <FormFeedback id="emailValidationMessage">
             Please enter a valid email address.
         </FormFeedback>
-    </FormGroup>
-}
+    </FormGroup>;
+};
