@@ -74,12 +74,12 @@ export const { trackPageview, trackEvent } = Plausible(
 export const SOCIAL_LINKS = siteSpecific(
     {
         youtube: {name: "YouTube", href: "https://www.youtube.com/user/isaacphysics"},
-        twitter: {name: "Twitter", href: "https://twitter.com/isaacphysics"},
+        twitter: {name: "X (Twitter)", href: "https://twitter.com/isaacphysics"},
         facebook: {name: "Facebook", href: "https://www.facebook.com/isaacphysicsUK"},
     },
     {
         facebook: {name: "Facebook", href: "https://www.facebook.com/RaspberryPiFoundation"},
-        twitter: {name: "Twitter", href: "https://twitter.com/RaspberryPi_org"},
+        twitter: {name: "X (Twitter)", href: "https://twitter.com/RaspberryPi_org"},
         instagram: {name: "Instagram", href: "https://www.instagram.com/raspberrypifoundation"},
         youtube: {name: "YouTube", href: "https://www.youtube.com/c/RaspberryPiFoundation"}
     }
