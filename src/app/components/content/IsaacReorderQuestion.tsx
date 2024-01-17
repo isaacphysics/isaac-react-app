@@ -138,7 +138,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             <div ref={provided.innerRef}
                                         className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "drag-over": snapshot.isDraggingOver})}>
                                 {availableItems && availableItems.map((item, index) =>
-                                    <ReorderDraggableItem key={index} item={item} index={index} inAvailableItems readonly={readonly}/>)}
+                                    <ReorderDraggableItem key={item.id} item={item} index={index} inAvailableItems readonly={readonly}/>)}
                                 {(!availableItems || availableItems.length === 0)
                                     ? <div>&nbsp;</div>
                                     : provided.placeholder}
@@ -153,7 +153,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             <div id="parsons-choice-area" ref={provided.innerRef}
                                         className={classNames("parsons-items", {"empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "drag-over": snapshot.isDraggingOver})}>
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) =>
-                                    <ReorderDraggableItem key={index} item={item} index={index} readonly={readonly}/>)}
+                                    <ReorderDraggableItem key={item.id} item={item} index={index} readonly={readonly}/>)}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0)
                                     ? <div className="text-muted text-center">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}
