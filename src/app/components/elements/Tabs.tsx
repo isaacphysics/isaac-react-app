@@ -93,6 +93,16 @@ export const Tabs = (props: TabsProps) => {
         }
     }, [activeTabOverride, refreshHash]);
 
+    // useEffect so that the onActiveTabChange runs on load
+    // This fixes visibility bugs with charts
+    useEffect(() => {
+        if (onActiveTabChange) {
+            onActiveTabChange(activeTab);
+        }
+    // When the charts are defined onActiveTabChange changes allowing the flush
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [onActiveTabChange]);
+
     function changeTab(tabIndex: number) {
         pauseAllVideos();
         let nextTabIndex = tabIndex;

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {bb} from "billboard.js";
+import {areaSpline, bb} from "billboard.js";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
 import {formatISODateOnly} from "../DateString";
 import {siteSpecific} from "../../../services";
@@ -35,7 +35,7 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
                     ["x", ...selectedDates],
                     ["activity", ...selectedDates.map((date) => answeredQuestionsByDate ? answeredQuestionsByDate[date] || 0 : 0)]
                 ],
-                types: {activity: "area-spline"},
+                types: {activity: areaSpline()},
                 colors: {activity: siteSpecific("#FFB53F", "#FF4DC9")},
                 xFormat: "%Y-%m-%d"
             },
@@ -51,7 +51,6 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
             legend: {show: false},
             spline: {interpolation: {type: "monotone-x"}},
             bindto: "#activityGraph",
-            padding: {top: 0, right: 30, bottom: 0, left: 30}  // Pad sides to avoid tick labels being truncated!
         });
     }, [answeredQuestionsByDate, selectedDates]);
 

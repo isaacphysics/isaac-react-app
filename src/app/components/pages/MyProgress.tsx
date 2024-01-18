@@ -121,12 +121,10 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                 <Tabs tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
                                     const flush = tabRefs[tabIndex - 1].current;
                                     if (flush) {
+                                        // Still required:
                                         // Don't call the flush in an event handler that causes the render, that's too early.
                                         // Call it once that's done.
                                         requestAnimationFrame(() => {
-                                            flush();
-                                            // You'd think this wouldn't do anything, but it fixes the vertical position of the
-                                            // legend. I'm beginning to dislike this library.
                                             flush();
                                         });
                                     }

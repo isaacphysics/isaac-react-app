@@ -1,7 +1,7 @@
 import React, {MutableRefObject, useEffect, useState} from 'react';
 import * as RS from "reactstrap";
 import {LevelAttempts} from "../../../../IsaacAppTypes";
-import {bb, Chart} from "billboard.js";
+import {bb, Chart, ChartOptions, donut} from "billboard.js";
 import {
     comparatorFromOrderedValues,
     difficultiesOrdered,
@@ -33,8 +33,12 @@ interface QuestionProgressChartsProps {
 
 export type FlushableRef = MutableRefObject<(() => void) | undefined>;
 
-const OPTIONS = {
-    size: { width: 240, height: 330 }
+const OPTIONS: ChartOptions = {
+    size: { width: 240, height: 330 },
+    render: {
+        lazy: true, // Only render when necessary, prevent legend overlap
+        observe: false // Only render on a flush, prevents double rendering
+    }
 };
 
 const colourPicker = (names: string[]): { [key: string]: string } => {
@@ -78,7 +82,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 data: {
                     columns: categoryColumns,
                     colors: colourPicker(categoryColumns.map((column) => column[0]) as string[]),
-                    type: "donut",
+                    type: donut(),
                 },
                 donut: {
                     title: "By " + topTagLevel,
@@ -94,7 +98,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             data: {
                 columns: topicColumns,
                 colors: colourPicker(topicColumns.map((column) => column[0]) as string[]),
-                type: "donut"
+                type: donut()
             },
             donut: {
                 title: isAllZero(topicColumns) ? "No Data" : "By Topic",
@@ -109,7 +113,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 data: {
                     columns: difficultyColumns,
                     colors: colourPicker(difficultyColumns?.map((column) => column[0]) as string[]),
-                    type: "donut",
+                    type: donut(),
                     order: null
                 },
                 donut: {
@@ -123,13 +127,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
         flushRef.current = () => {
             charts.forEach(chart => {
-                // N.B. This no-op actually clears the text size cache, which makes this flush actually work.
-                // (The relevant line in BB is this.internal.clearLegendItemTextBoxCache() )
-                chart.data.names();
-                // N.B. Of course, under the text size cache, is a more general cache, which also needs
-                // clearing, and is not exposed.
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (chart as any).internal.resetCache();
+                // It works properly now!
                 chart.flush();
             });
         };
