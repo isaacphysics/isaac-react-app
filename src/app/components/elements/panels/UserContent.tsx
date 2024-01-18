@@ -33,9 +33,8 @@ export const UserContent = (props: UserContentProps) => {
 
     return <MyAccountTab
         leftColumn={<>
-            <h3>Account details</h3>
+            <h3>Customise what content you see</h3>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mi sit amet mauris commodo quis imperdiet massa tincidunt.</p>
-            <p>If you would like to delete your account please <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a>.</p>
         </>}
         rightColumn={<>
             <UserContextAccountInput
