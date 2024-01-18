@@ -71,6 +71,7 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { Spacer } from "../elements/Spacer";
+import { sortItem } from "./MyGameboards";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -348,6 +349,24 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         boardOrder, setBoardOrder,
         groupsByGameboard, openAssignModal
     } = props;
+
+    const tableHeader = <tr className="my-gameboard-table-header">
+        <th>Groups</th>
+        {sortItem({colSpan: 2, className: "w-100", key: "title", title: "Quiz name", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]}, boardOrder, setBoardOrder)}
+        <th colSpan={2} className="long-titled-col">
+            Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
+            <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+                Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
+            </RS.UncontrolledTooltip>
+        </th>
+        <th>Creator</th>
+        {sortItem({key: "visited", title: "Last viewed", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]}, boardOrder, setBoardOrder)}
+        <th>Manage</th>
+        <th>Share</th>
+        <th>Delete</th>
+    </tr>;
+
     return <div className={"mb-5 mb-md-6 mt-4"}>
         <Row>
             <Col xs={6} md={4} lg={3} xl={3}>
@@ -372,30 +391,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         </Row>
         <Table className="mt-3 my-gameboard-table" responsive>
             <thead>
-            <tr>
-                <th>Groups</th>
-                <th colSpan={2} className="w-100">
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
-                        Quiz name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
-                <th colSpan={2} className="long-titled-col">
-                    Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
-                    <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                        Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
-                        Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
-                    </RS.UncontrolledTooltip>
-                </th>
-                <th>Creator</th>
-                <th>
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
-                        Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
-                <th>Manage</th>
-                <th>Share</th>
-                <th>Delete</th>
-            </tr>
+                {tableHeader}
             </thead>
             <tbody>
             {boards?.boards

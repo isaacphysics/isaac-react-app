@@ -61,7 +61,7 @@ function sortClass(itemOrder: BoardOrder, reverseOrder: BoardOrder, boardOrder: 
     }
 }
 
-function sortItem(
+export function sortItem(
     props: ComponentProps<"th"> & {title: string, itemOrder: BoardOrder, reverseOrder: BoardOrder},
     boardOrder: BoardOrder,
     setBoardOrder: (order: BoardOrder) => void
