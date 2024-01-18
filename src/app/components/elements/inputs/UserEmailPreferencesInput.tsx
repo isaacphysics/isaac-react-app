@@ -108,13 +108,12 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
 export const useEmailPreferenceState = (initialEmailPreferences?: Nullable<UserEmailPreferences>): [Nullable<UserEmailPreferences>, Dispatch<SetStateAction<Nullable<UserEmailPreferences>>>] => {
     const defaults: UserEmailPreferences = {
         ASSIGNMENTS: true,
-        NEWS_AND_UPDATES: false,
-        EVENTS: false
+        NEWS_AND_UPDATES: undefined,
+        EVENTS: undefined
     };
 
     const [emailPreferences, _setEmailPreferences] = useState<Nullable<UserEmailPreferences>>({...defaults, ...initialEmailPreferences});
     const setEmailPreferences = (newEmailPreferences: Nullable<UserEmailPreferences> | ((ep: Nullable<UserEmailPreferences>) => Nullable<UserEmailPreferences>)) => {
-        console.log(newEmailPreferences);
         if (typeof newEmailPreferences === "function") {
             return _setEmailPreferences((old) => ({...defaults, ...(newEmailPreferences(old))}));
         }

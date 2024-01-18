@@ -20,7 +20,7 @@ export const StyledCheckbox = ({initialValue, ...props} : StyledCheckboxProps) =
                 setChecked(c => !c);
             }}/>
         </div>
-        {props.label && <label htmlFor={id} className={isPhy ? "pt-1" : ""} {...props.label.props}/>}
+        {props.label && <label htmlFor={id} className="pt-1" {...props.label.props}/>}
         <Spacer/>
     </div>;
 };
