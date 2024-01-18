@@ -134,6 +134,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         return () => {
             flushRef.current = undefined;
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns]);
 
     const numberOfCharts = siteSpecific(3, 2);
