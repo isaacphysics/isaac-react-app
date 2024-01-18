@@ -278,7 +278,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                 className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.account)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.account))}
                             >
-                                Profile
+                                {siteSpecific("Profile", "Details")}
                             </NavLink>
                         </NavItem>
                         {isAda && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.customise})}>
