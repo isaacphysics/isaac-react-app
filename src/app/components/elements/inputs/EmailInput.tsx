@@ -17,7 +17,7 @@ export const EmailInput = ({userToUpdate, setUserToUpdate, emailIsValid, submiss
     return <FormGroup>
         <Label className={classNames({"form-optional": !required}, "font-weight-bold")}
                htmlFor="email-input">Email address</Label>
-        <p className={classNames("d-block", {"text-gray" : isAda})}>This will be visible to your students. We recommend using your school email address.</p>
+        {isAda && <p className="d-block input-description">This will be visible to your students. We recommend using your school email address.</p>}
         <Input
             id="email-input"
             type="email"

@@ -319,6 +319,10 @@ export const examBoardBooleanNotationMap: {[examBoard in ExamBoard]: BOOLEAN_NOT
     [EXAM_BOARD.CIE]: BOOLEAN_NOTATION.ENG,
     [EXAM_BOARD.ALL]: BOOLEAN_NOTATION.MATH,
 };
+export const booleanNotationMap: {[notation: string]: string} = {
+    [BOOLEAN_NOTATION.MATH]: "And (∧) Or (∨) Not (¬)",
+    [BOOLEAN_NOTATION.ENG]: "And (·) Or (+) Not (bar)",
+};
 
 // STAGES
 export enum STAGE {
@@ -748,7 +752,7 @@ export enum MEMBERSHIP_STATUS {
     INACTIVE = "INACTIVE",
 }
 
-export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
+export enum ACCOUNT_TAB {account, customise, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
 export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
 export enum MARKBOOK_TYPE_TAB {assignments = 1, tests = 2}

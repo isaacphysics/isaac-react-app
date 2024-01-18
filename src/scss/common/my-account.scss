@@ -27,6 +27,18 @@
   }
 }
 
+.remove-stage-container {
+  min-width: 16px;
+  padding: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.account-dropdown {
+  flex: 1 1 0px;
+}
+
 .invalid-school {
   width: 100%;
   margin-top: 0.25rem;

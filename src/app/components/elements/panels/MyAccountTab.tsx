@@ -9,7 +9,7 @@ export interface MyAccountTabProps {
 }
 
 export const MyAccountTab = ({leftColumn, rightColumn} : MyAccountTabProps) => {
-    return <CardBody className={classNames("px-4", {"px-sm-5": isAda})}>
+    return <CardBody className={classNames("my-account-tab px-4", {"px-sm-5": isAda})}>
         <Container>
             {isPhy ? <Col className="px-0 px-lg-2">
                 {leftColumn}

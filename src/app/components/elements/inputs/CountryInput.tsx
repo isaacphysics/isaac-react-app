@@ -9,6 +9,7 @@ import {
     useGetPriorityCountriesQuery,
 } from "../../../state";
 import { isAda } from "../../../services";
+import { StyledDropdown } from "./DropdownInput";
 
 interface CountryInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -24,9 +25,9 @@ export const CountryInput = ({userToUpdate, setUserToUpdate, submissionAttempted
 
     return <RS.FormGroup className="my-1">
         <Label className={classNames({"form-optional": !required}, "font-weight-bold")}>Country</Label>
-        <p className={classNames("d-block", {"text-gray mb-2" : isAda})}>This helps us personalise the platform for you.</p>
-        <Input
-            type="select" name="select" id={`${idPrefix}-country-select`}
+        {isAda && <p className="d-block input-description mb-2">This helps us personalise the platform for you.</p>}
+        <StyledDropdown
+            id={`${idPrefix}-country-select`}
             value={userToUpdate && userToUpdate.countryCode}
             invalid={submissionAttempted && required && userToUpdate.countryCode == null}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -44,7 +45,7 @@ export const CountryInput = ({userToUpdate, setUserToUpdate, submissionAttempted
                     return <option key={countryCode} value={countryCode}>{countryDisplayName}</option>;
                 }
             )}
-        </Input>
+        </StyledDropdown>
         <FormFeedback>
             Please select a country.
         </FormFeedback>

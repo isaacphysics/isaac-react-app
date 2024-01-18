@@ -5,6 +5,7 @@ import {Input} from "reactstrap";
 import {isAda, isPhy, validateUserGender} from "../../../services";
 import classNames from "classnames";
 import {Immutable} from "immer";
+import { StyledDropdown } from "./DropdownInput";
 
 interface GenderInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -18,9 +19,9 @@ export const GenderInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         <RS.Label htmlFor={`${idPrefix}-gender-select`} className={classNames({"form-optional": !required}, "font-weight-bold")}>
             Gender
         </RS.Label>
-        <p className={classNames("d-block", {"text-gray mb-2" : isAda})}>We conduct academic research, including research like this on gender balance in computing. Answering this question helps inform our work.</p>
-        <Input
-            type="select" name="select" id={`${idPrefix}-gender-select`}
+        {isAda && <p className="d-block input-description mb-2">We conduct academic research, including research like this on gender balance in computing. Answering this question helps inform our work.</p>}
+        <StyledDropdown 
+            id={`${idPrefix}-gender-select`}
             value={userToUpdate && userToUpdate.gender}
             invalid={submissionAttempted && required && !validateUserGender(userToUpdate)}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -32,6 +33,6 @@ export const GenderInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             <option value="MALE">Male</option>
             <option value="OTHER">Other gender identity</option>
             <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
-        </Input>
+        </StyledDropdown>
     </RS.FormGroup>;
 };
