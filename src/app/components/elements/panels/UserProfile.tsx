@@ -3,7 +3,7 @@ import { MyAccountTab } from './MyAccountTab';
 import { FirstNameInput, LastNameInput } from '../inputs/NameInput';
 import { EmailInput } from '../inputs/EmailInput';
 import { ValidationUser } from '../../../../IsaacAppTypes';
-import { validateName, validateEmail } from '../../../services';
+import {validateName, validateEmail, SITE_TITLE} from '../../../services';
 import { CountryInput } from '../inputs/CountryInput';
 import { DobInput } from '../inputs/DobInput';
 import { GenderInput } from '../inputs/GenderInput';
@@ -19,7 +19,7 @@ export const UserProfile = ({userToUpdate, setUserToUpdate, submissionAttempted,
     return <MyAccountTab
         leftColumn={<>
             <h3>Account details</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mi sit amet mauris commodo quis imperdiet massa tincidunt.</p>
+            <p>Here you can see and manage your account details for {SITE_TITLE}.</p>
             <p>If you would like to delete your account please <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a>.</p>
         </>}
         rightColumn={<>

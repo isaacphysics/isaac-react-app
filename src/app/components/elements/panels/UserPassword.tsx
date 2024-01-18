@@ -88,7 +88,7 @@ export const UserPassword = (
     return <MyAccountTab
         leftColumn={<>
             <h3>Account security</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mi sit amet mauris commodo quis imperdiet massa tincidunt.</p>
+            <p>Here you can change your password, link or unlink a third party account you use to sign in, and log out of all devices.</p>
         </>}
         rightColumn={<>
             <h4>Password</h4>

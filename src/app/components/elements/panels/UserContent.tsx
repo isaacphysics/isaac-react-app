@@ -34,7 +34,7 @@ export const UserContent = (props: UserContentProps) => {
     return <MyAccountTab
         leftColumn={<>
             <h3>Customise what content you see</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mi sit amet mauris commodo quis imperdiet massa tincidunt.</p>
+            <p>Answering these questions will help us personalise the platform for you. You can skip this or change your answers at any time.</p>
         </>}
         rightColumn={<>
             <UserContextAccountInput
