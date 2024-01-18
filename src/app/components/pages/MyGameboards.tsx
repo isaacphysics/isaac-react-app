@@ -68,7 +68,7 @@ function sortItem(
 ) {
     const {title, itemOrder, reverseOrder, ...rest} = props;
     const className = (props.className || siteSpecific("text-center align-middle", "")) + sortClass(itemOrder, reverseOrder, boardOrder);
-    const sortArrows = <button className={`sort ${siteSpecific("physics", "")}`} onClick={() => {toggleSort(itemOrder, reverseOrder, boardOrder, setBoardOrder);}}>
+    const sortArrows = <button className="sort" onClick={() => {toggleSort(itemOrder, reverseOrder, boardOrder, setBoardOrder);}}>
             <span className="up">▲</span>
             <span className="down">▼</span>
         </button>;

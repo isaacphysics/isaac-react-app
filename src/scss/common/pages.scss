@@ -111,6 +111,7 @@ main {
     th {
         position: relative;
         padding-right: 8px;
+        white-space: nowrap;
     }
 
     .sort {
@@ -118,10 +119,10 @@ main {
         border: none;
         padding: 0;
 
-        position: absolute;
-        right: 1px;
+        position: relative;
+        right: -2px;
         font-size: 9px;
-        top: 9px;
+        top: 3px;
         z-index: 1;
 
         line-height: initial;
@@ -135,12 +136,6 @@ main {
         .down {
             padding-bottom: 10px;
         }
-    }
-
-    .sort.physics {
-        font-size: 10px;
-        top: 25px;
-        right: -4px;
     }
 
     .sorted.forward .up {
