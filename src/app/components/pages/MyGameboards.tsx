@@ -30,7 +30,6 @@ import {
     isMobile,
     isPhy, isTutorOrAbove, matchesAllWordsInAnyOrder, PATHS,
     siteSpecific,
-    sortIcon,
     useGameboards
 } from "../../services";
 import {Link} from "react-router-dom";
@@ -39,6 +38,42 @@ import {BoardCard} from "../elements/cards/BoardCard";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { Spacer } from "../elements/Spacer";
+
+// TODO: Better method, similar to QuizProgressCommon
+function toggleSort(itemOrder: BoardOrder,
+                    reverseOrder: BoardOrder,
+                    boardOrder: BoardOrder,
+                    setBoardOrder: (order: BoardOrder) => void) {
+    if (boardOrder === itemOrder) {
+        setBoardOrder(reverseOrder);
+    } else {
+        setBoardOrder(itemOrder);
+    }
+}
+
+function sortClass(itemOrder: BoardOrder, reverseOrder: BoardOrder, boardOrder: BoardOrder) {
+    if (boardOrder === itemOrder) {
+        return " sorted forward";
+    } else if (boardOrder === reverseOrder) {
+        return " sorted reverse";
+    } else {
+        return "";
+    }
+}
+
+function sortItem(
+    props: ComponentProps<"th"> & {title: string, itemOrder: BoardOrder, reverseOrder: BoardOrder},
+    boardOrder: BoardOrder,
+    setBoardOrder: (order: BoardOrder) => void
+) {
+    const {title, itemOrder, reverseOrder, ...rest} = props;
+    const className = (props.className || siteSpecific("text-center align-middle", "")) + sortClass(itemOrder, reverseOrder, boardOrder);
+    const sortArrows = <button className={`sort ${siteSpecific("physics", "")}`} onClick={() => {toggleSort(itemOrder, reverseOrder, boardOrder, setBoardOrder);}}>
+            <span className="up">▲</span>
+            <span className="down">▼</span>
+        </button>;
+    return <th key={props.key} {...rest} className={className}>{title}{sortArrows}</th>;
+}
 
 interface GameboardsTableProps {
     user: RegisteredUserDTO;
@@ -66,38 +101,9 @@ const PhyTable = (props: GameboardsTableProps) => {
         boardOrder, setBoardOrder
     } = props;
 
-    // TODO: Better method, similar to QuizProgressCommon
-    function toggleSort(itemOrder: BoardOrder, reverseOrder: BoardOrder) {
-        if (boardOrder === itemOrder) {
-            setBoardOrder(reverseOrder);
-        } else {
-            setBoardOrder(itemOrder);
-        }
-    }
-
-    function sortClass(itemOrder: BoardOrder, reverseOrder: BoardOrder) {
-        if (boardOrder === itemOrder) {
-            return " sorted forward";
-        } else if (boardOrder === reverseOrder) {
-            return " sorted reverse";
-        } else {
-            return "";
-        }
-    }
-
-    function sortItem(props: ComponentProps<"th"> & {title: string, itemOrder: BoardOrder, reverseOrder: BoardOrder}) {
-        const {title, itemOrder, reverseOrder, ...rest} = props;
-        const className = (props.className || "text-center align-middle") + sortClass(itemOrder, reverseOrder);
-        const sortArrows = <button className="sort physics" onClick={() => {toggleSort(itemOrder, reverseOrder);}}>
-                <span className="up">▲</span>
-                <span className="down">▼</span>
-            </button>;
-        return <th key={props.key} {...rest} className={className}>{title}{sortArrows}</th>;
-    }
-
     const tableHeader = <tr className="my-gameboard-table-header">
-        {sortItem({key: "completion", title: "Completion", itemOrder: BoardOrder.completion, reverseOrder: BoardOrder["-completion"]})}
-        {sortItem({key: "title", title: "Board name", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]})}
+        {sortItem({key: "completion", title: "Completion", itemOrder: BoardOrder.completion, reverseOrder: BoardOrder["-completion"]}, boardOrder, setBoardOrder)}
+        {sortItem({key: "title", title: "Board name", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]}, boardOrder, setBoardOrder)}
         <th className="text-center align-middle">Stages</th>
         <th className="text-center align-middle" style={{whiteSpace: "nowrap"}}>
             Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
@@ -107,8 +113,8 @@ const PhyTable = (props: GameboardsTableProps) => {
             </RS.UncontrolledTooltip>
         </th>
         <th className="text-center align-middle">Creator</th>
-        {sortItem({key: "created", title: "Created", itemOrder: BoardOrder.created, reverseOrder: BoardOrder["-created"]})}
-        {sortItem({key: "visited", title: "Last viewed", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]})}
+        {sortItem({key: "created", title: "Created", itemOrder: BoardOrder.created, reverseOrder: BoardOrder["-created"]}, boardOrder, setBoardOrder)}
+        {sortItem({key: "visited", title: "Last viewed", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]}, boardOrder, setBoardOrder)}
         <th className="text-center align-middle">Share</th>
         <th colSpan={2}>
             <div className="text-right align-middle">
@@ -212,38 +218,9 @@ const CSTable = (props: GameboardsTableProps) => {
         boardOrder, setBoardOrder
     } = props;
 
-    // TODO: Better method, similar to QuizProgressCommon
-    function toggleSort(itemOrder: BoardOrder, reverseOrder: BoardOrder) {
-        if (boardOrder === itemOrder) {
-            setBoardOrder(reverseOrder);
-        } else {
-            setBoardOrder(itemOrder);
-        }
-    }
-
-    function sortClass(itemOrder: BoardOrder, reverseOrder: BoardOrder) {
-        if (boardOrder === itemOrder) {
-            return " sorted forward";
-        } else if (boardOrder === reverseOrder) {
-            return " sorted reverse";
-        } else {
-            return "";
-        }
-    }
-
-    function sortItem(props: ComponentProps<"th"> & {title: string, itemOrder: BoardOrder, reverseOrder: BoardOrder}) {
-        const {title, itemOrder, reverseOrder, ...rest} = props;
-        const className = (props.className || "") + sortClass(itemOrder, reverseOrder);
-        const sortArrows = <button className="sort" onClick={() => {toggleSort(itemOrder, reverseOrder);}}>
-                <span className="up">▲</span>
-                <span className="down">▼</span>
-            </button>;
-        return <th key={props.key} {...rest} className={className}>{title}{sortArrows}</th>;
-    }
-
     const tableHeader = <tr className="my-gameboard-table-header">
-        {sortItem({key: "completion", title: "Completion", className: "completion-column", itemOrder: BoardOrder.completion, reverseOrder: BoardOrder["-completion"]})}
-        {sortItem({colSpan: 4, key: "title", title: "Quiz name", className: "title-column", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]})}
+        {sortItem({key: "completion", title: "Completion", className: "completion-column", itemOrder: BoardOrder.completion, reverseOrder: BoardOrder["-completion"]}, boardOrder, setBoardOrder)}
+        {sortItem({colSpan: 4, key: "title", title: "Quiz name", className: "title-column", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]}, boardOrder, setBoardOrder)}
         <th colSpan={2} className="long-titled-col">
             Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
             <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
@@ -252,8 +229,8 @@ const CSTable = (props: GameboardsTableProps) => {
             </RS.UncontrolledTooltip>
         </th>
         <th>Creator</th>
-        {sortItem({key: "created", title: "Created", className: "created-column", itemOrder: BoardOrder.created, reverseOrder: BoardOrder["-created"]})}
-        {sortItem({key: "visited", title: "Last viewed", className: "visited-column", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]})}
+        {sortItem({key: "created", title: "Created", className: "created-column", itemOrder: BoardOrder.created, reverseOrder: BoardOrder["-created"]}, boardOrder, setBoardOrder)}
+        {sortItem({key: "visited", title: "Last viewed", className: "visited-column", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]}, boardOrder, setBoardOrder)}
         <th>Share</th>
         <th>
             {selectedBoards.length
