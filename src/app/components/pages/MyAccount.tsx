@@ -46,6 +46,7 @@ import {
     isAda,
     isDefined,
     isDobOldEnoughForSite,
+    isPhy,
     isStaff,
     SITE_TITLE, siteSpecific,
     validateEmail,
@@ -63,6 +64,8 @@ import {skipToken} from "@reduxjs/toolkit/query";
 import { Loading } from "../handlers/IsaacSpinner";
 import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesInput";
 import {Alert} from "../elements/Alert";
+import { UserProfile } from '../elements/panels/UserProfile';
+import { UserContent } from '../elements/panels/UserContent';
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -270,14 +273,22 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <Card>
                     <Nav tabs className={classNames("my-4 flex-wrap", {"mx-4": isAda})}>
-                        <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.account})}>
+                    <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.account})}>
                             <NavLink
                                 className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.account)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.account))}
                             >
-                                Profile
+                                {siteSpecific("Profile", "Details")}
                             </NavLink>
                         </NavItem>
+                        {isAda && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.customise})}>
+                            <NavLink
+                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
+                                onClick={() => setActiveTab(ACCOUNT_TAB.customise)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.customise))}
+                            >
+                                Customise
+                            </NavLink>
+                        </NavItem>}
                         <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}>
                             <NavLink
                                 className={siteSpecific("mx-2", "px-2")} tabIndex={0}
@@ -319,7 +330,23 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                         {error?.type == "generalError" && <Alert title="Unable to update your account" body={error.generalError} />}
                         <TabContent activeTab={activeTab}>
                             <TabPane tabId={ACCOUNT_TAB.account}>
-                                <UserDetails
+                                {isPhy && <UserDetails
+                                    userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                                    userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                                    programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
+                                    booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
+                                    displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
+                                    submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                                    userAuthSettings={userAuthSettings}
+                                />}
+                                {isAda && <UserProfile
+                                    userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                                    submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                                />}
+                            </TabPane>
+
+                            {isAda && <TabPane tabId={ACCOUNT_TAB.customise}>
+                                <UserContent
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
                                     programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
@@ -328,7 +355,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />
-                            </TabPane>
+                            </TabPane>}
 
                             <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                 <UserPassword
@@ -382,11 +409,11 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                 </Card>
             }
         </ShowLoading>
-        <Row className="text-muted text-center mt-3">
+        {isPhy && <Row className="text-muted text-center mt-3">
             <Col>
                 If you would like to delete your account please <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a>.
             </Col>
-        </Row>
+        </Row>}
     </Container>;
 };
 

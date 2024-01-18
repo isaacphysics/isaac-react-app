@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
-import {schoolNameWithPostcode, validateUserSchool} from "../../../services";
+import {isAda, schoolNameWithPostcode, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
@@ -99,7 +99,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
     return <RS.FormGroup className={`school ${className}`}>
         <Label className={"font-weight-bold"}>{"School (Optional)"}</Label>
-        <p className="d-block">This helps us personalise the platform for you.</p>
+        {isAda && <p className="d-block">This helps us personalise the platform for you.</p>}
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect
                 isClearable

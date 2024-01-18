@@ -8,7 +8,8 @@ import {
     useGetCountriesQuery,
     useGetPriorityCountriesQuery,
 } from "../../../state";
-import {isNull} from "lodash";
+import { isAda } from "../../../services";
+import { StyledDropdown } from "./DropdownInput";
 
 interface CountryInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -24,9 +25,9 @@ export const CountryInput = ({userToUpdate, setUserToUpdate, submissionAttempted
 
     return <RS.FormGroup className="my-1">
         <Label className={classNames({"form-optional": !required}, "font-weight-bold")}>Country</Label>
-        <p className="d-block">This helps us personalise the platform for you.</p>
-        <Input
-            type="select" name="select" id={`${idPrefix}-country-select`}
+        {isAda && <p className="d-block input-description mb-2">This helps us personalise the platform for you.</p>}
+        <StyledDropdown
+            id={`${idPrefix}-country-select`}
             value={userToUpdate && userToUpdate.countryCode}
             invalid={submissionAttempted && required && userToUpdate.countryCode == null}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -35,18 +36,18 @@ export const CountryInput = ({userToUpdate, setUserToUpdate, submissionAttempted
         >
             {priorityCountryOptions && Object.entries(priorityCountryOptions).map(
                 ([countryCode, countryDisplayName]) => {
-                    return <option key={countryCode} value={countryCode}>{countryDisplayName}</option>
+                    return <option key={countryCode} value={countryCode}>{countryDisplayName}</option>;
                 }
             )}
             <option /> {/* Empty option for spacing */}
             {allCountryOptions && Object.entries(allCountryOptions).map(
                 ([countryCode, countryDisplayName]) => {
-                    return <option key={countryCode} value={countryCode}>{countryDisplayName}</option>
+                    return <option key={countryCode} value={countryCode}>{countryDisplayName}</option>;
                 }
             )}
-        </Input>
+        </StyledDropdown>
         <FormFeedback>
             Please select a country.
         </FormFeedback>
-    </RS.FormGroup>
+    </RS.FormGroup>;
 };

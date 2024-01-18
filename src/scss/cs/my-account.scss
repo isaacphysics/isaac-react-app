@@ -1,5 +1,9 @@
 @import "../common/my-account";
 
+.input-description {
+  color: #7c7c7c;
+}
+
 .linked-account-button-outer {
   border: 3px $cs-cultured solid;
   border-radius: 10px;
@@ -10,5 +14,52 @@
     padding: 5px;
     background: url("/assets/logos/raspberry-pi.png") center no-repeat content-box;
     background-size: contain !important;
+  }
+}
+
+.remove-stage-container {
+  min-width: 24px;
+  margin: 6px 0 0 6px;
+}
+
+.my-account-tab {
+  select.form-control, input.form-control {
+    height: 45px;
+    border-radius: 10px;
+    border: solid 2px #666;
+  }
+
+  select.form-control:not(.date-input-day) {
+    position: relative;
+    appearance: none;
+  }
+
+  #dob-input > .date-input-wrapper {
+    select {
+      padding: 0 1.2em;
+      border-radius: 0;
+    }
+    
+    &:first-of-type select {
+      border-radius: 10px 0 0 10px;
+    }
+
+    &:last-of-type select {
+      border-radius: 0 10px 10px 0;
+    }
+  }
+
+  .styled-dropdown-caret::after, .date-input-wrapper::after {
+    content: "";
+    position: absolute;
+    top: calc(50% - 4px);
+    right: 12px;
+    z-index: 2;
+    height: 8px;
+    width: 12px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url('/assets/chevron_down.svg');
+    pointer-events: none;
   }
 }
