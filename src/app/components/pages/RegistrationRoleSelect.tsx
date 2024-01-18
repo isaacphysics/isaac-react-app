@@ -28,12 +28,11 @@ export const RegistrationRoleSelect = () => {
                                 <CardText>
                                     <p>With a student account you can:</p>
                                     <ul>
-                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
-                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
-                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
+                                        <li>Set your preferences so that you see content relevant to you</li>
+                                        <li>Track your progress, including how many questions you have answered by topic</li>
+                                        <li>See all assignments set by your teacher(s)</li>
                                     </ul>
                                 </CardText>
-                                {/* todo: this button should be at the bottom of the card */}
                                 <Button block disabled className="align-self-end mt-auto">I am a student</Button>
                             </CardBody>
                         </Card>
@@ -47,9 +46,9 @@ export const RegistrationRoleSelect = () => {
                                 <CardText>
                                     <p>With a teacher account you can:</p>
                                     <ul>
-                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
-                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
-                                        <li>Lorem ipsum dolor sit amet consectetur.</li>
+                                        <li>Create groups and invite students to join them</li>
+                                        <li>Create quizzes from the questions available, and assign them to your groups</li>
+                                        <li>View the progress of the students in your groups</li>
                                     </ul>
                                     <p>
                                         Teacher accounts do not give you access to the answers. <a href="/support/teacher/general">Learn more</a>
