@@ -137,5 +137,5 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation} />
             </Col>
         </Row>}
-    </CardBody>
+    </CardBody>;
 };
