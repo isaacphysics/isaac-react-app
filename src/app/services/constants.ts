@@ -691,6 +691,8 @@ export enum TAG_ID {
     breathingAndCirculation = "breathing_circulation",
     hormones = "hormones",
     digestionAndExcretion = "digestion_excretion",
+    senseAndMovement = "sense_movement",
+    diseaseAndImmunity = "disease_immunity",
     // Ecology
     populations = "populations",
     ecosystems = "ecosystems",
