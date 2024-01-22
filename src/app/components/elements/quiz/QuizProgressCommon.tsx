@@ -239,7 +239,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                                     </div>
                                                 </Button>
                                                 {!returningQuizToStudent && dropdownOpen?.[index] && <>
-                                                    {duedate && duedate.valueOf() > TODAY().valueOf() &&
+                                                    {(!duedate || duedate.valueOf() > TODAY().valueOf()) &&
                                                         (studentProgress.completed) &&
                                                         <div className="py-2 px-3">
                                                             <Button size="sm" onClick={() => returnToStudent(studentProgress.user.id)}>Allow another attempt</Button>
