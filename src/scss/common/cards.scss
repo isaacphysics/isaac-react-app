@@ -37,8 +37,8 @@
   .card-body {
     .card-text {
       > a {
-        font-size: 1.125rem;
-        font-weight: bold;
+        font-size: 1.125rem !important;
+        font-weight: bold !important;
       }
       &.card-text01 {
         flex: 1 0 auto;
