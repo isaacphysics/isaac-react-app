@@ -16,6 +16,9 @@ import {QuizTeacherFeedback} from "../../pages/quizzes/QuizTeacherFeedback";
 import {QuizPreview} from "../../pages/quizzes/QuizPreview";
 import {QuizDoFreeAttempt} from "../../pages/quizzes/QuizDoFreeAttempt";
 import {TeacherAccountSelfUpgrade} from "../../pages/TeacherAccountSelfUpgrade";
+import { Events } from "../../pages/Events";
+import EventDetails from "../../pages/EventDetails";
+import { RedirectToEvent } from "../../navigation/RedirectToEvent";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 
@@ -62,6 +65,11 @@ export const RoutesCS = [
     // Books: FIXME ADA are we going to include these?
     // <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
     // <TrackedRoute key={key++} exact path="/books/workbook_20_ocr" component={Workbook20OCR}/>,
+
+    // Events
+    <TrackedRoute key={key++} exact path='/events' component={Events}/>,
+    <TrackedRoute key={key++} exact path='/events/:eventId' component={EventDetails}/>,
+    <TrackedRoute key={key++} exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />,
 
     // Static pages:
     <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
