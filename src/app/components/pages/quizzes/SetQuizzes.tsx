@@ -242,7 +242,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                                         More
                                     </RS.DropdownToggle>
                                     <RS.DropdownMenu>
-                                        <RS.DropdownItem color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignment?.dueDate} onClick={() => {
+                                        <RS.DropdownItem color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignedGroup.assignment?.dueDate} onClick={() => {
                                             setSelectedQuiz(assignedGroup.assignment);
                                             setIsModalOpen(true);
                                         }}>
