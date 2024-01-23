@@ -181,7 +181,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 </table>}
             </td>
             {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
-            {!isSetAssignments && isPhy && <td className="align-middle text-center">{formatDate(board.creationDate)}</td>}
+            {!isSetAssignments && <td className="align-middle text-center">{formatDate(board.creationDate)}</td>}
             <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
             {isSetAssignments && <td className={"align-middle text-center"}>
                 <Button className="set-assignments-button" color={siteSpecific("tertiary", "secondary")} size="sm" onClick={toggleAssignModal}>

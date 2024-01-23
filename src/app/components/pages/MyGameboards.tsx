@@ -125,19 +125,19 @@ const CSTable = (props: GameboardsTableProps) => {
                     </RS.UncontrolledTooltip>
                 </th>
                 {isAda && <th>Creator</th>}
-                {isPhy && <th>
+                <th>
                     <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
                         Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
                     </button>
-                </th>}
+                </th>
                 
                 {siteSpecific(<>
-                    <th className={classNames({"text-center" : isPhy})}>
+                    <th className="text-center">
                         <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
                             Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
                         </button>
                     </th>
-                    <th className={classNames({"text-center" : isPhy})}>
+                    <th className="text-center">
                         Delete
                     </th>
                 </>,
