@@ -8,6 +8,7 @@ import {
     isAda,
     isAdminOrEventManager,
     isDefined,
+    isPhy,
     PATHS,
     siteSpecific,
     stageLabelMap
@@ -147,6 +148,10 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         </foreignObject>
     </svg>;
 
+    const stagesAndDifficultiesBorders = (i : number) => {
+        return siteSpecific(`border-left-1 border-right-1 border-top-${i === 0 ? 0 : 1} border-bottom-${i === boardStagesAndDifficulties.length - 1 ? 0 : 1}`, "border-0");
+    };
+
     return boardView == BoardViews.table ?
         <tr className={siteSpecific("board-card", "")} data-testid={"gameboard-table-row"}>
             <td className={siteSpecific("", "align-middle text-center")}>
@@ -157,16 +162,17 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
             </td>
             <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
                 <a href={boardLink} className={isAda ? "font-weight-semi-bold" : ""}>{board.title}</a>
+                {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
             </td>
             <td className={basicCellClasses + " p-0"} colSpan={2}>
                 {boardStagesAndDifficulties.length > 0 && <table className="w-100 border-0">
                     <tbody>
                     {boardStagesAndDifficulties.map(([stage,difficulties], i) => {
-                        return <tr key={stage} className={classNames({"border-0": i === 0, "border-left-0 border-right-0 border-bottom-0": i === 1})}>
-                            <td className="text-center align-middle border-0 p-1 w-50">
+                        return <tr key={stage} className={classNames({"border-0": i === 0, "border-left-0 border-right-0 border-bottom-0": i >= 1})}>
+                            <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
                                 {stageLabelMap[stage]}
                             </td>
-                            <td className="text-center align-middle border-0 p-1 w-50">
+                            <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
                                 {isAda && "("}{sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")}{isAda && ")"}
                             </td>
                         </tr>;
@@ -174,32 +180,28 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </tbody>
                 </table>}
             </td>
-            <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>
-            {!isSetAssignments && <td className={"align-middle text-center"}>{formatDate(board.creationDate)}</td>}
+            {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
+            {!isSetAssignments && isPhy && <td className="align-middle text-center">{formatDate(board.creationDate)}</td>}
             <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
             {isSetAssignments && <td className={"align-middle text-center"}>
                 <Button className="set-assignments-button" color={siteSpecific("tertiary", "secondary")} size="sm" onClick={toggleAssignModal}>
                     Assign{hasAssignedGroups && "\u00a0/ Unassign"}
                 </Button>
             </td>}
-            <td className={basicCellClasses}>
+            {isAda && <td className={basicCellClasses}>
                 <div className="table-share-link">
                     <ShareLink linkUrl={boardLink} gameboardId={board.id} outline={isAda} clickAwayClose={isAda} />
                 </div>
-            </td>
+            </td>}
             {isSetAssignments && isAda && <td className={basicCellClasses}>
                 <Button outline color={"secondary"} className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
             </td>}
             {!isSetAssignments && siteSpecific(
                 <td className={"text-center align-middle"}>
-                    <CustomInput
-                        id={`board-delete-${board.id}`}
-                        type="checkbox"
-                        checked={board && selectedBoards?.some(e => e.id === board.id)}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            board && updateBoardSelection(board, event.target.checked);
-                        }} aria-label="Delete gameboard"
-                    />
+                    <Button outline color="primary" className={"bin-icon d-inline-block outline"} style={{
+                        width: "20px",
+                        minWidth: "20px",
+                    }} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
                 </td>,
                 <td className={"text-center align-middle overflow-hidden"}>
                     <CustomInput
