@@ -34,6 +34,11 @@ export const sortItemHeader = (
             <span className="down">▼</span>
         </button>;
 
-    return <th key={props.key} {...rest} className={className}>{title}{sortArrows}</th>;
+    return <th key={props.key} {...rest} className={className}>
+        <div className="d-flex align-items-center">
+            {title}
+            {sortArrows}
+        </div>
+    </th>;
 };
 
