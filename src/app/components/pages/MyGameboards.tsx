@@ -1,4 +1,4 @@
-import React, {ComponentProps, useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import * as RS from 'reactstrap';
