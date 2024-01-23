@@ -262,6 +262,18 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         boardOrder, setBoardOrder,
         groupsByGameboard, openAssignModal
     } = props;
+
+    const tableHeader = <tr className="my-gameboard-table-header">
+        <th className="text-center align-middle"><span className="pl-2 pr-2">Groups</span></th>
+        {sortItemHeader({key: "title", title: "Board name", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]}, boardOrder, setBoardOrder)}
+        <th className="text-center align-middle">Stages</th>
+        <th className="text-center align-middle">Difficulties</th>
+        <th className="text-center align-middle">Creator</th>
+        {sortItemHeader({key: "visited", title: "Last viewed", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]}, boardOrder, setBoardOrder)}
+        <th className="text-center align-middle">Assignments</th>
+        <th className="text-center align-middle">Share</th>
+    </tr>;
+
     return <Card className="mt-2 mb-5">
         <CardBody id="boards-table">
             <Row>
@@ -295,29 +307,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
             <div className="overflow-auto mt-3">
                 <Table className="mb-0">
                     <thead>
-                    <tr>
-                        <th className="text-center align-middle"><span
-                            className="pl-2 pr-2">Groups</span></th>
-                        <th className="align-middle pointer-cursor">
-                            <button className="table-button"
-                                    onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
-                                Board
-                                name&nbsp;{boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
-                            </button>
-                        </th>
-                        <th className="text-center align-middle">Stages</th>
-                        <th className="text-center align-middle">Difficulties</th>
-                        <th className="text-center align-middle">Creator</th>
-                        <th className="text-center align-middle pointer-cursor">
-                            <button className="table-button"
-                                    onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
-                                Last
-                                viewed&nbsp;{boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
-                            </button>
-                        </th>
-                        <th className="text-center align-middle">Assignments</th>
-                        <th className="text-center align-middle">Share</th>
-                    </tr>
+                        {tableHeader}
                     </thead>
                     <tbody>
                     {boards?.boards
