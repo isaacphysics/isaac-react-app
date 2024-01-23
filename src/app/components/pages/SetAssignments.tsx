@@ -529,8 +529,8 @@ export const SetAssignments = () => {
             assignees={(isDefined(modalBoard) && isDefined(modalBoard?.id) && groupsByGameboard[modalBoard.id]) || []}
         />
 
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} help={pageHelp} modalId="set_assignments_help"/>
-        <PageFragment fragmentId={`set_${siteSpecific("gameboards", "quizzes")}_help`} ifNotFound={RenderNothing} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} help={pageHelp} modalId="help_modal_set_assignments"/>
+        <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
         {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
         {groups && groups.length === 0 && <Alert color="warning">
             You have not created any groups to assign work to.

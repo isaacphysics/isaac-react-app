@@ -641,7 +641,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const metaDescriptionCS = "Search for the perfect computer science questions to study. For revision. For homework. For the classroom.";
 
     return <Container id="gameboard-generator" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="gameboard_filter_help"/>
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="help_modal_gameboard_filter"/>
         {isAda && <MetaDescription description={metaDescriptionCS} />}
         <CanonicalHrefElement />
 
