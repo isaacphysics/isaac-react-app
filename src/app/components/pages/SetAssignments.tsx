@@ -71,7 +71,7 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { Spacer } from "../elements/Spacer";
-import { sortItem } from "./MyGameboards";
+import { sortItemHeader } from "../elements/sortItemHeader";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -352,7 +352,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <th>Groups</th>
-        {sortItem({colSpan: 2, className: "w-100", key: "title", title: "Quiz name", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]}, boardOrder, setBoardOrder)}
+        {sortItemHeader({colSpan: 2, className: "w-100", key: "title", title: "Quiz name", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]}, boardOrder, setBoardOrder)}
         <th colSpan={2} className="long-titled-col">
             Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
             <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
@@ -361,7 +361,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </RS.UncontrolledTooltip>
         </th>
         <th>Creator</th>
-        {sortItem({key: "visited", title: "Last viewed", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]}, boardOrder, setBoardOrder)}
+        {sortItemHeader({key: "visited", title: "Last viewed", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]}, boardOrder, setBoardOrder)}
         <th>Manage</th>
         <th>Share</th>
         <th>Delete</th>
