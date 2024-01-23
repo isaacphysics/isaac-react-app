@@ -33,9 +33,6 @@ module.exports = env => {
                 }, {
                     from: resolve('public/unsupported_browsers/unsupported-phy.html'),
                     to: 'unsupported_browser.html',
-                }, {
-                    from: resolve('public/unsupported_browsers/unsupported-phy.js'),
-                    to: 'unsupported_browser.js',
                 }
             ]}),
         ],
