@@ -8,7 +8,7 @@ import {WarningBanner} from "../../navigation/WarningBanner";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
-    const {data: news} = useGetNewsPodListQuery({subject: "physics"});
+    const {data: news} = useGetNewsPodListQuery({subject: "physics", orderDecending: true});
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
