@@ -20,7 +20,7 @@
 }
 
 @include media-breakpoint-up(md) {
-    .expansion-layout {
+    .accordion .expansion-layout {
       -webkit-animation: phy-gutter-overflow 0.5s; /* Safari 4+ */
       -moz-animation:    phy-gutter-overflow 0.5s; /* Fx 5+ */
       -o-animation:      phy-gutter-overflow 0.5s; /* Opera 12+ */
