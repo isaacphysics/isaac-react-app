@@ -114,11 +114,11 @@ export const RegistrationSetPreferences = () => {
                             <UserEmailPreferencesInput emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}></UserEmailPreferencesInput>
                             <hr />
                             <Row>
-                                <Col>
-                                    <Button outline color="secondary" onClick={continueToAfterAuthPath}>I'll do this later</Button>
+                                <Col className="d-flex justify-content-end" xs={12} sm={6} lg={6}>
+                                    <Button className={"my-2"} outline color="secondary" onClick={continueToAfterAuthPath}>I'll do this later</Button>
                                 </Col>
-                                <Col>
-                                    <Input type="submit" value="Save preferences" className="btn btn-primary" />
+                                <Col xs={12} sm={6} lg={6}>
+                                    <Input type="submit" value="Save preferences" className="btn btn-primary my-2" />
                                 </Col>
                             </Row>
                         </Form>

@@ -19,11 +19,11 @@ export const RegistrationAgeCheckFailed = () => {
                 <p><b>However, you can still access the whole site for free!</b> However you will not be able to track your progress.</p>
                 <hr />
                 <Row className="justify-content-end">
-                    <Col xs={6} lg={2}>
-                        <Button outline color="secondary" onClick={history.goBack}>Back</Button>
+                    <Col sm={6} lg={3} className="d-flex justify-content-end">
+                        <Button className={"mt-2"} outline color="secondary" onClick={history.goBack}>Back</Button>
                     </Col>
-                    <Col xs={6} lg={3}>
-                        <Button color="primary" onClick={returnToHomepage}>Home</Button>
+                    <Col sm={6} lg={3}>
+                        <Button className={"mt-2 w-100"} color="primary" onClick={returnToHomepage}>Back to the site</Button>
                     </Col>
                 </Row>
             </CardBody>

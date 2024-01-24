@@ -50,11 +50,11 @@ export const RegistrationAgeCheck = () => {
                     </FormGroup>
                     <hr />
                     <Row className="justify-content-end">
-                        <Col xs={6} lg={2}>
-                            <Button outline color="secondary" onClick={history.goBack}>Back</Button>
+                        <Col sm={6} lg={3} className="d-flex justify-content-end">
+                            <Button className={"mt-2"} outline color="secondary" onClick={history.goBack}>Back</Button>
                         </Col>
-                        <Col xs={6} lg={3}>
-                            <Input type="submit" value="Continue" className="btn btn-primary" />
+                        <Col sm={6} lg={3}>
+                            <Input type="submit" value="Continue" className="btn btn-primary mt-2" />
                         </Col>
                     </Row>
                 </Form>

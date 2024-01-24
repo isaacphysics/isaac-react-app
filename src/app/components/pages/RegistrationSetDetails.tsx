@@ -167,11 +167,11 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                             </FormGroup>
                             <hr />
                             <Row>
-                                <Col>
-                                    <Button outline color="secondary" onClick={history.goBack}>Back</Button>
+                                <Col className="d-flex justify-content-end" xs={12} sm={6} lg={6}>
+                                    <Button className={"mt-2"} outline color="secondary" onClick={history.goBack}>Back</Button>
                                 </Col>
-                                <Col>
-                                    <Input type="submit" value="Continue" className="btn btn-primary" />
+                                <Col xs={12} sm={6} lg={6}>
+                                    <Input type="submit" value="Continue" className="btn btn-primary mt-2" />
                                 </Col>
                             </Row>
                         </Form>
