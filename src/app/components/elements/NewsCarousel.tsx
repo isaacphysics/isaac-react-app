@@ -13,6 +13,6 @@ type NewsCarouselProps = {
 export const NewsCarousel = ({items, showTitle, className}: NewsCarouselProps) =>
     <ShowLoading until={items} thenRender={(newsPods) => <div>
         <ResponsiveCarousel className={className}>
-            {newsPods?.map((newsItem: IsaacPodDTO, index: number) => <NewsCard newsItem={newsItem} showTitle={showTitle} key={index} />)}
+            {newsPods.slice(0, 9).map((newsItem: IsaacPodDTO, index: number) => <NewsCard newsItem={newsItem} showTitle={showTitle} key={index} />)}
         </ResponsiveCarousel>
     </div>} />;

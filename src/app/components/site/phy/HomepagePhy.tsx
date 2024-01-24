@@ -90,7 +90,10 @@ export const HomepagePhy = () => {
 
             <section id="news">
                 <Container>
-                    <h2 className="h-title mb-4 mt-4 pt-2 mt-sm-5 pt-sm-0">News and features</h2>
+                    <div className="h-underline mb-4 mt-4 pt-2 mt-sm-5 pt-sm-0 d-flex align-items-center">
+                        <h2>News and features</h2>
+                        <Link to="/news" className="ml-auto">See all news</Link>
+                    </div>
                     <Row className="eventList pt-1">
                         <Col>
                             <NewsCarousel items={news} showTitle className={"mx-sm-n4"} />
@@ -112,5 +115,5 @@ export const HomepagePhy = () => {
                 </Container>
             </section>}
         </div>
-    </>
+    </>;
 };
