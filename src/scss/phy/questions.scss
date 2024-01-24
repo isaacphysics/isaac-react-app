@@ -47,7 +47,7 @@
     line-height: 1.6;
   }
   // Make sure that reorder questions have a background when they expand on Phy
-  .question-component:not(.isaacReorderQuestion) {
+  .question-component:not(.expansion-layout) {
     background: none;
     box-shadow: none;
     padding: 0 !important;
@@ -58,7 +58,7 @@
     }
   }
   // Make sure the banner does not overflow on reorder questions on Phy
-  div:not(.isaacReorderQuestion) > .validation-response-panel {
+  div:not(.expansion-layout) > .validation-response-panel {
     &.correct {
       margin-left: -1.25rem;
       margin-right: -1.25rem;
