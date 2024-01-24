@@ -12,6 +12,7 @@ import {
 } from "../index";
 import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
 import {QuizSettingModal} from "../../components/elements/modals/QuizSettingModal";
+import { throttle } from "lodash";
 
 export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: Date | null, scheduledStartDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
     dispatch(openActiveModal({
@@ -38,6 +39,13 @@ export const clearQuizAttempt = () => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: {}});
 };
 
+const throttleDispatch = throttle(async (dispatch: Dispatch<Action>, quizAttemptId: number, questionId: string, attempt) => {
+    // This clears the canSubmit flag so we need to dispatch it, even though we're crossing reducers.
+    dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST, questionId, attempt});
+    await api.quizzes.answer(quizAttemptId, questionId, attempt);
+    // Response is empty, so dispatch nothing
+}, 500);
+
 export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     // Get current answer
     const state = getState();
@@ -47,10 +55,7 @@ export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: str
         if (question) {
             const attempt = question.currentAttempt;
             if (attempt && question.canSubmit) {
-                // This clears the canSubmit flag so we need to dispatch it, even though we're crossing reducers.
-                dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST, questionId, attempt});
-                await api.quizzes.answer(quizAttemptId, questionId, attempt);
-                // Response is empty, so dispatch nothing
+                throttleDispatch(dispatch, quizAttemptId, questionId, attempt);
             }
         }
     }
