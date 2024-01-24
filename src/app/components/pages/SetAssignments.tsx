@@ -70,7 +70,7 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { Spacer } from "../elements/Spacer";
-import { SortItemHeader } from "../elements/SortItemHeader";
+import { SortItemHeader } from "../elements/SortableItemHeader";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];

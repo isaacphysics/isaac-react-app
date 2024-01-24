@@ -38,7 +38,7 @@ import {BoardCard} from "../elements/cards/BoardCard";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { Spacer } from "../elements/Spacer";
-import { SortItemHeader }  from "../elements/SortItemHeader";
+import { SortItemHeader }  from "../elements/SortableItemHeader";
 
 interface GameboardsTableProps {
     user: RegisteredUserDTO;
