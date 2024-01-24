@@ -1,23 +1,25 @@
-import {DropdownItem, FormGroup, Input, Label} from "reactstrap";
+import {FormGroup, Label} from "reactstrap";
 import {PROGRAMMING_LANGUAGE, programmingLanguagesMap} from "../../../services";
 import {ProgrammingLanguage} from "../../../../IsaacAppTypes";
-import React, {ChangeEvent} from "react";
-import { StyledDropdown } from "./DropdownInput";
+import React from "react";
+import {StyledDropdown} from "./DropdownInput";
+import classNames from "classnames";
 
 
 interface ProgrammingLanguageInputProps {
     programmingLanguage: Nullable<ProgrammingLanguage>;
     setProgrammingLanguage: (language: ProgrammingLanguage) => void;
+    isRequired?: boolean;
 }
 
-export const ProgrammingLanguageInput = ({programmingLanguage, setProgrammingLanguage} : ProgrammingLanguageInputProps) => {
+export const ProgrammingLanguageInput = ({programmingLanguage, setProgrammingLanguage, isRequired = false} : ProgrammingLanguageInputProps) => {
     const onChange = (event: any) => {
         const newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce((acc, [k, v]) => ({...acc, [k]: false}), {});
         setProgrammingLanguage(event.target.value ? {...newProgrammingLanguage, [event.target.value]: true} : newProgrammingLanguage);
     };
 
     return <FormGroup className="mr-lg-5">
-        <Label className={"font-weight-bold"} htmlFor="programming-language-select">Preferred programming language</Label>
+        <Label className={classNames({"form-optional": !isRequired}, "font-weight-bold")} htmlFor="programming-language-select">Preferred programming language</Label>
         <StyledDropdown
             id="programming-language-select"
             value={Object.values(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) =>

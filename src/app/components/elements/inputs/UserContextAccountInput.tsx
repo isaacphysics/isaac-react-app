@@ -1,10 +1,9 @@
-import React, {ReactNode, useRef} from "react";
+import React, {useRef} from "react";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     EMPTY_BOOLEAN_NOTATION_RECORD,
     EXAM_BOARD,
     examBoardBooleanNotationMap,
-    examBoardLabelMap,
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     isAda,
@@ -13,16 +12,15 @@ import {
     isTutorOrAbove,
     siteSpecific,
     STAGE,
-    stageLabelMap,
     TEACHER_REQUEST_ROUTE
 } from "../../../services";
-import {Button, Col, CustomInput, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label, UncontrolledDropdown, UncontrolledDropdownProps, UncontrolledTooltip} from "reactstrap";
+import {Button, Col, CustomInput, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
 import {UserContext} from "../../../../IsaacApiTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
 import {Immutable} from "immer";
-import { StyledDropdown } from "./DropdownInput";
+import {StyledDropdown} from "./DropdownInput";
 
 interface UserContextRowProps {
     userContext: UserContext;
@@ -37,11 +35,12 @@ interface UserContextRowProps {
     userContexts: UserContext[];
     setUserContexts: (ucs: UserContext[]) => void;
     index: number;
+    required: boolean;
 }
 
 function UserContextRow({
     userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings,
-    tutorOrAbove, showPlusOption, userContexts, setUserContexts, index
+    tutorOrAbove, showPlusOption, userContexts, setUserContexts, index, required
 }: UserContextRowProps) {
     const onlyUCWithThisStage = existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
 
@@ -76,7 +75,7 @@ function UserContextRow({
             <StyledDropdown
                 className={classNames("account-dropdown", {"mr-1" : isAda})}
                 aria-label="Stage"
-                invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
+                invalid={required && submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
                 onChange={onStageUpdate}
                 value={userContext.stage}
             >
@@ -93,7 +92,7 @@ function UserContextRow({
             {isAda && <StyledDropdown
                 className="account-dropdown ml-1"
                 aria-label="Exam Board"
-                invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
+                invalid={required && submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
                 onChange={onExamBoardUpdate}
                 value={userContext.examBoard}
             >
@@ -137,15 +136,16 @@ interface UserContextAccountInputProps {
     displaySettings: Nullable<DisplaySettings>;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     submissionAttempted: boolean;
+    required?: boolean;
 }
 export function UserContextAccountInput({
-    user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted,
+    user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted, required=true
 }: UserContextAccountInputProps) {
     const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
 
     return <div>
-        <Label htmlFor="user-context-selector" className="font-weight-bold">
+        <Label htmlFor="user-context-selector" className={classNames({"form-optional": !required}, "font-weight-bold")}>
             {siteSpecific(
                 <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
                 <span>Show me content for...</span>
@@ -185,15 +185,15 @@ export function UserContextAccountInput({
                         setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
                         existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
                         tutorOrAbove={tutorOrAbove} showPlusOption={showPlusOption} userContexts={userContexts} setUserContexts={setUserContexts}
-                        index={index}
+                        index={index} required={required}
                     />
-
                     {isAda && index === userContexts.length - 1 && <>
-                        <Col lg={6} className="p-0 pr-4 pr-lg-0">
-                            <Button color="primary" outline className="mt-3 mb-2 px-2 w-100" onClick={() => setUserContexts([...userContexts, {}])}>
-                                Add more content
-                            </Button>
-                        </Col>
+                        {tutorOrAbove &&
+                            <Col lg={6} className="p-0 pr-4 pr-lg-0">
+                                <Button color="primary" outline className="mt-3 mb-2 px-2 w-100" onClick={() => setUserContexts([...userContexts, {}])}>
+                                    Add more content
+                                </Button>
+                            </Col>}
                         {(userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <Label>
                             <CustomInput
                                 type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block mt-1"

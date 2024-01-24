@@ -3,7 +3,7 @@ import React from "react";
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { isAda } from "../../../services";
+import {isAda, isTeacherOrAbove} from "../../../services";
 
 interface EmailInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -17,10 +17,15 @@ export const EmailInput = ({userToUpdate, setUserToUpdate, emailIsValid, submiss
     return <FormGroup>
         <Label className={classNames({"form-optional": !required}, "font-weight-bold")}
                htmlFor="email-input">Email address</Label>
-        {isAda && <p className="d-block input-description">This will be visible to your students. We recommend using your school email address.</p>}
+        {isAda &&
+            isTeacherOrAbove(userToUpdate) ?
+                <p className="d-block input-description">This will be visible to your students. We recommend using your school email address.</p>
+                :
+                <p className="d-block input-description">This will be the email address you use to log in.</p>
+        }
         <Input
             id="email-input"
-            type="email"
+            type="text"
             name="email"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {email: e.target.value} : {email: null}))

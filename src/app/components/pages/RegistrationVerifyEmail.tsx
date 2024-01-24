@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
     errorSlice,
     getRTKQueryErrorMessage,
     selectors,
-    showErrorToast, useAppDispatch,
+    showErrorToast,
+    useAppDispatch,
     useAppSelector,
     useRequestEmailVerificationMutation,
     useVerifyEmailMutation

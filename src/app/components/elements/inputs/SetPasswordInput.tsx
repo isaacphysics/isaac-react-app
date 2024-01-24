@@ -23,7 +23,7 @@ export const SetPasswordInput = ({userToUpdate, setUserToUpdate, submissionAttem
 
     return <FormGroup>
         <Label className={"font-weight-bold"}>Password</Label>
-        <p className="d-block">Your password must be at least 8 characters.</p>
+        <p className="d-block input-description">Your password must be at least 8 characters.</p>
         <TogglablePasswordInput
             value={userToUpdate.password ? userToUpdate.password : undefined}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {

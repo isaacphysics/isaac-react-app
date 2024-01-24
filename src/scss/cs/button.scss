@@ -82,6 +82,9 @@
 }
 
 .btn, input.btn {
+  // Bootstrap's 'input' sets an unhelpful height
+  height: unset;
+
   border-radius: 50px;
   border-width: 3px;
 

@@ -13,6 +13,7 @@
 // Greyscale
 $cs-black: #000000;
 $cs-jet: #333333;
+$cs-muted: #4D575C;
 $cs-dark-silver: #B9B9B9;
 $cs-silver: #C2C2C2;
 $cs-light-gray: #D6D6D6;
@@ -279,6 +280,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "~billboard.js/dist/theme/insight.css";
 @import "~highlight.js/styles/a11y-light.css";
 @import "~leaflet/dist/leaflet.css";
+@import "~@raspberrypifoundation/design-system-core/scss/design-system-core.scss";
 
 @import "../common/isaac";
 
@@ -350,9 +352,6 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 
 // Difficulty icons
 @import "filter";
-
-//  RPF design system
-@import "https://static.raspberrypi.org/styles/design-system-core/branches/main/design-system-core.css";
 
 a.disabled {
     color: $gray-600;
