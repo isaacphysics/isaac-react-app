@@ -1,3 +1,24 @@
+@-webkit-keyframes gutter-overflow {
+  0%  {width: 100%; @include make-col-offset(0, 8);}
+  60%  {width: 100%; @include make-col-offset(0, 8);}
+  100% {width: 150%; @include make-col-offset(-2, 8);}
+}
+@-moz-keyframes gutter-overflow {
+  0%  {width: 100%; @include make-col-offset(0, 8);}
+  60%  {width: 100%; @include make-col-offset(0, 8);}
+  100% {width: 150%; @include make-col-offset(-2, 8);}
+}
+@-o-keyframes gutter-overflow {
+  0%  {width: 100%; @include make-col-offset(0, 8);}
+  60%  {width: 100%; @include make-col-offset(0, 8);}
+  100% {width: 150%; @include make-col-offset(-2, 8);}
+}
+@keyframes gutter-overflow {
+  0%  {width: 100%; @include make-col-offset(0, 8);}
+  60%  {width: 100%; @include make-col-offset(0, 8);}
+  100% {width: 150%; @include make-col-offset(-2, 8);}
+}
+
 @include media-breakpoint-up(lg) {
   .parsons-layout {
     -webkit-animation: gutter-overflow 0.5s; /* Safari 4+ */

@@ -1,19 +1,19 @@
-@-webkit-keyframes phy-gutter-overflow {
+@-webkit-keyframes gutter-overflow {
   0%  {width: 100%; @include make-col-offset(0, 8);}
   60%  {width: 100%; @include make-col-offset(0, 8);}
   100% {width: 110%; @include make-col-offset(-1, 20);}
 }
-@-moz-keyframes phy-gutter-overflow {
+@-moz-keyframes gutter-overflow {
   0%  {width: 100%; @include make-col-offset(0, 8);}
   60%  {width: 100%; @include make-col-offset(0, 8);}
   100% {width: 110%; @include make-col-offset(-1, 20);}
 }
-@-o-keyframes phy-gutter-overflow {
+@-o-keyframes gutter-overflow {
   0%  {width: 100%; @include make-col-offset(0, 8);}
   60%  {width: 100%; @include make-col-offset(0, 8);}
   100% {width: 110%; @include make-col-offset(-1, 20);}
 }
-@keyframes phy-gutter-overflow {
+@keyframes gutter-overflow {
   0%  {width: 100%; @include make-col-offset(0, 8);}
   60%  {width: 100%; @include make-col-offset(0, 8);}
   100% {width: 110%; @include make-col-offset(-1, 20);}
