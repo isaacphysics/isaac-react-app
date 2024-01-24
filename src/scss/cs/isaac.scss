@@ -285,7 +285,6 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 // Utility
 @import "preload";
 @import "../common/mixins";
-@import "../common/animations";
 
 // Atoms
 @import "fonts";
@@ -342,7 +341,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "quiz";
 @import "../common/callout";
 
-@import "parsons-layout";
+@import "expansion-layout";
 
 // Print
 @import "../common/print";
