@@ -57,7 +57,6 @@ import {
     PATHS,
     selectOnChange,
     siteSpecific,
-    sortIcon,
     useDeviceSize,
     useGameboards,
     TODAY
@@ -71,7 +70,7 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { Spacer } from "../elements/Spacer";
-import { sortItemHeader } from "../elements/sortItemHeader";
+import { SortItemHeader } from "../elements/SortItemHeader";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -265,11 +264,15 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <th className="text-center align-middle"><span className="pl-2 pr-2">Groups</span></th>
-        {sortItemHeader({key: "title", title: "Board name", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]}, boardOrder, setBoardOrder)}
+        <SortItemHeader key={"title"} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            Board name
+        </SortItemHeader>
         <th className="text-center align-middle">Stages</th>
         <th className="text-center align-middle">Difficulties</th>
         <th className="text-center align-middle">Creator</th>
-        {sortItemHeader({key: "visited", title: "Last viewed", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]}, boardOrder, setBoardOrder)}
+        <SortItemHeader key={"visited"} itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            Last viewed
+        </SortItemHeader>
         <th className="text-center align-middle">Assignments</th>
         <th className="text-center align-middle">Share</th>
     </tr>;
@@ -342,7 +345,9 @@ const CSTable = (props: SetAssignmentsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <th>Groups</th>
-        {sortItemHeader({colSpan: 2, className: "w-100", key: "title", title: "Quiz name", itemOrder: BoardOrder.title, reverseOrder: BoardOrder["-title"]}, boardOrder, setBoardOrder)}
+        <SortItemHeader key={"title"} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            Quiz name
+        </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
             Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
             <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
@@ -351,7 +356,9 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </RS.UncontrolledTooltip>
         </th>
         <th>Creator</th>
-        {sortItemHeader({key: "visited", title: "Last viewed", itemOrder: BoardOrder.visited, reverseOrder: BoardOrder["-visited"]}, boardOrder, setBoardOrder)}
+        <SortItemHeader key={"visited"} itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            Last viewed
+        </SortItemHeader>
         <th>Manage</th>
         <th>Share</th>
         <th>Delete</th>

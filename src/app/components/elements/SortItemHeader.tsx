@@ -1,4 +1,4 @@
-import React, { ComponentProps } from "react";
+import React, { ComponentProps, ReactNode } from "react";
 import { BoardOrder } from "../../../IsaacAppTypes";
 import { siteSpecific } from "../../services";
 
@@ -23,20 +23,29 @@ function sortClass(itemOrder: BoardOrder, reverseOrder: BoardOrder, boardOrder: 
     }
 }
 
-export const sortItemHeader = (
-    props: ComponentProps<"th"> & {title: string, itemOrder: BoardOrder, reverseOrder: BoardOrder},
+export interface SortItemHeaderProps extends ComponentProps<"th"> {
+    children: ReactNode,
+    itemOrder: BoardOrder,
+    reverseOrder: BoardOrder,
     boardOrder: BoardOrder,
-    setBoardOrder: (order: BoardOrder) => void) => {
-    const {title, itemOrder, reverseOrder, ...rest} = props;
+    setBoardOrder: (order: BoardOrder) => void
+}
+
+export const SortItemHeader = (props: SortItemHeaderProps) => {
+    const {itemOrder, reverseOrder, boardOrder, setBoardOrder, ...rest} = props;
+
     const className = (props.className || siteSpecific("text-center align-middle", "")) + sortClass(itemOrder, reverseOrder, boardOrder);
-    const sortArrows = <button className="sort" onClick={() => {toggleSort(itemOrder, reverseOrder, boardOrder, setBoardOrder);}}>
-            <span className="up">▲</span>
-            <span className="down">▼</span>
-        </button>;
+    const sortArrows = <button
+        className="sort"
+        onClick={() => {toggleSort(itemOrder, reverseOrder, boardOrder, setBoardOrder);}}
+    >
+        <span className="up">▲</span>
+        <span className="down">▼</span>
+    </button>;
 
     return <th key={props.key} {...rest} className={className}>
         <div className="d-flex align-items-center">
-            {title}
+            {props.children}
             {sortArrows}
         </div>
     </th>;
