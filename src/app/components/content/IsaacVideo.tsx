@@ -3,7 +3,7 @@ import {VideoDTO} from "../../../IsaacApiTypes";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {NOT_FOUND, trackEvent, useUserContext} from "../../services";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
-import { GenericYoutubeCookieHandler } from '../handlers/InterstitialCookieHandler';
+import { YoutubeCookieHandler } from '../handlers/InterstitialCookieHandler';
 import classNames from "classnames";
 
 interface IsaacVideoProps {
@@ -113,7 +113,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
         <div className="no-print content-value text-center">
             { embedSrc ?
                 <div className={classNames("content-video-container", {"ratio-16x9" : userContext.cookieConsent?.youtubeCookieAccepted ?? false})}>
-                    <GenericYoutubeCookieHandler afterAcceptedElement={
+                    <YoutubeCookieHandler afterAcceptedElement={
                         <iframe ref={videoRef} className="mw-100" title={altTextToUse} src={embedSrc} allowFullScreen/>
                     } />
                 </div>
