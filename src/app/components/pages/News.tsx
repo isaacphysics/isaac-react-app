@@ -17,7 +17,7 @@ export const News = () => {
             thenRender={(news) =>
                 news.length > 0
                     ? <CardDeck className={"justify-content-center"}>
-                        {news.map(n => <NewsCard newsItem={n} showTitle />)}
+                        {news.map(n => <NewsCard key={n.id} newsItem={n} showTitle />)}
                     </CardDeck>
                     : <div className={"w-100 text-left"}><h4>No news to display...</h4></div>
             }

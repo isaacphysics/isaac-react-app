@@ -13,15 +13,15 @@ import {
 import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
 import {QuizSettingModal} from "../../components/elements/modals/QuizSettingModal";
 
-export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, allowedToSchedule?: boolean, dueDate?: Date | null, scheduledStartDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
+export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: Date | null, scheduledStartDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
     dispatch(openActiveModal({
         closeAction: () => {
-            dispatch(closeActiveModal())
+            dispatch(closeActiveModal());
         },
         title: `Setting test '${quiz.title ?? quiz.id}'`,
-        body: <QuizSettingModal quiz={quiz} dueDate={dueDate} scheduledStartDate={scheduledStartDate} feedbackMode={feedbackMode} allowedToSchedule={allowedToSchedule}/>
+        body: <QuizSettingModal quiz={quiz} dueDate={dueDate} scheduledStartDate={scheduledStartDate} feedbackMode={feedbackMode}/>
     }));
-}
+};
 
 export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST, quizAssignmentId});

@@ -171,6 +171,11 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.biotechnology, title: `Bio${softHyphen}technology`, parent: TAG_ID.genetics},
         // Physiology
         {id: TAG_ID.plants, title: "Plants", parent: TAG_ID.physiology},
+        {id: TAG_ID.breathingAndCirculation, title: "Breathing & Circulation", parent: TAG_ID.physiology},
+        {id: TAG_ID.hormones, title: "Hormones", parent: TAG_ID.physiology},
+        {id: TAG_ID.digestionAndExcretion, title: "Digestion & Excretion", parent: TAG_ID.physiology},
+        {id: TAG_ID.senseAndMovement, title: "Sense & Movement", parent: TAG_ID.physiology},
+        {id: TAG_ID.diseaseAndImmunity, title: "Disease & Immunity", parent: TAG_ID.physiology},
         // Ecology
         {id: TAG_ID.populations, title: "Populations", parent: TAG_ID.ecology},
         {id: TAG_ID.ecosystems, title: "Ecosystems", parent: TAG_ID.ecology},

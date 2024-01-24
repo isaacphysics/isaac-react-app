@@ -25,6 +25,7 @@ import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { useHistory, useLocation } from "react-router";
+import Select from "react-select";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -112,7 +113,7 @@ export const Glossary = () => {
     const subjects = tags.allSubjectTags.sort((a,b) => a.title.localeCompare(b.title));
     const stages: Stage[] = stagesOrdered.slice(0,-1);
     const [filterSubject, setFilterSubject] = useState<Tag | undefined>(querySubjects);
-    const [filterStage, setFilterStage] = useState<string | undefined>(queryStages);
+    const [filterStage, setFilterStage] = useState<Stage | undefined>(queryStages);
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useAppSelector(
         (state: AppState) => state && state.glossaryTerms?.map(
@@ -129,7 +130,7 @@ export const Glossary = () => {
     useEffect(() => {
         const params: {[key: string]: string} = {};
         if (filterSubject) params.subjects = filterSubject.id;
-        if (filterStage) params.stage = filterStage;
+        if (filterStage) params.stages = filterStage;
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state, hash: location.hash});
     }, [filterSubject, filterStage]);
 
@@ -143,7 +144,7 @@ export const Glossary = () => {
 
                     if (isAda && isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
                     if (isPhy && isDefined(filterSubject) && !term.tags?.includes(filterSubject.id)) continue;
-                    if (isPhy && isDefined(filterStage) && !term.stage?.includes(filterStage)) continue;
+                    if (isPhy && isDefined(filterStage) && !term.stages?.includes(filterStage)) continue;
 
                     const value = term?.value?.[0] ?? '#';
                     const k = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.includes(value) ? value : '#';
@@ -174,7 +175,6 @@ export const Glossary = () => {
         const el = glossaryTermRefs.current?.get(hash);
         if (isDefined(el)) scrollVerticallyIntoView(el, ALPHABET_HEADER_OFFSET);
     }, [hash]);
-
 
     /* Stores a reference to each alphabet header (to the h2 element) - these are the headers alongside the glossary
      * terms, NOT the letters that exist in the clickable sticky header (or the other non-sticky one)
@@ -279,13 +279,15 @@ export const Glossary = () => {
                     <Row className="no-print">
                         {isPhy && <Col className="mt-3 mt-md-0">
                             <Label for='subject-select' className='sr-only'>Subject</Label>
-                            <StyledSelect inputId="subject-select"
-                                options={ subjects.map(e => ({ value: e.id, label: e.title})) }
-                                value={querySubjects ? ({value: querySubjects.id, label: querySubjects.title }) : undefined}
+                            <Select inputId="subject-select"
+                                options={subjects.map(s => ({ value: s.id, label: s.title}))}
+                                value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title}) : undefined}
                                 name="subject-select"
                                 placeholder="Select a subject"
                                 onChange={e => setFilterSubject(subjects.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                 isClearable
+                                className={`basic-multi-select glossary-select ${filterSubject?.id ?? ""}`}
+                                classNamePrefix="select"
                             />
                         </Col>}
                         <Col md={{size: 4}}>
@@ -298,7 +300,7 @@ export const Glossary = () => {
                         {isAda && <Col className="mt-3 mt-md-0">
                             <Label for='topic-select' className='sr-only'>Topic</Label>
                             <StyledSelect inputId="topic-select"
-                                options={ topics.map(e => ({ value: e.id, label: e.title})) }
+                                options={ topics.map(t => ({ value: t.id, label: t.title}))}
                                 name="topic-select"
                                 placeholder="All topics"
                                 onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
@@ -308,11 +310,11 @@ export const Glossary = () => {
                         {isPhy && <Col className="mt-3 mt-md-0">
                             <Label for='stage-select' className='sr-only'>Stage</Label>
                             <StyledSelect inputId="stage-select"
-                                options={ stages.map(e => ({ value: e, label: stageLabelMap[e]})) }
-                                value={queryStages ? ({value: queryStages, label: stageLabelMap[queryStages]}) : undefined}
+                                options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
+                                value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
                                 name="stage-select"
                                 placeholder="Select a stage"
-                                onChange={e => setFilterStage(stages.find(v => v === e?.value)) }
+                                onChange={e => setFilterStage(stages.find(s => s === e?.value))}
                                 isClearable
                             />
                         </Col>}

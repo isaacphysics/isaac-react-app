@@ -4,9 +4,14 @@ figure {
   background-color: white;
   img {
     max-width: 100%;
-    padding: 2rem;
+    padding: 1rem;
   }
 }
+
+.figure_panel {
+    margin: 1rem;
+}
+
 .figure-caption {
   font-size: 1rem !important;
   padding-left: 1rem !important;

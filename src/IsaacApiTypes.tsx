@@ -42,7 +42,7 @@ export interface AssignmentDTO extends IAssignmentLike {
     notes?: string;
 }
 
-export interface AssignmentFeedbackDTO {
+export interface AssignmentStatusDTO {
     groupId: number;
     assignmentId?: number;
     errorMessage?: string;
@@ -412,7 +412,7 @@ export interface FreeTextRuleDTO extends ChoiceDTO {
 export interface GlossaryTermDTO extends ContentDTO {
     explanation?: ContentDTO;
     examBoard?: EXAM_BOARD | "";
-    stage?: string[]
+    stages?: string[]
 }
 
 export interface CodeSnippetDTO extends ContentDTO {
