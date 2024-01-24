@@ -3,7 +3,8 @@ import {
     ACTION_TYPE,
     api,
     API_REQUEST_FAILURE_MESSAGE,
-    DOCUMENT_TYPE, FIRST_LOGIN_STATE,
+    DOCUMENT_TYPE,
+    FIRST_LOGIN_STATE,
     history,
     isAda,
     isFirstLoginInPersistence,
@@ -12,7 +13,8 @@ import {
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    TAG_ID, trackEvent
+    TAG_ID,
+    trackEvent
 } from "../../services";
 import {
     Action,
@@ -33,29 +35,21 @@ import {
     IsaacQuestionPageDTO,
     QuestionDTO,
     TestCaseDTO,
-    UserContext,
-    UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserContext
 } from "../../../IsaacApiTypes";
-import {
-    releaseAllConfirmationModal,
-    releaseConfirmationModal,
-    revocationConfirmationModal,
-    tokenVerificationModal
-} from "../../components/elements/modals/TeacherConnectionModalCreators";
 import {AxiosError} from "axios";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {
-    AppState,
-    store,
-    errorSlice,
-    routerPageChange,
-    closeActiveModal,
-    openActiveModal,
-    showToast,
-    logAction,
-    isaacApi,
     AppDispatch,
+    AppState,
+    closeActiveModal,
+    errorSlice,
+    isaacApi,
+    logAction,
+    openActiveModal,
+    routerPageChange,
+    showToast,
+    store,
 } from "../index";
 import {Immutable} from "immer";
 
@@ -218,9 +212,12 @@ export const registerNewUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
         await dispatch(requestCurrentUser() as any);
 
-        // Redirect to email verification page
-        history.push('/register/verify');
-
+        if (isTeacherOrAbove(newUser)) {
+            // Redirect to email verification page
+            history.push('/register/verify');
+        } else {
+            history.push('/register/connect')
+        }
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }

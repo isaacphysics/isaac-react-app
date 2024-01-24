@@ -40,7 +40,7 @@ export const UserContent = (props: UserContentProps) => {
             <UserContextAccountInput
                 user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
                 displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
-                setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
+                setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted} required={false}
             />
             <hr className="border-muted my-4"/>
             <ProgrammingLanguageInput programmingLanguage={programmingLanguage} setProgrammingLanguage={setProgrammingLanguage}/>

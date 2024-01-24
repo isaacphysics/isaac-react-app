@@ -1,12 +1,12 @@
 import React from 'react';
-import { MyAccountTab } from './MyAccountTab';
-import { FirstNameInput, LastNameInput } from '../inputs/NameInput';
-import { EmailInput } from '../inputs/EmailInput';
-import { ValidationUser } from '../../../../IsaacAppTypes';
-import {validateName, validateEmail, SITE_TITLE} from '../../../services';
-import { CountryInput } from '../inputs/CountryInput';
-import { DobInput } from '../inputs/DobInput';
-import { GenderInput } from '../inputs/GenderInput';
+import {MyAccountTab} from './MyAccountTab';
+import {FirstNameInput, LastNameInput} from '../inputs/NameInput';
+import {EmailInput} from '../inputs/EmailInput';
+import {ValidationUser} from '../../../../IsaacAppTypes';
+import {SITE_TITLE, validateEmail, validateName} from '../../../services';
+import {CountryInput} from '../inputs/CountryInput';
+import {GenderInput} from '../inputs/GenderInput';
+import {SchoolInput} from "../inputs/SchoolInput";
 
 interface UserProfileProps {
     userToUpdate: ValidationUser;
@@ -45,20 +45,20 @@ export const UserProfile = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 required={true}
             />
             <hr className="text-center border-muted my-4"/>
-            <DobInput 
-                userToUpdate={userToUpdate} 
-                setUserToUpdate={setUserToUpdate} 
-                submissionAttempted={submissionAttempted} 
-                editingOtherUser={editingOtherUser}
+            <CountryInput
+                userToUpdate={userToUpdate}
+                setUserToUpdate={setUserToUpdate}
+                submissionAttempted={submissionAttempted}
+                required={true}
+            />
+            <SchoolInput
+                userToUpdate={userToUpdate}
+                setUserToUpdate={setUserToUpdate}
+                submissionAttempted={submissionAttempted}
+                required={true}
             />
             <GenderInput 
                 userToUpdate={userToUpdate}
-                setUserToUpdate={setUserToUpdate} 
-                submissionAttempted={submissionAttempted}
-                required={false}
-            />
-            <CountryInput
-                userToUpdate={userToUpdate} 
                 setUserToUpdate={setUserToUpdate} 
                 submissionAttempted={submissionAttempted}
                 required={false}

@@ -1668,6 +1668,13 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
+"@raspberrypifoundation/design-system-core@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@raspberrypifoundation/design-system-core/-/design-system-core-0.1.13.tgz#b8b883a0b25878af4e0fea0f8bec5183b60871c7"
+  integrity sha512-hbW6PLa1+UkdD6/O2jyJHqBukwDP3Qtyh3YS9hkFSu3ht1OAEgC2A6QHUTlogvEZeomjqpWENbRdGaUNZyQK+A==
+  dependencies:
+    classnames "^2.3.2"
+
 "@reduxjs/toolkit@^1.8.3":
   version "1.9.5"
   resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.9.5.tgz#d3987849c24189ca483baa7aa59386c8e52077c4"
@@ -3247,6 +3254,11 @@ classnames@^2.2.3:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.2.tgz#351d813bf0137fcc6a76a16b88208d2560a0d924"
   integrity sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==
+
+classnames@^2.3.2:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.5.1.tgz#ba774c614be0f016da105c858e7159eae8e7687b"
+  integrity sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==
 
 clean-css@^5.2.2:
   version "5.3.2"

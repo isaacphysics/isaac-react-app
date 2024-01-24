@@ -15,10 +15,15 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     FIRST_LOGIN_STATE,
-    history, KEY,
+    history,
+    KEY,
     persistence,
     SITE_TITLE,
-    trackEvent, validateEmail, validateName, validatePassword
+    trackEvent,
+    validateEmail,
+    validateName,
+    validatePassword,
+    validateUserSchool
 } from "../../services";
 import {errorSlice, registerNewUser, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {Immutable} from "immer";
@@ -26,14 +31,20 @@ import {ValidationUser} from "../../../IsaacAppTypes";
 import {SchoolInput} from "../elements/inputs/SchoolInput";
 import {CountryInput} from "../elements/inputs/CountryInput";
 import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
-import {USER_ROLES} from "../../../IsaacApiTypes";
-import {LastNameInput, FirstNameInput} from "../elements/inputs/NameInput";
+import {UserRole} from "../../../IsaacApiTypes";
+import {FirstNameInput, LastNameInput} from "../elements/inputs/NameInput";
 import {EmailInput} from "../elements/inputs/EmailInput";
 import {GenderInput} from "../elements/inputs/GenderInput";
 import {extractErrorMessage} from "../../services/errors";
 import {Alert} from "../elements/Alert";
 
-export const RegistrationSetDetails = () => {
+
+interface RegistrationSetDetailsProps {
+    role: UserRole
+}
+
+
+export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     const dispatch = useAppDispatch();
 
     // todo: before, this was probably used to keep the details from the initial login screen (if any). Possibly still useful for SSO. Remove?
@@ -46,7 +57,7 @@ export const RegistrationSetDetails = () => {
             password: null,
             familyName: undefined,
             givenName: undefined,
-            role: USER_ROLES[2]  // todo: not this
+            role: role
         })
     );
 
@@ -56,6 +67,7 @@ export const RegistrationSetDetails = () => {
     const givenNameIsValid = validateName(registrationUser.givenName);
     const familyNameIsValid = validateName(registrationUser.familyName);
     const passwordIsValid = validatePassword(registrationUser.password || "");
+    const schoolIsValid = validateUserSchool(registrationUser);
     const error = useAppSelector((state) => state?.error);
     const errorMessage = extractErrorMessage(error);
 
@@ -63,7 +75,7 @@ export const RegistrationSetDetails = () => {
         event.preventDefault()
         setAttemptedSignUp(true);
 
-        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && tosAccepted) {
+        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && schoolIsValid && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
             setAttemptedSignUp(true)
@@ -87,7 +99,7 @@ export const RegistrationSetDetails = () => {
                 {errorMessage && <Alert title="Unable to create your account" body={errorMessage} />}
                 <Row>
                     <Col xs={12} lg={6}>
-                        <h3>Create your teacher account</h3>
+                        <h3>Create your {role.toLowerCase()} account</h3>
                     </Col>
                     <Col xs={12} lg={5}>
                         <Form onSubmit={register}>
@@ -119,20 +131,20 @@ export const RegistrationSetDetails = () => {
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
+                            <hr />
                             <CountryInput
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
-                            <hr />
-                            <GenderInput
+                            <SchoolInput
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 submissionAttempted={attemptedSignUp}
-                                required={false}
+                                required={true}
                             />
-                            <SchoolInput
+                            <GenderInput
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 submissionAttempted={attemptedSignUp}

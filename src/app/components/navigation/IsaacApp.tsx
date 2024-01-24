@@ -15,7 +15,6 @@ import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
 import {Glossary} from "../pages/Glossary";
-import {TeacherRequest} from "../pages/TeacherRequest";
 import {LogIn} from "../pages/LogIn";
 import {Registration} from "../pages/Registration";
 import {LogOutHandler} from "../handlers/LogOutHandler";
@@ -29,21 +28,21 @@ import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
 import {
-    persistence,
     checkForWebSocket,
     closeWebSocket,
     history,
+    isAda,
     isAdminOrEventManager,
     isEventLeader,
     isLoggedIn,
     isStaff,
-    KEY,
-    showNotification,
-    isTutorOrAbove,
-    PATHS,
-    isAda,
     isTeacherOrAbove,
-    isVerified
+    isTutorOrAbove,
+    isVerified,
+    KEY,
+    PATHS,
+    persistence,
+    showNotification
 } from "../../services"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -86,6 +85,10 @@ import {RegistrationRoleSelect} from "../pages/RegistrationRoleSelect";
 import {RegistrationSetDetails} from "../pages/RegistrationSetDetails";
 import {RegistrationVerifyEmail} from "../pages/RegistrationVerifyEmail";
 import {RegistrationSetPreferences} from "../pages/RegistrationSetPreferences";
+import {RegistrationTeacherConnect} from "../pages/RegistrationTeacherConnect";
+import {RegistrationSuccess} from "../pages/RegistrationSuccess";
+import {RegistrationAgeCheck} from "../pages/RegistrationAgeCheck";
+import {RegistrationAgeCheckFailed} from "../pages/RegistrationAgeCheckFailed";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -204,9 +207,14 @@ export const IsaacApp = () => {
                         {/* Registration flow */}
                         <TrackedRoute exact path="/register" component={Registration} />
                         <TrackedRoute exact path="/register/role" component={RegistrationRoleSelect} />
-                        <TrackedRoute exact path="/register/teacher/details" component={RegistrationSetDetails} />
+                        <TrackedRoute exact path="/register/student/age" component={RegistrationAgeCheck} />
+                        <TrackedRoute exact path="/register/student/age_denied" component={RegistrationAgeCheckFailed} />
+                        <TrackedRoute exact path="/register/student/details" component={RegistrationSetDetails} componentProps={{'role': 'STUDENT'}} />
+                        <TrackedRoute exact path="/register/teacher/details" component={RegistrationSetDetails} componentProps={{'role': 'TEACHER'}} />
                         <TrackedRoute exact path="/register/verify" component={RegistrationVerifyEmail} />
-                        <TrackedRoute exact path="/register/preferences" component={RegistrationSetPreferences} />
+                        <TrackedRoute exact path="/register/connect" ifUser={isLoggedIn} component={RegistrationTeacherConnect} />
+                        <TrackedRoute exact path="/register/preferences" ifUser={isLoggedIn} component={RegistrationSetPreferences} />
+                        <TrackedRoute exact path="/register/success" ifUser={isLoggedIn} component={RegistrationSuccess} />
 
                         {/* Static pages */}
                         <TrackedRoute exact path="/contact" component={Contact}/>

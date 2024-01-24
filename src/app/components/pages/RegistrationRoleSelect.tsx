@@ -1,9 +1,8 @@
 import React from "react";
-import {Button, Card, CardBody, CardFooter, CardText, CardTitle, Col, Container, Row} from "reactstrap";
+import {Button, Card, CardBody, CardText, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {history, isAda, SITE_TITLE} from "../../services";
-import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
-import {GoogleSignInButton} from "../elements/GoogleSignInButton";
+import {history, SITE_TITLE} from "../../services";
+
 
 export const RegistrationRoleSelect = () => {
 
@@ -11,6 +10,11 @@ export const RegistrationRoleSelect = () => {
         event.preventDefault();
         history.push("/register/teacher/details");
     };
+
+    const studentSignup = (event: React.MouseEvent) => {
+        event.preventDefault();
+        history.push("/register/student/age")
+    }
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
@@ -33,7 +37,7 @@ export const RegistrationRoleSelect = () => {
                                         <li>See all assignments set by your teacher(s)</li>
                                     </ul>
                                 </CardText>
-                                <Button block disabled className="align-self-end mt-auto">I am a student</Button>
+                                <Button block className="align-self-end mt-auto" onClick={studentSignup}>I am a student</Button>
                             </CardBody>
                         </Card>
                     </Col>
