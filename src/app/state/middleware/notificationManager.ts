@@ -3,7 +3,7 @@ import {
     ACTION_TYPE,
     allRequiredInformationIsPresent,
     isDefined,
-    isLoggedIn,
+    isLoggedIn, isPhy,
     KEY,
     persistence,
     withinLast2Hours,
@@ -28,9 +28,16 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
         }
 
         if (isDefined(user)) {
+            // Required account info modal - takes precedence over stage/exam board re-confirmation modal, and is only
+            // shown once every 50 minutes (using a key in clients browser storage)
+            if (isPhy && isDefined(state.userPreferences) && !allRequiredInformationIsPresent(user, state.userPreferences, user.registeredContexts) &&
+                !withinLast50Minutes(persistence.load(KEY.REQUIRED_MODAL_SHOWN_TIME))) {
+                persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
+                await dispatch(openActiveModal(requiredAccountInformationModal));
+            }
             // User context re-confirmation modal - used to request a user to update their stage and/or exam board
             // once every academic year.
-            if (needToUpdateUserContextDetails(user.registeredContextsLastConfirmed) &&
+            else if (needToUpdateUserContextDetails(user.registeredContextsLastConfirmed) &&
                      !withinLast50Minutes(persistence.load(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME))) {
                 persistence.save(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME, new Date().toString());
                 await dispatch(openActiveModal(userContextReconfimationModal));

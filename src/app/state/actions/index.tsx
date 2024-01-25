@@ -214,7 +214,7 @@ export const registerNewUser = (
 
         if (isTeacherOrAbove(newUser)) {
             // Redirect to email verification page
-            history.push('/register/verify');
+            history.push('/verifyemail');
         } else {
             history.push('/register/connect')
         }
@@ -352,7 +352,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
                 return;
             } else if (result.data.EMAIL_VERIFICATION_REQUIRED) {
                 // Email verification is required for this user
-                history.push("/register/verify");
+                history.push("/verifyemail");
                 // A partial login is still "successful", though we are unable to request user preferences and auth settings
                 dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
                 return;

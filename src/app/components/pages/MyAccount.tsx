@@ -14,7 +14,7 @@ import {
     NavLink,
     Row,
     TabContent,
-    TabPane,
+    TabPane, UncontrolledAlert,
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {
@@ -327,7 +327,14 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                     </Nav>
 
                     <Form name="my-account" onSubmit={updateAccount}>
-                        {error?.type == "generalError" && <Alert title="Unable to update your account" body={error.generalError} />}
+                        {error?.type == "generalError" &&
+                            siteSpecific(
+                                <UncontrolledAlert color="warning">
+                                    <p className="alert-heading font-weight-bold">Unable to update your account</p>
+                                    <p>{error.generalError}</p>
+                                </UncontrolledAlert>,
+                                <Alert title="Unable to update your account" body={error.generalError} />)
+                        }
                         <TabContent activeTab={activeTab}>
                             <TabPane tabId={ACCOUNT_TAB.account}>
                                 {isPhy && <UserDetails

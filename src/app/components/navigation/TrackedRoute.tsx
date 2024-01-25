@@ -44,7 +44,7 @@ export const TrackedRoute = function({component, componentProps, ...rest}: Track
                 const userNeedsToBeTutorOrTeacher = rest.ifUser && [isTutorOrAbove.name, isTeacherOrAbove.name].includes(rest.ifUser.name); // TODO we should try to find a more robust way than this
                 return <ShowLoading until={user}>
                     {isAda && user && isTeacherOrAbove(user) && !isVerified(user) && ifUser.name ? 
-                        <Redirect to="/register/verify"/> :
+                        <Redirect to="/verifyemail"/> :
                         user && ifUser(user) ?
                             <WrapperComponent component={component} {...propsWithUser} {...componentProps} /> :
                             user && !user.loggedIn && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?

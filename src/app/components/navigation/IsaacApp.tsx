@@ -16,7 +16,7 @@ import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
 import {Glossary} from "../pages/Glossary";
 import {LogIn} from "../pages/LogIn";
-import {Registration} from "../pages/Registration";
+import {RegistrationStart} from "../pages/RegistrationStart";
 import {LogOutHandler} from "../handlers/LogOutHandler";
 import {EmailAlterHandler} from "../handlers/EmailAlterHandler";
 import {ProviderCallbackHandler} from "../handlers/ProviderCallbackHandler";
@@ -202,19 +202,6 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/logout" component={LogOutHandler} />
                         <TrackedRoute exact path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                         <TrackedRoute exact path="/resetpassword/:token" component={ResetPasswordHandler}/>
-                        <TrackedRoute exact path="/verifyemail" component={EmailAlterHandler}/>
-
-                        {/* Registration flow */}
-                        <TrackedRoute exact path="/register" component={Registration} />
-                        <TrackedRoute exact path="/register/role" component={RegistrationRoleSelect} />
-                        <TrackedRoute exact path="/register/student/age" component={RegistrationAgeCheck} />
-                        <TrackedRoute exact path="/register/student/age_denied" component={RegistrationAgeCheckFailed} />
-                        <TrackedRoute exact path="/register/student/details" component={RegistrationSetDetails} componentProps={{'role': 'STUDENT'}} />
-                        <TrackedRoute exact path="/register/teacher/details" component={RegistrationSetDetails} componentProps={{'role': 'TEACHER'}} />
-                        <TrackedRoute exact path="/register/verify" component={RegistrationVerifyEmail} />
-                        <TrackedRoute exact path="/register/connect" ifUser={isLoggedIn} component={RegistrationTeacherConnect} />
-                        <TrackedRoute exact path="/register/preferences" ifUser={isLoggedIn} component={RegistrationSetPreferences} />
-                        <TrackedRoute exact path="/register/success" ifUser={isLoggedIn} component={RegistrationSuccess} />
 
                         {/* Static pages */}
                         <TrackedRoute exact path="/contact" component={Contact}/>
