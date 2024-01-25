@@ -304,9 +304,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                                 name&nbsp;{boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                             </button>
                         </th>
-                        <th className="text-center align-middle">Stages</th>
-                        <th className="text-center align-middle">Difficulties</th>
-                        <th className="text-center align-middle">Creator</th>
+                        <th className="text-center align-middle" colSpan={2}>Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" /></th>
                         <th className="text-center align-middle pointer-cursor">
                             <button className="table-button"
                                     onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
@@ -314,8 +312,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                                 viewed&nbsp;{boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
                             </button>
                         </th>
-                        <th className="text-center align-middle">Assignments</th>
-                        <th className="text-center align-middle">Share</th>
+                        <th className="text-center align-middle">Manage</th>
                     </tr>
                     </thead>
                     <tbody>
