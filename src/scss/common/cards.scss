@@ -18,15 +18,11 @@
   //  //margin-left: -1.45rem;
   //  //width: calc(100% - 0.5rem) !important;
   //}
-  .event-card-image {
-    img {
-      display: block;
-      height: 150px;
-      width: 150px;
-      border-radius: 50%;
-      margin: auto;
-      margin-top: 1rem;
-    }
+  .event-card-image img {
+    display: block;
+    height: 180px;
+    object-fit: cover;
+    margin: auto;
   }
 
   .card-title {
@@ -37,8 +33,8 @@
   .card-body {
     .card-text {
       > a {
-        font-size: 1.125rem;
-        font-weight: bold;
+        font-size: 1.125rem !important;
+        font-weight: bold !important;
       }
       &.card-text01 {
         flex: 1 0 auto;

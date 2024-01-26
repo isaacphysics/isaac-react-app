@@ -58,6 +58,11 @@ $yellow-500: #FFFAC3;
 $yellow-600: #FFFFE6;
 $yellow-700: #FFFFF5;
 
+$cs-perfect: #358539;
+$cs-in-progress: #FE8E15;
+$cs-failed: #C2423F;
+
+
 //Text Colour
 $highlight-text-light: $cs-white;
 $highlight-text-dark: $cs-black;
@@ -183,6 +188,10 @@ $theme-colors: ( // Special Bootstrap variable that is used to generate colour c
     "silver-grey" : $cs-silver,
     "light-grey" : $cs-light-gray,
     "cultured-grey" : $cs-cultured,
+
+    "perfect": $cs-perfect,
+    "in-progress": $cs-in-progress,
+    "failed": $cs-failed,
 );
 
 // Override Bootstrap warning alert text colour - it doesn't look like we can set it in the theme
@@ -199,10 +208,10 @@ $inequality-item-font-colour: $cs-white;
 
 // Assignment progress colours
 $default-name-fill: $cs-jet;
-$perfect-fill: #358539;
+$perfect-fill: $cs-perfect;
 $passed-fill: $cs-jet;
-$in-progress-fill: #FE8E15;
-$failed-fill: #C2423F;
+$in-progress-fill: $cs-in-progress;
+$failed-fill: $cs-failed;
 
 $spacer: 1rem !default;
 $spacers: ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
@@ -285,7 +294,6 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 // Utility
 @import "preload";
 @import "../common/mixins";
-@import "../common/animations";
 
 // Atoms
 @import "fonts";
@@ -342,7 +350,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "quiz";
 @import "../common/callout";
 
-@import "parsons-layout";
+@import "expansion-layout";
 
 // Print
 @import "../common/print";

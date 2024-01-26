@@ -91,20 +91,21 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                 { className: className.replace((matches && matches[0]) || `indent-${localCurrentIndent}`, `indent-${newIndent}`) }
             ));
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [draggedElement, currentIndent, currentMaxIndent, canIndent, currentDestinationIndex]);
 
     const moveItem = (src: Immutable<ParsonsItemDTO>[] | undefined, fromIndex: number, dst: Immutable<ParsonsItemDTO>[] | undefined, toIndex: number, indent: number) => {
         if (!src || !dst) return;
         const srcItem = src.splice(fromIndex, 1)[0];
         dst.splice(toIndex, 0, {...srcItem, indentation: indent});
-    }
+    };
 
     const onDragStart = (initial: DragStart) => {
         const draggedElement: HTMLElement | null = document.getElementById(initial.draggableId);
         const choiceElement: HTMLElement | null = document.getElementById("parsons-choice-area");
         setDraggedElement(draggedElement);
         setInitialX(choiceElement && choiceElement.getBoundingClientRect().left);
-    }
+    };
 
     const onDragEnd = (result: DropResult) => {
         if (!result.source || !result.destination) {
@@ -141,7 +142,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         setDraggedElement(null);
         setInitialX(null);
         setCurrentIndent(null);
-    }
+    };
 
     const onDragUpdate = (initial: DragUpdate) => {
         // FIXME: Needs moving because onDragUpdate is not called at all the times we need it.
@@ -151,7 +152,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         } else {
             setCurrentDestinationIndex(initial.destination.index);
         }
-    }
+    };
 
     const getStyle = (style: DraggingStyle | NotDraggingStyle | undefined, snapshot: DraggableStateSnapshot) => {
         if (!snapshot.isDropAnimating) {
@@ -162,13 +163,13 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             // cannot be 0, but make it super tiny
             transitionDuration: `0.001s`,
         };
-    }
+    };
 
     const getPreviousItemIndentation = (index: number) => {
         if (!currentAttempt?.items) return -1;
         const items = [...(currentAttempt.items || [])];
         return items[Math.max(0, index-1)].indentation || 0;
-    }
+    };
 
     const reduceIndentation = (index: number) => {
         if (!currentAttempt?.items || doc.disableIndentation) return;
@@ -179,7 +180,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             items.splice(index, 1, indentedItem);
         }
         dispatchSetCurrentAttempt({...currentAttempt, items});
-    }
+    };
 
     const increaseIndentation = (index: number) => {
         if (index === 0 || !currentAttempt?.items || doc.disableIndentation) return;
@@ -191,14 +192,14 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             items.splice(index, 1, indentedItem);
         }
         dispatchSetCurrentAttempt({...currentAttempt, items});
-    }
+    };
 
     const onCurrentAttemptUpdate = (newCurrentAttempt?: Immutable<ParsonsChoiceDTO>, newAvailableItems?: Immutable<ParsonsItemDTO>[]) => {
         if (!newCurrentAttempt) {
             const defaultAttempt: ParsonsChoiceDTO = {
                 type: "parsonsChoice",
                 items: [],
-            }
+            };
             dispatchSetCurrentAttempt(defaultAttempt);
         }
         if (newCurrentAttempt) {
@@ -229,7 +230,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                 setAvailableItems(fixedAvailableItems);
             }
         }
-    }
+    };
 
     useEffect(() => {
         window.addEventListener('mousemove', onMouseMove);
@@ -239,11 +240,12 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             window.removeEventListener('mousemove', onMouseMove);
             window.removeEventListener('touchmove', onMouseMove);
             window.removeEventListener('keyup', onKeyUp);
-        }
+        };
     }, [onMouseMove, onKeyUp]);
 
     useEffect(() => {
         onCurrentAttemptUpdate(currentAttempt, availableItems);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt, availableItems]);
 
     return <div className="parsons-question">
@@ -277,13 +279,13 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                 style={getStyle(provided.draggableProps.style, snapshot)}
                                             >
                                                 <pre>{item.value}</pre>
-                                            </div>
+                                            </div>;
                                         }}
-                                    </Draggable>
+                                    </Draggable>;
                                 })}
                                 {(!availableItems || availableItems.length === 0) && <div>&nbsp;</div>}
                                 {provided.placeholder}
-                            </div>
+                            </div>;
                         }}
                     </Droppable>
                 </Col>
@@ -334,9 +336,9 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                             </span>
                                                         </div>}
                                                     </pre>
-                                            </div>
+                                            </div>;
                                         }}
-                                    </Draggable>
+                                    </Draggable>;
                                 })}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0) &&
                                     <div className="text-muted text-center">
@@ -344,12 +346,12 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                     </div>
                                 }
                                 {provided.placeholder}
-                            </div>
+                            </div>;
                         }}
                     </Droppable>
                 </Col>
             </DragDropContext>
         </Row>
-    </div>
+    </div>;
 };
 export default IsaacParsonsQuestion;

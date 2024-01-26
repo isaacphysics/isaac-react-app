@@ -94,6 +94,10 @@ tr.board-card {
   font-weight: bold;
 }
 
+.my-gameboard-table {
+  min-width: 870px;
+}
+
 .input-options {
   float: right;
   @media only screen and (max-width:800px) {
