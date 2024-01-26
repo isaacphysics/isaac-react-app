@@ -14,7 +14,7 @@ import {
   Label,
   Row,
 } from "reactstrap";
-import { PotentialUser } from "../../../IsaacAppTypes";
+import { LoggedInUser, PotentialUser } from "../../../IsaacAppTypes";
 import { isTeacherOrAbove, SITE_SUBJECT_TITLE, SOCIAL_LINKS, validateEmail, WEBMASTER_EMAIL } from "../../services";
 import queryString from "query-string";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
@@ -27,24 +27,30 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
   let presetSubject = "";
   let presetMessage = "";
   let presetPlaceholder = "";
+  let presetUrl = "";
 
-  if (urlQuery?.preset == "teacherRequest" && user?.loggedIn && !isTeacherOrAbove(user)) {
+  const setTeacherRequestPresets = (user: Immutable<LoggedInUser>) => {
     presetSubject = "Teacher Account Request";
     presetMessage =
       "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" +
       user.givenName +
       " " +
       user.familyName;
-  } else if (urlQuery?.preset == "accountDeletion" && user?.loggedIn) {
+  };
+
+  const setAccountDeletionPresets = (user: Immutable<LoggedInUser>) => {
     presetSubject = "Account Deletion Request";
     presetMessage =
       `Hello,\n\nPlease could you delete my Isaac ${SITE_SUBJECT_TITLE} account.\n\nThanks, \n\n` +
       user.givenName +
       " " +
       user.familyName;
-  } else if (urlQuery?.preset == "contentProblem") {
+  };
+
+  const setContentProblemPresets = () => {
     presetSubject = "Content problem";
     presetPlaceholder = "Please describe the problem here.";
+    presetUrl = `Page link: ${urlQuery.url}`;
     if (urlQuery?.accordion) {
       presetSubject += ` in "${urlQuery.accordion}"`;
     } else if (urlQuery?.page) {
@@ -53,22 +59,31 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
     if (urlQuery?.section != null) {
       presetSubject += `, section "${urlQuery.section}"`;
     }
+  };
+
+  if (urlQuery?.preset == "teacherRequest" && user?.loggedIn && !isTeacherOrAbove(user)) {
+    setTeacherRequestPresets(user);
+  } else if (urlQuery?.preset == "accountDeletion" && user?.loggedIn) {
+    setAccountDeletionPresets(user);
+  } else if (urlQuery?.preset == "contentProblem") {
+    setContentProblemPresets();
   }
   return [
     (urlQuery.subject as string) || presetSubject,
     (urlQuery.message as string) || presetMessage,
     (urlQuery.placeholder as string) || presetPlaceholder,
+    presetUrl,
   ];
 };
 
 export const Contact = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectors.user.orNull);
-  const errorMessage = useAppSelector((state: AppState) => state?.error || null);
-  const [presetSubject, presetMessage, presetPlaceholder] = determineUrlQueryPresets(user);
-  const [firstName, setFirstName] = useState((user && user.loggedIn && user.givenName) || "");
-  const [lastName, setLastName] = useState((user && user.loggedIn && user.familyName) || "");
-  const [email, setEmail] = useState((user && user.loggedIn && user.email) || "");
+  const error = useAppSelector((state: AppState) => state?.error ?? null);
+  const [presetSubject, presetMessage, presetPlaceholder, presetUrl] = determineUrlQueryPresets(user);
+  const [firstName, setFirstName] = useState((user?.loggedIn && user.givenName) || "");
+  const [lastName, setLastName] = useState((user?.loggedIn && user.familyName) || "");
+  const [email, setEmail] = useState((user?.loggedIn && user.email) || "");
   const [subject, setSubject] = useState(presetSubject);
   const [message, setMessage] = useState(presetMessage);
   const [messageSendAttempt, setMessageSendAttempt] = useState(false);
@@ -81,9 +96,9 @@ export const Contact = () => {
   }, [presetSubject, presetMessage]);
 
   useEffect(() => {
-    setFirstName((user && user.loggedIn && user.givenName) || "");
-    setLastName((user && user.loggedIn && user.familyName) || "");
-    setEmail((user && user.loggedIn && user.email) || "");
+    setFirstName((user?.loggedIn && user.givenName) || "");
+    setLastName((user?.loggedIn && user.familyName) || "");
+    setEmail((user?.loggedIn && user.email) || "");
   }, [user]);
 
   const successRef = useRef<HTMLHeadingElement>(null);
@@ -102,7 +117,13 @@ export const Contact = () => {
       <MetaDescription description={metaDescriptionCS} />
       <div className="pt-4">
         <Row>
-          <Col size={12} md={{ size: 3, order: 1 }} xs={{ order: 2 }} className="mt-4 mt-md-0">
+          <Col
+            data-testid="contact-links"
+            size={12}
+            md={{ size: 3, order: 1 }}
+            xs={{ order: 2 }}
+            className="mt-4 mt-md-0"
+          >
             <h3>Upcoming events</h3>
             <p>
               If you&apos;d like to find out more about our upcoming events, visit our <a href="/events">Events Page</a>
@@ -116,16 +137,15 @@ export const Contact = () => {
             </p>
             <h3>Follow us</h3>
             <p>Follow us on:</p>
-            {Object.entries(SOCIAL_LINKS).map(([_, { name, href }], i) => (
-              <>
-                {i > 0 && <br />}
+            {Object.entries(SOCIAL_LINKS).map(([_, { name, href }]) => (
+              <p className="mb-0" key={`social-link-${name}`}>
                 <a href={href}>{name}</a>
-              </>
+              </p>
             ))}
           </Col>
           <Col size={12} md={{ size: 9, order: 2 }} xs={{ order: 1 }}>
             <Card>
-              {messageSent && !errorMessage ? (
+              {messageSent && !error ? (
                 <Row>
                   <Col className="text-center">
                     <h3 ref={successRef} tabIndex={-1}>
@@ -141,7 +161,16 @@ export const Contact = () => {
                       e.preventDefault();
                     }
                     setMessageSendAttempt(true);
-                    dispatch(submitMessage({ firstName, lastName, emailAddress: email, subject, message }));
+                    const urlAndMessage = `${presetUrl}\n\n${message}`;
+                    dispatch(
+                      submitMessage({
+                        firstName,
+                        lastName,
+                        emailAddress: email,
+                        subject,
+                        message: presetUrl ? urlAndMessage : message,
+                      }),
+                    );
                     setMessageSent(true);
                   }}
                 >
@@ -158,7 +187,7 @@ export const Contact = () => {
                             id="first-name-input"
                             type="text"
                             name="first-name"
-                            defaultValue={user && user.loggedIn ? user.givenName : ""}
+                            defaultValue={user?.loggedIn ? user.givenName : ""}
                             onChange={(e) => setFirstName(e.target.value)}
                             required
                           />
@@ -173,7 +202,7 @@ export const Contact = () => {
                             id="last-name-input"
                             type="text"
                             name="last-name"
-                            defaultValue={user && user.loggedIn ? user.familyName : ""}
+                            defaultValue={user?.loggedIn ? user.familyName : ""}
                             onChange={(e) => setLastName(e.target.value)}
                             required
                           />
@@ -191,7 +220,7 @@ export const Contact = () => {
                             id="email-input"
                             type="email"
                             name="email"
-                            defaultValue={user && user.loggedIn ? user.email : ""}
+                            defaultValue={user?.loggedIn ? user.email : ""}
                             onChange={(e) => setEmail(e.target.value)}
                             aria-describedby="emailValidationMessage"
                             required
@@ -239,11 +268,12 @@ export const Contact = () => {
                   </CardBody>
                   <CardFooter>
                     <div>
-                      <Alert color="danger" isOpen={!!errorMessage}>
-                        <>
-                          {errorMessage} You can contact us at{" "}
-                          <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a>
-                        </>
+                      <Alert color="danger" isOpen={!!error}>
+                        <h4 className="d-inline">Error:</h4>
+                        {error?.type === "generalError" && <span> {error.generalError}</span>}
+                        <p>
+                          You can contact us at <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a>
+                        </p>
                       </Alert>
                     </div>
                     <Row>

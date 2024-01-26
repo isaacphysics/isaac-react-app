@@ -45,7 +45,7 @@ export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/#!/compare";
 export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = envSpecific("G-H95WP5C8DR", "G-KZJS9ZKWBD", "G-2QRVC1GSQY");
 
 export const SOCIAL_LINKS = {
-  youtube: { name: "YouTube", href: "https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ" },
+  youtube: { name: "YouTube", href: "https://www.youtube.com/@isaaccomputerscience" },
   twitter: { name: "Twitter", href: "https://twitter.com/isaaccompsci" },
   facebook: { name: "Facebook", href: "https://www.facebook.com/IsaacComputerScience" },
   instagram: { name: "Instagram", href: "https://www.instagram.com/isaaccompsci" },

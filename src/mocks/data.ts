@@ -1,7 +1,11 @@
 import { FEATURED_NEWS_TAG } from "../app/services";
 import { DAYS_AGO } from "../test/utils";
-import { RegisteredUserDTO, IsaacEventPageDTO, UserSummaryWithGroupMembershipDTO } from "../IsaacApiTypes";
-import { EventBookingDTO } from "../IsaacApiTypes";
+import {
+  RegisteredUserDTO,
+  IsaacEventPageDTO,
+  UserSummaryWithGroupMembershipDTO,
+  EventBookingDTO,
+} from "../IsaacApiTypes";
 
 export const mockRandomQuestions = [
   {

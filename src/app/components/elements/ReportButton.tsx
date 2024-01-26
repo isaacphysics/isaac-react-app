@@ -12,6 +12,10 @@ export const ReportButton = ({ pageId }: { pageId?: string }) => {
     dispatch(logAction(eventDetails));
   }
 
+  const baseContactUrl = `/contact?preset=contentProblem&url=${window.location.href}`;
+  const pageParam = pageId ? `&page=${pageId}` : "";
+  const contactUrl = `${baseContactUrl}${pageParam}`;
+
   return (
     <button
       className="report-icon btn-action"
@@ -19,10 +23,7 @@ export const ReportButton = ({ pageId }: { pageId?: string }) => {
       title="Report a problem (opens in new tab)"
       onClick={() => {
         logPageReport();
-        window.open(
-          pageId ? `/contact?preset=contentProblem&page=${pageId}` : "/contact?preset=contentProblem",
-          "_blank",
-        );
+        window.open(contactUrl, "_blank");
       }}
     />
   );
