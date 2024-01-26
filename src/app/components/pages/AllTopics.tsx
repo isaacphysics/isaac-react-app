@@ -56,8 +56,13 @@ export const AllTopics = ({ stage }: { stage: STAGE.A_LEVEL | STAGE.GCSE }) => {
   const history = useHistory();
   const location = useLocation();
 
+  // hiding CIE from A Level topics page
+  const EXAM_BOARDS_CS_A_LEVEL_MODIFIED = new Set(
+    [...EXAM_BOARDS_CS_A_LEVEL].filter((board) => board !== EXAM_BOARD.CIE),
+  );
+
   const stageExamBoards = Array.from(
-    { [STAGE.GCSE]: EXAM_BOARDS_CS_GCSE, [STAGE.A_LEVEL]: EXAM_BOARDS_CS_A_LEVEL }[stage],
+    { [STAGE.GCSE]: EXAM_BOARDS_CS_GCSE, [STAGE.A_LEVEL]: EXAM_BOARDS_CS_A_LEVEL_MODIFIED }[stage],
   );
 
   useEffect(
@@ -150,7 +155,7 @@ export const AllTopics = ({ stage }: { stage: STAGE.A_LEVEL | STAGE.GCSE }) => {
 
   const metaDescriptionMap = {
     [STAGE.A_LEVEL]:
-      "Our free A level Computer Science topics cover the AQA, CIE, OCR, Eduqas, and WJEC exam specifications. Use our exam questions to learn or revise today.",
+      "Our free A level Computer Science topics cover the AQA, OCR, Eduqas, and WJEC exam specifications. Use our exam questions to learn or revise today.",
     [STAGE.GCSE]:
       "Discover our free GCSE Computer Science topics and questions. We cover AQA, Edexcel, Eduqas, OCR, and WJEC. Learn and revise for your exams with us today.",
   };
