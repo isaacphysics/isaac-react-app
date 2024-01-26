@@ -29,6 +29,7 @@ import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
 import {TeacherRequest} from "../../pages/TeacherRequest";
+import { News } from "../../pages/News";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -114,6 +115,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/tutor_features" component={TutorFeatures}/>,
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
     <TrackedRoute key={key++} exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>,
+    <TrackedRoute key={key++} exact path="/news" component={News} />,
 
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,
