@@ -156,7 +156,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                     id="tos-confirmation"
                                     name="tos-confirmation"
                                     type="checkbox"
-                                    label={<div>I accept the <a href="/terms">terms of use</a></div>}
+                                    label={<div>I accept the <a href="/terms" target="_blank">terms of use</a></div>}
                                     onChange={(e) => setTosAccepted(e?.target.checked)}
                                     invalid={attemptedSignUp && !tosAccepted}
                                 >
