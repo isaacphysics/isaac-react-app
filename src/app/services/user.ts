@@ -1,4 +1,4 @@
-import {isDefined} from "./";
+import {isAda, isDefined, isPhy} from "./";
 import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
 import {UserRole} from "../../IsaacApiTypes";
 import {Immutable} from "immer";
@@ -49,6 +49,16 @@ export function isAdminOrEventManager(user?: {readonly role?: UserRole, readonly
 
 export function isVerified(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly emailVerificationStatus?: string} | null): boolean {
     return isDefined(user) && (user.emailVerificationStatus === "VERIFIED");
+}
+
+/*
+* Returns false if the client is in a "partially logged in" (AKA caveat login) state, and needs to do something else for
+*  full functionality (e.g. email verification).
+*
+* Todo: For now this is specific to the Ada teacher flow, and it duplicates the API logic somewhat.
+*/
+export function isNotPartiallyLoggedIn(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly emailVerificationStatus?: string} | null): boolean {
+    return !(isAda && isTeacherOrAbove(user) && !isVerified(user))
 }
 
 export const roleRequirements: Record<UserRole, (u: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => boolean> = {

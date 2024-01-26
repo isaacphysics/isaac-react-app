@@ -6,10 +6,9 @@ import {
     DOCUMENT_TYPE,
     FIRST_LOGIN_STATE,
     history,
-    isAda,
+    isNotPartiallyLoggedIn,
     isFirstLoginInPersistence,
     isTeacherOrAbove,
-    isVerified,
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
@@ -180,8 +179,7 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
         // Request the user
         const currentUser = await api.users.getCurrent();
         // Now with that information request auth settings and preferences asynchronously
-        const requiresVerification = isAda ? isTeacherOrAbove(currentUser.data) && !isVerified(currentUser.data) : false;
-        if (!requiresVerification) {
+        if (isNotPartiallyLoggedIn(currentUser.data)) {
             await Promise.all([
                 dispatch(getUserAuthSettings() as any),
                 dispatch(getUserPreferences() as any)

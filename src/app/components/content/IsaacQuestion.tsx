@@ -16,7 +16,7 @@ import {
     determineFastTrackPrimaryAction,
     determineFastTrackSecondaryAction,
     fastTrackProgressEnabledBoards,
-    isAda,
+    isAda, isNotPartiallyLoggedIn,
     isLoggedIn,
     isPhy,
     isTeacherOrAbove,
@@ -36,6 +36,7 @@ import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
+import {current} from "immer";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -117,8 +118,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 }
 
                 dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt, currentGameboard?.id));
-                const requiresVerification = isAda ? isTeacherOrAbove(currentUser) && !isVerified(currentUser) : false;
-                if (isLoggedIn(currentUser) && !requiresVerification && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+                if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
                     dispatch(saveGameboard({
                         boardId: currentGameboard.id,
                         user: currentUser,

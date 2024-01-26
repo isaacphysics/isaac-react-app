@@ -31,14 +31,11 @@ import {
     checkForWebSocket,
     closeWebSocket,
     history,
-    isAda,
-    isAdminOrEventManager,
+    isAdminOrEventManager, isNotPartiallyLoggedIn,
     isEventLeader,
     isLoggedIn,
     isStaff,
-    isTeacherOrAbove,
     isTutorOrAbove,
-    isVerified,
     KEY,
     PATHS,
     persistence,
@@ -116,8 +113,7 @@ export const IsaacApp = () => {
         dispatch(fetchGlossaryTerms());
     }, [dispatch]);
 
-    const requiresVerification = isAda ? isTeacherOrAbove(user) && !isVerified(user) : false;
-    const loggedInUserId = isLoggedIn(user) && !requiresVerification ? user.id : undefined;
+    const loggedInUserId = isLoggedIn(user) && isNotPartiallyLoggedIn(user) ? user.id : undefined;
     useEffect(() => {
         if (loggedInUserId) {
             dispatch(requestNotifications());
@@ -167,7 +163,7 @@ export const IsaacApp = () => {
 
                         <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                         <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
-                        <TrackedRoute exact path="/questions/:questionId" component={Question} />
+                        <TrackedRoute exact path="/questions/:questionId" ifUser={isNotPartiallyLoggedIn} component={Question} />
                         <TrackedRoute exact path="/glossary" component={Glossary} />,
 
                         <TrackedRoute exact path={PATHS.GAMEBOARD} component={Gameboard} />
@@ -180,7 +176,7 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path={PATHS.MY_GAMEBOARDS} ifUser={isLoggedIn} component={MyGameboards} />
-                        <TrackedRoute exact path={PATHS.QUESTION_FINDER} component={GameboardFilter} />
+                        <TrackedRoute exact path={PATHS.QUESTION_FINDER} ifUser={isNotPartiallyLoggedIn} component={GameboardFilter} />
 
                         {/* Teacher pages */}
                         {/* Tutors can set and manage assignments, but not tests/quizzes */}
