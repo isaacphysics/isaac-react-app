@@ -14,7 +14,7 @@ import {
     NavLink,
     Row,
     TabContent,
-    TabPane, UncontrolledAlert,
+    TabPane,
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {
@@ -63,9 +63,9 @@ import hash, {NormalOption} from "object-hash";
 import {skipToken} from "@reduxjs/toolkit/query";
 import { Loading } from "../handlers/IsaacSpinner";
 import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesInput";
-import {Alert} from "../elements/Alert";
 import { UserProfile } from '../elements/panels/UserProfile';
 import { UserContent } from '../elements/panels/UserContent';
+import {FocusedAlert} from "../elements/FocusedAlert";
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -328,12 +328,10 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
 
                     <Form name="my-account" onSubmit={updateAccount}>
                         {error?.type == "generalError" &&
-                            siteSpecific(
-                                <UncontrolledAlert color="warning">
+                                <FocusedAlert color="warning">
                                     <p className="alert-heading font-weight-bold">Unable to update your account</p>
                                     <p>{error.generalError}</p>
-                                </UncontrolledAlert>,
-                                <Alert title="Unable to update your account" body={error.generalError} />)
+                                </FocusedAlert>
                         }
                         <TabContent activeTab={activeTab}>
                             <TabPane tabId={ACCOUNT_TAB.account}>

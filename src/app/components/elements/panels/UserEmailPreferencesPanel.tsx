@@ -3,8 +3,8 @@ import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {AppState, useAppSelector} from "../../../state";
 import {SITE_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
 import {UserEmailPreferencesInput} from "../inputs/UserEmailPreferencesInput";
-import {Alert} from "../Alert";
 import { MyAccountTab } from "./MyAccountTab";
+import {FocusedAlert} from "../FocusedAlert";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences | null | undefined;
@@ -23,7 +23,12 @@ export const UserEmailPreferencesPanel = ({emailPreferences, setEmailPreferences
     }
 
     return <>
-        {error?.type == "generalError" && <Alert title="Unable to update your account" body={error.generalError} />}
+        {error?.type == "generalError" &&
+            <FocusedAlert color="warning">
+                <p className="alert-heading font-weight-bold">Unable to update your account</p>
+                <p>{error.generalError}</p>
+            </FocusedAlert>
+        }
         <MyAccountTab
             leftColumn={<>
                 <h3>Set your email notification preferences</h3>

@@ -10,7 +10,7 @@ import {
     FormFeedback,
     FormGroup,
     Input,
-    Row
+    Row,
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
@@ -36,7 +36,7 @@ import {FirstNameInput, LastNameInput} from "../elements/inputs/NameInput";
 import {EmailInput} from "../elements/inputs/EmailInput";
 import {GenderInput} from "../elements/inputs/GenderInput";
 import {extractErrorMessage} from "../../services/errors";
-import {Alert} from "../elements/Alert";
+import {FocusedAlert} from "../elements/FocusedAlert";
 
 
 interface RegistrationSetDetailsProps {
@@ -96,7 +96,12 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
         <Card className="my-5">
             <CardBody>
-                {errorMessage && <Alert title="Unable to create your account" body={errorMessage} />}
+                {errorMessage &&
+                    <FocusedAlert color={"warning"}>
+                        <p className="alert-heading font-weight-bold">Unable create your account</p>
+                        <p>{errorMessage}</p>
+                    </FocusedAlert>
+                }
                 <Row>
                     <Col xs={12} lg={6}>
                         <h3>Create your {role.toLowerCase()} account</h3>

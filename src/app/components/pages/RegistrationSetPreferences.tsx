@@ -8,7 +8,7 @@ import {
     Form,
     Input,
     Label,
-    Row
+    Row,
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
@@ -40,8 +40,8 @@ import {
 import {BooleanNotationInput} from "../elements/inputs/BooleanNotationInput";
 import {ProgrammingLanguageInput} from "../elements/inputs/ProgrammingLanguageInput";
 import {useEmailPreferenceState, UserEmailPreferencesInput} from "../elements/inputs/UserEmailPreferencesInput";
-import {Alert} from "../elements/Alert";
 import {extractErrorMessage} from "../../services/errors";
+import {FocusedAlert} from "../elements/FocusedAlert";
 
 export const RegistrationSetPreferences = () => {
 
@@ -89,7 +89,12 @@ export const RegistrationSetPreferences = () => {
         <TitleAndBreadcrumb currentPageTitle={`Customise your account`} className="mb-4" />
         <Card className="my-5">
             <CardBody>
-                {errorMessage && <Alert title="Unable to update your account" body={errorMessage} />}
+                {errorMessage &&
+                    <FocusedAlert color="warning">
+                        <p className="alert-heading font-weight-bold">Unable to update your account</p>
+                        <p>{errorMessage}</p>
+                    </FocusedAlert>
+                }
                 <Row>
                     <Col xs={12} lg={6}>
                         <h3>Set your preferences</h3>

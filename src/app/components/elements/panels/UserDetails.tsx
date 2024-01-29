@@ -2,11 +2,11 @@ import React from "react";
 import {
     allRequiredInformationIsPresent,
     isAda,
-    isTutor, siteSpecific,
+    isTutor,
     validateEmail,
     validateName
 } from "../../../services";
-import {CardBody, Col, FormGroup, Row, UncontrolledAlert} from "reactstrap";
+import {CardBody, Col, FormGroup, Row} from "reactstrap";
 import {BooleanNotation, DisplaySettings, ProgrammingLanguage, ValidationUser} from "../../../../IsaacAppTypes";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
@@ -19,7 +19,7 @@ import {AccountTypeMessage} from "../AccountTypeMessage";
 import {ProgrammingLanguageInput} from "../inputs/ProgrammingLanguageInput";
 import {LastNameInput, FirstNameInput} from "../inputs/NameInput";
 import {EmailInput} from "../inputs/EmailInput";
-import {Alert} from "../Alert";
+import {FocusedAlert} from "../FocusedAlert";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -52,12 +52,10 @@ export const UserDetails = (props: UserDetailsProps) => {
 
     return <CardBody className="pt-0">
         {submissionAttempted && !allRequiredFieldsValid &&
-            siteSpecific(
-                <UncontrolledAlert color="warning">
+                <FocusedAlert color="warning">
                     <p className="alert-heading font-weight-bold">Unable to update your account</p>
                     <p>Please ensure you have completed all required fields.</p>
-                </UncontrolledAlert>,
-                <Alert title="Unable to update your account" body="Please ensure you have completed all required fields." />)
+                </FocusedAlert>
         }
         <Row>
             <Col>
