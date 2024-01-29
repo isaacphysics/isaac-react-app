@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Col, Container, Row} from "reactstrap";
 import {Tabs} from "../elements/Tabs";
 import {PageFragment} from "../elements/PageFragment";
-import {CS_EXAM_BOARDS_BY_STAGE, EXAM_BOARD, STAGE, STAGES_CS} from "../../services";
+import {CS_COUNTRY_DISPLAY_NAME, CS_EXAM_BOARDS_BY_STAGE, CS_STAGES_BY_COUNTRY, CS_SUPPORTED_COUNTRIES, EXAM_BOARD, STAGE, STAGES_CS, stageLabelMap} from "../../services";
 import {useHistory, useLocation} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -11,18 +11,21 @@ export const ExamSpecifications = () => {
     const history = useHistory();
     const location = useLocation();
 
-    const [stage, setStage] = useState<typeof STAGES_CS[number]>(STAGE.A_LEVEL);
+    const [countryTab, setCountryTab] = useState<typeof CS_SUPPORTED_COUNTRIES[number]>("uk");
+    const [stageTab, setStageTab] = useState<typeof STAGES_CS[number]>(STAGE.A_LEVEL);
+    const [stageOverride, setStageOverride] = useState<number | undefined>(undefined);
+    const [examBoardTab, setExamBoardTab] = useState<EXAM_BOARD>(EXAM_BOARD.AQA);
+    const [examBoardTabOverride, setExamBoardTabOverride] = useState<number | undefined>(undefined);
+    const [fragmentId, setFragmentId] = useState<string>("");
 
-    const stageExamBoards = CS_EXAM_BOARDS_BY_STAGE[stage];
+    const stageExamBoards = CS_EXAM_BOARDS_BY_STAGE[stageTab];
     // 1-indexed for some reason... can we fix Tabs so they are 0-indexed please
-    function setActiveTab(tabIndex: number) {
-        if (tabIndex < 1 || tabIndex > stageExamBoards.length) return;
-        const hash = stageExamBoards[tabIndex - 1].toString();
-        history.replace({...location, hash: `#${hash}`}); // This sets activeTab to the index corresponding to the hash
-    }
-    useEffect(function makeSureTheUrlHashRecordsTabState() { if (!location.hash) setActiveTab(activeTab); });
-
-    const activeTab = stageExamBoards.indexOf(location.hash.replace("#","").toLowerCase() as EXAM_BOARD) + 1 || (() => {setActiveTab(1); return 1;})();
+    // function setActiveTab(tabIndex: number) {
+    //     if (tabIndex < 1 || tabIndex > stageExamBoards.length) return;
+    //     const hash = stageExamBoards[tabIndex - 1].toString();
+    //     history.replace({...location, hash: `#${hash}`}); // This sets activeTab to the index corresponding to the hash
+    // }
+    // useEffect(function makeSureTheUrlHashRecordsTabState() { if (!location.hash) setActiveTab(activeTab); });
 
     const metaDescription = ({
         [STAGE.A_LEVEL]: "Discover our free A level computer science topics and questions. We cover AQA, CIE, OCR, Eduqas, and WJEC. Learn or revise for your exams with us today.",
@@ -30,64 +33,69 @@ export const ExamSpecifications = () => {
         [STAGE.SCOTLAND_NATIONAL_5]: "Discover our free National 5 computer science topics and questions. Learn or revise for your exams with us today.",
         [STAGE.SCOTLAND_HIGHER]: "Discover our free Higher computer science topics and questions. Learn or revise for your exams with us today.",
         [STAGE.SCOTLAND_ADVANCED_HIGHER]: "Discover our free Advanced Higher computer science topics and questions. Learn or revise for your exams with us today.",
-    })[stage];
+    })[stageTab];
+        
+    const examBoardTabs = CS_STAGES_BY_COUNTRY[countryTab].reduce((acc: {[stage: string]: React.JSX.Element}, stage) => ({
+        ...acc, 
+        [stageLabelMap[stage]]: <Tabs 
+            style="tabs" className="pt-3" tabContentClass="pt-3" 
+            activeTabOverride={examBoardTabOverride} 
+            refreshHash={stage} 
+            onActiveTabChange={(n) => {
+                setExamBoardTab(CS_EXAM_BOARDS_BY_STAGE[stageTab][n - 1] as EXAM_BOARD);
+                setExamBoardTabOverride(undefined);
+            }}
+        >
+            {Object.assign({}, ...stageExamBoards.map(examBoard => ({
+                [examBoard.toUpperCase()]: <></>
+            })))}
+        </Tabs>}), {});
 
-    const tabs = {
-        ["A Level"]: <Tabs style="tabs" className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
-            {Object.assign({}, ...stageExamBoards.map(examBoard => ({
-                [examBoard.toUpperCase()]: <Row>
-                    <Col lg={{size: 8, offset: 2}}>
-                        <PageFragment fragmentId={`${STAGE.A_LEVEL}_specification_${examBoard}`}/>
-                    </Col>
-                </Row>
-            })))}
-        </Tabs>,
-        ["GCSE"]: <Tabs style="tabs" className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
-            {Object.assign({}, ...stageExamBoards.map(examBoard => ({
-                [examBoard.toUpperCase()]: <Row>
-                    <Col lg={{size: 8, offset: 2}}>
-                        <PageFragment fragmentId={`${STAGE.GCSE}_specification_${examBoard}`}/>
-                    </Col>
-                </Row>
-            })))}
-        </Tabs>,
-        ["National 5"]: <Tabs style="tabs" className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
-            {Object.assign({}, ...stageExamBoards.map(examBoard => ({
-                [examBoard.toUpperCase()]: <Row>
-                    <Col lg={{size: 8, offset: 2}}>
-                        <PageFragment fragmentId={`${STAGE.SCOTLAND_NATIONAL_5}_specification_${examBoard}`}/>
-                    </Col>
-                </Row>
-            })))}
-        </Tabs>,
-        ["Higher"]: <Tabs style="tabs" className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
-            {Object.assign({}, ...stageExamBoards.map(examBoard => ({
-                [examBoard.toUpperCase()]: <Row>
-                    <Col lg={{size: 8, offset: 2}}>
-                        <PageFragment fragmentId={`${STAGE.SCOTLAND_HIGHER}_specification_${examBoard}`}/>
-                    </Col>
-                </Row>
-            })))}
-        </Tabs>,
-        ["Advanced Higher"]: <Tabs style="tabs" className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
-            {Object.assign({}, ...stageExamBoards.map(examBoard => ({
-                [examBoard.toUpperCase()]: <Row>
-                    <Col lg={{size: 8, offset: 2}}>
-                        <PageFragment fragmentId={`${STAGE.SCOTLAND_ADVANCED_HIGHER}_specification_${examBoard}`}/>
-                    </Col>
-                </Row>
-            })))}
+    const stageTabs = CS_SUPPORTED_COUNTRIES.reduce((acc, country) => ({
+        ...acc, 
+        [CS_COUNTRY_DISPLAY_NAME[country]]: <Tabs style={"buttons"} className={"mt-3"} tabContentClass={"mt-3"} 
+            activeTabOverride={stageOverride}
+            onActiveTabChange={(aT) => setStageTab((CS_STAGES_BY_COUNTRY[country][aT - 1] as any))}
+        >
+            {examBoardTabs}
         </Tabs>
-    };
+    }), {});
+
+    const countryTabs = <Tabs style={"tabs"} className={"mt-3"} tabContentClass={"mt-3"}
+        onActiveTabChange={(aT) => setCountryTab(CS_SUPPORTED_COUNTRIES[aT - 1] ?? "uk")}
+    >
+        {stageTabs}
+    </Tabs>;
+
+    useEffect(() => {
+        // Since examBoardTab is last in the dependency chain, we would ideally only have this useEffect run when examBoardTab changes.
+        // However, since exam boards can be shared among stages, switching from one stage to another can result in the same exam board being selected.
+        // In this case, the useEffect wouldn't run at all if we only had examBoardTab as a dependency.
+        // This unfortunately means we have to have all three tabs in the dependency, meaning we can generate an invalid request between when
+        //  the stage has changed but the exam board hasn't.
+        setFragmentId(`${stageTab}_specification_${examBoardTab}`);
+    }, [examBoardTab, stageTab, countryTab]);
+
+    // When changing the stage, set the exam board to the first one for that stage
+    useEffect(() => {
+        setExamBoardTab(CS_EXAM_BOARDS_BY_STAGE[stageTab][0] as EXAM_BOARD);
+        setExamBoardTabOverride(1);
+    }, [stageTab]);
+
+    useEffect(() => {
+        setStageTab(CS_STAGES_BY_COUNTRY[countryTab][0] as typeof STAGES_CS[number]);
+        setStageOverride(1);
+    }, [countryTab]);
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Exam specifications"} />
         <MetaDescription description={metaDescription} />
-        <Tabs activeTabOverride={STAGES_CS.indexOf(stage) + 1}
-              onActiveTabChange={(aT) => setStage((STAGES_CS.at(aT - 1) ?? STAGE.A_LEVEL))}
-              style={"buttons"} tabContentClass={"mt-3"} className={"mt-3"}
-        >
-            {tabs}
-        </Tabs>
+        {countryTabs}
+        <Row>
+            <Col lg={{size: 8, offset: 2}}>
+                {/* TODO: this should only update when the last tab change occurs, else "no content" can flash for a second */}
+                <PageFragment fragmentId={fragmentId}/>
+            </Col>
+        </Row>
     </Container>;
 }
