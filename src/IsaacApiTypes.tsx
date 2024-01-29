@@ -562,6 +562,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     lastUpdated?: Date;
     lastSeen?: Date;
     emailVerificationStatus?: EmailVerificationStatus;
+    teacherAccountPending?: boolean;
     id?: number;
     _id?: number;
 }

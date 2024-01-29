@@ -57,7 +57,8 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
             dateOfBirth: undefined,
             password: null,
             familyName: undefined,
-            givenName: undefined
+            givenName: undefined,
+            teacherAccountPending: undefined
         })
     );
 

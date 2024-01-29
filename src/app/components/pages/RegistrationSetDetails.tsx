@@ -57,7 +57,8 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             password: null,
             familyName: undefined,
             givenName: undefined,
-            role: role
+            role: role,
+            teacherAccountPending: undefined
         })
     );
 

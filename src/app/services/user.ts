@@ -51,14 +51,19 @@ export function isVerified(user?: {readonly role?: UserRole, readonly loggedIn?:
     return isDefined(user) && (user.emailVerificationStatus === "VERIFIED");
 }
 
+export function isTeacherAccountPending(user?: {readonly teacherAccountPending?: boolean} | null): boolean {
+    return isDefined(user) && user.teacherAccountPending === true;
+}
+
 /*
 * Returns false if the client is in a "partially logged in" (AKA caveat login) state, and needs to do something else for
 *  full functionality (e.g. email verification).
 *
-* Todo: For now this is specific to the Ada teacher flow, and it duplicates the API logic somewhat.
+* Todo: For now this is specific to the Ada teacher flow. For Ada, teacher accounts where teacherAccountPending is true
+*  can only ever be partially logged-in.
 */
-export function isNotPartiallyLoggedIn(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly emailVerificationStatus?: string} | null): boolean {
-    return !(isAda && isTeacherOrAbove(user) && !isVerified(user))
+export function isNotPartiallyLoggedIn(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly teacherAccountPending?: boolean, readonly EMAIL_VERIFICATION_REQUIRED?: boolean} | null): boolean {
+    return !(isAda && (isTeacherAccountPending(user) || user?.EMAIL_VERIFICATION_REQUIRED))
 }
 
 export const roleRequirements: Record<UserRole, (u: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => boolean> = {
