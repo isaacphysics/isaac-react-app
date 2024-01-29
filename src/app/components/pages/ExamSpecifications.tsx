@@ -83,8 +83,8 @@ export const ExamSpecifications = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Exam specifications"} />
         <MetaDescription description={metaDescription} />
-        <Tabs activeTabOverride={[STAGE.A_LEVEL, STAGE.GCSE, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER].indexOf(stage) + 1}
-              onActiveTabChange={(aT) => setStage(([STAGE.A_LEVEL, STAGE.GCSE].at(aT - 1) ?? STAGE.A_LEVEL) as STAGE.A_LEVEL | STAGE.GCSE)}
+        <Tabs activeTabOverride={STAGES_CS.indexOf(stage) + 1}
+              onActiveTabChange={(aT) => setStage((STAGES_CS.at(aT - 1) ?? STAGE.A_LEVEL))}
               style={"buttons"} tabContentClass={"mt-3"} className={"mt-3"}
         >
             {tabs}
