@@ -39,7 +39,7 @@ function UserContextRow({
     return <React.Fragment>
         {/* Stage Selector */}
         <Input
-            className="form-control w-auto d-inline-block pl-1 pr-0 mt-1 mt-sm-0" type="select"
+            className="form-control flex-grow-1 d-inline-block pl-1 pr-0 mt-1 mt-sm-0" type="select"
             aria-label="Stage"
             value={userContext.stage || ""}
             invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
@@ -72,7 +72,7 @@ function UserContextRow({
 
         {/* Exam Board Selector */}
         {isAda && <Input
-            className="form-control w-auto d-inline-block pl-1 pr-0 ml-sm-2 mt-1 mt-sm-0" type="select"
+            className="form-control flex-grow-1 d-inline-block pl-1 pr-0 ml-sm-2 mt-1 mt-sm-0" type="select"
             aria-label="Exam Board"
             value={userContext.examBoard || ""}
             invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
@@ -149,29 +149,32 @@ export function UserContextAccountInput({
                     getFilteredStageOptions({byUserContexts: userContexts, hideFurtherA: true}).length > 0;
 
                 return <RS.FormGroup key={index}>
-                    <UserContextRow
-                        userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
-                        setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
-                        existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
-                    />
+                    <div className="d-flex">
+                        <UserContextRow
+                            userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
+                            setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
+                            existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
+                        />
+                        {tutorOrAbove && userContexts.length > 1 && <button
+                            type="button" className="mx-2 close float-none align-middle" aria-label="clear stage row"
+                            onClick={() => setUserContexts(userContexts.filter((uc, i) => i !== index))}
+                        >
+                            ×
+                        </button>}
+                    </div>
 
-                    {tutorOrAbove && userContexts.length > 1 && <button
-                        type="button" className="mx-2 close float-none align-middle" aria-label="clear stage row"
-                        onClick={() => setUserContexts(userContexts.filter((uc, i) => i !== index))}
-                    >
-                        ×
-                    </button>}
-
-                    {showPlusOption && <RS.Label>
+                    {showPlusOption && <div className="d-flex mt-2 mr-4 justify-content-center">
                         <button
-                            type="button" aria-label="Add stage"
+                            id="add-stage" type="button" aria-label="Add stage"
                             className={`${userContexts.length <= 1 ? "ml-2" : ""} align-middle close float-none pointer-cursor`}
                             onClick={() => setUserContexts([...userContexts, {}])}
                         >
                             +
                         </button>
-                        {isAda && <span className="ml-1">add stage</span>}
-                    </RS.Label>}
+                        <RS.Label for="add-stage">
+                            {isAda && <span className="ml-1">Add stage</span>}
+                        </RS.Label>
+                    </div>}
 
                     {isAda && index === userContexts.length - 1 && (userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <RS.Label className="mt-2">
                         <CustomInput
