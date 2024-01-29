@@ -64,7 +64,7 @@ export const QuestionSearchModal = (
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>([]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>([]);
     useEffect(function populateExamBoardFromUserContext() {
-        if (!EXAM_BOARD_NULL_OPTIONS.has(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
+        if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
     }, [userContext.examBoard]);
 
     const [searchBook, setSearchBook] = useState<string[]>([]);

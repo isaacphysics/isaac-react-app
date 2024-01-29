@@ -1,10 +1,9 @@
 import {
     BOOLEAN_NOTATION,
     comparatorFromOrderedValues,
+    CS_EXAM_BOARDS_BY_STAGE,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
-    EXAM_BOARDS_CS_A_LEVEL,
-    EXAM_BOARDS_CS_GCSE,
     examBoardBooleanNotationMap,
     examBoardLabelMap,
     history,
@@ -19,12 +18,11 @@ import {
     STAGE_NULL_OPTIONS,
     stageLabelMap,
     STAGES_CS,
-    STAGES_PHY,
     stagesOrdered,
     useQueryParams,
 } from "./";
 import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext} from "../../IsaacApiTypes";
-import {useLocation, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {AppState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import queryString from "query-string";
@@ -69,7 +67,7 @@ export function useUserContext(): UseUserContextReturnType {
     // Stage
     let stage: STAGE;
     const stageQueryParam = queryParams.stage as STAGE | undefined;
-    if (stageQueryParam && Object.values(STAGE).includes(stageQueryParam) && !STAGE_NULL_OPTIONS.has(stageQueryParam)) {
+    if (stageQueryParam && Object.values(STAGE).includes(stageQueryParam) && !STAGE_NULL_OPTIONS.includes(stageQueryParam)) {
         stage = stageQueryParam;
         explanation.stage = urlMessage;
     } else if (isDefined(transientUserContext.stage)) {
@@ -85,7 +83,7 @@ export function useUserContext(): UseUserContextReturnType {
     const examBoardQueryParam = queryParams.examBoard as EXAM_BOARD | undefined;
     if (isPhy) {
         examBoard = EXAM_BOARD.ALL;
-    } else if (examBoardQueryParam && Object.values(EXAM_BOARD).includes(examBoardQueryParam) && !EXAM_BOARD_NULL_OPTIONS.has(examBoardQueryParam)) {
+    } else if (examBoardQueryParam && Object.values(EXAM_BOARD).includes(examBoardQueryParam) && !EXAM_BOARD_NULL_OPTIONS.includes(examBoardQueryParam)) {
         examBoard = examBoardQueryParam;
         explanation.examBoard = urlMessage;
     } else if (isDefined(transientUserContext?.examBoard)) {
@@ -115,7 +113,7 @@ export function useUserContext(): UseUserContextReturnType {
             const gameboardDeterminedViews = determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext);
             // If user's stage selection is not one specified by the gameboard change it
             if (gameboardDeterminedViews.length > 0) {
-                if (!gameboardDeterminedViews.map(v => v.stage).includes(stage) && !STAGE_NULL_OPTIONS.has(stage)) {
+                if (!gameboardDeterminedViews.map(v => v.stage).includes(stage) && !STAGE_NULL_OPTIONS.includes(stage)) {
                     explanation.stage = gameboardMessage;
                     if (gameboardDeterminedViews.length === 1) {
                         stage = gameboardDeterminedViews[0].stage as STAGE;
@@ -123,7 +121,7 @@ export function useUserContext(): UseUserContextReturnType {
                         stage = STAGE.ALL;
                     }
                 }
-                if (!gameboardDeterminedViews.map(v => v.examBoard).includes(examBoard) && !EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {
+                if (!gameboardDeterminedViews.map(v => v.examBoard).includes(examBoard) && !EXAM_BOARD_NULL_OPTIONS.includes(examBoard)) {
                     explanation.examBoard = gameboardMessage;
                     if (gameboardDeterminedViews.length === 1) {
                         examBoard = gameboardDeterminedViews[0].examBoard as EXAM_BOARD;
@@ -179,6 +177,7 @@ const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "EDUQAS", value: EXAM_BOARD.EDUQAS},
     {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "WJEC", value: EXAM_BOARD.WJEC},
+    {label: "SQA", value: EXAM_BOARD.SQA},
     {label: "All Exam Boards", value: EXAM_BOARD.ALL},
 ];
 interface ExamBoardFilterOptions {
@@ -194,23 +193,22 @@ export function getFilteredExamBoardOptions(filter?: ExamBoardFilterOptions) {
             !isDefined(filter?.byStages) || // ignore if not set
             i.value === EXAM_BOARD.ALL || // none does not get filtered by stage
             filter?.byStages.length === 0 || // if there are no stages to filter by all pass
-            filter?.byStages.some(s => STAGE_NULL_OPTIONS.has(s)) || // none in the stage level allows for all exam boards
-            (filter?.byStages.includes(STAGE.GCSE) && EXAM_BOARDS_CS_GCSE.has(i.value)) || // if there is gcse in stages allow GCSE boards
-            (filter?.byStages.includes(STAGE.A_LEVEL) && EXAM_BOARDS_CS_A_LEVEL.has(i.value)) // if there is a_level in stage allow A Level boards
+            filter?.byStages.some(s => STAGE_NULL_OPTIONS.includes(s)) || // none in the stage level allows for all exam boards
+            (STAGES_CS.some(s => filter?.byStages?.includes(s) && CS_EXAM_BOARDS_BY_STAGE[s].includes(i.value)))
         )
         // includeNullOptions flag
-        .filter(i => filter?.includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.has(i.value))
+        .filter(i => filter?.includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.includes(i.value))
         // by user account settings
         .filter(i =>
             // skip if null or logged out user
             !isLoggedIn(filter?.byUser) ||
             // user has a null option selected
             filter?.byUser.registeredContexts
-                ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE) || STAGE_NULL_OPTIONS.has(rc.stage as STAGE))
-                .some(rc => EXAM_BOARD_NULL_OPTIONS.has(rc.examBoard as EXAM_BOARD)) ||
+                ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE) || STAGE_NULL_OPTIONS.includes(rc.stage as STAGE))
+                .some(rc => EXAM_BOARD_NULL_OPTIONS.includes(rc.examBoard as EXAM_BOARD)) ||
             // stage is one of registered context selections
             filter?.byUser.registeredContexts
-                ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE) || STAGE_NULL_OPTIONS.has(rc.stage as STAGE))
+                ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE) || STAGE_NULL_OPTIONS.includes(rc.stage as STAGE))
                 .map(rc => rc.examBoard).includes(i.value)
         )
         // Restrict by existing user context selections
@@ -221,7 +219,7 @@ export function getFilteredExamBoardOptions(filter?: ExamBoardFilterOptions) {
                 .map(uc => uc.examBoard).includes(i.value));
 }
 
-const _STAGE_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
+const _STAGE_ITEM_OPTIONS = siteSpecific([ /* best not to export - use getFiltered */
     {label: "Year 7&8", value: STAGE.YEAR_7_AND_8},
     {label: "Year 9", value: STAGE.YEAR_9},
     {label: "GCSE", value: STAGE.GCSE},
@@ -229,7 +227,13 @@ const _STAGE_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "Further A", value: STAGE.FURTHER_A},
     {label: "University", value: STAGE.UNIVERSITY},
     {label: "All stages", value: STAGE.ALL},
-];
+], [
+    {label: "GCSE", value: STAGE.GCSE},
+    {label: "A Level", value: STAGE.A_LEVEL},
+    {label: "National 5", value: STAGE.SCOTLAND_NATIONAL_5},
+    {label: "Higher", value: STAGE.SCOTLAND_HIGHER},
+    {label: "Advanced Higher", value: STAGE.SCOTLAND_ADVANCED_HIGHER},
+]);
 interface StageFilterOptions {
     byUser?: Immutable<PotentialUser> | null;
     byUserContexts?: UserContext[];
@@ -238,16 +242,14 @@ interface StageFilterOptions {
 }
 export function getFilteredStageOptions(filter?: StageFilterOptions) {
     return _STAGE_ITEM_OPTIONS
-        // Restrict by subject stages
-        .filter(i => siteSpecific(STAGES_PHY, STAGES_CS).has(i.value))
         // Restrict by includeNullOptions flag
-        .filter(i => filter?.includeNullOptions || !STAGE_NULL_OPTIONS.has(i.value))
+        .filter(i => filter?.includeNullOptions || !STAGE_NULL_OPTIONS.includes(i.value))
         // Restrict by account settings
         .filter(i =>
             // skip if null or logged out user
             !isLoggedIn(filter?.byUser) ||
             // user has a null option selected
-            filter?.byUser.registeredContexts?.some(rc => STAGE_NULL_OPTIONS.has(rc.stage as STAGE)) ||
+            filter?.byUser.registeredContexts?.some(rc => STAGE_NULL_OPTIONS.includes(rc.stage as STAGE)) ||
             // stage is one of registered context selections
             filter?.byUser.registeredContexts?.map(rc => rc.stage).includes(i.value)
         )
@@ -262,7 +264,7 @@ export function getFilteredStageOptions(filter?: StageFilterOptions) {
             // - computer science
             (isAda && !(
                 // stage already has a null option selected
-                filter.byUserContexts.some(uc => uc.stage === i.value && EXAM_BOARD_NULL_OPTIONS.has(uc.examBoard as EXAM_BOARD)) ||
+                filter.byUserContexts.some(uc => uc.stage === i.value && EXAM_BOARD_NULL_OPTIONS.includes(uc.examBoard as EXAM_BOARD)) ||
                 // every exam board has been recorded for the stage
                 getFilteredExamBoardOptions({byUser: filter.byUser, byStages: [i.value], byUserContexts: filter.byUserContexts}).length === 0
             ))
@@ -413,10 +415,10 @@ export function mergeDisplayOptions(source: ContentBaseDTO["display"], update: C
 
 export function notRelevantMessage(userContext: UseUserContextReturnType): string {
     const message = [];
-    if (!STAGE_NULL_OPTIONS.has(userContext.stage)) {
+    if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
         message.push(stageLabelMap[userContext.stage]);
     }
-    if (isAda && !EXAM_BOARD_NULL_OPTIONS.has(userContext.examBoard)) {
+    if (isAda && !EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
         message.push(examBoardLabelMap[userContext.examBoard]);
     }
     if (message.length === 0) { // should never happen...
