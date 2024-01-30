@@ -2,7 +2,7 @@ import {StyledCheckbox} from "./CheckboxInput";
 import {FormGroup, Table} from "reactstrap";
 import React, {SetStateAction, useState} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
-import {isPhy, siteSpecific} from "../../../services";
+import {EMAIL_PREFERENCE_DEFAULTS, isPhy, siteSpecific} from "../../../services";
 import {Dispatch} from "react";
 import { TrueFalseRadioInput } from "./TrueFalseRadioInput";
 
@@ -106,18 +106,12 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
 
 // Extended useState hook for email preferences, setting defaults
 export const useEmailPreferenceState = (initialEmailPreferences?: Nullable<UserEmailPreferences>): [Nullable<UserEmailPreferences>, Dispatch<SetStateAction<Nullable<UserEmailPreferences>>>] => {
-    const defaults: UserEmailPreferences = {
-        ASSIGNMENTS: true,
-        NEWS_AND_UPDATES: undefined,
-        EVENTS: undefined
-    };
-
-    const [emailPreferences, _setEmailPreferences] = useState<Nullable<UserEmailPreferences>>({...defaults, ...initialEmailPreferences});
+    const [emailPreferences, _setEmailPreferences] = useState<Nullable<UserEmailPreferences>>({...EMAIL_PREFERENCE_DEFAULTS, ...initialEmailPreferences});
     const setEmailPreferences = (newEmailPreferences: Nullable<UserEmailPreferences> | ((ep: Nullable<UserEmailPreferences>) => Nullable<UserEmailPreferences>)) => {
         if (typeof newEmailPreferences === "function") {
-            return _setEmailPreferences((old) => ({...defaults, ...(newEmailPreferences(old))}));
+            return _setEmailPreferences((old) => ({...EMAIL_PREFERENCE_DEFAULTS, ...(newEmailPreferences(old))}));
         }
-        return _setEmailPreferences({...defaults, ...newEmailPreferences});
+        return _setEmailPreferences({...EMAIL_PREFERENCE_DEFAULTS, ...newEmailPreferences});
     };
     return [emailPreferences, setEmailPreferences];
 };
