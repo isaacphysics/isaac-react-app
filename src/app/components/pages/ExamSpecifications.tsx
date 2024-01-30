@@ -3,14 +3,10 @@ import {Col, Container, Row} from "reactstrap";
 import {Tabs} from "../elements/Tabs";
 import {PageFragment} from "../elements/PageFragment";
 import {CS_COUNTRY_DISPLAY_NAME, CS_EXAM_BOARDS_BY_STAGE, CS_STAGES_BY_COUNTRY, CS_SUPPORTED_COUNTRIES, EXAM_BOARD, STAGE, STAGES_CS, stageLabelMap} from "../../services";
-import {useHistory, useLocation} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 
 export const ExamSpecifications = () => {
-    const history = useHistory();
-    const location = useLocation();
-
     const [countryTab, setCountryTab] = useState<typeof CS_SUPPORTED_COUNTRIES[number]>("uk");
     const [stageTab, setStageTab] = useState<typeof STAGES_CS[number]>(STAGE.A_LEVEL);
     const [stageOverride, setStageOverride] = useState<number | undefined>(undefined);
@@ -19,13 +15,6 @@ export const ExamSpecifications = () => {
     const [fragmentId, setFragmentId] = useState<string>("");
 
     const stageExamBoards = CS_EXAM_BOARDS_BY_STAGE[stageTab];
-    // 1-indexed for some reason... can we fix Tabs so they are 0-indexed please
-    // function setActiveTab(tabIndex: number) {
-    //     if (tabIndex < 1 || tabIndex > stageExamBoards.length) return;
-    //     const hash = stageExamBoards[tabIndex - 1].toString();
-    //     history.replace({...location, hash: `#${hash}`}); // This sets activeTab to the index corresponding to the hash
-    // }
-    // useEffect(function makeSureTheUrlHashRecordsTabState() { if (!location.hash) setActiveTab(activeTab); });
 
     const metaDescription = ({
         [STAGE.A_LEVEL]: "Discover our free A level computer science topics and questions. We cover AQA, CIE, OCR, Eduqas, and WJEC. Learn or revise for your exams with us today.",
@@ -40,7 +29,6 @@ export const ExamSpecifications = () => {
         [stageLabelMap[stage]]: <Tabs 
             style="tabs" className="pt-3" tabContentClass="pt-3" 
             activeTabOverride={examBoardTabOverride} 
-            refreshHash={stage} 
             onActiveTabChange={(n) => {
                 setExamBoardTab(CS_EXAM_BOARDS_BY_STAGE[stageTab][n - 1] as EXAM_BOARD);
                 setExamBoardTabOverride(undefined);
@@ -55,7 +43,7 @@ export const ExamSpecifications = () => {
         ...acc, 
         [CS_COUNTRY_DISPLAY_NAME[country]]: <Tabs style={"buttons"} className={"mt-3"} tabContentClass={"mt-3"} 
             activeTabOverride={stageOverride}
-            onActiveTabChange={(aT) => setStageTab((CS_STAGES_BY_COUNTRY[country][aT - 1] as any))}
+            onActiveTabChange={(aT) => setStageTab((CS_STAGES_BY_COUNTRY[country][aT - 1] as typeof STAGES_CS[number]))}
         >
             {examBoardTabs}
         </Tabs>
@@ -74,6 +62,7 @@ export const ExamSpecifications = () => {
         // This unfortunately means we have to have all three tabs in the dependency, meaning we can generate an invalid request between when
         //  the stage has changed but the exam board hasn't.
         setFragmentId(`${stageTab}_specification_${examBoardTab}`);
+        // history.replace(`#${countryTab}/${stageTab}/${examBoardTab}`);
     }, [examBoardTab, stageTab, countryTab]);
 
     // When changing the stage, set the exam board to the first one for that stage
@@ -93,9 +82,8 @@ export const ExamSpecifications = () => {
         {countryTabs}
         <Row>
             <Col lg={{size: 8, offset: 2}}>
-                {/* TODO: this should only update when the last tab change occurs, else "no content" can flash for a second */}
                 <PageFragment fragmentId={fragmentId}/>
             </Col>
         </Row>
     </Container>;
-}
+};
