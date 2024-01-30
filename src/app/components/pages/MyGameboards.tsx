@@ -67,10 +67,10 @@ const PhyTable = (props: GameboardsTableProps) => {
     } = props;
 
     const tableHeader = <tr className="my-gameboard-table-header">
-        <SortItemHeader key={"completion"} itemOrder={BoardOrder.completion} reverseOrder={BoardOrder["-completion"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader itemOrder={BoardOrder.completion} reverseOrder={BoardOrder["-completion"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Completion
         </SortItemHeader>
-        <SortItemHeader key={"title"} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Board name
         </SortItemHeader>
         <th className="text-center align-middle">Stages</th>
@@ -82,10 +82,10 @@ const PhyTable = (props: GameboardsTableProps) => {
             </RS.UncontrolledTooltip>
         </th>
         <th className="text-center align-middle">Creator</th>
-        <SortItemHeader key={"created"} itemOrder={BoardOrder.created} reverseOrder={BoardOrder["-created"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader itemOrder={BoardOrder.created} reverseOrder={BoardOrder["-created"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Created
         </SortItemHeader>
-        <SortItemHeader key={"visited"} itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Last viewed
         </SortItemHeader>
         <th className="text-center align-middle">Share</th>
@@ -192,10 +192,10 @@ const CSTable = (props: GameboardsTableProps) => {
     } = props;
 
     const tableHeader = <tr className="my-gameboard-table-header">
-        <SortItemHeader key={"completion"} itemOrder={BoardOrder.completion} reverseOrder={BoardOrder["-completion"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader itemOrder={BoardOrder.completion} reverseOrder={BoardOrder["-completion"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Completion
         </SortItemHeader>
-        <SortItemHeader key={"title"} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader colSpan={4} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Quiz name
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
@@ -206,10 +206,10 @@ const CSTable = (props: GameboardsTableProps) => {
             </RS.UncontrolledTooltip>
         </th>
         <th>Creator</th>
-        <SortItemHeader key={"created"} itemOrder={BoardOrder.created} reverseOrder={BoardOrder["-created"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader itemOrder={BoardOrder.created} reverseOrder={BoardOrder["-created"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Created
         </SortItemHeader>
-        <SortItemHeader key={"visited"} itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Last viewed
         </SortItemHeader>
         <th>Share</th>

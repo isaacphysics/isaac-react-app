@@ -264,13 +264,13 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <th className="text-center align-middle"><span className="pl-2 pr-2">Groups</span></th>
-        <SortItemHeader key={"title"} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Board name
         </SortItemHeader>
         <th className="text-center align-middle">Stages</th>
         <th className="text-center align-middle">Difficulties</th>
         <th className="text-center align-middle">Creator</th>
-        <SortItemHeader key={"visited"} itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Last viewed
         </SortItemHeader>
         <th className="text-center align-middle">Assignments</th>
@@ -345,7 +345,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <th>Groups</th>
-        <SortItemHeader key={"title"} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader colSpan={2} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Quiz name
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
@@ -356,7 +356,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </RS.UncontrolledTooltip>
         </th>
         <th>Creator</th>
-        <SortItemHeader key={"visited"} itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+        <SortItemHeader itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Last viewed
         </SortItemHeader>
         <th>Manage</th>
