@@ -270,6 +270,10 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <th colSpan={2} className="text-center align-middle">
             Stages and Difficulties
             <span id="difficulties-help" className="icon-help mx-1"></span>
+            <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+                Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
+            </RS.UncontrolledTooltip>
         </th>
         <SortItemHeader itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Last viewed
