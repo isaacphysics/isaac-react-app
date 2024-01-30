@@ -30,7 +30,8 @@ import {
     isMobile,
     isPhy, isTutorOrAbove, matchesAllWordsInAnyOrder, PATHS,
     siteSpecific,
-    useGameboards
+    useGameboards,
+    isAda
 } from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -39,6 +40,7 @@ import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { Spacer } from "../elements/Spacer";
 import { SortItemHeader }  from "../elements/SortableItemHeader";
+import classNames from "classnames";
 
 interface GameboardsTableProps {
     user: RegisteredUserDTO;
@@ -58,128 +60,11 @@ interface GameboardsTableProps {
     setBoardOrder: (boardOrder: BoardOrder) => void;
 }
 const PhyTable = (props: GameboardsTableProps) => {
-    const {
-        user,
-        boards, selectedBoards, setSelectedBoards, confirmDeleteMultipleBoards,
-        boardView, switchViewAndClearSelected, boardTitleFilter, setBoardTitleFilter,
-        boardCompletion, setBoardCompletion, boardCreator, setBoardCreator,
-        boardOrder, setBoardOrder
-    } = props;
-
-    const tableHeader = <tr className="my-gameboard-table-header">
-        <SortItemHeader itemOrder={BoardOrder.completion} reverseOrder={BoardOrder["-completion"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
-            Completion
-        </SortItemHeader>
-        <SortItemHeader itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
-            Board name
-        </SortItemHeader>
-        <th className="text-center align-middle">Stages</th>
-        <th className="text-center align-middle" style={{whiteSpace: "nowrap"}}>
-            Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
-            <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
-                Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
-            </RS.UncontrolledTooltip>
-        </th>
-        <th className="text-center align-middle">Creator</th>
-        <SortItemHeader itemOrder={BoardOrder.created} reverseOrder={BoardOrder["-created"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
-            Created
-        </SortItemHeader>
-        <SortItemHeader itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
-            Last viewed
-        </SortItemHeader>
-        <th className="text-center align-middle">Share</th>
-        <th colSpan={2}>
-            <div className="text-right align-middle">
-                <Button disabled={selectedBoards.length == 0} size="sm" color="link" onClick={confirmDeleteMultipleBoards}>
-                    {`Delete (${selectedBoards.length})`}
-                </Button>
-            </div>
-        </th>
-    </tr>;
-
-    return <>
-        <Row>
-            <Col sm={4} lg={3}>
-                <Label className="w-100">
-                    Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected} className="p-2">
-                        {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
-                    </Input>
-                </Label>
-            </Col>
-        </Row>
-        <Card className="mt-2 mb-5">
-            <CardBody id="boards-table">
-                <Row>
-                    <Col lg={4}>
-                        <Label className="w-100">
-                            Filter boards <Input type="text" data-testid="title-filter" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
-                        </Label>
-                    </Col>
-                    {/* TODO MT add stage selector */}
-                    {/*{SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 1}}>*/}
-                    {/*    <Label className="w-100">Levels*/}
-                    {/*        <StyledSelect inputId="levels-select"*/}
-                    {/*            isMulti*/}
-                    {/*            options={[*/}
-                    {/*                {value: '1', label: '1'},*/}
-                    {/*                {value: '2', label: '2'},*/}
-                    {/*                {value: '3', label: '3'},*/}
-                    {/*                {value: '4', label: '4'},*/}
-                    {/*                {value: '5', label: '5'},*/}
-                    {/*                {value: '6', label: '6'},*/}
-                    {/*            ]}*/}
-                    {/*            className="basic-multi-select"*/}
-                    {/*            classNamePrefix="select"*/}
-                    {/*            placeholder="None"*/}
-                    {/*            onChange={multiSelectOnChange(setLevels)}*/}
-                    {/*        />*/}
-                    {/*    </Label>*/}
-                    {/*</Col>*/}
-                    {/*}*/}
-                    <Col sm={6} lg={{size: 2, offset: 4}}>
-                        <Label className="w-100">
-                            Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                            {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-                        </Input>
-                        </Label>
-                    </Col>
-                    <Col sm={6} lg={2}>
-                        <Label className="w-100">
-                            Completion <Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as BoardCompletions)}>
-                            {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
-                        </Input>
-                        </Label>
-                    </Col>
-                </Row>
-
-                <div className="overflow-auto mt-3">
-                    <Table className="mb-0">
-                        <thead>
-                            {tableHeader}
-                        </thead>
-                        <tbody>
-                        {boards?.boards
-                            .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
-                            .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                            .filter(board => boardCompletionSelection(board, boardCompletion))
-                            .map(board =>
-                                <BoardCard
-                                    key={board.id}
-                                    board={board}
-                                    selectedBoards={selectedBoards}
-                                    setSelectedBoards={setSelectedBoards}
-                                    boardView={boardView}
-                                    user={user}
-                                    boards={boards}
-                                />)
-                        }
-                        </tbody>
-                    </Table>
-                </div>
-            </CardBody>
-        </Card>
-    </>;
+    return <Card>
+        <CardBody id="boards-table">
+            <CSTable {...props} />
+        </CardBody>
+    </Card>;
 };
 
 const CSTable = (props: GameboardsTableProps) => {
@@ -195,32 +80,39 @@ const CSTable = (props: GameboardsTableProps) => {
         <SortItemHeader itemOrder={BoardOrder.completion} reverseOrder={BoardOrder["-completion"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Completion
         </SortItemHeader>
-        <SortItemHeader colSpan={4} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
-            Quiz name
+        <SortItemHeader colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            {siteSpecific("Board name", "Quiz name")}
         </SortItemHeader>
-        <th colSpan={2} className="long-titled-col">
+        <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}>
             Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
             <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
                 Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
             </RS.UncontrolledTooltip>
         </th>
-        <th>Creator</th>
+        {isAda && <th>Creator</th>}
         <SortItemHeader itemOrder={BoardOrder.created} reverseOrder={BoardOrder["-created"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Created
         </SortItemHeader>
         <SortItemHeader itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Last viewed
         </SortItemHeader>
-        <th>Share</th>
-        <th>
-            {selectedBoards.length
-                ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
-                    Delete ({selectedBoards.length})
-                </Button>
-                : "Delete"
-            }
-        </th>
+        {siteSpecific(
+            <>
+                <th className="text-center align-middle">Delete</th>
+            </>,
+            <>
+                <th>Share</th>
+                <th>
+                    {selectedBoards.length
+                        ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
+                            Delete ({selectedBoards.length})
+                        </Button>
+                        : "Delete"
+                    }
+                </th>
+            </>
+        )}
     </tr>;
 
     return <div className={"mb-5 mb-md-6 mt-4"}>
@@ -240,8 +132,8 @@ const CSTable = (props: GameboardsTableProps) => {
             <Col xs={6} md={3} lg={2} xl={2}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by Creator</span><Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                    {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-                </Input>
+                        {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+                    </Input>
                 </Label>
             </Col>
             <Col xs={6} md={3} xl={2}>

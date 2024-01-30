@@ -1,7 +1,7 @@
 import React, {ComponentProps, useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AppAssignmentProgress, AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
-import {siteSpecific} from "../../../services";
+import {siteSpecific, TODAY} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
@@ -40,6 +40,7 @@ export interface QuestionType {
 
 export interface ResultsTableProps<Q extends QuestionType> {
     assignmentId?: number;
+    duedate?: Date;
     progress?: AppAssignmentProgress[];
     questions: Q[];
     header: JSX.Element;
@@ -51,7 +52,18 @@ export interface ResultsTableProps<Q extends QuestionType> {
     isQuiz?: boolean;
 }
 
-export function ResultsTable<Q extends QuestionType>({assignmentId, progress, questions, header, getQuestionTitle, assignmentAverages, assignmentTotalQuestionParts, markClasses, markQuestionClasses, isQuiz} : ResultsTableProps<Q>) {
+export function ResultsTable<Q extends QuestionType>({assignmentId,
+                                                     duedate,
+                                                     progress,
+                                                     questions,
+                                                     header,
+                                                     getQuestionTitle,
+                                                     assignmentAverages,
+                                                     assignmentTotalQuestionParts,
+                                                     markClasses,
+                                                     markQuestionClasses,
+                                                     isQuiz} : ResultsTableProps<Q>) {
+
     const [selectedQuestionNumber, setSelectedQuestionNumber] = useState(0);
     const selectedQuestion: Q = questions[selectedQuestionNumber];
 
@@ -227,9 +239,11 @@ export function ResultsTable<Q extends QuestionType>({assignmentId, progress, qu
                                                     </div>
                                                 </Button>
                                                 {!returningQuizToStudent && dropdownOpen?.[index] && <>
-                                                    <div className="py-2 px-3">
-                                                        <Button size="sm" onClick={() => returnToStudent(studentProgress.user.id)}>Allow another attempt</Button>
-                                                    </div>
+                                                    {(!duedate || duedate.valueOf() > TODAY().valueOf()) &&
+                                                        (studentProgress.completed) &&
+                                                        <div className="py-2 px-3">
+                                                            <Button size="sm" onClick={() => returnToStudent(studentProgress.user.id)}>Allow another attempt</Button>
+                                                        </div>}
                                                     <div className="py-2 px-3">
                                                         <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user.id}`}>View answers</Button>
                                                     </div>

@@ -267,14 +267,14 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <SortItemHeader itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Board name
         </SortItemHeader>
-        <th className="text-center align-middle">Stages</th>
-        <th className="text-center align-middle">Difficulties</th>
-        <th className="text-center align-middle">Creator</th>
+        <th colSpan={2} className="text-center align-middle">
+            Stages and Difficulties
+            <span id="difficulties-help" className="icon-help mx-1"></span>
+        </th>
         <SortItemHeader itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
             Last viewed
         </SortItemHeader>
-        <th className="text-center align-middle">Assignments</th>
-        <th className="text-center align-middle">Share</th>
+        <th className="text-center align-middle">Manage</th>
     </tr>;
 
     return <Card className="mt-2 mb-5">

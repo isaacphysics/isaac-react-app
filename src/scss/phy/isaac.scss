@@ -100,7 +100,6 @@ $question-font-weight: 600;
 // Utility
 @import "preload";
 @import "../common/mixins";
-@import "../common/animations";
 
 // Atoms
 @import "fonts";
@@ -163,7 +162,7 @@ $question-font-weight: 600;
 @import "quiz";
 @import "glossary";
 
-@import "parsons-layout";
+@import "expansion-layout";
 @import "../common/callout";
 
 

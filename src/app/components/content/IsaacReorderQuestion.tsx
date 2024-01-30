@@ -29,10 +29,10 @@ const ReorderDraggableItem = ({item, index, inAvailableItems, readonly}: {item: 
                 <Markup trusted-markup-encoding={"html"}>
                     {item?.value ?? ""}
                 </Markup>
-            </div>
+            </div>;
         }}
-    </Draggable>
-}
+    </Draggable>;
+};
 
 const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
 
@@ -44,7 +44,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         if (!src || !dst) return;
         const srcItem = src.splice(fromIndex, 1)[0];
         dst.splice(toIndex, 0, srcItem);
-    }
+    };
 
     const onDragEnd = (result: DropResult) => {
         if (!result.source || !result.destination) {
@@ -78,14 +78,14 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         } else {
             console.error("Not sure how we got here...");
         }
-    }
+    };
 
     const onCurrentAttemptUpdate = (newCurrentAttempt?: Immutable<ItemChoiceDTO>, newAvailableItems?: Immutable<ItemDTO>[]) => {
         if (!newCurrentAttempt) {
             const defaultAttempt: ItemChoiceDTO = {
                 type: "itemChoice",
                 items: [],
-            }
+            };
             dispatchSetCurrentAttempt(defaultAttempt);
         }
         if (newCurrentAttempt) {
@@ -116,10 +116,11 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                 setAvailableItems(fixedAvailableItems);
             }
         }
-    }
+    };
 
     useEffect(() => {
         onCurrentAttemptUpdate(currentAttempt, availableItems);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt, availableItems]);
 
     return <div className="parsons-question">
@@ -137,7 +138,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             <div ref={provided.innerRef}
                                         className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "drag-over": snapshot.isDraggingOver})}>
                                 {availableItems && availableItems.map((item, index) =>
-                                    <ReorderDraggableItem item={item} index={index} inAvailableItems readonly={readonly}/>)}
+                                    <ReorderDraggableItem key={item.id} item={item} index={index} inAvailableItems readonly={readonly}/>)}
                                 {(!availableItems || availableItems.length === 0)
                                     ? <div>&nbsp;</div>
                                     : provided.placeholder}
@@ -152,7 +153,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                             <div id="parsons-choice-area" ref={provided.innerRef}
                                         className={classNames("parsons-items", {"empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0), "drag-over": snapshot.isDraggingOver})}>
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) =>
-                                    <ReorderDraggableItem item={item} index={index} readonly={readonly}/>)}
+                                    <ReorderDraggableItem key={item.id} item={item} index={index} readonly={readonly}/>)}
                                 {(!currentAttempt || currentAttempt?.items?.length === 0)
                                     ? <div className="text-muted text-center">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}
@@ -164,6 +165,6 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                 </Col>
             </DragDropContext>
         </Row>
-    </div>
+    </div>;
 };
 export default IsaacReorderQuestion;

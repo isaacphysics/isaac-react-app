@@ -46,8 +46,8 @@
     font-size: 1.25rem;
     line-height: 1.6;
   }
-  // Make sure that parsons questions have a background when they expand on PHY
-  .question-component:not(.isaacParsonsQuestion) {
+  // Make sure that reorder questions have a background when they expand on Phy
+  .question-component:not(.expansion-layout) {
     background: none;
     box-shadow: none;
     padding: 0 !important;
@@ -57,7 +57,8 @@
       padding-right: 3rem !important;
     }
   }
-  .validation-response-panel {
+  // Make sure the banner does not overflow on reorder questions on Phy
+  div:not(.expansion-layout) > .validation-response-panel {
     &.correct {
       margin-left: -1.25rem;
       margin-right: -1.25rem;
