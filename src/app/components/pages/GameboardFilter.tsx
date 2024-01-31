@@ -23,7 +23,8 @@ import {
     isItemEqual,
     isPhy,
     Item,
-    NOT_FOUND, PATHS,
+    NOT_FOUND,
+    PATHS,
     QUESTION_CATEGORY,
     QUESTION_CATEGORY_ITEM_OPTIONS,
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
@@ -50,21 +51,21 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
 import {
-    Col,
-    Row,
-    Input,
-    Button,
     Alert,
-    Container,
+    Button,
     Card,
-    Label,
-    UncontrolledTooltip,
-    CardFooter,
     CardBody,
-    CustomInput
+    CardFooter,
+    Col,
+    Container,
+    CustomInput,
+    Input,
+    Label,
+    Row,
+    UncontrolledTooltip
 } from "reactstrap";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
-import { Spacer } from '../elements/Spacer';
+import {Spacer} from '../elements/Spacer';
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -278,18 +279,18 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
                     onChange={() => {setShowBookQuestions(!showBookQuestions);}}
                 />
             </Col>
-        
+
             {/* Buttons */}
             <Row className="mt-4">
                 <Col>
                     {previousBoard && <Button className="w-100 w-sm-auto h-100 h-sm-auto" size="sm" color="primary" outline onClick={previousBoard}>
-                        <span>Undo Shuffle&nbsp;&#9100;</span> 
+                        <span>Undo Shuffle&nbsp;&#9100;</span>
                     </Button>}
                 </Col>
                 <Spacer width={10}/>
                 <Col className="text-right">
                     <Button className="w-100 w-sm-auto h-100 h-sm-auto" size="sm" color="primary" outline onClick={refresh}>
-                        <span>Shuffle Questions&nbsp;⟳</span> 
+                        <span>Shuffle Questions&nbsp;⟳</span>
                     </Button>
                 </Col>
             </Row>
@@ -638,11 +639,13 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         refresh
     };
 
-    const metaDescriptionCS = "Search for the perfect computer science questions to study. For revision. For homework. For the classroom.";
+    const metaDescription = siteSpecific(
+        "Find physics, maths, chemistry and biology questions by topic and difficulty.",
+        "Search for the perfect computer science questions to study. For revision. For homework. For the classroom.");
 
     return <Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="help_modal_gameboard_filter"/>
-        {isAda && <MetaDescription description={metaDescriptionCS} />}
+        <MetaDescription description={metaDescription} />
         <CanonicalHrefElement />
 
         {/* The site-specific question filtering UI */}

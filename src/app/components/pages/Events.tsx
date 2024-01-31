@@ -1,11 +1,7 @@
 import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {
-    selectors,
-    useAppSelector,
-    useLazyGetEventsQuery
-} from "../../state";
+import {selectors, useAppSelector, useLazyGetEventsQuery} from "../../state";
 import queryString from "query-string";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {EventCard} from "../elements/cards/EventCard";
@@ -14,8 +10,8 @@ import {
     EventStageFilter,
     EventStatusFilter,
     EventTypeFilter,
-    isAda,
     isTeacherOrAbove,
+    siteSpecific,
     stageExistsForSite
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
@@ -56,13 +52,15 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
         Follow the links below to find out more about our FREE events.
     </span>;
 
-    // FIXME this is the old meta description from Isaac CS
-    const metaDescriptionCS = "A level and GCSE Computer Science live online training. Free teacher CPD. Revision and extension workshops for students.";
+    // FIXME does Ada want an events page summary?
+    const metaDescription = siteSpecific(
+        "See all of our Isaac Physics Events, online and in-person, for students and teachers.",
+        undefined);
 
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
-            {isAda && <MetaDescription description={metaDescriptionCS} />}
+            <MetaDescription description={metaDescription} />
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">
