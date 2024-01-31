@@ -14,7 +14,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.6.0",
     "axios-mock-adapter": "^1.22.0",
-    "billboard.js": "^1.12.11",
+    "billboard.js": "^3.10.3",
     "core-js": "^3.19.3",
     "dayjs": "^1.10.7",
     "he": "^1.2.0",

@@ -1,17 +1,22 @@
-import React, { useEffect } from "react";
-import { bb } from "billboard.js";
+import React, { useEffect, useMemo } from "react";
+import bb, { zoom, areaSpline } from "billboard.js";
 import { AnsweredQuestionsByDate } from "../../../../IsaacApiTypes";
 import { formatISODateOnly } from "../DateString";
 
-export const ActivityGraph = ({ answeredQuestionsByDate }: { answeredQuestionsByDate: AnsweredQuestionsByDate }) => {
-  let selectedDates: string[] = [];
+const filterAndSortSelectedDates = (answeredQuestionsByDate: AnsweredQuestionsByDate) => {
   const foundDates = answeredQuestionsByDate ? Object.keys(answeredQuestionsByDate) : [];
-  if (foundDates && foundDates.length > 0) {
-    const nonZeroDates = foundDates.filter((date) => answeredQuestionsByDate && answeredQuestionsByDate[date] > 0);
-    if (nonZeroDates.length > 0) {
-      selectedDates = foundDates.sort();
-    }
+  const nonZeroDates = foundDates.some((date) => answeredQuestionsByDate[date] > 0);
+  if (nonZeroDates) {
+    return foundDates.sort((a, b) => a.localeCompare(b));
   }
+  return [];
+};
+
+export const ActivityGraph = ({ answeredQuestionsByDate }: { answeredQuestionsByDate: AnsweredQuestionsByDate }) => {
+  const selectedDates: string[] = useMemo(
+    () => filterAndSortSelectedDates(answeredQuestionsByDate),
+    [answeredQuestionsByDate],
+  );
 
   useEffect(() => {
     if (selectedDates.length === 0) {
@@ -36,23 +41,27 @@ export const ActivityGraph = ({ answeredQuestionsByDate }: { answeredQuestionsBy
             ...selectedDates.map((date) => (answeredQuestionsByDate ? answeredQuestionsByDate[date] || 0 : 0)),
           ],
         ],
-        types: { activity: "area-spline" },
+        types: { activity: areaSpline() },
         colors: { activity: "#ffb53f" },
         xFormat: "%Y-%m-%d",
       },
       axis: {
         x: {
+          padding: { right: 25, unit: "px" }, // to avoid the last label being cut off
           type: "timeseries",
-          tick: { fit: false, format: "%b %Y", count: Math.min(8, nTicks) },
+          tick: {
+            fit: false,
+            format: "%b %Y",
+            count: Math.min(8, nTicks),
+          },
           min: minDate, // If these are undefined, then the values from the data will be used.
           max: maxDate,
         },
       },
-      zoom: { enabled: true },
+      zoom: { enabled: zoom() },
       legend: { show: false },
       spline: { interpolation: { type: "monotone-x" } },
       bindto: "#activityGraph",
-      padding: { top: 0, right: 30, bottom: 0, left: 30 }, // Pad sides to avoid tick labels being truncated!
     });
   }, [answeredQuestionsByDate, selectedDates]);
 

@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  MyProgressState,
   getMyAnsweredQuestionsByDate,
   getMyProgress,
   getUserAnsweredQuestionsByDate,
@@ -9,17 +10,18 @@ import {
   useAppSelector,
 } from "../../state";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { Card, CardBody, Col, Container, Row } from "reactstrap";
+import { Button, Card, CardBody, Col, Container, Row } from "reactstrap";
 import { HUMAN_QUESTION_TYPES, isTeacherOrAbove, safePercentage } from "../../services";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { PotentialUser } from "../../../IsaacAppTypes";
+import { PotentialUser, UserProgress } from "../../../IsaacAppTypes";
 import { Unauthorised } from "./Unauthorised";
 import { AggregateQuestionStats } from "../elements/panels/AggregateQuestionStats";
 import { Tabs } from "../elements/Tabs";
-import { FlushableRef, QuestionProgressCharts } from "../elements/views/QuestionProgressCharts";
+import { QuestionProgressCharts } from "../elements/views/QuestionProgressCharts";
 import { ActivityGraph } from "../elements/views/ActivityGraph";
 import { ProgressBar } from "../elements/views/ProgressBar";
 import { LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
+import { UserSummaryDTO } from "../../../IsaacApiTypes";
 
 const statistics = {
   questionTypeStatsList: [
@@ -37,6 +39,39 @@ const statistics = {
   tagColWidth: "col-lg-12",
 };
 
+const QuestionParts = ({ progress }: { progress: MyProgressState | undefined }) => (
+  <div className="mt-4">
+    <h4>Question parts correct by Type</h4>
+    <Row>
+      {statistics.questionTypeStatsList.map((qType: string) => {
+        const correct = progress?.correctByType?.[qType] ?? null;
+        const attempts = progress?.attemptsByType?.[qType] ?? null;
+        const percentage = safePercentage(correct, attempts);
+        return (
+          <Col key={qType} className={`${statistics.typeColWidth} mt-2 type-progress-bar`}>
+            <div className={"px-2"}>{HUMAN_QUESTION_TYPES[qType]} questions correct</div>
+            <div className={"px-2"}>
+              <ProgressBar percentage={percentage ?? 0}>
+                {percentage == null ? "No data" : `${correct} of ${attempts}`}
+              </ProgressBar>
+            </div>
+          </Col>
+        );
+      })}
+    </Row>
+  </div>
+);
+
+const getPageTitle = (viewingOwnData: boolean, userDetails?: UserSummaryDTO) => {
+  const { givenName, familyName } = userDetails ?? {};
+  const nonEmptyNames = [givenName, familyName].filter((name) => name);
+  const userName = nonEmptyNames.join(" ") || "user";
+  return viewingOwnData ? "My progress" : `Progress for ${userName}`;
+};
+
+const getTagData = (subId: string, progress?: UserProgress | null) =>
+  progress?.[subId === "attempted" ? "attemptsByTag" : "correctByTag"];
+
 interface MyProgressProps extends RouteComponentProps<{ userIdOfInterest: string }> {
   user: PotentialUser;
 }
@@ -51,6 +86,8 @@ const MyProgress = withRouter((props: MyProgressProps) => {
   const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
   const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
 
+  const [subId, setSubId] = useState("correct");
+
   useEffect(() => {
     if (viewingOwnData && user.loggedIn) {
       dispatch(getMyProgress());
@@ -61,24 +98,22 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     }
   }, [dispatch, userIdOfInterest, viewingOwnData, user]);
 
-  const tabRefs: FlushableRef[] = [useRef(), useRef()];
+  const teacherViewingAnotherUser = !viewingOwnData && isTeacherOrAbove(user);
+  const nonTeacherViewingAnotherUser = !viewingOwnData && !isTeacherOrAbove(user);
 
-  // Only teachers and above can see other users progress. The API checks if the other user has shared data with the
-  // current user or not.
-  if (!viewingOwnData && !isTeacherOrAbove(user)) {
-    return <Unauthorised />;
-  }
+  const progressAndQuestions = teacherViewingAnotherUser
+    ? { progress: userProgress, answeredQuestionsByDate: userAnsweredQuestionsByDate }
+    : { progress: myProgress, answeredQuestionsByDate: myAnsweredQuestionsByDate };
 
-  const progress = !viewingOwnData && isTeacherOrAbove(user) ? userProgress : myProgress;
-  const answeredQuestionsByDate =
-    !viewingOwnData && isTeacherOrAbove(user) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
+  const { progress, answeredQuestionsByDate } = progressAndQuestions;
 
-  const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${
-    progress?.userDetails?.familyName || ""
-  }`;
-  const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
+  const pageTitle = getPageTitle(viewingOwnData, progress?.userDetails);
+  const tagData = getTagData(subId, progress);
 
-  return (
+  // Only teachers and above can see other users progress. The API checks if the other user has shared data with the current user or not.
+  return nonTeacherViewingAnotherUser ? (
+    <Unauthorised />
+  ) : (
     <Container id="my-progress" className="mb-5">
       <TitleAndBreadcrumb currentPageTitle={pageTitle} disallowLaTeX />
       <Card className="mt-4">
@@ -95,66 +130,29 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
                   <Card className="mt-4">
                     <CardBody>
-                      <Tabs
-                        tabContentClass="mt-4"
-                        onActiveTabChange={(tabIndex) => {
-                          const flush = tabRefs[tabIndex - 1].current;
-                          if (flush) {
-                            // Don't call the flush in an event handler that causes the render, that's too early.
-                            // Call it once that's done.
-                            requestAnimationFrame(() => {
-                              flush();
-                              // You'd think this wouldn't do anything, but it fixes the vertical position of the
-                              // legend. I'm beginning to dislike this library.
-                              flush();
-                            });
-                          }
-                        }}
-                      >
-                        {{
-                          "Correct questions": (
-                            <QuestionProgressCharts
-                              subId="correct"
-                              questionsByTag={progress?.correctByTag || {}}
-                              questionsByLevel={progress?.correctByLevel || {}}
-                              questionsByStageAndDifficulty={progress?.correctByStageAndDifficulty || {}}
-                              flushRef={tabRefs[0]}
-                            />
-                          ),
-                          "Attempted questions": (
-                            <QuestionProgressCharts
-                              subId="attempted"
-                              questionsByTag={progress?.attemptsByTag || {}}
-                              questionsByLevel={progress?.attemptsByLevel || {}}
-                              questionsByStageAndDifficulty={progress?.attemptsByStageAndDifficulty || {}}
-                              flushRef={tabRefs[1]}
-                            />
-                          ),
-                        }}
-                      </Tabs>
+                      <Row className="justify-content-center">
+                        <Button
+                          color="primary"
+                          outline={subId === "attempted"}
+                          className="mr-2 border-0"
+                          onClick={() => setSubId("correct")}
+                        >
+                          Correct questions
+                        </Button>
+                        <Button
+                          color="primary"
+                          className="border-0"
+                          outline={subId === "correct"}
+                          onClick={() => setSubId("attempted")}
+                        >
+                          Attempted questions
+                        </Button>
+                      </Row>
+                      <QuestionProgressCharts subId={subId} questionsByTag={tagData ?? {}} />
                     </CardBody>
                   </Card>
 
-                  <div className="mt-4">
-                    <h4>Question parts correct by Type</h4>
-                    <Row>
-                      {statistics.questionTypeStatsList.map((qType: string) => {
-                        const correct = progress?.correctByType?.[qType] || null;
-                        const attempts = progress?.attemptsByType?.[qType] || null;
-                        const percentage = safePercentage(correct, attempts);
-                        return (
-                          <Col key={qType} className={`${statistics.typeColWidth} mt-2 type-progress-bar`}>
-                            <div className={"px-2"}>{HUMAN_QUESTION_TYPES[qType]} questions correct</div>
-                            <div className={"px-2"}>
-                              <ProgressBar percentage={percentage || 0}>
-                                {percentage == null ? "No data" : `${correct} of ${attempts}`}
-                              </ProgressBar>
-                            </div>
-                          </Col>
-                        );
-                      })}
-                    </Row>
-                  </div>
+                  <QuestionParts progress={progress} />
 
                   {answeredQuestionsByDate && (
                     <div className="mt-4">
