@@ -54,7 +54,8 @@ import {
     SITE_TITLE, siteSpecific,
     validateEmail,
     validateEmailPreferences,
-    validatePassword
+    validatePassword,
+    isTeacherOrAbove
 } from "../../services";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
@@ -244,7 +245,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     useEffect(() => {
         const originalSchool: string | undefined = "schoolId" in user ? user.schoolId : undefined; 
         const newSchool: string | undefined = userToUpdate.schoolId;
-        if (newSchool && (!originalSchool || originalSchool !== newSchool)) {
+        if (isTeacherOrAbove(user) && !isStaff(user) && newSchool && (!originalSchool || originalSchool !== newSchool)) {
             dispatch(showChangeSchoolModal());
         }
    // eslint-disable-next-line react-hooks/exhaustive-deps
