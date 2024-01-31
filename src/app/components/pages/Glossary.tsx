@@ -10,21 +10,22 @@ import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
 import {GlossaryTermDTO, Stage} from "../../../IsaacApiTypes";
 import {
     isAda,
-    isPhy,
     isDefined,
+    isPhy,
     Item,
     NOT_FOUND,
     scrollVerticallyIntoView,
+    siteSpecific,
+    stageLabelMap,
+    stagesOrdered,
     TAG_ID,
     tags,
     useUrlHashValue,
-    stagesOrdered,
-    stageLabelMap,
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
-import { useHistory, useLocation } from "react-router";
+import {useHistory, useLocation} from "react-router";
 import Select from "react-select";
 
 /*
@@ -126,7 +127,7 @@ export const Glossary = () => {
         )
     );
 
-    // Update url 
+    // Update url
     useEffect(() => {
         const params: {[key: string]: string} = {};
         if (filterSubject) params.subjects = filterSubject.id;
@@ -259,12 +260,14 @@ export const Glossary = () => {
         }
     });
 
-    const metaDescriptionCS = "Confused about a computer science term? Look it up in our glossary. Get GCSE and A level support today!";
+    const metaDescription = siteSpecific(
+        "A glossary of important words and phrases used in maths, physics, chemistry and biology.",
+        "Confused about a computer science term? Look it up in our glossary. Get GCSE and A level support today!");
 
     const thenRender = <div className="glossary-page">
         <Container>
             <TitleAndBreadcrumb currentPageTitle="Glossary" />
-            {isAda && <MetaDescription description={metaDescriptionCS} />}
+            <MetaDescription description={metaDescription} />
 
             <div className="no-print d-flex align-items-center">
                 <div className="question-actions question-actions-leftmost mt-3">
