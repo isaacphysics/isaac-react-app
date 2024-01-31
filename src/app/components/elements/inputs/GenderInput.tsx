@@ -8,14 +8,15 @@ import {Immutable} from "immer";
 import { StyledDropdown } from "./DropdownInput";
 
 interface GenderInputProps {
+    className?: string;
     userToUpdate: Immutable<ValidationUser>;
     setUserToUpdate: (user: Immutable<ValidationUser>) => void;
     submissionAttempted: boolean;
     idPrefix?: string;
     required: boolean;
 }
-export const GenderInput = ({userToUpdate, setUserToUpdate, submissionAttempted, idPrefix="account", required}: GenderInputProps) => {
-    return <RS.FormGroup className={classNames({"my-1": isPhy})}>
+export const GenderInput = ({className, userToUpdate, setUserToUpdate, submissionAttempted, idPrefix="account", required}: GenderInputProps) => {
+    return <RS.FormGroup className={className}>
         <RS.Label htmlFor={`${idPrefix}-gender-select`} className={classNames({"form-optional": !required}, "font-weight-bold")}>
             Gender
         </RS.Label>

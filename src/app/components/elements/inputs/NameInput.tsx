@@ -5,6 +5,7 @@ import {ValidationUser} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 
 interface NameInputProps {
+    className?: string;
     userToUpdate: Immutable<ValidationUser>;
     setUserToUpdate: (user: Immutable<ValidationUser>) => void;
     nameValid: boolean;
@@ -12,8 +13,8 @@ interface NameInputProps {
     required: boolean;
 }
 
-export const LastNameInput = ({userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
-    return <FormGroup>
+export const LastNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
+    return <FormGroup className={className}>
         <Label htmlFor="last-name-input" className={classNames({"form-optional": !required}, "font-weight-bold")}>Last name</Label>
         <Input
             id="last-name-input"
@@ -32,8 +33,8 @@ export const LastNameInput = ({userToUpdate, setUserToUpdate, nameValid, submiss
     </FormGroup>
 }
 
-export const FirstNameInput = ({userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
-    return <FormGroup>
+export const FirstNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
+    return <FormGroup className={className}>
         <Label className={classNames({"form-optional": !required}, "font-weight-bold")}
                htmlFor="first-name-input">First name</Label>
         <Input

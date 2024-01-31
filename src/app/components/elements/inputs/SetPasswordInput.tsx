@@ -6,6 +6,7 @@ import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {TogglablePasswordInput} from "./TogglablePasswordInput";
 
 interface SetPasswordInputProps {
+    className?: string;
     userToUpdate: Immutable<ValidationUser>;
     setUserToUpdate: (user: Immutable<ValidationUser>) => void;
     passwordValid: boolean;
@@ -15,13 +16,13 @@ interface SetPasswordInputProps {
 }
 
 
-export const SetPasswordInput = ({userToUpdate, setUserToUpdate, submissionAttempted, passwordValid, required, idPrefix="account"}: SetPasswordInputProps) => {
+export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, submissionAttempted, passwordValid, required, idPrefix="account"}: SetPasswordInputProps) => {
 
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
 
     loadZxcvbnIfNotPresent();
 
-    return <FormGroup>
+    return <FormGroup className={className}>
         <Label className={"font-weight-bold"}>Password</Label>
         <p className="d-block input-description">Your password must be at least 8 characters.</p>
         <TogglablePasswordInput

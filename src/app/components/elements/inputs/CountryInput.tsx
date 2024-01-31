@@ -12,6 +12,7 @@ import { isAda } from "../../../services";
 import { StyledDropdown } from "./DropdownInput";
 
 interface CountryInputProps {
+    className?: string;
     userToUpdate: Immutable<ValidationUser>;
     setUserToUpdate: (user: Immutable<ValidationUser>) => void;
     submissionAttempted: boolean;
@@ -19,11 +20,11 @@ interface CountryInputProps {
     required: boolean;
 }
 
-export const CountryInput = ({userToUpdate, setUserToUpdate, submissionAttempted, idPrefix="account", required}: CountryInputProps) => {
+export const CountryInput = ({className, userToUpdate, setUserToUpdate, submissionAttempted, idPrefix="account", required}: CountryInputProps) => {
     const {data: allCountryOptions} = useGetCountriesQuery();
     const {data: priorityCountryOptions} = useGetPriorityCountriesQuery();
 
-    return <RS.FormGroup className="my-1">
+    return <RS.FormGroup className={className}>
         <Label className={classNames({"form-optional": !required}, "font-weight-bold")}>Country</Label>
         {isAda && <p className="d-block input-description mb-2">This helps us personalise the platform for you.</p>}
         <StyledDropdown

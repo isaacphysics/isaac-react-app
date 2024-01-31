@@ -97,7 +97,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     let randomNumber = Math.random();
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
-    return <RS.FormGroup className={`school ${className}`}>
+    return <RS.FormGroup className={`school mb-4 ${className} `}>
         <Label className={classNames({"form-optional": !required}, "font-weight-bold")}>School</Label>
         {isAda && <p className="d-block input-description">This helps us personalise the platform for you.</p>}
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>

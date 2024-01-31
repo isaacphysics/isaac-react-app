@@ -110,6 +110,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                     <Col xs={12} lg={5}>
                         <Form onSubmit={register}>
                             <FirstNameInput
+                                className="mb-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 nameValid={!!givenNameIsValid}
@@ -117,6 +118,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 required={true}
                             />
                             <LastNameInput
+                                className="my-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 nameValid={!!familyNameIsValid}
@@ -124,6 +126,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 required={true}
                             />
                             <EmailInput
+                                className="my-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 submissionAttempted={attemptedSignUp}
@@ -131,33 +134,37 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 required={true}
                             />
                             <SetPasswordInput
+                                className="mt-4 mb-5"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 passwordValid={passwordIsValid}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
-                            <hr />
+                            <hr className="my-4" />
                             <CountryInput
+                                className="my-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
                             <SchoolInput
+                                className="my-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
                             <GenderInput
+                                className="mt-4 mb-5"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 submissionAttempted={attemptedSignUp}
                                 required={false}
                             />
                             <hr />
-                            <FormGroup>
+                            <FormGroup className="my-4">
                                 <CustomInput
                                     id="tos-confirmation"
                                     name="tos-confirmation"

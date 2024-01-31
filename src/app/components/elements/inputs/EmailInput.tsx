@@ -6,6 +6,7 @@ import classNames from "classnames";
 import {isAda, isTeacherOrAbove} from "../../../services";
 
 interface EmailInputProps {
+    className?: string;
     userToUpdate: Immutable<ValidationUser>;
     setUserToUpdate: (user: Immutable<ValidationUser>) => void;
     submissionAttempted: boolean;
@@ -13,8 +14,8 @@ interface EmailInputProps {
     required: boolean;
 }
 
-export const EmailInput = ({userToUpdate, setUserToUpdate, emailIsValid, submissionAttempted, required}: EmailInputProps) => {
-    return <FormGroup>
+export const EmailInput = ({className, userToUpdate, setUserToUpdate, emailIsValid, submissionAttempted, required}: EmailInputProps) => {
+    return <FormGroup className={className}>
         <Label className={classNames({"form-optional": !required}, "font-weight-bold")}
                htmlFor="email-input">Email address</Label>
         {isAda &&
