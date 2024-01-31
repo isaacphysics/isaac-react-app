@@ -429,9 +429,9 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 currentPageTitle={siteSpecific("Assignment Progress", "My markbook")}
                 subTitle={"Track your group performance" + (isPhy ? " by question" : "")}
                 help={pageHelp}
-                modalId="assignment_progress_help"
+                modalId="help_modal_assignment_progress"
             />
-            <PageFragment fragmentId={"markbook_help"} ifNotFound={RenderNothing} />
+            <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_help")} ifNotFound={RenderNothing} />
             <div className="w-100 text-right">
                 <InputGroup className="d-inline text-nowrap">
                     <Label className="pr-2 mt-1">Sort assignments and tests:</Label>
