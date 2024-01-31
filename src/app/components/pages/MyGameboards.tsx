@@ -62,7 +62,7 @@ interface GameboardsTableProps {
 const PhyTable = (props: GameboardsTableProps) => {
     return <Card>
         <CardBody id="boards-table">
-            <CSTable {...props} />;
+            <CSTable {...props} />
         </CardBody>
     </Card>;
 };
@@ -77,26 +77,26 @@ const CSTable = (props: GameboardsTableProps) => {
     } = props;
     return <div className={"mb-5 mb-md-6 mt-4"}>
         <Row>
-            <Col xs={6} md={3} xl={2}>
+            <Col xs={6} md={3}>
                 <Label className="w-100">
                     Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
                 </Label>
             </Col>
-            <Col xs={6} md={3} lg={4} xl={{size: 3, offset: 3}}>
+            <Col xs={6} md={3} lg={4}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter boards by name</span><Input type="text" data-testid="title-filter" onChange={(e) => setBoardTitleFilter(e.target.value)} />
                 </Label>
             </Col>
-            <Col xs={6} md={3} lg={2} xl={2}>
+            <Col xs={6} md={3} lg={2}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by Creator</span><Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
                         {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
                     </Input>
                 </Label>
             </Col>
-            <Col xs={6} md={3} xl={2}>
+            <Col xs={6} md={3}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by Completion</span><Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as BoardCompletions)}>
                         {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
