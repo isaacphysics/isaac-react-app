@@ -193,6 +193,7 @@ export function useFilteredQuizzes(user: RegisteredUserDTO) {
             return; // Ugly but works...
         }
         setFilteredQuizzes(quizzes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [titleFilter, quizzes]);
 
     return {titleFilter, setTitleFilter, filteredQuizzes};
