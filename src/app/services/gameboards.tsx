@@ -48,6 +48,13 @@ export function boardCompletionSelection(board: GameboardDTO, boardCompletion: B
     } else return boardCompletion == BoardCompletions.any;
 }
 
+export function determineGameboardPercentageAttempted(gameboard?: GameboardDTO) {
+    const questionPartsNotAttempted = gameboard?.contents?.reduce((acc, c) => acc + (c.questionPartsNotAttempted ?? 0), 0) ?? 0;
+    const questionPartsTotal = gameboard?.contents?.reduce((acc, c) => acc + (c.questionPartsTotal ?? 0), 0) ?? 0;
+    const percentageAttempted = questionPartsTotal > 0 ? Math.round(100 * (questionPartsTotal - questionPartsNotAttempted) / questionPartsTotal) : 100;
+    return percentageAttempted;
+}
+
 const createGameabordLink = (gameboardId: string) => `${PATHS.GAMEBOARD}#${gameboardId}`;
 
 const createGameboardHistory = (title: string, gameboardId: string) => {
