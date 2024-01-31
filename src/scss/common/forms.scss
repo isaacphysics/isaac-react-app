@@ -171,22 +171,6 @@ label.label-radio > div {
   padding-left: 1em;
 }
 
-.form-required {
-  // todo: replace this with the inverse? (form-optional)
-  &:after {
-    content: '*';
-    padding-left: 6px;
-    font-weight: 600;
-    color: $secondary;
-  }
-}
-
-.form-optional {
-  &:after {
-    content: ' (Optional)';
-  }
-}
-
 .required-before {
   &:before {
     content: '* ';

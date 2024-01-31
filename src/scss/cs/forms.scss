@@ -86,3 +86,9 @@ input[type=text], input[type=search] {
   color: $cs-muted;
 }
 
+.form-optional {
+  &:after {
+    content: ' (Optional)';
+  }
+}
+

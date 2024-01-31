@@ -16,13 +16,16 @@ interface EmailInputProps {
 
 export const EmailInput = ({className, userToUpdate, setUserToUpdate, emailIsValid, submissionAttempted, required}: EmailInputProps) => {
     return <FormGroup className={className}>
-        <Label className={classNames({"form-optional": !required}, "font-weight-bold")}
+        <Label className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}
                htmlFor="email-input">Email address</Label>
         {isAda &&
-            isTeacherOrAbove(userToUpdate) ?
-                <p className="d-block input-description">This will be visible to your students. We recommend using your school email address.</p>
-                :
-                <p className="d-block input-description">This will be the email address you use to log in.</p>
+                <p className="d-block input-description">
+                    {isTeacherOrAbove(userToUpdate) ?
+                        "This will be visible to your students. We recommend using your school email address."
+                        :
+                        "This will be the email address you use to log in."
+                    }
+                </p>
         }
         <Input
             id="email-input"

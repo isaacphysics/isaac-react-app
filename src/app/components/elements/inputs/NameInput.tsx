@@ -15,7 +15,7 @@ interface NameInputProps {
 
 export const LastNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
     return <FormGroup className={className}>
-        <Label htmlFor="last-name-input" className={classNames({"form-optional": !required}, "font-weight-bold")}>Last name</Label>
+        <Label htmlFor="last-name-input" className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}>Last name</Label>
         <Input
             id="last-name-input"
             type="text"
@@ -35,7 +35,7 @@ export const LastNameInput = ({className, userToUpdate, setUserToUpdate, nameVal
 
 export const FirstNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
     return <FormGroup className={className}>
-        <Label className={classNames({"form-optional": !required}, "font-weight-bold")}
+        <Label className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}
                htmlFor="first-name-input">First name</Label>
         <Input
             id="first-name-input"
