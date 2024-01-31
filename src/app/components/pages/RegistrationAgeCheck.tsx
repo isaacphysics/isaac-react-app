@@ -1,18 +1,36 @@
 import React, {useState} from "react";
-import {Button, Card, CardBody, Col, Container, CustomInput, Form, FormGroup, Input, Label, Row} from "reactstrap";
+import {
+    Button,
+    Card,
+    CardBody,
+    Col,
+    Container,
+    CustomInput,
+    Form,
+    FormFeedback,
+    FormGroup,
+    Input,
+    Label,
+    Row
+} from "reactstrap";
 import {history, SITE_TITLE} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 export const RegistrationAgeCheck = () => {
 
     const [over13, setOver13] = useState<boolean | undefined>(undefined);
+    const [submissionAttempted, setSubmissionAttempted] = useState<boolean>(false);
 
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        over13 ?
-            history.push("/register/student/details")
-            :
-            history.push("/register/student/age_denied")
+        setSubmissionAttempted(true);
+
+        if (over13 !== undefined) {
+            over13 ?
+                history.push("/register/student/details")
+                :
+                history.push("/register/student/age_denied")
+        }
     };
 
     return <Container>
@@ -27,26 +45,28 @@ export const RegistrationAgeCheck = () => {
                             id="registration-age-check-over"
                             className="d-inline"
                             type="radio"
-                            checked={over13}
+                            checked={over13 === true}
                             onChange={() => {setOver13(true)}}
                             color="secondary"
+                            invalid={submissionAttempted && over13 === undefined}
+                            label={"13 and over"}
                         />
-                        <Label check>
-                            13 and over
-                        </Label>
                     </FormGroup>
                     <FormGroup check className="my-2">
                         <CustomInput
                             id="registration-age-check-under"
                             className="d-inline"
                             type="radio"
-                            checked={!over13}
+                            checked={over13 === false}
                             onChange={() => {setOver13(false)}}
                             color="secondary"
-                        />
-                        <Label check>
-                            Under 13
-                        </Label>
+                            invalid={submissionAttempted && over13 === undefined}
+                            label={"Under 13"}
+                        >
+                            <FormFeedback>
+                                Please make a selection.
+                            </FormFeedback>
+                        </CustomInput>
                     </FormGroup>
                     <hr />
                     <Row className="justify-content-end">
