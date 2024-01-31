@@ -25,7 +25,6 @@ import {
     isQuestion,
     Item,
     matchesAllWordsInAnyOrder,
-    siteSpecific,
     tags,
     toTuple,
     useQueryParams
@@ -88,20 +87,14 @@ export const assignMultipleQuiz = createAsyncThunk(
             const failedIds = quizStatuses.filter(q => isDefined(q.errorMessage));
             if (failedIds.length === 0) {
                 appDispatch(showSuccessToast(
-                    siteSpecific(
-                        `Quiz${successfulIds.length > 1 ? "zes" : ""} saved`,
-                        `Test${successfulIds.length > 1 ? "s" : ""} assigned`
-                    ),
-                    siteSpecific(
-                        `${successfulIds.length > 1 ? "All quizzes have" : "This quiz has"} been saved successfully.`,
-                        `${successfulIds.length > 1 ? "All tests have" : "This test has"} been saved successfully.`,
-                    )
+                    `Test${successfulIds.length > 1 ? "s" : ""} assigned`,
+                    `${successfulIds.length > 1 ? "All tests have" : "This test has"} been saved successfully`
                 ));
             } else {
                 // Show each group assignment error in a separate toast
                 failedIds.forEach(({groupId, errorMessage}) => {
                     appDispatch(showErrorToast(
-                        `${siteSpecific("Quiz", "Test")} assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`,
+                        `Test assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`,
                         errorMessage as string
                     ));
                 });
@@ -109,19 +102,11 @@ export const assignMultipleQuiz = createAsyncThunk(
                 if (failedIds.length === quizStatuses.length) {
                     return rejectWithValue(null);
                 } else {
-                    const partialSuccessMessage = siteSpecific(
-                        successfulIds.length > 1
-                            ? "Some quizzes were saved successfully."
-                            : `Quiz assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`,
-                        successfulIds.length > 1
+                    const partialSuccessMessage = `${successfulIds.length > 1
                             ? "Some tests were saved successfully."
-                            : `Test assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`,
-                    );
+                            : `Test assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`}`;
                     appDispatch(showSuccessToast(
-                        siteSpecific(
-                            `Quiz${successfulIds.length > 1 ? "zes" : ""} saved`,
-                            `Test${successfulIds.length > 1 ? "s" : ""} saved`,
-                        ),
+                        `Test${successfulIds.length > 1 ? "s" : ""} saved`,
                         partialSuccessMessage
                     ));
                 }
@@ -143,7 +128,7 @@ export const assignMultipleQuiz = createAsyncThunk(
             return newQuizAssignments;
         } else {
             appDispatch(showRTKQueryErrorToastIfNeeded(
-                `${siteSpecific("Quiz", "Test")} assignment${groups.length > 1 ? "(s)" : ""} failed`,
+                `Test assignment${groups.length > 1 ? "(s)" : ""} failed`,
                 response
             ));
             return rejectWithValue(null);
