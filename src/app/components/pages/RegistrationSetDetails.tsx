@@ -76,7 +76,8 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         event.preventDefault()
         setAttemptedSignUp(true);
 
-        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && schoolIsValid && tosAccepted ) {
+        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && ((role == 'STUDENT') || schoolIsValid)
+            && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
             setAttemptedSignUp(true)
@@ -134,27 +135,27 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 required={true}
                             />
                             <SetPasswordInput
-                                className="mt-4 mb-5"
+                                className="my-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 passwordValid={passwordIsValid}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
-                            <hr className="my-4" />
                             <CountryInput
-                                className="my-4"
+                                className="mt-4 mb-5"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
+                            <hr className="my-4" />
                             <SchoolInput
                                 className="my-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 submissionAttempted={attemptedSignUp}
-                                required={true}
+                                required={role == 'TEACHER'}
                             />
                             <GenderInput
                                 className="mt-4 mb-5"

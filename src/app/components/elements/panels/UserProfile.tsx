@@ -3,7 +3,7 @@ import {MyAccountTab} from './MyAccountTab';
 import {FirstNameInput, LastNameInput} from '../inputs/NameInput';
 import {EmailInput} from '../inputs/EmailInput';
 import {ValidationUser} from '../../../../IsaacAppTypes';
-import {SITE_TITLE, validateEmail, validateName} from '../../../services';
+import {isTeacherOrAbove, SITE_TITLE, validateEmail, validateName} from '../../../services';
 import {CountryInput} from '../inputs/CountryInput';
 import {GenderInput} from '../inputs/GenderInput';
 import {SchoolInput} from "../inputs/SchoolInput";
@@ -55,7 +55,7 @@ export const UserProfile = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 submissionAttempted={submissionAttempted}
-                required={true}
+                required={isTeacherOrAbove(userToUpdate)}
             />
             <GenderInput 
                 userToUpdate={userToUpdate}

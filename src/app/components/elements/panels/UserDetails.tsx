@@ -1,7 +1,7 @@
 import React from "react";
 import {
     allRequiredInformationIsPresent,
-    isAda,
+    isAda, isTeacherOrAbove,
     isTutor,
     validateEmail,
     validateName

@@ -7,7 +7,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, isAda, isPhy, isStudent, isTutor, siteSpecific, STAGE} from "./";
+import {EXAM_BOARD, isAda, isPhy, isStudent, isTeacherOrAbove, isTutor, siteSpecific, STAGE} from "./";
 import {Immutable} from "immer";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
@@ -105,7 +105,7 @@ export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser>
     return user && userPreferences
         && (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE))
         && ((isPhy && validateUserContexts(userContexts)) ||
-            (isAda && (validateUserSchool(user) && validateName(user.givenName) && validateName(user.familyName))))
+            (isAda && ((!isTeacherOrAbove(user) || validateUserSchool(user)) && validateName(user.givenName) && validateName(user.familyName))))
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: Immutable<UserSummaryWithEmailAddressDTO>, additionalInformation: AdditionalInformation) {
