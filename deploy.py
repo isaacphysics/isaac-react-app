@@ -167,10 +167,12 @@ def deploy_test(ctx):
 
 def deploy_staging_or_dev(ctx):
     print(f"\n[DEPLOY {ctx['site'].upper()} {ctx['env'].upper()}]")
-    update_config(ctx)
-    run_db_migrations(ctx)
-    bring_down_any_existing_containers(ctx)
-    bring_up_the_new_containers(ctx)
+    continue_anyway = not ctx['live'] or 'y' == input("Currently deploying the live site, do you want to deploy staging?[y/n] ").lower()
+    if continue_anyway:
+        update_config(ctx)
+        run_db_migrations(ctx)
+        bring_down_any_existing_containers(ctx)
+        bring_up_the_new_containers(ctx)
 
 
 def deploy_live(ctx):
@@ -252,6 +254,8 @@ if __name__ == '__main__':
     context = validate_args(context)
 
     EXEC = context['exec']
+
+    context['live'] = context['env'] == 'live' # As env changes during live deployment
 
     print("\n# ! THIS SCRIPT IS STILL EXPERIMENTAL SO CHECK EACH COMMAND BEFORE EXECUTING IT !\n")
     check_repos_are_up_to_date()
