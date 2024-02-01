@@ -323,18 +323,6 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.ALL]: "All exam boards",
 };
 
-export const CS_SUPPORTED_COUNTRIES = ["uk", "scotland"] as const;
-
-export const CS_COUNTRY_DISPLAY_NAME: {[country in typeof CS_SUPPORTED_COUNTRIES[number]]: string} = {
-    uk: "UK",
-    scotland: "Scotland",
-};
-
-export const CS_STAGES_BY_COUNTRY: {[country in typeof CS_SUPPORTED_COUNTRIES[number]]: Stage[]} = {
-    uk: [STAGE.A_LEVEL, STAGE.GCSE],
-    scotland: [STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER],
-};
-
 export const CS_EXAM_BOARDS_BY_STAGE: {[stage in typeof STAGES_CS[number]]: ExamBoard[]} = {
     gcse: [EXAM_BOARD.AQA, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.OCR, EXAM_BOARD.WJEC],
     a_level: [EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC],
