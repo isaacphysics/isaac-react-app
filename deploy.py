@@ -280,6 +280,9 @@ if __name__ == '__main__':
         elif context['env'] in ('staging', 'dev'):
             deploy_staging_or_dev(context)
         elif context['env'] == 'live':
+            print("# Bring down test containers")
+            context['env'] = 'test'
+            bring_down_any_existing_containers(context)
             context['env'] = 'staging'
             deploy_staging_or_dev(context)
             context['env'] = 'live'
