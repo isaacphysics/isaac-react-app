@@ -154,12 +154,10 @@ def update_config(ctx):
 
 def run_db_migrations(ctx):
     get_old_versions(ctx)
-    print("# New migrations from last release (please make sure that these have been updated):")
-    ask_to_run_command(f"cd /local/src/isaac-api && git diff --name-only {ctx['old_api']} {ctx['api']} -- src/main/resources/db_scripts/migrations")
     print("# Print migration SQL to terminal (to copy)?")
     ask_to_run_command(f"cd /local/src/isaac-api && git diff --name-only {ctx['old_api']} {ctx['api']} -- src/main/resources/db_scripts/migrations | xargs cat")
-    print("# If there are any DB migrations, run them (in a transaction with a BEGIN; ROLLBACK; or COMMIT;):")
-    ask_to_run_command(f"docker exec -it {ctx['site']}-pg-{ctx['env']} psql -U rutherford")
+    print("# If there are any DB migrations, run them (in a transaction with a BEGIN; ROLLBACK; or COMMIT;). The following should be run in a separate terminal:")
+    input(f"docker exec -it {ctx['site']}-pg-{ctx['env']} psql -U rutherford")
 
 
 def write_changelog():
