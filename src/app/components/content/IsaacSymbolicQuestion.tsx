@@ -49,7 +49,7 @@ function isError(p: ParsingError | any[]): p is ParsingError {
 export const symbolicInputValidator = (input: string) => {
     const openBracketsCount = input.split('(').length - 1;
     const closeBracketsCount = input.split(')').length - 1;
-    const regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
+    const regexStr = "[^ 0-9A-Za-zΑ-ΡΣ-Ωα-ω()*+,-./<=>^_±²³¼½¾×÷=]+"; // not \Alpha-\Omega directly because there is a gap in the unicode range (U+03A2)
     const badCharacters = new RegExp(regexStr);
     const errors = [];
     if (/\\[a-zA-Z()]|[{}]/.test(input)) {
