@@ -120,6 +120,7 @@ export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
+    maxNumCurves?: number;
     axisLabelX?: string;
     axisLabelY?: string;
 }

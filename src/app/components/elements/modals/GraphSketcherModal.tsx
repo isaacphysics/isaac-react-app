@@ -74,7 +74,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     // Setup and teardown of the graph sketcher p5 instance
     useEffect(function setupOfGraphSketcherP5Instance() {
-        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions: isStaff(user), axisLabelX: question?.axisLabelX, axisLabelY: question?.axisLabelY });
+        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions: isStaff(user), axisLabelX: question?.axisLabelX, axisLabelY: question?.axisLabelY, maxNumCurves: question?.maxNumCurves });
 
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
