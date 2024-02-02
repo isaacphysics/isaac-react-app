@@ -133,9 +133,13 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const hexagonSize = above['sm'](deviceSize) && above['sm'](deviceHeight) ? 74 : 48;
     const colourHexagon = calculateHexagonProportions(hexagonSize/4, 3);
 
+    const [copiedToClipboard, setCopiedToClipboard] = useState<boolean>(false);
+
     const copySpecificationToClipboard = useCallback(() => {
         if (graphSpec && graphSpec.length > 0 && graphSpec[0] !== "") {
             navigator.clipboard.writeText(graphSpec.join("\n"));
+            setCopiedToClipboard(true);
+            setTimeout(() => setCopiedToClipboard(false), 2000);
         }
     }, [graphSpec]);
 
@@ -170,8 +174,10 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                 <b>Debug mode enabled</b><br/><br/>
                 {graphSpec && graphSpec.length > 0 && graphSpec[0] !== ""
                     ? <>
-                        {graphSpec.map((spec, i) => <pre className={"border-0 p-0 m-0"} key={i}>{spec}</pre>)}
-                        <a id="copy-link" onClick={copySpecificationToClipboard}>(copy to clipboard)</a>
+                        <div>
+                            {graphSpec.map((spec, i) => <pre className={"border-0 p-0 m-0"} key={i}>{spec}</pre>)}
+                        </div>
+                        <a id="copy-link" onClick={copySpecificationToClipboard}>{copiedToClipboard ? "(copied!)" : "(copy to clipboard)"}</a>
                     </>
                     : "Please update the graph to generate a specification."
                 }

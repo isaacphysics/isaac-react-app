@@ -23,7 +23,7 @@
             padding: 10px;
             background-color: rgba(255, 255, 255, 0.8);
             // Cursor shouldn't interact with the debug window
-            pointer-events: none;
+            // pointer-events: none;
             touch-action: none;
             max-width: max(50%, 400px);
             #copy-link {
@@ -33,6 +33,10 @@
                 &:hover {
                     text-decoration: underline;
                 }
+            }
+            div {
+                max-height: 400px;
+                overflow-y: auto;
             }
             pre {
                 white-space: pre-wrap;       /* css-3 */
