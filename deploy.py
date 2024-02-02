@@ -56,21 +56,31 @@ def validate_args(args):
     return args
 
 
-def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: list = None, env_vars: dict = None, chunk_size=1024):
+def ask_to_run_command(command,
+                       print_output=True,
+                       expected_nonzero_exit_codes: list = None,
+                       env_vars: dict = None,
+                       chunk_size=1024,
+                       run_anyway=False):
     if not EXEC:
         return input(f"{command}\n")
 
-    response = input(f"Execute: {command}?: ").lower()
-    while response not in ["y", "yes", "s", "skip", "a", "abort"]:
-        response = input("Please respond with one of:\n - Yes (or y)\n - Skip (or s)\n - Abort (or a)\n").lower()
+    run = run_anyway
+    if not run_anyway:
+        response = input(f"Execute: {command}?: ").lower()
+        while response not in ["y", "yes", "s", "skip", "a", "abort"]:
+            response = input("Please respond with one of:\n - Yes (or y)\n - Skip (or s)\n - Abort (or a)\n").lower()
 
-    if response in ["a", "abort"]:
-        print("! Aborting release process, please clean up after yourself !")
-        sys.exit(1)
-    if response in ["s", "skip"]:
-        print("Skipping command...")
-        return
-    if response in ["y", "yes"]:
+        if response in ["a", "abort"]:
+            print("! Aborting release process, please clean up after yourself !")
+            sys.exit(1)
+        if response in ["s", "skip"]:
+            print("Skipping command...")
+            return
+        if response in ["y", "yes"]:
+            run = True
+
+    if run:
         output = ""
         return_code = None
         with subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, env=env_vars if env_vars else None) as proc:
@@ -235,7 +245,7 @@ def deploy_live(ctx):
         ask_to_run_command(f'while [ "$(curl --silent {api_endpoint})" != {expected_response} ]; do echo "Waiting for API..."; sleep 1; done && echo "The API is up!"')
 
         print("# Let the monitoring service know there is a new api service to track:")
-        ask_to_run_command("cd /local/src/isaac-monitor && ./monitor_services.py --generate --no-prompt && ./monitor_services.py --reload --no-prompt && cd -")
+        ask_to_run_command("cd /local/src/isaac-monitor && ./monitor_services.py --generate --no-prompt && ./monitor_services.py --reload --no-prompt && cd -", run_anyway=True)
 
     print("# Bring up the new app and take down the old one:")
     ask_to_run_command(f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-app-live-{ctx['app']} && "
