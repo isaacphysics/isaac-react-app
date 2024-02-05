@@ -12,7 +12,7 @@ import {
 } from "../../state";
 import {history, useQueryParams} from "../../services";
 import {Link} from "react-router-dom";
-import {FocusedAlert} from "../elements/FocusedAlert";
+import {ExigentAlert} from "../elements/ExigentAlert";
 
 
 export const RegistrationVerifyEmail = () => {
@@ -61,10 +61,10 @@ export const RegistrationVerifyEmail = () => {
         <Card className="my-5">
             <CardBody>
                 {!emailVerified && userFromParamVerificationFailed &&
-                    <FocusedAlert color="warning">
+                    <ExigentAlert color="warning">
                         <p className="alert-heading font-weight-bold">Unable to verify your email address</p>
                         <p>{getRTKQueryErrorMessage(userFromParamVerificationErrored).message}</p>
-                    </FocusedAlert>
+                    </ExigentAlert>
                 }
                 <Row className="justify-content-center">
                     <Col>

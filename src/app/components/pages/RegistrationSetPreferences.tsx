@@ -41,7 +41,7 @@ import {BooleanNotationInput} from "../elements/inputs/BooleanNotationInput";
 import {ProgrammingLanguageInput} from "../elements/inputs/ProgrammingLanguageInput";
 import {useEmailPreferenceState, UserEmailPreferencesInput} from "../elements/inputs/UserEmailPreferencesInput";
 import {extractErrorMessage} from "../../services/errors";
-import {FocusedAlert} from "../elements/FocusedAlert";
+import {ExigentAlert} from "../elements/ExigentAlert";
 
 export const RegistrationSetPreferences = () => {
 
@@ -90,10 +90,10 @@ export const RegistrationSetPreferences = () => {
         <Card className="my-5">
             <CardBody>
                 {errorMessage &&
-                    <FocusedAlert color="warning">
+                    <ExigentAlert color="warning">
                         <p className="alert-heading font-weight-bold">Unable to update your account</p>
                         <p>{errorMessage}</p>
-                    </FocusedAlert>
+                    </ExigentAlert>
                 }
                 <Row>
                     <Col xs={12} lg={6}>

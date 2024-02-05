@@ -4,7 +4,7 @@ import {AppState, useAppSelector} from "../../../state";
 import {SITE_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
 import {UserEmailPreferencesInput} from "../inputs/UserEmailPreferencesInput";
 import { MyAccountTab } from "./MyAccountTab";
-import {FocusedAlert} from "../FocusedAlert";
+import {ExigentAlert} from "../ExigentAlert";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences | null | undefined;
@@ -24,10 +24,10 @@ export const UserEmailPreferencesPanel = ({emailPreferences, setEmailPreferences
 
     return <>
         {error?.type == "generalError" &&
-            <FocusedAlert color="warning">
+            <ExigentAlert color="warning">
                 <p className="alert-heading font-weight-bold">Unable to update your account</p>
                 <p>{error.generalError}</p>
-            </FocusedAlert>
+            </ExigentAlert>
         }
         <MyAccountTab
             leftColumn={<>

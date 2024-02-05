@@ -65,7 +65,7 @@ import { Loading } from "../handlers/IsaacSpinner";
 import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesInput";
 import { UserProfile } from '../elements/panels/UserProfile';
 import { UserContent } from '../elements/panels/UserContent';
-import {FocusedAlert} from "../elements/FocusedAlert";
+import {ExigentAlert} from "../elements/ExigentAlert";
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -328,10 +328,10 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
 
                     <Form name="my-account" onSubmit={updateAccount}>
                         {error?.type == "generalError" &&
-                                <FocusedAlert color="warning">
+                                <ExigentAlert color="warning">
                                     <p className="alert-heading font-weight-bold">Unable to update your account</p>
                                     <p>{error.generalError}</p>
-                                </FocusedAlert>
+                                </ExigentAlert>
                         }
                         <TabContent activeTab={activeTab}>
                             <TabPane tabId={ACCOUNT_TAB.account}>

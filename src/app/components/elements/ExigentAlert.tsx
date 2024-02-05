@@ -1,12 +1,12 @@
 import {Alert} from "reactstrap";
 import React, {ReactNode, useEffect} from "react";
 
-type FocusedAlertProps = {
+type ExigentAlertProps = {
     color: 'warning'
     children: ReactNode
 }
 
-export const FocusedAlert = (props: FocusedAlertProps) => {
+export const ExigentAlert = (props: ExigentAlertProps) => {
 
     useEffect(() => {
         window.scrollTo(0, 0)

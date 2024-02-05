@@ -36,7 +36,7 @@ import {FirstNameInput, LastNameInput} from "../elements/inputs/NameInput";
 import {EmailInput} from "../elements/inputs/EmailInput";
 import {GenderInput} from "../elements/inputs/GenderInput";
 import {extractErrorMessage} from "../../services/errors";
-import {FocusedAlert} from "../elements/FocusedAlert";
+import {ExigentAlert} from "../elements/ExigentAlert";
 
 
 interface RegistrationSetDetailsProps {
@@ -99,10 +99,10 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         <Card className="my-5">
             <CardBody>
                 {errorMessage &&
-                    <FocusedAlert color={"warning"}>
+                    <ExigentAlert color={"warning"}>
                         <p className="alert-heading font-weight-bold">Unable create your account</p>
                         <p>{errorMessage}</p>
-                    </FocusedAlert>
+                    </ExigentAlert>
                 }
                 <Row>
                     <Col xs={12} lg={6}>

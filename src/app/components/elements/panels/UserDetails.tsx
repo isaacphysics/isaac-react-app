@@ -19,7 +19,7 @@ import {AccountTypeMessage} from "../AccountTypeMessage";
 import {ProgrammingLanguageInput} from "../inputs/ProgrammingLanguageInput";
 import {LastNameInput, FirstNameInput} from "../inputs/NameInput";
 import {EmailInput} from "../inputs/EmailInput";
-import {FocusedAlert} from "../FocusedAlert";
+import {ExigentAlert} from "../ExigentAlert";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -52,10 +52,10 @@ export const UserDetails = (props: UserDetailsProps) => {
 
     return <CardBody className="pt-0">
         {submissionAttempted && !allRequiredFieldsValid &&
-                <FocusedAlert color="warning">
+                <ExigentAlert color="warning">
                     <p className="alert-heading font-weight-bold">Unable to update your account</p>
                     <p>Please ensure you have completed all required fields.</p>
-                </FocusedAlert>
+                </ExigentAlert>
         }
         <Row>
             <Col>
