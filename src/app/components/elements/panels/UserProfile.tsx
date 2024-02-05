@@ -2,20 +2,33 @@ import React from 'react';
 import {MyAccountTab} from './MyAccountTab';
 import {FirstNameInput, LastNameInput} from '../inputs/NameInput';
 import {EmailInput} from '../inputs/EmailInput';
-import {ValidationUser} from '../../../../IsaacAppTypes';
-import {isTeacherOrAbove, SITE_TITLE, validateEmail, validateName} from '../../../services';
+import {BooleanNotation, DisplaySettings, ValidationUser} from '../../../../IsaacAppTypes';
+import {isAda, isPhy, isTeacherOrAbove, SITE_TITLE, validateEmail, validateName} from '../../../services';
 import {CountryInput} from '../inputs/CountryInput';
 import {GenderInput} from '../inputs/GenderInput';
 import {SchoolInput} from "../inputs/SchoolInput";
+import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
+import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
 
 interface UserProfileProps {
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
+    userContexts: UserContext[];
+    setUserContexts: (uc: UserContext[]) => void;
+    booleanNotation: Nullable<BooleanNotation>;
+    setBooleanNotation: (bn: BooleanNotation) => void;
+    displaySettings: Nullable<DisplaySettings>;
+    setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
+    userAuthSettings: UserAuthenticationSettingsDTO | null;
 }
 
-export const UserProfile = ({userToUpdate, setUserToUpdate, submissionAttempted, editingOtherUser}: UserProfileProps) => {
+export const UserProfile = (props: UserProfileProps) => {
+    const {
+        userToUpdate, setUserToUpdate, userContexts, setUserContexts, booleanNotation,
+        setBooleanNotation, displaySettings, setDisplaySettings, submissionAttempted, editingOtherUser
+    } = props;
     return <MyAccountTab
         leftColumn={<>
             <h3>Account details</h3>
@@ -45,12 +58,14 @@ export const UserProfile = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 required={true}
             />
             <hr className="text-center border-muted my-4"/>
-            <CountryInput
-                userToUpdate={userToUpdate}
-                setUserToUpdate={setUserToUpdate}
-                submissionAttempted={submissionAttempted}
-                required={true}
-            />
+            {isAda &&
+                <CountryInput
+                    userToUpdate={userToUpdate}
+                    setUserToUpdate={setUserToUpdate}
+                    submissionAttempted={submissionAttempted}
+                    required={true}
+                />
+            }
             <SchoolInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
@@ -63,6 +78,13 @@ export const UserProfile = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 submissionAttempted={submissionAttempted}
                 required={false}
             />
+            {isPhy &&
+                <UserContextAccountInput
+                    user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                    displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
+                    setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted} required={isPhy}
+                />
+            }
         </>}
     />;
 };

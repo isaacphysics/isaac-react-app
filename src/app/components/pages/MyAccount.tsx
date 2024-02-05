@@ -335,19 +335,14 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                         }
                         <TabContent activeTab={activeTab}>
                             <TabPane tabId={ACCOUNT_TAB.account}>
-                                {isPhy && <UserDetails
+                                <UserProfile
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
-                                    programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
                                     booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
                                     displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
-                                />}
-                                {isAda && <UserProfile
-                                    userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
-                                />}
+                                />
                             </TabPane>
 
                             {isAda && <TabPane tabId={ACCOUNT_TAB.customise}>

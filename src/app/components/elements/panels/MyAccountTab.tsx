@@ -1,6 +1,6 @@
 import React from "react";
 import { CardBody, Col, Container, Row } from "reactstrap";
-import { isAda, isPhy } from "../../../services";
+import { isAda } from "../../../services";
 import classNames from "classnames";
 
 export interface MyAccountTabProps {
@@ -11,11 +11,6 @@ export interface MyAccountTabProps {
 export const MyAccountTab = ({leftColumn, rightColumn} : MyAccountTabProps) => {
     return <CardBody className={classNames("my-account-tab px-4", {"px-sm-5": isAda})}>
         <Container>
-            {isPhy ? <Col className="px-0 px-lg-2">
-                {leftColumn}
-                <Row className="pt-4"/>
-                {rightColumn}
-            </Col> :
             <Row>
                 <Col lg={6} className="pr-lg-4 px-0 pl-lg-2">
                     {leftColumn}
@@ -23,7 +18,7 @@ export const MyAccountTab = ({leftColumn, rightColumn} : MyAccountTabProps) => {
                 <Col lg={6} className="pl-lg-4 px-0 pl-lg-2 pt-4 pt-lg-0">
                     {rightColumn}
                 </Col>
-            </Row>}
+            </Row>
         </Container>
     </CardBody>;
 };
