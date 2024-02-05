@@ -16,9 +16,7 @@ import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
 import {Glossary} from "../pages/Glossary";
 import {LogIn} from "../pages/LogIn";
-import {RegistrationStart} from "../pages/RegistrationStart";
 import {LogOutHandler} from "../handlers/LogOutHandler";
-import {EmailAlterHandler} from "../handlers/EmailAlterHandler";
 import {ProviderCallbackHandler} from "../handlers/ProviderCallbackHandler";
 import {MyAccount} from "../pages/MyAccount";
 import {MyAssignments} from "../pages/MyAssignments";
@@ -31,9 +29,10 @@ import {
     checkForWebSocket,
     closeWebSocket,
     history,
-    isAdminOrEventManager, isNotPartiallyLoggedIn,
+    isAdminOrEventManager,
     isEventLeader,
     isLoggedIn,
+    isNotPartiallyLoggedIn,
     isStaff,
     isTutorOrAbove,
     KEY,
@@ -78,14 +77,6 @@ import {AssignmentProgress} from "../pages/AssignmentProgress";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
-import {RegistrationRoleSelect} from "../pages/RegistrationRoleSelect";
-import {RegistrationSetDetails} from "../pages/RegistrationSetDetails";
-import {RegistrationVerifyEmail} from "../pages/RegistrationVerifyEmail";
-import {RegistrationSetPreferences} from "../pages/RegistrationSetPreferences";
-import {RegistrationTeacherConnect} from "../pages/RegistrationTeacherConnect";
-import {RegistrationSuccess} from "../pages/RegistrationSuccess";
-import {RegistrationAgeCheck} from "../pages/RegistrationAgeCheck";
-import {RegistrationAgeCheckFailed} from "../pages/RegistrationAgeCheckFailed";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));

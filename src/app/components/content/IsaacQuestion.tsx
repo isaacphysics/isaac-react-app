@@ -16,11 +16,10 @@ import {
     determineFastTrackPrimaryAction,
     determineFastTrackSecondaryAction,
     fastTrackProgressEnabledBoards,
-    isAda, isNotPartiallyLoggedIn,
+    isAda,
     isLoggedIn,
+    isNotPartiallyLoggedIn,
     isPhy,
-    isTeacherOrAbove,
-    isVerified,
     KEY,
     persistence,
     QUESTION_TYPES,
@@ -36,7 +35,6 @@ import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
-import {current} from "immer";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
