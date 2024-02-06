@@ -84,7 +84,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(errorSlice.actions.clearError());
             dispatch(registerNewUser(registrationUser, {}, undefined, null));
-            trackEvent("registration_started", {
+            trackEvent("registration", {
                     props:
                         {
                             provider: "SEGUE"
