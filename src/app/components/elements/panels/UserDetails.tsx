@@ -17,7 +17,7 @@ import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
 import {CountryInput} from "../inputs/CountryInput";
 import {AccountTypeMessage} from "../AccountTypeMessage";
 import {ProgrammingLanguageInput} from "../inputs/ProgrammingLanguageInput";
-import {LastNameInput, FirstNameInput} from "../inputs/NameInput";
+import {FamilyNameInput, GivenNameInput} from "../inputs/NameInput";
 import {EmailInput} from "../inputs/EmailInput";
 import {ExigentAlert} from "../ExigentAlert";
 
@@ -71,7 +71,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>
         <Row>
             <Col md={6}>
-                <FirstNameInput
+                <GivenNameInput
                     userToUpdate={userToUpdate}
                     setUserToUpdate={setUserToUpdate}
                     nameValid={!!validateName(userToUpdate.givenName)}
@@ -80,7 +80,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 />
             </Col>
             <Col md={6}>
-                <LastNameInput
+                <FamilyNameInput
                     userToUpdate={userToUpdate}
                     setUserToUpdate={setUserToUpdate}
                     nameValid={!!validateName(userToUpdate.familyName)}

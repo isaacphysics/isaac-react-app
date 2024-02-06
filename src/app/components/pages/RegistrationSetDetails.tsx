@@ -32,7 +32,7 @@ import {SchoolInput} from "../elements/inputs/SchoolInput";
 import {CountryInput} from "../elements/inputs/CountryInput";
 import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 import {UserRole} from "../../../IsaacApiTypes";
-import {FirstNameInput, LastNameInput} from "../elements/inputs/NameInput";
+import {GivenNameInput, FamilyNameInput} from "../elements/inputs/NameInput";
 import {EmailInput} from "../elements/inputs/EmailInput";
 import {GenderInput} from "../elements/inputs/GenderInput";
 import {extractErrorMessage} from "../../services/errors";
@@ -110,7 +110,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                     </Col>
                     <Col xs={12} lg={5}>
                         <Form onSubmit={register}>
-                            <FirstNameInput
+                            <GivenNameInput
                                 className="mb-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
@@ -118,7 +118,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
-                            <LastNameInput
+                            <FamilyNameInput
                                 className="my-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}

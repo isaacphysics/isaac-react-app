@@ -13,11 +13,11 @@ interface NameInputProps {
     required: boolean;
 }
 
-export const LastNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
+export const FamilyNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
     return <FormGroup className={className}>
-        <Label htmlFor="last-name-input" className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}>Last name</Label>
+        <Label htmlFor="family-name-input" className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}>Last name</Label>
         <Input
-            id="last-name-input"
+            id="family-name-input"
             type="text"
             name="last-name"
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -25,20 +25,20 @@ export const LastNameInput = ({className, userToUpdate, setUserToUpdate, nameVal
             }
             invalid={submissionAttempted && !nameValid}
             defaultValue={userToUpdate.familyName}
-            aria-describedby="lastNameValidationMessage"
+            aria-describedby="familyNameValidationMessage"
         />
-        <FormFeedback id="lastNameValidationMessage">
+        <FormFeedback id="familyNameValidationMessage">
             Please enter a valid name.
         </FormFeedback>
     </FormGroup>
 }
 
-export const FirstNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
+export const GivenNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
     return <FormGroup className={className}>
         <Label className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}
-               htmlFor="first-name-input">First name</Label>
+               htmlFor="given-name-input">First name</Label>
         <Input
-            id="first-name-input"
+            id="given-name-input"
             name="givenName"
             type="text"
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -46,9 +46,9 @@ export const FirstNameInput = ({className, userToUpdate, setUserToUpdate, nameVa
             }
             invalid={submissionAttempted && !nameValid}
             defaultValue={userToUpdate.givenName}
-            aria-describedby="firstNameValidationMessage"
+            aria-describedby="givenNameValidationMessage"
         />
-        <FormFeedback id="firstNameValidationMessage">
+        <FormFeedback id="givenNameValidationMessage">
             Please enter a valid name.
         </FormFeedback>
     </FormGroup>

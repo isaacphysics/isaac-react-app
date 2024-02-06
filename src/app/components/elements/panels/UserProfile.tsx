@@ -1,6 +1,6 @@
 import React from 'react';
 import {MyAccountTab} from './MyAccountTab';
-import {FirstNameInput, LastNameInput} from '../inputs/NameInput';
+import {GivenNameInput, FamilyNameInput} from '../inputs/NameInput';
 import {EmailInput} from '../inputs/EmailInput';
 import {BooleanNotation, DisplaySettings, ValidationUser} from '../../../../IsaacAppTypes';
 import {isAda, isPhy, isTeacherOrAbove, SITE_TITLE, validateEmail, validateName} from '../../../services';
@@ -36,14 +36,14 @@ export const UserProfile = (props: UserProfileProps) => {
             <p>If you would like to delete your account please <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a>.</p>
         </>}
         rightColumn={<>
-            <FirstNameInput
+            <GivenNameInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 nameValid={!!validateName(userToUpdate.givenName)}
                 submissionAttempted={submissionAttempted}
                 required={true}
             />
-            <LastNameInput
+            <FamilyNameInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
                 nameValid={!!validateName(userToUpdate.familyName)}
