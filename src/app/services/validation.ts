@@ -102,10 +102,9 @@ export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 export const withinLast2Hours = withinLastNMinutes.bind(null, 120);
 
 export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser> | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
-    return user && userPreferences
+    return user && userPreferences && validateName(user.givenName) && validateName(user.familyName)
         && (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE))
-        && ((isPhy && validateUserContexts(userContexts)) ||
-            (isAda && ((!isTeacherOrAbove(user) || validateUserSchool(user)) && validateName(user.givenName) && validateName(user.familyName))))
+        && ((isPhy && validateUserContexts(userContexts)) || (isAda && (!isTeacherOrAbove(user) || validateUserSchool(user))))
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: Immutable<UserSummaryWithEmailAddressDTO>, additionalInformation: AdditionalInformation) {
