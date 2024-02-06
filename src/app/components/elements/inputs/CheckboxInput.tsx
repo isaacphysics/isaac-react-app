@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useMemo, useState} from "react";
 import { Input, InputProps } from "reactstrap";
 import { v4 } from "uuid";
 import { Spacer } from "../Spacer";
@@ -11,7 +11,7 @@ export interface StyledCheckboxProps extends InputProps {
 
 export const StyledCheckbox = ({initialValue, ...props} : StyledCheckboxProps) => {
     const [checked, setChecked] = useState(initialValue ?? false);
-    const id = (props.id ?? "") + "-" + v4();
+    const id = useMemo(() => {return (props.id ?? "") + "-" + v4()}, [props.id]);
     return <div className="styled-checkbox-wrapper">
         <div className="mr-2 mb-3">
             {checked && <div className="tick"/>}
