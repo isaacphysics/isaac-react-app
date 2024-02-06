@@ -37,6 +37,7 @@ import {EmailInput} from "../elements/inputs/EmailInput";
 import {GenderInput} from "../elements/inputs/GenderInput";
 import {extractErrorMessage} from "../../services/errors";
 import {ExigentAlert} from "../elements/ExigentAlert";
+import classNames from "classnames";
 
 
 interface RegistrationSetDetailsProps {
@@ -143,13 +144,13 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 required={true}
                             />
                             <CountryInput
-                                className="mt-4 mb-5"
+                                className="my-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
-                            <hr className="my-4" />
+                            <hr className={classNames({"d-none": role == 'TEACHER'}, "my-4")} />
                             <SchoolInput
                                 className="my-4"
                                 userToUpdate={registrationUser}
@@ -157,6 +158,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 submissionAttempted={attemptedSignUp}
                                 required={role == 'TEACHER'}
                             />
+                            <hr className={classNames({"d-none": role != 'TEACHER'}, "my-4")} />
                             <GenderInput
                                 className="mt-4 mb-5"
                                 userToUpdate={registrationUser}
