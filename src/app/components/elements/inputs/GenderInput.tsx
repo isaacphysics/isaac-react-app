@@ -19,7 +19,12 @@ export const GenderInput = ({className, userToUpdate, setUserToUpdate, submissio
         <RS.Label htmlFor={`${idPrefix}-gender-select`} className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}>
             Gender
         </RS.Label>
-        {isAda && <p className="d-block input-description mb-2">We conduct academic research, including research like this on gender balance in computing. Answering this question helps inform our work.</p>}
+        {isAda && <p className="d-block input-description mb-2">
+            We conduct academic research, including&nbsp;
+            <a href={"https://www.raspberrypi.org/blog/gender-balance-in-computing-big-picture/"} target={"_blank"}>
+                research like this
+            </a>
+            &nbsp;on gender balance in computing. Answering this question helps inform our work.</p>}
         <StyledDropdown 
             id={`${idPrefix}-gender-select`}
             value={userToUpdate && userToUpdate.gender}
