@@ -4,6 +4,7 @@ import {Remarkable} from "remarkable";
 import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {
+    AuthenticationProvider,
     BookingStatus,
     ContentDTO,
     Difficulty,
@@ -312,6 +313,10 @@ export const examBoardBooleanNotationMap: {[examBoard in ExamBoard]: BOOLEAN_NOT
     [EXAM_BOARD.EDEXCEL]: BOOLEAN_NOTATION.MATH,
     [EXAM_BOARD.CIE]: BOOLEAN_NOTATION.ENG,
     [EXAM_BOARD.ALL]: BOOLEAN_NOTATION.MATH,
+};
+export const booleanNotationMap: {[notation: string]: string} = {
+    [BOOLEAN_NOTATION.MATH]: "And (∧) Or (∨) Not (¬)",
+    [BOOLEAN_NOTATION.ENG]: "And (·) Or (+) Not (bar)",
 };
 
 // STAGES
@@ -747,7 +752,7 @@ export enum MEMBERSHIP_STATUS {
     INACTIVE = "INACTIVE",
 }
 
-export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
+export enum ACCOUNT_TAB {account, customise, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
 export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
 export enum MARKBOOK_TYPE_TAB {assignments = 1, tests = 2}
@@ -951,4 +956,20 @@ export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "TEST": "Test",
     "SEGUE": "your email address and password"
 };
+
+export const AUTHENTICATOR_PROVIDERS : AuthenticationProvider[] = siteSpecific(["GOOGLE"], ["RASPBERRYPI", "GOOGLE"]);
+
 export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023
+
+export const EMAIL_PREFERENCE_DEFAULTS = siteSpecific(
+    {
+        ASSIGNMENTS: true,
+        NEWS_AND_UPDATES: undefined,
+        EVENTS: undefined
+    },
+    {
+        ASSIGNMENTS: true,
+        NEWS_AND_UPDATES: false,
+        EVENTS: false
+    }
+);

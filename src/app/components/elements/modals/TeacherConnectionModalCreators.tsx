@@ -36,7 +36,7 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
 
             <p>
                 <small>
-                    <strong>Remember</strong>: you can always revoke access to your data from the Teacher Connections tab on this page.
+                    <strong>Remember</strong>: you can always revoke access to your data from the Teacher Connections tab of My Account.
                 </small>
                 <br />
                 <small>

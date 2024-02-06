@@ -60,7 +60,8 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
             dateOfBirth: undefined,
             password: null,
             familyName: undefined,
-            givenName: undefined
+            givenName: undefined,
+            teacherAccountPending: undefined
         })
     );
 
@@ -99,9 +100,9 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
             dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true})), true));
             // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
             trackEvent("registration", {props:
-                    {
-                        provider: "SEGUE"
-                    }
+                        {
+                            provider: "SEGUE"
+                        }
                 }
             )
         }
@@ -227,7 +228,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                 />
                                 <FormFeedback id="password-validation-feedback">
                                     {attemptedSignUp && !passwordIsValid &&
-                                            "Passwords must match and be at least 6 characters long"}
+                                        "Passwords must match and be at least 6 characters long"}
                                 </FormFeedback>
                             </FormGroup>
                         </Col>

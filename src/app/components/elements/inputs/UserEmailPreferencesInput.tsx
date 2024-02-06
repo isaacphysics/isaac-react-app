@@ -1,30 +1,20 @@
-import {CardBody, FormGroup, Table} from "reactstrap";
-import React, {Dispatch, SetStateAction, useState} from "react";
+import {StyledCheckbox} from "./CheckboxInput";
+import {FormGroup, Table} from "reactstrap";
+import React, {SetStateAction, useState} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
-import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
-import {AppState, useAppSelector} from "../../../state";
-import {isPhy, SITE_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
-
-// Extended useState hook for email preferences, enforcing a default of {ASSIGNMENTS: true}
-export const useEmailPreferenceState = (initialEmailPreferences?: Nullable<UserEmailPreferences>): [Nullable<UserEmailPreferences>, Dispatch<SetStateAction<Nullable<UserEmailPreferences>>>] => {
-    const [emailPreferences, _setEmailPreferences] = useState<Nullable<UserEmailPreferences>>({ASSIGNMENTS: true, ...initialEmailPreferences});
-    const setEmailPreferences = (newEmailPreferences: Nullable<UserEmailPreferences> | ((ep: Nullable<UserEmailPreferences>) => Nullable<UserEmailPreferences>)) => {
-        if (typeof newEmailPreferences === "function") {
-            return _setEmailPreferences((old) => ({ASSIGNMENTS: true, ...(newEmailPreferences(old))}));
-        }
-        return _setEmailPreferences({ASSIGNMENTS: true, ...newEmailPreferences});
-    }
-    return [emailPreferences, setEmailPreferences];
-};
+import {EMAIL_PREFERENCE_DEFAULTS, isPhy, siteSpecific} from "../../../services";
+import {Dispatch} from "react";
+import { TrueFalseRadioInput } from "./TrueFalseRadioInput";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences | null | undefined;
     setEmailPreferences: (e: UserEmailPreferences) => void;
-    submissionAttempted: boolean;
+    submissionAttempted?: boolean;
     idPrefix?: string;
 }
-export const UserEmailPreference = ({emailPreferences, setEmailPreferences, submissionAttempted, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
-    const error = useAppSelector((state: AppState) => state && state.error);
+
+export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences, submissionAttempted, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
+
     const isaacEmailPreferenceDescriptions = {
         assignments: siteSpecific(
             "Get notified when your teacher gives your group a new assignment.",
@@ -40,17 +30,8 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
         )
     };
 
-    let errorMessage = null;
-    if (error && error.type === "generalError") {
-        errorMessage = error.generalError;
-    } else  if (submissionAttempted && !validateEmailPreferences(emailPreferences)) {
-        errorMessage = "Please specify all email preferences"
-    }
-
-    return <CardBody className="pb-0">
-        <p>Get important information about the {SITE_TITLE} programme delivered to your inbox.
-            These settings can be changed at any time.</p>
-        <FormGroup className="overflow-auto">
+    return <FormGroup className="overflow-auto">
+        {isPhy && submissionAttempted !== undefined ? <> {/* submissionAttempted should always exist on phy, just here for typing */}
             <Table className="mb-0">
                 <thead>
                     <tr>
@@ -101,15 +82,36 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     </tr>}
                 </tbody>
             </Table>
-            <hr />
-            <div>
-                <small>
-                    <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
-                </small>
-            </div>
-            {errorMessage && <h4 role="alert" className="text-danger text-center">
-                {errorMessage}
-            </h4>}
-        </FormGroup>
-    </CardBody>
+        </> : <>
+            <StyledCheckbox initialValue={emailPreferences?.ASSIGNMENTS ?? false} id={`${idPrefix}assignments`}
+                changeFunction={(checked) => setEmailPreferences({...emailPreferences, ASSIGNMENTS: checked})}
+                label={<span><b>Assignments</b></span>}
+            />
+            <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.assignments}</span>
+
+            <StyledCheckbox initialValue={emailPreferences?.NEWS_AND_UPDATES ?? false} id={`${idPrefix}news`}
+                changeFunction={(checked) => setEmailPreferences({...emailPreferences, NEWS_AND_UPDATES: checked})}
+                label={<span><b>News</b></span>}
+            />
+            <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.news}</span>
+
+            <StyledCheckbox initialValue={emailPreferences?.EVENTS ?? false} id={`${idPrefix}events`}
+                changeFunction={(checked) => setEmailPreferences({...emailPreferences, EVENTS: checked})}
+                label={<span><b>Events</b></span>}
+            />
+            <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.events}</span>
+        </>}
+    </FormGroup>;
+};
+
+// Extended useState hook for email preferences, setting defaults
+export const useEmailPreferenceState = (initialEmailPreferences?: Nullable<UserEmailPreferences>): [Nullable<UserEmailPreferences>, Dispatch<SetStateAction<Nullable<UserEmailPreferences>>>] => {
+    const [emailPreferences, _setEmailPreferences] = useState<Nullable<UserEmailPreferences>>({...EMAIL_PREFERENCE_DEFAULTS, ...initialEmailPreferences});
+    const setEmailPreferences = (newEmailPreferences: Nullable<UserEmailPreferences> | ((ep: Nullable<UserEmailPreferences>) => Nullable<UserEmailPreferences>)) => {
+        if (typeof newEmailPreferences === "function") {
+            return _setEmailPreferences((old) => ({...EMAIL_PREFERENCE_DEFAULTS, ...(newEmailPreferences(old))}));
+        }
+        return _setEmailPreferences({...EMAIL_PREFERENCE_DEFAULTS, ...newEmailPreferences});
+    };
+    return [emailPreferences, setEmailPreferences];
 };
