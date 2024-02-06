@@ -42,7 +42,6 @@
 
 input, textarea {
   &.form-control {
-    @include placeholder($text-muted);
     border: solid 1px $cs-black;
   }
 }
