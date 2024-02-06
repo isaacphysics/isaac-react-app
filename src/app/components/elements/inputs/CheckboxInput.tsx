@@ -1,8 +1,7 @@
 import React, {useMemo, useState} from "react";
-import { Input, InputProps } from "reactstrap";
-import { v4 } from "uuid";
-import { Spacer } from "../Spacer";
-import { isPhy } from "../../../services";
+import {Input, InputProps} from "reactstrap";
+import {v4} from "uuid";
+import {Spacer} from "../Spacer";
 
 export interface StyledCheckboxProps extends InputProps {
     initialValue: boolean;

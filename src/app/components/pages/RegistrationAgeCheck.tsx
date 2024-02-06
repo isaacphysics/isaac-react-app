@@ -10,7 +10,6 @@ import {
     FormFeedback,
     FormGroup,
     Input,
-    Label,
     Row
 } from "reactstrap";
 import {history, SITE_TITLE} from "../../services";

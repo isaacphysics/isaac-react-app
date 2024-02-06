@@ -1,15 +1,12 @@
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import * as RS from "reactstrap";
+import {FormFeedback, Label} from "reactstrap";
 import classNames from "classnames";
-import {FormFeedback, Input, Label} from "reactstrap";
 import React, {ChangeEvent} from "react";
-import {
-    useGetCountriesQuery,
-    useGetPriorityCountriesQuery,
-} from "../../../state";
-import { isAda } from "../../../services";
-import { StyledDropdown } from "./DropdownInput";
+import {useGetCountriesQuery, useGetPriorityCountriesQuery,} from "../../../state";
+import {isAda} from "../../../services";
+import {StyledDropdown} from "./DropdownInput";
 
 interface CountryInputProps {
     className?: string;

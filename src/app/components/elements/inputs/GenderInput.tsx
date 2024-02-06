@@ -1,11 +1,10 @@
 import React, {ChangeEvent} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import * as RS from "reactstrap";
-import {Input} from "reactstrap";
-import {isAda, isPhy, validateUserGender} from "../../../services";
+import {isAda, validateUserGender} from "../../../services";
 import classNames from "classnames";
 import {Immutable} from "immer";
-import { StyledDropdown } from "./DropdownInput";
+import {StyledDropdown} from "./DropdownInput";
 
 interface GenderInputProps {
     className?: string;

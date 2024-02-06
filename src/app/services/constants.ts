@@ -972,4 +972,4 @@ export const EMAIL_PREFERENCE_DEFAULTS = siteSpecific(
         NEWS_AND_UPDATES: false,
         EVENTS: false
     }
-)
+);

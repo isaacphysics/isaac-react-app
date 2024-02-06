@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import { Input, InputProps } from "reactstrap";
-import { isPhy } from "../../../services";
+import {Input, InputProps} from "reactstrap";
 
 export interface StyledDropdownProps extends InputProps {
     value: string | number | undefined;

@@ -1,9 +1,9 @@
-import {DropdownItem, FormGroup, Input, Label} from "reactstrap";
-import {BOOLEAN_NOTATION, EMPTY_BOOLEAN_NOTATION_RECORD, booleanNotationMap} from "../../../services";
+import {FormGroup, Label} from "reactstrap";
+import {BOOLEAN_NOTATION, booleanNotationMap, EMPTY_BOOLEAN_NOTATION_RECORD} from "../../../services";
 import {BooleanNotation} from "../../../../IsaacAppTypes";
-import React, {ChangeEvent} from "react";
+import React from "react";
 import classNames from "classnames";
-import { StyledDropdown } from "./DropdownInput";
+import {StyledDropdown} from "./DropdownInput";
 
 interface BooleanNotationInputProps {
     booleanNotation: Nullable<BooleanNotation>;

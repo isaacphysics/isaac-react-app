@@ -1,4 +1,4 @@
-import {isAda, isDefined, isPhy} from "./";
+import {isAda, isDefined} from "./";
 import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
 import {UserRole} from "../../IsaacApiTypes";
 import {Immutable} from "immer";

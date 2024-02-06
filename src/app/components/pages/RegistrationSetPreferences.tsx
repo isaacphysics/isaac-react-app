@@ -1,33 +1,10 @@
 import React, {useState} from "react";
-import {
-    Button,
-    Card,
-    CardBody,
-    Col,
-    Container,
-    Form,
-    Input,
-    Label,
-    Row,
-} from "reactstrap";
+import {Button, Card, CardBody, Col, Container, Form, Input, Label, Row,} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 import {Immutable} from "immer";
-import {
-    BooleanNotation,
-    DisplaySettings,
-    ProgrammingLanguage,
-    ValidationUser
-} from "../../../IsaacAppTypes";
-import {
-    AppState,
-    closeActiveModal,
-    errorSlice,
-    selectors,
-    updateCurrentUser,
-    useAppDispatch,
-    useAppSelector
-} from "../../state";
+import {BooleanNotation, DisplaySettings, ProgrammingLanguage, ValidationUser} from "../../../IsaacAppTypes";
+import {AppState, errorSlice, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
 import {UserContextAccountInput} from "../elements/inputs/UserContextAccountInput";
 import {
     allRequiredInformationIsPresent,
@@ -35,7 +12,9 @@ import {
     isDefined,
     isLoggedIn,
     KEY,
-    persistence, SITE_TITLE, siteSpecific,
+    persistence,
+    SITE_TITLE,
+    siteSpecific,
 } from "../../services";
 import {BooleanNotationInput} from "../elements/inputs/BooleanNotationInput";
 import {ProgrammingLanguageInput} from "../elements/inputs/ProgrammingLanguageInput";
