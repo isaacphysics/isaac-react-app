@@ -1,8 +1,6 @@
 import React, {ChangeEvent, MouseEvent, useEffect, useRef, useState} from 'react';
 import {Button, Input, InputGroup, InputProps} from "reactstrap";
 import range from 'lodash/range';
-import _cloneDeep from 'lodash/cloneDeep';
-import classNames from 'classnames';
 
 // @ts-ignore This value definition is a bit dodgy but should work.
 export interface DateInputProps extends InputProps {
@@ -231,15 +229,9 @@ export const DateInput = (props: DateInputProps) => {
         }
     };
 
-    const yearRange: number[] = _cloneDeep(props.yearRange) || range(currentYear, 1899, -1);
+    const yearRange: number[] = props.yearRange || range(currentYear, 1899, -1);
     // To prevent visual bug temporarily add the selected year to the range
     const preSelectedYear: number | undefined = values.year.get();
-    let excludeYear: number | undefined = undefined;
-    if (preSelectedYear && !(yearRange.includes(preSelectedYear))) {
-        // We know that this year was outside of the range and should be excluded in selection
-        excludeYear = preSelectedYear;
-        yearRange.push(preSelectedYear);
-    }
 
     const controlPropsWithValidationStripped = {...controlProps, valid: undefined, invalid: undefined};
 
@@ -261,8 +253,9 @@ export const DateInput = (props: DateInputProps) => {
             <div className="date-input-wrapper date-input-year position-relative mr-1">
                 <Input type="select" {...controlProps} aria-label={`Year${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("year")} value={values.year.get() || ""}>
                     {values.year.get() === undefined && <option />}
-                    {/* Hide the excluded year if it exists */}
-                    {yearRange.map(year => <option key={year} className={classNames({"d-none": excludeYear && year === excludeYear})}>{year}</option>)}
+                    {yearRange.map(year => <option key={year}>{year}</option>)}
+                    {/* Add the preselected year as an invisible option */}
+                    {preSelectedYear && !yearRange.includes(preSelectedYear) && <option className="d-none">{preSelectedYear}</option>}
                 </Input>
             </div>
             {(props.noClear === undefined || !props.noClear) && <Button close {...controlPropsWithValidationStripped} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />}
