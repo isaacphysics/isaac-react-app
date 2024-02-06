@@ -9,6 +9,7 @@ import {GenderInput} from '../inputs/GenderInput';
 import {SchoolInput} from "../inputs/SchoolInput";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
+import {DobInput} from "../inputs/DobInput";
 
 interface UserProfileProps {
     userToUpdate: ValidationUser;
@@ -72,6 +73,13 @@ export const UserProfile = (props: UserProfileProps) => {
                 submissionAttempted={submissionAttempted}
                 required={isTeacherOrAbove(userToUpdate)}
             />
+            {isPhy &&
+                <DobInput
+                    userToUpdate={userToUpdate}
+                    setUserToUpdate={setUserToUpdate}
+                    submissionAttempted={submissionAttempted}
+                />
+            }
             <GenderInput 
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate} 
