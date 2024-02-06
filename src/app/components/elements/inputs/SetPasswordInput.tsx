@@ -23,9 +23,10 @@ export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, subm
     loadZxcvbnIfNotPresent();
 
     return <FormGroup className={className}>
-        <Label className={"font-weight-bold"}>Password</Label>
+        <Label htmlFor={`${idPrefix}-password-set`} className={"font-weight-bold"}>Password</Label>
         <p className="d-block input-description">Your password must be at least 8 characters.</p>
         <TogglablePasswordInput
+            id={`${idPrefix}-password-set`}
             value={userToUpdate.password ? userToUpdate.password : undefined}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {password: e.target.value} : {password: null}))
