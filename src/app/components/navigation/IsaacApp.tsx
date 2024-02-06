@@ -104,9 +104,9 @@ export const IsaacApp = () => {
         dispatch(fetchGlossaryTerms());
     }, [dispatch]);
 
-    const loggedInUserId = isLoggedIn(user) && isNotPartiallyLoggedIn(user) ? user.id : undefined;
+    const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {
-        if (loggedInUserId) {
+        if (loggedInUserId && isNotPartiallyLoggedIn(user)) {
             dispatch(requestNotifications());
             checkForWebSocket();
         }
