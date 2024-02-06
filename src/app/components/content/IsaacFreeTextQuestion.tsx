@@ -18,8 +18,10 @@ interface Validation {
 }
 
 function validate(answer: string): Validation {
-    const wordLimit = 20;
-    const charLimit = 200;
+    // 10 sentences, 20 words per sentence = 200 words
+    // 4-7 characters per word = 1400 characters
+    const wordLimit = 200;
+    const charLimit = 1400;
     const wordMatches = answer.match(/\S+/g);
     const currentNumberOfWords = wordMatches ? wordMatches.length : 0;
     const currentNumberOfChars = answer.length;

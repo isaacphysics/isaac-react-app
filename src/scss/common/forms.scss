@@ -8,8 +8,10 @@
     right: 0;
     top: 0;
     bottom: 0;
-    border: solid 1px theme-color("danger");
     pointer-events: none;
+    &:not(.date-input) {
+      border: solid 1px theme-color("danger");
+    }
     @include border-radius($input-border-radius, 0);
   }
 
@@ -37,14 +39,19 @@
 }
 
 .date-input .is-invalid, .date-input .is-valid {
-  background: unset;
+  background: white;
 }
 
 .date-input {
+  min-width: 280px;
+  
   select.form-control {
     padding: 0.5rem;
     .board-card & {
       padding: 0.15rem;
+    }
+    &.is-invalid {
+      padding-right: 0.5rem !important;
     }
   }
 }
@@ -54,7 +61,7 @@
 }
 
 .date-input-month {
-  flex-grow: 3 !important;
+  flex-grow: 5 !important;
 }
 
 .date-input-year {

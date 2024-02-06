@@ -1,7 +1,12 @@
 @media print {
 
   @page {
-    size: A4;
+    // min-width of 992px, scaled to 1:sqrt(2), plus 1in default padding on each side
+    size: calc(992px + 1in) calc(992px * sqrt(2) + 1in);
+  }
+
+  body {
+    min-width: unset !important;
   }
 
   div#root {
@@ -45,6 +50,7 @@
 
   .container {
     max-width: none;
+    min-width: unset !important;
   }
 
   .question-panel {
@@ -67,7 +73,7 @@
     margin-bottom: 1rem;
   }
 
-  .parsons-layout {
+  .expansion-layout {
     margin-left: 1px;
     width: 100%;
   }

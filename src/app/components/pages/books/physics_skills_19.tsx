@@ -13,7 +13,7 @@ export const PhysicsSkills19 = () => {
     return <Container>
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Mastering Essential Pre-University Physics" help={pageHelp} modalId="physics_skills_19_help" />
+                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Mastering Essential Pre-University Physics" help={pageHelp} modalId="help_modal_physics_skills_19" />
                 <img className="book-cover" src="/assets/phy/books/physics_skills_19.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="physics_skills_19_intro"/>
             </div>

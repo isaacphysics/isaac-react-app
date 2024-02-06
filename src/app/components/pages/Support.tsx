@@ -4,7 +4,7 @@ import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history, isAda, isDefined, siteSpecific} from "../../services";
+import {history, isDefined, siteSpecific} from "../../services";
 import fromPairs from "lodash/fromPairs";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
@@ -121,16 +121,21 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         return "support-tab-" + section?.categories[categoryNames[tabIndex - 1]].icon;
     }
 
-    const metaDescriptionMap = {
-        "student": "Got a question about Ada Computer Science? Read our student FAQs. Get GCSE and A level support today!",
-        "teacher": "Got a question about Ada Computer Science? Read our teacher FAQs. Get GCSE and A level support today!"
-    };
+    const metaDescriptionMap = siteSpecific(
+        {
+            "student": "Find answers to your questions about Isaac Physics in our FAQ for students.",
+            "teacher": "Find answers to your questions about Isaac Physics in our FAQ for teachers.",
+        },
+        {
+            "student": "Got a question about Ada Computer Science? Read our student FAQs. Get GCSE and A level support today!",
+            "teacher": "Got a question about Ada Computer Science? Read our teacher FAQs. Get GCSE and A level support today!",
+        });
 
     return <Container>
         <Row>
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={section.title} />
-                {isAda && isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
+                {isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
             </Col>
         </Row>
         <Row>

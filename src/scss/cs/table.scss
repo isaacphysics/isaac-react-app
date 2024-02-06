@@ -17,12 +17,18 @@
       background-color: transparent !important;
     }
     th {
+      vertical-align: middle;
       border-bottom: solid 1px $cs-dark-silver !important;
     }
   }
   tr, td, th {
     background-color: $cs-white;
-    border: solid 1px $cs-dark-silver;
+  }
+
+  &:not(.table-borderless) {
+    tr, td, th {
+      border: solid 1px $cs-dark-silver;
+    }
   }
 }
 

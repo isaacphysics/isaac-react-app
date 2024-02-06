@@ -87,6 +87,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     useEffect(() => {
         dispatch(registerQuestions([doc], accordion.clientId));
         return () => dispatch(deregisterQuestions([doc.id as string]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, doc.id]);
 
     // Select QuestionComponent from the question part's document type (or default)
@@ -111,8 +112,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
                 // Notify Plausible that at least one question attempt has taken place today
                 if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {
-                    persistence.save(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME, new Date().toString())
-                    trackEvent("question_attempted")
+                    persistence.save(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME, new Date().toString());
+                    trackEvent("question_attempted");
                 }
 
                 dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt, currentGameboard?.id));
@@ -125,7 +126,12 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 }
             }
         }}>
-            <div className={classNames("question-component p-md-5", doc.type, {"parsons-layout": isAda && ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})}>
+            <div className={
+                classNames(
+                    "question-component p-md-5",
+                    doc.type,
+                    {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)}
+                )}>
                 <Suspense fallback={<Loading/>}>
                     <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
                 </Suspense>

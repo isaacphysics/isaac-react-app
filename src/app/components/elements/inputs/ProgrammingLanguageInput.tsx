@@ -14,7 +14,7 @@ interface ProgrammingLanguageInputProps {
 
 export const ProgrammingLanguageInput = ({programmingLanguage, setProgrammingLanguage, isRequired = false} : ProgrammingLanguageInputProps) => {
     const onChange = (event: any) => {
-        const newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce((acc, [k, v]) => ({...acc, [k]: false}), {});
+        const newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce((acc, [k, _v]) => ({...acc, [k]: false}), {});
         setProgrammingLanguage(event.target.value ? {...newProgrammingLanguage, [event.target.value]: true} : newProgrammingLanguage);
     };
 

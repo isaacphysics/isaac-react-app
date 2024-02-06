@@ -152,10 +152,11 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
                         <TrackedRoute exact path="/search" component={Search} />
 
+                        <Redirect exact from="/pages/glossary" to="/glossary" /> {/* deprecated route */}
                         <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                         <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute exact path="/questions/:questionId" ifUser={isNotPartiallyLoggedIn} component={Question} />
-                        <TrackedRoute exact path="/glossary" component={Glossary} />,
+                        <TrackedRoute exact path="/glossary" component={Glossary} />
 
                         <TrackedRoute exact path={PATHS.GAMEBOARD} component={Gameboard} />
                         <TrackedRoute exact path={PATHS.GAMEBOARD_BUILDER} ifUser={isTutorOrAbove} component={GameboardBuilder} />

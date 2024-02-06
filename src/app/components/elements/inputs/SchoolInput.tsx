@@ -31,16 +31,16 @@ const schoolSearch = (searchFn: (school : string) => Promise<School[]>) => (scho
 const throttledSchoolSearch = (searchFn: (school : string) => Promise<School[]>) => throttle(schoolSearch(searchFn), 450, {trailing: true, leading: true});
 
 export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput, required}: SchoolInputProps) => {
-    let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
+    const [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
     const [searchSchools] = useLazySearchSchoolsQuery();
-    const searchSchoolsFn = useCallback(throttledSchoolSearch((school: string) => {
-        return searchSchools(school).then(({data, error}) => {
-            if (data && data.length > 0) {
-                return data;
-            }
-            throw error;
-        })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const searchSchoolsFn = useCallback(throttledSchoolSearch(async (school: string) => {
+        const { data, error } = await searchSchools(school);
+        if (data && data.length > 0) {
+            return data;
+        }
+        throw error;
     }), [searchSchools]);
 
     const [getSchoolByUrn] = useLazyGetSchoolByUrnQuery();
@@ -59,11 +59,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     useEffect(() => {
         fetchSchool(userToUpdate.schoolId || "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userToUpdate]);
 
     // Set schoolId or schoolOther
     function setUserSchool(school: any) {
-        const {schoolId, schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
+        const {schoolId: _schoolId, schoolOther: _schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
         if (school.urn) {
             setUserToUpdate?.({...userWithoutSchoolInfo, schoolId: school.urn});
             setSelectedSchoolObject(school);
@@ -74,8 +75,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     }
 
     // Called when school input box option selected
-    function handleSetSchool(newValue: {value: string | School} | null) {
-        const {schoolId, schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
+    function handleSetSchool(newValue: {value: School | string} | null) {
+        const {schoolId: _schoolId, schoolOther: _schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
         if (newValue == null) {
             setSelectedSchoolObject(undefined);
             setUserToUpdate?.(userWithoutSchoolInfo);
@@ -94,7 +95,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 undefined))
     );
 
-    let randomNumber = Math.random();
+    const randomNumber = Math.random();
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
     return <RS.FormGroup className={`school mb-4 ${className} `}>
@@ -123,7 +124,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 invalid={isInvalid}
                 disabled={disableInput || !setUserToUpdate}
                 onChange={(e => {
-                    const {schoolId, schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
+                    const {schoolId: _schoolId, schoolOther: _schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
                     if (e.target.checked) {
                         setUserToUpdate?.({...userWithoutSchoolInfo, schoolOther: NOT_APPLICABLE});
                     } else {
@@ -137,5 +138,5 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 </FormFeedback>
             </RS.CustomInput>
         </div>}
-    </RS.FormGroup>
+    </RS.FormGroup>;
 };

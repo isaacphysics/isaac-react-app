@@ -1,9 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {
     getRTKQueryErrorMessage,
-    mutationSucceeded,
-    showSuccessToast,
-    useAppDispatch,
     useGetQuizAssignmentWithFeedbackQuery,
     useUpdateQuizAssignmentMutation
 } from "../../../state";
@@ -12,11 +9,12 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
-    confirmThen,
     extractTeacherName,
     getQuizAssignmentCSVDownloadLink,
     siteSpecific,
-    isDefined, nthHourOf, TODAY,
+    isDefined,
+    nthHourOf,
+    TODAY,
     useAssignmentProgressAccessibilitySettings,
     isQuestion,
     PATHS
@@ -25,8 +23,6 @@ import {AppAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedba
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
-import {currentYear, DateInput} from "../../elements/inputs/DateInput";
-import range from "lodash/range";
 import {ResultsTable, passMark} from "../../elements/quiz/QuizProgressCommon";
 import {
     Alert,
@@ -57,7 +53,6 @@ const feedbackNames: Record<QuizFeedbackMode, string> = {
 
 export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const {quizAssignmentId} = useParams<{quizAssignmentId: string}>();
-    const dispatch = useAppDispatch();
     const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
     const numericQuizAssignmentId = parseInt(quizAssignmentId, 10);
@@ -74,32 +69,6 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const assignmentStartDate = quizAssignment?.scheduledStartDate ?? quizAssignment?.creationDate;
     const assignmentNotYetStarted = assignmentStartDate && nthHourOf(0, assignmentStartDate) > TODAY();
     const quizTitle = (quizAssignment?.quiz?.title || quizAssignment?.quiz?.id || "Test") + (assignmentNotYetStarted ? ` (starts ${formatDate(assignmentStartDate)})` : " results");
-
-    // Date input variables
-    const yearRange = range(currentYear, currentYear + 5);
-    const [dueDate, setDueDate] = useState<Date>();
-
-    useEffect(() => {
-        setDueDate(quizAssignment?.dueDate);
-    }, [quizAssignment?.dueDate]);
-
-    const setValidDueDate = (newDate : Date) => {
-        if (isUpdatingQuiz || !newDate || quizAssignment?.dueDate == newDate) {
-            return;
-        }
-        if (quizAssignment?.dueDate && newDate > quizAssignment.dueDate) {
-            confirmThen(
-                "Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.",
-                () => updateQuiz({quizAssignmentId: numericQuizAssignmentId, update: {dueDate: newDate}})
-                    .then((result) => {
-                        if (mutationSucceeded(result)) {
-                            dispatch(showSuccessToast("Due date extended successfully", `This test is now due ${newDate.toLocaleDateString()}.`));
-                        }
-                    }),
-                () => setDueDate(quizAssignment.dueDate)
-            );
-        }
-    };
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
         <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
@@ -127,20 +96,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 </div>}
                 <Row>
                     {quizAssignment.dueDate && <Col xs={12} sm={6} md={4}>
-                        <Label for="dueDate" className="pr-1">Extend the due date:
-                            <DateInput id="dueDate" value={dueDate} invalid={dueDate && (dueDate < quizAssignment.dueDate)}
-                                       yearRange={yearRange} noClear onChange={(e) => setDueDate(e.target.valueAsDate ?? undefined)}
-                                       disabled={isUpdatingQuiz}
-                            />
-                        </Label>
-                        {dueDate && (dueDate < quizAssignment.dueDate) && <small className={"text-danger"}>
-                            You cannot set the due date to be earlier than the current due date.
-                        </small>}
-                        <div className={"mt-2 w-100 text-center mb-2"}>
-                            {dueDate && (dueDate > quizAssignment.dueDate) && <Button disabled={isUpdatingQuiz} color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
-                                Extend due date
-                            </Button>}
-                        </div>
+                        <p>Due date: {formatDate(quizAssignment.dueDate)}</p>
                     </Col>}
                     <Col>
                         <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br/>
@@ -255,6 +211,7 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
     const progress : AppAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
         return {
             user: user.user as UserSummaryDTO,
+            completed: user.feedback?.complete ?? false,
             // a list of the correct parts of an answer, one list for each question
             correctPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.correct ?? 0),
             incorrectPartResults: questions.map(q => user.feedback?.questionMarks?.[q?.id ?? 0]?.incorrect ?? 0),
@@ -276,11 +233,12 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         <Link to={`${PATHS.PREVIEW_TEST}/${assignment.quizId}/page/1`}>{assignment.quiz?.title}</Link>.
     </div>;
 
-    const getQuestionTitle = (question: QuizQuestion) => <div key={question.id} className="border">
-        {`Q${questions.indexOf(question) + 1}`}
+    const getQuestionTitle = (question: QuizQuestion) => <div key={question.id}>
+        {`Question ${questions.indexOf(question) + 1}`}
     </div>;
-    
-    return <ResultsTable<QuizQuestion> assignmentId={assignment.id} progress={progress} questions={questions} header={header} getQuestionTitle={getQuestionTitle}
-    assignmentAverages={quizAverages} assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
-    isQuiz={true}/>;
+
+    return <ResultsTable<QuizQuestion> assignmentId={assignment.id} duedate={assignment.dueDate} progress={progress}
+        questions={questions} header={header} getQuestionTitle={getQuestionTitle} assignmentAverages={quizAverages}
+        assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
+        isQuiz={false}/>;
 };

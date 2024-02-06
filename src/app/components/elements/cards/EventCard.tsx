@@ -4,7 +4,7 @@ import classnames from "classnames";
 import {Link} from "react-router-dom";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {DateString} from "../DateString";
-import {formatEventCardDate, isPhy} from "../../../services";
+import {formatEventCardDate, isPhy, siteSpecific} from "../../../services";
 
 export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
     const {id, title, subtitle, eventThumbnail, location, hasExpired, date, numberOfPlaces, eventStatus, isCancelled, userBookingStatus}
@@ -32,11 +32,11 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
             {title && <RS.CardTitle tag="h3">
                 {title}
                 <div>
-                    {userBookingStatus === "CONFIRMED" && <>{" "}<RS.Badge color="success" outline>Booked</RS.Badge></>}
-                    {userBookingStatus === "WAITING_LIST" && <>{" "}<RS.Badge color="warning" outline>On waiting list</RS.Badge></>}
-                    {userBookingStatus === "RESERVED" && <>{" "}<RS.Badge color="warning" outline>Reserved</RS.Badge></>}
+                    {userBookingStatus === "CONFIRMED" && <>{" "}<RS.Badge color={siteSpecific("success", "perfect")} outline>Booked</RS.Badge></>}
+                    {userBookingStatus === "WAITING_LIST" && <>{" "}<RS.Badge color={siteSpecific("warning", "in-progress")} outline>On waiting list</RS.Badge></>}
+                    {userBookingStatus === "RESERVED" && <>{" "}<RS.Badge color={siteSpecific("warning", "in-progress")} outline>Reserved</RS.Badge></>}
                     {isCancelled
-                        ? <>{" "}<RS.Badge color="danger">Cancelled</RS.Badge></>
+                        ? <>{" "}<RS.Badge color={siteSpecific("danger", "failed")}>Cancelled</RS.Badge></>
                         : eventStatus !== "WAITING_LIST_ONLY" && numberOfPlaces == 0 && <>{" "}<RS.Badge>Full</RS.Badge></>
                     }
                 </div>

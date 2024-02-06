@@ -1,11 +1,5 @@
 import React from "react";
-import {
-    allRequiredInformationIsPresent,
-    isAda, isTeacherOrAbove,
-    isTutor,
-    validateEmail,
-    validateName
-} from "../../../services";
+import {allRequiredInformationIsPresent, isAda, isTutor, validateEmail, validateName} from "../../../services";
 import {CardBody, Col, FormGroup, Row} from "reactstrap";
 import {BooleanNotation, DisplaySettings, ProgrammingLanguage, ValidationUser} from "../../../../IsaacAppTypes";
 import {SchoolInput} from "../inputs/SchoolInput";
@@ -23,6 +17,7 @@ import {ExigentAlert} from "../ExigentAlert";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setUserToUpdate: (user: any) => void;
     userContexts: UserContext[];
     setUserContexts: (uc: UserContext[]) => void;

@@ -116,7 +116,8 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     </React.Fragment>}
                     {targetUser.role == 'STUDENT' && <React.Fragment>
                         <RS.Label htmlFor="year-group" className="form-required">
-                            School year group
+                            {/* Based on the options, if only teacher roles are avalable use "Role" */}
+                            { !event.isStudentOnly && !event.isAStudentEvent ? "Role" : "School year group" }
                         </RS.Label>
                         <RS.Input
                             type="select" id="year-group" name="year-group" value={additionalInformation.yearGroup || ""}

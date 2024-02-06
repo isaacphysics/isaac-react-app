@@ -38,7 +38,7 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
             currentChunk.push(child);
         }
         lastType = child.type as string;
-    })
+    });
     if (currentChunk.length > 0) {
         contentChunks.push(currentChunk);
     }
@@ -67,7 +67,7 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
                 return <div className="clearfix content-chunk" key={chunkIndex}>
                     {contentChunk.map((content, contentIndex) =>
                         <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex}/>)}
-                </div>
+                </div>;
             }
         })}
    </React.Fragment>;

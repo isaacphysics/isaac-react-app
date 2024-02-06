@@ -42,7 +42,7 @@ export interface AssignmentDTO extends IAssignmentLike {
     notes?: string;
 }
 
-export interface AssignmentFeedbackDTO {
+export interface AssignmentStatusDTO {
     groupId: number;
     assignmentId?: number;
     errorMessage?: string;

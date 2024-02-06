@@ -61,11 +61,6 @@ export const EDITOR_ORIGIN = siteSpecific(
 export const EDITOR_URL = EDITOR_ORIGIN + "/edit/master/";
 export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/compare";
 
-export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
-    envSpecific("G-MM4SM6FNCF", "G-VXBDM5GDNG", "G-5VLS1Q1FCZ", "G-2YDE0QV3TK"),
-    envSpecific("G-HQ3BM12YB3", "G-EQPHX0WKJ7", "G-W7YJPSQTKP", "G-1Q8QGL0D5J"),
-);
-
 export const { trackPageview, trackEvent } = Plausible(
     {
         apiHost: siteSpecific("https://plausible.isaacphysics.org", "https://plausible.adacomputerscience.org"),
@@ -75,12 +70,12 @@ export const { trackPageview, trackEvent } = Plausible(
 export const SOCIAL_LINKS = siteSpecific(
     {
         youtube: {name: "YouTube", href: "https://www.youtube.com/user/isaacphysics"},
-        twitter: {name: "Twitter", href: "https://twitter.com/isaacphysics"},
+        twitter: {name: "X (Twitter)", href: "https://twitter.com/isaacphysics"},
         facebook: {name: "Facebook", href: "https://www.facebook.com/isaacphysicsUK"},
     },
     {
         facebook: {name: "Facebook", href: "https://www.facebook.com/RaspberryPiFoundation"},
-        twitter: {name: "Twitter", href: "https://twitter.com/RaspberryPi_org"},
+        twitter: {name: "X (Twitter)", href: "https://twitter.com/RaspberryPi_org"},
         instagram: {name: "Instagram", href: "https://www.instagram.com/raspberrypifoundation"},
         youtube: {name: "YouTube", href: "https://www.youtube.com/c/RaspberryPiFoundation"}
     }
@@ -693,6 +688,11 @@ export enum TAG_ID {
     biotechnology = "biotechnology",
     // Physiology
     plants = "plants",
+    breathingAndCirculation = "breathing_circulation",
+    hormones = "hormones",
+    digestionAndExcretion = "digestion_excretion",
+    senseAndMovement = "sense_movement",
+    diseaseAndImmunity = "disease_immunity",
     // Ecology
     populations = "populations",
     ecosystems = "ecosystems",
