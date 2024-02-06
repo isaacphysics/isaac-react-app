@@ -2,6 +2,7 @@ import React, {ChangeEvent, MouseEvent, useEffect, useRef, useState} from 'react
 import {Button, Input, InputGroup, InputProps} from "reactstrap";
 import range from 'lodash/range';
 import _cloneDeep from 'lodash/cloneDeep';
+import classNames from 'classnames';
 
 // @ts-ignore This value definition is a bit dodgy but should work.
 export interface DateInputProps extends InputProps {
@@ -252,7 +253,7 @@ export const DateInput = (props: DateInputProps) => {
             <Input className="date-input-year mr-1" type="select" {...controlProps} aria-label={`Year${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("year")} value={values.year.get() || ""}>
                 {values.year.get() === undefined && <option />}
                 {/* Hide the invalid option added */}
-                {yearRange.map(year => <option key={year} className={props.yearRange?.includes(year) ? "" : "d-none"}>{year}</option>)}
+                {yearRange.map(year => <option key={year} className={classNames({"d-none": selectedYear && year === selectedYear})}>{year}</option>)}
             </Input>
             {(props.noClear === undefined || !props.noClear) && <Button close {...controlPropsWithValidationStripped} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />}
         </InputGroup>
