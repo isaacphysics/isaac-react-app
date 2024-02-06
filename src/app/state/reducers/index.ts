@@ -27,7 +27,8 @@ import {
     isaacApi,
     gameboardsSlice,
     adminUserSearchSlice,
-    userSlice
+    userSlice,
+    interstitialCookieSlice
 } from "../index";
 
 export const rootReducer = combineReducers({
@@ -47,6 +48,9 @@ export const rootReducer = combineReducers({
     toasts,
     activeModals,
     notifications,
+
+    // Cookies
+    cookieConsent: interstitialCookieSlice.reducer,
 
     // Static Content
     glossaryTerms,
