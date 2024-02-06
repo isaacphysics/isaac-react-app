@@ -9,7 +9,6 @@ import {
 } from "../../../state";
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
-import {useEmailPreferenceState, UserEmailPreference} from "../panels/UserEmailPreferences";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
@@ -18,11 +17,8 @@ import {
     isLoggedIn,
     isMobile,
     isTutor,
-    isTutorOrAbove,
     SITE_TITLE,
     siteSpecific,
-    TEACHER_REQUEST_ROUTE,
-    UserFacingRole,
     validateEmailPreferences,
     validateUserContexts,
     validateUserGender,
@@ -31,9 +27,9 @@ import {
 import {SchoolInput} from "../inputs/SchoolInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
-import {Link} from "react-router-dom";
 import {Immutable} from "immer";
 import { AccountTypeMessage } from "../AccountTypeMessage";
+import {useEmailPreferenceState, UserEmailPreferencesInput} from "../inputs/UserEmailPreferencesInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -132,10 +128,16 @@ const RequiredAccountInfoBody = () => {
         </RS.CardBody>}
 
         {!validateEmailPreferences(initialEmailPreferencesValue) && <div>
-            <UserEmailPreference
+            <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
+            <UserEmailPreferencesInput
                 emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                 submissionAttempted={submissionAttempted} idPrefix="modal-"
             />
+            <div>
+                <small>
+                    <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
+                </small>
+            </div>
         </div>}
 
         {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) && <div>

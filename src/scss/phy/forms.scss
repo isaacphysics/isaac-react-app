@@ -15,3 +15,12 @@
     }
   }
 }
+
+.form-required {
+  &:after {
+    content: '*';
+    padding-left: 6px;
+    font-weight: 600;
+    color: $secondary;
+  }
+}

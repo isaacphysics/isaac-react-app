@@ -2,11 +2,12 @@ import React, {useCallback, useEffect, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
-import {schoolNameWithPostcode, validateUserSchool} from "../../../services";
+import {isAda, schoolNameWithPostcode, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {useLazyGetSchoolByUrnQuery, useLazySearchSchoolsQuery} from "../../../state";
+import {FormFeedback, Label} from "reactstrap";
 
 interface SchoolInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -97,8 +98,9 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     const randomNumber = Math.random();
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
-    return <RS.FormGroup className={`school ${className}`}>
-        <RS.Label htmlFor={`school-input-${randomNumber}`} className={classNames({"form-required": required})}>School</RS.Label>
+    return <RS.FormGroup className={`school mb-4 ${className} `}>
+        <Label htmlFor={`school-input-${randomNumber}`} className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}>School</Label>
+        {isAda && <p className="d-block input-description">This helps us measure our reach and impact.</p>}
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect
                 isClearable
@@ -130,11 +132,11 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                     }
                 })}
                 label="Not associated with a school"
-            />
+            >
+                <FormFeedback>
+                    Please specify your school association.
+                </FormFeedback>
+            </RS.CustomInput>
         </div>}
-
-        <div className="invalid-school">
-            {submissionAttempted && required && !validateUserSchool(userToUpdate) ? "Please specify your school association" : null}
-        </div>
     </RS.FormGroup>;
 };

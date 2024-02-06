@@ -178,15 +178,6 @@ label.label-radio > div {
   padding-left: 1em;
 }
 
-.form-required {
-  &:after {
-    content: '*';
-    padding-left: 6px;
-    font-weight: 600;
-    color: $secondary;
-  }
-}
-
 .required-before {
   &:before {
     content: '* ';
@@ -214,4 +205,11 @@ input[type=date]::-webkit-outer-spin-button {
 
 select.form-control {
   height: calc(1.5em + 0.75rem + 2px);
+}
+
+.inline-form-input-btn {
+  background-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0 4px 4px 0;
 }

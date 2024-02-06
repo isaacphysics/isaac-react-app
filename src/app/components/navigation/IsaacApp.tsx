@@ -15,11 +15,8 @@ import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
 import {Glossary} from "../pages/Glossary";
-import {TeacherRequest} from "../pages/TeacherRequest";
 import {LogIn} from "../pages/LogIn";
-import {Registration} from "../pages/Registration";
 import {LogOutHandler} from "../handlers/LogOutHandler";
-import {EmailAlterHandler} from "../handlers/EmailAlterHandler";
 import {ProviderCallbackHandler} from "../handlers/ProviderCallbackHandler";
 import {MyAccount} from "../pages/MyAccount";
 import {MyAssignments} from "../pages/MyAssignments";
@@ -29,18 +26,19 @@ import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
 import {
-    persistence,
     checkForWebSocket,
     closeWebSocket,
     history,
     isAdminOrEventManager,
     isEventLeader,
     isLoggedIn,
+    isNotPartiallyLoggedIn,
     isStaff,
-    KEY,
-    showNotification,
     isTutorOrAbove,
-    PATHS
+    KEY,
+    PATHS,
+    persistence,
+    showNotification
 } from "../../services"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -108,7 +106,7 @@ export const IsaacApp = () => {
 
     const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {
-        if (loggedInUserId) {
+        if (loggedInUserId && isNotPartiallyLoggedIn(user)) {
             dispatch(requestNotifications());
             checkForWebSocket();
         }
@@ -157,7 +155,7 @@ export const IsaacApp = () => {
                         <Redirect exact from="/pages/glossary" to="/glossary" /> {/* deprecated route */}
                         <TrackedRoute exact path="/pages/:pageId" component={Generic} />
                         <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
-                        <TrackedRoute exact path="/questions/:questionId" component={Question} />
+                        <TrackedRoute exact path="/questions/:questionId" ifUser={isNotPartiallyLoggedIn} component={Question} />
                         <TrackedRoute exact path="/glossary" component={Glossary} />
 
                         <TrackedRoute exact path={PATHS.GAMEBOARD} component={Gameboard} />
@@ -170,7 +168,7 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path={PATHS.MY_GAMEBOARDS} ifUser={isLoggedIn} component={MyGameboards} />
-                        <TrackedRoute exact path={PATHS.QUESTION_FINDER} component={GameboardFilter} />
+                        <TrackedRoute exact path={PATHS.QUESTION_FINDER} ifUser={isNotPartiallyLoggedIn} component={GameboardFilter} />
 
                         {/* Teacher pages */}
                         {/* Tutors can set and manage assignments, but not tests/quizzes */}
@@ -190,10 +188,8 @@ export const IsaacApp = () => {
                         {/* Authentication */}
                         <TrackedRoute exact path="/login" component={LogIn} />
                         <TrackedRoute exact path="/logout" component={LogOutHandler} />
-                        <TrackedRoute exact path="/register" component={Registration} />
                         <TrackedRoute exact path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                         <TrackedRoute exact path="/resetpassword/:token" component={ResetPasswordHandler}/>
-                        <TrackedRoute exact path="/verifyemail" component={EmailAlterHandler}/>
 
                         {/* Static pages */}
                         <TrackedRoute exact path="/contact" component={Contact}/>

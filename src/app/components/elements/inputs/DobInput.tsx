@@ -12,14 +12,14 @@ interface DobInputProps {
 }
 export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, editingOtherUser}: DobInputProps) => {
     return <RS.FormGroup>
-        <RS.Label htmlFor="dob-input">Date of birth</RS.Label>
+        <RS.Label className="font-weight-bold" htmlFor="dob-input">Date of birth</RS.Label>
         <DateInput
             invalid={isDefined(userToUpdate.dateOfBirth) && !isDobOldEnoughForSite(userToUpdate.dateOfBirth)}
             id="dob-input"
             name="date-of-birth"
             defaultValue={userToUpdate.dateOfBirth as unknown as string}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setUserToUpdate(Object.assign({}, userToUpdate, {dateOfBirth: event.target.valueAsDate}))
+                setUserToUpdate(Object.assign({}, userToUpdate, {dateOfBirth: event.target.valueAsDate}));
             }}
             disableDefaults
             aria-describedby="age-validation-message"
@@ -28,5 +28,5 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, ed
         <RS.FormFeedback id="age-validation-message">
             {`${editingOtherUser ? "The user" : "You"} must be over ${siteSpecific("10", "13")} years old to create an account.`}
         </RS.FormFeedback>
-    </RS.FormGroup>
+    </RS.FormGroup>;
 };
