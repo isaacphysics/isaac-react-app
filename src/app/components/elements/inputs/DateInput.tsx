@@ -233,9 +233,12 @@ export const DateInput = (props: DateInputProps) => {
 
     const yearRange: number[] = _cloneDeep(props.yearRange) || range(currentYear, 1899, -1);
     // To prevent visual bug temporarily add the selected year to the range
-    const selectedYear: number | undefined = values.year.get();
-    if (selectedYear && !(yearRange.includes(selectedYear))) {
-        yearRange.push(selectedYear);
+    const preSelectedYear: number | undefined = values.year.get();
+    let excludeYear: number | undefined = undefined;
+    if (preSelectedYear && !(yearRange.includes(preSelectedYear))) {
+        // We know that this year was outside of the range and should be excluded in selection
+        excludeYear = preSelectedYear;
+        yearRange.push(preSelectedYear);
     }
 
     const controlPropsWithValidationStripped = {...controlProps, valid: undefined, invalid: undefined};
@@ -252,8 +255,8 @@ export const DateInput = (props: DateInputProps) => {
             </Input>
             <Input className="date-input-year mr-1" type="select" {...controlProps} aria-label={`Year${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("year")} value={values.year.get() || ""}>
                 {values.year.get() === undefined && <option />}
-                {/* Hide the invalid option added */}
-                {yearRange.map(year => <option key={year} className={classNames({"d-none": selectedYear && year === selectedYear})}>{year}</option>)}
+                {/* Hide the excluded year if it exists */}
+                {yearRange.map(year => <option key={year} className={classNames({"d-none": excludeYear && year === excludeYear})}>{year}</option>)}
             </Input>
             {(props.noClear === undefined || !props.noClear) && <Button close {...controlPropsWithValidationStripped} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />}
         </InputGroup>
