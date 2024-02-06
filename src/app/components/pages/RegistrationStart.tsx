@@ -25,7 +25,7 @@ export const RegistrationStart = () => {
                     <Col xs={12} lg={6}>
                         <div className="mb-5">
                             <h2>How would you like to sign up?</h2>
-                            <p>You will have access to the same content no matter how you sign up.</p>
+                            <p>Here, you can create an Ada Computer Science account, or log in to an existing one.</p>
                         </div>
                         <div className="my-5">
                             <h3>Create a new account with your email:</h3>
