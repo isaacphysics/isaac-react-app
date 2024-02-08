@@ -24,7 +24,7 @@
     "identity-obj-proxy": "3.0.0",
     "immer": "^9.0.15",
     "inequality": "1.0.1",
-    "inequality-grammar": "1.0.0",
+    "inequality-grammar": "1.1.1",
     "isaac-graph-sketcher": "0.13.5",
     "js-cookie": "^3.0.1",
     "katex": "^0.16.2",
