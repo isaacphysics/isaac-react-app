@@ -58,8 +58,9 @@ function isAxiosError(e: Error): e is AxiosError {
 }
 
 export function extractMessage(e: Error) {
-    if (isAxiosError(e) && e.response && e.response.data && e.response.data.errorMessage) {
-        return e.response.data.errorMessage;
+    // FIXME: is there a way to type this correctly?
+    if (isAxiosError(e) && e.response && e.response.data && (e.response.data as any).errorMessage) {
+        return (e.response.data as any).errorMessage;
     }
     return API_REQUEST_FAILURE_MESSAGE;
 }
