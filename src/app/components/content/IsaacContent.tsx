@@ -1,4 +1,4 @@
-import React, {lazy} from "react";
+import React, {lazy, useRef} from "react";
 import {AnvilApp} from "./AnvilApp"
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestion} from "./IsaacQuestion";
@@ -12,7 +12,7 @@ import {IsaacTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {QuestionContext} from "../../../IsaacAppTypes";
+import {InlineStringEntryZoneContext, QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
 import {IsaacCardDeck} from "./IsaacCardDeck";
@@ -21,7 +21,7 @@ import {isQuestion} from "../../services";
 import {IsaacCodeTabs} from "./IsaacCodeTabs";
 import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 import {IsaacCallout} from "./IsaacCallout";
-import {RenderNothing} from "../elements/RenderNothing";
+import IsaacInlineRegion from "./IsaacInlineRegion";
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
 const classBasedLayouts = {
@@ -51,6 +51,14 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
         } else {
             tempSelectedComponent = <IsaacQuestion {...props} />;
         }
+
+        if (type === "isaacInlineRegion") {
+            const questionPartIdMap = useRef<Record<string, {questionId: string; attempt: string;}>>({}).current;
+            tempSelectedComponent = <InlineStringEntryZoneContext.Provider value={{ docId: props.doc.id, elementToQuestionMap: questionPartIdMap }}>
+                {tempSelectedComponent}
+            </InlineStringEntryZoneContext.Provider>;
+        }
+
         selectedComponent = <QuestionContext.Provider value={props.doc.id}>{tempSelectedComponent}</QuestionContext.Provider>;
     } else {
         switch (type) {
@@ -66,6 +74,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
             case "isaacCard": selectedComponent = <IsaacCard {...props} />; break;
             case "isaacCardDeck": selectedComponent = <IsaacCardDeck {...props} />; break;
             case "codeTabs": selectedComponent = <IsaacCodeTabs {...props} />; break;
+            case "isaacInlineRegion": selectedComponent = <IsaacInlineRegion {...props} />; break;
             default:
                 switch (layout) {
                     case "tabs": selectedComponent = <IsaacTabs {...props} />; break;

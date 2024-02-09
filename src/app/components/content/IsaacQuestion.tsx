@@ -29,12 +29,13 @@ import {
     wasTodayUTC
 } from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
-import {AccordionSectionContext, ConfidenceContext, GameboardContext} from "../../../IsaacAppTypes";
+import {AccordionSectionContext, AppQuestionDTO, ConfidenceContext, GameboardContext, InlineStringEntryZoneContext} from "../../../IsaacAppTypes";
 import {RouteComponentProps, withRouter} from "react-router";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
+import { submitInlineRegion } from "./IsaacInlineRegion";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -96,9 +97,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     // FastTrack buttons should only show up if on a FastTrack-enabled board
     const isFastTrack = fastTrackInfo.isFastTrackPage && currentGameboard?.id && fastTrackProgressEnabledBoards.includes(currentGameboard.id);
 
+    const inlineContext = useContext(InlineStringEntryZoneContext);
+
     // Determine Action Buttons
-    const primaryAction = isFastTrack ?
-        determineFastTrackPrimaryAction(fastTrackInfo) :
+    const primaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) :
+        doc.type === "isaacInlineRegion" ? {disabled: false, value: "Check my answer", type: "submit", onClick: () => { 
+            submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch);
+    }} :
         {disabled: !canSubmit, value: "Check my answer", type: "submit"};
 
     const secondaryAction = isFastTrack ?
@@ -106,25 +111,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         null;
 
     return <ConfidenceContext.Provider value={{recordConfidence}}>
-        <RS.Form onSubmit={function submitCurrentAttempt(event) {
+        <RS.Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
-            if (questionPart?.currentAttempt) {
-
-                // Notify Plausible that at least one question attempt has taken place today
-                if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {
-                    persistence.save(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME, new Date().toString());
-                    trackEvent("question_attempted");
-                }
-
-                dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt, currentGameboard?.id));
-                if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
-                    dispatch(saveGameboard({
-                        boardId: currentGameboard.id,
-                        user: currentUser,
-                        redirectOnSuccess: false
-                    }));
-                }
-            }
+            submitCurrentAttempt(questionPart, doc.id as string, currentGameboard, currentUser, dispatch);
         }}>
             <div className={
                 classNames(
@@ -211,3 +200,23 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         </RS.Form>
     </ConfidenceContext.Provider>;
 });
+
+export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, currentGameboard: ApiTypes.GameboardDTO | undefined, currentUser: any, dispatch: any) => {
+    if (questionPart?.currentAttempt) {
+        // Notify Plausible that at least one question attempt has taken place today
+        if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {
+            persistence.save(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME, new Date().toString());
+            trackEvent("question_attempted");
+        }
+
+        console.log("CURRENT ATTEMPT:", questionPart?.currentAttempt);
+        dispatch(attemptQuestion(docId, questionPart?.currentAttempt, currentGameboard?.id));
+        if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+            dispatch(saveGameboard({
+                boardId: currentGameboard.id,
+                user: currentUser,
+                redirectOnSuccess: false
+            }));
+        }
+    }
+};

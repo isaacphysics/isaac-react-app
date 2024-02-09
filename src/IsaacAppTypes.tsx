@@ -395,6 +395,10 @@ export const ClozeDropRegionContext = React.createContext<{
     dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
     shouldGetFocus: (id: string) => boolean
 } | undefined>(undefined);
+export const InlineStringEntryZoneContext = React.createContext<{
+    docId: string | undefined,
+    elementToQuestionMap: {[elementId: string]: {questionId: string, attempt?: string}},
+} | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});

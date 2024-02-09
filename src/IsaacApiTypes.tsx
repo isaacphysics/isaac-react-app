@@ -189,6 +189,10 @@ export interface IsaacStringMatchQuestionDTO extends QuestionDTO {
     preserveTrailingWhitespace?: boolean;
 }
 
+export interface IsaacInlineRegionDTO extends ContentDTO {
+    inlineQuestions?: IsaacStringMatchQuestionDTO[];
+}
+
 export interface IsaacRegexMatchQuestionDTO extends QuestionDTO {
     multiLineEntry?: boolean;
 }
