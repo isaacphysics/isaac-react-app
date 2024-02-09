@@ -562,8 +562,14 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     lastUpdated?: Date;
     lastSeen?: Date;
     emailVerificationStatus?: EmailVerificationStatus;
+    teacherAccountPending?: boolean;
     id?: number;
     _id?: number;
+}
+
+export interface AuthenticationResponseDTO extends RegisteredUserDTO {
+    MFA_REQUIRED?: boolean;
+    EMAIL_VERIFICATION_REQUIRED?: boolean;
 }
 
 export interface UserAuthenticationSettingsDTO extends AbstractSegueUserDTO {

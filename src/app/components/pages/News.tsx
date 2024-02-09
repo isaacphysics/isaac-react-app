@@ -5,14 +5,18 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import { SITE_TITLE, siteSpecific } from "../../services";
+import {siteSpecific} from "../../services";
 
 export const News = () => {
     const newsQuery = useGetNewsPodListQuery({subject: siteSpecific("physics", "news"), orderDecending: true});
 
+    const metaDescription = siteSpecific(
+        "Get all the latest news about Isaac Physics.",
+        "Get all the latest news about Ada Computer Science, and read the stories of recent graduates who now have exciting careers in computer science.");
+
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"News"} />
-        <MetaDescription description={`Get all the latest news about ${SITE_TITLE + siteSpecific(".", ", and read the stories of recent graduates who now have exciting careers in computer science.")}`} />
+        <MetaDescription description={metaDescription} />
         <ShowLoadingQuery
             query={newsQuery}
             thenRender={(news) =>

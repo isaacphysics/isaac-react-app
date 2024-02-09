@@ -18,8 +18,11 @@ export const middleware: Middleware[] = [
     notificationCheckerMiddleware
 ];
 const defaultMiddlewareOptions = {
-    serializableCheck: process.env.NODE_ENV !== 'test'
-}
+    serializableCheck: process.env.NODE_ENV !== 'test',
+    // Make local dev actually responsive?
+    // serializableCheck: false,
+    // immutableCheck: false,
+};
 
 export const store = configureStore({
     reducer: rootReducer,

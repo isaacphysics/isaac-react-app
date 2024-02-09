@@ -20,7 +20,8 @@ import {PasswordFeedback} from "../../../IsaacAppTypes";
 import {
     FIRST_LOGIN_STATE,
     isAda,
-    isDefined, isDobOldEnoughForSite,
+    isDefined,
+    isDobOldEnoughForSite,
     isDobOverTen,
     isDobOverThirteen,
     isPhy,
@@ -28,8 +29,10 @@ import {
     loadZxcvbnIfNotPresent,
     passwordDebounce,
     persistence,
-    SITE_TITLE, SITE_TITLE_SHORT,
-    siteSpecific, trackEvent,
+    SITE_TITLE,
+    SITE_TITLE_SHORT,
+    siteSpecific,
+    trackEvent,
     validateEmail,
     validateName,
     validatePassword
@@ -40,7 +43,7 @@ import {Redirect, RouteComponentProps, withRouter} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
-import { extractErrorMessage } from '../../services/errors';
+import {extractErrorMessage} from '../../services/errors';
 
 export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
     const dispatch = useAppDispatch();
@@ -57,7 +60,8 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
             dateOfBirth: undefined,
             password: null,
             familyName: undefined,
-            givenName: undefined
+            givenName: undefined,
+            teacherAccountPending: undefined
         })
     );
 
@@ -96,9 +100,9 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
             dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true})), true));
             // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
             trackEvent("registration", {props:
-                    {
-                        provider: "SEGUE"
-                    }
+                        {
+                            provider: "SEGUE"
+                        }
                 }
             )
         }
@@ -115,13 +119,15 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
         return <Redirect to="/" />;
     }
 
-    const metaDescriptionCS = "Sign up for an Ada Computer Science account to access hundreds of computer science topics and questions.";
+    const metaDescription = siteSpecific(
+        "Register for Isaac Physics to track your progress, connect with your teacher, or request a teacher account.",
+        "Sign up for an Ada Computer Science account to access hundreds of computer science topics and questions.");
 
     // Render
     return <Container id="registration-page" className="mb-5">
 
         <TitleAndBreadcrumb currentPageTitle="Registration" className="mb-4" />
-        {isAda && <MetaDescription description={metaDescriptionCS} />}
+        <MetaDescription description={metaDescription} />
 
         <Card>
             <CardBody>
@@ -222,7 +228,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                 />
                                 <FormFeedback id="password-validation-feedback">
                                     {attemptedSignUp && !passwordIsValid &&
-                                            "Passwords must match and be at least 6 characters long"}
+                                        "Passwords must match and be at least 6 characters long"}
                                 </FormFeedback>
                             </FormGroup>
                         </Col>

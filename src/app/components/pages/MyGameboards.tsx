@@ -27,12 +27,11 @@ import {
     difficultiesOrdered,
     difficultyShortLabelMap,
     formatBoardOwner,
-    isAda,
     isMobile,
     isPhy, isTutorOrAbove, matchesAllWordsInAnyOrder, PATHS,
     siteSpecific,
-    sortIcon,
-    useGameboards
+    useGameboards,
+    isAda
 } from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -40,6 +39,7 @@ import {BoardCard} from "../elements/cards/BoardCard";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { Spacer } from "../elements/Spacer";
+import { SortItemHeader }  from "../elements/SortableItemHeader";
 import classNames from "classnames";
 
 interface GameboardsTableProps {
@@ -62,7 +62,7 @@ interface GameboardsTableProps {
 const PhyTable = (props: GameboardsTableProps) => {
     return <Card>
         <CardBody id="boards-table">
-            <CSTable {...props} />;
+            <CSTable {...props} />
         </CardBody>
     </Card>;
 };
@@ -75,28 +75,68 @@ const CSTable = (props: GameboardsTableProps) => {
         boardCompletion, setBoardCompletion, boardCreator, setBoardCreator,
         boardOrder, setBoardOrder
     } = props;
+
+    const tableHeader = <tr className="my-gameboard-table-header">
+        <SortItemHeader itemOrder={BoardOrder.completion} reverseOrder={BoardOrder["-completion"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            Completion
+        </SortItemHeader>
+        <SortItemHeader colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            {siteSpecific("Board name", "Quiz name")}
+        </SortItemHeader>
+        <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}>
+            Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
+            <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+                Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
+            </RS.UncontrolledTooltip>
+        </th>
+        {isAda && <th>Creator</th>}
+        <SortItemHeader itemOrder={BoardOrder.created} reverseOrder={BoardOrder["-created"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            Created
+        </SortItemHeader>
+        <SortItemHeader itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            Last viewed
+        </SortItemHeader>
+        {siteSpecific(
+            <>
+                <th className="text-center align-middle">Delete</th>
+            </>,
+            <>
+                <th>Share</th>
+                <th>
+                    {selectedBoards.length
+                        ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
+                            Delete ({selectedBoards.length})
+                        </Button>
+                        : "Delete"
+                    }
+                </th>
+            </>
+        )}
+    </tr>;
+
     return <div className={"mb-5 mb-md-6 mt-4"}>
         <Row>
-            <Col xs={6} md={3} xl={2}>
+            <Col xs={6} md={3}>
                 <Label className="w-100">
                     Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
                 </Label>
             </Col>
-            <Col xs={6} md={3} lg={4} xl={{size: 3, offset: 3}}>
+            <Col xs={6} md={3} lg={4}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter boards by name</span><Input type="text" data-testid="title-filter" onChange={(e) => setBoardTitleFilter(e.target.value)} />
                 </Label>
             </Col>
-            <Col xs={6} md={3} lg={2} xl={2}>
+            <Col xs={6} md={3} lg={2}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by Creator</span><Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
                         {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
                     </Input>
                 </Label>
             </Col>
-            <Col xs={6} md={3} xl={2}>
+            <Col xs={6} md={3}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by Completion</span><Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as BoardCompletions)}>
                         {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
@@ -106,58 +146,7 @@ const CSTable = (props: GameboardsTableProps) => {
         </Row>
         <Table className="mt-3 my-gameboard-table" responsive>
             <thead>
-            <tr>
-                <th>
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.completion ? setBoardOrder(BoardOrder["-completion"]) : setBoardOrder(BoardOrder.completion)}>
-                        Completion {boardOrder == BoardOrder.completion ? sortIcon.ascending : boardOrder == BoardOrder["-completion"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
-                <th colSpan={isAda ? 4 : 1} className={siteSpecific("", "w-100")}>
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
-                        Quiz name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
-                <th colSpan={2} className={classNames("long-titled-col", {"text-center" : isPhy})}>
-                    Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
-                    <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                        Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
-                        Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
-                    </RS.UncontrolledTooltip>
-                </th>
-                {isAda && <th>Creator</th>}
-                <th>
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
-                        Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
-                
-                {siteSpecific(<>
-                    <th className="text-center">
-                        <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
-                            Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
-                        </button>
-                    </th>
-                    <th className="text-center">
-                        Delete
-                    </th>
-                </>,
-                <>
-                    <th>
-                        <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
-                            Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
-                        </button>
-                    </th>
-                    <th>Share</th>
-                    <th>
-                        {selectedBoards.length
-                            ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
-                                Delete ({selectedBoards.length})
-                            </Button>
-                            : "Delete"
-                        }
-                    </th>
-                </>)}
-            </tr>
+                {tableHeader}
             </thead>
             <tbody>
             {boards?.boards

@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
     AppState,
-    handleProviderLoginRedirect,
     logInUser,
     resetPassword,
     selectors,
@@ -30,7 +29,7 @@ import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
-import { extractErrorMessage } from '../../services/errors';
+import {extractErrorMessage} from '../../services/errors';
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -218,10 +217,12 @@ export const LogIn = () => {
         return logInAttempted ? <Loading/> : <Redirect to="/"/>;
     }
 
-    const metaDescriptionCS = "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.";
+    const metaDescription = siteSpecific(
+        "Log in to Isaac Physics to learn and track your progress.",
+        "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.");
 
     return <Container id="login-page" className="my-4 mb-5">
-        {isAda && <MetaDescription description={metaDescriptionCS} />}
+        <MetaDescription description={metaDescription} />
         <Row>
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card>

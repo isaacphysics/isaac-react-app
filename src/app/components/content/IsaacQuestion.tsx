@@ -18,6 +18,7 @@ import {
     fastTrackProgressEnabledBoards,
     isAda,
     isLoggedIn,
+    isNotPartiallyLoggedIn,
     isPhy,
     KEY,
     persistence,
@@ -116,7 +117,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 }
 
                 dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt, currentGameboard?.id));
-                if (isLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+                if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
                     dispatch(saveGameboard({
                         boardId: currentGameboard.id,
                         user: currentUser,
