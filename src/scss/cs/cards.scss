@@ -12,7 +12,7 @@ $news-cards-per-line: (
   @if (map-has-key($news-cards-per-line, $name)) {
     @include media-breakpoint-up($name) {
       .card-deck .news-card {
-        flex: 0 0 calc(#{100/map-get($news-cards-per-line, $name)}% - #{$grid-gutter-width});
+        flex: 0 0 calc(#{math.percentage(math.div(1, map-get($news-cards-per-line, $name)))} - #{$grid-gutter-width});
         width: 100%;
       }
     }
@@ -29,7 +29,7 @@ $cards-per-line: (
   @if (map-has-key($cards-per-line, $name)) {
     @include media-breakpoint-up($name) {
       .card-deck:not(.homepage-cards) .cs-card {
-        flex: 0 0 calc(#{100/map-get($cards-per-line, $name)}% - #{$grid-gutter-width});
+        flex: 0 0 calc(#{math.percentage(math.div(1, map-get($cards-per-line, $name)))} - #{$grid-gutter-width});
       }
     }
   }
@@ -44,7 +44,7 @@ $homepage-cards-per-line: (
   @if (map-has-key($homepage-cards-per-line, $name)) {
     @include media-breakpoint-up($name) {
       .homepage-cards .cs-card {
-        flex: 0 0 calc(#{100/map-get($homepage-cards-per-line, $name)}% - #{$grid-gutter-width});
+        flex: 0 0 calc(#{math.percentage(math.div(1, map-get($homepage-cards-per-line, $name)))} - #{$grid-gutter-width});
       }
     }
   }
