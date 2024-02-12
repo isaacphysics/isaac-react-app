@@ -416,7 +416,7 @@ export enum TAG_ID {
     computerScience = "computer_science",
 
     // Strands
-    artificialIntelligence = "artificial_intelligence",
+    aiAndMachineLearning = "ai_and_machine_learning",
     dataStructuresAndAlgorithms = "data_structures_and_algorithms",
     computerSystems = "computer_systems",
     creatingMedia = "creating_media",
@@ -429,7 +429,9 @@ export enum TAG_ID {
     cyberSecurity = "cyber_security",
     theoryOfComputation = "theory_of_computation",
 
-    // Artificial intelligence topics
+    // AI and machine learning topics
+    artificialIntelligence = "artificial_intelligence",
+    machineLearning = "machine_learning",
 
     // Algorithms and data structures topics
     complexity = "complexity",
