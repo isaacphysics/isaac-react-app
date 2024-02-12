@@ -315,10 +315,20 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
         window.open(event.currentTarget.href, '_blank');
     }
 
+    const quizAssignmentHasNotStarted = quizAssignment.scheduledStartDate && quizAssignment.scheduledStartDate.valueOf() > Date.now();
+
     return isDefined(quizAssignment.id) && quizAssignment.id > 0 ? <div className="assignment-progress-gameboard" key={quizAssignment.id}>
-        <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
+        <div className={classNames("gameboard-header", {"text-muted": quizAssignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)}>
             <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
-                <span>{quizAssignment.quizSummary?.title || "This test has no title"}{isDefined(quizAssignment.dueDate) && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(quizAssignment.dueDate)})</span>}</span>
+                <span className={classNames({"text-muted": quizAssignmentHasNotStarted})}>
+                    {quizAssignment.quizSummary?.title || "This test has no title"}
+                    {quizAssignmentHasNotStarted && <span className="gameboard-due-date">
+                        (Scheduled:&nbsp;{formatDate(quizAssignment.scheduledStartDate)})
+                    </span>}
+                    {isDefined(quizAssignment.dueDate) && <span className="gameboard-due-date">
+                        (Due:&nbsp;{formatDate(quizAssignment.dueDate)})
+                    </span>}
+                </span>
             </Button>
             <div className="gameboard-links align-items-center">
                 <Button color="link" tag="a" className="mr-md-0">
