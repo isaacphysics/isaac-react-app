@@ -107,7 +107,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                   <th style={{ minWidth: "100px" }}>Exam board</th>
                   <BookingHeaderButton sort="reservedById">Reserved by ID</BookingHeaderButton>
                   <th>Accessibility requirements</th>
-                  <th style={{ minWidth: "120px" }}>Medical / Dietary</th>
+                  <th style={{ minWidth: "120px" }}>Dietary requirements</th>
                   <th>Emergency name</th>
                   <th>Emergency telephone</th>
                 </tr>
@@ -202,7 +202,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                       <td>
                         {booking.additionalInformation && booking.additionalInformation.accessibilityRequirements}
                       </td>
-                      <td>{booking.additionalInformation && booking.additionalInformation.medicalRequirements}</td>
+                      <td>{booking.additionalInformation && booking.additionalInformation.dietaryRequirements}</td>
                       <td className=" text-nowrap">
                         {booking.additionalInformation && booking.additionalInformation.emergencyName}
                       </td>

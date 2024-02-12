@@ -69,7 +69,7 @@ const SchoolYearGroup = ({
   );
 };
 
-export const AccessibilityAndMedicalRequirements = ({
+export const AccessibilityAndDietaryRequirements = ({
   additionalInformation,
   updateAdditionalInformation,
 }: {
@@ -85,11 +85,10 @@ export const AccessibilityAndMedicalRequirements = ({
       type: "accessibilityRequirements" as keyof AdditionalInformation,
     },
     {
-      label: "Dietary requirements or relevant medical conditions",
-      id: "medical",
-      popover:
-        "For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...",
-      type: "medicalRequirements" as keyof AdditionalInformation,
+      label: "Dietary requirements",
+      id: "dietary",
+      popover: "For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen",
+      type: "dietaryRequirements" as keyof AdditionalInformation,
     },
   ];
 
@@ -322,7 +321,7 @@ export const EventBookingForm = ({
 
           {!event.isVirtual && (
             <div>
-              <AccessibilityAndMedicalRequirements
+              <AccessibilityAndDietaryRequirements
                 additionalInformation={additionalInformation}
                 updateAdditionalInformation={updateAdditionalInformation}
               />
@@ -350,8 +349,8 @@ export const EventBookingForm = ({
               )}
               <div className="text-center alert-warning p-1 mt-3" data-testid="pii-message">
                 Any additional personal identifiable information provided on this form, i.e. dietary requirements,
-                medical conditions, accessibility requirements and emergency contact details, will be automatically
-                deleted 30 days from the date of the event.
+                accessibility requirements and emergency contact details, will be automatically deleted 30 days from the
+                date of the event.
               </div>
             </div>
           )}

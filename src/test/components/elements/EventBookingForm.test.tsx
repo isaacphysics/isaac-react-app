@@ -142,13 +142,13 @@ describe("EventBookingForm", () => {
     expect(updateAdditionalInformation).toHaveBeenCalledWith({ experienceLevel: "2 years" });
   });
 
-  it("if event is not virtual, dietary or medical requirements are requested", () => {
+  it("if event is not virtual, dietary requirements are requested", () => {
     const event = augmentEvent(mockEvent);
     setupTest({ role: "STUDENT", user: mockUser, event: { ...event, isVirtual: false } });
-    const dietaryOrMedicalRequirements = screen.getByLabelText(/dietary requirements/i);
-    expect(dietaryOrMedicalRequirements).toBeInTheDocument();
-    fireEvent.change(dietaryOrMedicalRequirements, { target: { value: "Vegan" } });
-    expect(updateAdditionalInformation).toHaveBeenCalledWith({ medicalRequirements: "Vegan" });
+    const dietaryRequirements = screen.getByLabelText(/dietary requirements/i);
+    expect(dietaryRequirements).toBeInTheDocument();
+    fireEvent.change(dietaryRequirements, { target: { value: "Vegan" } });
+    expect(updateAdditionalInformation).toHaveBeenCalledWith({ dietaryRequirements: "Vegan" });
   });
 
   it("if event is not virtual, accessibility requirements are requested", () => {

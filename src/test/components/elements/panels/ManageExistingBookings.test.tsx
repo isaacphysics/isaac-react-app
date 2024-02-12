@@ -93,7 +93,7 @@ describe("ManageExistingBookings", () => {
       "Exam board",
       "Reserved by ID",
       "Accessibility requirements",
-      "Medical / Dietary",
+      "Dietary requirements",
       "Emergency name",
       "Emergency telephone",
     ];

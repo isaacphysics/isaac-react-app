@@ -128,7 +128,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                     </RS.Button>
                   </th>
                   <th className="align-middle">Accessibility requirements</th>
-                  <th className="align-middle">Medical requirements</th>
+                  <th className="align-middle">Dietary requirements</th>
                   <th className="align-middle">Emergency name</th>
                   <th className="align-middle">Emergency telephone</th>
                 </tr>
@@ -191,7 +191,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                           <DateString>{booking.updated}</DateString>
                         </td>
                         <td className="align-middle">{additionalInformation?.accessibilityRequirements || ""}</td>
-                        <td className="align-middle">{additionalInformation?.medicalRequirements || ""}</td>
+                        <td className="align-middle">{additionalInformation?.dietaryRequirements || ""}</td>
                         <td className="align-middle">{additionalInformation?.emergencyName || ""}</td>
                         <td className="align-middle">{additionalInformation?.emergencyNumber || ""}</td>
                       </tr>

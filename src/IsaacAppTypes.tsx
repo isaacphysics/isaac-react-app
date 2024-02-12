@@ -686,7 +686,7 @@ export interface EventMapData {
 export interface AdditionalInformation {
   jobTitle?: string;
   yearGroup?: string;
-  medicalRequirements?: string;
+  dietaryRequirements?: string;
   accessibilityRequirements?: string;
   emergencyName?: string;
   emergencyNumber?: string;
