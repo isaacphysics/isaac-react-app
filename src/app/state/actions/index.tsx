@@ -1231,6 +1231,20 @@ export const adminModifyUserEmailVerificationStatuses =
     }
   };
 
+export const adminModifyTeacherPending = (status: boolean, userIds: number[]) => async (dispatch: Dispatch<Action>) => {
+  dispatch({ type: ACTION_TYPE.ADMIN_MODIFY_TEACHER_PENDING_REQUEST });
+  try {
+    const response = await api.admin.modifyTeacherPending.post(status, userIds);
+    dispatch({
+      type: ACTION_TYPE.ADMIN_MODIFY_TEACHER_PENDING_RESPONSE_SUCCESS,
+      message: response.data,
+    });
+  } catch (e) {
+    dispatch({ type: ACTION_TYPE.ADMIN_MODIFY_TEACHER_PENDING_RESPONSE_FAILURE });
+    dispatch(showAxiosErrorToastIfNeeded("Teacher pending modification failed", e));
+  }
+};
+
 export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
   dispatch({ type: ACTION_TYPE.ADMIN_STATS_REQUEST });
   try {

@@ -85,6 +85,7 @@ export const selectors = {
   admin: {
     userSearch: (state: AppState) => state?.adminUserSearch || null,
     userSchoolLookup: (state: AppState) => state?.userSchoolLookup,
+    modifyTeacherPending: (state: AppState) => state?.adminModifyTeacherPendingMessage || null,
   },
 
   connections: {

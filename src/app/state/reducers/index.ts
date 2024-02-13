@@ -54,6 +54,7 @@ import {
   isaacApi,
   gameboardsSlice,
   randomQuestions,
+  adminModifyTeacherPendingMessage,
 } from "../index";
 
 const appReducer = combineReducers({
@@ -97,6 +98,7 @@ const appReducer = combineReducers({
   adminUserGet,
   adminUserSearch,
   adminContentErrors,
+  adminModifyTeacherPendingMessage,
   adminStats,
   adminEmailTemplate,
   contentVersion,

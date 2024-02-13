@@ -220,6 +220,11 @@ export const api = {
         return endpoint.post(`/admin/users/change_email_verification_status/${status}/true`, emails);
       },
     },
+    modifyTeacherPending: {
+      post: (status: boolean, userIds: number[]) => {
+        return endpoint.post(`/admin/users/change_teacher_pending/${status}`, userIds);
+      },
+    },
     getContentErrors: (): AxiosPromise<AppTypes.ContentErrorsResponse> => {
       return endpoint.get(`/admin/content_problems`);
     },

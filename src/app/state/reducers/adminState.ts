@@ -94,3 +94,12 @@ export const testQuestions = (testQuestions: TestQuestionsState = null, action: 
     }
   }
 };
+
+type AdminModifyTeacherPendingState = string | null;
+export const adminModifyTeacherPendingMessage = (message: AdminModifyTeacherPendingState = null, action: Action) => {
+  if (action.type === ACTION_TYPE.ADMIN_MODIFY_TEACHER_PENDING_RESPONSE_SUCCESS) {
+    return action.message;
+  } else {
+    return message;
+  }
+};
