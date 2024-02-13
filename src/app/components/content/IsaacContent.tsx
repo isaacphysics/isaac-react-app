@@ -12,7 +12,7 @@ import {IsaacTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {InlineStringEntryZoneContext, QuestionContext} from "../../../IsaacAppTypes";
+import {AppQuestionDTO, InlineStringEntryZoneContext, QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
 import {IsaacCardDeck} from "./IsaacCardDeck";
@@ -53,7 +53,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
         }
 
         if (type === "isaacInlineRegion") {
-            const questionPartIdMap = useRef<Record<string, {questionId: string; attempt: string;}>>({}).current;
+            const questionPartIdMap = useRef<Record<string, {questionId: string;}>>({}).current;
             tempSelectedComponent = <InlineStringEntryZoneContext.Provider value={{ docId: props.doc.id, elementToQuestionMap: questionPartIdMap }}>
                 {tempSelectedComponent}
             </InlineStringEntryZoneContext.Provider>;

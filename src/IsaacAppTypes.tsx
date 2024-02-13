@@ -397,7 +397,7 @@ export const ClozeDropRegionContext = React.createContext<{
 } | undefined>(undefined);
 export const InlineStringEntryZoneContext = React.createContext<{
     docId: string | undefined,
-    elementToQuestionMap: {[elementId: string]: {questionId: string, attempt?: string}},
+    elementToQuestionMap: {[elementId: string]: {questionId: string}},
 } | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);

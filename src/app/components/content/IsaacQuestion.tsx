@@ -209,7 +209,6 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
             trackEvent("question_attempted");
         }
 
-        console.log("CURRENT ATTEMPT:", questionPart?.currentAttempt);
         dispatch(attemptQuestion(docId, questionPart?.currentAttempt, currentGameboard?.id));
         if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
             dispatch(saveGameboard({

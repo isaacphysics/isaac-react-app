@@ -3,6 +3,8 @@ import { IsaacContentValueOrChildren } from "./IsaacContentValueOrChildren";
 import { AppQuestionDTO, InlineStringEntryZoneContext } from "../../../IsaacAppTypes";
 import { GameboardDTO, IsaacInlineRegionDTO } from "../../../IsaacApiTypes";
 import { submitCurrentAttempt } from "./IsaacQuestion";
+import { deregisterQuestions, registerQuestions, selectors, useAppDispatch, useAppSelector } from "../../state";
+import { selectQuestionPart } from "../../services";
 
 // TODO: generify this (IsaacContentProps?), reuse also for IsaacCardDeck
 interface IsaacInlineRegionProps {
@@ -11,29 +13,27 @@ interface IsaacInlineRegionProps {
 }
 
 export const submitInlineRegion = (inlineContext: ContextType<typeof InlineStringEntryZoneContext>, currentGameboard: GameboardDTO | undefined, currentUser: any, pageQuestions: AppQuestionDTO[] | undefined, dispatch: any) => {
-    if (inlineContext && inlineContext.docId) {
-        const inlineQuestionDTOs = Object.values(inlineContext.elementToQuestionMap);
-        for (const inlineQuestionDTO of inlineQuestionDTOs) {
-            console.log("Submitting", {type: "stringChoice", value: inlineQuestionDTO.attempt});
-            submitCurrentAttempt({currentAttempt: {type: "stringChoice", value: inlineQuestionDTO.attempt}}, inlineQuestionDTO.questionId, currentGameboard, currentUser, dispatch);
-            // submitCurrentAttempt({currentAttempt: {type: "stringChoice", value: inlineQuestionDTO.attempt}}, inlineQuestionDTO.questionId.split("|").at(-1) ?? "", currentGameboard, currentUser, dispatch);
-            // submitCurrentAttempt({currentAttempt: {type: "stringChoice", value: inlineQuestionDTO.attempt}}, (inlineQuestionDTO.questionId.split("|").at(0) ?? "") + "|" + (inlineQuestionDTO.questionId.split("|").at(-1) ?? ""), currentGameboard, currentUser, dispatch);
-
-            // }
+    if (inlineContext && inlineContext.docId && pageQuestions) {
+        for (const inlineQuestion of pageQuestions) {
+            if (inlineQuestion.id?.includes("inline-question:")) {
+                submitCurrentAttempt({currentAttempt: {type: "stringChoice", value: inlineQuestion.currentAttempt?.value}}, inlineQuestion.id, currentGameboard, currentUser, dispatch);
+            }
         }
     }
 };
 
 
 const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
-    // const registeredDropRegionIDs = useRef<Map<string, number>>(new Map()).current;
 
-    // const inlinePartValidationMap = useRef<Record<string, {correct: boolean | undefined}>>({}).current;
+    const dispatch = useAppDispatch();
     const inlineContext = useContext(InlineStringEntryZoneContext);
+
+    const pageQuestions = useAppSelector(selectors.questions.getQuestions);
+    const inlineRegionDTO = selectQuestionPart(pageQuestions, doc.id) as IsaacInlineRegionDTO;
 
     useEffect(() => {
         if (inlineContext) {
-            doc.inlineQuestions?.forEach(inlineQuestion => {
+            inlineRegionDTO.inlineQuestions?.forEach(inlineQuestion => {
                 if (inlineQuestion.id) {
                     const elementId = inlineQuestion.id.split("|").at(-1)?.replace("inline-question:", "inline-question-") ?? "unknown";
                     inlineContext.elementToQuestionMap[elementId] = {questionId: inlineQuestion.id};
@@ -42,6 +42,14 @@ const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
         }
     }, []);
 
+    // Register the inline question parts in Redux, so we can access previous/current attempts
+    useEffect(() => {
+        inlineRegionDTO.inlineQuestions && dispatch(registerQuestions(inlineRegionDTO.inlineQuestions, inlineContext?.docId));
+        return () => dispatch(deregisterQuestions([inlineContext?.docId as string]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, inlineContext?.docId]);
+
+    console.log(pageQuestions);
 
     // TODO: div id
     return <div className="question-content inline-region">
