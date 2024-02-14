@@ -15,6 +15,14 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
     const questionDTO = selectQuestionPart(pageQuestions, questionId);
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<StringChoiceDTO>(questionId as string);
 
+    const [modified, setModified] = useState(false);
+
+    useEffect(() => {
+        if (inlineContext) {
+            inlineContext.modified ||= modified;
+        }
+    }, [modified]);
+
     const [attempt, setAttempt] = useState(questionDTO?.bestAttempt?.answer?.value ?? "");
 
     useEffect(() => {
@@ -31,12 +39,18 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
     return <>
         {ReactDOM.createPortal(
             <Input 
-                valid={questionDTO?.validationResponse?.correct || (attempt === questionDTO?.bestAttempt?.answer?.value && questionDTO?.bestAttempt?.correct)} 
-                invalid={questionDTO?.validationResponse?.correct === false || (attempt === questionDTO?.bestAttempt?.answer?.value && questionDTO?.bestAttempt?.correct === false)} 
+                valid={questionDTO?.validationResponse?.correct || (!modified && questionDTO?.bestAttempt?.correct)} 
+                invalid={questionDTO?.validationResponse?.correct === false || (!modified && questionDTO?.bestAttempt?.correct === false)} 
                 id={inlineElementId} 
                 style={{width: `${width}px`, height: `${height}px`}}
                 value={attempt}
-                onChange={(e) => setAttempt(e.target.value)} 
+                onChange={(e) => {
+                    if (inlineContext) {
+                        inlineContext.canSubmit = true;
+                    }
+                    setModified(true);
+                    setAttempt(e.target.value);
+                }} 
             />,
             inlineStringEntryZone
         )}

@@ -37,13 +37,34 @@ import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { submitInlineRegion } from "./IsaacInlineRegion";
 
+const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined) : AppQuestionDTO => {
+    const inlineContext = useContext(InlineStringEntryZoneContext);
+    const inlineQuestions = pageQuestions?.filter(q => q.id?.includes("inline-question:"));
+    const validationResponses = inlineQuestions?.map(q => q.validationResponse);
+    const bestAttempts = inlineQuestions?.map(q => q.bestAttempt);
+    console.log("modified: ", inlineContext?.modified);
+    const correct = (inlineContext?.modified ? validationResponses : bestAttempts)?.every(r => r?.correct) || false;
+    const explanation = {...validationResponses?.[0]?.explanation, value: validationResponses?.map(r => r?.explanation?.value).filter(s => s).join("<br>")};
+    const lockedDates = inlineQuestions?.map(q => q.locked).filter(d => d) as Date[] | undefined;
+    return {
+        currentAttempt: undefined,
+        bestAttempt: undefined,
+        validationResponse: {
+            correct: correct,
+            explanation: explanation,
+        },
+        locked: lockedDates?.length ? new Date(lockedDates.reduce((a, b) => Math.max(a, b.valueOf()), 0)) : undefined,
+        canSubmit: inlineContext?.canSubmit,
+    };
+};
+
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const accordion = useContext(AccordionSectionContext);
     const currentGameboard = useContext(GameboardContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const currentUser = useAppSelector(selectors.user.orNull);
-    const questionPart = selectQuestionPart(pageQuestions, doc.id);
+    const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
     const currentAttempt = questionPart?.currentAttempt;
     const bestAttempt = questionPart?.bestAttempt;
     const validationResponse = questionPart?.validationResponse;
@@ -101,7 +122,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     // Determine Action Buttons
     const primaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) :
-        doc.type === "isaacInlineRegion" ? {disabled: false, value: "Check my answer", type: "submit", onClick: () => { 
+        doc.type === "isaacInlineRegion" ? {disabled: !inlineContext?.canSubmit, value: "Check my answer", type: "submit", onClick: () => { 
             submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch);
     }} :
         {disabled: !canSubmit, value: "Check my answer", type: "submit"};

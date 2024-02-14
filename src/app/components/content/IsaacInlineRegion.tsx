@@ -16,9 +16,13 @@ export const submitInlineRegion = (inlineContext: ContextType<typeof InlineStrin
     if (inlineContext && inlineContext.docId && pageQuestions) {
         for (const inlineQuestion of pageQuestions) {
             if (inlineQuestion.id?.includes("inline-question:")) {
+                // if (inlineQuestion.currentAttempt?.value) {
+                // TODO: If we don't mark empty attempts, they won't come back incorrect
                 submitCurrentAttempt({currentAttempt: {type: "stringChoice", value: inlineQuestion.currentAttempt?.value}}, inlineQuestion.id, currentGameboard, currentUser, dispatch);
+                // }
             }
         }
+        inlineContext.canSubmit = false;
     }
 };
 
@@ -48,8 +52,6 @@ const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
         return () => dispatch(deregisterQuestions([inlineContext?.docId as string]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, inlineContext?.docId]);
-
-    console.log(pageQuestions);
 
     // TODO: div id
     return <div className="question-content inline-region">

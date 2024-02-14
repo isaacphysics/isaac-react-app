@@ -54,7 +54,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
 
         if (type === "isaacInlineRegion") {
             const questionPartIdMap = useRef<Record<string, {questionId: string;}>>({}).current;
-            tempSelectedComponent = <InlineStringEntryZoneContext.Provider value={{ docId: props.doc.id, elementToQuestionMap: questionPartIdMap }}>
+            tempSelectedComponent = <InlineStringEntryZoneContext.Provider value={{ docId: props.doc.id, elementToQuestionMap: questionPartIdMap, canSubmit: false, modified: false }}>
                 {tempSelectedComponent}
             </InlineStringEntryZoneContext.Provider>;
         }
