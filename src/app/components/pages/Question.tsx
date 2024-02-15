@@ -1,18 +1,10 @@
 import React, { useEffect } from "react";
-import * as RS from "reactstrap";
-import { Col, Container, Row } from "reactstrap";
+import { Col, Container, Row, Button } from "reactstrap";
 import { match, RouteComponentProps, withRouter } from "react-router-dom";
 import { fetchDoc, goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector } from "../../state";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { IsaacQuestionPageDTO } from "../../../IsaacApiTypes";
-import {
-  determineAudienceViews,
-  DOCUMENT_TYPE,
-  fastTrackProgressEnabledBoards,
-  generateQuestionTitle,
-  isStudent,
-  useNavigation,
-} from "../../services";
+import { determineAudienceViews, DOCUMENT_TYPE, isStudent, useNavigation } from "../../services";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { EditContentButton } from "../elements/EditContentButton";
 import { WithFigureNumbering } from "../elements/WithFigureNumbering";
@@ -23,8 +15,6 @@ import { ShareLink } from "../elements/ShareLink";
 import { PrintButton } from "../elements/PrintButton";
 import { DocumentSubject, GameboardContext } from "../../../IsaacAppTypes";
 import { Markup } from "../elements/markup";
-import { FastTrackProgress } from "../elements/FastTrackProgress";
-import queryString from "query-string";
 import { IntendedAudienceWarningBanner } from "../navigation/IntendedAudienceWarningBanner";
 import { SupersededDeprecatedWarningBanner } from "../navigation/SupersededDeprecatedWarningBanner";
 import { CanonicalHrefElement } from "../navigation/CanonicalHrefElement";
@@ -40,8 +30,6 @@ export const Question = withRouter(({ questionIdOverride, match, location }: Que
   const doc = useAppSelector(selectors.doc.get);
   const user = useAppSelector(selectors.user.orNull);
   const navigation = useNavigation(doc);
-  const query = queryString.parse(location.search);
-  const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
 
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -54,23 +42,17 @@ export const Question = withRouter(({ questionIdOverride, match, location }: Que
       thenRender={(supertypedDoc) => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
 
-        const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
-
         return (
           <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <GameboardContext.Provider value={navigation.currentGameboard}>
               <Container>
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
-                  currentPageTitle={generateQuestionTitle(doc)}
+                  currentPageTitle={doc.title ?? ""}
                   intermediateCrumbs={[...navigation.breadcrumbHistory]}
                   collectionType={navigation.collectionType}
                   audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
-                >
-                  {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && (
-                    <FastTrackProgress doc={doc} search={location.search} />
-                  )}
-                </TitleAndBreadcrumb>
+                ></TitleAndBreadcrumb>
                 <CanonicalHrefElement />
                 <div className="no-print d-flex align-items-center mt-3">
                   <EditContentButton doc={doc} />
@@ -97,13 +79,13 @@ export const Question = withRouter(({ questionIdOverride, match, location }: Que
                     {doc.supersededBy && isStudent(user) && (
                       <div className="alert alert-warning">
                         This question{" "}
-                        <RS.Button
+                        <Button
                           color="link"
                           className="align-baseline"
                           onClick={() => dispatch(goToSupersededByQuestion(doc))}
                         >
                           has been replaced
-                        </RS.Button>
+                        </Button>
                         .<br />
                         However, if you were assigned this version, you should complete it.
                       </div>
@@ -117,9 +99,7 @@ export const Question = withRouter(({ questionIdOverride, match, location }: Que
 
                     <NavigationLinks navigation={navigation} />
 
-                    {doc.relatedContent && !isFastTrack && (
-                      <RelatedContent content={doc.relatedContent} parentPage={doc} />
-                    )}
+                    {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                   </Col>
                 </Row>
               </Container>

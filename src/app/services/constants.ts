@@ -6,7 +6,6 @@ import {
   ContentDTO,
   Difficulty,
   ExamBoard,
-  IsaacFastTrackQuestionPageDTO,
   IsaacQuestionPageDTO,
   Stage,
   UserRole,
@@ -396,10 +395,6 @@ export enum ACTION_TYPE {
   CONCEPTS_RESPONSE_SUCCESS = "CONCEPTS_RESPONSE_SUCCESS",
   CONCEPTS_RESPONSE_FAILURE = "CONCEPTS_RESPONSE_FAILURE",
 
-  FASTTRACK_CONCEPTS_REQUEST = "FASTTRACK_CONCEPTS_REQUEST",
-  FASTTRACK_CONCEPTS_RESPONSE_SUCCESS = "FASTTRACK_CONCEPTS_RESPONSE_SUCCESS",
-  FASTTRACK_CONCEPTS_RESPONSE_FAILURE = "FASTTRACK_CONCEPTS_RESPONSE_FAILURE",
-
   LOG_EVENT = "LOG_EVENT",
 
   QUIZZES_REQUEST = "QUIZZES_REQUEST",
@@ -612,16 +607,6 @@ export enum SUBJECTS {
   CS = "computer_science",
 }
 
-export const fastTrackProgressEnabledBoards = [
-  "ft_core_2017",
-  "ft_core_2018",
-  "ft_core_stage2",
-  "ft_mech_year1_2018",
-  "ft_mech_year2_2018",
-  "ft_further_stage1_2018",
-  "ft_further_stage2_2018",
-];
-
 export enum TAG_ID {
   // Categories
   computerScience = "computer_science",
@@ -727,14 +712,13 @@ export enum TAG_LEVEL {
 export enum DOCUMENT_TYPE {
   CONCEPT = "isaacConceptPage",
   QUESTION = "isaacQuestionPage",
-  FAST_TRACK_QUESTION = "isaacFastTrackQuestionPage",
   EVENT = "isaacEventPage",
   TOPIC_SUMMARY = "isaacTopicSummaryPage",
   GENERIC = "page",
   QUIZ = "isaacQuiz",
 }
-export function isAQuestionLikeDoc(doc: ContentDTO): doc is IsaacQuestionPageDTO | IsaacFastTrackQuestionPageDTO {
-  return doc.type === DOCUMENT_TYPE.QUESTION || doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
+export function isAQuestionLikeDoc(doc: ContentDTO): doc is IsaacQuestionPageDTO {
+  return doc.type === DOCUMENT_TYPE.QUESTION;
 }
 
 export enum SEARCH_RESULT_TYPE {
@@ -744,7 +728,6 @@ export enum SEARCH_RESULT_TYPE {
 export const documentDescription: { [documentType in DOCUMENT_TYPE]: string } = {
   [DOCUMENT_TYPE.CONCEPT]: "Concepts",
   [DOCUMENT_TYPE.QUESTION]: "Questions",
-  [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "Questions",
   [DOCUMENT_TYPE.EVENT]: "Events",
   [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
   [DOCUMENT_TYPE.GENERIC]: "Other pages",
@@ -755,7 +738,6 @@ export const documentTypePathPrefix: { [documentType in DOCUMENT_TYPE]: string }
   [DOCUMENT_TYPE.GENERIC]: "pages",
   [DOCUMENT_TYPE.CONCEPT]: "concepts",
   [DOCUMENT_TYPE.QUESTION]: "questions",
-  [DOCUMENT_TYPE.FAST_TRACK_QUESTION]: "questions",
   [DOCUMENT_TYPE.EVENT]: "events",
   [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics",
   [DOCUMENT_TYPE.QUIZ]: "quiz",

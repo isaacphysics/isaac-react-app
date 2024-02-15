@@ -14,7 +14,6 @@ function getType(doc: any) {
   }
   switch (doc.type) {
     case DOCUMENT_TYPE.QUESTION:
-    case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
       return "question";
     case DOCUMENT_TYPE.CONCEPT:
       return "concept";

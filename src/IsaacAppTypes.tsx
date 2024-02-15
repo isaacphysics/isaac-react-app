@@ -326,9 +326,6 @@ export type Action =
   | { type: ACTION_TYPE.CONCEPTS_REQUEST }
   | { type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE }
   | { type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts }
-  | { type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST }
-  | { type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE }
-  | { type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState }
   | { type: ACTION_TYPE.QUIZZES_REQUEST }
   | { type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE }
   | { type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS; quizzes: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO> }
@@ -762,7 +759,6 @@ export interface QuestionSearchQuery {
   stages?: string;
   difficulties?: string;
   examBoards?: string;
-  fasttrack?: boolean;
   startIndex?: number;
   limit?: number;
 }
@@ -889,8 +885,6 @@ export interface PageSettings {
   setFormatAsPercentage: (newValue: boolean) => void;
   isTeacher: boolean;
 }
-
-export type FasttrackConceptsState = { gameboardId: string; concept: string; items: GameboardItem[] } | null;
 
 export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
   groupName?: string;

@@ -1776,21 +1776,6 @@ export const fetchConcepts = (conceptIds?: string, tagIds?: string) => async (di
   }
 };
 
-// Fasttrack concepts
-export const fetchFasttrackConcepts =
-  (gameboardId: string, concept: string, upperQuestionId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({ type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST });
-    try {
-      const concepts = await api.fasttrack.concepts(gameboardId, concept, upperQuestionId);
-      dispatch({
-        type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS,
-        concepts: { gameboardId, concept, items: concepts.data },
-      });
-    } catch (e) {
-      dispatch({ type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE });
-    }
-  };
-
 // SERVICE ACTIONS (w/o dispatch)
 
 export const changePage = (path: string) => {

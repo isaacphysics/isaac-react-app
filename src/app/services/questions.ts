@@ -1,7 +1,7 @@
 import React, { lazy } from "react";
 import { AppQuestionDTO, IsaacQuestionProps, ValidatedChoice } from "../../IsaacAppTypes";
-import { DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP } from "./";
-import { ChoiceDTO, ContentDTO, ContentSummaryDTO } from "../../IsaacApiTypes";
+import { REVERSE_GREEK_LETTERS_MAP } from "./";
+import { ChoiceDTO, ContentDTO } from "../../IsaacApiTypes";
 import { selectors, setCurrentAttempt, useAppDispatch, useAppSelector } from "../state";
 import { Immutable } from "immer";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
@@ -53,26 +53,6 @@ export function isQuestion(doc: ContentDTO) {
 
 export function selectQuestionPart(questions?: AppQuestionDTO[], questionPartId?: string) {
   return questions?.filter((question) => question.id == questionPartId)[0];
-}
-
-function fastTrackConceptEnumerator(questionId: string) {
-  // Magic, unfortunately
-  return "_abcdefghijk".indexOf(questionId.split("_")[2].slice(-1));
-}
-
-export function generateQuestionTitle(doc: ContentDTO | ContentSummaryDTO) {
-  let title = doc.title as string;
-
-  // FastTrack title renaming
-  if (
-    doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION &&
-    doc.id &&
-    (doc.tags?.includes("ft_upper") || doc.tags?.includes("ft_lower"))
-  ) {
-    title += " " + fastTrackConceptEnumerator(doc.id) + (doc.tags.includes("ft_lower") ? "ii" : "i");
-  }
-
-  return title;
 }
 
 // Inequality specific functions

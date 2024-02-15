@@ -7,7 +7,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../state";
-import * as RS from "reactstrap";
+import { Col, Input, Label, Row, Table } from "reactstrap";
 import { SortableTableHeader } from "../SortableTableHeader";
 import { debounce, isEqual } from "lodash";
 import Select, { MultiValue } from "react-select";
@@ -72,7 +72,7 @@ export const QuestionSearchModal = ({
     [userContext.examBoard],
   );
 
-  const searchBook: string[] = [];
+  const searchBook: string[] = useMemo(() => [], []);
   const isBookSearch = searchBook.length > 0;
 
   const creationContext: AudienceContext = !isBookSearch
@@ -82,8 +82,6 @@ export const QuestionSearchModal = ({
         examBoard: searchExamBoards.length > 0 ? searchExamBoards : undefined,
       }
     : {};
-
-  const searchFastTrack = false;
 
   const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({ difficulty: SortOrder.ASC });
   const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(
@@ -103,11 +101,10 @@ export const QuestionSearchModal = ({
         book: string[],
         stages: string[],
         difficulties: string[],
-        fasttrack: boolean,
         startIndex: number,
       ) => {
         const isBookSearch = book.length > 0; // Tasty.
-        if ([searchString, topics, book, stages, difficulties, examBoards].every((v) => v.length === 0) && !fasttrack) {
+        if ([searchString, topics, book, stages, difficulties, examBoards].every((v) => v.length === 0)) {
           // Nothing to search for
           dispatch(clearQuestionSearch);
           return;
@@ -125,7 +122,6 @@ export const QuestionSearchModal = ({
             stages: stages.join(",") || undefined,
             difficulties: difficulties.join(",") || undefined,
             examBoards: examBoardString,
-            fasttrack,
             startIndex,
             limit: 300,
           }),
@@ -138,7 +134,6 @@ export const QuestionSearchModal = ({
           book,
           stages,
           difficulties,
-          fasttrack,
           startIndex,
         });
       },
@@ -164,23 +159,13 @@ export const QuestionSearchModal = ({
   const groupBaseTagOptions: GroupBase<Item<string>>[] = tagOptions;
 
   useEffect(() => {
-    searchDebounce(
-      searchQuestionName,
-      searchTopics,
-      searchExamBoards,
-      searchBook,
-      searchStages,
-      searchDifficulties,
-      searchFastTrack,
-      0,
-    );
+    searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, 0);
   }, [
     searchDebounce,
     searchQuestionName,
     searchTopics,
     searchExamBoards,
     searchBook,
-    searchFastTrack,
     searchStages,
     searchDifficulties,
   ]);
@@ -213,7 +198,7 @@ export const QuestionSearchModal = ({
         </strong>
       </div>
       <div>
-        <RS.Input
+        <Input
           type="button"
           value="Add selections to gameboard"
           disabled={isEqual(new Set(originalSelectedQuestions.keys()), new Set(selectedQuestions.keys()))}
@@ -230,9 +215,9 @@ export const QuestionSearchModal = ({
 
   return (
     <div className="mb-4">
-      <RS.Row>
-        <RS.Col lg={12} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
-          <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
+      <Row>
+        <Col lg={12} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
+          <Label htmlFor="question-search-topic">Topic</Label>
           <Select
             inputId="question-search-topic"
             isMulti
@@ -243,11 +228,11 @@ export const QuestionSearchModal = ({
               selectOnChange(setSearchTopics, true)(x);
             }}
           />
-        </RS.Col>
-      </RS.Row>
-      <RS.Row className={isBookSearch ? "d-none" : ""}>
-        <RS.Col lg={6} className={`text-wrap my-2`}>
-          <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
+        </Col>
+      </Row>
+      <Row className={isBookSearch ? "d-none" : ""}>
+        <Col lg={6} className={`text-wrap my-2`}>
+          <Label htmlFor="question-search-stage">Stage</Label>
           <Select
             inputId="question-search-stage"
             isClearable
@@ -257,9 +242,9 @@ export const QuestionSearchModal = ({
             options={getFilteredStageOptions()}
             onChange={selectOnChange(setSearchStages, true)}
           />
-        </RS.Col>
-        <RS.Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
-          <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
+        </Col>
+        <Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
+          <Label htmlFor="question-search-difficulty">Difficulty</Label>
           <Select
             inputId="question-search-difficulty"
             isClearable
@@ -269,9 +254,9 @@ export const QuestionSearchModal = ({
             options={DIFFICULTY_ICON_ITEM_OPTIONS}
             onChange={selectOnChange(setSearchDifficulties, true)}
           />
-        </RS.Col>
-        <RS.Col lg={6} className={`text-wrap my-2`}>
-          <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
+        </Col>
+        <Col lg={6} className={`text-wrap my-2`}>
+          <Label htmlFor="question-search-exam-board">Exam Board</Label>
           <Select
             inputId="question-search-exam-board"
             isClearable
@@ -284,13 +269,13 @@ export const QuestionSearchModal = ({
             options={getFilteredExamBoardOptions({ byStages: searchStages })}
             onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
           />
-        </RS.Col>
-      </RS.Row>
-      <RS.Row></RS.Row>
-      <RS.Row>
-        <RS.Col lg={12} className="text-wrap mt-2">
-          <RS.Label htmlFor="question-search-title">Search</RS.Label>
-          <RS.Input
+        </Col>
+      </Row>
+      <Row></Row>
+      <Row>
+        <Col lg={12} className="text-wrap mt-2">
+          <Label htmlFor="question-search-title">Search</Label>
+          <Input
             id="question-search-title"
             type="text"
             placeholder="e.g. Creating an AST"
@@ -298,11 +283,11 @@ export const QuestionSearchModal = ({
               setSearchQuestionName(e.target.value);
             }}
           />
-        </RS.Col>
-      </RS.Row>
+        </Col>
+      </Row>
       <div className="mt-4">{addSelectionsRow}</div>
       <Suspense fallback={<Loading />}>
-        <RS.Table bordered responsive className="mt-4">
+        <Table bordered responsive className="mt-4">
           <thead>
             <tr>
               <th className="w-5"> </th>
@@ -331,7 +316,7 @@ export const QuestionSearchModal = ({
               />
             ))}
           </tbody>
-        </RS.Table>
+        </Table>
       </Suspense>
       {questions && questions.length > 5 && <div className="mt-2">{addSelectionsRow}</div>}
     </div>

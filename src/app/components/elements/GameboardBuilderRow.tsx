@@ -1,5 +1,5 @@
 import classnames from "classnames";
-import * as RS from "reactstrap";
+import { CustomInput } from "reactstrap";
 import {
   tags,
   AUDIENCE_DISPLAY_FIELDS,
@@ -7,7 +7,6 @@ import {
   examBoardLabelMap,
   filterAudienceViewsByProperties,
   findAudienceRecordsMatchingPartial,
-  generateQuestionTitle,
   stageLabelMap,
   TAG_ID,
   TAG_LEVEL,
@@ -43,7 +42,7 @@ const GameboardBuilderRow = ({
 
   const topicTag = () => {
     const tag = question.tags && tags.getSpecifiedTag(TAG_LEVEL.topic, question.tags as TAG_ID[]);
-    return tag && tag.title;
+    return tag?.title;
   };
   const tagIcon = (tag: string) => {
     return (
@@ -74,13 +73,13 @@ const GameboardBuilderRow = ({
   return (
     <tr
       key={question.id}
-      ref={provided && provided.innerRef}
+      ref={provided?.innerRef}
       className={classnames({ selected: question.id && selectedQuestions.has(question.id) })}
-      {...(provided && provided.draggableProps)}
-      {...(provided && provided.dragHandleProps)}
+      {...provided?.draggableProps}
+      {...provided?.dragHandleProps}
     >
       <td className="text-center align-middle w-5">
-        <RS.CustomInput
+        <CustomInput
           type="checkbox"
           id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
           aria-label="Select question"
@@ -112,7 +111,7 @@ const GameboardBuilderRow = ({
           rel="noopener noreferrer"
           title="Preview question in new tab"
         >
-          {generateQuestionTitle(question)}
+          {question.title}
         </a>
         <input
           type="image"

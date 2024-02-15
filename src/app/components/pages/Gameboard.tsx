@@ -1,15 +1,13 @@
 import React, { useEffect } from "react";
 import { isaacApi, logAction, selectors, setAssignBoardPath, useAppDispatch, useAppSelector } from "../../state";
 import { Link, withRouter } from "react-router-dom";
-import * as RS from "reactstrap";
-import { Container } from "reactstrap";
+import { Button, Col, Container, ListGroup, ListGroupItem, Row } from "reactstrap";
 import { GameboardDTO, GameboardItem, IsaacWildcard } from "../../../IsaacApiTypes";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import {
   AUDIENCE_DISPLAY_FIELDS,
   determineAudienceViews,
   filterAudienceViewsByProperties,
-  generateQuestionTitle,
   isDefined,
   isFound,
   isTutorOrAbove,
@@ -61,7 +59,7 @@ const GameboardItemComponent = ({ gameboard, question }: { gameboard: GameboardD
   const questionTags = tags.getByIdsAsHierarchy((question.tags || []) as TAG_ID[]).filter((t, i) => i !== 0); // CS always has Computer Science at the top level
 
   return (
-    <RS.ListGroupItem key={question.id} className={itemClasses}>
+    <ListGroupItem key={question.id} className={itemClasses}>
       <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
         <span>
           <img src={iconHref} alt="" />
@@ -69,7 +67,7 @@ const GameboardItemComponent = ({ gameboard, question }: { gameboard: GameboardD
         <div className={`d-md-flex flex-fill`}>
           {/* TODO CP shouldn't the subject colour here depend on the contents/tags of the gameboard? */}
           <div className={"flex-grow-1 " + itemSubject?.id}>
-            <Markup encoding={"latex"}>{generateQuestionTitle(question)}</Markup>
+            <Markup encoding={"latex"}>{question.title}</Markup>
             {message && <span className={"gameboard-item-message" + messageClasses}>{message}</span>}
             {questionTags && (
               <div className="hierarchy-tags">
@@ -92,7 +90,7 @@ const GameboardItemComponent = ({ gameboard, question }: { gameboard: GameboardD
           )}
         </div>
       </Link>
-    </RS.ListGroupItem>
+    </ListGroupItem>
   );
 };
 
@@ -100,7 +98,7 @@ export const Wildcard = ({ wildcard }: { wildcard: IsaacWildcard }) => {
   const itemClasses = "p-3 content-summary-link text-info bg-transparent";
   const icon = <img src="/assets/wildcard.svg" alt="Optional extra information icon" />;
   return (
-    <RS.ListGroupItem key={wildcard.id} className={itemClasses}>
+    <ListGroupItem key={wildcard.id} className={itemClasses}>
       <a href={wildcard.url} className="align-items-center">
         <span className="gameboard-item-icon">{icon}</span>
         <div className={"flex-grow-1"}>
@@ -112,25 +110,24 @@ export const Wildcard = ({ wildcard }: { wildcard: IsaacWildcard }) => {
           )}
         </div>
       </a>
-    </RS.ListGroupItem>
+    </ListGroupItem>
   );
 };
 
 export const GameboardViewerInner = ({ gameboard }: { gameboard: GameboardDTO }) => {
   return (
-    <RS.ListGroup className="link-list list-group-links list-gameboard">
-      {gameboard?.contents &&
-        gameboard.contents.map((q) => <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />)}
-    </RS.ListGroup>
+    <ListGroup className="link-list list-group-links list-gameboard">
+      {gameboard.contents?.map((q) => <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />)}
+    </ListGroup>
   );
 };
 
 export const GameboardViewer = ({ gameboard, className }: { gameboard: GameboardDTO; className?: string }) => (
-  <RS.Row className={className}>
-    <RS.Col lg={{ size: 10, offset: 1 }}>
+  <Row className={className}>
+    <Col lg={{ size: 10, offset: 1 }}>
       <GameboardViewerInner gameboard={gameboard} />
-    </RS.Col>
-  </RS.Row>
+    </Col>
+  </Row>
 );
 
 export const Gameboard = withRouter(({ location }) => {
@@ -171,7 +168,7 @@ export const Gameboard = withRouter(({ location }) => {
   return !gameboardId ? (
     <Redirect to="/gameboards#example-gameboard" />
   ) : (
-    <RS.Container className="mb-5">
+    <Container className="mb-5">
       <ShowLoadingQuery
         query={gameboardQuery}
         defaultErrorTitle={`Error fetching gameboard with id: ${gameboardId}`}
@@ -185,9 +182,9 @@ export const Gameboard = withRouter(({ location }) => {
               <TitleAndBreadcrumb currentPageTitle={(gameboard && gameboard.title) || "Filter Generated Gameboard"} />
               <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
               {user && isTutorOrAbove(user) ? (
-                <RS.Row className="col-8 offset-2">
-                  <RS.Col className="mt-4">
-                    <RS.Button
+                <Row className="col-8 offset-2">
+                  <Col className="mt-4">
+                    <Button
                       tag={Link}
                       to={`/add_gameboard/${gameboardId}`}
                       color="primary"
@@ -195,10 +192,10 @@ export const Gameboard = withRouter(({ location }) => {
                       className="btn-block"
                     >
                       Set as assignment
-                    </RS.Button>
-                  </RS.Col>
-                  <RS.Col className="mt-4">
-                    <RS.Button
+                    </Button>
+                  </Col>
+                  <Col className="mt-4">
+                    <Button
                       tag={Link}
                       to={{ pathname: "/gameboard_builder", search: `?base=${gameboardId}` }}
                       color="primary"
@@ -206,15 +203,15 @@ export const Gameboard = withRouter(({ location }) => {
                       outline
                     >
                       Duplicate and edit
-                    </RS.Button>
-                  </RS.Col>
-                </RS.Row>
+                    </Button>
+                  </Col>
+                </Row>
               ) : (
                 gameboard &&
                 !gameboard.savedToCurrentUser && (
-                  <RS.Row>
-                    <RS.Col className="mt-4" sm={{ size: 8, offset: 2 }} md={{ size: 4, offset: 4 }}>
-                      <RS.Button
+                  <Row>
+                    <Col className="mt-4" sm={{ size: 8, offset: 2 }} md={{ size: 4, offset: 4 }}>
+                      <Button
                         tag={Link}
                         to={`/add_gameboard/${gameboardId}`}
                         onClick={() => setAssignBoardPath("/set_assignments")}
@@ -223,15 +220,15 @@ export const Gameboard = withRouter(({ location }) => {
                         className="btn-block"
                       >
                         Save to My gameboards
-                      </RS.Button>
-                    </RS.Col>
-                  </RS.Row>
+                      </Button>
+                    </Col>
+                  </Row>
                 )
               )}
             </>
           );
         }}
       />
-    </RS.Container>
+    </Container>
   );
 });

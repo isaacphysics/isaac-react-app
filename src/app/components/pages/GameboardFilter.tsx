@@ -33,7 +33,6 @@ import { NOT_FOUND_TYPE, Tag } from "../../../IsaacAppTypes";
 import { GameboardViewer } from "./Gameboard";
 import { ShowLoading } from "../handlers/ShowLoading";
 import queryString from "query-string";
-import { Tier } from "../elements/svg/HierarchyFilter";
 import Select, { GroupBase } from "react-select";
 import { ContentSummaryDTO, GameboardDTO } from "../../../IsaacApiTypes";
 import { debounce } from "lodash";
@@ -41,6 +40,12 @@ import { History } from "history";
 import { IsaacSpinner } from "../handlers/IsaacSpinner";
 import { CanonicalHrefElement } from "../navigation/CanonicalHrefElement";
 import { MetaDescription } from "../elements/MetaDescription";
+
+interface Tier {
+  id: string;
+  name: string;
+  for: string;
+}
 
 function itemiseByValue<R extends { value: string }>(values: string[], options: R[]) {
   return options.filter((option) => values.includes(option.value));

@@ -5,7 +5,6 @@ import {
   DOCUMENT_TYPE,
   documentTypePathPrefix,
   filterAudienceViewsByProperties,
-  generateQuestionTitle,
   isIntendedAudience,
   notRelevantMessage,
   SEARCH_RESULT_TYPE,
@@ -69,8 +68,7 @@ export const ContentSummaryListGroupItem = ({
       iconLabel = "Shortcut icon";
       break;
     case DOCUMENT_TYPE.QUESTION:
-    case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
-      title = generateQuestionTitle(item);
+      title = item.title;
       itemClasses += item.correct ? "bg-success" : "text-info";
       linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
       icon = questionIcon;

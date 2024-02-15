@@ -37,7 +37,6 @@ function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentD
       eventDetails.relatedConceptId = contentSummary.id;
       break;
     case DOCUMENT_TYPE.QUESTION:
-    case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
       eventDetails.type = "VIEW_RELATED_QUESTION";
       eventDetails.relatedQuestionId = contentSummary.id;
       break;
@@ -51,7 +50,6 @@ function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentD
       eventDetails.conceptId = parentPage.id;
       break;
     case DOCUMENT_TYPE.QUESTION:
-    case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
       eventDetails.questionId = parentPage.id;
       break;
     case DOCUMENT_TYPE.GENERIC:
@@ -122,10 +120,7 @@ export function RelatedContent({ content, parentPage, conceptId = "" }: RelatedC
     .sort(sortByNumberStringValue("difficulty"))
     .sort(sortByNumberStringValue("level")); // TODO should this reference to level still be here?
 
-  const questions = sortedContent.filter(
-    (contentSummary) =>
-      contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION,
-  );
+  const questions = sortedContent.filter((contentSummary) => contentSummary.type === DOCUMENT_TYPE.QUESTION);
 
   const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO) => {
     const audienceViews = filterAudienceViewsByProperties(

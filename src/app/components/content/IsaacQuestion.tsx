@@ -11,16 +11,7 @@ import {
 import { IsaacContent } from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import { BEST_ATTEMPT_HIDDEN, ContentDTO } from "../../../IsaacApiTypes";
-import * as RS from "reactstrap";
-import {
-  determineFastTrackPrimaryAction,
-  determineFastTrackSecondaryAction,
-  fastTrackProgressEnabledBoards,
-  isLoggedIn,
-  QUESTION_TYPES,
-  selectQuestionPart,
-  useFastTrackInformation,
-} from "../../services";
+import { isLoggedIn, QUESTION_TYPES, selectQuestionPart } from "../../services";
 import { DateString, TIME_ONLY } from "../elements/DateString";
 import { AccordionSectionContext, ConfidenceContext, GameboardContext } from "../../../IsaacAppTypes";
 import { RouteComponentProps, withRouter } from "react-router";
@@ -28,8 +19,9 @@ import { IsaacLinkHints } from "./IsaacHints";
 import { ConfidenceQuestions, useConfidenceQuestionsValues } from "../elements/inputs/ConfidenceQuestions";
 import { Loading } from "../handlers/IsaacSpinner";
 import classNames from "classnames";
+import { Alert, Col, Form, Row } from "reactstrap";
 
-export const IsaacQuestion = withRouter(({ doc, location }: { doc: ApiTypes.QuestionDTO } & RouteComponentProps) => {
+export const IsaacQuestion = withRouter(({ doc }: { doc: ApiTypes.QuestionDTO } & RouteComponentProps) => {
   const dispatch = useAppDispatch();
   const accordion = useContext(AccordionSectionContext);
   const currentGameboard = useContext(GameboardContext);
@@ -45,7 +37,6 @@ export const IsaacQuestion = withRouter(({ doc, location }: { doc: ApiTypes.Ques
   const canSubmit = (questionPart?.canSubmit && !locked) || false;
   const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
   const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
-  const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
 
   const {
     confidenceState,
@@ -88,22 +79,9 @@ export const IsaacQuestion = withRouter(({ doc, location }: { doc: ApiTypes.Ques
   // Select QuestionComponent from the question part's document type (or default)
   const QuestionComponent = QUESTION_TYPES[doc?.type ?? "default"];
 
-  // FastTrack buttons should only show up if on a FastTrack-enabled board
-  const isFastTrack =
-    fastTrackInfo.isFastTrackPage &&
-    currentGameboard?.id &&
-    fastTrackProgressEnabledBoards.includes(currentGameboard.id);
-
-  // Determine Action Buttons
-  const primaryAction = isFastTrack
-    ? determineFastTrackPrimaryAction(fastTrackInfo)
-    : { disabled: !canSubmit, value: "Check my answer", type: "submit" };
-
-  const secondaryAction = isFastTrack ? determineFastTrackSecondaryAction(fastTrackInfo) : null;
-
   return (
     <ConfidenceContext.Provider value={{ recordConfidence }}>
-      <RS.Form
+      <Form
         onSubmit={function submitCurrentAttempt(event) {
           if (event) {
             event.preventDefault();
@@ -160,10 +138,10 @@ export const IsaacQuestion = withRouter(({ doc, location }: { doc: ApiTypes.Ques
 
           {/* Lock */}
           {locked && (
-            <RS.Alert color="danger" className={"no-print"}>
+            <Alert color="danger" className={"no-print"}>
               This question is locked until at least {<DateString formatter={TIME_ONLY}>{locked}</DateString>} to
               prevent repeated guessing.
-            </RS.Alert>
+            </Alert>
           )}
 
           {/* Action Buttons */}
@@ -179,7 +157,7 @@ export const IsaacQuestion = withRouter(({ doc, location }: { doc: ApiTypes.Ques
               validationResponse={validationResponse}
             />
           ) : (
-            (!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) &&
+            (!correct || canSubmit) &&
             !locked && (
               <div
                 className={classNames(
@@ -187,42 +165,32 @@ export const IsaacQuestion = withRouter(({ doc, location }: { doc: ApiTypes.Ques
                   { "mt-5 mb-n3": correct },
                 )}
               >
-                {secondaryAction && (
-                  <div
-                    className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {
-                      "pr-sm-2 pr-md-0 pr-lg-3": primaryAction,
-                    })}
-                  >
-                    <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block" />
-                  </div>
-                )}
-                {primaryAction && (
-                  <div
-                    className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {
-                      "pl-sm-2 pl-md-0 pl-lg-3": secondaryAction,
-                    })}
-                  >
-                    <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
-                  </div>
-                )}
+                <div className="m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50">
+                  <input
+                    disabled={!canSubmit}
+                    value="Check my answer"
+                    type="submit"
+                    className="h-100 btn btn-secondary btn-block"
+                  />
+                </div>
               </div>
             )
           )}
 
           {/*  Hint Reminder */}
           {(!validationResponse || !correct || canSubmit) && (
-            <RS.Row>
-              <RS.Col xl={{ size: 10, offset: 1 }}>
+            <Row>
+              <Col xl={{ size: 10, offset: 1 }}>
                 {doc.hints && (
                   <p className="no-print text-center pt-2 mb-0">
                     <small>{"Don't forget to use the hints above if you need help."}</small>
                   </p>
                 )}
-              </RS.Col>
-            </RS.Row>
+              </Col>
+            </Row>
           )}
         </div>
-      </RS.Form>
+      </Form>
     </ConfidenceContext.Provider>
   );
 });

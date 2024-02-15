@@ -48,7 +48,6 @@ import {
   groupMemberships,
   otherUserAuthorisations,
   currentTopic,
-  fasttrackConcepts,
   questionSearchResult,
   search,
   isaacApi,
@@ -115,7 +114,6 @@ const appReducer = combineReducers({
   // Gameboards
   boards: gameboardsSlice.reducer,
   questionSearchResult,
-  fasttrackConcepts,
 
   // Search
   search,

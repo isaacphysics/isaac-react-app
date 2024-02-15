@@ -17,9 +17,7 @@ const filterForConcepts = (contents: ContentSummaryDTO[]) => {
 };
 
 const filterForQuestions = (contents: ContentSummaryDTO[]) => {
-  return contents.filter(
-    (content) => content.type === DOCUMENT_TYPE.QUESTION || content.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION,
-  );
+  return contents.filter((content) => content.type === DOCUMENT_TYPE.QUESTION);
 };
 
 export const filterAndSeparateRelatedContent = (

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import queryString from "query-string";
 import { fetchTopicSummary, isaacApi, selectors, useAppDispatch, useAppSelector } from "../state";
 import {
   determineCurrentCreationContext,
@@ -8,8 +7,6 @@ import {
   determineNextTopicContentLink,
   determinePreviousGameboardItem,
   determineTopicHistory,
-  DOCUMENT_TYPE,
-  fastTrackProgressEnabledBoards,
   makeAttemptAtTopicHistory,
   NOT_FOUND,
   TAG_ID,
@@ -42,7 +39,7 @@ const defaultPageNavigation = (currentGameboard?: GameboardDTO) => ({ breadcrumb
 
 export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavigation => {
   const { search } = useLocation();
-  const { board: gameboardId, topic, questionHistory } = useQueryParams(true);
+  const { board: gameboardId, topic } = useQueryParams(true);
   const currentDocId = doc && doc !== NOT_FOUND ? (doc.id as string) : "";
   const dispatch = useAppDispatch();
   const { data: currentGameboard } = isaacApi.endpoints.getGameboardById.useQuery(gameboardId || skipToken);
@@ -57,31 +54,6 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
 
   if (doc === null || doc === NOT_FOUND) {
     return defaultPageNavigation(currentGameboard);
-  }
-
-  if (
-    doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION &&
-    fastTrackProgressEnabledBoards.includes(currentGameboard?.id || "")
-  ) {
-    const gameboardHistory =
-      currentGameboard && gameboardId === currentGameboard.id ? determineGameboardHistory(currentGameboard) : [];
-    const questionHistoryList = ((questionHistory as string) || "").split(",");
-    const previousQuestion = questionHistoryList.pop();
-    const modifiedQuestionHistory = questionHistoryList.length ? questionHistoryList.join(",") : undefined;
-    const board = currentGameboard?.id;
-    return {
-      collectionType: "Master Mathematics",
-      breadcrumbHistory: gameboardHistory,
-      backToCollection: currentGameboard
-        ? { title: "Return to Top 10 Questions", to: `/gameboards#${currentGameboard.id}` }
-        : undefined,
-      nextItem: !previousQuestion ? determineNextGameboardItem(currentGameboard, currentDocId) : undefined,
-      previousItem: previousQuestion
-        ? { title: "Return to Previous Question", to: `/questions/${previousQuestion}` }
-        : undefined,
-      search: queryString.stringify(previousQuestion ? { board, modifiedQuestionHistory } : { board }),
-      currentGameboard,
-    };
   }
 
   if (gameboardId) {
