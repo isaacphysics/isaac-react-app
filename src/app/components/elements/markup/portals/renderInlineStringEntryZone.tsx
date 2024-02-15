@@ -14,7 +14,6 @@ export const useInlineStringEntryZoneInHtml: PortalInHtmlHook = (html) => {
 
     // Looks for all span elements with ids starting with "inline-question-".
     const inlineZones = htmlDom.querySelectorAll("span[id^='inline-question-']") as NodeListOf<HTMLElement>;
-    // console.log("inlineZones", inlineZones);
     if (inlineZones.length === 0) return [html, () => []];
 
     const inlineZoneConstructors: {id: string, width: number, height: number}[] = [];

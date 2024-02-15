@@ -39,10 +39,9 @@ import { submitInlineRegion } from "./IsaacInlineRegion";
 
 const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined) : AppQuestionDTO => {
     const inlineContext = useContext(InlineStringEntryZoneContext);
-    const inlineQuestions = pageQuestions?.filter(q => q.id?.includes("inline-question:"));
+    const inlineQuestions = pageQuestions?.filter(q => inlineContext?.docId && q.id?.startsWith(inlineContext?.docId) && q.id.includes("|inline-question:"));
     const validationResponses = inlineQuestions?.map(q => q.validationResponse);
     const bestAttempts = inlineQuestions?.map(q => q.bestAttempt);
-    console.log("modified: ", inlineContext?.modified);
     const correct = (inlineContext?.modified ? validationResponses : bestAttempts)?.every(r => r?.correct) || false;
     const explanation = {...validationResponses?.[0]?.explanation, value: validationResponses?.map(r => r?.explanation?.value).filter(s => s).join("<br>")};
     const lockedDates = inlineQuestions?.map(q => q.locked).filter(d => d) as Date[] | undefined;

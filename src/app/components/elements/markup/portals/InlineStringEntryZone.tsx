@@ -11,7 +11,9 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
     const inlineContext = useContext(InlineStringEntryZoneContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
 
-    const questionId = inlineContext?.elementToQuestionMap?.[inlineElementId].questionId;
+    const safeElementId = inlineElementId.replaceAll("_", "-");
+
+    const questionId = inlineContext?.elementToQuestionMap?.[safeElementId].questionId;
     const questionDTO = selectQuestionPart(pageQuestions, questionId);
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<StringChoiceDTO>(questionId as string);
 
@@ -21,13 +23,7 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
         if (inlineContext) {
             inlineContext.modified ||= modified;
         }
-    }, [modified]);
-
-    const [attempt, setAttempt] = useState(questionDTO?.bestAttempt?.answer?.value ?? "");
-
-    useEffect(() => {
-        dispatchSetCurrentAttempt({type: "stringChoice", value: attempt});
-    }, [attempt]);
+    }, [inlineContext, modified]);
     
     const inlineStringEntryZone = root?.querySelector(`#${inlineElementId}`);
 
@@ -43,13 +39,13 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
                 invalid={questionDTO?.validationResponse?.correct === false || (!modified && questionDTO?.bestAttempt?.correct === false)} 
                 id={inlineElementId} 
                 style={{width: `${width}px`, height: `${height}px`}}
-                value={attempt}
+                value={currentAttempt?.value ?? ""}
                 onChange={(e) => {
                     if (inlineContext) {
                         inlineContext.canSubmit = true;
                     }
                     setModified(true);
-                    setAttempt(e.target.value);
+                    dispatchSetCurrentAttempt({type: "stringChoice", value: e.target.value});
                 }} 
             />,
             inlineStringEntryZone
