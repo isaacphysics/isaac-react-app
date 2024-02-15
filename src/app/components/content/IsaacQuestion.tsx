@@ -43,7 +43,7 @@ const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined) : AppQ
     const validationResponses = inlineQuestions?.map(q => q.validationResponse);
     const bestAttempts = inlineQuestions?.map(q => q.bestAttempt);
     const correct = (inlineContext?.modified ? validationResponses : bestAttempts)?.every(r => r?.correct) || false;
-    const explanation = {...validationResponses?.[0]?.explanation, value: validationResponses?.map(r => r?.explanation?.value).filter(s => s).join("<br>")};
+    const explanation = {...validationResponses?.[0]?.explanation, value: undefined, children: validationResponses?.map(r => r?.explanation ?? {})};
     const lockedDates = inlineQuestions?.map(q => q.locked).filter(d => d) as Date[] | undefined;
     return {
         currentAttempt: undefined,
