@@ -130,7 +130,7 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
             <p className="px-1">
                 If you change schools we recommend you take the following steps:
             </p>
-            <ol>
+            <ol type='1'>
                 <li>
                     Check your <strong><a target="_blank" href="/groups">groups</a></strong>. Delete any groups that you will no longer teach.
                 </li>
