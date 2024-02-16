@@ -400,6 +400,11 @@ export const InlineStringEntryZoneContext = React.createContext<{
     elementToQuestionMap: {[elementId: string]: {questionId: string}},
     canSubmit: boolean,
     modified: boolean,
+    setModified: React.Dispatch<React.SetStateAction<boolean>>,
+    submitting: boolean,
+    setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
+    feedbackIndex: number,
+    setFeedbackIndex: React.Dispatch<React.SetStateAction<number>>,
 } | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);

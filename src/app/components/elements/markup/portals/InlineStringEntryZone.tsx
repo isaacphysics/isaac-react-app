@@ -21,10 +21,20 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
 
     useEffect(() => {
         if (inlineContext) {
-            inlineContext.modified ||= modified;
+            inlineContext.setModified(m => m || modified);
         }
     }, [inlineContext, modified]);
-    
+
+    useEffect(() => {
+        // only show the "Correct!" / "Incorrect" message once the last part submission has returned 
+        if (inlineContext) {
+            const elements = Object.keys(inlineContext.elementToQuestionMap);
+            if (elements.indexOf(safeElementId) === elements.length - 1) {
+                inlineContext.setSubmitting(false);
+            }
+        }
+    }, [questionDTO?.validationResponse]);
+
     const inlineStringEntryZone = root?.querySelector(`#${inlineElementId}`);
 
     if (!inlineStringEntryZone) {
@@ -39,6 +49,7 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
                 invalid={questionDTO?.validationResponse?.correct === false || (!modified && questionDTO?.bestAttempt?.correct === false)} 
                 id={inlineElementId} 
                 style={{width: `${width}px`, height: `${height}px`}}
+                className="inline-part"
                 value={currentAttempt?.value ?? ""}
                 onChange={(e) => {
                     if (inlineContext) {

@@ -54,7 +54,13 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
 
         if (type === "isaacInlineRegion") {
             const questionPartIdMap = useRef<Record<string, {questionId: string;}>>({}).current;
-            tempSelectedComponent = <InlineStringEntryZoneContext.Provider value={{ docId: props.doc.id, elementToQuestionMap: questionPartIdMap, canSubmit: false, modified: false }}>
+            const [feedbackIndex, setFeedbackIndex] = React.useState(0);
+            const [modified, setModified] = React.useState(false);
+            const [submitting, setSubmitting] = React.useState(false);
+            tempSelectedComponent = <InlineStringEntryZoneContext.Provider value={{ 
+                docId: props.doc.id, elementToQuestionMap: questionPartIdMap, canSubmit: false, modified, setModified,
+                feedbackIndex, setFeedbackIndex, submitting, setSubmitting }}
+            >
                 {tempSelectedComponent}
             </InlineStringEntryZoneContext.Provider>;
         }

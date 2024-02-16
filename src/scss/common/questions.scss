@@ -384,3 +384,26 @@
     }
   }
 }
+
+.feedback-panel {
+  background-color: #0003;
+  border-radius: 10px 10px 0 0;
+  > button {
+    color: inherit;
+    &:hover {
+      color: inherit;
+    }
+  }
+}
+
+.feedback-panel-content {
+  background-color: #0002;
+  border-radius: 0 0 2px 2px;
+}
+
+.inline-part {
+  outline: none !important;
+  &.selected {
+    border-width: 3px;
+  }
+}

@@ -35,27 +35,8 @@ import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
-import { submitInlineRegion } from "./IsaacInlineRegion";
-
-const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined) : AppQuestionDTO => {
-    const inlineContext = useContext(InlineStringEntryZoneContext);
-    const inlineQuestions = pageQuestions?.filter(q => inlineContext?.docId && q.id?.startsWith(inlineContext?.docId) && q.id.includes("|inline-question:"));
-    const validationResponses = inlineQuestions?.map(q => q.validationResponse);
-    const bestAttempts = inlineQuestions?.map(q => q.bestAttempt);
-    const correct = (inlineContext?.modified ? validationResponses : bestAttempts)?.every(r => r?.correct) || false;
-    const explanation = {...validationResponses?.[0]?.explanation, value: undefined, children: validationResponses?.map(r => r?.explanation ?? {})};
-    const lockedDates = inlineQuestions?.map(q => q.locked).filter(d => d) as Date[] | undefined;
-    return {
-        currentAttempt: undefined,
-        bestAttempt: undefined,
-        validationResponse: {
-            correct: correct,
-            explanation: explanation,
-        },
-        locked: lockedDates?.length ? new Date(lockedDates.reduce((a, b) => Math.max(a, b.valueOf()), 0)) : undefined,
-        canSubmit: inlineContext?.canSubmit,
-    };
-};
+import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
+import { Spacer } from "../elements/Spacer";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -118,6 +99,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const isFastTrack = fastTrackInfo.isFastTrackPage && currentGameboard?.id && fastTrackProgressEnabledBoards.includes(currentGameboard.id);
 
     const inlineContext = useContext(InlineStringEntryZoneContext);
+    const numInlineQuestions = Object.values(inlineContext?.elementToQuestionMap ?? {}).length;
 
     // Determine Action Buttons
     const primaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) :
@@ -129,6 +111,11 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const secondaryAction = isFastTrack ?
         determineFastTrackSecondaryAction(fastTrackInfo) :
         null;
+
+    const validationFeedback = invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
+        <IsaacContent doc={validationResponse?.explanation as ContentDTO}/>;
+
+    const inlineSubmitting = inlineContext?.submitting ?? false;
 
     return <ConfidenceContext.Provider value={{recordConfidence}}>
         <RS.Form onSubmit={(event) => {
@@ -175,9 +162,27 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                         <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
-                        {invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
-                            <IsaacContent doc={validationResponse.explanation as ContentDTO}/>
-                        }
+                        {inlineContext ? <>
+                            <span>You can view feedback for individual parts using the control panel below.</span>
+                                <div className="w-100 mt-2 d-flex feedback-panel">
+                                    <RS.Button color="transparent" onClick={() => {
+                                        inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex - 1) + numInlineQuestions) % numInlineQuestions);
+                                    }}>
+                                        Previous
+                                    </RS.Button>
+                                    <Spacer/>
+                                    <div className="align-self-center">Part {inlineContext.feedbackIndex + 1} of {numInlineQuestions}</div>
+                                    <Spacer/>
+                                    <RS.Button color="transparent" onClick={() => {
+                                        inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex + 1) % numInlineQuestions);
+                                    }}>
+                                        Next
+                                    </RS.Button>
+                                </div>
+                                <div className="feedback-panel-content py-3">
+                                    {validationFeedback}
+                                </div>
+                        </> : validationFeedback}
                     </div>}
                 </div>}
 
