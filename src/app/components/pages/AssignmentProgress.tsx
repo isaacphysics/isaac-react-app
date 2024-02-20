@@ -161,7 +161,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     return <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} header={tableHeader} getQuestionTitle={getQuestionTitle} 
     assignmentAverages={assignmentAverages} assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
-    isQuiz={true}/>;
+    isAssignment={true}/>;
 };
 
 const ProgressLoader = ({assignment}: {assignment: EnhancedAssignment}) => {
