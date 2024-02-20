@@ -31,6 +31,10 @@ module.exports = (env) => {
 
         mode: isProd ? "production" : "development",
 
+        ignoreWarnings: [
+            { message: /node\_modules\/bootstrap\/scss\/vendor\/\_rfs\.scss/ }
+        ],
+
         devServer: {
             headers: {
                 "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaacphysics.org https://cdn.adacomputerscience.org localhost:8080 ws://localhost:8080 https://maps.googleapis.com https://*.tile.openstreetmap.org; object-src 'none'; frame-src 'self' https://code-editor.ada-cs.org http://localhost:3000 https://anvil.works https://*.anvil.app https://www.youtube-nocookie.com; img-src 'self' localhost:8080 data: https://cdn.isaacphysics.org https://cdn.adacomputerscience.org https://i.ytimg.com https://maps.googleapis.com https://*.tile.openstreetmap.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://cdn.isaacphysics.org https://cdn.adacomputerscience.org https://fonts.gstatic.com;",
