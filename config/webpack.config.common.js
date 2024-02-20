@@ -32,7 +32,7 @@ module.exports = (env) => {
         mode: isProd ? "production" : "development",
 
         ignoreWarnings: [
-            { message: /node\_modules\/bootstrap\/scss\/vendor\/\_rfs\.scss/ }
+            { message: /node\_modules\/bootstrap\/scss\/vendor\/\_rfs\.scss/ } // Suppress a warning which cannot be fixed without updating bootstrap
         ],
 
         devServer: {
