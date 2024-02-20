@@ -53,14 +53,13 @@ import {
 import {Immutable} from "immer";
 
 // Utility functions
-function isAxiosError(e: Error): e is AxiosError {
+function isAxiosError(e: Error): e is AxiosError<{errorMessage?: string}, unknown> {
     return 'isAxiosError' in e && (e as AxiosError).isAxiosError;
 }
 
 export function extractMessage(e: Error) {
-    // FIXME: is there a way to type this correctly?
-    if (isAxiosError(e) && e.response && e.response.data && (e.response.data as any).errorMessage) {
-        return (e.response.data as any).errorMessage;
+    if (isAxiosError(e) && e.response?.data.errorMessage) {
+        return e.response.data.errorMessage;
     }
     return API_REQUEST_FAILURE_MESSAGE;
 }
