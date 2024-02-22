@@ -6,15 +6,11 @@ import {Tag} from "../../../IsaacAppTypes";
 import {
     STAGE,
     TAG_ID,
-    tags,
-    useHashState
-} from "../../services";
+    tags} from "../../services";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
-import {Tabs} from "../elements/Tabs";
-import {TypeGuard} from "@reduxjs/toolkit/dist/tsHelpers";
 
 const renderTopic = (topic: Tag) => {
     if (!topic.hidden) {
@@ -57,53 +53,26 @@ const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GC
                             <ul className="list-unstyled mb-3 link-list">
                                 {topicComponents}
                             </ul>
-                        </React.Fragment>
+                        </React.Fragment>;
                     }
                 }
             )}
-    </Col>
+    </Col>;
 };
 
 export const AllTopics = () => {
     const subcategoryTags = tags.allSubcategoryTags;
 
-    //const existingLocation = useLocation();
-    //const {stage: view, setStage: setTransientStage} = useUserContext();
-    const checkStage = ((a: any) => [STAGE.ALL, STAGE.A_LEVEL, STAGE.GCSE].includes(a)) as TypeGuard<STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL>;
-    const [stage, setStage] = useHashState<STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL>(STAGE.ALL, checkStage);
-    // TODO update users transient user context so they see the correct topics etc. when clicking through?
-    // useEffect(() => {
-    //     setTransientStage(stage);
-    //     const actualParams = queryString.parse(window.location.search);
-    //     if (stage !== actualParams.stage) {
-    //         try {
-    //             history.replace({
-    //                 ...existingLocation,
-    //                 search: queryString.stringify({
-    //                     ...actualParams,
-    //                     stage,
-    //                 }, {encode: false})
-    //             });
-    //         } catch (e) {
-    //             // This is to handle the case where the existingLocation pathname is invalid, i.e. "isaacphysics.org//".
-    //             // In that case history.replace(...) throws an exception, and it will do this while the ErrorBoundary is
-    //             // trying to render, causing a loop and a spike in client-side errors.
-    //         }
-    //     }
-    // }, [stage]);
-
     const charToCutAt = "D";
-    const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt});
-    const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > charToCutAt});
+    const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt;});
+    const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > charToCutAt;});
 
-    const metaDescription = ({
-        [STAGE.ALL]: "Discover our free computer science topics and questions. Learn or revise for your exams with us today.",
-        [STAGE.A_LEVEL]: "Discover our free A level computer science topics and questions. We cover AQA, CIE, OCR, Eduqas, and WJEC. Learn or revise for your exams with us today.",
-        [STAGE.GCSE]: "Discover our free GCSE computer science topics and questions. We cover AQA, Edexcel, Eduqas, OCR, and WJEC. Learn or revise for your exams with us today."
-    })[stage];
+    const metaDescription = "Discover our free computer science topics and questions. Learn or revise for your exams with us today.";
 
-    const tabs = {
-        ["All topics"]: <>
+    return <div id={"topics-bg"}>
+        <Container className={"mb-4"}>
+            <TitleAndBreadcrumb currentPageTitle={"Topics"} />
+            <MetaDescription description={metaDescription} />
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="pt-3 pt-md-4">
                     <PageFragment fragmentId={`${STAGE.ALL}_all_topics`} ifNotFound={RenderNothing} />
@@ -115,45 +84,6 @@ export const AllTopics = () => {
                     {topicColumn(secondColTags, STAGE.ALL)}
                 </Col>
             </Row>
-        </>,
-        ["A Level topics"]: <>
-            <Row>
-                <Col lg={{size: 8, offset: 2}} className="pt-3 pt-md-4">
-                    <PageFragment fragmentId={`${STAGE.A_LEVEL}_all_topics`} ifNotFound={RenderNothing} />
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={{size: 8, offset: 2}} className="py-md-4 row">
-                    {topicColumn(firstColTags, STAGE.A_LEVEL)}
-                    {topicColumn(secondColTags, STAGE.A_LEVEL)}
-                </Col>
-            </Row>
-        </>,
-        ["GCSE topics"]: <>
-            <Row>
-                <Col lg={{size: 8, offset: 2}} className="pt-3 pt-md-4">
-                    <PageFragment fragmentId={`${STAGE.GCSE}_all_topics`} ifNotFound={RenderNothing} />
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={{size: 8, offset: 2}} className="py-md-4 row">
-                    {topicColumn(firstColTags, STAGE.GCSE)}
-                    {topicColumn(secondColTags, STAGE.GCSE)}
-                </Col>
-            </Row>
-        </>
-    };
-
-    return <div id={"topics-bg"}>
-        <Container className={"mb-4"}>
-            <TitleAndBreadcrumb currentPageTitle={"Topics"} />
-            <MetaDescription description={metaDescription} />
-            <Tabs style={"buttons"} activeTabOverride={[STAGE.ALL, STAGE.A_LEVEL, STAGE.GCSE].indexOf(stage) + 1}
-                  onActiveTabChange={(activeTab) => setStage(([STAGE.ALL, STAGE.A_LEVEL, STAGE.GCSE].at(activeTab - 1) ?? STAGE.ALL) as STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL)}
-                  className={"mt-3"}
-            >
-                {tabs}
-            </Tabs>
         </Container>
     </div>;
 };
