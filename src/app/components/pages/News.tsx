@@ -1,14 +1,28 @@
-import {CardDeck, Container} from "reactstrap";
+import {Button, CardDeck, Container} from "reactstrap";
 import {NewsCard} from "../elements/cards/NewsCard";
-import React from "react";
+import React, { useEffect } from "react";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {siteSpecific} from "../../services";
+import {NEWS_PODS_PER_PAGE, siteSpecific} from "../../services";
+import { IsaacPodDTO } from "../../../IsaacApiTypes";
 
 export const News = () => {
-    const newsQuery = useGetNewsPodListQuery({subject: siteSpecific("physics", "news"), orderDecending: true});
+    const [page, setPage] = React.useState(0);
+    const [allNews, setAllNews] = React.useState([] as IsaacPodDTO[]); // each query fetches a new page; this acts as a cache for all the news fetched so far
+    const [disableLoadMore, setDisableLoadMore] = React.useState(false);
+
+    const newsQuery = useGetNewsPodListQuery({subject: siteSpecific("physics", "news"), startIndex: page * NEWS_PODS_PER_PAGE});
+
+    useEffect(() => {
+        if (newsQuery.status === "fulfilled" && newsQuery.data !== undefined) {
+            setAllNews(n => n.concat((newsQuery.data as IsaacPodDTO[]).slice(0, NEWS_PODS_PER_PAGE)));
+            if (newsQuery.data.length < NEWS_PODS_PER_PAGE) {
+                setDisableLoadMore(true);
+            }
+        }
+    }, [newsQuery.status]);
 
     const metaDescription = siteSpecific(
         "Get all the latest news about Isaac Physics.",
@@ -17,16 +31,20 @@ export const News = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"News"} />
         <MetaDescription description={metaDescription} />
-        <ShowLoadingQuery
-            query={newsQuery}
-            thenRender={(news) =>
-                news.length > 0
-                    ? <CardDeck className={"justify-content-center"}>
-                        {news.map(n => <NewsCard key={n.id} newsItem={n} showTitle />)}
-                    </CardDeck>
-                    : <div className={"w-100 text-left"}><h4>No news to display...</h4></div>
-            }
-            defaultErrorTitle={"Error fetching news stories"}
-        />
+        {allNews.length === 0 ? 
+            <ShowLoadingQuery
+                query={newsQuery}
+                thenRender={() => <div className={"w-100 text-left"}><h4>No news to display...</h4></div>}
+                defaultErrorTitle={"Error fetching news stories"}
+            /> : 
+            <>
+                <CardDeck className="justify-content-center mt-4">
+                    {allNews.map(n => <NewsCard key={n.id} newsItem={n} showTitle />)}
+                </CardDeck>
+                <div className="w-100 d-flex justify-content-center mb-5">
+                    <Button className={"mt-3"} color={"primary"} disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load older news</Button>
+                </div>
+            </>
+        }
     </Container>;
 };
