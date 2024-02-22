@@ -126,9 +126,20 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
             dispatch(closeActiveModal());
         },
         title: "Changing schools?",
-        body: <p className="px-1">
-            When you change schools, check your <strong><a target="_blank" href="/groups">groups</a></strong> and your <strong><a target="_blank" href="/account#teacherconnections">connections</a></strong>. Delete any groups that you will no longer teach and remove any connections with old colleagues and students.
-        </p>,
+        body: <>
+            <p className="px-1">
+                If you change schools we recommend you take the following steps:
+            </p>
+            <ol type='1'>
+                <li>
+                    Check your <strong><a target="_blank" href="/groups">groups</a>
+                    </strong>. Delete any groups that you will no longer teach.
+                </li>
+                <li>
+                    Check your <strong><a target="_blank" href="/account#teacherconnections">connections</a></strong>. Remove any connections with old colleagues and students.
+                </li>
+            </ol>
+        </>,
         buttons: [
             <Button key={1} color="primary" onClick={() => dispatch(closeActiveModal())}>
                 Continue
