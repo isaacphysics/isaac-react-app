@@ -1,0 +1,108 @@
+.interstitial-cookie-page {
+    background-color: $gray-107;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 2px;
+    font-size: 1rem;
+    text-align: left;
+
+    h3 {
+        font-size: 1.5rem;
+    }
+}
+
+.homepage-video {
+    .youtube-play {
+        background: url('/assets/logos/btn-youtube-red.png') no-repeat center;
+        position: absolute;
+        object-fit: none;
+        cursor: pointer;
+    }
+
+    .youtube-fade {
+        width: 100%;
+        height: 100%;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==);
+        background-repeat: repeat-x;
+        background-size: contain;
+        position: absolute;
+    }
+
+    .youtube-header {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        padding: 15px;
+        margin-top: -2px;
+        position: absolute;
+        color: #ddd;
+        
+        div .channel-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: url("/assets/logos/isaac-youtube-logo.jpeg") no-repeat center content-box;
+            background-size: contain;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+            z-index: 3;
+        }
+
+        div .video-name {
+            font-family: "YouTube Noto", Roboto, Arial, Helvetica, sans-serif;
+            font-size: 1.2rem;
+            color: #ddd !important;
+            text-decoration: none !important;
+            transition: all 0.2s ease-in-out;
+            z-index: 3;
+
+            &:hover {
+                color: #f0f0f0 !important;
+            }
+        }
+
+        .copy-container {
+            transition: all 0.2s ease-in-out;
+            z-index: 3;
+            padding: 5px;
+            border-radius: 15px;
+            width: 71px;
+
+            &:hover {
+                color: #fff;
+            }
+
+            .copy-link {
+                width: 36px;
+                height: 36px;
+                padding: 5px;
+                background: url("/assets/action-copy.svg") no-repeat center content-box;
+                background-size: cover;
+
+                &.copied {
+                    background-image: url("/assets/action-done.svg")
+                }
+
+                &.selected {
+                    padding: 1px;
+                }
+            }
+
+            .copy-text {
+                font-size: 0.85rem;
+                margin-top: -2px;
+            }
+        }
+    }
+
+    .selected {
+        border: 4px solid black;
+    }
+
+    p small {
+        display: block;
+        line-height: 1.5;
+        text-align: center;
+    }
+}

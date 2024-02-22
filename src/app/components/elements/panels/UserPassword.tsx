@@ -1,38 +1,65 @@
-import {Button, CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {Button, Col, FormGroup, Label, Row} from "reactstrap";
 import React, {useState} from "react";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {
     AUTHENTICATOR_FRIENDLY_NAMES_MAP,
+    AUTHENTICATOR_PROVIDERS,
+    above,
     isAda,
+    isPhy,
     loadZxcvbnIfNotPresent,
-    MINIMUM_PASSWORD_LENGTH,
     passwordDebounce,
     siteSpecific,
+    useDeviceSize,
     validateEmail
 } from "../../../services";
+import classNames from "classnames";
 import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
+import {TogglablePasswordInput} from "../inputs/TogglablePasswordInput";
+import { MyAccountTab } from "./MyAccountTab";
 
 interface UserPasswordProps {
     currentPassword?: string;
     currentUserEmail?: string;
-    setCurrentPassword: (e: any) => void;
+    setCurrentPassword: (e: React.SetStateAction<string>) => void;
     myUser: ValidationUser;
     setMyUser: (e: any) => void;
-    isNewPasswordConfirmed: boolean;
+    isNewPasswordValid: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
-    setNewPassword: (e: any) => void;
-    setNewPasswordConfirm: (e: any) => void;
-    newPasswordConfirm: string;
+    setNewPassword: (e: React.SetStateAction<string>) => void;
+    newPassword: string;
     editingOtherUser: boolean;
+    submissionAttempted: boolean;
 }
 
+const ThirdPartyAccount = ({provider, isLinked, imgCss} : {provider: AuthenticationProvider, isLinked: boolean, imgCss: string}) => {
+    const dispatch = useAppDispatch();
+    const deviceSize = useDeviceSize();
+    return <Row className={classNames("align-items-center linked-account-button-outer mb-1", {"mx-2" : above['sm'](deviceSize)})}>
+        <input
+            type="button"
+            id="linked-accounts-no-password"
+            className={`linked-account-button ${imgCss}`}
+            onClick={() => dispatch(isLinked ? unlinkAccount(provider) : linkAccount(provider))}
+        />
+        <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
+            {AUTHENTICATOR_FRIENDLY_NAMES_MAP[provider]}
+        </Label>
+        <Button color="link" className="ml-auto mr-3 btn-sm">
+            {isLinked ? <span>Unlink</span> : <span>Link</span>}
+        </Button>
+    </Row>;
+};
+
 export const UserPassword = (
-    {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm, editingOtherUser}: UserPasswordProps) => {
+    {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordValid, userAuthSettings, setNewPassword, newPassword, editingOtherUser, submissionAttempted}: UserPasswordProps) => {
 
     const dispatch = useAppDispatch();
+    const deviceSize = useDeviceSize();
     const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
 
+    const [showPasswordFields, setShowPasswordFields] = useState(false);
     const [passwordResetRequested, setPasswordResetRequested] = useState(false);
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
 
@@ -43,83 +70,71 @@ export const UserPassword = (
         }
     };
 
-    return <CardBody className={"pb-0"}>
-        <Row>
-            <Col md={{size: 6, offset: 3}}>
-                <h4>Password</h4>
-            </Col>
-        </Row>
-        {userAuthSettings && userAuthSettings.hasSegueAccount ?
-            <Row>
-                <Col>
-                    {!editingOtherUser &&
-                    <Row>
-                        <Col md={{size: 6, offset: 3}}>
-                            <FormGroup>
-                                <Label htmlFor="password-current">Current password</Label>
-                                <Input
-                                    id="password-current" type="password" name="current-password"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                        setCurrentPassword(e.target.value)
-                                    }
-                                />
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    }
-                    <Row>
-                        <Col md={{size: 6, offset: 3}}>
-                            <FormGroup>
-                                <Label htmlFor="new-password">New password</Label>
-                                <Input
-                                    invalid={!!newPasswordConfirm && !isNewPasswordConfirmed}
-                                    id="new-password" type="password" name="new-password"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setNewPassword(e.target.value);
-                                        passwordDebounce(e.target.value, setPasswordFeedback);
-                                    }}
-                                    onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        passwordDebounce(e.target.value, setPasswordFeedback);
-                                    }}
-                                    onFocus={loadZxcvbnIfNotPresent}
-                                    aria-describedby="passwordValidationMessage"
-                                    disabled={!editingOtherUser && currentPassword == ""}
-                                />
-                                {passwordFeedback &&
-                                <span className='float-right small mt-1'>
-                                    <strong>Password strength: </strong>
-                                    <span id="password-strength-feedback">
-                                        {passwordFeedback.feedbackText}
-                                    </span>
+    const authButtonsMap : Record<any, (isLinked: boolean) => JSX.Element> = {
+        "RASPBERRYPI": (isLinked: boolean) => <ThirdPartyAccount provider={"RASPBERRYPI"} imgCss="rpf-button" isLinked={isLinked}/>,
+        "GOOGLE": (isLinked: boolean) => <ThirdPartyAccount provider={"GOOGLE"} imgCss="google-button" isLinked={isLinked}/>
+    };
+
+    const connectedAccounts : AuthenticationProvider[] = [];
+    const unconnectedAccounts : AuthenticationProvider[] = [];
+    AUTHENTICATOR_PROVIDERS.forEach((provider) => {
+        if (authenticationProvidersUsed(provider as AuthenticationProvider) as boolean) {
+            connectedAccounts.push(provider);
+        } else {
+            unconnectedAccounts.push(provider);
+        }
+    });
+
+    return <MyAccountTab
+        leftColumn={<>
+            <h3>Account security</h3>
+            <p>Here you can change your password, link or unlink a third party account you use to sign in, and log out of all devices.</p>
+        </>}
+        rightColumn={<>
+            <h4>Password</h4>
+            {userAuthSettings && userAuthSettings.hasSegueAccount ? 
+                <>  
+                    {(isPhy || (isAda && showPasswordFields)) && 
+                    <>
+                        {!editingOtherUser && 
+                        <FormGroup>
+                            <Label htmlFor="password-current">Current password</Label>
+                            <TogglablePasswordInput
+                                id="password-current" type="password" name="current-password"
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                    setCurrentPassword(e.target.value)
+                                }
+                            />
+                        </FormGroup>}
+                        <FormGroup>
+                            <Label htmlFor="new-password">New password</Label>
+                            <TogglablePasswordInput
+                                invalid={submissionAttempted && !isNewPasswordValid}
+                                id="new-password" type="password" name="new-password"
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setNewPassword(e.target.value);
+                                    setMyUser(Object.assign({}, myUser, {password: e.target.value}));
+                                    passwordDebounce(e.target.value, setPasswordFeedback);
+                                }}
+                                onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    passwordDebounce(e.target.value, setPasswordFeedback);
+                                }}
+                                onFocus={loadZxcvbnIfNotPresent}
+                                aria-describedby="passwordValidationMessage"
+                                disabled={!editingOtherUser && currentPassword == ""}
+                            />
+                            {passwordFeedback &&
+                            <span className='float-right small mt-1'>
+                                <strong>Password strength: </strong>
+                                <span id="password-strength-feedback">
+                                    {passwordFeedback.feedbackText}
                                 </span>
-                                }
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={{size: 6, offset: 3}}>
-                            <FormGroup>
-                                <Label htmlFor="password-confirm">Re-enter new password</Label>
-                                <Input
-                                    invalid={!!currentPassword && !isNewPasswordConfirmed}
-                                    id="password-confirm"
-                                    type="password" name="password-confirmation"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        setNewPasswordConfirm(e.target.value);
-                                        setMyUser(Object.assign({}, myUser, {password: e.target.value}));
-                                    }} aria-describedby="passwordConfirmationValidationMessage"
-                                    disabled={!editingOtherUser && currentPassword == ""}
-                                />
-                                {currentPassword && !isNewPasswordConfirmed &&
-                                    <FormFeedback id="passwordConfirmationValidationMessage">
-                                        New passwords must match and be at least {MINIMUM_PASSWORD_LENGTH} characters long.
-                                    </FormFeedback>
-                                }
-                            </FormGroup>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
+                            </span>
+                            }
+                        </FormGroup>
+                    </>}
+                    {isAda && !showPasswordFields && <Button className="w-100 py-2 mt-3 mb-2" outline onClick={() => setShowPasswordFields(true)}>Change password</Button>}
+                </>
             : !passwordResetRequested ?
                 <React.Fragment>
                     <Row className="pt-4">
@@ -145,80 +160,46 @@ export const UserPassword = (
                 </React.Fragment>
                 :
                 <React.Fragment>
-                    <Col md={{size: 6, offset: 3}}>
-                        <p>
-                            <strong className="d-block">Your password reset request is being processed.</strong>
-                            <strong className="d-block">Please check your inbox.</strong>
-                        </p>
-                    </Col>
+                    <p>
+                        <strong className="d-block">Your password reset request is being processed.</strong>
+                        <strong className="d-block">Please check your inbox.</strong>
+                    </p>
                 </React.Fragment>
-        }
-        <React.Fragment>
-            <Row>
-                <Col md={{size: 6, offset: 3}}>
-                    <hr className="text-center" />
-                </Col>
-            </Row>
-            <Row>
-                <Col md={{size: 6, offset: 3}}>
-                    <FormGroup>
-                        <h4>Linked Accounts</h4>
-                        <Col>
-                            {
-                                isAda &&
-                                    <Row className="align-items-center ml-2">
-                                        <input
-                                            type="button"
-                                            id="linked-accounts-no-password"
-                                            className="linked-account-button rpf-button"
-                                            onClick={() => dispatch(authenticationProvidersUsed("RASPBERRYPI") ? unlinkAccount("RASPBERRYPI") : linkAccount("RASPBERRYPI"))}
-                                        />
-                                        <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
-                                            {authenticationProvidersUsed("RASPBERRYPI") ? " Remove linked Raspberry Pi account" : " Add linked Raspberry Pi account"}
-                                        </Label>
-                                    </Row>
-
-                            }
-                            <Row className="align-items-center ml-2">
-                                <input
-                                    type="button"
-                                    id="linked-accounts-no-password"
-                                    className="linked-account-button google-button"
-                                    onClick={() => dispatch(authenticationProvidersUsed("GOOGLE") ? unlinkAccount("GOOGLE") : linkAccount("GOOGLE"))}
-                                />
-                                <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
-                                    {authenticationProvidersUsed("GOOGLE") ? " Remove linked Google account" : " Add linked Google account"}
-                                </Label>
-                            </Row>
-                        </Col>
-                    </FormGroup>
-                </Col>
-            </Row>
-        </React.Fragment>
-        <React.Fragment>
-            <Row>
-                <Col md={{size: 6, offset: 3}}>
-                    <hr className="text-center"/>
-                </Col>
-            </Row>
-            <Row>
-                <Col md={{size: 6, offset: 3}}>
-                    <FormGroup>
-                        <h4>Log Out</h4>
-                        <small>
-                            {"If you forgot to log out on a device you no longer have access to, you can " +
-                            "log your account out on all devices, including this one."}
-                        </small>
-                        <Col className="text-center mt-2">
-                            <div className="vertical-center ml-2">
-                                <Button onClick={() => dispatch(logOutUserEverywhere())}>
-                                    Log me out everywhere
-                                </Button>
-                            </div>
-                        </Col>
-                    </FormGroup>
-                </Col>
-            </Row>
-        </React.Fragment>
-    </CardBody>
+            }
+            <React.Fragment>
+                <hr className="text-center" />
+                {connectedAccounts.length > 0 && <FormGroup>
+                    <h4>Linked {siteSpecific("Accounts", "accounts")}</h4>
+                    <Col>
+                        {connectedAccounts.map((provider) => {
+                            return authButtonsMap[provider](true);
+                        })}
+                    </Col>
+                </FormGroup>}
+                {unconnectedAccounts.length > 0 && <FormGroup>
+                    <h4>Link other accounts</h4>
+                    <Col>
+                        {unconnectedAccounts.map((provider) => {
+                            return authButtonsMap[provider](false);
+                        })}
+                    </Col>
+                </FormGroup>}
+            </React.Fragment>
+            <React.Fragment>
+                <hr className="text-center"/>
+                <FormGroup>
+                    <h4>Log Out</h4>
+                    <p>
+                        {"If you forgot to log out on a device you no longer have access to, you can " +
+                        "log your account out on all devices, including this one."}
+                    </p>
+                    <Col className="text-center mt-2 px-0">
+                        <Button className={classNames("w-100 py-2 mt-3 mb-2", isAda)} color="primary" outline onClick={() => dispatch(logOutUserEverywhere())}>
+                            Log {above['sm'](deviceSize) ? "me " : ""}out everywhere
+                        </Button>
+                    </Col>
+                </FormGroup>
+            </React.Fragment>
+        </>}
+    />;
 };

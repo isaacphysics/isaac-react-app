@@ -9,10 +9,28 @@
 
 .stage-label {
   font-family: $secondary-font;
-  padding: 1rem;
+  padding: 0.5rem;
   min-width: 130px;
   max-width: 130px;
   text-align: center;
+}
+
+.dynamic-x-padding .pad {
+  &:first-of-type {
+      padding-left: 0;
+  }
+
+  &:last-of-type {
+      padding-right: 0;
+  }
+
+  padding-left: 8px;
+  padding-right: 8px;
+
+  @media (max-width: 991px) {
+      padding-left: 0px;
+      padding-right: 0px;
+  }
 }
 
 .accordion-icon {

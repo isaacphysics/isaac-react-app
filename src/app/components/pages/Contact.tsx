@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {AppState, selectors, useAppDispatch, useAppSelector, useSubmitContactFormMutation} from "../../state";
+import {AppState, selectors, useAppSelector, useSubmitContactFormMutation} from "../../state";
 import {
     Alert,
     Card,
@@ -16,10 +16,10 @@ import {
 } from "reactstrap";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {
-    isAda,
     isPhy,
     isTeacherOrAbove,
     SITE_TITLE,
+    siteSpecific,
     SOCIAL_LINKS,
     validateEmail,
     WEBMASTER_EMAIL
@@ -29,7 +29,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Immutable} from "immer";
-import { extractErrorMessage } from '../../services/errors';
+import {extractErrorMessage} from '../../services/errors';
 
 const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
     const urlQuery = queryString.parse(location.search);
@@ -97,11 +97,13 @@ export const Contact = () => {
 
     const isValidEmail = validateEmail(email);
 
-    const metaDescriptionCS = "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!";
+    const metaDescription = siteSpecific(
+        "Contact the Isaac Physics team with questions, comments or feedback about our resources.",
+        "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!");
 
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Contact us" />
-        {isAda && <MetaDescription description={metaDescriptionCS}/>}
+        <MetaDescription description={metaDescription}/>
         <div className="pt-4">
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">

@@ -7,7 +7,6 @@ import {
 } from "isaac-graph-sketcher";
 import debounce from "lodash/debounce";
 import {IsaacGraphSketcherQuestionDTO} from "../../../../IsaacApiTypes";
-import {Markup} from "../markup";
 import {calculateHexagonProportions, Hexagon} from "../svg/Hexagon";
 import classNames from "classnames";
 import {
@@ -18,7 +17,7 @@ import {
     useGenerateAnswerSpecificationMutation
 } from "../../../state";
 import {PageFragment} from "../PageFragment";
-import {above, isStaff, useDeviceSize} from "../../../services";
+import {above, isStaff, useDeviceSize, useDeviceHeight} from "../../../services";
 import {Immutable} from "immer";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
@@ -33,7 +32,7 @@ interface GraphSketcherModalProps {
 }
 
 const GraphSketcherModal = (props: GraphSketcherModalProps) => {
-    const { onGraphSketcherStateChange, close, initialState, user } = props;
+    const { onGraphSketcherStateChange, close, initialState, user, question } = props;
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
 
@@ -75,7 +74,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     // Setup and teardown of the graph sketcher p5 instance
     useEffect(function setupOfGraphSketcherP5Instance() {
-        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions: isStaff(user) });
+        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions: isStaff(user), axisLabelX: question?.axisLabelX, axisLabelY: question?.axisLabelY });
 
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
@@ -130,7 +129,8 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const redo = () => modalSketch?.redo();
 
     const deviceSize = useDeviceSize();
-    const hexagonSize = above['sm'](deviceSize) ? 74 : 48;
+    const deviceHeight = useDeviceHeight();
+    const hexagonSize = above['sm'](deviceSize) && above['sm'](deviceHeight) ? 74 : 48;
     const colourHexagon = calculateHexagonProportions(hexagonSize/4, 3);
 
     const copySpecificationToClipboard = useCallback(() => {
@@ -145,12 +145,13 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     return <div id='graph-sketcher-modal' ref={graphSketcherContainer} style={{border: '5px solid black'}}>
         <div className="graph-sketcher-ui">
-            <button title="Redo last change" className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">Redo</button>
-            <button title="Undo last change" className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">Undo</button>
-            <div title="Draw polynomial curve" className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">Polynomial curve</div>
-            <div title="Draw straight line" className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">Straight line</div>
-            <button title="Delete selected curve" className={'button'} tabIndex={0} id="graph-sketcher-ui-trash-button">Delete selected curve</button>
-            <button title="Delete all curves" className={'button'} tabIndex={0} id="graph-sketcher-ui-reset-button">Delete all curves</button>
+            {/* do not use default <button>s -- these submit top-level forms (i.e. submit the question attempt) and can cause attempt spam timeout warnings */}
+            <div title="Redo last change" role="button" className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">Redo</div>
+            <div title="Undo last change" role="button" className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">Undo</div>
+            <div title="Draw polynomial curve" role="button" className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">Polynomial curve</div>
+            <div title="Draw straight line" role="button" className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">Straight line</div>
+            <div title="Delete selected curve" role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-trash-button">Delete selected curve</div>
+            <div title="Delete all curves" role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-reset-button">Delete all curves</div>
             <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">Submit</div>
             <div className="button" role="button" onClick={showHelpModal} onKeyUp={showHelpModal} tabIndex={0} id="graph-sketcher-ui-help-button">Help</div>
             {isStaff(user) && <div className="button" role="button" onClick={toggleDebugMode} onKeyUp={toggleDebugMode} tabIndex={0} id="graph-sketcher-ui-debug-button">Debug</div>}

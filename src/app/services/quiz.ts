@@ -11,7 +11,6 @@ import {
     showErrorToast,
     showRTKQueryErrorToastIfNeeded,
     showSuccessToast,
-    showToast,
     useAppDispatch,
     useAppSelector,
     useGetAvailableQuizzesQuery,
@@ -26,10 +25,7 @@ import {
     isQuestion,
     Item,
     matchesAllWordsInAnyOrder,
-    nthHourOf,
-    siteSpecific,
     tags,
-    TODAY,
     toTuple,
     useQueryParams
 } from "./";
@@ -63,40 +59,6 @@ export const assignMultipleQuiz = createAsyncThunk(
         {dispatch, rejectWithValue}
     ) => {
         const appDispatch = dispatch as AppDispatch;
-        if (groups.length === 0) {
-            appDispatch(showErrorToast(
-                `${siteSpecific("Quiz", "Test")} assignment failed`,
-                "Error: Please choose one or more groups."
-            ));
-            return rejectWithValue(null);
-        }
-
-        const today =  TODAY();
-        const isDue = dueDate !== undefined;
-        const isScheduled = scheduledStartDate !== undefined;
-
-        if (isDue) {
-            dueDate?.setHours(0, 0, 0, 0);
-            if ((dueDate.valueOf() - today.valueOf()) < 0) {
-                appDispatch(showToast({color: "danger", title: `${siteSpecific("Quiz", "Test")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}));
-                return rejectWithValue(null);
-            }
-        }
-
-        if (isScheduled) {
-            // Start date can be today, in which case the assignment will be immediately set (if it is past 7am)
-            if (nthHourOf(0, scheduledStartDate).valueOf() < nthHourOf(0, new Date()).valueOf()) {
-                appDispatch(showToast({color: "danger", title: `${siteSpecific("Quiz", "Test")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}));
-                return rejectWithValue(null);
-            }
-        }
-
-        if (isDue && isScheduled) {
-            if (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) {
-                appDispatch(showToast({color: "danger", title: `${siteSpecific("Quiz", "Test")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be on or after scheduled start date.", timeout: 5000}));
-                return rejectWithValue(null);
-            }
-        }
 
         const groupIds = groups.map(getValue);
         const quizzes: QuizAssignmentDTO[] = groupIds.map(id => ({
@@ -125,20 +87,14 @@ export const assignMultipleQuiz = createAsyncThunk(
             const failedIds = quizStatuses.filter(q => isDefined(q.errorMessage));
             if (failedIds.length === 0) {
                 appDispatch(showSuccessToast(
-                    siteSpecific(
-                        `Quiz${successfulIds.length > 1 ? "zes" : ""} saved`,
-                        `Test${successfulIds.length > 1 ? "s" : ""} assigned`
-                    ),
-                    siteSpecific(
-                        `${successfulIds.length > 1 ? "All quizzes have" : "This quiz has"} been saved successfully.`,
-                        `${successfulIds.length > 1 ? "All tests have" : "This test has"} been saved successfully.`,
-                    )
+                    `Test${successfulIds.length > 1 ? "s" : ""} assigned`,
+                    `${successfulIds.length > 1 ? "All tests have" : "This test has"} been saved successfully`
                 ));
             } else {
                 // Show each group assignment error in a separate toast
                 failedIds.forEach(({groupId, errorMessage}) => {
                     appDispatch(showErrorToast(
-                        `${siteSpecific("Quiz", "Test")} assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`,
+                        `Test assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`,
                         errorMessage as string
                     ));
                 });
@@ -146,19 +102,11 @@ export const assignMultipleQuiz = createAsyncThunk(
                 if (failedIds.length === quizStatuses.length) {
                     return rejectWithValue(null);
                 } else {
-                    const partialSuccessMessage = siteSpecific(
-                        successfulIds.length > 1
-                            ? "Some quizzes were saved successfully."
-                            : `Quiz assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`,
-                        successfulIds.length > 1
+                    const partialSuccessMessage = `${successfulIds.length > 1
                             ? "Some tests were saved successfully."
-                            : `Test assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`,
-                    );
+                            : `Test assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`}`;
                     appDispatch(showSuccessToast(
-                        siteSpecific(
-                            `Quiz${successfulIds.length > 1 ? "zes" : ""} saved`,
-                            `Test${successfulIds.length > 1 ? "s" : ""} saved`,
-                        ),
+                        `Test${successfulIds.length > 1 ? "s" : ""} saved`,
                         partialSuccessMessage
                     ));
                 }
@@ -180,7 +128,7 @@ export const assignMultipleQuiz = createAsyncThunk(
             return newQuizAssignments;
         } else {
             appDispatch(showRTKQueryErrorToastIfNeeded(
-                `${siteSpecific("Quiz", "Test")} assignment${groups.length > 1 ? "(s)" : ""} failed`,
+                `Test assignment${groups.length > 1 ? "(s)" : ""} failed`,
                 response
             ));
             return rejectWithValue(null);
@@ -245,6 +193,7 @@ export function useFilteredQuizzes(user: RegisteredUserDTO) {
             return; // Ugly but works...
         }
         setFilteredQuizzes(quizzes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [titleFilter, quizzes]);
 
     return {titleFilter, setTitleFilter, filteredQuizzes};

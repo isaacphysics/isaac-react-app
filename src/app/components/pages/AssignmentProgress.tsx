@@ -161,7 +161,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     return <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} header={tableHeader} getQuestionTitle={getQuestionTitle} 
     assignmentAverages={assignmentAverages} assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
-    isQuiz={false}/>;
+    isAssignment={true}/>;
 };
 
 const ProgressLoader = ({assignment}: {assignment: EnhancedAssignment}) => {
@@ -315,10 +315,20 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
         window.open(event.currentTarget.href, '_blank');
     }
 
+    const quizAssignmentHasNotStarted = quizAssignment.scheduledStartDate && quizAssignment.scheduledStartDate.valueOf() > Date.now();
+
     return isDefined(quizAssignment.id) && quizAssignment.id > 0 ? <div className="assignment-progress-gameboard" key={quizAssignment.id}>
-        <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
+        <div className={classNames("gameboard-header", {"text-muted": quizAssignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)}>
             <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
-                <span>{quizAssignment.quizSummary?.title || "This test has no title"}{isDefined(quizAssignment.dueDate) && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(quizAssignment.dueDate)})</span>}</span>
+                <span className={classNames({"text-muted": quizAssignmentHasNotStarted})}>
+                    {quizAssignment.quizSummary?.title || "This test has no title"}
+                    {quizAssignmentHasNotStarted && <span className="gameboard-due-date">
+                        (Scheduled:&nbsp;{formatDate(quizAssignment.scheduledStartDate)})
+                    </span>}
+                    {isDefined(quizAssignment.dueDate) && <span className="gameboard-due-date">
+                        (Due:&nbsp;{formatDate(quizAssignment.dueDate)})
+                    </span>}
+                </span>
             </Button>
             <div className="gameboard-links align-items-center">
                 <Button color="link" tag="a" className="mr-md-0">
@@ -429,9 +439,9 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 currentPageTitle={siteSpecific("Assignment Progress", "My markbook")}
                 subTitle={"Track your group performance" + (isPhy ? " by question" : "")}
                 help={pageHelp}
-                modalId="assignment_progress_help"
+                modalId="help_modal_assignment_progress"
             />
-            <PageFragment fragmentId={"markbook_help"} ifNotFound={RenderNothing} />
+            <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_help")} ifNotFound={RenderNothing} />
             <div className="w-100 text-right">
                 <InputGroup className="d-inline text-nowrap">
                     <Label className="pr-2 mt-1">Sort assignments and tests:</Label>

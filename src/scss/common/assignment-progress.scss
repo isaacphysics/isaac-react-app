@@ -294,6 +294,10 @@ $failed-bg-size: 25%;
   margin-right: 0.3rem;
 }
 
+.assignment-progress-table-wrapper {
+  overflow: auto hidden;
+}
+
 .assignment-progress-progress,
 .group-progress-summary {
   background: $gray-103;
@@ -461,7 +465,7 @@ $failed-bg-size: 25%;
       display: block;
     }
     .up {
-      padding-top: 10px;
+      padding-top: 4px;
     }
     .down {
       padding-bottom: 10px;

@@ -49,7 +49,7 @@ function isError(p: ParsingError | any[]): p is ParsingError {
 export const symbolicInputValidator = (input: string) => {
     const openBracketsCount = input.split('(').length - 1;
     const closeBracketsCount = input.split(')').length - 1;
-    const regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
+    const regexStr = "[^ 0-9A-Za-zΑ-ΡΣ-Ωα-ω()*+,-./<=>^_±²³¼½¾×÷=]+"; // not \Alpha-\Omega directly because there is a gap in the unicode range (U+03A2)
     const badCharacters = new RegExp(regexStr);
     const errors = [];
     if (/\\[a-zA-Z()]|[{}]/.test(input)) {
@@ -106,7 +106,11 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const updateState = (state: any) => {
         const newState = sanitiseInequalityState(state);
         const pythonExpression = newState?.result?.python || "";
-        dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
+        if (state.userInput !== "" || modalVisible) {
+            // Only call dispatch if the user has inputted text or is interacting with the modal
+            // Otherwise this causes the response to reset on reload removing the banner
+            dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
+        }
         initialEditorSymbols.current = state.symbols;
     };
 

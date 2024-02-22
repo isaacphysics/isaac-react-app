@@ -42,11 +42,11 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} modalId="my_assignments_help" />
-        <PageFragment fragmentId={`assignments_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
-        <Card className={siteSpecific("my-4", "my-assignments-card")}>
-            <CardBody className="pt-3">
-                <ShowLoadingQuery<AssignmentDTO[]>
+        <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} modalId="help_modal_my_assignments" />
+        <PageFragment fragmentId={`${siteSpecific("help_toptext_assignments", "assignments_help")}_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
+        <Card className={siteSpecific("my-5", "my-assignments-card")}>
+            <CardBody className={siteSpecific("pt-0", "pt-2")}>
+                <ShowLoadingQuery
                     query={assignmentQuery}
                     defaultErrorTitle={"Error fetching your assignments"}
                     thenRender={(assignments) => {

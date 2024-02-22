@@ -4,6 +4,7 @@
   .carousel-item {
     > div {
       display: flex;
+      min-height: 550px;
     }
   }
   .carousel-indicators {

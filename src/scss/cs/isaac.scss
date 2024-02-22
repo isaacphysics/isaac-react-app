@@ -13,6 +13,7 @@
 // Greyscale
 $cs-black: #000000;
 $cs-jet: #333333;
+$cs-muted: #4D575C;
 $cs-dark-silver: #B9B9B9;
 $cs-silver: #C2C2C2;
 $cs-light-gray: #D6D6D6;
@@ -57,6 +58,11 @@ $yellow-400: #FFF596;
 $yellow-500: #FFFAC3;
 $yellow-600: #FFFFE6;
 $yellow-700: #FFFFF5;
+
+$cs-perfect: #358539;
+$cs-in-progress: #FE8E15;
+$cs-failed: #C2423F;
+
 
 //Text Colour
 $highlight-text-light: $cs-white;
@@ -183,6 +189,10 @@ $theme-colors: ( // Special Bootstrap variable that is used to generate colour c
     "silver-grey" : $cs-silver,
     "light-grey" : $cs-light-gray,
     "cultured-grey" : $cs-cultured,
+
+    "perfect": $cs-perfect,
+    "in-progress": $cs-in-progress,
+    "failed": $cs-failed,
 );
 
 // Override Bootstrap warning alert text colour - it doesn't look like we can set it in the theme
@@ -199,10 +209,10 @@ $inequality-item-font-colour: $cs-white;
 
 // Assignment progress colours
 $default-name-fill: $cs-jet;
-$perfect-fill: #358539;
+$perfect-fill: $cs-perfect;
 $passed-fill: $cs-jet;
-$in-progress-fill: #FE8E15;
-$failed-fill: #C2423F;
+$in-progress-fill: $cs-in-progress;
+$failed-fill: $cs-failed;
 
 $spacer: 1rem !default;
 $spacers: ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
@@ -285,7 +295,6 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 // Utility
 @import "preload";
 @import "../common/mixins";
-@import "../common/animations";
 
 // Atoms
 @import "fonts";
@@ -299,6 +308,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "table";
 @import "tabs";
 @import "accordions";
+@import "../common/cookies";
 @import "cards";
 @import "list-groups";
 @import "inequality-modal";
@@ -312,6 +322,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "../common/reservation-modal";
 @import "../common/fasttrack";
 @import "../common/scroll";
+@import "../common/checkbox";
 @import "button";
 @import "logo";
 @import "featured-profile";
@@ -339,10 +350,10 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "../common/groups";
 @import "../common/events";
 @import "../common/glossary";
-@import "../common/quiz";
+@import "quiz";
 @import "../common/callout";
 
-@import "parsons-layout";
+@import "expansion-layout";
 
 // Print
 @import "../common/print";

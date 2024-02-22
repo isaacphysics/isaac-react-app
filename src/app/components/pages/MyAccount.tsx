@@ -1,8 +1,9 @@
-import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState, Suspense, lazy} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import classNames from "classnames";
 import {
+    Button,
     Card,
     CardFooter,
     Col,
@@ -18,10 +19,13 @@ import {
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {
+    AppDispatch,
     AppState,
+    closeActiveModal,
     errorSlice,
     ErrorState,
     getChosenUserAuthSettings,
+    openActiveModal,
     resetPassword,
     showErrorToast,
     updateCurrentUser,
@@ -33,11 +37,11 @@ import {
     DisplaySettings,
     PotentialUser,
     ProgrammingLanguage,
-    UserPreferencesDTO
+    UserPreferencesDTO,
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
-import {useEmailPreferenceState, UserEmailPreference} from "../elements/panels/UserEmailPreferences";
+import {UserEmailPreferencesPanel} from "../elements/panels/UserEmailPreferencesPanel";
 import {
     ACCOUNT_TAB,
     allRequiredInformationIsPresent,
@@ -46,24 +50,32 @@ import {
     isAda,
     isDefined,
     isDobOldEnoughForSite,
+    isPhy,
     isStaff,
     SITE_TITLE, siteSpecific,
     validateEmail,
     validateEmailPreferences,
-    validatePassword
+    validatePassword,
+    isTeacherOrAbove
 } from "../../services";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
 import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {Loading} from "../handlers/IsaacSpinner";
 import {UserBetaFeatures} from "../elements/panels/UserBetaFeatures";
 import hash, {NormalOption} from "object-hash";
 import {skipToken} from "@reduxjs/toolkit/query";
+import { Loading } from "../handlers/IsaacSpinner";
+import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesInput";
+import { UserProfile } from '../elements/panels/UserProfile';
+import { UserContent } from '../elements/panels/UserContent';
+import {ExigentAlert} from "../elements/ExigentAlert";
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
+// TODO: work out which of these `any`s can be specified
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
     const searchParams = queryString.parse(search);
@@ -71,11 +83,12 @@ const stateToProps = (state: AppState, props: any) => {
         error: state?.error ?? null,
         userAuthSettings: state?.userAuthSettings ?? null,
         userPreferences: state?.userPreferences ?? null,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
         hashAnchor: hash?.slice(1) ?? null,
         authToken: searchParams?.authToken as string ?? null,
         userOfInterest: searchParams?.userId as string ?? null
-    }
+    };
 };
 
 const dispatchToProps = {
@@ -107,6 +120,23 @@ function hashEqual<T>(current: NonNullable<T>, prev: NonNullable<T>, options?: N
     return equal;
 }
 
+const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
+    dispatch(openActiveModal({
+        closeAction: () => {
+            dispatch(closeActiveModal());
+        },
+        title: "Changing schools?",
+        body: <p className="px-1">
+            When you change schools, check your <strong><a target="_blank" href="/groups">groups</a></strong> and your <strong><a target="_blank" href="/account#teacherconnections">connections</a></strong>. Delete any groups that you will no longer teach and remove any connections with old colleagues and students.
+        </p>,
+        buttons: [
+            <Button key={1} color="primary" onClick={() => dispatch(closeActiveModal())}>
+                Continue
+            </Button>
+        ]
+    }));
+};
+
 const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthSettings, userPreferences, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
     const dispatch = useAppDispatch();
 
@@ -114,19 +144,21 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     // Memoising this derived field is necessary so that it can be used as a dependency to a useEffect later.
     // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
     const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
-        return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false}
+        return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false};
     }, [adminUserToEdit]);
 
     useEffect(() => {
         if (userOfInterest) {
             getChosenUserAuthSettings(Number(userOfInterest));
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userOfInterest]);
 
     // - Admin user modification
     const editingOtherUser = !!userOfInterest && user && user.loggedIn && user?.id?.toString() !== userOfInterest || false;
 
     // - Copy of user to store changes before saving
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [userToUpdate, setUserToUpdate] = useState<any>(
         editingOtherUser && userToEdit ?
             {...userToEdit, loggedIn: true, password: ""} :
@@ -149,11 +181,10 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
 
     // - Passwords
     const [newPassword, setNewPassword] = useState("");
-    const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
     const [currentPassword, setCurrentPassword] = useState("");
 
     // - User preferences
-    const [emailPreferences, setEmailPreferences] = useEmailPreferenceState();
+    const [emailPreferences, setEmailPreferences] = useEmailPreferenceState(userPreferences?.EMAIL_PREFERENCE);
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO | null | undefined>({});
     const emailPreferencesChanged = useMemo(() => !hashEqual(userPreferences?.EMAIL_PREFERENCE ?? {}, emailPreferences ?? myUserPreferences?.EMAIL_PREFERENCE ?? {}), [emailPreferences, myUserPreferences, userPreferences]);
     const otherPreferencesChanged = useMemo(() => !hashEqual(userPreferences ?? {}, myUserPreferences ?? {}, {excludeKeys: k => k === "EMAIL_PREFERENCE"}), [myUserPreferences, userPreferences]);
@@ -171,6 +202,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     useEffect(() => {
         setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
         setMyUserPreferences(userPreferences);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userPreferences]);
 
     // Set active tab using hash anchor
@@ -179,13 +211,15 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
         // @ts-ignore
         const tab: ACCOUNT_TAB =
             (authToken && ACCOUNT_TAB.teacherconnections) ||
+            // This feel particularly bad
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
             ACCOUNT_TAB.account;
         setActiveTab(tab);
     }, [hashAnchor, authToken]);
 
     // Values derived from inputs (props and state)
-    const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
+    const isNewPasswordValid = validatePassword(newPassword);
 
     function setProgrammingLanguage(newProgrammingLanguage: ProgrammingLanguage) {
         setMyUserPreferences({...myUserPreferences, PROGRAMMING_LANGUAGE: newProgrammingLanguage});
@@ -211,6 +245,16 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
         }
     }, [accountInfoChanged, saving]);
 
+    // Handling teachers changing school
+    useEffect(() => {
+        const originalSchool: string | undefined = "schoolId" in user ? user.schoolId : undefined; 
+        const newSchool: string | undefined = userToUpdate.schoolId;
+        if (isTeacherOrAbove(user) && !isStaff(user) && newSchool && (!originalSchool || originalSchool !== newSchool)) {
+            dispatch(showChangeSchoolModal());
+        }
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [userToUpdate, user]);
+
     // Form's submission method
     function updateAccount(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -232,7 +276,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
             validateEmail(userToUpdate.email) &&
             allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
             (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
-            (!userToUpdate.password || isNewPasswordConfirmed))
+            (!userToUpdate.password || isNewPasswordValid))
         {
             dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(
@@ -254,6 +298,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     // email preferences tab
     useEffect(() => {
         setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab]);
 
     return <Container id="account-page" className="mb-5">
@@ -269,21 +314,28 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <Card>
                     <Nav tabs className={classNames("my-4 flex-wrap", {"mx-4": isAda})}>
-                        <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.account})}>
+                    <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.account})}>
                             <NavLink
                                 className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.account)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.account))}
                             >
-                                Profile
+                                {siteSpecific("Profile", "Details")}
                             </NavLink>
                         </NavItem>
+                        {isAda && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.customise})}>
+                            <NavLink
+                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
+                                onClick={() => setActiveTab(ACCOUNT_TAB.customise)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.customise))}
+                            >
+                                Customise
+                            </NavLink>
+                        </NavItem>}
                         <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}>
                             <NavLink
                                 className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                             >
-                                <span className="d-none d-xl-block">Account security</span>
-                                <span className="d-block d-xl-none">Security</span>
+                                <span className="d-block">Security</span>
                             </NavLink>
                         </NavItem>
                         <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}>
@@ -302,8 +354,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                 className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.emailpreferences))}
                             >
-                                <span className="d-none d-lg-block">Email preferences</span>
-                                <span className="d-block d-lg-none">Emails</span>
+                                <span className="d-block">Notifications</span>
                             </NavLink>
                         </NavItem>}
                         {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.betafeatures})}>
@@ -311,16 +362,32 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                 className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.betafeatures)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.betafeatures))}
                             >
-                                <span className="d-none d-lg-block">Beta features</span>
-                                <span className="d-block d-lg-none">Other</span>
+                                <span className="d-block">Beta</span>
                             </NavLink>
                         </NavItem>}
                     </Nav>
 
                     <Form name="my-account" onSubmit={updateAccount}>
+                        {error?.type == "generalError" &&
+                                <ExigentAlert color="warning">
+                                    <p className="alert-heading font-weight-bold">Unable to update your account</p>
+                                    <p>{error.generalError}</p>
+                                </ExigentAlert>
+                        }
                         <TabContent activeTab={activeTab}>
                             <TabPane tabId={ACCOUNT_TAB.account}>
-                                <UserDetails
+                                <UserProfile
+                                    userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                                    userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                                    booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
+                                    displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
+                                    submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                                    userAuthSettings={userAuthSettings}
+                                />
+                            </TabPane>
+
+                            {isAda && <TabPane tabId={ACCOUNT_TAB.customise}>
+                                <UserContent
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
                                     programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
@@ -329,26 +396,16 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />
-                            </TabPane>
+                            </TabPane>}
 
                             <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                 <UserPassword
                                     currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
                                     myUser={userToUpdate} setMyUser={setUserToUpdate}
                                     setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
-                                    isNewPasswordConfirmed={isNewPasswordConfirmed} newPasswordConfirm={newPasswordConfirm}
-                                    setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
+                                    newPassword={newPassword} setNewPassword={setNewPassword} editingOtherUser={editingOtherUser}
+                                    isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
                                 />
-                                {isStaff(user) && !editingOtherUser &&
-                                    // Currently staff only
-                                    <Suspense fallback={<Loading/>}>
-                                        <UserMFA
-                                            userAuthSettings={userAuthSettings}
-                                            userToUpdate={userToUpdate}
-                                            editingOtherUser={editingOtherUser}
-                                        />
-                                    </Suspense>
-                                }
                             </TabPane>
 
                             <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
@@ -357,7 +414,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                             </TabPane>
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
-                                <UserEmailPreference
+                                <UserEmailPreferencesPanel
                                     emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
                                     submissionAttempted={attemptedAccountUpdate}
                                 />
@@ -371,26 +428,33 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                         <CardFooter className="py-4">
                             <Row>
                                 <Col size={12} md={{size: 6, offset: 3}}>
-                                    {error?.type === "generalError" && <h3 role="alert" className="text-danger text-center">
-                                        {error.generalError}
-                                    </h3>}
                                     {/* Teacher connections does not have a save */}
                                     <Input
-                                        type="submit" value="Save" className="btn btn-block btn-secondary border-0"
+                                        type="submit" value="Save" className="btn btn-secondary border-0"
                                         disabled={!accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections}
                                     />
                                 </Col>
                             </Row>
                         </CardFooter>
                     </Form>
+                    {activeTab === ACCOUNT_TAB.passwordreset && isStaff(userToUpdate) && !editingOtherUser &&
+                        // Currently staff only. This is outside the main Form as they cannot be nested.
+                        <Suspense fallback={<Loading/>}>
+                            <UserMFA
+                                userAuthSettings={userAuthSettings}
+                                userToUpdate={userToUpdate}
+                                editingOtherUser={editingOtherUser}
+                            />
+                        </Suspense>
+                    }
                 </Card>
             }
         </ShowLoading>
-        <Row className="text-muted text-center mt-3">
+        {isPhy && <Row className="text-muted text-center mt-3">
             <Col>
                 If you would like to delete your account please <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a>.
             </Col>
-        </Row>
+        </Row>}
     </Container>;
 };
 

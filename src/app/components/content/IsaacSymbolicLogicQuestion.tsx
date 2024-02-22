@@ -51,7 +51,7 @@ function isError(p: ParsingError | any[]): p is ParsingError {
 export const symbolicLogicInputValidator = (input: string) => {
     const openBracketsCount = input.split('(').length - 1;
     const closeBracketsCount = input.split(')').length - 1;
-    const regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+";
+    const regexStr = "[^ A-Za-z&|01()~¬∧∨^⊻+.!=]+";
     const badCharacters = new RegExp(regexStr);
 
     const errors = [];

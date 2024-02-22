@@ -33,7 +33,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         return function() {
             document.body.style.overflow = "initial";
             window.scrollTo(0, previousYPosition);
-        }
+        };
     }(window.scrollY), [modalVisible]); // Capture y position whenever modalVisible changes.
 
     function closeModal() {
@@ -57,7 +57,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     }, []);
 
     useEffect(function setupPreviewSketch() {
-        const { sketch, p } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialState?.curves });
+        const { sketch, p } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialState?.curves, axisLabelX: doc.axisLabelX, axisLabelY: doc.axisLabelY });
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
             setPreviewSketch(sketch);

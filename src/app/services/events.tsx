@@ -112,7 +112,7 @@ export const formatBookingModalConfirmMessage = (event: AugmentedEvent, userCanM
 
 export const stageExistsForSite = (stage: string) => {
     const stagesForSite = siteSpecific(STAGES_PHY, STAGES_CS);
-    return stagesForSite.has(stage as STAGE);
+    return stagesForSite.includes(stage as any);
 }
 
 export const userSatisfiesStudentOnlyRestrictionForEvent = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {

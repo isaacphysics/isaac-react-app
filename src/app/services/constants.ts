@@ -4,6 +4,7 @@ import {Remarkable} from "remarkable";
 import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {
+    AuthenticationProvider,
     BookingStatus,
     ContentDTO,
     Difficulty,
@@ -60,11 +61,6 @@ export const EDITOR_ORIGIN = siteSpecific(
 export const EDITOR_URL = EDITOR_ORIGIN + "/edit/master/";
 export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/compare";
 
-export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
-    envSpecific("G-MM4SM6FNCF", "G-VXBDM5GDNG", "G-5VLS1Q1FCZ", "G-2YDE0QV3TK"),
-    envSpecific("G-HQ3BM12YB3", "G-EQPHX0WKJ7", "G-W7YJPSQTKP", "G-1Q8QGL0D5J"),
-);
-
 export const { trackPageview, trackEvent } = Plausible(
     {
         apiHost: siteSpecific("https://plausible.isaacphysics.org", "https://plausible.adacomputerscience.org"),
@@ -74,12 +70,12 @@ export const { trackPageview, trackEvent } = Plausible(
 export const SOCIAL_LINKS = siteSpecific(
     {
         youtube: {name: "YouTube", href: "https://www.youtube.com/user/isaacphysics"},
-        twitter: {name: "Twitter", href: "https://twitter.com/isaacphysics"},
+        twitter: {name: "X (Twitter)", href: "https://twitter.com/isaacphysics"},
         facebook: {name: "Facebook", href: "https://www.facebook.com/isaacphysicsUK"},
     },
     {
         facebook: {name: "Facebook", href: "https://www.facebook.com/RaspberryPiFoundation"},
-        twitter: {name: "Twitter", href: "https://twitter.com/RaspberryPi_org"},
+        twitter: {name: "X (Twitter)", href: "https://twitter.com/RaspberryPi_org"},
         instagram: {name: "Instagram", href: "https://www.instagram.com/raspberrypifoundation"},
         youtube: {name: "YouTube", href: "https://www.youtube.com/c/RaspberryPiFoundation"}
     }
@@ -276,6 +272,36 @@ export const programmingLanguagesMap: {[language: string]: string} = {
     [PROGRAMMING_LANGUAGE.VBA]: "Visual Basic",
 };
 
+// STAGES
+export enum STAGE {
+    YEAR_7_AND_8 = "year_7_and_8",
+    YEAR_9 = "year_9",
+    GCSE = "gcse",
+    A_LEVEL = "a_level",
+    FURTHER_A = "further_a",
+    UNIVERSITY = "university",
+    SCOTLAND_NATIONAL_5 = "scotland_national_5",
+    SCOTLAND_HIGHER = "scotland_higher",
+    SCOTLAND_ADVANCED_HIGHER = "scotland_advanced_higher",
+    ALL = "all",
+}
+export const STAGE_NULL_OPTIONS = [STAGE.ALL];
+export const STAGES_PHY = [STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY] as const;
+export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER] as const;
+export const stagesOrdered: Stage[] = ["year_7_and_8", "year_9", "gcse", "a_level", "further_a", "university", "scotland_national_5", "scotland_higher", "scotland_advanced_higher", "all"];
+export const stageLabelMap: {[stage in Stage]: string} = {
+    year_7_and_8: "Year\u00A07&8",
+    year_9: "Year\u00A09",
+    gcse: "GCSE",
+    a_level: "A\u00A0Level",
+    further_a: "Further\u00A0A",
+    university: "University",
+    scotland_national_5: "National 5",
+    scotland_higher: "Higher",
+    scotland_advanced_higher: "Adv. Higher",
+    all: "All stages",
+};
+
 // EXAM BOARDS
 export enum EXAM_BOARD {
     AQA = "aqa",
@@ -284,6 +310,7 @@ export enum EXAM_BOARD {
     EDUQAS = "eduqas",
     OCR = "ocr",
     WJEC = "wjec",
+    SQA = "sqa",
     ALL = "all",
 }
 export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
@@ -293,11 +320,19 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.EDUQAS]: "EDUQAS",
     [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
+    [EXAM_BOARD.SQA]: "SQA",
     [EXAM_BOARD.ALL]: "All exam boards",
 };
-export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.ALL]);
-export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
-export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.OCR, EXAM_BOARD.WJEC]);
+
+export const CS_EXAM_BOARDS_BY_STAGE: {[stage in typeof STAGES_CS[number]]: ExamBoard[]} = {
+    gcse: [EXAM_BOARD.AQA, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.OCR, EXAM_BOARD.WJEC],
+    a_level: [EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC],
+    scotland_national_5: [EXAM_BOARD.SQA],
+    scotland_higher: [EXAM_BOARD.SQA],
+    scotland_advanced_higher: [EXAM_BOARD.SQA],
+};
+
+export const EXAM_BOARD_NULL_OPTIONS = [EXAM_BOARD.ALL];
 
 export const EXAM_BOARD_ITEM_OPTIONS = Object.keys(EXAM_BOARD).map(s => ({value: s, label: examBoardLabelMap[s as EXAM_BOARD]}));
 
@@ -316,31 +351,12 @@ export const examBoardBooleanNotationMap: {[examBoard in ExamBoard]: BOOLEAN_NOT
     [EXAM_BOARD.OCR]: BOOLEAN_NOTATION.MATH,
     [EXAM_BOARD.EDEXCEL]: BOOLEAN_NOTATION.MATH,
     [EXAM_BOARD.CIE]: BOOLEAN_NOTATION.ENG,
+    [EXAM_BOARD.SQA]: BOOLEAN_NOTATION.MATH,
     [EXAM_BOARD.ALL]: BOOLEAN_NOTATION.MATH,
 };
-
-// STAGES
-export enum STAGE {
-    YEAR_7_AND_8 = "year_7_and_8",
-    YEAR_9 = "year_9",
-    GCSE = "gcse",
-    A_LEVEL = "a_level",
-    FURTHER_A = "further_a",
-    UNIVERSITY = "university",
-    ALL = "all",
-}
-export const STAGE_NULL_OPTIONS = new Set([STAGE.ALL]);
-export const STAGES_PHY = new Set([STAGE.ALL, STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY]);
-export const STAGES_CS = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL]);
-export const stagesOrdered: Stage[] = ["year_7_and_8", "year_9", "gcse", "a_level", "further_a", "university", "all"];
-export const stageLabelMap: {[stage in Stage]: string} = {
-    year_7_and_8: "Year\u00A07&8",
-    year_9: "Year\u00A09",
-    gcse: "GCSE",
-    a_level: "A\u00A0Level",
-    further_a: "Further\u00A0A",
-    university: "University",
-    all: "All stages",
+export const booleanNotationMap: {[notation: string]: string} = {
+    [BOOLEAN_NOTATION.MATH]: "And (∧) Or (∨) Not (¬)",
+    [BOOLEAN_NOTATION.ENG]: "And (·) Or (+) Not (bar)",
 };
 
 // DIFFICULTIES
@@ -416,7 +432,7 @@ export enum TAG_ID {
     computerScience = "computer_science",
 
     // Strands
-    artificialIntelligence = "artificial_intelligence",
+    aiAndMachineLearning = "ai_and_machine_learning",
     dataStructuresAndAlgorithms = "data_structures_and_algorithms",
     computerSystems = "computer_systems",
     creatingMedia = "creating_media",
@@ -429,7 +445,9 @@ export enum TAG_ID {
     cyberSecurity = "cyber_security",
     theoryOfComputation = "theory_of_computation",
 
-    // Artificial intelligence topics
+    // AI and machine learning topics
+    artificialIntelligence = "artificial_intelligence",
+    machineLearning = "machine_learning",
 
     // Algorithms and data structures topics
     complexity = "complexity",
@@ -688,6 +706,11 @@ export enum TAG_ID {
     biotechnology = "biotechnology",
     // Physiology
     plants = "plants",
+    breathingAndCirculation = "breathing_circulation",
+    hormones = "hormones",
+    digestionAndExcretion = "digestion_excretion",
+    senseAndMovement = "sense_movement",
+    diseaseAndImmunity = "disease_immunity",
     // Ecology
     populations = "populations",
     ecosystems = "ecosystems",
@@ -747,7 +770,7 @@ export enum MEMBERSHIP_STATUS {
     INACTIVE = "INACTIVE",
 }
 
-export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
+export enum ACCOUNT_TAB {account, customise, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
 export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
 export enum MARKBOOK_TYPE_TAB {assignments = 1, tests = 2}
@@ -951,4 +974,20 @@ export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "TEST": "Test",
     "SEGUE": "your email address and password"
 };
+
+export const AUTHENTICATOR_PROVIDERS : AuthenticationProvider[] = siteSpecific(["GOOGLE"], ["RASPBERRYPI", "GOOGLE"]);
+
 export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023
+
+export const EMAIL_PREFERENCE_DEFAULTS = siteSpecific(
+    {
+        ASSIGNMENTS: true,
+        NEWS_AND_UPDATES: undefined,
+        EVENTS: undefined
+    },
+    {
+        ASSIGNMENTS: true,
+        NEWS_AND_UPDATES: false,
+        EVENTS: false
+    }
+);

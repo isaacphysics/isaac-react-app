@@ -21,7 +21,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react",
-    "sourceMap": true
+    "sourceMap": true,
+    "types": ["jest", "@testing-library/jest-dom"]
   },
   "include": [
     "src"

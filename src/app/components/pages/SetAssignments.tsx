@@ -57,9 +57,9 @@ import {
     PATHS,
     selectOnChange,
     siteSpecific,
-    sortIcon,
     useDeviceSize,
-    useGameboards
+    useGameboards,
+    TODAY
 } from "../../services";
 import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
@@ -70,6 +70,7 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { Spacer } from "../elements/Spacer";
+import { SortItemHeader } from "../elements/SortableItemHeader";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -97,7 +98,8 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
     }
 
     const yearRange = range(currentYear, currentYear + 5);
-    const dueDateInvalid = dueDate && scheduledStartDate ? nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf() : false;
+    const dueDateInvalid = dueDate && scheduledStartDate ? (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf() || TODAY().valueOf() > dueDate.valueOf()) : false;
+    const startDateInvalid = scheduledStartDate ? TODAY().valueOf() > scheduledStartDate.valueOf() : false;
 
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
         const utcDate = e.target.valueAsDate;
@@ -122,11 +124,13 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
         <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
                        onChange={setScheduledStartDateAtSevenAM} />
+            {startDateInvalid && <small className={"pt-2 text-danger"}>Start date must be in the future.</small>}
         </Label>
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
-            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
+            {dueDateInvalid && startDateInvalid && <br/>}
         </Label>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
@@ -145,7 +149,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
             block color={siteSpecific("secondary", "primary")}
             onClick={assign}
             role={"button"}
-            disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
+            disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || dueDateInvalid || startDateInvalid}
         >Assign to group{selectedGroups.length > 1 ? "s" : ""}</Button>
     </Container>;
 };
@@ -257,6 +261,26 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         boardOrder, setBoardOrder,
         groupsByGameboard, openAssignModal
     } = props;
+
+    const tableHeader = <tr className="my-gameboard-table-header">
+        <th className="text-center align-middle"><span className="pl-2 pr-2">Groups</span></th>
+        <SortItemHeader itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            Board name
+        </SortItemHeader>
+        <th colSpan={2} className="text-center align-middle">
+            Stages and Difficulties
+            <span id="difficulties-help" className="icon-help mx-1"></span>
+            <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+                Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
+            </RS.UncontrolledTooltip>
+        </th>
+        <SortItemHeader itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            Last viewed
+        </SortItemHeader>
+        <th className="text-center align-middle">Manage</th>
+    </tr>;
+
     return <Card className="mt-2 mb-5">
         <CardBody id="boards-table">
             <Row>
@@ -290,29 +314,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
             <div className="overflow-auto mt-3">
                 <Table className="mb-0">
                     <thead>
-                    <tr>
-                        <th className="text-center align-middle"><span
-                            className="pl-2 pr-2">Groups</span></th>
-                        <th className="align-middle pointer-cursor">
-                            <button className="table-button"
-                                    onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
-                                Board
-                                name&nbsp;{boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
-                            </button>
-                        </th>
-                        <th className="text-center align-middle">Stages</th>
-                        <th className="text-center align-middle">Difficulties</th>
-                        <th className="text-center align-middle">Creator</th>
-                        <th className="text-center align-middle pointer-cursor">
-                            <button className="table-button"
-                                    onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
-                                Last
-                                viewed&nbsp;{boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
-                            </button>
-                        </th>
-                        <th className="text-center align-middle">Assignments</th>
-                        <th className="text-center align-middle">Share</th>
-                    </tr>
+                        {tableHeader}
                     </thead>
                     <tbody>
                     {boards?.boards
@@ -344,6 +346,28 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         boardOrder, setBoardOrder,
         groupsByGameboard, openAssignModal
     } = props;
+
+    const tableHeader = <tr className="my-gameboard-table-header">
+        <th>Groups</th>
+        <SortItemHeader colSpan={2} itemOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            Quiz name
+        </SortItemHeader>
+        <th colSpan={2} className="long-titled-col">
+            Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
+            <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+                Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
+            </RS.UncontrolledTooltip>
+        </th>
+        <th>Creator</th>
+        <SortItemHeader itemOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} boardOrder={boardOrder} setBoardOrder={setBoardOrder}>
+            Last viewed
+        </SortItemHeader>
+        <th>Manage</th>
+        <th>Share</th>
+        <th>Delete</th>
+    </tr>;
+
     return <div className={"mb-5 mb-md-6 mt-4"}>
         <Row>
             <Col xs={6} md={4} lg={3} xl={3}>
@@ -368,30 +392,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         </Row>
         <Table className="mt-3 my-gameboard-table" responsive>
             <thead>
-            <tr>
-                <th>Groups</th>
-                <th colSpan={2} className="w-100">
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
-                        Quiz name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
-                <th colSpan={2} className="long-titled-col">
-                    Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
-                    <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                        Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
-                        Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
-                    </RS.UncontrolledTooltip>
-                </th>
-                <th>Creator</th>
-                <th>
-                    <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
-                        Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
-                    </button>
-                </th>
-                <th>Manage</th>
-                <th>Share</th>
-                <th>Delete</th>
-            </tr>
+                {tableHeader}
             </thead>
             <tbody>
             {boards?.boards
@@ -525,8 +526,8 @@ export const SetAssignments = () => {
             assignees={(isDefined(modalBoard) && isDefined(modalBoard?.id) && groupsByGameboard[modalBoard.id]) || []}
         />
 
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} help={pageHelp} modalId="set_assignments_help"/>
-        <PageFragment fragmentId={`set_${siteSpecific("gameboards", "quizzes")}_help`} ifNotFound={RenderNothing} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} help={pageHelp} modalId="help_modal_set_assignments"/>
+        <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
         {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
         {groups && groups.length === 0 && <Alert color="warning">
             You have not created any groups to assign work to.
