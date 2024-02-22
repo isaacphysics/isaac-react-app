@@ -139,6 +139,7 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
                     Check your <strong><a target="_blank" href="/account#teacherconnections">connections</a></strong>. Remove any connections with old colleagues and students.
                 </li>
             </ol>
+            <p><strong>This information can be found in the <a target="_blank" href="/support/teacher/general#moving_school">Teacher FAQ</a> for future reference.</strong></p>
         </>,
         buttons: [
             <Button key={1} color="primary" onClick={() => dispatch(closeActiveModal())}>
