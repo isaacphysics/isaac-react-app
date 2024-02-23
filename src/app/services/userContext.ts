@@ -437,6 +437,12 @@ export function audienceStyle(audienceString: string): string {
             return "stage-label-alevel";
         case stageLabelMap.gcse:
             return "stage-label-gcse";
+        case stageLabelMap.scotland_national_5:
+            return "stage-label-national-5";
+        case stageLabelMap.scotland_higher:
+            return "stage-label-higher";
+        case stageLabelMap.scotland_advanced_higher:
+            return "stage-label-advanced-higher";
         default:
             return "stage-label-all";
     }

@@ -1,6 +1,6 @@
 @import "../common/accordions";
 
-.stage-label-gcse, .stage-label-alevel, .stage-label-all {
+.stage-label-gcse, .stage-label-alevel, .stage-label-national-5, .stage-label-higher, .stage-label-advanced-higher, .stage-label-all {
   color: black;
   font-weight: 600;
   text-wrap: none;
@@ -15,6 +15,18 @@
 
 .stage-label-alevel {
   background-color: $a-level-colour;
+}
+
+.stage-label-national-5 {
+  background-color: $national-5-colour;
+}
+
+.stage-label-higher {
+  background-color: $higher-colour;
+}
+
+.stage-label-advanced-higher {
+  background-color: $adv-higher-colour;
 }
 
 .stage-label-all {
@@ -39,7 +51,7 @@
   background: $cs-white;
   border-top: 1px solid $cs-cultured;
 
-  margin-top: 4px;
+  margin-top: 2px;
   &:first-of-type {
     margin-top: 0;
   }
