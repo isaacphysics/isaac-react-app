@@ -170,7 +170,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             >
                 {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center " +
                     "justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
-                    {audienceString}
+                    {audienceString.split("\n").map((line, i, arr) => <>{line}{i < arr.length && <br/>}</>)}
                 </span>}
                 <div className="accordion-title pl-3">
                     <RS.Row>
