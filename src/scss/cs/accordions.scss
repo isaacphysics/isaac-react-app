@@ -39,6 +39,11 @@
   background: $cs-white;
   border-top: 1px solid $cs-cultured;
 
+  margin-top: 4px;
+  &:first-of-type {
+    margin-top: 0;
+  }
+
   .content-value {
     h3 {
       border-bottom: 2px solid #00000010;
