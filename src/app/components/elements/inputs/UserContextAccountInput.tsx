@@ -12,7 +12,8 @@ import {
     isTutorOrAbove,
     siteSpecific,
     STAGE,
-    TEACHER_REQUEST_ROUTE
+    TEACHER_REQUEST_ROUTE,
+    validateUserContexts
 } from "../../../services";
 import {Button, Col, CustomInput, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
 import {UserContext} from "../../../../IsaacApiTypes";
@@ -92,7 +93,7 @@ function UserContextRow({
             {isAda && <StyledDropdown
                 className="account-dropdown ml-1"
                 aria-label="Exam Board"
-                invalid={required && submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
+                invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
                 onChange={onExamBoardUpdate}
                 value={userContext.examBoard}
             >
@@ -115,7 +116,7 @@ function UserContextRow({
                 </button>}
             </div>
 
-            {!isAda && showPlusOption && <Label className="m-0 mt-1">
+            {!isAda && showPlusOption && validateUserContexts(userContexts) && <Label className="m-0 mt-1">
                 <button
                     type="button" aria-label="Add stage"
                     className={`ml-3 align-middle close float-none pointer-cursor`}
@@ -191,7 +192,9 @@ export function UserContextAccountInput({
                     {isAda && index === userContexts.length - 1 && <>
                         {tutorOrAbove &&
                             <Col lg={6} className="p-0 pr-4 pr-lg-0">
-                                <Button color="primary" outline className="mt-3 mb-2 px-2 w-100" onClick={() => setUserContexts([...userContexts, {}])}>
+                                <Button color="primary" outline className="mt-3 mb-2 px-2 w-100"
+                                        onClick={() => setUserContexts([...userContexts, {}])}
+                                        disabled={!validateUserContexts(userContexts)}>
                                     Add more content
                                 </Button>
                             </Col>}
