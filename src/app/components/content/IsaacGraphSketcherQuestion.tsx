@@ -57,7 +57,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     }, []);
 
     useEffect(function setupPreviewSketch() {
-        const { sketch, p } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialState?.curves, axisLabelX: doc.axisLabelX, axisLabelY: doc.axisLabelY });
+        const { sketch, p } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialState?.curves, axisLabelX: doc.axisLabelX, axisLabelY: doc.axisLabelY, maxNumCurves: doc.maxNumCurves });
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
             setPreviewSketch(sketch);
