@@ -91,7 +91,7 @@ function renderQuestionsCS(audienceQuestions: ContentSummaryDTO[], remainingQues
                         {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                     <ListGroup className="w-50">
-                        <h4 className="related-question-header">Beyond your specification:</h4>
+                        <h4 className="related-question-header">Outside your specification:</h4>
                         {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                 </div>
@@ -101,7 +101,7 @@ function renderQuestionsCS(audienceQuestions: ContentSummaryDTO[], remainingQues
                         {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                 </div>
-                <h4 className="d-lg-none related-question-header mt-4">Beyond your specification:</h4>
+                <h4 className="d-lg-none related-question-header mt-4">Outside your specification:</h4>
                 <div className="d-lg-none text-left">
                     <ListGroup>
                         {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
