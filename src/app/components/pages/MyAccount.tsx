@@ -128,7 +128,7 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
         title: "Changing schools?",
         body: <>
             <p className="px-1">
-                If you change schools we recommend you take the following steps:
+                If you are changing schools, we recommend you take the following steps:
             </p>
             <ol type='1'>
                 <li>
