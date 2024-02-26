@@ -65,7 +65,7 @@ function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentD
 }
 
 function getURLForContent(content: ContentSummaryDTO) {
-    return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`
+    return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`;
 }
 
 function renderQuestionsCS(audienceQuestions: ContentSummaryDTO[], remainingQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
@@ -76,7 +76,7 @@ function renderQuestionsCS(audienceQuestions: ContentSummaryDTO[], remainingQues
             <div className="flex-fill simple-card my-3 p-3 text-wrap">
                 <Row className="related-questions related-title">
                     <Col xs={12} sm={"auto"}>
-                        <img className={"related-q-icon mt-n2 ml-2 mr-3"} src={"/assets/cs/icons/question-not-started.svg"}/>
+                        <img className={"related-q-icon mt-n2 ml-2 mr-3"} src={"/assets/cs/icons/question-not-started.svg"} alt=""/>
                         <h3 className="d-inline-block mt-2">Related questions</h3>
                     </Col>
                     {showConceptGameboardButton && <Col xs={12} sm={"auto"} className={"ml-md-auto mt-2 mt-md-0 vertical-center justify-content-start"}>
@@ -109,7 +109,7 @@ function renderQuestionsCS(audienceQuestions: ContentSummaryDTO[], remainingQues
                 </div>
             </div>
         </div>
-    </div>
+    </div>;
 }
 
 function renderConceptsAndQuestionsPhy(concepts: ContentSummaryDTO[], questions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
@@ -150,7 +150,7 @@ function renderConceptsAndQuestionsPhy(concepts: ContentSummaryDTO[], questions:
                 </div>
             </div>
         </div>
-    </div>
+    </div>;
 }
 
 export function RelatedContent({content, parentPage, conceptId = ""}: RelatedContentProps) {
@@ -186,7 +186,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
                 className={classNames({"btn-link btn text-left": isAda})}
                 to={getURLForContent(contentSummary)}
                 onClick={() => {
-                    dispatch(logAction(getEventDetails(contentSummary, parentPage)))
+                    dispatch(logAction(getEventDetails(contentSummary, parentPage)));
                 }}
             >
                 <span className={classNames({"font-size-1 font-weight-regular": isAda})}>
@@ -195,16 +195,16 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
                         {audienceViews.length > 0 && " ("}
                         {audienceViews.map(av => {
                             let result = "";
-                            if (av.stage) {result += stageLabelMap[av.stage]}
-                            if (av.stage && av.difficulty) {result += " - "}
-                            if (av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
+                            if (av.stage) { result += stageLabelMap[av.stage]; }
+                            if (av.stage && av.difficulty) { result += " - "; }
+                            if (av.difficulty) { result += difficultyShortLabelMap[av.difficulty]; }
                             return result;
                         }).join(", ")}
                         {audienceViews.length > 0 && ")"}
                     </React.Fragment>}
                 </span>
             </Link>
-        </ListGroupItem>
+        </ListGroupItem>;
     };
 
     return siteSpecific(

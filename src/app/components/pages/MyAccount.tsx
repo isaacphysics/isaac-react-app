@@ -71,6 +71,7 @@ import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesIn
 import { UserProfile } from '../elements/panels/UserProfile';
 import { UserContent } from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
+import { supportsGoWithoutReloadUsingHash } from 'history/DOMUtils';
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
