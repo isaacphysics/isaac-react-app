@@ -276,15 +276,18 @@ export type Action =
   | { type: ACTION_TYPE.EVENT_RESPONSE_SUCCESS; augmentedEvent: AugmentedEvent }
   | { type: ACTION_TYPE.EVENT_RESPONSE_FAILURE }
   | { type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST }
-  | { type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS; eventBookings: ApiTypes.EventBookingDTO[] }
+  | { type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS; eventBookings: ApiTypes.DetailedEventBookingDTO[] }
   | { type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_FAILURE }
   | { type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_REQUEST }
-  | { type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS; eventBookingsForGroup: ApiTypes.EventBookingDTO[] }
+  | {
+      type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_SUCCESS;
+      eventBookingsForGroup: ApiTypes.DetailedEventBookingDTO[];
+    }
   | { type: ACTION_TYPE.EVENT_BOOKINGS_FOR_GROUP_RESPONSE_FAILURE }
   | { type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_REQUEST }
   | {
       type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_SUCCESS;
-      eventBookingsForAllGroups: ApiTypes.EventBookingDTO[];
+      eventBookingsForAllGroups: ApiTypes.DetailedEventBookingDTO[];
     }
   | { type: ACTION_TYPE.EVENT_BOOKINGS_FOR_ALL_GROUPS_RESPONSE_FAILURE }
   | { type: ACTION_TYPE.EVENT_BOOKING_CSV_REQUEST }

@@ -1,5 +1,5 @@
-import { USER_ROLES, UserRole } from "../../IsaacApiTypes";
 import {
+  USER_ROLES,
   UserRoleAndLoggedInStatus,
   extractTeacherName,
   isAdmin,
@@ -18,6 +18,7 @@ import {
   roleRequirements,
   schoolNameWithPostcode,
 } from "../../app/services/";
+import { Role } from "../../IsaacApiTypes";
 import { School } from "../../IsaacAppTypes";
 import { mockUser } from "../../mocks/data";
 
@@ -40,9 +41,9 @@ const generateTestCases = (userCheck: (user?: UserRoleAndLoggedInStatus | null) 
   };
 
   const generateTestCase = (
-    role: UserRole,
+    role: Role,
   ): {
-    role: UserRole | undefined | null;
+    role: Role | undefined | null;
     value: UserRoleAndLoggedInStatus | undefined | null;
     expected: boolean;
   } => {
@@ -162,7 +163,7 @@ describe("User Checks", () => {
   });
 
   it("should return false for undefined user", () => {
-    const result = isLoggedIn(undefined);
+    const result = isLoggedIn();
     expect(result).toBe(false);
   });
 });
@@ -184,7 +185,7 @@ describe("isTeacherPending function", () => {
   });
 
   it("should return false for undefined user", () => {
-    const result = isTeacherPending(undefined);
+    const result = isTeacherPending();
     expect(result).toBe(false);
   });
 });

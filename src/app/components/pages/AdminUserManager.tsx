@@ -36,7 +36,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../state";
-import { EmailVerificationStatus, UserRole } from "../../../IsaacApiTypes";
+import { EmailVerificationStatus, Role } from "../../../IsaacApiTypes";
 import { DateString } from "../elements/DateString";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { ADMIN_CRUMB, isAdmin, isDefined } from "../../services";
@@ -47,7 +47,7 @@ const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVE
 interface SearchQuery {
   familyName: string | null;
   email: string | null;
-  role: UserRole | null;
+  role: Role | null;
   schoolURN: number | null;
   schoolOther: string | null;
   postcode: string | null;
@@ -201,7 +201,7 @@ const UserManagerResults = ({ searchRequested, searchQuery }: { searchRequested:
   const [userUpdating, setUserUpdating] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
 
-  let promotableRoles: UserRole[] = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
+  let promotableRoles: Role[] = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
 
   useEffect(() => {
     if (modifyTeacherPendingMessage) dispatch(showSuccessToast("Teacher Pending Status", modifyTeacherPendingMessage));
@@ -226,7 +226,7 @@ const UserManagerResults = ({ searchRequested, searchQuery }: { searchRequested:
     }
   };
 
-  const modifyUserRolesAndUpdateResults = async (role: UserRole) => {
+  const modifyUserRolesAndUpdateResults = async (role: Role) => {
     const confirmed = role === "STUDENT" || confirmUnverifiedUserPromotions();
     if (confirmed) {
       setUserUpdating(true);

@@ -1,7 +1,7 @@
 import { Action, AugmentedEvent, EventMapData, EventOverview, NOT_FOUND_TYPE } from "../../../IsaacAppTypes";
 import { ACTION_TYPE, NOT_FOUND } from "../../services";
-import { EventBookingDTO } from "../../../IsaacApiTypes";
 import { routerPageChange } from "../index";
+import { DetailedEventBookingDTO } from "../../../IsaacApiTypes";
 
 type EventsState = { events: AugmentedEvent[]; total: number } | null;
 export const events = (events: EventsState = null, action: Action) => {
@@ -33,7 +33,7 @@ export const currentEvent = (currentEvent: CurrentEventState = null, action: Act
   }
 };
 
-export type EventBookingsState = EventBookingDTO[] | null;
+export type EventBookingsState = DetailedEventBookingDTO[] | null;
 export const eventBookings = (eventBookings: EventBookingsState = null, action: Action) => {
   switch (action.type) {
     case ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS:

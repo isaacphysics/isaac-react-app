@@ -102,8 +102,8 @@ export const assignGameboard = createAsyncThunk(
     const response = await dispatch(isaacApi.endpoints.assignGameboard.initiate(assignments));
     if (mutationSucceeded(response)) {
       const groupLookUp = new Map(groups.map(toTuple));
-      const assigmentStatuses = response.data;
-      const newAssignments: AssignmentDTO[] = assigmentStatuses
+      const assignmentStatuses = response.data;
+      const newAssignments: AssignmentDTO[] = assignmentStatuses
         .filter((a) => isDefined(a.assignmentId))
         .map((a) => ({
           id: a.assignmentId as number,
@@ -116,7 +116,7 @@ export const assignGameboard = createAsyncThunk(
           notes,
         }));
       const successfulIds = newAssignments.map((a) => a.groupId);
-      const failedIds = assigmentStatuses.filter((a) => isDefined(a.errorMessage));
+      const failedIds = assignmentStatuses.filter((a) => isDefined(a.errorMessage));
       // Handle user feedback depending on whether some groups failed to assign or not
       if (failedIds.length === 0) {
         const successMessage =
@@ -135,7 +135,7 @@ export const assignGameboard = createAsyncThunk(
           );
         });
         // Check whether some group assignments succeeded, if so show "partial success" toast
-        if (failedIds.length === assigmentStatuses.length) {
+        if (failedIds.length === assignmentStatuses.length) {
           return rejectWithValue(null);
         } else {
           const partialSuccessMessage =

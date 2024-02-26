@@ -20,34 +20,32 @@ const EventMisuseTable = ({ topMisuses }: { topMisuses: MisuseStatisticDTO[] }) 
         </tr>
       </thead>
       <tbody>
-        {topMisuses.map((m) => (
-          // eslint-disable-next-line react/jsx-key
-          <tr>
-            <td>{m.agentIdentifier}</td>
-            <td>
-              {m.currentCounter}{" "}
-              {m.currentCounter > 0 && (
-                <Button
-                  className={"float-right"}
-                  size={"sm"}
-                  onClick={() => resetMisuseMonitor({ eventLabel: m.eventType, agentIdentifier: m.agentIdentifier })}
-                >
-                  Reset
-                </Button>
-              )}
-            </td>
-            <td>{m.lastEventTimestamp ? new Date(m.lastEventTimestamp).toString() : "None"}</td>
-            <td>
-              {m.isMisused ? (
-                <span className={"text-danger font-weight-bold"}>Yes</span>
-              ) : m.isOverSoftThreshold ? (
-                <span className={"text-warning font-weight-bold"}>Almost</span>
-              ) : (
-                "No"
-              )}
-            </td>
-          </tr>
-        ))}
+        {topMisuses.map((m) => {
+          const isOverThreshold = m.isOverSoftThreshold ? (
+            <span className={"text-warning font-weight-bold"}>Almost</span>
+          ) : (
+            "No"
+          );
+          return (
+            <tr key={`${m.agentIdentifier}-${m.eventType}`}>
+              <td>{m.agentIdentifier}</td>
+              <td>
+                {m.currentCounter}{" "}
+                {m.currentCounter > 0 && (
+                  <Button
+                    className={"float-right"}
+                    size={"sm"}
+                    onClick={() => resetMisuseMonitor({ eventLabel: m.eventType, agentIdentifier: m.agentIdentifier })}
+                  >
+                    Reset
+                  </Button>
+                )}
+              </td>
+              <td>{m.lastEventTimestamp ? new Date(m.lastEventTimestamp).toString() : "None"}</td>
+              <td>{m.isMisused ? <span className={"text-danger font-weight-bold"}>Yes</span> : isOverThreshold}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </Table>
   );

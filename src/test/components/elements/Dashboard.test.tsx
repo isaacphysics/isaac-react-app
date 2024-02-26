@@ -2,9 +2,9 @@ import { mockNewsPods, mockPromoPods } from "../../../mocks/data";
 import { Dashboard } from "../../../app/components/elements/Dashboard";
 import { TestUserRole, renderTestEnvironment } from "../../utils";
 import { screen, waitFor, within } from "@testing-library/react";
-import { IsaacQuestionPageDTO, UserRole, USER_ROLES } from "../../../IsaacApiTypes";
+import { IsaacQuestionPageDTO, Role } from "../../../IsaacApiTypes";
 import { MockedRequest, RestHandler, rest } from "msw";
-import { API_PATH } from "../../../app/services";
+import { API_PATH, USER_ROLES } from "../../../app/services";
 
 const mockPromoItem = mockPromoPods.results[0];
 const mockFeaturedNewsItem = mockNewsPods.results[1];
@@ -121,7 +121,7 @@ describe("Dashboard", () => {
     expect(featuredNewsTitle).toBeInTheDocument();
   });
 
-  const nonTeacherOrStudentRoles: UserRole[] = USER_ROLES.filter((role) => role !== "TEACHER" && role !== "STUDENT");
+  const nonTeacherOrStudentRoles: Role[] = USER_ROLES.filter((role) => role !== "TEACHER" && role !== "STUDENT");
 
   it.each(nonTeacherOrStudentRoles)("shows featured news tile if %s user is logged in", async (role) => {
     setupTest(role);
@@ -135,7 +135,7 @@ describe("Dashboard", () => {
     expect(promoTitle).toBeInTheDocument();
   });
 
-  const nonStudentRoles: UserRole[] = USER_ROLES.filter((role) => role !== "STUDENT");
+  const nonStudentRoles: Role[] = USER_ROLES.filter((role) => role !== "STUDENT");
 
   it.each(nonStudentRoles)(
     "shows loading spinner for %s users if neither promo item nor featured news item are provided",

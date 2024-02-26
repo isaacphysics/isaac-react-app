@@ -15,12 +15,12 @@ import {
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Redirect } from "react-router";
 import { MetaDescription } from "../elements/MetaDescription";
-import { UserRole } from "../../../IsaacApiTypes";
+import { Role } from "../../../IsaacApiTypes";
 
 export const Registration = () => {
   const user = useAppSelector(selectors.user.orNull);
 
-  const [role, setRole] = useState<UserRole>();
+  const [role, setRole] = useState<Role>();
   const [error, setError] = useState<boolean>(false);
   const [redirectTo, setRedirectTo] = useState<string | null>();
 

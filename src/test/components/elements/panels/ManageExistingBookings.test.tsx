@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { BookingStatus, EventBookingDTO, UserRole } from "../../../../IsaacApiTypes";
+import { BookingStatus, EventBookingDTO, Role } from "../../../../IsaacApiTypes";
 import { ManageExistingBookings } from "../../../../app/components/elements/panels/ManageExistingBookings";
 import { renderTestEnvironment } from "../../../utils";
 import { API_PATH } from "../../../../app/services";
@@ -45,7 +45,7 @@ const getActionButton = async (firstBookingRow: HTMLElement, buttonName: string)
 };
 
 describe("ManageExistingBookings", () => {
-  const setupTest = (eventBookings: EventBookingDTO[], role: UserRole = "ADMIN") => {
+  const setupTest = (eventBookings: EventBookingDTO[], role: Role = "ADMIN") => {
     renderTestEnvironment({
       role: role,
       PageComponent: ManageExistingBookings,
@@ -141,9 +141,9 @@ describe("ManageExistingBookings", () => {
   });
 
   const deleteButtonTestCases = [
-    { role: "ADMIN" as UserRole, description: "offers", expected: true },
-    { role: "EVENT_LEADER" as UserRole, description: "does not offer", expected: false },
-    { role: "EVENT_MANAGER" as UserRole, description: "does not offer", expected: false },
+    { role: "ADMIN" as Role, description: "offers", expected: true },
+    { role: "EVENT_LEADER" as Role, description: "does not offer", expected: false },
+    { role: "EVENT_MANAGER" as Role, description: "does not offer", expected: false },
   ];
 
   it.each(deleteButtonTestCases)("$description delete button for $role", async ({ role, expected }) => {

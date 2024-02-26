@@ -2,8 +2,7 @@ import { TestUserRole, checkPageTitle, clickButton, renderTestEnvironment } from
 import { rest } from "msw";
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { USER_ROLES } from "../../IsaacApiTypes";
-import { API_PATH, SOCIAL_LINKS } from "../../app/services";
+import { API_PATH, SOCIAL_LINKS, USER_ROLES } from "../../app/services";
 import * as actions from "../../app/state/actions";
 import { Contact } from "../../app/components/pages/Contact";
 

@@ -2,7 +2,7 @@ import { DAYS_AGO, DAYS_IN_FUTURE, TestUserRole, checkPageTitle, renderTestEnvir
 import { mockEvent } from "../../mocks/data";
 import { rest } from "msw";
 import { API_PATH, formatAddress } from "../../app/services";
-import { EventStatus, IsaacEventPageDTO, UserRole } from "../../IsaacApiTypes";
+import { BookingStatus, EventStatus, IsaacEventPageDTO, Role } from "../../IsaacApiTypes";
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import * as eventServices from "../../app/services/events";
@@ -86,7 +86,7 @@ describe("EventDetails", () => {
     expect(privateBadge()).not.toBeInTheDocument();
   });
 
-  it.each(["ADMIN", "EVENT_MANAGER", "CONTENT_EDITOR"] as UserRole[])(
+  it.each(["ADMIN", "EVENT_MANAGER", "CONTENT_EDITOR"] as Role[])(
     "if user is %s, a google calendar button shows and can be clicked",
     async (role) => {
       const mockGoogleCalendarTemplate = jest.fn();
@@ -175,7 +175,7 @@ describe("EventDetails", () => {
       ...mockEvent,
       placesAvailable: 0,
       eventStatus: "WAITING_LIST_ONLY" as EventStatus,
-      userBookingStatus: "RESERVED",
+      userBookingStatus: "RESERVED" as BookingStatus,
     };
     await setupTest({ role: "STUDENT", event });
     const availability = placesAvailable();
@@ -204,13 +204,13 @@ describe("EventDetails", () => {
   });
 
   it("if user is already CONFIRMED on the event, `cancel booking` button is shown", async () => {
-    const event = { ...mockEvent, placesAvailable: 10, userBookingStatus: "CONFIRMED" };
+    const event = { ...mockEvent, placesAvailable: 10, userBookingStatus: "CONFIRMED" as BookingStatus };
     await setupTest({ role: "STUDENT", event });
     expect(getButton("Cancel your booking")).toBeInTheDocument();
   });
 
   it("if user is already RESERVED on the event, `cancel reservation` button is shown", async () => {
-    const event = { ...mockEvent, placesAvailable: 10, userBookingStatus: "RESERVED" };
+    const event = { ...mockEvent, placesAvailable: 10, userBookingStatus: "RESERVED" as BookingStatus };
     await setupTest({ role: "STUDENT", event });
     expect(getButton("Cancel your reservation")).toBeInTheDocument();
   });
@@ -218,7 +218,7 @@ describe("EventDetails", () => {
   it("if user is already WAITING_LIST and event is WAITING_LIST_ONLY, `cancel booking request` button is shown", async () => {
     const event = {
       ...mockEvent,
-      userBookingStatus: "WAITING_LIST",
+      userBookingStatus: "WAITING_LIST" as BookingStatus,
       eventStatus: "WAITING_LIST_ONLY" as EventStatus,
     };
     await setupTest({ role: "STUDENT", event });
@@ -228,7 +228,7 @@ describe("EventDetails", () => {
   it("if user is already WAITING_LIST and event is not WAITING_LIST_ONLY, `leave waiting list` button is shown", async () => {
     const event = {
       ...mockEvent,
-      userBookingStatus: "WAITING_LIST",
+      userBookingStatus: "WAITING_LIST" as BookingStatus,
     };
     await setupTest({ role: "STUDENT", event });
     expect(getButton("Leave waiting list")).toBeInTheDocument();

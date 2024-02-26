@@ -7,8 +7,8 @@ import {
   Difficulty,
   ExamBoard,
   IsaacQuestionPageDTO,
+  Role,
   Stage,
-  UserRole,
 } from "../../IsaacApiTypes";
 
 export const STAGING_URL = "https://www.staging.isaaccomputerscience.org";
@@ -780,7 +780,7 @@ export const EVENTS_CRUMB = { title: "Events", to: "/events" };
 export const REGISTER_CRUMB = { title: "Registration", to: "/register" };
 export const ASSIGNMENT_PROGRESS_CRUMB = { title: "My markbook", to: "/my_markbook" };
 
-export const UserFacingRole: { [role in UserRole]: string } = {
+export const UserFacingRole: { [role in Role]: string } = {
   ADMIN: "Admin",
   EVENT_MANAGER: "Event Manager",
   CONTENT_EDITOR: "Content Editor",
@@ -893,3 +893,13 @@ export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+
+export const USER_ROLES: Role[] = [
+  "STUDENT",
+  "TUTOR",
+  "TEACHER",
+  "EVENT_LEADER",
+  "CONTENT_EDITOR",
+  "EVENT_MANAGER",
+  "ADMIN",
+];

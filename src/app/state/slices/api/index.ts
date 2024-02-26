@@ -12,7 +12,7 @@ import { FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError } from "@reduxjs/too
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import {
   AssignmentDTO,
-  AssignmentFeedbackDTO,
+  AssignmentStatusDTO,
   GameboardDTO,
   GameboardListDTO,
   IsaacConceptPageDTO,
@@ -20,7 +20,7 @@ import {
   IsaacWildcard,
   MisuseStatisticDTO,
   QuizAssignmentDTO,
-  TOTPSharedSecretDTO,
+  TOTPSharedSecret,
   UserSummaryWithGroupMembershipDTO,
 } from "../../../../IsaacApiTypes";
 import {
@@ -381,7 +381,7 @@ const isaacApi = createApi({
       transformResponse: anonymiseIfNeededWith<AppAssignmentProgress[]>(anonymisationFunctions.progressState),
     }),
 
-    assignGameboard: build.mutation<AssignmentFeedbackDTO[], AssignmentDTO[]>({
+    assignGameboard: build.mutation<AssignmentStatusDTO[], AssignmentDTO[]>({
       query: (assignments) => ({
         url: "/assignments/assign_bulk",
         method: "POST",
@@ -731,7 +731,7 @@ const isaacApi = createApi({
       }),
     }),
 
-    newMFASecret: build.mutation<TOTPSharedSecretDTO, void>({
+    newMFASecret: build.mutation<TOTPSharedSecret, void>({
       query: () => ({
         url: "/users/current_user/mfa/new_secret",
         method: "GET",

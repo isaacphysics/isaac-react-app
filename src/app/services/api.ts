@@ -6,6 +6,7 @@ import {
   EmailTemplateDTO,
   EventBookingDTO,
   ResultsWrapper,
+  Role,
   TestCaseDTO,
   UserContext,
 } from "../../IsaacApiTypes";
@@ -211,7 +212,7 @@ export const api = {
       },
     },
     modifyUserRoles: {
-      post: (role: ApiTypes.UserRole, userIds: number[]) => {
+      post: (role: Role, userIds: number[]) => {
         return endpoint.post(`/admin/users/change_role/${role}`, userIds);
       },
     },

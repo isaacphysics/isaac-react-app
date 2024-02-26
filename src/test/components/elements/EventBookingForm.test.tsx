@@ -4,7 +4,7 @@ import { mockEvent, mockUser } from "../../../mocks/data";
 import {
   EmailVerificationStatus,
   RegisteredUserDTO,
-  UserRole,
+  Role,
   UserSummaryWithEmailAddressDTO,
 } from "../../../IsaacApiTypes";
 import { API_PATH, augmentEvent } from "../../../app/services";
@@ -25,7 +25,7 @@ describe("EventBookingForm", () => {
     user,
     additionalInformation,
   }: {
-    role: UserRole;
+    role: Role;
     event?: AugmentedEvent;
     user: RegisteredUserDTO;
     additionalInformation?: AdditionalInformation;

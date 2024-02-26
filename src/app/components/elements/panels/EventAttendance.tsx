@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import * as RS from "reactstrap";
 import { Accordion } from "../Accordion";
 import { AppState, recordEventAttendance, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { atLeastOne, isEventLeader, NOT_FOUND, sortOnPredicateAndReverse } from "../../../services";
-import { EventBookingDTO, UserSummaryWithEmailAddressAndGenderDTO } from "../../../../IsaacApiTypes";
+import { DetailedEventBookingDTO, UserSummaryWithEmailAddressAndGenderDTO } from "../../../../IsaacApiTypes";
 import { DateString } from "../DateString";
 import { ATTENDANCE, PotentialUser } from "../../../../IsaacAppTypes";
+import { Button, Input, Table } from "reactstrap";
 
 function displayAttendanceAsSymbol(status?: string) {
   switch (status) {
@@ -30,16 +30,15 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
   const [reverse, setReverse] = useState(true);
   const [familyNameFilter, setFamilyNameFilter] = useState("");
 
-  function filterOnSurname(booking: EventBookingDTO) {
+  function filterOnSurname(booking: DetailedEventBookingDTO) {
     return (
-      booking.userBooked &&
-      booking.userBooked.familyName !== undefined &&
+      booking.userBooked?.familyName !== undefined &&
       booking.userBooked.familyName.toLocaleLowerCase().includes(familyNameFilter.toLocaleLowerCase())
     );
   }
 
   let canRecordAttendance = false;
-  if (selectedEvent && selectedEvent.date) {
+  if (selectedEvent?.date) {
     const morningOfEvent = new Date(selectedEvent.date);
     morningOfEvent.setUTCHours(0, 0);
     canRecordAttendance = morningOfEvent <= new Date();
@@ -59,12 +58,12 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
             </div>
           )}
           <div className="overflow-auto">
-            <RS.Table bordered className="mb-0 bg-white">
+            <Table bordered className="mb-0 bg-white">
               <thead>
                 <tr>
                   <th className="align-middle">Actions</th>
                   <th className="align-middle">
-                    <RS.Button
+                    <Button
                       color="link"
                       onClick={() => {
                         setSortPredicate("bookingStatus");
@@ -72,10 +71,10 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                       }}
                     >
                       Attendance
-                    </RS.Button>
+                    </Button>
                   </th>
                   <th className="align-middle">
-                    <RS.Button
+                    <Button
                       color="link"
                       onClick={() => {
                         setSortPredicate("userBooked.familyName");
@@ -83,8 +82,8 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                       }}
                     >
                       Name
-                    </RS.Button>
-                    <RS.Input
+                    </Button>
+                    <Input
                       className="w-auto"
                       value={familyNameFilter}
                       onChange={(e) => setFamilyNameFilter(e.target.value)}
@@ -95,7 +94,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                   <th className="align-middle">School</th>
                   <th className="align-middle">Account type</th>
                   <th className="align-middle">
-                    <RS.Button
+                    <Button
                       color="link"
                       onClick={() => {
                         setSortPredicate("userBooked.email");
@@ -103,10 +102,10 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                       }}
                     >
                       Email
-                    </RS.Button>
+                    </Button>
                   </th>
                   <th className="align-middle">
-                    <RS.Button
+                    <Button
                       color="link"
                       onClick={() => {
                         setSortPredicate("bookingDate");
@@ -114,10 +113,10 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                       }}
                     >
                       Booking created
-                    </RS.Button>
+                    </Button>
                   </th>
                   <th className="align-middle">
-                    <RS.Button
+                    <Button
                       color="link"
                       onClick={() => {
                         setSortPredicate("updated");
@@ -125,7 +124,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                       }}
                     >
                       Booking updated
-                    </RS.Button>
+                    </Button>
                   </th>
                   <th className="align-middle">Accessibility requirements</th>
                   <th className="align-middle">Dietary requirements</th>
@@ -146,7 +145,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                       <tr key={booking.bookingId}>
                         <td className="align-middle">
                           {booking.bookingStatus != "ATTENDED" && (
-                            <RS.Button
+                            <Button
                               color="primary"
                               outline
                               className="btn-sm mb-2"
@@ -155,10 +154,10 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                               }
                             >
                               Mark&nbsp;as Attended
-                            </RS.Button>
+                            </Button>
                           )}
                           {booking.bookingStatus != "ABSENT" && (
-                            <RS.Button
+                            <Button
                               color="primary"
                               outline
                               className="btn-sm mb-2"
@@ -167,7 +166,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                               }
                             >
                               Mark&nbsp;as Absent
-                            </RS.Button>
+                            </Button>
                           )}
                         </td>
                         <td className="align-middle text-center">{displayAttendanceAsSymbol(booking.bookingStatus)}</td>
@@ -198,7 +197,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                     );
                   })}
               </tbody>
-            </RS.Table>
+            </Table>
           </div>
         </Accordion>
       )}

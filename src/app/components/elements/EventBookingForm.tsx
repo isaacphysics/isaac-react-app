@@ -1,11 +1,22 @@
 import React, { useState } from "react";
-import * as RS from "reactstrap";
 import { AdditionalInformation, AugmentedEvent } from "../../../IsaacAppTypes";
 import { SchoolInput } from "./inputs/SchoolInput";
 import { requestEmailVerification, selectors, useAppDispatch, useAppSelector } from "../../state";
 import { UserSummaryWithEmailAddressAndGenderDTO } from "../../../IsaacApiTypes";
 import { examBoardLabelMap, isTutor, stageLabelMap, studentOnlyEventMessage } from "../../services";
 import { Immutable } from "immer";
+import {
+  Button,
+  Card,
+  CardBody,
+  Col,
+  FormFeedback,
+  Input,
+  Label,
+  PopoverBody,
+  Row,
+  UncontrolledPopover,
+} from "reactstrap";
 
 interface EventBookingFormProps {
   event: AugmentedEvent;
@@ -25,10 +36,10 @@ const SchoolYearGroup = ({
 }) => {
   return (
     <>
-      <RS.Label htmlFor="year-group" className="form-required">
+      <Label htmlFor="year-group" className="form-required">
         School year group
-      </RS.Label>
-      <RS.Input
+      </Label>
+      <Input
         type="select"
         id="year-group"
         name="year-group"
@@ -51,7 +62,7 @@ const SchoolYearGroup = ({
             <option value="OTHER">N/A - Other</option>
           </>
         )}
-      </RS.Input>
+      </Input>
       {event.isStudentOnly && (
         <div className="text-muted" data-testid="student-only">
           {studentOnlyEventMessage(event.id)}
@@ -98,14 +109,14 @@ export const AccessibilityAndDietaryRequirements = ({
         const { label, id, popover, type } = requirement;
         return (
           <div key={id}>
-            <RS.Label htmlFor={`${id}-reqs`}>
+            <Label htmlFor={`${id}-reqs`}>
               {label}
               <span id={`${id}-reqs-help`} aria-haspopup="true" className="icon-help has-tip" />
-              <RS.UncontrolledPopover trigger="click" placement="bottom" target={`${id}-reqs-help`}>
-                <RS.PopoverBody>{popover}</RS.PopoverBody>
-              </RS.UncontrolledPopover>
-            </RS.Label>
-            <RS.Input
+              <UncontrolledPopover trigger="click" placement="bottom" target={`${id}-reqs-help`}>
+                <PopoverBody>{popover}</PopoverBody>
+              </UncontrolledPopover>
+            </Label>
+            <Input
               id={`${id}-reqs`}
               name={`${id}-reqs`}
               type="text"
@@ -139,10 +150,10 @@ const InputWithLabel = ({
 
   return (
     <>
-      <RS.Label htmlFor={id} className="form-required">
+      <Label htmlFor={id} className="form-required">
         {label}
-      </RS.Label>
-      <RS.Input
+      </Label>
+      <Input
         id={id}
         name={id}
         type="text"
@@ -201,16 +212,16 @@ export const EventBookingForm = ({
 
     return (
       <>
-        <RS.Label htmlFor={id} className="form-required">
+        <Label htmlFor={id} className="form-required">
           {label}
-        </RS.Label>
-        <RS.Input id={id} name={type} type="text" disabled value={value} invalid={invalid} />
+        </Label>
+        <Input id={id} name={type} type="text" disabled value={value} invalid={invalid} />
         {type === "email" && (
-          <RS.FormFeedback data-testid="email-feedback">
+          <FormFeedback data-testid="email-feedback">
             {editingSelf
               ? "You must verify your email address to book on events. This is so we can send you details about the event."
               : "WARNING: This email is not verified. The details about the event might not reach the user."}
-          </RS.FormFeedback>
+          </FormFeedback>
         )}
       </>
     );
@@ -218,10 +229,10 @@ export const EventBookingForm = ({
 
   const EmailVerification = () => {
     return (
-      <RS.Row className="mt-2">
-        <RS.Col>
+      <Row className="mt-2">
+        <Col>
           {editingSelf && !verifyEmailRequestSent && (
-            <RS.Button
+            <Button
               color="link"
               className="btn-underline"
               onClick={() => {
@@ -230,23 +241,23 @@ export const EventBookingForm = ({
               }}
             >
               Verify your email before booking
-            </RS.Button>
+            </Button>
           )}
           {verifyEmailRequestSent && (
             <span>
               We have sent an email to {targetUser.email}. Please follow the instructions in the email prior to booking.
             </span>
           )}
-        </RS.Col>
-      </RS.Row>
+        </Col>
+      </Row>
     );
   };
 
   return (
     <>
       {/* Account Information */}
-      <RS.Card className="mb-3 bg-light" data-testid="booking-account-info">
-        <RS.CardBody>
+      <Card className="mb-3 bg-light" data-testid="booking-account-info">
+        <CardBody>
           <legend>
             Your account information (
             <a href="/account" target="_blank" className="text-secondary">
@@ -254,28 +265,28 @@ export const EventBookingForm = ({
             </a>
             )
           </legend>
-          <RS.Row>
-            <RS.Col md={6}>
+          <Row>
+            <Col md={6}>
               <DisabledInputWithLabel type="firstname" />
-            </RS.Col>
-            <RS.Col md={6}>
+            </Col>
+            <Col md={6}>
               <DisabledInputWithLabel type="lastname" />
-            </RS.Col>
-          </RS.Row>
+            </Col>
+          </Row>
 
           <div>
-            <RS.Row>
-              <RS.Col md={12}>
+            <Row>
+              <Col md={12}>
                 <DisabledInputWithLabel type="email" invalid={notVerifiedEmail} />
                 {notVerifiedEmail && <EmailVerification />}
-              </RS.Col>
-              <RS.Col md={6}>
+              </Col>
+              <Col md={6}>
                 <DisabledInputWithLabel type="stage" />
-              </RS.Col>
-              <RS.Col md={6}>
+              </Col>
+              <Col md={6}>
                 <DisabledInputWithLabel type="examBoard" />
-              </RS.Col>
-            </RS.Row>
+              </Col>
+            </Row>
           </div>
           {editingSelf && (
             <>
@@ -286,20 +297,20 @@ export const EventBookingForm = ({
                 required={!isTutor(targetUser)}
               />
               <div className="text-center alert-warning p-1">
-                If this information is incorrect, please update it from your{" "}
+                {"If this information is incorrect, please update it from your "}
                 <a href="/account" target="_blank">
                   account page
                 </a>
-                .
+                {"."}
               </div>
             </>
           )}
-        </RS.CardBody>
-      </RS.Card>
+        </CardBody>
+      </Card>
 
       {/* Event Booking Details */}
-      <RS.Card className="mb-3" data-testid="event-booking-details">
-        <RS.CardBody>
+      <Card className="mb-3" data-testid="event-booking-details">
+        <CardBody>
           <legend>Event booking details</legend>
 
           <div>
@@ -327,25 +338,25 @@ export const EventBookingForm = ({
               />
 
               {additionalInformation.yearGroup != "TEACHER" && additionalInformation.yearGroup != "OTHER" && (
-                <RS.Row className="mt-2">
-                  <RS.Col xs={12}>
+                <Row className="mt-2">
+                  <Col xs={12}>
                     <h3>Emergency contact details</h3>
-                  </RS.Col>
-                  <RS.Col md={6}>
+                  </Col>
+                  <Col md={6}>
                     <InputWithLabel
                       type="emergencyName"
                       additionalInformation={additionalInformation}
                       updateAdditionalInformation={updateAdditionalInformation}
                     />
-                  </RS.Col>
-                  <RS.Col md={6}>
+                  </Col>
+                  <Col md={6}>
                     <InputWithLabel
                       type="emergencyNumber"
                       additionalInformation={additionalInformation}
                       updateAdditionalInformation={updateAdditionalInformation}
                     />
-                  </RS.Col>
-                </RS.Row>
+                  </Col>
+                </Row>
               )}
               <div className="text-center alert-warning p-1 mt-3" data-testid="pii-message">
                 Any additional personal identifiable information provided on this form, i.e. dietary requirements,
@@ -361,8 +372,8 @@ export const EventBookingForm = ({
               updateAdditionalInformation={updateAdditionalInformation}
             />
           )}
-        </RS.CardBody>
-      </RS.Card>
+        </CardBody>
+      </Card>
     </>
   );
 };

@@ -2,13 +2,13 @@ import { CardBody, FormGroup, Table } from "reactstrap";
 import React from "react";
 import { UserEmailPreferences } from "../../../../IsaacAppTypes";
 import { TrueFalseRadioInput } from "./TrueFalseRadioInput";
-import { UserRole } from "../../../../IsaacApiTypes";
+import { Role } from "../../../../IsaacApiTypes";
 
 interface RegistrationEmailPreferenceProps {
   emailPreferences: UserEmailPreferences | null | undefined;
   setEmailPreferences: (e: UserEmailPreferences) => void;
   submissionAttempted: boolean;
-  userRole: UserRole;
+  userRole: Role;
 }
 
 type EmailPreferenceDescriptions = {

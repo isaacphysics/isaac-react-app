@@ -3,11 +3,11 @@ import { EventManager } from "../../app/components/pages/EventManager";
 import { checkPageTitle, renderTestEnvironment } from "../utils";
 import { API_PATH } from "../../app/services";
 import { mockFutureEventOverviews, mockUser } from "../../mocks/data";
-import { UserRole } from "../../IsaacApiTypes";
 import { screen } from "@testing-library/react";
+import { Role } from "../../IsaacApiTypes";
 
 describe("Event Manager", () => {
-  const renderEventManager = ({ role = "EVENT_MANAGER" }: { role?: UserRole } = {}) => {
+  const renderEventManager = ({ role = "EVENT_MANAGER" }: { role?: Role } = {}) => {
     renderTestEnvironment({
       role: role,
       PageComponent: EventManager,
