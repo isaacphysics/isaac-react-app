@@ -58,7 +58,7 @@ const GraphSketcherPage = () => {
     useEffect(() => {
         if (previewSketch) return;
         if (makeGraphSketcher && previewRef.current) {
-            const { sketch } = makeGraphSketcher(previewRef.current || undefined, 1000, 600, { previewMode: true });
+            const { sketch } = makeGraphSketcher(previewRef.current || undefined, 1000, 600, { previewMode: true, initialCurves: initialState?.curves });
             if (sketch) {
                 sketch.selectedLineType = LineType.BEZIER;
                 setPreviewSketch(sketch);

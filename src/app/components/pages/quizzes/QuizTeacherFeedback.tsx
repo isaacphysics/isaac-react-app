@@ -240,5 +240,5 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
     return <ResultsTable<QuizQuestion> assignmentId={assignment.id} duedate={assignment.dueDate} progress={progress}
         questions={questions} header={header} getQuestionTitle={getQuestionTitle} assignmentAverages={quizAverages}
         assignmentTotalQuestionParts={totalParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
-        isQuiz={false}/>;
+        isAssignment={false}/>;
 };

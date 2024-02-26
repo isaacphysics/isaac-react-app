@@ -49,7 +49,7 @@ export interface ResultsTableProps<Q extends QuestionType> {
     assignmentTotalQuestionParts: number;
     markClasses: (row: AppAssignmentProgress, assignmentTotalQuestionParts: number) => string;
     markQuestionClasses: (row: AppAssignmentProgress, questionIndex: number) => string;
-    isQuiz?: boolean;
+    isAssignment?: boolean;
 }
 
 export function ResultsTable<Q extends QuestionType>({assignmentId,
@@ -62,7 +62,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                                      assignmentTotalQuestionParts,
                                                      markClasses,
                                                      markQuestionClasses,
-                                                     isQuiz} : ResultsTableProps<Q>) {
+                                                     isAssignment} : ResultsTableProps<Q>) {
 
     const [selectedQuestionNumber, setSelectedQuestionNumber] = useState(0);
     const selectedQuestion: Q = questions[selectedQuestionNumber];
@@ -156,7 +156,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
         {questions.map((q, index) =>
             sortItem({key: q.id, itemOrder: index, className: isSelected(q), children: `${assignmentAverages[index]}%`})
         )}
-        {isQuiz ? <>
+        {isAssignment ? <>
             {sortItem({key: "totalQuestionPartPercentage", itemOrder: "totalQuestionPartPercentage", className:"total-column left", children: "Total Parts"})}
             {sortItem({key: "totalQuestionPercentage", itemOrder: "totalQuestionPercentage", className:"total-column right", children: "Total Qs"})}
         </> : 
@@ -221,7 +221,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                 <th className="student-name">
                                     {fullAccess && pageSettings.isTeacher ?
                                         (
-                                            isQuiz ?
+                                            isAssignment ?
                                             <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
                                                 {studentProgress.user.givenName}
                                                 <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
@@ -255,18 +255,17 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                 </th>
                                 {questions.map((q, index) =>
                                     <td key={q.id} className={isSelected(questions[index]) + " " + markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestionNumber(index)}>
-                                        {(assignmentTotalQuestionParts === questions.length) ?
-                                            studentProgress.correctPartResults[index] === 1 ? ICON.correct :
-                                            studentProgress.incorrectPartResults[index] === 1 ? ICON.incorrect :
-                                            /* default */ ICON.notAttempted
-                                        : 
-                                        fullAccess ? formatMark(studentProgress.correctPartResults[index],
+                                        {isAssignment ? (fullAccess ? formatMark(studentProgress.correctPartResults[index],
                                             questions[index].questionPartsTotal as number,
                                             pageSettings.formatAsPercentage) : ""
+                                        ) : 
+                                        studentProgress.correctPartResults[index] === 1 ? ICON.correct :
+                                            studentProgress.incorrectPartResults[index] === 1 ? ICON.incorrect :
+                                            /* default */ ICON.notAttempted
                                         }
                                     </td> 
                                 )}
-                                {isQuiz ? <>
+                                {isAssignment ? <>
                                     <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
                                         {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
