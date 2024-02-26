@@ -3,13 +3,17 @@ import {
     ACTION_TYPE,
     api,
     API_REQUEST_FAILURE_MESSAGE,
-    DOCUMENT_TYPE, FIRST_LOGIN_STATE,
+    DOCUMENT_TYPE,
+    FIRST_LOGIN_STATE,
     history,
+    isNotPartiallyLoggedIn,
     isFirstLoginInPersistence,
+    isTeacherOrAbove,
     KEY,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    TAG_ID, trackEvent
+    TAG_ID,
+    trackEvent
 } from "../../services";
 import {
     Action,
@@ -30,39 +34,31 @@ import {
     IsaacQuestionPageDTO,
     QuestionDTO,
     TestCaseDTO,
-    UserContext,
-    UserSummaryDTO,
-    UserSummaryWithEmailAddressDTO
+    UserContext
 } from "../../../IsaacApiTypes";
-import {
-    releaseAllConfirmationModal,
-    releaseConfirmationModal,
-    revocationConfirmationModal,
-    tokenVerificationModal
-} from "../../components/elements/modals/TeacherConnectionModalCreators";
 import {AxiosError} from "axios";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {
-    AppState,
-    store,
-    errorSlice,
-    routerPageChange,
-    closeActiveModal,
-    openActiveModal,
-    showToast,
-    logAction,
-    isaacApi,
     AppDispatch,
+    AppState,
+    closeActiveModal,
+    errorSlice,
+    isaacApi,
+    logAction,
+    openActiveModal,
+    routerPageChange,
+    showToast,
+    store,
 } from "../index";
 import {Immutable} from "immer";
 
 // Utility functions
-function isAxiosError(e: Error): e is AxiosError {
+function isAxiosError(e: Error): e is AxiosError<{errorMessage?: string}, unknown> {
     return 'isAxiosError' in e && (e as AxiosError).isAxiosError;
 }
 
 export function extractMessage(e: Error) {
-    if (isAxiosError(e) && e.response && e.response.data && e.response.data.errorMessage) {
+    if (isAxiosError(e) && e.response?.data.errorMessage) {
         return e.response.data.errorMessage;
     }
     return API_REQUEST_FAILURE_MESSAGE;
@@ -183,10 +179,12 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
         // Request the user
         const currentUser = await api.users.getCurrent();
         // Now with that information request auth settings and preferences asynchronously
-        await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
-        ]);
+        if (isNotPartiallyLoggedIn(currentUser.data)) {
+            await Promise.all([
+                dispatch(getUserAuthSettings() as any),
+                dispatch(getUserPreferences() as any)
+            ]);
+        }
         dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE});
@@ -198,7 +196,31 @@ export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => as
     dispatch({type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE, userSnapshot: newUserSnapshot});
 };
 
-// TODO scope for pulling out a separate registerUser method from this
+export const registerNewUser = (
+    newUser: Immutable<ValidationUser>,
+    newUserPreferences: UserPreferencesDTO,
+    newUserContexts: UserContext[] | undefined,
+    passwordCurrent: string | null,
+) => async (dispatch: Dispatch<Action>) => {
+
+    try {
+        // Create the user
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
+        const currentUser = await api.users.updateCurrent(newUser, newUserPreferences, passwordCurrent, newUserContexts);
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
+        await dispatch(requestCurrentUser() as any);
+
+        if (isTeacherOrAbove(newUser)) {
+            // Redirect to email verification page
+            history.push('/verifyemail');
+        } else {
+            history.push('/register/connect')
+        }
+    } catch (e: any) {
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+    }
+};
+
 export const updateCurrentUser = (
     updatedUser: Immutable<ValidationUser>,
     updatedUserPreferences: UserPreferencesDTO,
@@ -321,9 +343,18 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         const result = await api.authentication.login(provider, credentials);
 
         if (result.status === 202) {
-            // indicates MFA is required for this user and user isn't logged in yet.
-            dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
-            return;
+            // We haven't been fully authenticated, some additional action is required
+            if (result.data.MFA_REQUIRED) {
+                // MFA is required for this user and user isn't logged in yet.
+                dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
+                return;
+            } else if (result.data.EMAIL_VERIFICATION_REQUIRED) {
+                // Email verification is required for this user
+                history.push("/verifyemail");
+                // A partial login is still "successful", though we are unable to request user preferences and auth settings
+                dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+                return;
+            }
         }
         // Request user preferences, as we do in the requestCurrentUser action:
         await Promise.all([

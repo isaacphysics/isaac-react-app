@@ -81,3 +81,14 @@ input[type=text], input[type=search] {
 .custom-control {
   z-index: 0;
 }
+
+.input-description {
+  color: $cs-muted;
+}
+
+.form-optional {
+  &:after {
+    content: ' (Optional)';
+  }
+}
+

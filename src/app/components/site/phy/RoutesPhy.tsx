@@ -29,7 +29,9 @@ import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
 import {TeacherRequest} from "../../pages/TeacherRequest";
-import { News } from "../../pages/News";
+import {Registration} from "../../pages/Registration";
+import {EmailAlterHandler} from "../../handlers/EmailAlterHandler";
+import {News} from "../../pages/News";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -37,6 +39,10 @@ const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 
 let key = 0;
 export const RoutesPhy = [
+    // Registration
+    <TrackedRoute exact path="/register" component={Registration} />,
+    <TrackedRoute exact path="/verifyemail" component={EmailAlterHandler}/>,
+
     // Assignments
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
     <TrackedRoute key={key++} exact path="/assignment_schedule" ifUser={isTutorOrAbove} component={AssignmentSchedule} />, // Currently in beta, not yet advertised or listed on navigation menus

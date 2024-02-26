@@ -5,7 +5,6 @@ module.exports = {
     ],
     "resolver": "jest-pnp-resolver",
     "setupFilesAfterEnv": [
-        "@testing-library/jest-dom/extend-expect",
         "<rootDir>src/test/setupTests.ts",
         "react-app-polyfill/jsdom"
     ],
@@ -14,7 +13,9 @@ module.exports = {
         "<rootDir>src/**/*.test.(js|jsx|ts|tsx)"
     ],
     "testEnvironment": "jsdom",
-    "testURL": "http://localhost",
+    "testEnvironmentOptions": {
+        "url": "http://localhost",
+    },
     "transform": {
         "^.+\\.css$": "<rootDir>config/jest/cssTransform.js",
         "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>config/jest/fileTransform.js",
@@ -46,5 +47,6 @@ module.exports = {
     ],
     "globals": {
         REACT_APP_API_VERSION: "any",
-    }
+    },
+    workerIdleMemoryLimit: '512MB',
 };

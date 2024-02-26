@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 .card-neat {
   .event-card-image {
     position: relative;
@@ -53,7 +55,7 @@ $news-cards-per-line: (
   @if (map-has-key($news-cards-per-line, $name)) {
     @include media-breakpoint-up($name) {
       .card-deck .news-card {
-        flex: 0 0 calc(#{100/map-get($news-cards-per-line, $name)}% - #{$grid-gutter-width});
+        flex: 0 0 calc(#{math.percentage(math.div(1, map-get($news-cards-per-line, $name)))} - #{$grid-gutter-width});
         width: 100%;
       }
     }

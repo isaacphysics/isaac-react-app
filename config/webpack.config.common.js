@@ -31,6 +31,12 @@ module.exports = (env) => {
 
         mode: isProd ? "production" : "development",
 
+        ignoreWarnings: [
+            { message: /node\_modules\/bootstrap\/scss\/vendor\/\_rfs\.scss/ }, // Suppress a warning which cannot be fixed without updating bootstrap
+            { message: /text-emphasis-variant()/ },
+            { message: /bg-variant()/ },
+        ],
+
         devServer: {
             headers: {
                 "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaacphysics.org https://cdn.adacomputerscience.org localhost:8080 ws://localhost:8080 https://maps.googleapis.com https://*.tile.openstreetmap.org; object-src 'none'; frame-src 'self' https://code-editor.ada-cs.org http://localhost:3000 https://anvil.works https://*.anvil.app https://www.youtube-nocookie.com; img-src 'self' localhost:8080 data: https://cdn.isaacphysics.org https://cdn.adacomputerscience.org https://i.ytimg.com https://maps.googleapis.com https://*.tile.openstreetmap.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://cdn.isaacphysics.org https://cdn.adacomputerscience.org https://fonts.gstatic.com;",
@@ -50,7 +56,6 @@ module.exports = (env) => {
         resolve: {
             modules: [path.resolve(__dirname), 'node_modules'],
             extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs'],
-            fallback: { "querystring": require.resolve("querystring-es3") }
         },
 
         module: {
@@ -71,7 +76,7 @@ module.exports = (env) => {
                                     options: {
                                         presets: ["@babel/preset-env", "@babel/preset-react"],
                                         plugins: [
-                                          "@babel/plugin-proposal-class-properties",
+                                          "@babel/plugin-transform-class-properties",
                                           "@babel/plugin-transform-classes"
                                         ]
                                     }

@@ -65,25 +65,25 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
         }
     }
 
-    return <CardBody className="pt-0">
+    return <CardBody className="pt-0 px-0">
         <Row>
-            <Col md={{size: 6, offset: 3}}>
+            <Col xs={{size: 8, offset: 2}} lg={{size: 6, offset: 3}} className="px-4">
                 <hr className="text-center" />
                 <h4>Two-factor Authentication (2FA)</h4>
             </Col>
         </Row>
         {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
             <Row>
-                <Col>
+                <Col xs={{size: 8, offset: 2}} lg={{size: 6, offset: 3}} className="px-4">
                     <Row>
-                        <Col md={{size: 6, offset: 3}}>
+                        <Col>
                             <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
                         </Col>
                     </Row>
                     {isDefined(totpSharedSecret) && isDefined(totpSharedSecret.sharedSecret) ?
                         <Form onSubmit={setupMFA}>
                             <Row>
-                                <Col md={{size: 6, offset: 3}}>
+                                <Col>
                                     <h5>Configure Two-factor Authentication (2FA)</h5>
                                     <p><strong>Step 1:</strong> Scan the QRcode below on your phone</p>
                                     <div className="qrcode-mfa vertical-center">
@@ -104,9 +104,9 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                     </FormGroup>
                                     <FormGroup>
                                         <Button
-                                            className="btn-secondary"
+                                            type="submit"
+                                            className="btn-secondary w-100"
                                             disabled={!mfaVerificationCode}
-                                            onClick={setupMFA}
                                         >
                                             {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
                                         </Button>
@@ -116,10 +116,11 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                         </Form>
                         :
                         <Row>
-                            <Col md={{size: 6, offset: 3}}>
+                            <Col>
                                 <FormGroup>
                                     <Button
-                                        className="btn-secondary"
+                                        type="button"
+                                        className="btn-secondary w-100"
                                         onClick={() => newMFASecret()}
                                     >
                                         {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
@@ -131,7 +132,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                 </Col>
             </Row>
             : <Row className="pt-4">
-                <Col className="text-center">
+                <Col xs={{size: 6, offset: 3}} className="text-center px-4">
                     {!editingOtherUser && userAuthSettings && userAuthSettings.linkedAccounts && <p>
                         You do not currently have a password set for this account; you
                         sign in using {" "}
@@ -146,7 +147,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
         }
         {editingOtherUser &&
             <Row className="pt-4">
-                <Col className="text-center">
+                <Col xs={{size: 6, offset: 3}} className="text-center px-4">
                     {userAuthSettings && <p>
                         <FormGroup>
                             <Button
@@ -161,6 +162,6 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
             </Row>
         }
 
-    </CardBody>
+    </CardBody>;
 };
 export default UserMFA;

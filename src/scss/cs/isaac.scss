@@ -13,6 +13,7 @@
 // Greyscale
 $cs-black: #000000;
 $cs-jet: #333333;
+$cs-muted: #4D575C;
 $cs-dark-silver: #B9B9B9;
 $cs-silver: #C2C2C2;
 $cs-light-gray: #D6D6D6;
@@ -307,6 +308,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "table";
 @import "tabs";
 @import "accordions";
+@import "../common/cookies";
 @import "cards";
 @import "list-groups";
 @import "inequality-modal";
@@ -320,6 +322,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "../common/reservation-modal";
 @import "../common/fasttrack";
 @import "../common/scroll";
+@import "../common/checkbox";
 @import "button";
 @import "logo";
 @import "featured-profile";

@@ -1,7 +1,6 @@
 import React, {ChangeEvent, MouseEvent, useEffect, useRef, useState} from 'react';
 import {Button, Input, InputGroup, InputProps} from "reactstrap";
 import range from 'lodash/range';
-import _cloneDeep from 'lodash/cloneDeep';
 
 // @ts-ignore This value definition is a bit dodgy but should work.
 export interface DateInputProps extends InputProps {
@@ -230,30 +229,35 @@ export const DateInput = (props: DateInputProps) => {
         }
     };
 
-    const yearRange: number[] = _cloneDeep(props.yearRange) || range(currentYear, 1899, -1);
+    const yearRange: number[] = props.yearRange || range(currentYear, 1899, -1);
     // To prevent visual bug temporarily add the selected year to the range
-    const selectedYear: number | undefined = values.year.get();
-    if (selectedYear && !(yearRange.includes(selectedYear))) {
-        yearRange.push(selectedYear);
-    }
+    const preSelectedYear: number | undefined = values.year.get();
 
     const controlPropsWithValidationStripped = {...controlProps, valid: undefined, invalid: undefined};
 
     return <React.Fragment>
         <InputGroup id={props.id} {...controlPropsWithValidationStripped} className={inputGroupClasses}>
-            <Input className="date-input-day mr-1" type="select" {...controlProps} aria-label={`Day${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("day")} value={values.day.get() || ""}>
-                {values.day.get() === undefined && <option />}
-                {range(1, Math.max(lastInMonth(), values.day.get() || 0) + 1).map(day => <option key={day}>{day}</option>)}
-            </Input>
-            <Input className="date-input-month mr-1" type="select" {...controlProps} aria-label={`Month${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("month")} value={values.month.get() || ""}>
-                {values.month.get() === undefined && <option />}
-                {MONTHS.map((month, index)=> <option value={index + 1} key={index + 1}>{month}</option>)}
-            </Input>
-            <Input className="date-input-year mr-1" type="select" {...controlProps} aria-label={`Year${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("year")} value={values.year.get() || ""}>
-                {values.year.get() === undefined && <option />}
-                {/* Hide the invalid option added */}
-                {yearRange.map(year => <option key={year} className={props.yearRange?.includes(year) ? "" : "d-none"}>{year}</option>)}
-            </Input>
+            {/* these wrappers exist as ::after pseudo-elements don't work with .select */}
+            <div className="date-input-wrapper date-input-day position-relative mr-1">
+                <Input type="select" {...controlProps} aria-label={`Day${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("day")} value={values.day.get() || ""}>
+                    {values.day.get() === undefined && <option />}
+                    {range(1, Math.max(lastInMonth(), values.day.get() || 0) + 1).map(day => <option key={day}>{day}</option>)}
+                </Input>
+            </div>
+            <div className="date-input-wrapper date-input-month position-relative mr-1">
+                <Input type="select" {...controlProps} aria-label={`Month${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("month")} value={values.month.get() || ""}>
+                    {values.month.get() === undefined && <option />}
+                    {MONTHS.map((month, index)=> <option value={index + 1} key={index + 1}>{month}</option>)}
+                </Input>
+            </div>
+            <div className="date-input-wrapper date-input-year position-relative mr-1">
+                <Input type="select" {...controlProps} aria-label={`Year${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("year")} value={values.year.get() || ""}>
+                    {values.year.get() === undefined && <option />}
+                    {yearRange.map(year => <option key={year}>{year}</option>)}
+                    {/* Add the preselected year as an invisible option */}
+                    {preSelectedYear && !yearRange.includes(preSelectedYear) && <option className="d-none">{preSelectedYear}</option>}
+                </Input>
+            </div>
             {(props.noClear === undefined || !props.noClear) && <Button close {...controlPropsWithValidationStripped} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />}
         </InputGroup>
         <Input innerRef={hiddenRef} type="hidden" name={props.name} value={calculateHiddenValue()} {...controlProps} />
