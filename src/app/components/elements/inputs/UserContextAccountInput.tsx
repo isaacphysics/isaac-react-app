@@ -53,9 +53,10 @@ function UserContextRow({
         }
         // Set exam board to something sensible (for CS)
         const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
-        const examBoard = getFilteredExamBoardOptions(
+        const possibleExamBoards = getFilteredExamBoardOptions(
             {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
-        })[0]?.value || EXAM_BOARD.ALL;
+            }) || [EXAM_BOARD.ALL];
+        const examBoard = possibleExamBoards.map(e => e.value).includes(userContext.examBoard as EXAM_BOARD) && userContext.examBoard || possibleExamBoards[0].value;
         setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
 
         // Set display settings default values
@@ -76,7 +77,7 @@ function UserContextRow({
             <StyledDropdown
                 className={classNames("account-dropdown", {"mr-1" : isAda})}
                 aria-label="Stage"
-                invalid={required && submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
+                invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
                 onChange={onStageUpdate}
                 value={userContext.stage}
             >
