@@ -39,7 +39,6 @@ import {
     ProgrammingLanguage,
     UserPreferencesDTO,
 } from "../../../IsaacAppTypes";
-import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
 import {UserEmailPreferencesPanel} from "../elements/panels/UserEmailPreferencesPanel";
 import {

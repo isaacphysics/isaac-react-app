@@ -90,7 +90,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 <UserContextAccountInput
                     user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
                     displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
-                    setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted} required={isPhy}
+                    setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted} required={true}
                 />
             }
         </>}
