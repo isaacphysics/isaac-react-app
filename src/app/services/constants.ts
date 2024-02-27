@@ -938,6 +938,8 @@ export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 
 export const FEATURED_NEWS_TAG = "featured";
 
+export const NEWS_PODS_PER_PAGE = 12; // <= api.MAX_PODS_TO_RETURN (if lower, the backend will still return the maximum number of pods, but they won't be displayed in the frontend)
+
 export const PATHS = siteSpecific({
     ASSIGNMENT_PROGRESS: "/assignment_progress",
     MY_GAMEBOARDS: "/my_gameboards",

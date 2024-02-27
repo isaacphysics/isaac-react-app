@@ -9,7 +9,7 @@ import { HomepageYoutubeCookieHandler } from "../../handlers/InterstitialCookieH
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
-    const {data: news} = useGetNewsPodListQuery({subject: "physics", orderDecending: true});
+    const {data: news} = useGetNewsPodListQuery({subject: "physics"});
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
     const userContext = useUserContext();

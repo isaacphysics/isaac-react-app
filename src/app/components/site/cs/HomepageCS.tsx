@@ -14,7 +14,7 @@ import {MetaDescription} from "../../elements/MetaDescription";
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
-    const {data: news} = useGetNewsPodListQuery({subject: "news", orderDecending: true});
+    const {data: news} = useGetNewsPodListQuery({subject: "news"});
 
     return <>
         {/*<WarningBanner/>*/}
