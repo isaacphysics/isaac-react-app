@@ -296,9 +296,9 @@ export const stageLabelMap: {[stage in Stage]: string} = {
     a_level: "A\u00A0Level",
     further_a: "Further\u00A0A",
     university: "University",
-    scotland_national_5: "National 5",
+    scotland_national_5: "N5",
     scotland_higher: "Higher",
-    scotland_advanced_higher: "Adv. Higher",
+    scotland_advanced_higher: "Adv Higher",
     all: "All stages",
 };
 

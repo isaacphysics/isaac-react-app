@@ -11,6 +11,7 @@ import {
     NOT_FOUND,
     notRelevantMessage,
     scrollVerticallyIntoView,
+    siteSpecific,
     useUserContext
 } from "../../services";
 import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
@@ -168,9 +169,9 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }}
                 aria-expanded={isOpen ? "true" : "false"}
             >
-                {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center " +
+                {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center p-1 " +
                     "justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
-                    {audienceString}
+                    {siteSpecific(audienceString, audienceString.split("\n").map((line, i, arr) => <>{line}{i < arr.length && <br/>}</>))}
                 </span>}
                 <div className="accordion-title pl-3">
                     <RS.Row>
