@@ -237,6 +237,7 @@ const _STAGE_ITEM_OPTIONS = siteSpecific([ /* best not to export - use getFilter
     {label: "National 5", value: STAGE.SCOTLAND_NATIONAL_5},
     {label: "Higher", value: STAGE.SCOTLAND_HIGHER},
     {label: "Advanced Higher", value: STAGE.SCOTLAND_ADVANCED_HIGHER},
+    {label: "All stages", value: STAGE.ALL},
 ]);
 interface StageFilterOptions {
     byUser?: Immutable<PotentialUser> | null;
