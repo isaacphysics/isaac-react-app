@@ -184,6 +184,13 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     accordionClientId?: string;
 }
 
+export interface InlineQuestionDTO extends AppQuestionDTO {
+    validationResponse?: Immutable<ApiTypes.QuestionValidationResponseDTO & {
+        partsCorrect?: number;
+        partsTotal?: number;
+    }>;
+}
+
 export interface AppGroup extends ApiTypes.UserGroupDTO {
     members?: AppGroupMembership[];
 }
@@ -398,9 +405,10 @@ export const ClozeDropRegionContext = React.createContext<{
 export const InlineStringEntryZoneContext = React.createContext<{
     docId: string | undefined,
     elementToQuestionMap: {[elementId: string]: {questionId: string}},
-    canSubmit: boolean,
-    modified: boolean,
-    setModified: React.Dispatch<React.SetStateAction<boolean>>,
+    modifiedElements: string[],
+    setModifiedElements: React.Dispatch<React.SetStateAction<string[]>>,
+    isModifiedSinceLastSubmission: boolean,
+    setIsModifiedSinceLastSubmission: React.Dispatch<React.SetStateAction<boolean>>,
     submitting: boolean,
     setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
     feedbackIndex: number,

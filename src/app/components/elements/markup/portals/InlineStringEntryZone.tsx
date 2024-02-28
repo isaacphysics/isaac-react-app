@@ -17,20 +17,21 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
     const questionDTO = selectQuestionPart(pageQuestions, questionId);
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<StringChoiceDTO>(questionId as string);
 
+    const bestAttempt = questionDTO?.bestAttempt?.answer?.value ?? "";
+    const [previousAttempt, setPreviousAttempt] = useState<string | undefined>(bestAttempt);
+
     const [modified, setModified] = useState(false);
 
     useEffect(() => {
-        if (inlineContext) {
-            inlineContext.setModified(m => m || modified);
-        }
-    }, [inlineContext, modified]);
-
-    useEffect(() => {
         // only show the "Correct!" / "Incorrect" message once the last part submission has returned 
-        if (inlineContext) {
+        if (inlineContext && questionDTO?.validationResponse) {
+            setModified(false);
+            setPreviousAttempt(currentAttempt?.value);
             const elements = Object.keys(inlineContext.elementToQuestionMap);
             if (elements.indexOf(safeElementId) === elements.length - 1) {
                 inlineContext.setSubmitting(false);
+                inlineContext.setModifiedElements([]);
+                inlineContext.setIsModifiedSinceLastSubmission(false);
             }
         }
     }, [questionDTO?.validationResponse]);
@@ -52,10 +53,12 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
                 className="inline-part"
                 value={currentAttempt?.value ?? ""}
                 onChange={(e) => {
+                    const modified = e.target.value !== previousAttempt;
+                    setModified(modified);
                     if (inlineContext) {
-                        inlineContext.canSubmit = true;
+                        inlineContext.setModifiedElements((m : string[]) => modified ? [...m, ...(m.includes(safeElementId) ? [] : [safeElementId])] : m.filter((e : string) => e !== safeElementId));
+                        inlineContext.setIsModifiedSinceLastSubmission(m => m || modified);
                     }
-                    setModified(true);
                     dispatchSetCurrentAttempt({type: "stringChoice", value: e.target.value});
                 }} 
             />,

@@ -29,7 +29,7 @@ import {
     wasTodayUTC
 } from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
-import {AccordionSectionContext, AppQuestionDTO, ConfidenceContext, GameboardContext, InlineStringEntryZoneContext} from "../../../IsaacAppTypes";
+import {AccordionSectionContext, AppQuestionDTO, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineStringEntryZoneContext} from "../../../IsaacAppTypes";
 import {RouteComponentProps, withRouter} from "react-router";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
@@ -99,11 +99,16 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const isFastTrack = fastTrackInfo.isFastTrackPage && currentGameboard?.id && fastTrackProgressEnabledBoards.includes(currentGameboard.id);
 
     const inlineContext = useContext(InlineStringEntryZoneContext);
-    const numInlineQuestions = Object.values(inlineContext?.elementToQuestionMap ?? {}).length;
+    const isInlineQuestion = doc.type === "isaacInlineRegion" && inlineContext;
+
+    const numInlineQuestions = isInlineQuestion ? Object.values(inlineContext?.elementToQuestionMap ?? {}).length : undefined;
+    const numCorrectInlineQuestions = (isInlineQuestion && validationResponse) ? (questionPart as InlineQuestionDTO).validationResponse?.partsCorrect : undefined;
+    const showInlineAttemptStatus = !isInlineQuestion || !inlineContext?.isModifiedSinceLastSubmission;
+    const almost = !correct && numCorrectInlineQuestions && numCorrectInlineQuestions > 0;
 
     // Determine Action Buttons
     const primaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) :
-        doc.type === "isaacInlineRegion" ? {disabled: !inlineContext?.canSubmit, value: "Check my answer", type: "submit", onClick: () => { 
+        doc.type === "isaacInlineRegion" ? {disabled: !canSubmit, value: "Check my answer", type: "submit", onClick: () => { 
             submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch);
     }} :
         {disabled: !canSubmit, value: "Check my answer", type: "submit"};
@@ -114,8 +119,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     const validationFeedback = invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
         <IsaacContent doc={validationResponse?.explanation as ContentDTO}/>;
-
-    const inlineSubmitting = inlineContext?.submitting ?? false;
 
     return <ConfidenceContext.Provider value={{recordConfidence}}>
         <RS.Form onSubmit={(event) => {
@@ -157,14 +160,21 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {isAda && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
 
                 {/* Validation Response */}
-                {showQuestionFeedback && validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : ""}`}>
+                {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && <div 
+                    className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
+                >
                     <div className="pb-1">
-                        <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
+                        {
+                            isInlineQuestion && numCorrectInlineQuestions ? 
+                                <h1 className="m-0">{correct ? "Correct!" : numCorrectInlineQuestions > 0 ? "Almost..." : "Incorrect"}</h1> :
+                                <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
+                        }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
-                        {inlineContext ? <>
+                        {isInlineQuestion && numInlineQuestions ? <>
                             <span>You can view feedback for individual parts using the control panel below.</span>
-                                <div className="w-100 mt-2 d-flex feedback-panel">
+                            <div className={`feedback-panel-${almost ? "light" : "dark"}`}>
+                                <div className={`w-100 mt-2 d-flex feedback-panel-header`}>
                                     <RS.Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex - 1) + numInlineQuestions) % numInlineQuestions);
                                     }}>
@@ -182,6 +192,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                 <div className="feedback-panel-content py-3">
                                     {validationFeedback}
                                 </div>
+                            </div>
                         </> : validationFeedback}
                     </div>}
                 </div>}
