@@ -27,8 +27,8 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.theoryOfComputation, title: "Models of computation", parent: TAG_ID.computerScience, stageOverride: GCSE_HIDDEN},
 
         // AI and machine learning topics
-        {id: TAG_ID.artificialIntelligence, title: "Artificial intelligence", parent: TAG_ID.aiAndMachineLearning},
-        {id: TAG_ID.machineLearning, title: "Machine learning", parent: TAG_ID.aiAndMachineLearning},
+        {id: TAG_ID.artificialIntelligence, title: "Artificial intelligence", parent: TAG_ID.aiAndMachineLearning, new: true},
+        {id: TAG_ID.machineLearning, title: "Machine learning", parent: TAG_ID.aiAndMachineLearning, new: true},
 
         // Algorithms and data structures topics
         {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms},
