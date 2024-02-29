@@ -411,6 +411,7 @@ export const InlineStringEntryZoneContext = React.createContext<{
     setIsModifiedSinceLastSubmission: React.Dispatch<React.SetStateAction<boolean>>,
     submitting: boolean,
     setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
+    canShowWarningToast: boolean,
     feedbackIndex: number,
     setFeedbackIndex: React.Dispatch<React.SetStateAction<number>>,
 } | undefined>(undefined);

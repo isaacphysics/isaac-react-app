@@ -237,7 +237,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     </ConfidenceContext.Provider>;
 });
 
-export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, currentGameboard: ApiTypes.GameboardDTO | undefined, currentUser: any, dispatch: any) => {
+export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, currentGameboard: ApiTypes.GameboardDTO | undefined, currentUser: any, dispatch: any, inlineContext?: ContextType<typeof InlineStringEntryZoneContext>) => {
     if (questionPart?.currentAttempt) {
         // Notify Plausible that at least one question attempt has taken place today
         if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {
@@ -245,7 +245,7 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
             trackEvent("question_attempted");
         }
 
-        dispatch(attemptQuestion(docId, questionPart?.currentAttempt, currentGameboard?.id));
+        dispatch(attemptQuestion(docId, questionPart?.currentAttempt, currentGameboard?.id, inlineContext));
         if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
             dispatch(saveGameboard({
                 boardId: currentGameboard.id,

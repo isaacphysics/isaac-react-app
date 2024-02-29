@@ -65,9 +65,11 @@ export const submitInlineRegion = (inlineContext: ContextType<typeof InlineStrin
         for (const inlineQuestion of pageQuestions) {
             if (inlineQuestion.id?.startsWith(inlineContext.docId) && inlineQuestion.id?.includes("|inline-question:")) {
                 // TODO: only submit modifiedElements (stored in the context)
-                submitCurrentAttempt({currentAttempt: {type: "stringChoice", value: inlineQuestion.currentAttempt?.value}}, inlineQuestion.id, currentGameboard, currentUser, dispatch);
+                submitCurrentAttempt({currentAttempt: {type: "stringChoice", value: inlineQuestion.currentAttempt?.value}}, 
+                    inlineQuestion.id, currentGameboard, currentUser, dispatch, inlineContext);
             }
         }
+        inlineContext.canShowWarningToast = true;
     }
 };
 

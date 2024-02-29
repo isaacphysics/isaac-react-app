@@ -58,9 +58,11 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
             const [modifiedElements, setModifiedElements] = React.useState([] as string[]);
             const [isModifiedSinceLastSubmission, setIsModifiedSinceLastSubmission] = React.useState(false);
             const [submitting, setSubmitting] = React.useState(false);
+            const canShowWarningToast = useRef(true).current; 
+            // above is a ref because multiple questions are submitted during the same render cycle; this value needs to update during this time, which setState doesn't guarantee.
             tempSelectedComponent = <InlineStringEntryZoneContext.Provider value={{ 
                 docId: props.doc.id, elementToQuestionMap: questionPartIdMap, modifiedElements, setModifiedElements, isModifiedSinceLastSubmission,
-                setIsModifiedSinceLastSubmission, feedbackIndex, setFeedbackIndex, submitting, setSubmitting }}
+                canShowWarningToast, setIsModifiedSinceLastSubmission, feedbackIndex, setFeedbackIndex, submitting, setSubmitting }}
             >
                 {tempSelectedComponent}
             </InlineStringEntryZoneContext.Provider>;
