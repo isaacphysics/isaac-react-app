@@ -1,4 +1,4 @@
-import React, {Suspense, useContext, useEffect} from "react";
+import React, {ContextType, Suspense, useContext, useEffect} from "react";
 import {
     attemptQuestion,
     deregisterQuestions,
@@ -13,6 +13,7 @@ import * as ApiTypes from "../../../IsaacApiTypes";
 import {BEST_ATTEMPT_HIDDEN, ContentDTO} from "../../../IsaacApiTypes";
 import * as RS from "reactstrap";
 import {
+    below,
     determineFastTrackPrimaryAction,
     determineFastTrackSecondaryAction,
     fastTrackProgressEnabledBoards,
@@ -25,6 +26,7 @@ import {
     QUESTION_TYPES,
     selectQuestionPart,
     trackEvent,
+    useDeviceSize,
     useFastTrackInformation,
     wasTodayUTC
 } from "../../services";
@@ -58,6 +60,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
+    const deviceSize = useDeviceSize();
 
     const {confidenceState, setConfidenceState, validationPending, setValidationPending, confidenceDisabled, recordConfidence, showQuestionFeedback} = useConfidenceQuestionsValues(
         currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD"),
@@ -178,7 +181,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                     <RS.Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex - 1) + numInlineQuestions) % numInlineQuestions);
                                     }}>
-                                        Previous
+                                        {below["xs"](deviceSize) ? "◀" : "Previous" }
                                     </RS.Button>
                                     <Spacer/>
                                     <div className="align-self-center">Part {inlineContext.feedbackIndex + 1} of {numInlineQuestions}</div>
@@ -186,7 +189,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                     <RS.Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex + 1) % numInlineQuestions);
                                     }}>
-                                        Next
+                                        {below["xs"](deviceSize) ? "▶" : "Next"}
                                     </RS.Button>
                                 </div>
                                 <div className="feedback-panel-content py-3">

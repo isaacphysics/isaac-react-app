@@ -5,6 +5,7 @@ import { selectQuestionPart, useCurrentQuestionAttempt } from "../../../../servi
 import { StringChoiceDTO } from "../../../../../IsaacApiTypes";
 import { InlineStringEntryZoneContext } from "../../../../../IsaacAppTypes";
 import { selectors, useAppSelector } from "../../../../state";
+import classNames from "classnames";
 
 const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineElementId: string, width: number, height: number, root: HTMLElement}) => {
     
@@ -19,6 +20,9 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
 
     const bestAttempt = questionDTO?.bestAttempt?.answer?.value ?? "";
     const [previousAttempt, setPreviousAttempt] = useState<string | undefined>(bestAttempt);
+
+    const [elementIndex, _setElementIndex] = useState<number>(Object.keys(inlineContext?.elementToQuestionMap ?? {}).indexOf(safeElementId));
+    const [isSelectedFeedback, setIsSelectedFeedback] = useState<boolean>(false);
 
     const [modified, setModified] = useState(false);
 
@@ -36,6 +40,10 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
         }
     }, [questionDTO?.validationResponse]);
 
+    useEffect(() => {
+        setIsSelectedFeedback(inlineContext?.feedbackIndex === elementIndex);
+    }, [elementIndex, inlineContext?.feedbackIndex]);
+
     const inlineStringEntryZone = root?.querySelector(`#${inlineElementId}`);
 
     if (!inlineStringEntryZone) {
@@ -50,7 +58,7 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
                 invalid={questionDTO?.validationResponse?.correct === false || (!modified && questionDTO?.bestAttempt?.correct === false)} 
                 id={inlineElementId} 
                 style={{width: `${width}px`, height: `${height}px`}}
-                className="inline-part"
+                className={classNames("inline-part", {"selected-feedback": isSelectedFeedback})}
                 value={currentAttempt?.value ?? ""}
                 onChange={(e) => {
                     const modified = e.target.value !== previousAttempt;
@@ -61,6 +69,7 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
                     }
                     dispatchSetCurrentAttempt({type: "stringChoice", value: e.target.value});
                 }} 
+                onFocus={() => inlineContext?.setFeedbackIndex(elementIndex)}
             />,
             inlineStringEntryZone
         )}

@@ -393,6 +393,10 @@
     border-radius: 10px 10px 0 0;
     > button {
       color: inherit;
+      min-width: 176px;
+      @media (max-width: 576px) {
+        min-width: 0;
+      }
       &:hover {
         color: inherit;
       }
@@ -415,7 +419,15 @@
 
 .inline-part {
   outline: none !important;
-  &.selected {
-    border-width: 3px;
+  $shadow-size: 3px;
+  &.selected-feedback {
+    box-shadow: 0 0 0 $shadow-size #000;
+    // these colours should match the .form-control bootstrap colours
+    &.is-valid {
+      box-shadow: 0 0 0 $shadow-size #208838;
+    }
+    &.is-invalid {
+      box-shadow: 0 0 0 $shadow-size #dc3545;
+    }
   }
 }

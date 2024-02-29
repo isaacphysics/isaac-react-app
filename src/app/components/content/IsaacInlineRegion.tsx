@@ -70,6 +70,7 @@ export const submitInlineRegion = (inlineContext: ContextType<typeof InlineStrin
             }
         }
         inlineContext.canShowWarningToast = true;
+        inlineContext.setFeedbackIndex(0);
     }
 };
 
