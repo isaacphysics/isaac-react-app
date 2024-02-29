@@ -2,9 +2,8 @@ import React, {useEffect} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, CardDeck, Col, Container, Row} from "reactstrap";
-import {SITE_TITLE} from "../../../services";
+import {EXAM_BOARD, SITE_TITLE, STAGE, useUserContext, history} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
-import {WarningBanner} from "../../navigation/WarningBanner";
 import {AdaHero1x1, AdaHero2x1} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
@@ -15,6 +14,7 @@ export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
+    const {setStage, setExamBoard} = useUserContext();
 
     return <>
         {/*<WarningBanner/>*/}
@@ -38,6 +38,21 @@ export const HomepageCS = () => {
                             <AdaHero1x1 className={"d-lg-block d-none"}/>
                             <AdaHero2x1 className={"mt-5 mt-lg-0 d-lg-none d-block"}/>
                         </Col>
+                    </Row>
+                </Container>
+            </section>
+
+            <section>
+                <Container className={"py-lg-6 py-5"}>
+                    <Row>
+                        Are you an American or an American't?
+                        <Button onClick={
+                            () => {
+                                setStage(STAGE.SCOTLAND_NATIONAL_5);
+                                setExamBoard(EXAM_BOARD.SQA);
+                                history.push("/topics")
+                            }
+                        }>USA! USA! USA!</Button>
                     </Row>
                 </Container>
             </section>
