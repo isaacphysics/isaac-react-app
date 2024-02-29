@@ -1,5 +1,5 @@
 import {AssignmentDTO} from "../../../IsaacApiTypes";
-import React, {MouseEvent, useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {Button, Col, Collapse, Label, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {
@@ -85,7 +85,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                                         <span className="board-subject-hexagon subject-complete"/> :
                                         <>
                                             {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
-                                            <div className="board-percent-completed">{boardPercentageAttempted}</div>
+                                            <div className="board-percent-completed">{boardPercentageAttempted ?? 0}</div>
                                         </>
                                     )}
                                 </div>
@@ -101,7 +101,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                                         <span className="board-subject-hexagon subject-complete"/> :
                                         <>
                                             {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
-                                            <div className="board-percent-completed">{assignment.gameboard.percentageCompleted}</div>
+                                            <div className="board-percent-completed">{assignment.gameboard.percentageCompleted ?? 0}</div>
                                         </>
                                     )}
                                 </div>
