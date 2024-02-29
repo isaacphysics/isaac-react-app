@@ -179,15 +179,15 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`}>
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header`}>
                                     <RS.Button color="transparent" onClick={() => {
-                                        inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex - 1) + numInlineQuestions) % numInlineQuestions);
+                                        inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
                                     }}>
                                         {below["xs"](deviceSize) ? "◀" : "Previous" }
                                     </RS.Button>
                                     <Spacer/>
-                                    <div className="align-self-center">Part {inlineContext.feedbackIndex + 1} of {numInlineQuestions}</div>
+                                    <div className="align-self-center">Part {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}</div>
                                     <Spacer/>
                                     <RS.Button color="transparent" onClick={() => {
-                                        inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex + 1) % numInlineQuestions);
+                                        inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
                                     }}>
                                         {below["xs"](deviceSize) ? "▶" : "Next"}
                                     </RS.Button>

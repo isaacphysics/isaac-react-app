@@ -30,6 +30,13 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
     const partsCorrect = currentAttempts?.filter(r => r?.correct).length;
     const partsTotal = currentAttempts?.length;
     const correct = partsCorrect !== undefined && (partsCorrect === partsTotal);
+    const canSubmit = (inlineContext?.modifiedQuestionIds?.length ?? 0) > 0 && !inlineContext?.submitting;
+
+    const isFeedbackShown = validationResponses?.some(vr => vr !== undefined) && !inlineContext?.submitting && !inlineContext?.isModifiedSinceLastSubmission && !canSubmit;
+
+    if (isFeedbackShown && inlineContext?.feedbackIndex === undefined) {
+        inlineContext?.setFeedbackIndex(0);
+    }
     
     const explanation = {
         ...validationResponses?.[0]?.explanation, 
@@ -55,7 +62,7 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
             partsTotal: partsTotal,
         } : undefined,
         locked: lockedDates?.length ? new Date(lockedDates.reduce((a, b) => Math.max(a, b.valueOf()), 0)) : undefined,
-        canSubmit: (inlineContext?.modifiedElements?.length ?? 0) > 0 && !inlineContext?.submitting,
+        canSubmit: canSubmit,
     };
 };
 
@@ -64,9 +71,11 @@ export const submitInlineRegion = (inlineContext: ContextType<typeof InlineStrin
         inlineContext.setSubmitting(true);
         for (const inlineQuestion of pageQuestions) {
             if (inlineQuestion.id?.startsWith(inlineContext.docId) && inlineQuestion.id?.includes("|inline-question:")) {
-                // TODO: only submit modifiedElements (stored in the context)
-                submitCurrentAttempt({currentAttempt: {type: "stringChoice", value: inlineQuestion.currentAttempt?.value}}, 
-                    inlineQuestion.id, currentGameboard, currentUser, dispatch, inlineContext);
+                // only submit modified questions, and questions that have not been submitted before (to get the initial incorrect response)
+                if (inlineContext.modifiedQuestionIds.includes(inlineQuestion.id) || inlineQuestion.bestAttempt === undefined) {
+                    submitCurrentAttempt({currentAttempt: {type: "stringChoice", value: inlineQuestion.currentAttempt?.value}}, 
+                        inlineQuestion.id, currentGameboard, currentUser, dispatch, inlineContext);
+                }
             }
         }
         inlineContext.canShowWarningToast = true;

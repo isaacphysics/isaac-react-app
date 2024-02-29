@@ -405,15 +405,15 @@ export const ClozeDropRegionContext = React.createContext<{
 export const InlineStringEntryZoneContext = React.createContext<{
     docId: string | undefined,
     elementToQuestionMap: {[elementId: string]: {questionId: string}},
-    modifiedElements: string[],
-    setModifiedElements: React.Dispatch<React.SetStateAction<string[]>>,
+    modifiedQuestionIds: string[],
+    setModifiedQuestionIds: React.Dispatch<React.SetStateAction<string[]>>,
     isModifiedSinceLastSubmission: boolean,
     setIsModifiedSinceLastSubmission: React.Dispatch<React.SetStateAction<boolean>>,
     submitting: boolean,
     setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
     canShowWarningToast: boolean,
-    feedbackIndex: number,
-    setFeedbackIndex: React.Dispatch<React.SetStateAction<number>>,
+    feedbackIndex?: number,
+    setFeedbackIndex: React.Dispatch<React.SetStateAction<number | undefined>>,
 } | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);

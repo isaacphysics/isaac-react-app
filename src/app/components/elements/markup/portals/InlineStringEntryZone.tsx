@@ -34,7 +34,7 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
             const elements = Object.keys(inlineContext.elementToQuestionMap);
             if (elements.indexOf(safeElementId) === elements.length - 1) {
                 inlineContext.setSubmitting(false);
-                inlineContext.setModifiedElements([]);
+                inlineContext.setModifiedQuestionIds([]);
                 inlineContext.setIsModifiedSinceLastSubmission(false);
             }
         }
@@ -61,15 +61,15 @@ const InlineStringEntryZone = ({inlineElementId, width, height, root}: {inlineEl
                 className={classNames("inline-part", {"selected-feedback": isSelectedFeedback})}
                 value={currentAttempt?.value ?? ""}
                 onChange={(e) => {
-                    const modified = e.target.value !== previousAttempt;
-                    setModified(modified);
-                    if (inlineContext) {
-                        inlineContext.setModifiedElements((m : string[]) => modified ? [...m, ...(m.includes(safeElementId) ? [] : [safeElementId])] : m.filter((e : string) => e !== safeElementId));
+                    if (inlineContext && questionId) {
+                        const modified = e.target.value !== previousAttempt;
+                        setModified(modified);
+                        inlineContext.setModifiedQuestionIds((m : string[]) => modified ? [...m, ...(m.includes(questionId) ? [] : [questionId])] : m.filter((e : string) => e !== questionId));
                         inlineContext.setIsModifiedSinceLastSubmission(m => m || modified);
+                        dispatchSetCurrentAttempt({type: "stringChoice", value: e.target.value});
                     }
-                    dispatchSetCurrentAttempt({type: "stringChoice", value: e.target.value});
                 }} 
-                onFocus={() => inlineContext?.setFeedbackIndex(elementIndex)}
+                onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
             />,
             inlineStringEntryZone
         )}
