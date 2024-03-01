@@ -3,7 +3,7 @@ import React from "react";
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import {isAda, isTeacherOrAbove} from "../../../services";
+import {isAda} from "../../../services";
 
 interface EmailInputProps {
     className?: string;
@@ -20,7 +20,7 @@ export const EmailInput = ({className, userToUpdate, setUserToUpdate, emailIsVal
                htmlFor="email-input">Email address</Label>
         {isAda &&
                 <p className="d-block input-description">
-                    {isTeacherOrAbove(userToUpdate) ?
+                    {(userToUpdate.role !== "STUDENT") && (userToUpdate.role !== "TUTOR") ?
                         "This will be visible to your students. We recommend using your school email address."
                         :
                         "This will be the email address you use to log in."
