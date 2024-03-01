@@ -21,22 +21,32 @@ export const HomepageCS = () => {
         <MetaDescription description={"Ada Computer Science is a free online computer science programme for students and teachers. Learn by using our computer science topics and questions!"}/>
         <div id="homepage">
             <section id="call-to-action" className="homepageHero">
-                <Container className="py-lg-6 pt-3 pb-5 z1 px-lg-6 px-4" fluid>
+                <Container className="py-5 px-md-4 px-xxl-5" fluid>
                     <Row className={"justify-content-center homepage-hero-logged-out"}>
-                        <Col lg={6} xl={5} className={"my-auto mw-640"}>
-                            <h1 className={"font-size-1-75 font-size-md-2 font-size-xxl-2-5"}>
+                        <Col xs={12} lg={7} className={"my-auto"}>
+                            <h1 className={"font-size-1-75"}>
                                 <span className={"text-pink"}>/</span><br/>
-                                Welcome to Ada Computer Science, <span className={"font-weight-regular"}>the free online platform for teachers and students around the world.</span>
+                                Computer science education should be accessible for everyone
                             </h1>
                             <p className={"font-size-1 font-size-md-1-25 py-3"}>
-                                Developed by the Raspberry Pi Foundation and the University of Cambridge.
+                                We create free resources to help teachers and students around the world
                             </p>
-                            <Button tag={Link} to={user?.loggedIn ? "/topics" : "/register"} color="dark-primary">{user?.loggedIn ? "Browse topics" : "Get started"}</Button>
+                            <Row className="justify-content-start align-items-center my-3">
+                                <Col xs={6} sm={3}>
+                                    <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
+                                        <img src="/assets/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
+                                    </a>
+                                </Col>
+                                <Col xs={6} sm={3}>
+                                    <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
+                                        <img src="/assets/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
+                                    </a>
+                                </Col>
+                            </Row>
+                            <Button className="mt-3" tag={Link} to="/topics" color="dark-primary">Explore topics</Button>
                         </Col>
-                        <Col xl={2} className={"spacer d-none d-xl-block"}/>
-                        <Col lg={6} xl={5} className={"mw-640 mb-1 mb-sm-3 mb-lg-0"}>
-                            <AdaHero1x1 className={"d-lg-block d-none"}/>
-                            <AdaHero2x1 className={"mt-5 mt-lg-0 d-lg-none d-block"}/>
+                        <Col xs={12} lg={5} className={"mb-1 mb-sm-3 mb-lg-0"}>
+                            <AdaHero2x1 className={"mt-5 mt-lg-0 d-block"}/>
                         </Col>
                     </Row>
                 </Container>

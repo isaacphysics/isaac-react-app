@@ -8,17 +8,6 @@
   section#call-to-action {
     background-color: $cs-black;
     color: $cs-white;
-    .mw-640 {
-      max-width: 640px;
-    }
-    .spacer {
-      @include media-breakpoint-between(xl, xxl) {
-        max-width: 80px;
-      }
-      @include media-breakpoint-up(xxl) {
-        max-width: 160px;
-      }
-    }
   }
 
   img#homepageHeroImg {
