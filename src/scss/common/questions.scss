@@ -400,6 +400,16 @@
       &:hover {
         color: inherit;
       }
+      &.inline-part-jump {
+        font-family: inherit;
+        font-size: 1rem;
+        text-decoration: underline;
+        text-decoration-thickness: 0.05rem;
+        text-underline-offset: 0.1rem;
+        &:hover {
+          text-decoration: none;
+        }
+      }
     }
   }
 

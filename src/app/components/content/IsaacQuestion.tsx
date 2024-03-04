@@ -101,9 +101,11 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     // FastTrack buttons should only show up if on a FastTrack-enabled board
     const isFastTrack = fastTrackInfo.isFastTrackPage && currentGameboard?.id && fastTrackProgressEnabledBoards.includes(currentGameboard.id);
 
+    // Inline questions
     const inlineContext = useContext(InlineStringEntryZoneContext);
     const isInlineQuestion = doc.type === "isaacInlineRegion" && inlineContext;
 
+    const inlineElementIds = Object.keys(inlineContext?.elementToQuestionMap ?? {});
     const numInlineQuestions = isInlineQuestion ? Object.values(inlineContext?.elementToQuestionMap ?? {}).length : undefined;
     const numCorrectInlineQuestions = (isInlineQuestion && validationResponse) ? (questionPart as InlineQuestionDTO).validationResponse?.partsCorrect : undefined;
     const showInlineAttemptStatus = !isInlineQuestion || !inlineContext?.isModifiedSinceLastSubmission;
@@ -176,7 +178,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     {validationResponse.explanation && <div className="mb-2">
                         {isInlineQuestion && numInlineQuestions ? <>
                             <span>You can view feedback for individual parts using the control panel below.</span>
-                            <div className={`feedback-panel-${almost ? "light" : "dark"}`}>
+                            <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header`}>
                                     <RS.Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
@@ -184,7 +186,11 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                         {below["xs"](deviceSize) ? "◀" : "Previous" }
                                     </RS.Button>
                                     <Spacer/>
-                                    <div className="align-self-center">Part {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}</div>
+                                    <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
+                                        inlineContext.feedbackIndex && document.getElementById(inlineElementIds[inlineContext.feedbackIndex])?.focus(); }
+                                    }>
+                                        Part {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
+                                    </RS.Button>
                                     <Spacer/>
                                     <RS.Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);

@@ -29,7 +29,7 @@ export const useInlineStringEntryZoneInHtml: PortalInHtmlHook = (html) => {
         (ref?: HTMLElement) => ref ? inlineZoneConstructors.map(({id, width, height}) =>
             <InlineStringEntryZone
                 key={id}
-                inlineElementId={id}
+                inlineSpanId={id}
                 width={width}
                 height={height}
                 root={ref}
