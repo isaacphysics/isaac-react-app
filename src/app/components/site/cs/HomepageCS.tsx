@@ -2,10 +2,10 @@ import React, {useEffect} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, CardDeck, Col, Container, Row} from "reactstrap";
-import {SITE_TITLE} from "../../../services";
+import {isLoggedIn, SITE_TITLE} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
-import {WarningBanner} from "../../navigation/WarningBanner";
-import {AdaHero1x1, AdaHero2x1} from "../../elements/svg/AdaHero";
+import {AdaHero2x1} from "../../elements/svg/AdaHero";
+import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
 import {AdaHomepageSearch} from "../../elements/SearchInputs";
@@ -15,14 +15,15 @@ export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
+    const featuredNewsItem = (news && user?.loggedIn) ? news[0] : undefined;
 
     return <>
         {/*<WarningBanner/>*/}
         <MetaDescription description={"Ada Computer Science is a free online computer science programme for students and teachers. Learn by using our computer science topics and questions!"}/>
         <div id="homepage">
             <section id="call-to-action" className="homepageHero">
-                <Container className="py-5 px-md-4 px-xxl-5" fluid>
-                    <Row className={"justify-content-center homepage-hero-logged-out"}>
+                <Container className="py-5 px-md-4 px-xxl-5 mw-1600" fluid>
+                    <Row className={"justify-content-center"}>
                         <Col xs={12} lg={7} className={"my-auto"}>
                             <h1 className={"font-size-1-75"}>
                                 <span className={"text-pink"}>/</span><br/>
@@ -46,7 +47,14 @@ export const HomepageCS = () => {
                             <Button className="mt-3" tag={Link} to="/topics" color="dark-primary">Explore topics</Button>
                         </Col>
                         <Col xs={12} lg={5} className={"mb-1 mb-sm-3 mb-lg-0"}>
-                            <AdaHero2x1 className={"mt-5 mt-lg-0 d-block"}/>
+                            {isLoggedIn(user) ?
+                                <div>
+                                    <AdaHero2x1 className={"mt-5 mt-lg-0 bg-hero"}/>
+                                    <FeaturedNewsItem item={featuredNewsItem} />
+                                </div>
+                                :
+                                <AdaHero2x1 className={"mt-5 mt-lg-0 d-block"}/>
+                            }
                         </Col>
                     </Row>
                 </Container>

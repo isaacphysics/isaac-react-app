@@ -1,6 +1,13 @@
 #homepage {
   //section {padding: 2rem 0;}
 
+  .bg-hero {
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter: opacity(70%) blur(1px);
+  }
+
   h1#homepageName {
     text-shadow: 0 0 4px $gray-103, 0 0 5px $gray-103, 0 0 10px $gray-103, 0 0 10px $gray-103, 0 0 20px $gray-103;
   }
