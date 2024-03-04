@@ -22,7 +22,7 @@ export const UserBetaFeatures = ({displaySettings, setDisplaySettings}: UserBeta
                 label={<p><b>Hide previous question attempts</b></p>}
                 id={"hide-previous-q-attempts"}
             />
-            This feature is helpful for revision, for example - you can attempt all of the questions on the website again, without seeing your previous answers.
+            This feature lets you answer questions again, even if you&apos;ve answered them before. It&apos;s useful if you are reviewing a topic before a test or exam.
         </>}
     />;
 };

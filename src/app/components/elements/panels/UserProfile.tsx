@@ -28,15 +28,15 @@ interface UserProfileProps {
 
 export const UserProfile = (props: UserProfileProps) => {
     const {
-        userToUpdate, setUserToUpdate, userContexts, setUserContexts, booleanNotation,
-        setBooleanNotation, displaySettings, setDisplaySettings, submissionAttempted, editingOtherUser
+        userToUpdate, setUserToUpdate, userContexts, setUserContexts, 
+        setBooleanNotation, displaySettings, setDisplaySettings, submissionAttempted
     } = props;
     return <MyAccountTab
         leftColumn={<>
             <h3>Account details</h3>
             <p>Here you can see and manage your account details for {SITE_TITLE}.</p>
             <p>You have a <strong>{userToUpdate.role ? UserFacingRole[userToUpdate.role] : ""}</strong> account.</p>
-            <p>If you would like to delete your account please <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a>.</p>
+            <p>If you would like to delete your account please <strong><a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a></strong>.</p>
         </>}
         rightColumn={<>
             <GivenNameInput
