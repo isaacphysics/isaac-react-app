@@ -292,8 +292,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 </RS.UncontrolledTooltip>
             </h3>
             <ul>
-                <li>Active group memberships mean you can receive assignments from the teachers in that group.</li>
-                <li>Setting your membership inactive means you won’t receive any assignments from the teachers in that group. You can set yourself as active again at any time.</li>
+                <li>{`Active group memberships mean you ${siteSpecific("will receive assignments set to that group by teachers in it." ,"can receive assignments from the teachers in that group.")}`}</li>
+                <li>{`Setting your membership inactive means you won’t receive any assignments ${siteSpecific("set to", "from the teachers in")} that group. You can set yourself as active again at any time.`}</li>
                 <li>If you want to permanently leave a group, ask you teacher remove you.</li>
             </ul>
             <div className="my-groups-table-section overflow-auto">
