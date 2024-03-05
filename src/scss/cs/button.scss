@@ -361,6 +361,12 @@ a:not(.btn):not(.nav-link) {
   }
 }
 
+strong {
+  a {
+    color: $dark-pink-300 !important;
+  }
+}
+
 .content-summary-link {
   * {
     text-decoration: none !important;

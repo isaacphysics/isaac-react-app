@@ -1,6 +1,6 @@
 import React from "react";
 import { DisplaySettings } from "../../../../IsaacAppTypes";
-import { SITE_TITLE } from "../../../services";
+import { SITE_TITLE, siteSpecific } from "../../../services";
 import { StyledCheckbox } from "../inputs/CheckboxInput";
 import { MyAccountTab } from "./MyAccountTab";
 interface UserBetaFeaturesProps {
@@ -22,7 +22,7 @@ export const UserBetaFeatures = ({displaySettings, setDisplaySettings}: UserBeta
                 label={<p><b>Hide previous question attempts</b></p>}
                 id={"hide-previous-q-attempts"}
             />
-            This feature is helpful for revision, for example - you can attempt all of the questions on the website again, without seeing your previous answers.
+            <p>{`This feature lets you answer questions ${siteSpecific("that you have answered before, without seeing your old answer.", "again, even if you've answered them before.")} It's useful if you are reviewing a topic before a test or exam.`}</p>
         </>}
     />;
 };

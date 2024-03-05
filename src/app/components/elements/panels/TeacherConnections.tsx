@@ -162,7 +162,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         </>}
         rightColumn={<>
             <h3>
-                <span>Teacher connections<span id="teacher-connections-title" className="icon-help" /></span>
+                <span>Teacher connection code<span id="teacher-connections-title" className="icon-help" /></span>
                 <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your {siteSpecific("Isaac", "Ada")} assignment progress.
                 </RS.UncontrolledTooltip>
@@ -291,11 +291,11 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     Groups on {siteSpecific("Isaac", "Ada")} let teachers set assignments to multiple students in one go.
                 </RS.UncontrolledTooltip>
             </h3>
-            <p>
-                You can manage who is able to set you assignments by temporarily leaving a group. While you are
-                inactive in a group you won&apos;t receive any assignments from that group.<br/>
-                If you want to permanently leave a group, ask your teacher to remove you.
-            </p>
+            <ul>
+                <li>{`Active group memberships mean you ${siteSpecific("will receive assignments set to that group by teachers in it." ,"can receive assignments from the teachers in that group.")}`}</li>
+                <li>{`Setting your membership inactive means you won’t receive any assignments ${siteSpecific("set to", "from the teachers in")} that group. You can set yourself as active again at any time.`}</li>
+                <li>If you want to permanently leave a group, ask you teacher remove you.</li>
+            </ul>
             <div className="my-groups-table-section overflow-auto">
                 <div className="connect-list">
                     <ConnectionsHeader title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch} setSearchText={setGroupSearchText}/>
