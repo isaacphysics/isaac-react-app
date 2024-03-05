@@ -25,11 +25,11 @@ const learnLinks = siteSpecific(
 );
 const eventsLinks = siteSpecific(
     ["/events", "/pages/isaac_mentor"],
-    null // ["/events?types=student", "/events?types=teacher", "/pages/event_types", "/safeguarding"] // teacher only ["/events?show_reservations_only=true"]
+    ["/pages/student_challenges"] // ["/events?types=student", "/events?types=teacher", "/pages/event_types", "/safeguarding"] // teacher only ["/events?show_reservations_only=true"]
 );
 const loggedInEventLinks = siteSpecific(
     ["/events?show_booked_only=true"],
-    null
+    ["/pages/student_challenges"]
 )?.concat(eventsLinks ?? []) ?? null;
 const helpLinks = siteSpecific(
     ["/pages/how_to_videos", "/solving_problems", "/support/student", "/support/teacher", "/contact"],
