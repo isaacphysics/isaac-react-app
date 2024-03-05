@@ -14,7 +14,7 @@ export const AddGameboard = ({user}: {user: PotentialUser}) => {
         dispatch(saveGameboard({
             boardId: gameboardId,
             user,
-            boardTitle: gameboardTitle,
+            boardTitle: decodeURIComponent(gameboardTitle),
             redirectOnSuccess: true
         })).then(action => {
             if (saveGameboard.rejected.match(action)) {
