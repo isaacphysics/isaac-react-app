@@ -702,8 +702,8 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                     )}
                     <Col xs={8} lg={"auto"} className="ml-auto text-right">
                         <Button size={siteSpecific("md", "sm")} tag={Link} color="secondary"
-                                   to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}/${customBoardTitle ?? gameboard.title}`}
-                                   onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
+                            to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}/${encodeURIComponent(customBoardTitle ?? gameboard.title ?? "")}`}
+                            onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
                         >
                             {siteSpecific(<>Save to My&nbsp;Gameboards</>, "Save to my quizzes")}
                         </Button>
