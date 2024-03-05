@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
-import {Button, CardDeck, Col, Container, Row} from "reactstrap";
+import {Button, Card, CardBody, CardDeck, Col, Container, Row} from "reactstrap";
 import {EXAM_BOARD, SITE_TITLE, STAGE, useUserContext, history} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {AdaHero1x1, AdaHero2x1} from "../../elements/svg/AdaHero";
@@ -44,15 +44,24 @@ export const HomepageCS = () => {
 
             <section>
                 <Container className={"py-lg-6 py-5"}>
-                    <Row>
-                        Are you an American or an American't?
-                        <Button onClick={
-                            () => {
-                                setStage(STAGE.SCOTLAND_NATIONAL_5);
-                                setExamBoard(EXAM_BOARD.SQA);
-                                history.push("/topics")
-                            }
-                        }>USA! USA! USA!</Button>
+                    <Row className={"justify-content-center"}>
+                        <Col xs={8}>
+                            <Card className={"cs-card border-0"}>
+                                <CardBody>
+                                    <h4>Looking for AP® Computer Science Principles resources?</h4>
+                                    <p>We’ve mapped our content to the specification so you can find what you need.</p>
+                                    <Button
+                                        className={"align-self-end mt-auto"}
+                                        onClick={
+                                            () => {
+                                                setStage(STAGE.SCOTLAND_NATIONAL_5);
+                                                setExamBoard(EXAM_BOARD.SQA);
+                                                history.push("/topics")
+                                        }
+                                    }>USA! USA! USA!</Button>
+                                </CardBody>
+                            </Card>
+                        </Col>
                     </Row>
                 </Container>
             </section>
