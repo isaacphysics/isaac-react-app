@@ -366,7 +366,7 @@ export function findAudienceRecordsMatchingPartial(audience: ContentBaseDTO['aud
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null): boolean {
     // If no audience is specified, we default to true
     if (!intendedAudience) {
-        return siteSpecific(true, false);
+        return true;
     }
 
     return intendedAudience.some(audienceClause => {
@@ -377,8 +377,6 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
             if (!satisfiesStageCriteria) {
                 return false;
             }
-        } else if (isAda) {
-            return false;
         }
 
         // If exam boards are specified do we have any of them in our context
@@ -389,8 +387,6 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
             if (!satisfiesExamBoardCriteria) {
                 return false;
             }
-        } else if (isAda) {
-            return false;
         }
 
         // If a role is specified do we have any of those roles or greater
