@@ -1,5 +1,7 @@
+import React from "react";
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import zip from "lodash/zip";
 import {USER_ROLES, UserRole} from "../../IsaacApiTypes";
 import {NAV_BAR_MENU_TITLE, NavBarMenus, renderTestEnvironment} from "../utils";
@@ -25,12 +27,10 @@ const eventsLinks = siteSpecific(
     ["/events", "/pages/isaac_mentor"],
     ["/pages/student_challenges"] // ["/events?types=student", "/events?types=teacher", "/pages/event_types", "/safeguarding"] // teacher only ["/events?show_reservations_only=true"]
 );
-const loggedInEventLinks = eventsLinks.concat(
-    siteSpecific(
-        ["/events?show_booked_only=true"],
-        []
-    )
-);
+const loggedInEventLinks = siteSpecific(
+    ["/events?show_booked_only=true"],
+    [] as string[]
+).concat(eventsLinks);
 const helpLinks = siteSpecific(
     ["/pages/how_to_videos", "/solving_problems", "/support/student", "/support/teacher", "/contact"],
     ["/support/teacher", "/support/student", "/contact"],
