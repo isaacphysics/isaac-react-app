@@ -366,6 +366,10 @@ export function findAudienceRecordsMatchingPartial(audience: ContentBaseDTO['aud
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null): boolean {
     // If no audience is specified, we default to true
     if (!intendedAudience) {
+        // TODO: another quickfix
+        if (isAda) {
+            return false;
+        }
         return true;
     }
 
@@ -377,6 +381,12 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
             if (!satisfiesStageCriteria) {
                 return false;
             }
+        } else if (isAda) {
+            // TODO: this is a quickfix and should be done better
+            // A proper discussion with Ada over the behaviour
+
+            // Ada behaves as "On Your Specification"
+            return false;
         }
 
         // If exam boards are specified do we have any of them in our context
@@ -387,6 +397,9 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
             if (!satisfiesExamBoardCriteria) {
                 return false;
             }
+        } else if (isAda) {
+            // TODO: this is the same quickfix
+            return false;
         }
 
         // If a role is specified do we have any of those roles or greater
