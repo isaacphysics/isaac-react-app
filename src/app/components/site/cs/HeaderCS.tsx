@@ -78,6 +78,10 @@ export const HeaderCS = () => {
                             {/*<LinkItem to="/student_rewards">Student rewards</LinkItem>*/}
                         </NavigationSection>}
 
+                        <NavigationSection title={"Events"}>
+                            <LinkItem to="/pages/student_challenges">Student Challenges</LinkItem>
+                        </NavigationSection>
+
                         <NavigationSection title={"Help"}>
                             <LinkItem to="/support/teacher">Teacher support</LinkItem>
                             <LinkItem to="/support/student">Student support</LinkItem>
