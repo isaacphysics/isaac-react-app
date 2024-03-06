@@ -1,7 +1,5 @@
-import React from "react";
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import zip from "lodash/zip";
 import {USER_ROLES, UserRole} from "../../IsaacApiTypes";
 import {NAV_BAR_MENU_TITLE, NavBarMenus, renderTestEnvironment} from "../utils";
@@ -27,10 +25,12 @@ const eventsLinks = siteSpecific(
     ["/events", "/pages/isaac_mentor"],
     ["/pages/student_challenges"] // ["/events?types=student", "/events?types=teacher", "/pages/event_types", "/safeguarding"] // teacher only ["/events?show_reservations_only=true"]
 );
-const loggedInEventLinks = siteSpecific(
-    ["/events?show_booked_only=true"],
-    ["/pages/student_challenges"]
-)?.concat(eventsLinks ?? []) ?? null;
+const loggedInEventLinks = eventsLinks.concat(
+    siteSpecific(
+        ["/events?show_booked_only=true"],
+        []
+    )
+);
 const helpLinks = siteSpecific(
     ["/pages/how_to_videos", "/solving_problems", "/support/student", "/support/teacher", "/contact"],
     ["/support/teacher", "/support/student", "/contact"],
@@ -134,11 +134,9 @@ describe("IsaacApp", () => {
                 if (!navLink) return; // appease TS
                 // Check all menu options are available on click
                 await userEvent.click(navLink);
-                // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
-                // related to a given title
-                const adminMenuSectionParent = navLink.closest("li[class*='nav-item']") as HTMLLIElement | null;
-                if (!adminMenuSectionParent) fail(`Missing NavigationSection parent to check ${menu} navigation menu contains correct entries.`);
-                const menuItems = await within(adminMenuSectionParent).findAllByRole("menuitem");
+                const navSectionParent = navLink.parentElement;
+                if (!navSectionParent) fail(`Missing NavigationSection parent to check ${menu} navigation menu contains correct entries.`);
+                const menuItems = await within(navSectionParent).findAllByRole("menuitem");
                 zip(menuItems, hrefs).forEach(([link, href]) => {
                     expect(link).toHaveAttribute("href", href);
                 });
