@@ -8,7 +8,20 @@ import {
   useAppSelector,
 } from "../../state";
 import { Link } from "react-router-dom";
-import * as RS from "reactstrap";
+import {
+  Alert,
+  Button,
+  Card,
+  CardBody,
+  CardTitle,
+  Container,
+  Form,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  ListGroup,
+  ListGroupItem,
+} from "reactstrap";
 import { RegisteredUserDTO } from "../../../IsaacApiTypes";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { ContentVersionUpdatingStatus, EDITOR_COMPARE_URL, isAdmin } from "../../services";
@@ -43,44 +56,47 @@ export const Admin = ({ user }: { user: RegisteredUserDTO }) => {
   const updateState = (contentVersion && contentVersion.updateState) || null;
 
   return (
-    <RS.Container id="admin-page">
+    <Container id="admin-page">
       <TitleAndBreadcrumb currentPageTitle="Isaac administration" breadcrumbTitleOverride="Admin tools" />
 
       <div className="py-4">
         Hi, {user.givenName}!
-        <RS.Card className="p-3 my-3">
-          <RS.CardTitle tag="h2">Useful links</RS.CardTitle>
-          <RS.ListGroup className="flex-row">
-            <RS.ListGroupItem className="w-auto">
+        <Card className="p-3 my-3">
+          <CardTitle tag="h2">Useful links</CardTitle>
+          <ListGroup className="flex-row">
+            <ListGroupItem className="w-auto">
               <Link to="/admin/usermanager">User Manager</Link>
-            </RS.ListGroupItem>
-            <RS.ListGroupItem className="w-auto">
+            </ListGroupItem>
+            <ListGroupItem className="w-auto">
               <Link to="/admin/emails">Admin emails</Link>
-            </RS.ListGroupItem>
-            <RS.ListGroupItem className="w-auto">
+            </ListGroupItem>
+            <ListGroupItem className="w-auto">
+              <Link to="/admin/direct_emails">Custom emails</Link>
+            </ListGroupItem>
+            <ListGroupItem className="w-auto">
               <Link to="/equality">Equation builder</Link>
-            </RS.ListGroupItem>
-            <RS.ListGroupItem className="w-auto">
+            </ListGroupItem>
+            <ListGroupItem className="w-auto">
               <Link to="/free_text">Free-text builder</Link>
-            </RS.ListGroupItem>
-            <RS.ListGroupItem className="w-auto">
+            </ListGroupItem>
+            <ListGroupItem className="w-auto">
               <Link to="/markdown">Markdown builder</Link>
-            </RS.ListGroupItem>
-          </RS.ListGroup>
-        </RS.Card>
-        <RS.Card className="p-3 mb-3">
-          <RS.CardTitle tag="h2">Admin Console</RS.CardTitle>
-          <RS.CardBody>
+            </ListGroupItem>
+          </ListGroup>
+        </Card>
+        <Card className="p-3 mb-3">
+          <CardTitle tag="h2">Admin Console</CardTitle>
+          <CardBody>
             <ul>
               <li>
                 <strong>API Version:</strong> {segueVersion}
               </li>
             </ul>
-          </RS.CardBody>
-        </RS.Card>
-        <RS.Card className="p-3 mb-3">
-          <RS.CardTitle tag="h2">Administrative tools</RS.CardTitle>
-          <RS.CardBody>
+          </CardBody>
+        </Card>
+        <Card className="p-3 mb-3">
+          <CardTitle tag="h2">Administrative tools</CardTitle>
+          <CardBody>
             <h3>Manage site content</h3>
             {contentVersion && (
               <React.Fragment>
@@ -93,16 +109,16 @@ export const Admin = ({ user }: { user: RegisteredUserDTO }) => {
                     return (
                       displayVersion !== null &&
                       updateState != ContentVersionUpdatingStatus.UPDATING && (
-                        <RS.Form onSubmit={startVersionUpdate}>
-                          <RS.InputGroup>
-                            <RS.Input
+                        <Form onSubmit={startVersionUpdate}>
+                          <InputGroup>
+                            <Input
                               aria-label="Live content commit SHA"
                               type="text"
                               value={displayVersion}
                               onChange={(e) => setNewVersion(e.target.value)}
                               placeholder="Enter commit SHA"
                             />
-                            <RS.InputGroupAddon addonType="append">
+                            <InputGroupAddon addonType="append">
                               <a
                                 className={classnames({
                                   "p-1 border-dark btn btn-secondary": true,
@@ -114,41 +130,41 @@ export const Admin = ({ user }: { user: RegisteredUserDTO }) => {
                               >
                                 Preview Changes
                               </a>
-                            </RS.InputGroupAddon>
-                            <RS.InputGroupAddon addonType="append">
-                              <RS.Button
+                            </InputGroupAddon>
+                            <InputGroupAddon addonType="append">
+                              <Button
                                 type="button"
                                 className="p-0 border-dark"
                                 onClick={startVersionUpdate}
                                 disabled={!isAdmin(user) || displayVersion === contentVersion.liveVersion}
                               >
                                 Set Version
-                              </RS.Button>
-                            </RS.InputGroupAddon>
-                          </RS.InputGroup>
-                        </RS.Form>
+                              </Button>
+                            </InputGroupAddon>
+                          </InputGroup>
+                        </Form>
                       )
                     );
                   }}
                 />
                 {updateState == ContentVersionUpdatingStatus.UPDATING && (
-                  <RS.Alert color="info">
+                  <Alert color="info">
                     <h4>Updating...</h4>
                     <p>
                       Replacing version {contentVersion.liveVersion} with {contentVersion.updatingVersion}
                     </p>
                     <IsaacSpinner />
-                  </RS.Alert>
+                  </Alert>
                 )}
                 {updateState == ContentVersionUpdatingStatus.SUCCESS && (
-                  <RS.Alert color="success">
+                  <Alert color="success">
                     <h4>Content version changed successfully.</h4>
-                  </RS.Alert>
+                  </Alert>
                 )}
                 {updateState == ContentVersionUpdatingStatus.FAILURE && (
-                  <RS.Alert color="danger">
+                  <Alert color="danger">
                     <h4>Error: Content version could not be changed.</h4>
-                  </RS.Alert>
+                  </Alert>
                 )}
               </React.Fragment>
             )}
@@ -162,9 +178,9 @@ export const Admin = ({ user }: { user: RegisteredUserDTO }) => {
                 <MisuseStats />
               </>
             )}
-          </RS.CardBody>
-        </RS.Card>
+          </CardBody>
+        </Card>
       </div>
-    </RS.Container>
+    </Container>
   );
 };
