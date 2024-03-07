@@ -39,10 +39,10 @@ import {
 import { EmailVerificationStatus, Role } from "../../../IsaacApiTypes";
 import { DateString } from "../elements/DateString";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { ADMIN_CRUMB, isAdmin, isDefined } from "../../services";
+import { ADMIN_CRUMB, isAdmin, isDefined, schoolNameWithPostcode, throttledSchoolSearch } from "../../services";
 import { Link } from "react-router-dom";
-
-const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVERY_FAILED"];
+import AsyncCreatableSelect from "react-select/async-creatable";
+import { School } from "../../../IsaacAppTypes";
 
 interface SearchQuery {
   familyName: string | null;
@@ -53,6 +53,74 @@ interface SearchQuery {
   postcode: string | null;
   postcodeRadius: string;
 }
+
+type SchoolValue = { value: string | School; label: string | undefined } | undefined;
+
+const SchoolSearch = ({
+  updateQuery,
+  searchQuery,
+}: {
+  updateQuery: (update: { [key: string]: string | null }) => void;
+  searchQuery: SearchQuery;
+}) => {
+  const [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
+
+  function determineSchoolValue(): SchoolValue {
+    if (selectedSchoolObject?.urn) {
+      return {
+        value: selectedSchoolObject.urn,
+        label: schoolNameWithPostcode(selectedSchoolObject) ?? "",
+      };
+    } else if (searchQuery.schoolOther) {
+      return {
+        value: "manually entered school",
+        label: searchQuery.schoolOther,
+      };
+    } else return undefined;
+  }
+
+  function setUserSchool(school: string | School) {
+    if (typeof school === "object" && "urn" in school) {
+      updateQuery({ schoolURN: school.urn });
+      setSelectedSchoolObject(school);
+    } else {
+      updateQuery({ schoolOther: school });
+    }
+  }
+
+  function handleSetSchool(newValue: { value: string | School } | null) {
+    if (newValue == null) {
+      setSelectedSchoolObject(undefined);
+      updateQuery({ schoolURN: null, schoolOther: null });
+    } else if (newValue) {
+      setUserSchool(newValue.value);
+    }
+  }
+
+  const schoolValue: SchoolValue = determineSchoolValue();
+
+  const formatCreateLabel = (input: string) => (
+    <span data-testid="custom-school-name">Use &quot;{input}&quot; as user&apos;s school name</span>
+  );
+
+  return (
+    <FormGroup>
+      <Label htmlFor="school-search">Find a user by school:</Label>
+      <AsyncCreatableSelect
+        isClearable
+        inputId="school-search"
+        placeholder={"Type user's school or college name"}
+        value={schoolValue}
+        className="basic-multi-select"
+        classNamePrefix="select"
+        onChange={handleSetSchool}
+        loadOptions={throttledSchoolSearch}
+        filterOption={() => true}
+        formatCreateLabel={formatCreateLabel}
+      />
+    </FormGroup>
+  );
+};
 
 const UserManagerSearch = ({
   searchQuery,
@@ -102,15 +170,6 @@ const UserManagerSearch = ({
                   defaultValue={searchQuery.email ?? undefined}
                   placeholder="e.g. teacher@school.org"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({ email: e.target.value })}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label htmlFor="school-other-search">Find by manually entered school:</Label>
-                <Input
-                  id="school-other-search"
-                  type="text"
-                  defaultValue={searchQuery.schoolOther ?? undefined}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({ schoolOther: e.target.value })}
                 />
               </FormGroup>
             </Col>
@@ -167,15 +226,11 @@ const UserManagerSearch = ({
                   </Col>
                 </Row>
               </FormGroup>
-              <FormGroup>
-                <Label htmlFor="school-urn-search">Find a user with school URN:</Label>
-                <Input
-                  id="school-urn-search"
-                  type="text"
-                  defaultValue={searchQuery.schoolURN ?? undefined}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({ schoolURN: e.target.value })}
-                />
-              </FormGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <SchoolSearch updateQuery={updateQuery} searchQuery={searchQuery} />
             </Col>
           </Row>
         </CardBody>
@@ -290,6 +345,8 @@ const UserManagerResults = ({ searchRequested, searchQuery }: { searchRequested:
       dispatch(resetPassword({ email: email }));
     }
   };
+
+  const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVERY_FAILED"];
 
   return (
     <Card className="my-4 mx-n4 mx-sm-n5">

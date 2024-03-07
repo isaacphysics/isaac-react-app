@@ -1,7 +1,8 @@
-import { isDefined } from "./";
+import { api, isDefined } from "./";
 import { LoggedInUser, PotentialUser, School } from "../../IsaacAppTypes";
 import { Immutable } from "immer";
 import { Role } from "../../IsaacApiTypes";
+import { throttle } from "lodash";
 
 export type UserRoleAndLoggedInStatus = {
   readonly role?: Role;
@@ -92,3 +93,21 @@ export function schoolNameWithPostcode(schoolResult: School): string | undefined
   }
   return schoolName;
 }
+
+const schoolSearch = (
+  schoolSearchText: string,
+  setAsyncSelectOptionsCallback: (options: { value: string | School; label: string | undefined }[]) => void,
+) => {
+  api.schools
+    .search(schoolSearchText)
+    .then(({ data }) => {
+      setAsyncSelectOptionsCallback(
+        data && data.length > 0 ? data.map((item) => ({ value: item, label: schoolNameWithPostcode(item) })) : [],
+      );
+    })
+    .catch((response) => {
+      console.error("Error searching for schools. ", response);
+    });
+};
+
+export const throttledSchoolSearch = throttle(schoolSearch, 450, { trailing: true, leading: true });

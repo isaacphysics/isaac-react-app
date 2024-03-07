@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import * as RS from "reactstrap";
 import { School, ValidationUser } from "../../../../IsaacAppTypes";
-import { api, schoolNameWithPostcode, validateUserSchool } from "../../../services";
-import { throttle } from "lodash";
+import { api, schoolNameWithPostcode, throttledSchoolSearch, validateUserSchool } from "../../../services";
 import { Immutable } from "immer";
 
 interface SchoolInputProps {
@@ -16,24 +15,6 @@ interface SchoolInputProps {
   required: boolean;
 }
 const NOT_APPLICABLE = "N/A";
-
-const schoolSearch = (
-  schoolSearchText: string,
-  setAsyncSelectOptionsCallback: (options: { value: string | School; label: string | undefined }[]) => void,
-) => {
-  api.schools
-    .search(schoolSearchText)
-    .then(({ data }) => {
-      setAsyncSelectOptionsCallback(
-        data && data.length > 0 ? data.map((item) => ({ value: item, label: schoolNameWithPostcode(item) })) : [],
-      );
-    })
-    .catch((response) => {
-      console.error("Error searching for schools. ", response);
-    });
-};
-// Must define this debounced function _outside_ the component to ensure it doesn't get overwritten each rerender!
-const throttledSchoolSearch = throttle(schoolSearch, 450, { trailing: true, leading: true });
 
 export const SchoolInput = ({
   userToUpdate,

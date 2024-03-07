@@ -24,10 +24,7 @@ const searchFields = {
     screen.getByRole("textbox", {
       name: /find a user by email:/i,
     }),
-  schoolOther: () =>
-    screen.getByRole("textbox", {
-      name: /find by manually entered school:/i,
-    }),
+  school: () => screen.getByRole("combobox", { name: /find a user by school:/i }),
   role: () =>
     screen.getByRole("combobox", {
       name: /find by user role:/i,
@@ -37,7 +34,6 @@ const searchFields = {
       name: /find users with school within a given distance of postcode:/i,
     }),
   postcodeRadius: () => getById("postcode-radius-search"),
-  schoolURN: () => screen.getByRole("textbox", { name: /find a user with school URN/i }),
   searchButton: () => screen.getByRole("button", { name: "Search" }),
 };
 
@@ -70,6 +66,20 @@ describe("Admin User Manager", () => {
           };
           return res(ctx.status(200), ctx.json(mockSchoolLookup));
         }),
+        rest.get(API_PATH + "/schools", (req, res, ctx) => {
+          return res(
+            ctx.status(200),
+            ctx.json([
+              {
+                urn: "1",
+                name: "Test School",
+                postcode: "ABC 123",
+                closed: false,
+                dataSource: "GOVERNMENT_UK",
+              },
+            ]),
+          );
+        }),
         rest.delete(API_PATH + "/admin/users/:userId", (req, res, ctx) => {
           return res(ctx.status(204), ctx.json({}));
         }),
@@ -92,19 +102,10 @@ describe("Admin User Manager", () => {
     it("renders with expected page title and has all expected fields", async () => {
       await renderUserManager();
       checkPageTitle("User manager");
-      const { searchForm, familyName, email, schoolOther, role, postcode, postcodeRadius, schoolURN, searchButton } =
-        searchFields;
-      [
-        searchForm(),
-        familyName(),
-        email(),
-        schoolOther(),
-        role(),
-        postcode(),
-        postcodeRadius(),
-        schoolURN(),
-        searchButton(),
-      ].forEach((input) => expect(input).toBeInTheDocument());
+      const { searchForm, familyName, email, school, role, postcode, postcodeRadius, searchButton } = searchFields;
+      [searchForm(), familyName(), email(), school(), role(), postcode(), postcodeRadius(), searchButton()].forEach(
+        (input) => expect(input).toBeInTheDocument(),
+      );
       const expectedRadiusOptions = ["5 miles", "10 miles", "15 miles", "20 miles", "25 miles", "50 miles"];
       const radiusOptions = within(postcodeRadius()).getAllByRole("option");
       expect(radiusOptions).toHaveLength(expectedRadiusOptions.length);
@@ -134,8 +135,6 @@ describe("Admin User Manager", () => {
     const textSearchCases = [
       { fieldName: "familyName", testValue: "Smith" },
       { fieldName: "email", testValue: "user@example.com" },
-      { fieldName: "schoolOther", testValue: "SchoolA" },
-      { fieldName: "schoolURN", testValue: "123456" },
       { fieldName: "postcode", testValue: "ABC 123" },
     ];
     it.each(textSearchCases)(
@@ -152,6 +151,26 @@ describe("Admin User Manager", () => {
         );
       },
     );
+
+    it("searches with schoolOther if a custom school name is selected", async () => {
+      await renderUserManager();
+      const schoolDropdown = searchFields.school;
+      await userEvent.type(schoolDropdown(), "Custom School Name");
+      const customSchoolName = await screen.findByTestId("custom-school-name");
+      await userEvent.click(customSchoolName);
+      await clickButton("Search");
+      expect(adminSearchSpy).toHaveBeenCalledWith(expect.objectContaining({ schoolOther: "Custom School Name" }));
+    });
+
+    it("searches with schoolURN if a school is selected from dropdown", async () => {
+      await renderUserManager();
+      const schoolDropdown = searchFields.school;
+      await userEvent.type(schoolDropdown(), "Test");
+      const testSchool = await screen.findByText("Test School, ABC 123");
+      await userEvent.click(testSchool);
+      await clickButton("Search");
+      expect(adminSearchSpy).toHaveBeenCalledWith(expect.objectContaining({ schoolURN: "1" }));
+    });
 
     const dropdownSearchCases = [
       { fieldName: "role", testValue: "STUDENT" },
