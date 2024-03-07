@@ -26,7 +26,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
-    useEffect(() => {dispatch(fetchTopicSummary(topicName))}, [dispatch, topicName]);
+    useEffect(() => {dispatch(fetchTopicSummary(topicName));}, [dispatch, topicName]);
 
     const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage, userContext, user);
     const [relatedConceptsForSpecificViewingContext, relatedQuestionsForSpecificViewingContext] =
@@ -51,7 +51,9 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     {!(atLeastOne(relatedConceptsForSpecificViewingContext.length) || atLeastOne(relatedQuestionsForSpecificViewingContext.length)) &&
                         <div className='text-center mt-3'>
                             <div className='alert alert-warning'>
-                                {`There is no material in this topic for ${stageLabelMap[userContext.stage]} ${examBoardLabelMap[userContext.examBoard]}.`}
+                                {`There is no material in this topic for ${stageLabelMap[userContext.stage]} ${examBoardLabelMap[userContext.examBoard]}. ` +
+                                "You can change your viewing preferences "}
+                                <strong>by updating your <a href="/account#customise">profile</a></strong>
                             </div>
                         </div>
                     }
