@@ -3,14 +3,11 @@ import {
   getContentVersion,
   requestConstantsSegueVersion,
   selectors,
-  setContentVersion,
   useAppDispatch,
   useAppSelector,
 } from "../../state";
 import { Link } from "react-router-dom";
 import {
-  Alert,
-  Button,
   Card,
   CardBody,
   CardTitle,
@@ -24,11 +21,10 @@ import {
 } from "reactstrap";
 import { RegisteredUserDTO } from "../../../IsaacApiTypes";
 import { ShowLoading } from "../handlers/ShowLoading";
-import { ContentVersionUpdatingStatus, EDITOR_COMPARE_URL, isAdmin } from "../../services";
+import { EDITOR_COMPARE_URL, isAdmin } from "../../services";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import { AnonymiseUsersCheckbox } from "../elements/AnonymiseUsersCheckbox";
-import { IsaacSpinner } from "../handlers/IsaacSpinner";
 import { MisuseStats } from "../elements/MisuseStats";
 
 export const Admin = ({ user }: { user: RegisteredUserDTO }) => {
@@ -43,17 +39,6 @@ export const Admin = ({ user }: { user: RegisteredUserDTO }) => {
   const [newVersion, setNewVersion] = useState<string | null>(null);
 
   const displayVersion = newVersion || (contentVersion && contentVersion.liveVersion) || null;
-
-  const startVersionUpdate = function (event?: React.FormEvent) {
-    if (event) {
-      event.preventDefault();
-    }
-    if (contentVersion && displayVersion !== contentVersion.liveVersion && newVersion != null) {
-      dispatch(setContentVersion(newVersion));
-    }
-  };
-
-  const updateState = (contentVersion && contentVersion.updateState) || null;
 
   return (
     <Container id="admin-page">
@@ -107,9 +92,8 @@ export const Admin = ({ user }: { user: RegisteredUserDTO }) => {
                   until={displayVersion !== null}
                   thenRender={() => {
                     return (
-                      displayVersion !== null &&
-                      updateState != ContentVersionUpdatingStatus.UPDATING && (
-                        <Form onSubmit={startVersionUpdate}>
+                      displayVersion !== null && (
+                        <Form>
                           <InputGroup>
                             <Input
                               aria-label="Live content commit SHA"
@@ -131,41 +115,12 @@ export const Admin = ({ user }: { user: RegisteredUserDTO }) => {
                                 Preview Changes
                               </a>
                             </InputGroupAddon>
-                            <InputGroupAddon addonType="append">
-                              <Button
-                                type="button"
-                                className="p-0 border-dark"
-                                onClick={startVersionUpdate}
-                                disabled={!isAdmin(user) || displayVersion === contentVersion.liveVersion}
-                              >
-                                Set Version
-                              </Button>
-                            </InputGroupAddon>
                           </InputGroup>
                         </Form>
                       )
                     );
                   }}
                 />
-                {updateState == ContentVersionUpdatingStatus.UPDATING && (
-                  <Alert color="info">
-                    <h4>Updating...</h4>
-                    <p>
-                      Replacing version {contentVersion.liveVersion} with {contentVersion.updatingVersion}
-                    </p>
-                    <IsaacSpinner />
-                  </Alert>
-                )}
-                {updateState == ContentVersionUpdatingStatus.SUCCESS && (
-                  <Alert color="success">
-                    <h4>Content version changed successfully.</h4>
-                  </Alert>
-                )}
-                {updateState == ContentVersionUpdatingStatus.FAILURE && (
-                  <Alert color="danger">
-                    <h4>Error: Content version could not be changed.</h4>
-                  </Alert>
-                )}
               </React.Fragment>
             )}
 

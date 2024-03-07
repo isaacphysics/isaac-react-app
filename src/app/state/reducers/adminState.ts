@@ -1,6 +1,6 @@
 import { RegisteredUserDTO, TestCaseDTO, UserSummaryForAdminUsersDTO } from "../../../IsaacApiTypes";
 import { Action, AdminStatsResponse, ContentErrorsResponse, TemplateEmail } from "../../../IsaacAppTypes";
-import { ACTION_TYPE, ContentVersionUpdatingStatus } from "../../services";
+import { ACTION_TYPE } from "../../services";
 
 export type AdminUserSearchState = UserSummaryForAdminUsersDTO[] | null;
 export const adminUserSearch = (adminUserSearch: AdminUserSearchState = null, action: Action) => {
@@ -64,19 +64,11 @@ export const adminEmailTemplate = (adminEmailTemplate: AdminEmailTemplateState =
 
 export type ContentVersionState = {
   liveVersion?: string;
-  updateState?: ContentVersionUpdatingStatus;
-  updatingVersion?: string;
 } | null;
 export const contentVersion = (contentVersion: ContentVersionState = null, action: Action): ContentVersionState => {
   switch (action.type) {
     case ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS:
       return { ...contentVersion, liveVersion: action.liveVersion };
-    case ACTION_TYPE.CONTENT_VERSION_SET_REQUEST:
-      return { ...contentVersion, updateState: ContentVersionUpdatingStatus.UPDATING, updatingVersion: action.version };
-    case ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS:
-      return { ...contentVersion, updateState: ContentVersionUpdatingStatus.SUCCESS, liveVersion: action.newVersion };
-    case ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE:
-      return { ...contentVersion, updateState: ContentVersionUpdatingStatus.FAILURE };
     default:
       return contentVersion;
   }

@@ -249,9 +249,6 @@ export type Action =
   | { type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST }
   | { type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS; liveVersion: string }
   | { type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE }
-  | { type: ACTION_TYPE.CONTENT_VERSION_SET_REQUEST; version: string }
-  | { type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS; newVersion: string }
-  | { type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE }
   | { type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string | undefined }
   | { type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO> }
   | { type: ACTION_TYPE.TOASTS_SHOW; toast: Toast }

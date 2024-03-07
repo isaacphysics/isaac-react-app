@@ -1129,16 +1129,6 @@ export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
   }
 };
 
-export const setContentVersion = (version: string) => async (dispatch: Dispatch<Action>) => {
-  dispatch({ type: ACTION_TYPE.CONTENT_VERSION_SET_REQUEST, version });
-  try {
-    await api.contentVersion.setLiveVersion(version);
-    dispatch({ type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS, newVersion: version });
-  } catch (e) {
-    dispatch({ type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE });
-  }
-};
-
 // Search
 export const fetchSearch = (query: string, types: string | undefined) => async (dispatch: Dispatch<Action>) => {
   dispatch({ type: ACTION_TYPE.SEARCH_REQUEST, query, types });

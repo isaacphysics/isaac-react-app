@@ -337,9 +337,6 @@ export const api = {
     getLiveVersion: (): AxiosPromise<{ liveVersion: string }> => {
       return endpoint.get(`/info/content_versions/live_version`);
     },
-    setLiveVersion(version: string): AxiosPromise {
-      return endpoint.post(`/admin/live_version/${version}`);
-    },
   },
   constants: {
     getUnits: (): AxiosPromise<string[]> => {
