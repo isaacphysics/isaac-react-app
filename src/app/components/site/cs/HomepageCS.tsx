@@ -25,11 +25,11 @@ export const HomepageCS = () => {
                 <Container className="py-5 px-md-4 px-xxl-5 mw-1600" fluid>
                     <Row className={"justify-content-center"}>
                         <Col xs={12} lg={7} className={"my-auto"}>
-                            <h1 className={"font-size-1-75"}>
+                            <h1 className={"font-size-1-75 font-size-md-2-5"}>
                                 <span className={"text-pink"}>/</span><br/>
                                 Computer science education should be accessible for everyone
                             </h1>
-                            <p className={"font-size-1 font-size-md-1-25 py-3"}>
+                            <p className={"font-size-1-25 py-3"}>
                                 We create free resources to help teachers and students around the world
                             </p>
                             <Row className="justify-content-start align-items-center my-3">
