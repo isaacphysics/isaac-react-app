@@ -16,13 +16,15 @@ export const News = () => {
     const newsQuery = useGetNewsPodListQuery({subject: siteSpecific("physics", "news"), startIndex: page * NEWS_PODS_PER_PAGE});
 
     useEffect(() => {
-        if (newsQuery.status === "fulfilled" && newsQuery.data !== undefined) {
-            setAllNews(n => n.concat((newsQuery.data as IsaacPodDTO[]).slice(0, NEWS_PODS_PER_PAGE)));
-            if (newsQuery.data.length < NEWS_PODS_PER_PAGE) {
-                setDisableLoadMore(true);
+        newsQuery.refetch().then((value) => {
+            if (value.status === "fulfilled" && value.data !== undefined) {
+                setAllNews(n => n.concat((value.data as IsaacPodDTO[]).slice(0, NEWS_PODS_PER_PAGE)));
+                if (value.data.length < NEWS_PODS_PER_PAGE) {
+                    setDisableLoadMore(true);
+                }
             }
-        }
-    }, [newsQuery.status]);
+        });
+    }, [page]);
 
     const metaDescription = siteSpecific(
         "Get all the latest news about Isaac Physics.",
