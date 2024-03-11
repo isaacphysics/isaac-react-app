@@ -6,10 +6,8 @@ import {IsaacContent} from "../content/IsaacContent";
 import {
     ALL_TOPICS_CRUMB,
     atLeastOne,
-    examBoardLabelMap,
     getRelatedDocs,
     NOT_FOUND, PATHS,
-    stageLabelMap,
     TAG_ID,
     useUserContext
 } from "../../services";
@@ -19,6 +17,7 @@ import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
+import { IntendedAudienceWarningBanner } from "../navigation/IntendedAudienceWarningBanner";
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
     const dispatch = useAppDispatch();
@@ -49,13 +48,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                         <IsaacContent key={index} doc={child}/>)
                     }
                     {!(atLeastOne(relatedConceptsForSpecificViewingContext.length) || atLeastOne(relatedQuestionsForSpecificViewingContext.length)) &&
-                        <div className='text-center mt-3'>
-                            <div className='alert alert-warning'>
-                                {`There is no content on this page for ${examBoardLabelMap[userContext.examBoard]} ${stageLabelMap[userContext.stage]}. ` +
-                                "You can change your viewing preferences "}
-                                <strong>by updating your profile <a href="/account#customise">here</a>.</strong>
-                            </div>
-                        </div>
+                        <IntendedAudienceWarningBanner doc={topicPage} />
                     }
                     {atLeastOne(relatedConcepts.length) &&
                         <TopicSummaryLinks items={relatedConcepts} search={searchQuery} />

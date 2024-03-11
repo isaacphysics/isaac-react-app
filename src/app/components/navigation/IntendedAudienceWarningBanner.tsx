@@ -1,7 +1,7 @@
 import React from "react";
 import * as RS from "reactstrap";
 import {ContentBaseDTO} from "../../../IsaacApiTypes";
-import {isIntendedAudience, notRelevantMessage, useUserContext} from "../../services";
+import {examBoardLabelMap, isIntendedAudience, stageLabelMap, useUserContext} from "../../services";
 import {selectors, useAppSelector} from "../../state";
 import {RenderNothing} from "../elements/RenderNothing";
 
@@ -16,7 +16,8 @@ export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
 
     return <RS.Alert color="warning" className={"no-print"}>
         <strong>Note: </strong>
-        {`The content on this page has ${notRelevantMessage(userContext)}. You can change your viewing preferences `}
+        {`There is no content on this page for ${examBoardLabelMap[userContext.examBoard]} ${stageLabelMap[userContext.stage]}. ` +
+        "You can change you preferences "}
         <strong>by updating your profile <a href="\account">here</a>.</strong>
     </RS.Alert>;
 }
