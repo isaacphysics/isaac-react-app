@@ -53,7 +53,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                             <div className='alert alert-warning'>
                                 {`There is no content on this page for ${examBoardLabelMap[userContext.examBoard]} ${stageLabelMap[userContext.stage]}. ` +
                                 "You can change your viewing preferences "}
-                                <strong>by updating your <a href="/account#customise">profile</a></strong>
+                                <strong>by updating your profile <a href="/account#customise">here</a>.</strong>
                             </div>
                         </div>
                     }
