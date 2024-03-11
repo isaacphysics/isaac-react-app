@@ -6,6 +6,11 @@
   max-width: 760px !important;
 }
 
+.mw-1600 {
+  @extend .mx-auto;
+  max-width: 1600px !important;
+}
+
 .title-help {
   color: $dark-pink-300;
   text-decoration: underline;
