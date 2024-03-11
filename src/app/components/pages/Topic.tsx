@@ -51,7 +51,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     {!(atLeastOne(relatedConceptsForSpecificViewingContext.length) || atLeastOne(relatedQuestionsForSpecificViewingContext.length)) &&
                         <div className='text-center mt-3'>
                             <div className='alert alert-warning'>
-                                {`There is no material in this topic for ${stageLabelMap[userContext.stage]} ${examBoardLabelMap[userContext.examBoard]}. ` +
+                                {`There is no content on this page for ${examBoardLabelMap[userContext.examBoard]} ${stageLabelMap[userContext.stage]}. ` +
                                 "You can change your viewing preferences "}
                                 <strong>by updating your <a href="/account#customise">profile</a></strong>
                             </div>
