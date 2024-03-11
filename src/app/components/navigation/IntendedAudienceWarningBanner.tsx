@@ -15,9 +15,8 @@ export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
     }
 
     return <RS.Alert color="warning" className={"no-print"}>
-        <strong>Note: </strong>
         {`There is no content on this page for ${examBoardLabelMap[userContext.examBoard]} ${stageLabelMap[userContext.stage]}. ` +
-        "You can change you preferences "}
+        "You can change your preferences "}
         <strong>by updating your profile <a href="\account">here</a>.</strong>
     </RS.Alert>;
 }
