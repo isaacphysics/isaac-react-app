@@ -42,7 +42,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             <Row>
                 <Col className={"py-3 mw-760"}>
                     <div className="d-flex justify-content-end">
-                        <UserContextPicker />
+                        <UserContextPicker className="justify-content-end" />
                     </div>
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)

@@ -12,6 +12,11 @@
   min-width: 130px;
   max-width: 130px;
   text-align: center;
+
+  @media (max-width: 575px) {
+    min-width: 120px;
+    max-width: 120px;
+  }
 }
 
 .dynamic-x-padding .pad {

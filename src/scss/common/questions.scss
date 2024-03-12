@@ -345,6 +345,7 @@
 }
 
 .question-actions {
+  align-self: flex-start;
   &.question-actions-leftmost {
     margin-left: auto;
   }
