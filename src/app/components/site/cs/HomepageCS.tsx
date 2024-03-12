@@ -67,7 +67,7 @@ export const HomepageCS = () => {
                             <h2 className={"font-size-1-75 mb-4"}>Ada Computer Science is:</h2>
                             <ul className={"font-size-1-25"}>
                                 <li>Made by the University of Cambridge and the Raspberry Pi Foundation</li>
-                                <li>Mapped to computer science exam specifications, including GCSE and A level</li>
+                                <li>Mapped to <Link to={"/exam_specifications"}>computer science exam specifications</Link>, including GCSE and A level</li>
                                 <li>A great way to save time when planning lessons and homework</li>
                                 <li>Perfect for learning a topic after class or preparing for exams</li>
                                 <li>Free forever — no hidden costs</li>
@@ -111,12 +111,14 @@ export const HomepageCS = () => {
             <section id="computer-science-stories">
                 <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
                     <Row>
-                        <Col xs={12} md={6} id={"cs-stories-text"}>
-                            <h2 className={"font-size-1-75 mb-5"}>Computer science stories</h2>
+                        <Col xs={12} lg={6} id={"cs-stories-text"}>
+                            <h2 className={"font-size-1-75 mb-4"}>Computer science stories</h2>
                             <p className={"mb-4"}>
-                                Discover our monthly interview series and learn from passionate educators within the Isaac community, and recently-graduated computer scientists who are doing AMAZING things in a huge range of computing-related fields!
+                                Discover our monthly interview series and learn from passionate educators within the
+                                Ada community, and recently-graduated computer scientists who are doing AMAZING things
+                                in a huge range of computing-related fields!
                             </p>
-                            <Button tag={Link} to="/pages/computer_science_stories" color="primary">Discover stories</Button>
+                            <Button tag={Link} to="/pages/computer_science_stories" color="primary">Read their stories</Button>
                         </Col>
                     </Row>
                 </Container>
