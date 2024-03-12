@@ -168,8 +168,8 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                 </IsaacContentValueOrChildren>
             </div>
             <Row className="no-print">
-                <Col className="d-flex flex-column flex-sm-row flex-md-column flex-lg-row">
-                    <div className="numeric-value w-100 w-sm-50 w-md-100 w-lg-50">
+                <Col className="d-flex flex-column flex-md-row">
+                    <div className="numeric-value w-100 w-md-50">
                         <Label className="w-100">
                             Value <br />
                             <InputGroup className={"feedback-zone nq-feedback separate-input-group"}>
@@ -197,8 +197,8 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                             </InputGroup>
                         </Label>
                     </div>
-                    {(doc.requireUnits || doc.displayUnit) && <div className="unit-selection w-100 w-sm-50 w-md-100 w-lg-25">
-                        <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-5">
+                    {(doc.requireUnits || doc.displayUnit) && <div className="unit-selection w-100 w-md-50">
+                        <Label className="w-100 w-md-auto pl-md-5">
                             Unit{noDisplayUnit && "s"} <br/>
                             <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle
