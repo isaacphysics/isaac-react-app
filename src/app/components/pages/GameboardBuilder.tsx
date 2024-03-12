@@ -279,9 +279,9 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     </Col>
                 </Row>}
 
-                <div className="mt-4 responsive">
+                <div className="my-4 responsive">
                     <DragDropContext onDragEnd={reorder}>
-                        <Table bordered>
+                        <Table bordered className="m-0">
                             <thead>
                             <tr>
                                 <th className="w-5"/>
