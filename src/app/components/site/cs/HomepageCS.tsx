@@ -5,7 +5,6 @@ import {Button, CardDeck, Col, Container, Row} from "reactstrap";
 import {isLoggedIn, SITE_TITLE} from "../../../services";
 import {AdaHero2x1} from "../../elements/svg/AdaHero";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
-import {WarningBanner} from "../../navigation/WarningBanner";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
 import {AdaHomepageSearch} from "../../elements/SearchInputs";
