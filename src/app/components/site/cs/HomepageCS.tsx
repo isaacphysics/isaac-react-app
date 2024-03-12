@@ -63,8 +63,8 @@ export const HomepageCS = () => {
                 <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
                     <Row className={"align-items-center"}>
                         <Col xs={12} lg={6}>
-                            <h2 className={"font-size-1-75 mb-4"}>Ada Computer Science is:</h2>
-                            <ul className={"font-size-1-25"}>
+                            <h2 className={"font-size-1-75 mb-4"}>Why use Ada Computer Science?</h2>
+                            <ul className={"font-size-1 font-size-md-1-25"}>
                                 <li>Made by the University of Cambridge and the Raspberry Pi Foundation</li>
                                 <li>Mapped to <Link to={"/exam_specifications"}>computer science exam specifications</Link>, including GCSE and A level</li>
                                 <li>A great way to save time when planning lessons and homework</li>
@@ -125,7 +125,7 @@ export const HomepageCS = () => {
 
             {news && news.length > 0 && <section id="news">
                 <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
-                    <h2 className={"font-size-1-75 mb-5"}>News</h2>
+                    <h2 className={"font-size-1-75 mb-4"}>News</h2>
                     <CardDeck data-testid={"news-pod-deck"} className={"justify-content-center"}>
                         {news.slice(0, 4).map(n => <NewsCard newsItem={n} showTitle />)}
                     </CardDeck>
