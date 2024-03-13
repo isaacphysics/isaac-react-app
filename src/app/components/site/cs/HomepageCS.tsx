@@ -82,6 +82,32 @@ export const HomepageCS = () => {
                 </Container>
             </section>
 
+            <section id="question-finder">
+                <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
+                    <Row className={"align-items-center"}>
+                        <Col xs={12} lg={6}>
+                            <h2 className={"font-size-1-75 mb-4"}>Explore our questions</h2>
+                            <p>
+                                Use the question finder to explore more than 1,000 self-marking questions, filtering by
+                                topic, concept and qualification. Written by experts and updated frequently, they
+                                address common misconceptions with tailored feedback.
+                            </p>
+                            <p><b>Students</b>: review key topics and get instant feedback</p>
+                            <p><b>Teachers</b>: save time by creating self-marking quizzes</p>
+                            <Button className={"mt-4"} tag={Link} to="/quizzes/new" color='primary'>
+                                Try our question finder
+                            </Button>
+                        </Col>
+                        <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>
+                            <picture>
+                                <source srcSet="/assets/cs/decor/question-finder.svg" type="image/svg"/>
+                                <img className={"d-block w-100"} src={"/assets/cs/decor/question-finder.svg"} alt="" />
+                            </picture>
+                        </Col>
+                    </Row>
+                </Container>
+            </section>
+
             <section id="what-resources">
                 <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
                     <h2 className={"font-size-1-75 mb-5"}>What resources are you looking for?</h2>

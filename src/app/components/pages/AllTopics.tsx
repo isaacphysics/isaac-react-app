@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Badge, Col, Container, Row} from "reactstrap";
+import {Badge, Button, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Tag} from "../../../IsaacAppTypes";
 import {
@@ -85,5 +85,31 @@ export const AllTopics = () => {
                 </Col>
             </Row>
         </Container>
+        <section id={'topics-question-finder'}>
+            <Container className={"mb-5 p-5 mx-auto"}>
+                <Row className={"align-items-center justify-content-center"}>
+                    <Col xs={12} lg={6}>
+                        <h2 className={"font-size-1-75 mb-4"}>Check your understanding</h2>
+                        <p>
+                            Using the Question finder you can select topics and concepts and we’ll generate a random
+                            selection questions for you to use. You can also specify your level and exam board.
+                        </p>
+                        <p><b>Students</b> might want to try our Question Finder to revise and get feedback on any
+                            mistakes.</p>
+                        <p><b>Teachers</b> might want to try our Question Finder to create quizzes and assign them to
+                            students.</p>
+                        <Button className={"mt-4"} tag={Link} to="/quizzes/new" color='dark-primary'>
+                            Try our question finder
+                        </Button>
+                    </Col>
+                    <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>
+                        <picture>
+                            <source srcSet="/assets/cs/decor/question-finder-dark.svg" type="image/svg"/>
+                            <img className={"d-block w-100"} src={"/assets/cs/decor/question-finder-dark.svg"} alt="" />
+                        </picture>
+                    </Col>
+                </Row>
+            </Container>
+        </section>
     </div>;
 };
