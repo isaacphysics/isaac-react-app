@@ -44,11 +44,11 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     <div className="d-flex justify-content-end">
                         <UserContextPicker />
                     </div>
-                    {topicPage.children && topicPage.children.map((child, index) =>
-                        <IsaacContent key={index} doc={child}/>)
-                    }
                     {!(atLeastOne(relatedConceptsForSpecificViewingContext.length) || atLeastOne(relatedQuestionsForSpecificViewingContext.length)) &&
                         <IntendedAudienceWarningBanner doc={topicPage} />
+                    }
+                    {topicPage.children && topicPage.children.map((child, index) =>
+                        <IsaacContent key={index} doc={child}/>)
                     }
                     {atLeastOne(relatedConcepts.length) &&
                         <TopicSummaryLinks items={relatedConcepts} search={searchQuery} />
