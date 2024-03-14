@@ -48,11 +48,11 @@
   .unit-selection {
     .dropdown-menu {
       width: 100%;
-      min-width: unset;
+      min-width: max-content;
     }
     button.btn {
       padding: 0.25rem 1.5rem;
-      min-width: unset;
+      min-width: 192px;
       width: 100%;
       &.selected {
         border-radius: 0;
