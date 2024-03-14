@@ -237,6 +237,7 @@ const _STAGE_ITEM_OPTIONS = siteSpecific([ /* best not to export - use getFilter
     {label: "National 5", value: STAGE.SCOTLAND_NATIONAL_5},
     {label: "Higher", value: STAGE.SCOTLAND_HIGHER},
     {label: "Advanced Higher", value: STAGE.SCOTLAND_ADVANCED_HIGHER},
+    {label: "All stages", value: STAGE.ALL},
 ]);
 interface StageFilterOptions {
     byUser?: Immutable<PotentialUser> | null;
@@ -437,6 +438,12 @@ export function audienceStyle(audienceString: string): string {
             return "stage-label-alevel";
         case stageLabelMap.gcse:
             return "stage-label-gcse";
+        case stageLabelMap.scotland_national_5:
+            return "stage-label-national-5";
+        case stageLabelMap.scotland_higher:
+            return "stage-label-higher";
+        case stageLabelMap.scotland_advanced_higher:
+            return "stage-label-advanced-higher";
         default:
             return "stage-label-all";
     }
@@ -454,12 +461,39 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
     // if you are one of the options - only show that option
     const stagesFilteredByUserContext = audienceStages.filter(s => userContext.stage === s);
-    let stagesToView = stagesFilteredByUserContext.length > 0 ? stagesFilteredByUserContext : audienceStages;
+    const stagesToView = stagesFilteredByUserContext.length > 0 ? stagesFilteredByUserContext : audienceStages;
     // If common, could find substrings and report ranges i.e, GCSE to University
+    
+    if (isAda) {
+        // Ada currently (subject to change) want to show the stages as 3 groups:
+        // - GCSE & A Level
+        // - National 5 & Higher
+        // - Advanced Higher
+        // with intra-group separation by commas, inter-group separation by newlines
 
-    // CS would like to show All stages instead of GCSE & A Level - that will work until we have more stages
-    if (isAda && stagesToView.includes(STAGE.GCSE) && stagesToView.includes(STAGE.A_LEVEL)) {
-        stagesToView = [STAGE.ALL];
+        const result = stagesToView.reduce((acc, label) => {
+            if ([STAGE.GCSE, STAGE.A_LEVEL].includes(label as STAGE)) {
+                acc[0].push(label);
+            } else if ([STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER].includes(label as STAGE)) {
+                acc[1].push(label);
+            } else if ([STAGE.SCOTLAND_ADVANCED_HIGHER].includes(label as STAGE)) {
+                acc[2].push(label);
+            }
+            return acc;
+        }, [[], [], []] as Stage[][]);
+
+        // FIXME: use result.findLastIndex when supported
+        // const lastNonEmptyIndex = result.findLastIndex((labels) => labels.length > 0);
+        const reversed = result.slice().reverse();
+        const lastNonEmptyIndex = (result.length - 1) - reversed.findIndex(((labels) => labels.length > 0));
+
+        return result.reduce((acc, labels, index) => {
+            if (labels.length === 0) return acc;
+            let labelStrings = labels.map((label) => stageLabelMap[label]).join(", ");
+            // do not include a newline after the last group
+            labelStrings += (index < lastNonEmptyIndex ? "\n" : "");
+            return acc + labelStrings;
+        }, "");
     }
 
     return stagesToView.map(stage => stageLabelMap[stage]).join(" & ");

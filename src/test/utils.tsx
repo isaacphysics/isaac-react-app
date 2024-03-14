@@ -101,7 +101,7 @@ export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string
         "My Isaac": "My Ada",
         Teach: "Teach",
         Learn: "Learn",
-        Events: null,
+        Events: "Events",
         Help: "Help",
         Admin: "Admin"
     }

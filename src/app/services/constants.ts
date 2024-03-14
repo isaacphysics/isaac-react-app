@@ -296,9 +296,9 @@ export const stageLabelMap: {[stage in Stage]: string} = {
     a_level: "A\u00A0Level",
     further_a: "Further\u00A0A",
     university: "University",
-    scotland_national_5: "National 5",
+    scotland_national_5: "N5",
     scotland_higher: "Higher",
-    scotland_advanced_higher: "Adv. Higher",
+    scotland_advanced_higher: "Adv Higher",
     all: "All stages",
 };
 
@@ -937,6 +937,8 @@ export const GAMEBOARD_UNDO_STACK_SIZE_LIMIT = 10;
 export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 
 export const FEATURED_NEWS_TAG = "featured";
+
+export const NEWS_PODS_PER_PAGE = 12; // <= api.MAX_PODS_TO_RETURN (if lower, the backend will still return the maximum number of pods, but they won't be displayed in the frontend)
 
 export const PATHS = siteSpecific({
     ASSIGNMENT_PROGRESS: "/assignment_progress",

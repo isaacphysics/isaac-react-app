@@ -18,15 +18,15 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
     const isaacEmailPreferenceDescriptions = {
         assignments: siteSpecific(
             "Get notified when your teacher gives your group a new assignment.",
-            "If you're a student, set this to 'Yes' to receive assignment notifications from your teacher."
+            "Receive notifications when your teacher sets you work. These are sent as needed by your teacher."
         ),
         news: siteSpecific(
             "New content and website feature updates, as well as interesting news about Isaac.",
-            "Be the first to know about new topics and platform features."
+            "Be the first to know about new questions, topics, and platform features. You can expect one email a month."
         ),
         events: siteSpecific(
             "Information about new virtual or real world physics events.",
-            "Get valuable updates on our free student workshops/teacher CPD events happening near you."
+            "Find out about upcoming events."
         )
     };
 

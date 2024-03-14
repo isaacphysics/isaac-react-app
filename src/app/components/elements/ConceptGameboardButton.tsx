@@ -12,5 +12,5 @@ export interface ConceptGameboardButtonProps {
 export const ConceptGameboardButton = ({conceptId, className} : ConceptGameboardButtonProps) => {
     return <Link className={classNames(className, "btn btn-sm btn-primary")} to={`${PATHS.GAMEBOARD_BUILDER}?concepts=${conceptId}`} >
         Generate a {siteSpecific("gameboard", "quiz")}
-    </Link>
-}
+    </Link>;
+};
