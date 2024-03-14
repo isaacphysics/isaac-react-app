@@ -46,10 +46,10 @@ export const NavigationBar = () => {
       )}
 
       <NavigationSection title="Learn">
+        {isTeacherOrAbove(user) && <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>}
         <LinkItem to="/topics/gcse">GCSE topics</LinkItem>
         <LinkItem to="/topics/a_level">A level topics</LinkItem>
         <LinkItem to="/gameboards/new">Question Finder</LinkItem>
-        <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
         <LinkItem to="/glossary">Glossary</LinkItem>
         <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
       </NavigationSection>

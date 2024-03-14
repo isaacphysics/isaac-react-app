@@ -12,12 +12,12 @@ const learnLinks = [
   "/topics/gcse",
   "/topics/a_level",
   "/gameboards/new",
-  "/pages/workbooks_2020",
   "/glossary",
   "/pages/computer_science_journeys_gallery",
 ];
 const eventsLinks = ["/events", "/safeguarding"];
 const teacherEventLinks = ["/events?show_reservations_only=true"].concat(eventsLinks);
+const teacherLearnLinks = ["/pages/workbooks_2020"].concat(learnLinks);
 const helpLinks = ["/support/teacher", "/support/student", "/contact"];
 
 const navigationBarLinksPerRole: {
@@ -50,7 +50,7 @@ const navigationBarLinksPerRole: {
   TEACHER: {
     "My Isaac": myIsaacLinks,
     Teach: teacherLinks,
-    Learn: learnLinks,
+    Learn: teacherLearnLinks,
     Events: teacherEventLinks,
     Help: helpLinks,
     Admin: null,
@@ -58,7 +58,7 @@ const navigationBarLinksPerRole: {
   EVENT_LEADER: {
     "My Isaac": myIsaacLinks,
     Teach: teacherLinks,
-    Learn: learnLinks,
+    Learn: teacherLearnLinks,
     Events: teacherEventLinks,
     Help: helpLinks,
     Admin: ["/admin/events"],
@@ -66,7 +66,7 @@ const navigationBarLinksPerRole: {
   EVENT_MANAGER: {
     "My Isaac": myIsaacLinks,
     Teach: teacherLinks,
-    Learn: learnLinks,
+    Learn: teacherLearnLinks,
     Events: teacherEventLinks,
     Help: helpLinks,
     Admin: ["/admin", "/admin/events", "/admin/stats", "/admin/content_errors"],
@@ -74,7 +74,7 @@ const navigationBarLinksPerRole: {
   CONTENT_EDITOR: {
     "My Isaac": myIsaacLinks,
     Teach: teacherLinks,
-    Learn: learnLinks,
+    Learn: teacherLearnLinks,
     Events: teacherEventLinks,
     Help: helpLinks,
     Admin: ["/admin", "/admin/stats", "/admin/content_errors"],
@@ -82,7 +82,7 @@ const navigationBarLinksPerRole: {
   ADMIN: {
     "My Isaac": myIsaacLinks,
     Teach: teacherLinks,
-    Learn: learnLinks,
+    Learn: teacherLearnLinks,
     Events: teacherEventLinks,
     Help: helpLinks,
     Admin: ["/admin", "/admin/usermanager", "/admin/events", "/admin/stats", "/admin/content_errors"],
@@ -110,10 +110,10 @@ describe("IsaacApp", () => {
         if (hrefs === null) {
           // Expect link to be hidden from user
           expect(navLink).toBeNull();
-          break;
+          continue;
         }
         expect(navLink).toBeDefined();
-        if (!navLink) return; // appease TS
+        if (!navLink) continue; // appease TS
         // Check all menu options are available on click
         await userEvent.click(navLink);
         // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
