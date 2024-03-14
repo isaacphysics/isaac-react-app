@@ -437,7 +437,7 @@ describe("Groups", () => {
     // Expect that both members are shown
     const memberInfos = await within(groupEditor).findAllByTestId("member-info");
     expect(memberInfos).toHaveLength(2);
-    const resetPasswordButton1 = within(memberInfos[0]).getByRole("button", { name: "Reset Password" });
+    const resetPasswordButton1 = within(memberInfos[0]).getByRole("button", { name: "Reset PW" });
     // First button should work, because student has authorised full access
     expect(resetPasswordButton1).not.toBeDisabled();
     // CAUTION - We can't use `userEvent.click` here because of the tooltip on this button. It crashes tests after
@@ -448,7 +448,7 @@ describe("Groups", () => {
       expect(passwordResetSuccessfullySent).toBeTruthy();
     });
     // Second button should be disabled
-    const resetPasswordButton2 = within(memberInfos[1]).getByRole("button", { name: "Reset Password" });
+    const resetPasswordButton2 = within(memberInfos[1]).getByRole("button", { name: "Reset PW" });
     expect(resetPasswordButton2).toBeDisabled();
   });
 
@@ -482,8 +482,8 @@ describe("Groups", () => {
     // Expect that both members are shown
     const memberInfos = await within(groupEditor).findAllByTestId("member-info");
     expect(memberInfos).toHaveLength(2);
-    const resetPasswordButton1 = within(memberInfos[0]).queryByRole("button", { name: "Reset Password" });
-    const resetPasswordButton2 = within(memberInfos[1]).queryByRole("button", { name: "Reset Password" });
+    const resetPasswordButton1 = within(memberInfos[0]).queryByRole("button", { name: "Reset PW" });
+    const resetPasswordButton2 = within(memberInfos[1]).queryByRole("button", { name: "Reset PW" });
     expect(resetPasswordButton1).toBeNull();
     expect(resetPasswordButton2).toBeNull();
   });
