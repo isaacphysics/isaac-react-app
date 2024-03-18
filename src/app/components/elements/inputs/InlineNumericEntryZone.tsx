@@ -13,9 +13,11 @@ interface InlineNumericEntryZoneProps extends InputProps {
     height: number, 
     questionDTO: IsaacNumericQuestionDTO & AppQuestionDTO;
     setModified: React.Dispatch<React.SetStateAction<boolean>>;
+    valid: boolean | undefined,
+    invalid: boolean | undefined,
 }
 
-export const InlineNumericEntryZone = ({width, height, questionDTO, setModified, ...props} : InlineNumericEntryZoneProps) => {
+export const InlineNumericEntryZone = ({width, height, questionDTO, setModified, valid, invalid, ...rest} : InlineNumericEntryZoneProps) => {
 
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId as string);
@@ -30,6 +32,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
     const noDisplayUnit = questionDTO.displayUnit == null || questionDTO.displayUnit === "";
     const readonly = false;
 
+    const currentAttemptValueWrong = questionDTO?.validationResponse && (questionDTO?.validationResponse as QuantityValidationResponseDTO).correctValue === false;
     const currentAttemptUnitsWrong = questionDTO?.validationResponse && (questionDTO?.validationResponse as QuantityValidationResponseDTO).correctUnits === false;
     const feedbackShowing = false;
 
@@ -43,10 +46,10 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
         setModified(true);
     }, [value, unit, setModified]);
 
-    return <div className={`d-flex align-items-center inline-numeric-container ${props.className}`}>
+    return <div {...rest} className={`d-flex align-items-center inline-numeric-container ${rest.className} ${classNames({"is-valid": valid, "is-invalid": invalid})}`}>
         <Input 
-            valid={props.valid}
-            invalid={props.invalid}
+            valid={valid}
+            invalid={invalid && currentAttemptValueWrong}
             className={classNames({"units-shown" : questionDTO.requireUnits || !noDisplayUnit})}
             style={{width: `${width}px`, height: `${height}px`}}
             value={value}
