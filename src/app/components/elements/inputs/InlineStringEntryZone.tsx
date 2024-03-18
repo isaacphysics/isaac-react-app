@@ -13,7 +13,7 @@ interface InlineStringEntryZoneProps extends InputProps {
 export const InlineStringEntryZone = ({width, height, questionDTO, setModified, ...props} : InlineStringEntryZoneProps) => {
     
     const questionId = questionDTO?.id ?? "";
-    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<StringChoiceDTO>(questionId as string);
+    const { currentAttempt: _, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<StringChoiceDTO>(questionId as string);
 
     const [value, setValue] = useState<string | undefined>(questionDTO?.bestAttempt?.answer?.value);
 

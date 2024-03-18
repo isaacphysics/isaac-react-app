@@ -19,8 +19,6 @@ const InlineEntryZone = ({inlineSpanId, width, height, root}: {inlineSpanId: str
     const questionType = inlineContext?.elementToQuestionMap?.[inlineInputId]?.type ?? "isaacStringMatchQuestion";
     const questionDTO = selectQuestionPart(pageQuestions, questionId);
 
-    const bestAttempt = questionDTO?.bestAttempt?.answer;
-
     const [elementIndex, _setElementIndex] = useState<number>(Object.keys(inlineContext?.elementToQuestionMap ?? {}).indexOf(inlineInputId));
     const [isSelectedFeedback, setIsSelectedFeedback] = useState<boolean>(false);
 

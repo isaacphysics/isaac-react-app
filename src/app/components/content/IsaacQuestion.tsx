@@ -198,7 +198,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                         {below["xs"](deviceSize) ? "▶" : "Next"}
                                     </RS.Button>
                                 </div>
-                                <div className="feedback-panel-content py-3">
+                                <div className="feedback-panel-content p-3">
                                     {validationFeedback}
                                 </div>
                             </div>
