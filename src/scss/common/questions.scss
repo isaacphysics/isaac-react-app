@@ -66,6 +66,27 @@
   }
 }
 
+.inline-numeric-container {
+  border-radius: 5px;
+
+  > .units-shown {
+    border-radius: 5px 0 0 5px;
+  }
+
+  .inline-unit-dropdown {
+    button.btn {
+      height: 27px;
+      min-width: 36px !important;
+      border-radius: 0 5px 5px 0;
+      border: none;
+
+      &.display-unit {
+        border: 1px solid black;
+      }
+    }
+  }
+}
+
 .symbolic-question, .equality-page {
   .eqn-editor-preview {
     padding: 0.15em 0.6em;
@@ -428,7 +449,6 @@
 }
 
 .inline-part {
-  outline: none !important;
   $shadow-size: 3px;
   &.selected-feedback {
     box-shadow: 0 0 0 $shadow-size #000;
@@ -440,4 +460,8 @@
       box-shadow: 0 0 0 $shadow-size #dc3545;
     }
   }
+}
+
+.inline-dropdown {
+  min-width: unset !important;
 }
