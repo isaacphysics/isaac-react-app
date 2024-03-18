@@ -31,7 +31,7 @@ import {
     wasTodayUTC
 } from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
-import {AccordionSectionContext, AppQuestionDTO, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineStringEntryZoneContext} from "../../../IsaacAppTypes";
+import {AccordionSectionContext, AppQuestionDTO, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineContext} from "../../../IsaacAppTypes";
 import {RouteComponentProps, withRouter} from "react-router";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
@@ -102,7 +102,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const isFastTrack = fastTrackInfo.isFastTrackPage && currentGameboard?.id && fastTrackProgressEnabledBoards.includes(currentGameboard.id);
 
     // Inline questions
-    const inlineContext = useContext(InlineStringEntryZoneContext);
+    const inlineContext = useContext(InlineContext);
     const isInlineQuestion = doc.type === "isaacInlineRegion" && inlineContext;
 
     const inlineElementIds = Object.keys(inlineContext?.elementToQuestionMap ?? {});
@@ -246,7 +246,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     </ConfidenceContext.Provider>;
 });
 
-export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, currentGameboard: ApiTypes.GameboardDTO | undefined, currentUser: any, dispatch: any, inlineContext?: ContextType<typeof InlineStringEntryZoneContext>) => {
+export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, currentGameboard: ApiTypes.GameboardDTO | undefined, currentUser: any, dispatch: any, inlineContext?: ContextType<typeof InlineContext>) => {
     if (questionPart?.currentAttempt) {
         // Notify Plausible that at least one question attempt has taken place today
         if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {

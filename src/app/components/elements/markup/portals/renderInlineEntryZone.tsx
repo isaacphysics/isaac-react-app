@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { PortalInHtmlHook } from "./utils";
-import { InlineStringEntryZoneContext } from "../../../../../IsaacAppTypes";
-import InlineStringEntryZone from "./InlineStringEntryZone";
+import { InlineContext } from "../../../../../IsaacAppTypes";
+import InlineEntryZone from "./InlineEntryZone";
 
 // See the comment on `PORTAL_HOOKS` constant for an explanation of how this works
-export const useInlineStringEntryZoneInHtml: PortalInHtmlHook = (html) => {
+export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
     // If not in an inline string entry zone, don't bother trying to find and render inline divs
-    const inlineZoneContext = useContext(InlineStringEntryZoneContext);
+    const inlineZoneContext = useContext(InlineContext);
     if (!inlineZoneContext) return [html, () => []];
 
     const htmlDom = document.createElement("html");
@@ -27,7 +27,7 @@ export const useInlineStringEntryZoneInHtml: PortalInHtmlHook = (html) => {
     return [
         htmlDom.innerHTML,
         (ref?: HTMLElement) => ref ? inlineZoneConstructors.map(({id, width, height}) =>
-            <InlineStringEntryZone
+            <InlineEntryZone
                 key={id}
                 inlineSpanId={id}
                 width={width}

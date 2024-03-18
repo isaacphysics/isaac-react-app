@@ -12,7 +12,7 @@ import {IsaacTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {AppQuestionDTO, InlineStringEntryZoneContext, QuestionContext} from "../../../IsaacAppTypes";
+import {InlineContext, QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
 import {IsaacCardDeck} from "./IsaacCardDeck";
@@ -53,19 +53,19 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
         }
 
         if (type === "isaacInlineRegion") {
-            const questionPartIdMap = useRef<Record<string, {questionId: string;}>>({}).current;
+            const questionPartIdMap = useRef<Record<string, {questionId: string; type: string;}>>({}).current;
             const [feedbackIndex, setFeedbackIndex] = React.useState<number | undefined>(undefined);
             const [modifiedQuestionIds, setModifiedQuestionIds] = React.useState([] as string[]);
             const [isModifiedSinceLastSubmission, setIsModifiedSinceLastSubmission] = React.useState(false);
             const [submitting, setSubmitting] = React.useState(false);
             const canShowWarningToast = useRef(true).current; 
             // above is a ref because multiple questions are submitted during the same render cycle; this value needs to update during this time, which setState doesn't guarantee.
-            tempSelectedComponent = <InlineStringEntryZoneContext.Provider value={{ 
+            tempSelectedComponent = <InlineContext.Provider value={{ 
                 docId: props.doc.id, elementToQuestionMap: questionPartIdMap, modifiedQuestionIds, setModifiedQuestionIds, isModifiedSinceLastSubmission,
                 canShowWarningToast, setIsModifiedSinceLastSubmission, feedbackIndex, setFeedbackIndex, submitting, setSubmitting }}
             >
                 {tempSelectedComponent}
-            </InlineStringEntryZoneContext.Provider>;
+            </InlineContext.Provider>;
         }
 
         selectedComponent = <QuestionContext.Provider value={props.doc.id}>{tempSelectedComponent}</QuestionContext.Provider>;

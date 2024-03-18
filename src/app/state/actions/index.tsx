@@ -20,7 +20,7 @@ import {
     AppGroupMembership,
     CredentialsAuthDTO,
     FreeTextRule,
-    InlineStringEntryZoneContext,
+    InlineContext,
     PotentialUser,
     QuestionSearchQuery,
     UserPreferencesDTO,
@@ -519,7 +519,7 @@ interface Attempt {
 }
 const attempts: {[questionId: string]: Attempt} = {};
 
-export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO>, gameboardId?: string, inlineContext?: ContextType<typeof InlineStringEntryZoneContext>) => async (dispatch: AppDispatch, getState: () => AppState) => {
+export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO>, gameboardId?: string, inlineContext?: ContextType<typeof InlineContext>) => async (dispatch: AppDispatch, getState: () => AppState) => {
     const state = getState();
     const isAnonymous = !(state && state.user && state.user.loggedIn);
     const timePeriod = isAnonymous ? 5 * 60 * 1000 : 15 * 60 * 1000;

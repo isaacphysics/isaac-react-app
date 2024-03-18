@@ -402,9 +402,10 @@ export const ClozeDropRegionContext = React.createContext<{
     dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
     shouldGetFocus: (id: string) => boolean
 } | undefined>(undefined);
-export const InlineStringEntryZoneContext = React.createContext<{
-    docId: string | undefined,
-    elementToQuestionMap: {[elementId: string]: {questionId: string}},
+
+export const InlineContext = React.createContext<{
+    docId?: string,
+    elementToQuestionMap: {[elementId: string]: {questionId: string, type: string}},
     modifiedQuestionIds: string[],
     setModifiedQuestionIds: React.Dispatch<React.SetStateAction<string[]>>,
     isModifiedSinceLastSubmission: boolean,
