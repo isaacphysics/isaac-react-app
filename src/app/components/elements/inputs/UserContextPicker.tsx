@@ -41,6 +41,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const showStageSelector = getFilteredStageOptions({byUser: user}).length > 1 || showUnusualContextMessage;
     const showExamBoardSelector = isAda && (getFilteredExamBoardOptions({byUser: user}).length > 1 || showUnusualContextMessage);
 
+    const onlyOneBoard : {label: string, value: EXAM_BOARD} | undefined = filteredExamBoardOptions.length === 2 && filteredExamBoardOptions.map(eb => eb.value).includes(EXAM_BOARD.ALL)
+        ? filteredExamBoardOptions.filter(eb => eb.value !== EXAM_BOARD.ALL)[0]
+        : undefined;
 
     return <div className="d-flex">
         {/* Show other content Selector */}
@@ -101,10 +104,13 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 value={userContext.examBoard}
                 onChange={e => {
                     history.push({search: queryString.stringify({...qParams, examBoard: e.target.value}, {encode: false})});
-                    dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD))
+                    dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD));
                 }}
             >
-                {filteredExamBoardOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
+                {onlyOneBoard 
+                    ? <option value={onlyOneBoard.value}>{onlyOneBoard.label}</option> 
+                    : filteredExamBoardOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)
+                }
                 {/* If the userContext.examBoard is not in the user's normal list of options (following link with q. params) add it */}
                 {!filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard) &&
                     <option key={userContext.examBoard} value={userContext.examBoard}>
