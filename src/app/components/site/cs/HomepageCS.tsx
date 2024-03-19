@@ -116,20 +116,19 @@ export const HomepageCS = () => {
                             cards: [{
                                 title: "Foundational",
                                 subtitle: "Aimed at students aged 14-16, these resources cover core concepts in computer science for students working towards qualifications like GCSEs and National 5s.",
-                                clickUrl: "/topics#gcse",
-                                buttonText: "See more",
                                 imageClassName: "backslash-1"
                             }, {
                                 title: "Advanced",
                                 subtitle: "Aimed at students aged 16-19, these resources cover advanced concepts. They are useful for students studying for A levels and Advanced Placement courses, and those heading towards further education.",
-                                clickUrl: "/topics#a_level",
-                                buttonText: "See more",
                                 imageClassName: "backslash-2"
                             }]
                         }}
                         className={"homepage-cards"}
                         containerClassName={"mw-1600"}
                     />
+                    <Col xs={12} sm={{size: 8, offset: 2}} md={{size: 6, offset: 3}} lg={{size: 4, offset: 4}} className="d-flex justify-content-center">
+                        <Button className="w-100" tag={Link} to="/topics" color="primary" outline>Explore all resources</Button>
+                    </Col>
                 </Container>
             </section>
 
