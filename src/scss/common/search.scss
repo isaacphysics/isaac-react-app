@@ -29,6 +29,13 @@
   }
 }
 
+#finder-page {
+    .finder-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+}
 
 // NOMENSA search.scss
 // REMEMBER TO REPLACE ./assets/ WITH /assets/
