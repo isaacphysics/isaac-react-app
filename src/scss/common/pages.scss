@@ -147,7 +147,7 @@ main {
 }
 
 .context-picker-container {
-  @media (min-width: 992px) {
+  @include media-breakpoint-up(lg) {
     min-width: 600px;
   }
 }
