@@ -41,6 +41,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const showStageSelector = getFilteredStageOptions({byUser: user}).length > 1 || showUnusualContextMessage;
     const showExamBoardSelector = isAda && (getFilteredExamBoardOptions({byUser: user}).length > 1 || showUnusualContextMessage);
 
+    const onlyOneBoard : {label: string, value: EXAM_BOARD} | undefined = filteredExamBoardOptions.length === 2 && filteredExamBoardOptions.map(eb => eb.value).includes(EXAM_BOARD.ALL)
+        ? filteredExamBoardOptions.filter(eb => eb.value !== EXAM_BOARD.ALL)[0]
+        : undefined;
 
     return <div className="d-flex context-picker-container">
         <RS.Row className="m-0 w-100">
@@ -96,7 +99,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 </FormGroup>}
 
                 {/* Exam Board Selector */}
-                {showExamBoardSelector && <FormGroup className={`${className} mb-0`}>
+                {showExamBoardSelector && <FormGroup className={className}>
                     {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
                     <Input
                         className="w-auto d-inline-block pl-1 pr-0" type="select" id="uc-exam-board-select"
@@ -107,7 +110,10 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                             dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD));
                         }}
                     >
-                        {filteredExamBoardOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
+                        {onlyOneBoard 
+                            ? <option value={onlyOneBoard.value}>{onlyOneBoard.label}</option> 
+                            : filteredExamBoardOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)
+                        }
                         {/* If the userContext.examBoard is not in the user's normal list of options (following link with q. params) add it */}
                         {!filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard) &&
                             <option key={userContext.examBoard} value={userContext.examBoard}>
