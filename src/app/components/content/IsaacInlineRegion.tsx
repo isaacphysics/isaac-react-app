@@ -32,11 +32,12 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
     const correct = partsCorrect !== undefined && (partsCorrect === partsTotal);
     const canSubmit = (inlineContext?.modifiedQuestionIds?.length ?? 0) > 0 && !inlineContext?.submitting;
 
-    const isFeedbackShown = currentAttempts?.some(vr => vr !== undefined) && !inlineContext?.submitting && !inlineContext?.isModifiedSinceLastSubmission && !canSubmit;
-
-    if (isFeedbackShown && inlineContext?.feedbackIndex === undefined) {
-        inlineContext?.setFeedbackIndex(0);
-    }
+    useEffect(() => {
+        const isFeedbackShown = currentAttempts?.some(vr => vr !== undefined) && !inlineContext?.submitting && !inlineContext?.isModifiedSinceLastSubmission && !canSubmit;
+        if (isFeedbackShown && inlineContext && inlineContext.feedbackIndex === undefined) {
+            inlineContext.setFeedbackIndex(0);
+        }
+    }, [canSubmit, currentAttempts, inlineContext]);
     
     const explanation = {
         ...currentAttempts?.[0]?.explanation, 
