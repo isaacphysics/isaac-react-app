@@ -104,8 +104,8 @@ export const AllTopics = () => {
                     </Col>
                     <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>
                         <picture>
-                            <source srcSet="/assets/cs/decor/question-finder-dark.svg" type="image/svg"/>
-                            <img className={"d-block w-100"} src={"/assets/cs/decor/question-finder-dark.svg"} alt="" />
+                            <source srcSet="/assets/cs/decor/question-finder-dark.png" type="image/png"/>
+                            <img className={"d-block w-100"} src={"/assets/cs/decor/question-finder-dark.png"} alt="" />
                         </picture>
                     </Col>
                 </Row>
