@@ -9,7 +9,6 @@ import {
     isAQuestionLikeDoc,
     isPhy,
     NOT_FOUND,
-    notRelevantMessage,
     scrollVerticallyIntoView,
     siteSpecific,
     useUserContext
@@ -183,12 +182,6 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                                     {trustedTitle}
                                 </Markup>
                             </h2>
-                        </div>}
-                        {isAda && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
-                            <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
-                            <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
-                                {`This content has ${notRelevantMessage(userContext)}.`}
-                            </RS.UncontrolledTooltip>
                         </div>}
                         {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
                             <span id={`disabled-tooltip-${componentId}`} className="icon-help" />

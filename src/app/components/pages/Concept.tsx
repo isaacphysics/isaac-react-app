@@ -51,10 +51,10 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     <MetaDescription description={doc.summary} />
                     <CanonicalHrefElement />
                 </>}
-                <div className="no-print d-flex align-items-center">
-                    <EditContentButton doc={doc} />
-                    <div className="mt-3 mr-sm-1 ml-auto">
-                        <UserContextPicker className="no-print text-right" />
+                <EditContentButton doc={doc} />
+                <div className="no-print d-flex align-items-center mt-4">
+                    <div className="mr-sm-1 ml-auto">
+                        <UserContextPicker className="no-print" />
                     </div>
                     <div className="question-actions">
                         <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />

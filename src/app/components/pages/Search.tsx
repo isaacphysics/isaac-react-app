@@ -145,7 +145,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         onChange={selectOnChange(setFiltersState, false)}
                                         styles={selectStyle}
                                     />
-                                    {isAda && <RS.Label className="mt-2 mb-2 mb-md-0">
+                                    {isAda && <RS.Label className="mt-2 mb-2 mb-md-0 mx-0">
                                         <UserContextPicker className="text-right" />
                                     </RS.Label>}
                                 </RS.Form>
