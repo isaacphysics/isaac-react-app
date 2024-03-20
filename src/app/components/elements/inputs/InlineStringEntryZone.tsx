@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Input, InputProps } from "reactstrap";
+import { Input } from "reactstrap";
 import { IsaacStringMatchQuestionDTO, StringChoiceDTO } from "../../../../IsaacApiTypes";
 import { useCurrentQuestionAttempt } from "../../../services";
+import { InlineEntryZoneProps } from "../markup/portals/InlineEntryZone";
 
-interface InlineStringEntryZoneProps extends InputProps {
-    width: number, 
-    height: number, 
-    questionDTO: IsaacStringMatchQuestionDTO,
-    setModified: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export const InlineStringEntryZone = ({width, height, questionDTO, setModified, ...props} : InlineStringEntryZoneProps) => {
+export const InlineStringEntryZone = ({width, height, questionDTO, focusRef, setModified, ...props} : InlineEntryZoneProps<IsaacStringMatchQuestionDTO>) => {
     
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt: _, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<StringChoiceDTO>(questionId as string);
@@ -28,6 +22,7 @@ export const InlineStringEntryZone = ({width, height, questionDTO, setModified, 
 
     return <Input 
         {...props}
+        ref={focusRef}
         value={value}
         style={{width: `${width}px`, height: `${height}px`}}
         onChange={(e) => setValue(e.target.value)}

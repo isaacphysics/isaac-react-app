@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { selectQuestionPart } from "../../../../services";
 import { AppQuestionDTO, InlineContext } from "../../../../../IsaacAppTypes";
@@ -7,6 +7,17 @@ import classNames from "classnames";
 import { InlineStringEntryZone } from "../../inputs/InlineStringEntryZone";
 import { InlineNumericEntryZone } from "../../inputs/InlineNumericEntryZone";
 import { IsaacNumericQuestionDTO, IsaacStringMatchQuestionDTO } from "../../../../../IsaacApiTypes";
+import { InputProps } from "reactstrap";
+
+export interface InlineEntryZoneProps<T> extends InputProps {
+    width: number, 
+    height: number, 
+    setModified: React.Dispatch<React.SetStateAction<boolean>>;
+    valid: boolean | undefined,
+    invalid: boolean | undefined,
+    focusRef: React.RefObject<any>,
+    questionDTO: T & AppQuestionDTO;
+}
 
 const InlineEntryZone = ({inlineSpanId, width, height, root}: {inlineSpanId: string, width: number, height: number, root: HTMLElement}) => {
     
@@ -50,6 +61,16 @@ const InlineEntryZone = ({inlineSpanId, width, height, root}: {inlineSpanId: str
         setIsSelectedFeedback(inlineContext?.feedbackIndex === elementIndex);
     }, [elementIndex, inlineContext?.feedbackIndex]);
 
+    const focusRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (focusRef && focusRef.current && inlineContext?.focusSelection && inlineContext?.feedbackIndex === elementIndex) {
+            // FIXME the ref is set but this doesn't seem to work
+            focusRef.current.focus();
+            inlineContext.setFocusSelection(false);
+        }
+    }, [inlineContext?.focusSelection]);
+
     if (!questionId || !questionDTO ) {
         console.error(`Inline question element (id: ${questionId}, dto: ${questionDTO}) not found.`);
         return null;
@@ -74,6 +95,7 @@ const InlineEntryZone = ({inlineSpanId, width, height, root}: {inlineSpanId: str
                     height={height}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
+                    focusRef={focusRef}
                 />;
             }
             case "isaacStringMatchQuestion": {
@@ -86,6 +108,7 @@ const InlineEntryZone = ({inlineSpanId, width, height, root}: {inlineSpanId: str
                     height={height}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
+                    focusRef={focusRef}
                 />;
             }
         }

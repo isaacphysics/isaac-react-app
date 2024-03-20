@@ -1,23 +1,14 @@
-import React, { FormEvent, useEffect, useState } from "react";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, InputProps } from "reactstrap";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from "reactstrap";
 import classNames from "classnames";
 import { selectUnits, wrapUnitForSelect } from "../../content/IsaacNumericQuestion";
 import { Markup } from "../markup";
 import { IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO } from "../../../../IsaacApiTypes";
 import { selectors, useAppSelector, useGetConstantUnitsQuery } from "../../../state";
 import { isLoggedIn, useCurrentQuestionAttempt } from "../../../services";
-import { AppQuestionDTO } from "../../../../IsaacAppTypes";
+import { InlineEntryZoneProps } from "../markup/portals/InlineEntryZone";
 
-interface InlineNumericEntryZoneProps extends InputProps {
-    width: number, 
-    height: number, 
-    questionDTO: IsaacNumericQuestionDTO & AppQuestionDTO;
-    setModified: React.Dispatch<React.SetStateAction<boolean>>;
-    valid: boolean | undefined,
-    invalid: boolean | undefined,
-}
-
-export const InlineNumericEntryZone = ({width, height, questionDTO, setModified, valid, invalid, ...rest} : InlineNumericEntryZoneProps) => {
+export const InlineNumericEntryZone = ({width, height, questionDTO, setModified, valid, invalid, focusRef, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
 
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId as string);
@@ -36,6 +27,8 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
     const currentAttemptUnitsWrong = questionDTO?.validationResponse && (questionDTO?.validationResponse as QuantityValidationResponseDTO).correctUnits === false;
     const feedbackShowing = false;
 
+    const inputRef = useRef(null);
+
     useEffect(function updateCurrentAttempt() {
         const attempt = {
             type: "quantity",
@@ -48,6 +41,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
 
     return <div {...rest} className={`d-flex align-items-center inline-numeric-container ${rest.className} ${classNames({"is-valid": valid, "is-invalid": invalid})}`}>
         <Input 
+            ref={focusRef}
             valid={valid}
             invalid={invalid && currentAttemptValueWrong}
             className={classNames({"units-shown" : questionDTO.requireUnits || !noDisplayUnit})}

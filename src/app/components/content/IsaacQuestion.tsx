@@ -187,8 +187,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                     </RS.Button>
                                     <Spacer/>
                                     <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
-                                        inlineContext.feedbackIndex && document.getElementById(inlineElementIds[inlineContext.feedbackIndex])?.focus(); }
-                                    }>
+                                        inlineContext.feedbackIndex && inlineContext.setFocusSelection(true); 
+                                        console.log("clicked", inlineContext.focusSelection);
+                                    }}>
                                         Part {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
                                     </RS.Button>
                                     <Spacer/>

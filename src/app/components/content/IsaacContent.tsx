@@ -1,5 +1,5 @@
 import React, {lazy, useRef} from "react";
-import {AnvilApp} from "./AnvilApp"
+import {AnvilApp} from "./AnvilApp";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestion} from "./IsaacQuestion";
 import {IsaacVideo} from "./IsaacVideo";
@@ -58,11 +58,12 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
             const [modifiedQuestionIds, setModifiedQuestionIds] = React.useState([] as string[]);
             const [isModifiedSinceLastSubmission, setIsModifiedSinceLastSubmission] = React.useState(false);
             const [submitting, setSubmitting] = React.useState(false);
+            const [focusSelection, setFocusSelection] = React.useState(false);
             const canShowWarningToast = useRef(true).current; 
             // above is a ref because multiple questions are submitted during the same render cycle; this value needs to update during this time, which setState doesn't guarantee.
             tempSelectedComponent = <InlineContext.Provider value={{ 
                 docId: props.doc.id, elementToQuestionMap: questionPartIdMap, modifiedQuestionIds, setModifiedQuestionIds, isModifiedSinceLastSubmission,
-                canShowWarningToast, setIsModifiedSinceLastSubmission, feedbackIndex, setFeedbackIndex, submitting, setSubmitting }}
+                canShowWarningToast, setIsModifiedSinceLastSubmission, feedbackIndex, setFeedbackIndex, submitting, setSubmitting, focusSelection, setFocusSelection }}
             >
                 {tempSelectedComponent}
             </InlineContext.Provider>;
