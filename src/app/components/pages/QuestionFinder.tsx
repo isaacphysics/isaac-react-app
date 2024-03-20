@@ -99,10 +99,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) setSearchStages([userContext.stage]);
     }, [userContext.stage]);
 
-    const [searchBook, setSearchBook] = useState<string[]>([]);
+    const [searchBook, setSearchBook] = useState<string[]>(
+        arrayFromPossibleCsv(params.book)
+    );
     const isBookSearch = searchBook.length > 0;
 
-    const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
+    const [searchFastTrack, setSearchFastTrack] = useState<boolean>(
+        params.fasttrack ? true : false
+    );
     const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({});
 
     const creationContext: AudienceContext = useMemo(() => {
@@ -155,6 +159,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const tagOptions: { options: Item<string>[]; label: string }[] = isPhy ? tags.allTags.map(groupTagSelectionsByParent) : tags.allSubcategoryTags.map(groupTagSelectionsByParent);
     const groupBaseTagOptions: GroupBase<Item<string>>[] = tagOptions;
+    const bookOptions: Item<string>[] = [
+        {value: "phys_book_step_up", label: "Step Up to GCSE Physics"},
+        {value: "phys_book_gcse", label: "GCSE Physics"},
+        {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
+        {value: "physics_linking_concepts", label: "Linking Concepts in Pre-Uni Physics"},
+        {value: "maths_book_gcse", label: "GCSE Maths"},
+        {value: "maths_book", label: "Pre-Uni Maths"},
+        {value: "chemistry_16", label: "A-Level Physical Chemistry"}
+    ];
 
     useEffect(() => {
         searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
@@ -165,6 +178,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (searchTopics.length) params.topics = toCSV(searchTopics);
         if (searchQuery.length) params.query = encodeURI(searchQuery);
         if (isAda && searchExamBoards.length) params.examBoards = toCSV(searchExamBoards);
+        if (isPhy && searchBook.length) params.book = toCSV(searchBook);
+        if (isPhy && searchFastTrack) params.fasttrack = "set";
 
         history.replace({search: queryString.stringify(params, {encode: true}), state: location.state});
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -207,23 +222,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     </RS.Col>
                 </RS.Row>
                 <RS.Row>
-                    {isPhy && <RS.Col lg={3} className="text-wrap my-2">
+                    {isPhy && <RS.Col lg={isBookSearch ? 12 : 3} className="text-wrap my-2">
                         <RS.Label htmlFor="question-search-book">Book</RS.Label>
                         <StyledSelect
                             inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
+                            value={itemiseByValue(searchBook, bookOptions)}
                             onChange={(e) => {
                                 selectOnChange(setSearchBook, true)(e);
                                 sortQuestionUpdateState(questionsSort, setQuestionsSort, "title");
                             }}
-                            options={[
-                                {value: "phys_book_step_up", label: "Step Up to GCSE Physics"},
-                                {value: "phys_book_gcse", label: "GCSE Physics"},
-                                {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
-                                {value: "physics_linking_concepts", label: "Linking Concepts in Pre-Uni Physics"},
-                                {value: "maths_book_gcse", label: "GCSE Maths"},
-                                {value: "maths_book", label: "Pre-Uni Maths"},
-                                {value: "chemistry_16", label: "A-Level Physical Chemistry"}
-                            ]}
+                            options={bookOptions}
                         />
                     </RS.Col>}
                     <RS.Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
@@ -290,7 +298,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         </RS.Card>
         <RS.Card>
             <RS.CardHeader className="finder-header">
-                {/* TODO: dynamic padding and remove for Phy */}
                 <RS.Col sm={12} md={6} lg={siteSpecific(12, 4)} xl={siteSpecific(12, 5)} className={"pr-0"}>
                     <h3>
                         {sortedQuestions ? <RS.Badge color="primary">{sortedQuestions.length}</RS.Badge> : <IsaacSpinner />} Questions Match
