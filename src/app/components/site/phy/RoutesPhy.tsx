@@ -32,6 +32,7 @@ import {TeacherRequest} from "../../pages/TeacherRequest";
 import {Registration} from "../../pages/Registration";
 import {EmailAlterHandler} from "../../handlers/EmailAlterHandler";
 import {News} from "../../pages/News";
+import { QuestionFinder } from "../../pages/QuestionFinder";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -40,8 +41,11 @@ const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 let key = 0;
 export const RoutesPhy = [
     // Registration
-    <TrackedRoute exact path="/register" component={Registration} />,
-    <TrackedRoute exact path="/verifyemail" component={EmailAlterHandler}/>,
+    <TrackedRoute key={key++} exact path="/register" component={Registration} />,
+    <TrackedRoute key={key++} exact path="/verifyemail" component={EmailAlterHandler}/>,
+
+    // Questions
+    <TrackedRoute key={key++} exact path="/questions" component={QuestionFinder} />,
 
     // Assignments
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,

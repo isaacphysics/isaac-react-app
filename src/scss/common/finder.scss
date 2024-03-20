@@ -1,0 +1,28 @@
+#finder-page {
+  .finder-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+  }
+
+  .search-item-icon {
+    max-width: 2rem;
+    max-height: 2rem;
+  }
+
+  .finder-filters {
+    @include respond-above(sm) {
+      justify-content: flex-end;
+    }
+  }
+
+  .finder-filters label {
+    @include respond-above(xs) {
+      margin-left: 0.5rem;
+    }
+    @include respond-below(xs) {
+      margin-right: 0.5rem;
+    }
+  }
+}
+

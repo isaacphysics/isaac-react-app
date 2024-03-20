@@ -30,6 +30,9 @@ import {
     useUserContext,
     STAGE_NULL_OPTIONS,
     useQueryParams,
+    arrayFromPossibleCsv,
+    toCSV,
+    itemiseByValue
 } from "../../services";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
@@ -49,25 +52,6 @@ const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
     menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 9999})}
 };
-
-// TODO: create a service and use in Glossary.tsx and GameBoardFilter.tsx
-// --------------
-function arrayFromPossibleCsv(queryParamValue: string | string[] | undefined): string[] {
-    return queryParamValue ?
-        (queryParamValue instanceof Array ?
-            queryParamValue :
-            queryParamValue.split(",")
-        ) :
-        [];
-}
-function toCSV<T extends string>(items: T[]) {
-    return items.join(",");
-}
-
-function itemiseByValue<R extends {value: string}>(values: string[], options: R[]): R[] {
-    return options.filter(option => values.includes(option.value));
-}
-// --------------
 
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -303,8 +287,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         {sortedQuestions ? <RS.Badge color="primary">{sortedQuestions.length}</RS.Badge> : <IsaacSpinner />} Questions Match
                     </h3>
                 </RS.Col>
-                {/* TODO: fix padding on small screens */}
-                {isAda && <RS.Col sm={12} md={6} lg={8} xl={7} className={"pl-0"}>
+                {isAda && <RS.Col sm={12} md={6} lg={8} xl={7} className={"pl-md-0 pl-lg-0 pl-xl-0"}>
                     <RS.Form inline className="search-filters">
                         <RS.Label className="mt-2 mb-2 mb-md-0">
                             <UserContextPicker className="text-right" />
