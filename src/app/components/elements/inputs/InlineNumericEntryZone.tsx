@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useRef, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from "reactstrap";
 import classNames from "classnames";
 import { selectUnits, wrapUnitForSelect } from "../../content/IsaacNumericQuestion";
@@ -27,8 +27,6 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
     const currentAttemptUnitsWrong = questionDTO?.validationResponse && (questionDTO?.validationResponse as QuantityValidationResponseDTO).correctUnits === false;
     const feedbackShowing = false;
 
-    const inputRef = useRef(null);
-
     useEffect(function updateCurrentAttempt() {
         const attempt = {
             type: "quantity",
@@ -45,7 +43,10 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
             valid={valid}
             invalid={invalid && currentAttemptValueWrong}
             className={classNames({"units-shown" : questionDTO.requireUnits || !noDisplayUnit})}
-            style={{width: `${width}px`, height: `${height}px`}}
+            style={{
+                ...(width && {width: `${width}px`}), 
+                ...(height && {height: `${height}px`}),
+            }}
             value={value}
             onChange={(e) => {
                 setValue(e.target.value);

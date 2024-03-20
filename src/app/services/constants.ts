@@ -970,7 +970,8 @@ export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
 
-export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+?)]/g;
+// Matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
+export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+?)(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
 
 interface inlineQuestionType<T extends ChoiceDTO> {
     choice: {

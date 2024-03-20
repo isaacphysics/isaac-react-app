@@ -10,8 +10,9 @@ import { IsaacNumericQuestionDTO, IsaacStringMatchQuestionDTO } from "../../../.
 import { InputProps } from "reactstrap";
 
 export interface InlineEntryZoneProps<T> extends InputProps {
-    width: number, 
-    height: number, 
+    // Any inline zone styles (string match, numeric...) should use this interface
+    width: number | undefined, 
+    height: number | undefined, 
     setModified: React.Dispatch<React.SetStateAction<boolean>>;
     valid: boolean | undefined,
     invalid: boolean | undefined,
@@ -19,7 +20,15 @@ export interface InlineEntryZoneProps<T> extends InputProps {
     questionDTO: T & AppQuestionDTO;
 }
 
-const InlineEntryZone = ({inlineSpanId, width, height, root}: {inlineSpanId: string, width: number, height: number, root: HTMLElement}) => {
+export interface InlineEntryZoneBaseProps {
+    inlineSpanId: string, 
+    className: string, 
+    width: number | undefined, 
+    height: number | undefined, 
+    root: HTMLElement
+}
+
+const InlineEntryZoneBase = ({inlineSpanId, className, width, height, root}: InlineEntryZoneBaseProps) => {
     
     const inlineContext = useContext(InlineContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
@@ -121,4 +130,4 @@ const InlineEntryZone = ({inlineSpanId, width, height, root}: {inlineSpanId: str
         )}
     </>;
 };
-export default InlineEntryZone;
+export default InlineEntryZoneBase;

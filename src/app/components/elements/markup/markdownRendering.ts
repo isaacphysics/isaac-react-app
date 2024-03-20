@@ -44,11 +44,9 @@ export const renderClozeDropZones = (markdown: string) => {
 };
 
 export const renderInlineQuestionPartZones = (markdown: string) => {
-    // const inlineQuestionMatches = Array.from(markdown.matchAll(inlineQuestionRegex));
-
-    return markdown.replace(inlineQuestionRegex, (_match, id) => {
+    return markdown.replace(inlineQuestionRegex, (_match, id: string | undefined, params: string | undefined, width: string | undefined, height: string | undefined) => {
         const inlineId = `inline-question-${id}`;
-        return `<span id="${inlineId}" class="d-inline-block"></span>`;
+        return `<span id="${inlineId}" class="d-inline-block ${width ? width : ""} ${height ? height : ""})}"></span>`;
     });
 };
 

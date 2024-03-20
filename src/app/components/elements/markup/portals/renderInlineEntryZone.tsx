@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { PortalInHtmlHook } from "./utils";
 import { InlineContext } from "../../../../../IsaacAppTypes";
-import InlineEntryZone from "./InlineEntryZone";
+import InlineEntryZoneBase from "./InlineEntryZone";
 
 // See the comment on `PORTAL_HOOKS` constant for an explanation of how this works
 export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
@@ -16,19 +16,34 @@ export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
     const inlineZones = htmlDom.querySelectorAll("span[id^='inline-question-']") as NodeListOf<HTMLElement>;
     if (inlineZones.length === 0) return [html, () => []];
 
-    const inlineZoneConstructors: {id: string, width: number, height: number}[] = [];
+    const inlineZoneConstructors: {id: string, className: string, width: number | undefined, height: number | undefined}[] = [];
 
     for (let i = 0; i < inlineZones.length; i++) {
-        const width = parseInt(inlineZones[i].dataset.width ?? "100");
-        const height = parseInt(inlineZones[i].dataset.height ?? "27");
-        inlineZoneConstructors.push({id: inlineZones[i].id, width, height});
+        const zone = inlineZones[i];
+        let className = "";
+        let defaultWidth = true;
+        let defaultHeight = true;
+        for (const c of zone.classList) {
+            if (c.match(/w-\d+/)) {
+                className += c + " ";
+                defaultWidth = false;
+            }
+            if (c.match(/h-\d+/)) {
+                className += c + " ";
+                defaultHeight = false;
+            }
+        }
+        const width = defaultWidth ? 100 : undefined;
+        const height = defaultHeight ? 27 : undefined;
+        inlineZoneConstructors.push({id: inlineZones[i].id, className, width, height});
     }
     
     return [
         htmlDom.innerHTML,
-        (ref?: HTMLElement) => ref ? inlineZoneConstructors.map(({id, width, height}) =>
-            <InlineEntryZone
+        (ref?: HTMLElement) => ref ? inlineZoneConstructors.map(({id, className, width, height}) =>
+            <InlineEntryZoneBase
                 key={id}
+                className={className}
                 inlineSpanId={id}
                 width={width}
                 height={height}
