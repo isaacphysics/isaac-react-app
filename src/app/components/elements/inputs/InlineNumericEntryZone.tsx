@@ -38,27 +38,33 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
     }, [value, unit, setModified]);
 
     return <div {...rest} className={`d-inline-flex inline-numeric-container ${rest.className} ${classNames({"is-valid": valid, "is-invalid": invalid})}`}>
-        <Input 
-            ref={focusRef}
-            valid={valid}
-            invalid={invalid && currentAttemptValueWrong}
-            className={classNames({"units-shown" : questionDTO.requireUnits || !noDisplayUnit})}
-            style={{
-                ...(width && {width: `${width}px`}), 
-                ...(height && {height: `${height}px`}),
-            }}
-            value={value}
-            onChange={(e) => {
-                setValue(e.target.value);
-            }}
-        />
-        {(questionDTO.requireUnits || !noDisplayUnit) && <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}} className="inline-unit-dropdown d-flex justify-content-center">
+        <div className={"feedback-zone inline-nq-feedback separate-input-group"}>
+            <Input 
+                ref={focusRef}
+                valid={valid}
+                invalid={invalid && currentAttemptValueWrong}
+                className={classNames({"units-shown" : questionDTO.requireUnits || !noDisplayUnit})}
+                style={{
+                    ...(width && {width: `${width}px`}), 
+                    ...(height && {height: `${height}px`}),
+                }}
+                value={value}
+                onChange={(e) => {
+                    setValue(e.target.value);
+                }}
+            />
+            {currentAttemptValueWrong && <div className={"feedback-box"}>
+                <span className={"feedback incorrect"}><b>!</b></span>
+            </div>}
+        </div>
+
+        {(questionDTO.requireUnits || !noDisplayUnit) && <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}} className={classNames("inline-unit-dropdown d-flex justify-content-center", {"display-unit": !noDisplayUnit})}>
             <DropdownToggle
                 disabled={readonly || !noDisplayUnit}
-                className={classNames("feedback-zone pl-2 pr-0 py-0", {"pr-4": currentAttemptUnitsWrong, "border-dark display-unit": !noDisplayUnit, "feedback-showing": feedbackShowing})}
+                className={classNames("feedback-zone pl-2 pr-0 py-0", {"pr-4": currentAttemptUnitsWrong, "border-dark": !noDisplayUnit, "feedback-showing": feedbackShowing})}
                 color={noDisplayUnit ? undefined : "white"}
             >
-                <div className={currentAttemptUnitsWrong ? "pr-3" : "pr-2"}>
+                <div className={currentAttemptUnitsWrong ? "pr-4" : "pr-2"}>
                     <Markup encoding={"latex"}>
                         {wrapUnitForSelect(noDisplayUnit ? unit : questionDTO.displayUnit)}
                     </Markup>

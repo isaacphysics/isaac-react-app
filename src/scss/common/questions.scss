@@ -69,7 +69,7 @@
 .inline-numeric-container {
   border-radius: 5px;
 
-  > .units-shown {
+  .units-shown {
     border-radius: 5px 0 0 5px;
   }
 
@@ -79,8 +79,10 @@
       min-width: 36px !important;
       border-radius: 0 5px 5px 0;
       border: none;
-
-      &.display-unit {
+    }
+    &.display-unit {
+      margin-bottom: -2px;
+      button.btn {
         height: calc(100% - 2px) !important;
         border: 1px solid black;
       }
@@ -364,6 +366,12 @@
     .feedback-box {
       z-index: 3;
       right: 75px;
+    }
+  }
+  &.inline-nq-feedback {
+    .feedback-box {
+      z-index: 3;
+      right: 10px;
     }
   }
 }
