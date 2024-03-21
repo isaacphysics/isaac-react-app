@@ -42,7 +42,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             <Row>
                 <Col className={"py-3 mw-760"}>
                     <div className="d-flex justify-content-end">
-                        <UserContextPicker />
+                        <UserContextPicker className="justify-content-end" />
                     </div>
                     {!(atLeastOne(relatedConceptsForSpecificViewingContext.length) || atLeastOne(relatedQuestionsForSpecificViewingContext.length)) &&
                         <IntendedAudienceWarningBanner doc={topicPage} />
