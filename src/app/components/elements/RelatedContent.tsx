@@ -70,7 +70,7 @@ function getURLForContent(content: ContentSummaryDTO) {
 
 function renderQuestionsCS(audienceQuestions: ContentSummaryDTO[], remainingQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
 
-    if (audienceQuestions.length == 0) return null;
+    if (audienceQuestions.length + remainingQuestions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 d-flex">
             <div className="flex-fill simple-card my-3 p-3 text-wrap">
