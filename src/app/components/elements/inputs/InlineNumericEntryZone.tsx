@@ -37,7 +37,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
         setModified(true);
     }, [value, unit, setModified]);
 
-    return <div {...rest} className={`d-flex align-items-center inline-numeric-container ${rest.className} ${classNames({"is-valid": valid, "is-invalid": invalid})}`}>
+    return <div {...rest} className={`d-inline-flex inline-numeric-container ${rest.className} ${classNames({"is-valid": valid, "is-invalid": invalid})}`}>
         <Input 
             ref={focusRef}
             valid={valid}

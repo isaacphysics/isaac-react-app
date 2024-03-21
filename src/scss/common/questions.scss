@@ -75,12 +75,13 @@
 
   .inline-unit-dropdown {
     button.btn {
-      height: 27px;
+      height: 100%;
       min-width: 36px !important;
       border-radius: 0 5px 5px 0;
       border: none;
 
       &.display-unit {
+        height: calc(100% - 2px) !important;
         border: 1px solid black;
       }
     }
