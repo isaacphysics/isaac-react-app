@@ -1,11 +1,13 @@
 import React, { ComponentProps, ReactNode } from "react";
 import { BoardOrder } from "../../../IsaacAppTypes";
-import { siteSpecific } from "../../services";
+import { siteSpecific, SortOrder } from "../../services";
 
-function toggleSort(itemOrder: BoardOrder,
-                    reverseOrder: BoardOrder,
-                    boardOrder: BoardOrder,
-                    setBoardOrder: (order: BoardOrder) => void) {
+function toggleSort<T extends BoardOrder | SortOrder>(
+        itemOrder: T,
+        reverseOrder: T,
+        boardOrder: T,
+        setBoardOrder: (order: T) => void) {
+    console.log("Toggled!", boardOrder, itemOrder, reverseOrder);
     if (boardOrder === itemOrder) {
         setBoardOrder(reverseOrder);
     } else {
@@ -13,7 +15,7 @@ function toggleSort(itemOrder: BoardOrder,
     }
 }
 
-function sortClass(itemOrder: BoardOrder, reverseOrder: BoardOrder, boardOrder: BoardOrder) {
+function sortClass<T extends BoardOrder | SortOrder>(itemOrder: T, reverseOrder: T, boardOrder: T) {
     if (boardOrder === itemOrder) {
         return " sorted forward";
     } else if (boardOrder === reverseOrder) {
@@ -23,15 +25,15 @@ function sortClass(itemOrder: BoardOrder, reverseOrder: BoardOrder, boardOrder: 
     }
 }
 
-export interface SortItemHeaderProps extends ComponentProps<"th"> {
+export interface SortItemHeaderProps<T extends BoardOrder | SortOrder> extends ComponentProps<"th"> {
     children: ReactNode,
-    itemOrder: BoardOrder,
-    reverseOrder: BoardOrder,
-    boardOrder: BoardOrder,
-    setBoardOrder: (order: BoardOrder) => void
+    itemOrder: T,
+    reverseOrder: T,
+    boardOrder: T,
+    setBoardOrder: (order: T) => void
 }
 
-export const SortItemHeader = (props: SortItemHeaderProps) => {
+export const SortItemHeader = <T extends BoardOrder | SortOrder>(props: SortItemHeaderProps<T>) => {
     const {itemOrder, reverseOrder, boardOrder, setBoardOrder, ...rest} = props;
 
     const className = (props.className || siteSpecific("text-center align-middle", "")) + sortClass(itemOrder, reverseOrder, boardOrder);
