@@ -257,9 +257,9 @@ export const QuestionSearchModal = (
                         <SortItemHeader
                             className={siteSpecific("w-40", "w-30")}
                             setBoardOrder={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
-                            itemOrder={SortOrder.ASC as SortOrder}
+                            defaultOrder={SortOrder.ASC as SortOrder}
                             reverseOrder={SortOrder.DESC}
-                            boardOrder={questionsSort['title']}
+                            currentOrder={questionsSort['title']}
                         >Question title</SortItemHeader>
                         <th className={siteSpecific("w-25", "w-20")}>Topic</th>
                         <th className="w-15">Stage</th>

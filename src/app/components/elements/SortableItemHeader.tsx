@@ -3,22 +3,22 @@ import { BoardOrder } from "../../../IsaacAppTypes";
 import { siteSpecific, SortOrder } from "../../services";
 
 function toggleSort<T extends BoardOrder | SortOrder>(
-        itemOrder: T,
+        defaultOrder: T,
         reverseOrder: T,
-        boardOrder: T,
+        currentOrder: T,
         setBoardOrder: (order: T) => void) {
-    console.log("Toggled!", boardOrder, itemOrder, reverseOrder);
-    if (boardOrder === itemOrder) {
+    console.log("Toggled!", currentOrder, defaultOrder, reverseOrder);
+    if (currentOrder === defaultOrder) {
         setBoardOrder(reverseOrder);
     } else {
-        setBoardOrder(itemOrder);
+        setBoardOrder(defaultOrder);
     }
 }
 
-function sortClass<T extends BoardOrder | SortOrder>(itemOrder: T, reverseOrder: T, boardOrder: T) {
-    if (boardOrder === itemOrder) {
+function sortClass<T extends BoardOrder | SortOrder>(defaultOrder: T, reverseOrder: T, currentOrder: T) {
+    if (currentOrder === defaultOrder) {
         return " sorted forward";
-    } else if (boardOrder === reverseOrder) {
+    } else if (currentOrder === reverseOrder) {
         return " sorted reverse";
     } else {
         return "";
@@ -27,19 +27,19 @@ function sortClass<T extends BoardOrder | SortOrder>(itemOrder: T, reverseOrder:
 
 export interface SortItemHeaderProps<T extends BoardOrder | SortOrder> extends ComponentProps<"th"> {
     children: ReactNode,
-    itemOrder: T,
+    defaultOrder: T,
     reverseOrder: T,
-    boardOrder: T,
+    currentOrder: T,
     setBoardOrder: (order: T) => void
 }
 
 export const SortItemHeader = <T extends BoardOrder | SortOrder>(props: SortItemHeaderProps<T>) => {
-    const {itemOrder, reverseOrder, boardOrder, setBoardOrder, ...rest} = props;
+    const {defaultOrder, reverseOrder, currentOrder, setBoardOrder, ...rest} = props;
 
-    const className = (props.className || siteSpecific("text-center align-middle", "")) + sortClass(itemOrder, reverseOrder, boardOrder);
+    const className = (props.className || siteSpecific("text-center align-middle", "")) + sortClass(defaultOrder, reverseOrder, currentOrder);
     const sortArrows = <button
         className="sort"
-        onClick={() => {toggleSort(itemOrder, reverseOrder, boardOrder, setBoardOrder);}}
+        onClick={() => {toggleSort(defaultOrder, reverseOrder, currentOrder, setBoardOrder);}}
     >
         <span className="up">▲</span>
         <span className="down">▼</span>
