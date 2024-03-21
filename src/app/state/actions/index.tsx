@@ -117,6 +117,9 @@ export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     dispatch({ type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings: authenticationSettings.data });
   } catch (e: any) {
     dispatch({ type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e) });
+    if (e.response.status === 401) {
+      window.location.href = "/login";
+    }
   }
 };
 
@@ -291,6 +294,9 @@ export const updateCurrentUser =
         type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE,
         errorMessage: extractMessage(e),
       });
+      if (e.response.status === 401) {
+        window.location.href = "/login";
+      }
     }
   };
 
@@ -323,8 +329,11 @@ export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
   try {
     const response = await api.users.getProgress();
     dispatch({ type: ACTION_TYPE.MY_PROGRESS_RESPONSE_SUCCESS, myProgress: response.data });
-  } catch (e) {
+  } catch (e: any) {
     dispatch({ type: ACTION_TYPE.MY_PROGRESS_RESPONSE_FAILURE });
+    if (e.response.status === 401) {
+      window.location.href = "/login";
+    }
   }
 };
 
@@ -353,8 +362,11 @@ export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
   try {
     await api.authentication.logout();
     dispatch({ type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS });
-  } catch (e) {
+  } catch (e: any) {
     dispatch(showAxiosErrorToastIfNeeded("Logout failed", e));
+    if (e.response.status === 401) {
+      window.location.href = "/";
+    }
   }
 };
 
@@ -572,9 +584,12 @@ export const getActiveAuthorisations = (userId?: number) => async (dispatch: Dis
       type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_SUCCESS,
       authorisations: authorisationsResponse.data,
     });
-  } catch (e) {
+  } catch (e: any) {
     dispatch({ type: ACTION_TYPE.AUTHORISATIONS_ACTIVE_RESPONSE_FAILURE });
     dispatch(showAxiosErrorToastIfNeeded("Loading authorised teachers failed", e));
+    if (e.response.status === 401) {
+      window.location.href = "/";
+    }
   }
 };
 
@@ -1025,9 +1040,12 @@ export const getRandomQuestions = () => async (dispatch: Dispatch<Action>) => {
         type: ACTION_TYPE.QUESTION_RANDOM_QUESTIONS_RESPONSE_SUCCESS,
         randomQuestions: randomQuestions.data,
       });
-  } catch (e) {
+  } catch (e: any) {
     dispatch({ type: ACTION_TYPE.QUESTION_RANDOM_QUESTIONS_RESPONSE_FAILURE });
     dispatch(showAxiosErrorToastIfNeeded("Failed to fetch random questions", e));
+    if (e.response.status === 401) {
+      window.location.href = "/";
+    }
   }
 };
 

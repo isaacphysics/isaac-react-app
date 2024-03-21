@@ -228,6 +228,15 @@ const AccountPageComponent = ({
     setActiveTab(tab);
   }, [hashAnchor, authToken]);
 
+  // Redirects to homepage after 10 mins of inactivity to avoid sensitive acc info remaining on page
+  useEffect(() => {
+    const redirect = () => history.push("/");
+    const timer = setTimeout(redirect, 10 * 60 * 1000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [activeTab]);
+
   // Values derived from inputs (props and state)
   const passwordMeetsRequirements = newPasswordConfirm.length === 0 || validatePassword(newPasswordConfirm);
   const arePasswordsIdentical = newPassword === newPasswordConfirm;
