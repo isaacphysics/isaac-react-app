@@ -104,6 +104,26 @@ describe("EventDetails", () => {
     expect(googleCalendarButton()).not.toBeInTheDocument();
   });
 
+  it.each(["ADMIN", "EVENT_MANAGER", "EVENT_LEADER"] as Role[])(
+    "shows hub name for event if user is %s",
+    async (role) => {
+      await setupTest({ role: role, event: mockEvent });
+      const hub = screen.getByTestId("event-hub");
+      expect(hub).toBeInTheDocument();
+    },
+  );
+
+  it.each(["STUDENT", "TEACHER", "CONTENT_EDITOR", "ANONYMOUS"] as Role[])(
+    "does not show hub name for %s user",
+    async (role) => {
+      await setupTest({ role: role, event: mockEvent });
+      const eventTitle = title();
+      expect(eventTitle).toHaveTextContent(mockEvent.title!);
+      const hub = screen.queryByTestId("event-hub");
+      expect(hub).toBeNull();
+    },
+  );
+
   it("shows event date and time, and message if event was in the past", async () => {
     const twoDaysAgo = DAYS_AGO(2);
     const twoHoursLater = twoDaysAgo + 2 * 60 * 60 * 1000;

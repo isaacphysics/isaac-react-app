@@ -78,6 +78,13 @@ describe("SelectedEventDetails", () => {
     expect(eventInfo).toHaveTextContent(location);
   });
 
+  it("shows hub name if provided", async () => {
+    setupTest(mockEvent);
+    const eventInfo = await screen.findByTestId("event-details");
+    const hub = "Cheshire";
+    expect(eventInfo).toHaveTextContent(hub);
+  });
+
   it("shows Prepwork deadline if present in the event details", async () => {
     const eventDetails = {
       ...mockEvent,

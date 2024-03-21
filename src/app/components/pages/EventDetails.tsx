@@ -42,6 +42,7 @@ import {
   isEventLeader,
   googleCalendarTemplate,
   formatAddress,
+  hubNames,
 } from "../../services";
 import { AdditionalInformation } from "../../../IsaacAppTypes";
 import { DateString } from "../elements/DateString";
@@ -216,6 +217,12 @@ const EventDetails = ({
                             )}
                           </td>
                         </tr>
+                        {(isEventLeader(user) || isAdminOrEventManager(user)) && event.hub && (
+                          <tr>
+                            <td>Hub:</td>
+                            <td data-testid="event-hub">{hubNames[event.hub]}</td>
+                          </tr>
+                        )}
                         <tr>
                           <td>Location:</td>
                           <td data-testid="event-location">{isVirtual ? "Online" : formatAddress(event.location)}</td>

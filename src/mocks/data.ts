@@ -926,6 +926,7 @@ export const mockEvent: IsaacEventPageDTO = {
   published: true,
   endDate: 253399845600000,
   eventStatus: "OPEN",
+  hub: "CHESHIRE",
   placesAvailable: 195,
   privateEvent: false,
 };

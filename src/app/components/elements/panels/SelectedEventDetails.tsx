@@ -3,7 +3,7 @@ import { Badge, Card, CardBody, CardTitle } from "reactstrap";
 import { AppState, getEvent, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
 import { DateString } from "../DateString";
-import { NOT_FOUND, formatAddress, zeroOrLess } from "../../../services";
+import { NOT_FOUND, formatAddress, hubNames, zeroOrLess } from "../../../services";
 import { EventBookingDTO, Location } from "../../../../IsaacApiTypes";
 import { EventGenderDetails } from "./EventGenderDetails";
 
@@ -69,6 +69,10 @@ export const SelectedEventDetails = ({ eventId }: { eventId: string }) => {
                   Private Event
                 </Badge>
               )}
+            </p>
+            <p className="mb-0">
+              <strong>Hub: </strong>
+              {selectedEvent.hub ? hubNames[selectedEvent.hub] : "N/A"}
             </p>
             <LocationDetails isVirtual={selectedEvent.isVirtual} location={selectedEvent.location} />
             <p className="mb-0">

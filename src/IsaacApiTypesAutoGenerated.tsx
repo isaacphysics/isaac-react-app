@@ -1,5 +1,5 @@
 /* tslint:disable */
-// Generated using typescript-generator version 2.12.476 on 2024-02-20 16:52:53.
+// Generated using typescript-generator version 2.12.476 on 2024-03-21 09:16:20.
 
 export interface AssignmentDTO extends IAssignmentLike {
   gameboardId?: string;
@@ -99,6 +99,7 @@ export interface IsaacEventPageDTO extends ContentDTO {
   groupReservationLimit?: number;
   allowGroupReservations?: boolean;
   privateEvent?: boolean;
+  hub?: Hub;
   endDate?: EpochTimeStamp;
   eventStatus?: EventStatus;
   userBookingStatus?: BookingStatus;
@@ -680,6 +681,8 @@ export interface Address {
 }
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
+
+export type Hub = "BIRMINGHAM_AND_CENTRAL_MIDLANDS" | "CAMBRIDGE_AND_NORTHAMPTONSHIRE" | "CHESHIRE" | "CORNWALL" | "CUMBRIA_SATELLITE" | "DARTFORD_AND_EAST_SUSSEX" | "DEVON" | "GLOUCESTERSHIRE_WILTSHIRE_AND_NORTH_SOMERSET" | "GREATER_MANCHESTER" | "LANCASHIRE_SATELLITE" | "LEICESTER_NOTTINGHAMSHIRE_AND_RUTLAND" | "LINCOLNSHIRE" | "LONDON_HERTFORDSHIRE_AND_ESSEX" | "LONDON_HERTFORDSHIRE_AND_HAMPSHIRE" | "LONDON_SURREY_AND_WEST_SUSSEX" | "MAIDSTONE_AND_KENT" | "MILTON_KEYNES_AND_NORTHAMPTONSHIRE" | "NEWCASTLE_DURHAM_AND_EAST_CUMBRIA" | "NORFOLK" | "NORTH_EAST_AND_NORTHUMBERLAND" | "NORTH_YORKSHIRE_LEEDS_AND_WAKEFIELD";
 
 export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY";
 
