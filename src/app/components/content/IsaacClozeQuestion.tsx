@@ -107,7 +107,7 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
     const updateScrollAmount = useCallback((scrollAmount: number, acceleration = 10, interval = 5) => {
         if (scrollAmount !== 0) {
             const scaledScrollAmount = Math.abs(scrollAmount) * scrollAmount * acceleration;
-            const doScroll = () => window.scrollBy(0, scaledScrollAmount);
+            const doScroll = () => window.scrollTo(window.scrollX, window.scrollY + scaledScrollAmount);
             const intervalId = setInterval(doScroll, interval);
             return () => clearInterval(intervalId);
         }
