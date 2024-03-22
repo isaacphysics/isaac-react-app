@@ -6,7 +6,8 @@ import {UserRole} from "../../../IsaacApiTypes";
 
 export const AccountTypeMessage = ({role, hideUpgradeMessage}: { role?: UserRole, hideUpgradeMessage?: boolean }) => {
     return <div>
-        You have a <strong>{role ? UserFacingRole[role] : ""}</strong> account.
+    {role && <>
+        You have a <strong>{UserFacingRole[role]}</strong> account.
         {role === "STUDENT" && !hideUpgradeMessage &&
             <span> If you are a teacher{siteSpecific(" or tutor", "")}, you can {" "}
                 {siteSpecific(
@@ -15,6 +16,8 @@ export const AccountTypeMessage = ({role, hideUpgradeMessage}: { role?: UserRole
                 )}
                 {"."}
             </span>
+        }
+    </>
     }
     </div>;
 };
