@@ -1,9 +1,17 @@
 import React, { ComponentProps } from "react";
 import { BoardOrder } from "../../../IsaacAppTypes";
 import { isDefined, siteSpecific, SortOrder } from "../../services";
+import classNames from "classnames";
 
 export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
 type Order = BoardOrder | SortOrder | ProgressSortOrder;
+
+function isProgressSortOrder(order: Order): boolean {
+    return typeof order === "number"
+        || order === "name"
+        || order === "totalQuestionPercentage"
+        || order === "totalQuestionPartPercentage";
+}
 
 function toggleSort<T extends Order>(
         defaultOrder: T,
@@ -66,7 +74,7 @@ export const SortItemHeader = <T extends Order>(props: SortItemHeaderProps<T>) =
     </button>;
 
     return <th key={props.key} {...rest} className={className} onClick={clickToSelect}>
-        <div className="d-flex align-items-center">
+        <div className={classNames("d-flex align-items-center", {"justify-content-center": isProgressSortOrder(defaultOrder)})}>
             {props.children}
             {!hideIcons && sortArrows}
         </div>
