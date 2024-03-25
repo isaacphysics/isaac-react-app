@@ -264,7 +264,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <th className="text-center align-middle"><span className="pl-2 pr-2">Groups</span></th>
-        <SortItemHeader defaultOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
+        <SortItemHeader defaultOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
             Board name
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">

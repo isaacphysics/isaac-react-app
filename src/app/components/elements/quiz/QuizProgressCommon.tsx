@@ -139,6 +139,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                 setOrder={toggleSort}
                 clickToSelect={() => setSelectedQuestionNumber(index)}
                 hideIcons={index !== selectedQuestionNumber} reversed={reverseOrder}
+                alignment="center"
             >
                {assignmentAverages[index]}%
             </SortItemHeader>
@@ -160,7 +161,9 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
         <SortItemHeader
             defaultOrder={"totalQuestionPartPercentage"}
             reverseOrder={"totalQuestionPartPercentage"}
-            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}>
+            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+            className="total-column"
+        >
             Overall
         </SortItemHeader>
     }

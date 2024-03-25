@@ -1,17 +1,10 @@
 import React, { ComponentProps } from "react";
 import { BoardOrder } from "../../../IsaacAppTypes";
 import { isDefined, siteSpecific, SortOrder } from "../../services";
-import classNames from "classnames";
+import { Spacer } from "./Spacer";
 
 export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
 type Order = BoardOrder | SortOrder | ProgressSortOrder;
-
-function isProgressSortOrder(order: Order): boolean {
-    return typeof order === "number"
-        || order === "name"
-        || order === "totalQuestionPercentage"
-        || order === "totalQuestionPartPercentage";
-}
 
 function toggleSort<T extends Order>(
         defaultOrder: T,
@@ -49,7 +42,8 @@ export interface SortItemHeaderProps<T extends Order> extends ComponentProps<"th
     setOrder: (order: T) => void,
     clickToSelect?: () => void,
     hideIcons?: boolean,
-    reversed?: boolean
+    reversed?: boolean,
+    alignment?: "start" | "center" | "end",
 }
 
 export const SortItemHeader = <T extends Order>(props: SortItemHeaderProps<T>) => {
@@ -64,7 +58,8 @@ export const SortItemHeader = <T extends Order>(props: SortItemHeaderProps<T>) =
         ...rest
     } = props;
 
-    const className = (props.className || siteSpecific("text-center align-middle", "")) + sortClass(defaultOrder, reverseOrder, currentOrder, reversed);
+    const justify = props.alignment ? "justify-content-" + props.alignment : siteSpecific("justify-content-center", "justify-content-start");
+
     const sortArrows = <button
         className="sort"
         onClick={() => {toggleSort(defaultOrder, reverseOrder, currentOrder, setOrder);}}
@@ -73,9 +68,10 @@ export const SortItemHeader = <T extends Order>(props: SortItemHeaderProps<T>) =
         <span className="down">▼</span>
     </button>;
 
-    return <th key={props.key} {...rest} className={className} onClick={clickToSelect}>
-        <div className={classNames("d-flex align-items-center", {"justify-content-center": isProgressSortOrder(defaultOrder)})}>
+    return <th key={props.key} {...rest} className={props.className + sortClass(defaultOrder, reverseOrder, currentOrder, reversed)} onClick={clickToSelect}>
+        <div className={`d-flex ${justify} align-items-center`}>
             {props.children}
+            {justify === "justify-content-start" && <Spacer/>}
             {!hideIcons && sortArrows}
         </div>
     </th>;

@@ -80,7 +80,7 @@ const CSTable = (props: GameboardsTableProps) => {
         <SortItemHeader defaultOrder={BoardOrder.completion} reverseOrder={BoardOrder["-completion"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
             Completion
         </SortItemHeader>
-        <SortItemHeader colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} defaultOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
+        <SortItemHeader colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} defaultOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
             {siteSpecific("Board name", "Quiz name")}
         </SortItemHeader>
         <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}>

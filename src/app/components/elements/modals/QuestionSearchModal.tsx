@@ -260,6 +260,7 @@ export const QuestionSearchModal = (
                             defaultOrder={SortOrder.ASC as SortOrder}
                             reverseOrder={SortOrder.DESC}
                             currentOrder={questionsSort['title']}
+                            alignment="start"
                         >Question title</SortItemHeader>
                         <th className={siteSpecific("w-25", "w-20")}>Topic</th>
                         <th className="w-15">Stage</th>
