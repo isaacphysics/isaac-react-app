@@ -9,7 +9,7 @@ import {
     useAppSelector
 } from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Card, CardBody, Col, Container, Row} from "reactstrap";
+import {Alert, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
     HUMAN_QUESTION_TAGS,
     HUMAN_QUESTION_TYPES,
@@ -211,6 +211,10 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                         </Row>
                     </div>,
                     ...(isPhy && viewingOwnData && isTeacherOrAbove(user) && {"Teacher Activity": <div>
+                        <Alert color="danger" className="mt-4">
+                            We plan to remove these teacher activity badges soon. Use the contact form
+                            to <a href="/contact?subject=Teacher%20Badges">send us any feedback about badges</a>.
+                        </Alert>
                         <TeacherAchievement
                             verb="created"
                             count={achievements && achievements.TEACHER_GROUPS_CREATED}
