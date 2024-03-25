@@ -1,16 +1,16 @@
 import React from 'react';
 import {MyAccountTab} from './MyAccountTab';
-import {GivenNameInput, FamilyNameInput} from '../inputs/NameInput';
+import {FamilyNameInput, GivenNameInput} from '../inputs/NameInput';
 import {EmailInput} from '../inputs/EmailInput';
 import {BooleanNotation, DisplaySettings, ValidationUser} from '../../../../IsaacAppTypes';
-import {isAda, isPhy, isTeacherOrAbove, SITE_TITLE, validateEmail, validateName} from '../../../services';
+import {isAda, isPhy, isTeacherOrAbove, SITE_TITLE, siteSpecific, validateEmail, validateName} from '../../../services';
 import {CountryInput} from '../inputs/CountryInput';
 import {GenderInput} from '../inputs/GenderInput';
 import {SchoolInput} from "../inputs/SchoolInput";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
 import {DobInput} from "../inputs/DobInput";
-import { UserFacingRole } from '../../../services/constants';
+import {AccountTypeMessage} from "../AccountTypeMessage";
 
 interface UserProfileProps {
     userToUpdate: ValidationUser;
@@ -28,15 +28,23 @@ interface UserProfileProps {
 
 export const UserProfile = (props: UserProfileProps) => {
     const {
-        userToUpdate, setUserToUpdate, userContexts, setUserContexts, 
+        userToUpdate, setUserToUpdate, userContexts, setUserContexts,
         setBooleanNotation, displaySettings, setDisplaySettings, submissionAttempted
     } = props;
     return <MyAccountTab
         leftColumn={<>
             <h3>Account details</h3>
             <p>Here you can see and manage your account details for {SITE_TITLE}.</p>
-            <p>You have a <strong>{userToUpdate.role ? UserFacingRole[userToUpdate.role] : ""}</strong> account.</p>
-            <p>If you would like to delete your account please <strong><a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a></strong>.</p>
+            <p>
+                <AccountTypeMessage role={userToUpdate?.role} />
+            </p>
+            <p>If you would like to delete your account please {" "}
+                {siteSpecific(
+                    <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener">contact us</a>,
+                    <strong><a href="/contact?preset=accountDeletion" target="_blank" rel="noopener">contact us</a></strong>,
+                )}
+                .
+            </p>
         </>}
         rightColumn={<>
             <GivenNameInput
@@ -82,9 +90,9 @@ export const UserProfile = (props: UserProfileProps) => {
                     submissionAttempted={submissionAttempted}
                 />
             }
-            <GenderInput 
+            <GenderInput
                 userToUpdate={userToUpdate}
-                setUserToUpdate={setUserToUpdate} 
+                setUserToUpdate={setUserToUpdate}
                 submissionAttempted={submissionAttempted}
                 required={false}
             />

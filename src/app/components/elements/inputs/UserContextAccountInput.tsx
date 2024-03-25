@@ -208,12 +208,6 @@ export function UserContextAccountInput({
                             <span>Show content that is not for my selected qualification(s).</span>
                         </Label>}
                     </>}
-
-                    {!tutorOrAbove && <><br/>
-                        <small>
-                            If you are a teacher or tutor, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one {isAda && "exam board and "}stage.
-                        </small>
-                    </>}
                 </FormGroup>;
             })}
         </div>

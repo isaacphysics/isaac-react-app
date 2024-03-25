@@ -91,7 +91,7 @@ const RequiredAccountInfoBody = () => {
             <div className="text-right text-muted required-before">
                 Required
             </div>
-            <AccountTypeMessage role={userToUpdate?.role} />
+            <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage/>
             <RS.Row className="d-flex flex-wrap my-2">
                 {((isAda && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
                     {isAda && !validateUserGender(initialUserValue) && <div className="mb-3">
