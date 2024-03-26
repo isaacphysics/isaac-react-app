@@ -1,4 +1,4 @@
-import React, {ComponentProps, useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
 import {AppAssignmentProgress, AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
 import {siteSpecific, TODAY} from "../../../services";
@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
 import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation } from "../../../state";
+import { ProgressSortOrder, SortItemHeader } from "../SortableItemHeader";
 
 export const ICON = siteSpecific(
     {
@@ -95,42 +96,20 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
         }));
     };
 
-    type SortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
-    const [sortOrder, setSortOrder] = useState<SortOrder>("name");
+    const [sortOrder, setSortOrder] = useState<ProgressSortOrder>("name");
     const [reverseOrder, setReverseOrder] = useState(false);
-    
+
     function isSelected(q: Q) {
         return q == selectedQuestion ? "selected" : "";
     }
 
-    function sortClasses(q: SortOrder) {
-        if (q === sortOrder) {
-            return "sorted" + (reverseOrder ? " reverse" : " forward");
-        } else {
-            return "";
-        }
-    }
-
-    function toggleSort(itemOrder: SortOrder) {
+    function toggleSort(itemOrder: ProgressSortOrder) {
         setSortOrder(itemOrder);
         if (sortOrder === itemOrder) {
             setReverseOrder(!reverseOrder);
         } else {
             setReverseOrder(false);
         }
-    }
-
-    function sortItem(props: ComponentProps<"th"> & {itemOrder: SortOrder}) {
-        const {itemOrder, ...rest} = props;
-        const className = (props.className || "") + " " + sortClasses(itemOrder);
-        const clickToSelect = typeof itemOrder === "number" ? (() => setSelectedQuestionNumber(itemOrder)) : undefined;
-        const sortArrows = (typeof itemOrder !== "number" || itemOrder === selectedQuestionNumber) ?
-            <button className="sort" onClick={() => {toggleSort(itemOrder);}}>
-                <span className="up" >▲</span>
-                <span className="down">▼</span>
-            </button>
-            : undefined;
-        return <th key={props.key} {...rest} className={className} onClick={clickToSelect}>{props.children}{sortArrows}</th>;
     }
 
     const semiSortedProgress = useMemo(() => orderBy(progress, (item) => {
@@ -152,17 +131,41 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
     , [semiSortedProgress, reverseOrder, sortOrder]);
 
     const tableHeaderFooter = <tr className="progress-table-header-footer">
-        {sortItem({key: "name", itemOrder: "name", className: "student-name"})}
+        <SortItemHeader defaultOrder={"name"} reverseOrder={"name"} currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}/>
         {questions.map((q, index) =>
-            sortItem({key: q.id, itemOrder: index, className: isSelected(q), children: `${assignmentAverages[index]}%`})
+            <SortItemHeader
+                key={q.id} className={`${isSelected(q)}`}
+                defaultOrder={index} reverseOrder={index} currentOrder={sortOrder}
+                setOrder={toggleSort}
+                clickToSelect={() => setSelectedQuestionNumber(index)}
+                hideIcons={index !== selectedQuestionNumber} reversed={reverseOrder}
+                alignment="center"
+            >
+               {assignmentAverages[index]}%
+            </SortItemHeader>
         )}
         {isAssignment ? <>
-            {sortItem({key: "totalQuestionPartPercentage", itemOrder: "totalQuestionPartPercentage", className:"total-column left", children: "Total Parts"})}
-            {sortItem({key: "totalQuestionPercentage", itemOrder: "totalQuestionPercentage", className:"total-column right", children: "Total Qs"})}
-        </> : 
-        <>
-            {sortItem({key: "totalQuestionPartPercentage", itemOrder: "totalQuestionPartPercentage", className:"total-column", children: "Overall"})}
-        </>
+            <SortItemHeader
+                defaultOrder={"totalQuestionPartPercentage"}
+                reverseOrder={"totalQuestionPartPercentage"}
+                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}>
+                Total Parts
+            </SortItemHeader>
+            <SortItemHeader
+                defaultOrder={"totalQuestionPercentage"}
+                reverseOrder={"totalQuestionPercentage"}
+                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}>
+                Total Qs
+            </SortItemHeader>
+        </> :
+        <SortItemHeader
+            defaultOrder={"totalQuestionPartPercentage"}
+            reverseOrder={"totalQuestionPartPercentage"}
+            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+            className="total-column"
+        >
+            Overall
+        </SortItemHeader>
     }
     </tr>;
 

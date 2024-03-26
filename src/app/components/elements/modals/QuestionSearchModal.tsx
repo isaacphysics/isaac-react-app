@@ -8,9 +8,8 @@ import {
     useAppSelector
 } from "../../../state";
 import * as RS from "reactstrap";
-import {SortableTableHeader} from "../SortableTableHeader";
 import debounce from "lodash/debounce";
-import isEqual from "lodash/isEqual"
+import isEqual from "lodash/isEqual";
 import {MultiValue} from "react-select";
 import {
     tags,
@@ -37,6 +36,7 @@ import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes"
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {StyledSelect} from "../inputs/StyledSelect";
+import { SortItemHeader } from "../SortableItemHeader";
 
 // Immediately load GameboardBuilderRow, but allow splitting
 const importGameboardBuilderRow = import("../GameboardBuilderRow");
@@ -45,7 +45,7 @@ const GameboardBuilderRow = lazy(() => importGameboardBuilderRow);
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
     menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 9999})}
-}
+};
 
 interface QuestionSearchModalProps {
     currentQuestions: GameboardBuilderQuestions;
@@ -99,7 +99,7 @@ export const QuestionSearchModal = (
                 return;
             }
 
-            const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ")
+            const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ");
             const examBoardString = examBoards.join(",");
 
             dispatch(searchQuestions({
@@ -118,7 +118,7 @@ export const QuestionSearchModal = (
         []
     );
 
-    const sortableTableHeaderUpdateState = (sortState: { [s: string]: string }, setSortState: React.Dispatch<React.SetStateAction<{}>>, key: string) => (order: string) => {
+    const sortableTableHeaderUpdateState = (sortState: Record<string, SortOrder>, setSortState: React.Dispatch<React.SetStateAction<Record<string, SortOrder>>>, key: string) => (order: SortOrder) => {
         const newSortState = {...sortState};
         newSortState[key] = order;
         setSortState(newSortState);
@@ -196,8 +196,8 @@ export const QuestionSearchModal = (
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <StyledSelect
                     inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
-                    options={groupBaseTagOptions} onChange={(x : readonly Item<string>[], {action}) => {
-                        selectOnChange(setSearchTopics, true)(x)
+                    options={groupBaseTagOptions} onChange={(x : readonly Item<string>[], {action: _action}) => {
+                        selectOnChange(setSearchTopics, true)(x);
                     }}
                 />
             </RS.Col>
@@ -252,13 +252,16 @@ export const QuestionSearchModal = (
         <Suspense fallback={<Loading/>}>
             <RS.Table bordered responsive className="mt-4">
                 <thead>
-                    <tr>
+                    <tr className="search-modal-table-header">
                         <th className="w-5"> </th>
-                        <SortableTableHeader
-                            className={siteSpecific("w-40", "w-30")} title="Question title"
-                            updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
-                            enabled={!isBookSearch}
-                        />
+                        <SortItemHeader
+                            className={siteSpecific("w-40", "w-30")}
+                            setOrder={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
+                            defaultOrder={SortOrder.ASC as SortOrder}
+                            reverseOrder={SortOrder.DESC}
+                            currentOrder={questionsSort['title']}
+                            alignment="start"
+                        >Question title</SortItemHeader>
                         <th className={siteSpecific("w-25", "w-20")}>Topic</th>
                         <th className="w-15">Stage</th>
                         <th className="w-15">Difficulty</th>

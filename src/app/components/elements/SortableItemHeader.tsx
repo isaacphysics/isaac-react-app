@@ -1,52 +1,78 @@
-import React, { ComponentProps, ReactNode } from "react";
+import React, { ComponentProps } from "react";
 import { BoardOrder } from "../../../IsaacAppTypes";
-import { siteSpecific } from "../../services";
+import { isDefined, siteSpecific, SortOrder } from "../../services";
+import { Spacer } from "./Spacer";
 
-function toggleSort(itemOrder: BoardOrder,
-                    reverseOrder: BoardOrder,
-                    boardOrder: BoardOrder,
-                    setBoardOrder: (order: BoardOrder) => void) {
-    if (boardOrder === itemOrder) {
-        setBoardOrder(reverseOrder);
+export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
+type Order = BoardOrder | SortOrder | ProgressSortOrder;
+
+function toggleSort<T extends Order>(
+        defaultOrder: T,
+        reverseOrder: T,
+        currentOrder: T,
+        setOrder: (order: T) => void) {
+    if (currentOrder === defaultOrder) {
+        setOrder(reverseOrder);
     } else {
-        setBoardOrder(itemOrder);
+        setOrder(defaultOrder);
     }
 }
 
-function sortClass(itemOrder: BoardOrder, reverseOrder: BoardOrder, boardOrder: BoardOrder) {
-    if (boardOrder === itemOrder) {
-        return " sorted forward";
-    } else if (boardOrder === reverseOrder) {
+function sortClass<T extends Order>(
+    defaultOrder: T,
+    reverseOrder: T,
+    currentOrder: T,
+    reversed: boolean | undefined
+) {
+    if (currentOrder === defaultOrder) {
+        return isDefined(reversed) ?
+            " sorted " + (reversed ? "reverse" : "forward") :
+            " sorted forward";
+    } else if (currentOrder === reverseOrder) {
         return " sorted reverse";
     } else {
         return "";
     }
 }
 
-export interface SortItemHeaderProps extends ComponentProps<"th"> {
-    children: ReactNode,
-    itemOrder: BoardOrder,
-    reverseOrder: BoardOrder,
-    boardOrder: BoardOrder,
-    setBoardOrder: (order: BoardOrder) => void
+export interface SortItemHeaderProps<T extends Order> extends ComponentProps<"th"> {
+    defaultOrder: T,
+    reverseOrder: T,
+    currentOrder: T,
+    setOrder: (order: T) => void,
+    clickToSelect?: () => void,
+    hideIcons?: boolean,
+    reversed?: boolean,
+    alignment?: "start" | "center" | "end",
 }
 
-export const SortItemHeader = (props: SortItemHeaderProps) => {
-    const {itemOrder, reverseOrder, boardOrder, setBoardOrder, ...rest} = props;
+export const SortItemHeader = <T extends Order>(props: SortItemHeaderProps<T>) => {
+    const {
+        defaultOrder,
+        reverseOrder,
+        currentOrder,
+        setOrder,
+        clickToSelect,
+        hideIcons,
+        reversed,
+        ...rest
+    } = props;
 
-    const className = (props.className || siteSpecific("text-center align-middle", "")) + sortClass(itemOrder, reverseOrder, boardOrder);
+    const justify = props.alignment ? "justify-content-" + props.alignment : siteSpecific("justify-content-center", "justify-content-start");
+
     const sortArrows = <button
         className="sort"
-        onClick={() => {toggleSort(itemOrder, reverseOrder, boardOrder, setBoardOrder);}}
+        onClick={() => {toggleSort(defaultOrder, reverseOrder, currentOrder, setOrder);}}
     >
         <span className="up">▲</span>
         <span className="down">▼</span>
     </button>;
 
-    return <th key={props.key} {...rest} className={className}>
-        <div className="d-flex align-items-center">
+    return <th key={props.key} {...rest} className={props.className + sortClass(defaultOrder, reverseOrder, currentOrder, reversed)} onClick={clickToSelect}>
+        <div className={`d-flex ${justify} align-items-center`}>
             {props.children}
-            {sortArrows}
+            {justify === "justify-content-start" && <Spacer/>}
+            {!hideIcons && sortArrows}
         </div>
     </th>;
 };
