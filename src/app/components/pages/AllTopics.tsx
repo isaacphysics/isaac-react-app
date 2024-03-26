@@ -91,12 +91,12 @@ export const AllTopics = () => {
                     <Col xs={12} lg={6}>
                         <h2 className={"font-size-1-75 mb-4"}>Check your understanding</h2>
                         <p>
-                            Using the Question finder you can select topics and concepts and we’ll generate a random
-                            selection questions for you to use. You can also specify your level and exam board.
+                            Using the question finder you can select topics and concepts and we’ll generate a random
+                            selection of questions for you to use. You can also specify your level and exam board.
                         </p>
-                        <p><b>Students</b> might want to try our Question Finder to revise and get feedback on any
+                        <p><b>Students</b> might want to try our question finder to revise and get feedback on any
                             mistakes.</p>
-                        <p><b>Teachers</b> might want to try our Question Finder to create quizzes and assign them to
+                        <p><b>Teachers</b> might want to try our question finder to create quizzes and assign them to
                             students.</p>
                         <Button className={"mt-4"} tag={Link} to="/quizzes/new" color='dark-primary'>
                             Try our question finder

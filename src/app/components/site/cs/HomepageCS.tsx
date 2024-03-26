@@ -66,7 +66,7 @@ export const HomepageCS = () => {
                             <h2 className={"font-size-1-75 mb-4"}>Why use Ada Computer Science?</h2>
                             <ul className={"font-size-1 font-size-md-1-25"}>
                                 <li>Made by the University of Cambridge and the Raspberry Pi Foundation</li>
-                                <li>Mapped to <Link to={"/exam_specifications"}>computer science exam specifications</Link>, including GCSE and A level</li>
+                                <li>Mapped to <strong><Link to={"/exam_specifications"}>computer science exam specifications</Link></strong>, including GCSE and A level</li>
                                 <li>A great way to save time when planning lessons and homework</li>
                                 <li>Perfect for learning a topic after class or preparing for exams</li>
                                 <li>Free forever — no hidden costs</li>
@@ -114,7 +114,7 @@ export const HomepageCS = () => {
                     <IsaacCardDeck
                         doc={{
                             cards: [{
-                                title: "Foundational",
+                                title: "Core",
                                 subtitle: "Aimed at students aged 14-16, these resources cover core concepts in computer science for students working towards qualifications like GCSEs and National 5s.",
                                 imageClassName: "backslash-1"
                             }, {
