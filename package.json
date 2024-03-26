@@ -26,7 +26,7 @@
     "inequality": "1.0.1",
     "inequality-grammar": "1.0.0",
     "js-cookie": "^3.0.5",
-    "katex": "^0.16.8",
+    "katex": "^0.16.10",
     "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
     "object-hash": "^3.0.0",
