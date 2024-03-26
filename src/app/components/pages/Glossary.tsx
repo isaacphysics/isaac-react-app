@@ -21,6 +21,7 @@ import {
     TAG_ID,
     tags,
     useUrlHashValue,
+    arrayFromPossibleCsv,
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import {MetaDescription} from "../elements/MetaDescription";
@@ -69,19 +70,10 @@ export function formatGlossaryTermId(rawTermId: string) {
         .replace(/[^a-z0-9]/g, '-');
 }
 
-// Might be an idea to export these functions from GameBoardFilter.tsx
-function arrayFromPossibleCsv(queryParamValue: string[] | string | null | undefined) {
-    if (queryParamValue) {
-        return queryParamValue instanceof Array ? queryParamValue : queryParamValue.split(",");
-    } else {
-        return [];
-    }
-}
-
-function tagByValue(values: string[], tags: Tag[]) {
+function tagByValue(values: string[], tags: Tag[]): Tag | undefined {
     return tags.filter(option => values.includes(option.id)).at(0);
 }
-function stageByValue(values: string[], tags: Stage[]) {
+function stageByValue(values: string[], tags: Stage[]): Stage | undefined {
     return tags.filter(option => values.includes(option)).at(0);
 }
 
@@ -92,8 +84,8 @@ interface QueryStringResponse {
 function processQueryString(query: string): QueryStringResponse {
     const {subjects, stages} = queryString.parse(query);
 
-    const subjectItems = tagByValue(arrayFromPossibleCsv(subjects as Nullable<string[] | string>), tags.allSubjectTags);
-    const stageItems = stageByValue(arrayFromPossibleCsv(stages as Nullable<string[] | string>), stagesOrdered.slice(0,-1));
+    const subjectItems = tagByValue(arrayFromPossibleCsv((subjects ?? []) as string[] | string), tags.allSubjectTags);
+    const stageItems = stageByValue(arrayFromPossibleCsv((stages ?? []) as string[] | string), stagesOrdered.slice(0,-1));
 
     return {
         queryStages: stageItems, querySubjects: subjectItems

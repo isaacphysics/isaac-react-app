@@ -34,7 +34,10 @@ import {
     TAG_ID,
     tags,
     useDeviceSize,
-    useUserContext
+    useUserContext,
+    toCSV,
+    arrayFromPossibleCsv,
+    itemiseByValue
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer, GameboardViewerInner} from './Gameboard';
@@ -67,9 +70,6 @@ import {
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {Spacer} from '../elements/Spacer';
 
-function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
-    return options.filter(option => values.includes(option.value));
-}
 function itemiseTag(tag: Tag) {
     return {value: tag.id, label: tag.title};
 }
@@ -78,18 +78,6 @@ function itemiseConcepts(concepts: string[]): Item<string>[] {
     return concepts
         .filter(concept => concept !== "")
         .map(concept => ({label: QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER, value: concept}));
-}
-
-function toCSV<T>(items: Item<T>[]) {
-    return items.map(item => item.value).join(",");
-}
-
-function arrayFromPossibleCsv(queryParamValue: string[] | string | null | undefined) {
-    if (queryParamValue) {
-        return queryParamValue instanceof Array ? queryParamValue : queryParamValue.split(",");
-    } else {
-        return [];
-    }
 }
 
 interface QueryStringResponse {
@@ -104,11 +92,11 @@ function processQueryString(query: string): QueryStringResponse {
     const {subjects, fields, topics, stages, difficulties, questionCategories, concepts, examBoards} = queryString.parse(query);
     const tagHierarchy = tags.getTagHierarchy();
 
-    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages as Nullable<string[] | string>), getFilteredStageOptions());
-    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties as Nullable<string[] | string>), siteSpecific(DIFFICULTY_ITEM_OPTIONS, DIFFICULTY_ICON_ITEM_OPTIONS));
-    const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards as Nullable<string[] | string>), getFilteredExamBoardOptions({byStages: stageItems.map(item => item.value as STAGE)}));
-    const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories as Nullable<string[] | string>), QUESTION_CATEGORY_ITEM_OPTIONS);
-    const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts as Nullable<string[] | string>));
+    const stageItems = itemiseByValue(arrayFromPossibleCsv((stages ?? []) as string[] | string), getFilteredStageOptions());
+    const difficultyItems = itemiseByValue(arrayFromPossibleCsv((difficulties ?? []) as string[] | string), siteSpecific(DIFFICULTY_ITEM_OPTIONS, DIFFICULTY_ICON_ITEM_OPTIONS));
+    const examBoardItems = itemiseByValue(arrayFromPossibleCsv((examBoards ?? []) as string[] | string), getFilteredExamBoardOptions({byStages: stageItems.map(item => item.value as STAGE)}));
+    const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv((questionCategories ?? []) as string[] | string), QUESTION_CATEGORY_ITEM_OPTIONS);
+    const conceptItems = itemiseConcepts(arrayFromPossibleCsv((concepts ?? []) as string[] | string));
 
     const selectionItems: Item<TAG_ID>[][] = [];
     if (isPhy) {
@@ -332,7 +320,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
     const selectedTopics = selections[2];
     useEffect(() => {
         if (selectedTopics) {
-            dispatch(fetchConcepts(undefined, toCSV(selectedTopics)));
+            dispatch(fetchConcepts(undefined, toCSV(selectedTopics.map(item => item.value))));
         }
     }, [dispatch, selectedTopics]);
     useEffect(function updateConceptChoices() {
@@ -539,10 +527,10 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                               history: History) {
         // Load a gameboard
         const params: {[key: string]: string} = {};
-        if (stages.length) params.stages = stages.find(s => s.value === STAGE.ALL) ? "" : toCSV(stages);
-        if (difficulties.length) params.difficulties = toCSV(difficulties);
-        if (concepts.length) params.concepts = toCSV(concepts);
-        if (isAda && examBoards.length) params.examBoards = toCSV(examBoards);
+        if (stages.length) params.stages = stages.find(s => s.value === STAGE.ALL) ? "" : toCSV(stages.map(item => item.value));
+        if (difficulties.length) params.difficulties = toCSV(difficulties.map(item => item.value));
+        if (concepts.length) params.concepts = toCSV(concepts.map(item => item.value));
+        if (isAda && examBoards.length) params.examBoards = toCSV(examBoards.map(item => item.value));
         if (isPhy) {params.questionCategories = `${QUESTION_CATEGORY.QUICK_QUIZ},${QUESTION_CATEGORY.PROBLEM_SOLVING}${showBookQuestions ? "," + QUESTION_CATEGORY.BOOK_QUESTIONS : ""}`;}
         params.title = boardTitle;
 
@@ -559,7 +547,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                 }
                 return;
             }
-            params[tier.id] = toCSV(selections[i]);
+            params[tier.id] = toCSV(selections[i].map(item => item.value));
         });
 
         generateTemporaryGameboard(params).then(extractDataFromQueryResponse).then((gameboard) => {
