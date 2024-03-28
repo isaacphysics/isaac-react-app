@@ -18,6 +18,7 @@ const IsaacSymbolicChemistryQuestion = lazy(() => import("../components/content/
 const IsaacGraphSketcherQuestion = lazy(() => import("../components/content/IsaacGraphSketcherQuestion"));
 const IsaacClozeQuestion = lazy(() => import("../components/content/IsaacClozeQuestion"));
 const IsaacCoordinateQuestion = lazy(() => import("../components/content/IsaacCoordinateQuestion"));
+const IsaacInlineRegion = lazy(() => import("../components/content/IsaacInlineRegion"));
 
 export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacMultiChoiceQuestion": "Multiple choice",
@@ -51,6 +52,7 @@ export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, qu
     "isaacGraphSketcherQuestion": IsaacGraphSketcherQuestion,
     "isaacClozeQuestion": IsaacClozeQuestion,
     "isaacCoordinateQuestion": IsaacCoordinateQuestion,
+    "isaacInlineRegion": IsaacInlineRegion, // This exists in the question types list to wrap the inline questions into a single answerable component
     "default": IsaacMultiChoiceQuestion
 };
 

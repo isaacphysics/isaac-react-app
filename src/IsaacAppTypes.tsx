@@ -184,6 +184,13 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     accordionClientId?: string;
 }
 
+export interface InlineQuestionDTO extends AppQuestionDTO {
+    validationResponse?: Immutable<ApiTypes.QuestionValidationResponseDTO & {
+        partsCorrect?: number;
+        partsTotal?: number;
+    }>;
+}
+
 export interface AppGroup extends ApiTypes.UserGroupDTO {
     members?: AppGroupMembership[];
 }
@@ -394,6 +401,22 @@ export const ClozeDropRegionContext = React.createContext<{
     inlineDropValueMap: {[p: string]: ClozeItemDTO},
     dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
     shouldGetFocus: (id: string) => boolean
+} | undefined>(undefined);
+
+export const InlineContext = React.createContext<{
+    docId?: string,
+    elementToQuestionMap: {[elementId: string]: {questionId: string, type: string}},
+    modifiedQuestionIds: string[],
+    setModifiedQuestionIds: React.Dispatch<React.SetStateAction<string[]>>,
+    isModifiedSinceLastSubmission: boolean,
+    setIsModifiedSinceLastSubmission: React.Dispatch<React.SetStateAction<boolean>>,
+    submitting: boolean,
+    setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
+    canShowWarningToast: boolean,
+    feedbackIndex?: number,
+    setFeedbackIndex: React.Dispatch<React.SetStateAction<number | undefined>>,
+    focusSelection?: boolean,
+    setFocusSelection: React.Dispatch<React.SetStateAction<boolean>>,
 } | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);

@@ -1,4 +1,4 @@
-import React, {Suspense, useContext, useEffect} from "react";
+import React, {ContextType, Suspense, useContext, useEffect} from "react";
 import {
     attemptQuestion,
     deregisterQuestions,
@@ -13,6 +13,7 @@ import * as ApiTypes from "../../../IsaacApiTypes";
 import {BEST_ATTEMPT_HIDDEN, ContentDTO} from "../../../IsaacApiTypes";
 import * as RS from "reactstrap";
 import {
+    below,
     determineFastTrackPrimaryAction,
     determineFastTrackSecondaryAction,
     fastTrackProgressEnabledBoards,
@@ -25,16 +26,19 @@ import {
     QUESTION_TYPES,
     selectQuestionPart,
     trackEvent,
+    useDeviceSize,
     useFastTrackInformation,
     wasTodayUTC
 } from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
-import {AccordionSectionContext, ConfidenceContext, GameboardContext} from "../../../IsaacAppTypes";
+import {AccordionSectionContext, AppQuestionDTO, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineContext} from "../../../IsaacAppTypes";
 import {RouteComponentProps, withRouter} from "react-router";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
+import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
+import { Spacer } from "../elements/Spacer";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -42,7 +46,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const currentGameboard = useContext(GameboardContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const currentUser = useAppSelector(selectors.user.orNull);
-    const questionPart = selectQuestionPart(pageQuestions, doc.id);
+    const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
     const currentAttempt = questionPart?.currentAttempt;
     const bestAttempt = questionPart?.bestAttempt;
     const validationResponse = questionPart?.validationResponse;
@@ -56,6 +60,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
+    const deviceSize = useDeviceSize();
 
     const {confidenceState, setConfidenceState, validationPending, setValidationPending, confidenceDisabled, recordConfidence, showQuestionFeedback} = useConfidenceQuestionsValues(
         currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD"),
@@ -96,35 +101,34 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     // FastTrack buttons should only show up if on a FastTrack-enabled board
     const isFastTrack = fastTrackInfo.isFastTrackPage && currentGameboard?.id && fastTrackProgressEnabledBoards.includes(currentGameboard.id);
 
+    // Inline questions
+    const inlineContext = useContext(InlineContext);
+    const isInlineQuestion = doc.type === "isaacInlineRegion" && inlineContext;
+
+    const inlineElementIds = Object.keys(inlineContext?.elementToQuestionMap ?? {});
+    const numInlineQuestions = isInlineQuestion ? Object.values(inlineContext?.elementToQuestionMap ?? {}).length : undefined;
+    const numCorrectInlineQuestions = (isInlineQuestion && validationResponse) ? (questionPart as InlineQuestionDTO).validationResponse?.partsCorrect : undefined;
+    const showInlineAttemptStatus = !isInlineQuestion || !inlineContext?.isModifiedSinceLastSubmission;
+    const almost = !correct && numCorrectInlineQuestions && numCorrectInlineQuestions > 0;
+
     // Determine Action Buttons
-    const primaryAction = isFastTrack ?
-        determineFastTrackPrimaryAction(fastTrackInfo) :
+    const primaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) :
+        doc.type === "isaacInlineRegion" ? {disabled: !canSubmit, value: "Check my answer", type: "submit", onClick: () => { 
+            submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch);
+    }} :
         {disabled: !canSubmit, value: "Check my answer", type: "submit"};
 
     const secondaryAction = isFastTrack ?
         determineFastTrackSecondaryAction(fastTrackInfo) :
         null;
 
+    const validationFeedback = invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
+        <IsaacContent doc={validationResponse?.explanation as ContentDTO}/>;
+
     return <ConfidenceContext.Provider value={{recordConfidence}}>
-        <RS.Form onSubmit={function submitCurrentAttempt(event) {
+        <RS.Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
-            if (questionPart?.currentAttempt) {
-
-                // Notify Plausible that at least one question attempt has taken place today
-                if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {
-                    persistence.save(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME, new Date().toString());
-                    trackEvent("question_attempted");
-                }
-
-                dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt, currentGameboard?.id));
-                if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
-                    dispatch(saveGameboard({
-                        boardId: currentGameboard.id,
-                        user: currentUser,
-                        redirectOnSuccess: false
-                    }));
-                }
-            }
+            submitCurrentAttempt(questionPart, doc.id as string, currentGameboard, currentUser, dispatch);
         }}>
             <div className={
                 classNames(
@@ -161,14 +165,44 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {isAda && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
 
                 {/* Validation Response */}
-                {showQuestionFeedback && validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : ""}`}>
+                {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && <div 
+                    className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
+                >
                     <div className="pb-1">
-                        <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
+                        {
+                            isInlineQuestion && numCorrectInlineQuestions ? 
+                                <h1 className="m-0">{correct ? "Correct!" : numCorrectInlineQuestions > 0 ? "Almost..." : "Incorrect"}</h1> :
+                                <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
+                        }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
-                        {invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
-                            <IsaacContent doc={validationResponse.explanation as ContentDTO}/>
-                        }
+                        {isInlineQuestion && numInlineQuestions ? <>
+                            <span>You can view feedback for an individual part by either selecting it above, or by using the control panel below.</span>
+                            <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
+                                <div className={`w-100 mt-2 d-flex feedback-panel-header`}>
+                                    <RS.Button color="transparent" onClick={() => {
+                                        inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
+                                    }}>
+                                        {below["xs"](deviceSize) ? "◀" : "Previous" }
+                                    </RS.Button>
+                                    <Spacer/>
+                                    <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
+                                        inlineContext.feedbackIndex && inlineContext.setFocusSelection(true); 
+                                    }}>
+                                        Part {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
+                                    </RS.Button>
+                                    <Spacer/>
+                                    <RS.Button color="transparent" onClick={() => {
+                                        inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
+                                    }}>
+                                        {below["xs"](deviceSize) ? "▶" : "Next"}
+                                    </RS.Button>
+                                </div>
+                                <div className="feedback-panel-content p-3">
+                                    {validationFeedback}
+                                </div>
+                            </div>
+                        </> : validationFeedback}
                     </div>}
                 </div>}
 
@@ -211,3 +245,22 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         </RS.Form>
     </ConfidenceContext.Provider>;
 });
+
+export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, currentGameboard: ApiTypes.GameboardDTO | undefined, currentUser: any, dispatch: any, inlineContext?: ContextType<typeof InlineContext>) => {
+    if (questionPart?.currentAttempt) {
+        // Notify Plausible that at least one question attempt has taken place today
+        if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {
+            persistence.save(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME, new Date().toString());
+            trackEvent("question_attempted");
+        }
+
+        dispatch(attemptQuestion(docId, questionPart?.currentAttempt, currentGameboard?.id, inlineContext));
+        if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+            dispatch(saveGameboard({
+                boardId: currentGameboard.id,
+                user: currentUser,
+                redirectOnSuccess: false
+            }));
+        }
+    }
+};

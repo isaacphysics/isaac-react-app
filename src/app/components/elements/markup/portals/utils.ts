@@ -2,12 +2,14 @@ import {useCallback, useState} from "react";
 import {useGlossaryTermsInHtml} from "./GlossaryTerms";
 import {useAccessibleTablesInHtml} from "./Tables";
 import {useClozeDropRegionsInHtml} from "./renderClozeDropRegions";
+import { useInlineEntryZoneInHtml } from "./renderInlineEntryZone";
 
 export type PortalInHtmlHook = (html: string) => [string, (ref?: HTMLElement) => JSX.Element[]];
 
 // These are the hooks that the Table component is allowed to use
 export const TABLE_COMPATIBLE_PORTAL_HOOKS: PortalInHtmlHook[] = [
     useClozeDropRegionsInHtml,
+    useInlineEntryZoneInHtml,
     useGlossaryTermsInHtml
 ];
 
@@ -21,6 +23,7 @@ export const TABLE_COMPATIBLE_PORTAL_HOOKS: PortalInHtmlHook[] = [
 export const PORTAL_HOOKS: PortalInHtmlHook[] = [
     useAccessibleTablesInHtml,
     useClozeDropRegionsInHtml,
+    useInlineEntryZoneInHtml,
     useGlossaryTermsInHtml
 ];
 
