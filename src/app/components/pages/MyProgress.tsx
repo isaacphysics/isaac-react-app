@@ -39,13 +39,13 @@ const siteSpecificStats = siteSpecific(
         ],
         questionCountByTag: {
             "phys_book_step_up": 432,
-            "phys_book_gcse": 533,
+            "phys_book_gcse": 534,
             "physics_skills_14": 75,
             "physics_skills_19": 614,
             "physics_linking_concepts": 258,
             "maths_book_gcse": 639,
-            "maths_book": 426,
-            "chemistry_16": 336
+            "maths_book": 432,
+            "chemistry_16": 338
         },
         typeColWidth: "col-lg-6",
         tagColWidth: "col-lg-12"
