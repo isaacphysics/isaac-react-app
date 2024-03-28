@@ -2,8 +2,10 @@ import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {
+    above,
     ALPHABET,
     audienceStyle,
+    below,
     DOCUMENT_TYPE,
     isAda,
     isAQuestionLikeDoc,
@@ -11,6 +13,7 @@ import {
     NOT_FOUND,
     scrollVerticallyIntoView,
     siteSpecific,
+    useDeviceSize,
     useUserContext
 } from "../../services";
 import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
@@ -37,9 +40,10 @@ let nextClientId = 0;
 
 export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useAppDispatch();
-    const userContext = useUserContext();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const page = useAppSelector((state: AppState) => (state && state.doc) || null);
+
+    const deviceSize = useDeviceSize();
 
     // Toggle
     const isFirst = index === 0;
@@ -168,12 +172,17 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }}
                 aria-expanded={isOpen ? "true" : "false"}
             >
-                {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center p-1 " +
+                {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center p-2 " +
                     "justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
-                    {siteSpecific(audienceString, audienceString.split("\n").map((line, i, arr) => <>{line}{i < arr.length && <br/>}</>))}
+                    {siteSpecific(
+                        audienceString, 
+                        (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
+                            {line}{i < arr.length && <br/>}
+                        </>)
+                    )}
                 </span>}
                 <div className="accordion-title pl-3">
-                    <RS.Row>
+                    <RS.Row className="h-100 align-items-center">
                         {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
                         <span className="accordion-part p-3 text-secondary">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
                         {trustedTitle && <div className="p-3">
