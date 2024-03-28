@@ -148,7 +148,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
     const [authenticationToken, setAuthenticationToken] = useState<string | null>(authToken);
 
-    function processToken(event: React.FormEvent<HTMLFormElement | HTMLButtonElement>) {
+    function processToken(event: React.FormEvent<HTMLFormElement | HTMLButtonElement | HTMLInputElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
         if (user.loggedIn && user.id) {
             authenticateWithTokenAfterPrompt(user.id, authenticationToken);
@@ -174,6 +174,10 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     <RS.Input
                         type="text" placeholder="Enter your code in here" value={authToken || undefined} className="py-4"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
+                        onKeyDown={(e) => {if (e.key === 'Enter') {
+                            processToken(e); 
+                            e.preventDefault(); 
+                        }}}
                     />
                     <RS.InputGroupAddon addonType="append">
                         <RS.Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark": isPhy})} color="secondary" outline disabled={editingOtherUser}>
