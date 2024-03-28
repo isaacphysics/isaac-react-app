@@ -31,6 +31,15 @@
 
   section#benefits-for-teachers-and-students {
     background-color: $cs-white;
+    ul {
+      padding-inline-start: 20px;
+      li {
+        margin: 1rem 0;
+      }
+      li::marker {
+        color: $primary;
+      }
+    }
   }
 
   section#what-resources {
