@@ -1,5 +1,6 @@
 /* tslint:disable */
-// Generated using typescript-generator version 2.12.476 on 2024-03-21 09:16:20.
+/* eslint-disable */
+// Generated using typescript-generator version 3.2.1263 on 2024-03-28 09:08:16.
 
 export interface AssignmentDTO extends IAssignmentLike {
   gameboardId?: string;
@@ -8,6 +9,9 @@ export interface AssignmentDTO extends IAssignmentLike {
   notes?: string;
   assignerSummary?: UserSummaryDTO;
   scheduledStartDate?: EpochTimeStamp;
+  /**
+   * @deprecated
+   */
   _id?: number;
 }
 
@@ -45,6 +49,7 @@ export interface GameboardDTO extends HasTitleOrId {
 }
 
 export interface GameboardListDTO extends ResultsWrapper<GameboardDTO> {
+  results?: GameboardDTO[];
   totalNotStarted?: number;
   totalInProgress?: number;
   totalCompleted?: number;
@@ -89,7 +94,6 @@ export interface IsaacConceptPageDTO extends SeguePageDTO {
 }
 
 export interface IsaacEventPageDTO extends ContentDTO {
-  canonicalSourceFile?: string;
   date?: EpochTimeStamp;
   bookingDeadline?: EpochTimeStamp;
   prepWorkDeadline?: EpochTimeStamp;
@@ -104,12 +108,18 @@ export interface IsaacEventPageDTO extends ContentDTO {
   eventStatus?: EventStatus;
   userBookingStatus?: BookingStatus;
   placesAvailable?: number;
+  end_date?: EpochTimeStamp;
+  preResources?: ExternalReference[];
+  postResources?: ExternalReference[];
+  EventStatus?: EventStatus;
 }
 
 export interface IsaacFeaturedProfileDTO extends ContentDTO {
   emailAddress?: string;
   image?: ImageDTO;
   homepage?: string;
+  src?: string;
+  altText?: string;
 }
 
 export interface IsaacFreeTextQuestionDTO extends IsaacQuestionBaseDTO {
@@ -132,7 +142,6 @@ export interface IsaacNumericQuestionDTO extends IsaacQuestionBaseDTO {
 }
 
 export interface IsaacPageFragmentDTO extends ContentDTO {
-  canonicalSourceFile?: string;
   summary?: string;
 }
 
@@ -160,6 +169,9 @@ export interface IsaacQuickQuestionDTO extends IsaacQuestionBaseDTO {
 }
 
 export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
+  /**
+   * @deprecated
+   */
   visibleToStudents?: boolean;
   hiddenFromRoles?: string[];
   defaultFeedbackMode?: QuizFeedbackMode;
@@ -200,6 +212,10 @@ export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
 export interface IsaacWildcardDTO extends ContentDTO {
   description?: string;
   url?: string;
+  src?: string;
+  altText?: string;
+  emailAddress?: string;
+  image?: Image;
 }
 
 export interface ItemValidationResponseDTO extends QuestionValidationResponseDTO {
@@ -292,6 +308,9 @@ export interface UserGroupDTO {
   additionalManagerPrivileges?: boolean;
   ownerSummary?: UserSummaryWithEmailAddressDTO;
   additionalManagers?: UserSummaryWithEmailAddressDTO[];
+  /**
+   * @deprecated
+   */
   _id?: number;
 }
 
@@ -338,6 +357,8 @@ export interface ContentDTO extends ContentBaseDTO {
   deprecated?: boolean;
   level?: number;
   expandable?: boolean;
+  author?: string;
+  canonicalSourceFile?: string;
 }
 
 export interface ContentSummaryDTO {
@@ -371,10 +392,15 @@ export interface FigureDTO extends ImageDTO {
 
 export interface FormulaDTO extends ChoiceDTO {
   pythonExpression?: string;
+  requiresExactMatch?: boolean;
 }
 
 export interface FreeTextRuleDTO extends ChoiceDTO {
   wordProximity?: number;
+  caseInsensitive?: boolean;
+  allowsAnyOrder?: boolean;
+  allowsExtraWords?: boolean;
+  allowsMisspelling?: boolean;
 }
 
 export interface GlossaryTermDTO extends ContentDTO {
@@ -405,6 +431,7 @@ export interface ItemDTO extends ContentDTO {
 
 export interface LogicFormulaDTO extends ChoiceDTO {
   pythonExpression?: string;
+  requiresExactMatch?: boolean;
 }
 
 export interface MediaDTO extends ContentDTO {
@@ -445,7 +472,6 @@ export interface RegexPatternDTO extends ChoiceDTO {
 }
 
 export interface SeguePageDTO extends ContentDTO {
-  canonicalSourceFile?: string;
   summary?: string;
 }
 
@@ -507,7 +533,11 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
   lastSeen?: EpochTimeStamp;
   emailVerificationStatus?: EmailVerificationStatus;
   id?: number;
+  /**
+   * @deprecated
+   */
   _id?: number;
+  verificationStatus?: EmailVerificationStatus;
 }
 
 export interface UserAuthenticationSettingsDTO extends AbstractSegueUserDTO {
@@ -555,10 +585,10 @@ export interface UserSummaryWithGroupMembershipDTO extends UserSummaryDTO {
 
 export interface IAssignmentLike {
   id?: number;
-  creationDate?: EpochTimeStamp;
   ownerUserId?: number;
   dueDate?: EpochTimeStamp;
   groupId?: number;
+  creationDate?: EpochTimeStamp;
 }
 
 export interface GameboardItem {
@@ -618,6 +648,16 @@ export interface Location {
   longitude?: number;
 }
 
+export interface ExternalReference {
+  title?: string;
+  url?: string;
+}
+
+export interface Image extends Media {
+  clickUrl?: string;
+  clickTarget?: string;
+}
+
 export interface IHasQuizSummary {
   quizId?: string;
   quizSummary?: ContentSummaryDTO;
@@ -627,11 +667,6 @@ export interface Mark {
   correct?: number;
   incorrect?: number;
   notAttempted?: number;
-}
-
-export interface ExternalReference {
-  title?: string;
-  url?: string;
 }
 
 export interface UserContext {
@@ -678,6 +713,11 @@ export interface Address {
   county?: string;
   postalCode?: string;
   country?: string;
+}
+
+export interface Media extends Content {
+  src?: string;
+  altText?: string;
 }
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
