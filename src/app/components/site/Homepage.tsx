@@ -5,12 +5,12 @@ import { Button, Col, Container } from "reactstrap";
 import { SITE_SUBJECT_TITLE } from "../../services";
 import { WhySignUpTabs } from "../elements/WhySignUpTabs";
 import { NewsCarousel } from "../elements/NewsCarousel";
-import { FeaturedContentTabs } from "../elements/FeaturedContentTabs";
 import { EventsCarousel } from "../elements/EventsCarousel";
 import classNames from "classnames";
 import { PromoContent } from "../elements/PromoContent";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { Dashboard } from "../elements/Dashboard";
+import { Careers } from "../elements/Careers";
 
 export const Homepage = () => {
   useEffect(() => {
@@ -62,39 +62,38 @@ export const Homepage = () => {
                 </Col>
               </Container>
             </section>
-            <section id="promo-content" className="row bg-primary pattern-05">
-              <ShowLoading
-                until={promo}
-                thenRender={() => (
-                  <Container>
-                    <Col className="py-5">{loggedOutPromoItem && <PromoContent item={loggedOutPromoItem} />}</Col>
-                  </Container>
-                )}
-              />
-            </section>
           </>
         )}
+
+        <section id="careers" className="banner-primary pattern-05 p-5">
+          <Careers />
+        </section>
 
         <section id="news">
           <Container
             className={classNames("pt-4 pb-5", {
-              "mt-n5 pt-lg-0": user?.loggedIn ?? false,
+              "mt-n4 pt-lg-0": user?.loggedIn ?? false,
             })}
           >
-            <div data-testid={"news-carousel"} className="eventList pt-3 pt-md-5 pattern-03-reverse">
+            <div data-testid={"news-carousel"} className="eventList pt-3 pt-md-4 pattern-03-reverse">
               <h2 className="h-title mb-4 pt-lg-3">News</h2>
               <NewsCarousel items={carouselNewsItems} />
             </div>
           </Container>
         </section>
 
-        <section id="headline-content" className="row bg-primary pattern-05">
-          <Container>
-            <Col className="py-5 pb-md-0">
-              <FeaturedContentTabs />
-            </Col>
-          </Container>
-        </section>
+        {!user?.loggedIn && (
+          <section id="promo-content" className="row bg-primary pattern-05">
+            <ShowLoading
+              until={promo}
+              thenRender={() => (
+                <Container>
+                  <Col className="py-5">{loggedOutPromoItem && <PromoContent item={loggedOutPromoItem} />}</Col>
+                </Container>
+              )}
+            />
+          </section>
+        )}
 
         <section id="events">
           <Container className="pt-4 pb-5">
