@@ -19,7 +19,7 @@ describe("Careers", () => {
     const videoDescription = screen.getByText(/Better understand computer science curriculum/i);
     expect(sectionTitle).toBeInTheDocument();
     expect(video).toBeInTheDocument();
-    expect(video).toHaveAttribute("src", expect.stringContaining("https://www.youtube.com/embed/"));
+    expect(video).toHaveAttribute("src", expect.stringContaining("https://www.youtube-nocookie.com/embed/"));
     expect(videoDescription).toBeInTheDocument();
   });
 

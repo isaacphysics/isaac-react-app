@@ -919,4 +919,5 @@ export const hubNames: { [key in Hub]: string } = {
   NORTH_YORKSHIRE_LEEDS_AND_WAKEFIELD: "North Yorkshire, Leeds, and Wakefield",
 };
 
-export const CAREER_VIDEO_LINK = "https://www.youtube.com/embed/t0ojrm0fMoE?enablejsapi=1&fs=0&modestbranding=1";
+export const CAREER_VIDEO_LINK =
+  "https://www.youtube-nocookie.com/embed/t0ojrm0fMoE?enablejsapi=1&fs=0&modestbranding=1";
