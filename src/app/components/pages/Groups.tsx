@@ -14,6 +14,7 @@ import {
     Input,
     InputGroup,
     InputGroupAddon,
+    Label,
     Nav,
     NavItem,
     NavLink,
@@ -48,6 +49,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
+import { StyledCheckbox } from "../elements/inputs/CheckboxInput";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -205,6 +207,16 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
         }
     }
 
+    function toggleSelfRemoval() {
+        if (group) {
+            const updatedGroup = {...group, selfRemoval: !group.selfRemoval};
+            updateGroup({
+                updatedGroup,
+                message: "Group member self-removal " + (updatedGroup.selfRemoval ? "enabled" : "disabled") + "."
+            });
+        }
+    }
+
     function toggleArchived() {
         if (group) {
             const updatedGroup = {...group, archived: !group.archived};
@@ -344,6 +356,18 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                             Email users
                                         </Button>
                                     </Col>}
+                                </Row>
+                                <Row>
+                                    <Col xs={12}>
+                                        <div className="d-flex">
+                                            <StyledCheckbox
+                                                id="self-removal"
+                                                changeFunction={toggleSelfRemoval}
+                                                initialValue={!!group.selfRemoval}
+                                            />
+                                            <Label for="self-removal" className="d-inline-block mr-2">Allow students to remove themselves from this group?</Label>
+                                        </div>
+                                    </Col>
                                 </Row>
                                 <div>
                                     There are {group.members.length} users in this group {" "}

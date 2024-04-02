@@ -136,3 +136,33 @@ export const releaseAllConfirmationModal = () => {
         ]
     }
 };
+
+export const confirmSelfRemovalModal = (userId: number, groupId: number) => {
+    return {
+        closeAction: () => store.dispatch(closeActiveModal()),
+        title: "Leave group",
+        body: <>
+            <p>
+                This group has enabled student self-removal. This means you can remove yourself from the group at any time, without requiring permission from 
+                the owner(s) of the group. If you remove yourself, you will no longer receive assignments.
+                <br/><br/>
+                Note that if you have granted the group owner(s) access to your data, they can still view this data after you have left the group. To revoke 
+                this access, use the Teacher Connections tab at the top of this page.
+                <br/><br/>
+                You can rejoin at any time using the code or link you used to join the group. Your progress, assignments and test scores will be retained.
+            </p>
+        </>,
+        buttons: [
+            <RS.Button key={1} color="primary" outline onClick={() => store.dispatch(closeActiveModal())}>
+                Cancel
+            </RS.Button>,
+            <RS.Button key={0} color="secondary" onClick={() => {
+                store.dispatch(authorisationsApi.endpoints.deleteGroupMember.initiate({groupId, userId})).then(() => {
+                    store.dispatch(closeActiveModal());
+                });
+            }}>
+                Leave group
+            </RS.Button>,
+        ]
+    };
+};
