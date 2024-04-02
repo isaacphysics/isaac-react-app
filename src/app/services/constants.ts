@@ -917,6 +917,16 @@ export const hubNames: { [key in Hub]: string } = {
   NORFOLK: "Norfolk",
   NORTH_EAST_AND_NORTHUMBERLAND: "North East and Northumberland",
   NORTH_YORKSHIRE_LEEDS_AND_WAKEFIELD: "North Yorkshire, Leeds, and Wakefield",
+  OXFORDSHIRE_BUCKINGHAMSHIRE_AND_WEST_BERKSHIRE: "Oxfordshire, Buckinghamshire, and West Berkshire",
+  SOMERSET: "Somerset",
+  STOKE_ON_TRENT_STAFFORDSHIRE_AND_DERBYSHIRE: "Stoke-on-Trent, Staffordshire, and Derbyshire",
+  SUFFOLK: "Suffolk",
+  TEES_VALLEY_AND_RICHMONDSHIRE: "Tees Valley and Richmondshire",
+  WARRINGTON_AND_MERSEYSIDE: "Warrington and Merseyside",
+  WEST_MIDLANDS_SATELLITE: "West Midlands Satellite",
+  WEST_SUSSEX_AND_HAMPSHIRE: "West Sussex and Hampshire",
+  WEST_YORKSHIRE: "West Yorkshire",
+  YORK_EAST_AND_SOUTH_YORKSHIRE: "York, East, and South Yorkshire",
 };
 
 export const CAREER_VIDEO_LINK =
