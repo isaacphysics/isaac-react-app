@@ -72,6 +72,7 @@ const support: {student: SupportCategories; teacher: SupportCategories, tutor?: 
                 general: {category: "general", title: "General questions", icon: "faq"},
                 homework: {category: "homework", title: "Finding homework", icon: "faq"},
                 code: {category: "code", title: "Code and pseudocode", icon: "faq"},
+                revision: {category: "revision", title: "Revision", icon: "faq"},
             }
         },
         teacher: {
@@ -103,21 +104,21 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
     const section = support[type];
 
     if (section == undefined) {
-        return <Route component={NotFound} />
+        return <Route component={NotFound} />;
     }
 
     const categoryNames = Object.keys(section.categories);
     const categoryIndex = categoryNames.indexOf(category);
 
     if (categoryIndex == -1) {
-        return <Route component={NotFound} />
+        return <Route component={NotFound} />;
     }
 
     function activeTabChanged(tabIndex: number) {
         history.push(supportPath(type, categoryNames[tabIndex - 1]));
     }
 
-    function tabTitleClass(tabName: string, tabIndex: number) {
+    function tabTitleClass(_tabName: string, tabIndex: number) {
         return "support-tab-" + section?.categories[categoryNames[tabIndex - 1]].icon;
     }
 
