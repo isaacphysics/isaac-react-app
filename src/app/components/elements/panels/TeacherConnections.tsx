@@ -94,7 +94,6 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     const groupQuery = (user.loggedIn && user.id) ? ((editingOtherUser && userToEdit?.id) || undefined) : skipToken;
     const {data: groupMemberships} = useGetGroupMembershipsQuery(groupQuery);
     const [changeMyMembershipStatus] = useChangeMyMembershipStatusMutation();
-    const [deleteGroupMember] = useDeleteGroupMemberMutation();
     const {data: activeAuthorisations} = useGetActiveAuthorisationsQuery((editingOtherUser && userToEdit?.id) || undefined);
     const {data: studentAuthorisations} = useGetOtherUserAuthorisationsQuery((editingOtherUser && userToEdit?.id) || undefined);
     let filteredActiveAuthorisations = activeAuthorisations;
