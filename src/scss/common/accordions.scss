@@ -14,8 +14,8 @@
   text-align: center;
 
   @include media-breakpoint-down(xs) {
-    min-width: 120px;
-    max-width: 120px;
+    min-width: 105px;
+    max-width: 105px;
   }
 }
 
@@ -109,7 +109,7 @@
         background-image: url('/assets/chevron_down.svg');
         background-repeat: no-repeat;
         background-position: right;
-        width: 20px;
+        width: 30px;
         height: 10px;
         margin-right: 1rem;
         margin-top: auto;
