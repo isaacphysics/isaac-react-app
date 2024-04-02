@@ -1,4 +1,4 @@
-import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
+import {Col, Row} from "reactstrap";
 import {IsaacHintModal} from "./IsaacHintModal";
 import React, {useContext} from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
@@ -64,11 +64,11 @@ export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
     return <div className="tabbed-hints">
         {hints && <Tabs onActiveTabChange={logHintView} className="no-print" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
             {Object.assign({}, ...hints.map((hint, index) => ({
-                [`Hint\u00A0${index + 1}`]: <div className="mt-3 mt-lg-4 pt-2">
+                [hint.title ?? `Hint\u00A0${index + 1}`]: <div className="mt-3 mt-lg-4 pt-2">
                     <IsaacContent doc={hint} />
                 </div>
             })))}
         </Tabs>}
         <PrintOnlyHints hints={hints} />
-    </div>
+    </div>;
 };
