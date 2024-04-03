@@ -5,10 +5,10 @@
 
 module.exports = {
   process() {
-    return 'module.exports = {};';
+    return {code: 'module.exports = {};'};
   },
   getCacheKey() {
     // The output is always the same.
-    return 'cssTransform';
+    return {code:'cssTransform'};
   },
 };

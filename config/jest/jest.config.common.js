@@ -15,14 +15,16 @@ module.exports = {
     ],
     "testEnvironment": "jsdom",
     "testTimeout": 10000,
-    "testURL": "http://localhost",
+    "testEnvironmentOptions": {
+        "url": "http://localhost",
+    },
     "transform": {
         "^.+\\.css$": "<rootDir>config/jest/cssTransform.js",
-        "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>config/jest/fileTransform.js",
+        "^(?!.*\\.(js|jsx|ts|tsx|cjs|css|json)$)": "<rootDir>config/jest/fileTransform.js",
         '^.+\\.[jt]sx?$': "<rootDir>config/jest/tsTransform.js",
     },
     "transformIgnorePatterns": [
-        "[/\\\\]node_modules/(?!(axios)/).+\\.(js|jsx|ts|tsx)$",
+        "[/\\\\]node_modules/(?!(axios)/).+\\.(js|jsx|ts|tsx|cjs)$",
         "^.+\\.module\\.(css|sass|scss)$"
     ],
     "moduleNameMapper": {
