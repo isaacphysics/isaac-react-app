@@ -100,3 +100,7 @@ nav.search {
     }
   }
 }
+
+.search-filters > div {
+  flex-flow: row nowrap;
+}
