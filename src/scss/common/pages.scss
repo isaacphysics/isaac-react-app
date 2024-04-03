@@ -147,8 +147,12 @@ main {
 }
 
 .context-picker-container select {
-  @include media-breakpoint-up(lg) {
-    max-width: 200px;
+  @include media-breakpoint-down(sm) {
+    // for large sm only, widens the select precisely enough to fill the width;
+    // we usually only want 200px, but it looks odd when it fills ~85% of the screen
+    max-width: 253px;
   }
+
+  max-width: 200px;
   flex-basis: 0;
 }

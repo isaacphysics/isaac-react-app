@@ -151,7 +151,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
 
                                     </RS.Row>
 
-                                    <UserContextPicker className="text-right" />
+                                    <UserContextPicker />
                                 </RS.Form>
                             </RS.Col>
                         </RS.CardHeader>
