@@ -101,6 +101,8 @@ nav.search {
   }
 }
 
-.search-filters > div {
+.search-filters-select-containter {
+  flex-grow: 1;
   flex-flow: row nowrap;
+  max-width: 520px;
 }
