@@ -77,3 +77,10 @@
     }
   }
 }
+
+.context-picker-container select {
+  @include media-breakpoint-down(sm) {
+    // for large sm only, widens the select precisely enough to fill the width
+    max-width: 253px;
+  }
+}

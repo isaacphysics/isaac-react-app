@@ -47,11 +47,11 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     return <RS.Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
         <RS.Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}> 
             {/* Stage Selector */}
-            <FormGroup className="w-100 d-flex justify-content-end m-0">
+            <FormGroup className={`w-100 d-flex justify-content-end m-0`}>
                 {showStageSelector && <>
                     {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-stage-select">Stage</Label>}
                     <Input
-                        className={`flex-grow-1 d-inline-block pl-2 pr-0 mb-2 ${showExamBoardSelector ? "mr-1" : "ml-1"}`} type="select" id="uc-stage-select"
+                        className={`flex-grow-1 d-inline-block pl-2 pr-0 mb-2 ${showExamBoardSelector ? "mr-1" : ""}`} type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
                         value={userContext.stage}
                         onChange={e => {
@@ -90,7 +90,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 {showExamBoardSelector && <>
                     {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
                     <Input
-                        className={`flex-grow-1 d-inline-block pl-2 pr-0 mb-2 ${showStageSelector ? "ml-1" : "mr-1"}`} type="select" id="uc-exam-board-select"
+                        className={`flex-grow-1 d-inline-block pl-2 pr-0 mb-2 ${showStageSelector ? "ml-1" : ""}`} type="select" id="uc-exam-board-select"
                         aria-label={hideLabels ? "Exam Board" : undefined}
                         value={userContext.examBoard}
                         onChange={e => {
