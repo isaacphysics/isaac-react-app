@@ -40,7 +40,7 @@ export const buildMockStudent = <T extends number>(id: T extends (typeof mockUse
         familyName: `Student ${id}`,
         email: `test-student-${id}@test.com`,
         dateOfBirth: 888888888888,
-        gender: id % 2 === 0 ? "MALE" : "FEMALE",
+        gender: id as number % 2 === 0 ? "MALE" : "FEMALE",
         registrationDate: DAYS_AGO(50),
         role: "STUDENT",
         schoolOther: "N/A",
@@ -54,8 +54,8 @@ export const buildMockStudent = <T extends number>(id: T extends (typeof mockUse
         lastSeen: DAYS_AGO(1),
         emailVerificationStatus: "VERIFIED",
         id: id,
-    }
-}
+    };
+};
 
 export const buildMockTeacher = <T extends number>(id: T extends (typeof mockUser.id) ? `Teacher ID cannot be the same as the mockUser: ${typeof mockUser.id}` : T) => {
     if (id === mockUser.id) throw Error("A mock teacher cannot have the same ID as the mockUser");
@@ -64,7 +64,7 @@ export const buildMockTeacher = <T extends number>(id: T extends (typeof mockUse
         familyName: `Teacher ${id}`,
         email: `test-teacher-${id}@test.com`,
         dateOfBirth: 888888888888,
-        gender: id % 2 === 0 ? "MALE" : "FEMALE",
+        gender: id as number % 2 === 0 ? "MALE" : "FEMALE",
         registrationDate: DAYS_AGO(50),
         role: "TEACHER",
         schoolOther: "N/A",
@@ -78,8 +78,8 @@ export const buildMockTeacher = <T extends number>(id: T extends (typeof mockUse
         lastSeen: DAYS_AGO(1),
         emailVerificationStatus: "VERIFIED",
         id: id,
-    }
-}
+    };
+};
 
 export const buildMockUserSummary = (user: any, authorisedFullAccess: boolean) => {
     const email = authorisedFullAccess ? user.email : undefined;
@@ -3478,7 +3478,7 @@ export const mockQuizAssignments = [
             completedDate: DAYS_AGO(2)
         }
     }
-]
+];
 
 export const mockGroups = [
     {
