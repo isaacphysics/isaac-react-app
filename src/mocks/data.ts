@@ -717,7 +717,6 @@ export const mockEventBookings: DetailedEventBookingDTO[] = [
     bookingStatus: "CONFIRMED",
     bookingDate: 1695897589235,
     additionalInformation: {
-      experienceLevel: "Lots of teaching experience",
       jobTitle: "Teacher of Computer Science",
     },
     updated: 1695897589235,
@@ -808,7 +807,6 @@ export const mockEventBookings: DetailedEventBookingDTO[] = [
     bookingStatus: "CONFIRMED",
     bookingDate: 1695889960207,
     additionalInformation: {
-      experienceLevel: "GCSE and A Level",
       jobTitle: "Head of CS",
     },
     updated: 1695889960207,
@@ -871,7 +869,6 @@ export const mockEventBooking: DetailedEventBookingDTO = {
   bookingStatus: "CANCELLED",
   bookingDate: 1695897589235,
   additionalInformation: {
-    experienceLevel: "teacher",
     jobTitle: "CS Teacher",
   },
   updated: 1695897589235,

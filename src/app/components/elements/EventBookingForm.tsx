@@ -135,14 +135,13 @@ const InputWithLabel = ({
   additionalInformation,
   updateAdditionalInformation,
 }: {
-  type: "emergencyNumber" | "emergencyName" | "experienceLevel" | "jobTitle";
+  type: "emergencyNumber" | "emergencyName" | "jobTitle";
   additionalInformation: AdditionalInformation;
   updateAdditionalInformation: (update: AdditionalInformation) => void;
 }) => {
   const fields = {
     emergencyNumber: { label: "Contact telephone number", id: "emergency-number" },
     emergencyName: { label: "Contact name", id: "emergency-name" },
-    experienceLevel: { label: "Level of teaching experience", id: "experience-level" },
     jobTitle: { label: "Job title", id: "job-title" },
   };
 
@@ -364,13 +363,6 @@ export const EventBookingForm = ({
                 date of the event.
               </div>
             </div>
-          )}
-          {targetUser.role != "STUDENT" && (
-            <InputWithLabel
-              type="experienceLevel"
-              additionalInformation={additionalInformation}
-              updateAdditionalInformation={updateAdditionalInformation}
-            />
           )}
         </CardBody>
       </Card>

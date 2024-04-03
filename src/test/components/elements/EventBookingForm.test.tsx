@@ -44,9 +44,9 @@ describe("EventBookingForm", () => {
       role: role,
       PageComponent: EventBookingForm,
       componentProps: {
-        event: event ? event : augmentEvent(mockEvent),
+        event: event || augmentEvent(mockEvent),
         targetUser: mockUserSummary,
-        additionalInformation: additionalInformation ? additionalInformation : {},
+        additionalInformation: additionalInformation || {},
         updateAdditionalInformation: updateAdditionalInformation,
       },
       initialRouteEntries: [`/events/${mockEvent.id}`],
@@ -132,14 +132,6 @@ describe("EventBookingForm", () => {
     expect(jobTitle).toBeInTheDocument();
     fireEvent.change(jobTitle, { target: { value: "Head of CS" } });
     expect(updateAdditionalInformation).toHaveBeenCalledWith({ jobTitle: "Head of CS" });
-  });
-
-  it("if user is not a student, level of teaching experience is requested", () => {
-    setupTest({ role: "TEACHER", user: mockUser });
-    const teachingExperience = screen.getByLabelText("Level of teaching experience");
-    expect(teachingExperience).toBeInTheDocument();
-    fireEvent.change(teachingExperience, { target: { value: "2 years" } });
-    expect(updateAdditionalInformation).toHaveBeenCalledWith({ experienceLevel: "2 years" });
   });
 
   it("if event is not virtual, dietary requirements are requested", () => {
