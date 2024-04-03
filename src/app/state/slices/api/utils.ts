@@ -43,7 +43,9 @@ export const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQ
         }
     }
     let result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
-    if (result.error && result.error.status >= 500 && !(result.error.data as {bypassGenericSiteErrorPage?: boolean})?.bypassGenericSiteErrorPage) {
+    if (result.error &&
+        (typeof(result.error.status) === "number" ? result.error.status : parseInt(result.error.status)) >= 500 &&
+        !(result.error.data as {bypassGenericSiteErrorPage?: boolean})?.bypassGenericSiteErrorPage) {
         if (result.error.status === 502) {
             // A '502 Bad Gateway' response means that the API no longer exists:
             api.dispatch(errorSlice.actions.apiGoneAway());
@@ -120,7 +122,7 @@ export const extractDataFromQueryResponse = <T>(response: { data?: T } | { error
         return NOT_FOUND;
     }
     return undefined;
-}
+};
 
 export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError | undefined): {status?: number | string, message: string} => {
     if (e?.hasOwnProperty("data")) {
@@ -131,7 +133,7 @@ export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError
         const se = e as SerializedError;
         return {status: se.code, message: se?.message ?? API_REQUEST_FAILURE_MESSAGE}
     }
-    return {message: API_REQUEST_FAILURE_MESSAGE}
+    return {message: API_REQUEST_FAILURE_MESSAGE};
 }
 
 // === Anonymisation utilities ===
