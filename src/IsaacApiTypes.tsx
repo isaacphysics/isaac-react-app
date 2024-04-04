@@ -54,8 +54,6 @@ export interface GameboardDTO extends HasTitleOrId {
     wildCardPosition?: number;
     creationDate?: Date;
     gameFilter?: GameFilter;
-    ownerUserId?: number;
-    ownerUserInformation?: UserSummaryDTO;
     tags?: string[];
     creationMethod?: GameboardCreationMethod;
     percentageCompleted?: number;

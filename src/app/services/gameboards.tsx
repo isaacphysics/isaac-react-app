@@ -28,16 +28,6 @@ export enum BoardCompletions {
     "completed" = "Completed"
 }
 
-export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
-    if (board.tags && board.tags.includes("ISAAC_BOARD")) {
-        return siteSpecific("Isaac", "Ada");
-    }
-    if (user && (user.id == board.ownerUserId)) {
-        return "Me";
-    }
-    return "Someone else";
-}
-
 export function boardCompletionSelection(board: GameboardDTO, boardCompletion: BoardCompletions) {
     if (boardCompletion == BoardCompletions.notStarted && (board.percentageCompleted == 0 || !board.percentageCompleted)) {
         return true;
@@ -176,15 +166,6 @@ export enum BoardViews {
     "table" = "Table View",
     "card" = "Card View"
 }
-
-// Reusable pattern for site-specific "enums"
-export const BoardCreators = {
-    "all": "All",
-    "isaac": siteSpecific("Isaac", "Ada"),
-    "me": "Me",
-    "someoneElse": "Someone else"
-} as const;
-export type BoardCreators = typeof BoardCreators[keyof (typeof BoardCreators)];
 
 export enum BoardSubjects {
     "all" = "All",

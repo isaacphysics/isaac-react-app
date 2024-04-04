@@ -38,14 +38,12 @@ import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
     above,
     BOARD_ORDER_NAMES,
-    BoardCreators,
     BoardLimit,
     BoardSubjects,
     BoardViews,
     determineGameboardSubjects,
     difficultiesOrdered,
     difficultyShortLabelMap,
-    formatBoardOwner,
     isAda,
     isDefined,
     isPhy,
@@ -245,8 +243,6 @@ interface SetAssignmentsTableProps {
     setBoardSubject: (boardSubject: BoardSubjects) => void;
     boardTitleFilter: string;
     setBoardTitleFilter: (title: string) => void;
-    boardCreator: BoardCreators;
-    setBoardCreator: (creator: BoardCreators) => void;
     boardOrder: BoardOrder;
     setBoardOrder: (boardOrder: BoardOrder) => void;
     groupsByGameboard: {[p: string]: BoardAssignee[]};
@@ -257,7 +253,6 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         user,
         boards, boardSubject, setBoardSubject,
         boardView, boardTitleFilter, setBoardTitleFilter,
-        boardCreator, setBoardCreator,
         boardOrder, setBoardOrder,
         groupsByGameboard, openAssignModal
     } = props;
@@ -300,15 +295,6 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                     </Input>
                     </Label>
                 </Col>
-                <Col lg={2}>
-                    <Label className="w-100">
-                        Creator <Input type="select" value={boardCreator}
-                                       onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                        {Object.values(BoardCreators).map(creator => <option key={creator}
-                                                                             value={creator}>{creator}</option>)}
-                    </Input>
-                    </Label>
-                </Col>
             </Row>
 
             <div className="overflow-auto mt-3">
@@ -319,7 +305,6 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                     <tbody>
                     {boards?.boards
                         .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
-                        .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
                         .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
                         .map(board =>
                             <BoardCard
@@ -342,7 +327,6 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         user,
         boards, boardView, switchView,
         boardTitleFilter, setBoardTitleFilter,
-        boardCreator, setBoardCreator,
         boardOrder, setBoardOrder,
         groupsByGameboard, openAssignModal
     } = props;
@@ -359,7 +343,6 @@ const CSTable = (props: SetAssignmentsTableProps) => {
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
             </RS.UncontrolledTooltip>
         </th>
-        <th>Creator</th>
         <SortItemHeader defaultOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
             Last viewed
         </SortItemHeader>
@@ -370,23 +353,16 @@ const CSTable = (props: SetAssignmentsTableProps) => {
 
     return <div className={"mb-5 mb-md-6 mt-4"}>
         <Row>
-            <Col xs={6} md={4} lg={3} xl={3}>
+            <Col xs={6} md={4} lg={3}>
                 <Label className="w-100">
                     Display in <Input type="select" value={boardView} onChange={switchView}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
                 </Label>
             </Col>
-            <Col xs={{size: 12, order: 3}} md={{size: 4, offset: 1, order: 1}} lg={{size: 4, offset: 3}} xl={{size: 4, offset: 3}}>
+            <Col xs={12} md={{size: 4, offset: 4}} lg={{size: 4, offset: 5}}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter {siteSpecific("boards", "quizzes")} by name</span><Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} />
-                </Label>
-            </Col>
-            <Col xs={6} md={{size: 3, order: 2}} lg={2} xl={2}>
-                <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by Creator</span><Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                    {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-                </Input>
                 </Label>
             </Col>
         </Row>
@@ -396,8 +372,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </thead>
             <tbody>
             {boards?.boards
-                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter)
-                    && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All"))
+                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
                 .map(board =>
                     <BoardCard
                         key={board.id}
@@ -459,7 +434,6 @@ export const SetAssignments = () => {
         }, {} as {[gameboardId: string]: BoardAssignee[]}) ?? {}
     , [assignmentsSetByMe]);
 
-    const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
     const [boardSubject, setBoardSubject] = useState<BoardSubjects>(BoardSubjects.all);
 
     const deviceSize = useDeviceSize();
@@ -512,8 +486,7 @@ export const SetAssignments = () => {
         user,
         boards, boardSubject, setBoardSubject,
         boardView, switchView, boardTitleFilter, setBoardTitleFilter,
-        boardCreator, setBoardCreator, boardOrder, setBoardOrder,
-        groupsByGameboard, openAssignModal
+        boardOrder, setBoardOrder, groupsByGameboard, openAssignModal
     };
 
     return <Container> {/* fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})} */}

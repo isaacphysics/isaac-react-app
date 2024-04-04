@@ -32,7 +32,6 @@ import {
 } from "reactstrap";
 import {
     BoardLimit, determineGameboardStagesAndDifficulties, determineGameboardSubjects, difficultyShortLabelMap,
-    formatBoardOwner,
     getAssignmentStartDate,
     isDefined,
     isStaff,
@@ -229,7 +228,6 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                     <Row>
                         <Col xs={12} md={boardStagesAndDifficulties.length === 0 ? 12 : 6}>
                             <div>Gameboard: <strong><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle} <span className={"sr-only"}>(opens in new tab)</span></a></strong></div>
-                            <div>Gameboard created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>
                             <div className={"mb-1"}>Subject(s): <strong>{boardSubjects.map(subj => tags.getSpecifiedTag(TAG_LEVEL.subject, [subj as TAG_ID])?.title).join(", ")}</strong></div>
                         </Col>
                         {boardStagesAndDifficulties.length > 0 && <Col xs={12} md={6}>
@@ -384,7 +382,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
     useEffect(() => {
         setSelectedGroups([]);
         if (assignmentToCopy && assignmentToCopy.gameboardId) {
-            const displayTitle = (assignmentToCopy.gameboard?.title ?? boardsById[assignmentToCopy.gameboardId]?.title ?? `Unknown ${siteSpecific("gameboard", "quiz")}`) + (assignmentToCopy.gameboard?.ownerUserId === user.id ? "" : ` (belongs to another user)`);
+            const displayTitle = (assignmentToCopy.gameboard?.title ?? boardsById[assignmentToCopy.gameboardId]?.title ?? `Unknown ${siteSpecific("gameboard", "quiz")}`);
             // Copy existing assignment
             setSelectedGameboard([{value: assignmentToCopy.gameboardId, label: displayTitle}]);
             setScheduledStartDate(assignmentToCopy.scheduledStartDate ? new Date(assignmentToCopy.scheduledStartDate.valueOf()) : undefined);

@@ -3,7 +3,6 @@ import {
     determineGameboardStagesAndDifficulties,
     determineGameboardSubjects,
     difficultyShortLabelMap,
-    formatBoardOwner,
     generateGameboardSubjectHexagons,
     isAda,
     isAdminOrEventManager,
@@ -162,7 +161,6 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
             </td>
             <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
                 <a href={boardLink} className={isAda ? "font-weight-semi-bold" : ""}>{board.title}</a>
-                {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
             </td>
             <td className={basicCellClasses + " p-0"} colSpan={2}>
                 {boardStagesAndDifficulties.length > 0 && <table className="w-100 border-0">
@@ -180,7 +178,6 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </tbody>
                 </table>}
             </td>
-            {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
             {!isSetAssignments && <td className="align-middle text-center">{formatDate(board.creationDate)}</td>}
             <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
             {isSetAssignments && <td className={"align-middle text-center"}>
@@ -226,7 +223,6 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <Row className="mt-1 mb-2">
                         <Col lg={8} md={8} sm={10} xs={8}>
                             <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
-                            <CardSubtitle data-testid={"owner"}>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                         </Col>
                     </Row>
                     <CardSubtitle data-testid={"created-date"}>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
@@ -280,7 +276,6 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         <Col>
                             <div className={"float-left mr-3 mb-2"}>{csCircle}</div>
                             <h4><Link className={"d-inline"} to={boardLink}>{board.title}</Link></h4>
-                            <span data-testid={"owner"}>By: {formatBoardOwner(user, board)}</span>
                         </Col>
                     </Row>
                     <Row className={isSetAssignments ? "mb-5 pb-3" : "mb-0"}>

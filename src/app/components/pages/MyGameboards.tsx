@@ -21,12 +21,10 @@ import {
     BOARD_ORDER_NAMES,
     BoardCompletions,
     boardCompletionSelection,
-    BoardCreators,
     BoardLimit,
     BoardViews,
     difficultiesOrdered,
     difficultyShortLabelMap,
-    formatBoardOwner,
     isMobile,
     isPhy, isTutorOrAbove, matchesAllWordsInAnyOrder, PATHS,
     siteSpecific,
@@ -52,8 +50,6 @@ interface GameboardsTableProps {
     switchViewAndClearSelected: (e: React.ChangeEvent<HTMLInputElement>) => void;
     boardTitleFilter: string;
     setBoardTitleFilter: (title: string) => void;
-    boardCreator: BoardCreators;
-    setBoardCreator: (creator: BoardCreators) => void;
     boardCompletion: BoardCompletions;
     setBoardCompletion: (boardCompletion: BoardCompletions) => void;
     boardOrder: BoardOrder;
@@ -72,8 +68,7 @@ const CSTable = (props: GameboardsTableProps) => {
         user,
         boards, selectedBoards, setSelectedBoards, confirmDeleteMultipleBoards,
         boardView, switchViewAndClearSelected, boardTitleFilter, setBoardTitleFilter,
-        boardCompletion, setBoardCompletion, boardCreator, setBoardCreator,
-        boardOrder, setBoardOrder
+        boardCompletion, setBoardCompletion, boardOrder, setBoardOrder
     } = props;
 
     const tableHeader = <tr className="my-gameboard-table-header">
@@ -90,7 +85,6 @@ const CSTable = (props: GameboardsTableProps) => {
                 Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
             </RS.UncontrolledTooltip>
         </th>
-        {isAda && <th>Creator</th>}
         <SortItemHeader defaultOrder={BoardOrder.created} reverseOrder={BoardOrder["-created"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
             Created
         </SortItemHeader>
@@ -124,16 +118,9 @@ const CSTable = (props: GameboardsTableProps) => {
                 </Input>
                 </Label>
             </Col>
-            <Col xs={6} md={3} lg={4}>
+            <Col xs={6} md={{size: 4, offset: 2}}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter boards by name</span><Input type="text" data-testid="title-filter" onChange={(e) => setBoardTitleFilter(e.target.value)} />
-                </Label>
-            </Col>
-            <Col xs={6} md={3} lg={2}>
-                <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by Creator</span><Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                        {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-                    </Input>
                 </Label>
             </Col>
             <Col xs={6} md={3}>
@@ -151,7 +138,6 @@ const CSTable = (props: GameboardsTableProps) => {
             <tbody>
             {boards?.boards
                 .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
-                .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
                 .filter(board => boardCompletionSelection(board, boardCompletion))
                 .map(board =>
                     <BoardCard
@@ -178,7 +164,6 @@ export const MyGameboards = () => {
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
 
     const [selectedBoards, setSelectedBoards] = useState<GameboardDTO[]>([]);
-    const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
     const [boardCompletion, setBoardCompletion] = useState<BoardCompletions>(BoardCompletions.any);
     const [completed, setCompleted] = useState(0);
     const [inProgress, setInProgress] = useState(0);
@@ -235,8 +220,7 @@ export const MyGameboards = () => {
         user,
         boards, selectedBoards, setSelectedBoards, confirmDeleteMultipleBoards,
         boardView, switchViewAndClearSelected, boardTitleFilter, setBoardTitleFilter,
-        boardCompletion, setBoardCompletion, boardCreator, setBoardCreator,
-        boardOrder, setBoardOrder
+        boardCompletion, setBoardCompletion, boardOrder, setBoardOrder
     };
 
     return <Container> {/* fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})} */}
@@ -258,7 +242,7 @@ export const MyGameboards = () => {
                 </div>
                 <div>
                     {boardView !== BoardViews.table && <Row>
-                        <Col sm={4} lg={3}>
+                        <Col xs={6} md={3}>
                             <Label className="w-100">
                                 Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected}>
                                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
@@ -266,14 +250,14 @@ export const MyGameboards = () => {
                             </Label>
                         </Col>
                         <Spacer />
-                        <Col xs={6} lg={2}>
+                        <Col xs={6} md={{size: 2, offset: 3}}>
                             <Label className="w-100">
                                 Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                                 </Input>
                             </Label>
                         </Col>
-                        <Col xs={6} lg={4}>
+                        <Col xs={6} md={4}>
                             <Label className="w-100">
                                 Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
                                     {Object.values(BoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
