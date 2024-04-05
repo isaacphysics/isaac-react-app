@@ -1,6 +1,6 @@
-import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
+import {Col, Row} from "reactstrap";
 import {IsaacHintModal} from "./IsaacHintModal";
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {ConfidenceContext} from "../../../IsaacAppTypes";
 import {IsaacContent} from "./IsaacContent";
@@ -61,14 +61,30 @@ export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
         }
     }
 
+    // Give indexed titles to untitled hints
+    const [titles, setTitles] = useState<string[]>([]);
+    useEffect(() => {
+        if (hints) {
+            const newTitles: string[] = [];
+            let currHintIndex = 1;
+            let index = 0;
+            for (const hint of hints) {
+                newTitles[index] = hint.title ?? `Hint\u00A0${currHintIndex}`;
+                currHintIndex += hint.title ? 0 : 1;
+                index += 1;
+            }
+            setTitles(newTitles);
+        }
+    }, [hints]);
+
     return <div className="tabbed-hints">
         {hints && <Tabs onActiveTabChange={logHintView} className="no-print" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
             {Object.assign({}, ...hints.map((hint, index) => ({
-                [`Hint\u00A0${index + 1}`]: <div className="mt-3 mt-lg-4 pt-2">
+                [titles[index]]: <div className="mt-3 mt-lg-4 pt-2">
                     <IsaacContent doc={hint} />
                 </div>
             })))}
         </Tabs>}
         <PrintOnlyHints hints={hints} />
-    </div>
+    </div>;
 };
