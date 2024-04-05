@@ -63,7 +63,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         arrayFromPossibleCsv(params.topics)
     );
     const [searchQuery, setSearchQuery] = useState<string>(
-        params.query ? decodeURI(params.query instanceof Array ? params.query[0] : params.query) : ""
+        params.query ? (params.query instanceof Array ? params.query[0] : params.query) : ""
     );
     const [searchStages, setSearchStages] = useState<STAGE[]>(
         arrayFromPossibleCsv(params.stages) as STAGE[]
