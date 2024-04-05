@@ -146,8 +146,9 @@ main {
     }
 }
 
-.context-picker-container {
-  @include media-breakpoint-up(lg) {
-    min-width: 600px;
+.context-picker-container select {
+  @include media-breakpoint-up(sm) {
+    max-width: 200px;
   }
+  flex-basis: 0;
 }

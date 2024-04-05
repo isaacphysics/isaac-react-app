@@ -8,6 +8,7 @@ import {
     getFilteredStageOptions,
     history,
     isAda,
+    siteSpecific,
     STAGE,
     stageLabelMap,
     useQueryParams,
@@ -18,7 +19,6 @@ import {
     transientUserContextSlice,
     useAppDispatch,
     useAppSelector,
-    useGetSegueEnvironmentQuery
 } from "../../../state";
 import queryString from "query-string";
 
@@ -27,7 +27,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const qParams = useQueryParams();
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
-    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
 
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
     const filteredStages = getFilteredStageOptions({byUser: user, includeNullOptions: true});
@@ -37,7 +36,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         examBoard: isAda && !filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard),
     };
     const showUnusualContextMessage = unusual.stage || unusual.examBoard;
-    const showHideOtherContentSelector = isAda && segueEnvironment === "DEV";
     const showStageSelector = getFilteredStageOptions({byUser: user}).length > 1 || showUnusualContextMessage;
     const showExamBoardSelector = isAda && (getFilteredExamBoardOptions({byUser: user}).length > 1 || showUnusualContextMessage);
 
@@ -45,25 +43,14 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         ? filteredExamBoardOptions.filter(eb => eb.value !== EXAM_BOARD.ALL)[0]
         : undefined;
 
-    return <div className="d-flex context-picker-container">
-        <RS.Row className="m-0 w-100">
-            {/* Other content Selector */}
-            <RS.Col xs={{size: 12, order: 2}} lg={{size: 5, order: 0}} className="pl-0 pr-2 m-0 align-self-center pb-2">
-                {showHideOtherContentSelector && <FormGroup className={`d-flex align-items-center m-0 float-lg-right ${className}`}>
-                    <Label className="d-inline-block m-0" htmlFor="uc-show-other-content-check">Show other content? </Label>
-                    <CustomInput
-                        className="w-auto d-inline-block ml-2 pr-0" type="checkbox" id="uc-show-other-content-check"
-                        checked={userContext.showOtherContent}
-                        onChange={e => dispatch(transientUserContextSlice.actions.setShowOtherContent(e.target.checked))}
-                    />
-                </FormGroup>}
-            </RS.Col>
-            <RS.Col xs={12} lg={7} className={`d-flex m-0 mb-2 p-0 justify-content-lg-end ${className}`}> 
-                {/* Stage Selector */}
-                {showStageSelector && <FormGroup className={`${showExamBoardSelector ? "mr-2 mb-0" : ""} ${className}`}>
+    return <RS.Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
+        <RS.Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}> 
+            {/* Stage Selector */}
+            <FormGroup className={`w-100 d-flex justify-content-end m-0`}>
+                {showStageSelector && <>
                     {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-stage-select">Stage</Label>}
                     <Input
-                        className="w-auto d-inline-block pl-1 pr-0" type="select" id="uc-stage-select"
+                        className={`flex-grow-1 d-inline-block pl-2 pr-0 mb-2 ${showExamBoardSelector ? "mr-1" : ""}`} type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
                         value={userContext.stage}
                         onChange={e => {
@@ -96,13 +83,13 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                             </option>
                         }
                     </Input>
-                </FormGroup>}
+                </>}
 
                 {/* Exam Board Selector */}
-                {showExamBoardSelector && <FormGroup className={className}>
+                {showExamBoardSelector && <>
                     {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
                     <Input
-                        className="w-auto d-inline-block pl-1 pr-0" type="select" id="uc-exam-board-select"
+                        className={`flex-grow-1 d-inline-block pl-2 pr-0 mb-2 ${showStageSelector ? "ml-1" : ""}`} type="select" id="uc-exam-board-select"
                         aria-label={hideLabels ? "Exam Board" : undefined}
                         value={userContext.examBoard}
                         onChange={e => {
@@ -123,9 +110,22 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                             </option>
                         }
                     </Input>
-                </FormGroup>}
-            </RS.Col>
+                </>}
+            </FormGroup>
         </RS.Row>
+        
+
+        {/* "Show other content" selector */}
+        {isAda && <RS.Row className="w-100 px-0 m-0 pb-2 justify-content-end">
+            <FormGroup className="w-auto m-0">
+                <Label className="d-inline-block m-0" htmlFor="uc-show-other-content-check">Show other content? </Label>
+                <CustomInput
+                    className="d-inline-block ml-2 pr-0" type="checkbox" id="uc-show-other-content-check"
+                    checked={userContext.showOtherContent}
+                    onChange={e => dispatch(transientUserContextSlice.actions.setShowOtherContent(e.target.checked))}
+                />
+            </FormGroup>
+        </RS.Row>}
 
         {showUnusualContextMessage && <div className="mt-2 ml-1">
             <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
@@ -141,5 +141,5 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 {unusual.examBoard && !unusual.stage && `The exam board was specified by your ${userContext.explanation.examBoard}.`}
             </RS.UncontrolledTooltip>
         </div>}
-    </div>;
+    </RS.Col>;
 };
