@@ -7,7 +7,7 @@ export const questionSearchResult = (questionSearchResult: QuestionSearchResultS
     switch(action.type) {
         case ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS: {
             return action.questions.map((question) => {
-                return {...question, url: question.url && question.url.replace("/isaac-api/api/pages","")}
+                return {...question, url: question.url && question.url.replace("/isaac-api/api/pages","")};
             });
         }
         case ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE: {

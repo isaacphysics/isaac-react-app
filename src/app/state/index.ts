@@ -25,6 +25,7 @@ export * from "./reducers/groupsState";
 export * from "./reducers/gameboardsState";
 export * from "./reducers/progressState";
 export * from "./reducers/adminState";
+export * from "./reducers/finderState";
 
 // Where the base isaacApi is defined
 export * from "./slices/api/baseApi";
