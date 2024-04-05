@@ -7,7 +7,7 @@ export function arrayFromPossibleCsv(queryParamValue: string | string[] | undefi
         [];
 }
 
-export function toCSV<T extends string>(items: T[]) {
+export function toSimpleCSV<T extends string>(items: T[]) {
     return items.join(",");
 }
 

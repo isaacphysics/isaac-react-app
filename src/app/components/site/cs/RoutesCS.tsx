@@ -55,7 +55,7 @@ export const RoutesCS = [
     <Redirect key={key++} exact from="/teachers" to="/support/teacher/general" />,
 
     // Questions
-    <TrackedRoute key={key++} exact path="/questions" component={QuestionFinder} />,
+    <TrackedRoute key={key++} exact path="/questions" ifUser={isStaff} component={QuestionFinder} />,
 
     // Assignments
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,

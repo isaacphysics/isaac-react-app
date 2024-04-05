@@ -45,7 +45,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/verifyemail" component={EmailAlterHandler}/>,
 
     // Questions
-    <TrackedRoute key={key++} exact path="/questions" component={QuestionFinder} />,
+    <TrackedRoute key={key++} exact path="/questions" ifUser={isStaff} component={QuestionFinder} />,
 
     // Assignments
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,

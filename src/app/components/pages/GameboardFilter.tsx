@@ -35,7 +35,7 @@ import {
     tags,
     useDeviceSize,
     useUserContext,
-    toCSV,
+    toSimpleCSV,
     arrayFromPossibleCsv,
     itemiseByValue
 } from "../../services";
@@ -320,7 +320,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
     const selectedTopics = selections[2];
     useEffect(() => {
         if (selectedTopics) {
-            dispatch(fetchConcepts(undefined, toCSV(selectedTopics.map(item => item.value))));
+            dispatch(fetchConcepts(undefined, toSimpleCSV(selectedTopics.map(item => item.value))));
         }
     }, [dispatch, selectedTopics]);
     useEffect(function updateConceptChoices() {
@@ -338,6 +338,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 setConcepts(conceptsFilteredByAvailable);
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conceptDTOs, concepts]);
 
     function setTierSelection(topics: Item<TAG_ID>[]) {
@@ -468,6 +469,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
             history.replace({search: location.search, state: location.state});
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gameboard, gameboardIdAnchor]);
 
     const gameboardRef = useRef<HTMLDivElement>(null);
@@ -500,6 +502,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const [stages, setStages] = useState<Item<string>[]>(queryStages.length > 0 ? queryStages : itemiseByValue([userContext.stage], getFilteredStageOptions()));
     useEffect(function keepStagesInSyncWithUserContext() {
         if (stages.length === 0) setStages(itemiseByValue([userContext.stage], getFilteredStageOptions()));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userContext.stage]);
 
     const [difficulties, setDifficulties] = useState<Item<string>[]>(queryDifficulties);
@@ -527,10 +530,10 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                               history: History) {
         // Load a gameboard
         const params: {[key: string]: string} = {};
-        if (stages.length) params.stages = stages.find(s => s.value === STAGE.ALL) ? "" : toCSV(stages.map(item => item.value));
-        if (difficulties.length) params.difficulties = toCSV(difficulties.map(item => item.value));
-        if (concepts.length) params.concepts = toCSV(concepts.map(item => item.value));
-        if (isAda && examBoards.length) params.examBoards = toCSV(examBoards.map(item => item.value));
+        if (stages.length) params.stages = stages.find(s => s.value === STAGE.ALL) ? "" : toSimpleCSV(stages.map(item => item.value));
+        if (difficulties.length) params.difficulties = toSimpleCSV(difficulties.map(item => item.value));
+        if (concepts.length) params.concepts = toSimpleCSV(concepts.map(item => item.value));
+        if (isAda && examBoards.length) params.examBoards = toSimpleCSV(examBoards.map(item => item.value));
         if (isPhy) {params.questionCategories = `${QUESTION_CATEGORY.QUICK_QUIZ},${QUESTION_CATEGORY.PROBLEM_SOLVING}${showBookQuestions ? "," + QUESTION_CATEGORY.BOOK_QUESTIONS : ""}`;}
         params.title = boardTitle;
 
@@ -547,7 +550,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                 }
                 return;
             }
-            params[tier.id] = toCSV(selections[i].map(item => item.value));
+            params[tier.id] = toSimpleCSV(selections[i].map(item => item.value));
         });
 
         generateTemporaryGameboard(params).then(extractDataFromQueryResponse).then((gameboard) => {
@@ -581,6 +584,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             setBoardStack([]);
             loadNewGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selections, stages, difficulties, concepts, examBoards, showBookQuestions]);
 
     function refresh() {

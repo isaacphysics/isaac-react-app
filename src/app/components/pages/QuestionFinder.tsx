@@ -31,7 +31,7 @@ import {
     STAGE_NULL_OPTIONS,
     useQueryParams,
     arrayFromPossibleCsv,
-    toCSV,
+    toSimpleCSV,
     itemiseByValue
 } from "../../services";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
@@ -44,7 +44,6 @@ import { ShowLoading } from "../handlers/ShowLoading";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { MetaDescription } from "../elements/MetaDescription";
 import { CanonicalHrefElement } from "../navigation/CanonicalHrefElement";
-import { UserContextPicker } from "../elements/inputs/UserContextPicker";
 import classNames from "classnames";
 import queryString from "query-string";
 
@@ -157,12 +156,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
 
         const params: {[key: string]: string} = {};
-        if (searchStages.length) params.stages = toCSV(searchStages);
-        if (searchDifficulties.length) params.difficulties = toCSV(searchDifficulties);
-        if (searchTopics.length) params.topics = toCSV(searchTopics);
+        if (searchStages.length) params.stages = toSimpleCSV(searchStages);
+        if (searchDifficulties.length) params.difficulties = toSimpleCSV(searchDifficulties);
+        if (searchTopics.length) params.topics = toSimpleCSV(searchTopics);
         if (searchQuery.length) params.query = encodeURI(searchQuery);
-        if (isAda && searchExamBoards.length) params.examBoards = toCSV(searchExamBoards);
-        if (isPhy && searchBook.length) params.book = toCSV(searchBook);
+        if (isAda && searchExamBoards.length) params.examBoards = toSimpleCSV(searchExamBoards);
+        if (isPhy && searchBook.length) params.book = toSimpleCSV(searchBook);
         if (isPhy && searchFastTrack) params.fasttrack = "set";
 
         history.replace({search: queryString.stringify(params, {encode: true}), state: location.state});
@@ -282,25 +281,23 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         </RS.Card>
         <RS.Card>
             <RS.CardHeader className="finder-header">
-                <RS.Col sm={12} md={6} lg={siteSpecific(12, 4)} xl={siteSpecific(12, 5)} className={"pr-0"}>
+                <RS.Col classname={"pr-0"}>
                     <h3>
                         {sortedQuestions ? <RS.Badge color="primary">{sortedQuestions.length}</RS.Badge> : <IsaacSpinner />} Questions Match
                     </h3>
                 </RS.Col>
-                {isAda && <RS.Col sm={12} md={6} lg={8} xl={7} className={"pl-md-0 pl-lg-0 pl-xl-0"}>
-                    <RS.Form inline className="search-filters">
-                        <RS.Label className="mt-2 mb-2 mb-md-0">
-                            <UserContextPicker className="text-right" />
-                        </RS.Label>
-                    </RS.Form>
-                </RS.Col>}
             </RS.CardHeader>
             <Suspense fallback={<Loading/>}>
                 <RS.CardBody className={classNames({"p-0 m-0": isAda})}>
                     <ShowLoading until={sortedQuestions}>
-                        {sortedQuestions ?
-                        <LinkToContentSummaryList items={sortedQuestions}/> :
-                        <em>No results found</em>}
+                        {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) ?
+                            <em>Please select filters</em> :
+                            (sortedQuestions ?
+                                (sortedQuestions.length > 0 ?
+                                    <LinkToContentSummaryList items={sortedQuestions}/> :
+                                    <em>No results found</em>) :
+                                <em>No results found</em>)
+                        }
                     </ShowLoading>
                 </RS.CardBody>
             </Suspense>
