@@ -513,6 +513,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const [examBoards, setExamBoards] = useState<Item<string>[]>(queryExamBoards.length > 0 ? queryExamBoards : itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
     useEffect(function keepExamBoardsInSyncWithUserContext() {
         if (examBoards.length === 0) setExamBoards(itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userContext.examBoard]);
 
     const [concepts, setConcepts] = useState<Item<string>[]>(queryConcepts);
