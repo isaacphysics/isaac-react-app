@@ -191,7 +191,7 @@ export interface IsaacStringMatchQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacInlineRegionDTO extends ContentDTO {
-    inlineQuestions?: IsaacStringMatchQuestionDTO[];
+    inlineQuestions?: QuestionDTO[];
 }
 
 export interface IsaacRegexMatchQuestionDTO extends QuestionDTO {
