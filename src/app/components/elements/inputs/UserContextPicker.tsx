@@ -36,7 +36,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         examBoard: isAda && !filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard),
     };
     const showUnusualContextMessage = unusual.stage || unusual.examBoard;
-    const showHideOtherContentSelector = isAda;
     const showStageSelector = getFilteredStageOptions({byUser: user}).length > 1 || showUnusualContextMessage;
     const showExamBoardSelector = isAda && (getFilteredExamBoardOptions({byUser: user}).length > 1 || showUnusualContextMessage);
 
@@ -116,8 +115,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         </RS.Row>
         
 
-        {/* Other content Selector */}
-        {showHideOtherContentSelector && <RS.Row className="w-100 px-0 m-0 pb-2 justify-content-end">
+        {/* "Show other content" selector */}
+        {isAda && <RS.Row className="w-100 px-0 m-0 pb-2 justify-content-end">
             <FormGroup className="w-auto m-0">
                 <Label className="d-inline-block m-0" htmlFor="uc-show-other-content-check">Show other content? </Label>
                 <CustomInput

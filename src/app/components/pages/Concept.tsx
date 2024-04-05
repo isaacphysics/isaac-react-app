@@ -69,7 +69,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
 
                 {below["sm"](deviceSize) && <ManageButtons />}
 
-                <div className="d-flex mr-sm-1 flex-grow-1">
+                <div className="d-flex align-items-center mr-sm-1 flex-grow-1">
                     <UserContextPicker />
                     {above["md"](deviceSize) && <ManageButtons />}
                 </div>

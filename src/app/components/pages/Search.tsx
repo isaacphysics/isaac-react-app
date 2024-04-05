@@ -132,7 +132,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
                                             {`Filter${siteSpecific("","s")}:`}
                                         </RS.Label>
-                                        <div className="search-filters-select-containter">
+                                        <div className="search-filters-select-container">
                                             <StyledSelect
                                                 inputId="document-filter" isMulti
                                                 placeholder="No page type filter"
