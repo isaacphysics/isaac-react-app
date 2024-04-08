@@ -296,11 +296,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             (sortedQuestions?.length ?
                                 <>
                                     <LinkToContentSummaryList items={sortedQuestions}/>
-                                    {(total_questions ?? 0) > sortedQuestions.length &&
-                                    <h4 className="text-center text-muted w-100 my-4 d-inline-block">
+                                    {(total_questions ?? 0) > sortedQuestions.length && <div role="status" className={`alert alert-light border ${siteSpecific("m-0", "m-4")}`}>
                                         Not found what you&apos;re looking for? Try refining your search filters.<br/>
                                         {`${(total_questions ?? 0) - sortedQuestions.length} questions matching your criteria not shown.`}
-                                    </h4>}
+                                    </div>}
                                 </> :
                                 <em>No results found</em>)
                         }
