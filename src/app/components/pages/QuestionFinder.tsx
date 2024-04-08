@@ -289,11 +289,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 </RS.Col>
             </RS.CardHeader>
             <Suspense fallback={<Loading/>}>
-                <RS.CardBody className={classNames({"p-0 m-0": isAda})}>
+                <RS.CardBody className={classNames({"p-0 m-0": isAda && sortedQuestions?.length})}>
                     <ShowLoading until={sortedQuestions}>
                         {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) ?
                             <em>Please select filters</em> :
-                            (sortedQuestions && sortedQuestions.length > 0 ?
+                            (sortedQuestions?.length ?
                                 <>
                                     <LinkToContentSummaryList items={sortedQuestions}/>
                                     {(total_questions ?? 0) > sortedQuestions.length &&
