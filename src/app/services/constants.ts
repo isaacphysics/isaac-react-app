@@ -787,13 +787,13 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
 );
 
 export const UserFacingRole: {[role in UserRole]: string} = {
-    ADMIN: "Admin",
-    EVENT_MANAGER: "Event Manager",
-    CONTENT_EDITOR: "Content Editor",
-    EVENT_LEADER: "Event Leader",
-    TEACHER: "Teacher",
-    TUTOR: "Tutor",
-    STUDENT: "Student"
+    ADMIN: "admin",
+    EVENT_MANAGER: "event manager",
+    CONTENT_EDITOR: "content editor",
+    EVENT_LEADER: "event leader",
+    TEACHER: "teacher",
+    TUTOR: "tutor",
+    STUDENT: "student"
 };
 
 export enum SortOrder {

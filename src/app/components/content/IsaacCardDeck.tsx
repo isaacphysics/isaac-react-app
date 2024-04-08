@@ -8,10 +8,11 @@ import {isPhy} from "../../services";
 interface IsaacCardDeckProps {
     doc: IsaacCardDeckDTO,
     className?: string
+    containerClassName?: string
 }
 
-export const IsaacCardDeck = ({doc, className}: IsaacCardDeckProps) => {
-    return <Container className={"px-0"}>
+export const IsaacCardDeck = ({doc, className, containerClassName}: IsaacCardDeckProps) => {
+    return <Container className={classNames("px-0", containerClassName)}>
         {doc.title && <Row className="my-4">
             <Col>
                 <h3 className={classNames("h-title", {"text-center": isPhy})}>{doc.title}</h3>

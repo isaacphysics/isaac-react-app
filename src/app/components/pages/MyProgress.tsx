@@ -9,7 +9,7 @@ import {
     useAppSelector
 } from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Card, CardBody, Col, Container, Row} from "reactstrap";
+import {Alert, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
     HUMAN_QUESTION_TAGS,
     HUMAN_QUESTION_TYPES,
@@ -39,13 +39,13 @@ const siteSpecificStats = siteSpecific(
         ],
         questionCountByTag: {
             "phys_book_step_up": 432,
-            "phys_book_gcse": 533,
+            "phys_book_gcse": 534,
             "physics_skills_14": 75,
             "physics_skills_19": 614,
             "physics_linking_concepts": 258,
             "maths_book_gcse": 639,
-            "maths_book": 426,
-            "chemistry_16": 336
+            "maths_book": 432,
+            "chemistry_16": 338
         },
         typeColWidth: "col-lg-6",
         tagColWidth: "col-lg-12"
@@ -211,6 +211,10 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                         </Row>
                     </div>,
                     ...(isPhy && viewingOwnData && isTeacherOrAbove(user) && {"Teacher Activity": <div>
+                        <Alert color="danger" className="mt-4">
+                            We plan to remove these teacher activity badges soon. Use the contact form
+                            to <a href="/contact?subject=Teacher%20Badges">send us any feedback about badges</a>.
+                        </Alert>
                         <TeacherAchievement
                             verb="created"
                             count={achievements && achievements.TEACHER_GROUPS_CREATED}

@@ -2,6 +2,7 @@ import React from "react";
 import * as RS from "reactstrap";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {
+    above,
     audienceStyle,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
@@ -11,6 +12,7 @@ import {
     notRelevantMessage,
     siteSpecific,
     stringifyAudience,
+    useDeviceSize,
     useUserContext
 } from "../../../services";
 import {Link} from "react-router-dom";
@@ -21,6 +23,7 @@ import {Markup} from "../markup";
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
     const userContext = useUserContext();
     const user = useAppSelector(selectors.user.orNull);
+    const deviceSize = useDeviceSize();
 
     return <RS.ListGroup className="mt-4 link-list list-group-links">
         {items
@@ -49,7 +52,12 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                         block color="link" className={"d-flex align-items-stretch " + classNames({"de-emphasised": item.deEmphasised})}
                     >
                         <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
-                            {siteSpecific(audienceString, audienceString.split("\n").map((line, i, arr) => <>{line}{i < arr.length && <br/>}</>))}
+                            {siteSpecific(
+                            audienceString, 
+                            (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
+                                {line}{i < arr.length && <br/>}
+                            </>)
+                        )}
                         </div>
                         <div className="title pl-3 d-flex">
                             <div className="p-3">
