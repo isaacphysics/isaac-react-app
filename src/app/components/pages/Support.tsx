@@ -145,9 +145,8 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
                     activeTabOverride={categoryIndex + 1} onActiveTabChange={activeTabChanged}
                     tabTitleClass={tabTitleClass} tabContentClass="pt-4"
                 >
-                    {fromPairs(Object.values(section.categories).map(category => {
-                        // eslint-disable-next-line react/jsx-key
-                        return [category.title, <PageFragment fragmentId={`support_${type}_${category.category}`} />];
+                    {fromPairs(Object.values(section.categories).map((category, index) => {
+                        return [category.title, <PageFragment key={index} fragmentId={`support_${type}_${category.category}`} />];
                     }))}
                 </Tabs>
             </Col>
