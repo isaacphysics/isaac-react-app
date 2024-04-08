@@ -293,17 +293,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     <ShowLoading until={sortedQuestions}>
                         {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) ?
                             <em>Please select filters</em> :
-                            (sortedQuestions ?
-                                (sortedQuestions.length > 0 ?
-                                    <>
-                                        <LinkToContentSummaryList items={sortedQuestions}/>
-                                        {(total_questions ?? 0) > sortedQuestions.length &&
-                                        <h4 className="text-center text-muted w-100 my-4 d-inline-block">
-                                            Not found what you&apos;re looking for? Try refining your search filters.<br/>
-                                            {`${(total_questions ?? 0) - sortedQuestions.length} questions matching your criteria not shown.`}
-                                        </h4>}
-                                    </> :
-                                    <em>No results found</em>) :
+                            (sortedQuestions && sortedQuestions.length > 0 ?
+                                <>
+                                    <LinkToContentSummaryList items={sortedQuestions}/>
+                                    {(total_questions ?? 0) > sortedQuestions.length &&
+                                    <h4 className="text-center text-muted w-100 my-4 d-inline-block">
+                                        Not found what you&apos;re looking for? Try refining your search filters.<br/>
+                                        {`${(total_questions ?? 0) - sortedQuestions.length} questions matching your criteria not shown.`}
+                                    </h4>}
+                                </> :
                                 <em>No results found</em>)
                         }
                     </ShowLoading>
