@@ -572,6 +572,11 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             delete params.questionCategories;
             delete params.title;
             if (params.subjects === allTags) delete params.subjects;
+
+            // seemingly necessary to remove old query params
+            // if we upgrade to react-router-dom 6, navigate(..., replace=true) in the if-else below should remove the need for this
+            history.replace({search: "", state: location.state});
+
             if (isFound(gameboard)) {
                 history.replace({search: queryString.stringify(params, {encode: false}), hash: gameboard.id, state: location.state});
             } else {
