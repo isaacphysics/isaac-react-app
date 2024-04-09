@@ -109,6 +109,7 @@ const EventDetails = ({
             } else if (canBeAddedToWaitingList) {
               dispatch(addMyselfToWaitingList(event.id as string, additionalInformation, event.isWaitingListOnly));
             }
+            setBookingFormOpen(false);
           }
         }
 
