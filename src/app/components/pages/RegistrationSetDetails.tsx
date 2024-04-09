@@ -101,7 +101,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             <CardBody>
                 {errorMessage &&
                     <ExigentAlert color={"warning"}>
-                        <p className="alert-heading font-weight-bold">Unable create your account</p>
+                        <p className="alert-heading font-weight-bold">Unable to create your account</p>
                         <p>{errorMessage}</p>
                     </ExigentAlert>
                 }
