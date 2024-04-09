@@ -34,6 +34,7 @@ export const RegistrationNameInput = ({ userToUpdate, setUserToUpdate, attempted
             <Label htmlFor={`${each.name}-input`}>{each.label}</Label>
             <Input
               id={`${each.name}-input`}
+              defaultValue={each.value}
               type="text"
               name={each.name}
               onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {

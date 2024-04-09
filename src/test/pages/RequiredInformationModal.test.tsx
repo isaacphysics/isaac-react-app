@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import { produce } from "immer";
 import { renderTestEnvironment } from "../utils";
 import { API_PATH } from "../../app/services";
@@ -65,5 +65,82 @@ describe("RequiredInformationModal", () => {
     // find assignments email option
     const assignmentsEmailOption = screen.queryByText(/receive assignment notifications from your teacher\./i);
     expect(assignmentsEmailOption).not.toBeInTheDocument();
+  });
+
+  it("should request name if this information is missing from account", async () => {
+    renderTestEnvironment({
+      modifyUser: (user) =>
+        produce(user, (u) => {
+          u.givenName = undefined;
+          u.familyName = undefined;
+        }),
+    });
+    await screen.findByTestId("main");
+    const modal = await screen.findByTestId("active-modal");
+    expect(modal).toHaveModalTitle("Required account information");
+    const givenNameInput = within(modal).getByLabelText(/first name/i);
+    const familyNameInput = within(modal).getByLabelText(/last name/i);
+    expect(givenNameInput).toBeInTheDocument();
+    expect(familyNameInput).toBeInTheDocument();
+  });
+
+  it("should request gender if this information is missing from account", async () => {
+    renderTestEnvironment({
+      modifyUser: (user) =>
+        produce(user, (u) => {
+          u.gender = undefined;
+        }),
+    });
+    await screen.findByTestId("main");
+    const modal = await screen.findByTestId("active-modal");
+    expect(modal).toHaveModalTitle("Required account information");
+    const genderInput = within(modal).getByLabelText(/gender/i);
+    expect(genderInput).toBeInTheDocument();
+  });
+
+  it("should request school if this information is missing from account", async () => {
+    renderTestEnvironment({
+      modifyUser: (user) =>
+        produce(user, (u) => {
+          u.schoolId = undefined;
+          u.schoolOther = undefined;
+        }),
+    });
+    await screen.findByTestId("main");
+    const modal = await screen.findByTestId("active-modal");
+    expect(modal).toHaveModalTitle("Required account information");
+    const schoolInput = within(modal).getByLabelText(/current school/i);
+    expect(schoolInput).toBeInTheDocument();
+  });
+
+  it("should request context if this information is missing from account", async () => {
+    renderTestEnvironment({
+      modifyUser: (user) =>
+        produce(user, (u) => {
+          u.registeredContexts = [{}];
+        }),
+    });
+    await screen.findByTestId("main");
+    const modal = await screen.findByTestId("active-modal");
+    expect(modal).toHaveModalTitle("Required account information");
+    const stageInput = within(modal).getByRole("combobox", { name: "Stage" });
+    const examBoardInput = within(modal).getByRole("combobox", { name: "Exam Board" });
+    expect(stageInput).toBeInTheDocument();
+    expect(examBoardInput).toBeInTheDocument();
+  });
+
+  it("should request email preferences if this information is missing from account", async () => {
+    renderTestEnvironment({
+      extraEndpoints: [
+        rest.get(API_PATH + "/users/user_preferences", (req, res, ctx) => {
+          return res(ctx.status(200), ctx.json({}));
+        }),
+      ],
+    });
+    await screen.findByTestId("main");
+    const modal = await screen.findByTestId("active-modal");
+    expect(modal).toHaveModalTitle("Required account information");
+    const emailPreferencesInput = within(modal).getByText(/communication preferences/i);
+    expect(emailPreferencesInput).toBeInTheDocument();
   });
 });

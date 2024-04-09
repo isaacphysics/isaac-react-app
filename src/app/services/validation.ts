@@ -98,6 +98,10 @@ export const validateUserGender = (user?: Immutable<ValidationUser> | null) => {
   return user && user.gender && user.gender !== "UNKNOWN";
 };
 
+export const validateFullName = (user?: Immutable<ValidationUser> | null) => {
+  return user && validateName(user.givenName) && validateName(user.familyName);
+};
+
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
   if (dateOfAction) {
     const now = new Date();
@@ -121,8 +125,7 @@ export function allRequiredInformationIsPresent(
     userPreferences &&
     validateUserSchool(user) &&
     validateUserGender(user) &&
-    validateName(user.givenName) &&
-    validateName(user.familyName) &&
+    validateFullName(user) &&
     (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
     validateUserContexts(userContexts)
   );
