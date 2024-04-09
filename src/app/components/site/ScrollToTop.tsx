@@ -22,7 +22,7 @@ export const ScrollToTop = ({mainContent}: {mainContent: React.RefObject<any>}) 
 
     return <div ref={scrollButton} onClick={scroll} className="scroll-btn d-print-none">
         <button>
-            <img src="/assets/chevron-up.svg" alt="Scroll to top of page"/>
+            <img src="/assets/common/chevron-up.svg" alt="Scroll to top of page"/>
         </button>
     </div>
 }

@@ -182,12 +182,12 @@
             }
 
             &.reduce {
-              background: $gray-120 url('/assets/chevron_left.svg') no-repeat center;
+              background: $gray-120 url('/assets/common/chevron_left.svg') no-repeat center;
               margin-right: 4px;
             }
 
             &.increase {
-              background: $gray-120 url('/assets/chevron_right.svg') no-repeat center;
+              background: $gray-120 url('/assets/common/chevron_right.svg') no-repeat center;
             }
           }
         }

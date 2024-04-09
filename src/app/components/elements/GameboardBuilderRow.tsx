@@ -96,12 +96,12 @@ const GameboardBuilderRow = (
             />
         </td>
         <td className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
-            {provided && <img src="/assets/drag_indicator.svg" alt="Drag to reorder" className="mr-1 grab-cursor" />}
+            {provided && <img src="/assets/common/drag_indicator.svg" alt="Drag to reorder" className="mr-1 grab-cursor" />}
             <a className="mr-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
                 {generateQuestionTitle(question)}
             </a>
             <input
-                type="image" src="/assets/new-tab.svg" alt="Preview question" title="Preview question in modal"
+                type="image" src="/assets/common/new-tab.svg" alt="Preview question" title="Preview question in modal"
                 className="pointer-cursor align-middle new-tab" onClick={() => {question.id && openQuestionModal(question.id)}}
             />
             {question.subtitle && <>

@@ -459,7 +459,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         </CardBody>
 
         <CardFooter tag={Button} color="secondary" className="w-100" onClick={scrollToQuestions}>
-            Scroll straight to questions<img className={"ml-3"} src={"/assets/chevron_down_white.svg"} alt=""/>
+            Scroll straight to questions<img className={"ml-3"} src={"/assets/common/chevron_down_white.svg"} alt=""/>
         </CardFooter>
     </Card>;
 };

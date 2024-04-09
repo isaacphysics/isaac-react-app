@@ -2,9 +2,9 @@
 body:after{
   display:none;
   content:
-          url(/assets/google-login-sprite-dark-pressed.png)
+          url(/assets/common/google-login-sprite-dark-pressed.png)
 ;
   @media only screen and (min-resolution: 192dpi) {
-  content: url(/assets/google-login-sprite-dark-pressed@2x.png);
+  content: url(/assets/common/google-login-sprite-dark-pressed@2x.png);
 }
 }

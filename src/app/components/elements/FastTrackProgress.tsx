@@ -309,7 +309,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
     function generateCompletionTick(isCurrentQuestion: boolean) {
         return <image
-            href="/assets/tick-bg.png"
+            href="/assets/common/tick-bg.png"
             height={{xl: 36, lg: 34, md: 29, sm: 29, xs: 18}[deviceSize]}
             width={{xl: 36, lg: 34, md: 29, sm: 29, xs: 18}[deviceSize]}
             x={hexagon.halfWidth - {xl: 18, lg: 17, md: 15, sm: 15, xs: 9}[deviceSize]}

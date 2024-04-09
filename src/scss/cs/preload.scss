@@ -2,12 +2,12 @@
 body:after{
   display:none;
   content:
-          url(/assets/google-login-sprite-dark-pressed.png)
-          url(/assets/NCCE_SW_015.jpg)
-          url(/assets/NCCE_SW_019.jpg)
-          url(/assets/isaac-cs-typer-css.svg)
+          url(/assets/common/google-login-sprite-dark-pressed.png)
+          url(/assets/common/NCCE_SW_015.jpg)
+          url(/assets/common/NCCE_SW_019.jpg)
+          url(/assets/common/isaac-cs-typer-css.svg)
 ;
   @media only screen and (min-resolution: 192dpi) {
-    content: url(/assets/google-login-sprite-dark-pressed@2x.png);
+    content: url(/assets/common/google-login-sprite-dark-pressed@2x.png);
   }
 }

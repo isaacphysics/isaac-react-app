@@ -71,7 +71,7 @@
   .hierarchy-tag:not(:first-child) {
     padding-left: 12px;
     &::before {
-      background-image: url(/assets/chevron_right.svg);
+      background-image: url(/assets/common/chevron_right.svg);
       background-repeat: no-repeat;
       background-size: contain;
       content: ' ';

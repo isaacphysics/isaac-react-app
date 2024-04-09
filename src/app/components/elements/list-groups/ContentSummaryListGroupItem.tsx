@@ -53,7 +53,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     const questionIconLabel = item.correct ? "Completed question icon" : "Question icon";
     const questionIcon = siteSpecific(
         item.correct ?
-            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg> :
+            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/common/tick-rp-hex.svg#icon`} xlinkHref={`/assets/common/tick-rp-hex.svg#icon`}/></svg> :
             <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/question-hex.svg#icon`} xlinkHref={`/assets/question-hex.svg#icon`}/></svg>,
         item.correct ?
             <img src="/assets/cs/icons/question-correct.svg" alt={questionIconLabel}/> :
@@ -94,17 +94,17 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             break;
         case (DOCUMENT_TYPE.EVENT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
-            icon = <img src={siteSpecific("/assets/event-md.svg", "/assets/cs/icons/event.svg")} alt="Event page icon"/>;
+            icon = <img src={siteSpecific("/assets/common/event-md.svg", "/assets/cs/icons/event.svg")} alt="Event page icon"/>;
             typeLabel = "Event";
             break;
         case (DOCUMENT_TYPE.TOPIC_SUMMARY):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
-            icon = <img src={siteSpecific("/assets/work-md.svg", "/assets/cs/icons/topic.svg")} alt="Topic summary page icon"/>;
+            icon = <img src={siteSpecific("/assets/common/work-md.svg", "/assets/cs/icons/topic.svg")} alt="Topic summary page icon"/>;
             typeLabel = "Topic"
             break;
         case (DOCUMENT_TYPE.GENERIC):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
-            icon = <img src={siteSpecific("/assets/info-md.svg", "/assets/cs/icons/info-filled.svg")} alt="Generic page icon"/>;
+            icon = <img src={siteSpecific("/assets/common/info-md.svg", "/assets/cs/icons/info-filled.svg")} alt="Generic page icon"/>;
             if (isAda) {
                 typeLabel = "Info";
             }
@@ -155,7 +155,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                 </div>}
                 {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} />}
             </div>
-            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/chevron_right.svg"} alt={"Go to page"}/></div>}
+            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/common/chevron_right.svg"} alt={"Go to page"}/></div>}
         </Link>
     </ListGroupItem>;
 };

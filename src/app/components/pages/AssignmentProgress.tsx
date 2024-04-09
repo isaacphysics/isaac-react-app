@@ -409,7 +409,7 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
                 (Download group tests CSV)
             </a></div>}
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
-                <img src={siteSpecific("/assets/icon-expand-arrow.png", "/assets/chevron-up.svg")} alt="" className="accordion-arrow" />
+                <img src={siteSpecific("/assets/common/icon-expand-arrow.png", "/assets/common/chevron-up.svg")} alt="" className="accordion-arrow" />
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
             </Button>
         </div>

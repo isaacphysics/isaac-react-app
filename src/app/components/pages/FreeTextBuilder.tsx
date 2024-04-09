@@ -249,7 +249,7 @@ export const FreeTextBuilder = () => {
                                     <tr>
                                         <td colSpan={4} className="text-center pb-3">
                                             <RS.Button color="link" onClick={() => setQuestionChoices([...questionChoices, generateDefaultChoice()])}>
-                                                <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
+                                                <img src="/assets/common/add_circle_outline.svg" alt="Add matching rule" />
                                             </RS.Button>
                                         </td>
                                     </tr>
@@ -343,7 +343,7 @@ export const FreeTextBuilder = () => {
                                     <tr>
                                         <td colSpan={6} className="text-center pb-3">
                                             <RS.Button color="link" onClick={() => setTestCases([...testCases, generateDefaultTestCase()])}>
-                                                <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
+                                                <img src="/assets/common/add_circle_outline.svg" alt="Add matching rule" />
                                             </RS.Button>
                                         </td>
                                     </tr>

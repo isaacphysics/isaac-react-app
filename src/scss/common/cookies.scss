@@ -77,11 +77,11 @@
                 width: 36px;
                 height: 36px;
                 padding: 5px;
-                background: url("/assets/action-copy.svg") no-repeat center content-box;
+                background: url("/assets/common/action-copy.svg") no-repeat center content-box;
                 background-size: cover;
 
                 &.copied {
-                    background-image: url("/assets/action-done.svg")
+                    background-image: url("/assets/common/action-done.svg")
                 }
 
                 &.selected {
