@@ -365,7 +365,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                                 changeFunction={toggleSelfRemoval}
                                                 initialValue={!!group.selfRemoval}
                                             />
-                                            <Label for="self-removal" className="d-inline-block mr-2">Allow students to remove themselves from this group?</Label>
+                                            <Label for="self-removal" className="d-inline-block mr-2">Allow students to remove themselves from this group</Label>
                                         </div>
                                     </Col>
                                 </Row>
