@@ -181,9 +181,9 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                     });
                 },
                 successTitle: "Removal successful",
-                successMessage: "You have been removed from the group.",
+                successMessage: "User removed from the group.",
                 errorTitle: "Failed to delete",
-                errorMessage: "You have not been removed from the group, please try again."
+                errorMessage: "User not removed from the group, please try again."
             })
         }),
 

@@ -318,7 +318,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     :
                                                     <span><b>{(membership.group.groupName ?? "Group " + membership.group.id)}</b></span>
                                                 }
-                                                {membership.group.selfRemoval && <img className="self-removal-group ml-1" src="/assets/phy/teacher_features_sprite.svg#groups" alt=""/>}
+                                                {membership.group.selfRemoval && <img className="self-removal-group ml-1" src={siteSpecific("/assets/phy/teacher_features_sprite.svg#groups", "/assets/cs/icons/group.svg")} alt=""/>}
                                                 <br/>
                                                 {membership.group.ownerSummary && 
                                                     <span className="text-muted">Teacher{membership.group.additionalManagers && membership.group.additionalManagers.length > 0 ? "s" : ""}: {

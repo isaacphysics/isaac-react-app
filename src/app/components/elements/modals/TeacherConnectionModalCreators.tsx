@@ -147,7 +147,7 @@ export const confirmSelfRemovalModal = (userId: number, groupId: number) => {
                 the owner(s) of the group. If you remove yourself, you will no longer receive assignments.
                 <br/><br/>
                 Note that if you have granted the group owner(s) access to your data, they can still view this data after you have left the group. To revoke 
-                this access, use the Teacher Connections tab at the top of this page.
+                this access, use the Teacher Connections panel at the top of this page.
                 <br/><br/>
                 You can rejoin at any time using the code or link you used to join the group. Your progress, assignments and test scores will be retained.
             </p>
