@@ -118,7 +118,7 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>}
 
     | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questionResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST}
@@ -532,10 +532,6 @@ export interface QuestionSearchQuery {
     limit?: number;
 }
 
-export interface QuestionSearchResponse {
-    results: ApiTypes.ContentSummaryDTO[];
-}
-
 export interface ContentSummary extends ContentSummaryDTO {
     creationContext?: AudienceContext;
 }
@@ -666,7 +662,7 @@ export interface GameboardBuilderQuestionsStackProps {
     pop: () => {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>};
     length: number;
     clear: () => void;
-};
+}
 
 export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
     groupName: string;
