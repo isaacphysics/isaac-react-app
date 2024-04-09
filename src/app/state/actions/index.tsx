@@ -591,7 +591,7 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
         // Because some searches might take longer to return that others, check this is the most recent search still.
         // Otherwise, we just discard the data.
         if (searchCount === questionSearchCounter) {
-            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results, totalQuestionSearchResults: questionsResponse.data.totalResults});
+            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: questionsResponse.data});
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
@@ -601,7 +601,7 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
 
 export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
     questionSearchCounter++;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: [], totalQuestionSearchResults: 0});
+    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: {results: [], totalResults: 0}});
 };
 
 export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {

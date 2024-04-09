@@ -100,8 +100,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         } : {};
     }, [isBookSearch, searchDifficulties, searchExamBoards, searchStages]);
 
-    const questions = useAppSelector((state: AppState) => state && state.questionSearchResult);
-    const total_questions = useAppSelector((state: AppState) => state && state.totalQuestionSearchResults);
+    const {results: questions, totalResults: totalQuestions} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
@@ -296,9 +295,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             (sortedQuestions?.length ?
                                 <>
                                     <LinkToContentSummaryList items={sortedQuestions}/>
-                                    {(total_questions ?? 0) > sortedQuestions.length && <div role="status" className={`alert alert-light border ${siteSpecific("m-0", "m-4")}`}>
+                                    {(totalQuestions ?? 0) > sortedQuestions.length && <div role="status" className={`alert alert-light border ${siteSpecific("m-0", "m-4")}`}>
                                         Not found what you&apos;re looking for? Try refining your search filters.<br/>
-                                        {`${(total_questions ?? 0) - sortedQuestions.length} questions matching your criteria not shown.`}
+                                        {`${(totalQuestions ?? 0) - sortedQuestions.length} questions matching your criteria not shown.`}
                                     </div>}
                                 </> :
                                 <em>No results found</em>)
