@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
-import {GroupMembershipDetailDTO, PotentialUser} from "../../../../IsaacAppTypes";
+import {GroupMembershipDetailDTO, LoggedInUser, PotentialUser} from "../../../../IsaacAppTypes";
 import {
     openActiveModal,
     showErrorToast,
     useAppDispatch,
     useChangeMyMembershipStatusMutation,
+    useDeleteGroupMemberMutation,
     useGetActiveAuthorisationsQuery,
     useGetGroupMembershipsQuery, useGetOtherUserAuthorisationsQuery,
     useLazyGetTokenOwnerQuery
@@ -29,6 +30,7 @@ import {RenderNothing} from "../RenderNothing";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {
+    confirmSelfRemovalModal,
     releaseAllConfirmationModal,
     releaseConfirmationModal,
     revocationConfirmationModal,
@@ -316,6 +318,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     :
                                                     <span><b>{(membership.group.groupName ?? "Group " + membership.group.id)}</b></span>
                                                 }
+                                                {membership.group.selfRemoval && <img className="self-removal-group ml-1" src={siteSpecific("/assets/phy/teacher_features_sprite.svg#groups", "/assets/cs/icons/group.svg")} alt=""/>}
                                                 <br/>
                                                 {membership.group.ownerSummary && 
                                                     <span className="text-muted">Teacher{membership.group.additionalManagers && membership.group.additionalManagers.length > 0 ? "s" : ""}: {
@@ -325,7 +328,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                             <RS.Col className="d-flex flex-col justify-content-end flex-grow-0 pr-1">
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
                                                     <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
-                                                        changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.INACTIVE})
+                                                        membership.group.selfRemoval 
+                                                            ? dispatch(openActiveModal(confirmSelfRemovalModal((user as LoggedInUser).id as number, membership.group.id as number)))
+                                                            : changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.INACTIVE})
                                                     }>
                                                         Leave
                                                     </RS.Button>
