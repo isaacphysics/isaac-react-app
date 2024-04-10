@@ -61,7 +61,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 {isDefined(assignmentStartDate) &&
                 <p className="mb-0" data-testid={"gameboard-assigned"}><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>
                 }
-                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100
+                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageAttempted !== 100
                     ? <p className="mb-0"><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>
                     : <>{assignment.dueDate && <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>}</>
                 }
@@ -97,11 +97,11 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                             %&nbsp;Correct
                             <div className="d-flex justify-content-center">
                                 <div className="board-subject-hexagon-container justify-content-center">
-                                    {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCompleted === 100) ?
+                                    {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageAttempted === 100) ?
                                         <span className="board-subject-hexagon subject-complete"/> :
                                         <>
                                             {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
-                                            <div className="board-percent-completed">{assignment.gameboard.percentageCompleted ?? 0}</div>
+                                            <div className="board-percent-completed">{assignment.gameboard.percentageAttempted ?? 0}</div>
                                         </>
                                     )}
                                 </div>
@@ -166,7 +166,7 @@ const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
             </Link>
             {isDefined(assignmentStartDate) && <p className="mb-0" data-testid={"gameboard-assigned"}><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>}
-            {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100
+            {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageAttempted !== 100
                 ? <p className="mb-0"><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>
                 : <>{assignment.dueDate && <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>}</>
             }
@@ -180,7 +180,7 @@ const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     {assignment.gameboard && <CSCircle percentage={boardPercentageAttempted} label="%&nbsp;attempted"/>}
                 </Col>
                 <Col xs="auto" className={"text-center px-3"}>
-                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageCompleted} label="%&nbsp;correct"/>}
+                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageAttempted} label="%&nbsp;correct"/>}
                 </Col>
             </Row>
         </Col>

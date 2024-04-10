@@ -39,7 +39,7 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
         assignments
         .map(createAssignmentWithStartDate)
         .forEach(assignment => {
-            if (assignment?.gameboard?.percentageCompleted === undefined || assignment.gameboard.percentageCompleted < 100) {
+            if (assignment?.gameboard?.percentageAttempted === undefined || assignment.gameboard.percentageAttempted < 100) {
                 const noDueDateButRecent = !assignment.dueDate && (assignment.startDate > fourWeeksAgo);
                 const beforeDueDate = assignment.dueDate && (assignment.dueDate >= midnightLastNight);
                 if (beforeDueDate || noDueDateButRecent) {

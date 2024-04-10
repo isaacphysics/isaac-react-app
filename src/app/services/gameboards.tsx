@@ -39,11 +39,11 @@ export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
 }
 
 export function boardCompletionSelection(board: GameboardDTO, boardCompletion: BoardCompletions) {
-    if (boardCompletion == BoardCompletions.notStarted && (board.percentageCompleted == 0 || !board.percentageCompleted)) {
+    if (boardCompletion == BoardCompletions.notStarted && (board.percentageAttempted == 0 || !board.percentageAttempted)) {
         return true;
-    } else if (boardCompletion == BoardCompletions.completed && board.percentageCompleted && board.percentageCompleted == 100) {
+    } else if (boardCompletion == BoardCompletions.completed && board.percentageAttempted && board.percentageAttempted == 100) {
         return true;
-    } else if (boardCompletion == BoardCompletions.inProgress && board.percentageCompleted && board.percentageCompleted != 100 && board.percentageCompleted != 0) {
+    } else if (boardCompletion == BoardCompletions.inProgress && board.percentageAttempted && board.percentageAttempted != 100 && board.percentageAttempted != 0) {
         return true;
     } else return boardCompletion == BoardCompletions.any;
 }
@@ -223,7 +223,7 @@ const BOARD_SORT_FUNCTIONS = {
     [BoardOrder.visited]: (b: GameboardDTO) => b.lastVisited?.valueOf(),
     [BoardOrder.created]: (b: GameboardDTO) => b.creationDate?.valueOf(),
     [BoardOrder.title]: (b: GameboardDTO) => b.title,
-    [BoardOrder.completion]: (b: GameboardDTO) => b.percentageCompleted,
+    [BoardOrder.completion]: (b: GameboardDTO) => b.percentageAttempted,
 };
 
 const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: BoardLimit) =>

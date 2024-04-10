@@ -116,14 +116,14 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     const phyHexagon = <div className={classNames("board-subject-hexagon-container", isTable ? "table-view" : "card-view")}>
         {isSetAssignments
             ? <HexagonGroupsButton toggleAssignModal={toggleAssignModal} boardSubjects={boardSubjects} assignees={assignees} id={hexagonId} />
-            : ((board.percentageCompleted === 100)
+            : ((board.percentageAttempted === 100)
                 ? <>
                     <span className="board-subject-hexagon subject-complete"/>
                     <span className="sr-only">Complete</span>
                 </>
                 : <>
                     {generateGameboardSubjectHexagons(boardSubjects)}
-                    <div className="board-percent-completed">{board.percentageCompleted}</div>
+                    <div className="board-percent-completed">{board.percentageAttempted}</div>
                 </>
         )}
     </div>;
@@ -143,7 +143,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         </UncontrolledTooltip>
                     }
                 </div>
-                : <>{board.percentageCompleted}%</>
+                : <>{board.percentageAttempted}%</>
             }
         </foreignObject>
     </svg>;

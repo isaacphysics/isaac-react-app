@@ -213,9 +213,9 @@ export const MyGameboards = () => {
             let boardsNotStarted = 0;
             let boardsInProgress = 0;
             boards.boards.map(board => {
-                if (board.percentageCompleted === 0) {
+                if (board.percentageAttempted === 0) {
                     boardsNotStarted += 1;
-                } else if (board.percentageCompleted === 100) {
+                } else if (board.percentageAttempted === 100) {
                     boardsCompleted += 1;
                 } else {
                     boardsInProgress += 1;

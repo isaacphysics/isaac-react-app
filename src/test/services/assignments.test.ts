@@ -261,13 +261,13 @@ describe("Assignment categorisation depending on status", () => {
     it("Records an assignment as 'all attempted' if all questions have at least one attempt", () => {
         // Arrange
         const assignmentWithAllQuestionsAttempted: AssignmentDTO = {...assignmentA,
-            gameboard: {...assignmentA.gameboard, percentageCompleted: 100 * 7 / 9, contents: [completedQuestion, completedQuestion, fullyAttemptedQuestion]}
+            gameboard: {...assignmentA.gameboard, percentageAttempted: 100 * 7 / 9, contents: [completedQuestion, completedQuestion, fullyAttemptedQuestion]}
         };
         const assignmentWithAllQuestionsCorrect: AssignmentDTO = {...assignmentA,
-            gameboard: {...assignmentA.gameboard, percentageCompleted: 100, contents: [completedQuestion, completedQuestion, completedQuestion]}
+            gameboard: {...assignmentA.gameboard, percentageAttempted: 100, contents: [completedQuestion, completedQuestion, completedQuestion]}
         };
         const partiallyAttemptedAssignment: AssignmentDTO = {...assignmentA,
-            gameboard: {...assignmentA.gameboard, percentageCompleted: 100 * 4 / 9, contents: [completedQuestion, partiallyAttemptedQuestion, notAttemptedQuestion]}
+            gameboard: {...assignmentA.gameboard, percentageAttempted: 100 * 4 / 9, contents: [completedQuestion, partiallyAttemptedQuestion, notAttemptedQuestion]}
         };
 
         // Act
@@ -288,7 +288,7 @@ describe("Assignment categorisation depending on status", () => {
 
     it("Records an assignment as completed if all questions are correct even if due date is in the future", () => {
         // Arrange
-        const completedAssignment: AssignmentDTO = {...assignmentA, gameboard: {...assignmentA.gameboard, percentageCompleted: 100}, dueDate: tomorrow};
+        const completedAssignment: AssignmentDTO = {...assignmentA, gameboard: {...assignmentA.gameboard, percentageAttempted: 100}, dueDate: tomorrow};
 
         // Act
         const result = filterAssignmentsByStatus([completedAssignment]);
