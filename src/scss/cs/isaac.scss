@@ -253,8 +253,11 @@ $purple: $dark-pink-300; // Something to do with links
 // Stage colours
 // Used for staged accordion sections - we currently do not distinguish by colours
 $gcse-colour: $pink-400;
-$all-stages-colour: $yellow-400;
 $a-level-colour: $cyan-400;
+$national-5-colour: $pink-400;
+$higher-colour: $dark-pink-400;
+$adv-higher-colour: $cyan-400;
+$all-stages-colour: $yellow-400;
 
 // Button/input colours
 $light-hover-dark-pink: $dark-pink-200;
@@ -352,6 +355,8 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "../common/glossary";
 @import "quiz";
 @import "../common/callout";
+@import "../common/finder";
+@import "topics";
 
 @import "expansion-layout";
 

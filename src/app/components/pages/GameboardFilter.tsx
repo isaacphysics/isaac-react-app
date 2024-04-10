@@ -34,7 +34,10 @@ import {
     TAG_ID,
     tags,
     useDeviceSize,
-    useUserContext
+    useUserContext,
+    toSimpleCSV,
+    arrayFromPossibleCsv,
+    itemiseByValue
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer, GameboardViewerInner} from './Gameboard';
@@ -67,9 +70,6 @@ import {
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {Spacer} from '../elements/Spacer';
 
-function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
-    return options.filter(option => values.includes(option.value));
-}
 function itemiseTag(tag: Tag) {
     return {value: tag.id, label: tag.title};
 }
@@ -78,18 +78,6 @@ function itemiseConcepts(concepts: string[]): Item<string>[] {
     return concepts
         .filter(concept => concept !== "")
         .map(concept => ({label: QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER, value: concept}));
-}
-
-function toCSV<T>(items: Item<T>[]) {
-    return items.map(item => item.value).join(",");
-}
-
-function arrayFromPossibleCsv(queryParamValue: string[] | string | null | undefined) {
-    if (queryParamValue) {
-        return queryParamValue instanceof Array ? queryParamValue : queryParamValue.split(",");
-    } else {
-        return [];
-    }
 }
 
 interface QueryStringResponse {
@@ -104,11 +92,11 @@ function processQueryString(query: string): QueryStringResponse {
     const {subjects, fields, topics, stages, difficulties, questionCategories, concepts, examBoards} = queryString.parse(query);
     const tagHierarchy = tags.getTagHierarchy();
 
-    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages as Nullable<string[] | string>), getFilteredStageOptions());
-    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties as Nullable<string[] | string>), siteSpecific(DIFFICULTY_ITEM_OPTIONS, DIFFICULTY_ICON_ITEM_OPTIONS));
-    const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards as Nullable<string[] | string>), getFilteredExamBoardOptions({byStages: stageItems.map(item => item.value as STAGE)}));
-    const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories as Nullable<string[] | string>), QUESTION_CATEGORY_ITEM_OPTIONS);
-    const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts as Nullable<string[] | string>));
+    const stageItems = itemiseByValue(arrayFromPossibleCsv((stages ?? []) as string[] | string), getFilteredStageOptions());
+    const difficultyItems = itemiseByValue(arrayFromPossibleCsv((difficulties ?? []) as string[] | string), siteSpecific(DIFFICULTY_ITEM_OPTIONS, DIFFICULTY_ICON_ITEM_OPTIONS));
+    const examBoardItems = itemiseByValue(arrayFromPossibleCsv((examBoards ?? []) as string[] | string), getFilteredExamBoardOptions({byStages: stageItems.map(item => item.value as STAGE)}));
+    const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv((questionCategories ?? []) as string[] | string), QUESTION_CATEGORY_ITEM_OPTIONS);
+    const conceptItems = itemiseConcepts(arrayFromPossibleCsv((concepts ?? []) as string[] | string));
 
     const selectionItems: Item<TAG_ID>[][] = [];
     if (isPhy) {
@@ -332,7 +320,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
     const selectedTopics = selections[2];
     useEffect(() => {
         if (selectedTopics) {
-            dispatch(fetchConcepts(undefined, toCSV(selectedTopics)));
+            dispatch(fetchConcepts(undefined, toSimpleCSV(selectedTopics.map(item => item.value))));
         }
     }, [dispatch, selectedTopics]);
     useEffect(function updateConceptChoices() {
@@ -350,6 +338,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 setConcepts(conceptsFilteredByAvailable);
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [conceptDTOs, concepts]);
 
     function setTierSelection(topics: Item<TAG_ID>[]) {
@@ -480,6 +469,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
             history.replace({search: location.search, state: location.state});
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gameboard, gameboardIdAnchor]);
 
     const gameboardRef = useRef<HTMLDivElement>(null);
@@ -512,6 +502,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const [stages, setStages] = useState<Item<string>[]>(queryStages.length > 0 ? queryStages : itemiseByValue([userContext.stage], getFilteredStageOptions()));
     useEffect(function keepStagesInSyncWithUserContext() {
         if (stages.length === 0) setStages(itemiseByValue([userContext.stage], getFilteredStageOptions()));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userContext.stage]);
 
     const [difficulties, setDifficulties] = useState<Item<string>[]>(queryDifficulties);
@@ -522,6 +513,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const [examBoards, setExamBoards] = useState<Item<string>[]>(queryExamBoards.length > 0 ? queryExamBoards : itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
     useEffect(function keepExamBoardsInSyncWithUserContext() {
         if (examBoards.length === 0) setExamBoards(itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userContext.examBoard]);
 
     const [concepts, setConcepts] = useState<Item<string>[]>(queryConcepts);
@@ -539,10 +531,10 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                               history: History) {
         // Load a gameboard
         const params: {[key: string]: string} = {};
-        if (stages.length) params.stages = stages.find(s => s.value === STAGE.ALL) ? "" : toCSV(stages);
-        if (difficulties.length) params.difficulties = toCSV(difficulties);
-        if (concepts.length) params.concepts = toCSV(concepts);
-        if (isAda && examBoards.length) params.examBoards = toCSV(examBoards);
+        if (stages.length) params.stages = stages.find(s => s.value === STAGE.ALL) ? "" : toSimpleCSV(stages.map(item => item.value));
+        if (difficulties.length) params.difficulties = toSimpleCSV(difficulties.map(item => item.value));
+        if (concepts.length) params.concepts = toSimpleCSV(concepts.map(item => item.value));
+        if (isAda && examBoards.length) params.examBoards = toSimpleCSV(examBoards.map(item => item.value));
         if (isPhy) {params.questionCategories = `${QUESTION_CATEGORY.QUICK_QUIZ},${QUESTION_CATEGORY.PROBLEM_SOLVING}${showBookQuestions ? "," + QUESTION_CATEGORY.BOOK_QUESTIONS : ""}`;}
         params.title = boardTitle;
 
@@ -559,7 +551,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                 }
                 return;
             }
-            params[tier.id] = toCSV(selections[i]);
+            params[tier.id] = toSimpleCSV(selections[i].map(item => item.value));
         });
 
         generateTemporaryGameboard(params).then(extractDataFromQueryResponse).then((gameboard) => {
@@ -593,6 +585,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             setBoardStack([]);
             loadNewGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selections, stages, difficulties, concepts, examBoards, showBookQuestions]);
 
     function refresh() {
@@ -702,8 +695,8 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                     )}
                     <Col xs={8} lg={"auto"} className="ml-auto text-right">
                         <Button size={siteSpecific("md", "sm")} tag={Link} color="secondary"
-                                   to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}/${customBoardTitle ?? gameboard.title}`}
-                                   onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
+                            to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}/${encodeURIComponent(customBoardTitle ?? gameboard.title ?? "")}`}
+                            onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
                         >
                             {siteSpecific(<>Save to My&nbsp;Gameboards</>, "Save to my quizzes")}
                         </Button>

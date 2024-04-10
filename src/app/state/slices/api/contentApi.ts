@@ -6,21 +6,19 @@ import {isaacApi} from "./baseApi";
 const contentApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
 
-        getNewsPodList: build.query<IsaacPodDTO[], {subject: string; orderDecending?: boolean}>({
-            query: ({subject}) => ({
-                url: `/pages/pods/${subject}`
+        getNewsPodList: build.query<IsaacPodDTO[], {subject: string; startIndex?: number}>({
+            query: ({subject, startIndex}) => ({
+                url: `/pages/pods/${subject}/${startIndex ?? 0}`
             }),
             transformResponse: (response: {results: IsaacPodDTO[]; totalResults: number}, meta, arg) => {
-                // Sort news pods in order of id (asc or desc depending on orderDecending), with ones tagged "featured"
-                // placed first
+                // Sort news pods to place those tagged "featured" first.
+                // The pods are otherwise correctly sorted by ID descending (i.e. newest first) in the backend
                 return response.results.sort((a, b) => {
                     const aIsFeatured = a.tags?.includes(FEATURED_NEWS_TAG);
                     const bIsFeatured = b.tags?.includes(FEATURED_NEWS_TAG);
                     if (aIsFeatured && !bIsFeatured) return -1;
                     if (!aIsFeatured && bIsFeatured) return 1;
-                    return a.id && b.id
-                        ? a.id.localeCompare(b.id) * (arg.orderDecending ? -1 : 1)
-                        : 0;
+                    return 0;
                 });
             },
             onQueryStarted: onQueryLifecycleEvents({

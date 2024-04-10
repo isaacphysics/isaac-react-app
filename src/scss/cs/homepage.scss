@@ -1,6 +1,13 @@
 #homepage {
   //section {padding: 2rem 0;}
 
+  .bg-hero {
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter: opacity(70%) blur(1px);
+  }
+
   h1#homepageName {
     text-shadow: 0 0 4px $gray-103, 0 0 5px $gray-103, 0 0 10px $gray-103, 0 0 10px $gray-103, 0 0 20px $gray-103;
   }
@@ -8,17 +15,6 @@
   section#call-to-action {
     background-color: $cs-black;
     color: $cs-white;
-    .mw-640 {
-      max-width: 640px;
-    }
-    .spacer {
-      @include media-breakpoint-between(xl, xxl) {
-        max-width: 80px;
-      }
-      @include media-breakpoint-up(xxl) {
-        max-width: 160px;
-      }
-    }
   }
 
   img#homepageHeroImg {
@@ -35,6 +31,15 @@
 
   section#benefits-for-teachers-and-students {
     background-color: $cs-white;
+    ul {
+      padding-inline-start: 20px;
+      li {
+        margin: 1rem 0;
+      }
+      li::marker {
+        color: $primary;
+      }
+    }
   }
 
   section#what-resources {

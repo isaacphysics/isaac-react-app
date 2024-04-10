@@ -8,6 +8,7 @@ import {
     getFilteredStageOptions,
     history,
     isAda,
+    siteSpecific,
     STAGE,
     stageLabelMap,
     useQueryParams,
@@ -18,7 +19,6 @@ import {
     transientUserContextSlice,
     useAppDispatch,
     useAppSelector,
-    useGetSegueEnvironmentQuery
 } from "../../../state";
 import queryString from "query-string";
 
@@ -27,7 +27,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const qParams = useQueryParams();
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
-    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
 
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
     const filteredStages = getFilteredStageOptions({byUser: user, includeNullOptions: true});
@@ -37,84 +36,96 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         examBoard: isAda && !filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard),
     };
     const showUnusualContextMessage = unusual.stage || unusual.examBoard;
-    const showHideOtherContentSelector = isAda && segueEnvironment === "DEV";
     const showStageSelector = getFilteredStageOptions({byUser: user}).length > 1 || showUnusualContextMessage;
     const showExamBoardSelector = isAda && (getFilteredExamBoardOptions({byUser: user}).length > 1 || showUnusualContextMessage);
 
+    const onlyOneBoard : {label: string, value: EXAM_BOARD} | undefined = filteredExamBoardOptions.length === 2 && filteredExamBoardOptions.map(eb => eb.value).includes(EXAM_BOARD.ALL)
+        ? filteredExamBoardOptions.filter(eb => eb.value !== EXAM_BOARD.ALL)[0]
+        : undefined;
 
-    return <div className="d-flex">
-        {/* Show other content Selector */}
-        {showHideOtherContentSelector && <FormGroup className={`mr-2 ${className}`}>
-            <Label className="d-inline-block pr-4" htmlFor="uc-show-other-content-check">Show other content? </Label>
-            <CustomInput
-                className="w-auto d-inline-block pl-1 pr-0" type="checkbox" id="uc-show-other-content-check"
-                checked={userContext.showOtherContent}
-                onChange={e => dispatch(transientUserContextSlice.actions.setShowOtherContent(e.target.checked))}
-            />
-        </FormGroup>}
-
-        {/* Stage Selector */}
-        {showStageSelector && <FormGroup className={`${showExamBoardSelector ? "mr-2" : ""} ${className}`}>
-            {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-stage-select">Stage</Label>}
-            <Input
-                className="w-auto d-inline-block pl-1 pr-0" type="select" id="uc-stage-select"
-                aria-label={hideLabels ? "Stage" : undefined}
-                value={userContext.stage}
-                onChange={e => {
-                    const newParams: {[key: string]: unknown} = {...qParams, stage: e.target.value};
-                    const stage = e.target.value as STAGE;
-                    if (isAda) {
-                        // Drive exam board selection so that it is a valid option - by default use All.
-                        let examBoard = EXAM_BOARD.ALL;
-                        const possibleExamBoards =
-                            getFilteredExamBoardOptions({byUser: user, byStages: [stage], includeNullOptions: true})
-                                .map(eb => eb.value);
-                        // If we have possible valid exam board options but All is not one of them, use one of those.
-                        if (possibleExamBoards.length > 0 && !possibleExamBoards.includes(EXAM_BOARD.ALL)) {
-                            examBoard = possibleExamBoards[0];
+    return <RS.Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
+        <RS.Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}> 
+            {/* Stage Selector */}
+            <FormGroup className={`w-100 d-flex justify-content-end m-0`}>
+                {showStageSelector && <>
+                    {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-stage-select">Stage</Label>}
+                    <Input
+                        className={`flex-grow-1 d-inline-block pl-2 pr-0 mb-2 ${showExamBoardSelector ? "mr-1" : ""}`} type="select" id="uc-stage-select"
+                        aria-label={hideLabels ? "Stage" : undefined}
+                        value={userContext.stage}
+                        onChange={e => {
+                            const newParams: {[key: string]: unknown} = {...qParams, stage: e.target.value};
+                            const stage = e.target.value as STAGE;
+                            if (isAda) {
+                                // Drive exam board selection so that it is a valid option - by default use All.
+                                let examBoard = EXAM_BOARD.ALL;
+                                const possibleExamBoards =
+                                    getFilteredExamBoardOptions({byUser: user, byStages: [stage], includeNullOptions: true})
+                                        .map(eb => eb.value);
+                                // If we have possible valid exam board options but All is not one of them, use one of those.
+                                if (possibleExamBoards.length > 0 && !possibleExamBoards.includes(EXAM_BOARD.ALL)) {
+                                    examBoard = possibleExamBoards[0];
+                                }
+                                newParams.examBoard = examBoard;
+                                dispatch(transientUserContextSlice.actions.setExamBoard(examBoard));
+                            }
+                            history.push({search: queryString.stringify(newParams, {encode: false})});
+                            dispatch(transientUserContextSlice.actions.setStage(stage));
+                        }}
+                    >
+                        {filteredStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
+                        {/* If the userContext.stage is not in the user's normal list of options (following link with q. params) add it */}
+                        {!filteredStages.map(s => s.value).includes(userContext.stage) &&
+                            <option key={userContext.stage} value={userContext.stage}>
+                                {"*"}
+                                {getFilteredStageOptions().filter(o => o.value === userContext.stage)[0]?.label}
+                                {"*"}
+                            </option>
                         }
-                        newParams.examBoard = examBoard;
-                        dispatch(transientUserContextSlice.actions.setExamBoard(examBoard));
-                    }
-                    history.push({search: queryString.stringify(newParams, {encode: false})});
-                    dispatch(transientUserContextSlice.actions.setStage(stage));
-                }}
-            >
-                {filteredStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
-                {/* If the userContext.stage is not in the user's normal list of options (following link with q. params) add it */}
-                {!filteredStages.map(s => s.value).includes(userContext.stage) &&
-                    <option key={userContext.stage} value={userContext.stage}>
-                        {"*"}
-                        {getFilteredStageOptions().filter(o => o.value === userContext.stage)[0]?.label}
-                        {"*"}
-                    </option>
-                }
-            </Input>
-        </FormGroup>}
+                    </Input>
+                </>}
 
-        {/* Exam Board Selector */}
-        {showExamBoardSelector && <FormGroup className={className}>
-            {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
-            <Input
-                className="w-auto d-inline-block pl-1 pr-0" type="select" id="uc-exam-board-select"
-                aria-label={hideLabels ? "Exam Board" : undefined}
-                value={userContext.examBoard}
-                onChange={e => {
-                    history.push({search: queryString.stringify({...qParams, examBoard: e.target.value}, {encode: false})});
-                    dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD))
-                }}
-            >
-                {filteredExamBoardOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
-                {/* If the userContext.examBoard is not in the user's normal list of options (following link with q. params) add it */}
-                {!filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard) &&
-                    <option key={userContext.examBoard} value={userContext.examBoard}>
-                        {"*"}
-                        {getFilteredExamBoardOptions().filter(o => o.value === userContext.examBoard)[0]?.label}
-                        {"*"}
-                    </option>
-                }
-            </Input>
-        </FormGroup>}
+                {/* Exam Board Selector */}
+                {showExamBoardSelector && <>
+                    {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
+                    <Input
+                        className={`flex-grow-1 d-inline-block pl-2 pr-0 mb-2 ${showStageSelector ? "ml-1" : ""}`} type="select" id="uc-exam-board-select"
+                        aria-label={hideLabels ? "Exam Board" : undefined}
+                        value={userContext.examBoard}
+                        onChange={e => {
+                            history.push({search: queryString.stringify({...qParams, examBoard: e.target.value}, {encode: false})});
+                            dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD));
+                        }}
+                    >
+                        {onlyOneBoard 
+                            ? <option value={onlyOneBoard.value}>{onlyOneBoard.label}</option> 
+                            : filteredExamBoardOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)
+                        }
+                        {/* If the userContext.examBoard is not in the user's normal list of options (following link with q. params) add it */}
+                        {!filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard) &&
+                            <option key={userContext.examBoard} value={userContext.examBoard}>
+                                {"*"}
+                                {getFilteredExamBoardOptions().filter(o => o.value === userContext.examBoard)[0]?.label}
+                                {"*"}
+                            </option>
+                        }
+                    </Input>
+                </>}
+            </FormGroup>
+        </RS.Row>
+        
+
+        {/* "Show other content" selector */}
+        {isAda && <RS.Row className="w-100 px-0 m-0 pb-2 justify-content-end">
+            <FormGroup className="w-auto m-0">
+                <Label className="d-inline-block m-0" htmlFor="uc-show-other-content-check">Show other content? </Label>
+                <CustomInput
+                    className="d-inline-block ml-2 pr-0" type="checkbox" id="uc-show-other-content-check"
+                    checked={userContext.showOtherContent}
+                    onChange={e => dispatch(transientUserContextSlice.actions.setShowOtherContent(e.target.checked))}
+                />
+            </FormGroup>
+        </RS.Row>}
 
         {showUnusualContextMessage && <div className="mt-2 ml-1">
             <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
@@ -130,5 +141,5 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 {unusual.examBoard && !unusual.stage && `The exam board was specified by your ${userContext.explanation.examBoard}.`}
             </RS.UncontrolledTooltip>
         </div>}
-    </div>;
+    </RS.Col>;
 };

@@ -120,6 +120,7 @@ export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
+    maxNumCurves?: number;
     axisLabelX?: string;
     axisLabelY?: string;
 }
@@ -319,6 +320,7 @@ export interface UserGroupDTO {
     ownerId?: number;
     created?: Date;
     lastUpdated?: Date;
+    selfRemoval?: boolean;
     token?: string;
     archived?: boolean;
     additionalManagerPrivileges?: boolean;

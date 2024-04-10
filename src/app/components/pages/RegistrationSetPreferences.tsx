@@ -84,7 +84,10 @@ export const RegistrationSetPreferences = () => {
                     </Col>
                     <Col xs={12} lg={6}>
                         <Form onSubmit={submit}>
-                            <UserContextAccountInput user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} setBooleanNotation={setBooleanNotation} displaySettings={displaySettings} setDisplaySettings={setDisplaySettings} submissionAttempted={submissionAttempted} />
+                            <UserContextAccountInput user={userToUpdate} userContexts={userContexts}
+                                                     setUserContexts={setUserContexts} setBooleanNotation={setBooleanNotation}
+                                                     displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
+                                                     submissionAttempted={submissionAttempted} required={false} />
                             <hr />
 
                             <ProgrammingLanguageInput programmingLanguage={programmingLanguage} setProgrammingLanguage={setProgrammingLanguage} />

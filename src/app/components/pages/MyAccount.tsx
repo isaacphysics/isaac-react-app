@@ -39,7 +39,6 @@ import {
     ProgrammingLanguage,
     UserPreferencesDTO,
 } from "../../../IsaacAppTypes";
-import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
 import {UserEmailPreferencesPanel} from "../elements/panels/UserEmailPreferencesPanel";
 import {
@@ -126,9 +125,21 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
             dispatch(closeActiveModal());
         },
         title: "Changing schools?",
-        body: <p className="px-1">
-            When you change schools, check your <strong><a target="_blank" href="/groups">groups</a></strong> and your <strong><a target="_blank" href="/account#teacherconnections">connections</a></strong>. Delete any groups that you will no longer teach and remove any connections with old colleagues and students.
-        </p>,
+        body: <>
+            <p className="px-1">
+                If you are changing schools, we recommend you take the following steps:
+            </p>
+            <ol type='1'>
+                <li>
+                    Check your <strong><a target="_blank" href="/groups">groups</a>
+                    </strong>. Delete any groups that you will no longer teach.
+                </li>
+                <li>
+                    Check your <strong><a target="_blank" href="/account#teacherconnections">connections</a></strong>. Remove any connections with old colleagues and students.
+                </li>
+            </ol>
+            <p><strong>This information can be found in the <a target="_blank" href="/support/teacher/general#moving_schools">Teacher FAQ</a> for future reference.</strong></p>
+        </>,
         buttons: [
             <Button key={1} color="primary" onClick={() => dispatch(closeActiveModal())}>
                 Continue

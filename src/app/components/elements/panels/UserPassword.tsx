@@ -190,8 +190,8 @@ export const UserPassword = (
                 <FormGroup>
                     <h4>Log Out</h4>
                     <p>
-                        {"If you forgot to log out on a device you no longer have access to, you can " +
-                        "log your account out on all devices, including this one."}
+                        {"This button will log you out on all devices, including this one. " +
+                        "You might want to do this if you forgot to log out on a shared device like a school computer."}
                     </p>
                     <Col className="text-center mt-2 px-0">
                         <Button className={classNames("w-100 py-2 mt-3 mb-2", isAda)} color="primary" outline onClick={() => dispatch(logOutUserEverywhere())}>

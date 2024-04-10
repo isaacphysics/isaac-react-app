@@ -65,21 +65,18 @@ function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentD
 }
 
 function getURLForContent(content: ContentSummaryDTO) {
-    return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`
+    return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`;
 }
 
-function renderQuestionsCS(allQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
-    const halfWayIndex = Math.ceil(allQuestions.length / 2) - 1;
-    const firstColQuestions = allQuestions.filter((q, i) => i <= halfWayIndex);
-    const secondColQuestions = allQuestions.filter((q, i) => i > halfWayIndex);
+function renderQuestionsCS(audienceQuestions: ContentSummaryDTO[], remainingQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
 
-    if (allQuestions.length == 0) return null;
+    if (audienceQuestions.length + remainingQuestions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 d-flex">
             <div className="flex-fill simple-card my-3 p-3 text-wrap">
                 <Row className="related-questions related-title">
                     <Col xs={12} sm={"auto"}>
-                        <img className={"related-q-icon mt-n2 ml-2 mr-3"} src={"/assets/cs/icons/question-not-started.svg"}/>
+                        <img className={"related-q-icon mt-n2 ml-2 mr-3"} src={"/assets/cs/icons/question-not-started.svg"} alt=""/>
                         <h3 className="d-inline-block mt-2">Related questions</h3>
                     </Col>
                     {showConceptGameboardButton && <Col xs={12} sm={"auto"} className={"ml-md-auto mt-2 mt-md-0 vertical-center justify-content-start"}>
@@ -90,21 +87,29 @@ function renderQuestionsCS(allQuestions: ContentSummaryDTO[], renderItem: Render
                 {/* Large devices - multi column */}
                 <div className="d-none d-lg-flex text-left">
                     <ListGroup className="w-50">
-                        {firstColQuestions.map(contentSummary => renderItem(contentSummary))}
+                        <h4 className="related-question-header">On your specification:</h4>
+                        {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                     <ListGroup className="w-50">
-                        {secondColQuestions.map(contentSummary => renderItem(contentSummary))}
+                        <h4 className="related-question-header">Outside your specification:</h4>
+                        {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                 </div>
                 {/* Small devices - single column */}
                 <div className="d-lg-none text-left">
                     <ListGroup>
-                        {allQuestions.map(contentSummary => renderItem(contentSummary))}
+                        {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
+                    </ListGroup>
+                </div>
+                <h4 className="d-lg-none related-question-header mt-4">Outside your specification:</h4>
+                <div className="d-lg-none text-left">
+                    <ListGroup>
+                        {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                 </div>
             </div>
         </div>
-    </div>
+    </div>;
 }
 
 function renderConceptsAndQuestionsPhy(concepts: ContentSummaryDTO[], questions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
@@ -145,7 +150,7 @@ function renderConceptsAndQuestionsPhy(concepts: ContentSummaryDTO[], questions:
                 </div>
             </div>
         </div>
-    </div>
+    </div>;
 }
 
 export function RelatedContent({content, parentPage, conceptId = ""}: RelatedContentProps) {
@@ -153,6 +158,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
+    const remainingContent: ContentSummaryDTO[] = isAda && userContext.showOtherContent ? content.filter(c => !isIntendedAudience(c.audience, userContext, user)) : [];
     const showConceptGameboardButton = isAda && isTutorOrAbove(useAppSelector(selectors.user.orNull));
 
     const sortedContent = siteSpecific(
@@ -164,9 +170,13 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
         (c: ContentSummaryDTO[]) => c.sort(sortByStringValue("title"))
     )(audienceFilteredContent);
 
+    const sortedRemainder: ContentSummaryDTO[] = isAda ? remainingContent.sort(sortByStringValue("title")) : [];
+
     const concepts = sortedContent
         .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.CONCEPT);
     const questions = sortedContent
+        .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
+    const remainingQuestions = sortedRemainder
         .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
 
     const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO) => {
@@ -176,7 +186,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
                 className={classNames({"btn-link btn text-left": isAda})}
                 to={getURLForContent(contentSummary)}
                 onClick={() => {
-                    dispatch(logAction(getEventDetails(contentSummary, parentPage)))
+                    dispatch(logAction(getEventDetails(contentSummary, parentPage)));
                 }}
             >
                 <span className={classNames({"font-size-1 font-weight-regular": isAda})}>
@@ -185,22 +195,22 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
                         {audienceViews.length > 0 && " ("}
                         {audienceViews.map(av => {
                             let result = "";
-                            if (av.stage) {result += stageLabelMap[av.stage]}
-                            if (av.stage && av.difficulty) {result += " - "}
-                            if (av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
+                            if (av.stage) { result += stageLabelMap[av.stage]; }
+                            if (av.stage && av.difficulty) { result += " - "; }
+                            if (av.difficulty) { result += difficultyShortLabelMap[av.difficulty]; }
                             return result;
                         }).join(", ")}
                         {audienceViews.length > 0 && ")"}
                     </React.Fragment>}
                 </span>
             </Link>
-        </ListGroupItem>
+        </ListGroupItem>;
     };
 
     return siteSpecific(
         // Physics
         renderConceptsAndQuestionsPhy(concepts, questions, makeListGroupItem, conceptId, showConceptGameboardButton),
         // Computer Science
-        renderQuestionsCS(questions, makeListGroupItem, conceptId, showConceptGameboardButton)
+        renderQuestionsCS(questions, remainingQuestions, makeListGroupItem, conceptId, showConceptGameboardButton)
     );
 }

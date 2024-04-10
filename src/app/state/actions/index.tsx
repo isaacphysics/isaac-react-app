@@ -80,7 +80,7 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
                             fatal: true
                         }
                 }
-            )
+            );
             return showToast({
                 color: "danger", title: error, timeout: 5000,
                 body: API_REQUEST_FAILURE_MESSAGE
@@ -591,7 +591,7 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
         // Because some searches might take longer to return that others, check this is the most recent search still.
         // Otherwise, we just discard the data.
         if (searchCount === questionSearchCounter) {
-            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
+            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: questionsResponse.data});
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
@@ -601,7 +601,7 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
 
 export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
     questionSearchCounter++;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: []});
+    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: {results: [], totalResults: 0}});
 };
 
 export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
@@ -662,7 +662,7 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
 
 export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal({
-        closeAction: () => {dispatch(closeActiveModal() as any)},
+        closeAction: () => {dispatch(closeActiveModal() as any);},
         title: "Test already submitted",
         body: <div className="text-center my-5 pb-4">
             <strong>A submission has already been recorded for this test by your account.</strong>

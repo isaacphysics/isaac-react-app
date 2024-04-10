@@ -128,26 +128,30 @@ export const Search = withRouter((props: RouteComponentProps) => {
                             </RS.Col>
                             <RS.Col sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)}>
                                 <RS.Form inline className="search-filters">
-                                    <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
-                                        {`Filter${siteSpecific("","s")}:`}
-                                    </RS.Label>
-                                    <StyledSelect
-                                        inputId="document-filter" isMulti
-                                        placeholder="No page type filter"
-                                        value={filtersState}
-                                        options={
-                                            [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.GENERIC]
-                                                .concat(siteSpecific([DOCUMENT_TYPE.EVENT], [DOCUMENT_TYPE.TOPIC_SUMMARY]))
-                                                .map(itemise)
-                                        }
-                                        className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
-                                        classNamePrefix="select"
-                                        onChange={selectOnChange(setFiltersState, false)}
-                                        styles={selectStyle}
-                                    />
-                                    {isAda && <RS.Label className="mt-2 mb-2 mb-md-0">
-                                        <UserContextPicker className="text-right" />
-                                    </RS.Label>}
+                                    <RS.Row className="w-100 align-items-center justify-content-end m-0">
+                                        <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
+                                            {`Filter${siteSpecific("","s")}:`}
+                                        </RS.Label>
+                                        <div className="search-filters-select-container">
+                                            <StyledSelect
+                                                inputId="document-filter" isMulti
+                                                placeholder="No page type filter"
+                                                value={filtersState}
+                                                options={
+                                                    [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.GENERIC]
+                                                        .concat(siteSpecific([DOCUMENT_TYPE.EVENT], [DOCUMENT_TYPE.TOPIC_SUMMARY]))
+                                                        .map(itemise)
+                                                }
+                                                className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
+                                                classNamePrefix="select"
+                                                onChange={selectOnChange(setFiltersState, false)}
+                                                styles={selectStyle}
+                                            />
+                                        </div>
+
+                                    </RS.Row>
+
+                                    <UserContextPicker />
                                 </RS.Form>
                             </RS.Col>
                         </RS.CardHeader>

@@ -2,10 +2,9 @@ import React, {useEffect} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, CardDeck, Col, Container, Row} from "reactstrap";
-import {SITE_TITLE} from "../../../services";
-import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
-import {WarningBanner} from "../../navigation/WarningBanner";
-import {AdaHero1x1, AdaHero2x1} from "../../elements/svg/AdaHero";
+import {isLoggedIn, SITE_TITLE} from "../../../services";
+import {AdaHero2x1} from "../../elements/svg/AdaHero";
+import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
 import {AdaHomepageSearch} from "../../elements/SearchInputs";
@@ -14,94 +13,144 @@ import {MetaDescription} from "../../elements/MetaDescription";
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
-    const {data: news} = useGetNewsPodListQuery({subject: "news", orderDecending: true});
+    const {data: news} = useGetNewsPodListQuery({subject: "news"});
+    const featuredNewsItem = (news && user?.loggedIn) ? news[0] : undefined;
 
     return <>
         {/*<WarningBanner/>*/}
         <MetaDescription description={"Ada Computer Science is a free online computer science programme for students and teachers. Learn by using our computer science topics and questions!"}/>
         <div id="homepage">
             <section id="call-to-action" className="homepageHero">
-                <Container className="py-lg-6 pt-3 pb-5 z1 px-lg-6 px-4" fluid>
-                    <Row className={"justify-content-center homepage-hero-logged-out"}>
-                        <Col lg={6} xl={5} className={"my-auto mw-640"}>
-                            <h1 className={"font-size-1-75 font-size-md-2 font-size-xxl-2-5"}>
+                <Container className="py-5 px-md-4 px-xxl-5 mw-1600" fluid>
+                    <Row className={"justify-content-center"}>
+                        <Col xs={12} lg={7} className={"my-auto"}>
+                            <h1 className={"font-size-1-75 font-size-md-2-5"}>
                                 <span className={"text-pink"}>/</span><br/>
-                                Welcome to Ada Computer Science, <span className={"font-weight-regular"}>the free online platform for teachers and students around the world.</span>
+                                Computer science education should be accessible for everyone
                             </h1>
-                            <p className={"font-size-1 font-size-md-1-25 py-3"}>
-                                Developed by the Raspberry Pi Foundation and the University of Cambridge.
+                            <p className={"font-size-1-25 py-3"}>
+                                We create free resources to help teachers and students around the world
                             </p>
-                            <Button tag={Link} to={user?.loggedIn ? "/topics" : "/register"} color="dark-primary">{user?.loggedIn ? "Browse topics" : "Get started"}</Button>
+                            <Row className="justify-content-start align-items-center my-3">
+                                <Col xs={6} sm={3}>
+                                    <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
+                                        <img src="/assets/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
+                                    </a>
+                                </Col>
+                                <Col xs={6} sm={3}>
+                                    <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
+                                        <img src="/assets/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
+                                    </a>
+                                </Col>
+                            </Row>
+                            <Button className="mt-3" tag={Link} to="/topics" color="dark-primary">Explore topics</Button>
                         </Col>
-                        <Col xl={2} className={"spacer d-none d-xl-block"}/>
-                        <Col lg={6} xl={5} className={"mw-640 mb-1 mb-sm-3 mb-lg-0"}>
-                            <AdaHero1x1 className={"d-lg-block d-none"}/>
-                            <AdaHero2x1 className={"mt-5 mt-lg-0 d-lg-none d-block"}/>
+                        <Col xs={12} lg={5} className={"mb-1 mb-sm-3 mb-lg-0"}>
+                            {isLoggedIn(user) ?
+                                <div>
+                                    <AdaHero2x1 className={"mt-5 mt-lg-0 bg-hero"}/>
+                                    <FeaturedNewsItem item={featuredNewsItem} />
+                                </div>
+                                :
+                                <AdaHero2x1 className={"mt-5 mt-lg-0 d-block"}/>
+                            }
                         </Col>
                     </Row>
                 </Container>
             </section>
 
             <section id="benefits-for-teachers-and-students">
-                <Container className={"py-lg-6 py-5"}>
-                    <Row>
-                        <Col lg={6} className={"px-5 my-auto my-lg-0"}>
+                <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
+                    <Row className={"align-items-center"}>
+                        <Col xs={12} lg={6}>
+                            <h2 className={"font-size-1-75 mb-4"}>Why use Ada Computer Science?</h2>
+                            <ul className={"font-size-1 font-size-md-1-25"}>
+                                <li>Made by the University of Cambridge and the Raspberry Pi Foundation</li>
+                                <li>Mapped to <strong><Link to={"/exam_specifications"}>computer science exam specifications</Link></strong>, including GCSE and A level</li>
+                                <li>A great way to save time when planning lessons and homework</li>
+                                <li>Perfect for learning a topic after class or preparing for exams</li>
+                                <li>Free forever — no hidden costs</li>
+                            </ul>
+                        </Col>
+                        <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>
                             <picture>
-                                <source srcSet="/assets/cs/decor/benefits-for-homepage-3x4.webp" type="image/webp"/>
-                                <img className={"d-none d-lg-block w-100"} src={"/assets/cs/decor/benefits-for-homepage-3x4.png"} alt="" />
-                            </picture>
-                            <picture>
-                                <source srcSet="/assets/cs/decor/benefits-for-homepage-4x3.webp" type="image/webp"/>
-                                <img className={"d-lg-none d-block w-100"} src={"/assets/cs/decor/benefits-for-homepage-4x3.png"} alt="" />
+                                <source srcSet="/assets/cs/decor/benefits-for-homepage.webp" type="image/webp"/>
+                                <img className={"d-block w-100"} src={"/assets/cs/decor/benefits-for-homepage.png"} alt="" />
                             </picture>
                         </Col>
-                        <Col lg={6} className={"order-first order-lg-last pb-5 pb-md-0"}>
-                            <WhySignUpTabs user={user}/>
+                    </Row>
+                </Container>
+            </section>
+
+            <section id="question-finder">
+                <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
+                    <Row className={"align-items-center"}>
+                        <Col xs={12} lg={6}>
+                            <h2 className={"font-size-1-75 mb-4"}>Explore our questions</h2>
+                            <p>
+                                Use the question finder to explore more than 1,000 self-marking questions, filtering by
+                                topic, concept and qualification. Written by experts and updated frequently, they
+                                address common misconceptions with tailored feedback.
+                            </p>
+                            <p><b>Students</b>: review key topics and get instant feedback</p>
+                            <p><b>Teachers</b>: save time by creating self-marking quizzes</p>
+                            <Button className={"mt-4"} tag={Link} to="/quizzes/new" color='primary'>
+                                Try our question finder
+                            </Button>
+                        </Col>
+                        <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>
+                            <picture>
+                                <source srcSet="/assets/cs/decor/question-finder.png" type="image/png"/>
+                                <img className={"d-block w-100"} src={"/assets/cs/decor/question-finder.png"} alt="" />
+                            </picture>
                         </Col>
                     </Row>
                 </Container>
             </section>
 
             <section id="what-resources">
-                <Container className={"py-lg-6 py-5"}>
-                    <h2 className={"mb-5 mb-lg-6"}>What are you looking for?</h2>
-                    <IsaacCardDeck doc={{
-                        cards: [{
-                            title: "GCSE computer science",
-                            subtitle: "Our GCSE computer science topics cover the secondary school phase of learning for students aged 14 to 16.",
-                            clickUrl: "/topics#gcse",
-                            buttonText: "View GCSE resources",
-                            imageClassName: "backslash-1"
-                        }, {
-                            title: "A level computer science",
-                            subtitle: "Our A level computer science topics cover the advanced secondary school phase of learning for students aged 16 to 19.",
-                            clickUrl: "/topics#a_level",
-                            buttonText: "View A level resources",
-                            imageClassName: "backslash-2"
-                        }]
-                    }} className={"homepage-cards"} />
+                <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
+                    <h2 className={"font-size-1-75 mb-5"}>What resources are you looking for?</h2>
+                    <IsaacCardDeck
+                        doc={{
+                            cards: [{
+                                title: "Core",
+                                subtitle: "Aimed at students aged 14-16, these resources cover core concepts in computer science for students working towards qualifications like GCSEs and National 5s.",
+                                imageClassName: "backslash-1"
+                            }, {
+                                title: "Advanced",
+                                subtitle: "Aimed at students aged 16-19, these resources cover advanced concepts. They are useful for students studying for A levels and Advanced Placement courses, and those heading towards further education.",
+                                imageClassName: "backslash-2"
+                            }]
+                        }}
+                        className={"homepage-cards"}
+                        containerClassName={"mw-1600"}
+                    />
+                    <Col xs={12} sm={{size: 8, offset: 2}} md={{size: 6, offset: 3}} lg={{size: 4, offset: 4}} className="d-flex justify-content-center">
+                        <Button className="w-100" tag={Link} to="/topics" color="primary" outline>Explore all resources</Button>
+                    </Col>
                 </Container>
             </section>
 
             <section id="computer-science-stories">
-                <Container className={"py-lg-6 py-5"}>
+                <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
                     <Row>
-                        <Col xs={12} md={6} id={"cs-stories-text"}>
-                            <h2 className={"mb-4"}>Computer Science Stories</h2>
+                        <Col xs={12} lg={6} id={"cs-stories-text"}>
+                            <h2 className={"font-size-1-75 mb-4"}>Computer science stories</h2>
                             <p className={"mb-4"}>
-                                Ada Lovelace was a true pioneer who is a celebrated figure in the history of computer science.
-                                Inspiring professionals, passionate educators, and young graduates are shaping the field of computer science today.
-                                We share some of their stories.
+                                Discover our monthly interview series and learn from passionate educators within the
+                                Ada community, and recently-graduated computer scientists who are doing AMAZING things
+                                in a huge range of computing-related fields!
                             </p>
-                            <Button tag={Link} to="/pages/computer_science_stories" color="primary">Discover stories</Button>
+                            <Button tag={Link} to="/pages/computer_science_stories" color="primary">Read their stories</Button>
                         </Col>
                     </Row>
                 </Container>
             </section>
 
             {news && news.length > 0 && <section id="news">
-                <Container className={"py-lg-6 py-5"}>
-                    <h2 className={"mb-4 mb-lg-5"}>News</h2>
+                <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
+                    <h2 className={"font-size-1-75 mb-4"}>News</h2>
                     <CardDeck data-testid={"news-pod-deck"} className={"justify-content-center"}>
                         {news.slice(0, 4).map(n => <NewsCard newsItem={n} showTitle />)}
                     </CardDeck>

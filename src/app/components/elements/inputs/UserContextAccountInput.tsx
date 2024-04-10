@@ -12,7 +12,8 @@ import {
     isTutorOrAbove,
     siteSpecific,
     STAGE,
-    TEACHER_REQUEST_ROUTE
+    TEACHER_REQUEST_ROUTE,
+    validateUserContexts
 } from "../../../services";
 import {Button, Col, CustomInput, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
 import {UserContext} from "../../../../IsaacApiTypes";
@@ -52,9 +53,10 @@ function UserContextRow({
         }
         // Set exam board to something sensible (for CS)
         const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
-        const examBoard = getFilteredExamBoardOptions(
+        const possibleExamBoards = getFilteredExamBoardOptions(
             {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
-        })[0]?.value || EXAM_BOARD.ALL;
+            }) || [EXAM_BOARD.ALL];
+        const examBoard = possibleExamBoards.map(e => e.value).includes(userContext.examBoard as EXAM_BOARD) && userContext.examBoard || possibleExamBoards[0].value;
         setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
 
         // Set display settings default values
@@ -75,7 +77,7 @@ function UserContextRow({
             <StyledDropdown
                 className={classNames("account-dropdown", {"mr-1" : isAda})}
                 aria-label="Stage"
-                invalid={required && submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
+                invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
                 onChange={onStageUpdate}
                 value={userContext.stage}
             >
@@ -92,7 +94,7 @@ function UserContextRow({
             {isAda && <StyledDropdown
                 className="account-dropdown ml-1"
                 aria-label="Exam Board"
-                invalid={required && submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
+                invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
                 onChange={onExamBoardUpdate}
                 value={userContext.examBoard}
             >
@@ -115,7 +117,7 @@ function UserContextRow({
                 </button>}
             </div>
 
-            {!isAda && showPlusOption && <Label className="m-0 mt-1">
+            {!isAda && showPlusOption && validateUserContexts(userContexts) && <Label className="m-0 mt-1">
                 <button
                     type="button" aria-label="Add stage"
                     className={`ml-3 align-middle close float-none pointer-cursor`}
@@ -191,7 +193,9 @@ export function UserContextAccountInput({
                     {isAda && index === userContexts.length - 1 && <>
                         {tutorOrAbove &&
                             <Col lg={6} className="p-0 pr-4 pr-lg-0">
-                                <Button color="primary" outline className="mt-3 mb-2 px-2 w-100" onClick={() => setUserContexts([...userContexts, {}])}>
+                                <Button color="primary" outline className="mt-3 mb-2 px-2 w-100"
+                                        onClick={() => setUserContexts([...userContexts, {}])}
+                                        disabled={!validateUserContexts(userContexts)}>
                                     Add more content
                                 </Button>
                             </Col>}
@@ -203,12 +207,6 @@ export function UserContextAccountInput({
                             />
                             <span>Show content that is not for my selected qualification(s).</span>
                         </Label>}
-                    </>}
-
-                    {!tutorOrAbove && <><br/>
-                        <small>
-                            If you are a teacher or tutor, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one {isAda && "exam board and "}stage.
-                        </small>
                     </>}
                 </FormGroup>;
             })}

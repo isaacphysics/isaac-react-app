@@ -58,7 +58,7 @@ elif [ "$SITE" == "phy" ]; then
   CONTENT_REPO="rutherford-content"
 fi
 
-docker-compose -p dc-$APP_NAME -f - $@ << EOF
+docker-compose -p dc-${APP_NAME//./-} -f - $@ << EOF
 version: '2'
 services:
   $APP_NAME:

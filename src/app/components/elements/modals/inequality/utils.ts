@@ -157,7 +157,7 @@ export function generateMathsDifferentialItem(parsedDifferential: string[]): Men
     const nameToLetterMap: { [name: string]: string } = {"delta":"δ","Delta":"∆","d":"d"};
     const nameToLatexMap: { [name: string]: string } = {"delta":"\\delta","Delta":"\\Delta","d":"d"};
     const differentialType: string = parsedDifferential[1];
-    const differentialOrder = parsedDifferential[2] || 0;
+    const differentialOrder: number = parseInt(parsedDifferential[2]) || 0;
     const differentialArgument = parsedDifferential[3] || null;
     const differentialLetter = nameToLetterMap[differentialType] || "?";
     const differentialLatex = "\\mathrm{" + ( nameToLatexMap[differentialType] || "?" ) + "}";

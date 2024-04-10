@@ -63,7 +63,7 @@ class GameboardBuilderQuestionsStack {
         this.selectedQuestionsStack = props.selectedQuestionsStack;
         this.setSelectedQuestionsStack = props.setSelectedQuestionsStack;
     }
-    
+
     public push({questionOrder, selectedQuestions} : {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>}) {
         if (this.questionOrderStack.length >= GAMEBOARD_UNDO_STACK_SIZE_LIMIT) {
             this.setSelectedQuestionsStack(p => p.slice(1));
@@ -199,15 +199,15 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     };
 
     const undoStack : GameboardBuilderQuestionsStackProps = new GameboardBuilderQuestionsStack({
-        questionOrderStack: previousQuestionOrderStack, 
-        setQuestionOrderStack: setPreviousQuestionOrderStack, 
+        questionOrderStack: previousQuestionOrderStack,
+        setQuestionOrderStack: setPreviousQuestionOrderStack,
         selectedQuestionsStack: previousSelectedQuestionsStack,
         setSelectedQuestionsStack: setPreviousSelectedQuestionsStack
     });
     const currentQuestions = {questionOrder, setQuestionOrder, selectedQuestions, setSelectedQuestions};
     const redoStack : GameboardBuilderQuestionsStackProps = new GameboardBuilderQuestionsStack({
-        questionOrderStack: redoQuestionOrderStack, 
-        setQuestionOrderStack: setRedoQuestionOrderStack, 
+        questionOrderStack: redoQuestionOrderStack,
+        setQuestionOrderStack: setRedoQuestionOrderStack,
         selectedQuestionsStack: redoSelectedQuestionsStack,
         setSelectedQuestionsStack: setRedoSelectedQuestionsStack
     });
@@ -279,9 +279,9 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     </Col>
                 </Row>}
 
-                <div className="mt-4 responsive">
+                <div className="my-4 responsive">
                     <DragDropContext onDragEnd={reorder}>
-                        <Table bordered>
+                        <Table bordered className="m-0">
                             <thead>
                             <tr>
                                 <th className="w-5"/>
@@ -314,73 +314,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                 </Draggable>;
                                         })}
                                         {provided.placeholder}
-                                        <tr>
+                                        {selectedQuestions?.size === 0 && <tr>
                                             <td colSpan={20}>
-                                                <div className="img-center">
-                                                    <div className="row w-100 justify-content-center">
-                                                        <div className={`${undoStack.length > 0 ? 'pl-1 pb-1' : ''} p-0 col-auto col-md-3 d-flex justify-content-center justify-content-md-start`}>
-                                                            {undoStack.length > 0 && <Button
-                                                                className="btn-sm mb-1 mb-md-1 mt-md-1"
-                                                                color="primary" outline
-                                                                onClick={() => {
-                                                                    const newQuestion = undoStack.pop();
-                                                                    redoStack.push(currentQuestions);
-                                                                    currentQuestions.setQuestionOrder(newQuestion.questionOrder);
-                                                                    currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
-                                                                }}
-                                                            >
-                                                                Undo
-                                                            </Button>}
-                                                        </div>
-                                                        <div className="col-md-6 d-flex justify-content-center order-2 order-md-1" >
-                                                            <ShowLoading
-                                                                placeholder={<div className="text-center"><IsaacSpinner/></div>}
-                                                                until={!baseGameboardId || baseGameboard}
-                                                            >
-                                                                <Button
-                                                                    className="plus-button"
-                                                                    color="primary" outline
-                                                                    onClick={() => {
-                                                                        logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                                                        dispatch(openActiveModal({
-                                                                            closeAction: () => {
-                                                                                dispatch(closeActiveModal())
-                                                                            },
-                                                                            closeLabelOverride: "Cancel",
-                                                                            size: "xl",
-                                                                            title: "Search questions",
-                                                                            body: <QuestionSearchModal
-                                                                                currentQuestions={currentQuestions}
-                                                                                undoStack={undoStack}
-                                                                                redoStack={redoStack}
-                                                                                eventLog={eventLog}
-                                                                            />
-                                                                        }));
-                                                                    }}
-                                                                >
-                                                                    {siteSpecific("Add Questions", "Add questions")}
-                                                                    {isAda && <img className={"plus-icon"} src={"/assets/cs/icons/add-circle-outline-pink.svg"}/>}
-                                                                </Button>
-                                                            </ShowLoading>
-                                                        </div>
-                                                        <div className={`${redoStack.length > 0 ? 'pl-1 pb-1' : ''} p-0 col-auto col-md-3 d-flex justify-content-center justify-content-md-end order-1 order-md-2`}>
-                                                            {redoStack.length > 0 && <Button
-                                                                className="btn-sm mb-1 mb-md-1 mt-md-1"
-                                                                color="primary" outline
-                                                                onClick={() => {
-                                                                    const newQuestion = redoStack.pop();
-                                                                    undoStack.push(currentQuestions);
-                                                                    currentQuestions.setQuestionOrder(newQuestion.questionOrder);
-                                                                    currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
-                                                                }}
-                                                            >
-                                                                Redo
-                                                            </Button>}
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </td>
-                                        </tr>
+                                        </tr>}
                                         </tbody>
                                     );
                                 }}
@@ -389,66 +326,129 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     </DragDropContext>
                 </div>
 
-                <div className="text-center">
-                    <Button
-                        id="gameboard-save-button" disabled={!canSubmit} color="secondary"
-                        className="mt-2" aria-describedby="gameboard-help"
-                        onClick={() => {
-                            // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
-                            let wildcard = undefined;
-                            if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
-                                wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
-                            }
-
-                            let subjects = [];
-
-                            if (isAda) {
-                                subjects.push("computer_science");
-                            } else {
-                                const definedSubjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
-                                selectedQuestions?.forEach((item) => {
-                                    const tags = intersection(definedSubjects, item.tags || []);
-                                    tags.forEach((tag: string) => subjects.push(tag));
-                                });
-                                // If none of the questions have a subject tag, default to physics
-                                if (subjects.length === 0) {
-                                    subjects.push(TAG_ID.physics);
+                <Row className="justify-content-center">
+                    <Col className="col-auto col-md-2 order-1 d-flex justify-content-center">
+                        {undoStack.length > 0 && <Button
+                            className="btn-sm my-2"
+                            color="primary" outline
+                            onClick={() => {
+                                const newQuestion = undoStack.pop();
+                                redoStack.push(currentQuestions);
+                                currentQuestions.setQuestionOrder(newQuestion.questionOrder);
+                                currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
+                            }}
+                        >
+                            Undo
+                        </Button>}
+                    </Col>
+                    <Col className="col-auto col-md-2 order-2 order-md-4 d-flex justify-content-center">
+                        {redoStack.length > 0 && <Button
+                            className="btn-sm my-2"
+                            color="primary" outline
+                            onClick={() => {
+                                const newQuestion = redoStack.pop();
+                                undoStack.push(currentQuestions);
+                                currentQuestions.setQuestionOrder(newQuestion.questionOrder);
+                                currentQuestions.setSelectedQuestions(newQuestion.selectedQuestions);
+                            }}
+                        >
+                            Redo
+                        </Button>}
+                    </Col>
+                    <div className="w-100 d-md-none"></div>
+                    {/* Main two centre buttons: */}
+                    <Col className="col-12 col-md-4 order-3 order-md-2 d-flex justify-content-center justify-content-md-end">
+                        <ShowLoading
+                            placeholder={<div className="text-center"><IsaacSpinner/></div>}
+                            until={!baseGameboardId || baseGameboard}
+                        >
+                            <Button
+                                className="plus-button"
+                                color="primary" outline
+                                onClick={() => {
+                                    logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
+                                    dispatch(openActiveModal({
+                                        closeAction: () => {
+                                            dispatch(closeActiveModal())
+                                        },
+                                        closeLabelOverride: "Cancel",
+                                        size: "xl",
+                                        title: "Search questions",
+                                        body: <QuestionSearchModal
+                                            currentQuestions={currentQuestions}
+                                            undoStack={undoStack}
+                                            redoStack={redoStack}
+                                            eventLog={eventLog}
+                                        />
+                                    }));
+                                }}
+                            >
+                                {siteSpecific("Add Questions", "Add questions")}
+                                {isAda && <img className={"plus-icon"} src={"/assets/cs/icons/add-circle-outline-pink.svg"} alt="" />}
+                            </Button>
+                        </ShowLoading>
+                    </Col>
+                    <Col className="col-12 col-md-4 order-4 order-md-3 d-flex justify-content-center justify-content-md-start">
+                        <Button
+                            id="gameboard-save-button" disabled={!canSubmit} color="secondary"
+                            aria-describedby="gameboard-help"
+                            onClick={() => {
+                                // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
+                                let wildcard = undefined;
+                                if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
+                                    wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                                 }
-                                subjects = Array.from(new Set(subjects));
-                            }
 
-                            createGameboard({
-                                gameboard: {
-                                    id: gameboardURL,
-                                    title: gameboardTitle,
-                                    contents: questionOrder.map((questionId) => {
-                                        const question = selectedQuestions.get(questionId);
-                                        return question && convertContentSummaryToGameboardItem(question);
-                                    }).filter((question) => question !== undefined) as GameboardItem[],
-                                    wildCard: wildcard,
-                                    wildCardPosition: 0,
-                                    gameFilter: {subjects: subjects},
-                                    tags: gameboardTags.map(getValue)
-                                },
-                                previousId: baseGameboardId
-                            }).then(gameboardOrError => {
-                                const error = 'error' in gameboardOrError ? gameboardOrError.error : undefined;
-                                const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
-                                dispatch(openActiveModal({
-                                    closeAction: () => dispatch(closeActiveModal()),
-                                    title: `${siteSpecific("Gameboard", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
-                                    body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
-                                }));
-                            });
+                                let subjects = [];
 
-                            logEvent(eventLog, "SAVE_GAMEBOARD", {});
-                            dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
-                        }}
-                    >
-                        {isWaitingForCreateGameboard ?
-                            <Spinner size={"md"}/> : siteSpecific("Save Gameboard", "Save quiz")}
-                    </Button>
-                </div>
+                                if (isAda) {
+                                    subjects.push("computer_science");
+                                } else {
+                                    const definedSubjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
+                                    selectedQuestions?.forEach((item) => {
+                                        const tags = intersection(definedSubjects, item.tags || []);
+                                        tags.forEach((tag: string) => subjects.push(tag));
+                                    });
+                                    // If none of the questions have a subject tag, default to physics
+                                    if (subjects.length === 0) {
+                                        subjects.push(TAG_ID.physics);
+                                    }
+                                    subjects = Array.from(new Set(subjects));
+                                }
+
+                                createGameboard({
+                                    gameboard: {
+                                        id: gameboardURL,
+                                        title: gameboardTitle,
+                                        contents: questionOrder.map((questionId) => {
+                                            const question = selectedQuestions.get(questionId);
+                                            return question && convertContentSummaryToGameboardItem(question);
+                                        }).filter((question) => question !== undefined) as GameboardItem[],
+                                        wildCard: wildcard,
+                                        wildCardPosition: 0,
+                                        gameFilter: {subjects: subjects},
+                                        tags: gameboardTags.map(getValue)
+                                    },
+                                    previousId: baseGameboardId
+                                }).then(gameboardOrError => {
+                                    const error = 'error' in gameboardOrError ? gameboardOrError.error : undefined;
+                                    const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
+                                    dispatch(openActiveModal({
+                                        closeAction: () => dispatch(closeActiveModal()),
+                                        title: `${siteSpecific("Gameboard", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
+                                        body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
+                                    }));
+                                });
+
+                                logEvent(eventLog, "SAVE_GAMEBOARD", {});
+                                dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
+                            }}
+                        >
+                            {isWaitingForCreateGameboard ?
+                                <Spinner size={"md"}/> : siteSpecific("Save Gameboard", "Save quiz")}
+                        </Button>
+                    </Col>
+                </Row>
 
                 {!canSubmit && <div
                     id="gameboard-help" color="light"

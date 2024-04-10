@@ -56,8 +56,9 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
     );
 };
 
-export function validateUserContexts(userContexts?: UserContext[]): boolean {
+export function validateUserContexts(userContexts?: UserContext[], defaultIsValid=false): boolean {
     if (userContexts === undefined) {return false;}
+    if (defaultIsValid && userContexts.length === 1 && Object.keys(userContexts[0]).length === 0) {return true;}
     if (userContexts.length === 0) {return false;}
     return userContexts.every(uc =>
         Object.values(STAGE).includes(uc.stage as STAGE) && //valid stage
@@ -103,8 +104,9 @@ export const withinLast2Hours = withinLastNMinutes.bind(null, 120);
 
 export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser> | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
     return user && userPreferences && validateName(user.givenName) && validateName(user.familyName)
+        && validateUserContexts(userContexts, isAda)
         && (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE))
-        && ((isPhy && validateUserContexts(userContexts)) || (isAda && (!isTeacherOrAbove(user) || validateUserSchool(user))))
+        && (isPhy || (!isTeacherOrAbove(user) || validateUserSchool(user)))
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: Immutable<UserSummaryWithEmailAddressDTO>, additionalInformation: AdditionalInformation) {

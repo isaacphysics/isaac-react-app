@@ -13,7 +13,7 @@ export const sortQuestions = (sortState: {[s: string]: string}, creationContext?
             const firstDifficultyA = determineAudienceViews(a.audience, creationContext)[0]?.difficulty;
             const firstDifficultyB = determineAudienceViews(b.audience, creationContext)[0]?.difficulty;
             if (firstDifficultyA === firstDifficultyB) return 0;
-            const aIndex = difficultiesOrdered.indexOf(firstDifficultyA as Difficulty)
+            const aIndex = difficultiesOrdered.indexOf(firstDifficultyA as Difficulty);
             const bIndex = difficultiesOrdered.indexOf(firstDifficultyB as Difficulty);
             return (sortState.difficulty === SortOrder.ASC && aIndex > bIndex) ? 1 : -1;
         });
@@ -47,7 +47,7 @@ export const convertTagToSelectionOption = (tag: Tag) => {
         label: `${tag.title}${tag.comingSoonDate ? ` (Coming ${tag.comingSoonDate})`: ""}`,
         isDisabled: !!tag.comingSoonDate,
         isHidden: !!tag.hidden,
-    }
+    };
 };
 
 export const groupTagSelectionsByParent = (parent: Tag) => {
@@ -75,5 +75,5 @@ export const logEvent = (eventsLog: any[], event: string, params: any) => {
         event,
         timestamp: new Date().getTime(),
         ...params
-    })
+    });
 };

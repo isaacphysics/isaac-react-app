@@ -5,7 +5,7 @@ import {Col, Container, Row} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, isAda, isPhy, useNavigation} from "../../services";
+import {DOCUMENT_TYPE, above, below, isAda, isPhy, useDeviceSize, useNavigation} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -29,12 +29,26 @@ interface ConceptPageProps {
     location: {search: string};
     preview?: boolean;
 }
+
 export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride, preview}: ConceptPageProps) => {
     const dispatch = useAppDispatch();
     const conceptId = conceptIdOverride || params.conceptId;
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
     const doc = useAppSelector((state: AppState) => state?.doc || null);
     const navigation = useNavigation(doc);
+    const deviceSize = useDeviceSize();
+
+    const ManageButtons = () => <div className="no-print d-flex justify-content-end mt-1 ml-2">
+        <div className="question-actions">
+            <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
+            </div>
+            <div className="question-actions not-mobile">
+            <PrintButton />
+            </div>
+            <div className="question-actions">
+            <ReportButton pageId={conceptId}/>
+        </div>
+    </div>;
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
@@ -51,20 +65,13 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     <MetaDescription description={doc.summary} />
                     <CanonicalHrefElement />
                 </>}
-                <div className="no-print d-flex align-items-center">
-                    <EditContentButton doc={doc} />
-                    <div className="mt-3 mr-sm-1 ml-auto">
-                        <UserContextPicker className="no-print text-right" />
-                    </div>
-                    <div className="question-actions">
-                        <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
-                    </div>
-                    <div className="question-actions not-mobile">
-                        <PrintButton />
-                    </div>
-                    <div className="question-actions">
-                        <ReportButton pageId={conceptId}/>
-                    </div>
+                <EditContentButton doc={doc} />
+
+                {below["sm"](deviceSize) && <ManageButtons />}
+
+                <div className="d-flex align-items-center mr-sm-1 flex-grow-1">
+                    <UserContextPicker />
+                    {above["md"](deviceSize) && <ManageButtons />}
                 </div>
 
                 <Row className="concept-content-container">

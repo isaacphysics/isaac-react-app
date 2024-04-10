@@ -4,36 +4,31 @@ import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {siteSpecific} from "../../services";
 
-const PhyNotFound = () => {
-    const {pathname, state} = useLocation<{overridePathname?: string}>();
-    return <Container>
-        <div>
-            <TitleAndBreadcrumb breadcrumbTitleOverride="Unknown page" currentPageTitle="Page not found" />
-            <h3 className="my-4">
-                <small>
-                    {"We're sorry, page not found: "}
-                    <code>
-                        {(state && state.overridePathname) || pathname}
-                    </code>
-                </small>
-            </h3>
-        </div>
-    </Container>;
+const buildContactUrl = (state: {overridePathname?: string}, pathname: string) => {
+    const page = encodeURIComponent((state && state.overridePathname) || pathname);
+    return `/contact?preset=notFound&page=${page}`;
 };
 
-const CSNotFound = () => {
+export const NotFound = () => {
     const {pathname, state} = useLocation<{overridePathname?: string}>();
     return <Container>
         <div>
-            <TitleAndBreadcrumb breadcrumbTitleOverride="404" currentPageTitle="Page not found" />
+            <TitleAndBreadcrumb
+                breadcrumbTitleOverride={siteSpecific("Unknown page", "404")}
+                currentPageTitle="Page not found"
+            />
             <p className="my-4">
                 {"We're sorry, page not found: "}
                 <code>
                     {(state && state.overridePathname) || pathname}
                 </code>
             </p>
+            <p>
+                Expecting to find something here?
+                <a className="pl-1" href={buildContactUrl(state, pathname)} >
+                    Let us know <span className="sr-only">about this missing page</span>
+                </a>.
+            </p>
         </div>
     </Container>;
 };
-
-export const NotFound = siteSpecific(PhyNotFound, CSNotFound);

@@ -37,24 +37,26 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
     let presetMessage = "";
     let presetPlaceholder = "";
 
-    if (urlQuery?.preset == "teacherRequest" && user?.loggedIn && !isTeacherOrAbove(user)) {
+    if (urlQuery?.preset === "teacherRequest" && user?.loggedIn && !isTeacherOrAbove(user)) {
         presetSubject = "Teacher Account Request";
         presetMessage = `Hello,\n\nPlease could you convert my ${SITE_TITLE} account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n` + user.givenName + " " + user.familyName;
-    } else if (urlQuery?.preset == 'accountDeletion' && user?.loggedIn) {
+    } else if (urlQuery?.preset === 'accountDeletion' && user?.loggedIn) {
         presetSubject = "Account Deletion Request";
         presetMessage = `Hello,\n\nPlease could you delete my ${SITE_TITLE} account.\n\nThanks, \n\n` + user.givenName + " " + user.familyName;
-    } else if (urlQuery?.preset == 'contentProblem') {
+    } else if (urlQuery?.preset === 'contentProblem') {
         presetSubject = "Content problem";
         presetPlaceholder = "Please describe the problem here."
         if (urlQuery?.accordion) {
             presetSubject += ` in "${urlQuery.accordion}"`
-        }
-        else if (urlQuery?.page) {
+        } else if (urlQuery?.page) {
             presetSubject += ` in "${urlQuery.page}"`
         }
         if (urlQuery?.section != null) {
             presetSubject += `, section "${urlQuery.section}"`
         }
+    } else if (urlQuery?.preset === 'notFound') {
+        presetSubject = "Page not found";
+        presetMessage = `Page: "${urlQuery?.page}"\n\n[Add any details about how you found this missing page here.]`;
     }
     return [
         urlQuery.subject as string || presetSubject,

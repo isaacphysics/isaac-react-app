@@ -2,6 +2,7 @@ import React from "react";
 import * as RS from "reactstrap";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {
+    above,
     audienceStyle,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
@@ -9,7 +10,9 @@ import {
     isIntendedAudience,
     makeIntendedAudienceComparator,
     notRelevantMessage,
+    siteSpecific,
     stringifyAudience,
+    useDeviceSize,
     useUserContext
 } from "../../../services";
 import {Link} from "react-router-dom";
@@ -20,6 +23,7 @@ import {Markup} from "../markup";
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
     const userContext = useUserContext();
     const user = useAppSelector(selectors.user.orNull);
+    const deviceSize = useDeviceSize();
 
     return <RS.ListGroup className="mt-4 link-list list-group-links">
         {items
@@ -40,29 +44,37 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
             .filter(item => !item.hidden)
 
             // Render remaining items
-            .map((item, index) => <RS.ListGroupItem key={item.id} className="topic-summary-link">
-                <RS.Button
-                    tag={Link} to={{pathname: `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`, search}}
-                    block color="link" className={"d-flex align-items-stretch " + classNames({"de-emphasised": item.deEmphasised})}
-                >
-                    <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(stringifyAudience(item.audience, userContext))]: isAda})}>
-                        {stringifyAudience(item.audience, userContext)}
-                    </div>
-                    <div className="title pl-3 d-flex">
-                        <div className="p-3">
-                            <Markup encoding={"latex"}>
-                                {item.title}
-                            </Markup>
+            .map((item, index) => {
+                const audienceString = stringifyAudience(item.audience, userContext);
+                return <RS.ListGroupItem key={item.id} className="topic-summary-link">
+                    <RS.Button
+                        tag={Link} to={{pathname: `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`, search}}
+                        block color="link" className={"d-flex align-items-stretch " + classNames({"de-emphasised": item.deEmphasised})}
+                    >
+                        <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
+                            {siteSpecific(
+                            audienceString, 
+                            (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
+                                {line}{i < arr.length && <br/>}
+                            </>)
+                        )}
                         </div>
-                        {item.deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
-                            <span id={`audience-help-${index}`} className="icon-help mx-1" />
-                            <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${index}`}>
-                                {`This content has ${notRelevantMessage(userContext)}.`}
-                            </RS.UncontrolledTooltip>
-                        </div>}
-                    </div>
-                </RS.Button>
-            </RS.ListGroupItem>)
+                        <div className="title pl-3 d-flex">
+                            <div className="p-3">
+                                <Markup encoding={"latex"}>
+                                    {item.title}
+                                </Markup>
+                            </div>
+                            {item.deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
+                                <span id={`audience-help-${index}`} className="icon-help mx-1" />
+                                <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${index}`}>
+                                    {`This content has ${notRelevantMessage(userContext)}.`}
+                                </RS.UncontrolledTooltip>
+                            </div>}
+                        </div>
+                    </RS.Button>
+                </RS.ListGroupItem>;
+            })
         }
     </RS.ListGroup>;
 }

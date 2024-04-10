@@ -46,10 +46,15 @@
 
     .stage-label {
       font-family: $secondary-font;
-      padding: 1rem;
+      padding: 0.3rem;
       min-width: 130px;
       max-width: 130px;
       text-align: center;
+
+      @include respond-below(xs) {
+        min-width: 105px;
+        max-width: 105px;
+      }
     }
 
     &:hover {

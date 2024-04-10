@@ -62,7 +62,10 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const [searchChoice, setSearchChoice] = useState(defaultSearchChoiceTag.id);
     const [stageChoices, setStageChoices] = useState<Item<STAGE>[]>([{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}]);
 
-    const isAllZero = (arr: (string | number)[][]) => arr.filter((elem) => elem[1] > 0).length == 0;
+    const isAllZero = (arr: (string | number)[][]) =>
+        arr.filter((elem) =>
+                   typeof(elem[1]) === "number" ? elem[1] : parseInt(elem[1]) > 0
+                  ).length == 0;
     const categoryColumns = tags.getSpecifiedTags(topTagLevel, tags.allTagIds).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const topicColumns = tags.getDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const difficultyColumns = stageChoices && questionsByStageAndDifficulty[stageChoices[0].value] ?

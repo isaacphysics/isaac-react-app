@@ -30,7 +30,7 @@ function augmentQuestions(questions: AppQuestionDTO[]): QuestionsState {
     return {
         questions,
         pageCompleted: questions.every(q => q.validationResponse && q.validationResponse.correct)
-    }
+    };
 }
 export const questions = (qs: QuestionsState = null, action: Action) => {
     switch (action.type) {

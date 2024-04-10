@@ -3,7 +3,7 @@ import {Alert, Button, Col, Row} from "reactstrap";
 import {ContentDTO, IsaacQuickQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {logAction, useAppDispatch} from "../../state";
-import {determineFastTrackSecondaryAction, isAda, useFastTrackInformation} from "../../services";
+import {determineFastTrackSecondaryAction, isAda, siteSpecific, useFastTrackInformation} from "../../services";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import classNames from "classnames";
 import {useLocation} from "react-router-dom";
@@ -38,7 +38,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
 
     function DefaultOptions() {
         return <Row>
-            <Col sm="12" md={{size: 10, offset: 1}}>
+            <Col sm={12} md={siteSpecific({size: 10, offset: 1}, {size: 12})}>
                 <Button color="secondary" block className={classNames({"active": isVisible})} onClick={toggle}>
                     {isVisible ? "Hide answer" : "Show answer"}
                 </Button>
@@ -73,7 +73,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
                                  disableInitialState={confidenceDisabled}
                                  identifier={doc.id} type={"quick_question"} />
             {isVisible && <Row className="mt-3 no-print">
-                <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
+                <Col sm={12} md={!fastTrackInfo.isFastTrackPage ? siteSpecific({size: 10, offset: 1}, {size: 12}) : {}}>
                     <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isAda})} onClick={hideAnswer}>
                         Hide answer
                     </Button>
@@ -83,10 +83,10 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     }
 
     // Select which one of the 3 above options styles we need
-    const Options = fastTrackInfo.isFastTrackPage ? FastTrackOptions : (recordConfidence ? ConfidenceOptions : DefaultOptions)
+    const Options = fastTrackInfo.isFastTrackPage ? FastTrackOptions : (recordConfidence ? ConfidenceOptions : DefaultOptions);
 
     return <form onSubmit={e => e.preventDefault()}>
-        <div className="question-component p-md-5">
+        <div className={`question-component ${siteSpecific("p-md-5", "p-md-4")}`}>
             <div className={classNames({"quick-question": !fastTrackInfo.isFastTrackPage})}>
                 {isAda &&
                     <div className="quick-question-title">
@@ -98,7 +98,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
                 </div>
                 {<Options/>}
                 {isVisible && <Row>
-                    <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
+                    <Col sm={12} md={!fastTrackInfo.isFastTrackPage ? siteSpecific({size: 10, offset: 1}, {size: 12}) : {}}>
                         <Alert className={"quick-q-alert"} color={isAda ? "hide" : "secondary"}>
                             <IsaacContentValueOrChildren {...answer} />
                         </Alert>
