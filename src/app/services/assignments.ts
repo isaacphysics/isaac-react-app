@@ -10,11 +10,6 @@ export function getAssignmentCSVDownloadLink(assignmentId: number) {
     return `${API_PATH}/assignments/assign/${assignmentId}/progress/download`;
 }
 
-function allQuestionsAttempted(assignment: AssignmentDTO) {
-    // questionPartsTotal will be 0 for the case when we someday include concepts in gameboards.
-    return assignment?.gameboard?.contents?.every(c => c.questionPartsTotal === 0 || c.questionPartsNotAttempted === 0);
-}
-
 function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO & {startDate: Date} {
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate as Date;
     return {...assignment, startDate: assignmentStartDate};

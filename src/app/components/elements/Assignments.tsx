@@ -3,7 +3,6 @@ import React, {useMemo, useState} from "react";
 import {Button, Col, Collapse, Label, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {
-    determineGameboardPercentageAttempted,
     determineGameboardStagesAndDifficulties,
     determineGameboardSubjects,
     difficultyShortLabelMap,
@@ -41,7 +40,6 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     const [showMore, setShowMore] = useState(false);
     const now = new Date();
     const boardStagesAndDifficulties = useMemo(() => determineGameboardStagesAndDifficulties(assignment.gameboard), [assignment.gameboard]);
-    const boardPercentageAttempted = useMemo(() => determineGameboardPercentageAttempted(assignment.gameboard), [assignment.gameboard]);
 
     const topics = tags.getTopicTags(Array.from((assignment.gameboard?.contents || []).reduce((a, c) => {
         if (isDefined(c.tags) && c.tags.length > 0) {
@@ -81,11 +79,11 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                             %&nbsp;Attempted
                             <div className="d-flex justify-content-center">
                                 <div className="board-subject-hexagon-container justify-content-center">
-                                    {isDefined(assignment.gameboard) && ((boardPercentageAttempted === 100) ?
+                                    {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageAttempted === 100) ?
                                         <span className="board-subject-hexagon subject-complete"/> :
                                         <>
                                             {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
-                                            <div className="board-percent-completed">{boardPercentageAttempted ?? 0}</div>
+                                            <div className="board-percent-completed">{assignment.gameboard.percentageAttempted ?? 0}</div>
                                         </>
                                     )}
                                 </div>
@@ -97,11 +95,11 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                             %&nbsp;Correct
                             <div className="d-flex justify-content-center">
                                 <div className="board-subject-hexagon-container justify-content-center">
-                                    {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageAttempted === 100) ?
+                                    {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCorrect === 100) ?
                                         <span className="board-subject-hexagon subject-complete"/> :
                                         <>
                                             {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
-                                            <div className="board-percent-completed">{assignment.gameboard.percentageAttempted ?? 0}</div>
+                                            <div className="board-percent-completed">{assignment.gameboard.percentageCorrect ?? 0}</div>
                                         </>
                                     )}
                                 </div>
@@ -157,7 +155,6 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
 };
 
 const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
-    const boardPercentageAttempted = useMemo(() => determineGameboardPercentageAttempted(assignment.gameboard), [assignment.gameboard]);
     const now = new Date();
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
     return <Row data-testid={"my-assignment"} className={"pt-3 mb-3 border-top"}>
@@ -177,10 +174,10 @@ const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
         <Col xs={4} sm={3} md={5} lg={4} >
             <Row className="justify-content-end">
                 <Col xs="auto d-none d-md-block" className={"text-center px-3"}>
-                    {assignment.gameboard && <CSCircle percentage={boardPercentageAttempted} label="%&nbsp;attempted"/>}
+                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageAttempted} label="%&nbsp;attempted"/>}
                 </Col>
                 <Col xs="auto" className={"text-center px-3"}>
-                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageAttempted} label="%&nbsp;correct"/>}
+                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageCorrect} label="%&nbsp;correct"/>}
                 </Col>
             </Row>
         </Col>
