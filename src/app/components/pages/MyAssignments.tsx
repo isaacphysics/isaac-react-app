@@ -53,11 +53,11 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                         const myAssignments = filterAssignmentsByStatus(assignments);
 
                         const assignmentByStates: Record<AssignmentState, AssignmentDTO[]> = {
-                            "All": [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld, ...myAssignments.allAttempted, ...myAssignments.completed],
+                            "All": [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld, ...myAssignments.allAttempted, ...myAssignments.allCorrect],
                             "To do": myAssignments.inProgressRecent,
                             "Older": myAssignments.inProgressOld,
                             "All attempted": myAssignments.allAttempted,
-                            "All correct": myAssignments.completed
+                            "All correct": myAssignments.allCorrect
                         };
 
                         const filteredAssignments = filterAssignmentsByProperties(assignmentByStates[assignmentStateFilter], assignmentTitleFilter, assignmentGroupFilter, assignmentSetByFilter);

@@ -15,7 +15,7 @@ function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO
     return {...assignment, startDate: assignmentStartDate};
 }
 
-type AssignmentStatus = "inProgressRecent" | "inProgressOld" | "allAttempted" | "completed";
+type AssignmentStatus = "inProgressRecent" | "inProgressOld" | "allAttempted" | "allCorrect";
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {
     const now = new Date();
     const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));
@@ -27,31 +27,31 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
         inProgressRecent: [],
         inProgressOld: [],
         allAttempted: [],
-        completed: []
+        allCorrect: []
     };
 
     if (assignments) {
         assignments
         .map(createAssignmentWithStartDate)
         .forEach(assignment => {
-            if (assignment?.gameboard?.percentageAttempted === undefined || assignment.gameboard.percentageAttempted < 100) {
+            if (assignment.gameboard?.percentageCorrect !== 100) {
                 const noDueDateButRecent = !assignment.dueDate && (assignment.startDate > fourWeeksAgo);
                 const beforeDueDate = assignment.dueDate && (assignment.dueDate >= midnightLastNight);
                 if (beforeDueDate || noDueDateButRecent) {
                     myAssignments.inProgressRecent.push(assignment);
-                } else if (allQuestionsAttempted(assignment)) {
+                } else if (assignment.gameboard?.percentageAttempted === 100) {
                     myAssignments.allAttempted.push(assignment);
                 } else {
                     myAssignments.inProgressOld.push(assignment);
                 }
             } else {
-                myAssignments.completed.push(assignment);
+                myAssignments.allCorrect.push(assignment);
             }
         });
         myAssignments.inProgressRecent = orderBy(myAssignments.inProgressRecent, ["dueDate", "startDate"], ["asc", "desc"]);
         myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["startDate"], ["desc"]);
         myAssignments.allAttempted = orderBy(myAssignments.allAttempted, ["startDate"], ["desc"]);
-        myAssignments.completed = orderBy(myAssignments.completed, ["startDate"], ["desc"]);
+        myAssignments.allCorrect = orderBy(myAssignments.allCorrect, ["startDate"], ["desc"]);
     }
 
     return myAssignments;

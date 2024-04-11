@@ -280,21 +280,21 @@ describe("Assignment categorisation depending on status", () => {
         // Assert
         expect(result.allAttempted).toContainEqual(createAssignmentWithStartDate(assignmentWithAllQuestionsAttempted));
         expect(result.allAttempted.length).toBe(1);
-        expect(result.completed).toContainEqual(createAssignmentWithStartDate(assignmentWithAllQuestionsCorrect));
-        expect(result.completed.length).toBe(1);
+        expect(result.allCorrect).toContainEqual(createAssignmentWithStartDate(assignmentWithAllQuestionsCorrect));
+        expect(result.allCorrect.length).toBe(1);
         expect(result.inProgressOld).toContainEqual(createAssignmentWithStartDate(partiallyAttemptedAssignment));
         expect(result.inProgressOld.length).toBe(1);
     });
 
     it("Records an assignment as completed if all questions are correct even if due date is in the future", () => {
         // Arrange
-        const completedAssignment: AssignmentDTO = {...assignmentA, gameboard: {...assignmentA.gameboard, percentageAttempted: 100}, dueDate: tomorrow};
+        const completedAssignment: AssignmentDTO = {...assignmentA, gameboard: {...assignmentA.gameboard, percentageAttempted: 100, percentageCorrect: 100}, dueDate: tomorrow};
 
         // Act
         const result = filterAssignmentsByStatus([completedAssignment]);
 
         // Assert
-        expect(result.completed).toContainEqual(createAssignmentWithStartDate(completedAssignment));
+        expect(result.allCorrect).toContainEqual(createAssignmentWithStartDate(completedAssignment));
     });
 
     it("Sorts assignments 'to do' by due soonest then by assigned most recently", () => {
