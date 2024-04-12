@@ -27,32 +27,30 @@ const NotificationModalBody = (notification: { notification: any }) => {
   }
 
   return (
-    <React.Fragment>
-      <Col>
-        <Row className="justify-content-md-center mb-3">
-          <Col>
-            {currentNotification ? <IsaacContent doc={currentNotification} /> : "Would you like to complete a survey?"}
-          </Col>
-        </Row>
-        <Row className="mb-3">
-          <Col className="d-inline-flex p-2">
-            <Button color="secondary" block onClick={() => respond("ACKNOWLEDGED")}>
-              Yes, view questionnaire
-            </Button>
-          </Col>
-          <Col className="d-inline-flex p-2">
-            <Button color="secondary" block onClick={() => respond("DISABLED")}>
-              No thanks
-            </Button>
-          </Col>
-          <Col className="d-inline-flex p-2">
-            <Button color="secondary" block onClick={() => respond("POSTPONED")}>
-              Ask me later
-            </Button>
-          </Col>
-        </Row>
-      </Col>
-    </React.Fragment>
+    <Col>
+      <Row className="justify-content-md-center mb-3">
+        <Col>
+          {currentNotification ? <IsaacContent doc={currentNotification} /> : "Would you like to complete a survey?"}
+        </Col>
+      </Row>
+      <Row className="mb-3">
+        <Col className="d-inline-flex p-2">
+          <Button color="secondary" block onClick={() => respond("ACKNOWLEDGED")}>
+            Yes, view questionnaire
+          </Button>
+        </Col>
+        <Col className="d-inline-flex p-2">
+          <Button color="secondary" block onClick={() => respond("DISABLED")}>
+            No thanks
+          </Button>
+        </Col>
+        <Col className="d-inline-flex p-2">
+          <Button color="secondary" block onClick={() => respond("POSTPONED")}>
+            Ask me later
+          </Button>
+        </Col>
+      </Row>
+    </Col>
   );
 };
 

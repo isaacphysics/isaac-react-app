@@ -1,15 +1,15 @@
 import React from "react";
-import * as RS from "reactstrap";
 import * as AppTypes from "../../../../IsaacAppTypes";
 import { closeActiveModal, useAppDispatch } from "../../../state";
 import classNames from "classnames";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 interface ActiveModalProps {
   activeModal?: AppTypes.ActiveModal | null;
 }
 
 export const ActiveModal = ({ activeModal }: ActiveModalProps) => {
-  const ModalBody = activeModal && activeModal.body;
+  const ActiveModalBody = activeModal?.body;
   const dispatch = useAppDispatch();
 
   const toggle = () => {
@@ -17,17 +17,17 @@ export const ActiveModal = ({ activeModal }: ActiveModalProps) => {
   };
 
   return (
-    <RS.Modal
+    <Modal
       data-testid={"active-modal"}
       toggle={toggle}
       isOpen={true}
-      size={(activeModal && activeModal.size) || "lg"}
+      size={activeModal?.size ?? "lg"}
       centered={activeModal?.centered}
     >
       {activeModal && (
         <React.Fragment>
           {
-            <RS.ModalHeader
+            <ModalHeader
               data-testid={"modal-header"}
               className={classNames(
                 { "h-title pb-5 mb-4": !!activeModal.title },
@@ -37,15 +37,15 @@ export const ActiveModal = ({ activeModal }: ActiveModalProps) => {
               close={
                 activeModal.closeAction ? (
                   <button className="close" onClick={activeModal.closeAction}>
-                    {activeModal?.closeLabelOverride || "Close"}
+                    {activeModal?.closeLabelOverride ?? "Close"}
                   </button>
                 ) : null
               }
             >
               {activeModal.title}
-            </RS.ModalHeader>
+            </ModalHeader>
           }
-          <RS.ModalBody
+          <ModalBody
             className={classNames({
               "pt-0": !activeModal.title,
               "pb-2 mx-4": !activeModal?.noPadding,
@@ -53,13 +53,13 @@ export const ActiveModal = ({ activeModal }: ActiveModalProps) => {
               "overflow-visible": activeModal?.overflowVisible,
             })}
           >
-            {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
-          </RS.ModalBody>
+            {typeof ActiveModalBody === "function" ? <ActiveModalBody /> : ActiveModalBody}
+          </ModalBody>
           {activeModal.buttons && (
-            <RS.ModalFooter className="mb-4 mx-2 align-self-center">{activeModal.buttons}</RS.ModalFooter>
+            <ModalFooter className="mb-4 mx-2 align-self-center">{activeModal.buttons}</ModalFooter>
           )}
         </React.Fragment>
       )}
-    </RS.Modal>
+    </Modal>
   );
 };
