@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     useGetAttemptedFreelyByMeQuery,
     useGetQuizAssignmentsAssignedToMeQuery
 } from "../../../state";
-import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import {Link, RouteComponentProps, useHistory, useLocation, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -140,19 +140,37 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         switch (user.role) {
             case "STUDENT":
             // Tutors should see the same tests as students can
+            // eslint-disable-next-line no-fallthrough
             case "TUTOR":
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents;
             case "TEACHER":
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true;
             default:
-                return true
+                return true;
         }
     };
+
+    const tabAnchors = ["#in-progress", "#completed", "#practice"];
+
+    const anchorMap = tabAnchors.reduce((acc, anchor, index) => 
+        ({...acc, [anchor]: index + 1}), {} as Record<string, number>
+    );
+
+    const history = useHistory();
+    const [tabOverride, setTabOverride] = useState<number | undefined>(anchorMap[location.hash as keyof typeof anchorMap]);
+
+    useEffect(() => {
+        if (location.hash && anchorMap[location.hash as keyof typeof anchorMap]) {
+            setTabOverride(anchorMap[location.hash as keyof typeof anchorMap]);
+        }
+    }, [location.hash]);
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
         <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
-        <Tabs className="mb-5 mt-4" tabContentClass="mt-4">
+        <Tabs className="mb-5 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
+            history.replace({...history.location, hash: tabAnchors[index - 1]});
+        }}>
             {{
                 [siteSpecific("In Progress Tests", "Tests in progress")]:
                     <ShowLoading
