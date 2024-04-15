@@ -163,7 +163,13 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         if (location.hash && anchorMap[location.hash as keyof typeof anchorMap]) {
             setTabOverride(anchorMap[location.hash as keyof typeof anchorMap]);
         }
-    }, [location.hash]);
+        if (location.search.includes("filter")) {
+            setFilterText(new URLSearchParams(location.search).get("filter") || "");
+        }
+    }, [location.hash, location.search]);
+
+    const [filterText, setFilterText] = useState<string>("");
+    const [copied, setCopied] = useState(false);
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
@@ -192,8 +198,15 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                     <ShowLoading until={quizzes}>
                         {quizzes && <>
                             {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
+                            <RS.Col xs={12} className="mb-4">
+                                <RS.Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />
+                                <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
+                                    filterText.trim() && navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
+                                    setCopied(true);
+                                }} onMouseLeave={() => setCopied(false)} />
+                            </RS.Col>
                             <RS.ListGroup className="mb-3 quiz-list">
-                                {quizzes.filter(showQuiz).map(quiz => <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                                {quizzes.filter((quiz) => showQuiz(quiz) && quiz.title?.toLowerCase().includes(filterText.toLowerCase())).map(quiz => <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                     <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
                                         <span className="mb-2 mb-sm-0">{quiz.title}</span>
                                         {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
