@@ -24,7 +24,7 @@ import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
-function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
+export function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
     const seedValue = userId + "|" + questionId;
     const random = new Rand(seedValue);
 
@@ -81,7 +81,7 @@ function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: s
     return unitsToShow;
 }
 
-function wrapUnitForSelect(unit?: string): string {
+export function wrapUnitForSelect(unit?: string): string {
     switch (unit) {
         case undefined:
             return "\u00A0";

@@ -6,12 +6,15 @@ import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
     BookingStatus,
+    ChoiceDTO,
     ContentDTO,
     Difficulty,
     ExamBoard,
     IsaacFastTrackQuestionPageDTO,
     IsaacQuestionPageDTO,
+    QuantityDTO,
     Stage,
+    StringChoiceDTO,
     UserRole
 } from "../../IsaacApiTypes";
 import {siteSpecific} from "./";
@@ -966,6 +969,23 @@ export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+
+// Matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
+export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+?)(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+
+interface inlineQuestionType<T extends ChoiceDTO> {
+    choice: {
+        type: string,
+        dto: T, // since types can't be variables, we make an empty object of type T then use typeof
+    }
+}
+
+type inlineDTOTypes = StringChoiceDTO | QuantityDTO;
+
+export const inlineQuestionTypes : {[key: string]: inlineQuestionType<inlineDTOTypes>} = {
+    "isaacStringMatchQuestion": {choice: { type: "stringMatch", dto: {} as StringChoiceDTO}},
+    "isaacNumericQuestion": {choice: { type: "quantity", dto: {} as QuantityDTO}},
+};
 
 export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "RASPBERRYPI": "Raspberry Pi Foundation",
