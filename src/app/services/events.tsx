@@ -2,10 +2,6 @@ import {
     atLeastOne,
     isDefined,
     isTeacherOrAbove,
-    siteSpecific,
-    STAGE,
-    STAGES_CS,
-    STAGES_PHY,
     zeroOrLess
 } from "./";
 import {AugmentedEvent, PotentialUser} from "../../IsaacAppTypes";
@@ -108,11 +104,6 @@ export const formatBookingModalConfirmMessage = (event: AugmentedEvent, userCanM
     else {
         return event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past"
     }
-}
-
-export const stageExistsForSite = (stage: string) => {
-    const stagesForSite = siteSpecific(STAGES_PHY, STAGES_CS);
-    return stagesForSite.includes(stage as any);
 }
 
 export const userSatisfiesStudentOnlyRestrictionForEvent = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {

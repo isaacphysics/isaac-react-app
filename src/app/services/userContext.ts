@@ -244,11 +244,12 @@ interface StageFilterOptions {
     byUserContexts?: UserContext[];
     includeNullOptions?: boolean;
     hideFurtherA?: true;
+    nullFirst?: boolean;
 }
 export function getFilteredStageOptions(filter?: StageFilterOptions) {
     return _STAGE_ITEM_OPTIONS
         // Restrict by includeNullOptions flag
-        .filter(i => filter?.includeNullOptions || !STAGE_NULL_OPTIONS.includes(i.value))
+        .filter(i => filter?.includeNullOptions || filter?.nullFirst || !STAGE_NULL_OPTIONS.includes(i.value))
         // Restrict by account settings
         .filter(i =>
             // skip if null or logged out user
@@ -273,7 +274,7 @@ export function getFilteredStageOptions(filter?: StageFilterOptions) {
                 // every exam board has been recorded for the stage
                 getFilteredExamBoardOptions({byUser: filter.byUser, byStages: [i.value], byUserContexts: filter.byUserContexts}).length === 0
             ))
-        );
+        ).sort((a, b) => filter?.nullFirst ? (-STAGE_NULL_OPTIONS.includes(a.value) + -STAGE_NULL_OPTIONS.includes(b.value)) : 0);
 }
 
 function produceAudienceViewingCombinations(audience: AudienceContext): ViewingContext[] {

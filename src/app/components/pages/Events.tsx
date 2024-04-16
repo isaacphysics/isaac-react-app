@@ -7,23 +7,21 @@ import {RouteComponentProps, withRouter} from "react-router-dom";
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
 import {
-    EventStageFilter,
     EventStatusFilter,
     EventTypeFilter,
+    STAGE,
+    getFilteredStageOptions,
     isTeacherOrAbove,
     siteSpecific,
-    stageExistsForSite
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-
-
 interface EventsPageQueryParams {
     show_booked_only?: boolean;
     show_reservations_only?: boolean;
     event_status?: "all";
-    show_stage_only?: EventStageFilter;
+    show_stage_only?: STAGE;
     types?: EventTypeFilter;
 }
 
@@ -42,7 +40,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
         (query.event_status === "all" && EventStatusFilter["All events"]) ||
         EventStatusFilter["Upcoming events"];
     const typeFilter = query.types || EventTypeFilter["All events"];
-    const stageFilter = query.show_stage_only || EventStageFilter["All stages"];
+    const stageFilter = query.show_stage_only || STAGE.ALL;
 
     useEffect(() => {
         getEventsList({startIndex: 0, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
@@ -91,13 +89,12 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                             )}
                         </RS.Input>
                         <RS.Input id="event-stage-filter" className="ml-2" type="select" value={stageFilter} onChange={e => {
-                            const selectedStage = e.target.value as EventStageFilter;
-                            query.show_stage_only = selectedStage !== EventStageFilter["All stages"] ? selectedStage : undefined;
+                            const selectedStage = e.target.value as STAGE;
+                            query.show_stage_only = selectedStage !== STAGE.ALL ? selectedStage : undefined;
                             history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
                         }}>
-                            {Object.entries(EventStageFilter).filter(([_, stageValue]) =>
-                                stageExistsForSite(stageValue)).map(([stageLabel, stageValue]) =>
-                                    <option key={stageValue} value={stageValue}>{stageLabel}</option>
+                            {getFilteredStageOptions({nullFirst: true}).map(({label, value}) =>
+                                <option key={value} value={value}>{label}</option>
                             )}
                         </RS.Input>
                     </RS.Label>
