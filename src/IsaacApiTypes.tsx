@@ -318,6 +318,11 @@ export interface ItemValidationResponseDTO extends QuestionValidationResponseDTO
     itemsCorrect?: boolean[];
 }
 
+export interface InlineRegionValidationResponseDTO extends QuestionValidationResponseDTO {
+    partsCorrect?: number;
+    partsTotal?: number;
+}
+
 export interface UserGroupDTO {
     id?: number;
     groupName?: string;
