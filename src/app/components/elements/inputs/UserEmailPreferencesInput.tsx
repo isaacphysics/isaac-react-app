@@ -84,19 +84,19 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
             </Table>
         </> : <>
             <StyledCheckbox initialValue={emailPreferences?.ASSIGNMENTS ?? false} id={`${idPrefix}assignments`}
-                changeFunction={(checked) => setEmailPreferences({...emailPreferences, ASSIGNMENTS: checked})}
+                onChange={(e) => setEmailPreferences({...emailPreferences, ASSIGNMENTS: e.target.checked})}
                 label={<span><b>Assignments</b></span>}
             />
             <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.assignments}</span>
 
             <StyledCheckbox initialValue={emailPreferences?.NEWS_AND_UPDATES ?? false} id={`${idPrefix}news`}
-                changeFunction={(checked) => setEmailPreferences({...emailPreferences, NEWS_AND_UPDATES: checked})}
+                onChange={(e) => setEmailPreferences({...emailPreferences, NEWS_AND_UPDATES: e.target.checked})}
                 label={<span><b>News</b></span>}
             />
             <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.news}</span>
 
             <StyledCheckbox initialValue={emailPreferences?.EVENTS ?? false} id={`${idPrefix}events`}
-                changeFunction={(checked) => setEmailPreferences({...emailPreferences, EVENTS: checked})}
+                onChange={(e) => setEmailPreferences({...emailPreferences, EVENTS: e.target.checked})}
                 label={<span><b>Events</b></span>}
             />
             <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.events}</span>

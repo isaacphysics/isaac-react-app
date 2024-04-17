@@ -16,8 +16,8 @@ export const UserBetaFeatures = ({displaySettings, setDisplaySettings}: UserBeta
         </>}
         rightColumn={<>
             <StyledCheckbox type={"checkbox"} initialValue={displaySettings.HIDE_QUESTION_ATTEMPTS ?? false}
-                changeFunction={e => setDisplaySettings(
-                    (oldDs) => ({...oldDs, HIDE_QUESTION_ATTEMPTS: e})
+                onChange={e => setDisplaySettings(
+                    (oldDs) => ({...oldDs, HIDE_QUESTION_ATTEMPTS: e.target.checked})
                 )} 
                 label={<p><b>Hide previous question attempts</b></p>}
                 id={"hide-previous-q-attempts"}

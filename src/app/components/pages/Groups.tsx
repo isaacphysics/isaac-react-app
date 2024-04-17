@@ -362,8 +362,8 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                         <div className="d-flex">
                                             <StyledCheckbox
                                                 id="self-removal"
-                                                changeFunction={toggleSelfRemoval}
-                                                initialValue={!!group.selfRemoval}
+                                                onChange={toggleSelfRemoval}
+                                                checked={!!group.selfRemoval}
                                             />
                                             <Label for="self-removal" className="d-inline-block mr-2">Allow students to remove themselves from this group</Label>
                                         </div>
