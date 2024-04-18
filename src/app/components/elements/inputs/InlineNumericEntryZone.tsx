@@ -1,12 +1,12 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from "reactstrap";
 import classNames from "classnames";
-import { selectUnits, wrapUnitForSelect } from "../../content/IsaacNumericQuestion";
 import { Markup } from "../markup";
 import { IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO } from "../../../../IsaacApiTypes";
 import { selectors, useAppSelector, useGetConstantUnitsQuery } from "../../../state";
 import { isLoggedIn, useCurrentQuestionAttempt } from "../../../services";
 import { InlineEntryZoneProps } from "../markup/portals/InlineEntryZone";
+import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
 
 export const InlineNumericEntryZone = ({width, height, questionDTO, setModified, valid, invalid, focusRef, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
 
@@ -48,7 +48,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
                     ...(width && {width: `${width}px`}), 
                     ...(height && {height: `${height}px`}),
                 }}
-                value={value}
+                value={value ?? ""}
                 onChange={(e) => {
                     setValue(e.target.value);
                 }}
