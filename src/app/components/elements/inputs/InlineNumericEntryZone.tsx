@@ -23,8 +23,8 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
     const noDisplayUnit = questionDTO.displayUnit == null || questionDTO.displayUnit === "";
     const readonly = false;
 
-    const currentAttemptValueWrong = questionDTO?.validationResponse && (questionDTO?.validationResponse as QuantityValidationResponseDTO).correctValue === false;
-    const currentAttemptUnitsWrong = questionDTO?.validationResponse && (questionDTO?.validationResponse as QuantityValidationResponseDTO).correctUnits === false;
+    const currentAttemptValueWrong = ((questionDTO?.validationResponse ?? questionDTO.bestAttempt) as QuantityValidationResponseDTO | undefined)?.correctValue === false;
+    const currentAttemptUnitsWrong = ((questionDTO?.validationResponse ?? questionDTO.bestAttempt) as QuantityValidationResponseDTO | undefined)?.correctUnits === false;
     const feedbackShowing = false;
 
     useEffect(function updateCurrentAttempt() {
