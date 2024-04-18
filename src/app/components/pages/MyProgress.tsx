@@ -14,7 +14,7 @@ import {
     HUMAN_QUESTION_TAGS,
     HUMAN_QUESTION_TYPES,
     isPhy,
-    isTeacherOrAbove, PATHS,
+    isTeacherOrAbove,
     safePercentage,
     siteSpecific
 } from "../../services";
@@ -27,7 +27,6 @@ import {Tabs} from "../elements/Tabs";
 import {FlushableRef, QuestionProgressCharts} from "../elements/views/QuestionProgressCharts";
 import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
-import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 
 const siteSpecificStats = siteSpecific(
@@ -212,44 +211,13 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                     </div>,
                     ...(isPhy && viewingOwnData && isTeacherOrAbove(user) && {"Teacher Activity": <div>
                         <Alert color="danger" className="mt-4">
-                            We plan to remove these teacher activity badges soon. Use the contact form
+                            We have now removed these teacher activity badges. Use the contact form
                             to <a href="/contact?subject=Teacher%20Badges">send us any feedback about badges</a>.
                         </Alert>
-                        <TeacherAchievement
-                            verb="created"
-                            count={achievements && achievements.TEACHER_GROUPS_CREATED}
-                            item="group"
-                            createMoreText="Manage groups"
-                            createMoreLink="/groups"
-                            iconClassName="group-badge"/>
-
-                        <TeacherAchievement
-                            verb="set"
-                            count={achievements && achievements.TEACHER_ASSIGNMENTS_SET}
-                            item="assignment"
-                            createMoreText={siteSpecific("Set assignments", "Set quizzes")}
-                            createMoreLink={PATHS.SET_ASSIGNMENTS}
-                            iconClassName="assignment-badge"/>
-
-                        <TeacherAchievement
-                            verb="created"
-                            count={achievements && achievements.TEACHER_GAMEBOARDS_CREATED}
-                            item="gameboard"
-                            createMoreText="Board builder"
-                            createMoreLink={PATHS.GAMEBOARD_BUILDER}
-                            iconClassName="gameboard-badge"/>
-
-                        <TeacherAchievement
-                            verb="visited"
-                            count={achievements && achievements.TEACHER_CPD_EVENTS_ATTENDED}
-                            item="CPD event"
-                            createMoreText="Events"
-                            createMoreLink="/events"
-                            iconClassName="cpd-badge"/>
                     </div>}),
                 }}</Tabs>
             </CardBody>
         </Card>
-    </Container>
+    </Container>;
 });
 export default MyProgress;

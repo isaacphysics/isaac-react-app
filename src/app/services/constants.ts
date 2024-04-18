@@ -833,6 +833,20 @@ export enum EventTypeFilter {
     "Online tutorials" = "virtual",
 }
 
+export const EventStageMap = siteSpecific(
+    {
+        "All Stages": STAGE.ALL,
+        "Years 7, 8 & 9": [STAGE.YEAR_7_AND_8, STAGE.YEAR_9].join(','),
+        "GCSE": STAGE.GCSE,
+        "A Level": STAGE.A_LEVEL,
+        "Further A": STAGE.FURTHER_A,
+        "University": STAGE.UNIVERSITY,
+    },
+    {
+        "All Stages": STAGE.ALL,
+    }
+) as {[stage: string]: string};
+
 export const GREEK_LETTERS_MAP: { [letter: string]: string } = {
     "alpha": "α",
     "beta": "β",
