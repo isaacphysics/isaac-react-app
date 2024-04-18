@@ -455,7 +455,13 @@
 }
 
 .feedback-panel-dark {
-  @include feedback-panel-classes(#000, 0.18);
+  @include feedback-panel-classes(#000, 0.08);
+}
+
+.correct {
+  .feedback-panel-dark {
+    @include feedback-panel-classes(#000, 0.18);
+  }
 }
 
 .inline-part {
