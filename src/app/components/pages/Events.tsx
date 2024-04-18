@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useMemo} from "react";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {selectors, useAppSelector, useLazyGetEventsQuery} from "../../state";
@@ -7,10 +7,10 @@ import {RouteComponentProps, withRouter} from "react-router-dom";
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
 import {
+    EventStageMap,
     EventStatusFilter,
     EventTypeFilter,
     STAGE,
-    getFilteredStageOptions,
     isTeacherOrAbove,
     siteSpecific,
 } from "../../services";
@@ -21,7 +21,7 @@ interface EventsPageQueryParams {
     show_booked_only?: boolean;
     show_reservations_only?: boolean;
     event_status?: "all";
-    show_stage_only?: STAGE;
+    show_stage_only?: string;
     types?: EventTypeFilter;
 }
 
@@ -40,7 +40,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
         (query.event_status === "all" && EventStatusFilter["All events"]) ||
         EventStatusFilter["Upcoming events"];
     const typeFilter = query.types || EventTypeFilter["All events"];
-    const stageFilter = query.show_stage_only || STAGE.ALL;
+    const stageFilter = useMemo(() => query.show_stage_only?.split(',') as STAGE[] || [STAGE.ALL], [query.show_stage_only]);
 
     useEffect(() => {
         getEventsList({startIndex: 0, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
@@ -54,6 +54,10 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     const metaDescription = siteSpecific(
         "See all of our Isaac Physics Events, online and in-person, for students and teachers.",
         undefined);
+
+    const reverseEventsMap = Object.entries(EventStageMap).reduce((acc, [key, value]) => {
+        return {...acc, [value]: key};
+    }, {} as {[key: string]: string});
 
     return <div>
         <RS.Container>
@@ -88,12 +92,14 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                                 <option key={typeValue} value={typeValue}>{typeLabel}</option>
                             )}
                         </RS.Input>
-                        <RS.Input id="event-stage-filter" className="ml-2" type="select" value={stageFilter} onChange={e => {
-                            const selectedStage = e.target.value as STAGE;
-                            query.show_stage_only = selectedStage !== STAGE.ALL ? selectedStage : undefined;
-                            history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
-                        }}>
-                            {getFilteredStageOptions({nullFirst: true}).map(({label, value}) =>
+                        <RS.Input id="event-stage-filter" className="ml-2" type="select" 
+                            value={query.show_stage_only && Object.keys(reverseEventsMap).includes(query.show_stage_only) ? query.show_stage_only : STAGE.ALL}
+                            onChange={e => {
+                                const selectedStage = e.target.value as STAGE;
+                                query.show_stage_only = selectedStage !== STAGE.ALL ? selectedStage : undefined;
+                                history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                            }}>
+                            {Object.entries(EventStageMap).map(([label, value]) =>
                                 <option key={value} value={value}>{label}</option>
                             )}
                         </RS.Input>
