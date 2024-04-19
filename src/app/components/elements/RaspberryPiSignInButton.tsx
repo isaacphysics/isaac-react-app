@@ -10,7 +10,7 @@ export const RaspberryPiSignInButton = ({isSignup, concise}: {isSignup?: boolean
     };
 
     return <Button className={"position-relative"} block outline color="primary" onClick={logInWithRaspberryPi}>
-        <img className="rpf-button-logo" src={"/assets/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>
+        <img className="rpf-button-logo" src={"/assets/common/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>
         {
             concise ?
                 <div className={"d-inline"}>Raspberry Pi</div> :

@@ -148,8 +148,8 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             _flattenDeep((currentAttemptValue || { symbols: [] }).symbols),
             {
                 textEntry: true,
-                fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
-                fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf',
+                fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
+                fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
             }
         );
         if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
