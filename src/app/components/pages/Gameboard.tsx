@@ -48,7 +48,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     let itemClasses = classNames("content-summary-link text-info bg-transparent", {"p-3": isPhy, "p-0": isAda});
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
-    let iconHref = siteSpecific("/assets/question-hex.svg#icon", "/assets/cs/icons/question-not-started.svg");
+    let iconHref = siteSpecific("/assets/phy/question-hex.svg#icon", "/assets/cs/icons/question-not-started.svg");
     let message = siteSpecific("", "Not started");
     const messageClasses = "";
 

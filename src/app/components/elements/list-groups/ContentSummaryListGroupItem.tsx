@@ -54,7 +54,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     const questionIcon = siteSpecific(
         item.correct ?
             <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/common/tick-rp-hex.svg#icon`} xlinkHref={`/assets/common/tick-rp-hex.svg#icon`}/></svg> :
-            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/question-hex.svg#icon`} xlinkHref={`/assets/question-hex.svg#icon`}/></svg>,
+            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/question-hex.svg#icon`} xlinkHref={`/assets/phy/question-hex.svg#icon`}/></svg>,
         item.correct ?
             <img src="/assets/cs/icons/question-correct.svg" alt={questionIconLabel}/> :
             <img src="/assets/cs/icons/question-not-started.svg" alt={questionIconLabel}/>
@@ -67,7 +67,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     switch (item.type) {
         case (SEARCH_RESULT_TYPE.SHORTCUT):
             linkDestination = item.url;
-            icon = <img src={siteSpecific("/assets/concept.svg", "/assets/cs/icons/concept.svg")} alt="Shortcut icon"/>;
+            icon = <img src={siteSpecific("/assets/phy/icons/concept.svg", "/assets/cs/icons/concept.svg")} alt="Shortcut icon"/>;
             if (isAda) {
                 typeLabel = "Shortcut";
             }
@@ -87,7 +87,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
-            icon = <img src={siteSpecific("/assets/concept.svg", "/assets/cs/icons/concept.svg")} alt="Concept page icon"/>;
+            icon = <img src={siteSpecific("/assets/phy/icons/concept.svg", "/assets/cs/icons/concept.svg")} alt="Concept page icon"/>;
             if (isAda) {
                 typeLabel = "Concept";
             }
