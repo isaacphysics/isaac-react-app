@@ -1,6 +1,14 @@
-import React, { useEffect } from "react";
-import { isaacApi, logAction, selectors, setAssignBoardPath, useAppDispatch, useAppSelector } from "../../state";
-import { Link, withRouter } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  isaacApi,
+  logAction,
+  saveGameboard,
+  selectors,
+  setAssignBoardPath,
+  useAppDispatch,
+  useAppSelector,
+} from "../../state";
+import { Link } from "react-router-dom";
 import { Button, Col, Container, ListGroup, ListGroupItem, Row } from "reactstrap";
 import { GameboardDTO, GameboardItem, IsaacWildcard } from "../../../IsaacApiTypes";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
@@ -10,12 +18,13 @@ import {
   filterAudienceViewsByProperties,
   isDefined,
   isFound,
+  isTeacherOrAbove,
   isTutorOrAbove,
   TAG_ID,
   TAG_LEVEL,
   tags,
 } from "../../services";
-import { Redirect } from "react-router";
+import { Redirect, useLocation } from "react-router";
 import queryString from "query-string";
 import { StageAndDifficultySummaryIcons } from "../elements/StageAndDifficultySummaryIcons";
 import { Markup } from "../elements/markup";
@@ -130,12 +139,33 @@ export const GameboardViewer = ({ gameboard, className }: { gameboard: Gameboard
   </Row>
 );
 
-export const Gameboard = withRouter(({ location }) => {
+const GameboardDetails = ({ gameboard }: { gameboard: GameboardDTO }) => {
   const dispatch = useAppDispatch();
-  const gameboardId = location.hash ? location.hash.slice(1) : null;
-  const gameboardQuery = isaacApi.endpoints.getGameboardById.useQuery(gameboardId || skipToken);
-  const { data: gameboard } = gameboardQuery;
+  const [gameboardTitle, setGameboardTitle] = useState<string | undefined>();
+
   const user = useAppSelector(selectors.user.orNull);
+
+  const isGameboardOwner = (user?.loggedIn && isTeacherOrAbove(user) && gameboard?.ownerUserId === user.id) ?? false;
+
+  const changeGameboardTitle = (newTitle: string) => {
+    if (gameboard?.id && user?.loggedIn) {
+      dispatch(
+        saveGameboard({
+          boardId: gameboard.id,
+          user: user,
+          boardTitle: newTitle,
+        }),
+      ).then(() => {
+        setGameboardTitle(newTitle);
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (gameboard) {
+      setGameboardTitle(gameboard.title);
+    }
+  }, [gameboard]);
 
   // Show filter
   const { filter } = queryString.parse(location.search);
@@ -144,6 +174,65 @@ export const Gameboard = withRouter(({ location }) => {
     const filterValue = filter instanceof Array ? filter[0] : filter;
     showFilter = isDefined(filterValue) && filterValue.toLowerCase() === "true";
   }
+
+  if (showFilter) {
+    return <Redirect to={`/gameboards/new?${extractFilterQueryString(gameboard)}#${gameboard.id}`} />;
+  }
+  return (
+    <>
+      <TitleAndBreadcrumb
+        onTitleEdit={isGameboardOwner ? changeGameboardTitle : undefined}
+        currentPageTitle={gameboardTitle ?? "Filter Generated Gameboard"}
+      />
+      <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
+      {user && isTutorOrAbove(user) ? (
+        <Row className="col-8 offset-2">
+          <Col className="mt-4">
+            <Button tag={Link} to={`/add_gameboard/${gameboard.id}`} color="primary" outline className="btn-block">
+              Set as assignment
+            </Button>
+          </Col>
+          <Col className="mt-4">
+            <Button
+              tag={Link}
+              to={{ pathname: "/gameboard_builder", search: `?base=${gameboard.id}` }}
+              color="primary"
+              block
+              outline
+            >
+              Duplicate and edit
+            </Button>
+          </Col>
+        </Row>
+      ) : (
+        gameboard &&
+        !gameboard.savedToCurrentUser && (
+          <Row>
+            <Col className="mt-4" sm={{ size: 8, offset: 2 }} md={{ size: 4, offset: 4 }}>
+              <Button
+                tag={Link}
+                to={`/add_gameboard/${gameboard.id}`}
+                onClick={() => setAssignBoardPath("/set_assignments")}
+                color="primary"
+                outline
+                className="btn-block"
+              >
+                Save to My gameboards
+              </Button>
+            </Col>
+          </Row>
+        )
+      )}
+    </>
+  );
+};
+
+export const Gameboard = () => {
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const gameboardId = location.hash ? location.hash.slice(1) : null;
+  const gameboardQuery = isaacApi.endpoints.getGameboardById.useQuery(gameboardId || skipToken);
+  const { data: gameboard } = gameboardQuery;
 
   // Only log a gameboard view when we have a gameboard loaded:
   useEffect(() => {
@@ -165,6 +254,8 @@ export const Gameboard = withRouter(({ location }) => {
     </Container>
   );
 
+  const renderGameboardDetails = (gameboard: GameboardDTO) => <GameboardDetails gameboard={gameboard} />;
+
   return !gameboardId ? (
     <Redirect to="/gameboards#example-gameboard" />
   ) : (
@@ -173,62 +264,8 @@ export const Gameboard = withRouter(({ location }) => {
         query={gameboardQuery}
         defaultErrorTitle={`Error fetching gameboard with id: ${gameboardId}`}
         ifNotFound={notFoundComponent}
-        thenRender={(gameboard) => {
-          if (showFilter) {
-            return <Redirect to={`/gameboards/new?${extractFilterQueryString(gameboard)}#${gameboardId}`} />;
-          }
-          return (
-            <>
-              <TitleAndBreadcrumb currentPageTitle={(gameboard && gameboard.title) || "Filter Generated Gameboard"} />
-              <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
-              {user && isTutorOrAbove(user) ? (
-                <Row className="col-8 offset-2">
-                  <Col className="mt-4">
-                    <Button
-                      tag={Link}
-                      to={`/add_gameboard/${gameboardId}`}
-                      color="primary"
-                      outline
-                      className="btn-block"
-                    >
-                      Set as assignment
-                    </Button>
-                  </Col>
-                  <Col className="mt-4">
-                    <Button
-                      tag={Link}
-                      to={{ pathname: "/gameboard_builder", search: `?base=${gameboardId}` }}
-                      color="primary"
-                      block
-                      outline
-                    >
-                      Duplicate and edit
-                    </Button>
-                  </Col>
-                </Row>
-              ) : (
-                gameboard &&
-                !gameboard.savedToCurrentUser && (
-                  <Row>
-                    <Col className="mt-4" sm={{ size: 8, offset: 2 }} md={{ size: 4, offset: 4 }}>
-                      <Button
-                        tag={Link}
-                        to={`/add_gameboard/${gameboardId}`}
-                        onClick={() => setAssignBoardPath("/set_assignments")}
-                        color="primary"
-                        outline
-                        className="btn-block"
-                      >
-                        Save to My gameboards
-                      </Button>
-                    </Col>
-                  </Row>
-                )
-              )}
-            </>
-          );
-        }}
+        thenRender={renderGameboardDetails}
       />
     </Container>
   );
-});
+};

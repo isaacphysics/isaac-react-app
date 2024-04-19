@@ -59,6 +59,18 @@ header {
   box-shadow: 0 2px 30px 0 $shadow-08;
 }
 
+.title-edit {
+  input[type="text"] {
+    height: 50px;
+    min-width: 350px;
+  }
+  button {
+    height: 30px;
+    width: 50px;
+    min-width: 50px !important;
+  }
+}
+
 .title-help {
   display: flex;
   align-items: center;

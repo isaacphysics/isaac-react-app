@@ -14,6 +14,7 @@ import { DifficultyIcons } from "./svg/DifficultyIcons";
 import classnames from "classnames";
 import { Helmet } from "react-helmet";
 import { Markup } from "./markup";
+import { EditablePageTitle } from "./inputs/EditablePageTitle";
 
 function AudienceViewer({ audienceViews }: { audienceViews: ViewingContext[] }) {
   const userContext = useUserContext();
@@ -30,7 +31,7 @@ function AudienceViewer({ audienceViews }: { audienceViews: ViewingContext[] }) 
             <div className="text-center align-self-center">{stageLabelMap[view.stage]}</div>
           )}
           {view.difficulty && (
-            <div className={"ml-2 ml-sm-0" + classnames({ "mr-2": i > 0 })}>
+            <div className={"ml-2 ml-sm-0" + classnames({ "mr-2": i > 0 })} data-testid="difficulty-icons">
               <DifficultyIcons difficulty={view.difficulty} />
             </div>
           )}
@@ -47,6 +48,7 @@ export interface PageTitleProps {
   help?: ReactElement;
   className?: string;
   audienceViews?: ViewingContext[];
+  onTitleEdit?: (newTitle: string) => void;
 }
 export const PageTitle = ({
   currentPageTitle,
@@ -55,6 +57,7 @@ export const PageTitle = ({
   help,
   className,
   audienceViews,
+  onTitleEdit,
 }: PageTitleProps) => {
   const dispatch = useAppDispatch();
   const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
@@ -72,14 +75,13 @@ export const PageTitle = ({
   }, [currentPageTitle]);
 
   return (
-    <h1
-      id="main-heading"
-      tabIndex={-1}
-      ref={headerRef}
-      className={`h-title h-secondary d-sm-flex ${className ? className : ""}`}
-    >
+    <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary d-sm-flex ${className ?? ""}`}>
       <div className="mr-auto" data-testid={"main-heading"}>
-        {formatPageTitle(currentPageTitle, disallowLaTeX)}
+        {onTitleEdit ? (
+          <EditablePageTitle onEdit={onTitleEdit} currentPageTitle={currentPageTitle} />
+        ) : (
+          formatPageTitle(currentPageTitle, disallowLaTeX)
+        )}
         {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
       </div>
       <Helmet>

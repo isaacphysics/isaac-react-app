@@ -5,6 +5,18 @@ import "./matchers";
 global.window.scrollTo = jest.fn();
 jest.mock("react-ga4"); // Google Analytics requires a DOM.window which doesn't exist in test
 jest.mock("../app/services/websockets"); // MSW can't handle websockets just yet
+jest.mock("popper.js", () => {
+  const PopperJS = jest.requireActual("popper.js");
+  return class MockedPopper {
+    static readonly placements = PopperJS.placements;
+    destroy: () => void;
+    scheduleUpdate: () => void;
+    constructor() {
+      this.destroy = jest.fn();
+      this.scheduleUpdate = jest.fn();
+    }
+  };
+});
 
 // TODO jest.mock("../app/services/localStorage"); <--- need to mock this effectively
 
