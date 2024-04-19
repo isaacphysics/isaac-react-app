@@ -96,7 +96,7 @@ const GameboardBuilderRow = (
             />
         </td>
         <td className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
-            {provided && <img src="/assets/common/drag_indicator.svg" alt="Drag to reorder" className="mr-1 grab-cursor" />}
+            {provided && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mr-1 grab-cursor" />}
             <a className="mr-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
                 {generateQuestionTitle(question)}
             </a>

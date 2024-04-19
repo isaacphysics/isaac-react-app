@@ -104,7 +104,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS)
                 } />}
             </div>
-            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/common/chevron_right.svg"} alt={"Go to question"}/></div>}
+            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to question"}/></div>}
         </Link>
     </ListGroupItem>;
 };

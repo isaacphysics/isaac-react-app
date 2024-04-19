@@ -64,12 +64,12 @@ nav.search {
     }
 
     .navbar-toggler-icon {
-      background-image: url('/assets/common/search-icon.svg');
+      background-image: url('/assets/common/icons/search-icon.svg');
     }
 
     &.open {
       .navbar-toggler-icon {
-        background-image: url('/assets/common/cross.svg');
+        background-image: url('/assets/common/icons/cross.svg');
       }
     }
   }

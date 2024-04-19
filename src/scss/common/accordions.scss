@@ -45,13 +45,13 @@
   height: 20px;
   margin-right: 0.25rem;
   &-tick {
-    background-image: url(/assets/common/tick.svg);
+    background-image: url(/assets/common/icons/tick.svg);
   }
   &-cross {
-    background-image: url(/assets/common/untick.svg);
+    background-image: url(/assets/common/icons/untick.svg);
   }
   &-report {
-    background-image: url(/assets/common/flag-accordion.svg);
+    background-image: url(/assets/common/icons/flag-accordion.svg);
     background-color: transparent;
     opacity: 0.4;
     align-self: flex-end;
@@ -106,7 +106,7 @@
 
       &:after {
         content: "";
-        background-image: url('/assets/common/chevron_down.svg');
+        background-image: url('/assets/common/icons/chevron_down.svg');
         background-repeat: no-repeat;
         background-position: right;
         width: 20px;
@@ -119,7 +119,7 @@
       &.active {
         border-bottom: 1px solid $shadow-08 !important;
         &:after {
-          background-image: url('/assets/common/common/chevron_up.svg');
+          background-image: url('/assets/common/common/icons/chevron_up.svg');
         }
       }
 

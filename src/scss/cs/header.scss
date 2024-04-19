@@ -107,9 +107,9 @@ header {
       width: 15px;
       background-repeat: no-repeat;
       background-size: contain;
-      background-image: url('/assets/common/chevron_down_white.svg');
+      background-image: url('/assets/common/icons/chevron_down_white.svg');
       &.open {
-        background-image: url('/assets/common/common/chevron_up_white.svg');
+        background-image: url('/assets/common/common/icons/chevron_up_white.svg');
       }
     }
   }

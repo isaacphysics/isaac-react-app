@@ -238,7 +238,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                                         <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
                                                     </div>
                                                     <div className="quiz-student-menu-icon">
-                                                        {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/common/menu.svg" alt="Menu" />}
+                                                        {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/common/icons/menu.svg" alt="Menu" />}
                                                     </div>
                                                 </Button>
                                                 {!returningQuizToStudent && dropdownOpen?.[index] && <>

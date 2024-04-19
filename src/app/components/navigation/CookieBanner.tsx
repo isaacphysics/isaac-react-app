@@ -27,7 +27,7 @@ export const CookieBanner = () => {
                 <RS.Col xs={12} sm={2} md={1}>
                     <h3 className="text-center">
                         <span role="presentation" aria-labelledby="cookies-heading">
-                            <img className={siteSpecific("mt-n2 mt-sm-0 mt-md-n1", "mt-n1 mt-sm-1")} src="/assets/common/info.svg" style={{height: "1.5rem"}} alt="" />
+                            <img className={siteSpecific("mt-n2 mt-sm-0 mt-md-n1", "mt-n1 mt-sm-1")} src="/assets/common/icons/info.svg" style={{height: "1.5rem"}} alt="" />
                         </span>
                         <span id="cookies-heading" className="d-inline-block d-sm-none">&nbsp;Cookies</span>
                     </h3>

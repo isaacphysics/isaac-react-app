@@ -46,10 +46,10 @@
   }
   > a[class*='next'] {
     right: 3px;
-    background-image: url('/assets/common/chevron_right.svg');
+    background-image: url('/assets/common/icons/chevron_right.svg');
   }
   > a[class*='prev'] {
     left: 3px;
-    background-image: url('/assets/common/chevron_left.svg');
+    background-image: url('/assets/common/icons/chevron_left.svg');
   }
 }
