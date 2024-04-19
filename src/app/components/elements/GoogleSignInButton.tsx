@@ -12,6 +12,6 @@ export const GoogleSignInButton = () => {
     };
 
     return <Button className={"position-relative"} block outline color={siteSpecific("primary", undefined)} style={siteSpecific({}, {borderColor: "black", color: "black"})} onClick={logInWithGoogle}>
-        <img className="google-button-logo" src={"/assets/common/google-logo.svg"} alt={"Google logo"}/>Google
+        <img className="google-button-logo" src={"/assets/common/logos/google-logo.svg"} alt={"Google logo"}/>Google
     </Button>;
 }

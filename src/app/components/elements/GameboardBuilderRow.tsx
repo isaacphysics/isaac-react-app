@@ -101,7 +101,7 @@ const GameboardBuilderRow = (
                 {generateQuestionTitle(question)}
             </a>
             <input
-                type="image" src="/assets/common/new-tab.svg" alt="Preview question" title="Preview question in modal"
+                type="image" src="/assets/common/icons/new-tab.svg" alt="Preview question" title="Preview question in modal"
                 className="pointer-cursor align-middle new-tab" onClick={() => {question.id && openQuestionModal(question.id)}}
             />
             {question.subtitle && <>
