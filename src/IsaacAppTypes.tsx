@@ -118,7 +118,7 @@ export type Action =
     | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>}
 
     | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
+    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questionResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST}
@@ -182,6 +182,13 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     canSubmit?: boolean;
     locked?: Date;
     accordionClientId?: string;
+}
+
+export interface InlineQuestionDTO extends AppQuestionDTO {
+    validationResponse?: Immutable<ApiTypes.QuestionValidationResponseDTO & {
+        partsCorrect?: number;
+        partsTotal?: number;
+    }>;
 }
 
 export interface AppGroup extends ApiTypes.UserGroupDTO {
@@ -395,6 +402,22 @@ export const ClozeDropRegionContext = React.createContext<{
     dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
     shouldGetFocus: (id: string) => boolean
 } | undefined>(undefined);
+
+export const InlineContext = React.createContext<{
+    docId?: string,
+    elementToQuestionMap: {[elementId: string]: {questionId: string, type: string}},
+    modifiedQuestionIds: string[],
+    setModifiedQuestionIds: React.Dispatch<React.SetStateAction<string[]>>,
+    isModifiedSinceLastSubmission: boolean,
+    setIsModifiedSinceLastSubmission: React.Dispatch<React.SetStateAction<boolean>>,
+    submitting: boolean,
+    setSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
+    canShowWarningToast: boolean,
+    feedbackIndex?: number,
+    setFeedbackIndex: React.Dispatch<React.SetStateAction<number | undefined>>,
+    focusSelection?: boolean,
+    setFocusSelection: React.Dispatch<React.SetStateAction<boolean>>,
+} | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
@@ -532,10 +555,6 @@ export interface QuestionSearchQuery {
     limit?: number;
 }
 
-export interface QuestionSearchResponse {
-    results: ApiTypes.ContentSummaryDTO[];
-}
-
 export interface ContentSummary extends ContentSummaryDTO {
     creationContext?: AudienceContext;
 }
@@ -666,7 +685,7 @@ export interface GameboardBuilderQuestionsStackProps {
     pop: () => {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>};
     length: number;
     clear: () => void;
-};
+}
 
 export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
     groupName: string;

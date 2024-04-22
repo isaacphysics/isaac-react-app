@@ -66,6 +66,30 @@
   }
 }
 
+.inline-numeric-container {
+  border-radius: 5px;
+
+  .units-shown {
+    border-radius: 5px 0 0 5px;
+  }
+
+  .inline-unit-dropdown {
+    button.btn {
+      height: 100%;
+      min-width: 36px !important;
+      border-radius: 0 5px 5px 0;
+      border: none;
+    }
+    &.display-unit {
+      margin-bottom: -2px;
+      button.btn {
+        height: calc(100% - 2px) !important;
+        border: 1px solid black;
+      }
+    }
+  }
+}
+
 .symbolic-question, .equality-page {
   .eqn-editor-preview {
     padding: 0.15em 0.6em;
@@ -232,12 +256,11 @@
   text-align: center;
   border-top: solid 1px $gray-107;
   border-bottom: solid 1px $gray-107;
-  &.correct {
+  &.correct, &.almost {
     background: $primary;
     color: black;
     margin-left: -3rem;
     margin-right: -3rem;
-    margin-bottom: -3rem;
     padding-left: 1.5rem !important;
     padding-right: 1.5rem !important;
     @include media-breakpoint-down(sm) {
@@ -245,6 +268,9 @@
       margin-right: -1rem;
       margin-bottom: -1rem;
     }
+  }
+  &.correct {
+    margin-bottom: -3rem;
   }
   p {
     margin-bottom: 0;
@@ -342,6 +368,12 @@
       right: 75px;
     }
   }
+  &.inline-nq-feedback {
+    .feedback-box {
+      z-index: 3;
+      right: 10px;
+    }
+  }
 }
 
 .question-actions {
@@ -384,4 +416,62 @@
       display: inline-block;
     }
   }
+}
+
+@mixin feedback-panel-classes($transparency, $alph) {
+  .feedback-panel-header {
+    background-color: rgba($transparency, 2 * $alph);
+    border-radius: 10px 10px 0 0;
+    > button {
+      color: inherit;
+      min-width: 176px;
+      @media (max-width: 576px) {
+        min-width: 0;
+      }
+      &:hover {
+        color: inherit;
+      }
+      &.inline-part-jump {
+        font-family: inherit;
+        font-size: 1rem;
+        text-decoration: underline;
+        text-decoration-thickness: 0.05rem;
+        text-underline-offset: 0.1rem;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  .feedback-panel-content {
+    background-color: rgba($transparency, $alph);
+    border-radius: 0 0 2px 2px;
+  }
+}
+
+.feedback-panel-light {
+  @include feedback-panel-classes(#fff, 0.18);
+}
+
+.feedback-panel-dark {
+  @include feedback-panel-classes(#000, 0.18);
+}
+
+.inline-part {
+  $shadow-size: 3px;
+  &.selected-feedback {
+    box-shadow: 0 0 0 $shadow-size #000;
+    // these colours should match the .form-control bootstrap colours
+    &.is-valid {
+      box-shadow: 0 0 0 $shadow-size #208838;
+    }
+    &.is-invalid {
+      box-shadow: 0 0 0 $shadow-size #dc3545;
+    }
+  }
+}
+
+.inline-dropdown {
+  min-width: unset !important;
 }

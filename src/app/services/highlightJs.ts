@@ -1,12 +1,12 @@
 import javascript from 'highlight.js/lib/languages/javascript';
-import python from 'highlight.js/lib/languages/python'
-import php from 'highlight.js/lib/languages/php'
-import csharp from 'highlight.js/lib/languages/csharp'
-import plaintext from 'highlight.js/lib/languages/plaintext'
-import sql from 'highlight.js/lib/languages/sql'
-import java from 'highlight.js/lib/languages/java'
-import vbnet from 'highlight.js/lib/languages/vbnet'
-import haskell from 'highlight.js/lib/languages/haskell'
+import python from 'highlight.js/lib/languages/python';
+import php from 'highlight.js/lib/languages/php';
+import csharp from 'highlight.js/lib/languages/csharp';
+import plaintext from 'highlight.js/lib/languages/plaintext';
+import sql from 'highlight.js/lib/languages/pgsql';
+import java from 'highlight.js/lib/languages/java';
+import vbnet from 'highlight.js/lib/languages/vbnet';
+import haskell from 'highlight.js/lib/languages/haskell';
 import {LanguageFn} from "highlight.js";
 
 const importHljsCore = import("highlight.js/lib/core");
@@ -121,7 +121,7 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
         "False",
         "True",
         "Null",
-    ]
+    ];
 
     const BUILT_INS = [
         "STR",
@@ -157,7 +157,7 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
         "RANDOM_INT",
         "STR_TO_DATE",
         "STR_TO_TIME",
-    ]
+    ];
 
     const FUNCTION_DEFINITION = {
         match: [
@@ -196,7 +196,7 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
             FUNCTION_DEFINITION,
         ]
     };
-}
+};
 
 export const highlightJsService = {
     registerLanguages,

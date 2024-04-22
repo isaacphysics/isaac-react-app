@@ -29,7 +29,6 @@
   }
 }
 
-
 // NOMENSA search.scss
 // REMEMBER TO REPLACE ./assets/ WITH /assets/
 nav.search {
@@ -99,4 +98,10 @@ nav.search {
       }
     }
   }
+}
+
+.search-filters-select-container {
+  flex-grow: 1;
+  flex-flow: row nowrap;
+  max-width: 520px;
 }

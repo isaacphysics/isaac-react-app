@@ -11,6 +11,7 @@ export * from "./progress";
 export * from "./select";
 export * from "./svg";
 export * from "./sorting";
+export * from "./filter";
 
 // No internal /services dependencies
 export * from "./constants";

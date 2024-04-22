@@ -81,7 +81,7 @@ export const rootReducer = combineReducers({
     // Gameboards
     boards: gameboardsSlice.reducer,
     questionSearchResult,
-
+    
     // Search
     search,
 

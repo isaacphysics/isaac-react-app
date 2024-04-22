@@ -1,4 +1,4 @@
-import React, {Dispatch} from "react";
+import React, {ContextType, Dispatch} from "react";
 import {
     ACTION_TYPE,
     api,
@@ -20,6 +20,7 @@ import {
     AppGroupMembership,
     CredentialsAuthDTO,
     FreeTextRule,
+    InlineContext,
     PotentialUser,
     QuestionSearchQuery,
     UserPreferencesDTO,
@@ -80,7 +81,7 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
                             fatal: true
                         }
                 }
-            )
+            );
             return showToast({
                 color: "danger", title: error, timeout: 5000,
                 body: API_REQUEST_FAILURE_MESSAGE
@@ -518,7 +519,7 @@ interface Attempt {
 }
 const attempts: {[questionId: string]: Attempt} = {};
 
-export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO>, gameboardId?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
+export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO>, gameboardId?: string, inlineContext?: ContextType<typeof InlineContext>) => async (dispatch: AppDispatch, getState: () => AppState) => {
     const state = getState();
     const isAnonymous = !(state && state.user && state.user.loggedIn);
     const timePeriod = isAnonymous ? 5 * 60 * 1000 : 15 * 60 * 1000;
@@ -544,13 +545,15 @@ export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO
             attempts[questionId] = lastAttempt;
         }
         const softLimit = isAnonymous ? 3 : 10;
-        if (lastAttempt.attempts >= softLimit && !response.data.correct) {
+        if (lastAttempt.attempts >= softLimit && !response.data.correct && (!inlineContext || inlineContext.canShowWarningToast)) {
             dispatch(showToast({
                 color: "warning", title: "Approaching attempts limit", timeout: 10000,
                 body: "You have entered several guesses for this question; soon it will be temporarily locked."
             }) as any);
+            if (inlineContext) inlineContext.canShowWarningToast = false;
         }
     } catch (e: any) {
+        if (inlineContext?.canShowWarningToast === false) return;
         if (e.response && e.response.status === 429) {
             const errorMessage = e.response?.data?.errorMessage || QUESTION_ATTEMPT_THROTTLED_MESSAGE;
             const lock = new Date((new Date()).getTime() + timePeriod);
@@ -570,6 +573,7 @@ export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO
                 body: "Your answer could not be checked. Please try again."
             }) as any);
         }
+        if (inlineContext) inlineContext.canShowWarningToast = false;
     }
 };
 
@@ -591,7 +595,7 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
         // Because some searches might take longer to return that others, check this is the most recent search still.
         // Otherwise, we just discard the data.
         if (searchCount === questionSearchCounter) {
-            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
+            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: questionsResponse.data});
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
@@ -601,7 +605,7 @@ export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: 
 
 export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
     questionSearchCounter++;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: []});
+    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questionResults: {results: [], totalResults: 0}});
 };
 
 export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
@@ -662,7 +666,7 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
 
 export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal({
-        closeAction: () => {dispatch(closeActiveModal() as any)},
+        closeAction: () => {dispatch(closeActiveModal() as any);},
         title: "Test already submitted",
         body: <div className="text-center my-5 pb-4">
             <strong>A submission has already been recorded for this test by your account.</strong>

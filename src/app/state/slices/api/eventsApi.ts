@@ -2,7 +2,7 @@ import {isaacApi} from "./baseApi";
 import {EventBookingDTO, IsaacEventPageDTO} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
 import {AdditionalInformation, AugmentedEvent, EventOverview} from "../../../../IsaacAppTypes";
-import {apiHelper, EventStageFilter, EventStatusFilter, EventTypeFilter, isDefined} from "../../../services";
+import {apiHelper, EventStatusFilter, EventTypeFilter, isDefined, STAGE} from "../../../services";
 import {EventOverviewFilter} from "../../../components/elements/panels/EventOverviews";
 
 const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
@@ -60,7 +60,7 @@ const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
 type EventsQueryParams = {
     typeFilter: EventTypeFilter;
     statusFilter: EventStatusFilter;
-    stageFilter: EventStageFilter;
+    stageFilter: STAGE[];
     startIndex: number;
     limit: number;
 }
@@ -86,7 +86,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
                     show_inactive_only: false,
                     show_booked_only: statusFilter === EventStatusFilter["My booked events"],
                     show_reservations_only: statusFilter === EventStatusFilter["My event reservations"],
-                    show_stage_only: stageFilter !== EventStageFilter["All stages"] ? stageFilter : undefined
+                    show_stage_only: !stageFilter.includes(STAGE.ALL) ? stageFilter.join(',') : undefined
                 }
             }),
             transformResponse: (data: {results: IsaacEventPageDTO[], totalResults: number}) => ({events: data.results.map(augmentEvent), total: data.totalResults}),

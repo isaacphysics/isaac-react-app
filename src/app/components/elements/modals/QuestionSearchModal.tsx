@@ -84,7 +84,7 @@ export const QuestionSearchModal = (
 
     const modalQuestions : GameboardBuilderQuestions = {selectedQuestions, questionOrder, setSelectedQuestions, setQuestionOrder};
 
-    const questions = useAppSelector((state: AppState) => state && state.questionSearchResult);
+    const {results: questions} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(

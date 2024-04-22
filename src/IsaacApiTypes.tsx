@@ -190,6 +190,10 @@ export interface IsaacStringMatchQuestionDTO extends QuestionDTO {
     preserveTrailingWhitespace?: boolean;
 }
 
+export interface IsaacInlineRegionDTO extends ContentDTO {
+    inlineQuestions?: QuestionDTO[];
+}
+
 export interface IsaacRegexMatchQuestionDTO extends QuestionDTO {
     multiLineEntry?: boolean;
 }
@@ -320,6 +324,7 @@ export interface UserGroupDTO {
     ownerId?: number;
     created?: Date;
     lastUpdated?: Date;
+    selfRemoval?: boolean;
     token?: string;
     archived?: boolean;
     additionalManagerPrivileges?: boolean;

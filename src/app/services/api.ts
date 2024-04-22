@@ -9,7 +9,6 @@ import {
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
     AuthenticationProvider,
-    ResultsWrapper,
     TestCaseDTO,
     UserContext
 } from "../../IsaacApiTypes";
@@ -19,7 +18,6 @@ import {
     Concepts,
     CredentialsAuthDTO,
     QuestionSearchQuery,
-    QuestionSearchResponse,
     UserPreferencesDTO,
     ValidationUser
 } from "../../IsaacAppTypes";
@@ -158,7 +156,7 @@ export const api = {
         get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
             return endpoint.get(`/pages/questions/${id}`);
         },
-        search: (query: QuestionSearchQuery): AxiosPromise<QuestionSearchResponse> => {
+        search: (query: QuestionSearchQuery): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
             return endpoint.get(`/pages/questions/`, {
                 params: query,
             });

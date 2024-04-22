@@ -6,12 +6,15 @@ import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
     BookingStatus,
+    ChoiceDTO,
     ContentDTO,
     Difficulty,
     ExamBoard,
     IsaacFastTrackQuestionPageDTO,
     IsaacQuestionPageDTO,
+    QuantityDTO,
     Stage,
+    StringChoiceDTO,
     UserRole
 } from "../../IsaacApiTypes";
 import {siteSpecific} from "./";
@@ -288,7 +291,7 @@ export enum STAGE {
 export const STAGE_NULL_OPTIONS = [STAGE.ALL];
 export const STAGES_PHY = [STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY] as const;
 export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER] as const;
-export const stagesOrdered: Stage[] = ["year_7_and_8", "year_9", "gcse", "a_level", "further_a", "university", "scotland_national_5", "scotland_higher", "scotland_advanced_higher", "all"];
+export const stagesOrdered: Stage[] = [...siteSpecific(STAGES_PHY, STAGES_CS), STAGE.ALL];
 export const stageLabelMap: {[stage in Stage]: string} = {
     year_7_and_8: "Year\u00A07&8",
     year_9: "Year\u00A09",
@@ -830,13 +833,19 @@ export enum EventTypeFilter {
     "Online tutorials" = "virtual",
 }
 
-export enum EventStageFilter {
-    "All stages" = "all",
-    "GCSE" = "gcse",
-    "A-Level" = "a_level",
-    "Further A" = "further_a",
-    "University" = "university"
-}
+export const EventStageMap = siteSpecific(
+    {
+        "All Stages": STAGE.ALL,
+        "Years 7, 8 & 9": [STAGE.YEAR_7_AND_8, STAGE.YEAR_9].join(','),
+        "GCSE": STAGE.GCSE,
+        "A Level": STAGE.A_LEVEL,
+        "Further A": STAGE.FURTHER_A,
+        "University": STAGE.UNIVERSITY,
+    },
+    {
+        "All Stages": STAGE.ALL,
+    }
+) as {[stage: string]: string};
 
 export const GREEK_LETTERS_MAP: { [letter: string]: string } = {
     "alpha": "α",
@@ -966,6 +975,23 @@ export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+
+// Matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
+export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+?)(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+
+interface inlineQuestionType<T extends ChoiceDTO> {
+    choice: {
+        type: string,
+        dto: T, // since types can't be variables, we make an empty object of type T then use typeof
+    }
+}
+
+type inlineDTOTypes = StringChoiceDTO | QuantityDTO;
+
+export const inlineQuestionTypes : {[key: string]: inlineQuestionType<inlineDTOTypes>} = {
+    "isaacStringMatchQuestion": {choice: { type: "stringMatch", dto: {} as StringChoiceDTO}},
+    "isaacNumericQuestion": {choice: { type: "quantity", dto: {} as QuantityDTO}},
+};
 
 export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "RASPBERRYPI": "Raspberry Pi Foundation",
