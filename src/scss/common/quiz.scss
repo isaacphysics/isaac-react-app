@@ -188,3 +188,21 @@
     }
   }
 }
+
+.copy-test-filter-link {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  padding: 5px;
+  top: 2px;
+  right: 20px;
+  background: url("/assets/action-copy.svg") no-repeat center content-box;
+  background-size: cover;
+  filter: invert(0.5);
+  transform: scaleY(-1);
+
+  &.clicked {
+    background: url("/assets/action-done.svg") no-repeat center content-box;
+    transform: none;
+  }
+}
