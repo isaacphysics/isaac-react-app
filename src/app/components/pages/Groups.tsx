@@ -49,7 +49,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { StyledCheckbox } from "../elements/inputs/CheckboxInput";
+import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",

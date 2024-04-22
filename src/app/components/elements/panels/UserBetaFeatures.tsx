@@ -1,7 +1,7 @@
 import React from "react";
 import { DisplaySettings } from "../../../../IsaacAppTypes";
 import { SITE_TITLE, siteSpecific } from "../../../services";
-import { StyledCheckbox } from "../inputs/CheckboxInput";
+import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { MyAccountTab } from "./MyAccountTab";
 interface UserBetaFeaturesProps {
     displaySettings: DisplaySettings;

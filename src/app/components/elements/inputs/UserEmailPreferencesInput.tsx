@@ -1,4 +1,4 @@
-import {StyledCheckbox} from "./CheckboxInput";
+import {StyledCheckbox} from "./StyledCheckbox";
 import {FormGroup, Table} from "reactstrap";
 import React, {SetStateAction, useState} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
