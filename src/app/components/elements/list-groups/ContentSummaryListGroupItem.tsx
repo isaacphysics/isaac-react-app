@@ -53,8 +53,8 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     const questionIconLabel = item.correct ? "Completed question icon" : "Question icon";
     const questionIcon = siteSpecific(
         item.correct ?
-            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/common/tick-rp-hex.svg#icon`} xlinkHref={`/assets/common/tick-rp-hex.svg#icon`}/></svg> :
-            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/question-hex.svg#icon`} xlinkHref={`/assets/phy/question-hex.svg#icon`}/></svg>,
+            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/tick-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/></svg> :
+            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/question-hex.svg#icon`} xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/></svg>,
         item.correct ?
             <img src="/assets/cs/icons/question-correct.svg" alt={questionIconLabel}/> :
             <img src="/assets/cs/icons/question-not-started.svg" alt={questionIconLabel}/>
