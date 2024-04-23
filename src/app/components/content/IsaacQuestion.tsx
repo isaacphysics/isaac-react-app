@@ -10,7 +10,7 @@ import {
 } from "../../state";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import {BEST_ATTEMPT_HIDDEN, ContentDTO} from "../../../IsaacApiTypes";
+import {ContentDTO} from "../../../IsaacApiTypes";
 import * as RS from "reactstrap";
 import {
     below,
@@ -48,7 +48,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
     const currentAttempt = questionPart?.currentAttempt;
-    const bestAttempt = questionPart?.bestAttempt;
     const validationResponse = questionPart?.validationResponse;
     const validationResponseTags = validationResponse?.explanation?.tags;
     const correct = validationResponse?.correct || false;
@@ -139,12 +138,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 <Suspense fallback={<Loading/>}>
                     <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
                 </Suspense>
-
-                {!currentAttempt && bestAttempt === BEST_ATTEMPT_HIDDEN && <div className={"w-100 text-center"}>
-                    <small className={"no-print text-muted"}>
-                        A previous attempt at this question part has been hidden.
-                    </small>
-                </div>}
 
                 {isAda &&
                     <div className="mt-4">
