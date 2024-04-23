@@ -153,7 +153,6 @@ export function useUserContext(): UseUserContextReturnType {
                 history.replace({
                     ...window.location,
                     search: queryString.stringify({
-                        ...queryParams,
                         ...actualParams,
                         stage,
                         examBoard: isAda ? examBoard : undefined,
@@ -165,7 +164,7 @@ export function useUserContext(): UseUserContextReturnType {
                 // trying to render, causing a loop and a spike in client-side errors.
             }
         }
-    }, [stage, examBoard, queryParams.stage, queryParams.examBoard]);
+    }, [stage, examBoard]);
 
     return {
         stage, setStage, examBoard, setExamBoard, explanation,
