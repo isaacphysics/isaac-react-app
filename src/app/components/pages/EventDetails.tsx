@@ -157,7 +157,7 @@ const EventDetails = ({
                           src={event.eventThumbnail.src}
                           data-testid="event-details-image"
                         />
-                        <div className="border px-2 py-1 mt-3 bg-light" data-testid="event-details-title">
+                        <div className="border px-2 py-1 mt-3 bg-light text-center" data-testid="event-details-title">
                           <strong>{event.title}</strong>
                           {event.isPrivateEvent && (
                             <Row className="mx-0 mt-2">
@@ -167,6 +167,15 @@ const EventDetails = ({
                             </Row>
                           )}
                         </div>
+
+                        {event.userBookingStatus === "CONFIRMED" && event.meetingUrl && (
+                          <a href={event.meetingUrl} className="w-100" target="_blank" rel="noopener noreferrer">
+                            <Button color="primary" className="mt-2 w-100">
+                              Join event now
+                            </Button>
+                          </a>
+                        )}
+
                         {isDefined(event.location) &&
                           isDefined(event.location?.latitude) &&
                           isDefined(event.location?.longitude) && (

@@ -22,6 +22,7 @@ const eventDate = () => screen.getByTestId("event-date");
 const placesAvailable = () => screen.queryByTestId("event-availability");
 const privateBadge = () => screen.queryByText("Private Event");
 const bookingDeadline = () => screen.queryByTestId("event-booking-deadline");
+const joinEventButton = () => screen.queryByRole("link", { name: "Join event now" });
 
 describe("EventDetails", () => {
   const setupTest = async ({ role, event }: { role: TestUserRole; event: IsaacEventPageDTO }) => {
@@ -252,5 +253,57 @@ describe("EventDetails", () => {
     };
     await setupTest({ role: "STUDENT", event });
     expect(getButton("Leave waiting list")).toBeInTheDocument();
+  });
+
+  it("does not offer a 'join event now' button if user is not logged in", async () => {
+    const event = {
+      ...mockEvent,
+      meetingUrl: "https://example-meeting-link.com",
+    };
+    await setupTest({ role: "ANONYMOUS", event });
+    expect(joinEventButton()).toBeNull();
+  });
+
+  it("does not offer a 'join event now' button if user is not booked on the event", async () => {
+    const event = {
+      ...mockEvent,
+      meetingUrl: "https://example-meeting-link.com",
+    };
+    await setupTest({ role: "STUDENT", event });
+    expect(joinEventButton()).toBeNull();
+  });
+
+  it.each(["RESERVED", "CANCELLED", "WAITING_LIST", "ATTENDED", "ABSENT"] as BookingStatus[])(
+    "does not offer a 'join event now' button if user's booking status is %s",
+    async (bookingStatus) => {
+      const event = {
+        ...mockEvent,
+        meetingUrl: "https://example-meeting-link.com",
+        userBookingStatus: bookingStatus,
+      };
+      await setupTest({ role: "STUDENT", event });
+      const joinEventButton = screen.queryByRole("link", { name: "Join event now" });
+      expect(joinEventButton).toBeNull();
+    },
+  );
+
+  it("does not offer a 'join event now' button if a meetingUrl is not provided", async () => {
+    const event = {
+      ...mockEvent,
+      userBookingStatus: "CONFIRMED" as BookingStatus,
+    };
+    await setupTest({ role: "STUDENT", event });
+    expect(joinEventButton()).toBeNull();
+  });
+
+  it("offers a 'join event now' button if a meetingUrl is provided and user's booking status is CONFIRMED", async () => {
+    const event = {
+      ...mockEvent,
+      meetingUrl: "https://example-meeting-link.com",
+      userBookingStatus: "CONFIRMED" as BookingStatus,
+    };
+    await setupTest({ role: "STUDENT", event });
+    expect(joinEventButton()).toBeInTheDocument();
+    expect(joinEventButton()).toHaveAttribute("href", event.meetingUrl);
   });
 });
