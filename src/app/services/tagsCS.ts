@@ -65,7 +65,6 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.designAndDevelopment, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.programDesign, title: "Program design", parent: TAG_ID.designAndDevelopment},
         {id: TAG_ID.testing, title: "Testing", parent: TAG_ID.designAndDevelopment},
-        {id: TAG_ID.softwareProject, title: "Software projects (coursework)", parent: TAG_ID.designAndDevelopment, stageOverride: GCSE_HIDDEN},
 
         // Effective use of tools topics
         {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.effectiveUseOfTools},

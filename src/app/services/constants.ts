@@ -485,7 +485,6 @@ export enum TAG_ID {
     // Design and development topics
     programDesign = "program_design",
     softwareEngineeringPrinciples = "software_engineering_principles",
-    softwareProject = "software_project",
     testing = "testing",
 
     // Effective use of tools topics
