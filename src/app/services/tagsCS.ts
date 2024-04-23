@@ -25,6 +25,8 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.programming, title: "Programming", parent: TAG_ID.computerScience},
         {id: TAG_ID.cyberSecurity, title: "Safety and security", parent: TAG_ID.computerScience},
         {id: TAG_ID.theoryOfComputation, title: "Models of computation", parent: TAG_ID.computerScience, stageOverride: GCSE_HIDDEN},
+        {id: TAG_ID.projects, title: "Software projects", parent: TAG_ID.computerScience},
+
 
         // AI and machine learning topics
         {id: TAG_ID.artificialIntelligence, title: "Artificial intelligence", parent: TAG_ID.aiAndMachineLearning, new: true},
@@ -98,7 +100,13 @@ export class CsTagService extends AbstractBaseTagService {
 
         // Models of computation topics
         {id: TAG_ID.machinesWithMemory, title: "Machines with memory", parent: TAG_ID.theoryOfComputation, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.mathsForCs, title: "Maths for computer science", parent: TAG_ID.theoryOfComputation, stageOverride: GCSE_HIDDEN}
+        {id: TAG_ID.mathsForCs, title: "Maths for computer science", parent: TAG_ID.theoryOfComputation, stageOverride: GCSE_HIDDEN},
+
+        // Software projects topics
+        {id: TAG_ID.database_project, title: "Database project", parent: TAG_ID.projects, comingSoonDate: "soon"},
+        {id: TAG_ID.aqa_nea_project, title: "AQA NEA (coursework)", parent: TAG_ID.projects},
+        {id: TAG_ID.ocr_nea_project, title: "OCR NEA (coursework)", parent: TAG_ID.projects},
+
     ];
     public getTagHierarchy() {return CsTagService.tagHierarchy;}
     public getBaseTags() {return CsTagService.baseTags;}
