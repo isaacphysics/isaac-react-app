@@ -31,7 +31,7 @@ export const TutorFeatures = () => {
         </Row>
         <Row className="card-deck isaac-cards-body px-3">
             <IsaacCard doc={{ clickUrl: "/groups",
-                image: {src: "/assets/phy/teacher_features_sprite.svg#groups"},
+                image: {src: "/assets/phy/icons/teacher_features_sprite.svg#groups"},
                 title: "1. Create a Group",
                 disabled: isDisabled,
                 verticalContent: true,
@@ -39,7 +39,7 @@ export const TutorFeatures = () => {
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: PATHS.SET_ASSIGNMENTS,
-                image: {src: "/assets/phy/teacher_features_sprite.svg#set-assignments"},
+                image: {src: "/assets/phy/icons/teacher_features_sprite.svg#set-assignments"},
                 title: "2. Set Assignments",
                 disabled: isDisabled,
                 verticalContent: true,
@@ -47,7 +47,7 @@ export const TutorFeatures = () => {
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: PATHS.ASSIGNMENT_PROGRESS,
-                image: {src: "/assets/phy/teacher_features_sprite.svg#track-progress"},
+                image: {src: "/assets/phy/icons/teacher_features_sprite.svg#track-progress"},
                 title: "3. Assignment Progress",
                 disabled: isDisabled,
                 verticalContent: true,
@@ -62,21 +62,21 @@ export const TutorFeatures = () => {
         </Row>
         <Row className="card-deck isaac-cards-body mb-5 mt-2 px-3">
             <IsaacCard doc={{ clickUrl: "/support/tutor/general",
-                image: {src: "/assets/phy/teacher_features_sprite.svg#teacher-forum"},
+                image: {src: "/assets/phy/icons/teacher_features_sprite.svg#teacher-forum"},
                 title: "Tutor FAQ",
                 verticalContent: true,
                 subtitle: "Answers to your questions and how-to guides."}}
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: "/pages/order_books",
-                image: {src: "/assets/phy/teacher_features_sprite.svg#skills-book-cover"},
+                image: {src: "/assets/phy/icons/teacher_features_sprite.svg#skills-book-cover"},
                 title: "Isaac Physics Books",
                 verticalContent: true,
                 subtitle: "Buy one of our Skills Mastery books at cost."}}
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: "/pages/pre_made_gameboards",
-                image: {src: "/assets/phy/key_stage_sprite.svg#triple"},
+                image: {src: "/assets/phy/icons/key_stage_sprite.svg#triple"},
                 title: "Boards for Lessons",
                 verticalContent: true,
                 subtitle: isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}}

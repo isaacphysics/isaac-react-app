@@ -34,7 +34,7 @@ export const IsaacFeaturedProfile = ({doc, contentIndex}: IsaacFeaturedProfilePr
             {isDefined(summary) && <IsaacContent doc={summary} />}
         </div>
         {doc.emailAddress && <a href={"mailto:" + doc.emailAddress} className="mb-4">
-            <img src='/assets/phy/icon-mailto.png' alt=""/>
+            <img src='/assets/phy/icons/icon-mailto.png' alt=""/>
             <span className="sr-only">{"Email " + doc.title}</span>
         </a>}
     </div>
