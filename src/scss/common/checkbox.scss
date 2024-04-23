@@ -33,6 +33,10 @@
           background: #eee;
           border-color: #222;
         }
+
+        &:focus {
+          box-shadow: 0 0 0 0.1em #000;
+        }
       }
   
       .tick {
