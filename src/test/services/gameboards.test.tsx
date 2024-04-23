@@ -1,4 +1,3 @@
-import { GameboardDTO } from "../../IsaacApiTypes";
 import {formatBoardOwner, SITE_TITLE_SHORT} from "../../app/services";
 
 describe("Correct board owner is shown", () => {

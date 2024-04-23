@@ -63,13 +63,13 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                         const filteredAssignments = filterAssignmentsByProperties(assignmentByStates[assignmentStateFilter], assignmentTitleFilter, assignmentGroupFilter, assignmentSetByFilter);
 
                         return <>
-                            <Row>
-                                <Col md={8} lg={4}>
+                            <Row className={siteSpecific("pt-4", "pt-2")}>
+                                <Col lg={4}>
                                     <Label className="w-100">
                                         {siteSpecific("Filter assignments", "Filter quizzes by name")} <Input type="text" onChange={(e) => setAssignmentTitleFilter(e.target.value)} placeholder={siteSpecific("Filter assignments by name", undefined)}/>
                                     </Label>
                                 </Col>
-                                <Col sm={6} lg={2} className="ml-lg-auto">
+                                <Col sm={6} md={4} lg={2} className="ml-lg-auto">
                                     <Label className="w-100">
                                         Group
                                         <Input type="select" value={assignmentGroupFilter} onChange={e => setAssignmentGroupFilter(e.target.value)}>
@@ -77,7 +77,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                         </Input>
                                     </Label>
                                 </Col>
-                                <Col sm={6} lg={2}>
+                                <Col sm={6} md={4} lg={2}>
                                     <Label className="w-100">
                                         Set by
                                         <Input type="select" value={assignmentSetByFilter} onChange={e => setAssignmentSetByFilter(e.target.value)}>
