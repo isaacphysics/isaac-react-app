@@ -3,6 +3,7 @@ import {
     AppState,
     clearQuestionSearch,
     searchQuestions,
+    updateCurrentUser,
     useAppDispatch,
     useAppSelector
 } from "../../state";
@@ -32,7 +33,8 @@ import {
     useQueryParams,
     arrayFromPossibleCsv,
     toSimpleCSV,
-    itemiseByValue
+    itemiseByValue,
+    isLoggedIn
 } from "../../services";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
@@ -46,6 +48,7 @@ import { MetaDescription } from "../elements/MetaDescription";
 import { CanonicalHrefElement } from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
+import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -78,18 +81,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     useEffect(function populateExamBoardFromUserContext() {
         if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
     }, [userContext.examBoard]);
+
     useEffect(function populateStageFromUserContext() {
         if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) setSearchStages([userContext.stage]);
     }, [userContext.stage]);
 
-    const [searchBook, setSearchBook] = useState<string[]>(
-        arrayFromPossibleCsv(params.book)
-    );
+    const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
+
+    const [searchBook, setSearchBook] = useState<string[]>(arrayFromPossibleCsv(params.book));
+
     const isBookSearch = searchBook.length > 0;
 
-    const [searchFastTrack, setSearchFastTrack] = useState<boolean>(
-        params.fasttrack ? true : false
-    );
+    const [searchFastTrack, setSearchFastTrack] = useState<boolean>(!!params.fasttrack);
     const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({});
 
     const creationContext: AudienceContext = useMemo(() => {
@@ -182,6 +185,19 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         );
     }, [questions, user, searchTopics, isBookSearch, questionsSort, creationContext]);
 
+    const [revisionMode, setRevisionMode] = useState(!!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS);
+
+    const debouncedRevisionModeUpdate = useCallback(debounce(() => {
+        if (user && isLoggedIn(user)) {
+            const userToUpdate = {...user, password: null};
+            const userPreferencesToUpdate = {
+                DISPLAY_SETTING: {...userPreferences?.DISPLAY_SETTING, HIDE_QUESTION_ATTEMPTS: !userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS}
+            };
+            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, undefined, null, user, false));
+            setRevisionMode(r => !r);
+        }}, 1000, {leading: true, trailing: true}
+    ), []);
+
     const pageHelp = <span>
         You can find a question by selecting the areas of interest, stage and difficulties.
         <br/>
@@ -264,6 +280,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         </RS.Form>
                     </RS.Col>}
                 </RS.Row>
+                
                 <RS.Row>
                     <RS.Col lg={12} className="text-wrap mt-2">
                         <RS.Label htmlFor="question-search-title">Search</RS.Label>
@@ -277,11 +294,29 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         />
                     </RS.Col>
                 </RS.Row>
+
+                {user && isLoggedIn(user) && <RS.Row>
+                    <RS.Form>
+                        <RS.Col className="mt-4">
+                            <div className="d-flex">
+                                <StyledCheckbox 
+                                    checked={revisionMode} 
+                                    onChange={debouncedRevisionModeUpdate}
+                                    label={<p><b>Revision mode</b></p>}
+                                />
+                                <span id="revision-mode-checkbox" className="icon-help"/>
+                                <RS.UncontrolledTooltip target="revision-mode-checkbox" placement="top" autohide={false}>
+                                    Revision mode hides your previous answers, so you can practice questions that you have answered before.
+                                </RS.UncontrolledTooltip>
+                            </div>
+                        </RS.Col>
+                    </RS.Form>
+                </RS.Row>}
             </RS.CardBody>
         </RS.Card>
         <RS.Card>
             <RS.CardHeader className="finder-header">
-                <RS.Col classname={"pr-0"}>
+                <RS.Col className={"pr-0"}>
                     <h3>
                         {sortedQuestions ? <RS.Badge color="primary">{sortedQuestions.length}</RS.Badge> : <IsaacSpinner />} Questions Match
                     </h3>
