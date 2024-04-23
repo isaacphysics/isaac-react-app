@@ -131,7 +131,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                     <Tooltip tipText="This user has not yet verified their email." className="icon-email-status unverified" />
                 }
                 {member.groupMembershipInformation && member.groupMembershipInformation.status == "INACTIVE" &&
-                    <Tooltip tipText="This user has set their status to inactive for this group. This means they will no longer see new assignments."> (inactive in group)</Tooltip>
+                    <Tooltip className="ml-1" tipText="This user has set their status to inactive for this group. This means they will no longer see new assignments.">(inactive in group)</Tooltip>
                 }
             </div>
         </div>

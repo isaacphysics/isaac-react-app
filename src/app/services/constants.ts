@@ -447,6 +447,7 @@ export enum TAG_ID {
     programming = "programming",
     cyberSecurity = "cyber_security",
     theoryOfComputation = "theory_of_computation",
+    projects = "projects",
 
     // AI and machine learning topics
     artificialIntelligence = "artificial_intelligence",
@@ -484,7 +485,6 @@ export enum TAG_ID {
     // Design and development topics
     programDesign = "program_design",
     softwareEngineeringPrinciples = "software_engineering_principles",
-    softwareProject = "software_project",
     testing = "testing",
 
     // Effective use of tools topics
@@ -521,6 +521,11 @@ export enum TAG_ID {
     // Models of computation topics
     machinesWithMemory = "machines_with_memory",
     mathsForCs = "maths_for_cs",
+
+    // Software project topics
+    database_project = "database_project",
+    aqa_nea_project = "aqa_nea_project",
+    ocr_nea_project = "ocr_nea_project",
 
     // Old tags ------
     // programmingParadigms = "programming_paradigms",

@@ -162,21 +162,17 @@ export const groupsApi = assignmentsApi.injectEndpoints({
                 onQuerySuccess: ({groupId, userId}, _, {dispatch, getState}) => {
                     const currentUserId = getState().user.id;
                     if (currentUserId === userId) {
-                        dispatch(assignmentsApi.util.invalidateTags(["AllMyAssignments", "MyGroupMemberships"]));
+                        dispatch(assignmentsApi.util.invalidateTags(["AllMyAssignments", "MyGroupMemberships", "Groups"]));
                     }
                     [true, false].forEach(archivedGroupsOnly => {
                         dispatch(groupsApi.util.updateQueryData(
                             "getGroups",
                             archivedGroupsOnly,
                             (groups) =>
-                                groups.filter(g => g.selfRemoval && g.members?.find(m => m.id === userId)
-                                        ? g.id !== groupId 
-                                        : true
-                                    )
-                                    .map(g => g.id === groupId
-                                        ? {...g, members: g.members?.filter(m => m.id !== userId)}
-                                        : g
-                                    )
+                                groups.map(g => g.id === groupId
+                                    ? {...g, members: g.members?.filter(m => m.id !== userId)}
+                                    : g
+                                )
                         ));
                     });
                 },
