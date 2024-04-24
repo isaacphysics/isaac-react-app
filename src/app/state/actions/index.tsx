@@ -11,7 +11,6 @@ import {
   EventTypeFilter,
   history,
   isDefined,
-  isFirstLoginInPersistence,
   KEY,
   persistence,
   QUESTION_ATTEMPT_THROTTLED_MESSAGE,
@@ -259,15 +258,7 @@ export const updateCurrentUser =
       });
       dispatch(requestCurrentUser() as any);
 
-      const isFirstLogin = isFirstLoginInPersistence() || false;
-      if (isFirstLogin) {
-        persistence.session.remove(KEY.FIRST_LOGIN);
-        if (redirect) {
-          history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || "/", {
-            firstLogin: isFirstLogin,
-          });
-        }
-      } else if (!editingOtherUser) {
+      if (!editingOtherUser) {
         dispatch(
           showToast({
             title: "Account settings updated",
@@ -312,13 +303,7 @@ export const registerUser =
       dispatch({ type: ACTION_TYPE.USER_REGISTRATION_REQUEST });
       const currentUser = await api.users.updateCurrent(newUser, userPreferences, null, userContexts, recaptchaToken);
       dispatch({ type: ACTION_TYPE.USER_REGISTRATION_RESPONSE_SUCCESS, user: currentUser.data });
-      dispatch(requestCurrentUser() as any);
-
-      const isFirstLogin = isFirstLoginInPersistence() || false;
-      if (isFirstLogin) {
-        persistence.session.remove(KEY.FIRST_LOGIN);
-        history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || "/", { firstLogin: isFirstLogin });
-      }
+      changePage("/register/success");
     } catch (e: any) {
       dispatch({ type: ACTION_TYPE.USER_REGISTRATION_RESPONSE_FAILURE, errorMessage: extractMessage(e) });
     }
@@ -392,11 +377,12 @@ export const logInUser =
   };
 
 export const upgradeAccount =
-  (params: { verificationDetails: string; otherInformation?: string }) => async (dispatch: Dispatch<Action>) => {
+  (params: { verificationDetails: string; userEmail: string; otherInformation?: string }) =>
+  async (dispatch: Dispatch<Action>) => {
     dispatch({ type: ACTION_TYPE.ACCOUNT_UPGRADE_SEND_REQUEST });
     try {
-      const pendingAccountUpgrade = await api.users.upgradeAccount(params);
-      dispatch({ type: ACTION_TYPE.ACCOUNT_UPGRADE_SEND_RESPONSE_SUCCESS, user: pendingAccountUpgrade.data });
+      await api.users.upgradeAccount(params);
+      dispatch({ type: ACTION_TYPE.ACCOUNT_UPGRADE_SEND_RESPONSE_SUCCESS });
     } catch (e) {
       const errorMessage = extractMessage(e as Error);
       dispatch({ type: ACTION_TYPE.ACCOUNT_UPGRADE_SEND_RESPONSE_FAILURE, errorMessage: errorMessage });
@@ -481,7 +467,7 @@ export const handleProviderCallback =
         });
       }
       const nextPage = persistence.pop(KEY.AFTER_AUTH_PATH);
-      history.push(nextPage || "/");
+      history.push(nextPage ?? "/account");
     } catch (error: any) {
       history.push("/auth_error", { errorMessage: extractMessage(error) });
       dispatch({ type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed" });
@@ -649,7 +635,7 @@ export const authenticateWithTokenAfterPrompt =
       }
     }
   };
-export const authenticateWithToken = (authToken: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
+export const authenticateWithToken = (authToken: string) => async (dispatch: AppDispatch) => {
   try {
     dispatch({ type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST });
     await api.authorisations.useToken(authToken);
@@ -666,14 +652,8 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: App
         body: "You have granted access to your data.",
       }) as any,
     );
-    const state = getState();
-    // TODO currently this is not necessary because we are not on the correct tab after being told to log in
-    // user.firstLogin is set correctly using SSO, but not with Segue: check session storage too:
-    if ((state && state.user && state.user.loggedIn && state.user.firstLogin) || isFirstLoginInPersistence()) {
-      // If we've just signed up and used a group code immediately, change back to the main settings page:
-      history.push("/account");
-    }
     dispatch(closeActiveModal() as any);
+    history.push("/account#profile");
   } catch (e) {
     dispatch({ type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE });
     dispatch(

@@ -13,11 +13,12 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { Redirect } from "react-router";
+import { Redirect, useLocation } from "react-router";
 import { MetaDescription } from "../elements/MetaDescription";
 import { Role } from "../../../IsaacApiTypes";
 
 export const Registration = () => {
+  const location = useLocation();
   const user = useAppSelector(selectors.user.orNull);
 
   const [role, setRole] = useState<Role>();
@@ -42,7 +43,7 @@ export const Registration = () => {
   }
 
   if (redirectTo) {
-    return <Redirect to={redirectTo} />;
+    return <Redirect to={{ pathname: redirectTo, state: location.state }} />;
   }
 
   const metaDescriptionCS =

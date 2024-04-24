@@ -4,7 +4,7 @@ import { Card, CardBody, CardTitle, Col, Container, Form, FormFeedback, Row } fr
 import { BooleanNotation, DisplaySettings, UserEmailPreferences, ValidationUser } from "../../../IsaacAppTypes";
 import { loadZxcvbnIfNotPresent, REGISTER_CRUMB, validateForm } from "../../services";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { Redirect } from "react-router";
+import { Redirect, useLocation } from "react-router";
 import { MetaDescription } from "../elements/MetaDescription";
 import { SchoolInput } from "../elements/inputs/SchoolInput";
 import { UserContext } from "../../../IsaacApiTypes";
@@ -21,8 +21,9 @@ import { RegistrationSubmit } from "../elements/inputs/RegistrationSubmit";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Recaptcha } from "../elements/inputs/Recaptcha";
 
-// TODO: useLocation hook to retrieve email/password when upgrading react router to v6+
 export const StudentRegistration = () => {
+  const location = useLocation();
+  const { email } = (location.state || {}) as { email?: string };
   const user = useAppSelector(selectors.user.orNull);
   const errorMessage = useAppSelector(selectors.error.general);
   const { register, attemptedSignUp } = useRegistration({ isTeacher: false });
@@ -37,7 +38,7 @@ export const StudentRegistration = () => {
   // Inputs which trigger re-render
   const [registrationUser, setRegistrationUser] = useState<Immutable<ValidationUser>>({
     ...user,
-    email: undefined,
+    email: email,
     dateOfBirth: undefined,
     password: null,
     familyName: undefined,
@@ -130,6 +131,7 @@ export const StudentRegistration = () => {
                   userToUpdate={registrationUser}
                   setUserToUpdate={setRegistrationUser}
                   submissionAttempted={attemptedSignUp}
+                  emailDefault={email}
                 />
               </Col>
               <Col md={6}>

@@ -30,6 +30,14 @@ describe("Teacher Registration", () => {
       role: "ANONYMOUS",
       PageComponent: TeacherRegistration,
       initialRouteEntries: ["/register/teacher"],
+      extraEndpoints: [
+        rest.post(API_PATH + "/users", (req, res, ctx) => {
+          return res(ctx.status(200), ctx.json(registrationMockUser));
+        }),
+        rest.post(API_PATH + "/users/request_role_change", (req, res, ctx) => {
+          return res(ctx.status(200), ctx.json({ ...registrationMockUser, teacherPending: true }));
+        }),
+      ],
     });
   };
 
@@ -143,19 +151,7 @@ describe("Teacher Registration", () => {
   });
 
   it("attempts to create a user and submits an account upgrade request if fields are filled in correctly and submit button is pressed", async () => {
-    renderTestEnvironment({
-      role: "ANONYMOUS",
-      PageComponent: TeacherRegistration,
-      initialRouteEntries: ["/register/student"],
-      extraEndpoints: [
-        rest.post(API_PATH + "/users", (req, res, ctx) => {
-          return res(ctx.status(200), ctx.json(registrationMockUser));
-        }),
-        rest.post(API_PATH + "/users/request_role_change", (req, res, ctx) => {
-          return res(ctx.status(200), ctx.json({ ...registrationMockUser, teacherPending: true }));
-        }),
-      ],
-    });
+    renderTeacherRegistration();
     await confirmTeacherAndAcceptTerms();
     await fillFormCorrectly(true, "teacher");
     await clickButton("Register my account");
@@ -185,8 +181,18 @@ describe("Teacher Registration", () => {
     expect(upgradeAccountSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         verificationDetails: registrationUserData.verificationInfo,
+        userEmail: registrationUserData.email,
         otherInformation: "extra information",
       }),
     );
+  });
+
+  it("redirects to registration success page after form submission", async () => {
+    renderTeacherRegistration();
+    await confirmTeacherAndAcceptTerms();
+    await fillFormCorrectly(true, "teacher");
+    await clickButton("Register my account");
+    const newPage = location.pathname;
+    expect(newPage).toBe("/register/success");
   });
 });

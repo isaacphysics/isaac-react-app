@@ -60,7 +60,7 @@ export const useLoginLogic = () => {
 
   const signUp = (event: React.MouseEvent) => {
     event.preventDefault();
-    history.push("/register", { email: email, password: password });
+    history.push("/register", { email: email });
   };
 
   const attemptLogIn = () => {

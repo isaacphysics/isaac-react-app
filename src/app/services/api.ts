@@ -116,6 +116,7 @@ export const api = {
 
     upgradeAccount: (params: {
       verificationDetails: string;
+      userEmail: string;
       otherInformation?: string;
     }): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
       return endpoint.post(`/users/request_role_change`, params);

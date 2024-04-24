@@ -22,6 +22,11 @@ describe("Student Registration", () => {
       role: "ANONYMOUS",
       PageComponent: StudentRegistration,
       initialRouteEntries: ["/register/student"],
+      extraEndpoints: [
+        rest.post(API_PATH + "/users", (req, res, ctx) => {
+          return res(ctx.status(200), ctx.json(registrationMockUser));
+        }),
+      ],
     });
   };
 
@@ -84,17 +89,7 @@ describe("Student Registration", () => {
   });
 
   it("attempts to create a user when submit is pressed, if fields are filled in correctly", async () => {
-    renderTestEnvironment({
-      role: "ANONYMOUS",
-      PageComponent: StudentRegistration,
-      initialRouteEntries: ["/register/student"],
-      extraEndpoints: [
-        rest.post(API_PATH + "/users", (req, res, ctx) => {
-          return res(ctx.status(200), ctx.json(registrationMockUser));
-        }),
-      ],
-    });
-
+    renderStudentRegistration();
     await fillFormCorrectly(true, "student");
     await clickButton("Register my account");
 
@@ -121,6 +116,14 @@ describe("Student Registration", () => {
       ]),
       "mocked-recaptcha-token",
     );
+  });
+
+  it("redirects to registration success page after form submission", async () => {
+    renderStudentRegistration();
+    await fillFormCorrectly(true, "student");
+    await clickButton("Register my account");
+    const newPage = location.pathname;
+    expect(newPage).toBe("/register/success");
   });
 
   it("should disable register button until recaptcha checkbox is ticked", async () => {

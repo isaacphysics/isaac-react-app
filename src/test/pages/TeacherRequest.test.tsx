@@ -2,7 +2,7 @@ import { checkPageTitle, clickButton, renderTestEnvironment } from "../utils";
 import { TeacherRequest } from "../../app/components/pages/TeacherRequest";
 import { RestHandler, rest } from "msw";
 import { API_PATH } from "../../app/services";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { produce } from "immer";
 import { mockUser } from "../../mocks/data";
 import userEvent from "@testing-library/user-event";
@@ -173,6 +173,9 @@ describe("TeacherRequest", () => {
 
   it("if no Verification Details are specified, form does not submit", async () => {
     setupTest({ role: "STUDENT" });
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
+    });
     await clickButton("Submit");
     expect(upgradeAccountSpy).not.toHaveBeenCalled();
   });
@@ -184,6 +187,9 @@ describe("TeacherRequest", () => {
       }),
     ];
     setupTest({ role: "STUDENT", extraEndpoints });
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
+    });
     const verificationDetailsInput = screen.getByLabelText(/URL of a page on your school website/);
     const otherInformationInput = screen.getByLabelText(/Any other information/);
     await userEvent.type(verificationDetailsInput, "https://example.com");
@@ -192,6 +198,7 @@ describe("TeacherRequest", () => {
     expect(upgradeAccountSpy).toHaveBeenCalledWith(
       expect.objectContaining({
         verificationDetails: "https://example.com",
+        userEmail: mockUser.email,
         otherInformation: "Test other information",
       }),
     );

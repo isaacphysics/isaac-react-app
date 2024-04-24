@@ -92,6 +92,7 @@ import { ExternalRedirect } from "../handlers/ExternalRedirect";
 import { StudentRegistration } from "../pages/StudentRegistration";
 import { TeacherRegistration } from "../pages/TeacherRegistration";
 import { WorkbookDownload } from "../pages/WorkbookDownload";
+import { RegistrationSuccess } from "../pages/RegistrationSuccess";
 
 const ContentEmails = lazy(() => import("../pages/ContentEmails"));
 const MyProgress = lazy(() => import("../pages/MyProgress"));
@@ -328,6 +329,7 @@ export const IsaacApp = () => {
               <TrackedRoute exact path="/register" component={Registration} />
               <TrackedRoute exact path="/register/student" component={StudentRegistration} />
               <TrackedRoute exact path="/register/teacher" component={TeacherRegistration} />
+              <TrackedRoute exact path="/register/success" component={RegistrationSuccess} />
               <TrackedRoute exact path="/auth/:provider/callback" component={ProviderCallbackHandler} />
               <TrackedRoute exact path="/resetpassword/:token" component={ResetPasswordHandler} />
               <TrackedRoute exact path="/verifyemail" component={EmailAlterHandler} />

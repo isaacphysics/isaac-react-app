@@ -2,7 +2,6 @@
 export enum KEY {
   AFTER_AUTH_PATH = "afterAuthPath",
   CURRENT_USER_ID = "currentUserId",
-  FIRST_LOGIN = "firstLogin",
   REQUIRED_MODAL_SHOWN_TIME = "requiredModalShownTime",
   RECONFIRM_USER_CONTEXT_SHOWN_TIME = "reconfirmStageExamBoardShownTime",
   LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME = "loginOrSignUpModalShownTime",

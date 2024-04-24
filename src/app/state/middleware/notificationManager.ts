@@ -35,12 +35,10 @@ export const notificationCheckerMiddleware: Middleware =
       }
 
       if (isDefined(user)) {
-        const firstLogin = persistence.session.load(KEY.FIRST_LOGIN);
         // email confirmation modal to take precedence over other modals, only for teacherPending accounts
         if (
           needToVerifyEmail(user.teacherPending, user.emailVerificationStatus) &&
-          !withinLast2Minutes(persistence.load(KEY.EMAIL_CONFIRMATION_MODAL_SHOWN_TIME)) &&
-          firstLogin === null
+          !withinLast2Minutes(persistence.load(KEY.EMAIL_CONFIRMATION_MODAL_SHOWN_TIME))
         ) {
           persistence.save(KEY.EMAIL_CONFIRMATION_MODAL_SHOWN_TIME, new Date().toString());
           dispatch(openActiveModal(emailConfirmationModal));
@@ -48,8 +46,7 @@ export const notificationCheckerMiddleware: Middleware =
         // Required account info modal - takes precedence over stage/exam board re-confirmation modal
         if (
           isDefined(state.userPreferences) &&
-          !allRequiredInformationIsPresent(user, state.userPreferences, user.registeredContexts) &&
-          firstLogin === null
+          !allRequiredInformationIsPresent(user, state.userPreferences, user.registeredContexts)
         ) {
           dispatch(openActiveModal(requiredAccountInformationModal));
         }

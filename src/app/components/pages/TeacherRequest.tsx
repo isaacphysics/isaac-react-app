@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   AppState,
   isaacApi,
+  requestCurrentUser,
   requestEmailVerification,
   selectors,
   upgradeAccount,
@@ -128,14 +129,18 @@ export const TeacherRequest = () => {
                     </Col>
                   </Row>
                 ) : (
-                  !isTeacherPending(user) && (
+                  !isTeacherPending(user) &&
+                  user?.loggedIn && (
                     <Form
                       name="contact"
                       onSubmit={(e) => {
                         e.preventDefault();
-                        if (verificationDetails) {
-                          dispatch(upgradeAccount({ verificationDetails, otherInformation }));
-                          setMessageSent(true);
+                        if (verificationDetails && user?.email && isValidEmail) {
+                          const userEmail = user.email;
+                          dispatch(upgradeAccount({ verificationDetails, userEmail, otherInformation })).then(() => {
+                            setMessageSent(true);
+                            dispatch(requestCurrentUser());
+                          });
                         }
                       }}
                     >
