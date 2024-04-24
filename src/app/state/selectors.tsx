@@ -30,7 +30,7 @@ export const selectors = {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
         },
         anyQuestionHidden: (state: AppState) => {
-            return !!state && !!state.questions && state.questions.questions.map(q => q.bestAttempt === BEST_ATTEMPT_HIDDEN).reduce((prev, current) => prev || current);
+            return !!state && !!state.questions && state.questions.questions.some(q => q.bestAttempt === BEST_ATTEMPT_HIDDEN);
         }
     },
 
