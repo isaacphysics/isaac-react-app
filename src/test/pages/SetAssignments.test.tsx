@@ -217,4 +217,49 @@ describe("SetAssignments", () => {
         const groupsAssignedHexagon = await within(gameboards[0]).findByTitle("Number of groups assigned");
         expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual("2groups");
     });
+
+    it('should let you unassign a gameboard', async () => {
+        // Arrange
+        renderTestEnvironment({
+            PageComponent: SetAssignments,
+            initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
+            extraEndpoints: [
+                rest.delete(API_PATH + "/assignments/assign/test-gameboard-1/2", async (req, res, ctx) => {
+                    return res(
+                        ctx.status(204),
+                    );
+                })
+            ]
+        });
+        if (!isPhy) {
+            // Change view to "Card View"
+            const viewDropdown = await screen.findByLabelText("Display in");
+            await userEvent.selectOptions(viewDropdown, "Card View");
+        }
+        const gameboards = await screen.findAllByTestId("gameboard-card");
+        const mockGameboard = mockGameboards.results[0];
+
+        // Find and click assign gameboard button
+        const modalOpenButton = within(gameboards[0]).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
+        await userEvent.click(modalOpenButton);
+
+        // Wait for modal to appear
+        const modal = await screen.findByTestId("set-assignment-modal");
+
+        // prepare response to window.confirm dialog
+        let confirmSpy = jest.spyOn(window, 'confirm');
+        confirmSpy.mockImplementation(jest.fn(() => true));
+
+        // Act
+        // click delete button
+        const deleteButton = within(modal).getByRole("button", {name: "Unassign group"});
+        await userEvent.click(deleteButton);
+
+        // Assert
+        const assignedStatusMessage = await within(modal).findByTestId("currently-assigned-to");
+        expect(assignedStatusMessage.textContent).toContain("No groups.")
+
+        // Cleanup
+        confirmSpy.mockRestore();
+    });
 });
