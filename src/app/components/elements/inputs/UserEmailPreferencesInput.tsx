@@ -1,4 +1,4 @@
-import {StyledCheckbox} from "./CheckboxInput";
+import {StyledCheckbox} from "./StyledCheckbox";
 import {FormGroup, Table} from "reactstrap";
 import React, {SetStateAction, useState} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
@@ -83,20 +83,20 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                 </tbody>
             </Table>
         </> : <>
-            <StyledCheckbox initialValue={emailPreferences?.ASSIGNMENTS ?? false} id={`${idPrefix}assignments`}
-                changeFunction={(checked) => setEmailPreferences({...emailPreferences, ASSIGNMENTS: checked})}
+            <StyledCheckbox checked={emailPreferences?.ASSIGNMENTS ?? false} id={`${idPrefix}assignments`}
+                onChange={(e) => setEmailPreferences({...emailPreferences, ASSIGNMENTS: e.target.checked})}
                 label={<span><b>Assignments</b></span>}
             />
             <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.assignments}</span>
 
-            <StyledCheckbox initialValue={emailPreferences?.NEWS_AND_UPDATES ?? false} id={`${idPrefix}news`}
-                changeFunction={(checked) => setEmailPreferences({...emailPreferences, NEWS_AND_UPDATES: checked})}
+            <StyledCheckbox checked={emailPreferences?.NEWS_AND_UPDATES ?? false} id={`${idPrefix}news`}
+                onChange={(e) => setEmailPreferences({...emailPreferences, NEWS_AND_UPDATES: e.target.checked})}
                 label={<span><b>News</b></span>}
             />
             <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.news}</span>
 
-            <StyledCheckbox initialValue={emailPreferences?.EVENTS ?? false} id={`${idPrefix}events`}
-                changeFunction={(checked) => setEmailPreferences({...emailPreferences, EVENTS: checked})}
+            <StyledCheckbox checked={emailPreferences?.EVENTS ?? false} id={`${idPrefix}events`}
+                onChange={(e) => setEmailPreferences({...emailPreferences, EVENTS: e.target.checked})}
                 label={<span><b>Events</b></span>}
             />
             <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.events}</span>
