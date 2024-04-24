@@ -159,7 +159,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (searchStages.length) params.stages = toSimpleCSV(searchStages);
         if (searchDifficulties.length) params.difficulties = toSimpleCSV(searchDifficulties);
         if (searchTopics.length) params.topics = toSimpleCSV(searchTopics);
-        if (searchQuery.length) params.query = encodeURI(searchQuery);
+        if (searchQuery.length) params.query = encodeURIComponent(searchQuery);
         if (isAda && searchExamBoards.length) params.examBoards = toSimpleCSV(searchExamBoards);
         if (isPhy && searchBook.length) params.book = toSimpleCSV(searchBook);
         if (isPhy && searchFastTrack) params.fasttrack = "set";
