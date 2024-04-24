@@ -75,6 +75,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         arrayFromPossibleCsv(params.examBoards) as ExamBoard[]
     );
 
+    const [tempSearchString, setTempSearch] = useState<string>(searchQuery);
+
     useEffect(function populateExamBoardFromUserContext() {
         if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
     }, [userContext.examBoard]);
@@ -270,9 +272,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         <RS.Input id="question-search-title"
                             type="text"
                             placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                            value={searchQuery}
+                            value={tempSearchString}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setSearchQuery(e.target.value);
+                                setTempSearch(e.target.value);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    setSearchQuery(tempSearchString);
+                                }
                             }}
                         />
                     </RS.Col>
