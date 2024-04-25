@@ -32,7 +32,8 @@ import {
     useQueryParams,
     arrayFromPossibleCsv,
     toSimpleCSV,
-    itemiseByValue
+    itemiseByValue,
+    ifKeyIsEnter
 } from "../../services";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
@@ -74,6 +75,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(
         arrayFromPossibleCsv(params.examBoards) as ExamBoard[]
     );
+
+    const [tempSearchString, setTempSearch] = useState<string>(searchQuery);
 
     useEffect(function populateExamBoardFromUserContext() {
         if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
@@ -159,7 +162,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (searchStages.length) params.stages = toSimpleCSV(searchStages);
         if (searchDifficulties.length) params.difficulties = toSimpleCSV(searchDifficulties);
         if (searchTopics.length) params.topics = toSimpleCSV(searchTopics);
-        if (searchQuery.length) params.query = encodeURI(searchQuery);
+        if (searchQuery.length) params.query = encodeURIComponent(searchQuery);
         if (isAda && searchExamBoards.length) params.examBoards = toSimpleCSV(searchExamBoards);
         if (isPhy && searchBook.length) params.book = toSimpleCSV(searchBook);
         if (isPhy && searchFastTrack) params.fasttrack = "set";
@@ -270,10 +273,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         <RS.Input id="question-search-title"
                             type="text"
                             placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                            value={searchQuery}
+                            value={tempSearchString}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setSearchQuery(e.target.value);
+                                setTempSearch(e.target.value);
                             }}
+                            onKeyDown={ifKeyIsEnter(() => setSearchQuery(tempSearchString))}
                         />
                     </RS.Col>
                 </RS.Row>
