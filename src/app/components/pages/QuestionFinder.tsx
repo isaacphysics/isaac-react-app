@@ -194,8 +194,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 DISPLAY_SETTING: {...userPreferences?.DISPLAY_SETTING, HIDE_QUESTION_ATTEMPTS: !userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS}
             };
             dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, undefined, null, user, false));
-            setRevisionMode(r => !r);
-        }}, 1000, {leading: true, trailing: true}
+        }}, 250, {trailing: true}
     ), []);
 
     const pageHelp = <span>
@@ -301,7 +300,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             <div className="d-flex">
                                 <StyledCheckbox 
                                     checked={revisionMode} 
-                                    onChange={debouncedRevisionModeUpdate}
+                                    onChange={() => {
+                                        setRevisionMode(r => !r); 
+                                        debouncedRevisionModeUpdate();
+                                    }}
                                     label={<p><b>Revision mode</b></p>}
                                 />
                                 <span id="revision-mode-checkbox" className="icon-help"/>
