@@ -287,7 +287,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             <RS.CardHeader className="finder-header">
                 <RS.Col classname={"pr-0"}>
                     <h3>
-                        {sortedQuestions ? <RS.Badge color="primary">{sortedQuestions.length}</RS.Badge> : <IsaacSpinner />} Questions Match
+                        Results
                     </h3>
                 </RS.Col>
             </RS.CardHeader>
@@ -299,9 +299,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             (sortedQuestions?.length ?
                                 <>
                                     <LinkToContentSummaryList items={sortedQuestions}/>
-                                    {(totalQuestions ?? 0) > sortedQuestions.length && <div role="status" className={`alert alert-light border ${siteSpecific("m-0", "m-4")}`}>
-                                        Not found what you&apos;re looking for? Try refining your search filters.<br/>
-                                        {`${(totalQuestions ?? 0) - sortedQuestions.length} questions matching your criteria not shown.`}
+                                    {sortedQuestions && (totalQuestions ?? 0) > sortedQuestions.length &&
+                                    <div role="status" className={"alert alert-light border"}>
+                                            {`${totalQuestions} questions match your criteria.`}<br/>
+                                            Not found what you&apos;re looking for? Try refining your search filters.
                                     </div>}
                                 </> :
                                 <em>No results found</em>)
