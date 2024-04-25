@@ -32,7 +32,8 @@ import {
     useQueryParams,
     arrayFromPossibleCsv,
     toSimpleCSV,
-    itemiseByValue
+    itemiseByValue,
+    ifKeyIsEnter
 } from "../../services";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
@@ -276,11 +277,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setTempSearch(e.target.value);
                             }}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    setSearchQuery(tempSearchString);
-                                }
-                            }}
+                            onKeyDown={ifKeyIsEnter(() => setSearchQuery(tempSearchString))}
                         />
                     </RS.Col>
                 </RS.Row>
