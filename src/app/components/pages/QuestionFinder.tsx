@@ -297,7 +297,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     <LinkToContentSummaryList items={sortedQuestions}/>
                                     {sortedQuestions && (totalQuestions ?? 0) > sortedQuestions.length &&
                                     <div role="status" className={"alert alert-light border"}>
-                                            {`Showing ${sortedQuestions.length} out of ${totalQuestions} questions matching your criteria.`}<br/>
+                                            {`${totalQuestions} questions match your criteria.`}<br/>
                                             Not found what you&apos;re looking for? Try refining your search filters.
                                     </div>}
                                 </> :
