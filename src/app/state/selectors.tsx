@@ -1,5 +1,6 @@
 import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith, AppState} from "./index";
 import {NOT_FOUND} from "../services";
+import { BEST_ATTEMPT_HIDDEN } from "../../IsaacApiTypes";
 
 export const selectors = {
 
@@ -27,6 +28,9 @@ export const selectors = {
         },
         anyQuestionPreviouslyAttempted: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
+        },
+        anyQuestionHidden: (state: AppState) => {
+            return !!state && !!state.questions && state.questions.questions.some(q => q.bestAttempt === BEST_ATTEMPT_HIDDEN);
         }
     },
 
