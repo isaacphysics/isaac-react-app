@@ -1,7 +1,7 @@
 import React from "react";
 import {rest, RestHandler} from "msw";
 import {API_PATH, PATHS, siteSpecific} from "../../app/services";
-import {screen, waitFor, within} from "@testing-library/react";
+import {getByText, screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
 import {mockMyAssignments, mockUser} from "../../mocks/data";
@@ -169,5 +169,15 @@ describe("MyAssignments", () => {
         const assignedDate = assignedDateEl?.textContent?.replace(/Assigned:\s?/, "");
         expect(assignedDate).toMatch(DDMMYYYY_REGEX);
         expect(dayMonthYearStringToDate(assignedDate)?.valueOf()).toEqual(DAYS_AGO(3, true));
+    });
+
+    it('should show the notes field for assignments with notes', async () => {
+        // Arrange
+        renderMyAssignments();
+        await screen.findAllByTestId("my-assignment");
+
+        // Act & Assert
+        expect(screen.getAllByText("Notes:")).toHaveLength(1);
+        expect(screen.getByText("This is cool")).toBeInTheDocument();
     });
 });
