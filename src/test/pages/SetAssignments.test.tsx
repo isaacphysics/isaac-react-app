@@ -1,10 +1,9 @@
-import React from "react";
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, renderTestEnvironment} from "../utils";
-import {API_PATH, isAda, isPhy, PATHS, siteSpecific, STAGE, stageLabelMap} from "../../app/services";
+import {API_PATH, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
 import {rest} from "msw";
 
 const expectedPhysicsTopLinks = {
@@ -237,7 +236,6 @@ describe("SetAssignments", () => {
             await userEvent.selectOptions(viewDropdown, "Card View");
         }
         const gameboards = await screen.findAllByTestId("gameboard-card");
-        const mockGameboard = mockGameboards.results[0];
 
         // Find and click assign gameboard button
         const modalOpenButton = within(gameboards[0]).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
@@ -247,7 +245,7 @@ describe("SetAssignments", () => {
         const modal = await screen.findByTestId("set-assignment-modal");
 
         // prepare response to window.confirm dialog
-        let confirmSpy = jest.spyOn(window, 'confirm');
+        const confirmSpy = jest.spyOn(window, 'confirm');
         confirmSpy.mockImplementation(jest.fn(() => true));
 
         // Act
@@ -257,7 +255,7 @@ describe("SetAssignments", () => {
 
         // Assert
         const assignedStatusMessage = await within(modal).findByTestId("currently-assigned-to");
-        expect(assignedStatusMessage.textContent).toContain("No groups.")
+        expect(assignedStatusMessage.textContent).toContain("No groups.");
 
         // Cleanup
         confirmSpy.mockRestore();
@@ -265,16 +263,11 @@ describe("SetAssignments", () => {
 
     it('should reject duplicate assignment', async () => {
         // Arrange
-        let requestGroupIds: string[];
-        let requestAssignment: {gameboardId: string, scheduledStartDate?: any, dueDate?: any, notes?: string};
         renderTestEnvironment({
             PageComponent: SetAssignments,
             initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
             extraEndpoints: [
                 rest.post(API_PATH + "/assignments/assign_bulk", async (req, res, ctx) => {
-                    const json = await req.json();
-                    requestGroupIds = json.map((x: any) => x.groupId);
-                    requestAssignment = json[0];
                     return res(
                         ctx.status(200),
                         ctx.json(
@@ -289,7 +282,6 @@ describe("SetAssignments", () => {
             await userEvent.selectOptions(viewDropdown, "Card View");
         }
         const gameboards = await screen.findAllByTestId("gameboard-card");
-        const mockGameboard = mockGameboards.results[0];
 
         // find and click assign gameboard button for the first gameboard
         const modalOpenButton = within(gameboards[0]).getByRole("button", {name: /Assign\s?\/\s?Unassign/});
