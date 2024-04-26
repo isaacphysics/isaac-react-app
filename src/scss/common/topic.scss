@@ -51,6 +51,10 @@
       max-width: 130px;
       text-align: center;
 
+      &.stage-label-higher {
+        color: white;
+      }
+
       @include respond-below(xs) {
         min-width: 105px;
         max-width: 105px;
