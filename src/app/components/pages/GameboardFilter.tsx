@@ -564,6 +564,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             delete params.questionCategories;
             delete params.title;
             if (params.subjects === allTags) delete params.subjects;
+
             if (isFound(gameboard)) {
                 history.replace({search: queryString.stringify(params, {encode: false}), hash: gameboard.id, state: location.state});
             } else {
