@@ -79,7 +79,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
 
                         <SupersededDeprecatedWarningBanner doc={doc} />
 
-                        <IntendedAudienceWarningBanner doc={doc} />
+                        {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />

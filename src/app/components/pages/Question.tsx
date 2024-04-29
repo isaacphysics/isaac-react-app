@@ -103,7 +103,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
 
                         <SupersededDeprecatedWarningBanner doc={doc} />
 
-                        <IntendedAudienceWarningBanner doc={doc} />
+                        {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
                         <RevisionWarningBanner />
 
