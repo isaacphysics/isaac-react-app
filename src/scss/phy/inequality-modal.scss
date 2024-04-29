@@ -15,6 +15,12 @@
             &.show-question {
                 background-image: url('/assets/phy/icons/inequality-togglequestion-phy.svg');
             }
+            &.trash {
+                background-image: url('/assets/phy/icons/inequality-trash-phy.svg');
+            }
+            &.reset {
+                background-image: url('/assets/phy/icons/inequality-reset-phy.svg');
+            }
         }
 
         &.katex-preview {
