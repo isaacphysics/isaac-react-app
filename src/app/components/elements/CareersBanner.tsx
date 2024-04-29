@@ -1,7 +1,8 @@
 import React from "react";
 import { Col, Container, Row } from "reactstrap";
 import { selectors, useAppSelector } from "../../state";
-import { CAREER_VIDEO_LINK, isStudent } from "../../services";
+import { isStudent } from "../../services";
+import careerVideos from "../../assets/career_videos.json";
 
 const CsAtWorkDescription = () => {
   const user = useAppSelector(selectors.user.orNull);
@@ -17,39 +18,37 @@ const CsAtWorkDescription = () => {
   return <p className="mb-3">{!user?.loggedIn ? loggedOutDescription : roleSpecificDescription}</p>;
 };
 
-export const Careers = () => {
+const videoId = careerVideos[0].video;
+
+export const CareersBanner = () => {
   const user = useAppSelector(selectors.user.orNull);
   return (
     <Container className="d-flex align-items-center flex-column">
       <button className="btn-lg">Careers in Computer Science</button>
-      <Row className="at-work">
-        <Col xs={12} sm={6} className="left-column">
+      <Row className="career reversed">
+        <Col xs={12} sm={6} className="video-column">
           <iframe
             title="career-video"
             className="no-border mh-100"
             id="ytplayer"
             width="100%"
             height="100%"
-            src={CAREER_VIDEO_LINK}
+            src={`https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&fs=1&modestbranding=1`}
             allowFullScreen
           />
         </Col>
-        <Col className="right-column">
-          <h5>
-            <strong>
-              {isStudent(user) ? "Linking computer science to the real world" : "Computer Science at work"}
-            </strong>
-          </h5>
+        <Col className="video-description-column">
+          <h4>{isStudent(user) ? "Linking computer science to the real world" : "Computer Science at work"}</h4>
           <CsAtWorkDescription />
         </Col>
       </Row>
       <Row className="cs-journey">
         <Col xs="auto" className="left-column">
-          <h5>
+          <h4>
             <a href="/pages/computer_science_journeys_gallery" rel="noopener noreferrer">
-              <strong>Computer Science Journeys</strong>
+              Computer Science Journeys
             </a>
-          </h5>
+          </h4>
           <p className="mb-3">
             Discover our monthly interview series and learn from passionate educators within the Isaac community, and
             recently-graduated computer scientists who are doing AMAZING things in a huge range of computing-related

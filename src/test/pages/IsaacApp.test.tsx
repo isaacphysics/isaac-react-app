@@ -12,8 +12,9 @@ const learnLinks = [
   "/topics/gcse",
   "/topics/a_level",
   "/gameboards/new",
-  "/glossary",
   "/pages/computer_science_journeys_gallery",
+  "/careers_in_computer_science",
+  "/glossary",
 ];
 const eventsLinks = ["/events", "/safeguarding"];
 const teacherEventLinks = ["/events?show_reservations_only=true"].concat(eventsLinks);

@@ -93,6 +93,7 @@ import { StudentRegistration } from "../pages/StudentRegistration";
 import { TeacherRegistration } from "../pages/TeacherRegistration";
 import { WorkbookDownload } from "../pages/WorkbookDownload";
 import { RegistrationSuccess } from "../pages/RegistrationSuccess";
+import { Careers } from "../pages/Careers";
 
 const ContentEmails = lazy(() => import("../pages/ContentEmails"));
 const MyProgress = lazy(() => import("../pages/MyProgress"));
@@ -334,6 +335,7 @@ export const IsaacApp = () => {
               <TrackedRoute exact path="/resetpassword/:token" component={ResetPasswordHandler} />
               <TrackedRoute exact path="/verifyemail" component={EmailAlterHandler} />
               {/* Static pages */}
+              <TrackedRoute exact path="/careers_in_computer_science" component={Careers} />
               <TrackedRoute exact path="/contact" component={Contact} />
               <TrackedRoute exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest} />
               <StaticPageRoute exact path="/privacy" pageId="privacy_policy" />

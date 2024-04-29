@@ -10,7 +10,7 @@ import classNames from "classnames";
 import { PromoContent } from "../elements/PromoContent";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { Dashboard } from "../elements/Dashboard";
-import { Careers } from "../elements/Careers";
+import { CareersBanner } from "../elements/CareersBanner";
 
 export const Homepage = () => {
   useEffect(() => {
@@ -66,7 +66,7 @@ export const Homepage = () => {
         )}
 
         <section id="careers" className="banner-primary pattern-05 p-5">
-          <Careers />
+          <CareersBanner />
         </section>
 
         <section id="news">

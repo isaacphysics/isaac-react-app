@@ -1,13 +1,14 @@
-.at-work {
+.career {
   margin: 2rem 0 0 0;
   width: 100%;
-  .left-column {
+  .video-column {
+    background-color: black;
     padding: 0;
     min-height: 300px;
     min-width: 500px;
   }
 
-  .right-column {
+  .video-description-column {
     background-color: white;
     padding: 2rem;
     align-content: center;
@@ -37,10 +38,22 @@
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
   .cs-journey,
-  .at-work {
+  .career {
     max-width: 500px;
+    flex-direction: column;
+    iframe {
+      min-height: 300px;
+    }
+    .video-column {
+      min-height: 0;
+    }
+    .video-description-column {
+      padding: 1rem;
+    }
+    .video-column,
+    .video-description-column,
     .left-column,
     .right-column {
       width: 100%;
@@ -54,13 +67,7 @@
     }
   }
 
-  .at-work {
+  .career.reversed {
     flex-direction: column-reverse;
-    iframe {
-      min-height: 300px;
-    }
-    .left-column {
-      min-height: 0;
-    }
   }
 }

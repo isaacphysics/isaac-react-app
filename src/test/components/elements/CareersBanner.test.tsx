@@ -1,11 +1,11 @@
 import { screen } from "@testing-library/react";
 import { TestUserRole, renderTestEnvironment } from "../../utils";
-import { Careers } from "../../../app/components/elements/Careers";
+import { CareersBanner } from "../../../app/components/elements/CareersBanner";
 import { USER_ROLES } from "../../../app/services";
 
 const renderCareers = async (role?: TestUserRole) => {
   renderTestEnvironment({
-    PageComponent: Careers,
+    PageComponent: CareersBanner,
     initialRouteEntries: ["/"],
     role: role ?? "ANONYMOUS",
   });

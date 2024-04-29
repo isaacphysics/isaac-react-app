@@ -928,6 +928,3 @@ export const hubNames: { [key in Hub]: string } = {
   WEST_YORKSHIRE: "West Yorkshire",
   YORK_EAST_AND_SOUTH_YORKSHIRE: "York, East, and South Yorkshire",
 };
-
-export const CAREER_VIDEO_LINK =
-  "https://www.youtube-nocookie.com/embed/t0ojrm0fMoE?enablejsapi=1&fs=0&modestbranding=1";

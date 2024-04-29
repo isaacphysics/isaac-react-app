@@ -50,8 +50,9 @@ export const NavigationBar = () => {
         <LinkItem to="/topics/gcse">GCSE topics</LinkItem>
         <LinkItem to="/topics/a_level">A level topics</LinkItem>
         <LinkItem to="/gameboards/new">Question Finder</LinkItem>
+        <LinkItem to="/pages/computer_science_journeys_gallery">Computer Science Journeys</LinkItem>
+        <LinkItem to="/careers_in_computer_science">Careers in Computer Science</LinkItem>
         <LinkItem to="/glossary">Glossary</LinkItem>
-        <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
       </NavigationSection>
 
       <NavigationSection title="Events">
