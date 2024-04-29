@@ -37,7 +37,7 @@ import {
 } from "../../services";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
-import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
+import {Loading} from "../handlers/IsaacSpinner";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { RouteComponentProps, useHistory, withRouter } from "react-router";
 import { LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
@@ -111,19 +111,19 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             // Clear front-end sorting so as not to override ElasticSearch's match ranking
             setQuestionsSort({});
 
-            const isBookSearch = book.length > 0; // Tasty.
             if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for
                 dispatch(clearQuestionSearch);
                 return;
             }
 
-            const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ");
+            const tags = [...topics].filter((query) => query != "").join(" ");
             const examBoardString = examBoards.join(",");
 
             dispatch(searchQuestions({
                 searchString: searchString,
                 tags,
+                books: book.join(",") || undefined,
                 stages: stages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
                 examBoards: examBoardString,
@@ -208,7 +208,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     </RS.Col>
                 </RS.Row>
                 <RS.Row>
-                    {isPhy && <RS.Col lg={isBookSearch ? 12 : 3} className="text-wrap my-2">
+                    {isPhy && <RS.Col lg={3} className="text-wrap my-2">
                         <RS.Label htmlFor="question-search-book">Book</RS.Label>
                         <StyledSelect
                             inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
@@ -220,7 +220,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             options={bookOptions}
                         />
                     </RS.Col>}
-                    <RS.Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
+                    <RS.Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2`}>
                         <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                         <StyledSelect
                             inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
@@ -231,7 +231,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         />
                     </RS.Col>
                 </RS.Row>
-                <RS.Row className={isBookSearch ? "d-none" : ""}>
+                <RS.Row>
                     <RS.Col lg={6} className={`text-wrap my-2`}>
                         <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
                         <StyledSelect
@@ -241,7 +241,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             onChange={selectOnChange(setSearchStages, true)}
                         />
                     </RS.Col>
-                    <RS.Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
+                    <RS.Col lg={6} className="text-wrap my-2">
                         <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                         <StyledSelect
                             inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
@@ -250,7 +250,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             onChange={selectOnChange(setSearchDifficulties, true)}
                         />
                     </RS.Col>
-                    {isAda && <RS.Col lg={6} className={`text-wrap my-2`}>
+                    {isAda && <RS.Col lg={6} className="text-wrap my-2">
                         <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
                         <StyledSelect
                             inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
