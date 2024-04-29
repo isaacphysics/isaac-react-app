@@ -1,7 +1,7 @@
 import React from "react";
 import {rest, RestHandler} from "msw";
 import {API_PATH, PATHS, siteSpecific} from "../../app/services";
-import {getByText, screen, waitFor, within} from "@testing-library/react";
+import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
 import {mockMyAssignments, mockUser} from "../../mocks/data";
