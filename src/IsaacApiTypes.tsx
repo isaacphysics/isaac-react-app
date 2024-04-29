@@ -368,7 +368,6 @@ export interface ContentDTO extends ContentBaseDTO {
     attribution?: string;
     relatedContent?: ContentSummaryDTO[];
     published?: boolean;
-    deprecated?: boolean;
     level?: number;
 }
 
@@ -503,6 +502,7 @@ export interface QuestionDTO extends ContentDTO {
 export interface SeguePageDTO extends ContentDTO {
     canonicalSourceFile?: string;
     summary?: string;
+    deprecated?: boolean;
 }
 
 export interface StringChoiceDTO extends ChoiceDTO {
