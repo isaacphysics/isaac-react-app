@@ -20,6 +20,7 @@ import {
     persistence,
     SITE_TITLE,
     trackEvent,
+    validateCountryCode,
     validateEmail,
     validateName,
     validatePassword,
@@ -70,6 +71,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     const familyNameIsValid = validateName(registrationUser.familyName);
     const passwordIsValid = validatePassword(registrationUser.password || "");
     const schoolIsValid = validateUserSchool(registrationUser);
+    const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
     const error = useAppSelector((state) => state?.error);
     const errorMessage = extractErrorMessage(error);
 
@@ -77,8 +79,8 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         event.preventDefault()
         setAttemptedSignUp(true);
 
-        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && ((role == 'STUDENT') || schoolIsValid)
-            && tosAccepted ) {
+        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && countryCodeIsValid &&
+            ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
             setAttemptedSignUp(true)
@@ -147,6 +149,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 className="my-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
+                                countryCodeValid={countryCodeIsValid}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
