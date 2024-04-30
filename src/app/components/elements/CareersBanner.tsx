@@ -1,8 +1,9 @@
 import React from "react";
-import { Col, Container, Row } from "reactstrap";
+import { Button, Col, Container, Row } from "reactstrap";
 import { selectors, useAppSelector } from "../../state";
 import { isStudent } from "../../services";
 import careerVideos from "../../assets/career_videos.json";
+import { Link } from "react-router-dom";
 
 const CsAtWorkDescription = () => {
   const user = useAppSelector(selectors.user.orNull);
@@ -40,6 +41,9 @@ export const CareersBanner = () => {
         <Col className="video-description-column">
           <h4>{isStudent(user) ? "Linking computer science to the real world" : "Computer Science at work"}</h4>
           <CsAtWorkDescription />
+          <Button tag={Link} size="lg" className="mt-2" to={"/careers_in_computer_science"}>
+            See more careers videos
+          </Button>
         </Col>
       </Row>
       <Row className="cs-journey">

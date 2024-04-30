@@ -12,15 +12,15 @@ const renderCareers = async (role?: TestUserRole) => {
 };
 
 describe("Careers", () => {
-  it("renders section title, video, description for logged out user", () => {
+  it("renders section title, video, description and more videos button for logged out user", () => {
     renderCareers();
     const sectionTitle = screen.getByRole("button", { name: /Careers in Computer Science/i });
     const video = screen.getByTitle(/career-video/i);
     const videoDescription = screen.getByText(/Better understand computer science curriculum/i);
-    expect(sectionTitle).toBeInTheDocument();
-    expect(video).toBeInTheDocument();
+    const button = screen.getByRole("link", { name: /see more careers videos/i });
+    [button, sectionTitle, video, videoDescription].forEach((element) => expect(element).toBeInTheDocument());
+    expect(button).toHaveAttribute("href", "/careers_in_computer_science");
     expect(video).toHaveAttribute("src", expect.stringContaining("https://www.youtube-nocookie.com/embed/"));
-    expect(videoDescription).toBeInTheDocument();
   });
 
   it("renders CS Journeys", async () => {
@@ -45,12 +45,15 @@ describe("Careers", () => {
     expect(title).toBeInTheDocument();
   });
 
-  it.each(USER_ROLES)("shows correct video description for %s role", async (role) => {
+  it.each(USER_ROLES)("shows correct video description and more videos button for %s role", async (role) => {
     await renderCareers(role);
     const studentDescription = /Wondering how studying computer science/i;
     const otherRoleDescription = /Looking at how to connect your/i;
     const expectedDescription = role === "STUDENT" ? studentDescription : otherRoleDescription;
     const description = await screen.findByText(expectedDescription);
+    const button = screen.getByRole("link", { name: /see more careers videos/i });
     expect(description).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute("href", "/careers_in_computer_science");
   });
 });
