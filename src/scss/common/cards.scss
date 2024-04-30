@@ -110,7 +110,7 @@
           display: none;
           @include respond-above(md) {
             @include pseudo-element;
-            background-image: url('/assets/box-line.svg');
+            background-image: url('/assets/common/box-line.svg');
             background-repeat: no-repeat;
             border-width: 0;
             height: 318px;

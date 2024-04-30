@@ -74,7 +74,7 @@
                     opacity: 0.4;
                     cursor: not-allowed !important;
                 }
-                background-image: url('/assets/inequality-trash-phy.svg');
+                background-image: url('/assets/phy/icons/inequality-trash-phy.svg');
             }
 
             &#graph-sketcher-ui-reset-button {
@@ -83,60 +83,60 @@
                     opacity: 0.4;
                     cursor: not-allowed !important;
                 }
-                background-image: url('/assets/inequality-reset-phy.svg');
+                background-image: url('/assets/phy/icons/inequality-reset-phy.svg');
             }
 
             &#graph-sketcher-ui-undo-button {
-                background-image: url('/assets/hex-undo.svg');
+                background-image: url('/assets/phy/icons/hex-undo.svg');
 
                 &:hover {
-                    background-image: url('/assets/hex-undo-active.svg');
+                    background-image: url('/assets/phy/icons/hex-undo-active.svg');
                 }
             }
 
             &#graph-sketcher-ui-redo-button {
-                background-image: url('/assets/hex-redo.svg');
+                background-image: url('/assets/phy/icons/hex-redo.svg');
 
                 &:hover {
-                    background-image: url('/assets/hex-redo-active.svg');
+                    background-image: url('/assets/phy/icons/hex-redo-active.svg');
                 }
             }
 
             &#graph-sketcher-ui-submit-button {
-                background-image: url('/assets/inequality-confirm-phy.svg');
+                background-image: url('/assets/phy/icons/inequality-confirm-phy.svg');
             }
 
             &#graph-sketcher-ui-help-button {
-                background-image: url('/assets/inequality-help-phy.svg');
+                background-image: url('/assets/phy/icons/inequality-help-phy.svg');
             }
 
             &#graph-sketcher-ui-question-button {
-                background-image: url('/assets/inequality-togglequestion-phy.svg');
+                background-image: url('/assets/phy/icons/inequality-togglequestion-phy.svg');
             }
 
             &#graph-sketcher-ui-debug-button {
-                background-image: url('/assets/hex-debug.svg');
+                background-image: url('/assets/phy/icons/hex-debug.svg');
 
                 &:hover {
-                    background-image: url('/assets/hex-debug-active.svg');
+                    background-image: url('/assets/phy/icons/hex-debug-active.svg');
                 }
             }
 
             &#graph-sketcher-ui-bezier-button {
-                background-image: url('/assets/graph-sketcher-polynomial.svg');
+                background-image: url('/assets/phy/icons/graph-sketcher-polynomial.svg');
 
                 &:hover,
                 &.active {
-                    background-image: url('/assets/graph-sketcher-polynomial-active.svg');
+                    background-image: url('/assets/phy/icons/graph-sketcher-polynomial-active.svg');
                 }
             }
 
             &#graph-sketcher-ui-linear-button {
-                background-image: url('/assets/graph-sketcher-straight.svg');
+                background-image: url('/assets/phy/icons/graph-sketcher-straight.svg');
 
                 &:hover,
                 &.active {
-                    background-image: url('/assets/graph-sketcher-straight-active.svg');
+                    background-image: url('/assets/phy/icons/graph-sketcher-straight-active.svg');
                 }
             }
         }

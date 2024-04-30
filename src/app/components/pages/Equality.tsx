@@ -163,8 +163,8 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
             [],
             {
                 textEntry: true,
-                fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
-                fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf',
+                fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
+                fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
             }
         );
         if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");

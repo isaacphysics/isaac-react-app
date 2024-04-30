@@ -40,7 +40,7 @@ const LoginOrSignUpBody = () => {
         <Col lg={6} className={classNames("content-body", {"pattern-ada-dots": isAda})}>
             {siteSpecific(
                 <img src={"/assets/phy/logo.svg"} alt={"Isaac Physics Logo"} />,
-                <img src={"/assets/logos/ada_logo_3-stack_aqua.svg"} className={"mt-5 mb-4 pb-2 ml-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
+                <img src={"/assets/common/logos/ada_logo_3-stack_aqua.svg"} className={"mt-5 mb-4 pb-2 ml-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
             )}
             <div className={"px-3 mb-4"}>
                 <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>

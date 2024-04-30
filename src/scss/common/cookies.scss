@@ -13,7 +13,7 @@
 
 .homepage-video {
     .youtube-play {
-        background: url('/assets/logos/btn-youtube-red.png') no-repeat center;
+        background: url('/assets/common/logos/btn-youtube-red.png') no-repeat center;
         position: absolute;
         object-fit: none;
         cursor: pointer;
@@ -41,7 +41,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: url("/assets/logos/isaac-youtube-logo.jpeg") no-repeat center content-box;
+            background: url("/assets/common/logos/isaac-youtube-logo.jpeg") no-repeat center content-box;
             background-size: contain;
             display: inline-block;
             vertical-align: middle;
@@ -77,11 +77,11 @@
                 width: 36px;
                 height: 36px;
                 padding: 5px;
-                background: url("/assets/action-copy.svg") no-repeat center content-box;
+                background: url("/assets/common/icons/action-copy.svg") no-repeat center content-box;
                 background-size: cover;
 
                 &.copied {
-                    background-image: url("/assets/action-done.svg")
+                    background-image: url("/assets/common/icons/action-done.svg")
                 }
 
                 &.selected {
