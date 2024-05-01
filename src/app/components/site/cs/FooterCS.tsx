@@ -12,7 +12,7 @@ export const FooterCS = () => (
                     <Col xs={"auto"} className={"mr-5 mb-4 mb-md-0"}>
                         <Link to="/">
                             <img
-                                src="/assets/logos/ada_logo_stamp_aqua.svg"
+                                src="/assets/common/logos/ada_logo_stamp_aqua.svg"
                                 className="footer-logo"
                                 alt="Ada Computer Science homepage"
                             />
@@ -41,12 +41,12 @@ export const FooterCS = () => (
                             <Row className="align-items-center">
                                 <Col>
                                     <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                        <img src="/assets/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
+                                        <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
                                     </a>
                                 </Col>
                                 <Col>
                                     <a href="https://www.raspberrypi.org/" target="_blank" rel="noopener">
-                                        <img src="/assets/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
+                                        <img src="/assets/common/logos/ada_rpf_icon.svg" alt='Raspberry Pi website' className='img-fluid footer-org-logo' />
                                     </a>
                                 </Col>
                             </Row>

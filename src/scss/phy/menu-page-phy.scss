@@ -98,7 +98,7 @@
   }
 
   a.hexagon, div.hexagon, button.hexagon {
-    background-image:url(/assets/hexagon.svg#green);
+    background-image:url(/assets/phy/icons/hexagon.svg#green);
     background-size: contain;
     background-repeat: no-repeat;
     color: black;
@@ -111,18 +111,18 @@
     background-color: transparent;
 
     &:focus {
-      background-image:url(/assets/hexagon.svg#green-bold);
+      background-image:url(/assets/phy/icons/hexagon.svg#green-bold);
       outline: none;
     }
 
     &.disabled{
       color: #ccc;
-      background-image:url(/assets/hexagon.svg#grey);
+      background-image:url(/assets/phy/icons/hexagon.svg#grey);
       &:hover .hexagon-title {
         color: #ccc;
       }
       &:focus {
-        background-image:url(/assets/hexagon.svg#grey-bold);
+        background-image:url(/assets/phy/icons/hexagon.svg#grey-bold);
       }
     }
   }

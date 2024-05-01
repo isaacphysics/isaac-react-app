@@ -28,7 +28,7 @@ export const FooterPhy = () => (
                         </div>
                         <div className="footer-links logo-text pt-3 mt-1">
                             <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="mt-2 mb-3">
-                                <img src="/assets/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='footer-org-logo' />
+                                <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='footer-org-logo' />
                             </a>
                             Funded by&nbsp;<ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">
                             <strong>Department for Education</strong>

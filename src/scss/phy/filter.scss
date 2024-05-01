@@ -6,11 +6,11 @@
     border-top-left-radius: unset;
     border-top-right-radius: unset;
     background-color: $secondary;
-    -webkit-mask-image: url(/assets/reveal-down.svg);
-    mask-image: url(/assets/reveal-down.svg);
+    -webkit-mask-image: url(/assets/common/icons/reveal-down.svg);
+    mask-image: url(/assets/common/icons/reveal-down.svg);
     &.open {
-      -webkit-mask-image: url(/assets/reveal-up.svg);
-      mask-image: url(/assets/reveal-up.svg);
+      -webkit-mask-image: url(/assets/common/icons/reveal-up.svg);
+      mask-image: url(/assets/common/icons/reveal-up.svg);
     }
     display: block;
     height: 34px;
