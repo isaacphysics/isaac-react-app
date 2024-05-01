@@ -37,7 +37,8 @@ import {
     useUserContext,
     toSimpleCSV,
     arrayFromPossibleCsv,
-    itemiseByValue
+    itemiseByValue,
+    itemiseTag
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer, GameboardViewerInner} from './Gameboard';
@@ -69,10 +70,6 @@ import {
 } from "reactstrap";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {Spacer} from '../elements/Spacer';
-
-function itemiseTag(tag: Tag) {
-    return {value: tag.id, label: tag.title};
-}
 
 function itemiseConcepts(concepts: string[]): Item<string>[] {
     return concepts
