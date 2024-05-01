@@ -19,7 +19,8 @@ import {HexagonConnection} from "./HexagonConnection";
 import classNames from "classnames";
 import {StyledSelect} from "../inputs/StyledSelect";
 
-export interface Tier {id: string; name: string; for: string}
+export type TierID = "subjects" | "fields" | "topics";
+export interface Tier {id: TierID; name: string; for: string}
 
 const connectionProperties = {fill: 'none', strokeWidth: 3, strokeDasharray: 3};
 

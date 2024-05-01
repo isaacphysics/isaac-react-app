@@ -49,7 +49,7 @@ import { MetaDescription } from "../elements/MetaDescription";
 import { CanonicalHrefElement } from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import { HierarchyFilterHexagonal, Tier } from "../elements/svg/HierarchyFilter";
+import { HierarchyFilterHexagonal, Tier, TierID } from "../elements/svg/HierarchyFilter";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -132,9 +132,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     }
 
     const tiers: Tier[] = [
-        {id: "subjects", name: "Subject"},
-        {id: "fields", name: "Field"},
-        {id: "topics", name: "Topic"}
+        {id: "subjects" as TierID, name: "Subject"},
+        {id: "fields" as TierID, name: "Field"},
+        {id: "topics" as TierID, name: "Topic"}
     ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, index + 1);
 
     const tagOptions: { options: Item<string>[]; label: string }[] = isPhy ? tags.allTags.map(groupTagSelectionsByParent) : tags.allSubcategoryTags.map(groupTagSelectionsByParent);
@@ -171,28 +171,29 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 return;
             }
 
-            // TODO: have separate subject, field, topic parameters
-            let tags = "";
+            const filterParams: Record<TierID, string[] | undefined> = {} as Record<TierID, string[] | undefined>;
             if (isPhy) {
-                const allTags = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology].join(" ");
+                const allTags: TAG_ID[] = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
                 tiers.forEach((tier, i) => {
                     if (!hierarchySelections[i] || hierarchySelections[i].length === 0) {
                         if (i === 0) {
-                            tags = allTags;
+                            filterParams[tier.id] = allTags;
                         }
                         return;
                     }
-                    tags = [tags, hierarchySelections[i].map(item => item.value).join(" ")].join(" ");
-                    console.log(tags);
+                    filterParams[tier.id] = hierarchySelections[i].map(item => item.value);
                 });
             } else {
-                tags = [...topics].filter((query) => query != "").join(" ");
+                filterParams["topics"] = [...topics].filter((query) => query != "");
             }
             const examBoardString = examBoards.join(",");
 
             dispatch(searchQuestions({
                 searchString: searchString,
-                tags,
+                tags: "", // Tags currently not used
+                fields: filterParams.fields?.join(",") || undefined,
+                subjects: filterParams.subjects?.join(",") || undefined,
+                topics: filterParams.topics?.join(",") || undefined,
                 books: book.join(",") || undefined,
                 stages: stages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
