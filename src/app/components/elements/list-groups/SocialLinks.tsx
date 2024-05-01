@@ -5,9 +5,9 @@ import {ExternalLink} from "../ExternalLink";
 
 const getSocialIcon = (name: string) => {
     if (name === "x (twitter)") {
-        return "/assets/logos/x_icon.svg";
+        return "/assets/common/logos/x_icon.svg";
     }
-    return `/assets/logos/${name}_icon.svg`;
+    return `/assets/common/logos/${name}_icon.svg`;
 };
 
 export const SocialLinksRow = () => {

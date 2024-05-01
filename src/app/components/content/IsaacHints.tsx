@@ -69,7 +69,7 @@ export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
             let currHintIndex = 1;
             let index = 0;
             for (const hint of hints) {
-                newTitles[index] = hint.title ?? `Hint\u00A0${currHintIndex}`;
+                newTitles[index] = hint.title || `Hint\u00A0${currHintIndex}`;
                 currHintIndex += hint.title ? 0 : 1;
                 index += 1;
             }

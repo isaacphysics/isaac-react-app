@@ -3,7 +3,16 @@ import {MyAccountTab} from './MyAccountTab';
 import {FamilyNameInput, GivenNameInput} from '../inputs/NameInput';
 import {EmailInput} from '../inputs/EmailInput';
 import {BooleanNotation, DisplaySettings, ValidationUser} from '../../../../IsaacAppTypes';
-import {isAda, isPhy, isTeacherOrAbove, SITE_TITLE, siteSpecific, validateEmail, validateName} from '../../../services';
+import {
+    isAda,
+    isPhy,
+    isTeacherOrAbove,
+    SITE_TITLE,
+    siteSpecific,
+    validateCountryCode,
+    validateEmail,
+    validateName
+} from '../../../services';
 import {CountryInput} from '../inputs/CountryInput';
 import {GenderInput} from '../inputs/GenderInput';
 import {SchoolInput} from "../inputs/SchoolInput";
@@ -73,6 +82,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 <CountryInput
                     userToUpdate={userToUpdate}
                     setUserToUpdate={setUserToUpdate}
+                    countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
                     submissionAttempted={submissionAttempted}
                     required={true}
                 />

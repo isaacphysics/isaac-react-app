@@ -4,7 +4,7 @@ import {AppState, fetchDoc, useAppDispatch, useAppSelector} from "../../state";
 import {Col, Container, Row} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, above, below, isAda, isPhy, useDeviceSize, useNavigation} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
@@ -51,7 +51,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     </div>;
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
-        const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
+        const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
         return <GameboardContext.Provider value={navigation.currentGameboard}>
             <Container className={classNames(doc.subjectId)}>
                 <TitleAndBreadcrumb
@@ -79,7 +79,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
 
                         <SupersededDeprecatedWarningBanner doc={doc} />
 
-                        <IntendedAudienceWarningBanner doc={doc} />
+                        {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />

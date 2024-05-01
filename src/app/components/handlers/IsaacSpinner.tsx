@@ -13,7 +13,7 @@ export interface IsaacSpinnerProps {
 // TODO: investigate and improve accessibility of both CS and default spinners. (The "Loading..." is copied from Bootstrap).
 export const IsaacSpinner = ({size = "md", className, color = "primary", inline = false, displayText = "Loading..."} : IsaacSpinnerProps) => {
     const contents = <>
-        <img style={siteSpecific({width: "auto", height: "5.5rem"}, {})} className={classNames(`isaac-spinner-${size}`, className)} alt="" src={siteSpecific("/assets/isaac-phy-apple-grow.svg", "/assets/cs/icons/loading-spinner-placeholder.svg")}/>
+        <img style={siteSpecific({width: "auto", height: "5.5rem"}, {})} className={classNames(`isaac-spinner-${size}`, className)} alt="" src={siteSpecific("/assets/phy/isaac-phy-apple-grow.svg", "/assets/cs/icons/loading-spinner-placeholder.svg")}/>
         <span className="sr-only">{displayText}</span>
     </>;
     return inline

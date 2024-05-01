@@ -86,9 +86,9 @@ export const RegistrationVerifyEmail = () => {
                 <Row className="justify-content-center">
                     <Col>
                         {emailVerified ?
-                            <img className="img-fluid mx-auto my-5" src={"/assets/cs/decor/verify_done.svg"} alt="" />
+                            <img className="img-fluid w-md-50 mx-auto my-5" src={"/assets/cs/decor/verify_done.png"} alt="" />
                             :
-                            <img className="img-fluid mx-auto my-5" src={"/assets/cs/decor/verify_request.svg"} alt="" />
+                            <img className="img-fluid w-md-50 mx-auto my-5" src={"/assets/cs/decor/verify_request.png"} alt="" />
                         }
                     </Col>
                 </Row>

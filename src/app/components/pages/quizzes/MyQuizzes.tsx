@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     useGetAttemptedFreelyByMeQuery,
     useGetQuizAssignmentsAssignedToMeQuery
 } from "../../../state";
-import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import {Link, RouteComponentProps, useHistory, useLocation, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -140,19 +140,43 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         switch (user.role) {
             case "STUDENT":
             // Tutors should see the same tests as students can
+            // eslint-disable-next-line no-fallthrough
             case "TUTOR":
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents;
             case "TEACHER":
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true;
             default:
-                return true
+                return true;
         }
     };
+
+    const tabAnchors = ["#in-progress", "#completed", "#practice"];
+
+    const anchorMap = tabAnchors.reduce((acc, anchor, index) => 
+        ({...acc, [anchor]: index + 1}), {} as Record<string, number>
+    );
+
+    const history = useHistory();
+    const [tabOverride, setTabOverride] = useState<number | undefined>(anchorMap[location.hash as keyof typeof anchorMap]);
+
+    useEffect(() => {
+        if (location.hash && anchorMap[location.hash as keyof typeof anchorMap]) {
+            setTabOverride(anchorMap[location.hash as keyof typeof anchorMap]);
+        }
+        if (location.search.includes("filter")) {
+            setFilterText(new URLSearchParams(location.search).get("filter") || "");
+        }
+    }, [location.hash, location.search]);
+
+    const [filterText, setFilterText] = useState<string>("");
+    const [copied, setCopied] = useState(false);
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
         <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
-        <Tabs className="mb-5 mt-4" tabContentClass="mt-4">
+        <Tabs className="mb-5 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
+            history.replace({...history.location, hash: tabAnchors[index - 1]});
+        }}>
             {{
                 [siteSpecific("In Progress Tests", "Tests in progress")]:
                     <ShowLoading
@@ -174,8 +198,15 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                     <ShowLoading until={quizzes}>
                         {quizzes && <>
                             {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
+                            <RS.Col xs={12} className="mb-4">
+                                <RS.Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />
+                                <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
+                                    filterText.trim() && navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
+                                    setCopied(true);
+                                }} onMouseLeave={() => setCopied(false)} />
+                            </RS.Col>
                             <RS.ListGroup className="mb-3 quiz-list">
-                                {quizzes.filter(showQuiz).map(quiz => <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                                {quizzes.filter((quiz) => showQuiz(quiz) && quiz.title?.toLowerCase().includes(filterText.toLowerCase())).map(quiz => <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                     <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
                                         <span className="mb-2 mb-sm-0">{quiz.title}</span>
                                         {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}

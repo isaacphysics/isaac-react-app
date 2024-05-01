@@ -8,7 +8,7 @@
 .linked-account-button {
   &.rpf-button {
     padding: 5px;
-    background: url("/assets/logos/raspberry-pi.png") center no-repeat content-box;
+    background: url("/assets/common/logos/raspberry-pi.png") center no-repeat content-box;
     background-size: contain !important;
   }
 }
@@ -55,7 +55,7 @@
     width: 12px;
     background-repeat: no-repeat;
     background-size: contain;
-    background-image: url('/assets/chevron_down.svg');
+    background-image: url('/assets/common/icons/chevron_down.svg');
     pointer-events: none;
   }
 }

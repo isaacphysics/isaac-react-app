@@ -543,6 +543,7 @@ export interface UserSchoolLookup {[userId: number]: School}
 export interface QuestionSearchQuery {
     searchString?: string;
     tags?: string;
+    books?: string;
     levels?: string;
     stages?: string;
     difficulties?: string;

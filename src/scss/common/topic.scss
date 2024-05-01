@@ -25,7 +25,7 @@
 
     &:after {
       content: "";
-      background-image: url('/assets/chevron_right.svg');
+      background-image: url('/assets/common/icons/chevron_right.svg');
       background-repeat: no-repeat;
       background-position: right;
       width: 20px;
@@ -50,6 +50,10 @@
       min-width: 130px;
       max-width: 130px;
       text-align: center;
+
+      &.stage-label-higher {
+        color: white;
+      }
 
       @include respond-below(xs) {
         min-width: 105px;

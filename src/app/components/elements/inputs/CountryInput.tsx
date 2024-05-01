@@ -12,12 +12,13 @@ interface CountryInputProps {
     className?: string;
     userToUpdate: Immutable<ValidationUser>;
     setUserToUpdate: (user: Immutable<ValidationUser>) => void;
+    countryCodeValid: boolean;
     submissionAttempted: boolean;
     idPrefix?: string;
     required: boolean;
 }
 
-export const CountryInput = ({className, userToUpdate, setUserToUpdate, submissionAttempted, idPrefix="account", required}: CountryInputProps) => {
+export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryCodeValid, submissionAttempted, idPrefix="account", required}: CountryInputProps) => {
     const {data: allCountryOptions} = useGetCountriesQuery();
     const {data: priorityCountryOptions} = useGetPriorityCountriesQuery();
 
@@ -27,7 +28,8 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, submissi
         <StyledDropdown
             id={`${idPrefix}-country-select`}
             value={userToUpdate && userToUpdate.countryCode}
-            invalid={submissionAttempted && required && userToUpdate.countryCode == null}
+            invalid={submissionAttempted && required && !countryCodeValid}
+            feedback="Please select your country."
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {countryCode: e.target.value} : {countryCode: null}))
             }
@@ -44,8 +46,5 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, submissi
                 }
             )}
         </StyledDropdown>
-        <FormFeedback>
-            Please select a country.
-        </FormFeedback>
     </RS.FormGroup>;
 };

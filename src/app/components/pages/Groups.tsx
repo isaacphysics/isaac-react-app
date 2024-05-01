@@ -49,7 +49,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { StyledCheckbox } from "../elements/inputs/CheckboxInput";
+import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -131,7 +131,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                     <Tooltip tipText="This user has not yet verified their email." className="icon-email-status unverified" />
                 }
                 {member.groupMembershipInformation && member.groupMembershipInformation.status == "INACTIVE" &&
-                    <Tooltip tipText="This user has set their status to inactive for this group. This means they will no longer see new assignments."> (inactive in group)</Tooltip>
+                    <Tooltip className="ml-1" tipText="This user has set their status to inactive for this group. This means they will no longer see new assignments.">(inactive in group)</Tooltip>
                 }
             </div>
         </div>
@@ -362,8 +362,8 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                         <div className="d-flex">
                                             <StyledCheckbox
                                                 id="self-removal"
-                                                changeFunction={toggleSelfRemoval}
-                                                initialValue={!!group.selfRemoval}
+                                                onChange={toggleSelfRemoval}
+                                                checked={!!group.selfRemoval}
                                             />
                                             <Label for="self-removal" className="d-inline-block mr-2">Allow students to remove themselves from this group</Label>
                                         </div>
