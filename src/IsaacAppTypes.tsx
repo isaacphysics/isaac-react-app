@@ -185,10 +185,7 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
 }
 
 export interface InlineQuestionDTO extends AppQuestionDTO {
-    validationResponse?: Immutable<ApiTypes.QuestionValidationResponseDTO & {
-        partsCorrect?: number;
-        partsTotal?: number;
-    }>;
+    validationResponse?: Immutable<ApiTypes.InlineRegionValidationResponseDTO>;
 }
 
 export interface AppGroup extends ApiTypes.UserGroupDTO {
