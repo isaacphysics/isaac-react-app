@@ -197,7 +197,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
             <hr className="text-center" />
             <AssignGroup {...props} />
             <hr className="text-center" />
-            <div className="py-2 border-bottom">
+            <div className="py-2 border-bottom" data-testid="currently-assigned-to">
                 <Label>{siteSpecific("Board", "Quiz")} currently assigned to:</Label>
                 {startedAssignees.length > 0
                     ? <Container className="mb-4">{startedAssignees.map(assignee =>
