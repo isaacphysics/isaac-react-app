@@ -165,7 +165,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             // Clear front-end sorting so as not to override ElasticSearch's match ranking
             setQuestionsSort({});
 
-            if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
+            if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && hierarchySelections.every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for
                 dispatch(clearQuestionSearch);
                 return;
@@ -228,13 +228,22 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         const params: {[key: string]: string} = {};
         if (searchStages.length) params.stages = toSimpleCSV(searchStages);
         if (searchDifficulties.length) params.difficulties = toSimpleCSV(searchDifficulties);
-        if (searchTopics.length) params.topics = toSimpleCSV(searchTopics);
         if (searchQuery.length) params.query = encodeURIComponent(searchQuery);
+        if (isAda && searchTopics.length) params.topics = toSimpleCSV(searchTopics);
         if (isAda && searchExamBoards.length) params.examBoards = toSimpleCSV(searchExamBoards);
         if (isPhy && searchBook.length) params.book = toSimpleCSV(searchBook);
         if (isPhy && searchFastTrack) params.fasttrack = "set";
 
-        history.replace({search: queryString.stringify(params, {encode: true}), state: location.state});
+        if (isPhy) {
+            tiers.forEach((tier, i) => {
+                if (!selections[i] || selections[i].length === 0) {
+                    return;
+                }
+                params[tier.id] = selections[i].map(item => item.value).join(",");
+            });
+        }
+
+        history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, selections]);
 
@@ -366,7 +375,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             <Suspense fallback={<Loading/>}>
                 <RS.CardBody className={classNames({"p-0 m-0": isAda && sortedQuestions?.length})}>
                     <ShowLoading until={sortedQuestions}>
-                        {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) ?
+                        {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
+                         selections.every(v => v.length === 0) ?
                             <em>Please select filters</em> :
                             (sortedQuestions?.length ?
                                 <>
