@@ -98,7 +98,6 @@ $question-font-weight: 600;
 @import "../common/isaac";
 
 // Utility
-@import "preload";
 @import "../common/mixins";
 
 // Atoms
@@ -113,7 +112,6 @@ $question-font-weight: 600;
 @import "../common/cookies";
 @import "../common/tabs";
 @import "../common/cards";
-@import "../common/inequality-modal";
 @import "../common/graph-sketcher-modal";
 @import "../common/carousel";
 @import "../common/checkbox";

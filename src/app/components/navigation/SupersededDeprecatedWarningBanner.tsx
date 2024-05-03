@@ -1,11 +1,11 @@
 import React from "react";
 import * as RS from "reactstrap";
-import {ContentDTO} from "../../../IsaacApiTypes";
+import {SeguePageDTO} from "../../../IsaacApiTypes";
 import {RenderNothing} from "../elements/RenderNothing";
 import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {isAQuestionLikeDoc, isStudent, isTutorOrAbove} from "../../services";
 
-export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
+export function SupersededDeprecatedWarningBanner({doc}: {doc: SeguePageDTO}) {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
 

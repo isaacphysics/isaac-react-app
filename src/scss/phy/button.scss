@@ -271,7 +271,7 @@ a.btn {
   @extend .hex-icon;
 
   button {
-    background-image: url(/assets/share.svg);
+    background-image: url(/assets/common/icons/share.svg);
     background-repeat: no-repeat;
     background-color: transparent;
     z-index: 2;
@@ -314,12 +314,12 @@ a.btn {
 
 .print-icon {
   @extend .hex-icon;
-  background-image: url(/assets/print.svg);
+  background-image: url(/assets/common/icons/print.svg);
 }
 
 .report-icon {
   @extend .hex-icon;
-  background-image: url(/assets/flag.svg);
+  background-image: url(/assets/common/icons/flag.svg);
 }
 
 // Button focus selectors
@@ -365,7 +365,7 @@ a.btn {
 }
 
 .bin-icon {
-  background-image: url("/assets/phy/bin-black.svg");
+  background-image: url("/assets/phy/icons/bin-black.svg");
   width: 48px;
   height: 48px;
   background-repeat: no-repeat;

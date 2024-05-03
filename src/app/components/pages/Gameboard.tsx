@@ -48,7 +48,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     let itemClasses = classNames("content-summary-link text-info bg-transparent", {"p-3": isPhy, "p-0": isAda});
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
-    let iconHref = siteSpecific("/assets/question-hex.svg#icon", "/assets/cs/icons/question-not-started.svg");
+    let iconHref = siteSpecific("/assets/phy/icons/question-hex.svg#icon", "/assets/cs/icons/question-not-started.svg");
     let message = siteSpecific("", "Not started");
     const messageClasses = "";
 
@@ -58,16 +58,16 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 itemClasses += " bg-success";
             }
             message = siteSpecific("perfect!", "Correct");
-            iconHref = siteSpecific("/assets/tick-rp-hex.svg#icon", "/assets/cs/icons/question-correct.svg");
+            iconHref = siteSpecific("/assets/phy/icons/tick-rp-hex.svg#icon", "/assets/cs/icons/question-correct.svg");
             break;
         case "PASSED":
         case "IN_PROGRESS":
             message = siteSpecific("in progress", "In progress");
-            iconHref = siteSpecific("/assets/incomplete-hex.svg#icon", "/assets/cs/icons/question-in-progress.svg");
+            iconHref = siteSpecific("/assets/phy/icons/incomplete-hex.svg#icon", "/assets/cs/icons/question-in-progress.svg");
             break;
         case "FAILED":
             message = siteSpecific("try again!", "Try again");
-            iconHref = siteSpecific("/assets/cross-rp-hex.svg#icon", "/assets/cs/icons/question-incorrect.svg");
+            iconHref = siteSpecific("/assets/phy/icons/cross-rp-hex.svg#icon", "/assets/cs/icons/question-incorrect.svg");
             break;
     }
 
@@ -104,14 +104,14 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS)
                 } />}
             </div>
-            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/chevron_right.svg"} alt={"Go to question"}/></div>}
+            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to question"}/></div>}
         </Link>
     </ListGroupItem>;
 };
 
 export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
     const itemClasses = "p-3 content-summary-link text-info bg-transparent";
-    const icon = <img src="/assets/wildcard.svg" alt="Optional extra information icon"/>;
+    const icon = <img src="/assets/common/wildcard.svg" alt="Optional extra information icon"/>;
     return <ListGroupItem key={wildcard.id} className={itemClasses}>
         <a href={wildcard.url} className="align-items-center">
             <span className="gameboard-item-icon">{icon}</span>

@@ -663,8 +663,8 @@ export function prepareInequality({editorMode, inequalityModalRef, initialEditor
             editorMode: editorMode ?? "logic",
             logicSyntax: logicSyntax ?? "logic",
             textEntry: false,
-            fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
-            fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf'
+            fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
+            fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf'
         }
     );
     if (!isDefined(newSketch)) {

@@ -1,16 +1,14 @@
-import React, {ContextType, Suspense, useContext, useEffect} from "react";
+import React, {Suspense, useContext, useEffect} from "react";
 import {
-    attemptQuestion,
     deregisterQuestions,
     registerQuestions,
-    saveGameboard,
     selectors,
     useAppDispatch,
     useAppSelector
 } from "../../state";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import {BEST_ATTEMPT_HIDDEN, ContentDTO} from "../../../IsaacApiTypes";
+import {ContentDTO} from "../../../IsaacApiTypes";
 import * as RS from "reactstrap";
 import {
     below,
@@ -18,20 +16,14 @@ import {
     determineFastTrackSecondaryAction,
     fastTrackProgressEnabledBoards,
     isAda,
-    isLoggedIn,
-    isNotPartiallyLoggedIn,
     isPhy,
-    KEY,
-    persistence,
     QUESTION_TYPES,
     selectQuestionPart,
-    trackEvent,
+    submitCurrentAttempt,
     useDeviceSize,
-    useFastTrackInformation,
-    wasTodayUTC
-} from "../../services";
+    useFastTrackInformation} from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
-import {AccordionSectionContext, AppQuestionDTO, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineContext} from "../../../IsaacAppTypes";
+import {AccordionSectionContext, ConfidenceContext, GameboardContext, InlineQuestionDTO, InlineContext} from "../../../IsaacAppTypes";
 import {RouteComponentProps, withRouter} from "react-router";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
@@ -48,7 +40,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
     const currentAttempt = questionPart?.currentAttempt;
-    const bestAttempt = questionPart?.bestAttempt;
     const validationResponse = questionPart?.validationResponse;
     const validationResponseTags = validationResponse?.explanation?.tags;
     const correct = validationResponse?.correct || false;
@@ -105,7 +96,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const inlineContext = useContext(InlineContext);
     const isInlineQuestion = doc.type === "isaacInlineRegion" && inlineContext;
 
-    const inlineElementIds = Object.keys(inlineContext?.elementToQuestionMap ?? {});
     const numInlineQuestions = isInlineQuestion ? Object.values(inlineContext?.elementToQuestionMap ?? {}).length : undefined;
     const numCorrectInlineQuestions = (isInlineQuestion && validationResponse) ? (questionPart as InlineQuestionDTO).validationResponse?.partsCorrect : undefined;
     const showInlineAttemptStatus = !isInlineQuestion || !inlineContext?.isModifiedSinceLastSubmission;
@@ -139,12 +129,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 <Suspense fallback={<Loading/>}>
                     <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
                 </Suspense>
-
-                {!currentAttempt && bestAttempt === BEST_ATTEMPT_HIDDEN && <div className={"w-100 text-center"}>
-                    <small className={"no-print text-muted"}>
-                        A previous attempt at this question part has been hidden.
-                    </small>
-                </div>}
 
                 {isAda &&
                     <div className="mt-4">
@@ -245,22 +229,3 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         </RS.Form>
     </ConfidenceContext.Provider>;
 });
-
-export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, currentGameboard: ApiTypes.GameboardDTO | undefined, currentUser: any, dispatch: any, inlineContext?: ContextType<typeof InlineContext>) => {
-    if (questionPart?.currentAttempt) {
-        // Notify Plausible that at least one question attempt has taken place today
-        if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {
-            persistence.save(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME, new Date().toString());
-            trackEvent("question_attempted");
-        }
-
-        dispatch(attemptQuestion(docId, questionPart?.currentAttempt, currentGameboard?.id, inlineContext));
-        if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
-            dispatch(saveGameboard({
-                boardId: currentGameboard.id,
-                user: currentUser,
-                redirectOnSuccess: false
-            }));
-        }
-    }
-};

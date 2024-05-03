@@ -448,7 +448,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         </CardBody>
 
         <CardFooter tag={Button} color="secondary" className="w-100" onClick={scrollToQuestions}>
-            Scroll straight to questions<img className={"ml-3"} src={"/assets/chevron_down_white.svg"} alt=""/>
+            Scroll straight to questions<img className={"ml-3"} src={"/assets/common/icons/chevron_down_white.svg"} alt=""/>
         </CardFooter>
     </Card>;
 };
@@ -564,6 +564,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             delete params.questionCategories;
             delete params.title;
             if (params.subjects === allTags) delete params.subjects;
+
             if (isFound(gameboard)) {
                 history.replace({search: queryString.stringify(params, {encode: false}), hash: gameboard.id, state: location.state});
             } else {

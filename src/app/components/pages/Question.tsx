@@ -34,6 +34,7 @@ import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDepreca
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {ReportButton} from "../elements/ReportButton";
 import classNames from "classnames";
+import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
@@ -102,7 +103,9 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
 
                         <SupersededDeprecatedWarningBanner doc={doc} />
 
-                        <IntendedAudienceWarningBanner doc={doc} />
+                        {isAda && <IntendedAudienceWarningBanner doc={doc} />}
+
+                        <RevisionWarningBanner />
 
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc}/>

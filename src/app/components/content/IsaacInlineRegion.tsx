@@ -2,9 +2,8 @@ import React, { ContextType, useContext, useEffect } from "react";
 import { IsaacContentValueOrChildren } from "./IsaacContentValueOrChildren";
 import { AppQuestionDTO, InlineQuestionDTO, InlineContext } from "../../../IsaacAppTypes";
 import { ContentDTO, GameboardDTO, IsaacInlineRegionDTO } from "../../../IsaacApiTypes";
-import { submitCurrentAttempt } from "./IsaacQuestion";
 import { deregisterQuestions, registerQuestions, selectors, useAppDispatch, useAppSelector } from "../../state";
-import { selectQuestionPart } from "../../services";
+import { selectQuestionPart, submitCurrentAttempt } from "../../services";
 
 // TODO: generify this (IsaacContentProps?), reuse also for IsaacCardDeck
 interface IsaacInlineRegionProps {

@@ -7,6 +7,7 @@ import {
     ALL_TOPICS_CRUMB,
     atLeastOne,
     getRelatedDocs,
+    isAda,
     NOT_FOUND, PATHS,
     TAG_ID,
     useUserContext
@@ -44,7 +45,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     <div className="d-flex justify-content-end">
                         <UserContextPicker />
                     </div>
-                    {!(atLeastOne(relatedConceptsForSpecificViewingContext.length) || atLeastOne(relatedQuestionsForSpecificViewingContext.length)) &&
+                    {!(atLeastOne(relatedConceptsForSpecificViewingContext.length) || atLeastOne(relatedQuestionsForSpecificViewingContext.length)) && isAda &&
                         <IntendedAudienceWarningBanner doc={topicPage} />
                     }
                     {topicPage.children && topicPage.children.map((child, index) =>

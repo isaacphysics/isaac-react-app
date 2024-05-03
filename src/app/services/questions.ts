@@ -1,8 +1,8 @@
-import React, {lazy} from "react";
-import {AppQuestionDTO, IsaacQuestionProps, ValidatedChoice} from "../../IsaacAppTypes";
-import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX} from './';
-import {ChoiceDTO, ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
-import {selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
+import React, {ContextType, lazy} from "react";
+import {AppQuestionDTO, InlineContext, IsaacQuestionProps, ValidatedChoice} from "../../IsaacAppTypes";
+import {ChoiceDTO, ContentDTO, ContentSummaryDTO, GameboardDTO} from "../../IsaacApiTypes";
+import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP_PYTHON, REVERSE_GREEK_LETTERS_MAP_LATEX, persistence, KEY, trackEvent, isLoggedIn, isNotPartiallyLoggedIn, wasTodayUTC} from './';
+import {attemptQuestion, saveGameboard, selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 import {Immutable} from "immer";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
 const IsaacItemQuestion = lazy(() => import("../components/content/IsaacItemQuestion"));
@@ -167,3 +167,22 @@ export function useCurrentQuestionAttempt<T extends ChoiceDTO>(questionId: strin
         questionPart: questionPart
     };
 }
+
+export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, currentGameboard: GameboardDTO | undefined, currentUser: any, dispatch: any, inlineContext?: ContextType<typeof InlineContext>) => {
+    if (questionPart?.currentAttempt) {
+        // Notify Plausible that at least one question attempt has taken place today
+        if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {
+            persistence.save(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME, new Date().toString());
+            trackEvent("question_attempted");
+        }
+
+        dispatch(attemptQuestion(docId, questionPart?.currentAttempt, currentGameboard?.id, inlineContext));
+        if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+            dispatch(saveGameboard({
+                boardId: currentGameboard.id,
+                user: currentUser,
+                redirectOnSuccess: false
+            }));
+        }
+    }
+};

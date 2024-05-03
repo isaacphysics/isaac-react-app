@@ -30,7 +30,7 @@ export const HeaderCS = () => {
     return <header className="light" data-testid={"header"}>
         <Navbar expand="nav" className={"px-0 px-nav-3 pb-0 pb-nav-2"}>
             <NavbarBrand href="/" className="header-logo ml-3 mb-2 mb-nav-0 link-light">
-                <img src="/assets/logos/ada_logo_3-stack_aqua_white_text.svg" alt="Ada Computer Science" />
+                <img src="/assets/common/logos/ada_logo_3-stack_aqua_white_text.svg" alt="Ada Computer Science" />
             </NavbarBrand>
 
             <a href={`#${mainContentId}`} className="skip-main position-absolute">Skip to main content</a>
@@ -79,7 +79,8 @@ export const HeaderCS = () => {
                         </NavigationSection>}
 
                         <NavigationSection title={"Events"}>
-                            <LinkItem to="/pages/student_challenges">Student Challenges</LinkItem>
+                            <LinkItem to="/pages/teacher_mentoring_2024">Teacher events</LinkItem>
+                            <LinkItem to="/pages/student_challenges">Student challenges</LinkItem>
                         </NavigationSection>
 
                         <NavigationSection title={"Help"}>

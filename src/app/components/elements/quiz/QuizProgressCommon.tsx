@@ -10,14 +10,14 @@ import { ProgressSortOrder, SortItemHeader } from "../SortableItemHeader";
 
 export const ICON = siteSpecific(
     {
-        correct: <svg style={{width: 30, height: 30}}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg>,
-        incorrect: <svg style={{width: 30, height: 30}}><use href={`/assets/cross-rp-hex.svg#icon`} xlinkHref={`/assets/cross-rp-hex.svg#icon`}/></svg>,
-        notAttempted: <svg  style={{width: 30, height: 30}}><use href={`/assets/dash-hex.svg#icon`} xlinkHref={`/assets/dash-hex.svg#icon`}/></svg>,
+        correct: <svg style={{width: 30, height: 30}}><use href={`/assets/phy/icons/tick-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/></svg>,
+        incorrect: <svg style={{width: 30, height: 30}}><use href={`/assets/phy/icons/cross-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/cross-rp-hex.svg#icon`}/></svg>,
+        notAttempted: <svg  style={{width: 30, height: 30}}><use href={`/assets/phy/icons/dash-hex.svg#icon`} xlinkHref={`/assets/phy/icons/dash-hex.svg#icon`}/></svg>,
     },
     {
-        correct: <img src="/assets/tick-rp.svg" alt="Correct" style={{width: 30}} />,
-        incorrect: <img src="/assets/cross-rp.svg" alt="Incorrect" style={{width: 30}} />,
-        notAttempted: <img src="/assets/dash.svg" alt="Not attempted" style={{width: 30}} />,
+        correct: <img src="/assets/cs/icons/tick-rp.svg" alt="Correct" style={{width: 30}} />,
+        incorrect: <img src="/assets/cs/icons/cross-rp.svg" alt="Incorrect" style={{width: 30}} />,
+        notAttempted: <img src="/assets/cs/icons/dash.svg" alt="Not attempted" style={{width: 30}} />,
     }
 );
 
@@ -238,7 +238,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                                         <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
                                                     </div>
                                                     <div className="quiz-student-menu-icon">
-                                                        {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
+                                                        {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/common/icons/menu.svg" alt="Menu" />}
                                                     </div>
                                                 </Button>
                                                 {!returningQuizToStudent && dropdownOpen?.[index] && <>

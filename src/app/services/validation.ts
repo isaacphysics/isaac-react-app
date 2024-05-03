@@ -17,6 +17,10 @@ export function validateName(userName?: string | null) {
     return userName && userName.length > 0 && userName.length <= 255 && !userName.includes('*')
 }
 
+export function validateCountryCode(countryCode: string | undefined) {
+    return !!countryCode;
+}
+
 export const validateEmail = (email?: string) => {
     return email && email.length > 0 && email.includes("@");
 };
