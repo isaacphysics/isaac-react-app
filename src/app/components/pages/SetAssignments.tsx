@@ -49,7 +49,7 @@ import {
     isAda,
     isDefined,
     isPhy,
-    isStaff,
+    isEventLeaderOrStaff,
     Item,
     itemise,
     matchesAllWordsInAnyOrder,
@@ -132,7 +132,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
             {dueDateInvalid && startDateInvalid && <br/>}
         </Label>
-        {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
+        {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
                    spellCheck={true}
                    rows={3}
