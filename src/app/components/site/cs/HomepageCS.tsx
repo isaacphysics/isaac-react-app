@@ -73,8 +73,8 @@ export const HomepageCS = () => {
                         <CardBody>
                             <Row className="align-items-center justify-content-between">
                                 <Col xs={12} lg={8}>
-                                    <h4>Hey, folks in Scotland! 🏴󠁧󠁢󠁳󠁣󠁴󠁿 Looking for SQA resources?</h4>
-                                    <p>We've mapped our content to the N5 and Higher specifications.</p>
+                                    <h4>Hey, folks in Scotland! <img className="pb-1" height="24px" src="/assets/cs/icons/flag-sco.svg" alt=""/> Looking for SQA resources?</h4>
+                                    <p>We&apos;ve mapped our content to the N5 and Higher specifications.</p>
                                 </Col>
                                 <Col xs={12} lg={3}>
                                     <Button
