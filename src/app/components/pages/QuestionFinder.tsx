@@ -223,6 +223,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     };
 
     useEffect(() => {
+        // If a certain stage excludes a selected examboard remove it from query params
+        if (isAda) {
+            setSearchExamBoards(
+                getFilteredExamBoardOptions({byStages: searchStages})
+                    .filter(o => searchExamBoards.includes(o.value))
+                    .map(o => o.value)
+            );
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchStages]);
+
+    useEffect(() => {
         searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, 0);
 
         const params: {[key: string]: string} = {};
