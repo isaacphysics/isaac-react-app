@@ -155,7 +155,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     <div className="pb-1">
                         {
                             isInlineQuestion && numCorrectInlineQuestions ? 
-                                <h1 className="m-0">{correct ? "Correct!" : numCorrectInlineQuestions > 0 ? "Almost..." : "Incorrect"}</h1> :
+                                <h1 className="m-0">{correct ? "Correct!" : numCorrectInlineQuestions > 0 ? "Partly correct..." : "Incorrect"}</h1> :
                                 <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                         }
                     </div>

@@ -5,10 +5,10 @@ import { Markup } from "../markup";
 import { IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO } from "../../../../IsaacApiTypes";
 import { selectors, useAppSelector, useGetConstantUnitsQuery } from "../../../state";
 import { isLoggedIn, useCurrentQuestionAttempt } from "../../../services";
-import { InlineEntryZoneProps } from "../markup/portals/InlineEntryZone";
+import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
 import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
 
-export const InlineNumericEntryZone = ({width, height, questionDTO, setModified, valid, invalid, focusRef, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
+export const InlineNumericEntryZone = ({width, height, questionDTO, setModified, correctness, focusRef, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
 
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId as string);
@@ -23,8 +23,8 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
     const noDisplayUnit = questionDTO.displayUnit == null || questionDTO.displayUnit === "";
     const readonly = false;
 
-    const currentAttemptValueWrong = ((questionDTO?.validationResponse ?? questionDTO.bestAttempt) as QuantityValidationResponseDTO | undefined)?.correctValue === false;
-    const currentAttemptUnitsWrong = ((questionDTO?.validationResponse ?? questionDTO.bestAttempt) as QuantityValidationResponseDTO | undefined)?.correctUnits === false;
+    const currentAttemptValueWrong = correctness !== "NOT_SUBMITTED" && ((questionDTO?.validationResponse ?? questionDTO.bestAttempt) as QuantityValidationResponseDTO | undefined)?.correctValue === false;
+    const currentAttemptUnitsWrong = correctness !== "NOT_SUBMITTED" && ((questionDTO?.validationResponse ?? questionDTO.bestAttempt) as QuantityValidationResponseDTO | undefined)?.correctUnits === false;
     const feedbackShowing = false;
 
     useEffect(function updateCurrentAttempt() {
@@ -37,13 +37,15 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
         setModified(true);
     }, [value, unit, setModified]);
 
-    return <div {...rest} className={`d-inline-flex inline-numeric-container ${rest.className} ${classNames({"is-valid": valid, "is-invalid": invalid})}`}>
+    return <div {...rest} className={classNames("d-inline-flex inline-numeric-container", rest.className, correctnessClass(correctness))}>
         <div className={"feedback-zone inline-nq-feedback"}>
             <Input 
                 ref={focusRef}
-                valid={valid}
-                invalid={invalid && currentAttemptValueWrong}
-                className={classNames({"units-shown" : questionDTO.requireUnits || !noDisplayUnit})}
+                className={classNames(
+                    {"units-shown" : questionDTO.requireUnits || !noDisplayUnit}, 
+                    // if the value is correct but the unit is not, only the unit should be marked as such
+                    correctnessClass(correctness === "INCORRECT" ? (currentAttemptValueWrong ? "INCORRECT" : "NOT_SUBMITTED") : correctness)
+                )}
                 style={{
                     ...(width && {width: `${width}px`}), 
                     ...(height && {height: `${height}px`}),
@@ -54,7 +56,10 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
                 }}
             />
             {currentAttemptValueWrong && <div className={"feedback-box"}>
-                <span className={"feedback incorrect"}><b>!</b></span>
+                {correctness === "NOT_ANSWERED" ? 
+                    <span className={"feedback unanswered"}><b>!</b></span> : 
+                    <span className={"feedback incorrect"}>✘</span>
+                }
             </div>}
         </div>
 
