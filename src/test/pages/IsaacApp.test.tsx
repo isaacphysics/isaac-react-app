@@ -25,7 +25,7 @@ const learnLinks = siteSpecific(
 );
 const eventsLinks = siteSpecific(
     ["/events", "/pages/isaac_mentor"],
-    ["/pages/student_challenges"] // ["/events?types=student", "/events?types=teacher", "/pages/event_types", "/safeguarding"] // teacher only ["/events?show_reservations_only=true"]
+    ["/pages/teacher_mentoring_2024", "/pages/student_challenges"] // ["/events?types=student", "/events?types=teacher", "/pages/event_types", "/safeguarding"] // teacher only ["/events?show_reservations_only=true"]
 );
 const loggedInEventLinks = siteSpecific(
     ["/events?show_booked_only=true"],

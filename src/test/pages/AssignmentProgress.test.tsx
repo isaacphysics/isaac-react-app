@@ -1,6 +1,6 @@
-import {screen} from "@testing-library/react";
+import {screen, waitFor, within} from "@testing-library/react";
 import {renderTestEnvironment, followHeaderNavLink} from "../utils";
-import {API_PATH, isAda, isPhy, siteSpecific} from "../../app/services";
+import {API_PATH, siteSpecific, utf8ByteLength} from "../../app/services";
 import {mockActiveGroups, mockAssignmentsGroup2, mockQuizAssignments} from "../../mocks/data";
 import userEvent from "@testing-library/user-event";
 import {buildGroupHandler} from "../../mocks/handlers";
@@ -93,5 +93,109 @@ describe("AssignmentProgress", () => {
         for (const assignmentTitle of mockAssignments.map(a => a.gameboard?.title)) {
             await screen.findByText(assignmentTitle, {exact: false});
         }
+    });
+
+    it("allows teachers to download group assignment progress CSVs", async () => {
+        // Arrange
+        const mockData = "I'm a CSV";
+
+        renderTestEnvironment({
+            role: "TEACHER",
+            extraEndpoints: [
+                rest.get(API_PATH + "/assignments/assign/group/2/progress/download", (req, res, ctx) => {
+                    return res(
+                        ctx.set('Content-Length', utf8ByteLength(mockData).toString()),
+                        ctx.set('Content-Type', 'text/csv'),
+                        ctx.body(mockData),
+                    );
+                }),
+            ]
+        });
+        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+        const groupDownloadLinks = await screen.findAllByText("(Download group assignments CSV)");
+
+        // Act
+        await userEvent.click(groupDownloadLinks[0]);
+
+        // Assert
+        // privacy modal is shown
+        const modal = await screen.findByTestId("active-modal");
+        expect(modal.textContent).toContain("Privacy Notice");
+        // clicking "download" closes the modal
+        await userEvent.click(within(modal).getByRole("link", {name: "Download CSV"}));
+        await waitFor(() => {
+            expect(modal).not.toBeInTheDocument();
+        });
+    });
+
+    it("allows teachers to download individual assignment progress CSVs", async () => {
+        // Arrange
+        const mockData = "I'm a CSV";
+
+        renderTestEnvironment({
+            role: "TEACHER",
+            extraEndpoints: [
+                rest.get(API_PATH + "/assignments/assign/2/progress/download", (req, res, ctx) => {
+                    return res(
+                        ctx.set('Content-Length', utf8ByteLength(mockData).toString()),
+                        ctx.set('Content-Type', 'text/csv'),
+                        ctx.body(mockData),
+                    );
+                }),
+            ]
+        });
+        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+
+        const groupTitles = await screen.findAllByTestId("group-name");
+        // Clicking on the group title should suffice to open the accordion
+        await userEvent.click(groupTitles[0]);
+
+        const assignmentDownloadLinks = await screen.findAllByText("Download CSV");
+
+        // Act
+        await userEvent.click(assignmentDownloadLinks[0]);
+
+        // Assert
+        // privacy modal is shown
+        const modal = await screen.findByTestId("active-modal");
+        expect(modal.textContent).toContain("Privacy Notice");
+        // clicking "download" closes the modal
+        await userEvent.click(within(modal).getByRole("link", {name: "Download CSV"}));
+        await waitFor(() => {
+            expect(modal).not.toBeInTheDocument();
+        });
+    });
+
+    it("allows teachers to download group test progress CSVs", async () => {
+        // Arrange
+        const mockData = "I'm a CSV";
+
+        renderTestEnvironment({
+            role: "TEACHER",
+            extraEndpoints: [
+                rest.get(API_PATH + "/quiz/group/2/download", (req, res, ctx) => {
+                    return res(
+                        ctx.set('Content-Length', utf8ByteLength(mockData).toString()),
+                        ctx.set('Content-Type', 'text/csv'),
+                        ctx.body(mockData),
+                    );
+                }),
+            ]
+        });
+        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+        const groupDownloadLinks = await screen.findAllByText("(Download group tests CSV)");
+
+        // Act
+        await userEvent.click(groupDownloadLinks[0]);
+
+        // Assert
+        // privacy modal is shown
+        const modal = await screen.findByTestId("active-modal");
+        expect(modal.textContent).toContain("Privacy Notice");
+        // clicking "download" closes the modal
+        await userEvent.click(within(modal).getByRole("link", {name: "Download CSV"}));
+        await waitFor(() => {
+            expect(modal).not.toBeInTheDocument();
+        });
     });
 });

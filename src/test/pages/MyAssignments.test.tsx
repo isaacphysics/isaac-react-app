@@ -170,4 +170,14 @@ describe("MyAssignments", () => {
         expect(assignedDate).toMatch(DDMMYYYY_REGEX);
         expect(dayMonthYearStringToDate(assignedDate)?.valueOf()).toEqual(DAYS_AGO(3, true));
     });
+
+    it('should show the notes field for assignments with notes', async () => {
+        // Arrange
+        renderMyAssignments();
+        await screen.findAllByTestId("my-assignment");
+
+        // Act & Assert
+        expect(screen.getAllByText("Notes:")).toHaveLength(1);
+        expect(screen.getByText("This is cool")).toBeInTheDocument();
+    });
 });
