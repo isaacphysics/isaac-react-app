@@ -11,12 +11,6 @@ interface IsaacInlineRegionProps {
     className?: string
 }
 
-const defaultFeedback : ContentDTO = {
-    type: "content",
-    encoding: "plaintext",
-    value: "(No feedback available for this part)",
-};
-
 // return a "question part" representing the inline region; the validation response is a combination of the validation responses of each of the inline questions
 export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined) : InlineQuestionDTO => {
     const inlineContext = useContext(InlineContext);
@@ -31,9 +25,15 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
     const correct = partsCorrect !== undefined && (partsCorrect === partsTotal);
     const canSubmit = (inlineContext?.modifiedQuestionIds?.length ?? 0) > 0 && !inlineContext?.submitting;
 
+    const defaultFeedback : ContentDTO = {
+        type: "content",
+        encoding: "plaintext",
+        value: partsTotal && partsTotal > 1 ? "(No feedback available for this part)" : "",
+    };
+
     useEffect(() => {
         const isFeedbackShown = currentAttempts?.some(vr => vr !== undefined) && !inlineContext?.submitting && !inlineContext?.isModifiedSinceLastSubmission && !canSubmit;
-        if (isFeedbackShown && inlineContext && inlineContext.feedbackIndex === undefined) {
+        if (isFeedbackShown && inlineContext && inlineContext.feedbackIndex === undefined && inlineQuestions && inlineQuestions.length > 1) {
             inlineContext.setFeedbackIndex(0);
         }
     }, [canSubmit, currentAttempts, inlineContext]);
@@ -81,7 +81,7 @@ export const submitInlineRegion = (inlineContext: ContextType<typeof InlineConte
             }
         }
         inlineContext.canShowWarningToast = true;
-        inlineContext.setFeedbackIndex(0);
+        Object.keys(inlineContext.elementToQuestionMap).length > 1 && inlineContext.setFeedbackIndex(0);
     }
 };
 
