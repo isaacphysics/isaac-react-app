@@ -24,7 +24,9 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
     const inlineQuestions = pageQuestions?.filter(q => inlineContext?.docId && q.id?.startsWith(inlineContext?.docId) && q.id.includes("|inline-question:"));
     const validationResponses = inlineQuestions?.map(q => q.validationResponse);
     const bestAttempts = inlineQuestions?.map(q => q.bestAttempt);
-    const currentAttempts = validationResponses?.map((vr, i) => vr || bestAttempts?.[i]); // use bestAttempts if no validation response (i.e. if loaded attempt has not changed since page load)
+    
+    const hidingAttempts = useAppSelector(selectors.user.preferences)?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS ?? false;
+    const currentAttempts = validationResponses?.map((vr, i) => vr || (hidingAttempts ? undefined : bestAttempts?.[i])); // use bestAttempts if no validation response (i.e. if loaded attempt has not changed since page load)
     
     const partsCorrect = currentAttempts?.filter(r => r?.correct).length;
     const partsTotal = currentAttempts?.length;
@@ -66,12 +68,12 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
     };
 };
 
-export const submitInlineRegion = (inlineContext: ContextType<typeof InlineContext>, currentGameboard: GameboardDTO | undefined, currentUser: any, pageQuestions: AppQuestionDTO[] | undefined, dispatch: any) => {
+export const submitInlineRegion = (inlineContext: ContextType<typeof InlineContext>, currentGameboard: GameboardDTO | undefined, currentUser: any, pageQuestions: AppQuestionDTO[] | undefined, dispatch: any, hidingAttempts : boolean) => {
     if (inlineContext && inlineContext.docId && pageQuestions) {
         inlineContext.setSubmitting(true);
         const inlineQuestions = pageQuestions.filter(q => inlineContext.docId && q.id?.startsWith(inlineContext.docId) && q.id.includes("|inline-question:"));
         // we submit all modified answers, and those with undefined values. we must submit this latter group to get a validation response at the same time as the other answers
-        const modifiedInlineQuestions = inlineQuestions.filter(q => (q.id && inlineContext.modifiedQuestionIds.includes(q.id)) || (q.currentAttempt?.value === undefined && q.bestAttempt === undefined));
+        const modifiedInlineQuestions = inlineQuestions.filter(q => (q.id && inlineContext.modifiedQuestionIds.includes(q.id)) || (q.currentAttempt?.value === undefined && (q.bestAttempt === undefined || hidingAttempts)));
         for (const inlineQuestion of modifiedInlineQuestions) {
             submitCurrentAttempt(
                 {currentAttempt: inlineQuestion.currentAttempt},
