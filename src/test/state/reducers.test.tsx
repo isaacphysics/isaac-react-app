@@ -19,8 +19,8 @@ import {
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
-function q(questions: AppQuestionDTO[]): { questions: AppQuestionDTO[]; pageCompleted: boolean } {
-    return {questions, pageCompleted: false};
+function q(questions: AppQuestionDTO[]): { questions: AppQuestionDTO[]; pageCompleted: boolean; mostRecentCorrectAttemptDate: Date | undefined} {
+    return {questions, pageCompleted: false, mostRecentCorrectAttemptDate: undefined};
 }
 
 function removeRTKProperties(state: AppState) {

@@ -31,7 +31,10 @@ export const selectors = {
         },
         anyQuestionHidden: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.some(q => q.bestAttempt === BEST_ATTEMPT_HIDDEN);
-        }
+        },
+        getMostRecentCorrectAttemptDate: (state: AppState) => {
+            return !!state && state.questions?.mostRecentCorrectAttemptDate;
+        },
     },
 
     user:  {

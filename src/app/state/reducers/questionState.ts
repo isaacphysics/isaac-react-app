@@ -1,5 +1,5 @@
 import {Action, AppQuestionDTO, isValidatedChoice} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services";
+import {ACTION_TYPE, getMostRecentCorrectAttemptDate} from "../../services";
 import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
 
 export const question = (question: AppQuestionDTO, action: Action) => {
@@ -25,11 +25,12 @@ export const question = (question: AppQuestionDTO, action: Action) => {
     }
 };
 
-type QuestionsState = {questions: AppQuestionDTO[]; pageCompleted: boolean} | null;
-function augmentQuestions(questions: AppQuestionDTO[]): QuestionsState {
+type QuestionsState = {questions: AppQuestionDTO[]; pageCompleted: boolean; mostRecentCorrectAttemptDate: Date | undefined} | null;
+function augmentQuestions(questions: AppQuestionDTO[], mostRecentCorrectAttemptDate: Date | undefined): QuestionsState {
     return {
         questions,
-        pageCompleted: questions.every(q => q.validationResponse && q.validationResponse.correct)
+        pageCompleted: questions.every(q => q.validationResponse && q.validationResponse.correct),
+        mostRecentCorrectAttemptDate: mostRecentCorrectAttemptDate,
     };
 }
 export const questions = (qs: QuestionsState = null, action: Action) => {
@@ -42,11 +43,11 @@ export const questions = (qs: QuestionsState = null, action: Action) => {
                     {...q, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer, accordionClientId: action.accordionClientId} :
                     {...q, accordionClientId: action.accordionClientId};
             });
-            return augmentQuestions(currentQuestions.concat(newQuestions));
+            return augmentQuestions(currentQuestions.concat(newQuestions), action.mostRecentCorrectAttemptDate);
         }
         case ACTION_TYPE.QUESTION_DEREGISTRATION: {
             const filteredQuestions = qs && qs.questions.filter((q) => q.id && !action.questionIds.includes(q.id));
-            return filteredQuestions && filteredQuestions.length ? augmentQuestions(filteredQuestions) : null;
+            return filteredQuestions && filteredQuestions.length ? augmentQuestions(filteredQuestions, undefined) : null;
         }
         // Delegate processing the question matching action.questionId to the question reducer
         case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
@@ -54,7 +55,7 @@ export const questions = (qs: QuestionsState = null, action: Action) => {
         case ACTION_TYPE.QUESTION_UNLOCK:
         case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE:
         case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS: {
-            return qs && augmentQuestions(qs.questions.map((q) => q.id === action.questionId ? question(q, action) : q));
+            return qs && augmentQuestions(qs.questions.map((q) => q.id === action.questionId ? question(q, action) : q), qs.mostRecentCorrectAttemptDate);
         }
         // If we receive user preferences, then check for the "hide question attempts" preference. If the preference is
         // there then we clear all attempt info from stored questions that have a best attempt, since the current attempt
