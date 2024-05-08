@@ -40,19 +40,11 @@ export const Routes = [
   <Redirect key={key++} from="/topics/string_manipulation" to="/topics/string_handling" />,
 
   <TrackedRoute key={key++} exact path="/topics" component={AllTopicsWithoutAStage} />,
-  <TrackedRoute
-    key={key++}
-    exact
-    path="/topics/gcse"
-    component={AllTopics}
-    ifUser={isLoggedIn}
-    componentProps={{ stage: STAGE.GCSE }}
-  />,
+  <TrackedRoute key={key++} exact path="/topics/gcse" component={AllTopics} componentProps={{ stage: STAGE.GCSE }} />,
   <TrackedRoute
     key={key++}
     exact
     path="/topics/a_level"
-    ifUser={isLoggedIn}
     component={AllTopics}
     componentProps={{ stage: STAGE.A_LEVEL }}
   />,
