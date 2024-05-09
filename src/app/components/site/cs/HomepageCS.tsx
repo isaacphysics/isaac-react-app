@@ -1,8 +1,14 @@
 import React, {useEffect} from "react";
-import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
+import {
+    selectors,
+    transientUserContextSlice,
+    useAppDispatch,
+    useAppSelector,
+    useGetNewsPodListQuery
+} from "../../../state";
 import {Link} from "react-router-dom";
-import {Button, CardDeck, Col, Container, Row} from "reactstrap";
-import {isLoggedIn, SITE_TITLE} from "../../../services";
+import {Button, Card, CardBody, CardDeck, Col, Container, Row} from "reactstrap";
+import {EXAM_BOARD, history, isLoggedIn, SITE_TITLE, STAGE} from "../../../services";
 import {AdaHero2x1} from "../../elements/svg/AdaHero";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
@@ -15,6 +21,9 @@ export const HomepageCS = () => {
     const user = useAppSelector(selectors.user.orNull);
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
     const featuredNewsItem = (news && user?.loggedIn) ? news[0] : undefined;
+    const dispatch = useAppDispatch();
+    const setStage = (stage: STAGE) => dispatch(transientUserContextSlice?.actions.setStage(stage));
+    const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));
 
     return <>
         {/*<WarningBanner/>*/}
@@ -58,7 +67,31 @@ export const HomepageCS = () => {
                     </Row>
                 </Container>
             </section>
-
+            <section id="scotland-slice">
+                <Container className={"py-5 px-md-4 px-xxl-5"}>
+                    <Card id="scotland-slice-card" className={"border-0"}>
+                        <CardBody>
+                            <Row className="align-items-center justify-content-between">
+                                <Col xs={12} lg={8}>
+                                    <h4>Hey, folks in Scotland! <img className="pb-1" height="24px" src="/assets/cs/icons/flag-sco.svg" alt=""/> Looking for SQA resources?</h4>
+                                    <p>We&apos;ve mapped our content to the N5 and Higher specifications.</p>
+                                </Col>
+                                <Col xs={12} lg={3}>
+                                    <Button
+                                        className={"align-self-end mt-auto"}
+                                        onClick={
+                                            () => {
+                                                setStage(STAGE.ALL);
+                                                setExamBoard(EXAM_BOARD.SQA);
+                                                history.push("/topics");
+                                            }
+                                        }>Show me</Button>
+                                </Col>
+                            </Row>
+                        </CardBody>
+                    </Card>
+                </Container>
+            </section>
             <section id="benefits-for-teachers-and-students">
                 <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
                     <Row className={"align-items-center"}>
