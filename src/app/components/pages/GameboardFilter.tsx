@@ -37,13 +37,14 @@ import {
     useUserContext,
     toSimpleCSV,
     arrayFromPossibleCsv,
-    itemiseByValue
+    itemiseByValue,
+    itemiseTag
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer, GameboardViewerInner} from './Gameboard';
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
-import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
+import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier, TierID} from "../elements/svg/HierarchyFilter";
 import {GroupBase} from "react-select";
 import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
 import {ContentSummaryDTO, GameboardDTO} from "../../../IsaacApiTypes";
@@ -69,10 +70,6 @@ import {
 } from "reactstrap";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {Spacer} from '../elements/Spacer';
-
-function itemiseTag(tag: Tag) {
-    return {value: tag.id, label: tag.title};
-}
 
 function itemiseConcepts(concepts: string[]): Item<string>[] {
     return concepts
@@ -489,14 +486,14 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     }
 
     const tiers: Tier[] = siteSpecific([
-            {id: "subjects", name: "Subject"},
-            {id: "fields", name: "Field"},
-            {id: "topics", name: "Topic"},
+            {id: "subjects" as TierID, name: "Subject"},
+            {id: "fields" as TierID, name: "Field"},
+            {id: "topics" as TierID, name: "Topic"},
         ],
         [
-            {id: "subjects", name: "Category"},
-            {id: "fields", name: "Strand"},
-            {id: "topics", name: "Topic"},
+            {id: "subjects" as TierID, name: "Category"},
+            {id: "fields" as TierID, name: "Strand"},
+            {id: "topics" as TierID, name: "Topic"},
         ]).map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
 
     const [stages, setStages] = useState<Item<string>[]>(queryStages.length > 0 ? queryStages : itemiseByValue([userContext.stage], getFilteredStageOptions()));
