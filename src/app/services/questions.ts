@@ -186,3 +186,11 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
         }
     }
 };
+
+export const getMostRecentCorrectAttemptDate = (questions: AppQuestionDTO[] | undefined) => {
+    return questions?.filter(q => q.bestAttempt?.correct).map(q => q.bestAttempt?.dateAttempted).reduce((prev, current) => {
+        if (!prev) return current;
+        if (!current) return prev;
+        return prev > current ? prev : current;
+    }, undefined);
+};

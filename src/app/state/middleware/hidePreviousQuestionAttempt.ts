@@ -1,7 +1,7 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
 import {Action} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services";
+import {ACTION_TYPE, getMostRecentCorrectAttemptDate} from "../../services";
 
 export const hidePreviousQuestionAttemptMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
     if (action.type === ACTION_TYPE.QUESTION_REGISTRATION) {
@@ -13,9 +13,10 @@ export const hidePreviousQuestionAttemptMiddleware: Middleware = (middlewareApi:
                     ...q,
                     bestAttempt: q.bestAttempt && BEST_ATTEMPT_HIDDEN
                 })),
+                mostRecentCorrectAttemptDate: getMostRecentCorrectAttemptDate(action.questions),
                 accordionClientId: action.accordionClientId
             });
         }
     }
     return dispatch(action);
-}
+};
