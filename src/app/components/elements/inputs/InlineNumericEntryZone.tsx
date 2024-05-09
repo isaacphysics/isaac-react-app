@@ -83,7 +83,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
             >
                 <div className={showFeedback(unitCorrectness) ? "pr-4" : "pr-2"}>
                     <Markup encoding={"latex"}>
-                        {wrapUnitForSelect(noDisplayUnit ? unit : questionDTO.displayUnit)}
+                        {unit !== undefined ? wrapUnitForSelect(noDisplayUnit ? unit : questionDTO.displayUnit) : "Unit..."}
                     </Markup>
                     {showFeedback(unitCorrectness) && noDisplayUnit && <div className={"feedback-box pl-2"}>
                         {unitCorrectness === "NOT_ANSWERED" ? 
