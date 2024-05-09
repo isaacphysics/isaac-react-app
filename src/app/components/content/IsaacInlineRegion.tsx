@@ -1,6 +1,6 @@
 import React, { ContextType, useContext, useEffect } from "react";
 import { IsaacContentValueOrChildren } from "./IsaacContentValueOrChildren";
-import { AppQuestionDTO, InlineQuestionDTO, InlineContext } from "../../../IsaacAppTypes";
+import { AppQuestionDTO, InlineQuestionDTO, InlineContext, QuestionCorrectness } from "../../../IsaacAppTypes";
 import { ContentDTO, GameboardDTO, IsaacInlineRegionDTO } from "../../../IsaacApiTypes";
 import { deregisterQuestions, registerQuestions, selectors, useAppDispatch, useAppSelector } from "../../state";
 import { selectQuestionPart, submitCurrentAttempt } from "../../services";
@@ -27,10 +27,19 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
     const correct = partsCorrect !== undefined && (partsCorrect === partsTotal);
     const canSubmit = (inlineContext?.modifiedQuestionIds?.length ?? 0) > 0 && !inlineContext?.submitting;
 
-    const defaultFeedback : ContentDTO = {
-        type: "content",
-        encoding: "plaintext",
-        value: partsTotal && partsTotal > 1 ? "(No feedback available for this part)" : "",
+    const defaultFeedback = (correctness: QuestionCorrectness) : ContentDTO => {
+        const feedbackMap : {[key in QuestionCorrectness]: string} = {
+            "CORRECT" : "Correct!",
+            "INCORRECT" : "Check your working.",
+            "NOT_ANSWERED" : "You did not provide an answer.",
+            "NOT_SUBMITTED" : "This answer is missing a unit.", // this is a special case for numeric questions, may need to be updated if we add more inline q types
+        };
+
+        return {
+            type: "content",
+            encoding: "plaintext",
+            value: partsTotal && partsTotal > 1 ? feedbackMap[correctness] : "",
+        };
     };
 
     useEffect(() => {
@@ -41,13 +50,15 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
     }, [canSubmit, currentAttempts, inlineContext]);
     
     const explanation = {
-        ...currentAttempts?.[0]?.explanation, 
+        ...currentAttempts?.[currentFeedbackPart ?? 0]?.explanation, 
         value: undefined, 
         // if the response explanation exists (i.e. it has a value or children), use it; otherwise use the default feedback
         children: currentFeedbackPart !== undefined ? [
-            currentAttempts?.[currentFeedbackPart]?.explanation?.value || currentAttempts?.[currentFeedbackPart]?.explanation?.children?.length
-            ? currentAttempts?.[currentFeedbackPart]?.explanation ?? defaultFeedback
-            : defaultFeedback
+            (currentAttempts?.[currentFeedbackPart]?.explanation?.value || currentAttempts?.[currentFeedbackPart]?.explanation?.children?.length) && 
+            currentAttempts?.[currentFeedbackPart]?.explanation !== undefined ? currentAttempts?.[currentFeedbackPart]?.explanation as ContentDTO : defaultFeedback(
+                currentAttempts?.[currentFeedbackPart]?.correct ? "CORRECT" : 
+                currentAttempts?.[currentFeedbackPart]?.answer?.value !== undefined ? "INCORRECT" : "NOT_ANSWERED"
+            )
         ] : undefined,
     };
     const lockedDates = inlineQuestions?.map(q => q.locked).filter(d => d) as Date[] | undefined;
