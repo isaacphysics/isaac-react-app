@@ -5,8 +5,9 @@ import { Markup } from "../markup";
 import { IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO } from "../../../../IsaacApiTypes";
 import { selectors, useAppSelector, useGetConstantUnitsQuery } from "../../../state";
 import { isLoggedIn, useCurrentQuestionAttempt } from "../../../services";
-import { InlineEntryZoneProps, QuestionCorrectness, correctnessClass } from "../markup/portals/InlineEntryZone";
+import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
 import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
+import { QuestionCorrectness } from "../../../../IsaacAppTypes";
 
 export const InlineNumericEntryZone = ({width, height, questionDTO, setModified, correctness, focusRef, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
 

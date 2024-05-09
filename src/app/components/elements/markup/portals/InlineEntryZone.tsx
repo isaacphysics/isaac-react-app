@@ -1,15 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { selectQuestionPart } from "../../../../services";
-import { AppQuestionDTO, InlineContext } from "../../../../../IsaacAppTypes";
+import { AppQuestionDTO, InlineContext, QuestionCorrectness } from "../../../../../IsaacAppTypes";
 import { selectors, useAppSelector } from "../../../../state";
 import classNames from "classnames";
 import { InlineStringEntryZone } from "../../inputs/InlineStringEntryZone";
 import { InlineNumericEntryZone } from "../../inputs/InlineNumericEntryZone";
 import { IsaacNumericQuestionDTO, IsaacStringMatchQuestionDTO } from "../../../../../IsaacApiTypes";
 import { InputProps } from "reactstrap";
-
-export type QuestionCorrectness = "CORRECT" | "INCORRECT" | "NOT_ANSWERED" | "NOT_SUBMITTED"; 
 
 export function correctnessClass(correctness: QuestionCorrectness) {
     switch (correctness) {
