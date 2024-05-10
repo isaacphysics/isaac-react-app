@@ -162,7 +162,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 ? <>
-                            <span>You can view feedback for an individual part by either selecting it above, or by using the control panel below.</span>
+                            <span>You can view feedback for a specific box by either selecting it above, or by using the control panel below.</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header`}>
                                     <RS.Button color="transparent" onClick={() => {
@@ -174,7 +174,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                     <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
                                         inlineContext.feedbackIndex && inlineContext.setFocusSelection(true); 
                                     }}>
-                                        Part {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
+                                        Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
                                     </RS.Button>
                                     <Spacer/>
                                     <RS.Button color="transparent" onClick={() => {
