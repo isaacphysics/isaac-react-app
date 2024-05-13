@@ -39,7 +39,7 @@ import {
     itemiseTag,
     isLoggedIn
 } from "../../services";
-import {AudienceContext, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
+import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {Loading} from "../handlers/IsaacSpinner";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
@@ -126,6 +126,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         processTagHierarchy(subjects, fields, topics)
     );
 
+    const [hideCompleted, setHideCompleted] = useState(false);
+
     const choices = [tags.allSubjectTags.map(itemiseTag)];
     let index;
     for (index = 0; index < selections.length && index < 2; index++)  {
@@ -164,7 +166,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
-                            debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], fasttrack: boolean, startIndex: number) => {
+                            debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], fasttrack: boolean, hideCompleted: boolean, startIndex: number) => {
             // Clear front-end sorting so as not to override ElasticSearch's match ranking
             setQuestionsSort({});
 
@@ -202,6 +204,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 difficulties: difficulties.join(",") || undefined,
                 examBoards: examBoardString,
                 fasttrack,
+                hideCompleted,
                 startIndex,
                 limit: 30
             }));
@@ -238,7 +241,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     }, [searchStages]);
 
     useEffect(() => {
-        searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, 0);
+        searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, 0);
 
         const params: {[key: string]: string} = {};
         if (searchStages.length) params.stages = toSimpleCSV(searchStages);
@@ -248,6 +251,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (isAda && searchExamBoards.length) params.examBoards = toSimpleCSV(searchExamBoards);
         if (isPhy && searchBook.length) params.book = toSimpleCSV(searchBook);
         if (isPhy && searchFastTrack) params.fasttrack = "set";
+        if (hideCompleted) params.hideCompleted = "set";
 
         if (isPhy) {
             tiers.forEach((tier, i) => {
@@ -260,7 +264,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, selections]);
+    },[searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, selections, hideCompleted]);
 
     const sortedQuestions = useMemo(() => {
         return questions && sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
@@ -277,6 +281,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     }, [questions, user, searchTopics, isBookSearch, questionsSort, creationContext]);
 
     const [revisionMode, setRevisionMode] = useState(!!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS);
+
+    useEffect(() => {
+        if (revisionMode) {
+            setHideCompleted(false);
+        }
+    }, [revisionMode]);
 
     const debouncedRevisionModeUpdate = useCallback(debounce(() => {
         if (user && isLoggedIn(user)) {
@@ -401,12 +411,20 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         setRevisionMode(r => !r); 
                                         debouncedRevisionModeUpdate();
                                     }}
-                                    label={<p><b>Revision mode</b></p>}
+                                    label={<p>Revision mode</p>}
                                 />
                                 <span id="revision-mode-checkbox" className="icon-help"/>
                                 <RS.UncontrolledTooltip target="revision-mode-checkbox" placement="top" autohide={false}>
                                     Revision mode hides your previous answers, so you can practice questions that you have answered before.
                                 </RS.UncontrolledTooltip>
+                            </div>
+                            <div className="d-flex">
+                                <StyledCheckbox 
+                                    checked={hideCompleted}
+                                    onChange={() => setHideCompleted(h => !h)}
+                                    label={<p>Hide completed questions</p>}
+                                    disabled={revisionMode}
+                                />
                             </div>
                         </RS.Col>
                     </RS.Form>
@@ -429,7 +447,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             <em>Please select filters</em> :
                             (sortedQuestions?.length ?
                                 <>
-                                    <LinkToContentSummaryList items={sortedQuestions}/>
+                                    <LinkToContentSummaryList items={sortedQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
                                     {sortedQuestions && (totalQuestions ?? 0) > sortedQuestions.length &&
                                     <div role="status" className={"alert alert-light border"}>
                                             {`${totalQuestions} questions match your criteria.`}<br/>
