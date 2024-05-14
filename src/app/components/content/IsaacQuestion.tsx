@@ -53,6 +53,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
     const deviceSize = useDeviceSize();
     const feedbackRef = useRef<HTMLDivElement>(null);
+    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
     const {confidenceState, setConfidenceState, validationPending, setValidationPending, confidenceDisabled, recordConfidence, showQuestionFeedback} = useConfidenceQuestionsValues(
         currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD"),
@@ -89,7 +90,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     // Focus on the feedback banner after submission
     useEffect(() => {
-        if (validationResponse) feedbackRef.current?.focus();
+        if (hasSubmitted) {
+            feedbackRef.current?.focus();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [validationResponse]);
 
     // Select QuestionComponent from the question part's document type (or default)
@@ -125,6 +129,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         <RS.Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
             submitCurrentAttempt(questionPart, doc.id as string, currentGameboard, currentUser, dispatch);
+            setHasSubmitted(true);
         }}>
             <div className={
                 classNames(
