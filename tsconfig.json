@@ -25,6 +25,7 @@
     "types": ["jest", "@testing-library/jest-dom"]
   },
   "include": [
-    "src"
+    "src",
+    "node_modules/cypress/types/cypress-global-vars.d.ts"
   ]
 }
