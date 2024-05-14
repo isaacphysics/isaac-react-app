@@ -54,6 +54,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const deviceSize = useDeviceSize();
     const feedbackRef = useRef<HTMLDivElement>(null);
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+    const hidingAttempts = useAppSelector(selectors.user.preferences)?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS ?? false;
+
 
     const {confidenceState, setConfidenceState, validationPending, setValidationPending, confidenceDisabled, recordConfidence, showQuestionFeedback} = useConfidenceQuestionsValues(
         currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD"),
@@ -113,8 +115,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     // Determine Action Buttons
     const primaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) :
-        doc.type === "isaacInlineRegion" ? {disabled: !canSubmit, value: "Check my answer", type: "submit", onClick: () => {
-            submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch);
+        doc.type === "isaacInlineRegion" ? {disabled: !canSubmit, value: "Check my answer", type: "submit", onClick: () => { 
+            submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts);
     }} :
         {disabled: !canSubmit, value: "Check my answer", type: "submit"};
 
@@ -166,14 +168,14 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     {/*eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex*/}
                     <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
                         {
-                            isInlineQuestion && numCorrectInlineQuestions ?
-                                <h1 className="m-0">{correct ? "Correct!" : numCorrectInlineQuestions > 0 ? "Almost..." : "Incorrect"}</h1> :
+                            isInlineQuestion && numCorrectInlineQuestions ? 
+                                <h1 className="m-0">{correct ? "Correct!" : numCorrectInlineQuestions > 0 ? "Partly correct..." : "Incorrect"}</h1> :
                                 <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 ? <>
-                            <span>You can view feedback for an individual part by either selecting it above, or by using the control panel below.</span>
+                            <span>You can view feedback for a specific box by either selecting it above, or by using the control panel below.</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header`}>
                                     <RS.Button color="transparent" onClick={() => {
@@ -185,7 +187,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                     <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
                                         inlineContext.feedbackIndex && inlineContext.setFocusSelection(true);
                                     }}>
-                                        Part {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
+                                        Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
                                     </RS.Button>
                                     <Spacer/>
                                     <RS.Button color="transparent" onClick={() => {

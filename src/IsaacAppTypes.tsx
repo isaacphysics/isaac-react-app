@@ -712,3 +712,5 @@ export interface SearchShortcut {
     type: SEARCH_RESULT_TYPE;
     hash?: string;
 }
+
+export type QuestionCorrectness = "CORRECT" | "INCORRECT" | "NOT_ANSWERED" | "NOT_SUBMITTED"; 

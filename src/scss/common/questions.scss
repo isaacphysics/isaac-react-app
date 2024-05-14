@@ -357,6 +357,9 @@
       &.incorrect {
         color: red;
       }
+      &.unanswered {
+        color: orange;
+      }
     }
   }
   &.nq-feedback {
@@ -468,12 +471,14 @@
   $shadow-size: 3px;
   &.selected-feedback {
     box-shadow: 0 0 0 $shadow-size #000;
-    // these colours should match the .form-control bootstrap colours
     &.is-valid {
-      box-shadow: 0 0 0 $shadow-size #208838;
+      box-shadow: 0 0 0 $shadow-size theme-color("success");
     }
     &.is-invalid {
-      box-shadow: 0 0 0 $shadow-size #dc3545;
+      box-shadow: 0 0 0 $shadow-size theme-color("danger");
+    }
+    &.is-unanswered {
+      box-shadow: 0 0 0 $shadow-size theme-color("warning");
     }
   }
 }
