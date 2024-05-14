@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Input } from "reactstrap";
 import { IsaacStringMatchQuestionDTO, StringChoiceDTO } from "../../../../IsaacApiTypes";
 import { useCurrentQuestionAttempt } from "../../../services";
-import { InlineEntryZoneProps } from "../markup/portals/InlineEntryZone";
+import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
 
-export const InlineStringEntryZone = ({width, height, questionDTO, focusRef, setModified, ...props} : InlineEntryZoneProps<IsaacStringMatchQuestionDTO>) => {
+export const InlineStringEntryZone = ({width, height, questionDTO, focusRef, setModified, correctness, ...rest} : InlineEntryZoneProps<IsaacStringMatchQuestionDTO>) => {
     
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt: _, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<StringChoiceDTO>(questionId as string);
@@ -20,11 +20,20 @@ export const InlineStringEntryZone = ({width, height, questionDTO, focusRef, set
         setModified(true);
     }, [value]);
 
-    return <Input 
-        {...props}
-        ref={focusRef}
-        value={value}
-        style={{width: `${width}px`, height: `${height}px`}}
-        onChange={(e) => setValue(e.target.value)}
-    />;
+    return <div className={"feedback-zone inline-nq-feedback"}>
+        <Input 
+            {...rest}
+            className={rest.className + " " + correctnessClass(correctness)}
+            ref={focusRef}
+            value={value}
+            style={{width: `${width}px`, height: `${height}px`}}
+            onChange={(e) => setValue(e.target.value)}
+        />
+        {(correctness === "NOT_ANSWERED" || correctness === "INCORRECT") && <div className={"feedback-box"}>
+            {correctness === "NOT_ANSWERED" ? 
+                <span className={"feedback unanswered"}><b>!</b></span> : 
+                <span className={"feedback incorrect"}>✘</span>
+            }
+        </div>}
+    </div>;
 };
