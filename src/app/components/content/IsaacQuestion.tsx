@@ -159,7 +159,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
                     {/*eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex*/}
-                    <div tabIndex={0} className="pb-1" role="alert" ref={feedbackRef}>
+                    <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
                         {
                             isInlineQuestion && numCorrectInlineQuestions ?
                                 <h1 className="m-0">{correct ? "Correct!" : numCorrectInlineQuestions > 0 ? "Almost..." : "Incorrect"}</h1> :
