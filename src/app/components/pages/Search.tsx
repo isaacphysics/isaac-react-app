@@ -102,10 +102,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
 
     // Process results and add shortcut responses
     const filteredSearchResults = searchResults?.results && searchResults.results
-        .filter(result => searchResultIsPublic(result, user))
-        .filter(result =>
-            isPhy || userContext.showOtherContent || isIntendedAudience(result.audience, userContext, user)
-        );
+        .filter(result => searchResultIsPublic(result, user));
     const shortcutResponses = (queryState ? shortcuts(queryState) : []) as ShortcutResponse[];
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
     const gotResults = shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0;
