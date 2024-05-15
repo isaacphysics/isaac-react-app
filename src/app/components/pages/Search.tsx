@@ -72,6 +72,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
         dispatch(fetchSearch(urlQuery ?? "", initialFilters.length ? initialFilters.join(",") : undefined));
         setQueryState(urlQuery);
         setFiltersState(initialFilters.map(itemise));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, location.search]);
 
     function updateSearchUrl(e?: FormEvent<HTMLFormElement>) {
@@ -83,9 +84,10 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const timer: MutableRefObject<number | undefined> = useRef();
     useEffect(() => {
         if (queryState !== urlQuery) {
-            timer.current = window.setTimeout(() => {updateSearchUrl()}, 800);
-            return () => {clearTimeout(timer.current)};
+            timer.current = window.setTimeout(() => {updateSearchUrl();}, 800);
+            return () => {clearTimeout(timer.current);};
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [queryState]);
 
     useEffect(() => {
@@ -95,12 +97,12 @@ export const Search = withRouter((props: RouteComponentProps) => {
         if (!filtersStateMatchesQueryParamFilters) {
             updateSearchUrl();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filtersState]);
 
     // Process results and add shortcut responses
     const filteredSearchResults = searchResults?.results && searchResults.results
-        .filter(result => searchResultIsPublic(result, user))
-        .filter(result => isPhy || isIntendedAudience(result.audience, userContext, user));
+        .filter(result => searchResultIsPublic(result, user));
     const shortcutResponses = (queryState ? shortcuts(queryState) : []) as ShortcutResponse[];
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
     const gotResults = shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0;
