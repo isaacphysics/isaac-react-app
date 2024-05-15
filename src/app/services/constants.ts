@@ -523,7 +523,7 @@ export enum TAG_ID {
     mathsForCs = "maths_for_cs",
 
     // Software project topics
-    database_project = "database_project",
+    database_project = "projdb_repair_and_reform",
     aqa_nea_project = "aqa_nea_project",
     ocr_nea_project = "ocr_nea_project",
 
