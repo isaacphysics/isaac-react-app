@@ -1,4 +1,4 @@
-import React, {Suspense, useContext, useEffect} from "react";
+import React, {Suspense, useContext, useEffect, useRef, useState} from "react";
 import {
     deregisterQuestions,
     registerQuestions,
@@ -52,7 +52,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
     const deviceSize = useDeviceSize();
+    const feedbackRef = useRef<HTMLDivElement>(null);
+    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const hidingAttempts = useAppSelector(selectors.user.preferences)?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS ?? false;
+
 
     const {confidenceState, setConfidenceState, validationPending, setValidationPending, confidenceDisabled, recordConfidence, showQuestionFeedback} = useConfidenceQuestionsValues(
         currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD"),
@@ -87,6 +90,14 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, doc.id]);
 
+    // Focus on the feedback banner after submission
+    useEffect(() => {
+        if (hasSubmitted) {
+            feedbackRef.current?.focus();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [validationResponse]);
+
     // Select QuestionComponent from the question part's document type (or default)
     const QuestionComponent = QUESTION_TYPES[doc?.type ?? "default"];
 
@@ -120,6 +131,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         <RS.Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
             submitCurrentAttempt(questionPart, doc.id as string, currentGameboard, currentUser, dispatch);
+            setHasSubmitted(true);
         }}>
             <div className={
                 classNames(
@@ -150,10 +162,11 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {isAda && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
 
                 {/* Validation Response */}
-                {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && <div 
+                {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && <div
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
-                    <div className="pb-1">
+                    {/*eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex*/}
+                    <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
                         {
                             isInlineQuestion && numCorrectInlineQuestions ? 
                                 <h1 className="m-0">{correct ? "Correct!" : numCorrectInlineQuestions > 0 ? "Partly correct..." : "Incorrect"}</h1> :
@@ -172,7 +185,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                     </RS.Button>
                                     <Spacer/>
                                     <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
-                                        inlineContext.feedbackIndex && inlineContext.setFocusSelection(true); 
+                                        inlineContext.feedbackIndex && inlineContext.setFocusSelection(true);
                                     }}>
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
                                     </RS.Button>
