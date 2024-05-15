@@ -37,7 +37,8 @@ import {
     ifKeyIsEnter,
     TAG_ID,
     itemiseTag,
-    isLoggedIn
+    isLoggedIn,
+    SEARCH_RESULTS_PER_PAGE
 } from "../../services";
 import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
@@ -119,6 +120,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(!!params.fasttrack);
     const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({});
 
+    const [disableLoadMore, setDisableLoadMore] = useState(false);
+
     const subjects = arrayFromPossibleCsv(params.subjects);
     const fields = arrayFromPossibleCsv(params.fields);
     const topics = arrayFromPossibleCsv(params.topics);
@@ -162,7 +165,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         } : {};
     }, [isBookSearch, searchDifficulties, searchExamBoards, searchStages]);
 
-    const {results: questions, totalResults: totalQuestions} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
+    const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
@@ -241,6 +244,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     }, [searchStages]);
 
     useEffect(() => {
+        setPageCount(1);
+        setDisableLoadMore(false);
         searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, 0);
 
         const params: {[key: string]: string} = {};
@@ -267,6 +272,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     },[searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, selections, hideCompleted]);
 
     const sortedQuestions = useMemo(() => {
+        if (questions && questions.length < SEARCH_RESULTS_PER_PAGE) {
+            setDisableLoadMore(true);
+        }
         return questions && sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
             questions.filter(question => {
                 const qIsPublic = searchResultIsPublic(question, user);
@@ -278,7 +286,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 return qIsPublic && qTopicsMatch;
             })
         );
-    }, [questions, user, searchTopics, isBookSearch, questionsSort, creationContext]);
+    }, [questions]);
+
+    const [displayQuestions, setDisplayQuestions] = useState<ContentSummaryDTO[] | undefined>(undefined);
+    const [pageCount, setPageCount] = useState(1);
+
+    useEffect(() => {
+        if (displayQuestions && nextSearchOffset && pageCount > 1) {
+            setDisplayQuestions(dqs => [...dqs ?? [], ...sortedQuestions ?? []]);
+        } else {
+            setDisplayQuestions(sortedQuestions);
+        }
+    }, [sortedQuestions]);
 
     const [revisionMode, setRevisionMode] = useState(!!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS);
 
@@ -440,15 +459,28 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 </RS.Col>
             </RS.CardHeader>
             <Suspense fallback={<Loading/>}>
-                <RS.CardBody className={classNames({"p-0 m-0": isAda && sortedQuestions?.length})}>
-                    <ShowLoading until={sortedQuestions}>
+                <RS.CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
+                    <ShowLoading until={displayQuestions}>
                         {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
                          selections.every(v => v.length === 0) ?
                             <em>Please select filters</em> :
-                            (sortedQuestions?.length ?
+                            (displayQuestions?.length ?
                                 <>
-                                    <LinkToContentSummaryList items={sortedQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
-                                    {sortedQuestions && (totalQuestions ?? 0) > sortedQuestions.length &&
+                                    <LinkToContentSummaryList items={displayQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
+                                    <RS.Row>
+                                        <RS.Col className="d-flex justify-content-center mb-3">
+                                            <RS.Button
+                                                onClick={() => {
+                                                    setPageCount(c => c + 1);
+                                                    searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ?? 0);
+                                                }}
+                                                disabled={disableLoadMore}
+                                            >
+                                                Load more
+                                            </RS.Button>
+                                        </RS.Col>
+                                    </RS.Row>
+                                    {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
                                     <div role="status" className={"alert alert-light border"}>
                                             {`${totalQuestions} questions match your criteria.`}<br/>
                                             Not found what you&apos;re looking for? Try refining your search filters.
