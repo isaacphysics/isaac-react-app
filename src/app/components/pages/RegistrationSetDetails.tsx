@@ -5,7 +5,6 @@ import {
     CardBody,
     Col,
     Container,
-    CustomInput,
     Form,
     FormFeedback,
     FormGroup,
@@ -171,7 +170,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                             />
                             <hr />
                             <FormGroup className="my-4">
-                                <CustomInput
+                                <Input
                                     id="tos-confirmation"
                                     name="tos-confirmation"
                                     type="checkbox"
@@ -182,7 +181,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                     <FormFeedback>
                                         You must accept the terms to continue.
                                     </FormFeedback>
-                                </CustomInput>
+                                </Input>
                             </FormGroup>
                             <hr />
                             <Row>

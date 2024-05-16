@@ -62,7 +62,6 @@ import {
     CardFooter,
     Col,
     Container,
-    CustomInput,
     Input,
     Label,
     Row,
@@ -256,7 +255,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
             </Row>
 
             <Col className="mt-2">
-                <CustomInput
+                <Input
                     type="checkbox"
                     id="show-book-questions-checkbox"
                     label="Include Isaac book questions"

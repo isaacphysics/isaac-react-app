@@ -1,6 +1,6 @@
 import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
-import {Button, Col, Container, Input, InputGroup, InputGroupAddon, Label, Row, UncontrolledTooltip} from "reactstrap";
+import {Button, Col, Container, Input, InputGroup, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
 import {ifKeyIsEnter, isDefined, isStaff, siteSpecific, sanitiseInequalityState} from "../../services";
 import katex from "katex";
@@ -239,7 +239,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                         <InputGroup className="my-2">
                             <Input className="py-4" type="text" onChange={updateEquation} value={textInput}
                                 placeholder="Type your expression here"/>
-                            <InputGroupAddon addonType="append">
+                            <>
                                 {siteSpecific(
                                     <Button type="button" className="eqn-editor-help pt-2" id="inequality-help" size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>,
                                     <span id={"inequality-help"} className="icon-help-q my-auto"/>
@@ -263,7 +263,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                                     1 . ~(0 + A)<br />
                                     As you type, the box below will preview the result.
                                 </UncontrolledTooltip>}
-                            </InputGroupAddon>
+                            </>
                         </InputGroup>
                         <QuestionInputValidation userInput={textInput} validator={(i: string) => equalityValidator(i, editorMode)} />
                     </div>}

@@ -28,6 +28,7 @@ import classNames from "classnames";
 import {PageFragment} from "../PageFragment";
 import {RenderNothing} from "../RenderNothing";
 import {skipToken} from "@reduxjs/toolkit/query";
+import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {
     confirmSelfRemovalModal,
@@ -181,11 +182,11 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                             e.preventDefault(); 
                         }}}
                     />
-                    <RS.InputGroupAddon addonType="append">
+                    <>
                         <RS.Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark": isPhy})} color="secondary" outline disabled={editingOtherUser}>
                             Connect
                         </RS.Button>
-                    </RS.InputGroupAddon>
+                    </>
                 </RS.InputGroup>
             </RS.Form>
 
@@ -337,7 +338,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     {isPhy && <>
                                                         <span id={`leave-group-action-${membership.group.id}`} className="icon-help membership-status-help-button" />
                                                         <RS.UncontrolledTooltip placement="bottom" target={`leave-group-action-${membership.group.id}`}
-                                                                                modifiers={{preventOverflow: {boundariesElement: "viewport"}}}>
+                                                                                modifiers={[preventOverflow]}>
                                                             If you leave a group you will no longer receive notifications of new assignments.
                                                         </RS.UncontrolledTooltip>
                                                     </>}
@@ -352,7 +353,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     {isPhy && <>
                                                         <span id={`rejoin-group-action-${membership.group.id}`} className="icon-help membership-status-help-button" />
                                                         <RS.UncontrolledTooltip placement="bottom" target={`rejoin-group-action-${membership.group.id}`}
-                                                                                modifiers={{preventOverflow: {boundariesElement: "viewport"}}}>
+                                                                                modifiers={[preventOverflow]}>
                                                             If you rejoin a group you will see all the assignments set since the group was created.
                                                         </RS.UncontrolledTooltip>
                                                     </>}

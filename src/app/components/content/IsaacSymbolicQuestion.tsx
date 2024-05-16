@@ -222,7 +222,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 <RS.InputGroup className="my-2 separate-input-group">
                     <RS.Input type="text" onChange={updateEquation} value={textInput}
                               placeholder="Type your formula here"/>
-                    <RS.InputGroupAddon addonType="append">
+                    <>
                         {siteSpecific(
                             <RS.Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>,
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
@@ -237,7 +237,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                             <br />
                             As you type, the box below will preview the result.
                         </RS.UncontrolledTooltip>
-                    </RS.InputGroupAddon>
+                    </>
                 </RS.InputGroup>
                 <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
                 {symbolList && <div className="eqn-editor-symbols">

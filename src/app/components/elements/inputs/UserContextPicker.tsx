@@ -1,6 +1,6 @@
 import React from "react";
 import * as RS from "reactstrap";
-import {CustomInput, FormGroup, Input, Label} from "reactstrap";
+import {FormGroup, Input, Label} from "reactstrap";
 import {
     EXAM_BOARD,
     examBoardLabelMap,
@@ -119,7 +119,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         {isAda && <RS.Row className="w-100 px-0 m-0 pb-2 justify-content-end">
             <FormGroup className="w-auto m-0">
                 <Label className="d-inline-block m-0" htmlFor="uc-show-other-content-check">Show other content? </Label>
-                <CustomInput
+                <Input
                     className="d-inline-block ml-2 pr-0" type="checkbox" id="uc-show-other-content-check"
                     checked={userContext.showOtherContent}
                     onChange={e => dispatch(transientUserContextSlice.actions.setShowOtherContent(e.target.checked))}

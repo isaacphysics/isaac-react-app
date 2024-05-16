@@ -66,7 +66,7 @@ const GameboardBuilderRow = (
         {...(provided && provided.draggableProps)} {...(provided && provided.dragHandleProps)}
     >
         <td className="w-5 text-center align-middle">
-            <RS.CustomInput
+            <RS.Input
                 type="checkbox"
                 id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                 aria-label={!isSelected ? "Select question" : "Deselect question"}

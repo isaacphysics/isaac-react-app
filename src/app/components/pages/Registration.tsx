@@ -8,7 +8,6 @@ import {
     CardTitle,
     Col,
     Container,
-    CustomInput,
     Form,
     FormFeedback,
     FormGroup,
@@ -278,7 +277,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                         />
                                     </Col>
                                     <Col lg={siteSpecific(12, 6)} xs={12} className="pt-2">
-                                        <CustomInput
+                                        <Input
                                             id="age-over-13-confirmation-input" name="age-over-13-confirmation" type="checkbox"
                                             className="ml-1 ml-md-0"
                                             checked={confirmedOverThirteen}
@@ -288,7 +287,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                             onChange={(e) => setDobOver13CheckboxChecked(e?.target.checked)}
                                             invalid={dobTooYoung}
                                         />
-                                        {isPhy && <CustomInput
+                                        {isPhy && <Input
                                             id="age-10-to-12-confirmation-input" name="age-10-to-12-confirmation" type="checkbox"
                                             className="ml-1 ml-md-0"
                                             checked={confirmedTenToTwelve}
@@ -330,7 +329,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                             you should always check what data is being kept to do this - you can read how we use your
                             data to provide our service <Link to="/privacy" target="_blank">here</Link>.
                         </p>
-                        <CustomInput
+                        <Input
                             id="consent-checkbox" name="consent-checkbox" type="checkbox"
                             checked={parentalConsentCheckboxChecked}
                             label="Please check the box to confirm that you have read and understood this message."

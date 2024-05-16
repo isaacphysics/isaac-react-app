@@ -46,10 +46,10 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
             As an event leader, you are only able to see the details of events which you manage.
         </div>}
         <div className="clearfix">
-            {isAda && <div className="mb-3 float-left">
+            {isAda && <div className="mb-3 float-start">
                 <RS.Button color="primary" size="sm" tag={Link} to="/events_toolkit">Events toolkit</RS.Button>
             </div>}
-            <div className="float-left">
+            <div className="float-start">
                 {/* Load More Button */}
                 <RS.Button size={"sm"} disabled={!(eventOverviews && total && eventOverviews.length < total)} onClick={() => {
                     if (eventOverviews) {

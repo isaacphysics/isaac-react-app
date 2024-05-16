@@ -374,15 +374,13 @@ export const AdminUserManager = () => {
                             value={mergeSourceId}
                             onChange={(e => setMergeSourceId(e.target.value))}
                         />
-                        <RS.InputGroupAddon addonType="append">
-                            <RS.Button
-                                type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
-                                disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
-                                onClick={confirmMergeUsers}
-                            >
-                                Merge
-                            </RS.Button>
-                        </RS.InputGroupAddon>
+                        <RS.Button
+                            type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
+                            disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
+                            onClick={confirmMergeUsers}
+                        >
+                            Merge
+                        </RS.Button>
                     </RS.InputGroup>
                 </FormGroup>
             </RS.CardBody>

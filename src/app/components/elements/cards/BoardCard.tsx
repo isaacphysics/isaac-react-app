@@ -28,7 +28,7 @@ import {
     CardSubtitle,
     CardTitle,
     Col,
-    CustomInput,
+    Input,
     Row,
     Spinner,
     UncontrolledTooltip
@@ -149,7 +149,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     </svg>;
 
     const stagesAndDifficultiesBorders = (i : number) => {
-        return siteSpecific(`border-left-1 border-right-1 border-top-${i === 0 ? 0 : 1} border-bottom-${i === boardStagesAndDifficulties.length - 1 ? 0 : 1}`, "border-0");
+        return siteSpecific(`border-start-1 border-right-1 border-top-${i === 0 ? 0 : 1} border-bottom-${i === boardStagesAndDifficulties.length - 1 ? 0 : 1}`, "border-0");
     };
 
     return boardView == BoardViews.table ?
@@ -168,7 +168,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 {boardStagesAndDifficulties.length > 0 && <table className="w-100 border-0">
                     <tbody>
                     {boardStagesAndDifficulties.map(([stage,difficulties], i) => {
-                        return <tr key={stage} className={classNames({"border-0": i === 0, "border-left-0 border-right-0 border-bottom-0": i >= 1})}>
+                        return <tr key={stage} className={classNames({"border-0": i === 0, "border-start-0 border-right-0 border-bottom-0": i >= 1})}>
                             <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
                                 {stageLabelMap[stage]}
                             </td>
@@ -204,7 +204,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     }} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
                 </td>,
                 <td className={"text-center align-middle overflow-hidden"}>
-                    <CustomInput
+                    <Input
                         id={`board-delete-${board.id}`}
                         type="checkbox"
                         color="secondary"
@@ -278,7 +278,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 <CardBody className="pb-4 pt-4">
                     <Row className={"mb-2"}>
                         <Col>
-                            <div className={"float-left mr-3 mb-2"}>{csCircle}</div>
+                            <div className={"float-start mr-3 mb-2"}>{csCircle}</div>
                             <h4><Link className={"d-inline"} to={boardLink}>{board.title}</Link></h4>
                             <span data-testid={"owner"}>By: {formatBoardOwner(user, board)}</span>
                         </Col>

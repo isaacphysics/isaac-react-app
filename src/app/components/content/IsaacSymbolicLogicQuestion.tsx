@@ -13,7 +13,7 @@ import {
     useUserContext
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
-import {Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip} from 'reactstrap';
+import {Button, Input, InputGroup, UncontrolledTooltip} from 'reactstrap';
 import {v4 as uuid_v4} from "uuid";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
@@ -228,7 +228,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 <InputGroup className="my-2 separate-input-group">
                     <Input type="text" onChange={updateEquation} value={textInput}
                            placeholder="or type your expression here"/>
-                    <InputGroupAddon addonType="append">
+                    <>
                         {siteSpecific(
                             <Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId}>?</Button>,
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
@@ -242,7 +242,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                             1 . ~(0 + A)<br />
                             As you type, the box above will preview the result.
                         </UncontrolledTooltip>
-                    </InputGroupAddon>
+                    </>
                 </InputGroup>
                 <QuestionInputValidation userInput={textInput} validator={symbolicLogicInputValidator} />
                 {symbolList && <div className="eqn-editor-symbols">

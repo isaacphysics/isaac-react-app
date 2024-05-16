@@ -1,6 +1,6 @@
-import * as RS from "reactstrap";
 import React from "react";
 import {KEY, persistence} from "../../services";
+import { Input } from "reactstrap";
 
 interface AnonymisationCheckboxesProps {
     className?: string
@@ -8,7 +8,7 @@ interface AnonymisationCheckboxesProps {
 
 export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProps) => {
     return <div className={className}>
-        <RS.CustomInput
+        <Input
             type="checkbox" id={"anonymise-users-checkbox"}
             checked={persistence.load(KEY.ANONYMISE_USERS) === "YES"}
             onChange={e => {
@@ -20,7 +20,7 @@ export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProp
             }}
             label="Disguise only user names and emails in teacher tools"
         />
-        <RS.CustomInput
+        <Input
             type="checkbox" id={"anonymise-groups-checkbox"}
             checked={persistence.load(KEY.ANONYMISE_GROUPS) === "YES"}
             onChange={e => {

@@ -12,7 +12,6 @@ import {
     DropdownToggle,
     Input,
     InputGroup,
-    InputGroupAddon,
     Label,
     Row,
     UncontrolledTooltip
@@ -114,7 +113,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                 {currentAttemptValueWrong && <div className={"feedback-box"}>
                                     <span className={"feedback incorrect"}><b>!</b></span>
                                 </div>}
-                                {!readonly && <InputGroupAddon addonType="append">
+                                {!readonly && <>
                                     {siteSpecific(
                                         <Button type="button" className={classNames("numeric-help", {"py-0": isAda})} size="sm" id={helpTooltipId}>?</Button>,
                                         <span id={helpTooltipId} className="icon-help-q my-auto"/>
@@ -126,7 +125,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                         2.8e-12<br /><br />
                                         Do not use commas or spaces.
                                     </UncontrolledTooltip>
-                                </InputGroupAddon>}
+                                </>}
                             </InputGroup>
                         </Label>
                     </div>
@@ -146,7 +145,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                         <span className={"feedback incorrect"}>✘</span>
                                     </div>}
                                 </DropdownToggle>
-                                <DropdownMenu right>
+                                <DropdownMenu end>
                                     {selectedUnits.map((unit) =>
                                         <DropdownItem key={wrapUnitForSelect(unit)}
                                             data-unit={unit || 'None'}

@@ -5,7 +5,6 @@ import {
     CardBody,
     Col,
     Container,
-    CustomInput,
     Form,
     FormFeedback,
     FormGroup,
@@ -40,7 +39,7 @@ export const RegistrationAgeCheck = () => {
                 <p>We can only create accounts for people over 13 years old.</p>
                 <Form onSubmit={submit}>
                     <FormGroup check className="my-2">
-                        <CustomInput
+                        <Input
                             id="registration-age-check-over"
                             className="d-inline"
                             type="radio"
@@ -52,7 +51,7 @@ export const RegistrationAgeCheck = () => {
                         />
                     </FormGroup>
                     <FormGroup check className="my-2">
-                        <CustomInput
+                        <Input
                             id="registration-age-check-under"
                             className="d-inline"
                             type="radio"
@@ -65,7 +64,7 @@ export const RegistrationAgeCheck = () => {
                             <FormFeedback>
                                 Please make a selection.
                             </FormFeedback>
-                        </CustomInput>
+                        </Input>
                     </FormGroup>
                     <hr />
                     <Row className="justify-content-end">

@@ -146,7 +146,7 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                                 onClick={() => setViewBy("startDate")}>
                             By start date
                         </Button>
-                        <Button size={"md"} className={"border-left-0"} id={"due-date-button"}
+                        <Button size={"md"} className={"border-start-0"} id={"due-date-button"}
                                 color={viewBy === "dueDate" ? "secondary" : "primary"}
                                 outline={viewBy !== "dueDate"}
                                 onClick={() => setViewBy("dueDate")}>
@@ -222,7 +222,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
             {showMore && <>
                 {assignment.notes && <div>
                     Notes
-                    <div className={"ml-1 mt-1 mb-2 pl-3 border-left"}>{assignment.notes}</div>
+                    <div className={"ml-1 mt-1 mb-2 pl-3 border-start"}>{assignment.notes}</div>
                 </div>}
                 <div>Assigned by: <strong>{assignmentOwnedByMe ? "Me" : "Someone else"}</strong></div>
                 {assignment.gameboard && <div className={"mt-2 border-top pt-2"}>

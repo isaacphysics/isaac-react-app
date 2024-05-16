@@ -24,10 +24,10 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
 
     const previousItemLink = navigation.previousItem && <div className="w-50 w-md-auto text-left mb-4">
         <Link to={{pathname: navigation.previousItem.to, search: navigation.search}}>
-            <div className="isaac-nav-link float-left a-alt lrg-text font-weight-bold">
+            <div className="isaac-nav-link float-start a-alt lrg-text font-weight-bold">
                 <Markup trusted-markup-encoding={"html"}>{navigation.previousItem.title}</Markup>
             </div>
-            <div className="isaac-nav-link float-left previous-link">Previous</div>
+            <div className="isaac-nav-link float-start previous-link">Previous</div>
         </Link>
     </div>;
 

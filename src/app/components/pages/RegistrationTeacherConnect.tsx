@@ -99,11 +99,9 @@ export const RegistrationTeacherConnect = () => {
                                     aria-describedby="codeValidationMessage"
                                     value={authenticationToken}
                                 />
-                                <RS.InputGroupAddon addonType="append">
-                                    <Button disabled={!codeIsValid} onClick={submit} color="secondary" outline>
-                                        Connect
-                                    </Button>
-                                </RS.InputGroupAddon>
+                                <Button disabled={!codeIsValid} onClick={submit} color="secondary" outline>
+                                    Connect
+                                </Button>
                             </InputGroup>
                             <FormFeedback id="codeValidationMessage">
                                 Please enter a valid code.

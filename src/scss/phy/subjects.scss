@@ -7,7 +7,8 @@
 
 @mixin apply-subject-classes($color) {
   /* background classes */
-  @include bg-variant(".bg-secondary", $color);
+  color: $color;
+  
 
   /* correct answer */
   .validation-response-panel {
@@ -44,11 +45,11 @@
   //}
 
   /* text- classes */
-  @include text-emphasis-variant(".text-secondary", $color);
+  // @include text-emphasis-variant(".text-secondary", $color);
+  text-emphasis-color: $color;
 
   /* badge classes */
   .badge-secondary {
-    @include badge-variant($color);
   }
 
   /* borders */
@@ -90,11 +91,6 @@
   }
 
   .alert-secondary {
-    @include alert-variant(
-      color-level($color, $alert-bg-level),
-      color-level($color, $alert-border-level),
-      color-level($color, $alert-color-level)
-    );
   }
 
   li {

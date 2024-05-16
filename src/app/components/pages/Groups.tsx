@@ -13,7 +13,6 @@ import {
     FormFeedback,
     Input,
     InputGroup,
-    InputGroupAddon,
     Label,
     Nav,
     NavItem,
@@ -266,16 +265,14 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                 invalid={isGroupNameInvalid}
                                 valid={isGroupNameValid}
                             />
-                            {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
-                                <Button
+                            {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <Button
                                     color={siteSpecific("secondary", "primary")}
                                     className={classNames("py-0", {"px-0 border-dark": isPhy})} disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
                                     onClick={saveUpdatedGroup}
                                     size="sm"
                                 >
                                     {group ? "Update" : "Create"}
-                                </Button>
-                            </InputGroupAddon>}
+                                </Button>}
                             <FormFeedback>A{existingGroupWithConflictingName?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
                         </InputGroup>
                     </Form>

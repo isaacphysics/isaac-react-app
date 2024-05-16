@@ -23,6 +23,7 @@ import {v4 as uuid_v4} from "uuid";
 import classNames from "classnames";
 import {Markup} from "./markup";
 import {ReportAccordionButton} from "./ReportAccordionButton";
+import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import { debounce } from "lodash";
 
 interface AccordionsProps extends RouteComponentProps {
@@ -195,7 +196,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                         {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
                             <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
                             <RS.UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
-                                                    modifiers={{preventOverflow: {boundariesElement: "viewport"}}}>
+                                                    modifiers={[preventOverflow]}>
                                 {disabled}
                             </RS.UncontrolledTooltip>
                         </div>}

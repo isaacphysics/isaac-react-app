@@ -159,7 +159,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
 
         <div className="w-100">
             <Button
-                className={"float-left mb-4"}
+                className={"float-start mb-4"}
                 color="tertiary"
                 disabled={isAssigning}
                 onClick={() => dispatch(closeActiveModal())}

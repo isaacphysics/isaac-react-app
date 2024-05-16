@@ -1,5 +1,5 @@
 import React, {ChangeEvent} from "react";
-import {Button, Input, InputGroup, InputGroupAddon, Label} from "reactstrap";
+import {Button, Input, InputGroup, Label} from "reactstrap";
 import {siteSpecific, withSearch} from "../../services";
 
 const PhysicsSearchButton = () => (
@@ -74,9 +74,7 @@ export const AdaHomepageSearch = withSearch(({inputProps, setSearchText, searchT
                 id="homepage-search" {...inputProps} placeholder={"Search your topic here"}
                 value={searchText} onChange={setSearchTextAsValue}
             />
-            <InputGroupAddon addonType={"append"}>
-                <LongSearchButton/>
-            </InputGroupAddon>
+            <LongSearchButton/>
         </InputGroup>
     </>
 });
@@ -92,11 +90,9 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
                 id="header-search" {...inputProps}
                 value={searchText} onChange={setSearchTextAsValue}
             />
-            <InputGroupAddon addonType={"append"}>
-                <button>
-                    <img src={"/assets/cs/icons/search-jet.svg"}/>
-                </button>
-            </InputGroupAddon>
+            <button>
+                <img src={"/assets/cs/icons/search-jet.svg"}/>
+            </button>
         </InputGroup>
     </>;
 });

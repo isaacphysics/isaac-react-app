@@ -12,13 +12,11 @@ import {
     isTutorOrAbove,
     siteSpecific,
     STAGE,
-    TEACHER_REQUEST_ROUTE,
     validateUserContexts
 } from "../../../services";
-import {Button, Col, CustomInput, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
+import {Button, Col, FormGroup, Input, Label, UncontrolledTooltip} from "reactstrap";
 import {UserContext} from "../../../../IsaacApiTypes";
 import {v4 as uuid_v4} from "uuid";
-import {Link} from "react-router-dom";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
@@ -200,7 +198,7 @@ export function UserContextAccountInput({
                                 </Button>
                             </Col>}
                         {(userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <Label>
-                            <CustomInput
+                            <Input
                                 type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block mt-1"
                                 checked={isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings?.HIDE_NON_AUDIENCE_CONTENT : true}
                                 onChange={e => setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: !e.target.checked}))}

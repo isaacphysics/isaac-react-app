@@ -14,7 +14,6 @@ import {
     CardBody,
     Col,
     Container,
-    CustomInput,
     Form,
     FormFeedback,
     FormGroup,
@@ -244,7 +243,7 @@ export const LogIn = () => {
 
                                     <Row className={classNames("mb-4", {"mt-2": isAda})}>
                                         <Col className={"col-5 mt-1"}>
-                                            <CustomInput
+                                            <Input
                                                 id="login-remember-me"
                                                 type="checkbox"
                                                 label="Remember me"
