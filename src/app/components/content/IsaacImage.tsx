@@ -11,7 +11,7 @@ interface IsaacImageProps {
 export const IsaacImage = ({doc}: IsaacImageProps) => {
     const path = doc.src && apiHelper.determineImageUrl(doc.src);
 
-    return <div className="figure_panel px-1">
+    return <div className="figure_panel">
         <figure>
             <div className="text-center">
                 {!doc.clickUrl && <img src={path} alt={doc.altText} />}
