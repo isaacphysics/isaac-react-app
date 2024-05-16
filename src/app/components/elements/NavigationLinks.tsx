@@ -13,16 +13,16 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
         </Link>
     </div>;
 
-    const nextItemLink = navigation.nextItem && <div className="w-50 w-md-auto text-right mb-4">
+    const nextItemLink = navigation.nextItem && <div className="w-50 w-md-auto text-end mb-4">
         <Link to={{pathname: navigation.nextItem.to, search: navigation.search}}>
-            <div className="isaac-nav-link float-right a-alt lrg-text font-weight-bold">
+            <div className="isaac-nav-link float-end a-alt lrg-text font-weight-bold">
                 <Markup trusted-markup-encoding={"html"}>{navigation.nextItem.title}</Markup>
             </div>
-            <div className="isaac-nav-link float-right next-link">Next</div>
+            <div className="isaac-nav-link float-end next-link">Next</div>
         </Link>
     </div>;
 
-    const previousItemLink = navigation.previousItem && <div className="w-50 w-md-auto text-left mb-4">
+    const previousItemLink = navigation.previousItem && <div className="w-50 w-md-auto text-start mb-4">
         <Link to={{pathname: navigation.previousItem.to, search: navigation.search}}>
             <div className="isaac-nav-link float-start a-alt lrg-text font-weight-bold">
                 <Markup trusted-markup-encoding={"html"}>{navigation.previousItem.title}</Markup>

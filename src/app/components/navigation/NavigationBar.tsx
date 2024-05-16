@@ -39,17 +39,17 @@ export const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOp
 });
 
 export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWithChildren<DropdownItemProps & {muted?: boolean, badgeTitle?: string}>) => {
-    const className = classNames(siteSpecific("pl-4 py-3 p-md-3", "pl-2 py-2 p-nav-3 font-h4 link-light"), {"text-muted": muted});
+    const className = classNames(siteSpecific("ps-4 py-3 p-md-3", "ps-2 py-2 p-nav-3 font-h4 link-light"), {"text-muted": muted});
     return <DropdownItem tag={Link} className={className} {...props}>
         {children}
-        {badgeTitle && <Badge color="light" className="border-secondary border bg-white ml-2 mr-1">{badgeTitle}</Badge>}
+        {badgeTitle && <Badge color="light" className="border-secondary border bg-white ms-2 me-1">{badgeTitle}</Badge>}
     </DropdownItem>
 };
 
 export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
     <LinkItem to="/coming_soon" aria-disabled="true">
-        <span className="mr-2 text-muted">{children}</span>
-        <Badge  color="light" className="border-secondary border bg-white ml-auto mr-1">Coming soon</Badge>
+        <span className="me-2 text-muted">{children}</span>
+        <Badge  color="light" className="border-secondary border bg-white ms-auto me-1">Coming soon</Badge>
     </LinkItem>
 );
 
@@ -59,7 +59,7 @@ export const NavigationSection = ({className, children, title, topLevelLink, to}
     const toggle = () => {
         setIsOpen(!isOpen);
     }
-    const linkClasses = siteSpecific("p-3 ml-3 mr-3", classNames("mx-0 mx-nav-1 p-3 font-h4 link-light", {"open": isOpen}));
+    const linkClasses = siteSpecific("p-3 ms-3 me-3", classNames("mx-0 mx-nav-1 p-3 font-h4 link-light", {"open": isOpen}));
     const dropdownClasses = siteSpecific("p-3 pt-0 m-0 mx-lg-4 nav-section", "p-3 pt-0 m-0 nav-section");
     return <MenuOpenContext.Consumer>
         {({setMenuOpen}) => <Dropdown className={className} nav inNavbar isOpen={isOpen} toggle={toggle}>
@@ -67,7 +67,7 @@ export const NavigationSection = ({className, children, title, topLevelLink, to}
                 <NavLink className={linkClasses} tag={Link} to={to} onClick={() => setMenuOpen(false)}>{title}</NavLink> :
                 <DropdownToggle nav caret={isPhy} className={linkClasses}>
                     {title}
-                    {isAda && <span onClick={toggle} className={classNames("cs-caret float-right d-nav-none d-inline-block", {"open": isOpen})}/>}
+                    {isAda && <span onClick={toggle} className={classNames("cs-caret float-end d-nav-none d-inline-block", {"open": isOpen})}/>}
                 </DropdownToggle>}
             {children && <DropdownMenu className={dropdownClasses} onClick={() => setMenuOpen(false)}>
                 {children}
@@ -81,8 +81,8 @@ export function MenuBadge({count, message, ...rest}: {count: number, message: st
         return RenderNothing;
     }
     return <div className={"d-inline"} {...rest}>
-        <span className={classNames("badge badge-pill ml-2", {"bg-grey": isPhy, "bg-turquoise-blue text-dark": isAda})}>{count}</span>
-        <span className="sr-only"> {message}</span>
+        <span className={classNames("badge badge-pill ms-2", {"bg-grey": isPhy, "bg-turquoise-blue text-dark": isAda})}>{count}</span>
+        <span className="visually-hidden"> {message}</span>
     </div>;
 }
 

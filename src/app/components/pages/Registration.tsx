@@ -146,7 +146,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     {/* Name */}
                     <Row>
                         <Col md={6}>
-                            <FormGroup>
+                            <FormGroup className="form-group">
                                 <Label htmlFor="first-name-input" className="form-required">
                                     First name
                                 </Label>
@@ -164,7 +164,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                             </FormGroup>
                         </Col>
                         <Col md={6}>
-                            <FormGroup>
+                            <FormGroup className="form-group">
                                 <Label htmlFor="last-name-input" className="form-required">
                                     Last name
                                 </Label>
@@ -186,7 +186,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     {/* Password */}
                     <Row>
                         <Col md={6}>
-                            <FormGroup>
+                            <FormGroup className="form-group">
                                 <Label htmlFor="password-input" className="form-required">
                                     Password
                                 </Label>
@@ -202,7 +202,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                     }}
                                 />
                                 {passwordFeedback &&
-                                    <span className='float-right small mt-1'>
+                                    <span className='float-end small mt-1'>
                                         <strong>Password strength: </strong>
                                         <span id="password-strength-feedback">
                                             {passwordFeedback.feedbackText}
@@ -212,7 +212,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                             </FormGroup>
                         </Col>
                         <Col md={6}>
-                            <FormGroup>
+                            <FormGroup className="form-group">
                                 <Label htmlFor="password-confirm" className="form-required">
                                     Re-enter password
                                 </Label>
@@ -236,7 +236,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     {/* Email and DOB */}
                     <Row>
                         <Col md={6}>
-                            <FormGroup>
+                            <FormGroup className="form-group">
                                 <Label htmlFor="email-input" className="form-required">
                                     Email address
                                 </Label>
@@ -255,7 +255,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                             </FormGroup>
                         </Col>
                         <Col md={6}>
-                            <FormGroup>
+                            <FormGroup className="form-group">
                                 <Label htmlFor="dob-input">
                                     Date of birth
                                 </Label>
@@ -279,7 +279,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                     <Col lg={siteSpecific(12, 6)} xs={12} className="pt-2">
                                         <Input
                                             id="age-over-13-confirmation-input" name="age-over-13-confirmation" type="checkbox"
-                                            className="ml-1 ml-md-0"
+                                            className="ms-1 ms-md-0"
                                             checked={confirmedOverThirteen}
                                             required
                                             label="I am at least 13 years old"
@@ -289,7 +289,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                         />
                                         {isPhy && <Input
                                             id="age-10-to-12-confirmation-input" name="age-10-to-12-confirmation" type="checkbox"
-                                            className="ml-1 ml-md-0"
+                                            className="ms-1 ms-md-0"
                                             checked={confirmedTenToTwelve}
                                             required
                                             label="I am aged 10 to 12 years old"
@@ -308,11 +308,11 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                         <Col>
                             {attemptedSignUp &&
                                 (!givenNameIsValid || !familyNameIsValid || !passwordIsValid || !emailIsValid) &&
-                                <h4 role="alert" className="text-danger text-left">
+                                <h4 role="alert" className="text-danger text-start">
                                     Not all required fields have been correctly filled.
                                 </h4>
                             }
-                            <h4 role="alert" className="text-danger text-left">
+                            <h4 role="alert" className="text-danger text-start">
                                 {attemptedSignUp && !confirmedOldEnoughForSite ?
                                     `You must be over ${siteSpecific("10", "13")} years old to create an account.` :
                                     errorMessage}
@@ -353,7 +353,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
 
                 </Form>
                 <hr className="text-center mb-4" />
-                <h3 className="text-left mb-3">Sign up with:</h3>
+                <h3 className="text-start mb-3">Sign up with:</h3>
                 {isAda &&
                     <Row className={"mb-3 justify-content-center"}>
                         <Col md={{size: 7}} lg={{size: 5}}>

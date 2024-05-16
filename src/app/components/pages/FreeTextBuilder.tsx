@@ -168,11 +168,11 @@ export const FreeTextBuilder = () => {
                                                         className="w-100" type="text" value={choice.value}
                                                         onChange={e => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, value: e.target.value} : c))}
                                                     />
-                                                    <span id={`choice-help-${choice.choiceNumber}`} className="icon-help mr-2" />
+                                                    <span id={`choice-help-${choice.choiceNumber}`} className="icon-help me-2" />
                                                 </div>
                                             </RS.Label>
                                             <RS.UncontrolledTooltip target={`choice-help-${choice.choiceNumber}`} placement="bottom" innerClassName="">
-                                                <div className="text-left">
+                                                <div className="text-start">
                                                     <RS.Table>
                                                         <thead>
                                                             <tr><th className="text-light" colSpan={2}>In-word wildcards:</th></tr>

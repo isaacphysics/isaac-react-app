@@ -100,7 +100,7 @@ export function withSearch(Component: React.FC<SearchInputProps>) {
         useEffect(() => { if (location.pathname === "/search") { setSearchText(initialValue ?? ""); }}, [location]);
 
         return <Form inline={inline} onSubmit={doSearch} className={className}>
-            <FormGroup className='search--main-group'>
+            <FormGroup className='form-group search--main-group'>
                 <Component inputProps={{
                     maxLength: SEARCH_CHAR_LENGTH_LIMIT,
                     type: "search",

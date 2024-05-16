@@ -18,7 +18,7 @@ export const Toasts = () => {
             </RS.ToastHeader>
             {toast.body && <RS.ToastBody className="p-3">
                 {toast.body}
-                {toast.buttons && <div className="text-right">{toast.buttons}</div>}
+                {toast.buttons && <div className="text-end">{toast.buttons}</div>}
             </RS.ToastBody>}
         </RS.Toast>)
     }</div>;

@@ -130,7 +130,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                         </Label>
                     </div>
                     {(doc.requireUnits || doc.displayUnit) && <div className="unit-selection w-100 w-md-50">
-                        <Label className="w-100 w-md-auto pl-md-5">
+                        <Label className="w-100 w-md-auto ps-md-5">
                             Unit{noDisplayUnit && "s"} <br/>
                             <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle

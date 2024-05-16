@@ -219,7 +219,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                         <Row data-testid={"pending-assignment"} key={assignee.groupId} className="px-1">
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             {assignee.startDate && <>
-                                    <span id={`start-date-${assignee.groupId}`} className="ml-auto mr-2">🕑 {(typeof assignee.startDate === "number"
+                                    <span id={`start-date-${assignee.groupId}`} className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
                                         ? new Date(assignee.startDate)
                                         : assignee.startDate).toDateString()}
                                     </span>
@@ -263,7 +263,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
     } = props;
 
     const tableHeader = <tr className="my-gameboard-table-header">
-        <th className="text-center align-middle"><span className="pl-2 pr-2">Groups</span></th>
+        <th className="text-center align-middle"><span className="ps-2 pe-2">Groups</span></th>
         <SortItemHeader defaultOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
             Board name
         </SortItemHeader>
@@ -538,7 +538,7 @@ export const SetAssignments = () => {
                 You have no {siteSpecific("gameboards", "quizzes")} to assign
                 {siteSpecific(
                     "; use one of the options above to find one.",
-                    <Button className={"ml-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} size="sm" color="secondary">
+                    <Button className={"ms-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} size="sm" color="secondary">
                         Create a quiz
                     </Button>
                 )}

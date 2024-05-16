@@ -182,7 +182,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                         </>)
                     )}
                 </span>}
-                <div className="accordion-title pl-3">
+                <div className="accordion-title ps-3">
                     <RS.Row className="h-100 align-items-center">
                         {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
                         <span className="accordion-part p-3 text-secondary">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
@@ -204,7 +204,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 </div>
 
                 {accordionIcon && isPhy && <span className={"accordion-icon align-self-center accordion-icon-" + accordionIcon}>
-                    <span className="sr-only">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
+                    <span className="visually-hidden">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
                 </span>}
             </RS.Button>
         </div>

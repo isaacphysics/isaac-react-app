@@ -170,7 +170,7 @@ export const TeacherRequest = () => {
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="first-name-input" className="form-required">First name</Label>
                                                 <Input disabled id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user?.loggedIn ? user.givenName : ""}
@@ -178,7 +178,7 @@ export const TeacherRequest = () => {
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="last-name-input" className="form-required">Last name</Label>
                                                 <Input disabled id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user?.loggedIn ? user.familyName : ""}
@@ -188,7 +188,7 @@ export const TeacherRequest = () => {
                                     </Row>
                                     <Row>
                                         <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="email-input" className="form-required">Email address</Label>
                                                 <Input disabled invalid={!isValidEmail || !emailVerified || !allowedDomain} id="email-input"
                                                     type="email" name="email"
@@ -198,7 +198,7 @@ export const TeacherRequest = () => {
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="school-input" className={siteSpecific("form-required", "")}>School</Label>
                                                 <Input disabled id="school-input" type="text" name="school"
                                                     defaultValue={school} invalid={isPhy && typeof school == "undefined"}
@@ -208,14 +208,14 @@ export const TeacherRequest = () => {
                                     </Row>
                                     <Row>
                                         {isPhy && <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="user-verification-input" className="form-required">URL of a page on your school website which shows your name and email address, or your school phone number</Label>
                                                 <Input id="user-verification-input" type="text" name="user-verification"
                                                     onChange={e => setVerificationDetails(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>}
                                         <Col size={12} md={siteSpecific(6, 12)}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="other-info-input">Any other information</Label>
                                                 <Input id="other-info-input" type="textarea" name="other-info"
                                                     onChange={e => setOtherInformation(e.target.value)}/>
@@ -225,7 +225,7 @@ export const TeacherRequest = () => {
                                     {!emailVerified &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-left">Your email address is not verified —
+                                            <small className="text-danger text-start">Your email address is not verified —
                                                 please click on the link in the verification email to confirm your
                                                 email address. You can <Button color="link primary-font-link" onClick={requestVerificationEmail}>request a
                                                     new verification email</Button> if necessary.
@@ -236,7 +236,7 @@ export const TeacherRequest = () => {
                                     {isPhy && typeof school == "undefined" &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-left">You have not provided your school —
+                                            <small className="text-danger text-start">You have not provided your school —
                                                 please add your school on your <Link to="/account">My Account</Link> page.
                                                 If you are a private tutor or parent, you can{" "}
                                                 <Link to="/tutor_account_request">
@@ -249,7 +249,7 @@ export const TeacherRequest = () => {
                                     {!allowedDomain &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-left">You have not used your school
+                                            <small className="text-danger text-start">You have not used your school
                                             email address — please change your email address on your <Link to="/account">My Account</Link> page.
                                             </small>
                                         </Col>
@@ -262,11 +262,11 @@ export const TeacherRequest = () => {
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>
-                                            <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
+                                            <span className="d-block pb-3 pb-md-0 text-end text-md-left form-required">
                                                 Required field
                                             </span>
                                         </Col>
-                                        <Col size={12} md={6} className="text-right">
+                                        <Col size={12} md={6} className="text-end">
                                             <Input type="submit" value="Submit" disabled={invalidDetails} className="btn btn-block btn-secondary border-0" />
                                         </Col>
                                     </Row>

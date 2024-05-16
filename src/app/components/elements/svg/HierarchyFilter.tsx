@@ -147,7 +147,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
     const height = `${hexagon.quarterHeight * 4 + hexagon.padding * 2 + 32}px`
 
     if (! selections[0]?.length) {
-        return <span className="text-muted ml-3 d-inline-block" style={{height}}>
+        return <span className="text-muted ms-3 d-inline-block" style={{height}}>
             None Selected
         </span>;
     }

@@ -238,19 +238,19 @@ export const DateInput = (props: DateInputProps) => {
     return <React.Fragment>
         <InputGroup id={props.id} {...controlPropsWithValidationStripped} className={inputGroupClasses}>
             {/* these wrappers exist as ::after pseudo-elements don't work with .select */}
-            <div className="date-input-wrapper date-input-day position-relative mr-1">
+            <div className="date-input-wrapper date-input-day position-relative me-1">
                 <Input type="select" {...controlProps} aria-label={`Day${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("day")} value={values.day.get() || ""}>
                     {values.day.get() === undefined && <option />}
                     {range(1, Math.max(lastInMonth(), values.day.get() || 0) + 1).map(day => <option key={day}>{day}</option>)}
                 </Input>
             </div>
-            <div className="date-input-wrapper date-input-month position-relative mr-1">
+            <div className="date-input-wrapper date-input-month position-relative me-1">
                 <Input type="select" {...controlProps} aria-label={`Month${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("month")} value={values.month.get() || ""}>
                     {values.month.get() === undefined && <option />}
                     {MONTHS.map((month, index)=> <option value={index + 1} key={index + 1}>{month}</option>)}
                 </Input>
             </div>
-            <div className="date-input-wrapper date-input-year position-relative mr-1">
+            <div className="date-input-wrapper date-input-year position-relative me-1">
                 <Input type="select" {...controlProps} aria-label={`Year${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("year")} value={values.year.get() || ""}>
                     {values.year.get() === undefined && <option />}
                     {yearRange.map(year => <option key={year}>{year}</option>)}

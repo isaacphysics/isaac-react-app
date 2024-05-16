@@ -58,7 +58,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     )}
                 </div>
             </Col>
-            <Col xs={8} md={3} lg={4} className="pl-lg-5">
+            <Col xs={8} md={3} lg={4} className="ps-lg-5">
                 <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
                     <h4 className="text-break">{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
                 </Link>
@@ -98,7 +98,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                             <td className="w-50 align-baseline">
                                 {stageLabelMap[stage]}:
                             </td>
-                            <td className="w-50 pl-1">
+                            <td className="w-50 ps-1">
                                 {difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}
                             </td>
                         </tr>)}
@@ -107,7 +107,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 </p>}
                 {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
             </Col>
-            <Col xs={5} md={2} className="mt-sm-2 text-right">
+            <Col xs={5} md={2} className="mt-sm-2 text-end">
                 <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
                     View Assignment
                 </Link>
@@ -143,7 +143,7 @@ const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 View quiz
             </Button>
         </Col>
-        <Col className={"ml-auto text-right d-lg-block d-md-none d-block"}>
+        <Col className={"ms-auto text-end d-lg-block d-md-none d-block"}>
             <Button className={"text-nowrap vertical-center-transform"} size={"sm"} outline tag={Link} to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
                 View quiz
             </Button>

@@ -29,7 +29,7 @@ const classBasedLayouts = {
     left: "align-left",
     right: "align-right",
     righthalf: "align-right-half",
-    textleft: "text-left",
+    textleft: "text-start",
     textcentre: "text-center",
     textcentrecolumn: "text-center-column",
     clearfix: "clearfix w-100"

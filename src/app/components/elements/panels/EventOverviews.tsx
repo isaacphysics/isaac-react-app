@@ -62,9 +62,9 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                 }}>
                     Load more events
                 </RS.Button>
-                <span className="ml-2">(showing {eventOverviews?.length ?? 0} of {total ?? 0})</span>
+                <span className="ms-2">(showing {eventOverviews?.length ?? 0} of {total ?? 0})</span>
             </div>
-            <div className="float-right mb-4">
+            <div className="float-end mb-4">
                 <RS.Label>
                     <RS.Input type="select" value={eventOverviewFilter} onChange={e => {setEventOverviewFilter(e.target.value as EventOverviewFilter)}}>
                         {Object.entries(EventOverviewFilter).map(([filterLabel, filterValue]) =>

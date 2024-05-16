@@ -29,7 +29,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                             dispatch(printingSettingsSlice.actions.enableHints(true));
                             setTimeout(window.print, 100);
                         }}
-                    ><span className="sr-only">Print{" "}</span>With hints
+                    ><span className="visually-hidden">Print{" "}</span>With hints
                     </Button>
                     |
                     <Button
@@ -41,7 +41,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                             dispatch(printingSettingsSlice.actions.enableHints(false));
                             setTimeout(window.print, 100);
                         }}
-                    ><span className="sr-only">Print{" "}</span>Without hints</Button>
+                    ><span className="visually-hidden">Print{" "}</span>Without hints</Button>
                 </div>
             </div>}
         </>

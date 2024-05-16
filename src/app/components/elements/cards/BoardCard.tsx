@@ -110,7 +110,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     const boardSubjects = determineGameboardSubjects(board);
     const boardStagesAndDifficulties = determineGameboardStagesAndDifficulties(board);
 
-    const basicCellClasses = `align-middle ${siteSpecific("text-center", "text-left")}`;
+    const basicCellClasses = `align-middle ${siteSpecific("text-center", "text-start")}`;
 
     const isTable = boardView === BoardViews.table;
     const phyHexagon = <div className={classNames("board-subject-hexagon-container", isTable ? "table-view" : "card-view")}>
@@ -119,7 +119,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
             : ((board.percentageCompleted === 100)
                 ? <>
                     <span className="board-subject-hexagon subject-complete"/>
-                    <span className="sr-only">Complete</span>
+                    <span className="visually-hidden">Complete</span>
                 </>
                 : <>
                     {generateGameboardSubjectHexagons(boardSubjects)}
@@ -149,7 +149,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     </svg>;
 
     const stagesAndDifficultiesBorders = (i : number) => {
-        return siteSpecific(`border-start-1 border-right-1 border-top-${i === 0 ? 0 : 1} border-bottom-${i === boardStagesAndDifficulties.length - 1 ? 0 : 1}`, "border-0");
+        return siteSpecific(`border-start-1 border-end-1 border-top-${i === 0 ? 0 : 1} border-bottom-${i === boardStagesAndDifficulties.length - 1 ? 0 : 1}`, "border-0");
     };
 
     return boardView == BoardViews.table ?
@@ -168,7 +168,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 {boardStagesAndDifficulties.length > 0 && <table className="w-100 border-0">
                     <tbody>
                     {boardStagesAndDifficulties.map(([stage,difficulties], i) => {
-                        return <tr key={stage} className={classNames({"border-0": i === 0, "border-start-0 border-right-0 border-bottom-0": i >= 1})}>
+                        return <tr key={stage} className={classNames({"border-0": i === 0, "border-start-0 border-end-0 border-bottom-0": i >= 1})}>
                             <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
                                 {stageLabelMap[stage]}
                             </td>
@@ -208,7 +208,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         id={`board-delete-${board.id}`}
                         type="checkbox"
                         color="secondary"
-                        className={"isaac-checkbox mr-n2"}
+                        className={"isaac-checkbox me-n2"}
                         checked={board && selectedBoards?.some(e => e.id === board.id)}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             board && updateBoardSelection(board, event.target.checked);
@@ -238,7 +238,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             <th className="w-50">
                                 <strong>{`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}`}</strong>
                             </th>
-                            <th className="w-50 pl-1">
+                            <th className="w-50 ps-1">
                                 <strong>{`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}</strong>
                             </th>
                         </tr>
@@ -248,7 +248,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             <td className="w-50 align-baseline text-lg">
                                 {stageLabelMap[stage]}
                             </td>
-                            <td className="w-50 pl-1">
+                            <td className="w-50 ps-1">
                                 {difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}
                             </td>
                         </tr>)}
@@ -256,7 +256,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             <td className="w-50 align-baseline text-lg">
                                 N/A
                             </td>
-                            <td className="w-50 pl-1">
+                            <td className="w-50 ps-1">
                                 -
                             </td>
                         </tr>}
@@ -278,7 +278,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 <CardBody className="pb-4 pt-4">
                     <Row className={"mb-2"}>
                         <Col>
-                            <div className={"float-start mr-3 mb-2"}>{csCircle}</div>
+                            <div className={"float-start me-3 mb-2"}>{csCircle}</div>
                             <h4><Link className={"d-inline"} to={boardLink}>{board.title}</Link></h4>
                             <span data-testid={"owner"}>By: {formatBoardOwner(user, board)}</span>
                         </Col>
@@ -292,9 +292,9 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             ).join(", ") || "-"}<br/>
                         </Col>
                     </Row>
-                    <CardFooter className={"text-right p-3"}>
+                    <CardFooter className={"text-end p-3"}>
                         <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
-                        <Button outline color={"secondary"} className={"mr-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                        <Button outline color={"secondary"} className={"me-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="secondary" onClick={toggleAssignModal}>
                             Assign{hasAssignedGroups && " / Unassign"}
                         </Button>}

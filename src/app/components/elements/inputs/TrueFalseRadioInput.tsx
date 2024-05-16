@@ -16,8 +16,8 @@ export function TrueFalseRadioInput({id, stateObject, propertyName, setStateFunc
 
     return <RS.FormGroup>
         <div className="d-flex flex-nowrap">
-            <RS.Label htmlFor={`${id}-t`} className="w-50 text-right text-nowrap pr-2">
-                {trueLabel}<span className='sr-only'> for {propertyName}</span>
+            <RS.Label htmlFor={`${id}-t`} className="w-50 text-end text-nowrap pe-2">
+                {trueLabel}<span className='visually-hidden'> for {propertyName}</span>
             </RS.Label>
             <RS.Input
                 id={`${id}-t`} type="radio" name={id} color="$secondary" className="d-inline"
@@ -29,8 +29,8 @@ export function TrueFalseRadioInput({id, stateObject, propertyName, setStateFunc
             />
         </div>
         <div className="d-flex flex-nowrap">
-            <RS.Label htmlFor={`${id}-f`} className="w-50 text-right text-nowrap pr-2">
-                {falseLabel}<span className='sr-only'> for {propertyName}</span>
+            <RS.Label htmlFor={`${id}-f`} className="w-50 text-end text-nowrap pe-2">
+                {falseLabel}<span className='visually-hidden'> for {propertyName}</span>
             </RS.Label>
             <RS.Input
                 id={`${id}-f`} type="radio" name={id} color="$secondary" className="d-inline"

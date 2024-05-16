@@ -70,14 +70,14 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title}
                     <RS.Input type="text" autoFocus placeholder="Search teachers" className="connections-search" onChange={e => setSearchText(e.target.value)}/>
                     <Spacer />
                 </> : 
-                <h4 className={classNames("d-flex", {"pl-0" : isAda})}>
+                <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
                     <span className={siteSpecific("icon-person-active", "icon-group-white")} />
                     {title}
                 </h4>
             }</>
             :
             <>
-                <h4 className={classNames("d-flex", {"pl-0" : isAda})}>
+                <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
                     <span className={siteSpecific("icon-person-active", "icon-group-white")} />
                     {title}
                 </h4>
@@ -193,7 +193,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             <div className="connect-list">
                 <ConnectionsHeader title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch} setSearchText={setTeacherSearchText}/>
                 <div className="connect-list-inner">
-                    <ul className={classNames("teachers-connected list-unstyled my-0", {"ml-3 mr-2": isPhy}, {"ml-1 mr-2": isAda})}>
+                    <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                         <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredActiveAuthorisations?.length ?? 0))} itemCount={filteredActiveAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                             {({index, style}) => {
                                 const teacherAuthorisation = filteredActiveAuthorisations?.[index];
@@ -213,7 +213,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                         To remove this access, click &apos;Revoke&apos;.
                                     </RS.UncontrolledTooltip>
                                     <RS.Button
-                                        color="link" className="revoke-teacher pr-1"
+                                        color="link" className="revoke-teacher pe-1"
                                         disabled={editingOtherUser}
                                         onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
                                         >
@@ -246,7 +246,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 <div className="connect-list">
                     <ConnectionsHeader title="Student connections" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch} setSearchText={setStudentSearchText}/>
                     <div className="connect-list-inner">
-                        <ul className={classNames("teachers-connected list-unstyled my-0", {"ml-3 mr-2": isPhy}, {"ml-1 mr-2": isAda})}>
+                        <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                             <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredStudentAuthorisations?.length ?? 0))} itemCount={filteredStudentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                                 {({index, style}) => {
                                     const student = filteredStudentAuthorisations?.[index];
@@ -265,7 +265,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                             To remove this access, click &apos;Remove&apos;.
                                         </RS.UncontrolledTooltip>
                                         <RS.Button
-                                            color="link" className="revoke-teacher pr-1" disabled={editingOtherUser}
+                                            color="link" className="revoke-teacher pe-1" disabled={editingOtherUser}
                                             onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(releaseConfirmationModal(user.id, student)))}
                                         >
                                             Remove
@@ -319,14 +319,14 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     :
                                                     <span><b>{(membership.group.groupName ?? "Group " + membership.group.id)}</b></span>
                                                 }
-                                                {membership.group.selfRemoval && <img className="self-removal-group ml-1" src={siteSpecific("/assets/phy/icons/teacher_features_sprite.svg#groups", "/assets/cs/icons/group.svg")} alt=""/>}
+                                                {membership.group.selfRemoval && <img className="self-removal-group ms-1" src={siteSpecific("/assets/phy/icons/teacher_features_sprite.svg#groups", "/assets/cs/icons/group.svg")} alt=""/>}
                                                 <br/>
                                                 {membership.group.ownerSummary && 
                                                     <span className="text-muted">Teacher{membership.group.additionalManagers && membership.group.additionalManagers.length > 0 ? "s" : ""}: {
                                                     [membership.group.ownerSummary, ...membership.group.additionalManagers ?? []].map(extractTeacherName).join(", ")
                                                 }</span>}
                                             </RS.Col>
-                                            <RS.Col className="d-flex flex-col justify-content-end flex-grow-0 pr-1">
+                                            <RS.Col className="d-flex flex-col justify-content-end flex-grow-0 pe-1">
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
                                                     <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
                                                         membership.group.selfRemoval 

@@ -57,7 +57,7 @@ export const TutorFeatures = () => {
         </Row>
         <Row className="my-4">
             <Col>
-                <h3 className="h-title text-right">Tutor Support and Resources</h3>
+                <h3 className="h-title text-end">Tutor Support and Resources</h3>
             </Col>
         </Row>
         <Row className="card-deck isaac-cards-body mb-5 mt-2 px-3">

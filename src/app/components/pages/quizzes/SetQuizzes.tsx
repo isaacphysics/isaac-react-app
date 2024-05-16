@@ -181,8 +181,8 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                     : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
                 </RS.UncontrolledTooltip>
             </td>}
-            <td className={classNames("set-quiz-table-title align-middle ", {"pl-4": isAda})}>{quizTitle}</td>
-            <td className="align-middle pr-0 d-none d-sm-table-cell">
+            <td className={classNames("set-quiz-table-title align-middle ", {"ps-4": isAda})}>{quizTitle}</td>
+            <td className="align-middle pe-0 d-none d-sm-table-cell">
                 <RS.Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
                     onClick={(e) => {
                         assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
@@ -230,13 +230,13 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                                 </td> :
                                 <></>
                             }
-                            <td className={isPhy ? "text-right" : "text-center"}>
+                            <td className={isPhy ? "text-end" : "text-center"}>
                                 <RS.Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className={`px-1 bg-transparent text-center ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`}>
                                     View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
                                 </RS.Button>
                             </td>
 
-                            <td className={isPhy ? "text-left" : "text-center"}>
+                            <td className={isPhy ? "text-start" : "text-center"}>
                                 <RS.UncontrolledButtonDropdown>
                                     <RS.DropdownToggle caret className={`text-nowrap ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`} size="sm" color="link">
                                         More
@@ -303,8 +303,8 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     // If the user is event admin or above, and the quiz is hidden from teachers, then show that
     // Otherwise, show if the quiz is visible to students
     const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
-        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ml-2">hidden from teachers</div>}
-        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ml-2">visible to students</div>}
+        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
+        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
     </>;
 
     const rowFiltersView = above["md"](deviceSize);
@@ -379,7 +379,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                             {filteredQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                 <div className="d-flex flex-grow-1 flex-row align-items-center p-3">
                                     <div className="d-flex flex-column">
-                                        <span className="mb-2 mb-sm-0 pr-2">{quiz.title}</span>
+                                        <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
                                         {roleVisibilitySummary(quiz)}
                                     </div>
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
@@ -405,7 +405,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                         </RS.DropdownMenu>
                                 </RS.UncontrolledButtonDropdown> 
                                 <div className="d-none d-md-flex align-items-center">
-                                    <Link className="my-3 mr-2 pl-3 pr-4 quiz-list-separator" to={{pathname: `/test/preview/${quiz.id}`}}>
+                                    <Link className="my-3 me-2 ps-3 pe-4 quiz-list-separator" to={{pathname: `/test/preview/${quiz.id}`}}>
                                         <span>Preview</span>
                                     </Link>
                                 </div>

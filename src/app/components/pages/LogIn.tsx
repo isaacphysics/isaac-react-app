@@ -83,7 +83,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
     return <>
         <h3 ref={ref} tabIndex={-1}>Two-Factor Authentication</h3>
         <p>Two-factor authentication has been enabled for this account.</p>
-        <FormGroup>
+        <FormGroup className="form-group">
             <Label htmlFor="verification-code">Verification Code</Label>
             <Input
                 id="verification-code" type="text" name="verification-code" placeholder="Verification code"
@@ -97,7 +97,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
                 {isNaN(Number(mfaVerificationCode)) && "Please enter a valid verification code"}
             </FormFeedback>
         </FormGroup>
-        <FormGroup>
+        <FormGroup className="form-group">
             <Button
                 id="submit-verification-code"
                 tag="input" value="Verify"
@@ -127,7 +127,7 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
     };
 
     return !passwordResetRequest ?
-        <div className={small ? "mt-1 w-100 text-right" : ""}>
+        <div className={small ? "mt-1 w-100 text-end" : ""}>
             <Button color="link" onClick={attemptPasswordReset}>
                 {small ? <small>Forgotten your password?</small> : "Forgotten your password?"}
             </Button>
@@ -155,7 +155,7 @@ interface EmailPasswordInputsProps {
 }
 export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPassword, logInAttempted, passwordResetAttempted, errorMessage, displayLabels = true}: EmailPasswordInputsProps) => {
     return <>
-        <FormGroup>
+        <FormGroup className="form-group">
             {displayLabels && <Label htmlFor="email-input">Email address</Label>}
             <Input
                 id="email-input" type="email" name="email" placeholder="Email address"
@@ -169,7 +169,7 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
             </FormFeedback>
         </FormGroup>
 
-        <FormGroup className="mb-0">
+        <FormGroup className="form-group mb-0">
             {displayLabels && <Label htmlFor="password-input">Password</Label>}
             <Input
                 id="password-input" type="password" name="password" placeholder="Password"
@@ -250,9 +250,9 @@ export const LogIn = () => {
                                                 onChange={e => setRememberMe(e.target.checked)}
                                             />
                                         </Col>
-                                        <Col className="text-right">
+                                        <Col className="text-end">
                                             <div>
-                                                <h4 role="alert" className="text-danger text-right mb-0">
+                                                <h4 role="alert" className="text-danger text-end mb-0">
                                                     {errorMessage}
                                                 </h4>
                                                 <PasswordResetButton email={email} isValidEmail={isValidEmail}
@@ -280,7 +280,7 @@ export const LogIn = () => {
                                     </Row>
 
                                     <hr className="text-center mb-4"/>
-                                    <h3 className="text-left mb-3">Log in with:</h3>
+                                    <h3 className="text-start mb-3">Log in with:</h3>
                                     {isAda &&
                                         <Row className="mb-2 justify-content-center">
                                             <Col sm={9}>

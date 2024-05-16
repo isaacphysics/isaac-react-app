@@ -36,7 +36,7 @@ export const News = () => {
         {allNews.length === 0 ? 
             <ShowLoadingQuery
                 query={newsQuery}
-                thenRender={() => <div className={"w-100 text-left"}><h4>No news to display...</h4></div>}
+                thenRender={() => <div className={"w-100 text-start"}><h4>No news to display...</h4></div>}
                 defaultErrorTitle={"Error fetching news stories"}
             /> : 
             <>

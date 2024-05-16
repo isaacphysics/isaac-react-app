@@ -191,7 +191,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
                 <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
                     <Row>
                         <Col lg={6} className="mt-3 mt-lg-0">
-                            <Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
+                            <Label className="d-block text-start d-sm-flex mb-0 pointer-cursor">
                                 <span>Topics:</span>
                                 <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
                             </Label>
@@ -221,7 +221,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
                     <div>
                         <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
                             I am interested in stage...
-                            <span id={`stage-help-tooltip`} className="icon-help ml-1" />
+                            <span id={`stage-help-tooltip`} className="icon-help ms-1" />
                             <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
                                 {"Find questions that are suitable for this stage of school learning."} <br />
                                 {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
@@ -232,7 +232,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
                     <div>
                         <Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
                             I would like questions for...
-                            <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
+                            <span id={`difficulty-help-tooltip`} className="icon-help ms-1" />
                             <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
                                 Practice questions let you directly apply one idea -<br />
                                 P1 covers revision of a previous stage or topics near the beginning of a course,<br />
@@ -272,7 +272,7 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
                     </Button>}
                 </Col>
                 <Spacer width={10}/>
-                <Col className="text-right">
+                <Col className="text-end">
                     <Button className="w-100 w-sm-auto h-100 h-sm-auto" size="sm" color="primary" outline onClick={refresh}>
                         <span>Shuffle Questions&nbsp;⟳</span>
                     </Button>
@@ -361,7 +361,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 <Col md={6}>
                     <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
                         I am interested in stage...
-                        <span id={`stage-help-tooltip`} className="icon-help ml-1" />
+                        <span id={`stage-help-tooltip`} className="icon-help ms-1" />
                         <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
                             Find questions that are suitable for this stage of learning.
                         </UncontrolledTooltip>
@@ -384,7 +384,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 <Col md={6}>
                     <Label className={`mt-2 mt-lg-0`} htmlFor="difficulty-selector">
                         with difficulty levels...
-                        <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
+                        <span id={`difficulty-help-tooltip`} className="icon-help ms-1" />
                         <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
                             Practice questions require you to directly apply a single concept:<br/>
                             P1 questions cover a single foundation concept.<br/>
@@ -435,7 +435,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         <span className="d-md-inline d-none">Undo Shuffle</span> <span className={"font-size-1-25 d-inline-block"}>&#9100;</span>
                     </Button>}
                 </Col>
-                <Col className="text-right">
+                <Col className="text-end">
                     <Button size="sm" color="secondary" outline onClick={refresh}>
                         <span className="d-md-inline d-none">Shuffle Questions</span> <span className={"font-size-1-25 d-inline-block"}>⟳</span>
                     </Button>
@@ -444,7 +444,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         </CardBody>
 
         <CardFooter tag={Button} color="secondary" className="w-100" onClick={scrollToQuestions}>
-            Scroll straight to questions<img className={"ml-3"} src={"/assets/common/icons/chevron_down_white.svg"} alt=""/>
+            Scroll straight to questions<img className={"ms-3"} src={"/assets/common/icons/chevron_down_white.svg"} alt=""/>
         </CardFooter>
     </Card>;
 };
@@ -677,7 +677,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                                         }}>
                                             Save title
                                         </Button>
-                                        <Button size={"sm"} color="link" className={"ml-2 mb-n2"} onClick={() => setIsEditingTitle(false)}>
+                                        <Button size={"sm"} color="link" className={"ms-2 mb-n2"} onClick={() => setIsEditingTitle(false)}>
                                             Cancel
                                         </Button>
                                     </> :
@@ -690,7 +690,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                             </Col>
                         </>
                     )}
-                    <Col xs={8} lg={"auto"} className="ml-auto text-right">
+                    <Col xs={8} lg={"auto"} className="ms-auto text-end">
                         <Button size={siteSpecific("md", "sm")} tag={Link} color="secondary"
                             to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}/${encodeURIComponent(customBoardTitle ?? gameboard.title ?? "")}`}
                             onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}

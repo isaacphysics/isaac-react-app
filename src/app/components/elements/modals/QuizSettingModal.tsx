@@ -167,7 +167,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 Close
             </Button>
             <Button
-                className={"float-right mb-4"}
+                className={"float-end mb-4"}
                 disabled={selectedGroups.length === 0 || !feedbackMode || isAssigning || dueDateInvalid || scheduledStartDateInvalid}
                 onMouseEnter={() => setValidated(new Set(['group', 'feedbackMode']))}
                 onClick={assign}

@@ -36,7 +36,7 @@ const CoordinateInput = (props: CoordinateInputProps) => {
             readOnly={readonly}
         />
         )
-        {remove && <Button className="ml-3" size="sm" onClick={remove}>Delete</Button>}
+        {remove && <Button className="ms-3" size="sm" onClick={remove}>Delete</Button>}
     </span>;
 };
 

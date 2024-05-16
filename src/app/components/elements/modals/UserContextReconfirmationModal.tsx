@@ -67,13 +67,13 @@ const UserContextReconfimationModalBody = () => {
             return <a target={"_blank"} onClick={logReviewTeacherConnections} rel={"noopener"}
                       href={"/account#teacherconnections"}>
                 {text}
-                <span className={"sr-only"}> (opens in new tab) </span>
+                <span className={"visually-hidden"}> (opens in new tab) </span>
             </a>;
         },
         function buildPrivacyPolicyLink(text: string) {
             return <a target={"_blank"} rel={"noopener"} href={"/privacy"}>
                 {text}
-                <span className={"sr-only"}> (opens in new tab) </span>
+                <span className={"visually-hidden"}> (opens in new tab) </span>
             </a>;
         })[isTutorOrAbove(user) ? (isTeacherOrAbove(user) ? "teacher" : "tutor") : "student"]
     , [user]);
@@ -95,7 +95,7 @@ const UserContextReconfimationModalBody = () => {
     return <Form onSubmit={formSubmission} className={"mb-2"}>
         <p>{modalText.intro}</p>
         <p>{modalText.connections}</p>
-        <div className="text-right text-muted required-before">
+        <div className="text-end text-muted required-before">
             Required
         </div>
         <Row className="my-2">

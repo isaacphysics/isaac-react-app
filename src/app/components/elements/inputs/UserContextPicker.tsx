@@ -46,11 +46,11 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     return <RS.Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
         <RS.Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}> 
             {/* Stage Selector */}
-            <FormGroup className={`w-100 d-flex justify-content-end m-0`}>
+            <FormGroup className={`form-group w-100 d-flex justify-content-end m-0`}>
                 {showStageSelector && <>
-                    {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-stage-select">Stage</Label>}
+                    {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}
                     <Input
-                        className={`flex-grow-1 d-inline-block pl-2 pr-0 mb-2 ${showExamBoardSelector ? "mr-1" : ""}`} type="select" id="uc-stage-select"
+                        className={`flex-grow-1 d-inline-block ps-2 pe-0 mb-2 ${showExamBoardSelector ? "me-1" : ""}`} type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
                         value={userContext.stage}
                         onChange={e => {
@@ -87,9 +87,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
 
                 {/* Exam Board Selector */}
                 {showExamBoardSelector && <>
-                    {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
+                    {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
                     <Input
-                        className={`flex-grow-1 d-inline-block pl-2 pr-0 mb-2 ${showStageSelector ? "ml-1" : ""}`} type="select" id="uc-exam-board-select"
+                        className={`flex-grow-1 d-inline-block ps-2 pe-0 mb-2 ${showStageSelector ? "ms-1" : ""}`} type="select" id="uc-exam-board-select"
                         aria-label={hideLabels ? "Exam Board" : undefined}
                         value={userContext.examBoard}
                         onChange={e => {
@@ -117,17 +117,17 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
 
         {/* "Show other content" selector */}
         {isAda && <RS.Row className="w-100 px-0 m-0 pb-2 justify-content-end">
-            <FormGroup className="w-auto m-0">
+            <FormGroup className="form-group w-auto m-0">
                 <Label className="d-inline-block m-0" htmlFor="uc-show-other-content-check">Show other content? </Label>
                 <Input
-                    className="d-inline-block ml-2 pr-0" type="checkbox" id="uc-show-other-content-check"
+                    className="d-inline-block ms-2 pe-0" type="checkbox" id="uc-show-other-content-check"
                     checked={userContext.showOtherContent}
                     onChange={e => dispatch(transientUserContextSlice.actions.setShowOtherContent(e.target.checked))}
                 />
             </FormGroup>
         </RS.Row>}
 
-        {showUnusualContextMessage && <div className="mt-2 ml-1">
+        {showUnusualContextMessage && <div className="mt-2 ms-1">
             <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
             <RS.UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
                 You are seeing {stageLabelMap[userContext.stage]} {isAda ? examBoardLabelMap[userContext.examBoard] : ""}{" "}

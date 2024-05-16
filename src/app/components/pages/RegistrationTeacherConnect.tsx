@@ -86,7 +86,7 @@ export const RegistrationTeacherConnect = () => {
                     <p>This lets you see the work your teacher sets, and lets your teacher see your progress. You can join more than one group and you always have control over which groups you are in. <a href="/support/student/general">Learn more</a></p>
                     <p>You can always skip this now and connect to your teacher later.</p>
                     <Col xs={12} lg={5}>
-                        <FormGroup>
+                        <FormGroup className="form-group">
                             <Label className={"font-weight-bold"} htmlFor="connect-code-input">{"Teacher connection code"}</Label>
                             <p className={"input-description"}>Enter the code given by your teacher to join a group</p>
                             <InputGroup className={"separate-input-group mb-4 d-flex flex-row align-items-center"}>

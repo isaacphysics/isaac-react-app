@@ -415,7 +415,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         </RS.Card>
         <RS.Card>
             <RS.CardHeader className="finder-header">
-                <RS.Col className={"pr-0"}>
+                <RS.Col className={"pe-0"}>
                     <h3>
                         Results
                     </h3>

@@ -239,7 +239,7 @@ export const AdminUserManager = () => {
 
         {/* Result panel */}
         <RS.Card className="my-4">
-            <RS.CardTitle data-testid="user-search-numbers" tag="h4" className="pl-4 pt-3 mb-0">
+            <RS.CardTitle data-testid="user-search-numbers" tag="h4" className="ps-4 pt-3 mb-0">
                 Manage users ({isDefined(searchResults) && searchResults.length || 0})<br />
                 Selected ({selectedUserIds.length})
             </RS.CardTitle>
@@ -263,7 +263,7 @@ export const AdminUserManager = () => {
                             </RS.DropdownMenu>
                         </RS.UncontrolledButtonDropdown>
                         {isDefined(currentUser) && currentUser.role === 'ADMIN' && <RS.UncontrolledButtonDropdown>
-                            <RS.DropdownToggle caret disabled={userBeingModified} color="primary" outline className="ml-3">Email Status</RS.DropdownToggle>
+                            <RS.DropdownToggle caret disabled={userBeingModified} color="primary" outline className="ms-3">Email Status</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Change email verification status for users to:</RS.DropdownItem>
                                 {(verificationStatuses).map(status =>
@@ -278,7 +278,7 @@ export const AdminUserManager = () => {
                         </RS.UncontrolledButtonDropdown>}
                     </RS.Col>
                     <RS.Col>
-                        <Link className="btn float-right btn-secondary border-0" to={{
+                        <Link className="btn float-end btn-secondary border-0" to={{
                             pathname: "/admin/emails",
                             state: {
                                 csvIDs: selectedUserIds
@@ -360,7 +360,7 @@ export const AdminUserManager = () => {
         <RS.Card className={"my-4"}>
             <RS.CardBody>
                 <h3>Merge user accounts</h3>
-                <FormGroup>
+                <FormGroup className="form-group">
                     <RS.InputGroup className={"separate-input-group"}>
                         <RS.Input
                             type="text"

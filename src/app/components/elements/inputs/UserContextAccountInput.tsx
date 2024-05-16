@@ -73,7 +73,7 @@ function UserContextRow({
         {/* Stage Selector */}
         <div className="d-flex flex-row justify-content-between">
             <StyledDropdown
-                className={classNames("account-dropdown", {"mr-1" : isAda})}
+                className={classNames("account-dropdown", {"me-1" : isAda})}
                 aria-label="Stage"
                 invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
                 onChange={onStageUpdate}
@@ -90,7 +90,7 @@ function UserContextRow({
 
             {/* Exam Board Selector */}
             {isAda && <StyledDropdown
-                className="account-dropdown ml-1"
+                className="account-dropdown ms-1"
                 aria-label="Exam Board"
                 invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
                 onChange={onExamBoardUpdate}
@@ -190,7 +190,7 @@ export function UserContextAccountInput({
                     />
                     {isAda && index === userContexts.length - 1 && <>
                         {tutorOrAbove &&
-                            <Col lg={6} className="p-0 pr-4 pr-lg-0">
+                            <Col lg={6} className="p-0 pe-4 pe-lg-0">
                                 <Button color="primary" outline className="mt-3 mb-2 px-2 w-100"
                                         onClick={() => setUserContexts([...userContexts, {}])}
                                         disabled={!validateUserContexts(userContexts)}>

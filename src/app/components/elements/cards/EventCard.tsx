@@ -60,7 +60,7 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
             <RS.CardText className="d-flex">
                 <Link className="focus-target" to={`/events/${id}`}>
                     View details
-                    <span className='sr-only'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
+                    <span className='visually-hidden'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
                 </Link>
                 {isPhy && <div className="event-card-icons">
                     {isTeacherEvent && <img src="/assets/phy/icons/key_stage_sprite.svg#teacher-hat" alt="Teacher event" title="Teacher event"/>}

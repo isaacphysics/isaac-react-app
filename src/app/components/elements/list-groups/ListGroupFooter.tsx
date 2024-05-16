@@ -70,7 +70,7 @@ export const ListGroupFooter = () => (
         // CS
         <div className="footer-links py-0">
             <div className="d-flex flex-row">
-                <ListGroup className="w-50 mb-3 mr-3 link-list">
+                <ListGroup className="w-50 mb-3 me-3 link-list">
                     {footerLinks.left}
                 </ListGroup>
                 <ListGroup className="w-50 mb-3 link-list">

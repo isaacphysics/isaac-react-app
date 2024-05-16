@@ -75,7 +75,7 @@ const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                     {doc.children}
                 </IsaacContentValueOrChildren>
             </div>
-            <FormGroup className="mb-4">
+            <FormGroup className="form-group mb-4">
                 <Input type="textarea"
                     placeholder="Type your answer here."
                     spellCheck={true}

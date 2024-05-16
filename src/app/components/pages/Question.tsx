@@ -88,7 +88,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                 {!preview && <CanonicalHrefElement />}
                 <div className="no-print d-flex flex-wrap align-items-center mt-3">
                     <EditContentButton doc={doc} />
-                    <div className="question-actions ml-auto">
+                    <div className="question-actions ms-auto">
                         <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
                     </div>
                     <div className="question-actions not-mobile">

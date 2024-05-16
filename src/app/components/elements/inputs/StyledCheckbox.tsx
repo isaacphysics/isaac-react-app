@@ -21,7 +21,7 @@ export const StyledCheckbox = (props : InputProps) => {
     }, [props.checked]);
 
     return <div className="styled-checkbox-wrapper">
-        <div className="mr-2 mb-3">
+        <div className="me-2 mb-3">
             {checked && <div className="tick"/>}
             <Input {...props} id={id} type="checkbox" className={classNames(props.className ?? "", {"checked" : checked})}
                 onChange={(e) => onCheckChange(e)}

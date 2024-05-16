@@ -12,7 +12,7 @@ interface SubjectInterestTableInputProps<T> {
 export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<SubjectInterests>) => {
     const {stateObject, setStateFunction} = props;
 
-    return <FormGroup>
+    return <FormGroup className="form-group">
         <Label htmlFor="phy-subject-table" className="mb-0">
             Subject Interests
         </Label>

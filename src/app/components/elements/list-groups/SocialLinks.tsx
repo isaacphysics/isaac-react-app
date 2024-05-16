@@ -30,7 +30,7 @@ export const SocialLinksRow = () => {
                     // CS
                     <div className='mt-1 text-nowrap'>
                         {Object.entries(SOCIAL_LINKS).map(([_, {name, href}]) =>
-                            <div className={"mr-3 d-inline-block"} key={name}>
+                            <div className={"me-3 d-inline-block"} key={name}>
                                 <ExternalLink href={href}>
                                     <img src={getSocialIcon(name.toLowerCase())} alt={`${SITE_TITLE} on ${name}`}
                                          className='img-fluid footer-social-logo'/>

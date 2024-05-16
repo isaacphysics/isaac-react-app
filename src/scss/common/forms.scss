@@ -218,3 +218,32 @@ select.form-control {
   border-width: 1px;
   border-radius: 0 4px 4px 0;
 }
+
+// Bootstrap 5 forms migration
+// FIXME: anything using these is old and should be updated -- see https://getbootstrap.com/docs/5.0/migration/#forms
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-inline .form-control {
+  display: inline-block;
+  width: auto;
+  vertical-align: middle;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.form-row > .col {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+label {
+  margin-bottom: 0.5rem;
+}

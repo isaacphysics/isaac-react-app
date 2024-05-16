@@ -149,7 +149,7 @@ export const Contact = () => {
                                     <PageFragment fragmentId="contact_intro"/>
                                     <Row>
                                         <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="first-name-input" className="form-required">First name</Label>
                                                 <Input id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user && user.loggedIn ? user.givenName : ""}
@@ -157,7 +157,7 @@ export const Contact = () => {
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="last-name-input" className="form-required">Last name</Label>
                                                 <Input id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user && user.loggedIn ? user.familyName : ""}
@@ -167,7 +167,7 @@ export const Contact = () => {
                                     </Row>
                                     <Row>
                                         <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="email-input" className="form-required">Email address</Label>
                                                 <Input invalid={messageSendAttempt && !isValidEmail} id="email-input"
                                                     type="email" name="email"
@@ -180,7 +180,7 @@ export const Contact = () => {
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="subject-input" className="form-required">Message subject</Label>
                                                 <Input id="subject-input" type="text" name="subject" defaultValue={subject}
                                                     onChange={e => setSubject(e.target.value)} required/>
@@ -189,7 +189,7 @@ export const Contact = () => {
                                     </Row>
                                     <Row>
                                         <Col>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="message-input" className="form-required">Message</Label>
                                                 <Input id="message-input" type="textarea" name="message" rows={7} value={message}
                                                     placeholder={presetPlaceholder}
@@ -204,11 +204,11 @@ export const Contact = () => {
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>
-                                            <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
+                                            <span className="d-block pb-3 pb-md-0 text-end text-md-left form-required">
                                                 Required field
                                             </span>
                                         </Col>
-                                        <Col size={12} md={6} className="text-right">
+                                        <Col size={12} md={6} className="text-end">
                                             <Input type="submit" value="Submit" className="btn btn-block btn-secondary border-0" />
                                         </Col>
                                     </Row>

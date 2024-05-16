@@ -67,7 +67,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">
                     <RS.Label>Filter by
-                        <RS.Input id="event-status-filter" className="ml-2 mr-3" type="select" value={statusFilter} onChange={e => {
+                        <RS.Input id="event-status-filter" className="ms-2 me-3" type="select" value={statusFilter} onChange={e => {
                             const selectedFilter = e.target.value as EventStatusFilter;
                             query.show_booked_only = selectedFilter === EventStatusFilter["My booked events"] ? true : undefined;
                             query.show_reservations_only = selectedFilter === EventStatusFilter["My event reservations"] ? true : undefined;
@@ -83,7 +83,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                                 )
                             }
                         </RS.Input>
-                        <RS.Input id="event-type-filter" className="ml-2" type="select" value={typeFilter} onChange={e => {
+                        <RS.Input id="event-type-filter" className="ms-2" type="select" value={typeFilter} onChange={e => {
                             const selectedType = e.target.value as EventTypeFilter;
                             query.types = selectedType !== EventTypeFilter["All events"] ? selectedType : undefined;
                             history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
@@ -92,7 +92,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                                 <option key={typeValue} value={typeValue}>{typeLabel}</option>
                             )}
                         </RS.Input>
-                        <RS.Input id="event-stage-filter" className="ml-2" type="select" 
+                        <RS.Input id="event-stage-filter" className="ms-2" type="select" 
                             value={query.show_stage_only && Object.keys(reverseEventsMap).includes(query.show_stage_only) ? query.show_stage_only : STAGE.ALL}
                             onChange={e => {
                                 const selectedStage = e.target.value as STAGE;

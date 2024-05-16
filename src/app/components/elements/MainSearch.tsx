@@ -13,7 +13,7 @@ export const MainSearch = () => {
             onClick={() => setShowSearchBox(!showSearchBox)}
         />
         <Collapse navbar isOpen={showSearchBox}>
-            <Nav className={classNames("ml-auto",{"mb-3 mb-md-0": isPhy})} navbar id="search-menu">
+            <Nav className={classNames("ms-auto",{"mb-3 mb-md-0": isPhy})} navbar id="search-menu">
                 <NavItem>
                     <MainSearchInput inline/>
                 </NavItem>

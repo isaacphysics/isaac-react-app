@@ -20,7 +20,7 @@ export const BooleanNotationInput = ({booleanNotation, setBooleanNotation, isReq
         setBooleanNotation(newBooleanNotation);
     };
 
-    return <FormGroup className="mr-lg-5">
+    return <FormGroup className="form-group me-lg-5">
         <Label className={classNames("font-weight-bold", (isRequired ? "form-required" : "form-optional"))}
                htmlFor="boolean-notation-preference">Preferred logic notation</Label>
 

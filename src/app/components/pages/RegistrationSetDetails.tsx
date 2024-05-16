@@ -169,7 +169,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 required={false}
                             />
                             <hr />
-                            <FormGroup className="my-4">
+                            <FormGroup className="form-group my-4">
                                 <Input
                                     id="tos-confirmation"
                                     name="tos-confirmation"

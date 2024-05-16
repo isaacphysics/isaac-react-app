@@ -140,7 +140,7 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 {/*</Button>*/}
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
                     <ButtonGroup className={"w-100 pt-3"}>
-                        <Button size={"md"} className={"border-right-0"} id={"start-date-button"}
+                        <Button size={"md"} className={"border-end-0"} id={"start-date-button"}
                                 color={viewBy === "startDate" ? "secondary" : "primary"}
                                 outline={viewBy !== "startDate"}
                                 onClick={() => setViewBy("startDate")}>
@@ -206,7 +206,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
             <h4><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle}</a></h4>
-            <div className={"ml-auto text-right"}>
+            <div className={"ms-auto text-end"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
                     Set again
                 </Button>
@@ -222,13 +222,13 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
             {showMore && <>
                 {assignment.notes && <div>
                     Notes
-                    <div className={"ml-1 mt-1 mb-2 pl-3 border-start"}>{assignment.notes}</div>
+                    <div className={"ms-1 mt-1 mb-2 ps-3 border-start"}>{assignment.notes}</div>
                 </div>}
                 <div>Assigned by: <strong>{assignmentOwnedByMe ? "Me" : "Someone else"}</strong></div>
                 {assignment.gameboard && <div className={"mt-2 border-top pt-2"}>
                     <Row>
                         <Col xs={12} md={boardStagesAndDifficulties.length === 0 ? 12 : 6}>
-                            <div>Gameboard: <strong><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle} <span className={"sr-only"}>(opens in new tab)</span></a></strong></div>
+                            <div>Gameboard: <strong><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle} <span className={"visually-hidden"}>(opens in new tab)</span></a></strong></div>
                             <div>Gameboard created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>
                             <div className={"mb-1"}>Subject(s): <strong>{boardSubjects.map(subj => tags.getSpecifiedTag(TAG_LEVEL.subject, [subj as TAG_ID])?.title).join(", ")}</strong></div>
                         </Col>
@@ -258,15 +258,15 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                         </Col>}
                     </Row>
                     {gameboardToPreview?.contents && gameboardToPreview.contents.length > 0 && <Card className={"mt-1"}>
-                        <CardHeader className={"text-right"}><Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("gameboard", "quiz")} preview</Button></CardHeader>
+                        <CardHeader className={"text-end"}><Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("gameboard", "quiz")} preview</Button></CardHeader>
                         {showGameboardPreview && gameboardToPreview && <GameboardViewerInner gameboard={gameboardToPreview}/>}
-                        {showGameboardPreview && <CardFooter className={"text-right"}><Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>Hide {siteSpecific("gameboard", "quiz")} preview</Button></CardFooter>}
+                        {showGameboardPreview && <CardFooter className={"text-end"}><Button color={"link"} onClick={() => setShowGameboardPreview(p => !p)}>Hide {siteSpecific("gameboard", "quiz")} preview</Button></CardFooter>}
                     </Card>}
                 </div>}
             </>}
         </CardBody>
         <CardFooter className={"assignment-card-footer border-top-0 pt-0"}>
-            <a className={"mr-3"} href="#" color="link" role="button" onClick={(e) => {
+            <a className={"me-3"} href="#" color="link" role="button" onClick={(e) => {
                 e.preventDefault();
                 setShowMore(sm => !sm);
             }}>
@@ -274,7 +274,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
             </a>
             {assignment.listingDate <= TODAY() &&
                 <a color="link" target={"_blank"} rel={"noreferrer noopener"} href={`${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`}>
-                    View assignment progress <span className={"sr-only"}>(opens in new tab)</span>
+                    View assignment progress <span className={"visually-hidden"}>(opens in new tab)</span>
                 </a>}
         </CardFooter>
     </Card>;
@@ -335,7 +335,7 @@ const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, dates
     }, [collapsed]);
     return <>
         <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for ${MONTH_NAMES[month]}`}
-             className={"month-label w-100 text-right d-flex"} onKeyPress={(e) => {
+             className={"month-label w-100 text-end d-flex"} onKeyPress={(e) => {
             if (e.key === "Enter") {
                 setOpen(o => !o);
                 setCollapsed(false);
@@ -471,9 +471,9 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
                 This {siteSpecific("gameboard", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
             </Alert>}
             {gameboardToPreview?.contents && <Card className={"my-1"} >
-                <CardHeader className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("gameboard", "quiz")} preview</Button></CardHeader>
+                <CardHeader className={"text-end"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("gameboard", "quiz")} preview</Button></CardHeader>
                 {showGameboardPreview && gameboardToPreview && <GameboardViewerInner gameboard={gameboardToPreview}/>}
-                {showGameboardPreview && <CardFooter className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide {siteSpecific("gameboard", "quiz")} preview</Button></CardFooter>}
+                {showGameboardPreview && <CardFooter className={"text-end"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide {siteSpecific("gameboard", "quiz")} preview</Button></CardFooter>}
             </Card>}
         </Label>
         <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
@@ -651,7 +651,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
             query={assignmentsSetByMeQuery}
         >
             <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
-                <div className="px-md-4 pl-2 pr-2 timeline-column mb-4 pt-2">
+                <div className="px-md-4 ps-2 pe-2 timeline-column mb-4 pt-2">
                     {!isStaff(user) && <Alert className="mt-2" color="info">
                         The Assignment Schedule page is an alternate way to manage your assignments, focusing on the start and due dates of the assignments, rather than the assigned gameboard.
                         <br/>
@@ -685,9 +685,9 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                             {assignmentsGroupedByDate.length > 0 && <div className={classNames("timeline w-100", {"pt-2": !notAllPastAssignmentsAreListed})}>
                                 {assignmentsGroupedByDate.map(([y, ms]) =>
                                     <Fragment key={y}>
-                                        <div className="year-label w-100 text-right">
+                                        <div className="year-label w-100 text-end">
                                             <h3 className="mb-n3">{`${y}`}</h3>
-                                            <hr className="ml-4"/>
+                                            <hr className="ms-4"/>
                                         </div>
                                         {ms.map(([m, ds]) => <MonthAssignmentList key={m} month={m} datesAndAssignments={ds}/>)}
                                     </Fragment>
