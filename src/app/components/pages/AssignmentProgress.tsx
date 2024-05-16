@@ -149,7 +149,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     const tableHeader = <div className="progress-header">
         <strong>{noStudentsAttemptedAll}</strong> of <strong>{progress.length}</strong>
-        {` students have completed the assignment `}
+        {` students attempted all questions in `}
         <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link>.
     </div>;
         
