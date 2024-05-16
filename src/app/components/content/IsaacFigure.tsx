@@ -18,7 +18,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
 
     const figId = doc.id && extractFigureId(doc.id);
 
-    return <div className="figure_panel">
+    return <div className="figure-panel">
         <FigureNumberingContext.Consumer>
             {figureNumbers => {
                 const figureString = figId && Object.keys(figureNumbers).includes(figId) ?
