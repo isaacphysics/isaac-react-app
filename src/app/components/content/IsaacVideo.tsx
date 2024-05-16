@@ -19,13 +19,13 @@ function rewrite(src: string) {
         const optionalStart = possibleStartTime ? `&start=${possibleStartTime[2]}` : "";
         const optionalEnd = possibleEndTime ? `&end=${possibleEndTime[1]}` : "";
         return `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&rel=0&fs=1&modestbranding=1` +
-               `${optionalStart}${optionalEnd}&origin=${window.location.origin}`
+               `${optionalStart}${optionalEnd}&origin=${window.location.origin}`;
     }
 }
 
 function onPlayerStateChange(event: any, wrappedLogAction: (eventDetails: object) => void, pageId?: string) {
     const YT = (window as any).YT;
-    let logEventDetails: any = {
+    const logEventDetails: any = {
         videoUrl: event.target.getVideoUrl(),
         videoPosition: event.target.getCurrentTime(),
     };
@@ -60,6 +60,15 @@ export function pauseAllVideos() {
     });
 }
 
+function trackYoutubeError(videoSrc: string, errorMessage: string) {
+    console.error("Error with YouTube video: ", videoSrc);
+    trackEvent("exception", {props:
+        {
+            description: errorMessage,
+            fatal: false
+        }
+    });
+}
 
 export function IsaacVideo(props: IsaacVideoProps) {
     const dispatch = useAppDispatch();
@@ -68,7 +77,8 @@ export function IsaacVideo(props: IsaacVideoProps) {
     const page = useAppSelector(selectors.doc.get);
     const pageId = page && page !== NOT_FOUND && page.id || undefined;
     const embedSrc = src && rewrite(src);
-    const altTextToUse = `Embedded YouTube video: ${altText || src}.`
+    const errorSrc = src || altText || "Unknown embedded video.";
+    const altTextToUse = `Embedded YouTube video: ${altText || src}.`;
 
     const videoRef = useCallback( (node: any) => { // This isn't great but I couldn't figure out the actual type
         const $window: any = window;
@@ -77,21 +87,22 @@ export function IsaacVideo(props: IsaacVideoProps) {
                 $window.YT.ready(function() {
                     new $window.YT.Player(node, {
                         events: {
+                            'onReady': (event: any) => {
+                                if (event?.target?.getDuration && event.target.getDuration() <= 0) {
+                                    trackYoutubeError(errorSrc, "youtube_error: video loaded, but has no duration");
+                                }
+                            },
                             'onStateChange': (event: any) => {
                                 onPlayerStateChange(event, eventDetails => dispatch(logAction(eventDetails)), pageId);
+                            },
+                            'onError': (event: any) => {
+                                trackYoutubeError(errorSrc, `youtube_error: player error code ${event?.data}`);
                             }
                         }
                     });
                 });
             } catch (error: any) {
-                console.error("Error with YouTube library: ", error, error.stack);
-                trackEvent("exception", {props:
-                        {
-                            description: `youtube_error: ${error?.message || 'problem with YT library'}`,
-                            fatal: false
-                        }
-                    }
-                )
+                trackYoutubeError(errorSrc + ", " + error.stack, `youtube_error: ${error?.message || 'problem with YT library'}`);
             }
         }
     }, [dispatch, pageId]);
