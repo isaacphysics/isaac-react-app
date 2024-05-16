@@ -211,6 +211,8 @@ export interface IsaacSymbolicQuestionDTO extends QuestionDTO {
 
 export interface IsaacCoordinateQuestionDTO extends QuestionDTO {
     numberOfCoordinates?: number;
+    placeholderXValue?: string;
+    placeholderYValue?: string;
 }
 
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
