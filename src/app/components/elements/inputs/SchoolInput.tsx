@@ -131,12 +131,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                         setUserToUpdate?.(userWithoutSchoolInfo);
                     }
                 })}
-                label="Not associated with a school"
             >
                 <FormFeedback>
                     Please specify your school association.
                 </FormFeedback>
             </RS.Input>
+            <Label for={`${idPrefix}-not-associated-with-school`} className="ms-2">Not associated with a school</Label>
         </div>}
     </RS.FormGroup>;
 };

@@ -258,10 +258,10 @@ const PhysicsFilter = ({tiers, choices, showBookQuestions, setShowBookQuestions,
                 <Input
                     type="checkbox"
                     id="show-book-questions-checkbox"
-                    label="Include Isaac book questions"
                     checked={showBookQuestions}
                     onChange={() => {setShowBookQuestions(!showBookQuestions);}}
                 />
+                <Label for="show-book-questions-checkbox" className="ms-2">Include Isaac book questions</Label>
             </Col>
 
             {/* Buttons */}

@@ -9,6 +9,7 @@ import {
     FormFeedback,
     FormGroup,
     Input,
+    Label,
     Row,
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -174,7 +175,6 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                     id="tos-confirmation"
                                     name="tos-confirmation"
                                     type="checkbox"
-                                    label={<div>I accept the <a href="/terms" target="_blank">terms of use</a></div>}
                                     onChange={(e) => setTosAccepted(e?.target.checked)}
                                     invalid={attemptedSignUp && !tosAccepted}
                                 >
@@ -182,6 +182,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                         You must accept the terms to continue.
                                     </FormFeedback>
                                 </Input>
+                                <Label for="tos-confirmation" className="ms-2">I accept the <a href="/terms" target="_blank">terms of use</a></Label>
                             </FormGroup>
                             <hr />
                             <Row>

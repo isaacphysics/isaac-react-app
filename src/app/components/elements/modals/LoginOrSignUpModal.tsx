@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Button, Col, Form, Input, Row} from "reactstrap";
+import {Button, Col, Form, Input, Label, Row} from "reactstrap";
 import {closeActiveModal, selectors, store, useAppDispatch, useAppSelector} from "../../../state";
 import {useLocation} from "react-router-dom";
 import {
@@ -73,9 +73,9 @@ const LoginOrSignUpBody = () => {
                             id="login-remember-me"
                             className={"mb-2"}
                             type="checkbox"
-                            label="Remember me"
                             onChange={e => setRememberMe(e.target.checked)}
                         />
+                        <Label for="login-remember-me" className="ms-2">Remember me</Label>
                         <div className="text-end">
                            <h4 role="alert" className="text-danger text-end mb-0">
                                 {errorMessage}

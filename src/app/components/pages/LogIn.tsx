@@ -246,9 +246,9 @@ export const LogIn = () => {
                                             <Input
                                                 id="login-remember-me"
                                                 type="checkbox"
-                                                label="Remember me"
                                                 onChange={e => setRememberMe(e.target.checked)}
                                             />
+                                            <Label for="login-remember-me" className="ms-2">Remember me</Label>
                                         </Col>
                                         <Col className="text-end">
                                             <div>

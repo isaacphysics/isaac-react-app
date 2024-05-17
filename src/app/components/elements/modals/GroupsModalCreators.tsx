@@ -16,7 +16,7 @@ import {
 } from "../../../state";
 import sortBy from "lodash/sortBy";
 import {history, isAda, isDefined, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
-import {Row, Col, Form, Input, Table, Alert} from "reactstrap";
+import {Row, Col, Form, Input, Table, Alert, Label} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
@@ -282,9 +282,9 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
                 checked={group.additionalManagerPrivileges}
                 className={"mb-2"}
                 type="checkbox"
-                label={"Give additional managers extra privileges"}
                 onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
             />
+            <Label for="additional-manager-privileges-check" className="ms-2">Give additional managers extra privileges</Label>
             {group.additionalManagerPrivileges
                 ? <>
                     <span className={"font-weight-bold"}>Caution</span>: All other group managers are allowed delete
