@@ -1,6 +1,6 @@
 import { AdminUserManager } from "../../app/components/pages/AdminUserManager";
 import { checkPageTitle, renderTestEnvironment, getById, clickButton } from "../utils";
-import { fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { act, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import * as actions from "../../app/state/actions";
 import * as popups from "../../app/state/actions/popups";
@@ -128,7 +128,7 @@ describe("Admin User Manager", () => {
 
     it("searches if search button is pressed", async () => {
       await renderUserManager();
-      await clickButton("Search");
+      await act(() => clickButton("Search"));
       expect(adminSearchSpy).toHaveBeenCalled();
     });
 
@@ -143,7 +143,7 @@ describe("Admin User Manager", () => {
         await renderUserManager();
         const inputField = searchFields[fieldName as keyof typeof searchFields];
         fireEvent.change(inputField(), { target: { value: testValue } });
-        await clickButton("Search");
+        await act(() => clickButton("Search"));
         expect(adminSearchSpy).toHaveBeenCalledWith(
           expect.objectContaining({
             [fieldName]: testValue,
@@ -155,20 +155,24 @@ describe("Admin User Manager", () => {
     it("searches with schoolOther if a custom school name is selected", async () => {
       await renderUserManager();
       const schoolDropdown = searchFields.school;
-      await userEvent.type(schoolDropdown(), "Custom School Name");
-      const customSchoolName = await screen.findByTestId("custom-school-name");
-      await userEvent.click(customSchoolName);
-      await clickButton("Search");
+      await act(async () => {
+        await userEvent.type(schoolDropdown(), "Custom School Name");
+        const customSchoolName = await screen.findByTestId("custom-school-name");
+        await userEvent.click(customSchoolName);
+        await clickButton("Search");
+      });
       expect(adminSearchSpy).toHaveBeenCalledWith(expect.objectContaining({ schoolOther: "Custom School Name" }));
     });
 
     it("searches with schoolURN if a school is selected from dropdown", async () => {
       await renderUserManager();
       const schoolDropdown = searchFields.school;
-      await userEvent.type(schoolDropdown(), "Test");
-      const testSchool = await screen.findByText("Test School, ABC 123");
-      await userEvent.click(testSchool);
-      await clickButton("Search");
+      await act(async () => {
+        await userEvent.type(schoolDropdown(), "Test");
+        const testSchool = await screen.findByText("Test School, ABC 123");
+        await userEvent.click(testSchool);
+        await clickButton("Search");
+      });
       expect(adminSearchSpy).toHaveBeenCalledWith(expect.objectContaining({ schoolURN: "1" }));
     });
 
@@ -317,103 +321,104 @@ describe("Admin User Manager", () => {
       buttons.forEach((button, index) => expect(button).toHaveTextContent(expectedButtons[index]));
     });
 
-    describe("User Manager buttons", () => {
-      it("links to a new tab with target user's progress page from View button", async () => {
-        await renderUserManager();
-        const { firstUserDetails } = await searchAndWaitForResults();
-        const viewButton = within(firstUserDetails[1]).getByText("View");
-        expect(viewButton).toHaveAttribute("href", "/progress/1");
-        expect(viewButton).toHaveAttribute("target", "_blank");
-      });
+    it("links to a new tab with target user's progress page from View button", async () => {
+      await renderUserManager();
+      const { firstUserDetails } = await searchAndWaitForResults();
+      const viewButton = within(firstUserDetails[1]).getByText("View");
+      expect(viewButton).toHaveAttribute("href", "/progress/1");
+      expect(viewButton).toHaveAttribute("target", "_blank");
+    });
 
-      it("opens a new tab with user's account page if Edit button is clicked", async () => {
-        jest.spyOn(window, "open").mockImplementation(jest.fn());
-        await renderUserManager();
-        const { firstUserDetails } = await searchAndWaitForResults();
-        const editButton = within(firstUserDetails[1]).getByText("Edit");
-        await userEvent.click(editButton);
-        expect(window.open).toHaveBeenCalledWith(expect.stringContaining("/account?userId=1"), "_blank");
-      });
+    it("opens a new tab with user's account page if Edit button is clicked", async () => {
+      jest.spyOn(window, "open").mockImplementation(jest.fn());
+      await renderUserManager();
+      const { firstUserDetails } = await searchAndWaitForResults();
+      const editButton = within(firstUserDetails[1]).getByText("Edit");
+      await userEvent.click(editButton);
+      expect(window.open).toHaveBeenCalledWith(expect.stringContaining("/account?userId=1"), "_blank");
+    });
 
-      it("shows a confirmation popup if Delete button is clicked", async () => {
-        jest.spyOn(window, "confirm").mockImplementation(jest.fn());
-        await renderUserManager();
-        const { firstUserDetails } = await searchAndWaitForResults();
-        const deleteButton = within(firstUserDetails[1]).getByText("Delete");
-        await userEvent.click(deleteButton);
-        expect(window.confirm).toHaveBeenCalledWith("Are you sure you want to delete this user?");
-      });
+    it("shows a confirmation popup if Delete button is clicked", async () => {
+      jest.spyOn(window, "confirm").mockImplementation(jest.fn());
+      await renderUserManager();
+      const { firstUserDetails } = await searchAndWaitForResults();
+      const deleteButton = within(firstUserDetails[1]).getByText("Delete");
+      await userEvent.click(deleteButton);
+      expect(window.confirm).toHaveBeenCalledWith("Are you sure you want to delete this user?");
+    });
 
-      it("continues to delete a user if the confirmation popup is accepted", async () => {
-        const deleteSpy = jest.spyOn(actions, "adminUserDelete");
-        jest.spyOn(window, "confirm").mockReturnValueOnce(true);
-        await renderUserManager();
-        const { firstUserDetails } = await searchAndWaitForResults();
-        const deleteButton = within(firstUserDetails[1]).getByText("Delete");
-        await userEvent.click(deleteButton);
-        expect(deleteSpy).toHaveBeenCalledWith(1);
-        expect(popupSpy).toHaveBeenCalledWith(expect.objectContaining({ title: "User deleted" }));
-      });
+    it("continues to delete a user if the confirmation popup is accepted", async () => {
+      const deleteSpy = jest.spyOn(actions, "adminUserDelete");
+      jest.spyOn(window, "confirm").mockReturnValueOnce(true);
+      await renderUserManager();
+      const { firstUserDetails } = await searchAndWaitForResults();
+      const deleteButton = within(firstUserDetails[1]).getByText("Delete");
+      await userEvent.click(deleteButton);
+      expect(deleteSpy).toHaveBeenCalledWith(1);
+      expect(popupSpy).toHaveBeenCalledWith(expect.objectContaining({ title: "User deleted" }));
+    });
 
-      it("sends a password request if the Reset password button is clicked", async () => {
-        const resetPasswordSpy = jest.spyOn(actions, "resetPassword");
-        await renderUserManager();
-        const { firstUserDetails } = await searchAndWaitForResults();
-        const resetPasswordButton = within(firstUserDetails[1]).getByText("Reset password");
-        await userEvent.click(resetPasswordButton);
-        expect(resetPasswordSpy).toHaveBeenCalledWith({ email: mockUser.email });
-        expect(popupSpy).toHaveBeenCalledWith(expect.objectContaining({ title: "Password reset email sent" }));
-      });
+    it("sends a password request if the Reset password button is clicked", async () => {
+      const resetPasswordSpy = jest.spyOn(actions, "resetPassword");
+      await renderUserManager();
+      const { firstUserDetails } = await searchAndWaitForResults();
+      const resetPasswordButton = within(firstUserDetails[1]).getByText("Reset password");
+      await userEvent.click(resetPasswordButton);
+      expect(resetPasswordSpy).toHaveBeenCalledWith({ email: mockUser.email });
+      expect(popupSpy).toHaveBeenCalledWith(expect.objectContaining({ title: "Password reset email sent" }));
+    });
 
-      it("modifies the user role if Modify Role clicked, a role clicked, and email status is already verified", async () => {
-        const modifyRoleSpy = jest.spyOn(actions, "adminModifyUserRoles");
-        await renderUserManager();
-        const { firstUserDetails } = await searchAndWaitForResults();
-        const checkbox = within(firstUserDetails[0]).getByRole("checkbox");
-        await userEvent.click(checkbox);
-        const roleOptions = screen.getByTestId("modify-role-options");
-        const teacherRoleUpgradeButton = within(roleOptions).getByText("TEACHER", { selector: "button" });
-        await userEvent.click(teacherRoleUpgradeButton);
-        expect(modifyRoleSpy).toHaveBeenCalledWith("TEACHER", [mockUser.id]);
-      });
+    it("modifies the user role if Modify Role clicked, a role clicked, and email status is already verified", async () => {
+      const modifyRoleSpy = jest.spyOn(actions, "adminModifyUserRoles");
+      await renderUserManager();
+      const { firstUserDetails } = await searchAndWaitForResults();
+      const checkbox = within(firstUserDetails[0]).getByRole("checkbox");
+      await userEvent.click(checkbox);
+      const roleOptions = screen.getByTestId("modify-role-options");
+      const teacherRoleUpgradeButton = within(roleOptions).getByText("TEACHER", { selector: "button" });
+      await act(() => userEvent.click(teacherRoleUpgradeButton));
+      expect(modifyRoleSpy).toHaveBeenCalledWith("TEACHER", [mockUser.id]);
+    });
 
-      it("shows a popup warning if attempting to change the role of a user with unverified email address", async () => {
-        await renderUserManager();
-        const { tableRows } = await searchAndWaitForResults();
-        const secondUserDetails = within(tableRows[2]).getAllByRole("cell");
-        const checkbox = within(secondUserDetails[0]).getByRole("checkbox");
-        await userEvent.click(checkbox);
-        const roleOptions = screen.getByTestId("modify-role-options");
-        const teacherRoleUpgradeButton = within(roleOptions).getByText("TEACHER", { selector: "button" });
-        await userEvent.click(teacherRoleUpgradeButton);
-        expect(window.confirm).toHaveBeenCalledWith(
-          expect.stringContaining("Are you really sure you want to promote unverified user(s)"),
-        );
-      });
+    it("shows a popup warning if attempting to change the role of a user with unverified email address", async () => {
+      const windowSpy = jest.spyOn(window, "confirm").mockImplementation(jest.fn());
+      await renderUserManager();
+      const { tableRows } = await searchAndWaitForResults();
+      const secondUserDetails = within(tableRows[2]).getAllByRole("cell");
+      const checkbox = within(secondUserDetails[0]).getByRole("checkbox");
+      await userEvent.click(checkbox);
+      const roleOptions = screen.getByTestId("modify-role-options");
+      const teacherRoleUpgradeButton = within(roleOptions).getByText("TEACHER", { selector: "button" });
+      await userEvent.click(teacherRoleUpgradeButton);
+      expect(windowSpy).toHaveBeenCalledWith(
+        expect.stringContaining("Are you really sure you want to promote unverified user(s)"),
+      );
+    });
 
-      it("updates the email status of a user if Email Status button is clicked and a status chosen", async () => {
-        const modifyEmailStatusSpy = jest.spyOn(actions, "adminModifyUserEmailVerificationStatuses");
-        await renderUserManager();
-        const { firstUserDetails } = await searchAndWaitForResults();
-        const checkbox = within(firstUserDetails[0]).getByRole("checkbox");
-        await userEvent.click(checkbox);
-        const notVerifiedEmailStatus = within(screen.getByTestId("email-status-options")).getByText("NOT_VERIFIED", {
-          selector: "button",
-        });
-        await userEvent.click(notVerifiedEmailStatus);
-        expect(modifyEmailStatusSpy).toHaveBeenCalledWith("NOT_VERIFIED", [mockUser.email]);
+    it("updates the email status of a user if Email Status button is clicked and a status chosen", async () => {
+      const modifyEmailStatusSpy = jest.spyOn(actions, "adminModifyUserEmailVerificationStatuses");
+      await renderUserManager();
+      const { firstUserDetails } = await searchAndWaitForResults();
+      const checkbox = within(firstUserDetails[0]).getByRole("checkbox");
+      await userEvent.click(checkbox);
+      const notVerifiedEmailStatus = within(screen.getByTestId("email-status-options")).getByText("NOT_VERIFIED", {
+        selector: "button",
       });
-      it("sets teacher pending status to false if Decline Teacher Upgrade button is clicked", async () => {
-        const modifyTeacherPendingSpy = jest.spyOn(actions, "adminModifyTeacherPending");
-        await renderUserManager();
-        const { firstUserDetails } = await searchAndWaitForResults();
-        const checkbox = within(firstUserDetails[0]).getByRole("checkbox");
-        await userEvent.click(checkbox);
-        await clickButton("Decline Teacher Upgrade");
-        expect(modifyTeacherPendingSpy).toHaveBeenCalledWith(false, [mockUser.id]);
-      });
+      await act(() => userEvent.click(notVerifiedEmailStatus));
+      expect(modifyEmailStatusSpy).toHaveBeenCalledWith("NOT_VERIFIED", [mockUser.email]);
+    });
+
+    it("sets teacher pending status to false if Decline Teacher Upgrade button is clicked", async () => {
+      const modifyTeacherPendingSpy = jest.spyOn(actions, "adminModifyTeacherPending");
+      await renderUserManager();
+      const { firstUserDetails } = await searchAndWaitForResults();
+      const checkbox = within(firstUserDetails[0]).getByRole("checkbox");
+      await userEvent.click(checkbox);
+      await act(() => clickButton("Decline Teacher Upgrade"));
+      expect(modifyTeacherPendingSpy).toHaveBeenCalledWith(false, [mockUser.id]);
     });
   });
+
   describe("Merge accounts", () => {
     it("does not show for EVENT_MANAGER users", async () => {
       await renderUserManager({ role: "EVENT_MANAGER" });
