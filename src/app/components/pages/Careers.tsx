@@ -11,10 +11,11 @@ interface CareerPanelProps {
   description: string;
   name: string;
   job: string;
+  url: string;
   reversed?: boolean;
 }
 
-const CareerPanel = ({ video, title, description, name, job, reversed }: CareerPanelProps) => {
+const CareerPanel = ({ video, title, description, name, job, reversed, url }: CareerPanelProps) => {
   const videoColumn = (
     <Col xs={12} sm={6} className="video-column">
       <iframe
@@ -30,7 +31,9 @@ const CareerPanel = ({ video, title, description, name, job, reversed }: CareerP
 
   const videoDescriptionColumn = (
     <Col className="video-description-column">
-      <h3 style={{ textDecorationLine: "underline" }}>{title}</h3>
+      <h3>
+        <Link to={url}>{title}</Link>
+      </h3>
       <Row className="mx-0 mt-3 career">
         <Col xs={12} xl={4} className="p-0" data-testid="video-speaker">
           <Row className="flex-nowrap m-0">
@@ -74,7 +77,7 @@ export const Careers = () => (
     <div className="mt-4" />
 
     <section id="careers" className="d-flex justify-content-center flex-column align-items-center pattern-03-reverse">
-      {careerVideos.map(({ video, title, description, name, job, id }) => (
+      {careerVideos.map(({ video, title, description, name, job, id, url }) => (
         <CareerPanel
           key={`video-${id}`}
           video={video}
@@ -82,6 +85,7 @@ export const Careers = () => (
           description={description}
           name={name}
           job={job}
+          url={url}
           reversed={id % 2 === 0}
         />
       ))}

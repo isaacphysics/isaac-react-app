@@ -24,13 +24,14 @@ describe("Careers", () => {
   });
 
   it.each(careerVideos)(
-    "shows $title video, with correct speaker name, role, description and link to video",
-    ({ id, video, title, description, name, job }) => {
+    "shows $title video, with link to content page, correct speaker name, role, description and link to video",
+    ({ id, video, title, description, name, job, url }) => {
       renderCareers();
       const careerVideo = screen.getByTitle(title);
       const speakerName = screen.getAllByTestId("video-speaker");
       const speakerRole = screen.getAllByTestId("speaker-role");
       const videoDescription = screen.getAllByTestId("video-description");
+      const videoTitleAndLink = screen.getByText(title);
       expect(careerVideo).toBeInTheDocument();
       expect(careerVideo).toHaveAttribute(
         "src",
@@ -41,6 +42,7 @@ describe("Careers", () => {
       const expectedText = description.trim();
       const receivedText = videoDescription[id - 1].textContent?.trim();
       expect(receivedText).toBe(expectedText);
+      expect(videoTitleAndLink).toHaveAttribute("href", expect.stringContaining(url));
     },
   );
 });

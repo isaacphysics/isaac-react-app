@@ -5,7 +5,8 @@
     "title": "Virtual Storage",
     "description": "Users often have access to storage that is not installed as part of their own computer system. Cloud storage is facilitated by the internet, and is usually owned and managed by commercial organisations. In this video, Sabrina Singh, Cloud DBA at Morgan Stanley, explains the topic of virtual (cloud) storage and how she uses it in her day-to-day role.",
     "name": "Sabrina Singh",
-    "job": "Cloud DBA at Morgan Stanley"
+    "job": "Cloud DBA at Morgan Stanley",
+    "url": "/concepts/sys_hard_secondary_storage"
   },
   {
     "id": 2,
@@ -13,7 +14,8 @@
     "title": "Systems Architecture",
     "description": "Systems architecture refers to the parts of the computer like the processor, the memory, I/O expansion ports, and the buses that connect them together. Watch John explain how he uses systems architecture on a daily basis when designing computer systems to solve client problems - from designing a system that ensures a smooth running of the airport to developing a supercomputer for the American government. ",
     "name": "John Easton",
-    "job": "Distinguished Engineer at IBM"
+    "job": "Distinguished Engineer at IBM",
+    "url": "/topics/architecture"
   },
   {
     "id": 3,
@@ -21,7 +23,8 @@
     "title": "Networking Hardware",
     "description": "Everything in the connected world is built on computer networks including the internet. For any career in tech, it is essential to have knowledge of networking basics, and networking devices like switches, routers and wireless access points are the bedrock of networks that connect the world. Watch Elizabeth talk about her own career path and how you can help shape the future through technology. ",
     "name": "Elizabeth Barr",
-    "job": "Head of the Cisco Networking Academy UK & Ireland"
+    "job": "Head of the Cisco Networking Academy UK & Ireland",
+    "url": "/topics/network_hardware"
   },
   {
     "id": 4,
@@ -29,7 +32,8 @@
     "title": "Databases (SQL)",
     "description": "SQL, which stands for Structured Query Language, is a language used in databases to create, update, delete, and read data. You can use the SELECT command and inner joins to retrieve data from the database. In a data-rich world, being able to filter and use data effectively is key. In this video, Zac explains how he helps all types of businesses use their data better and the exciting opportunities a role like his offers. ",
     "name": "Zachary Decent",
-    "job": "Data Governance & Quality Manager at UK Power Networks"
+    "job": "Data Governance & Quality Manager at UK Power Networks",
+    "url": "/concepts/data_dbs_dql"
   },
   {
     "id": 5,
@@ -37,7 +41,8 @@
     "title": "Cyber Security",
     "description": "Cyber security is the process of applying techniques to prevent unauthorised access to computer networks and data stored within them. It helps us deal with security threats that have an intention to cause harm to code or steal our data. Watch Veno explain how she helps keep us safe online and protect our data by heading up a team of technical support engineers at Cisco Umbrella.",
     "name": "Veno Senthil",
-    "job": "Technical Support Manager at Cisco"
+    "job": "Technical Support Manager at Cisco",
+    "url": "/concepts/net_sec_viruses"
   },
   {
     "id": 6,
@@ -45,6 +50,7 @@
     "title": "Programming 2D Arrays",
     "description": "A 2D array is a data structure used in programming that has two pointers - an X and a Y. It can hold multiple pieces of data but has a single identifier and can be visualised as a table with rows and columns. Watch Gerard, a researcher and lecturer explain how robots use 2D arrays to detect objects and how you can learn to program them to complete tasks like moving things or even dress or feed people. ",
     "name": "Gerard Canal",
-    "job": "Lecturer in Autonomous Systems at Kings College London"
+    "job": "Lecturer in Autonomous Systems at Kings College London",
+    "url": "/concepts/dsa_datastruct_two_dimensional_arrays"
   }
 ]
