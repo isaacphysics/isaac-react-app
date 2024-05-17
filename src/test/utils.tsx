@@ -1,6 +1,7 @@
 import {UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
-import {server} from "../mocks/server";
+// import {server} from "../mocks/server";
+import {worker} from "../mocks/browser";
 import {rest, RestHandler} from "msw";
 import {ACTION_TYPE, API_PATH, SITE, SITE_SUBJECT} from "../app/services";
 import produce from "immer";
@@ -47,9 +48,9 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     const {role, modifyUser, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch(isaacApi.util.resetApiState());
-    server.resetHandlers();
+    worker.resetHandlers();
     if (role || modifyUser) {
-        server.use(
+        worker.use(
             rest.get(API_PATH + "/users/current_user", (req, res, ctx) => {
                 if (role === "ANONYMOUS") {
                     return res(
@@ -73,19 +74,23 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
         );
     }
     if (extraEndpoints) {
-        server.use(...extraEndpoints);
+        worker.use(...extraEndpoints);
     }
     if (isDefined(PageComponent) && PageComponent.name !== "IsaacApp") {
         store.dispatch(requestCurrentUser());
     }
-    render(<Provider store={store}>
+    render(getComponent(PageComponent, initalRouteEntries));
+};
+
+export function getComponent(PageComponent?: React.FC<any>, initialRouteEntries?: string[]) {
+    return <Provider store={store}>
         {PageComponent
-            ? <MemoryRouter initialEntries={initalRouteEntries ?? []}>
+            ? <MemoryRouter initialEntries={initialRouteEntries ?? []}>
                 <PageComponent/>
             </MemoryRouter>
             : <IsaacApp/>}
-    </Provider>);
-};
+    </Provider>;
+}
 
 export type NavBarMenus = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
 export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string | null}} = {

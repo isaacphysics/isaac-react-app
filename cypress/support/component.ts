@@ -37,3 +37,12 @@ Cypress.Commands.add('mount', mount)
 
 // Example use:
 // cy.mount(<MyComponent />)
+
+// import styles
+import '../../src/scss/cs/isaac.scss';
+
+// Start MSW 
+import { worker } from '../../src/mocks/browser';
+Cypress.on('test:before:run:async', async () => {
+  await worker.start();
+});

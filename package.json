@@ -138,6 +138,7 @@
     "@types/katex": "^0.16.7",
     "@types/leaflet": "^1.7.9",
     "@types/lodash": "^4.17.0",
+    "@types/node": "^20.12.12",
     "@types/object-hash": "^3.0.6",
     "@types/qrcode": "^1.5.5",
     "@types/react-beautiful-dnd": "^13.1.8",
