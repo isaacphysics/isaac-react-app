@@ -121,22 +121,8 @@ small {
 
 hr {
   display: block;
-  border-bottom: 1px solid $black;
+  border-bottom: 3px solid $black;
   position: relative;
-
-  &::before {
-    @include pseudo-element;
-    border-bottom: 5px solid $black;
-    bottom: -3px;
-    left: 0;
-    max-width: 158px;
-    right: 0;
-    width: 32%;
-
-    @include respond-above(sm) {
-      max-width: 380px;
-    }
-  }
 
   &.text-center {
     &::before {
