@@ -8,7 +8,6 @@ import { store } from "../../app/state";
 
 
 it('My Assignments should render', () => {
-    // @ts-ignore
     cy.mount(
         <Provider store={store}>
             <MemoryRouter initialEntries={[PATHS.MY_ASSIGNMENTS]}>
@@ -16,4 +15,6 @@ it('My Assignments should render', () => {
             </MemoryRouter>
         </Provider>
     );
+
+    cy.matchImage();
 });
