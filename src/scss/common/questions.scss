@@ -79,6 +79,9 @@
       min-width: 36px !important;
       border-radius: 0 5px 5px 0;
       border: none;
+      &:active {
+        border: none !important;
+      }
     }
     &.display-unit {
       margin-bottom: -2px;
