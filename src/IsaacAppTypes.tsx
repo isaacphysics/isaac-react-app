@@ -263,8 +263,9 @@ export type Action =
   | { type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: AugmentedEvent[]; total: number }
   | { type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE }
   | { type: ACTION_TYPE.EVENTS_CLEAR }
+  | { type: ACTION_TYPE.EVENT_OVERVIEWS_CLEAR }
   | { type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST }
-  | { type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS; eventOverviews: EventOverview[] }
+  | { type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS; eventOverviews: EventOverview[]; total: number }
   | { type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE }
   | { type: ACTION_TYPE.EVENT_MAP_DATA_REQUEST }
   | { type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS; eventMapData: EventMapData[]; total: number }

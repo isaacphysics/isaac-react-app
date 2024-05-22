@@ -67,13 +67,17 @@ export const eventBookingsForAllGroups = (eventBookingsForAllGroups: EventBookin
   }
 };
 
-type EventOverviewsState = EventOverview[] | null;
+type EventOverviewsState = { eventOverviews: EventOverview[]; total: number } | null;
 export const eventOverviews = (eventOverviews: EventOverviewsState = null, action: Action) => {
+  const currentEventOverviews = eventOverviews ? eventOverviews.eventOverviews : [];
   switch (action.type) {
-    case ACTION_TYPE.EVENT_OVERVIEWS_REQUEST:
+    case ACTION_TYPE.EVENT_OVERVIEWS_CLEAR:
       return null;
     case ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS:
-      return [...action.eventOverviews];
+      return {
+        eventOverviews: Array.from(new Set([...currentEventOverviews, ...action.eventOverviews])),
+        total: action.total,
+      };
     default:
       return eventOverviews;
   }

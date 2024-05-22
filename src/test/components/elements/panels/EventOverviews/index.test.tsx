@@ -216,4 +216,62 @@ describe("Admin Event Manager", () => {
     expect(eventStatusCell).toContainElement(privateEventButton);
     expect(eventStatusCell).toHaveTextContent(event.eventStatus);
   });
+
+  it("shows load more button if less events are returned than the total", async () => {
+    renderTestEnvironment({
+      role: "ADMIN",
+      PageComponent: EventOverviews,
+      componentProps: {
+        setSelectedEventId: mockSetSelectedEventId,
+        user: { ...mockUser, loggedIn: true, role: "ADMIN" },
+      },
+      initialRouteEntries: ["/admin/events"],
+      extraEndpoints: [
+        rest.get(API_PATH + "/events/overview", (req, res, ctx) => {
+          return res(
+            ctx.status(200),
+            ctx.json({
+              results: Array.from({ length: 50 }, (_, index) => ({
+                ...mockPastEventOverviews.results[0],
+                id: `test_event_${index + 1}`,
+              })),
+              totalResults: 200,
+            }),
+          );
+        }),
+      ],
+    });
+    await screen.findByText("Actions");
+    const loadMoreButton = screen.getByRole("button", { name: "Load more" });
+    expect(loadMoreButton).toBeInTheDocument();
+  });
+
+  it("does not show load more button if events displayed are not smaller than total number", async () => {
+    renderTestEnvironment({
+      role: "ADMIN",
+      PageComponent: EventOverviews,
+      componentProps: {
+        setSelectedEventId: mockSetSelectedEventId,
+        user: { ...mockUser, loggedIn: true, role: "ADMIN" },
+      },
+      initialRouteEntries: ["/admin/events"],
+      extraEndpoints: [
+        rest.get(API_PATH + "/events/overview", (req, res, ctx) => {
+          return res(
+            ctx.status(200),
+            ctx.json({
+              results: Array.from({ length: 20 }, (_, index) => ({
+                ...mockPastEventOverviews.results[0],
+                id: `test_event_${index + 1}`,
+              })),
+              totalResults: 20,
+            }),
+          );
+        }),
+      ],
+    });
+    await screen.findByText("Actions");
+    const loadMoreButton = screen.queryByRole("button", { name: "Load more" });
+    expect(loadMoreButton).toBeNull();
+  });
 });

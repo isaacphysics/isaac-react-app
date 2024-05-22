@@ -1410,17 +1410,23 @@ export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dis
   }
 };
 
-export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => async (dispatch: Dispatch<Action>) => {
-  try {
-    dispatch({ type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST });
-    const response = await api.events.getEventOverviews(eventOverviewFilter);
-    // We ignore response.data.total because we do not currently page the results of event overviews
-    dispatch({ type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS, eventOverviews: response.data.results });
-  } catch (error) {
-    dispatch({ type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE });
-    dispatch(showAxiosErrorToastIfNeeded("Failed to load event overviews", error) as any);
-  }
-};
+export const clearEventOverviews = { type: ACTION_TYPE.EVENT_OVERVIEWS_CLEAR };
+
+export const getEventOverviews =
+  (eventOverviewFilter: EventOverviewFilter, startIndex: number) => async (dispatch: Dispatch<Action>) => {
+    try {
+      dispatch({ type: ACTION_TYPE.EVENT_OVERVIEWS_REQUEST });
+      const response = await api.events.getEventOverviews(eventOverviewFilter, startIndex);
+      dispatch({
+        type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_SUCCESS,
+        eventOverviews: response.data.results,
+        total: response.data.totalResults,
+      });
+    } catch (error) {
+      dispatch({ type: ACTION_TYPE.EVENT_OVERVIEWS_RESPONSE_FAILURE });
+      dispatch(showAxiosErrorToastIfNeeded("Failed to load event overviews", error) as any);
+    }
+  };
 
 export const getEventMapData =
   (

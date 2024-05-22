@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import * as RS from "reactstrap";
 import { PotentialUser } from "../../../IsaacAppTypes";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { ADMIN_CRUMB, isEventLeader, scrollVerticallyIntoView } from "../../services";
@@ -8,9 +7,10 @@ import { SelectedEventDetails } from "../elements/panels/SelectedEventDetails";
 import { ManageExistingBookings } from "../elements/panels/ManageExistingBookings";
 import { AddUsersToBooking } from "../elements/panels/AddUsersToBooking";
 import { EventAttendance } from "../elements/panels/EventAttendance";
+import { Button, Container } from "reactstrap";
 
 const EventButton = ({ link, text, className }: { link: string; text: string; className?: string }) => (
-  <RS.Button
+  <Button
     color="primary"
     size="md"
     href={link}
@@ -19,7 +19,7 @@ const EventButton = ({ link, text, className }: { link: string; text: string; cl
     rel="noopener noreferrer"
   >
     {text}
-  </RS.Button>
+  </Button>
 );
 
 export const EventManager = ({ user }: { user: PotentialUser }) => {
@@ -33,7 +33,7 @@ export const EventManager = ({ user }: { user: PotentialUser }) => {
   }, [selectedEventId]);
 
   return (
-    <RS.Container>
+    <Container>
       <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin" />
       <div className="my-3 d-flex flex-column flex-sm-row justify-content-end">
         <EventButton link="https://forms.office.com/e/ZrijWx8gcw" text="Event listing form" className="mb-2 mb-sm-0" />
@@ -63,6 +63,6 @@ export const EventManager = ({ user }: { user: PotentialUser }) => {
           </React.Fragment>
         )}
       </div>
-    </RS.Container>
+    </Container>
   );
 };

@@ -413,8 +413,9 @@ export const api = {
     },
     getEventOverviews: (
       eventOverviewFilter: EventOverviewFilter,
+      startIndex: number,
     ): AxiosPromise<{ results: AppTypes.EventOverview[]; totalResults: number }> => {
-      const params = { limit: -1, startIndex: 0 };
+      const params = { limit: 50, start_index: startIndex };
       if (eventOverviewFilter !== EventOverviewFilter["All events"]) {
         Object.assign(params, { filter: eventOverviewFilter });
       }

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import * as RS from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import {
   AppState,
@@ -25,6 +24,7 @@ import {
 import { RenderNothing } from "../elements/RenderNothing";
 import { MetaDescription } from "../elements/MetaDescription";
 import { Banner } from "../elements/panels/Banner";
+import { Button, Container, Form, Input, Label, Row } from "reactstrap";
 
 interface EventsPageQueryParams {
   show_booked_only?: boolean;
@@ -56,12 +56,12 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
   const numberOfLoadedEvents = eventsState ? eventsState.events.length : 0;
 
   const statusFilter =
-    (user && user.loggedIn && query.show_booked_only && EventStatusFilter["My booked events"]) ||
-    (user && user.loggedIn && query.show_reservations_only && EventStatusFilter["My event reservations"]) ||
+    (user?.loggedIn && query.show_booked_only && EventStatusFilter["My booked events"]) ||
+    (user?.loggedIn && query.show_reservations_only && EventStatusFilter["My event reservations"]) ||
     (query.event_status === "all" && EventStatusFilter["All events"]) ||
     EventStatusFilter["Upcoming events"];
-  const typeFilter = query.types || EventTypeFilter["All events"];
-  const stageFilter = query.show_stage_only || EventStageFilter["All stages"];
+  const typeFilter = query.types ?? EventTypeFilter["All events"];
+  const stageFilter = query.show_stage_only ?? EventStageFilter["All stages"];
 
   useEffect(() => {
     const startIndex = 0;
@@ -78,15 +78,15 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
   return (
     <>
       <div>
-        <RS.Container>
+        <Container>
           <TitleAndBreadcrumb currentPageTitle={"Events"} subTitle="Student Events" help={pageHelp} />
           <MetaDescription description={metaDescriptionCS} />
           <div className="my-4">
             {/* Filters */}
-            <RS.Form inline className="d-flex justify-content-end">
-              <RS.Label>
+            <Form inline className="d-flex justify-content-end">
+              <Label>
                 Filter by
-                <RS.Input
+                <Input
                   id="event-status-filter"
                   className="ml-2 mr-3"
                   type="select"
@@ -104,8 +104,7 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
                   {/* Tutors are considered students w.r.t. events currently, so cannot see teacher-only events */}
                   {Object.entries(EventStatusFilter)
                     .filter(
-                      ([_, statusValue]) =>
-                        (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"],
+                      ([_, statusValue]) => user?.loggedIn || statusValue !== EventStatusFilter["My booked events"],
                     )
                     .filter(
                       ([_, statusValue]) =>
@@ -117,8 +116,8 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
                         {statusLabel}
                       </option>
                     ))}
-                </RS.Input>
-                <RS.Input
+                </Input>
+                <Input
                   id="event-type-filter"
                   className="ml-2"
                   type="select"
@@ -134,8 +133,8 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
                       {typeLabel}
                     </option>
                   ))}
-                </RS.Input>
-                <RS.Input
+                </Input>
+                <Input
                   id="event-stage-filter"
                   className="ml-2"
                   type="select"
@@ -154,27 +153,27 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
                         {stageLabel}
                       </option>
                     ))}
-                </RS.Input>
-              </RS.Label>
-            </RS.Form>
+                </Input>
+              </Label>
+            </Form>
 
             {/* Results */}
             <ShowLoading
               until={eventsState}
               thenRender={({ events, total }) => (
                 <div className="my-4">
-                  <RS.Row>
+                  <Row>
                     {events.map((event) => (
                       <div key={event.id} className="col-xs-12 col-sm-6 col-md-4 d-flex">
                         <EventCard event={event} />
                       </div>
                     ))}
-                  </RS.Row>
+                  </Row>
 
                   {/* Load More Button */}
                   {numberOfLoadedEvents < total && (
                     <div className="text-center mb-5">
-                      <RS.Button
+                      <Button
                         onClick={() => {
                           dispatch(
                             getEventsList(numberOfLoadedEvents, EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter),
@@ -182,7 +181,7 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
                         }}
                       >
                         Load more events
-                      </RS.Button>
+                      </Button>
                     </div>
                   )}
 
@@ -205,7 +204,7 @@ export const Events = withRouter(({ history, location }: RouteComponentProps) =>
               <PageFragment fragmentId="event_type_descriptions" ifNotFound={RenderNothing} />
             </div>
           </div>
-        </RS.Container>
+        </Container>
       </div>
       {isTeacherOrAbove(user) && (
         <Banner
