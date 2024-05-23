@@ -88,6 +88,7 @@ export const EventOverviews = ({
   const [overviewFilter, setOverviewFilter] = useState(EventOverviewFilter["Upcoming events"]);
   const [sortPredicate, setSortPredicate] = useState("date");
   const [reverse, setReverse] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const numberOfLoadedEvents = eventOverviews ? eventOverviews.eventOverviews.length : 0;
 
@@ -191,19 +192,22 @@ export const EventOverviews = ({
               </div>
             )}
 
-            {/* Load More Button */}
             {numberOfLoadedEvents < total && (
               <div className="text-center mt-4">
                 <Button
                   onClick={() => {
+                    setIsLoading(true);
                     const startIndex = numberOfLoadedEvents;
-                    dispatch(getEventOverviews(overviewFilter, startIndex));
+                    dispatch(getEventOverviews(overviewFilter, startIndex)).finally(() => {
+                      setIsLoading(false);
+                    });
                   }}
                 >
-                  Load more
+                  {!isLoading ? "Load more" : "Loading..."}
                 </Button>
               </div>
             )}
+
             {zeroOrLess(eventOverviews.length) && (
               <p className="text-center">
                 <strong>No events to display with this filter setting</strong>
