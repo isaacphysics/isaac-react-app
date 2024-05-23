@@ -13,9 +13,9 @@ export const HeaderPhy = () => {
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
     return <header className="light" data-testid={"header"}>
-        <Container className="container-fluid px-0">
+        <Container>
             <Row className="align-items-center">
-                <Col>
+                <Col className="d-grid">
                     <div className="header-bar mx-3 mx-md-0 d-md-flex">
                         <div className="header-logo">
                             <Link to="/">
