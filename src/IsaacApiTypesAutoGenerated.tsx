@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-05-24 11:05:52.
+// Generated using typescript-generator version 3.2.1263 on 2024-05-24 14:03:38.
 
 export interface AssignmentDTO extends IAssignmentLike {
   gameboardId?: string;
@@ -97,6 +97,7 @@ export interface IsaacEventPageDTO extends ContentDTO {
   date?: EpochTimeStamp;
   bookingDeadline?: EpochTimeStamp;
   prepWorkDeadline?: EpochTimeStamp;
+  publicationDate?: EpochTimeStamp;
   location?: Location;
   eventThumbnail?: ImageDTO;
   numberOfPlaces?: number;
@@ -397,11 +398,11 @@ export interface FormulaDTO extends ChoiceDTO {
 }
 
 export interface FreeTextRuleDTO extends ChoiceDTO {
-  wordProximity?: number;
   caseInsensitive?: boolean;
   allowsAnyOrder?: boolean;
   allowsExtraWords?: boolean;
   allowsMisspelling?: boolean;
+  wordProximity?: number;
 }
 
 export interface GlossaryTermDTO extends ContentDTO {
@@ -585,11 +586,11 @@ export interface UserSummaryWithGroupMembershipDTO extends UserSummaryDTO {
 }
 
 export interface IAssignmentLike {
-  id?: number;
-  creationDate?: EpochTimeStamp;
-  groupId?: number;
   ownerUserId?: number;
+  creationDate?: EpochTimeStamp;
   dueDate?: EpochTimeStamp;
+  groupId?: number;
+  id?: number;
 }
 
 export interface GameboardItem {
@@ -632,8 +633,8 @@ export interface GameFilter {
 }
 
 export interface HasTitleOrId {
-  id?: string;
   title?: string;
+  id?: string;
 }
 
 export interface AudienceContext {
