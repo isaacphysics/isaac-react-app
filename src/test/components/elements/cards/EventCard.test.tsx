@@ -4,7 +4,9 @@ import { EventCard } from "../../../../app/components/elements/cards/EventCard";
 import { mockEvent } from "../../../../mocks/data";
 import { augmentEvent } from "../../../../app/services";
 import { FRIENDLY_DATE } from "../../../../app/components/elements/DateString";
-import { EventStatus } from "../../../../IsaacApiTypes";
+import { BookingStatus, EventStatus } from "../../../../IsaacApiTypes";
+
+const joinEventButton = () => screen.queryByRole("link", { name: "Join event now" });
 
 describe("EventCard", () => {
   const setupTest = (props = {}) => {
@@ -132,5 +134,67 @@ describe("EventCard", () => {
     const viewDetails = screen.getByTestId("event-card-details");
     const viewDetailsLink = viewDetails.querySelector("a");
     expect(viewDetailsLink).toHaveAttribute("href", `/events/${mockEvent.id}`);
+  });
+
+  it("does not offer a 'join event now' button if user is not logged in", async () => {
+    const event = augmentEvent({
+      ...mockEvent,
+      meetingUrl: "https://example-meeting-link.com",
+    });
+    setupTest({ role: "ANONYMOUS", event });
+    const title = await screen.findByTestId("event-card-title");
+    expect(title).toBeInTheDocument();
+    expect(joinEventButton()).toBeNull();
+  });
+
+  it("does not offer a 'join event now' button if user is not booked on the event", async () => {
+    const event = augmentEvent({
+      ...mockEvent,
+      meetingUrl: "https://example-meeting-link.com",
+    });
+    setupTest({ role: "STUDENT", event });
+    const title = await screen.findByTestId("event-card-title");
+    expect(title).toBeInTheDocument();
+    expect(joinEventButton()).toBeNull();
+  });
+
+  it.each(["RESERVED", "CANCELLED", "WAITING_LIST", "ATTENDED", "ABSENT"] as BookingStatus[])(
+    "does not offer a 'join event now' button if user's booking status is %s",
+    async (bookingStatus) => {
+      const event = augmentEvent({
+        ...mockEvent,
+        meetingUrl: "https://example-meeting-link.com",
+        userBookingStatus: bookingStatus,
+      });
+      setupTest({ role: "STUDENT", event });
+      const title = await screen.findByTestId("event-card-title");
+      expect(title).toBeInTheDocument();
+      const joinEventButton = screen.queryByRole("link", { name: "Join event now" });
+      expect(joinEventButton).toBeNull();
+    },
+  );
+
+  it("does not offer a 'join event now' button if a meetingUrl is not provided", async () => {
+    const event = augmentEvent({
+      ...mockEvent,
+      userBookingStatus: "CONFIRMED",
+    });
+    setupTest({ role: "STUDENT", event });
+    const title = await screen.findByTestId("event-card-title");
+    expect(title).toBeInTheDocument();
+    expect(joinEventButton()).toBeNull();
+  });
+
+  it("offers a 'join event now' button if a meetingUrl is provided and user's booking status is CONFIRMED", async () => {
+    const event = augmentEvent({
+      ...mockEvent,
+      meetingUrl: "https://example-meeting-link.com",
+      userBookingStatus: "CONFIRMED",
+    });
+    setupTest({ role: "STUDENT", event });
+    const title = await screen.findByTestId("event-card-title");
+    expect(title).toBeInTheDocument();
+    expect(joinEventButton()).toBeInTheDocument();
+    expect(joinEventButton()).toHaveAttribute("href", event.meetingUrl);
   });
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import * as RS from "reactstrap";
+import { Badge, Button, Card, CardBody, CardImg, CardText, CardTitle, Row } from "reactstrap";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
 import { AugmentedEvent } from "../../../../IsaacAppTypes";
@@ -20,10 +20,12 @@ export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?:
     eventStatus,
     isCancelled,
     isPrivateEvent,
+    userBookingStatus,
+    meetingUrl,
   } = event;
 
   return (
-    <RS.Card
+    <Card
       data-testid="event-card"
       className={classnames("card-neat", {
         "disabled text-muted": hasExpired || isCancelled,
@@ -33,7 +35,7 @@ export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?:
     >
       {eventThumbnail && (
         <div className={"event-card-image text-center"}>
-          <RS.CardImg
+          <CardImg
             data-testid="event-card-image"
             aria-hidden={true}
             top
@@ -42,30 +44,30 @@ export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?:
           />
         </div>
       )}
-      <RS.CardBody className="d-flex flex-column">
+      <CardBody className="d-flex flex-column">
         {title && (
-          <RS.CardTitle tag="h3" data-testid="event-card-title">
+          <CardTitle tag="h3" data-testid="event-card-title">
             {title}
             {isCancelled ? (
-              <RS.Badge color={"danger"} className="ml-1">
+              <Badge color={"danger"} className="ml-1">
                 Cancelled
-              </RS.Badge>
+              </Badge>
             ) : (
-              eventStatus !== "WAITING_LIST_ONLY" && placesAvailable == 0 && <RS.Badge className="ml-1">Full</RS.Badge>
+              eventStatus !== "WAITING_LIST_ONLY" && placesAvailable == 0 && <Badge className="ml-1">Full</Badge>
             )}
             {isPrivateEvent && (
-              <RS.Row className="mx-0 mt-2">
-                <RS.Badge color="primary">Private Event</RS.Badge>
-              </RS.Row>
+              <Row className="mx-0 mt-2">
+                <Badge color="primary">Private Event</Badge>
+              </Row>
             )}
-          </RS.CardTitle>
+          </CardTitle>
         )}
         {subtitle && (
-          <RS.CardText className="m-0 my-auto card-date-time" data-testid="event-card-subtitle">
+          <CardText className="m-0 my-auto card-date-time" data-testid="event-card-subtitle">
             {subtitle}
-          </RS.CardText>
+          </CardText>
         )}
-        <RS.CardText className="m-0 my-auto card-date-time">
+        <CardText className="m-0 my-auto card-date-time">
           {date && endDate && (
             <span className="d-block my-2">
               <span className="font-weight-bold">When:</span>
@@ -87,8 +89,8 @@ export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?:
               )}
             </span>
           )}
-        </RS.CardText>
-        <RS.CardText className="d-flex" data-testid="event-card-details">
+        </CardText>
+        <CardText className="d-flex" data-testid="event-card-details">
           <Link className="focus-target" to={`/events/${id}`}>
             View details
             <span className="sr-only">
@@ -96,8 +98,17 @@ export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?:
               of the event: {title} {" - "} <DateString>{date}</DateString>
             </span>
           </Link>
-        </RS.CardText>
-      </RS.CardBody>
-    </RS.Card>
+        </CardText>
+        {userBookingStatus === "CONFIRMED" && meetingUrl && (
+          <CardText className="d-flex justify-content-center">
+            <a href={meetingUrl} target="_blank" rel="noopener noreferrer">
+              <Button color="secondary" className="mt-2 w-100">
+                Join event now
+              </Button>
+            </a>
+          </CardText>
+        )}
+      </CardBody>
+    </Card>
   );
 };
