@@ -1,5 +1,5 @@
 // ***********************************************************
-// This example support/component.ts is processed and
+// This example support/component-ada.ts is processed and
 // loaded automatically before your test files.
 //
 // This is a great place to put global configuration and
@@ -38,11 +38,18 @@ Cypress.Commands.add('mount', mount)
 // Example use:
 // cy.mount(<MyComponent />)
 
-// import styles
-import '../../src/scss/cs/isaac.scss';
+// Import styles
+import '../../src/scss/phy/isaac.scss';
 
-// Start MSW 
+// Start Mock Service Worker
 import { worker } from '../../src/mocks/browser';
 Cypress.on('test:before:run:async', async () => {
   await worker.start();
 });
+
+// Skip visual regression tests in interactive mode - the results are not consistent with headless
+if (Cypress.config('isInteractive')) {
+  Cypress.Commands.add('matchImage', () => {
+    cy.log('Skipping snapshot 👀');
+  });
+}

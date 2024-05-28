@@ -8,10 +8,15 @@ import { store } from "../../app/state";
 
 
 it('My Assignments should render', () => {
+    cy.viewport(1280, 720);
+
     cy.mount(
         <Provider store={store}>
             <MemoryRouter initialEntries={[PATHS.MY_ASSIGNMENTS]}>
-                <MyAssignments user={mockUser}/>
+                {
+                    // @ts-ignore
+                    <MyAssignments user={mockUser}/>
+                }
             </MemoryRouter>
         </Provider>
     );
