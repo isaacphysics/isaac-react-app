@@ -664,6 +664,7 @@ export interface EventOverview {
   eventStatus?: ApiTypes.EventStatus;
   location?: ApiTypes.Location;
   numberOfConfirmedBookings: number;
+  numberOfReservedBookings: number;
   numberOfWaitingListBookings: number;
   numberAttended: number;
   numberAbsent: number;
