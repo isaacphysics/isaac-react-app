@@ -10,7 +10,6 @@ import { EventGenderDetails } from "./EventGenderDetails";
 export const countStudentsAndTeachers = (eventBookings: EventBookingDTO[]) => {
   let studentCount = 0;
   let teacherCount = 0;
-  let reservedCount = 0;
 
   eventBookings.forEach((booking) => {
     const role = booking.userBooked?.role;
@@ -23,15 +22,12 @@ export const countStudentsAndTeachers = (eventBookings: EventBookingDTO[]) => {
         studentCount++;
       } else if (role === "TEACHER" && validStatus) {
         teacherCount++;
-      } else if (bookingStatus === "RESERVED") {
-        reservedCount++;
       }
     }
   });
   return {
     studentCount,
     teacherCount,
-    reservedCount,
   };
 };
 
@@ -55,7 +51,7 @@ export const SelectedEventDetails = ({ eventId }: { eventId: string }) => {
     return state && state.currentEvent;
   });
   const eventBookings = useAppSelector(selectors.events.eventBookings);
-  const { studentCount, teacherCount, reservedCount } = countStudentsAndTeachers(eventBookings);
+  const { studentCount, teacherCount } = countStudentsAndTeachers(eventBookings);
 
   return (
     <Card>
@@ -117,10 +113,6 @@ export const SelectedEventDetails = ({ eventId }: { eventId: string }) => {
             <p className="mb-0">
               <strong>Number of teachers: </strong>
               {teacherCount} / {selectedEvent.numberOfPlaces}
-            </p>
-            <p className="mb-0">
-              <strong>Number of reservations: </strong>
-              {reservedCount} / {selectedEvent.numberOfPlaces}
             </p>
             <EventGenderDetails eventBookings={eventBookings} />
           </div>
