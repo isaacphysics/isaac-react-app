@@ -5,7 +5,7 @@
   border-radius: 0;
   border-width: 0;
   box-shadow: 0 2px 13px 0 $shadow-08;
-  width: 100%;
+  // width: 100%;
 
   @include respond-above(sm) {
     box-shadow: 0 2px 30px 0 $shadow-08;
@@ -211,4 +211,36 @@
 
 .card-deck + .card-deck {
   margin-top: 1.5rem;
+}
+
+.card-deck {
+  @extend .card-group;
+
+  .news-card {
+    flex: unset !important;
+  }
+
+  // de-couple the border
+  @include media-breakpoint-up(sm){
+      > .card {
+          &:not(:first-child) {
+              border-top-left-radius: $card-border-radius;
+              border-bottom-left-radius: $card-border-radius;
+          }
+
+          &:not(:last-child) {
+              border-top-right-radius: $card-border-radius;
+              border-bottom-right-radius: $card-border-radius;
+          }
+
+          + .card {
+              border-left: 1px solid $card-border-color;
+          }
+      }
+  }
+
+  // optionally change the breakpoint for column layout on mobile
+  @include media-breakpoint-down(md){
+      flex-direction: column;
+  }
 }

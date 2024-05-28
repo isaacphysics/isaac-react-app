@@ -1,4 +1,4 @@
-import {Button, CardDeck, Container} from "reactstrap";
+import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCard} from "../elements/cards/NewsCard";
 import React, { useEffect } from "react";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -40,9 +40,11 @@ export const News = () => {
                 defaultErrorTitle={"Error fetching news stories"}
             /> : 
             <>
-                <CardDeck className="justify-content-center mt-4">
-                    {allNews.map(n => <NewsCard key={n.id} newsItem={n} showTitle />)}
-                </CardDeck>
+                <Row className="d-flex mx-2 flex-row card-deck row-cols-1 row-cols-sm-2 row-cols-lg-3 justify-content-center mt-4">
+                    {allNews.map((n, i) => <Col key={i} className="d-flex my-3 px-0 justify-content-center">
+                        <NewsCard key={n.id} newsItem={n} showTitle />
+                    </Col>)}
+                </Row>
                 <div className="w-100 d-flex justify-content-center mb-5">
                     <Button className={"mt-3"} color={"primary"} disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load older news</Button>
                 </div>

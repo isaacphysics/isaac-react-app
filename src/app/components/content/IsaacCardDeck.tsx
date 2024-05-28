@@ -1,7 +1,7 @@
 import React from "react";
 import {IsaacCard} from "./IsaacCard";
 import {IsaacCardDeckDTO} from "../../../IsaacApiTypes";
-import {CardDeck, Col, Container, Row} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import classNames from "classnames";
 import {isPhy} from "../../services";
 
@@ -18,8 +18,8 @@ export const IsaacCardDeck = ({doc, className, containerClassName}: IsaacCardDec
                 <h3 className={classNames("h-title", {"text-center": isPhy})}>{doc.title}</h3>
             </Col>
         </Row>}
-        <CardDeck className={classNames("card-deck isaac-cards-body my-3", className)}>
+        <Row xs={12} className={classNames("d-flex flex-row card-deck row-cols-1 row-cols-sm-2 isaac-cards-body justify-content-between my-3", className)}>
             {doc?.cards?.map((props, i) => <IsaacCard key={i} doc={props} imageClassName={props.imageClassName}/>)}
-        </CardDeck>
+        </Row>
     </Container>;
 };
