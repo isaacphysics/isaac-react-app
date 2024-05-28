@@ -81,7 +81,7 @@ export function MenuBadge({count, message, ...rest}: {count: number, message: st
         return RenderNothing;
     }
     return <div className={"d-inline"} {...rest}>
-        <span className={classNames("badge badge-pill ms-2", {"bg-grey": isPhy, "bg-turquoise-blue text-dark": isAda})}>{count}</span>
+        <span className={classNames("badge rounded-pill ms-2", {"bg-grey text-body": isPhy, "bg-turquoise-blue text-dark": isAda})}>{count}</span>
         <span className="visually-hidden"> {message}</span>
     </div>;
 }
