@@ -54,6 +54,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
             <Input 
                 ref={focusRef}
                 className={classNames(
+                    "force-print",
                     {"units-shown" : questionDTO.requireUnits || !noDisplayUnit}, 
                     // if the answer is incorrect because the units are wrong but the value is correct, hide the green outline from the value
                     correctnessClass((correctness === "INCORRECT" && valueCorrectness === "CORRECT") ? "NOT_SUBMITTED" : valueCorrectness)

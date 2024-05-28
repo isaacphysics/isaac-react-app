@@ -69,8 +69,10 @@
 .inline-numeric-container {
   border-radius: 5px;
 
-  .units-shown {
-    border-radius: 5px 0 0 5px;
+  @media screen {
+    .units-shown {
+      border-radius: 5px 0 0 5px;
+    }
   }
 
   .inline-unit-dropdown {
@@ -420,6 +422,11 @@
       margin-right: 3px;
       max-width: 100px;
       display: inline-block;
+      @media print {
+        &::placeholder {
+          color: transparent !important;
+        }
+      }
     }
   }
 }
