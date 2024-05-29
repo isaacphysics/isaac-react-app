@@ -5,9 +5,31 @@
   @return mix($color-base, $color, $level * $theme-color-interval);
 }
 
+@mixin bg-variant($parent, $color) {
+  #{$parent} {
+    background-color: $color !important;
+  }
+  a#{$parent},
+  button#{$parent} {
+    &:hover, &:focus {
+      background-color: darken($color, 10%) !important;
+    }
+  }
+}
+
+@mixin text-emphasis-variant($parent, $color) {
+  #{$parent} {
+    color: $color !important;
+  }
+  a#{$parent}:hover,
+  a#{$parent}:focus {
+    color: darken($color, 10%) !important;
+  }
+}
+
 @mixin apply-subject-classes($color) {
   /* background classes */
-  color: $color;
+  @include bg-variant(".bg-secondary", $color);
   
 
   /* correct answer */
@@ -45,11 +67,12 @@
   //}
 
   /* text- classes */
-  // @include text-emphasis-variant(".text-secondary", $color);
-  text-emphasis-color: $color;
+  @include text-emphasis-variant(".text-secondary", $color);
+  // text-emphasis-color: $color;
 
   /* badge classes */
   .badge-secondary {
+    // TODO
   }
 
   /* borders */

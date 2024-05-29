@@ -102,6 +102,10 @@
           line-height: inherit;
           margin-bottom: inherit;
         }
+
+        div > * {
+          width: max-content;
+        }
       }
 
       &:after {
