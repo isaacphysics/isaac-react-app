@@ -44,7 +44,7 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
 
     useEffect(() => {
         const isFeedbackShown = currentAttempts?.some(vr => vr !== undefined) && !inlineContext?.submitting && !inlineContext?.isModifiedSinceLastSubmission && !canSubmit;
-        if (isFeedbackShown && inlineContext && inlineContext.feedbackIndex === undefined && inlineQuestions && inlineQuestions.length > 1) {
+        if (isFeedbackShown && inlineContext && inlineContext.feedbackIndex === undefined && inlineQuestions && inlineQuestions.length > 0) {
             inlineContext.setFeedbackIndex(0);
         }
     }, [canSubmit, currentAttempts, inlineContext]);
