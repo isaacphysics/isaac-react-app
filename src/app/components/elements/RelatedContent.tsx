@@ -189,7 +189,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
                     dispatch(logAction(getEventDetails(contentSummary, parentPage)));
                 }}
             >
-                <span className={classNames({"font-size-1 font-weight-regular": isAda})}>
+                <span className={classNames({"font-size-1 fw-regular": isAda})}>
                     {contentSummary.title}
                     {isPhy && <React.Fragment>
                         {audienceViews.length > 0 && " ("}

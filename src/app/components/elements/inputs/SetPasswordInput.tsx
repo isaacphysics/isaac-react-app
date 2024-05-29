@@ -23,7 +23,7 @@ export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, subm
     loadZxcvbnIfNotPresent();
 
     return <FormGroup className={`form-group ${className}`}>
-        <Label htmlFor={`${idPrefix}-password-set`} className={"font-weight-bold"}>Password</Label>
+        <Label htmlFor={`${idPrefix}-password-set`} className={"fw-bold"}>Password</Label>
         <p className="d-block input-description">Your password must be at least 8 characters.</p>
         <TogglablePasswordInput
             id={`${idPrefix}-password-set`}

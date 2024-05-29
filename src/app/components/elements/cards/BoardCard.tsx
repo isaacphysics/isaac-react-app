@@ -161,7 +161,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 )}
             </td>
             <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
-                <a href={boardLink} className={isAda ? "font-weight-semi-bold" : ""}>{board.title}</a>
+                <a href={boardLink} className={isAda ? "fw-semi-bold" : ""}>{board.title}</a>
                 {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
             </td>
             <td className={basicCellClasses + " p-0"} colSpan={2}>

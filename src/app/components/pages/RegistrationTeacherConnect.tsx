@@ -87,7 +87,7 @@ export const RegistrationTeacherConnect = () => {
                     <p>You can always skip this now and connect to your teacher later.</p>
                     <Col xs={12} lg={5}>
                         <FormGroup className="form-group">
-                            <Label className={"font-weight-bold"} htmlFor="connect-code-input">{"Teacher connection code"}</Label>
+                            <Label className={"fw-bold"} htmlFor="connect-code-input">{"Teacher connection code"}</Label>
                             <p className={"input-description"}>Enter the code given by your teacher to join a group</p>
                             <InputGroup className={"separate-input-group mb-4 d-flex flex-row align-items-center"}>
                                 <Input

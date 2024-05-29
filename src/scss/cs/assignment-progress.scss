@@ -26,7 +26,7 @@
 }
 
 .assignment-progress-gameboard .gameboard-title {
-  //@extend .font-weight-regular;
+  //@extend .fw-regular;
   font-size: 0.9rem;
   text-decoration: none !important;
   color: black;
@@ -35,7 +35,7 @@
 .gameboard-links a, .download-csv-link {
   @extend .btn;
   @extend .btn-link;
-  @extend .font-weight-regular;
+  @extend .fw-regular;
   font-size: 0.9rem;
 }
 

@@ -287,7 +287,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
             <Label for="additional-manager-privileges-check" className="ms-2">Give additional managers extra privileges</Label>
             {group.additionalManagerPrivileges
                 ? <>
-                    <span className={"font-weight-bold"}>Caution</span>: All other group managers are allowed delete
+                    <span className={"fw-bold"}>Caution</span>: All other group managers are allowed delete
                     and modify any assignments set to this group (by any other manager including the owner), remove
                     group members, and archive and rename the group. <br/>
                     Additional managers cannot add or remove other managers. <br/>

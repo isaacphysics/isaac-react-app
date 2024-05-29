@@ -21,7 +21,7 @@ const EventMisuseTable = ({topMisuses}: {topMisuses: MisuseStatisticDTO[]}) => {
             <td>{m.agentIdentifier}</td>
             <td>{m.currentCounter}{" "}{m.currentCounter > 0 && <Button className={"float-end"} size={"sm"} onClick={() => resetMisuseMonitor({eventLabel: m.eventType, agentIdentifier: m.agentIdentifier})}>Reset</Button>}</td>
             <td>{m.lastEventTimestamp ? (new Date(m.lastEventTimestamp)).toString() : "None"}</td>
-            <td>{m.isMisused ? <span className={"text-danger font-weight-bold"}>Yes</span> : (m.isOverSoftThreshold ? <span className={"text-warning font-weight-bold"}>Almost</span> : "No")}</td>
+            <td>{m.isMisused ? <span className={"text-danger fw-bold"}>Yes</span> : (m.isOverSoftThreshold ? <span className={"text-warning fw-bold"}>Almost</span> : "No")}</td>
         </tr>)}
         </tbody>
     </Table>;

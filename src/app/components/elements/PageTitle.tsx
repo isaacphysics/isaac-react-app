@@ -34,7 +34,7 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
 
     return <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
         {filteredViews.map((view, i) => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classNames("d-flex d-sm-block", {"ms-sm-2": i > 0})}>
-            {view.stage && view.stage !== STAGE.ALL && <div className={classNames("text-center align-self-center", {"font-weight-regular": isAda})}>
+            {view.stage && view.stage !== STAGE.ALL && <div className={classNames("text-center align-self-center", {"fw-regular": isAda})}>
                 {stageLabelMap[view.stage]}
             </div>}
             {view.difficulty && <div className={"ms-2 ms-sm-0 text-center"}>

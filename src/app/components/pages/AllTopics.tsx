@@ -16,10 +16,10 @@ const renderTopic = (topic: Tag) => {
     if (!topic.hidden) {
         return <>
             {topic.comingSoonDate
-                ? <span className={"font-weight-semi-bold"}>{topic.title}</span>
+                ? <span className={"fw-semi-bold"}>{topic.title}</span>
                 : <Link
                     to={topic.comingSoonDate ? "/coming_soon" : `/topics/${topic.id}`}
-                    className={classNames("font-weight-semi-bold", {"text-muted": topic.comingSoonDate})}
+                    className={classNames("fw-semi-bold", {"text-muted": topic.comingSoonDate})}
                 >
                     {topic.title}
                 </Link>

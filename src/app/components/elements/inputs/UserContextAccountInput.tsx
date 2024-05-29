@@ -145,7 +145,7 @@ export function UserContextAccountInput({
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
 
     return <div>
-        <Label htmlFor="user-context-selector" className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}>
+        <Label htmlFor="user-context-selector" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
             {siteSpecific(
                 <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
                 <span>Show me content for...</span>

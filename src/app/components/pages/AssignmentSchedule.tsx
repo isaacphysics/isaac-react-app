@@ -236,10 +236,10 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                             <Table>
                                 <thead>
                                 <tr>
-                                    <th className="border-top-0 font-weight-normal py-1">
+                                    <th className="border-top-0 fw-normal py-1">
                                         {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}`}
                                     </th>
-                                    <th className="border-top-0 font-weight-normal py-1">
+                                    <th className="border-top-0 fw-normal py-1">
                                         {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
                                     </th>
                                 </tr>

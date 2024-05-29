@@ -99,7 +99,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
     return <RS.FormGroup className={`school mb-4 ${className} `}>
-        <Label htmlFor={`school-input-${randomNumber}`} className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}>School</Label>
+        <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>School</Label>
         {isAda && <p className="d-block input-description">This helps us measure our reach and impact.</p>}
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect

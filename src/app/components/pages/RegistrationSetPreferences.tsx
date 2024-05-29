@@ -70,7 +70,7 @@ export const RegistrationSetPreferences = () => {
             <CardBody>
                 {errorMessage &&
                     <ExigentAlert color="warning">
-                        <p className="alert-heading font-weight-bold">Unable to update your account</p>
+                        <p className="alert-heading fw-bold">Unable to update your account</p>
                         <p>{errorMessage}</p>
                     </ExigentAlert>
                 }
@@ -95,7 +95,7 @@ export const RegistrationSetPreferences = () => {
                             <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation} />
                             <hr />
 
-                            <Label className={"font-weight-bold"}>Set your email notification preferences</Label>
+                            <Label className={"fw-bold"}>Set your email notification preferences</Label>
                             <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
                             <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
                             <UserEmailPreferencesInput emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}></UserEmailPreferencesInput>

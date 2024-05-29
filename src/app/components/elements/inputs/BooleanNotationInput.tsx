@@ -21,7 +21,7 @@ export const BooleanNotationInput = ({booleanNotation, setBooleanNotation, isReq
     };
 
     return <FormGroup className="form-group me-lg-5">
-        <Label className={classNames("font-weight-bold", (isRequired ? "form-required" : "form-optional"))}
+        <Label className={classNames("fw-bold", (isRequired ? "form-required" : "form-optional"))}
                htmlFor="boolean-notation-preference">Preferred logic notation</Label>
 
         <StyledDropdown

@@ -415,7 +415,7 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
 
     return <Row className={className}>
         <Col size={12} className={siteSpecific("mt-2", "")}>
-            <h6 className={siteSpecific("", "font-weight-semi-bold")}>Create New Group</h6>
+            <h6 className={siteSpecific("", "fw-semi-bold")}>Create New Group</h6>
         </Col>
         <Col size={12} className="mb-2">
             <Form>
