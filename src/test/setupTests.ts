@@ -1,4 +1,3 @@
-import "core-js";
 import { server } from "../mocks/server";
 import "./matchers";
 

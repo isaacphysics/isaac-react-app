@@ -50,9 +50,6 @@ module.exports = (env) => {
         resolve: {
             modules: [path.resolve(__dirname), 'node_modules'],
             extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs'],
-            alias: {
-                'p5': 'p5/lib/p5.min.js'
-            },
             fallback: { "query-string": require.resolve("querystring-es3") }
         },
 
@@ -142,13 +139,6 @@ module.exports = (env) => {
                 chunks: "all",
             },
             runtimeChunk: true,
-            minimizer: [
-                new TerserPlugin({
-                    terserOptions: {
-                        safari10: true,
-                    },
-                }),
-            ],
         },
 
         devtool : "source-map",
