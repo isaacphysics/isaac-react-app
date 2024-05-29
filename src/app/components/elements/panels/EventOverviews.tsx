@@ -34,6 +34,7 @@ const EventTableRow = ({ eventData, onClick }: { eventData: EventOverview; onCli
     location,
     eventStatus,
     numberOfConfirmedBookings,
+    numberOfReservedBookings,
     numberOfWaitingListBookings,
     numberAttended,
     numberAbsent,
@@ -67,6 +68,7 @@ const EventTableRow = ({ eventData, onClick }: { eventData: EventOverview; onCli
       <td>
         {numberOfConfirmedBookings} / {numberOfPlaces}
       </td>
+      <td>{numberOfReservedBookings}</td>
       <td>{numberOfWaitingListBookings}</td>
       <td>{numberAttended}</td>
       <td>{numberAbsent}</td>
@@ -122,6 +124,7 @@ export const EventOverviews = ({
     { sort: "location.address.town", text: "Location" },
     { sort: "eventStatus", text: "Status" },
     { sort: "numberOfConfirmedBookings", text: "Number confirmed" },
+    { sort: "numberOfReservedBookings", text: "Number reserved" },
     { sort: "numberOfWaitingListBookings", text: "Number waiting" },
     { sort: "numberAttended", text: "Number attended" },
     { sort: "numberAbsent", text: "Number absent" },
