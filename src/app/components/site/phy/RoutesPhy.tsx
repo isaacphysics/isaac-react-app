@@ -4,10 +4,11 @@ import {PhysicsSkills19} from "../../pages/books/physics_skills_19";
 import {PhysBookGcse} from "../../pages/books/phys_book_gcse";
 import {PhysicsSkills14} from "../../pages/books/physics_skills_14";
 import {PreUniMaths} from "../../pages/books/pre_uni_maths";
+import {PreUniMaths2e} from "../../pages/books/pre_uni_maths_2e";
 import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect} from "react-router";
-import {isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove, PATHS} from "../../../services";
+import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
@@ -32,7 +33,7 @@ import {TeacherRequest} from "../../pages/TeacherRequest";
 import {Registration} from "../../pages/Registration";
 import {EmailAlterHandler} from "../../handlers/EmailAlterHandler";
 import {News} from "../../pages/News";
-import { QuestionFinder } from "../../pages/QuestionFinder";
+import {QuestionFinder} from "../../pages/QuestionFinder";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -89,6 +90,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/books/phys_book_gcse" component={PhysBookGcse}/>,
     <TrackedRoute key={key++} exact path="/books/physics_skills_14" component={PhysicsSkills14}/>,
     <TrackedRoute key={key++} exact path="/books/pre_uni_maths" component={PreUniMaths}/>,
+    <TrackedRoute key={key++} exact path="/books/pre_uni_maths_2e" component={PreUniMaths2e}/>,
     <TrackedRoute key={key++} exact path="/books/chemistry_16" component={Chemistry16}/>,
     <TrackedRoute key={key++} exact path="/books/quantum_mechanics_primer" component={QuantumMechanicsPrimer}/>,
     <TrackedRoute key={key++} exact path="/books/solve_physics_problems" component={SolvingPhysProblems}/>,
