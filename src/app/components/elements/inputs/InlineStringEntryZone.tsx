@@ -3,6 +3,7 @@ import { Input } from "reactstrap";
 import { IsaacStringMatchQuestionDTO, StringChoiceDTO } from "../../../../IsaacApiTypes";
 import { useCurrentQuestionAttempt } from "../../../services";
 import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
+import classNames from "classnames";
 
 export const InlineStringEntryZone = ({width, height, questionDTO, focusRef, setModified, correctness, ...rest} : InlineEntryZoneProps<IsaacStringMatchQuestionDTO>) => {
     
@@ -23,7 +24,7 @@ export const InlineStringEntryZone = ({width, height, questionDTO, focusRef, set
     return <div className={"feedback-zone inline-nq-feedback"}>
         <Input 
             {...rest}
-            className={rest.className + " " + correctnessClass(correctness)}
+            className={classNames("force-print", rest.className, correctnessClass(correctness))}
             ref={focusRef}
             value={value}
             style={{width: `${width}px`, height: `${height}px`}}
