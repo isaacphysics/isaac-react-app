@@ -1,7 +1,6 @@
 import React, { ChangeEvent } from "react";
 import { ValidationUser } from "../../../../IsaacAppTypes";
-import * as RS from "reactstrap";
-import { Input } from "reactstrap";
+import { FormFeedback, FormGroup, Input, Label } from "reactstrap";
 import { validateUserGender } from "../../../services";
 import { Immutable } from "immer";
 import { Gender } from "../../../../IsaacApiTypes";
@@ -19,8 +18,8 @@ export const GenderInput = ({
   idPrefix = "account",
 }: GenderInputProps) => {
   return (
-    <RS.FormGroup>
-      <RS.Label htmlFor={`${idPrefix}-gender-select`}>Gender</RS.Label>
+    <FormGroup>
+      <Label htmlFor={`${idPrefix}-gender-select`}>Gender</Label>
       <Input
         className="pl-2"
         type="select"
@@ -42,9 +41,7 @@ export const GenderInput = ({
         <option value="OTHER">Other gender identity</option>
         <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
       </Input>
-      <RS.FormFeedback id="genderValidationMessage">
-        {submissionAttempted ? "Please select an option" : null}
-      </RS.FormFeedback>
-    </RS.FormGroup>
+      <FormFeedback id="genderValidationMessage">{submissionAttempted ? "Please select an option" : null}</FormFeedback>
+    </FormGroup>
   );
 };

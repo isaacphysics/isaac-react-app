@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { requestEmailVerification, selectors, useAppDispatch, useAppSelector } from "../../state";
 import { Link } from "react-router-dom";
-import * as RS from "reactstrap";
-import { Button } from "reactstrap";
+import { Button, Col, Container, Row } from "reactstrap";
 import { WEBMASTER_EMAIL } from "../../services";
 
 export const EmailVerificationBanner = () => {
@@ -19,9 +18,9 @@ export const EmailVerificationBanner = () => {
 
   return show ? (
     <div className="banner d-print-none" id="email-status-banner">
-      <RS.Container className="py-3">
-        <RS.Row style={{ alignItems: "center" }}>
-          <RS.Col xs={12} sm={2} md={1}>
+      <Container className="py-3">
+        <Row style={{ alignItems: "center" }}>
+          <Col xs={12} sm={2} md={1}>
             <h3 className="text-center">
               <span role="presentation" aria-labelledby="email-verification-heading">
                 ℹ
@@ -30,10 +29,10 @@ export const EmailVerificationBanner = () => {
                 &nbsp;Email Verification
               </span>
             </h3>
-          </RS.Col>
+          </Col>
           {(status == null || status == "NOT_VERIFIED") && (
             <React.Fragment>
-              <RS.Col xs={12} sm={10} md={8}>
+              <Col xs={12} sm={10} md={8}>
                 <small>
                   Your email address is not verified - please find our email in your inbox and follow the verification
                   link. You can{" "}
@@ -42,9 +41,9 @@ export const EmailVerificationBanner = () => {
                   </Button>{" "}
                   if necessary. To change your account email, go to <Link to="/account">My account</Link>.
                 </small>
-              </RS.Col>
-              <RS.Col xs={12} md={3} className="text-center">
-                <RS.Button
+              </Col>
+              <Col xs={12} md={3} className="text-center">
+                <Button
                   color="primary"
                   outline
                   className="mt-3 mb-2 d-block d-md-inline-block banner-button"
@@ -52,12 +51,12 @@ export const EmailVerificationBanner = () => {
                   id="email-verification-snooze"
                 >
                   Snooze
-                </RS.Button>
-              </RS.Col>
+                </Button>
+              </Col>
             </React.Fragment>
           )}
           {status == "DELIVERY_FAILED" && (
-            <RS.Col xs={12} sm={10} md={11}>
+            <Col xs={12} sm={10} md={11}>
               <small>
                 One or more email(s) sent to your email address failed. This means you won&apos;t receive emails from
                 Isaac, and may prevent you regaining access to your account. <br />
@@ -66,10 +65,10 @@ export const EmailVerificationBanner = () => {
                 </Link>{" "}
                 page. If you believe this is in error, please <a href={`mailto:${WEBMASTER_EMAIL}`}>email us</a>.
               </small>
-            </RS.Col>
+            </Col>
           )}
-        </RS.Row>
-      </RS.Container>
+        </Row>
+      </Container>
     </div>
   ) : null;
 };

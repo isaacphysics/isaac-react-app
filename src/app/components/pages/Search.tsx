@@ -1,8 +1,7 @@
 import React, { ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { AppState, fetchSearch, selectors, useAppDispatch, useAppSelector } from "../../state";
-import * as RS from "reactstrap";
-import { Col, Container, Form, Input, Row } from "reactstrap";
+import { Badge, Card, CardBody, CardHeader, Col, Container, Form, Input, Label, Row } from "reactstrap";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import {
@@ -127,25 +126,25 @@ export const Search = withRouter((props: RouteComponentProps) => {
       </Row>
       <Row>
         <Col className="py-4">
-          <RS.Card>
-            <RS.CardHeader className="search-header">
-              <RS.Col md={5} sm={12}>
+          <Card>
+            <CardHeader className="search-header">
+              <Col md={5} sm={12}>
                 <h3>
                   <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results{" "}
                   {urlQuery != "" ? (
                     shortcutAndFilteredSearchResults ? (
-                      <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge>
+                      <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge>
                     ) : (
                       <IsaacSpinner />
                     )
                   ) : null}
                 </h3>
-              </RS.Col>
-              <RS.Col md={7} sm={12}>
-                <RS.Form inline className="search-filters">
-                  <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
+              </Col>
+              <Col md={7} sm={12}>
+                <Form inline className="search-filters">
+                  <Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
                     Filters
-                  </RS.Label>
+                  </Label>
                   <Select
                     inputId="document-filter"
                     isMulti
@@ -163,14 +162,14 @@ export const Search = withRouter((props: RouteComponentProps) => {
                     onChange={selectOnChange(setFiltersState, false)}
                     styles={selectStyle}
                   />
-                  <RS.Label className="mt-2 mb-2 mb-md-0">
+                  <Label className="mt-2 mb-2 mb-md-0">
                     <UserContextPicker className="text-right" />
-                  </RS.Label>
-                </RS.Form>
-              </RS.Col>
-            </RS.CardHeader>
+                  </Label>
+                </Form>
+              </Col>
+            </CardHeader>
             {urlQuery != "" && (
-              <RS.CardBody>
+              <CardBody>
                 <ShowLoading until={shortcutAndFilteredSearchResults}>
                   {shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0 ? (
                     <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={true} />
@@ -178,9 +177,9 @@ export const Search = withRouter((props: RouteComponentProps) => {
                     <em>No results found</em>
                   )}
                 </ShowLoading>
-              </RS.CardBody>
+              </CardBody>
             )}
-          </RS.Card>
+          </Card>
         </Col>
       </Row>
     </Container>

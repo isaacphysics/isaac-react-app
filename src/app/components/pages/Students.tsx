@@ -1,49 +1,49 @@
 import React from "react";
 import { selectors, useAppSelector } from "../../state";
-import * as RS from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { PageFragment } from "../elements/PageFragment";
 import { Link } from "react-router-dom";
 import { LinkCard } from "../elements/cards/LinkCard";
+import { Button, Container, Row, Col, ListGroup, ListGroupItem } from "reactstrap";
 
 export const Students = () => {
   const user = useAppSelector(selectors.user.orNull);
   const pageTitle = user && user.loggedIn ? "My Isaac" : "How we help students";
   const registrationButton = (
     <div className="text-center">
-      <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>
+      <Button size="lg" tag={Link} to={"/register"} color="primary" outline>
         Sign up
-      </RS.Button>
+      </Button>
     </div>
   );
 
   return (
-    <RS.Container className="students-page">
-      <RS.Row className="pb-4">
-        <RS.Col>
+    <Container className="students-page">
+      <Row className="pb-4">
+        <Col>
           <TitleAndBreadcrumb currentPageTitle={pageTitle} breadcrumbTitleOverride="Students" />
-        </RS.Col>
-      </RS.Row>
+        </Col>
+      </Row>
 
       {!(user && user.loggedIn) && (
-        <RS.Row>
-          <RS.Col md={{ size: 8, offset: 2 }} className="pb-4 mb-5">
+        <Row>
+          <Col md={{ size: 8, offset: 2 }} className="pb-4 mb-5">
             <React.Fragment>
               <PageFragment fragmentId="for_students_logged_out" />
               {registrationButton}
             </React.Fragment>
-          </RS.Col>
-        </RS.Row>
+          </Col>
+        </Row>
       )}
 
       {user && user.loggedIn && (
-        <RS.Row>
-          <RS.Col>
+        <Row>
+          <Col>
             <h2 className="h-secondary h-m">Pick up where you left off</h2>
             <div className="pattern-07 pb-5">
-              <RS.Row>
-                <RS.ListGroup className="mt-md-4 mb-3 d-block d-md-flex flex-wrap flex-row link-list align-items-stretch">
-                  <RS.ListGroupItem className="bg-transparent">
+              <Row>
+                <ListGroup className="mt-md-4 mb-3 d-block d-md-flex flex-wrap flex-row link-list align-items-stretch">
+                  <ListGroupItem className="bg-transparent">
                     <LinkCard
                       title="Assignments"
                       imageSource="/assets/card04.png"
@@ -52,9 +52,9 @@ export const Students = () => {
                     >
                       View the current status of your assignments.
                     </LinkCard>
-                  </RS.ListGroupItem>
+                  </ListGroupItem>
 
-                  <RS.ListGroupItem className="bg-transparent">
+                  <ListGroupItem className="bg-transparent">
                     <LinkCard
                       title="Topics"
                       imageSource="/assets/card01.png"
@@ -63,9 +63,9 @@ export const Students = () => {
                     >
                       Work through one of your course&apos;s topics.
                     </LinkCard>
-                  </RS.ListGroupItem>
+                  </ListGroupItem>
 
-                  <RS.ListGroupItem className="bg-transparent">
+                  <ListGroupItem className="bg-transparent">
                     <LinkCard
                       title="Events"
                       imageSource="/assets/card02.png"
@@ -74,13 +74,13 @@ export const Students = () => {
                     >
                       Attend one of our free student workshop events.
                     </LinkCard>
-                  </RS.ListGroupItem>
-                </RS.ListGroup>
-              </RS.Row>
+                  </ListGroupItem>
+                </ListGroup>
+              </Row>
             </div>
-          </RS.Col>
-        </RS.Row>
+          </Col>
+        </Row>
       )}
-    </RS.Container>
+    </Container>
   );
 };

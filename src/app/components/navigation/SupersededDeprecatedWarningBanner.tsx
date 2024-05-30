@@ -1,9 +1,9 @@
 import React from "react";
-import * as RS from "reactstrap";
 import { ContentDTO } from "../../../IsaacApiTypes";
 import { RenderNothing } from "../elements/RenderNothing";
 import { goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector } from "../../state";
 import { isAQuestionLikeDoc, isStudent, isTutorOrAbove } from "../../services";
+import { Alert, Button, UncontrolledTooltip } from "reactstrap";
 
 export function SupersededDeprecatedWarningBanner({ doc }: { doc: ContentDTO }) {
   const dispatch = useAppDispatch();
@@ -28,7 +28,7 @@ export function SupersededDeprecatedWarningBanner({ doc }: { doc: ContentDTO }) 
   const teacherMessage = isTutorOrAbove(user) && (
     <React.Fragment>
       <span id="superseded-help" className="icon-help" />
-      <RS.UncontrolledTooltip placement="bottom" target="superseded-help">
+      <UncontrolledTooltip placement="bottom" target="superseded-help">
         <div className="text-left">
           {supersededBy && (
             <>
@@ -47,13 +47,13 @@ export function SupersededDeprecatedWarningBanner({ doc }: { doc: ContentDTO }) 
             <>As this {contentType} is unsupported, we do not recommend using it with your students.</>
           )}
         </div>
-      </RS.UncontrolledTooltip>
+      </UncontrolledTooltip>
     </React.Fragment>
   );
 
   // First check if question is deprecated, if so amalgamate deprecated and superseded messages
   return (
-    <RS.Alert color="warning">
+    <Alert color="warning">
       {isTutorOrAbove(user) && <strong>Teacher note: </strong>}
       {doc.deprecated ? (
         <>
@@ -61,14 +61,14 @@ export function SupersededDeprecatedWarningBanner({ doc }: { doc: ContentDTO }) 
           {supersededBy && (
             <>
               It has been replaced by{" "}
-              <RS.Button
+              <Button
                 role="link"
                 color="link"
                 className="align-baseline"
                 onClick={() => dispatch(goToSupersededByQuestion(doc))}
               >
                 this question
-              </RS.Button>
+              </Button>
               .
             </>
           )}{" "}
@@ -78,20 +78,20 @@ export function SupersededDeprecatedWarningBanner({ doc }: { doc: ContentDTO }) 
       supersededBy && !isStudent(user) ? (
         <>
           This question has been replaced by{" "}
-          <RS.Button
+          <Button
             role="link"
             color="link"
             className="align-baseline"
             onClick={() => dispatch(goToSupersededByQuestion(doc))}
           >
             this question
-          </RS.Button>
+          </Button>
           . {teacherMessage}
         </>
       ) : (
         // If neither deprecated or superseded, render nothing (although this should happen at the top of the component anyway)
         RenderNothing
       )}
-    </RS.Alert>
+    </Alert>
   );
 }

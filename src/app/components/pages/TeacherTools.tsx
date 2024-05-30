@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { getMyProgress, selectors, useAppDispatch, useAppSelector } from "../../state";
-import * as RS from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { PageFragment } from "../elements/PageFragment";
 import { isTeacherOrAbove } from "../../services";
 import { Link } from "react-router-dom";
 import { ActionCard } from "../elements/cards/ActionCard";
 import { LinkCard } from "../elements/cards/LinkCard";
+import { Button, Container, Row, Col, ListGroup, ListGroupItem } from "reactstrap";
 
 // TODO do we need a version of this for CS tutors?
 export const TeacherTools = () => {
@@ -24,16 +24,16 @@ export const TeacherTools = () => {
 
   const teacherUpgradeLink = (
     <div className="text-center">
-      <RS.Button size="lg" tag={Link} to="/pages/teacher_accounts" color="primary" outline>
+      <Button size="lg" tag={Link} to="/pages/teacher_accounts" color="primary" outline>
         Register as a Teacher
-      </RS.Button>
+      </Button>
     </div>
   );
   const registrationButton = (
     <div className="text-center">
-      <RS.Button size="lg" tag={Link} to={"/register"} color="primary" outline>
+      <Button size="lg" tag={Link} to={"/register"} color="primary" outline>
         Sign up
-      </RS.Button>
+      </Button>
     </div>
   );
   const achievementText = (verb: string, count: number, item: string) => {
@@ -46,30 +46,30 @@ export const TeacherTools = () => {
   };
 
   return (
-    <RS.Container className="teachers-page">
-      <RS.Row className="pb-4">
-        <RS.Col>
+    <Container className="teachers-page">
+      <Row className="pb-4">
+        <Col>
           <TitleAndBreadcrumb currentPageTitle={pageTitle} />
-        </RS.Col>
-      </RS.Row>
+        </Col>
+      </Row>
 
       {!(user && isTeacherOrAbove(user)) && (
-        <RS.Row>
-          <RS.Col md={{ size: 8, offset: 2 }} className="pt-4 pb-5 mb-5">
+        <Row>
+          <Col md={{ size: 8, offset: 2 }} className="pt-4 pb-5 mb-5">
             <PageFragment fragmentId="for_teachers_logged_out" />
             {user && user.loggedIn ? !isTeacherOrAbove(user) && teacherUpgradeLink : registrationButton}
-          </RS.Col>
-        </RS.Row>
+          </Col>
+        </Row>
       )}
 
       {isTeacherOrAbove(user) && (
-        <RS.Row>
-          <RS.Col>
+        <Row>
+          <Col>
             <h2 className="h-secondary h-m">Pick up where you left off</h2>
             <div>
-              <RS.Row>
-                <RS.ListGroup className="my-3 d-block d-md-flex flex-row flex-wrap align-items-stretch link-list bg-transparent">
-                  <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
+              <Row>
+                <ListGroup className="my-3 d-block d-md-flex flex-row flex-wrap align-items-stretch link-list bg-transparent">
+                  <ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                     <ActionCard
                       title="Create a group"
                       linkDestination="/groups"
@@ -82,9 +82,9 @@ export const TeacherTools = () => {
                     >
                       Create and alter groups on the manage groups page.
                     </ActionCard>
-                  </RS.ListGroupItem>
+                  </ListGroupItem>
 
-                  <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
+                  <ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                     <ActionCard
                       title="Set an assignment"
                       linkDestination="/set_assignments"
@@ -97,9 +97,9 @@ export const TeacherTools = () => {
                     >
                       Set more assignments from the set assignments page.
                     </ActionCard>
-                  </RS.ListGroupItem>
+                  </ListGroupItem>
 
-                  <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
+                  <ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                     <ActionCard
                       title="Create a gameboard"
                       linkDestination="/gameboard_builder"
@@ -112,15 +112,15 @@ export const TeacherTools = () => {
                     >
                       Create custom gameboards to set as assignments to your groups.
                     </ActionCard>
-                  </RS.ListGroupItem>
-                </RS.ListGroup>
-              </RS.Row>
+                  </ListGroupItem>
+                </ListGroup>
+              </Row>
             </div>
 
             <div className="pattern-06 pt-4 pb-5">
-              <RS.Row>
-                <RS.ListGroup className="mb-4 d-block d-md-flex flex-row align-items-stretch link-list bg-transparent">
-                  <RS.ListGroupItem className="bg-transparent">
+              <Row>
+                <ListGroup className="mb-4 d-block d-md-flex flex-row align-items-stretch link-list bg-transparent">
+                  <ListGroupItem className="bg-transparent">
                     <LinkCard
                       title="Group progress"
                       imageSource="/assets/card03.png"
@@ -129,9 +129,9 @@ export const TeacherTools = () => {
                     >
                       Review your groups&apos; progress on the work which you have assigned to them.
                     </LinkCard>
-                  </RS.ListGroupItem>
+                  </ListGroupItem>
 
-                  <RS.ListGroupItem className="bg-transparent">
+                  <ListGroupItem className="bg-transparent">
                     <LinkCard
                       title="CPD events"
                       imageSource="/assets/card02.png"
@@ -141,9 +141,9 @@ export const TeacherTools = () => {
                       Receive guidance on how to use isaaccomputerscience.org by attending our professional development
                       events.
                     </LinkCard>
-                  </RS.ListGroupItem>
+                  </ListGroupItem>
 
-                  <RS.ListGroupItem className="bg-transparent">
+                  <ListGroupItem className="bg-transparent">
                     <LinkCard
                       title="Topics"
                       imageSource="/assets/card01.png"
@@ -152,13 +152,13 @@ export const TeacherTools = () => {
                     >
                       Review the site&apos;s material arranged by topic.
                     </LinkCard>
-                  </RS.ListGroupItem>
-                </RS.ListGroup>
-              </RS.Row>
+                  </ListGroupItem>
+                </ListGroup>
+              </Row>
             </div>
-          </RS.Col>
-        </RS.Row>
+          </Col>
+        </Row>
       )}
-    </RS.Container>
+    </Container>
   );
 };

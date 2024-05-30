@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector } from "../../state";
 import { ShowLoading } from "../handlers/ShowLoading";
-import * as RS from "reactstrap";
 import {
   Button,
   Card,
@@ -16,6 +15,7 @@ import {
   Row,
   Spinner,
   Table,
+  UncontrolledTooltip,
 } from "reactstrap";
 import { BoardOrder, Boards } from "../../../IsaacAppTypes";
 import { GameboardDTO, RegisteredUserDTO } from "../../../IsaacApiTypes";
@@ -491,7 +491,7 @@ export const MyGameboards = () => {
                               <th className="text-center align-middle">Stages</th>
                               <th className="text-center align-middle" style={{ whiteSpace: "nowrap" }}>
                                 Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
-                                <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+                                <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                                   Practice:{" "}
                                   {difficultiesOrdered
                                     .slice(0, 2)
@@ -503,7 +503,7 @@ export const MyGameboards = () => {
                                     .slice(2)
                                     .map((d) => difficultyShortLabelMap[d])
                                     .join(", ")}
-                                </RS.UncontrolledTooltip>
+                                </UncontrolledTooltip>
                               </th>
                               <th className="text-center align-middle">Creator</th>
                               <th className="text-center align-middle pointer-cursor">

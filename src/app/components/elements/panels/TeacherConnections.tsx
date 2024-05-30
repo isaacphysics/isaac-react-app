@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import * as RS from "reactstrap";
 import { PotentialUser } from "../../../../IsaacAppTypes";
 import {
   AdminUserGetState,
@@ -17,6 +16,19 @@ import {
 } from "../../../state";
 import classnames from "classnames";
 import { extractTeacherName, isLoggedIn, isStudent, MEMBERSHIP_STATUS } from "../../../services";
+import {
+  Button,
+  CardBody,
+  Col,
+  Container,
+  Form,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  Row,
+  Table,
+  UncontrolledTooltip,
+} from "reactstrap";
 
 interface TeacherConnectionsProps {
   user: PotentialUser;
@@ -58,45 +70,45 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
   }
 
   return (
-    <RS.CardBody>
-      <RS.Container>
+    <CardBody>
+      <Container>
         <h3>
           <span>
             Teacher connections
             <span id="teacher-connections-title" className="icon-help" />
           </span>
-          <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
+          <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
             The teachers that you are connected to can view your Isaac assignment progress.
-          </RS.UncontrolledTooltip>
+          </UncontrolledTooltip>
         </h3>
 
-        <RS.Row>
-          <RS.Col lg={7}>
+        <Row>
+          <Col lg={7}>
             <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
             {/* TODO Need to handle nested form complaint */}
-            <RS.Form onSubmit={processToken}>
-              <RS.InputGroup>
-                <RS.Input
+            <Form onSubmit={processToken}>
+              <InputGroup>
+                <Input
                   type="text"
                   placeholder="Enter your code in here"
                   value={authToken || undefined}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                 />
-                <RS.InputGroupAddon addonType="append">
-                  <RS.Button
+                <InputGroupAddon addonType="append">
+                  <Button
                     onClick={processToken}
                     className="p-0 border-dark"
                     color="secondary"
                     disabled={editingOtherUser}
                   >
                     Connect
-                  </RS.Button>
-                </RS.InputGroupAddon>
-              </RS.InputGroup>
-            </RS.Form>
-          </RS.Col>
+                  </Button>
+                </InputGroupAddon>
+              </InputGroup>
+            </Form>
+          </Col>
 
-          <RS.Col lg={5} className="mt-4 mt-lg-0">
+          <Col lg={5} className="mt-4 mt-lg-0">
             <div className="connect-list">
               <h3>
                 <span className="icon-person-active" />
@@ -112,14 +124,14 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
                           <span id={`teacher-authorisation-${teacherAuthorisation.id}`}>
                             {extractTeacherName(teacherAuthorisation)}
                           </span>
-                          <RS.UncontrolledTooltip
+                          <UncontrolledTooltip
                             placement="bottom"
                             target={`teacher-authorisation-${teacherAuthorisation.id}`}
                           >
                             This user ({teacherAuthorisation.email}) has access to your data. To remove this access,
                             click &apos;Revoke&apos;.
-                          </RS.UncontrolledTooltip>
-                          <RS.Button
+                          </UncontrolledTooltip>
+                          <Button
                             color="link"
                             className="revoke-teacher"
                             disabled={editingOtherUser}
@@ -130,7 +142,7 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
                             }
                           >
                             Revoke
-                          </RS.Button>
+                          </Button>
                         </li>
                       </React.Fragment>
                     ))}
@@ -140,30 +152,30 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
                 )}
               </div>
             </div>
-          </RS.Col>
-        </RS.Row>
+          </Col>
+        </Row>
 
         {isLoggedIn(user) && !isStudent(user) && (
           <React.Fragment>
             <hr className="my-5" />
-            <RS.Row>
-              <RS.Col lg={7}>
+            <Row>
+              <Col lg={7}>
                 <h3>
                   <span>
                     Your student connections
                     <span id="student-connections-title" className="icon-help" />
                   </span>
-                  <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
+                  <UncontrolledTooltip placement="bottom" target="student-connections-title">
                     These are the students who have shared their Isaac data with you. These students are also able to
                     view your name and email address on their Teacher connections page.
-                  </RS.UncontrolledTooltip>
+                  </UncontrolledTooltip>
                 </h3>
                 <p>
                   You can invite students to share their Isaac data with you through the{" "}
                   <Link to="/groups">group management page</Link>.
                 </p>
-              </RS.Col>
-              <RS.Col lg={5}>
+              </Col>
+              <Col lg={5}>
                 <div className="connect-list">
                   <h3>
                     <span className="icon-person-active" /> Student connections{" "}
@@ -178,11 +190,11 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
                             <span id={`student-authorisation-${student.id}`}>
                               {student.givenName} {student.familyName}
                             </span>
-                            <RS.UncontrolledTooltip placement="bottom" target={`student-authorisation-${student.id}`}>
+                            <UncontrolledTooltip placement="bottom" target={`student-authorisation-${student.id}`}>
                               You have access to this user&apos;s data and they can see your name and email address. To
                               remove this access, click &apos;Remove&apos;.
-                            </RS.UncontrolledTooltip>
-                            <RS.Button
+                            </UncontrolledTooltip>
+                            <Button
                               color="link"
                               className="revoke-teacher"
                               disabled={editingOtherUser}
@@ -191,7 +203,7 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
                               }
                             >
                               Remove
-                            </RS.Button>
+                            </Button>
                           </li>
                         ))}
                     </ul>
@@ -202,7 +214,7 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
                   </div>
                   {studentAuthorisations && studentAuthorisations.length > 0 && (
                     <p className="remove-link">
-                      <RS.Button
+                      <Button
                         color="link"
                         onClick={() =>
                           user.loggedIn && user.id && dispatch(releaseAllAuthorisationsAfterPrompt(user.id))
@@ -210,27 +222,27 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
                         disabled={editingOtherUser}
                       >
                         Remove all
-                      </RS.Button>
+                      </Button>
                     </p>
                   )}
                 </div>
-              </RS.Col>
-            </RS.Row>
+              </Col>
+            </Row>
           </React.Fragment>
         )}
         <hr className="my-5" />
 
-        <RS.Row>
-          <RS.Col>
+        <Row>
+          <Col>
             <h3>
               <span>
                 Your group memberships
                 <span id="group-memberships-title" className="icon-help" />
               </span>
-              <RS.UncontrolledTooltip placement="bottom" target="group-memberships-title">
+              <UncontrolledTooltip placement="bottom" target="group-memberships-title">
                 These are the groups you are currently a member of. Groups on Isaac let teachers set assignments to
                 multiple students in one go.
-              </RS.UncontrolledTooltip>
+              </UncontrolledTooltip>
             </h3>
             <p>
               You can manage who is able to set you assignments by temporarily leaving a group. While you are inactive
@@ -238,7 +250,7 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
               group, ask your teacher to remove you.
             </p>
             <div className="my-groups-table-section overflow-auto">
-              <RS.Table borderless>
+              <Table borderless>
                 <thead>
                   <tr>
                     <th className="align-middle">Group name</th>
@@ -271,7 +283,7 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
                         <td>
                           {membership.membershipStatus === MEMBERSHIP_STATUS.ACTIVE && (
                             <React.Fragment>
-                              <RS.Button
+                              <Button
                                 color="link"
                                 disabled={editingOtherUser}
                                 onClick={() =>
@@ -282,21 +294,21 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
                                 }
                               >
                                 Leave group
-                              </RS.Button>
+                              </Button>
                               <span id={`leave-group-action-${membership.group.id}`} className="icon-help" />
-                              <RS.UncontrolledTooltip
+                              <UncontrolledTooltip
                                 placement="bottom"
                                 target={`leave-group-action-${membership.group.id}`}
                                 modifiers={{ preventOverflow: { boundariesElement: "viewport" } }}
                               >
                                 If you leave a group you will no longer receive notifications of new assignments.
-                              </RS.UncontrolledTooltip>
+                              </UncontrolledTooltip>
                             </React.Fragment>
                           )}
 
                           {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE && (
                             <React.Fragment>
-                              <RS.Button
+                              <Button
                                 color="link"
                                 disabled={editingOtherUser}
                                 onClick={() =>
@@ -307,29 +319,29 @@ export const TeacherConnections = ({ user, authToken, editingOtherUser, userToEd
                                 }
                               >
                                 Rejoin group
-                              </RS.Button>
+                              </Button>
                               <span id={`rejoin-group-action-${membership.group.id}`} className="icon-help" />
-                              <RS.UncontrolledTooltip
+                              <UncontrolledTooltip
                                 placement="bottom"
                                 target={`rejoin-group-action-${membership.group.id}`}
                                 modifiers={{ preventOverflow: { boundariesElement: "viewport" } }}
                               >
                                 If you rejoin a group you will see all the assignments set since the group was created.
-                              </RS.UncontrolledTooltip>
+                              </UncontrolledTooltip>
                             </React.Fragment>
                           )}
                         </td>
                       </tr>
                     ))}
                 </tbody>
-              </RS.Table>
+              </Table>
             </div>
             {groupMemberships && groupMemberships.length === 0 && (
               <p className="teachers-connected text-center">You are not a member of any groups.</p>
             )}
-          </RS.Col>
-        </RS.Row>
-      </RS.Container>
-    </RS.CardBody>
+          </Col>
+        </Row>
+      </Container>
+    </CardBody>
   );
 };

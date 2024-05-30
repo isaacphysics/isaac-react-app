@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { AppState, getAdminSiteStats, useAppDispatch, useAppSelector } from "../../state";
-import * as RS from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { asPercentage } from "../../services";
+import { Container, Card, CardBody, Row, Col } from "reactstrap";
 
 function addTotalToMapOfCounts(counts: { [key: string]: number }) {
   counts["TOTAL"] = 0;
@@ -35,17 +35,17 @@ export const AdminStats = () => {
   }
 
   return (
-    <RS.Container id="admin-stats-page">
+    <Container id="admin-stats-page">
       <TitleAndBreadcrumb currentPageTitle="Isaac statistics" breadcrumbTitleOverride="Admin statistics" />
 
       <ShowLoading until={adminStats}>
         {adminStats && (
           <React.Fragment>
             <div className="py-3">A high-level overview of the users and activity on the platform:</div>
-            <RS.Card className="mb-5 px-3 pt-1">
-              <RS.CardBody>
-                <RS.Row>
-                  <RS.Col>
+            <Card className="mb-5 px-3 pt-1">
+              <CardBody>
+                <Row>
+                  <Col>
                     <strong>Users:</strong>
                     <ul className="list-unstyled mb-5">
                       <li>
@@ -115,8 +115,8 @@ export const AdminStats = () => {
                       <li>Total Question Attempts: {(adminStats.answeredQuestionEvents || 0).toLocaleString()}</li>
                       <li>Concept Page Views: {(adminStats.viewConceptEvents || 0).toLocaleString()}</li>
                     </ul>
-                  </RS.Col>
-                  <RS.Col>
+                  </Col>
+                  <Col>
                     <strong>Last Seen</strong>
                     <ul className="list-unstyled">
                       <li>
@@ -172,13 +172,13 @@ export const AdminStats = () => {
                         </ul>
                       </li>
                     </ul>
-                  </RS.Col>
-                </RS.Row>
-              </RS.CardBody>
-            </RS.Card>
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
           </React.Fragment>
         )}
       </ShowLoading>
-    </RS.Container>
+    </Container>
   );
 };

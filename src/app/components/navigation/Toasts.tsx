@@ -1,15 +1,15 @@
 import React from "react";
 import { hideToast, selectors, useAppDispatch, useAppSelector } from "../../state";
-import * as RS from "reactstrap";
-import { Toast } from "../../../IsaacAppTypes";
+import { Toast as ToastTypes } from "../../../IsaacAppTypes";
+import { Toast, ToastBody, ToastHeader } from "reactstrap";
 
-export const FAILURE_TOAST: Toast = {
+export const FAILURE_TOAST: ToastTypes = {
   color: "danger",
   title: "Validation error",
   timeout: 5000,
   body: "Required information is not present.",
 };
-export const SUCCESS_TOAST: Toast = {
+export const SUCCESS_TOAST: ToastTypes = {
   color: "success",
   title: "Action completed",
   timeout: 5000,
@@ -22,21 +22,21 @@ export const Toasts = () => {
   return (
     <div className="toasts-container">
       {toasts.map((toast) => (
-        <RS.Toast key={toast.id} isOpen={toast.showing}>
-          <RS.ToastHeader
+        <Toast key={toast.id} isOpen={toast.showing}>
+          <ToastHeader
             icon={toast.color}
             className="py-2 px-3"
             toggle={toast.closable ? () => toast.id && dispatch(hideToast(toast.id)) : undefined}
           >
             <span className={`pl-1 toast-heading text-${toast.color}`}>{toast.title}</span>
-          </RS.ToastHeader>
+          </ToastHeader>
           {toast.body && (
-            <RS.ToastBody className="p-3">
+            <ToastBody className="p-3">
               {toast.body}
               {toast.buttons && <div className="text-right">{toast.buttons}</div>}
-            </RS.ToastBody>
+            </ToastBody>
           )}
-        </RS.Toast>
+        </Toast>
       ))}
     </div>
   );

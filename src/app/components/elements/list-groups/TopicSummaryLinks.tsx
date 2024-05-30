@@ -1,5 +1,4 @@
 import React from "react";
-import * as RS from "reactstrap";
 import { ContentSummaryDTO } from "../../../../IsaacApiTypes";
 import {
   audienceStyle,
@@ -15,13 +14,14 @@ import { Link } from "react-router-dom";
 import { selectors, useAppSelector } from "../../../state";
 import classNames from "classnames";
 import { Markup } from "../markup";
+import { Button, ListGroup, ListGroupItem, UncontrolledTooltip } from "reactstrap";
 
 export function TopicSummaryLinks({ items, search }: { items: ContentSummaryDTO[]; search?: string }) {
   const userContext = useUserContext();
   const user = useAppSelector(selectors.user.orNull);
 
   return (
-    <RS.ListGroup className="mt-3 link-list list-group-links">
+    <ListGroup className="mt-3 link-list list-group-links">
       {items
         // For CS we want relevant sections to appear first
         .sort((itemA, itemB) => {
@@ -40,8 +40,8 @@ export function TopicSummaryLinks({ items, search }: { items: ContentSummaryDTO[
 
         // Render remaining items
         .map((item, index) => (
-          <RS.ListGroupItem key={item.id} className="topic-summary-link">
-            <RS.Button
+          <ListGroupItem key={item.id} className="topic-summary-link">
+            <Button
               tag={Link}
               to={{ pathname: `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`, search }}
               block
@@ -63,15 +63,15 @@ export function TopicSummaryLinks({ items, search }: { items: ContentSummaryDTO[
                 {item.deEmphasised && (
                   <div className="ml-auto mr-3 d-flex align-items-center">
                     <span id={`audience-help-${index}`} className="icon-help mx-1" />
-                    <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${index}`}>
+                    <UncontrolledTooltip placement="bottom" target={`audience-help-${index}`}>
                       {`This content has ${notRelevantMessage(userContext)}.`}
-                    </RS.UncontrolledTooltip>
+                    </UncontrolledTooltip>
                   </div>
                 )}
               </div>
-            </RS.Button>
-          </RS.ListGroupItem>
+            </Button>
+          </ListGroupItem>
         ))}
-    </RS.ListGroup>
+    </ListGroup>
   );
 }

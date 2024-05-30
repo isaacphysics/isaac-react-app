@@ -8,7 +8,6 @@ import {
   useAppSelector,
 } from "../../../state";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
-import * as RS from "reactstrap";
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
 import { TitleAndBreadcrumb } from "../../elements/TitleAndBreadcrumb";
@@ -25,6 +24,7 @@ import {
 } from "../../../services";
 import { Tabs } from "../../elements/Tabs";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
+import { Card, CardBody, Button, Alert, Container, Input, ListGroup, ListGroupItem } from "reactstrap";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
   user: RegisteredUserDTO;
@@ -65,8 +65,8 @@ function QuizAssignment({ user, assignment }: QuizAssignmentProps) {
   const isCancelling = "cancelling" in assignment && (assignment as { cancelling: boolean }).cancelling;
   return (
     <div className="p-2">
-      <RS.Card className="card-neat">
-        <RS.CardBody>
+      <Card className="card-neat">
+        <CardBody>
           <h4 className="border-bottom pb-3 mb-3">{assignment.quizSummary?.title || assignment.quizId}</h4>
 
           <p>
@@ -89,7 +89,7 @@ function QuizAssignment({ user, assignment }: QuizAssignmentProps) {
           </p>
 
           <div className="mt-4 text-right">
-            <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1">
+            <Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1">
               {isCancelling ? (
                 <>
                   <IsaacSpinner size="sm" /> Cancelling...
@@ -97,8 +97,8 @@ function QuizAssignment({ user, assignment }: QuizAssignmentProps) {
               ) : (
                 "Cancel test"
               )}
-            </RS.Button>
-            <RS.Button
+            </Button>
+            <Button
               tag={Link}
               to={`/quiz/assignment/${assignment.id}/feedback`}
               disabled={isCancelling}
@@ -107,10 +107,10 @@ function QuizAssignment({ user, assignment }: QuizAssignmentProps) {
               className="ml-1"
             >
               View results
-            </RS.Button>
+            </Button>
           </div>
-        </RS.CardBody>
-      </RS.Card>
+        </CardBody>
+      </Card>
     </div>
   );
 }
@@ -159,7 +159,7 @@ const SetQuizzesPageComponent = ({ user, location }: SetQuizzesPageProps) => {
   );
 
   return (
-    <RS.Container>
+    <Container>
       <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} />
       <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab}>
         {{
@@ -168,7 +168,7 @@ const SetQuizzesPageComponent = ({ user, location }: SetQuizzesPageProps) => {
               {filteredQuizzes && (
                 <>
                   <p>The following tests are available to set to your groups.</p>
-                  <RS.Input
+                  <Input
                     id="available-quizzes-title-filter"
                     type="search"
                     className="mb-4"
@@ -182,20 +182,20 @@ const SetQuizzesPageComponent = ({ user, location }: SetQuizzesPageProps) => {
                       <em>There are no tests you can set which match your search term.</em>
                     </p>
                   )}
-                  <RS.ListGroup className="mb-2 quiz-list">
+                  <ListGroup className="mb-2 quiz-list">
                     {filteredQuizzes.map((quiz) => (
-                      <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                      <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                         <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
                           <span className="mb-2 mb-sm-0">{quiz.title}</span>
                           {roleVisibilitySummary(quiz)}
                           {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                           <Spacer />
-                          <RS.Button
+                          <Button
                             className={below["md"](deviceSize) ? "btn-sm" : ""}
                             onClick={() => dispatch(showQuizSettingModal(quiz))}
                           >
                             Set test
-                          </RS.Button>
+                          </Button>
                         </div>
                         <div className="d-none d-md-flex align-items-center">
                           <Link
@@ -205,9 +205,9 @@ const SetQuizzesPageComponent = ({ user, location }: SetQuizzesPageProps) => {
                             <span>Preview</span>
                           </Link>
                         </div>
-                      </RS.ListGroupItem>
+                      </ListGroupItem>
                     ))}
-                  </RS.ListGroup>
+                  </ListGroup>
                 </>
               )}
             </ShowLoading>
@@ -217,9 +217,9 @@ const SetQuizzesPageComponent = ({ user, location }: SetQuizzesPageProps) => {
             <ShowLoading
               until={quizAssignments}
               ifNotFound={
-                <RS.Alert color="warning">
+                <Alert color="warning">
                   Tests you have assigned have failed to load, please try refreshing the page.
-                </RS.Alert>
+                </Alert>
               }
             >
               {quizAssignments && quizAssignments !== NOT_FOUND && (
@@ -238,7 +238,7 @@ const SetQuizzesPageComponent = ({ user, location }: SetQuizzesPageProps) => {
           ),
         }}
       </Tabs>
-    </RS.Container>
+    </Container>
   );
 };
 

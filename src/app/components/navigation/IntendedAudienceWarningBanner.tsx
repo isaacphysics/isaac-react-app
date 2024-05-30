@@ -1,9 +1,9 @@
 import React from "react";
-import * as RS from "reactstrap";
 import { ContentBaseDTO } from "../../../IsaacApiTypes";
 import { isIntendedAudience, notRelevantMessage, useUserContext } from "../../services";
 import { selectors, useAppSelector } from "../../state";
 import { RenderNothing } from "../elements/RenderNothing";
+import { Alert } from "reactstrap";
 
 export function IntendedAudienceWarningBanner({ doc }: { doc: ContentBaseDTO }) {
   const user = useAppSelector(selectors.user.orNull);
@@ -15,11 +15,11 @@ export function IntendedAudienceWarningBanner({ doc }: { doc: ContentBaseDTO }) 
   }
 
   return (
-    <RS.Alert color="warning" className={"no-print"}>
+    <Alert color="warning" className={"no-print"}>
       <strong>Note: </strong>
       {`The content on this page has ${notRelevantMessage(
         userContext,
       )}. You can change your viewing preferences by updating your profile.`}
-    </RS.Alert>
+    </Alert>
   );
 }

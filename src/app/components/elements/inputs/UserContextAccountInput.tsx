@@ -11,8 +11,7 @@ import {
   isTutorOrAbove,
   STAGE,
 } from "../../../services";
-import * as RS from "reactstrap";
-import { CustomInput, Input } from "reactstrap";
+import { Col, CustomInput, FormGroup, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
 import { UserContext } from "../../../../IsaacApiTypes";
 import { v4 as uuid_v4 } from "uuid";
 import { selectors, useAppSelector } from "../../../state";
@@ -41,7 +40,7 @@ function UserContextRow({
   const onlyUCWithThisStage = existingUserContexts.filter((uc) => uc.stage === userContext.stage).length === 1;
   return (
     <>
-      <RS.Col xs={5} md={5} lg={4} className="pr-1">
+      <Col xs={5} md={5} lg={4} className="pr-1">
         {/* Stage Selector */}
         <Input
           className="form-control w-100 d-inline-block pl-1 pr-10"
@@ -80,8 +79,8 @@ function UserContextRow({
             </option>
           ))}
         </Input>
-      </RS.Col>
-      <RS.Col xs={5} md={5} lg={4} className="pl-1">
+      </Col>
+      <Col xs={5} md={5} lg={4} className="pl-1">
         {/* Exam Board Selector */}
         <Input
           className="form-control w-100 d-inline-block pl-1 pr-10 ml-2"
@@ -112,7 +111,7 @@ function UserContextRow({
             </option>
           ))}
         </Input>
-      </RS.Col>
+      </Col>
     </>
   );
 }
@@ -140,12 +139,12 @@ export function UserContextAccountInput({
 
   return (
     <>
-      <RS.Label htmlFor="user-context-selector">
+      <Label htmlFor="user-context-selector">
         <span>I am {studyingOrTeaching}</span>
-      </RS.Label>
+      </Label>
       <React.Fragment>
         <span id={`show-me-content-${componentId}`} className="icon-help" />
-        <RS.UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
+        <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
           {tutorOrAbove ? (
             <>
               Add a stage and examination board for each qualification you are teaching.
@@ -159,7 +158,7 @@ export function UserContextAccountInput({
               relevant for the qualification you have chosen.
             </>
           )}
-        </RS.UncontrolledTooltip>
+        </UncontrolledTooltip>
       </React.Fragment>
       <div id="user-context-selector">
         {userContexts.map((userContext, index) => {
@@ -171,8 +170,8 @@ export function UserContextAccountInput({
             userContexts.findIndex((p) => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1;
 
           return (
-            <RS.FormGroup key={index}>
-              <RS.Row>
+            <FormGroup key={`${userContext.stage}-${userContext.examBoard}`}>
+              <Row>
                 <UserContextRow
                   isStudent={!tutorOrAbove}
                   userContext={userContext}
@@ -194,11 +193,11 @@ export function UserContextAccountInput({
                     ×
                   </button>
                 )}
-              </RS.Row>
+              </Row>
 
               {showPlusOption && (
-                <RS.Row className="mt-3 ml-0">
-                  <RS.Label className="vertical-center">
+                <Row className="mt-3 ml-0">
+                  <Label className="vertical-center">
                     <button
                       type="button"
                       aria-label="Add stage"
@@ -218,13 +217,13 @@ export function UserContextAccountInput({
                       </svg>
                     </button>
                     <span className="ml-2 mt-1 pointer-cursor">Add another stage</span>
-                  </RS.Label>
-                </RS.Row>
+                  </Label>
+                </Row>
               )}
 
               {index === userContexts.length - 1 &&
                 userContexts.findIndex((p) => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1 && (
-                  <RS.Label className="m-0 mt-3">
+                  <Label className="m-0 mt-3">
                     <CustomInput
                       type="checkbox"
                       id={`hide-content-check-${componentId}`}
@@ -242,14 +241,14 @@ export function UserContextAccountInput({
                       Show other content that is not for my selected exam board.{" "}
                       <span id={`show-other-content-${componentId}`} className="icon-help ml-1" />
                     </span>
-                    <RS.UncontrolledTooltip placement="bottom" target={`show-other-content-${componentId}`}>
+                    <UncontrolledTooltip placement="bottom" target={`show-other-content-${componentId}`}>
                       {tutorOrAbove
                         ? "If you select this box, additional content that is not intended for your chosen stage and examination board will be shown (e.g. you will also see A level content in your GCSE view)."
                         : "If you select this box, additional content that is not intended for your chosen stage and examination board will be shown (e.g. you will also see A level content if you are studying GCSE)."}
-                    </RS.UncontrolledTooltip>
-                  </RS.Label>
+                    </UncontrolledTooltip>
+                  </Label>
                 )}
-            </RS.FormGroup>
+            </FormGroup>
           );
         })}
       </div>

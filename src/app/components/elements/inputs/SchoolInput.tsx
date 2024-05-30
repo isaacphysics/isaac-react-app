@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
-import * as RS from "reactstrap";
 import { School, ValidationUser } from "../../../../IsaacAppTypes";
 import { api, schoolNameWithPostcode, throttledSchoolSearch, validateUserSchool } from "../../../services";
 import { Immutable } from "immer";
+import { CustomInput, FormGroup, Label } from "reactstrap";
 
 interface SchoolInputProps {
   userToUpdate: Immutable<ValidationUser>;
@@ -76,8 +76,8 @@ export const SchoolInput = ({
 
   const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
   return (
-    <RS.FormGroup className={`school ${className}`}>
-      <RS.Label htmlFor={`school-input-${randomNumber}`}>My current school or college</RS.Label>
+    <FormGroup className={`school ${className}`}>
+      <Label htmlFor={`school-input-${randomNumber}`}>My current school or college</Label>
       {userToUpdate.schoolOther !== NOT_APPLICABLE && (
         <React.Fragment>
           <AsyncCreatableSelect
@@ -99,7 +99,7 @@ export const SchoolInput = ({
       {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) ||
         userToUpdate.schoolOther == NOT_APPLICABLE) && (
         <div className={(userToUpdate.schoolOther === NOT_APPLICABLE ? "mt-1" : "mt-3") + " d-flex"}>
-          <RS.CustomInput
+          <CustomInput
             type="checkbox"
             id={`${idPrefix}-not-associated-with-school`}
             checked={userToUpdate.schoolOther === NOT_APPLICABLE}
@@ -122,6 +122,6 @@ export const SchoolInput = ({
       <div className="invalid-school">
         {submissionAttempted && !validateUserSchool(userToUpdate) && "Please specify a school or college"}
       </div>
-    </RS.FormGroup>
+    </FormGroup>
   );
 };

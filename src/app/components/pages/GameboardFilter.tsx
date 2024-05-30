@@ -8,7 +8,6 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../state";
-import * as RS from "reactstrap";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { Link, RouteComponentProps, useHistory, withRouter } from "react-router-dom";
 import {
@@ -40,6 +39,7 @@ import { History } from "history";
 import { IsaacSpinner } from "../handlers/IsaacSpinner";
 import { CanonicalHrefElement } from "../navigation/CanonicalHrefElement";
 import { MetaDescription } from "../elements/MetaDescription";
+import { Row, Col, Label, UncontrolledTooltip, Button, Card, Container, Input, Alert } from "reactstrap";
 
 interface Tier {
   id: string;
@@ -231,26 +231,26 @@ const CSFilter = ({
     <>
       {/* CS-specific metadata: */}
       <MetaDescription description={metaDescriptionCS} />
-      <RS.Row>
-        <RS.Col md={6}>
-          <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
+      <Row>
+        <Col md={6}>
+          <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
             I am interested in stage...
             <span id={`stage-help-tooltip`} className="icon-help ml-1" />
-            <RS.UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
+            <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
               {"Find questions that are suitable for this stage of school learning."}
-            </RS.UncontrolledTooltip>
-          </RS.Label>
+            </UncontrolledTooltip>
+          </Label>
           <Select
             id="stage-selector"
             onChange={selectOnChange(setStages, false)}
             value={stages}
             options={getFilteredStageOptions()}
           />
-        </RS.Col>
-        <RS.Col md={6}>
-          <RS.Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
+        </Col>
+        <Col md={6}>
+          <Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
             and exam board...
-          </RS.Label>
+          </Label>
           <Select
             inputId="exam-boards"
             isClearable
@@ -259,14 +259,14 @@ const CSFilter = ({
             options={getFilteredExamBoardOptions({ byStages: stages.map((item) => item.value as STAGE) })}
             onChange={selectOnChange(setExamBoards, false)}
           />
-        </RS.Col>
-      </RS.Row>
-      <RS.Row className="mt-lg-3 mb-sm-3">
-        <RS.Col md={6}>
-          <RS.Label className={`mt-2 mt-lg-0`} htmlFor="difficulty-selector">
+        </Col>
+      </Row>
+      <Row className="mt-lg-3 mb-sm-3">
+        <Col md={6}>
+          <Label className={`mt-2 mt-lg-0`} htmlFor="difficulty-selector">
             with difficulty levels...
             <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
-            <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom">
+            <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom">
               Practice questions require you to directly apply a single concept:
               <br />
               P1 questions cover a single foundation concept.
@@ -278,8 +278,8 @@ const CSFilter = ({
               C1 questions cover more than one foundation concept.
               <br />
               C2 questions cover more than one concept which must be selected and combined with skill.
-            </RS.UncontrolledTooltip>
-          </RS.Label>
+            </UncontrolledTooltip>
+          </Label>
           <Select
             id="difficulty-selector"
             isClearable
@@ -288,11 +288,11 @@ const CSFilter = ({
             value={difficulties}
             onChange={selectOnChange(setDifficulties, false)}
           />
-        </RS.Col>
-        <RS.Col md={6}>
-          <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">
+        </Col>
+        <Col md={6}>
+          <Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">
             from topics...
-          </RS.Label>
+          </Label>
           <Select
             inputId="question-search-topic"
             isMulti
@@ -307,13 +307,13 @@ const CSFilter = ({
               return selectOnChange(setTierSelection, false)(v);
             }}
           />
-        </RS.Col>
-      </RS.Row>
-      <RS.Row>
-        <RS.Col md={12}>
-          <RS.Label className={`mt-2 mt-lg-0`} htmlFor="concepts">
+        </Col>
+      </Row>
+      <Row>
+        <Col md={12}>
+          <Label className={`mt-2 mt-lg-0`} htmlFor="concepts">
             and concepts...
-          </RS.Label>
+          </Label>
           {concepts?.filter((c) => c.label === QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER).length === 0 ? (
             <Select
               inputId="concepts"
@@ -328,8 +328,8 @@ const CSFilter = ({
           ) : (
             <IsaacSpinner />
           )}
-        </RS.Col>
-      </RS.Row>
+        </Col>
+      </Row>
     </>
   );
 };
@@ -531,28 +531,28 @@ export const GameboardFilter = withRouter(({ location }: RouteComponentProps) =>
   }
 
   return (
-    <RS.Container id="gameboard-generator" className="mb-5">
+    <Container id="gameboard-generator" className="mb-5">
       <TitleAndBreadcrumb currentPageTitle="Question Finder" help={pageHelp} />
       <CanonicalHrefElement />
 
-      <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
+      <Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
         {/* Filter Summary */}
 
         {filterExpanded ? (
-          <RS.Row className={"mb-3"}>
-            <RS.Col>
+          <Row className={"mb-3"}>
+            <Col>
               <span>
                 Specify your search criteria and we will generate a random selection of up to 10 questions for your
                 chosen filter(s). Shuffle the questions to get a new random selection.
               </span>
-            </RS.Col>
-          </RS.Row>
+            </Col>
+          </Row>
         ) : (
-          <RS.Col xs={12} className={`text-center mt-3 mb-4 m-sm-0`}>
-            <RS.Button size="sm" color="primary" outline onClick={() => setFilterExpanded(true)}>
+          <Col xs={12} className={`text-center mt-3 mb-4 m-sm-0`}>
+            <Button size="sm" color="primary" outline onClick={() => setFilterExpanded(true)}>
               Edit question filters ✎
-            </RS.Button>
-          </RS.Col>
+            </Button>
+          </Col>
         )}
 
         {/* Filter */}
@@ -567,38 +567,38 @@ export const GameboardFilter = withRouter(({ location }: RouteComponentProps) =>
         )}
 
         {/* Buttons */}
-        <RS.Row className={filterExpanded ? "mt-4" : ""}>
-          <RS.Col>
+        <Row className={filterExpanded ? "mt-4" : ""}>
+          <Col>
             {boardStack.length > 0 && (
-              <RS.Button size="sm" color="primary" outline onClick={previousBoard}>
+              <Button size="sm" color="primary" outline onClick={previousBoard}>
                 <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
-              </RS.Button>
+              </Button>
             )}
-          </RS.Col>
-          <RS.Col className="text-right">
-            <RS.Button size="sm" color="primary" outline onClick={refresh}>
+          </Col>
+          <Col className="text-right">
+            <Button size="sm" color="primary" outline onClick={refresh}>
               <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
-            </RS.Button>
-          </RS.Col>
-        </RS.Row>
-        <RS.Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
+            </Button>
+          </Col>
+        </Row>
+        <Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
           Scroll to Questions...
-        </RS.Button>
-        <RS.Button
+        </Button>
+        <Button
           color="link"
           id="expand-filter-button"
           onClick={() => setFilterExpanded(!filterExpanded)}
           className={filterExpanded ? "open" : ""}
           aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
         />
-      </RS.Card>
+      </Card>
 
       {isFound(gameboard) && (
         <div ref={gameboardRef} className="row mt-4 mb-3">
           <>
-            <RS.Col xs={12} lg={"auto"}>
+            <Col xs={12} lg={"auto"}>
               {isEditingTitle ? (
-                <RS.Input
+                <Input
                   defaultValue={customBoardTitle ?? gameboard?.title}
                   onChange={(e) => setPendingCustomBoardTitle(e.target.value)}
                   className={"mb-2 mb-lg-0"}
@@ -606,8 +606,8 @@ export const GameboardFilter = withRouter(({ location }: RouteComponentProps) =>
               ) : (
                 <h3>{customBoardTitle ?? gameboard?.title}</h3>
               )}
-            </RS.Col>
-            <RS.Col
+            </Col>
+            <Col
               xs={12}
               sm={isEditingTitle ? 7 : 4}
               lg={isEditingTitle ? 4 : 2}
@@ -615,7 +615,7 @@ export const GameboardFilter = withRouter(({ location }: RouteComponentProps) =>
             >
               {isEditingTitle ? (
                 <>
-                  <RS.Button
+                  <Button
                     size={"sm"}
                     color="secondary"
                     onClick={() => {
@@ -627,13 +627,13 @@ export const GameboardFilter = withRouter(({ location }: RouteComponentProps) =>
                     }}
                   >
                     Save title
-                  </RS.Button>
-                  <RS.Button size={"sm"} color="secondary" className={"ml-2"} onClick={() => setIsEditingTitle(false)}>
+                  </Button>
+                  <Button size={"sm"} color="secondary" className={"ml-2"} onClick={() => setIsEditingTitle(false)}>
                     Cancel
-                  </RS.Button>
+                  </Button>
                 </>
               ) : (
-                <RS.Button
+                <Button
                   size={"sm"}
                   color="secondary"
                   onClick={() => {
@@ -642,20 +642,20 @@ export const GameboardFilter = withRouter(({ location }: RouteComponentProps) =>
                   }}
                 >
                   Edit title
-                </RS.Button>
+                </Button>
               )}
-            </RS.Col>
+            </Col>
           </>
-          <RS.Col xs={8} lg={"auto"} className="ml-auto text-right">
-            <RS.Button
+          <Col xs={8} lg={"auto"} className="ml-auto text-right">
+            <Button
               tag={Link}
               color="secondary"
               to={`/add_gameboard/${gameboard.id}/${customBoardTitle ?? gameboard.title}`}
               onClick={() => setAssignBoardPath("/set_assignments")}
             >
               Save to My&nbsp;Gameboards
-            </RS.Button>
-          </RS.Col>
+            </Button>
+          </Col>
         </div>
       )}
 
@@ -663,9 +663,9 @@ export const GameboardFilter = withRouter(({ location }: RouteComponentProps) =>
         <ShowLoading
           until={gameboard}
           thenRender={(gameboard) => <GameboardViewer gameboard={gameboard} />}
-          ifNotFound={<RS.Alert color="warning">No questions found matching the criteria.</RS.Alert>}
+          ifNotFound={<Alert color="warning">No questions found matching the criteria.</Alert>}
         />
       </div>
-    </RS.Container>
+    </Container>
   );
 });

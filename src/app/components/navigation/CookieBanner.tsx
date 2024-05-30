@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import * as RS from "reactstrap";
 import Cookies from "js-cookie";
 import { logAction, useAppDispatch } from "../../state";
+import { Button, Col, Container, Row } from "reactstrap";
 
 const COOKIE_COOKIE = "isaacCookiesAccepted";
 
@@ -22,9 +22,9 @@ export const CookieBanner = () => {
 
   return show ? (
     <div className="banner d-print-none" id="cookie-banner">
-      <RS.Container className="py-3">
-        <RS.Row style={{ alignItems: "center" }}>
-          <RS.Col xs={12} sm={2} md={1}>
+      <Container className="py-3">
+        <Row style={{ alignItems: "center" }}>
+          <Col xs={12} sm={2} md={1}>
             <h3 className="text-center">
               <span role="presentation" aria-labelledby="cookies-heading">
                 ℹ
@@ -33,27 +33,27 @@ export const CookieBanner = () => {
                 &nbsp;Cookies
               </span>
             </h3>
-          </RS.Col>
-          <RS.Col xs={12} sm={10} md={8}>
+          </Col>
+          <Col xs={12} sm={10} md={8}>
             <small>
               We use cookies to ensure you get the best experience on our website.
               <br />
               View our <Link to="/privacy">privacy policy</Link> and <Link to="/cookies">cookie policy</Link> for
               details.
             </small>
-          </RS.Col>
-          <RS.Col xs={12} md={3} className="text-center">
-            <RS.Button
+          </Col>
+          <Col xs={12} md={3} className="text-center">
+            <Button
               color="primary"
               outline
               className="mt-3 mb-2 d-block d-md-inline-block banner-button"
               onClick={clickDismiss}
             >
               Accept
-            </RS.Button>
-          </RS.Col>
-        </RS.Row>
-      </RS.Container>
+            </Button>
+          </Col>
+        </Row>
+      </Container>
     </div>
   ) : null;
 };

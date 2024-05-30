@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import * as RS from "reactstrap";
+import { Button, Card, CardBody, Collapse, Row, UncontrolledTooltip } from "reactstrap";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import {
   ALPHABET,
@@ -134,7 +134,7 @@ export const Accordion = withRouter(
     return (
       <div className="accordion">
         <div className="accordion-header">
-          <RS.Button
+          <Button
             id={anchorId || ""}
             block
             color="link"
@@ -176,7 +176,7 @@ export const Accordion = withRouter(
               </span>
             )}
             <div className="accordion-title pl-3">
-              <RS.Row>
+              <Row>
                 {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
                 <span className="accordion-part p-3 text-secondary">
                   Part {ALPHABET[(index as number) % ALPHABET.length]}{" "}
@@ -189,35 +189,35 @@ export const Accordion = withRouter(
                 {deEmphasised && (
                   <div className="ml-auto mr-3 d-flex align-items-center">
                     <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
-                    <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
+                    <UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
                       {`This content has ${notRelevantMessage(userContext)}.`}
-                    </RS.UncontrolledTooltip>
+                    </UncontrolledTooltip>
                   </div>
                 )}
                 {typeof disabled === "string" && disabled.length > 0 && (
                   <div className={"p-3"}>
                     <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
-                    <RS.UncontrolledTooltip
+                    <UncontrolledTooltip
                       placement="right"
                       target={`disabled-tooltip-${componentId}`}
                       modifiers={{ preventOverflow: { boundariesElement: "viewport" } }}
                     >
                       {disabled}
-                    </RS.UncontrolledTooltip>
+                    </UncontrolledTooltip>
                   </div>
                 )}
-              </RS.Row>
+              </Row>
             </div>
-          </RS.Button>
+          </Button>
         </div>
-        <RS.Collapse isOpen={isOpen} className="mt-1">
+        <Collapse isOpen={isOpen} className="mt-1">
           <AccordionSectionContext.Provider value={{ id, clientId: clientId.current, open: isOpen }}>
-            <RS.Card>
-              <RS.CardBody>{children}</RS.CardBody>
+            <Card>
+              <CardBody>{children}</CardBody>
               <ReportAccordionButton pageId={getPage()?.id} sectionId={id} sectionTitle={trustedTitle} />
-            </RS.Card>
+            </Card>
           </AccordionSectionContext.Provider>
-        </RS.Collapse>
+        </Collapse>
       </div>
     );
   },

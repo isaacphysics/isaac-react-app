@@ -1,5 +1,5 @@
 import React from "react";
-import * as RS from "reactstrap";
+import { CustomInput, FormGroup, Label } from "reactstrap";
 
 interface TrueFalseRadioProps {
   id: string;
@@ -23,13 +23,13 @@ export function TrueFalseRadioInput({
   const invalid = submissionAttempted && typeof stateObject?.[propertyName] !== "boolean";
 
   return (
-    <RS.FormGroup>
+    <FormGroup>
       <div className="d-flex flex-nowrap">
-        <RS.Label htmlFor={`${id}-t`} className="w-50 text-right text-nowrap pr-2">
+        <Label htmlFor={`${id}-t`} className="w-50 text-right text-nowrap pr-2">
           {trueLabel}
           <span className="sr-only"> for {propertyName}</span>
-        </RS.Label>
-        <RS.CustomInput
+        </Label>
+        <CustomInput
           id={`${id}-t`}
           type="radio"
           name={id}
@@ -44,11 +44,11 @@ export function TrueFalseRadioInput({
         />
       </div>
       <div className="d-flex flex-nowrap">
-        <RS.Label htmlFor={`${id}-f`} className="w-50 text-right text-nowrap pr-2">
+        <Label htmlFor={`${id}-f`} className="w-50 text-right text-nowrap pr-2">
           {falseLabel}
           <span className="sr-only"> for {propertyName}</span>
-        </RS.Label>
-        <RS.CustomInput
+        </Label>
+        <CustomInput
           id={`${id}-f`}
           type="radio"
           name={id}
@@ -67,6 +67,6 @@ export function TrueFalseRadioInput({
           required
         </div>
       )}
-    </RS.FormGroup>
+    </FormGroup>
   );
 }

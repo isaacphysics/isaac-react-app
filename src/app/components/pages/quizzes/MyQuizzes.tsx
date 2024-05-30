@@ -8,7 +8,6 @@ import {
   useAppSelector,
 } from "../../../state";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
-import * as RS from "reactstrap";
 
 import { ShowLoading } from "../../handlers/ShowLoading";
 import { QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
@@ -24,6 +23,7 @@ import {
 } from "../../../services";
 import { Spacer } from "../../elements/Spacer";
 import { Tabs } from "../../elements/Tabs";
+import { Card, CardBody, Button, Alert, Container, ListGroup, ListGroupItem } from "reactstrap";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
   user: RegisteredUserDTO;
@@ -47,8 +47,8 @@ function QuizItem({ item }: QuizAssignmentProps) {
   const status: Status = !attempt ? Status.Unstarted : !attempt.completedDate ? Status.Started : Status.Complete;
   return (
     <div className="p-2">
-      <RS.Card className="card-neat">
-        <RS.CardBody>
+      <Card className="card-neat">
+        <CardBody>
           <h4 className="border-bottom pb-3 mb-3">{item.quizSummary?.title || item.quizId}</h4>
 
           {assignment ? (
@@ -80,20 +80,20 @@ function QuizItem({ item }: QuizAssignmentProps) {
             {assignment ? (
               <>
                 {status === Status.Unstarted && (
-                  <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
+                  <Button tag={Link} to={`/test/assignment/${assignment.id}`}>
                     Start test
-                  </RS.Button>
+                  </Button>
                 )}
                 {status === Status.Started && (
-                  <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
+                  <Button tag={Link} to={`/test/assignment/${assignment.id}`}>
                     Continue test
-                  </RS.Button>
+                  </Button>
                 )}
                 {status === Status.Complete &&
                   (assignment.quizFeedbackMode !== "NONE" ? (
-                    <RS.Button tag={Link} to={`/test/attempt/${assignment.attempt?.id}/feedback`}>
+                    <Button tag={Link} to={`/test/attempt/${assignment.attempt?.id}/feedback`}>
                       View feedback
-                    </RS.Button>
+                    </Button>
                   ) : (
                     <strong>No feedback available</strong>
                   ))}
@@ -102,15 +102,15 @@ function QuizItem({ item }: QuizAssignmentProps) {
               attempt && (
                 <>
                   {status === Status.Started && (
-                    <RS.Button tag={Link} to={`/test/attempt/${attempt.quizId}`}>
+                    <Button tag={Link} to={`/test/attempt/${attempt.quizId}`}>
                       Continue test
-                    </RS.Button>
+                    </Button>
                   )}
                   {status === Status.Complete &&
                     (attempt.feedbackMode !== "NONE" ? (
-                      <RS.Button tag={Link} to={`/test/attempt/${attempt.id}/feedback`}>
+                      <Button tag={Link} to={`/test/attempt/${attempt.id}/feedback`}>
                         View feedback
-                      </RS.Button>
+                      </Button>
                     ) : (
                       <strong>No feedback available</strong>
                     ))}
@@ -118,8 +118,8 @@ function QuizItem({ item }: QuizAssignmentProps) {
               )
             )}
           </div>
-        </RS.CardBody>
-      </RS.Card>
+        </CardBody>
+      </Card>
     </div>
   );
 }
@@ -187,7 +187,7 @@ const MyQuizzesPageComponent = ({ user }: MyQuizzesPageProps) => {
   };
 
   return (
-    <RS.Container>
+    <Container>
       <TitleAndBreadcrumb currentPageTitle="My tests" help={pageHelp} />
 
       <Tabs className="mb-5 mt-4" tabContentClass="mt-4">
@@ -196,9 +196,7 @@ const MyQuizzesPageComponent = ({ user }: MyQuizzesPageProps) => {
             <ShowLoading
               until={quizAssignments}
               ifNotFound={
-                <RS.Alert color="warning">
-                  Your test assignments failed to load, please try refreshing the page.
-                </RS.Alert>
+                <Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>
               }
             >
               <QuizGrid quizzes={incompleteQuizzes} empty="You don't have any incomplete or assigned tests." />
@@ -209,9 +207,7 @@ const MyQuizzesPageComponent = ({ user }: MyQuizzesPageProps) => {
             <ShowLoading
               until={quizAssignments}
               ifNotFound={
-                <RS.Alert color="warning">
-                  Your test assignments failed to load, please try refreshing the page.
-                </RS.Alert>
+                <Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>
               }
             >
               <QuizGrid quizzes={completedQuizzes} empty="You haven't completed any tests." />
@@ -227,9 +223,9 @@ const MyQuizzesPageComponent = ({ user }: MyQuizzesPageProps) => {
                       <em>There are no tests currently available.</em>
                     </p>
                   )}
-                  <RS.ListGroup className="mb-3 quiz-list">
+                  <ListGroup className="mb-3 quiz-list">
                     {quizzes.filter(showQuiz).map((quiz) => (
-                      <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                      <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                         <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
                           <span className="mb-2 mb-sm-0">{quiz.title}</span>
                           {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
@@ -241,20 +237,20 @@ const MyQuizzesPageComponent = ({ user }: MyQuizzesPageProps) => {
                               </Link>
                             </div>
                           )}
-                          <RS.Button tag={Link} to={{ pathname: `/test/attempt/${quiz.id}` }}>
+                          <Button tag={Link} to={{ pathname: `/test/attempt/${quiz.id}` }}>
                             Take test
-                          </RS.Button>
+                          </Button>
                         </div>
-                      </RS.ListGroupItem>
+                      </ListGroupItem>
                     ))}
-                  </RS.ListGroup>
+                  </ListGroup>
                 </>
               )}
             </ShowLoading>
           ),
         }}
       </Tabs>
-    </RS.Container>
+    </Container>
   );
 };
 

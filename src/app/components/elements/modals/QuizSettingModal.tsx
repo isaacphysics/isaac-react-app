@@ -13,10 +13,10 @@ import React, { useState } from "react";
 import { isDefined, Item, selectOnChange } from "../../../services";
 import { range } from "lodash";
 import { currentYear, DateInput } from "../inputs/DateInput";
-import * as RS from "reactstrap";
 import Select from "react-select";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
+import { Button, FormFeedback, Label } from "reactstrap";
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
 const feedbackOptions = {
@@ -76,7 +76,7 @@ export function QuizSettingModal({
 
   return (
     <div className="mb-4">
-      <RS.Label className="w-100 mb-4">
+      <Label className="w-100 mb-4">
         Set test to the following groups:
         <br />
         <ShowLoadingQuery
@@ -106,12 +106,12 @@ export function QuizSettingModal({
           }}
         />
         {groupInvalid && (
-          <RS.FormFeedback className="d-block" valid={false}>
+          <FormFeedback className="d-block" valid={false}>
             You must select a group
-          </RS.FormFeedback>
+          </FormFeedback>
         )}
-      </RS.Label>
-      <RS.Label className="w-100 mb-4">
+      </Label>
+      <Label className="w-100 mb-4">
         Set an optional due date:
         <br />
         <DateInput
@@ -121,8 +121,8 @@ export function QuizSettingModal({
           onChange={(e) => (e.target.value ? setDueDate(parseInt(e.target.value, 10)) : setDueDate(null))}
         />
         {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after today.</small>}
-      </RS.Label>
-      <RS.Label className="w-100 mb-4">
+      </Label>
+      <Label className="w-100 mb-4">
         What level of feedback should students get:
         <br />
         <Select
@@ -143,13 +143,13 @@ export function QuizSettingModal({
           }}
         />
         {feedbackModeInvalid && (
-          <RS.FormFeedback className="d-block" valid={false}>
+          <FormFeedback className="d-block" valid={false}>
             You must select a feedback mode
-          </RS.FormFeedback>
+          </FormFeedback>
         )}
-      </RS.Label>
+      </Label>
       <div className="text-right">
-        <RS.Button
+        <Button
           disabled={selectedGroups.length === 0 || !feedbackMode || submitting}
           onMouseEnter={() => setValidated(new Set(["group", "feedbackMode"]))}
           onClick={async () => {
@@ -176,9 +176,9 @@ export function QuizSettingModal({
                   body: "Test set to " + selectedGroups[0].label + " successfully",
                   timeout: 7000,
                   buttons: [
-                    <RS.Button key="again" onClick={again}>
+                    <Button key="again" onClick={again}>
                       Set to another group
-                    </RS.Button>,
+                    </Button>,
                   ],
                 }),
               );
@@ -191,7 +191,7 @@ export function QuizSettingModal({
           }}
         >
           {submitting ? <IsaacSpinner /> : "Set test"}
-        </RS.Button>
+        </Button>
       </div>
     </div>
   );

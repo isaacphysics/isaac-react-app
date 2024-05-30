@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import * as RS from "reactstrap";
-import { Badge } from "reactstrap";
+import { Badge, Button } from "reactstrap";
 
 interface ActionCardProps {
   title: string;
@@ -37,9 +36,9 @@ export const ActionCard = ({
       <p>
         <>{children}</>
       </p>
-      <RS.Button tag={Link} to={linkDestination} color="secondary" block disabled={comingSoon}>
+      <Button tag={Link} to={linkDestination} color="secondary" block disabled={comingSoon}>
         {linkText}
-      </RS.Button>
+      </Button>
     </div>
   );
 };

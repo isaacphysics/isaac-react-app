@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import * as RS from "reactstrap";
 import { Accordion } from "../Accordion";
 import {
   adminUserSearchRequest,
@@ -12,6 +11,7 @@ import {
 import { atLeastOne, formatManageBookingActionButtonMessage, NOT_FOUND, zeroOrLess } from "../../../services";
 import { DateString } from "../DateString";
 import { userBookingModal } from "../modals/UserBookingModal";
+import { Button, Col, Form, Input, Label, Row, Table } from "reactstrap";
 
 export const AddUsersToBooking = () => {
   const dispatch = useAppDispatch();
@@ -45,12 +45,12 @@ export const AddUsersToBooking = () => {
       trustedTitle="Add users to booking"
       disabled={selectedEvent?.isCancelled && "You cannot add users to a cancelled event"}
     >
-      <RS.Form onSubmit={userSearch}>
-        <RS.Row>
-          <RS.Col md={6}>
+      <Form onSubmit={userSearch}>
+        <Row>
+          <Col md={6}>
             <div className="mb-3">
-              <RS.Label htmlFor="user-search-familyName">Find a user by family name:</RS.Label>
-              <RS.Input
+              <Label htmlFor="user-search-familyName">Find a user by family name:</Label>
+              <Input
                 id="user-search-familyName"
                 type="text"
                 placeholder="Enter user family name"
@@ -60,11 +60,11 @@ export const AddUsersToBooking = () => {
                 }
               />
             </div>
-          </RS.Col>
-          <RS.Col md={6}>
+          </Col>
+          <Col md={6}>
             <div className="mb-3">
-              <RS.Label htmlFor="user-search-email">Find a user by email:</RS.Label>
-              <RS.Input
+              <Label htmlFor="user-search-email">Find a user by email:</Label>
+              <Input
                 id="user-search-email"
                 type="text"
                 placeholder="Enter user email"
@@ -74,11 +74,11 @@ export const AddUsersToBooking = () => {
                 }
               />
             </div>
-          </RS.Col>
-          <RS.Col md={6}>
+          </Col>
+          <Col md={6}>
             <div className="mb-3">
-              <RS.Label htmlFor="user-search-role">Find by user role:</RS.Label>
-              <RS.Input
+              <Label htmlFor="user-search-role">Find by user role:</Label>
+              <Input
                 type="select"
                 id="user-search-role"
                 value={queryParams.role || "NO_ROLE"}
@@ -91,22 +91,22 @@ export const AddUsersToBooking = () => {
                 <option value="TEACHER">Teacher</option>
                 <option value="CONTENT_EDITOR">Content editor</option>
                 <option value="ADMIN">Admin</option>
-              </RS.Input>
+              </Input>
             </div>
-          </RS.Col>
-        </RS.Row>
-        <RS.Row>
-          <RS.Col>
-            <RS.Input type="submit" className="btn btn-block btn-secondary border-0 my-2" value="Find user" />
-          </RS.Col>
-        </RS.Row>
-      </RS.Form>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Input type="submit" className="btn btn-block btn-secondary border-0 my-2" value="Find user" />
+          </Col>
+        </Row>
+      </Form>
 
       {searched && <hr className="text-center my-4" />}
 
       {atLeastOne(userResults.length) && (
         <div className="overflow-auto">
-          <RS.Table bordered className="mb-0 bg-white">
+          <Table bordered className="mb-0 bg-white">
             <thead>
               <tr>
                 <th className="align-middle">Actions</th>
@@ -124,7 +124,7 @@ export const AddUsersToBooking = () => {
                   <tr key={result.id}>
                     <td className="align-middle">
                       {!userBookings.includes(result.id as number) && (
-                        <RS.Button
+                        <Button
                           color="primary"
                           outline
                           className="btn-sm"
@@ -133,7 +133,7 @@ export const AddUsersToBooking = () => {
                           }
                         >
                           {formatManageBookingActionButtonMessage(selectedEvent)}
-                        </RS.Button>
+                        </Button>
                       )}
                       {userBookings.includes(result.id as number) && <div className="text-center">Booking exists</div>}
                     </td>
@@ -154,7 +154,7 @@ export const AddUsersToBooking = () => {
                   </tr>
                 ))}
             </tbody>
-          </RS.Table>
+          </Table>
         </div>
       )}
 

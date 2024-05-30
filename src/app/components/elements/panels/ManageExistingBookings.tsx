@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import * as RS from "reactstrap";
 import { Accordion } from "../Accordion";
 import {
   cancelUserBooking,
@@ -27,6 +26,7 @@ import {
 import { PotentialUser } from "../../../../IsaacAppTypes";
 import { BookingStatus, DetailedEventBookingDTO } from "../../../../IsaacApiTypes";
 import { DateString } from "../DateString";
+import { Button, ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle, Table } from "reactstrap";
 
 export const ManageExistingBookings = ({ user, eventBookingId }: { user: PotentialUser; eventBookingId: string }) => {
   const dispatch = useAppDispatch();
@@ -70,9 +70,9 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
   const BookingHeaderButton = ({ sort, children }: PropsWithChildren<{ sort: string }>) => {
     return (
       <th>
-        <RS.Button color="link" onClick={setSortPredicateAndDirection(sort)}>
+        <Button color="link" onClick={setSortPredicateAndDirection(sort)}>
           {children}
-        </RS.Button>
+        </Button>
       </th>
     );
   };
@@ -88,7 +88,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
       {atLeastOne(eventBookings.length) && (
         <div>
           <div className="overflow-auto">
-            <RS.Table bordered className="mb-0 bg-white table-hover table-sm">
+            <Table bordered className="mb-0 bg-white table-hover table-sm">
               <thead>
                 <tr>
                   <th>Actions</th>
@@ -119,7 +119,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                     <tr key={booking.bookingId}>
                       <td>
                         {["WAITING_LIST", "CANCELLED"].includes(booking.bookingStatus as string) && (
-                          <RS.Button
+                          <Button
                             color="success"
                             outline
                             block
@@ -127,10 +127,10 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                             onClick={() => dispatch(promoteUserBooking(eventBookingId, userId))}
                           >
                             Promote
-                          </RS.Button>
+                          </Button>
                         )}
                         {["WAITING_LIST", "CONFIRMED"].includes(booking.bookingStatus as string) && (
-                          <RS.Button
+                          <Button
                             color="primary"
                             outline
                             block
@@ -138,10 +138,10 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                             onClick={() => dispatch(cancelUserBooking(eventBookingId, userId))}
                           >
                             Cancel
-                          </RS.Button>
+                          </Button>
                         )}
                         {isAdmin(user) && (
-                          <RS.Button
+                          <Button
                             color="danger"
                             outline
                             block
@@ -149,9 +149,9 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                             onClick={() => dispatch(deleteUserBooking(eventBookingId, userId))}
                           >
                             Delete
-                          </RS.Button>
+                          </Button>
                         )}
-                        <RS.Button
+                        <Button
                           color="success"
                           outline
                           block
@@ -159,7 +159,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                           onClick={() => dispatch(resendUserConfirmationEmail(eventBookingId, userId))}
                         >
                           Resend email
-                        </RS.Button>
+                        </Button>
                       </td>
                       <td className="text-nowrap">
                         {booking.userBooked && (
@@ -213,28 +213,28 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
                   );
                 })}
               </tbody>
-            </RS.Table>
+            </Table>
           </div>
 
           <div className="mt-3 text-right">
-            <RS.ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
-              <RS.DropdownToggle caret color="primary" outline className="mr-3 mt-1">
+            <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+              <DropdownToggle caret color="primary" outline className="mr-3 mt-1">
                 Email Users
-              </RS.DropdownToggle>
-              <RS.DropdownMenu>
+              </DropdownToggle>
+              <DropdownMenu>
                 {Object.keys(bookingStatusMap).map((key, index) => {
                   const usersWithStatus = relevantUsers(key);
                   if (atLeastOne(usersWithStatus.length)) {
                     return (
-                      <RS.DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(usersWithStatus))}>
+                      <DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(usersWithStatus))}>
                         Email {bookingStatusMap[key as BookingStatus]} users
-                      </RS.DropdownItem>
+                      </DropdownItem>
                     );
                   }
                 })}
-              </RS.DropdownMenu>
-            </RS.ButtonDropdown>
-            <RS.Button
+              </DropdownMenu>
+            </ButtonDropdown>
+            <Button
               color="primary"
               outline
               className="btn-md mt-1"
@@ -242,7 +242,7 @@ export const ManageExistingBookings = ({ user, eventBookingId }: { user: Potenti
               onClick={() => dispatch(getEventBookingCSV(eventBookingId))}
             >
               Export as CSV
-            </RS.Button>
+            </Button>
           </div>
         </div>
       )}

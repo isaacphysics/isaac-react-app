@@ -1,14 +1,12 @@
 import React from "react";
-import * as RS from "reactstrap";
 import { SITE_SUBJECT_TITLE } from "../../services";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 export const ConsistencyErrorModal = ({ consistencyError }: { consistencyError: boolean }) => {
   return (
-    <RS.Modal id="user-consistency-error" isOpen={consistencyError} size={"lg"}>
-      <RS.ModalHeader className="h-title pb-5 mb-4">
-        {`Your Isaac ${SITE_SUBJECT_TITLE} session has changed`}
-      </RS.ModalHeader>
-      <RS.ModalBody className="px-0 mx-4">
+    <Modal id="user-consistency-error" isOpen={consistencyError} size={"lg"}>
+      <ModalHeader className="h-title pb-5 mb-4">{`Your Isaac ${SITE_SUBJECT_TITLE} session has changed`}</ModalHeader>
+      <ModalBody className="px-0 mx-4">
         <h3>This browser window / tab is out of sync.</h3>
         <p className="pb-2">
           This can happen if you have logged out or logged in as another user via another browser window. Please click
@@ -22,12 +20,12 @@ export const ConsistencyErrorModal = ({ consistencyError }: { consistencyError: 
           </a>
           {" feature."}
         </p>
-      </RS.ModalBody>
-      <RS.ModalFooter className="mb-4 align-self-center">
-        <RS.Button color="secondary" href="/login">
+      </ModalBody>
+      <ModalFooter className="mb-4 align-self-center">
+        <Button color="secondary" href="/login">
           Continue
-        </RS.Button>
-      </RS.ModalFooter>
-    </RS.Modal>
+        </Button>
+      </ModalFooter>
+    </Modal>
   );
 };

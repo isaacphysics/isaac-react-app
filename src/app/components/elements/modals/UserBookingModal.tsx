@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { UserSummaryForAdminUsersDTO } from "../../../../IsaacApiTypes";
 import { AdditionalInformation, AugmentedEvent } from "../../../../IsaacAppTypes";
 import { bookUserOnEvent, closeActiveModal, showToast, store, useAppDispatch } from "../../../state";
-import * as RS from "reactstrap";
 import { atLeastOne, formatBookingModalConfirmMessage, zeroOrLess } from "../../../services";
 import { EventBookingForm } from "../EventBookingForm";
 import { FAILURE_TOAST } from "../../navigation/Toasts";
+import { Form, Input, Label } from "reactstrap";
 
 export function userBookingModal(
   selectedUser: UserSummaryForAdminUsersDTO,
@@ -60,7 +60,7 @@ export function userBookingModal(
       }
 
       return (
-        <RS.Form onSubmit={makeUserBooking} className="mb-4">
+        <Form onSubmit={makeUserBooking} className="mb-4">
           <EventBookingForm
             event={selectedEvent}
             targetUser={selectedUser}
@@ -76,10 +76,10 @@ export function userBookingModal(
               </small>
             </p>
 
-            <RS.Label htmlFor="form-authorisation" className="form-required">
+            <Label htmlFor="form-authorisation" className="form-required">
               Booking/personal data sharing authorised by
-            </RS.Label>
-            <RS.Input
+            </Label>
+            <Input
               type="select"
               id="form-authorisation"
               name="form-authorisation"
@@ -90,9 +90,9 @@ export function userBookingModal(
               <option value="Telephone-Owner">Telephone - Data Owner</option>
               <option value="Email-Owner">Verified email - Data Owner</option>
               <option value="OTHER">Other - Please specify</option>
-            </RS.Input>
+            </Input>
             {additionalInformation.authorisation === "OTHER" && (
-              <RS.Input
+              <Input
                 type="text"
                 className="mt-2"
                 value={additionalInformation.authorisationOther || ""}
@@ -101,14 +101,14 @@ export function userBookingModal(
             )}
 
             {(userCanBeBookedOnEvent || userCanBeAddedToWaitingList) && (
-              <RS.Input
+              <Input
                 className="btn btn-block btn-secondary border-0 mt-3"
                 type="submit"
                 value={formatBookingModalConfirmMessage(selectedEvent, userCanBeBookedOnEvent)}
               />
             )}
           </span>
-        </RS.Form>
+        </Form>
       );
     },
   };

@@ -1,5 +1,5 @@
 import React from "react";
-import * as RS from "reactstrap";
+import { FormFeedback, FormGroup, Label } from "reactstrap";
 import { ValidationUser } from "../../../../IsaacAppTypes";
 import { isDefined, isDobOverThirteen } from "../../../services";
 import { DateInput } from "./DateInput";
@@ -12,8 +12,8 @@ interface DobInputProps {
 }
 export const DobInput = ({ userToUpdate, setUserToUpdate, editingOtherUser }: DobInputProps) => {
   return (
-    <RS.FormGroup>
-      <RS.Label htmlFor="dob-input">Date of birth</RS.Label>
+    <FormGroup>
+      <Label htmlFor="dob-input">Date of birth</Label>
       <DateInput
         invalid={isDefined(userToUpdate.dateOfBirth) && !isDobOverThirteen(userToUpdate.dateOfBirth)}
         id="dob-input"
@@ -30,9 +30,9 @@ export const DobInput = ({ userToUpdate, setUserToUpdate, editingOtherUser }: Do
         aria-describedby="age-validation-message"
         labelSuffix=" of birth"
       />
-      <RS.FormFeedback id="age-validation-message">
+      <FormFeedback id="age-validation-message">
         {`${editingOtherUser ? "The user" : "You"} must be over 13 years old.`}
-      </RS.FormFeedback>
-    </RS.FormGroup>
+      </FormFeedback>
+    </FormGroup>
   );
 };

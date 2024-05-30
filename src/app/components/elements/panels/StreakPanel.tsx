@@ -1,7 +1,7 @@
-import * as RS from "reactstrap";
 import { StreakGauge } from "../views/StreakGauge";
 import React from "react";
 import { UserProgress } from "../../../../IsaacAppTypes";
+import { UncontrolledTooltip } from "reactstrap";
 
 // NOTE: Physics feature, currently unused
 
@@ -19,14 +19,14 @@ export const StreakPanel = ({ userProgress }: { userProgress?: UserProgress | nu
         <br />
         {currentDailyStreak !== 0 && `Daily streak: ${currentDailyStreak} Day${currentDailyStreak !== 1 ? "s" : ""}`}
       </div>
-      <RS.UncontrolledTooltip placement="bottom" target="streak-help">
+      <UncontrolledTooltip placement="bottom" target="streak-help">
         <div className="text-left">
           The weekly streak indicates the number of consecutive weeks you have been active on Isaac.
           <br />
           Answer at least <b>ten question parts</b> correctly per week to fill up your daily progress bar and increase
           your streak!
         </div>
-      </RS.UncontrolledTooltip>
+      </UncontrolledTooltip>
     </div>
   );
 };

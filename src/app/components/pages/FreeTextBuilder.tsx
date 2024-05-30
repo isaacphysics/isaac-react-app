@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { FreeTextRule } from "../../../IsaacAppTypes";
-import * as RS from "reactstrap";
 import { ContentBase, TestCaseDTO } from "../../../IsaacApiTypes";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { AppState, testQuestion, useAppDispatch, useAppSelector } from "../../state";
 import { Tabs } from "../elements/Tabs";
 import { atLeastOne } from "../../services";
 import { IsaacContent } from "../content/IsaacContent";
+import {
+  Container,
+  Form,
+  Card,
+  CardBody,
+  Table,
+  Label,
+  Input,
+  UncontrolledTooltip,
+  Row,
+  Col,
+  Button,
+} from "reactstrap";
 
 interface AugmentedTestCase extends TestCaseDTO {
   match?: boolean;
@@ -175,9 +187,9 @@ export const FreeTextBuilder = () => {
     atLeastOne(cleanQuestionChoices.length) && atLeastOne(cleanTestCases.length);
 
   return (
-    <RS.Container>
+    <Container>
       <TitleAndBreadcrumb className="mb-4" currentPageTitle="Free-text question builder" />
-      <RS.Form
+      <Form
         onSubmit={(event: React.FormEvent) => {
           if (event) {
             event.preventDefault();
@@ -188,13 +200,13 @@ export const FreeTextBuilder = () => {
           }
         }}
       >
-        <RS.Card className="mb-4">
-          <RS.CardBody>
+        <Card className="mb-4">
+          <CardBody>
             <h2 className="h3">Matching rules</h2>
             <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
               {{
                 GUI: (
-                  <RS.Table className="mb-3">
+                  <Table className="mb-3">
                     <thead>
                       <tr>
                         <th>Rule</th>
@@ -205,10 +217,10 @@ export const FreeTextBuilder = () => {
                       {questionChoices.map((choice) => (
                         <tr key={choice.choiceNumber}>
                           <td>
-                            <RS.Label className="mb-3 w-100">
+                            <Label className="mb-3 w-100">
                               Value
                               <div className="d-flex align-items-center">
-                                <RS.Input
+                                <Input
                                   className="w-100"
                                   type="text"
                                   value={choice.value}
@@ -220,14 +232,14 @@ export const FreeTextBuilder = () => {
                                 />
                                 <span id={`choice-help-${choice.choiceNumber}`} className="icon-help mr-2" />
                               </div>
-                            </RS.Label>
-                            <RS.UncontrolledTooltip
+                            </Label>
+                            <UncontrolledTooltip
                               target={`choice-help-${choice.choiceNumber}`}
                               placement="bottom"
                               innerClassName=""
                             >
                               <div className="text-left">
-                                <RS.Table>
+                                <Table>
                                   <thead>
                                     <tr>
                                       <th className="text-light" colSpan={2}>
@@ -259,12 +271,12 @@ export const FreeTextBuilder = () => {
                                     </td>
                                     <td className="text-light">Match zero or more characters.</td>
                                   </tr>
-                                </RS.Table>
+                                </Table>
                               </div>
-                            </RS.UncontrolledTooltip>
-                            <RS.Row>
-                              <RS.Col xs={3} className="text-center">
-                                <RS.Button
+                            </UncontrolledTooltip>
+                            <Row>
+                              <Col xs={3} className="text-center">
+                                <Button
                                   color="link"
                                   onClick={() =>
                                     setQuestionChoices(
@@ -274,11 +286,11 @@ export const FreeTextBuilder = () => {
                                     )
                                   }
                                 >
-                                  <RS.Label>Ignore case {checkMark(choice.caseInsensitive)}</RS.Label>
-                                </RS.Button>
-                              </RS.Col>
-                              <RS.Col xs={3} className="text-center">
-                                <RS.Button
+                                  <Label>Ignore case {checkMark(choice.caseInsensitive)}</Label>
+                                </Button>
+                              </Col>
+                              <Col xs={3} className="text-center">
+                                <Button
                                   color="link"
                                   onClick={() =>
                                     setQuestionChoices(
@@ -288,11 +300,11 @@ export const FreeTextBuilder = () => {
                                     )
                                   }
                                 >
-                                  <RS.Label>Any order {checkMark(choice.allowsAnyOrder)}</RS.Label>
-                                </RS.Button>
-                              </RS.Col>
-                              <RS.Col xs={3} className="text-center">
-                                <RS.Button
+                                  <Label>Any order {checkMark(choice.allowsAnyOrder)}</Label>
+                                </Button>
+                              </Col>
+                              <Col xs={3} className="text-center">
+                                <Button
                                   color="link"
                                   onClick={() =>
                                     setQuestionChoices(
@@ -302,11 +314,11 @@ export const FreeTextBuilder = () => {
                                     )
                                   }
                                 >
-                                  <RS.Label>Extra words {checkMark(choice.allowsExtraWords)}</RS.Label>
-                                </RS.Button>
-                              </RS.Col>
-                              <RS.Col xs={3} className="text-center">
-                                <RS.Button
+                                  <Label>Extra words {checkMark(choice.allowsExtraWords)}</Label>
+                                </Button>
+                              </Col>
+                              <Col xs={3} className="text-center">
+                                <Button
                                   color="link"
                                   onClick={() =>
                                     setQuestionChoices(
@@ -316,13 +328,13 @@ export const FreeTextBuilder = () => {
                                     )
                                   }
                                 >
-                                  <RS.Label>Misspelling {checkMark(choice.allowsMisspelling)}</RS.Label>
-                                </RS.Button>
-                              </RS.Col>
-                            </RS.Row>
+                                  <Label>Misspelling {checkMark(choice.allowsMisspelling)}</Label>
+                                </Button>
+                              </Col>
+                            </Row>
                           </td>
                           <td className="align-middle">
-                            <RS.Button
+                            <Button
                               color="link"
                               onClick={() =>
                                 setQuestionChoices(
@@ -331,13 +343,13 @@ export const FreeTextBuilder = () => {
                               }
                             >
                               <div className="h4 px-4">{checkMark(choice.correct)}</div>
-                            </RS.Button>
+                            </Button>
                           </td>
                           <td>
-                            <RS.Label>
+                            <Label>
                               Feedback:
                               {isEditableExplanation(choice.explanation) ? (
-                                <RS.Input
+                                <Input
                                   type="textarea"
                                   value={(choice.explanation as any).children[0].value}
                                   onChange={(event) => {
@@ -351,7 +363,7 @@ export const FreeTextBuilder = () => {
                               ) : (
                                 <IsaacContent doc={choice.explanation as ContentBase} />
                               )}
-                            </RS.Label>
+                            </Label>
                           </td>
                           <td>
                             <button
@@ -371,23 +383,23 @@ export const FreeTextBuilder = () => {
                     <tfoot>
                       <tr>
                         <td colSpan={4} className="text-center pb-3">
-                          <RS.Button
+                          <Button
                             color="link"
                             onClick={() => setQuestionChoices([...questionChoices, generateDefaultChoice()])}
                           >
                             <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
-                          </RS.Button>
+                          </Button>
                         </td>
                       </tr>
                     </tfoot>
-                  </RS.Table>
+                  </Table>
                 ),
                 JSON: (
                   <div className="mb-3">
                     <p>
                       JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion
                     </p>
-                    <RS.Input
+                    <Input
                       type="textarea"
                       rows={25}
                       className={jsonParseError ? "alert-danger" : ""}
@@ -398,7 +410,7 @@ export const FreeTextBuilder = () => {
                       }}
                     />
                     <div className="text-center">
-                      <RS.Button
+                      <Button
                         className="my-2"
                         onClick={() => {
                           try {
@@ -409,24 +421,24 @@ export const FreeTextBuilder = () => {
                         }}
                       >
                         Submit
-                      </RS.Button>
+                      </Button>
                     </div>
                   </div>
                 ),
               }}
             </Tabs>
-          </RS.CardBody>
-        </RS.Card>
+          </CardBody>
+        </Card>
 
-        <RS.Card className="mb-4">
-          <RS.CardBody>
+        <Card className="mb-4">
+          <CardBody>
             <h2 className="h3">
               Test answers ({numberOfResponseMatches}/{testCases.length})
             </h2>
             <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
               {{
                 GUI: (
-                  <RS.Table className="mb-2">
+                  <Table className="mb-2">
                     <thead>
                       <tr>
                         <th className="w-10 text-center">Expected</th>
@@ -444,7 +456,7 @@ export const FreeTextBuilder = () => {
                         return (
                           <tr key={testCase.testCaseNumber}>
                             <td className="w-10 text-center align-middle">
-                              <RS.Button
+                              <Button
                                 color="link"
                                 onClick={() =>
                                   setTestCases(
@@ -453,10 +465,10 @@ export const FreeTextBuilder = () => {
                                 }
                               >
                                 {checkMark(testCase.expected)}
-                              </RS.Button>
+                              </Button>
                             </td>
                             <td>
-                              <RS.Input
+                              <Input
                                 type="text"
                                 value={testCase?.answer?.value || ""}
                                 onChange={(event) =>
@@ -503,21 +515,18 @@ export const FreeTextBuilder = () => {
                     <tfoot>
                       <tr>
                         <td colSpan={6} className="text-center pb-3">
-                          <RS.Button
-                            color="link"
-                            onClick={() => setTestCases([...testCases, generateDefaultTestCase()])}
-                          >
+                          <Button color="link" onClick={() => setTestCases([...testCases, generateDefaultTestCase()])}>
                             <img src="/assets/add_circle_outline.svg" alt="Add matching rule" />
-                          </RS.Button>
+                          </Button>
                         </td>
                       </tr>
                     </tfoot>
-                  </RS.Table>
+                  </Table>
                 ),
                 CSV: (
                   <div className="mb-3">
                     <p>Enter test cases as CSV with the headers: expected(true/false), value</p>
-                    <RS.Input
+                    <Input
                       type="textarea"
                       rows={10}
                       value={testCasesCsv}
@@ -527,7 +536,7 @@ export const FreeTextBuilder = () => {
                       }}
                     />
                     <div className="text-center">
-                      <RS.Button
+                      <Button
                         className={`my-2 ${csvParseError ? "alert-danger" : ""}`}
                         onClick={() => {
                           try {
@@ -538,19 +547,19 @@ export const FreeTextBuilder = () => {
                         }}
                       >
                         Submit
-                      </RS.Button>
+                      </Button>
                     </div>
                   </div>
                 ),
               }}
             </Tabs>
-          </RS.CardBody>
-        </RS.Card>
+          </CardBody>
+        </Card>
 
         <div className="mb-5 text-center">
-          <RS.Input type="submit" value="Test question" className="btn btn-xl btn-secondary border-0" />
+          <Input type="submit" value="Test question" className="btn btn-xl btn-secondary border-0" />
         </div>
-      </RS.Form>
-    </RS.Container>
+      </Form>
+    </Container>
   );
 };

@@ -13,7 +13,6 @@ import {
   tags,
   useUserContext,
 } from "../../../services";
-import * as RS from "reactstrap";
 import { Link } from "react-router-dom";
 import React, { useRef } from "react";
 import { selectors, useAppSelector } from "../../../state";
@@ -21,6 +20,7 @@ import { v4 as uuid_v4 } from "uuid";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { ShortcutResponse } from "../../../../IsaacAppTypes";
 import { Markup } from "../markup";
+import { ListGroup, ListGroupItem, UncontrolledTooltip } from "reactstrap";
 
 export const ContentSummaryListGroupItem = ({
   item,
@@ -110,7 +110,7 @@ export const ContentSummaryListGroupItem = ({
   const displayStage = audienceViews && audienceViews.length > 0;
 
   return (
-    <RS.ListGroupItem
+    <ListGroupItem
       className={`p-3 content-summary-item d-md-flex flex-column justify-content-center ${itemClasses}`}
       key={linkDestination}
     >
@@ -141,15 +141,15 @@ export const ContentSummaryListGroupItem = ({
           {!isContentsIntendedAudience && (
             <div className="ml-auto mr-3 d-flex align-items-center">
               <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
-              <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
+              <UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
                 {`This content has ${notRelevantMessage(userContext)}.`}
-              </RS.UncontrolledTooltip>
+              </UncontrolledTooltip>
             </div>
           )}
           {audienceViews && displayStage && <StageAndDifficultySummaryIcons audienceViews={audienceViews} />}
         </div>
       </Link>
-    </RS.ListGroupItem>
+    </ListGroupItem>
   );
 };
 
@@ -183,8 +183,8 @@ export const LinkToContentSummaryList = ({
   cssModule?: any;
 }) => {
   return (
-    <RS.ListGroup {...rest} className="mb-3 link-list list-group-links">
+    <ListGroup {...rest} className="mb-3 link-list list-group-links">
       {items.map((item) => linkToContent(search, item, displayTopicTitle))}
-    </RS.ListGroup>
+    </ListGroup>
   );
 };

@@ -8,8 +8,8 @@ import {
   revokeAuthorisation,
   store,
 } from "../../../state";
-import * as RS from "reactstrap";
 import { extractTeacherName } from "../../../services";
+import { Button, Table } from "reactstrap";
 
 export const tokenVerificationModal = (
   userId: number,
@@ -24,7 +24,7 @@ export const tokenVerificationModal = (
     body: (
       <React.Fragment>
         <p>Are you sure you would like to give the following Isaac users access to your data?</p>
-        <RS.Table bordered>
+        <Table bordered>
           <tbody>
             {usersToGrantAccess.map((member) => (
               <tr key={member.id}>
@@ -35,7 +35,7 @@ export const tokenVerificationModal = (
               </tr>
             ))}
           </tbody>
-        </RS.Table>
+        </Table>
 
         {/* TODO Highlight already authorised teachers */}
         {/*{anyUsersAlreadyAuthorised && <p>*/}
@@ -63,7 +63,7 @@ export const tokenVerificationModal = (
       </React.Fragment>
     ),
     buttons: [
-      <RS.Button
+      <Button
         key={1}
         color="primary"
         outline
@@ -72,8 +72,8 @@ export const tokenVerificationModal = (
         }}
       >
         Cancel
-      </RS.Button>,
-      <RS.Button
+      </Button>,
+      <Button
         key={0}
         color="secondary"
         onClick={() => {
@@ -81,7 +81,7 @@ export const tokenVerificationModal = (
         }}
       >
         Confirm
-      </RS.Button>,
+      </Button>,
     ],
   };
 };
@@ -102,7 +102,7 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
       </React.Fragment>
     ),
     buttons: [
-      <RS.Button
+      <Button
         key={1}
         color="primary"
         outline
@@ -111,8 +111,8 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
         }}
       >
         Cancel
-      </RS.Button>,
-      <RS.Button
+      </Button>,
+      <Button
         key={0}
         color="secondary"
         onClick={() => {
@@ -120,7 +120,7 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
         }}
       >
         Confirm
-      </RS.Button>,
+      </Button>,
     ],
   };
 };
@@ -145,7 +145,7 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
       </React.Fragment>
     ),
     buttons: [
-      <RS.Button
+      <Button
         key={1}
         color="primary"
         outline
@@ -154,8 +154,8 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
         }}
       >
         Cancel
-      </RS.Button>,
-      <RS.Button
+      </Button>,
+      <Button
         key={0}
         color="secondary"
         onClick={() => {
@@ -163,7 +163,7 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
         }}
       >
         Confirm
-      </RS.Button>,
+      </Button>,
     ],
   };
 };
@@ -184,7 +184,7 @@ export const releaseAllConfirmationModal = (userId: number) => {
       </React.Fragment>
     ),
     buttons: [
-      <RS.Button
+      <Button
         key={1}
         color="primary"
         outline
@@ -193,8 +193,8 @@ export const releaseAllConfirmationModal = (userId: number) => {
         }}
       >
         Cancel
-      </RS.Button>,
-      <RS.Button
+      </Button>,
+      <Button
         key={0}
         color="secondary"
         onClick={() => {
@@ -202,7 +202,7 @@ export const releaseAllConfirmationModal = (userId: number) => {
         }}
       >
         Confirm
-      </RS.Button>,
+      </Button>,
     ],
   };
 };

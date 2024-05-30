@@ -1,6 +1,5 @@
 import React from "react";
-import * as RS from "reactstrap";
-import { CustomInput, FormGroup, Input, Label } from "reactstrap";
+import { CustomInput, FormGroup, Input, Label, UncontrolledTooltip } from "reactstrap";
 import {
   EXAM_BOARD,
   examBoardLabelMap,
@@ -148,7 +147,7 @@ export const UserContextPicker = ({ className, hideLabels = true }: { className?
       {showUnusualContextMessage && (
         <div className="mt-2 ml-1">
           <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
-          <RS.UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
+          <UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
             You are seeing {stageLabelMap[userContext.stage]} {examBoardLabelMap[userContext.examBoard]} content, which
             is different to your account settings. <br />
             {unusual.stage && unusual.examBoard && (
@@ -162,7 +161,7 @@ export const UserContextPicker = ({ className, hideLabels = true }: { className?
             {unusual.examBoard &&
               !unusual.stage &&
               `The exam board was specified by your ${userContext.explanation.examBoard}.`}
-          </RS.UncontrolledTooltip>
+          </UncontrolledTooltip>
         </div>
       )}
     </div>

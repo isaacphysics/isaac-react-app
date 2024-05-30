@@ -1,5 +1,5 @@
 import React, { ChangeEvent, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import * as RS from "reactstrap";
+import { Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip } from "reactstrap";
 import { IsaacContentValueOrChildren } from "./IsaacContentValueOrChildren";
 import { FormulaDTO, IsaacSymbolicQuestionDTO } from "../../../IsaacApiTypes";
 import katex from "katex";
@@ -236,10 +236,10 @@ const IsaacSymbolicQuestion = ({ doc, questionId, readonly }: IsaacQuestionProps
             className="equation-editor-text-entry"
             style={{ height: 0, overflow: "hidden", visibility: "hidden" }}
           />
-          <RS.InputGroup className="my-2">
-            <RS.Input type="text" onChange={updateEquation} value={textInput} placeholder="Type your formula here" />
-            <RS.InputGroupAddon addonType="append">
-              <RS.Button
+          <InputGroup className="my-2">
+            <Input type="text" onChange={updateEquation} value={textInput} placeholder="Type your formula here" />
+            <InputGroupAddon addonType="append">
+              <Button
                 type="button"
                 className="eqn-editor-help"
                 id={helpTooltipId}
@@ -247,8 +247,8 @@ const IsaacSymbolicQuestion = ({ doc, questionId, readonly }: IsaacQuestionProps
                 href="/solving_problems#symbolic_text"
               >
                 ?
-              </RS.Button>
-              <RS.UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
+              </Button>
+              <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                 Here are some examples of expressions you can type:
                 <br />
                 <br />
@@ -261,9 +261,9 @@ const IsaacSymbolicQuestion = ({ doc, questionId, readonly }: IsaacQuestionProps
                 <br />
                 <br />
                 As you type, the box below will preview the result.
-              </RS.UncontrolledTooltip>
-            </RS.InputGroupAddon>
-          </RS.InputGroup>
+              </UncontrolledTooltip>
+            </InputGroupAddon>
+          </InputGroup>
           {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && (
             <div className="eqn-editor-input-errors">
               <strong>Careful!</strong>
