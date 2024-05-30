@@ -53,6 +53,7 @@ import { IsaacContent } from "../content/IsaacContent";
 import { EditContentButton } from "../elements/EditContentButton";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import * as L from "leaflet";
+import ReactGA from "react-ga4";
 
 interface EventDetailsProps {
   match: { params: { eventId: string } };
@@ -170,7 +171,17 @@ const EventDetails = ({
 
                         {event.userBookingStatus === "CONFIRMED" && event.meetingUrl && (
                           <a href={event.meetingUrl} className="w-100" target="_blank" rel="noopener noreferrer">
-                            <Button color="primary" className="mt-2 w-100">
+                            <Button
+                              color="primary"
+                              className="mt-2 w-100"
+                              onClick={() =>
+                                ReactGA.event({
+                                  action: "join_event_button",
+                                  category: "Join Event Now",
+                                  label: "Event Page",
+                                })
+                              }
+                            >
                               Join event now
                             </Button>
                           </a>

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { AugmentedEvent } from "../../../../IsaacAppTypes";
 import { DateString } from "../DateString";
 import { formatEventCardDate } from "../../../services";
+import ReactGA from "react-ga4";
 
 export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?: boolean }) => {
   const {
@@ -102,7 +103,17 @@ export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?:
         {userBookingStatus === "CONFIRMED" && meetingUrl && (
           <CardText className="d-flex justify-content-center">
             <a href={meetingUrl} target="_blank" rel="noopener noreferrer">
-              <Button color="secondary" className="mt-2 w-100">
+              <Button
+                color="secondary"
+                className="mt-2 w-100"
+                onClick={() =>
+                  ReactGA.event({
+                    action: "join_event_button",
+                    category: "Join Event Now",
+                    label: "Event Card",
+                  })
+                }
+              >
                 Join event now
               </Button>
             </a>
