@@ -34,7 +34,6 @@ import {
     arrayFromPossibleCsv,
     toSimpleCSV,
     itemiseByValue,
-    ifKeyIsEnter,
     TAG_ID,
     itemiseTag,
     isLoggedIn
@@ -99,8 +98,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(
         arrayFromPossibleCsv(params.examBoards) as ExamBoard[]
     );
-
-    const [tempSearchString, setTempSearch] = useState<string>(searchQuery);
 
     useEffect(function populateExamBoardFromUserContext() {
         if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
@@ -288,6 +285,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }}, 250, {trailing: true}
     ), []);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const handleSearch = useCallback(
+        debounce((searchTerm: string) => {
+            setSearchQuery(searchTerm);
+        }, 500),
+        [setSearchQuery]
+    );
+
     const pageHelp = <span>
         You can find a question by selecting the areas of interest, stage and difficulties.
         <br/>
@@ -375,18 +380,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         </RS.Form>
                     </RS.Col>}
                 </RS.Row>
-                
                 <RS.Row>
                     <RS.Col lg={12} className="text-wrap mt-2">
                         <RS.Label htmlFor="question-search-title">Search</RS.Label>
                         <RS.Input id="question-search-title"
                             type="text"
                             placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                            value={tempSearchString}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setTempSearch(e.target.value);
-                            }}
-                            onKeyDown={ifKeyIsEnter(() => setSearchQuery(tempSearchString))}
+                            onChange={(e) => handleSearch(e.target.value)}
                         />
                     </RS.Col>
                 </RS.Row>
