@@ -22,7 +22,6 @@ import {
     isStaff,
     Item,
     logEvent,
-    searchResultIsPublic,
     selectOnChange,
     siteSpecific,
     SortOrder,
@@ -129,7 +128,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         processTagHierarchy(subjects, fields, topics)
     );
 
-    const [hideCompleted, setHideCompleted] = useState(false);
+    const [hideCompleted, setHideCompleted] = useState(!!params.hideCompleted);
 
     const choices = [tags.allSubjectTags.map(itemiseTag)];
     let index;
@@ -209,7 +208,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 fasttrack,
                 hideCompleted,
                 startIndex,
-                limit: 30
+                limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need, as to know if there are more results
             }));
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
@@ -272,20 +271,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     },[searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, selections, hideCompleted]);
 
     const sortedQuestions = useMemo(() => {
-        if (questions && questions.length < SEARCH_RESULTS_PER_PAGE) {
-            setDisableLoadMore(true);
-        }
-        return questions && sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
-            questions.filter(question => {
-                const qIsPublic = searchResultIsPublic(question, user);
-                if (isBookSearch) return qIsPublic;
-                const qTopicsMatch =
-                    searchTopics.length === 0 ||
-                    (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
+        if (questions) {
+            if (questions.length < SEARCH_RESULTS_PER_PAGE + 1) {
+                setDisableLoadMore(true);
+            }
 
-                return qIsPublic && qTopicsMatch;
-            })
-        );
+            return sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
+                questions.slice(0, SEARCH_RESULTS_PER_PAGE)
+                // .filter(question => searchResultIsPublic(question, user))
+            );
+        }
     }, [questions]);
 
     const [displayQuestions, setDisplayQuestions] = useState<ContentSummaryDTO[] | undefined>(undefined);
@@ -471,8 +466,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         <RS.Col className="d-flex justify-content-center mb-3">
                                             <RS.Button
                                                 onClick={() => {
+                                                    searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
                                                     setPageCount(c => c + 1);
-                                                    searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ?? 0);
                                                 }}
                                                 disabled={disableLoadMore}
                                             >
