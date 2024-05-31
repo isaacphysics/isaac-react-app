@@ -21,7 +21,7 @@
     "html-to-text": "^9.0.5",
     "identity-obj-proxy": "3.0.0",
     "immer": "^10.0.4",
-    "inequality": "1.0.1",
+    "inequality": "1.1.0",
     "inequality-grammar": "1.1.1",
     "js-cookie": "^3.0.5",
     "katex": "^0.16.10",
