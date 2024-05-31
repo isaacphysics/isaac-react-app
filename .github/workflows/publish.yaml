@@ -26,7 +26,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta cs
         id: meta-cs
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}-cs
           tags: |
@@ -36,7 +36,7 @@ jobs:
             type=ref,event=tag
       - name: Docker meta cs-renderer
         id: meta-cs-renderer
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}-cs-renderer
           tags: |
