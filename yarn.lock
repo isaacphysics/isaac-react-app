@@ -5925,13 +5925,13 @@ indent-string@^4.0.0:
   resolved "https://registry.yarnpkg.com/indent-string/-/indent-string-4.0.0.tgz#624f8f4497d619b2d9768531d58f4122854d7251"
   integrity sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==
 
-inequality-grammar@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/inequality-grammar/-/inequality-grammar-1.2.0.tgz#b8156eee1f1371f42cce1696692e2d582cfb4b54"
-  integrity sha512-5AEMVMu9Pdx2FD/BGwy7uf4bJZo6k/ZeIMvBAq21dHUWO07psWu45lxIsZZbcOv7QqccpAZIO6PI03f6e1qEAQ==
+inequality-grammar@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/inequality-grammar/-/inequality-grammar-1.2.1.tgz#6d706d0aead1ea56f1970ab50e134284437293fa"
+  integrity sha512-m8DWRJXiV75dnZILjZqjxj7T+TqQbZMRWZoIZhKcxX3G4S5NqVCUDP+FliGx4z/Hs1Jan3tbbpJNeDXqY1Km/g==
   dependencies:
     lodash "^4.17.21"
-    moo "^0.5.1"
+    moo "^0.5.2"
     nearley "^2.20.1"
 
 inequality@1.1.0:
@@ -7215,7 +7215,7 @@ mkdirp@^2.1.6:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-2.1.6.tgz#964fbcb12b2d8c5d6fbc62a963ac95a273e2cc19"
   integrity sha512-+hEnITedc8LAtIP9u3HJDFIdcLV2vXP33sqLLIzkv1Db1zO/1OxbvYf0Y1OC/S/Qo5dxHXepofhmxL02PsKe+A==
 
-moo@^0.5.0, moo@^0.5.1:
+moo@^0.5.0, moo@^0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/moo/-/moo-0.5.2.tgz#f9fe82473bc7c184b0d32e2215d3f6e67278733c"
   integrity sha512-iSAJLHYKnX41mKcJKjqvnAN9sf0LMDTXDEvFv+ffuRR9a1MIuXLjMNL6EsnDHSkKLTWNqQQ5uo61P4EbU4NU+Q==
