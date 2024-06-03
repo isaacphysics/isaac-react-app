@@ -14,7 +14,7 @@ const renderCareers = async (role?: TestUserRole) => {
 describe("Careers", () => {
   it("renders section title, video, description and more videos button for logged out user", () => {
     renderCareers();
-    const sectionTitle = screen.getByRole("button", { name: /Careers in Computer Science/i });
+    const sectionTitle = screen.getByRole("heading", { name: /Careers in Computer Science/i, level: 4 });
     const video = screen.getByTitle(/career-video/i);
     const videoDescription = screen.getByText(/Better understand computer science curriculum/i);
     const button = screen.getByRole("link", { name: /see more careers videos/i });

@@ -25,7 +25,7 @@ export const CareersBanner = () => {
   const user = useAppSelector(selectors.user.orNull);
   return (
     <Container className="d-flex align-items-center flex-column">
-      <button className="btn-lg">Careers in Computer Science</button>
+      <h4 className="career-title">Careers in Computer Science</h4>
       <Row className="career reversed">
         <Col xs={12} sm={6} className="video-column">
           <iframe
