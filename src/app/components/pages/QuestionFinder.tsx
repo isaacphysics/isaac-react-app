@@ -22,7 +22,6 @@ import {
     isStaff,
     Item,
     logEvent,
-    searchResultIsPublic,
     selectOnChange,
     siteSpecific,
     SortOrder,
@@ -37,9 +36,10 @@ import {
     ifKeyIsEnter,
     TAG_ID,
     itemiseTag,
-    isLoggedIn
+    isLoggedIn,
+    SEARCH_RESULTS_PER_PAGE
 } from "../../services";
-import {AudienceContext, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
+import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {Loading} from "../handlers/IsaacSpinner";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
@@ -119,12 +119,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(!!params.fasttrack);
     const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({});
 
+    const [disableLoadMore, setDisableLoadMore] = useState(false);
+
     const subjects = arrayFromPossibleCsv(params.subjects);
     const fields = arrayFromPossibleCsv(params.fields);
     const topics = arrayFromPossibleCsv(params.topics);
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(
         processTagHierarchy(subjects, fields, topics)
     );
+
+    const [hideCompleted, setHideCompleted] = useState(!!params.hideCompleted);
 
     const choices = [tags.allSubjectTags.map(itemiseTag)];
     let index;
@@ -160,11 +164,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         } : {};
     }, [isBookSearch, searchDifficulties, searchExamBoards, searchStages]);
 
-    const {results: questions, totalResults: totalQuestions} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
+    const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
-                            debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], fasttrack: boolean, startIndex: number) => {
+                            debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], fasttrack: boolean, hideCompleted: boolean, startIndex: number) => {
             // Clear front-end sorting so as not to override ElasticSearch's match ranking
             setQuestionsSort({});
 
@@ -202,8 +206,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 difficulties: difficulties.join(",") || undefined,
                 examBoards: examBoardString,
                 fasttrack,
+                hideCompleted,
                 startIndex,
-                limit: 30
+                limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need, as to know if there are more results
             }));
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
@@ -238,7 +243,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     }, [searchStages]);
 
     useEffect(() => {
-        searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, 0);
+        setPageCount(1);
+        setDisableLoadMore(false);
+        searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, 0);
 
         const params: {[key: string]: string} = {};
         if (searchStages.length) params.stages = toSimpleCSV(searchStages);
@@ -248,6 +255,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (isAda && searchExamBoards.length) params.examBoards = toSimpleCSV(searchExamBoards);
         if (isPhy && searchBook.length) params.book = toSimpleCSV(searchBook);
         if (isPhy && searchFastTrack) params.fasttrack = "set";
+        if (hideCompleted) params.hideCompleted = "set";
 
         if (isPhy) {
             tiers.forEach((tier, i) => {
@@ -260,23 +268,39 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, selections]);
+    },[searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, selections, hideCompleted]);
 
     const sortedQuestions = useMemo(() => {
-        return questions && sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
-            questions.filter(question => {
-                const qIsPublic = searchResultIsPublic(question, user);
-                if (isBookSearch) return qIsPublic;
-                const qTopicsMatch =
-                    searchTopics.length === 0 ||
-                    (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
+        if (questions) {
+            if (questions.length < SEARCH_RESULTS_PER_PAGE + 1) {
+                setDisableLoadMore(true);
+            }
 
-                return qIsPublic && qTopicsMatch;
-            })
-        );
-    }, [questions, user, searchTopics, isBookSearch, questionsSort, creationContext]);
+            return sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
+                questions.slice(0, SEARCH_RESULTS_PER_PAGE)
+                // .filter(question => searchResultIsPublic(question, user))
+            );
+        }
+    }, [questions]);
+
+    const [displayQuestions, setDisplayQuestions] = useState<ContentSummaryDTO[] | undefined>(undefined);
+    const [pageCount, setPageCount] = useState(1);
+
+    useEffect(() => {
+        if (displayQuestions && nextSearchOffset && pageCount > 1) {
+            setDisplayQuestions(dqs => [...dqs ?? [], ...sortedQuestions ?? []]);
+        } else {
+            setDisplayQuestions(sortedQuestions);
+        }
+    }, [sortedQuestions]);
 
     const [revisionMode, setRevisionMode] = useState(!!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS);
+
+    useEffect(() => {
+        if (revisionMode) {
+            setHideCompleted(false);
+        }
+    }, [revisionMode]);
 
     const debouncedRevisionModeUpdate = useCallback(debounce(() => {
         if (user && isLoggedIn(user)) {
@@ -401,12 +425,20 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         setRevisionMode(r => !r); 
                                         debouncedRevisionModeUpdate();
                                     }}
-                                    label={<p><b>Revision mode</b></p>}
+                                    label={<p>Revision mode</p>}
                                 />
                                 <span id="revision-mode-checkbox" className="icon-help"/>
                                 <RS.UncontrolledTooltip target="revision-mode-checkbox" placement="top" autohide={false}>
                                     Revision mode hides your previous answers, so you can practice questions that you have answered before.
                                 </RS.UncontrolledTooltip>
+                            </div>
+                            <div className="d-flex">
+                                <StyledCheckbox 
+                                    checked={hideCompleted}
+                                    onChange={() => setHideCompleted(h => !h)}
+                                    label={<p>Hide completed questions</p>}
+                                    disabled={revisionMode}
+                                />
                             </div>
                         </RS.Col>
                     </RS.Form>
@@ -422,15 +454,28 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 </RS.Col>
             </RS.CardHeader>
             <Suspense fallback={<Loading/>}>
-                <RS.CardBody className={classNames({"p-0 m-0": isAda && sortedQuestions?.length})}>
-                    <ShowLoading until={sortedQuestions}>
+                <RS.CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
+                    <ShowLoading until={displayQuestions}>
                         {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
                          selections.every(v => v.length === 0) ?
                             <em>Please select filters</em> :
-                            (sortedQuestions?.length ?
+                            (displayQuestions?.length ?
                                 <>
-                                    <LinkToContentSummaryList items={sortedQuestions}/>
-                                    {sortedQuestions && (totalQuestions ?? 0) > sortedQuestions.length &&
+                                    <LinkToContentSummaryList items={displayQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
+                                    <RS.Row>
+                                        <RS.Col className="d-flex justify-content-center mb-3">
+                                            <RS.Button
+                                                onClick={() => {
+                                                    searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
+                                                    setPageCount(c => c + 1);
+                                                }}
+                                                disabled={disableLoadMore}
+                                            >
+                                                Load more
+                                            </RS.Button>
+                                        </RS.Col>
+                                    </RS.Row>
+                                    {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
                                     <div role="status" className={"alert alert-light border"}>
                                             {`${totalQuestions} questions match your criteria.`}<br/>
                                             Not found what you&apos;re looking for? Try refining your search filters.

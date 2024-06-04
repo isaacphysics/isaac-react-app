@@ -169,7 +169,7 @@ export const LinkToContentSummaryList = ({items, search, displayTopicTitle, ...r
     className?: string;
     cssModule?: any;
 }) => {
-    return <ListGroup {...rest} className={classNames("link-list list-group-links", {"mb-3": isPhy})}>
+    return <ListGroup {...rest} className="link-list list-group-links mb-3">
         {items.map(item => <ContentSummaryListGroupItem item={item} search={search} key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}/>)}
     </ListGroup>;
 };

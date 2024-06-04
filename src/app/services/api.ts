@@ -156,7 +156,7 @@ export const api = {
         get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
             return endpoint.get(`/pages/questions/${id}`);
         },
-        search: (query: QuestionSearchQuery): AxiosPromise<ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+        search: (query: QuestionSearchQuery): AxiosPromise<ApiTypes.SearchResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
             return endpoint.get(`/pages/questions/`, {
                 params: query,
             });

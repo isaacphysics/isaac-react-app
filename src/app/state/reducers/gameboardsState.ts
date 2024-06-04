@@ -1,8 +1,8 @@
-import {ContentSummaryDTO, ResultsWrapper} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, SearchResultsWrapper} from "../../../IsaacApiTypes";
 import {Action} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
 
-type QuestionSearchResultState = ResultsWrapper<ContentSummaryDTO> | null;
+type QuestionSearchResultState = SearchResultsWrapper<ContentSummaryDTO> | null;
 export const questionSearchResult = (questionSearchResult: QuestionSearchResultState = null, action: Action) => {
     switch(action.type) {
         case ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS: {

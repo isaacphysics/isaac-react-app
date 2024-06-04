@@ -23,15 +23,15 @@
           background: #000;
           border-color: #000;
   
-          &:hover {
+          &:hover, &:disabled {
             background: #333;
             border-color: #333;
           }
         }
   
-        &:not(.checked):hover {
-          background: #eee;
-          border-color: #222;
+        &:not(.checked):hover, &:not(.checked):disabled {
+          background: #f8f8f8;
+          border-color: #666;
         }
 
         &:focus {

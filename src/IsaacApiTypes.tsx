@@ -736,6 +736,10 @@ export interface ResultsWrapper<T> {
     totalResults?: number;
 }
 
+export interface SearchResultsWrapper<T> extends ResultsWrapper<T> {
+    nextSearchOffset?: number;
+}
+
 export interface Address {
     addressLine1?: string;
     addressLine2?: string;

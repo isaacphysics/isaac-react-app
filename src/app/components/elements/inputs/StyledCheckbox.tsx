@@ -30,7 +30,7 @@ export const StyledCheckbox = (props : InputProps) => {
                 onKeyDown={(e) => ifKeyIsEnter(() => {onCheckChange({...e, target: {...e.currentTarget, checked: !e.currentTarget.checked}}); e.preventDefault();})(e)}
             />
         </div>
-        {props.label && <label htmlFor={id} className="pt-1" {...props.label.props}/>}
+        {props.label && <label htmlFor={id} className={classNames("pt-1", {"text-muted" : props.disabled})} {...props.label.props}/>}
         <Spacer/>
     </div>;
 };
