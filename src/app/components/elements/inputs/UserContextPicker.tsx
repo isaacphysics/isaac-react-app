@@ -66,6 +66,10 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                                 if (possibleExamBoards.length > 0 && !possibleExamBoards.includes(EXAM_BOARD.ALL)) {
                                     examBoard = possibleExamBoards[0];
                                 }
+                                // If we only have one possible exam board besides All, use that.
+                                else if (possibleExamBoards.length === 2 && possibleExamBoards.includes(EXAM_BOARD.ALL)) {
+                                    examBoard = possibleExamBoards.filter(eb => eb !== EXAM_BOARD.ALL)[0];
+                                }
                                 newParams.examBoard = examBoard;
                                 dispatch(transientUserContextSlice.actions.setExamBoard(examBoard));
                             }
