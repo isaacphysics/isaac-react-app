@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { PortalInHtmlHook } from "./utils";
 import { InlineContext } from "../../../../../IsaacAppTypes";
 import InlineEntryZoneBase from "./InlineEntryZone";
+import { siteSpecific } from "../../../../services";
 
 // See the comment on `PORTAL_HOOKS` constant for an explanation of how this works
 export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
@@ -34,7 +35,7 @@ export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
             }
         }
         const width = defaultWidth ? 100 : undefined;
-        const height = defaultHeight ? 27 : undefined;
+        const height = defaultHeight ? siteSpecific(27, 25) : undefined;
         inlineZoneConstructors.push({id: inlineZones[i].id, className, width, height});
     }
     
