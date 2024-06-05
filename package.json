@@ -14,7 +14,7 @@
     "@reduxjs/toolkit": "^1.9.7",
     "axios": "^1.7.2",
     "billboard.js": "^3.11.3",
-    "dayjs": "^1.11.10",
+    "dayjs": "^1.11.11",
     "he": "^1.2.0",
     "highlight.js": "^11.9.0",
     "history": "^4.10.1",
