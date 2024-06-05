@@ -38,8 +38,9 @@ import {
     KEY,
     PATHS,
     persistence,
-    showNotification
-} from "../../services"
+    showNotification,
+    trackEvent
+} from "../../services";
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
 import {AuthError} from "../pages/AuthError";
@@ -113,6 +114,7 @@ export const IsaacApp = () => {
         return () => {
             closeWebSocket();
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, loggedInUserId]);
 
     const showNotifications = isLoggedIn(user) && showNotification(user);
@@ -120,9 +122,21 @@ export const IsaacApp = () => {
         const dateNow = new Date();
         if (showNotifications && notifications && notifications.length > 0) {
             dispatch(openActiveModal(notificationModal(notifications[0])));
-            persistence.save(KEY.LAST_NOTIFICATION_TIME, dateNow.toString())
+            persistence.save(KEY.LAST_NOTIFICATION_TIME, dateNow.toString());
         }
     }, [dispatch, showNotifications, notifications]);
+
+
+    function onBeforePrint() {
+        trackEvent("print_page");
+    }
+    useEffect(() => {
+        window.addEventListener("beforeprint", onBeforePrint);
+
+        return () => {
+            window.removeEventListener("beforeprint", onBeforePrint);
+        };
+    });
 
     // Render
     return <Router history={history}>
