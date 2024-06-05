@@ -12,7 +12,7 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@reduxjs/toolkit": "^1.9.7",
-    "axios": "^1.6.8",
+    "axios": "^1.7.2",
     "billboard.js": "^3.11.3",
     "dayjs": "^1.11.10",
     "he": "^1.2.0",
