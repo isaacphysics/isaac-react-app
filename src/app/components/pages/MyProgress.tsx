@@ -53,7 +53,7 @@ const siteSpecificStats = siteSpecific(
     {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
-            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion"
+            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacLlmFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion"
         ],
         questionCountByTag: {},
         typeColWidth: "col-lg-4",
