@@ -45,3 +45,11 @@ button {
   border: none;
   outline: none !important;
 }
+
+input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="button"].btn-block {
+  width: 100%;
+}
+
+.btn.btn-primary:focus-visible, .btn.btn-outline-primary:focus-visible {
+  background-color: unset !important;
+}

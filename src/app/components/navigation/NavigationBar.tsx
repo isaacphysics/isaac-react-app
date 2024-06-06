@@ -60,7 +60,7 @@ export const NavigationSection = ({className, children, title, topLevelLink, to}
         setIsOpen(!isOpen);
     }
     const linkClasses = siteSpecific("p-3 ms-3 me-3", classNames("mx-0 mx-nav-1 p-3 font-h4 link-light", {"open": isOpen}));
-    const dropdownClasses = siteSpecific("p-3 pt-0 m-0 mx-lg-4 nav-section", "p-3 pt-0 m-0 nav-section");
+    const dropdownClasses = siteSpecific("p-3 m-0 mx-lg-4 nav-section", "p-3 pt-0 m-0 nav-section");
     return <MenuOpenContext.Consumer>
         {({setMenuOpen}) => <Dropdown className={className} nav inNavbar isOpen={isOpen} toggle={toggle}>
             {topLevelLink ?
