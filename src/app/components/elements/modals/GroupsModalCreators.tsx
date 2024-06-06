@@ -277,14 +277,16 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
         </Table>
 
         {userIsOwner && <Alert className={classNames("px-2 py-2 mb-2", {"my-3": isAda})} color={group.additionalManagerPrivileges ? "danger" : "warning"}>
-            <Input
-                id="additional-manager-privileges-check"
-                checked={group.additionalManagerPrivileges}
-                className={"mb-2"}
-                type="checkbox"
-                onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
-            />
-            <Label for="additional-manager-privileges-check" className="ms-2">Give additional managers extra privileges</Label>
+            <div>
+                <Input
+                    id="additional-manager-privileges-check"
+                    checked={group.additionalManagerPrivileges}
+                    className={"mb-2"}
+                    type="checkbox"
+                    onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
+                />
+                <Label for="additional-manager-privileges-check" className="ms-2 mb-0">Give additional managers extra privileges</Label>
+            </div>
             {group.additionalManagerPrivileges
                 ? <>
                     <span className={"fw-bold"}>Caution</span>: All other group managers are allowed delete

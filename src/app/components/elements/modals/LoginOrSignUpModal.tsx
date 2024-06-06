@@ -69,13 +69,16 @@ const LoginOrSignUpBody = () => {
 
                         <PasswordResetButton email={email} isValidEmail={isValidEmail} setPasswordResetAttempted={setPasswordResetAttempted} small />
 
-                        <Input
-                            id="login-remember-me"
-                            className={"mb-2"}
-                            type="checkbox"
-                            onChange={e => setRememberMe(e.target.checked)}
-                        />
-                        <Label for="login-remember-me" className="ms-2">Remember me</Label>
+                        <div>
+                            <Input
+                                id="login-remember-me"
+                                className={"mb-2"}
+                                type="checkbox"
+                                onChange={e => setRememberMe(e.target.checked)}
+                            />
+                            <Label for="login-remember-me" className="ms-2">Remember me</Label>
+                        </div>
+                        
                         <div className="text-end">
                            <h4 role="alert" className="text-danger text-end mb-0">
                                 {errorMessage}

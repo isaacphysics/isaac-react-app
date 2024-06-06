@@ -277,20 +277,22 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                         />
                                     </Col>
                                     <Col lg={siteSpecific(12, 6)} xs={12} className="pt-2">
-                                        <Input
-                                            id="age-over-13-confirmation-input" name="age-over-13-confirmation" type="checkbox"
-                                            className="ms-1 ms-md-0"
-                                            checked={confirmedOverThirteen}
-                                            required
-                                            disabled={(isPhy && dob10To12CheckboxChecked) || registrationUser.dateOfBirth}
-                                            onChange={(e) => setDobOver13CheckboxChecked(e?.target.checked)}
-                                            invalid={dobTooYoung}
-                                        />
-                                        <Label for="age-over-13-confirmation-input" className="ms-2">I am at least 13 years old</Label>
-                                        {isPhy && <>
+                                        <div>
+                                            <Input
+                                                id="age-over-13-confirmation-input" name="age-over-13-confirmation" type="checkbox"
+                                                className="m-0 ms-1 ms-md-0"
+                                                checked={confirmedOverThirteen}
+                                                required
+                                                disabled={(isPhy && dob10To12CheckboxChecked) || registrationUser.dateOfBirth}
+                                                onChange={(e) => setDobOver13CheckboxChecked(e?.target.checked)}
+                                                invalid={dobTooYoung}
+                                            />
+                                            <Label for="age-over-13-confirmation-input" className="ms-2">I am at least 13 years old</Label>
+                                        </div>
+                                        {isPhy && <div>
                                             <Input
                                                 id="age-10-to-12-confirmation-input" name="age-10-to-12-confirmation" type="checkbox"
-                                                className="ms-1 ms-md-0"
+                                                className="m-0 ms-1 ms-md-0"
                                                 checked={confirmedTenToTwelve}
                                                 required
                                                 disabled={dobOver13CheckboxChecked || registrationUser.dateOfBirth}
@@ -298,7 +300,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                                 invalid={dobTooYoung}
                                             />
                                             <Label for="age-10-to-12-confirmation-input" className="ms-2">I am aged 10 to 12 years old</Label>
-                                        </>}
+                                        </div>}
                                     </Col>
                                 </Row>
                             </FormGroup>
