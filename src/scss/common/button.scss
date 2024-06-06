@@ -53,3 +53,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 .btn.btn-primary:focus-visible, .btn.btn-outline-primary:focus-visible {
   background-color: unset !important;
 }
+
+.btn-close {
+  align-self: center;
+}

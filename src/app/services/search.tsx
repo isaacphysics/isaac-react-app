@@ -101,7 +101,7 @@ export function withSearch(Component: React.FC<SearchInputProps>) {
         useEffect(() => { if (location.pathname === "/search") { setSearchText(initialValue ?? ""); }}, [location]);
 
         return <Form onSubmit={doSearch} className={classNames(className, {"form-inline" : inline})}>
-            <FormGroup className='form-group search--main-group'>
+            <div className='form-group search--main-group'>
                 <Component inputProps={{
                     maxLength: SEARCH_CHAR_LENGTH_LIMIT,
                     type: "search",
@@ -111,7 +111,7 @@ export function withSearch(Component: React.FC<SearchInputProps>) {
                     placeholder: "Search"
                 }} setSearchText={setSearchText} searchText={searchText} />
                 <input type="hidden" name="types" value="isaacQuestionPage,isaacConceptPage" />
-            </FormGroup>
+            </div>
         </Form>;
     };
     SearchComponent.displayName = "SearchComponent";

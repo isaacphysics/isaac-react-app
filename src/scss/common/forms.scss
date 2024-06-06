@@ -207,7 +207,7 @@ input[type=date]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-select.form-control {
+select.form-control, input.form-control {
   height: calc(1.5em + 0.75rem + 2px);
 }
 
@@ -237,13 +237,21 @@ select.form-control {
   align-items: center;
 }
 
+.form-check-input {
+  margin-top: 0;
+}
+
+.form-label {
+  margin-bottom: 0;
+}
+
 @media (min-width: 576px) {
   .form-inline label {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 0;
-    > * {
+    > *:not([type='checkbox']) { // checkboxes in BS5 have no content so would be made 0 width
       width: max-content;
     }
   }
@@ -263,4 +271,9 @@ select.form-control {
 
 label {
   margin-bottom: 0.5rem;
+}
+
+[type=search] {
+  border-radius: 2.5rem;
+  height: 2.6rem !important;
 }
