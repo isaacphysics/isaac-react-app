@@ -80,19 +80,24 @@
     border-color: $color !important;
   }
 
-  /* checkboxes and radio buttons */
-  .custom-control-input {
-    &:checked ~ .custom-control-label::before {
+  /* BS5 checkboxes and radio buttons */
+  .form-check-input {
+    width: 24px;
+    height: 24px;
+    transition: all 0.1s ease-in-out;
+    outline: none;
+    box-shadow: none;
+    &:checked {
       border-color: $color;
       background-color: $color;
     }
-    &:focus ~ .custom-control-label::before {
-      box-shadow: 0 0 0 $input-btn-focus-width rgba($color, .25);
-    }
-    &:focus:not(:checked) ~ .custom-control-label::before {
+    &:focus {
       border-color: $color;
+      &:checked {
+        box-shadow: 0 0 0 0.25rem rgba($color, 0.25);
+      }
     }
-    &:not(:disabled):active ~ .custom-control-label::before {
+    &:not(:disabled):active {
       background-color: lighten($color, 35%);
       border-color: lighten($color, 35%);
     }
@@ -108,7 +113,7 @@
         @include button-variant($color, $color);
       }
       &:focus {
-        box-shadow: 0 0 0 $input-btn-focus-width rgba($color, .25);
+        box-shadow: 0 0 0 0.25rem rgba($color, .25);
       }
     }
   }
