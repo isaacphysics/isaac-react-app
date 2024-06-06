@@ -136,7 +136,7 @@ export const IsaacApp = () => {
         return () => {
             window.removeEventListener("beforeprint", onBeforePrint);
         };
-    });
+    }, []);
 
     // Render
     return <Router history={history}>
