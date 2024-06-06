@@ -257,7 +257,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
             {isAda && <hr/>}
             <Row>
                 <Col xs={12} sm={canArchive ? 8 : 12}>
-                    <Form inline onSubmit={saveUpdatedGroup}>
+                    <Form className="form-inline" onSubmit={saveUpdatedGroup}>
                         <InputGroup className="w-100 separate-input-group">
                             <Input
                                 innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}

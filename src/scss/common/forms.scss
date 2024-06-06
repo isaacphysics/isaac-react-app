@@ -196,7 +196,6 @@ label.label-radio > div {
 .form-inline .form-check-input {
   position: relative;
   flex-shrink: 0;
-  margin-top: 0;
   margin-right: 0.25rem;
   margin-left: 0;
 }
@@ -228,8 +227,26 @@ select.form-control {
 
 .form-inline .form-control {
   display: inline-block;
-  width: auto;
+  // width: auto;
   vertical-align: middle;
+}
+
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+@media (min-width: 576px) {
+  .form-inline label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+    > * {
+      width: max-content;
+    }
+  }
 }
 
 .form-row {
@@ -246,8 +263,4 @@ select.form-control {
 
 label {
   margin-bottom: 0.5rem;
-}
-
-input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="button"].btn-block {
-  width: 100%;
 }

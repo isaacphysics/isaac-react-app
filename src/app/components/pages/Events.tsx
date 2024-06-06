@@ -65,7 +65,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
             <MetaDescription description={metaDescription} />
             <div className="my-4">
                 {/* Filters */}
-                <RS.Form inline className="d-flex justify-content-end">
+                <RS.Form className="form-inline d-flex justify-content-end">
                     <RS.Label>Filter by
                         <RS.Input id="event-status-filter" className="ms-2 me-3" type="select" value={statusFilter} onChange={e => {
                             const selectedFilter = e.target.value as EventStatusFilter;

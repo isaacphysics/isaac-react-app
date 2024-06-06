@@ -7,6 +7,7 @@ import {Immutable} from "immer";
 import React, {FormEvent, useEffect, useRef, useState} from "react";
 import {useHistory, useLocation} from "react-router-dom";
 import {Form, FormGroup} from "reactstrap";
+import classNames from "classnames";
 
 export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {
     const previousQuery = queryString.parse(history.location.search);
@@ -99,7 +100,7 @@ export function withSearch(Component: React.FC<SearchInputProps>) {
         const location = useLocation();
         useEffect(() => { if (location.pathname === "/search") { setSearchText(initialValue ?? ""); }}, [location]);
 
-        return <Form inline={inline} onSubmit={doSearch} className={className}>
+        return <Form onSubmit={doSearch} className={classNames(className, {"form-inline" : inline})}>
             <FormGroup className='form-group search--main-group'>
                 <Component inputProps={{
                     maxLength: SEARCH_CHAR_LENGTH_LIMIT,

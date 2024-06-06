@@ -85,7 +85,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             </Row>
             <Row>
                 <Col>
-                    <Form inline onSubmit={doSearch}>
+                    <Form className="form-inline" onSubmit={doSearch}>
                         <Input
                             className='search--filter-input mt-4'
                             type="search" value={searchText || ""}
@@ -105,7 +105,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                                 </h3>
                             </Col>
                             <Col lg={8} md={9} xs={12}>
-                                <Form id="concept-filter" inline className="search-filters">
+                                <Form id="concept-filter" className="form-inline search-filters">
                                     <Label for="concept-filter" className="d-none d-sm-inline-block">Filter:</Label>
                                     <Label>
                                         <Input id="problem-search-phy" type="checkbox" defaultChecked={conceptFilterPhysics} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterPhysics(e.target.checked)} />

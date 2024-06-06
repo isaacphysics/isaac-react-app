@@ -129,7 +129,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                 </h3>
                             </RS.Col>
                             <RS.Col sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)}>
-                                <RS.Form inline className="search-filters">
+                                <RS.Form className="form-inline search-filters">
                                     <RS.Row className="w-100 align-items-center justify-content-end m-0">
                                         <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block me-1">
                                             {`Filter${siteSpecific("","s")}:`}
