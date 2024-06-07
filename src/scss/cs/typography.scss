@@ -51,13 +51,13 @@ $code_font_scale_ratio: 1.16;
 
 .fw-regular {
   font-family: $secondary-font, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
-  font-weight: $fw-normal !important;
+  @extend .fw-normal;
 }
 
 .fw-bold {
   // FIXME this is nasty (using semi-bold for bold) but some of the shared SCSS uses fw-bold
   font-family: $secondary-font-semi-bold, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
-  font-weight: $fw-normal !important;
+  @extend .fw-normal;
 }
 
 .fw-semi-bold {
