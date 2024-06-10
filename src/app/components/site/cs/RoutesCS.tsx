@@ -91,7 +91,7 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/news" component={News} />,
 
     // Online Courses
-    <TrackedRoute key={key++} exact path="/online_courses" component={OnlineCourses} />,
+    <TrackedRoute key={key++} exact path="/pages/online_courses" component={OnlineCourses} />,
 
     // Books: FIXME ADA are we going to include these?
     // <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,

@@ -81,7 +81,7 @@ export const HeaderCS = () => {
                         <NavigationSection title={"Events"}>
                             <LinkItem to="/pages/teacher_mentoring_2024">Teacher mentoring</LinkItem>
                             <LinkItem to="/pages/student_challenges">Student challenges</LinkItem>
-                            <LinkItem to="/online_courses">Online courses</LinkItem>
+                            <LinkItem to="/pages/online_courses">Online courses</LinkItem>
                         </NavigationSection>
 
                         <NavigationSection title={"Help"}>
