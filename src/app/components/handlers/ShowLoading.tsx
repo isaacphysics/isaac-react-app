@@ -32,7 +32,7 @@ export const ShowLoading = <T extends {}>({until, children, thenRender, placehol
                 clearTimeout(timeout);
             }
         };
-    }, [until, children, thenRender]);
+    }, [until, thenRender]);
 
     switch(until) {
         case null:

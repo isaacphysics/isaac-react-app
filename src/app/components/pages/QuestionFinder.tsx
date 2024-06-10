@@ -242,6 +242,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     useEffect(() => {
         setPageCount(1);
         setDisableLoadMore(false);
+        setDisplayQuestions(undefined);
         searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, 0);
 
         const params: {[key: string]: string} = {};
@@ -453,39 +454,37 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     </h3>
                 </RS.Col>
             </RS.CardHeader>
-            <Suspense fallback={<Loading/>}>
-                <RS.CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
-                    <ShowLoading until={displayQuestions}>
-                        {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
-                         selections.every(v => v.length === 0) ?
-                            <em>Please select filters</em> :
-                            (displayQuestions?.length ?
-                                <>
-                                    <LinkToContentSummaryList items={displayQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
-                                    <RS.Row>
-                                        <RS.Col className="d-flex justify-content-center mb-3">
-                                            <RS.Button
-                                                onClick={() => {
-                                                    searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
-                                                    setPageCount(c => c + 1);
-                                                }}
-                                                disabled={disableLoadMore}
-                                            >
-                                                Load more
-                                            </RS.Button>
-                                        </RS.Col>
-                                    </RS.Row>
-                                    {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
-                                    <div role="status" className={"alert alert-light border"}>
-                                            {`${totalQuestions} questions match your criteria.`}<br/>
-                                            Not found what you&apos;re looking for? Try refining your search filters.
-                                    </div>}
-                                </> :
-                                <em>No results found</em>)
-                        }
-                    </ShowLoading>
-                </RS.CardBody>
-            </Suspense>
+            <RS.CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
+                <ShowLoading until={displayQuestions}>
+                    {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
+                        selections.every(v => v.length === 0) ?
+                        <em>Please select filters</em> :
+                        (displayQuestions?.length ?
+                            <>
+                                <LinkToContentSummaryList items={displayQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
+                                <RS.Row>
+                                    <RS.Col className="d-flex justify-content-center mb-3">
+                                        <RS.Button
+                                            onClick={() => {
+                                                searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
+                                                setPageCount(c => c + 1);
+                                            }}
+                                            disabled={disableLoadMore}
+                                        >
+                                            Load more
+                                        </RS.Button>
+                                    </RS.Col>
+                                </RS.Row>
+                                {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
+                                <div role="status" className={"alert alert-light border"}>
+                                        {`${totalQuestions} questions match your criteria.`}<br/>
+                                        Not found what you&apos;re looking for? Try refining your search filters.
+                                </div>}
+                            </> :
+                            <em>No results found</em>)
+                    }
+                </ShowLoading>
+            </RS.CardBody>
         </RS.Card>
     </RS.Container>;
 });
