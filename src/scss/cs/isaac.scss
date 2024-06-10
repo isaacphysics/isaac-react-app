@@ -110,7 +110,7 @@ $highlight-text-dark: $cs-black;
     }
 }
 .hi-cyan-25.hi-cyan-25 {
-    background-color: $cyan-600;
+    background-color: $cyan-600 !important;
     color: $highlight-text-dark;
     tr, td, th {
         background-color: $cyan-100;
