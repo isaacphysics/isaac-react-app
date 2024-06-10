@@ -271,6 +271,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (questions) {
             if (questions.length < SEARCH_RESULTS_PER_PAGE + 1) {
                 setDisableLoadMore(true);
+            } else {
+                setDisableLoadMore(false);
             }
 
             return sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
@@ -468,6 +470,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                                 onClick={() => {
                                                     searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
                                                     setPageCount(c => c + 1);
+                                                    setDisableLoadMore(true);
                                                 }}
                                                 disabled={disableLoadMore}
                                             >
