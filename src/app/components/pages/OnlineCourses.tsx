@@ -27,7 +27,7 @@ export const OnlineCourses = () => {
         });
     }, [page]);
 
-    const metaDescription = ""; // TODO
+    const metaDescription = "Browse the Raspberry Pi Foundation’s free online courses for educators and choose from a range of computing topics.";
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Online courses"} />
