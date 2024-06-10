@@ -40,7 +40,7 @@ import {
 } from "../../services";
 import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
-import {Loading} from "../handlers/IsaacSpinner";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { RouteComponentProps, useHistory, withRouter } from "react-router";
 import { LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
@@ -329,6 +329,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         "Search for the perfect computer science questions to study. For revision. For homework. For the classroom."
     );
 
+    const loadingPlaceholder = <div className="w-100 text-center pb-2">
+        <h2 aria-hidden="true" className="pt-5">Searching...</h2>
+        <IsaacSpinner />
+    </div>;
+
     return <RS.Container id="finder-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={"Question Finder"} help={pageHelp}/>
         <MetaDescription description={metaDescription}/>
@@ -455,7 +460,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 </RS.Col>
             </RS.CardHeader>
             <RS.CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
-                <ShowLoading until={displayQuestions}>
+                <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                     {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
                         selections.every(v => v.length === 0) ?
                         <em>Please select filters</em> :
