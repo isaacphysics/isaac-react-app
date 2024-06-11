@@ -1,4 +1,4 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {
     AppState,
     clearQuestionSearch,
@@ -24,8 +24,6 @@ import {
     logEvent,
     selectOnChange,
     siteSpecific,
-    SortOrder,
-    sortQuestions,
     STAGE,
     useUserContext,
     STAGE_NULL_OPTIONS,
@@ -38,7 +36,7 @@ import {
     isLoggedIn,
     SEARCH_RESULTS_PER_PAGE
 } from "../../services";
-import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
@@ -108,14 +106,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     }, [userContext.stage]);
 
     const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
-
     const [searchBook, setSearchBook] = useState<string[]>(arrayFromPossibleCsv(params.book));
-
-    const isBookSearch = searchBook.length > 0;
-
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(!!params.fasttrack);
-    const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({});
-
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
     const subjects = arrayFromPossibleCsv(params.subjects);
@@ -153,22 +145,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         {value: "chemistry_16", label: "A-Level Physical Chemistry"}
     ];
 
-    const creationContext: AudienceContext = useMemo(() => {
-        return !isBookSearch ? {
-            stage: searchStages.length > 0 ? searchStages : undefined,
-            difficulty: searchDifficulties.length > 0 ? searchDifficulties : undefined,
-            examBoard: searchExamBoards.length > 0 ? searchExamBoards : undefined,
-        } : {};
-    }, [isBookSearch, searchDifficulties, searchExamBoards, searchStages]);
-
     const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
                             debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], fasttrack: boolean, hideCompleted: boolean, startIndex: number) => {
-            // Clear front-end sorting so as not to override ElasticSearch's match ranking
-            setQuestionsSort({});
-
             if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && hierarchySelections.every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for
                 dispatch(clearQuestionSearch);
@@ -212,12 +193,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }, 250),
         []
     );
-
-    const sortQuestionUpdateState = (sortState: Record<string, SortOrder>, setSortState: React.Dispatch<React.SetStateAction<Record<string, SortOrder>>>, key: string) => (order: string) => {
-        const newSortState = {...sortState};
-        newSortState[key] = order as SortOrder;
-        setSortState(newSortState);
-    };
 
     const setTierSelection = (tierIndex: number) => {
         return ((values: Item<TAG_ID>[]) => {
@@ -268,7 +243,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, selections, hideCompleted]);
 
-    const sortedQuestions = useMemo(() => {
+    const questionList = useMemo(() => {
         if (questions) {
             if (questions.length < SEARCH_RESULTS_PER_PAGE + 1) {
                 setDisableLoadMore(true);
@@ -276,10 +251,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 setDisableLoadMore(false);
             }
 
-            return sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
-                questions.slice(0, SEARCH_RESULTS_PER_PAGE)
-                // .filter(question => searchResultIsPublic(question, user))
-            );
+            return questions.slice(0, SEARCH_RESULTS_PER_PAGE);
         }
     }, [questions]);
 
@@ -288,11 +260,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         if (displayQuestions && nextSearchOffset && pageCount > 1) {
-            setDisplayQuestions(dqs => [...dqs ?? [], ...sortedQuestions ?? []]);
+            setDisplayQuestions(dqs => [...dqs ?? [], ...questionList ?? []]);
         } else {
-            setDisplayQuestions(sortedQuestions);
+            setDisplayQuestions(questionList);
         }
-    }, [sortedQuestions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [questionList]);
 
     const [revisionMode, setRevisionMode] = useState(!!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS);
 
@@ -399,7 +372,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             value={itemiseByValue(searchBook, bookOptions)}
                             onChange={(e) => {
                                 selectOnChange(setSearchBook, true)(e);
-                                sortQuestionUpdateState(questionsSort, setQuestionsSort, "title");
                             }}
                             options={bookOptions}
                         />
