@@ -7,8 +7,8 @@ import {
     useGetNewsPodListQuery
 } from "../../../state";
 import {Link} from "react-router-dom";
-import {Button, Card, CardBody, CardDeck, Col, Container, Row} from "reactstrap";
-import {EXAM_BOARD, history, isLoggedIn, SITE_TITLE, STAGE} from "../../../services";
+import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
+import {EXAM_BOARD, history, isLoggedIn, SITE_TITLE, STAGE, useDeviceSize} from "../../../services";
 import {AdaHero2x1} from "../../elements/svg/AdaHero";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
@@ -22,6 +22,7 @@ export const HomepageCS = () => {
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
     const featuredNewsItem = (news && user?.loggedIn) ? news[0] : undefined;
     const dispatch = useAppDispatch();
+    const deviceSize = useDeviceSize();
     const setStage = (stage: STAGE) => dispatch(transientUserContextSlice?.actions.setStage(stage));
     const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));
 
@@ -56,7 +57,7 @@ export const HomepageCS = () => {
                         </Col>
                         <Col xs={12} lg={5} className={"mb-1 mb-sm-3 mb-lg-0"}>
                             {isLoggedIn(user) ?
-                                <div>
+                                <div className="position-relative">
                                     <AdaHero2x1 className={"mt-5 mt-lg-0 bg-hero"}/>
                                     <FeaturedNewsItem item={featuredNewsItem} />
                                 </div>
@@ -184,9 +185,9 @@ export const HomepageCS = () => {
             {news && news.length > 0 && <section id="news">
                 <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
                     <h2 className={"font-size-1-75 mb-4"}>News</h2>
-                    <CardDeck data-testid={"news-pod-deck"} className={"justify-content-center"}>
-                        {news.slice(0, 4).map(n => <NewsCard newsItem={n} showTitle />)}
-                    </CardDeck>
+                    <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around my-3">
+                        {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n} showTitle />)}
+                    </Row>
                     <div className={"mt-4 mt-lg-5 w-100 text-center"}>
                         <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
                     </div>
