@@ -22,11 +22,11 @@
   background-repeat: no-repeat;
   background-position: 50% 30%;
   background-size: 150%;
-  @include media-breakpoint-down(md) {
+  @include media-breakpoint-down(lg) {
     background-position: 50% 50%;
     background-size: 200%;
   }
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     background-position: -13% 200px;
     background-size: 400%;
   }
@@ -79,7 +79,7 @@
 }
 
 .context-picker-container select {
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-down(md) {
     // for large sm only, widens the select precisely enough to fill the width
     max-width: 253px;
   }

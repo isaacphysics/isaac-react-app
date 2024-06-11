@@ -5,7 +5,7 @@
     box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
     margin: auto auto 2rem auto;
     padding: $question-padding;
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
       padding: 1rem;
     }
 
@@ -263,7 +263,7 @@
     margin-right: -3rem;
     padding-left: 1.5rem !important;
     padding-right: 1.5rem !important;
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
       margin-left: -1rem;
       margin-right: -1rem;
       margin-bottom: -1rem;

@@ -240,7 +240,7 @@
   }
 
   // optionally change the breakpoint for column layout on mobile
-  @include media-breakpoint-down(md){
+  @include media-breakpoint-down(lg){
       flex-direction: column;
   }
 }

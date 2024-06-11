@@ -47,7 +47,7 @@
         background-position-y: 50%;
         background-size: 50%;
         filter: opacity(7%);
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
           background-size: 90%;
           background-position-x: 300%;
         }
@@ -76,12 +76,12 @@
     .container {
       position: relative;
       .row {
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
           padding-bottom: 40vw !important;
         }
         #cs-stories-text {
           background: radial-gradient(rgba(255, 255, 255, .9) 0, rgba(255, 255, 255, .8) 60%, transparent 80%, transparent 100%);
-
+          z-index: 1;
         }
       }
       &:before {
@@ -97,10 +97,10 @@
         background-position-x: 100%;
         background-position-y: 40%;
         background-size: auto 120%;
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
           left: 11vw;
         }
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
           left: 0;
           width: 100%;
           background-position-x: 100%;
