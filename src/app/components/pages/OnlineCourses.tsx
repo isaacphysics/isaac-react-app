@@ -41,7 +41,7 @@ export const OnlineCourses = () => {
             /> : 
             <>
                 <CardDeck className="justify-content-center mt-4">
-                    {allCourses.map(n => <NewsCard key={n.id} newsItem={n} showTitle />)}
+                    {allCourses.map(n => <NewsCard key={n.id} newsItem={n} className="ratio-5x3" showTitle />)}
                 </CardDeck>
                 <div className="w-100 d-flex justify-content-center mb-5">
                     <Button className={"mt-3"} color={"primary"} disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load more courses</Button>
