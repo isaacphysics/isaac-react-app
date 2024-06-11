@@ -4,6 +4,7 @@ import {Button, Card, CardBody, CardFooter, CardImg, CardProps, CardText, CardTi
 import {IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper, isAppLink, siteSpecific} from "../../../services";
 import classNames from "classnames";
+import { ExternalLink } from "../ExternalLink";
 
 interface NewsCardProps extends CardProps {
     newsItem: IsaacPodDTO;
@@ -73,8 +74,12 @@ export const AdaNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
                 <p>{value}</p>
             </CardBody>
         </>}
-        {url && !url?.startsWith("http") && isAppLink(url) && <CardFooter className={"border-top-0 p-4"}>
-            <Button outline color={"secondary"} tag={Link} to={url}>Read more</Button>
+        {url && <CardFooter className={"border-top-0 p-4"}>
+            {!url?.startsWith("http") && isAppLink(url) ? (   
+                <Button outline color={"secondary"} tag={Link} to={url}>Read more</Button>
+            ) : (
+                <Button outline color={"secondary"} tag={ExternalLink} href={url}>Find out more</Button>
+            )}
         </CardFooter>}
     </Card>;
 };
