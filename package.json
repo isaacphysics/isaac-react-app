@@ -171,7 +171,7 @@
     "prettier": "^3.0.3",
     "react-app-polyfill": "^3.0.0",
     "react-leaflet": "^3.2.5",
-    "react-remove-props-loader": "^1.2.5",
+    "react-remove-props-loader": "^1.2.6",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.4.2",
     "sass": "~1.64.2",

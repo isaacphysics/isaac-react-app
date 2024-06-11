@@ -8275,10 +8275,10 @@ react-redux@^8.1.2:
     react-is "^18.0.0"
     use-sync-external-store "^1.0.0"
 
-react-remove-props-loader@^1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/react-remove-props-loader/-/react-remove-props-loader-1.2.5.tgz#c955353372f6bc46ff370c2892d7f66185a97a6b"
-  integrity sha512-fDBAj3NeAdBKh9da1EJWBzwFhU3mMsTIAf/fOFVqz1Kp1uPBTZHeYs/fN9ldp9zrjWUaoZK4HFB4XjdSSK+BFQ==
+react-remove-props-loader@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/react-remove-props-loader/-/react-remove-props-loader-1.2.6.tgz#82cde21bd395103a7705239c7ab4f9f40ef98bca"
+  integrity sha512-xfYLHFZm5hoX1TG0V7RXSUoq8zX3Lj85hijJtPd0i+iY1oNMc60qKAhOqeXJQ+5wXXk9Yv9fO0AYB35gpjyKHQ==
   dependencies:
     ts-morph "^22.0.0"
 
