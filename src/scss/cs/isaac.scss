@@ -214,25 +214,6 @@ $passed-fill: $cs-jet;
 $in-progress-fill: $cs-in-progress;
 $failed-fill: $cs-failed;
 
-$spacer: 1rem !default;
-$spacers: ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
-    0: 0,
-    1: ($spacer * .25),
-    2: ($spacer * .5),
-    3: $spacer,
-    4: ($spacer * 1.5),
-    5: ($spacer * 3),
-    6: ($spacer * 6.25) // 100px-ish
-);
-$grid-breakpoints: (
-    xs: 0,
-    sm: 576px,
-    md: 768px,
-    lg: 992px,
-    xl: 1200px,
-    nav: 1256px,
-    xxl: 1400px
-);
 
 // fonts
 $primary-font: "poppins-regular", sans-serif;
@@ -292,7 +273,29 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 
 // ISAAC
 // Node module imports
-@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/functions";
+
+$nav-link-hover-color: $cs-white !important;
+$toast-padding-x: 1.5rem;
+
+@import "~bootstrap/scss/variables"; // all Bootstrap default overrides must appear before this; anything that uses the defaults must come after
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  nav: 1256px,
+  xxl: 1400px
+);
+
+$spacer: 1rem !default;
+$spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
+    6: ($spacer * 6.25) // 100px-ish
+));
+
+@import "~bootstrap/scss/bootstrap"; // all Bootstrap overrides must appear before this
 @import "~katex/dist/katex.min.css";
 @import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 @import "~billboard.js/dist/theme/insight.css";
