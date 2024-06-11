@@ -443,7 +443,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
             />
             <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_help")} ifNotFound={RenderNothing} />
             <div className="w-100 text-end">
-                <InputGroup className="d-inline text-nowrap">
+                <div className="d-inline text-nowrap">
                     <Label className="pe-2 mt-1">Sort assignments and tests:</Label>
                     <UncontrolledButtonDropdown size="sm">
                         <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
@@ -455,8 +455,8 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                             )}
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
-                </InputGroup>
-                <InputGroup className="d-inline text-nowrap ms-4">
+                </div>
+                <div className="d-inline text-nowrap ms-4">
                     <Label className="pe-2 mt-1">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">
                         <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
@@ -468,7 +468,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                             )}
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
-                </InputGroup>
+                </div>
             </div>
         </Container>
         <ShowLoadingQuery
