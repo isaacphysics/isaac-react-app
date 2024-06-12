@@ -158,7 +158,14 @@ module.exports = (env) => {
                 REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
                 GOOGLE_RECAPTCHA_SITE_KEY: `"${process.env.GOOGLE_RECAPTCHA_SITE_KEY}"`,
                 ENV_QUIZ_FEATURE_FLAG: process.env.QUIZ_FEATURE && process.env.QUIZ_FEATURE.trim() === "true",
-                EDITOR_PREVIEW: JSON.stringify(isRenderer)
+                EDITOR_PREVIEW: JSON.stringify(isRenderer),
+                REACT_APP_STAGING_URL: `"${process.env.REACT_APP_STAGING_URL}"`,
+                REACT_APP_API_PATH_LOCAL: `"${process.env.REACT_APP_API_PATH_LOCAL}"`,
+                REACT_APP_EDITOR_ORIGIN: `"${process.env.REACT_APP_EDITOR_ORIGIN}"`,
+                REACT_APP_GOOGLE_ANALYTICS_4_MEASUREMENT_ID_1: `"${process.env.REACT_APP_GOOGLE_ANALYTICS_4_MEASUREMENT_ID_1}"`,
+                REACT_APP_GOOGLE_ANALYTICS_4_MEASUREMENT_ID_2: `"${process.env.REACT_APP_GOOGLE_ANALYTICS_4_MEASUREMENT_ID_2}"`,
+                REACT_APP_GOOGLE_ANALYTICS_4_MEASUREMENT_ID_3: `"${process.env.REACT_APP_GOOGLE_ANALYTICS_4_MEASUREMENT_ID_3}"`,
+                REACT_APP_CODE_EDITOR_BASE_URL: `"${process.env.REACT_APP_CODE_EDITOR_BASE_URL}"`,
             }),
         ].filter(Boolean),
     };
