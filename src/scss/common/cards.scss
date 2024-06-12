@@ -11,7 +11,9 @@
     box-shadow: 0 2px 30px 0 $shadow-08;
   }
   .news-card-image {
-    @include aspect-ratio(100, 59);
+    @include aspect-ratio(4, 3);
+    width: 100%;
+    object-fit: cover;
   }
   // Nomensa's image offset code, if we decide to use
   //.news-card-image {
@@ -134,7 +136,6 @@
   }
 }
 .basic-card {
-  @include aspect-ratio(145, 93);
   background-color: $white;
   box-shadow: 0 2px 30px 0 $shadow-08;
   height: 100%;
@@ -187,7 +188,7 @@
     }
 
     a img {
-      height: 180px;
+      @include aspect-ratio(5, 3);
       object-fit: cover;
     }
   }

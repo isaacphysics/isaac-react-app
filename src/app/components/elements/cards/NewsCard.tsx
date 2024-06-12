@@ -14,7 +14,7 @@ interface NewsCardProps extends CardProps {
 const PhysicsNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
 
-    return <Card data-testid={"news-pod"} className={"card-neat news-card"} {...props}>
+    return <Card data-testid={"news-pod"} {...props} className={classNames("card-neat news-card", props.className)}>
         {image && <a href={url} className="focus-target">
             <CardImg
                 top
@@ -57,7 +57,7 @@ const PhysicsNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
 
 export const AdaNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
-    return <Card data-testid={"news-pod"} className={classNames("news-card border-0 pb-3 my-3 my-xl-0")} {...props}>
+    return <Card data-testid={"news-pod"} {...props} className={classNames("news-card card-neat border-0 pb-3 my-3 my-xl-0", props.className)}>
         {image && <a href={url} className={"w-100"}>
             <CardImg
                 className={"news-card-image"}
