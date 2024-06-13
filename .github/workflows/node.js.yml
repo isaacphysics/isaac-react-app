@@ -30,6 +30,8 @@ jobs:
     - run: yarn run build-ada
     - run: yarn run test-phy --silent
     - run: yarn run test-ada --silent --coverage
+    - run: yarn run test-phy-visual
+    - run: yarn run test-ada-visual
     - uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
