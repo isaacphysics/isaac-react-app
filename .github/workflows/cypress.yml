@@ -29,6 +29,7 @@ jobs:
           env:
             CYPRESS_SITE='phy'
       - name: Upload artifacts
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: visual-diffs
