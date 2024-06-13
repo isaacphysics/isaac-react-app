@@ -4,18 +4,11 @@ import ReactGA from "react-ga4";
 import { FigureNumberingContext, PotentialUser } from "../../../IsaacAppTypes";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { selectors, useAppSelector } from "../../state";
-import {
-  GOOGLE_ANALYTICS_4_MEASUREMENT_ID,
-  isTeacherOrAbove,
-  isTutorOrAbove,
-  KEY,
-  persistence,
-  TEACHER_REQUEST_ROUTE,
-} from "../../services";
+import { isTeacherOrAbove, isTutorOrAbove, KEY, persistence, TEACHER_REQUEST_ROUTE } from "../../services";
 import { Unauthorised } from "../pages/Unauthorised";
 import { Immutable } from "immer";
 
-ReactGA.initialize(GOOGLE_ANALYTICS_4_MEASUREMENT_ID);
+ReactGA.initialize(REACT_APP_GOOGLE_ANALYTICS);
 
 export interface FieldsObject {
   [i: string]: any;

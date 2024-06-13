@@ -50,6 +50,11 @@ module.exports = {
     ],
     "globals": {
         REACT_APP_API_VERSION: "any",
-        GOOGLE_RECAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+        GOOGLE_RECAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
+        REACT_APP_STAGING_URL: "any",
+        REACT_APP_API_PATH_LOCAL: "http://localhost:8080/isaac-api/api",
+        REACT_APP_EDITOR_ORIGIN: "any",
+        REACT_APP_GOOGLE_ANALYTICS: "any",
+        REACT_APP_CODE_EDITOR_BASE_URL: "any",
     }
 };

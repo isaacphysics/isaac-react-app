@@ -12,37 +12,29 @@ import {
   Stage,
 } from "../../IsaacApiTypes";
 
-export const STAGING_URL = "https://www.staging.isaaccomputerscience.org";
+export const STAGING_URL = REACT_APP_STAGING_URL;
 
 // eslint-disable-next-line no-undef
-export const API_VERSION: string = REACT_APP_API_VERSION || "any";
+export const API_VERSION = REACT_APP_API_VERSION;
 
 /*
  * Configure the api provider with the server running the API:
  * No need if we want to use the same server as the static content.
  */
-let apiPath = `${document.location.origin}/api/${API_VERSION}/api`;
+let apiPath = `${document.location.origin}/api/${REACT_APP_API_VERSION}/api`;
 if (document.location.hostname === "localhost") {
-  apiPath = "http://localhost:8080/isaac-api/api";
+  apiPath = REACT_APP_API_PATH_LOCAL;
 } else if (EDITOR_PREVIEW) {
-  apiPath = `${STAGING_URL}/api/any/api`;
-} else if (document.location.hostname.endsWith(".eu.ngrok.io")) {
-  apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
+  apiPath = `${REACT_APP_STAGING_URL}/api/any/api`;
 }
 export const isStaging =
   document.location.hostname.startsWith("staging.") || document.location.hostname.startsWith("www.staging.");
 
-export const envSpecific = <L, S, D>(live: L, staging: S, dev: D) =>
-  isStaging ? staging : process.env.NODE_ENV === "production" ? live : dev;
-
 export const API_PATH: string = apiPath;
 
-export const EDITOR_ORIGIN = "https://editor.isaaccomputerscience.org";
-
+export const EDITOR_ORIGIN = REACT_APP_EDITOR_ORIGIN;
 export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
 export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/#!/compare";
-
-export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = envSpecific("G-H95WP5C8DR", "G-KZJS9ZKWBD", "G-2QRVC1GSQY");
 
 export const SOCIAL_LINKS = {
   youtube: { name: "YouTube", href: "https://www.youtube.com/@isaaccomputerscience" },
@@ -52,7 +44,7 @@ export const SOCIAL_LINKS = {
 };
 
 // Change to "http://localhost:3000" if you want to run a local version of the code editor
-export const CODE_EDITOR_BASE_URL = "https://editor.isaaccode.org";
+export const CODE_EDITOR_BASE_URL = REACT_APP_CODE_EDITOR_BASE_URL;
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
 export const QUESTION_ATTEMPT_THROTTLED_MESSAGE =
