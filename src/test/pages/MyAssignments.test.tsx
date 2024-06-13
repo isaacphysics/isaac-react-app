@@ -5,7 +5,8 @@ import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
 import {mockMyAssignments, mockUser} from "../../mocks/data";
-import {augmentErrorMessage, dayMonthYearStringToDate, DDMMYYYY_REGEX, renderTestEnvironment, DAYS_AGO} from "../utils";
+import {augmentErrorMessage, renderTestEnvironment} from "../testUtils";
+import {DDMMYYYY_REGEX, DAYS_AGO, dayMonthYearStringToDate} from "../dateUtils";
 import produce from "immer";
 
 const TAB_TITLE = siteSpecific({

@@ -1,6 +1,6 @@
 import {siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
-import {DAYS_AGO} from "../test/utils";
+import {DAYS_AGO} from "../test/dateUtils";
 import {
     BookingStatus,
     EmailVerificationStatus,

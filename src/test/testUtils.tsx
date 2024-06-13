@@ -1,7 +1,7 @@
 import {UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
-// import {server} from "../mocks/server";
-import {worker} from "../mocks/browser";
+import {server} from "../mocks/server";
+// import {worker} from "../mocks/browser";
 import {rest, RestHandler} from "msw";
 import {ACTION_TYPE, API_PATH, SITE, SITE_SUBJECT} from "../app/services";
 import produce from "immer";
@@ -48,9 +48,9 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     const {role, modifyUser, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch(isaacApi.util.resetApiState());
-    worker.resetHandlers();
+    server.resetHandlers();
     if (role || modifyUser) {
-        worker.use(
+        server.use(
             rest.get(API_PATH + "/users/current_user", (req, res, ctx) => {
                 if (role === "ANONYMOUS") {
                     return res(
@@ -74,7 +74,7 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
         );
     }
     if (extraEndpoints) {
-        worker.use(...extraEndpoints);
+        server.use(...extraEndpoints);
     }
     if (isDefined(PageComponent) && PageComponent.name !== "IsaacApp") {
         store.dispatch(requestCurrentUser());
@@ -125,21 +125,4 @@ export const followHeaderNavLink = async (menu: NavBarMenus, linkName: string) =
     if (!adminMenuSectionParent) fail(`Missing NavigationSection parent - cannot locate entries in ${menu} navigation menu.`);
     const link = await within(adminMenuSectionParent).findByRole("menuitem", {name: linkName, exact: false});
     await userEvent.click(link);
-};
-
-export const dayMonthYearStringToDate = (d?: string) => {
-    if (!d) return undefined;
-    const parts = d.split("/").map(n => parseInt(n, 10));
-    return new Date(parts[2], parts[1] - 1, parts[0], 0, 0, 0, 0);
-}
-
-export const ONE_DAY_IN_MS = 86400000;
-export const DDMMYYYY_REGEX = /\d{2}\/\d{2}\/\d{4}/;
-
-export const NOW = Date.now(); // Use same "now" for all time relative calculations
-export const DAYS_AGO = (n: number, roundDownToNearestDate = false) => {
-    let d = new Date(NOW);
-    d.setUTCDate(d.getUTCDate() - n);
-    if (roundDownToNearestDate) d.setHours(0, 0, 0, 0);
-    return d.valueOf();
 };
