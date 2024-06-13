@@ -1,6 +1,5 @@
 import { defineConfig } from "cypress";
 import { initPlugin } from "@frsource/cypress-plugin-visual-regression-diff/plugins";
-import {SITE} from "./src/app/services";
 
 const SITE_STRING = process.env.CYPRESS_SITE == 'ada' ? 'ada' : 'phy';
 
