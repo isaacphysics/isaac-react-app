@@ -21,6 +21,7 @@ import {
     SITE_TITLE,
     siteSpecific,
     SOCIAL_LINKS,
+    trackEvent,
     validateEmail,
     WEBMASTER_EMAIL
 } from "../../services";
@@ -143,6 +144,9 @@ export const Contact = () => {
                                 setMessageSendAttempt(true);
                                 submitContactForm({firstName, lastName, emailAddress: email, subject, message});
                                 setMessageSent(true);
+                                trackEvent("debug_form_submission", {props: {
+                                    type: "contact_us"
+                                }});
                             }}>
                                 <CardBody>
                                     <h3>Send us a message</h3>

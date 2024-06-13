@@ -27,6 +27,7 @@ import {
     selectOnChange,
     SITE_TITLE, siteSpecific,
     tags,
+    trackEvent,
     validateEmail,
     WEBMASTER_EMAIL
 } from "../../services";
@@ -114,6 +115,9 @@ export const TutorRequest = () => {
                                 e.preventDefault();
                                 submitContactForm({firstName, lastName, emailAddress, subject, message});
                                 setMessageSent(true);
+                                trackEvent("debug_form_submission", {props: {
+                                    type: "teacher_account_request"
+                                }});
                             }}>
                                 <CardBody>
                                     <p>

@@ -92,6 +92,9 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const register = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedSignUp(true);
+        trackEvent("debug_form_submission", {props: {
+            type: "registration_attempt"
+        }});
 
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && confirmedOldEnoughForSite && consentGivenOrNotRequired) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);

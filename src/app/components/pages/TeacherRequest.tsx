@@ -28,6 +28,7 @@ import {
     isTeacherOrAbove,
     schoolNameWithPostcode,
     SITE_TITLE, siteSpecific,
+    trackEvent,
     validateEmail,
     WEBMASTER_EMAIL
 } from "../../services";
@@ -155,6 +156,9 @@ export const TeacherRequest = () => {
                                 e.preventDefault();
                                 submitContactForm({firstName, lastName, emailAddress, subject, message});
                                 setMessageSent(true);
+                                trackEvent("debug_form_submission", {props: {
+                                    type: "teacher_account_request"
+                                }});
                             }}>
                                 <CardBody>
                                     <p>

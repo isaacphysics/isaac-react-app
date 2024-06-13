@@ -20,6 +20,7 @@ import {
     QUESTION_TYPES,
     selectQuestionPart,
     submitCurrentAttempt,
+    trackEvent,
     useDeviceSize,
     useFastTrackInformation} from "../../services";
 import {DateString, TIME_ONLY} from "../elements/DateString";
@@ -132,6 +133,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             if (event) {event.preventDefault();}
             submitCurrentAttempt(questionPart, doc.id as string, currentGameboard, currentUser, dispatch);
             setHasSubmitted(true);
+            trackEvent("debug_form_submission", {props: {
+                type: "question_attempt"
+            }});
         }}>
             <div className={
                 classNames(
