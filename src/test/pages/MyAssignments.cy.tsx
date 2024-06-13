@@ -7,9 +7,7 @@ import {Provider} from "react-redux";
 import { store } from "../../app/state";
 
 
-it('My Assignments should render', () => {
-    cy.viewport(1280, 720);
-
+it('My Assignments should have no visual regressions', () => {
     cy.mount(
         <Provider store={store}>
             <MemoryRouter initialEntries={[PATHS.MY_ASSIGNMENTS]}>
