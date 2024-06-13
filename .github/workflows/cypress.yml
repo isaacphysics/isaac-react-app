@@ -22,4 +22,14 @@ jobs:
           component: true
           env:
             CYPRESS_SITE='ada'
-      # todo: Phy
+      - name: Cypress run (Physics)
+        uses: cypress-io/github-action@v6
+        with:
+          component: true
+          env:
+            CYPRESS_SITE='phy'
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diffs
+          path: src/test/**/*.diff.png
