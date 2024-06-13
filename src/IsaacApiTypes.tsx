@@ -119,7 +119,7 @@ export interface IsaacFeaturedProfileDTO extends ContentDTO {
 export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
 }
 
-export interface IsaacLlmFreeTextQuestionDTO extends QuestionDTO {
+export interface IsaacLLMFreeTextQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
