@@ -47,7 +47,8 @@ Cypress.on('test:before:run:async', async () => {
   await worker.start();
 });
 
-// Skip visual regression tests in interactive mode - the results are not consistent with headless
+// Skip visual regression tests in interactive mode - the results are not consistent with headless.
+// It may be useful to comment this out when debugging tests locally, but don't commit the snapshots.
 if (Cypress.config('isInteractive')) {
   Cypress.Commands.add('matchImage', () => {
     cy.log('Skipping snapshot 👀');

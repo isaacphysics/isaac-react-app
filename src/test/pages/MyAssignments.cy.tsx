@@ -21,5 +21,7 @@ it('My Assignments should render', () => {
         </Provider>
     );
 
+    cy.get('[data-testid="loading"]').should('not.exist');
+
     cy.matchImage();
 });
