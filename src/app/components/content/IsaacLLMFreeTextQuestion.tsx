@@ -1,6 +1,6 @@
 import React from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {IsaacLlmFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
+import {IsaacLLMFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
 import {Alert, FormGroup, Input} from "reactstrap";
 import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
 import {useCurrentQuestionAttempt} from "../../services";
@@ -61,7 +61,7 @@ const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
         </Alert>;
 };
 
-const IsaacLlmFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacLlmFreeTextQuestionDTO>) => {
+const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacLLMFreeTextQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
@@ -90,4 +90,4 @@ const IsaacLlmFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
         </div>
     );
 };
-export default IsaacLlmFreeTextQuestion;
+export default IsaacLLMFreeTextQuestion;
