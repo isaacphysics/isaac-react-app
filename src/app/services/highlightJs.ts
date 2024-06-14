@@ -4,6 +4,8 @@ import php from "highlight.js/lib/languages/php";
 import csharp from "highlight.js/lib/languages/csharp";
 import plaintext from "highlight.js/lib/languages/plaintext";
 import sql from "highlight.js/lib/languages/sql";
+import java from "highlight.js/lib/languages/java";
+import vbnet from "highlight.js/lib/languages/vbnet";
 import { LanguageFn } from "highlight.js";
 const importHljsCore = import("highlight.js/lib/core");
 
@@ -17,6 +19,8 @@ function registerLanguages() {
     hljs.registerLanguage("assembly", plaintext);
     hljs.registerLanguage("sql", sql);
     hljs.registerLanguage("pseudocode", isaacPseudocodeHighlightDefinition);
+    hljs.registerLanguage("java", java);
+    hljs.registerLanguage("vba", vbnet);
   });
 }
 
