@@ -3,7 +3,7 @@ import { EventManager } from "../../app/components/pages/EventManager";
 import { checkPageTitle, renderTestEnvironment } from "../utils";
 import { API_PATH } from "../../app/services";
 import { mockFutureEventOverviews, mockUser } from "../../mocks/data";
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import { Role } from "../../IsaacApiTypes";
 
 describe("Event Manager", () => {
@@ -21,11 +21,16 @@ describe("Event Manager", () => {
     });
   };
 
-  it("event booking admin page renders", () => {
+  it("event booking admin page renders with events", async () => {
     renderEventManager();
     checkPageTitle("Event booking admin");
     const eventOverviews = screen.getByText(/events overview/i);
     expect(eventOverviews).toBeInTheDocument();
+    const eventsTable = await screen.findByRole("table");
+    const tableCells = within(eventsTable).getAllByRole("cell");
+    expect(tableCells[1]).toHaveTextContent(
+      `${mockFutureEventOverviews.results[0].title} - ${mockFutureEventOverviews.results[0].subtitle}`,
+    );
   });
 
   it("shows event listing form and events toolkit buttons with correct links", () => {

@@ -1469,7 +1469,7 @@ export const getEventBookings = (eventId: string) => async (dispatch: Dispatch<A
     dispatch({ type: ACTION_TYPE.EVENT_BOOKINGS_REQUEST });
     const response = await api.eventBookings.getEventBookings(eventId);
     dispatch({ type: ACTION_TYPE.EVENT_BOOKINGS_RESPONSE_SUCCESS, eventBookings: response.data });
-    const userIds = response.data.map((booking) => booking.userBooked && booking.userBooked.id) as number[];
+    const userIds = response.data.map((booking) => booking.userBooked?.id) as number[];
     if (atLeastOne(userIds.length)) {
       dispatch(getUserIdSchoolLookup(userIds) as any);
     }
@@ -1734,10 +1734,10 @@ export const deleteUserBooking = (eventBookingId: string, userId?: number) => as
 };
 
 export const recordEventAttendance =
-  (eventId: string, userId: number, attendance: ATTENDANCE) => async (dispatch: Dispatch<Action>) => {
+  (eventId: string, userIds: number[], attendance: ATTENDANCE) => async (dispatch: Dispatch<Action>) => {
     try {
       dispatch({ type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_REQUEST });
-      await api.eventBookings.recordEventAttendance(eventId, userId, attendance);
+      await api.eventBookings.recordEventAttendance(eventId, userIds, attendance);
       dispatch({ type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS });
       dispatch(getEventBookings(eventId) as any);
     } catch (error) {

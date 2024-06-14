@@ -483,9 +483,9 @@ export const api = {
     deleteUserBooking: (eventId: string, userId: number) => {
       return endpoint.delete(`/events/${eventId}/bookings/${userId}`);
     },
-    recordEventAttendance: (eventId: string, userId: number, attendance: ATTENDANCE) => {
+    recordEventAttendance: (eventId: string, userIds: number[], attendance: ATTENDANCE) => {
       const attended = attendance === ATTENDANCE.ATTENDED;
-      return endpoint.post(`/events/${eventId}/bookings/${userId}/record_attendance?attended=${attended}`);
+      return endpoint.post(`/events/${eventId}/bookings/record_attendance?attended=${attended}`, userIds);
     },
     getEventBookingCSV: (eventId: string) => {
       return endpoint.get(`/events/${eventId}/bookings/download`);

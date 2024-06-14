@@ -19,11 +19,9 @@ export const AddUsersToBooking = () => {
   const selectedEvent = useAppSelector((state: AppState) =>
     state && state.currentEvent !== NOT_FOUND ? state.currentEvent : null,
   );
-  const userBookings = useAppSelector(
-    (state: AppState) =>
-      (state && state.eventBookings && (state.eventBookings.map((b) => b.userBooked && b.userBooked.id) as number[])) ||
-      [],
-  );
+
+  const bookings = useAppSelector(selectors.events.eventBookings);
+  const userBookings = bookings && (bookings.map((b) => b.userBooked?.id) as number[]);
 
   const [searched, setSearched] = useState(false);
   const [queryParams, setQueryParams] = useState({ familyName: null, email: null, role: null });
