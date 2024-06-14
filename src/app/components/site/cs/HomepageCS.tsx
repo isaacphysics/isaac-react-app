@@ -83,7 +83,7 @@ export const HomepageCS = () => {
                                             () => {
                                                 setStage(STAGE.ALL);
                                                 setExamBoard(EXAM_BOARD.SQA);
-                                                history.push("/topics");
+                                                history.push("/concepts/sqa_computer_systems");
                                             }
                                         }>Show me</Button>
                                 </Col>
