@@ -519,6 +519,10 @@ export interface StringChoiceDTO extends ChoiceDTO {
     caseInsensitive?: boolean;
 }
 
+export interface LLMFreeTextChoiceDTO extends ChoiceDTO {
+}
+
+
 export interface VideoDTO extends MediaDTO {
 }
 
