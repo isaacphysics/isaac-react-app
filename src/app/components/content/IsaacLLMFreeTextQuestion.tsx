@@ -1,6 +1,6 @@
 import React from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {IsaacLLMFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
+import {IsaacLLMFreeTextQuestionDTO, LLMFreeTextChoiceDTO} from "../../../IsaacApiTypes";
 import {Alert, FormGroup, Input} from "reactstrap";
 import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
 import {useCurrentQuestionAttempt} from "../../services";
@@ -38,14 +38,11 @@ function validate(answer: string): Validation {
     };
 }
 
-function validatedChoiceDtoFromEvent(event: React.ChangeEvent<HTMLInputElement>): ValidatedChoice<StringChoiceDTO> {
+function validatedChoiceDtoFromEvent(event: React.ChangeEvent<HTMLInputElement>): ValidatedChoice<LLMFreeTextChoiceDTO> {
     const value = event.target.value;
     const frontEndValidation = validate(value).validValue;
     return {
-        choice: {
-            type: "stringChoice", // Note there is no llmFreeTextChoice
-            value
-        },
+        choice: {type: "llmFreeTextChoice", value},
         frontEndValidation
     };
 }
