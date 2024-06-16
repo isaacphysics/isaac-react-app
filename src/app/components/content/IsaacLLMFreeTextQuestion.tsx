@@ -47,7 +47,7 @@ function validatedChoiceDtoFromEvent(event: React.ChangeEvent<HTMLInputElement>)
     };
 }
 
-const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
+const FreeTextEntryValidation = ({validValue, wordLimit, charLimit}: Validation) => {
     return validValue ? null
         : <Alert color="warning" className={"no-print"}>
             <strong>Warning:</strong>
@@ -83,7 +83,7 @@ const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
                     readOnly={readonly}
                 />
             </FormGroup>
-            <FreeTextValidation {...validation} />
+            <FreeTextEntryValidation {...validation} />
         </div>
     );
 };

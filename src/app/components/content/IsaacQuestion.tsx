@@ -31,6 +31,7 @@ import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
 import { Spacer } from "../elements/Spacer";
+import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -108,6 +109,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const inlineContext = useContext(InlineContext);
     const isInlineQuestion = doc.type === "isaacInlineRegion" && inlineContext;
 
+    // Free text question
+    const isLLMFreeTextQuestion = doc.type === "isaacLLMFreeTextQuestion";
+
     const numInlineQuestions = isInlineQuestion ? Object.values(inlineContext?.elementToQuestionMap ?? {}).length : undefined;
     const numCorrectInlineQuestions = (isInlineQuestion && validationResponse) ? (questionPart as InlineQuestionDTO).validationResponse?.partsCorrect : undefined;
     const showInlineAttemptStatus = !isInlineQuestion || !inlineContext?.isModifiedSinceLastSubmission;
@@ -162,7 +166,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {isAda && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
 
                 {/* Validation Response */}
-                {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && <div
+                {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && !isLLMFreeTextQuestion && <div
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
                     {/*eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex*/}
@@ -241,5 +245,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 </div>}
             </div>
         </RS.Form>
+
+        {/* LLM free-text question validation response */}
+        {isLLMFreeTextQuestion && showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit &&
+            <LLMFreeTextQuestionFeedbackView validationResponse={validationResponse} />
+        }
     </ConfidenceContext.Provider>;
 });
