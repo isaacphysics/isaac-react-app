@@ -328,6 +328,14 @@ export interface InlineRegionValidationResponseDTO extends QuestionValidationRes
     partsTotal?: number;
 }
 
+export interface LLMFreeTextQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
+    markCalculationInstructions?: string;
+    additionalMarkingInstructions?: string;
+    maxMarks?: number;
+    marksAwarded?: number;
+    markBreakdown?: LLMFreeTextMarkSchemeEntryDTO[];
+}
+
 export interface UserGroupDTO {
     id?: number;
     groupName?: string;
@@ -482,6 +490,12 @@ export interface CoordinateChoiceDTO extends ItemChoiceDTO {
 
 export interface ItemDTO extends ContentDTO {
     altText?: string;
+}
+
+export interface LLMFreeTextMarkSchemeEntryDTO {
+    jsonField: string;
+    shortDescription: string;
+    marks: number;
 }
 
 export interface ParsonsItemDTO extends ItemDTO {
