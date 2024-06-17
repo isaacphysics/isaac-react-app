@@ -35,6 +35,7 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {ReportButton} from "../elements/ReportButton";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
+import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
 
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
@@ -104,6 +105,8 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                         <SupersededDeprecatedWarningBanner doc={doc} />
 
                         {isAda && <IntendedAudienceWarningBanner doc={doc} />}
+
+                        <LLMFreeTextQuestionInfoBanner />
 
                         <RevisionWarningBanner />
 
