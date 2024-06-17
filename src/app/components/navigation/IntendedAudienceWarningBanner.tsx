@@ -1,14 +1,14 @@
 import React from "react";
 import * as RS from "reactstrap";
 import {ContentBaseDTO} from "../../../IsaacApiTypes";
-import {examBoardLabelMap, isIntendedAudience, stageLabelMap, useUserContext} from "../../services";
+import {examBoardLabelMap, isIntendedAudience, stageLabelMap, useUserViewingContext} from "../../services";
 import {selectors, useAppSelector} from "../../state";
 import {RenderNothing} from "../elements/RenderNothing";
 import { Link } from "react-router-dom";
 
 export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
 
     // If this page is intended for this user's context no need to show a warning banner
     if (isIntendedAudience(doc.audience, userContext, user)) {

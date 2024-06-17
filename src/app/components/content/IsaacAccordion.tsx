@@ -11,7 +11,7 @@ import {
     mergeDisplayOptions,
     siteSpecific,
     stringifyAudience,
-    useUserContext
+    useUserViewingContext
 } from "../../services";
 import {AppState, selectors, useAppSelector} from "../../state";
 import {useLocation} from "react-router-dom";
@@ -30,7 +30,7 @@ interface SectionWithDisplaySettings extends ContentDTO {
 export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
     const page = useAppSelector((state: AppState) => (state && state.doc) || null);
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
 
     // Select different default display depending on page type
     const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;

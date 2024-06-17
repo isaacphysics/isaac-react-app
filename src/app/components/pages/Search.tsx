@@ -17,7 +17,7 @@ import {
     selectOnChange,
     shortcuts,
     siteSpecific,
-    useUserContext
+    useUserViewingContext
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
@@ -58,7 +58,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const searchResults = useAppSelector((state: AppState) => state?.search?.searchResults || null);
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     const [queryState, setQueryState] = useState(urlQuery);
 
