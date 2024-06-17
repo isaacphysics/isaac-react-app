@@ -87,7 +87,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                 </Col>
                                 <Col md={4} lg="auto">
                                     <Label className="w-100">
-                                        Completion
+                                        Status
                                         <Input type="select" data-testid="assignment-type-filter" value={assignmentStateFilter} onChange={e => setAssignmentStateFilter(e.target.value)}>
                                             {assignmentStates.map(state => <option key={state} value={state}>{state}</option>)}
                                         </Input>
