@@ -32,6 +32,12 @@
   }
 }
 
+.btn.btn-link:focus {
+  box-shadow: 0 0 0 0.2rem $focus-blue !important;
+  outline: none !important;
+  border-radius: 3px;
+}
+
 @mixin ada-button-outline($color, $hover-color, $active-color) {
   background-color: transparent;
   border: 3px solid $color;
