@@ -37,6 +37,7 @@ import {
     DisplaySettings,
     PotentialUser,
     ProgrammingLanguage,
+    UserConsent,
     UserPreferencesDTO,
 } from "../../../IsaacAppTypes";
 import {UserPassword} from "../elements/panels/UserPassword";
@@ -249,6 +250,15 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
         }));
     }
 
+    function setConsentSettings(newConsentSettings: UserConsent | ((oldCS?: UserConsent) => UserConsent)) {
+        setMyUserPreferences(oldPref => ({
+            ...oldPref,
+            CONSENT: typeof newConsentSettings === "function"
+                ? newConsentSettings(oldPref?.CONSENT)
+                : newConsentSettings
+        }));
+    }
+
     const accountInfoChanged = contextsChanged || userChanged || otherPreferencesChanged || (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
     useEffect(() => {
         if (accountInfoChanged && !saving) {
@@ -432,7 +442,10 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                             </TabPane>}
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
-                                <UserBetaFeatures displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings} />
+                                <UserBetaFeatures
+                                    displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
+                                    consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
+                                />
                             </TabPane>}
                         </TabContent>
 
