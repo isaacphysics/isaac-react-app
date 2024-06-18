@@ -242,6 +242,10 @@ export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
 }
 
+export interface UserConsent {
+    OPENAI?: boolean;
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
@@ -249,6 +253,7 @@ export interface UserPreferencesDTO {
     PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
     BOOLEAN_NOTATION?: BooleanNotation;
     DISPLAY_SETTING?: DisplaySettings;
+    CONSENT?: UserConsent;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
