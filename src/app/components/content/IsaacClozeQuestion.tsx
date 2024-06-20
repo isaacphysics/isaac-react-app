@@ -11,7 +11,8 @@ import {
     CLOZE_DROP_ZONE_ID_PREFIX,
     CLOZE_ITEM_SECTION_ID,
     isDefined,
-    useCurrentQuestionAttempt
+    useCurrentQuestionAttempt,
+    useDeviceSize
 } from "../../services";
 import {customKeyboardCoordinates} from "../../services/clozeQuestionKeyboardCoordinateGetter";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -131,7 +132,7 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
 };
 
 const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacClozeQuestionDTO, ItemValidationResponseDTO>) => {
-
+    const deviceSize = useDeviceSize();
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
 
@@ -231,6 +232,21 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         }
     }, [registeredDropRegionIDs, setInlineDropValues]);
 
+    const updateAttempt = (idvs: (Immutable<ClozeItemDTO> | undefined)[]) => {
+        // Update attempt since an inline drop zone changed
+        const itemChoice: ItemChoiceDTO = {
+            type: "itemChoice",
+            items: Array(registeredDropRegionIDs.size).fill(null).map((_, i) => {
+                const item = idvs[i];
+                // If no item, return a "null item" to indicate a hole in the answer
+                if (!item) return NULL_CLOZE_ITEM;
+                const {replacementId: _replacementId, ...itemDto} = item;
+                return itemDto as ItemDTO;
+            })
+        };
+        dispatchSetCurrentAttempt(itemChoice);
+    };
+
     // Run after a drag action ends
     const onDragEnd = useCallback((event: DragEndEvent) => {
         const {over, active} = event;
@@ -252,21 +268,6 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         let newFocusId = item?.replacementId;
 
         if (!item) return; // Something very wrong happened here, abort
-
-        const updateAttempt = (idvs: (Immutable<ClozeItemDTO> | undefined)[]) => {
-            // Update attempt since an inline drop zone changed
-            const itemChoice: ItemChoiceDTO = {
-                type: "itemChoice",
-                items: Array(registeredDropRegionIDs.size).fill(null).map((_, i) => {
-                    const item = idvs[i];
-                    // If no item, return a "null item" to indicate a hole in the answer
-                    if (!item) return NULL_CLOZE_ITEM;
-                    const {replacementId, ...itemDto} = item;
-                    return itemDto as ItemDTO;
-                })
-            };
-            dispatchSetCurrentAttempt(itemChoice);
-        };
 
         if (isFromItemSection) {
             // Drag originated in the item section
@@ -339,6 +340,50 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         // Record the id of the item to be focused after the end of this drag - important for accessibility
         setFocusId(newFocusId);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [inlineDropValues, nonSelectedItems, registeredDropRegionIDs, dispatchSetCurrentAttempt]);
+
+    // On mobile screens we have a dropdown rather than a drag and drop
+    // Keep the logic here and provide a onEvent function
+    const onDropdownSelect = useCallback((item: Immutable<ClozeItemDTO>, dropZoneId: UniqueIdentifier, clearSelection: boolean) => {
+        const inlineDropIndex = (id : string) => registeredDropRegionIDs.get(id);
+
+        const nsis = [...nonSelectedItems];
+        const idvs = [...inlineDropValues];
+
+        const toIndex = inlineDropIndex(dropZoneId as string) ?? idvs.findIndex(i => i?.replacementId === dropZoneId);
+        // Cancel if error
+        if (toIndex === -1) return;
+        const previousItem = idvs[toIndex];
+
+        if (clearSelection && previousItem) {
+            if (!withReplacement) {
+                // Add the previously selected item back to the options
+                // if it wasn't duplicated
+                nsis.push(previousItem);
+            }
+            // and remove the item from the current drop zone values
+            idvs.splice(toIndex, 1);
+        } else if (!clearSelection) {
+            const fromIndex = nsis.indexOf(item);
+
+            // Otherwise remove from item section and add to drop-zone, swapping out the previous item if it exists
+            if (!withReplacement) {
+                if (previousItem) {
+                    nsis.splice(fromIndex, 1, previousItem);
+                } else {
+                    nsis.splice(fromIndex, 1);
+                }
+            }
+            idvs[toIndex] = augmentInlineItemWithUniqueReplacementID(item);
+        }
+
+        updateAttempt(idvs);
+
+        // Update both lists of items after any changes
+        setInlineDropValues(idvs);
+        setNonSelectedItems(nsis);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [inlineDropValues, nonSelectedItems, registeredDropRegionIDs, dispatchSetCurrentAttempt]);
 
     const sensors = useSensors(
@@ -435,7 +480,16 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     }), [usingKeyboard]);
 
     return <div className="question-content cloze-question" id={cssFriendlyQuestionPartId}>
-        <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, readonly: readonly ?? false, inlineDropValueMap, shouldGetFocus, dropZoneValidationMap}}>
+        <ClozeDropRegionContext.Provider value={{
+            questionPartId: cssFriendlyQuestionPartId,
+            register: registerInlineDropRegion,
+            onSelect: onDropdownSelect,
+            readonly: readonly ?? false,
+            inlineDropValueMap,
+            shouldGetFocus,
+            dropZoneValidationMap,
+            nonSelectedItems
+        }}>
             <DndContext
                 sensors={sensors}
                 autoScroll={false}
@@ -449,16 +503,18 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
-                {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
-                <DragOverlay>
-                    {activeItem && <Badge className="p-2 cloze-item is-dragging">
-                        <IsaacContentValueOrChildren value={activeItem.value} encoding={activeItem.encoding || "html"}>
-                            {activeItem.children as ContentDTO[]}
-                        </IsaacContentValueOrChildren>
-                    </Badge>}
-                </DragOverlay>
+                {deviceSize !== "xs" && <>
+                    {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
+                    <DragOverlay>
+                        {activeItem && <Badge className="p-2 cloze-item is-dragging">
+                            <IsaacContentValueOrChildren value={activeItem.value} encoding={activeItem.encoding || "html"}>
+                                {activeItem.children as ContentDTO[]}
+                            </IsaacContentValueOrChildren>
+                        </Badge>}
+                    </DragOverlay>
 
-                <ItemSection id={CLOZE_ITEM_SECTION_ID} items={nonSelectedItems}/>
+                    <ItemSection id={CLOZE_ITEM_SECTION_ID} items={nonSelectedItems}/>
+                </>}
             </DndContext>
         </ClozeDropRegionContext.Provider>
     </div>;
