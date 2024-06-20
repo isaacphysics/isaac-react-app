@@ -15,6 +15,7 @@ interface Validation {
     validValue: boolean;
     wordLimit: Limit;
     charLimit: Limit;
+    piiDetected?: boolean;
 }
 
 function validate(answer: string): Validation {
@@ -29,12 +30,17 @@ function validate(answer: string): Validation {
     const wordLimitExceeded = currentNumberOfWords > wordLimit;
     const charLimitExceeded = currentNumberOfChars > charLimit;
 
-    const validValue = !wordLimitExceeded && !charLimitExceeded;
+    const emailDetected = !!answer.match(/[\w.-]+@[\w.-]+\.\w+/g);
+    const postCodeDetected = !!answer.match(/[A-Z]{1,2}[0-9]{1,2}[A-Z]? [0-9][A-Z]{2}/g);
+    const piiDetected = emailDetected || postCodeDetected;
+
+    const validValue = !wordLimitExceeded && !charLimitExceeded && !piiDetected;
 
     return {
         validValue,
+        piiDetected,
         wordLimit : {exceeded: wordLimitExceeded, limit: wordLimit, current: currentNumberOfWords},
-        charLimit : {exceeded: charLimitExceeded, limit: charLimit, current: currentNumberOfChars},
+        charLimit : {exceeded: charLimitExceeded, limit: charLimit, current: currentNumberOfChars}
     };
 }
 
@@ -47,19 +53,21 @@ function validatedChoiceDtoFromEvent(event: React.ChangeEvent<HTMLInputElement>)
     };
 }
 
-const FreeTextEntryValidation = ({validValue, wordLimit, charLimit}: Validation) => {
+const FreeTextEntryValidation = ({validValue, wordLimit, charLimit, piiDetected}: Validation) => {
     return validValue ? null
         : <Alert color="warning" className={"no-print"}>
             <strong>Warning:</strong>
             <ul>
                 {charLimit.exceeded && <li>Character limit exceeded ({charLimit.current}/{charLimit.limit})</li>}
                 {wordLimit.exceeded && <li>Word limit exceeded ({wordLimit.current}/{wordLimit.limit})</li>}
+                {piiDetected && <li><strong>Possible PII detected:</strong><br />
+                    It looks like your answer contains personal information, like a name, email or street address. Sending this data to OpenAI is against their Usage policy.
+                </li>}
             </ul>
         </Alert>;
 };
 
 const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacLLMFreeTextQuestionDTO>) => {
-
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
     const currentAttemptValue = currentAttempt?.value ?? "";
