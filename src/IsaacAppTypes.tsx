@@ -315,8 +315,10 @@ export enum BoardOrder {
     "-visited" = "-visited",
     "title" = "title",
     "-title" = "-title",
-    "completion" = "completion",
-    "-completion" = "-completion"
+    "attempted" = "attempted",
+    "-attempted" = "-attempted",
+    "correct" = "correct",
+    "-correct" = "-correct",
 }
 
 export enum AssignmentOrderType {

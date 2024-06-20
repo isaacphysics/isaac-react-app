@@ -208,15 +208,18 @@ export const BOARD_ORDER_NAMES: {[key in BoardOrder]: string} = {
     "-visited": "Date Visited Descending",
     "title": "Title Ascending",
     "-title": "Title Descending",
-    "completion": "Completion Ascending",
-    "-completion": "Completion Descending"
+    "attempted": "Completion Ascending",
+    "-attempted": "Completion Descending",
+    "correct": "Correctness Ascending",
+    "-correct": "Correctness Descending"
 };
 
 const BOARD_SORT_FUNCTIONS = {
     [BoardOrder.visited]: (b: GameboardDTO) => b.lastVisited?.valueOf(),
     [BoardOrder.created]: (b: GameboardDTO) => b.creationDate?.valueOf(),
     [BoardOrder.title]: (b: GameboardDTO) => b.title,
-    [BoardOrder.completion]: (b: GameboardDTO) => b.percentageAttempted,
+    [BoardOrder.attempted]: (b: GameboardDTO) => b.percentageAttempted,
+    [BoardOrder.correct]: (b: GameboardDTO) => b.percentageCorrect
 };
 
 const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: BoardLimit) =>
@@ -299,9 +302,9 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
             return boards;
         }
         const boardOrderNegative = boardOrder.at(0) == "-";
-        const boardOrderKind = (boardOrderNegative ? boardOrder.slice(1) : boardOrder) as "created" | "visited" | "completion" | "title";
+        const boardOrderKind = (boardOrderNegative ? boardOrder.slice(1) : boardOrder) as "created" | "visited" | "attempted" | "correct" | "title";
         const orderedBoards = sortBy(boards?.boards, BOARD_SORT_FUNCTIONS[boardOrderKind]);
-        if (["visited", "created", "-completion", "-title"].includes(boardOrder)) orderedBoards.reverse();
+        if (["visited", "created", "-attempted", "-correct", "-title"].includes(boardOrder)) orderedBoards.reverse();
         return {
             totalResults: boards?.totalResults ?? 0,
             boards: orderedBoards
