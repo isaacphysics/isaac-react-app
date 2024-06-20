@@ -116,6 +116,7 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
 
     useEffect(() => {
         return updateScrollAmount(scrollAmount, acceleration, interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scrollAmount, acceleration, interval]);
 
     useEffect(() => {
@@ -126,8 +127,9 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
                 window.removeEventListener("mousemove", autoScrollListener);
                 window.removeEventListener("touchmove", autoScrollListener);
                 setScrollAmount(0);
-            }
+            };
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [active]);
 };
 
@@ -145,6 +147,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
 
     const [inlineDropValues, setInlineDropValues] = useState<(Immutable<ClozeItemDTO> | undefined)[]>(() => currentAttempt?.items || []);
     // Whenever the inlineDropValues change or a drop region is added, computes a map from drop region id -> drop region value
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const inlineDropValueMap = useMemo<{[p: string]: ClozeItemDTO}>(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
 
     // Compute map used to highlight each inline drop-zone with whether it is correct or not
@@ -157,6 +160,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             // drop-zone.
             setDropZoneValidationMap(Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: {correct: itemsCorrect.at(i), itemId: inlineDropValueMap[dropId]?.id}}), {}));
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [itemsCorrect, inlineDropValueMap]);
 
     // Manual management of which draggable item gets focus at the end of the drag. The new focus id is set in onDragEnd,

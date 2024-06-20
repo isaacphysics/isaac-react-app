@@ -41,6 +41,7 @@ export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable
             const el = document.getElementById(id);
             el?.focus();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dropRegionContext?.shouldGetFocus]);
 
     return <Badge id={id} className={classNames(type === "item-section" && "m-2", "p-2 cloze-item feedback-zone", isDefined(isCorrect) && "feedback-showing")} style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
@@ -68,6 +69,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
     useEffect(() => {
         // Register with the current cloze question on first render
         dropRegionContext?.register(droppableId, index);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
