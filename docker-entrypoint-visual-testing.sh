@@ -2,4 +2,4 @@
 
 yarn install
 # yarn cypress info
-yarn cypress run --component
+yarn cypress run --component --browser chrome
