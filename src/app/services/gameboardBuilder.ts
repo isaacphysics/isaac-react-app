@@ -30,10 +30,23 @@ export const sortQuestions = (sortState: {[s: string]: string}, creationContext?
     return orderBy(questions, keys, order);
 };
 
+type ContentSummaryFieldsNotInGameboardItem = Exclude<keyof ContentSummary, keyof GameboardItem>;
 export const convertContentSummaryToGameboardItem = (question: ContentSummary): GameboardItem => {
-    const newQuestion = {...question, contentType: question.type};
-    delete newQuestion.type;
-    delete newQuestion.url;
+    // We use the type system to ensure we remove fields that are not in a GameboardItem as it would otherwise cause serialization errors in the backend.
+    const fieldsThatMustBeRemoved: {[field in ContentSummaryFieldsNotInGameboardItem]: undefined} = {
+        type: undefined,
+        difficulty: undefined,
+        summary: undefined,
+        level: undefined,
+        url: undefined,
+        correct: undefined,
+        deprecated: undefined,
+    };
+    const newQuestion = {
+        ...question,
+        contentType: question.type,
+        ...fieldsThatMustBeRemoved
+    };
     return newQuestion;
 };
 

@@ -22,7 +22,11 @@
 }
 
 .ratio-16x9 {
-  aspect-ratio: 16/9;
+  @include aspect-ratio(16, 9);
+}
+
+.ratio-5x3 {
+  @include aspect-ratio(5, 3);
 }
 
 .content-video-container {

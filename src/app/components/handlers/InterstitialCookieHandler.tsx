@@ -3,6 +3,7 @@ import { Button } from 'reactstrap';
 import classNames from 'classnames';
 import { interstitialCookieSlice, useAppDispatch } from '../../state';
 import { useUserContext } from '../../services';
+import { IsaacVideo } from '../content/IsaacVideo';
 
 const youtubeHomepageCookieText = <p className="text-muted m-0"><small>We use YouTube to show you videos on our website. By clicking the above, you agree to Google&apos;s <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer"><b>Cookie Policy</b></a> and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"><b>Privacy Policy</b></a>.</small></p>;
 const youtubeCookieText = <p>We use YouTube to show you videos on our website. We ask for your permission before loading the content, as YouTube may be using cookies to help them track usage and improve their services.<br/><br/>You may wish to read Google&apos;s <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer"><b>Cookie Policy</b></a> and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"><b>Privacy Policy</b></a> before accepting.</p>;
@@ -60,10 +61,8 @@ export const HomepageYoutubeCookieHandler = () => {
             </div>
             {youtubeHomepageCookieText}
         </div>}
-        afterAccepted={<iframe
-            title="Isaac Physics introduction video"
-            src={`https://www.youtube-nocookie.com/embed/kWA2AISiHXQ?enablejsapi=1&rel=0&fs=1&autoplay=${autoplay ? 1 : 0}&modestbranding=1&origin=home`}
-            allowFullScreen className="mw-100"
+        afterAccepted={<IsaacVideo
+            doc={{src: `https://www.youtube-nocookie.com/embed/kWA2AISiHXQ?enablejsapi=1&rel=0&fs=1&autoplay=${autoplay ? 1 : 0}&modestbranding=1&origin=home`, altText: "Isaac Physics introduction video"}}
         />}
     />;
 };

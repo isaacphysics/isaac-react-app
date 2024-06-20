@@ -258,7 +258,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
 
     // Handling teachers changing school
     useEffect(() => {
-        const originalSchool: string | undefined = "schoolId" in user ? user.schoolId : undefined; 
+        const originalSchool: string | undefined = "schoolId" in user ? user.schoolId : undefined;
         const newSchool: string | undefined = userToUpdate.schoolId;
         if (isTeacherOrAbove(user) && !isStaff(user) && newSchool && (!originalSchool || originalSchool !== newSchool)) {
             dispatch(showChangeSchoolModal());
@@ -461,11 +461,6 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                 </Card>
             }
         </ShowLoading>
-        {isPhy && <Row className="text-muted text-center mt-3">
-            <Col>
-                If you would like to delete your account please <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a>.
-            </Col>
-        </Row>}
     </Container>;
 };
 

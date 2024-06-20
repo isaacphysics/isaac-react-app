@@ -211,6 +211,8 @@ export interface IsaacSymbolicQuestionDTO extends QuestionDTO {
 
 export interface IsaacCoordinateQuestionDTO extends QuestionDTO {
     numberOfCoordinates?: number;
+    placeholderXValue?: string;
+    placeholderYValue?: string;
 }
 
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
@@ -732,6 +734,10 @@ export interface Content extends ContentBase {
 export interface ResultsWrapper<T> {
     results?: T[];
     totalResults?: number;
+}
+
+export interface SearchResultsWrapper<T> extends ResultsWrapper<T> {
+    nextSearchOffset?: number;
 }
 
 export interface Address {

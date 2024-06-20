@@ -29,8 +29,8 @@ export class CsTagService extends AbstractBaseTagService {
 
 
         // AI and machine learning topics
-        {id: TAG_ID.artificialIntelligence, title: "Artificial intelligence", parent: TAG_ID.aiAndMachineLearning, new: true},
-        {id: TAG_ID.machineLearning, title: "Machine learning", parent: TAG_ID.aiAndMachineLearning, new: true},
+        {id: TAG_ID.artificialIntelligence, title: "Artificial intelligence", parent: TAG_ID.aiAndMachineLearning},
+        {id: TAG_ID.machineLearning, title: "Machine learning", parent: TAG_ID.aiAndMachineLearning},
 
         // Algorithms and data structures topics
         {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms},
@@ -102,7 +102,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.mathsForCs, title: "Maths for computer science", parent: TAG_ID.theoryOfComputation, stageOverride: GCSE_HIDDEN},
 
         // Software projects topics
-        {id: TAG_ID.database_project, title: "Database project", parent: TAG_ID.projects, comingSoonDate: "soon"},
+        {id: TAG_ID.database_project, title: "Database project", parent: TAG_ID.projects, new: true},
         {id: TAG_ID.aqa_nea_project, title: "AQA NEA (coursework)", parent: TAG_ID.projects},
         {id: TAG_ID.ocr_nea_project, title: "OCR NEA (coursework)", parent: TAG_ID.projects},
 

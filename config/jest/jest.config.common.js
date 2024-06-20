@@ -48,5 +48,6 @@ module.exports = {
     "globals": {
         REACT_APP_API_VERSION: "any",
     },
-    workerIdleMemoryLimit: '512MB',
+    "workerIdleMemoryLimit": '512MB',
+    "testTimeout": 20000
 };

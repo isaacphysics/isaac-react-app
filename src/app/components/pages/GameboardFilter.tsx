@@ -70,6 +70,7 @@ import {
 } from "reactstrap";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {Spacer} from '../elements/Spacer';
+import { QuestionFinderBanner } from '../navigation/QuestionFinderBanner';
 
 function itemiseConcepts(concepts: string[]): Item<string>[] {
     return concepts
@@ -638,6 +639,8 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="help_modal_gameboard_filter"/>
         <MetaDescription description={metaDescription} />
         <CanonicalHrefElement />
+
+        <QuestionFinderBanner />
 
         {/* The site-specific question filtering UI */}
         {siteSpecific(

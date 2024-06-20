@@ -8,16 +8,39 @@ import {Immutable} from "immer";
 
 // Custom input component for coordinates - a pair of inputs, one for x and one for y, formatted with brackets
 // and a comma in between.
-const CoordinateInput = ({value, onChange, readonly, remove}: {value: Immutable<CoordinateItemDTO>, onChange: (value: Immutable<CoordinateItemDTO>) => void, readonly?: boolean, remove?: () => void}) => {
+interface CoordinateInputProps {
+    value: Immutable<CoordinateItemDTO>;
+    placeholderXValue?: string;
+    placeholderYValue?: string;
+    onChange: (value: Immutable<CoordinateItemDTO>) => void;
+    readonly?: boolean;
+    remove?: () => void;
+}
+const CoordinateInput = (props: CoordinateInputProps) => {
+    const {value, placeholderXValue, placeholderYValue, onChange, readonly, remove} = props;
     return <span className="coordinate-input">
         (
-        <Input type="text" placeholder="x" value={value.x ?? ""} onChange={event => onChange({...value, x: event.target.value === "" ? undefined : event.target.value})} readOnly={readonly} />
+        <Input
+            type="text"
+            className="force-print"
+            placeholder={placeholderXValue ?? "x"}
+            value={value.x ?? ""}
+            onChange={event => onChange({...value, x: event.target.value === "" ? undefined : event.target.value})}
+            readOnly={readonly}
+        />
         <span className="coordinate-input-separator">,&nbsp;</span>
-        <Input type="text" placeholder="y" value={value.y ?? ""} onChange={event => onChange({...value, y: event.target.value === "" ? undefined : event.target.value})} readOnly={readonly} />
+        <Input
+            type="text"
+            className="force-print"
+            placeholder={placeholderYValue ?? "y"}
+            value={value.y ?? ""}
+            onChange={event => onChange({...value, y: event.target.value === "" ? undefined : event.target.value})}
+            readOnly={readonly}
+        />
         )
         {remove && <Button className="ml-3" size="sm" onClick={remove}>Delete</Button>}
     </span>;
-}
+};
 
 const DEFAULT_COORDINATE_ITEM = {type: "coordinateItem", x: undefined, y: undefined};
 
@@ -53,6 +76,8 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
             ? Array.from({length: doc.numberOfCoordinates}).map((_, index) =>
                 <CoordinateInput
                     key={index}
+                    placeholderXValue={doc.placeholderXValue}
+                    placeholderYValue={doc.placeholderYValue}
                     value={currentAttempt?.items?.[index] ?? {...DEFAULT_COORDINATE_ITEM}}
                     readonly={readonly}
                     onChange={value => updateItem(index, value)}
@@ -62,6 +87,8 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                     {currentAttempt?.items?.map((item, index) =>
                         <CoordinateInput
                             key={index}
+                            placeholderXValue={doc.placeholderXValue}
+                            placeholderYValue={doc.placeholderYValue}
                             value={item}
                             readonly={readonly}
                             onChange={value => updateItem(index, value)}
@@ -71,6 +98,8 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                 </>
                 : <CoordinateInput
                     key={0}
+                    placeholderXValue={doc.placeholderXValue}
+                    placeholderYValue={doc.placeholderYValue}
                     value={{...DEFAULT_COORDINATE_ITEM}}
                     readonly={readonly}
                     onChange={value => updateItem(0, value)}

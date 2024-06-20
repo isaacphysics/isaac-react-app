@@ -40,7 +40,7 @@
   margin-bottom: 1.5rem;
 
   a img {
-    height: 180px;
+    @include aspect-ratio(5, 3);
     object-fit: cover;
   }
 }
