@@ -10,6 +10,8 @@ import {
 import {
     CLOZE_DROP_ZONE_ID_PREFIX,
     CLOZE_ITEM_SECTION_ID,
+    NULL_CLOZE_ITEM,
+    NULL_CLOZE_ITEM_ID,
     isDefined,
     useCurrentQuestionAttempt,
     useDeviceSize
@@ -46,11 +48,6 @@ const augmentInlineItemWithUniqueReplacementID = (idv: Immutable<ClozeItemDTO> |
 const augmentNonSelectedItemWithReplacementID = (item: Immutable<ClozeItemDTO>) => ({...item, replacementId: item.id});
 const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (Immutable<ItemDTO> | undefined)[]}) => (i: Immutable<ClozeItemDTO> | undefined) => i ? !currentAttempt.items?.map(si => si?.id).includes(i.id) : false;
 
-const NULL_CLOZE_ITEM_ID = "NULL_CLOZE_ITEM" as const;
-const NULL_CLOZE_ITEM: ItemDTO = {
-    type: "item",
-    id: NULL_CLOZE_ITEM_ID
-};
 const replaceNullItems = (items: readonly Immutable<ItemDTO>[] | undefined) => items?.map(i => i.id === NULL_CLOZE_ITEM_ID ? undefined : i);
 
 const ItemSection = ({id, items}: {id: string, items: Immutable<ClozeItemDTO>[]}) => {

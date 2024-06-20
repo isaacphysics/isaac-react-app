@@ -9,14 +9,8 @@ import {useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import {useSortable} from "@dnd-kit/sortable";
 import classNames from "classnames";
-import {CLOZE_DROP_ZONE_ID_PREFIX, isDefined, useDeviceSize} from "../../../../services";
+import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, isDefined, useDeviceSize} from "../../../../services";
 import { Markup } from "..";
-
-const NULL_CLOZE_ITEM_ID = "NULL_CLOZE_ITEM" as const;
-const NULL_CLOZE_ITEM: ItemDTO = {
-    type: "item",
-    id: NULL_CLOZE_ITEM_ID
-};
 
 export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean, isCorrect?: boolean}) {
     const {attributes, listeners, setNodeRef, isDragging, isOver, transform, transition} = useSortable({
