@@ -20,14 +20,12 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           component: true
-          env:
-            CYPRESS_SITE='ada'
+          env: SITE="ada"
       - name: Cypress run (Physics)
         uses: cypress-io/github-action@v6
         with:
           component: true
-          env:
-            CYPRESS_SITE='phy'
+          env: SITE="phy"
       - name: Upload artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
