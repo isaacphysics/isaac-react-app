@@ -21,3 +21,16 @@
 polygon.fill-secondary {
   fill: $secondary;
 }
+
+.icon-dropdown {
+  position: absolute;
+  align-self: center;
+  right: 5px;
+  filter: invert(1);
+
+  &.active {
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+  }
+}

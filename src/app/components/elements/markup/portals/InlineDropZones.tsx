@@ -108,10 +108,11 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
         toggle={() => {setIsOpen(!isOpen);}}
     >
         <DropdownToggle style={{minHeight: height, minWidth: width}}>
-            <div>
+            <div className={"d-flex"}>
                 <Markup trusted-markup-encoding={"html"}>
                     {dropdownValue}
                 </Markup>
+                <img className={classNames("icon-dropdown", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"></img>
             </div>
         </DropdownToggle>
         <DropdownMenu right>
