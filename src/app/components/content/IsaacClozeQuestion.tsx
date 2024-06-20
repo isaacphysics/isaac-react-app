@@ -352,10 +352,10 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         const nsis = [...nonSelectedItems];
         const idvs = [...inlineDropValues];
 
-        const toIndex = inlineDropIndex(dropZoneId as string) ?? idvs.findIndex(i => i?.replacementId === dropZoneId);
+        const dropZoneIndex = inlineDropIndex(dropZoneId as string) ?? idvs.findIndex(i => i?.replacementId === dropZoneId);
         // Cancel if error
-        if (toIndex === -1) return;
-        const previousItem = idvs[toIndex];
+        if (dropZoneIndex === -1) return;
+        const previousItem = idvs[dropZoneIndex];
 
         if (clearSelection && previousItem) {
             if (!withReplacement) {
@@ -364,19 +364,19 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                 nsis.push(previousItem);
             }
             // and remove the item from the current drop zone values
-            idvs.splice(toIndex, 1);
+            idvs[dropZoneIndex] = undefined;
         } else if (!clearSelection) {
-            const fromIndex = nsis.indexOf(item);
+            const itemIndex = nsis.indexOf(item);
 
             // Otherwise remove from item section and add to drop-zone, swapping out the previous item if it exists
             if (!withReplacement) {
                 if (previousItem) {
-                    nsis.splice(fromIndex, 1, previousItem);
+                    nsis.splice(itemIndex, 1, previousItem);
                 } else {
-                    nsis.splice(fromIndex, 1);
+                    nsis.splice(itemIndex, 1);
                 }
             }
-            idvs[toIndex] = augmentInlineItemWithUniqueReplacementID(item);
+            idvs[dropZoneIndex] = augmentInlineItemWithUniqueReplacementID(item);
         }
 
         updateAttempt(idvs);
