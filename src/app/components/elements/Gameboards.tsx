@@ -47,8 +47,7 @@ const CSTable = (props: GameboardsTableProps) => {
     const {
         user,
         boards, selectedBoards, setSelectedBoards, confirmDeleteMultipleBoards,
-        boardView, switchViewAndClearSelected, boardTitleFilter, setBoardTitleFilter,
-        boardCompletion, setBoardCompletion, boardCreator, setBoardCreator,
+        boardView, boardTitleFilter, boardCompletion, boardCreator, 
         boardOrder, setBoardOrder
     } = props;
 
@@ -92,34 +91,6 @@ const CSTable = (props: GameboardsTableProps) => {
     </tr>;
 
     return <div className={"mb-5 mb-md-6"}>
-        {/* <Row>
-            <Col xs={6} md={3}>
-                <Label className="w-100">
-                    Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected}>
-                    {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
-                </Input>
-                </Label>
-            </Col>
-            <Col xs={6} md={3} lg={4}>
-                <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter boards by name</span><Input type="text" data-testid="title-filter" onChange={(e) => setBoardTitleFilter(e.target.value)} />
-                </Label>
-            </Col>
-            <Col xs={6} md={3} lg={2}>
-                <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by Creator</span><Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                        {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-                    </Input>
-                </Label>
-            </Col>
-            <Col xs={6} md={3}>
-                <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by Completion</span><Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as BoardCompletions)}>
-                        {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
-                    </Input>
-                </Label>
-            </Col>
-        </Row> */}
         <Table className="my-gameboard-table" responsive>
             <thead>
                 {tableHeader}

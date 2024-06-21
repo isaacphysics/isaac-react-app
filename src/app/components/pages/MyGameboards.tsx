@@ -49,7 +49,7 @@ const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, board
                 </Input>
             </Label>
         </Col>
-        <Col xs={6} md={3}>
+        <Col xs={6} md={2}>
             <Label className="w-100">
                 Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
@@ -57,15 +57,16 @@ const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, board
             </Label>
         </Col>
         <Spacer />
-        <Col xs={10} md={5} lg={4}>
+        <Col xs={9} md={5} lg={4}>
             <Label className="w-100">
                 Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
                     {Object.values(BoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
                 </Input>
             </Label>
         </Col>
-        <Col xs={2} sm={1}>
-            <Label className="w-100">
+        <span className="flex-grow-0 flex-sm-grow-1 flex-md-grow-0"/>
+        <Col xs={3} sm={2} lg={1}>
+            <Label className="w-100 d-flex flex-column">
                 Filters
                 <Button color="secondary" className={classNames("gameboards-filter-dropdown", {"selected": showFilters})} 
                 onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"/>
@@ -194,7 +195,7 @@ export const MyGameboards = () => {
             <>
                 <div className="mt-4 mb-2">
                     {boards && <h4>Showing <strong>{inProgress + notStarted}</strong> gameboards, with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
-                    {!boards && <h4>You have <IsaacSpinner size="sm" inline /> saved {siteSpecific("gameboards", "quizzes")}...</h4>}
+                    {!boards && <IsaacSpinner size="sm" inline />}
                 </div>
                 <GameboardsDisplaySettings 
                     boardView={boardView} switchViewAndClearSelected={switchViewAndClearSelected} boardLimit={boardLimit}

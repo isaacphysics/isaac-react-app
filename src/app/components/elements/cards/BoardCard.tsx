@@ -11,7 +11,8 @@ import {
     isPhy,
     PATHS,
     siteSpecific,
-    stageLabelMap
+    stageLabelMap,
+    useDeviceSize
 } from "../../../services";
 import {showErrorToast, unlinkUserFromGameboard, useAppDispatch} from "../../../state";
 import {GameboardDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
@@ -131,6 +132,8 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
 
     const dispatch = useAppDispatch();
 
+    const deviceSize = useDeviceSize();
+
     const updateBoardSelection = (board: GameboardDTO, checked: boolean) => {
         if (!setSelectedBoards || !isDefined(selectedBoards)) return;
         if (checked) {
@@ -174,83 +177,101 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         return siteSpecific(`border-left-1 border-right-1 border-top-${i === 0 ? 0 : 1} border-bottom-${i === boardStagesAndDifficulties.length - 1 ? 0 : 1}`, "border-0");
     };
 
-    return boardView == BoardViews.table ?
+    const stagesAndDifficultiesTD = <td className={basicCellClasses + " p-0"} colSpan={2}>
+        {boardStagesAndDifficulties.length > 0 && <table className="w-100 border-0">
+            <tbody>
+            {boardStagesAndDifficulties.map(([stage,difficulties], i) => {
+                return <tr key={stage} className={classNames({"border-0": i === 0, "border-left-0 border-right-0 border-bottom-0": i >= 1})}>
+                    <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
+                        {stageLabelMap[stage]}
+                    </td>
+                    <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
+                        {isAda && "("}{sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")}{isAda && ")"}
+                    </td>
+                </tr>;
+            })}
+            </tbody>
+        </table>}
+    </td>;
+
+    return boardView == BoardViews.table ? (
         <tr className={siteSpecific("board-card", "")} data-testid={"gameboard-table-row"}>
-            {isSetAssignments && <td className={siteSpecific("", "align-middle text-center")}>
-                {siteSpecific(
-                    <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />,
-                    <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                )}
-            </td>}
-            <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
-                <a href={boardLink} className={isAda ? "font-weight-semi-bold" : ""}>{board.title}</a>
-                {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
-            </td>
-            <td className={basicCellClasses + " p-0"} colSpan={2}>
-                {boardStagesAndDifficulties.length > 0 && <table className="w-100 border-0">
-                    <tbody>
-                    {boardStagesAndDifficulties.map(([stage,difficulties], i) => {
-                        return <tr key={stage} className={classNames({"border-0": i === 0, "border-left-0 border-right-0 border-bottom-0": i >= 1})}>
-                            <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
-                                {stageLabelMap[stage]}
-                            </td>
-                            <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
-                                {isAda && "("}{sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")}{isAda && ")"}
-                            </td>
-                        </tr>;
-                    })}
-                    </tbody>
-                </table>}
-            </td>
-            {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
-            {!isSetAssignments && <td className="align-middle text-center">{formatDate(board.creationDate)}</td>}
-            {isSetAssignments && <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>}
-            {isSetAssignments && <td className={"align-middle text-center"}>
-                <Button className="set-assignments-button" color={siteSpecific("tertiary", "secondary")} size="sm" onClick={toggleAssignModal}>
-                    Assign{hasAssignedGroups && "\u00a0/ Unassign"}
-                </Button>
-            </td>}
-            {isAda && <td className={basicCellClasses}>
-                <div className="table-share-link">
-                    <ShareLink linkUrl={boardLink} gameboardId={board.id} outline={isAda} clickAwayClose={isAda} />
-                </div>
-            </td>}
-            {isSetAssignments && isAda && <td className={basicCellClasses}>
-                <Button outline color={"secondary"} className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
-            </td>}
-            {!isSetAssignments && <td className={siteSpecific("", "align-middle text-center")}>
-                {siteSpecific(
-                    <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />,
-                    <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                )}
-            </td>}
-            {!isSetAssignments && <td className={siteSpecific("", "align-middle text-center")}>
-                {siteSpecific(
-                    <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />,
-                    <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
-                )}
-            </td>}
-            {!isSetAssignments && siteSpecific(
-                <td className={"text-center align-middle"}>
-                    <Button outline color="primary" className={"bin-icon d-inline-block outline"} style={{
-                        width: "20px",
-                        minWidth: "20px",
-                    }} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
-                </td>,
-                <td className={"text-center align-middle overflow-hidden"}>
-                    <CustomInput
-                        id={`board-delete-${board.id}`}
-                        type="checkbox"
-                        color="secondary"
-                        className={"isaac-checkbox mr-n2"}
-                        checked={board && selectedBoards?.some(e => e.id === board.id)}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            board && updateBoardSelection(board, event.target.checked);
-                        }} aria-label="Delete quiz"
-                    />
+            {isSetAssignments ? <>
+                <td className={siteSpecific("", "align-middle text-center")}>
+                    {siteSpecific(
+                        <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />,
+                        <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                    )}
                 </td>
-            )}
-        </tr>
+                <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
+                    <a href={boardLink} className={isAda ? "font-weight-semi-bold" : ""}>{board.title}</a>
+                    {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
+                </td>
+                {stagesAndDifficultiesTD}
+                {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
+                <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
+                <td className={"align-middle text-center"}>
+                    <Button className="set-assignments-button" color={siteSpecific("tertiary", "secondary")} size="sm" onClick={toggleAssignModal}>
+                        Assign{hasAssignedGroups && "\u00a0/ Unassign"}
+                    </Button>
+                </td>
+                {isAda && <td className={basicCellClasses}>
+                    <div className="table-share-link">
+                        <ShareLink linkUrl={boardLink} gameboardId={board.id} outline={isAda} clickAwayClose={isAda} />
+                    </div>
+                </td>}
+                {isAda && <td className={basicCellClasses}>
+                    <Button outline color={"secondary"} className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                </td>}
+            </> 
+            : 
+            <>
+                <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
+                    <a href={boardLink} className={isAda ? "font-weight-semi-bold" : ""}>{board.title}</a>
+                    {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
+                </td>
+                {stagesAndDifficultiesTD}
+                {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
+                <td className="align-middle text-center">{formatDate(board.creationDate)}</td>
+                <td className={siteSpecific("", "align-middle text-center")}>
+                    {siteSpecific(
+                        <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />,
+                        <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                    )}
+                </td>
+                <td className={siteSpecific("", "align-middle text-center")}>
+                    {siteSpecific(
+                        <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />,
+                        <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
+                    )}
+                </td>
+                {isAda && <td className={basicCellClasses}>
+                    <div className="table-share-link">
+                        <ShareLink linkUrl={boardLink} gameboardId={board.id} outline={isAda} clickAwayClose={isAda} />
+                    </div>
+                </td>}
+                {siteSpecific(
+                    <td className={"text-center align-middle"}>
+                        <Button outline color="primary" className={"bin-icon d-inline-block outline"} style={{
+                            width: "20px",
+                            minWidth: "20px",
+                        }} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                    </td>,
+                    <td className={"text-center align-middle overflow-hidden"}>
+                        <CustomInput
+                            id={`board-delete-${board.id}`}
+                            type="checkbox"
+                            color="secondary"
+                            className={"isaac-checkbox mr-n2"}
+                            checked={board && selectedBoards?.some(e => e.id === board.id)}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                board && updateBoardSelection(board, event.target.checked);
+                            }} aria-label="Delete quiz"
+                        />
+                    </td>
+                )}
+            </>}
+        </tr>)
         :
         siteSpecific(
             <Card className="board-card card-neat" data-testid={"gameboard-card"}>
@@ -261,10 +282,15 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
                             <CardSubtitle data-testid={"owner"}>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                         </Col>
-                        <Spacer/>
-                        <Col xs={2} className="card-share-link col-auto">
-                            <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
+                        {isSetAssignments ? <Col>
+                            <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
                         </Col>
+                        : <>
+                            <Spacer/>
+                            <Col xs={2} className="card-share-link col-auto">
+                                <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
+                            </Col>
+                        </>}
                     </Row>
                     <CardSubtitle data-testid={"created-date"}>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                     <CardSubtitle data-testid={"last-visited"}>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
@@ -300,15 +326,21 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         </tbody>
                     </table>
                     <Spacer />
-                    <Row className="pt-4 my-gameboards-cards-hex-container">
-                        <Col>
-                            <b>Attempted:</b>
-                            <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                    <Row className={isSetAssignments ? "justify-content-end" : "pt-4 my-gameboards-cards-hex-container"}>
+                        {isSetAssignments ? <Col xs={2} className="card-share-link col-auto">
+                            <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
                         </Col>
-                        <Col>
-                            <b>Correct:</b>
-                            <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />                    
-                        </Col>
+                        :
+                        <>
+                            <Col>
+                                <b>Attempted:</b>
+                                <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                            </Col>
+                            <Col>
+                                <b>Correct:</b>
+                                <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />                    
+                            </Col>
+                        </>}
                     </Row>
                 </CardBody>
                 {isSetAssignments && <CardFooter>
@@ -320,22 +352,36 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
             <Card className={"board-card"} data-testid={"gameboard-card"}>
                 <CardBody className="pb-4 pt-4">
                     <Row className={"mb-2"}>
-                        <Col>
-                            <div className={"float-left mr-3 mb-2"}>
-                                <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                            </div>
+                        <Col xs={8} sm={7} md={8}>
                             <h4><Link className={"d-inline"} to={boardLink}>{board.title}</Link></h4>
-                            <span data-testid={"owner"}>By: {formatBoardOwner(user, board)}</span>
-                        </Col>
-                    </Row>
-                    <Row className={isSetAssignments ? "mb-5 pb-3" : "mb-0"}>
-                        <Col>
+                            <span data-testid={"owner"}><b>By</b>: {formatBoardOwner(user, board)}</span><br/>
                             <span data-testid={"created-date"}><b>Created</b>: {formatDate(board.creationDate)}</span><br/>
                             <span data-testid={"last-visited"}><b>Last visited</b>: {formatDate(board.lastVisited)}</span><br/>
+                            <br/>
                             <b>Stages and difficulties</b>: {boardStagesAndDifficulties.map(([stage,difficulties], _) =>
                                 `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
                             ).join(", ") || "-"}<br/>
                         </Col>
+                        {deviceSize === "sm" ? <Col sm={5} className="pl-0 d-flex flex-sm-row">
+                            <Col xs={12} sm={6} md={12} className="d-flex flex-column p-0 align-items-center">
+                                <span>Attempted</span>
+                                <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                            </Col>
+                            <Col xs={12} sm={6} md={12} className="d-flex flex-column p-0 align-items-center">
+                                <span className="p-0">Correct</span>
+                                <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
+                            </Col>
+                        </Col> :
+                        <Col xs={4} className="pl-0 d-flex flex-column">
+                            <Row className="d-flex flex-column p-0 align-items-center">
+                                <span>Attempted</span>
+                                <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                            </Row>
+                            <Row className="d-flex flex-column p-0 align-items-center">
+                                <span className="pt-2">Correct</span>
+                                <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
+                            </Row>
+                        </Col>}
                     </Row>
                     <CardFooter className={"text-right p-3"}>
                         <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
