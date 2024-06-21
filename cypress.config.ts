@@ -12,7 +12,7 @@ export default defineConfig({
           require(`./config/webpack.config.ada.js`) : require(`./config/webpack.config.physics.js`)
     },
     indexHtmlFile: `cypress/support/component-index-${SITE_STRING}.html`,
-    supportFile: `cypress/support/component-${SITE_STRING}.ts`,
+    supportFile: `cypress/support/component-${SITE_STRING}.tsx`,
     setupNodeEvents(on, config) {
       initPlugin(on, config);
     }
