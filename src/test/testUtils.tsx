@@ -1,7 +1,6 @@
 import {UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
-// import {worker} from "../mocks/browser";
 import {rest, RestHandler} from "msw";
 import {ACTION_TYPE, API_PATH, SITE, SITE_SUBJECT} from "../app/services";
 import produce from "immer";
@@ -79,18 +78,14 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     if (isDefined(PageComponent) && PageComponent.name !== "IsaacApp") {
         store.dispatch(requestCurrentUser());
     }
-    render(getComponent(PageComponent, initalRouteEntries));
-};
-
-export function getComponent(PageComponent?: React.FC<any>, initialRouteEntries?: string[]) {
-    return <Provider store={store}>
+    render(<Provider store={store}>
         {PageComponent
-            ? <MemoryRouter initialEntries={initialRouteEntries ?? []}>
+            ? <MemoryRouter initialEntries={initalRouteEntries ?? []}>
                 <PageComponent/>
             </MemoryRouter>
             : <IsaacApp/>}
-    </Provider>;
-}
+    </Provider>);
+};
 
 export type NavBarMenus = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
 export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string | null}} = {
