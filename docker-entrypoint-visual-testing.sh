@@ -1,5 +1,4 @@
 #!/bin/bash
 
-yarn install
-# yarn cypress info
+yarn install --frozen-lockfile
 yarn cypress run --component --browser chrome
