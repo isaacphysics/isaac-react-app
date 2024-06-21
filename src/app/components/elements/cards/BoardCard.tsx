@@ -350,40 +350,48 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 </CardFooter>}
             </Card>,
             <Card className={"board-card"} data-testid={"gameboard-card"}>
-                <CardBody className="pb-4 pt-4">
+                <CardBody className="pb-5 pt-4">
                     <Row className={"mb-2"}>
                         <Col xs={8} sm={7} md={8}>
                             <h4><Link className={"d-inline"} to={boardLink}>{board.title}</Link></h4>
                             <span data-testid={"owner"}><b>By</b>: {formatBoardOwner(user, board)}</span><br/>
                             <span data-testid={"created-date"}><b>Created</b>: {formatDate(board.creationDate)}</span><br/>
                             <span data-testid={"last-visited"}><b>Last visited</b>: {formatDate(board.lastVisited)}</span><br/>
-                            <br/>
-                            <b>Stages and difficulties</b>: {boardStagesAndDifficulties.map(([stage,difficulties], _) =>
+                        </Col>
+                        {isSetAssignments ? (
+                            <Col>
+                                {/* number of groups */}
+                                <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                            </Col>
+                        ) : (
+                            deviceSize === "sm" ? <Col sm={5} className="pl-0 d-flex flex-sm-row">
+                                <Col xs={12} sm={6} md={12} className="d-flex flex-column p-0 align-items-center">
+                                    <span>Attempted</span>
+                                    <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                                </Col>
+                                <Col xs={12} sm={6} md={12} className="d-flex flex-column p-0 align-items-center">
+                                    <span className="p-0">Correct</span>
+                                    <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
+                                </Col>
+                            </Col> :
+                            <Col xs={4} className="pl-0 d-flex flex-column">
+                                <Row className="d-flex flex-column p-0 align-items-center">
+                                    <span>Attempted</span>
+                                    <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                                </Row>
+                                <Row className="d-flex flex-column p-0 align-items-center">
+                                    <span className="pt-2">Correct</span>
+                                    <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
+                                </Row>
+                            </Col>
+                        )}
+                        <Col className="pt-3">
+                            <b>Stages and difficulties</b>:<br/> {boardStagesAndDifficulties.map(([stage,difficulties], _) =>
                                 `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
                             ).join(", ") || "-"}<br/>
                         </Col>
-                        {deviceSize === "sm" ? <Col sm={5} className="pl-0 d-flex flex-sm-row">
-                            <Col xs={12} sm={6} md={12} className="d-flex flex-column p-0 align-items-center">
-                                <span>Attempted</span>
-                                <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                            </Col>
-                            <Col xs={12} sm={6} md={12} className="d-flex flex-column p-0 align-items-center">
-                                <span className="p-0">Correct</span>
-                                <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
-                            </Col>
-                        </Col> :
-                        <Col xs={4} className="pl-0 d-flex flex-column">
-                            <Row className="d-flex flex-column p-0 align-items-center">
-                                <span>Attempted</span>
-                                <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                            </Row>
-                            <Row className="d-flex flex-column p-0 align-items-center">
-                                <span className="pt-2">Correct</span>
-                                <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
-                            </Row>
-                        </Col>}
                     </Row>
-                    <CardFooter className={"text-right p-3"}>
+                    <CardFooter className={"text-right p-3 mt-3"}>
                         <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
                         <Button outline color={"secondary"} className={"mr-0 bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="secondary" onClick={toggleAssignModal}>
