@@ -37,8 +37,8 @@ if (document.location.hostname === "localhost") {
     apiPath = "http://localhost:8080/isaac-api/api";
 } else if (EDITOR_PREVIEW) {
     apiPath = `${STAGING_URL}/api/any/api`;
-} else if (document.location.hostname.endsWith(".eu.ngrok.io")) {
-    apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
+} else if (document.location.hostname.endsWith(".ngrok.isaacscience.org")) {
+    apiPath = "https://isaac-api.ngrok.isaacscience.org/isaac-api/api";
 }
 let imagePath = `${apiPath}/images`;
 if (apiPath.indexOf(`/api/${API_VERSION}/api`) > -1) {
