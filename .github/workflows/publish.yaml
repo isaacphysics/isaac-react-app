@@ -45,7 +45,7 @@ jobs:
             # tag event
             type=ref,event=tag
       - name: Build and push cs Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           file: Dockerfile-react
           context: .
@@ -55,7 +55,7 @@ jobs:
           tags: ${{ steps.meta-cs.outputs.tags }}
           labels: ${{ steps.meta-cs.outputs.labels }}
       - name: Build and push cs-renderer Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           file: Dockerfile-react
           context: .
