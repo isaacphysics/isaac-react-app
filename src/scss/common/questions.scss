@@ -384,6 +384,10 @@
   }
 }
 
+input.inline-input {
+  display: inline-flex;
+}
+
 .question-actions {
   align-self: flex-start;
   &.question-actions-leftmost {
