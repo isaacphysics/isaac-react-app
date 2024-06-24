@@ -7713,10 +7713,10 @@ p-try@^2.0.0:
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
-p5@^1.9.2:
-  version "1.9.2"
-  resolved "https://registry.yarnpkg.com/p5/-/p5-1.9.2.tgz#34f9fa4b2d72aa8bc23c1efd7ffc97831f8145bd"
-  integrity sha512-fV8Td9Q1qlYXRXPLNrclRsgzXxPp/EuDlJUteV1XEtsy0JwjjCVteCrv7TTCU71BSoEtmuQ/51BIVRUJi/0gEw==
+p5@^1.9.4:
+  version "1.9.4"
+  resolved "https://registry.yarnpkg.com/p5/-/p5-1.9.4.tgz#948ec06c123105f516b0ef63db01c44b93c93b72"
+  integrity sha512-dhiZ9mvXx5pm8eRwml34xbeUwce4uS9Q2za0YOHg2p97N9iNAb5hTIHAt77CHKHXAh6A16u/oalz5egRfTyFWw==
 
 param-case@^3.0.4:
   version "3.0.4"
