@@ -13,7 +13,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@reduxjs/toolkit": "^1.9.7",
     "axios": "^1.7.2",
-    "billboard.js": "^3.11.3",
+    "billboard.js": "^3.12.4",
     "dayjs": "^1.11.11",
     "he": "^1.2.0",
     "highlight.js": "^11.9.0",
