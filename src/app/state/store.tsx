@@ -17,22 +17,20 @@ export const middleware: Middleware[] = [
   userConsistencyCheckerMiddleware,
   notificationCheckerMiddleware,
 ];
-const defaultMiddlewareOptions = {
-  serializableCheck: process.env.NODE_ENV !== "test",
-};
-
 export const store = configureStore({
   reducer: rootReducer,
-  // [thunk, immutableStateInvariant, serializableStateInvariant] are all in the default middleware and included by default
-  // in development, with only thunk included in production.
-  // See https://redux-toolkit.js.org/api/getDefaultMiddleware#customizing-the-included-middleware
   middleware: (getDefaultMiddleware) => {
-    const newMiddleware = getDefaultMiddleware(defaultMiddlewareOptions).concat(middleware);
+    const newMiddleware = getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: process.env.NODE_ENV !== "test",
+    }).concat(middleware);
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (process.env.NODE_ENV !== "production" && !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
       newMiddleware.concat([reduxLogger]);
     }
+
     return newMiddleware;
   },
   preloadedState: {},
