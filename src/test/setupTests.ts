@@ -2,6 +2,7 @@ import 'core-js';
 import '@testing-library/jest-dom';
 import {server} from "../mocks/server";
 import "./matchers";
+import {configure} from "@testing-library/dom";
 
 global.window.scrollTo = jest.fn();
 global.window.alert = jest.fn();

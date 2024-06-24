@@ -1,8 +1,17 @@
-import {screen, waitFor, within} from "@testing-library/react";
+import {
+    findAllByTestId,
+    getByTestId, queryAllByText,
+    queryByTestId,
+    queryByText,
+    screen,
+    waitFor,
+    waitForElementToBeRemoved,
+    within
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
-import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS} from "../dateUtils";
+import {dayMonthYearStringToDate, DAYS_AGO, DDMMYYYY_REGEX, ONE_DAY_IN_MS, SOME_FIXED_FUTURE_DATE} from "../dateUtils";
 import {renderTestEnvironment} from "../testUtils";
 
 import {API_PATH, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
@@ -265,6 +274,11 @@ describe("SetAssignments", () => {
 
     it('should reject duplicate assignment', async () => {
         // Arrange
+        // mock date
+        const dateMock = jest.spyOn(global.Date, 'now').mockImplementation(() =>
+            new Date(SOME_FIXED_FUTURE_DATE).valueOf()
+        );
+
         renderTestEnvironment({
             PageComponent: SetAssignments,
             initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
@@ -319,5 +333,8 @@ describe("SetAssignments", () => {
 
         const groupsAssignedHexagon = await within(gameboards[0]).findByTitle("Number of groups assigned");
         expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual("1group");
+
+        // Teardown
+        dateMock.mockRestore();
     });
 });

@@ -2,6 +2,7 @@ import { defineConfig } from "cypress";
 import { initPlugin } from "@frsource/cypress-plugin-visual-regression-diff/plugins";
 
 const SITE_STRING = process.env.CYPRESS_SITE == 'ada' ? 'ada' : 'phy';
+const UPDATE_BASELINE = !!process.env.CYPRESS_UPDATE_BASELINE;
 
 export default defineConfig({
   component: {
@@ -18,6 +19,8 @@ export default defineConfig({
     }
   },
   env: {
-    pluginVisualRegressionImagesPath : `{spec_path}/__image_snapshots__/${SITE_STRING}`
+    pluginVisualRegressionImagesPath : `{spec_path}/__image_snapshots__/${SITE_STRING}`,
+    pluginVisualRegressionMaxDiffThreshold: 0,
+    pluginVisualRegressionUpdateImages: UPDATE_BASELINE,
   }
 });

@@ -6,7 +6,7 @@ import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
 import {mockMyAssignments, mockUser} from "../../mocks/data";
 import {augmentErrorMessage, renderTestEnvironment} from "../testUtils";
-import {DDMMYYYY_REGEX, DAYS_AGO, dayMonthYearStringToDate} from "../dateUtils";
+import {DDMMYYYY_REGEX, DAYS_AGO, dayMonthYearStringToDate, SOME_FIXED_FUTURE_DATE} from "../dateUtils";
 import produce from "immer";
 
 const TAB_TITLE = siteSpecific({
@@ -111,7 +111,7 @@ describe("MyAssignments", () => {
                             gameboard: {
                                 id: "test-gameboard",
                                 title: "Test Gameboard",
-                                creationDate: DAYS_AGO(3),
+                                creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
                                 ownerUserId: 1,
                                 tags: [
                                     "ISAAC_BOARD"
@@ -121,9 +121,9 @@ describe("MyAssignments", () => {
                             groupId: 2,
                             groupName: "Test Group 1",
                             ownerUserId: mockUser.id,
-                            creationDate: DAYS_AGO(3),
-                            dueDate: DAYS_AGO(-5, true),
-                            scheduledStartDate: DAYS_AGO(-1, true),
+                            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+                            dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5, true),
+                            scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1, true),
                         }
                     ])
                 );
@@ -133,7 +133,7 @@ describe("MyAssignments", () => {
         const assignedDateEl = within(myAssignment).getByTestId("gameboard-assigned");
         const assignedDate = assignedDateEl?.textContent?.replace(/Assigned:\s?/, "");
         expect(assignedDate).toMatch(DDMMYYYY_REGEX);
-        expect(dayMonthYearStringToDate(assignedDate)?.valueOf()).toEqual(DAYS_AGO(-1, true));
+        expect(dayMonthYearStringToDate(assignedDate)?.valueOf()).toEqual(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1, true));
     });
 
     it('should show the assignment creation date as the "Assigned" date if the scheduled start date does not exist', async () => {
@@ -148,7 +148,7 @@ describe("MyAssignments", () => {
                             gameboard: {
                                 id: "test-gameboard",
                                 title: "Test Gameboard",
-                                creationDate: DAYS_AGO(3),
+                                creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
                                 ownerUserId: 1,
                                 tags: [
                                     "ISAAC_BOARD"
@@ -158,8 +158,8 @@ describe("MyAssignments", () => {
                             groupId: 2,
                             groupName: "Test Group 1",
                             ownerUserId: mockUser.id,
-                            creationDate: DAYS_AGO(3),
-                            dueDate: DAYS_AGO(-5, true)
+                            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+                            dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5, true)
                         }
                     ])
                 );
@@ -169,7 +169,7 @@ describe("MyAssignments", () => {
         const assignedDateEl = within(myAssignment).getByTestId("gameboard-assigned");
         const assignedDate = assignedDateEl?.textContent?.replace(/Assigned:\s?/, "");
         expect(assignedDate).toMatch(DDMMYYYY_REGEX);
-        expect(dayMonthYearStringToDate(assignedDate)?.valueOf()).toEqual(DAYS_AGO(3, true));
+        expect(dayMonthYearStringToDate(assignedDate)?.valueOf()).toEqual(DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3, true));
     });
 
     it('should show the notes field for assignments with notes', async () => {

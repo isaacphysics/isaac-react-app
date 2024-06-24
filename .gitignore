@@ -8,6 +8,8 @@ bundle-stats-*.json
 
 # testing
 /coverage
+*.actual.png
+*.diff.png
 
 # production
 /build
