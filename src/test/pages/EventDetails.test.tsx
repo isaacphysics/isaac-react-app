@@ -2,11 +2,12 @@ import { DAYS_AGO, DAYS_IN_FUTURE, TestUserRole, checkPageTitle, renderTestEnvir
 import { mockEvent } from "../../mocks/data";
 import { rest } from "msw";
 import { API_PATH, formatAddress } from "../../app/services";
-import { BookingStatus, EventStatus, IsaacEventPageDTO, Role } from "../../IsaacApiTypes";
+import { BookingStatus, EventStatus, IsaacEventPageDTO, RegisteredUserDTO, Role } from "../../IsaacApiTypes";
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import * as eventServices from "../../app/services/events";
 import { FRIENDLY_DATE_AND_TIME, TIME_ONLY } from "../../app/components/elements/DateString";
+import { produce } from "immer";
 
 const getButton = (buttonText: string) => {
   const eventButton = screen.getByRole("button", { name: buttonText });
@@ -25,7 +26,15 @@ const bookingDeadline = () => screen.queryByTestId("event-booking-deadline");
 const joinEventButton = () => screen.queryByRole("link", { name: "Join event now" });
 
 describe("EventDetails", () => {
-  const setupTest = async ({ role, event }: { role: TestUserRole; event: IsaacEventPageDTO }) => {
+  const setupTest = async ({
+    role,
+    event,
+    modifyUser,
+  }: {
+    role: TestUserRole;
+    event: IsaacEventPageDTO;
+    modifyUser?: (user: RegisteredUserDTO) => RegisteredUserDTO;
+  }) => {
     renderTestEnvironment({
       role: role,
       extraEndpoints: [
@@ -36,6 +45,7 @@ describe("EventDetails", () => {
           return res(ctx.status(200), ctx.json(event));
         }),
       ],
+      modifyUser: modifyUser,
     });
     const eventCards = await screen.findAllByTestId("event-card");
     const eventCardViewDetails = within(eventCards[0]).getByText("View details");
@@ -306,4 +316,50 @@ describe("EventDetails", () => {
     expect(joinEventButton()).toBeInTheDocument();
     expect(joinEventButton()).toHaveAttribute("href", event.meetingUrl);
   });
+
+  it("if details are missing, 'book now' button should be invalid", async () => {
+    const event = { ...mockEvent, placesAvailable: 10 };
+    await setupTest({
+      role: "STUDENT",
+      event,
+      modifyUser: (user) =>
+        produce(user, (u) => {
+          u.givenName = undefined;
+          u.familyName = undefined;
+          u.registeredContexts = [];
+        }),
+    });
+    const bookButton = screen.getByRole("button", { name: "Book a place" });
+    await userEvent.click(bookButton);
+
+    const firstNameInput = screen.getByRole("textbox", { name: "First name" });
+    const familyNameInput = screen.getByRole("textbox", { name: "Last name" });
+    const stageInput = screen.getByRole("textbox", { name: "Stage" });
+    const examBoardInput = screen.getByRole("textbox", { name: "Exam board" });
+
+    [firstNameInput, familyNameInput, stageInput, examBoardInput].forEach((each) => expect(each).toBeInvalid());
+
+    const bookNowButton = screen.getByRole("button", { name: "Book now" });
+    expect(bookNowButton).toBeDisabled();
+  });
+
+  it("if details are present, 'book now' button should be valid", async () => {
+    const event = { ...mockEvent, placesAvailable: 10 };
+    await setupTest({ role: "STUDENT", event });
+
+    const bookButton = screen.getByRole("button", { name: "Book a place" });
+    await userEvent.click(bookButton);
+
+    const firstNameInput = screen.getByRole("textbox", { name: "First name" });
+    const familyNameInput = screen.getByRole("textbox", { name: "Last name" });
+    const stageInput = screen.getByRole("textbox", { name: "Stage" });
+    const examBoardInput = screen.getByRole("textbox", { name: "Exam board" });
+
+    [firstNameInput, familyNameInput, stageInput, examBoardInput].forEach((each) => expect(each).toBeValid());
+
+    const bookNowButton = screen.getByRole("button", { name: "Book now" });
+    expect(bookNowButton).toBeEnabled();
+  });
 });
+
+// add book event button test here

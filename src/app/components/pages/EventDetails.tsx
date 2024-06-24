@@ -54,6 +54,8 @@ import { EditContentButton } from "../elements/EditContentButton";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import * as L from "leaflet";
 import ReactGA from "react-ga4";
+import { UserSummaryWithEmailAddressAndGenderDTO } from "../../../IsaacApiTypes";
+import { Immutable } from "immer";
 
 interface EventDetailsProps {
   match: { params: { eventId: string } };
@@ -84,6 +86,17 @@ const EventDetails = ({
     persistence.save(KEY.AFTER_AUTH_PATH, pathname);
     history.push("/login");
   }
+
+  // Function to check user information
+  const isUserInfoValid = (user: Immutable<UserSummaryWithEmailAddressAndGenderDTO>): boolean => {
+    return (
+      !!user.familyName &&
+      !!user.givenName &&
+      user.emailVerificationStatus === "VERIFIED" &&
+      !!user.registeredContexts &&
+      user.registeredContexts.length > 0
+    );
+  };
 
   return (
     <ShowLoading
@@ -357,6 +370,7 @@ const EventDetails = ({
                                   <Input
                                     type="submit"
                                     value={formatBookingModalConfirmMessage(event, canMakeABooking)}
+                                    disabled={!isUserInfoValid(user)}
                                     className="btn btn-xl btn-secondary border-0"
                                   />
                                 </div>

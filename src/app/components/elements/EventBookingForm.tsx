@@ -266,10 +266,12 @@ export const EventBookingForm = ({
           </legend>
           <Row>
             <Col md={6}>
-              <DisabledInputWithLabel type="firstname" />
+              <DisabledInputWithLabel type="firstname" invalid={!targetUser.givenName} />
+              <FormFeedback>First name is required</FormFeedback>
             </Col>
             <Col md={6}>
-              <DisabledInputWithLabel type="lastname" />
+              <DisabledInputWithLabel type="lastname" invalid={!targetUser.familyName} />
+              <FormFeedback>Last name is required</FormFeedback>
             </Col>
           </Row>
 
@@ -280,10 +282,18 @@ export const EventBookingForm = ({
                 {notVerifiedEmail && <EmailVerification />}
               </Col>
               <Col md={6}>
-                <DisabledInputWithLabel type="stage" />
+                <DisabledInputWithLabel
+                  type="stage"
+                  invalid={!targetUser.registeredContexts || targetUser.registeredContexts.length === 0}
+                />
+                <FormFeedback>Stage is required</FormFeedback>
               </Col>
               <Col md={6}>
-                <DisabledInputWithLabel type="examBoard" />
+                <DisabledInputWithLabel
+                  type="examBoard"
+                  invalid={!targetUser.registeredContexts || targetUser.registeredContexts.length === 0}
+                />
+                <FormFeedback>Exam Board is required</FormFeedback>
               </Col>
             </Row>
           </div>
