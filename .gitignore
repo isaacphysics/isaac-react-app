@@ -8,6 +8,7 @@ bundle-stats-*.json
 
 # testing
 /coverage
+/cypress/screenshots
 *.actual.png
 *.diff.png
 
