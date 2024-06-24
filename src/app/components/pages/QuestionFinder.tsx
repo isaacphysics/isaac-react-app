@@ -50,6 +50,7 @@ import { HierarchyFilterHexagonal, Tier, TierID } from "../elements/svg/Hierarch
 import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 import classNames from "classnames";
 import queryString from "query-string";
+import { PageFragment } from "../elements/PageFragment";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -313,6 +314,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <TitleAndBreadcrumb currentPageTitle={"Question Finder"} help={pageHelp}/>
         <MetaDescription description={metaDescription}/>
         <CanonicalHrefElement/>
+        <PageFragment fragmentId={"question_finder_intro"}/>
         <RS.Card id="finder-panel" className="mx-auto mt-4 mb-5">
             <RS.CardBody className={"px-2 py-3 p-sm-4 pb-5"}>
                 <RS.Row className={"mb-3"}>
