@@ -26,7 +26,6 @@ polygon.fill-secondary {
   position: absolute;
   align-self: center;
   right: 5px;
-  filter: invert(1);
 
   &.active {
     transform: rotate(180deg);

@@ -9,7 +9,7 @@ import {useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import {useSortable} from "@dnd-kit/sortable";
 import classNames from "classnames";
-import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, isDefined, useDeviceSize} from "../../../../services";
+import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, isAda, isDefined, siteSpecific, useDeviceSize} from "../../../../services";
 import { Markup } from "..";
 
 export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean, isCorrect?: boolean}) {
@@ -55,7 +55,6 @@ export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable
 function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id: string; index: number; emptyWidth?: string; emptyHeight?: string; rootElement?: HTMLElement}) {
     const dropRegionContext = useContext(ClozeDropRegionContext);
     const deviceSize = useDeviceSize();
-    const [dropdownValue, setDropdownValue] = useState<string>("");
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const droppableId = CLOZE_DROP_ZONE_ID_PREFIX + `${index + 1}`;
     const dropdownItems = dropRegionContext?.nonSelectedItems ?? [];
@@ -65,14 +64,6 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
         dropRegionContext?.register(droppableId, index);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    useEffect(() => {
-        // Use the drop-zone region state
-        if (dropRegionContext) {
-            setDropdownValue(dropRegionContext.inlineDropValueMap[droppableId]?.value ?? "");
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dropRegionContext?.inlineDropValueMap]);
 
     const item = dropRegionContext ? dropRegionContext.inlineDropValueMap[droppableId] : undefined;
 
@@ -90,6 +81,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
     });
 
     const height = (item || !emptyHeight) ? "auto" : (emptyHeight + "px");
+    // Ada buttons have a fixed width that needs to be overriden
     const width = (item || !emptyWidth) ? "auto" : (emptyWidth + "px");
 
     const draggableDropZone = <span
@@ -107,12 +99,18 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
         isOpen={isOpen}
         toggle={() => {setIsOpen(!isOpen);}}
     >
-        <DropdownToggle style={{minHeight: height, minWidth: width}}>
-            <div className={"d-flex"}>
-                <Markup trusted-markup-encoding={"html"}>
-                    {dropdownValue}
-                </Markup>
-                <img className={classNames("icon-dropdown", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"></img>
+        <DropdownToggle className={classNames(`cloze-dropdown ${siteSpecific("p-1", "p-0")}`, {"empty": !item})} style={{minHeight: height, width: width}}>
+            <div className={classNames("d-flex cloze-item feedback-zone", {"feedback-showing": isDefined(isCorrect), "p-2": isAda && !!item})}>
+                <span className={"sr-only"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
+                <span aria-hidden={true}>
+                    <Markup trusted-markup-encoding={"html"}>
+                        {item?.value ?? ""}
+                    </Markup>
+                </span>
+                {isDefined(isCorrect) && <div className={"feedback-box"}>
+                    <span className={classNames("feedback", isCorrect ? "correct" : "incorrect")}>{isCorrect ? "✔" : "✘"}</span>
+                </div>}
+                {!item && <img className={classNames("icon-dropdown", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"></img>}
             </div>
         </DropdownToggle>
         <DropdownMenu right>
@@ -124,7 +122,6 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
                 <span className="d-inline-block"></span>
             </DropdownItem>
             {dropdownItems.map((item, i) => {
-                console.log(item.encoding);
                 return <DropdownItem key={i}
                     data-unit={item || 'None'}
                     onClick={() => {dropRegionContext?.onSelect(item, droppableId, false);}}

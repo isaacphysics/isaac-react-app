@@ -329,9 +329,19 @@
   }
 }
 
-.cloze-drop-zone {
+.cloze-drop-zone, .cloze-dropdown {
   &.incorrect {
     filter: drop-shadow(0 0 0.3rem red);
+  }
+}
+
+.cloze-dropdown {
+  min-width: unset !important; // Bootstrap thinks its important
+  &.empty.empty {
+    &, &:hover, &:active, &:focus { // Apply regardless of hover
+      border: grey solid 1px !important;
+      background-color: transparent !important;
+    }
   }
 }
 
