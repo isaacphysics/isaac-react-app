@@ -124,6 +124,9 @@ const UserContextReconfirmationModalBody = () => {
     return <Form onSubmit={formSubmission} className={"mb-2"}>
         <p>{modalText.intro}</p>
         <p>{modalText.connections}</p>
+        {isPhy && <div className="text-right text-muted required-before">
+            Required
+        </div>}
         <Col>
             <Row className="pb-3">
                 <CountryInput
