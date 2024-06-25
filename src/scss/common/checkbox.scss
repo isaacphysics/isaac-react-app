@@ -4,6 +4,7 @@
   
     div {
       width: 1.6em;
+      min-width: 1.6em;
       height: 1.6em;
       position: relative;
   
@@ -44,7 +45,7 @@
         display: inline-block;
         width: 22px;
         height: 22px;
-        top: 3px;
+        top: 4px;
         transform: rotate(45deg);
         -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);
@@ -73,8 +74,8 @@
       }
     }
   
-    label {
-      width: max-content;
+    > label {
+      width: fit-content;
       margin: 0;
       line-height: normal;
     }
