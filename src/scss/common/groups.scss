@@ -1,6 +1,6 @@
 .group-item {
 
-  border: black
+  border: black;
 
   + .group-item {
     border-top: $gray-107 solid 1px;
