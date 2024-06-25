@@ -37,6 +37,9 @@
 
 .account-dropdown {
   flex: 1 1 0px;
+  @include respond-above(xs) {
+    min-width: 140px;
+  }
 }
 
 .invalid-school {
