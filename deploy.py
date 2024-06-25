@@ -198,12 +198,39 @@ def bring_up_the_new_containers(ctx):
     ask_to_run_command(f"./compose {ctx['site']} {ctx['env']} {ctx['app']} up -d")
 
 
+def check_running_servers(ctx):
+    print("\n# Determining whether old services running\nMay return exit code 1.")
+
+    api_running = ask_to_run_command(
+        "docker ps --format '{{.Names}}' | " + f"grep api-{ctx['env']}",
+        expected_nonzero_exit_codes=[1],
+        run_anyway=True
+    )
+    app_running = ask_to_run_command(
+        "docker ps --format '{{.Names}}' | " + f"grep app-{ctx['env']}",
+        expected_nonzero_exit_codes=[1],
+        run_anyway=True
+    )
+    previous_servers_exist = api_running != "" and app_running != ""
+    ctx['previous_servers_exist'] = previous_servers_exist
+
+    if not previous_servers_exist:
+        print("# OLD CONTAINERS NOT FOUND.")
+        print("\n# ! THIS SCRIPT WILL NOT TAKE DOWN RUNNING CONTAINERS SO CLEAN UP OLD CONTAINERS AFTER !\n")
+    else:
+        print("# OLD CONTAINERS FOUND.\n")
+
+
+
 def deploy_test(ctx):
     print(f"\n[DEPLOY {ctx['site'].upper()} TEST]")
-    bring_down_any_existing_containers(ctx)
-    print("Note: If there is a database schema change, you might need to alter the default data - usually through a migration followed by a snapshot.")
-    print("# Reset the test database.")
-    ask_to_run_command(f"./clean-test-db.sh {ctx['site']}")
+
+    if ctx["previous_servers_exist"]:
+        bring_down_any_existing_containers(ctx)
+        print("Note: If there is a database schema change, you might need to alter the default data - usually through a migration followed by a snapshot.")
+        print("# Reset the test database.")
+        ask_to_run_command(f"./clean-test-db.sh {ctx['site']}")
+
     update_config(ctx)
     bring_up_the_new_containers(ctx)
 
@@ -213,8 +240,11 @@ def deploy_staging_or_dev(ctx):
     continue_anyway = not ctx['live'] or 'y' == input("Currently deploying the live site, do you want to deploy staging? [y/n] ").lower()
     if continue_anyway:
         update_config(ctx)
-        run_db_migrations(ctx)
-        bring_down_any_existing_containers(ctx)
+
+        if ctx['previous_servers_exist']:
+            run_db_migrations(ctx)
+            bring_down_any_existing_containers(ctx)
+
         bring_up_the_new_containers(ctx)
 
 
@@ -304,25 +334,7 @@ if __name__ == '__main__':
     check_repos_are_up_to_date()
 
     build_docker_image_for_version(context)
-
-    print("\n# DETERMINING WHETHER OLD SERVICES RUNNING\nMay return exit code 1.")
-    api_running = ask_to_run_command(
-        "docker ps --format '{{.Names}}' | " + f"grep api-live",
-        expected_nonzero_exit_codes=[1],
-        run_anyway=True
-    )
-    app_running = ask_to_run_command(
-        "docker ps --format '{{.Names}}' | " + f"grep app-live",
-        expected_nonzero_exit_codes=[1],
-        run_anyway=True
-    )
-    previous_servers_exist = api_running != "" and app_running != ""
-    context['previous_servers_exist'] = previous_servers_exist
-    if not previous_servers_exist:
-        print("# OLD CONTAINERS NOT FOUND.")
-        print("\n# ! THIS SCRIPT WILL NOT TAKE DOWN RUNNING CONTAINERS SO CLEAN UP OLD CONTAINERS AFTER !\n")
-    else:
-        print("# OLD CONTAINERS FOUND.\n")
+    check_running_servers(context)
 
     sites = [Site.ADA, Site.PHY] if context['site'] == Site.BOTH else [context['site']]
     for site in sites:
@@ -336,10 +348,8 @@ if __name__ == '__main__':
                 print("# Bring down test containers")
                 context['env'] = 'test'
                 bring_down_any_existing_containers(context)
-                context['env'] = 'staging'
-                deploy_staging_or_dev(context)
-            else:
-                print("No support for deploying staging when no containers are running!")
+            context['env'] = 'staging'
+            deploy_staging_or_dev(context)
             context['env'] = 'live'
             deploy_live(context)
             context['env'] = 'etl'
