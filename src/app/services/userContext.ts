@@ -181,6 +181,7 @@ const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "WJEC", value: EXAM_BOARD.WJEC},
     {label: "SQA", value: EXAM_BOARD.SQA},
+    {label: "ADA", value: EXAM_BOARD.ADA},
     {label: "All Exam Boards", value: EXAM_BOARD.ALL},
 ];
 interface ExamBoardFilterOptions {
