@@ -128,7 +128,7 @@ const UserContextReconfirmationModalBody = () => {
             Required
         </div>}
         <Col>
-            <Row className="pb-3">
+            <Row className={siteSpecific("pb-1", "pb-3")}>
                 <CountryInput
                     className={below["md"](deviceSize) ? "w-100" : "w-75"}
                     userToUpdate={userToUpdate} 
@@ -138,7 +138,7 @@ const UserContextReconfirmationModalBody = () => {
                     required={true}
                 />
             </Row>
-            <Row className="pt-2">
+            <Row className={siteSpecific("py-1", "pt-2")}>
                 <SchoolInput
                     className={below["md"](deviceSize) ? "w-100" : "w-75"}
                     userToUpdate={userToUpdate} 
@@ -148,7 +148,7 @@ const UserContextReconfirmationModalBody = () => {
                     required={isAda && !isStudent(user)}
                 />
             </Row>
-            <Row className={classNames("pt-2", "pt-3")}>
+            <Row className={classNames({"pt-3": isAda})}>
                 <UserContextAccountInput
                     className={below["md"](deviceSize) ? "w-100" : "w-75"}
                     user={userToUpdate} 
@@ -161,7 +161,7 @@ const UserContextReconfirmationModalBody = () => {
                     required={false}
                 />
             </Row>
-            <Row className={classNames({"pt-4 pb-2" : isPhy})}>
+            <Row className={classNames({"py-2" : isPhy})}>
                 <RevisionModeInput displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}/>
             </Row>
         </Col>
