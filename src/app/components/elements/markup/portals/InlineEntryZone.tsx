@@ -120,7 +120,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className, width, height, root}: Inl
                 return <InlineNumericEntryZone 
                     correctness={correctness}
                     questionDTO={questionDTO as IsaacNumericQuestionDTO & AppQuestionDTO} 
-                    className={classNames(className, "inline-part", {"selected-feedback": isSelectedFeedback})}
+                    className={classNames("inline-part", {"selected-feedback": isSelectedFeedback})}
                     width={width}
                     height={height}
                     setModified={setModified}
@@ -132,7 +132,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className, width, height, root}: Inl
                 return <InlineStringEntryZone 
                     correctness={correctness}
                     questionDTO={questionDTO as IsaacStringMatchQuestionDTO & AppQuestionDTO} 
-                    className={classNames(className, "inline-part", {"selected-feedback": isSelectedFeedback})}
+                    className={classNames("inline-part", {"selected-feedback": isSelectedFeedback})}
                     width={width}
                     height={height}
                     setModified={setModified}
