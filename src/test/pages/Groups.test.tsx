@@ -758,4 +758,72 @@ describe("Groups", () => {
             expect(modal).not.toBeInTheDocument();
         });
     });
+    
+    [true, false].forEach(async (additionalManagerPrivileges) => {
+        it(additionalManagerPrivileges ? "allows managers to remove students from groups when they have permission" : "prevents managers removing students from groups without permission", async () => {
+            const mockOwner = buildMockTeacher(2);
+            const mockStudent10 = buildMockStudent(10);
+            const mockStudent11 = buildMockStudent(11);
+            const mockGroup = {
+                ...mockActiveGroups[0],
+                ownerId: mockOwner.id,
+                ownerSummary: buildMockUserSummary(mockOwner, true),
+                additionalManagers: [buildMockUserSummary(mockUser, true)],
+                members: [
+                    buildMockUserSummaryWithGroupMembership(mockStudent10, mockActiveGroups[0].id, true), 
+                    buildMockUserSummaryWithGroupMembership(mockStudent11, mockActiveGroups[0].id, false),
+                ],
+                additionalManagerPrivileges: additionalManagerPrivileges,
+            };
+            const removeStudentHandler = jest.fn((req, res, ctx) => {
+                return res(
+                    ctx.status(200)
+                );
+            });
+            const getGroupMembershipHandler = handlerThatReturns({data: mockGroup.members});
+            renderTestEnvironment({
+                role: "TEACHER",
+                extraEndpoints: [
+                    rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
+                    rest.get(API_PATH + "/groups/:groupId/membership", getGroupMembershipHandler),
+                    rest.delete(API_PATH + "/groups/:groupId/membership/:userId", removeStudentHandler),
+                ]
+            });
+            await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
+            const groups = await switchGroupsTab("active", [mockGroup]);
+
+            // Select group of interest
+            const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
+            await userEvent.click(selectGroupButton);
+            const groupEditor = await screen.findByTestId("group-editor");
+
+            // find all group members
+            expect(getGroupMembershipHandler).toHaveBeenCalledTimes(1);
+            const memberInfos = await within(groupEditor).findAllByTestId("member-info");
+
+            expect(memberInfos).toHaveLength(2);
+            memberInfos.forEach((memberInfo) => {
+                expect(memberInfo.textContent).toMatch(
+                    new RegExp(String.raw`${mockStudent10.givenName}\s${mockStudent10.familyName}|${mockStudent11.givenName}\s${mockStudent11.familyName}`, "g")
+                );
+            });
+
+            jest.spyOn(window, "confirm").mockImplementation(() => true);
+
+            if (additionalManagerPrivileges) {
+                // The remove button should be visible
+                const student10Container = memberInfos.find((memberInfo) => memberInfo.textContent?.includes(mockStudent10.familyName)) as HTMLElement;
+                const removeStudentButton = within(student10Container).getByRole("button", {name: "Remove member"});
+                removeStudentButton.click();
+
+                await waitFor(() => {
+                    expect(removeStudentHandler).toHaveBeenCalledTimes(1);
+                });
+            } else {
+                // The remove button should not be visible
+                const student10Container = memberInfos.find((memberInfo) => memberInfo.textContent?.includes(mockStudent10.familyName)) as HTMLElement;
+                expect(within(student10Container).queryByRole("button", {name: "Remove member"})).not.toBeInTheDocument();
+            }
+        });
+    });
 });
