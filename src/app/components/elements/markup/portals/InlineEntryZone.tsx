@@ -47,7 +47,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className, width, height, root}: Inl
     const questionType = inlineContext?.elementToQuestionMap?.[inlineInputId]?.type ?? "isaacStringMatchQuestion";
     const questionDTO = selectQuestionPart(pageQuestions, questionId);
 
-    const [elementIndex, _setElementIndex] = useState<number>(Object.keys(inlineContext?.elementToQuestionMap ?? {}).indexOf(inlineInputId));
+    const elementIndex = Object.keys(inlineContext?.elementToQuestionMap ?? {}).indexOf(inlineInputId);
     const [isSelectedFeedback, setIsSelectedFeedback] = useState<boolean>(false);
 
     const [correctness, setCorrectness] = useState<QuestionCorrectness>("NOT_SUBMITTED");
