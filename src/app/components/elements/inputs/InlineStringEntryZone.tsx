@@ -25,8 +25,8 @@ export const InlineStringEntryZone = ({width, height, questionDTO, focusRef, set
         <Input 
             {...rest}
             className={classNames(
-                "inline-input force-print", 
-                rest.className, 
+                "force-print",
+                rest.className,
                 correctnessClass(correctness)
             )}
             ref={focusRef}
