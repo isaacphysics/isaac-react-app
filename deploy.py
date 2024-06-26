@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 import getpass
+from typing import Union
 
 # Global flag, whether commands should be executed by this script or not
 EXEC = False
@@ -58,8 +59,8 @@ def validate_args(args):
 
 def ask_to_run_command(command,
                        print_output=True,
-                       expected_nonzero_exit_codes: list = None,
-                       env_vars: dict = None,
+                       expected_nonzero_exit_codes: Union[list, None] = None,
+                       env_vars: Union[dict, None] = None,
                        chunk_size=1024,
                        run_anyway=False):
     if not EXEC:
@@ -86,7 +87,11 @@ def ask_to_run_command(command,
         with subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, env=env_vars if env_vars else None) as proc:
             stdout_data = []
             while True:
-                chunk = proc.stdout.read(chunk_size)
+                output = proc.stdout
+                if output is None:
+                    break
+
+                chunk = output.read(chunk_size)
                 if not chunk:
                     break
                 decoded_chunk = chunk.decode('utf-8', errors='replace')
@@ -140,7 +145,6 @@ def get_old_versions(ctx):
             else:
                 print("\n# ! UNABLE TO FIND PREVIOUS APP VERSION !\n")
                 previous_app_version = input(f"Enter old APP version (e.g. v1.2.3) for {ctx['site']} {ctx['env']}: ")
-                sys.exit(1)
 
         ctx['old_app'] = previous_app_version
     else:
@@ -202,12 +206,12 @@ def check_running_servers(ctx):
     print("\n# Determining whether old services running\nMay return exit code 1.")
 
     api_running = ask_to_run_command(
-        "docker ps --format '{{.Names}}' | " + f"grep api-{ctx['env']}",
+        "docker ps --format '{{.Names}}' | grep api-live",
         expected_nonzero_exit_codes=[1],
         run_anyway=True
     )
     app_running = ask_to_run_command(
-        "docker ps --format '{{.Names}}' | " + f"grep app-{ctx['env']}",
+        "docker ps --format '{{.Names}}' | grep app-live",
         expected_nonzero_exit_codes=[1],
         run_anyway=True
     )
@@ -216,21 +220,35 @@ def check_running_servers(ctx):
 
     if not previous_servers_exist:
         print("# OLD CONTAINERS NOT FOUND.")
-        print("\n# ! THIS SCRIPT WILL NOT TAKE DOWN RUNNING CONTAINERS SO CLEAN UP OLD CONTAINERS AFTER !\n")
+        print("\n# ! THIS SCRIPT WILL NOT TAKE DOWN ALL RUNNING CONTAINERS SO CLEAN UP OLD CONTAINERS AFTER !\n")
     else:
-        print("# OLD CONTAINERS FOUND.\n")
+        print("# Old containers found.\n")
 
+
+def volume_exists(ctx):
+    print("\n# Determining whether necessary containers exist\nMay return exit code 1.")
+
+    volume_grep = ask_to_run_command(
+        "docker volume list | " + f"grep {ctx['site']}-pg-{ctx['env']}",
+        expected_nonzero_exit_codes=[1],
+        run_anyway=True
+    )
+    volume_exists = volume_grep != ""
+
+    if not volume_exists:
+        print(f"\n# Could not find necessary volume {ctx['site']}-pg-{ctx['env']}.")
+        print(f"Create this volume if you want to deploy {ctx['env']}.")
+
+    return volume_exists
 
 
 def deploy_test(ctx):
     print(f"\n[DEPLOY {ctx['site'].upper()} TEST]")
 
-    if ctx["previous_servers_exist"]:
-        bring_down_any_existing_containers(ctx)
-        print("Note: If there is a database schema change, you might need to alter the default data - usually through a migration followed by a snapshot.")
-        print("# Reset the test database.")
-        ask_to_run_command(f"./clean-test-db.sh {ctx['site']}")
-
+    bring_down_any_existing_containers(ctx)
+    print("Note: If there is a database schema change, you might need to alter the default data - usually through a migration followed by a snapshot.")
+    print("# Reset the test database.")
+    ask_to_run_command(f"./clean-test-db.sh {ctx['site']}")
     update_config(ctx)
     bring_up_the_new_containers(ctx)
 
@@ -243,8 +261,8 @@ def deploy_staging_or_dev(ctx):
 
         if ctx['previous_servers_exist']:
             run_db_migrations(ctx)
-            bring_down_any_existing_containers(ctx)
 
+        bring_down_any_existing_containers(ctx)
         bring_up_the_new_containers(ctx)
 
 
@@ -339,9 +357,9 @@ if __name__ == '__main__':
     sites = [Site.ADA, Site.PHY] if context['site'] == Site.BOTH else [context['site']]
     for site in sites:
         context['site'] = site
-        if context['env'] == 'test':
+        if context['env'] == 'test' and volume_exists(context):
             deploy_test(context)
-        elif context['env'] in ('staging', 'dev'):
+        elif context['env'] in ('staging', 'dev') and volume_exists(context):
             deploy_staging_or_dev(context)
         elif context['env'] == 'live':
             if context['previous_servers_exist']:
@@ -349,7 +367,8 @@ if __name__ == '__main__':
                 context['env'] = 'test'
                 bring_down_any_existing_containers(context)
             context['env'] = 'staging'
-            deploy_staging_or_dev(context)
+            if volume_exists(context):
+                deploy_staging_or_dev(context)
             context['env'] = 'live'
             deploy_live(context)
             context['env'] = 'etl'
