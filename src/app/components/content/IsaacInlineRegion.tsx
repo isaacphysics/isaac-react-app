@@ -103,18 +103,18 @@ const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
     const inlineContext = useContext(InlineContext);
 
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
-    const inlineRegionDTO = selectQuestionPart(pageQuestions, doc.id) as IsaacInlineRegionDTO;
+    const inlineRegionDTO = selectQuestionPart(pageQuestions, doc.id) as IsaacInlineRegionDTO | undefined;
 
     useEffect(() => {
         if (inlineContext) {
-            inlineRegionDTO.inlineQuestions?.forEach(inlineQuestion => {
+            inlineRegionDTO?.inlineQuestions?.forEach(inlineQuestion => {
                 if (inlineQuestion.id && inlineQuestion.type) {
                     const elementId = (inlineQuestion.id.split("|").at(-1)?.replace("inline-question:", "inline-question-") + "-input") ?? "unknown";
                     inlineContext.elementToQuestionMap[elementId] = {questionId: inlineQuestion.id, type: inlineQuestion.type};
                 }
             });
         }
-    }, [inlineRegionDTO.inlineQuestions]);
+    }, [inlineRegionDTO?.inlineQuestions]);
 
     useEffect(() => {
         // once the final question part to a region has been submitted, show the feedback box
@@ -128,10 +128,9 @@ const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
 
     // Register the inline question parts in Redux, so we can access previous/current attempts
     useEffect(() => {
-        inlineRegionDTO.inlineQuestions && dispatch(registerQuestions(inlineRegionDTO.inlineQuestions, inlineContext?.docId));
+        inlineRegionDTO?.inlineQuestions && dispatch(registerQuestions(inlineRegionDTO.inlineQuestions, inlineContext?.docId));
         return () => dispatch(deregisterQuestions([inlineContext?.docId as string]));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, inlineContext?.docId]);
+    }, [dispatch, inlineContext?.docId, inlineRegionDTO?.inlineQuestions]);
 
     return <div className={`question-content inline-region ${className}`}>
         <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
