@@ -4,7 +4,7 @@ import { EventManager } from "../../../../app/components/pages/EventManager";
 import { API_PATH } from "../../../../app/services";
 import { renderTestEnvironment } from "../../../utils";
 import { mockEventBookings, mockFutureEventOverviews, mockPastEventOverviews, mockUser } from "../../../../mocks/data";
-import { act, screen, within } from "@testing-library/react";
+import { act, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ATTENDANCE, School, UserSchoolLookup } from "../../../../IsaacAppTypes";
 import { FRIENDLY_DATE_AND_TIME } from "../../../../app/components/elements/DateString";
@@ -213,5 +213,35 @@ describe("EventAttendance", () => {
       }
     };
     expect(attendanceStatus).toHaveTextContent(expectedSymbol(bookingStatus));
+  });
+
+  it("shows a 'select remaining' button that selects all bookings that are not marked as attended or absent", async () => {
+    const confirmedBookings = mockEventBookings.map((booking) => ({
+      ...booking,
+      bookingStatus: "CONFIRMED" as BookingStatus,
+    }));
+    const oneBookingAlreadyAttended = [
+      { ...confirmedBookings[0], bookingStatus: "ATTENDED" as BookingStatus },
+      ...confirmedBookings.slice(1),
+    ];
+    await setupTest("EVENT_MANAGER", oneBookingAlreadyAttended);
+    const { attendanceTable, recordAttendanceControls } = await findAttendanceSection();
+    const tableRows = within(attendanceTable).getAllByRole("row");
+    expect(tableRows.length).toBe(6);
+    const numberOfAttendedBookings = tableRows
+      .slice(1)
+      .map((row) => within(row).getAllByRole("cell")[1])
+      .filter((each) => each.textContent === "✔️").length;
+    expect(numberOfAttendedBookings).toBe(1);
+    const selectRemainingButton = within(recordAttendanceControls).getByRole("button", { name: /select remaining/i });
+    await waitFor(() => userEvent.click(selectRemainingButton));
+    const bookingsWithoutAttendanceMarked = tableRows.slice(1).filter((row) => {
+      const cellContent = within(row).getAllByRole("cell")[1].textContent;
+      return cellContent === "";
+    });
+    bookingsWithoutAttendanceMarked.forEach((row) => {
+      const checkbox = within(row).getByRole("checkbox");
+      expect(checkbox).toBeChecked();
+    });
   });
 });

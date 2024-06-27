@@ -220,7 +220,7 @@ const EmailOrExport = ({
             if (atLeastOne(usersWithStatus.length)) {
               return (
                 <DropdownItem
-                  key={`${usersWithStatus[index]}-email`}
+                  key={`${Object.keys(bookingStatusMap)[index]}-email`}
                   onClick={() => dispatch(showGroupEmailModal(usersWithStatus))}
                 >
                   Email {bookingStatusMap[key as BookingStatus]} users

@@ -57,6 +57,17 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
     }
   };
 
+  const selectRemaining = () => {
+    if (selectedUserIds.length !== 0) {
+      setSelectedUserIds([]);
+    } else {
+      const remainingUserIds = bookings
+        .filter((result) => result.bookingStatus !== "ATTENDED" && result.bookingStatus !== "ABSENT")
+        .map((result) => result.userBooked?.id as number);
+      setSelectedUserIds(remainingUserIds);
+    }
+  };
+
   const updateUserSelection = (userId: number, checked: boolean) => {
     if (checked) {
       setSelectedUserIds([...selectedUserIds, userId]);
@@ -109,6 +120,9 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
           )}
           <CardTitle className="d-flex" data-testid="record-attendance-controls">
             <h4 className="pl-1 pr-3 pt-1">Selected ({selectedUserIds.length})</h4>
+            <Button onClick={selectRemaining} style={{ marginRight: "1rem" }} color="secondary">
+              Select Remaining
+            </Button>
             <UncontrolledButtonDropdown>
               <DropdownToggle caret disabled={userUpdating} color="primary">
                 Mark Attendance
@@ -174,7 +188,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
 
                     return (
                       <tr key={booking.bookingId}>
-                        <td className="align-middle" key={booking.userBooked?.id}>
+                        <td className="align-middle">
                           <Input
                             type="checkbox"
                             className="m-0 position-relative"
