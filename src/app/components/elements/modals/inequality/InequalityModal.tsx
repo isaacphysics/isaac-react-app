@@ -433,7 +433,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     // --- Resetting to seed value ---
     const resetToInitialState = () => {
         // loadTestCase should probably be renamed to resetSymbolsTo or something (in the inequality package)
-        sketch.current?.loadTestCase(editorSeed);
+        sketch.current?.loadTestCase(editorSeed ?? "");
     };
 
     // --- Rendering ---
@@ -455,9 +455,6 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     }, [inequalityModalRef.current]);
 
     const previewTexString = editorState.result?.tex as string;
-    // Only show the reset button if content define an editor seed - alternative would be always showing it and resetting
-    // to a blank slate if editor seed isn't defined
-    const showReset = isDefined(editorSeed);
 
     return <div id="inequality-modal" ref={inequalityModalRef}>
         <div
@@ -496,12 +493,12 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             Help
         </div>
 
-        {showReset && <div id="inequality-reset" className="inequality-ui reset button"
+        <div id="inequality-reset" className="inequality-ui reset button"
              role="button" tabIndex={-1} onClick={resetToInitialState} onKeyUp={resetToInitialState}
         >
             Reset
-        </div>}
-        <div id="inequality-trash" className={classNames("inequality-ui trash button", {"trash-with-reset": showReset})}>Trash</div>
+        </div>
+        <div id="inequality-trash" className={"inequality-ui trash button trash-with-reset"}>Trash</div>
 
         {showQuestionReminder && (questionDoc?.value || (questionDoc?.children && questionDoc?.children?.length > 0)) && <div className="question-reminder">
             <IsaacContentValueOrChildren value={questionDoc.value} encoding={questionDoc.encoding}>
