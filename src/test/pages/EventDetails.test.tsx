@@ -1,7 +1,7 @@
 import { DAYS_AGO, DAYS_IN_FUTURE, TestUserRole, checkPageTitle, renderTestEnvironment } from "../utils";
 import { mockEvent } from "../../mocks/data";
 import { rest } from "msw";
-import { API_PATH, formatAddress } from "../../app/services";
+import { API_PATH, USER_ROLES, formatAddress } from "../../app/services";
 import { BookingStatus, EventStatus, IsaacEventPageDTO, RegisteredUserDTO, Role } from "../../IsaacApiTypes";
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -18,7 +18,7 @@ const image = () => screen.getByTestId("event-details-image");
 const title = () => screen.getByTestId("event-details-title");
 const map = () => screen.queryByTestId("event-map");
 const location = () => screen.getByTestId("event-location");
-const googleCalendarButton = () => screen.queryByText("Add to Calendar");
+const calendarButton = () => screen.queryByText("Add to Calendar");
 const eventDate = () => screen.getByTestId("event-date");
 const placesAvailable = () => screen.queryByTestId("event-availability");
 const privateBadge = () => screen.queryByText("Private Event");
@@ -97,22 +97,19 @@ describe("EventDetails", () => {
     expect(privateBadge()).not.toBeInTheDocument();
   });
 
-  it.each(["ADMIN", "EVENT_MANAGER", "CONTENT_EDITOR"] as Role[])(
-    "if user is %s, a google calendar button shows and can be clicked",
-    async (role) => {
-      const mockGoogleCalendarTemplate = jest.fn();
-      jest.spyOn(eventServices, "googleCalendarTemplate").mockImplementation(mockGoogleCalendarTemplate);
-      await setupTest({ role: role, event: mockEvent });
-      const calendarButton = googleCalendarButton();
-      expect(calendarButton).toBeVisible();
-      await userEvent.click(calendarButton as HTMLElement);
-      expect(mockGoogleCalendarTemplate).toHaveBeenCalled();
-    },
-  );
+  it.each(USER_ROLES)("shows an add to calendar button if user is %s", async (role) => {
+    const mockCalendarTemplate = jest.fn();
+    jest.spyOn(eventServices, "createCalendarFile").mockImplementation(mockCalendarTemplate);
+    await setupTest({ role: role, event: mockEvent });
+    const button = calendarButton();
+    expect(button).toBeVisible();
+    await userEvent.click(button as HTMLElement);
+    expect(mockCalendarTemplate).toHaveBeenCalled();
+  });
 
-  it("if user is STUDENT, a google calendar button does not show", async () => {
-    await setupTest({ role: "STUDENT", event: mockEvent });
-    expect(googleCalendarButton()).not.toBeInTheDocument();
+  it("does not show an add to calendar button if logged out", async () => {
+    await setupTest({ role: "ANONYMOUS", event: mockEvent });
+    expect(calendarButton()).toBeNull();
   });
 
   it.each(["ADMIN", "EVENT_MANAGER", "EVENT_LEADER"] as Role[])(
@@ -361,5 +358,3 @@ describe("EventDetails", () => {
     expect(bookNowButton).toBeEnabled();
   });
 });
-
-// add book event button test here

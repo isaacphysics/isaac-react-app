@@ -1,12 +1,11 @@
 import { apiHelper, atLeastOne, isTeacherOrAbove, STAGE, STAGES_CS, zeroOrLess } from "./";
-import { IsaacEventPageDTO } from "../../IsaacApiTypes";
+import { IsaacEventPageDTO, Location } from "../../IsaacApiTypes";
 import { AugmentedEvent, PotentialUser } from "../../IsaacAppTypes";
 import { DateString, FRIENDLY_DATE, TIME_ONLY } from "../components/elements/DateString";
 import React from "react";
 import { Link } from "react-router-dom";
 import { Immutable } from "immer";
 import dayjs from "dayjs";
-import { Location } from "../../IsaacApiTypes";
 
 export const studentOnlyEventMessage = (eventId?: string) => (
   <React.Fragment>
@@ -48,7 +47,7 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
   augmentedEvent.isWaitingListOnly = event.eventStatus === "WAITING_LIST_ONLY";
 
   // we have to fix the event image url.
-  if (augmentedEvent.eventThumbnail && augmentedEvent.eventThumbnail.src) {
+  if (augmentedEvent.eventThumbnail?.src) {
     augmentedEvent.eventThumbnail.src = apiHelper.determineImageUrl(augmentedEvent.eventThumbnail.src);
   } else {
     if (augmentedEvent.eventThumbnail == null) {
@@ -230,13 +229,13 @@ export const userCanReserveEventSpaces = (user: Immutable<PotentialUser> | null,
   );
 };
 
-export function googleCalendarTemplate(event: AugmentedEvent) {
-  function formatDate(date: EpochTimeStamp) {
+export function createCalendarFile(event: AugmentedEvent) {
+  const formatDate = (date: EpochTimeStamp) => {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
-  }
-  // https://calendar.google.com/calendar/event?action=TEMPLATE&text=[event_name]&dates=[start_date as YYYYMMDDTHHMMSS or YYYYMMDD]/[end_date as YYYYMMDDTHHMMSS or YYYYMMDD]&details=[extra_info]&location=[full_address_here]
-  const address =
-    event.location && event.location.address
+  };
+
+  if (event.date && event.endDate && event.title) {
+    const address = event.location?.address
       ? [
           event.location.address.addressLine1,
           event.location.address.addressLine2,
@@ -247,24 +246,42 @@ export function googleCalendarTemplate(event: AugmentedEvent) {
         ]
       : [];
 
-  const calendarTemplateUrl = [
-    "https://calendar.google.com/calendar/event?action=TEMPLATE",
-    event.title && "text=" + encodeURI(event.title),
-    event.date &&
-      "dates=" + encodeURI(formatDate(event.date)) + (event.endDate ? "/" + encodeURI(formatDate(event.endDate)) : ""),
-    event.subtitle && "details=" + encodeURI(event.subtitle),
-    "location=" + encodeURI(address.filter((s) => !!s).join(", ")),
-  ];
+    const eventDetails = `BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+PRODID:stem-learning/isaac-cs
+METHOD:PUBLISH
+BEGIN:VEVENT
+SUMMARY:${event.title} ${event.subtitle ? `- ${event.subtitle}` : ""}
+DESCRIPTION:Isaac Computer Science Event - www.isaaccomputerscience.org/events/${event.id}
+URL:${event.isVirtual && event.meetingUrl ? event.meetingUrl : ""}
+DTSTAMP:${formatDate(Date.now())}Z
+DTSTART;TZID=Europe/London:${formatDate(event.date)}
+DTEND;TZID=Europe/London:${formatDate(event.endDate)}
+LOCATION:${address.filter((s) => !!s).join(", ")}
+UID:${formatDate(event.date)}-${event.title.replace(/\s+/g, "_")}
+END:VEVENT
+END:VCALENDAR`;
 
-  window.open(calendarTemplateUrl.filter((s) => !!s).join("&"), "_blank");
+    const filename = `${event.title.replace(/\s+/g, "_")}.ics`;
+    const file: Blob = new File([eventDetails], filename, { type: "text/calendar" });
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${event.title.replace(/\s+/g, "_")}.ics`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
 }
 
 export const formatAddress = (location: Location | undefined) => {
-  if (!location || !location.address) return "Unknown Location";
-  const addressLine1 = location.address.addressLine1 || "";
-  const addressLine2 = location.address.addressLine2 || "";
-  const town = location.address.town || "";
-  const postalCode = location.address.postalCode || "";
+  if (!location?.address) return "Unknown Location";
+  const addressLine1 = location.address.addressLine1 ?? "";
+  const addressLine2 = location.address.addressLine2 ?? "";
+  const town = location.address.town ?? "";
+  const postalCode = location.address.postalCode ?? "";
   const addressComponents = [addressLine1, addressLine2, town, postalCode].filter(Boolean);
   return addressComponents.join(", ");
 };

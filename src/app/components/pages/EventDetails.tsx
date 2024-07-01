@@ -27,7 +27,6 @@ import {
   history,
   isDefined,
   isLoggedIn,
-  isStaff,
   isTeacherOrAbove,
   KEY,
   SITE_SUBJECT_TITLE,
@@ -40,9 +39,9 @@ import {
   zeroOrLess,
   isAdminOrEventManager,
   isEventLeader,
-  googleCalendarTemplate,
   formatAddress,
   hubNames,
+  createCalendarFile,
 } from "../../services";
 import { AdditionalInformation } from "../../../IsaacAppTypes";
 import { DateString } from "../elements/DateString";
@@ -227,13 +226,12 @@ const EventDetails = ({
                     )}
                   </Col>
                   <Col lg={8} className={event.hasExpired ? "expired" : ""}>
-                    {/* TODO Student/Teacher/Virtual icon */}
-                    {isStaff(user) && (
+                    {isLoggedIn(user) && (
                       <Button
                         color="link"
-                        onClick={() => googleCalendarTemplate(event)}
+                        onClick={() => createCalendarFile(event)}
                         className="calendar-img mx-2"
-                        title="Add to Google Calendar"
+                        title="Add to Calendar"
                       >
                         Add to Calendar
                       </Button>
