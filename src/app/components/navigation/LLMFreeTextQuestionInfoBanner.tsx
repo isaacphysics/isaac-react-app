@@ -1,10 +1,9 @@
 import React from "react";
 
-import { Alert, Button } from "reactstrap";
+import { Button, Col, Row } from "reactstrap";
 import { ACCOUNT_TAB, isLoggedIn, KEY, persistence, useUserConsent } from "../../services";
 import { Link, useLocation } from "react-router-dom";
 import { selectors, updateCurrentUser, useAppDispatch, useAppSelector } from "../../state";
-import { Spacer } from "../elements/Spacer";
 import { PotentialUser } from "../../../IsaacAppTypes";
 
 const locationOfFAQEntry = "/support/student/general";
@@ -16,7 +15,7 @@ function LoggedOutCopy() {
     }
 
     return <>
-        <h2>🔒 You must be logged in to answer this question</h2>
+        <h2><span className="icon-lock"/> You must be logged in to answer this question</h2>
         <p>
             We use a large language model (LLM) to mark free-text questions like this one.
             The model typically returns a predicted mark in under 10 seconds, along with the mark scheme.
@@ -28,12 +27,15 @@ function LoggedOutCopy() {
         <p>
             You can read more in our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link>.
         </p>
-        <div className="d-flex align-items-center">
-            <Link to="/login" onClick={setAfterAuthPath} className="btn btn-primary mr-2">Log in</Link>
-            <Link to="/register" onClick={setAfterAuthPath} className="btn btn-outline-primary bg-cultured-grey">Sign up</Link>
-            <Spacer />
-            <Link to="/">Skip question</Link> <strong>&gt;</strong>
-        </div>
+        <Row className="align-items-center mt-4">
+            <Col div className="col-12 col-sm-auto mr-auto">
+                <Link to="/login" onClick={setAfterAuthPath} className="btn btn-primary mr-2">Log in</Link>
+                <Link to="/register" onClick={setAfterAuthPath} className="btn btn-outline-primary bg-cultured-grey">Sign up</Link>
+            </Col>
+            <Col className="col-auto mt-4 mt-md-0">
+                <Link to="/">Skip question</Link> <strong>&gt;</strong>
+            </Col>
+        </Row>
     </>;
 }
 
@@ -60,7 +62,7 @@ function OpenAIConsentCopy() {
         <p>
             You can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`}>account settings</Link>.
         </p>
-        <div>
+        <div className="mt-4">
             <Button color="primary" className="mr-2" onClick={provideConsent}>Consent</Button>
             <Button color="outline-primary" className="bg-cultured-grey">Skip question</Button>
         </div>
@@ -94,9 +96,7 @@ export function LLMFreeTextQuestionInfoBanner() {
         CopyToDisplay = GeneralInfoCopy;
     }
 
-    return <div className="d-print-none">
-        <Alert color="info">
-            <CopyToDisplay />
-        </Alert>
+    return <div className="d-print-none llm-info-banner mt-2">
+        <CopyToDisplay />
     </div>;
 }

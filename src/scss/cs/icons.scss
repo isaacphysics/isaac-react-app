@@ -81,6 +81,13 @@
   width: 24px;
   height: 24px;
 }
+.icon-lock {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background: url(/assets/cs/icons/lock.svg) no-repeat;
+  margin-bottom: -4px;
+}
 
 // This class is used in a number of non-icon-related places on both sites
 .bg-grey {
