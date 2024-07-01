@@ -35,6 +35,9 @@ export const selectors = {
         getMostRecentCorrectAttemptDate: (state: AppState) => {
             return !!state && state.questions?.mostRecentCorrectAttemptDate;
         },
+        includesLLMFreeTextQuestion: (state: AppState) => {
+            return !!state?.questions?.questions.some(q => q.type === "isaacLLMFreeTextQuestion");
+        }
     },
 
     user:  {
