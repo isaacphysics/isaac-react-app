@@ -47,6 +47,7 @@ import {
     isaacApi,
     logAction,
     openActiveModal,
+    questionsApi,
     routerPageChange,
     showToast,
     store,
@@ -519,7 +520,7 @@ interface Attempt {
 }
 const attempts: {[questionId: string]: Attempt} = {};
 
-export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO>, gameboardId?: string, inlineContext?: ContextType<typeof InlineContext>) => async (dispatch: AppDispatch, getState: () => AppState) => {
+export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO>, questionType: string, gameboardId?: string, inlineContext?: ContextType<typeof InlineContext>) => async (dispatch: AppDispatch, getState: () => AppState) => {
     const state = getState();
     const isAnonymous = !(state && state.user && state.user.loggedIn);
     const timePeriod = isAnonymous ? 5 * 60 * 1000 : 15 * 60 * 1000;
@@ -531,6 +532,7 @@ export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO
         if (gameboardId) {
             dispatch(isaacApi.util.invalidateTags([{type: "Gameboard", id: gameboardId}]));
         }
+        dispatch(questionsApi.util.invalidateTags([{ type: 'CanAttemptQuestionType', id: questionType }]));
 
         // This mirrors the soft limit checking on the server
         let lastAttempt = attempts[questionId];
@@ -650,7 +652,7 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
             await Promise.all(currentState.questions.questions.map(
                 question => {
                     if (question.id && question.currentAttempt) {
-                        dispatch(attemptQuestion(question.id, question.currentAttempt) as any);
+                        dispatch(attemptQuestion(question.id, question.currentAttempt, question.type as string) as any);
                     }
                 }
             ));

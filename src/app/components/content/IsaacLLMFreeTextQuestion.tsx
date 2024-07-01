@@ -4,6 +4,7 @@ import {IsaacLLMFreeTextQuestionDTO, LLMFreeTextChoiceDTO} from "../../../IsaacA
 import {Alert, FormGroup, Input} from "reactstrap";
 import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
 import {useCurrentQuestionAttempt} from "../../services";
+import { useCanAttemptQuestionTypeQuery } from "../../state";
 
 interface Limit {
     exceeded: boolean;
@@ -70,6 +71,7 @@ const FreeTextEntryValidation = ({validValue, wordLimit, charLimit, piiDetected}
 const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacLLMFreeTextQuestionDTO>) => {
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
+    const canAttemptQuestionType = useCanAttemptQuestionTypeQuery(doc.type as string);
     const currentAttemptValue = currentAttempt?.value ?? "";
     const validation = validate(currentAttemptValue);
 
@@ -82,7 +84,7 @@ const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
             </div>
             <FormGroup className="mb-4">
                 <Input type="textarea"
-                    placeholder="Type your answer here."
+                    disabled={canAttemptQuestionType.isError}
                     spellCheck={true}
                     rows={3}
                     value={currentAttemptValue}

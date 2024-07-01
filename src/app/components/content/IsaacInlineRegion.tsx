@@ -88,7 +88,7 @@ export const submitInlineRegion = (inlineContext: ContextType<typeof InlineConte
         for (const inlineQuestion of modifiedInlineQuestions) {
             submitCurrentAttempt(
                 {currentAttempt: inlineQuestion.currentAttempt},
-                inlineQuestion.id as string, currentGameboard, currentUser, dispatch, inlineContext
+                inlineQuestion.id as string, inlineQuestion.type as string, currentGameboard, currentUser, dispatch, inlineContext
             );
         }
         inlineContext.canShowWarningToast = true;

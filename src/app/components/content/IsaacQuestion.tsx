@@ -4,7 +4,8 @@ import {
     registerQuestions,
     selectors,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useCanAttemptQuestionTypeQuery
 } from "../../state";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
@@ -32,6 +33,7 @@ import classNames from "classnames";
 import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
 import { Spacer } from "../elements/Spacer";
 import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
+import { LLMFreeTextQuestionRemainingAttemptsView } from "../elements/LLMFreeTextQuestionRemainingAttemptsView";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -40,12 +42,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
+    const canAttemptQuestionType = useCanAttemptQuestionTypeQuery(doc.type as string);
     const currentAttempt = questionPart?.currentAttempt;
     const validationResponse = questionPart?.validationResponse;
     const validationResponseTags = validationResponse?.explanation?.tags;
     const correct = validationResponse?.correct || false;
     const locked = questionPart?.locked;
-    const canSubmit = questionPart?.canSubmit && !locked || false;
+    const canSubmit = canAttemptQuestionType.isSuccess && questionPart?.canSubmit && !locked || false;
     const sigFigsError = isPhy && validationResponseTags?.includes("sig_figs");
     const tooManySigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_many");
     const tooFewSigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_few");
@@ -134,7 +137,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     return <ConfidenceContext.Provider value={{recordConfidence}}>
         <RS.Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
-            submitCurrentAttempt(questionPart, doc.id as string, currentGameboard, currentUser, dispatch);
+            submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
             setHasSubmitted(true);
         }}>
             <div className={
@@ -143,6 +146,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     doc.type,
                     {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)}
                 )}>
+                
+                {isLLMFreeTextQuestion && <LLMFreeTextQuestionRemainingAttemptsView canAttemptQuestionType={canAttemptQuestionType} />}
+
                 <Suspense fallback={<Loading/>}>
                     <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
                 </Suspense>
