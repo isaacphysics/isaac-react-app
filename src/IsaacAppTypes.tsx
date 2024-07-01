@@ -266,6 +266,10 @@ export function isValidatedChoice(choice: Immutable<ApiTypes.ChoiceDTO | Validat
     return choice.hasOwnProperty("frontEndValidation");
 }
 
+export interface CanAttemptQuestionTypeDTO {
+    remainingAttempts?: number;
+}
+
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO;
 export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean;};
 

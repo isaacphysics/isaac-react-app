@@ -93,6 +93,7 @@ export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attemp
 
 export const NOT_FOUND: NOT_FOUND_TYPE = 404;
 export const NO_CONTENT = 204;
+export const TOO_MANY_REQUESTS = 429;
 
 export const MARKDOWN_RENDERER = new Remarkable({
     html: true
