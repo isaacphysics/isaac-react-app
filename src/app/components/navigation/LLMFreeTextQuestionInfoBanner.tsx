@@ -82,15 +82,8 @@ function GeneralInfoCopy() {
 }
 
 export function LLMFreeTextQuestionInfoBanner() {
-    const pageQuestions = useAppSelector(selectors.questions.getQuestions) || [];
-    const pageContainsFreeTextQuestion = pageQuestions.some(q => q.type === "isaacLLMFreeTextQuestion");
     const user = useAppSelector(selectors.user.orNull);
     const userConsent = useUserConsent();
-
-    // Early exit if there are no free text questions on the page
-    if (!pageContainsFreeTextQuestion) {
-        return null;
-    }
 
     let CopyToDisplay;
     if (!isLoggedIn(user)) {

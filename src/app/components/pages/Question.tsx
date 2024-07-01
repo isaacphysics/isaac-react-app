@@ -36,6 +36,7 @@ import {ReportButton} from "../elements/ReportButton";
 import classNames from "classnames";
 import { RevisionWarningBanner } from "../navigation/RevisionWarningBanner";
 import { LLMFreeTextQuestionInfoBanner } from "../navigation/LLMFreeTextQuestionInfoBanner";
+import { LLMFreeTextQuesitonIndicator } from "../elements/LLMFreeTextQuestionIndicator";
 
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
@@ -60,6 +61,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
     const doc = useAppSelector(selectors.doc.get);
     const user = useAppSelector(selectors.user.orNull);
     const navigation = useNavigation(doc);
+    const pageContainsLLMFreeTextQuestion = useAppSelector(selectors.questions.includesLLMFreeTextQuestion);
     const query = queryString.parse(location.search);
     const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
 
@@ -88,6 +90,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                 </TitleAndBreadcrumb>
                 {!preview && <CanonicalHrefElement />}
                 <div className="no-print d-flex flex-wrap align-items-center mt-3">
+                    {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuesitonIndicator />}
                     <EditContentButton doc={doc} />
                     <div className="question-actions ml-auto">
                         <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
@@ -106,7 +109,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
 
                         {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
-                        <LLMFreeTextQuestionInfoBanner />
+                        {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionInfoBanner />}
 
                         <RevisionWarningBanner />
 
