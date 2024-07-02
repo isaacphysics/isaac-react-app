@@ -109,4 +109,107 @@ describe("My Account", () => {
         const teacherName = extractTeacherName(mockTeacher);
         await within(teacherConnectionsList).findByText(teacherName as string);
     });
+
+    it("student can revoke connection access to a teacher", async () => {
+
+        const mockTeacher = buildMockTeacher(2);
+        const mockTeacher2 = buildMockTeacher(3);
+        const mockToken = "3GGD0G";
+
+        const mockGroup = {
+            ...mockActiveGroups[0],
+            ownerId: mockTeacher.id,
+            ownerSummary: buildMockUserSummary(mockTeacher, false),
+            additionalManagers: [],
+            members: [],
+        };
+
+        const getAuthorisationsHandler = jest.fn(async (req, res, ctx) => {
+            return res(
+                ctx.status(200),
+                ctx.json([mockTeacher, mockTeacher2])
+            );
+        });
+
+        const getGroupOwnerHandler = jest.fn(async (req, res, ctx) => {
+            const token = req.params.token;
+            if (token !== mockToken) return res(ctx.status(400));
+
+            return res(
+                ctx.status(200),
+                ctx.json([buildMockUserSummary(mockTeacher, false)])
+            );
+        });
+
+        const membershipHandler = jest.fn(async (req, res, ctx) => {
+            return res(
+                ctx.status(200),
+                ctx.json([{
+                    "group": mockGroup,
+                    "membershipStatus": "ACTIVE",
+                }])
+            );
+        });
+
+        const getOtherUserAuthorisationsHandler = jest.fn(async (req, res, ctx) => {
+            return res(
+                ctx.status(200),
+                ctx.json([])
+            );
+        });
+
+        const deleteAuthorisationHandler = jest.fn(async (req, res, ctx) => {
+            const id = req.params.id;
+            if (id !== mockTeacher.id) return res(ctx.status(400));
+
+            return res(
+                ctx.status(204),
+                ctx.json({
+                    result: "success",
+                })
+            );
+        });
+
+        renderTestEnvironment({
+            role: "STUDENT",
+            extraEndpoints: [
+                rest.get(API_PATH + `/authorisations/token/:token/owner`, getGroupOwnerHandler),
+                rest.get(API_PATH + "/authorisations", getAuthorisationsHandler),
+                rest.get(API_PATH + "/groups/membership", membershipHandler),
+                rest.get(API_PATH + "/authorisations/other_users", getOtherUserAuthorisationsHandler),
+                rest.delete(API_PATH + "/authorisations/:id", deleteAuthorisationHandler),
+            ]
+        });
+
+        // Navigate to the teacher connections tab
+        await followHeaderNavLink("My Isaac", siteSpecific("My Account", "My account"));
+        await switchAccountTab(ACCOUNT_TAB.teacherconnections);
+
+        // Check that the teacher is displayed in the list of teacher connections
+        const teacherConnectionsList = await screen.findByTestId("teacher-connections");
+        const teacherName = extractTeacherName(mockTeacher);
+        const teacherNameSpan = await within(teacherConnectionsList).findByText(teacherName as string);
+
+        const teacherSpan = teacherNameSpan.parentElement;
+        expect(teacherSpan).toBeInTheDocument();
+
+        const teacherRevokeButton = await within(teacherSpan as HTMLElement).findByRole("button", {name: "Revoke"});
+
+        // Revoke the connection
+        await userEvent.click(teacherRevokeButton);
+
+        const confirmationModal = await screen.findByTestId("active-modal");
+        expect(confirmationModal).toHaveModalTitle("Revoke access to your data");
+        expect(confirmationModal).toContainHTML(teacherName as string);
+
+        const confirmButton = await within(confirmationModal).findByRole("button", {name: "Confirm"});
+        await userEvent.click(confirmButton);
+
+        // Check that the connection was revoked
+
+        await waitFor(() => {
+            expect(getAuthorisationsHandler).toHaveBeenCalledTimes(2);
+        });
+
+    });
 });
