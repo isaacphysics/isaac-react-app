@@ -5,7 +5,6 @@ import {
     above,
     ALPHABET,
     audienceStyle,
-    below,
     DOCUMENT_TYPE,
     isAda,
     isAQuestionLikeDoc,
@@ -13,8 +12,9 @@ import {
     NOT_FOUND,
     scrollVerticallyIntoView,
     siteSpecific,
-    useDeviceSize,
-    useUserContext
+    STAGE,
+    stageLabelMap,
+    useDeviceSize
 } from "../../services";
 import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
@@ -24,6 +24,7 @@ import classNames from "classnames";
 import {Markup} from "./markup";
 import {ReportAccordionButton} from "./ReportAccordionButton";
 import { debounce } from "lodash";
+import { Stage } from "../../../IsaacApiTypes";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -34,11 +35,12 @@ interface AccordionsProps extends RouteComponentProps {
     deEmphasised?: boolean;
     disabled?: string | boolean;
     audienceString?: string;
+    audienceStages?: Stage[];
 }
 
 let nextClientId = 0;
 
-export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, location: {hash}}: AccordionsProps) => {
+export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, audienceStages, location: {hash}}: AccordionsProps) => {
     const dispatch = useAppDispatch();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const page = useAppSelector((state: AppState) => (state && state.doc) || null);
@@ -175,10 +177,12 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center p-2 " +
                     "justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
                     {siteSpecific(
-                        audienceString, 
-                        (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
-                            {line}{i < arr.length && <br/>}
-                        </>)
+                        audienceString,
+                        deEmphasised && audienceStages
+                            ? audienceStages.includes(STAGE.CORE) ? stageLabelMap[STAGE.CORE] : stageLabelMap[STAGE.ADVANCED]
+                            : (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
+                                {line}{i < arr.length && <br/>}
+                            </>)
                     )}
                 </span>}
                 <div className="accordion-title pl-3">

@@ -78,7 +78,7 @@ export function useUserContext(): UseUserContextReturnType {
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].stage) {
         stage = user.registeredContexts[0].stage as STAGE;
     } else {
-        stage = STAGE.ALL;
+        stage = isAda ? STAGE.NONE : STAGE.ALL;
     }
 
     // Exam Board
@@ -94,7 +94,7 @@ export function useUserContext(): UseUserContextReturnType {
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].examBoard) {
         examBoard = user.registeredContexts[0].examBoard as EXAM_BOARD;
     } else {
-        examBoard = EXAM_BOARD.ALL;
+        examBoard = isAda ? EXAM_BOARD.NONE : EXAM_BOARD.ALL;
     }
 
     // Boolean notation preference -
@@ -467,7 +467,7 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     const stagesFilteredByUserContext = audienceStages.filter(s => userContext.stage === s);
     const stagesToView = stagesFilteredByUserContext.length > 0 ? stagesFilteredByUserContext : audienceStages;
     // If common, could find substrings and report ranges i.e, GCSE to University
-    
+
     if (isAda) {
         // Ada currently (subject to change) want to show the stages as 3 groups:
         // - GCSE & A Level
