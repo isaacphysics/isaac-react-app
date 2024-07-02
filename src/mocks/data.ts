@@ -82,7 +82,7 @@ export const buildMockTeacher = <T extends number>(id: T extends (typeof mockUse
 };
 
 export const buildMockUserSummary = (user: any, authorisedFullAccess: boolean) => {
-    const email = authorisedFullAccess ? user.email : undefined;
+    const email = user.role !== "STUDENT" || authorisedFullAccess ? user.email : undefined;
     return Object.assign({
         givenName: user.givenName,
         familyName: user.familyName,
