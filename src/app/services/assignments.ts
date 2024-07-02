@@ -9,39 +9,49 @@ export function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedA
 export function getAssignmentCSVDownloadLink(assignmentId: number) {
     return `${API_PATH}/assignments/assign/${assignmentId}/progress/download`;
 }
+
+function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO & {startDate: Date} {
+    const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate as Date;
+    return {...assignment, startDate: assignmentStartDate};
+}
+
+type AssignmentStatus = "inProgressRecent" | "inProgressOld" | "allAttempted" | "allCorrect";
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {
     const now = new Date();
     const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));
-    // Midnight five days ago:
-    const fiveDaysAgo = new Date(now);
-    fiveDaysAgo.setDate(now.getDate() - 5);
-    fiveDaysAgo.setHours(0, 0, 0, 0);
+    // Midnight last night:
+    const midnightLastNight = new Date(now);
+    midnightLastNight.setHours(0, 0, 0, 0);
 
-    const myAssignments: {inProgressRecent: AssignmentDTO[]; inProgressOld: AssignmentDTO[]; completed: AssignmentDTO[]} = {
+    const myAssignments: Record<AssignmentStatus, (AssignmentDTO & {startDate: Date})[]> = {
         inProgressRecent: [],
         inProgressOld: [],
-        completed: []
+        allAttempted: [],
+        allCorrect: []
     };
 
     if (assignments) {
-        assignments.forEach(assignment => {
-            if (assignment?.gameboard?.percentageCompleted === undefined || assignment.gameboard.percentageCompleted < 100) {
-                const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
-                const noDueDateButRecent = !assignment.dueDate && (assignmentStartDate && assignmentStartDate > fourWeeksAgo);
-                const dueDateAndCurrent = assignment.dueDate && (assignment.dueDate >= fiveDaysAgo);
-                if (noDueDateButRecent || dueDateAndCurrent) {
-                    // Assignment either not/only just overdue, or else set within last month but no due date.
+        assignments
+        .map(createAssignmentWithStartDate)
+        .forEach(assignment => {
+            if (assignment.gameboard?.percentageCorrect !== 100) {
+                const noDueDateButRecent = !assignment.dueDate && (assignment.startDate > fourWeeksAgo);
+                const beforeDueDate = assignment.dueDate && (assignment.dueDate >= midnightLastNight);
+                if (beforeDueDate || noDueDateButRecent) {
                     myAssignments.inProgressRecent.push(assignment);
+                } else if (assignment.gameboard?.percentageAttempted === 100) {
+                    myAssignments.allAttempted.push(assignment);
                 } else {
                     myAssignments.inProgressOld.push(assignment);
                 }
             } else {
-                myAssignments.completed.push(assignment);
+                myAssignments.allCorrect.push(assignment);
             }
         });
-        myAssignments.inProgressRecent = orderBy(myAssignments.inProgressRecent, ["dueDate", "creationDate"], ["asc", "desc"]);
-        myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["creationDate"], ["desc"]);
-        myAssignments.completed = orderBy(myAssignments.completed, ["creationDate"], ["desc"]);
+        myAssignments.inProgressRecent = orderBy(myAssignments.inProgressRecent, ["dueDate", "startDate"], ["asc", "desc"]);
+        myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["startDate"], ["desc"]);
+        myAssignments.allAttempted = orderBy(myAssignments.allAttempted, ["startDate"], ["desc"]);
+        myAssignments.allCorrect = orderBy(myAssignments.allCorrect, ["startDate"], ["desc"]);
     }
 
     return myAssignments;

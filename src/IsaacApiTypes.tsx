@@ -58,7 +58,8 @@ export interface GameboardDTO extends HasTitleOrId {
     ownerUserInformation?: UserSummaryDTO;
     tags?: string[];
     creationMethod?: GameboardCreationMethod;
-    percentageCompleted?: number;
+    percentageAttempted?: number;
+    percentageCorrect?: number;
     lastVisited?: Date;
     startedQuestion?: boolean;
     savedToCurrentUser?: boolean;
