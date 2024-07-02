@@ -21,8 +21,13 @@ const removeTestPropsLoader = {
 
 module.exports = (env) => {
 
-    let isProd = env['prod'] ?? false;
-    let isRenderer = env['isRenderer'] ?? false;
+    let isProd = false;
+    let isRenderer = false;
+
+    if (!!env) {
+        isProd = env['prod'] ?? false;
+        isRenderer = env['isRenderer'] ?? false;
+    }
 
     return {
         stats: {

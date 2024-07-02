@@ -22,9 +22,11 @@
     "isolatedModules": true,
     "jsx": "react",
     "sourceMap": true,
-    "types": ["jest", "@testing-library/jest-dom"]
+    "types": ["jest", "@testing-library/jest-dom", "node"]
   },
   "include": [
-    "src"
+    "src",
+    "node_modules/cypress/types/cypress-global-vars.d.ts",
+    "cypress"
   ]
 }

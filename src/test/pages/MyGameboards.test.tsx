@@ -3,7 +3,7 @@ import {screen, waitFor} from "@testing-library/react";
 import {mockGameboards} from "../../mocks/data";
 import {MyGameboards} from "../../app/components/pages/MyGameboards";
 import userEvent from "@testing-library/user-event";
-import {renderTestEnvironment} from "../utils";
+import {renderTestEnvironment} from "../testUtils";
 import {PATHS} from "../../app/services";
 
 describe("MyGameboards", () => {

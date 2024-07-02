@@ -1,5 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {renderTestEnvironment, followHeaderNavLink} from "../utils";
+import {renderTestEnvironment, followHeaderNavLink} from "../testUtils";
 import {API_PATH, siteSpecific, utf8ByteLength} from "../../app/services";
 import {mockActiveGroups, mockAssignmentsGroup2, mockQuizAssignments} from "../../mocks/data";
 import userEvent from "@testing-library/user-event";

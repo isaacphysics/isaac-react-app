@@ -1,5 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {renderTestEnvironment, followHeaderNavLink, paramsToObject} from "../utils";
+import {renderTestEnvironment, followHeaderNavLink, paramsToObject} from "../testUtils";
 import {API_PATH, isDefined, siteSpecific} from "../../app/services";
 import {rest} from "msw";
 import {handlerThatReturns} from "../../mocks/handlers";
