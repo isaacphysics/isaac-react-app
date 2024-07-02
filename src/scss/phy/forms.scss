@@ -6,6 +6,10 @@
   }
   .select__control, .select__control:hover {
     border-color: $black;
+
+    .select__value-container {
+      padding: 0 0 0 1.2em;
+    }
   }
 
   .select__menu {

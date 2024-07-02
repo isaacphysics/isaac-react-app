@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {Input, InputProps} from "reactstrap";
 import {v4} from "uuid";
 import {Spacer} from "../Spacer";
-import { ifKeyIsEnter } from "../../../services";
+import { ifKeyIsEnter, isPhy } from "../../../services";
 import classNames from "classnames";
 
 // A custom checkbox, dealing with mouse and keyboard input. Pass `onChange((e : ChangeEvent) => void)`, `checked: bool`, and `label: Element` as required as props to use.
@@ -30,7 +30,7 @@ export const StyledCheckbox = (props : InputProps) => {
                 onKeyDown={(e) => ifKeyIsEnter(() => {onCheckChange({...e, target: {...e.currentTarget, checked: !e.currentTarget.checked}}); e.preventDefault();})(e)}
             />
         </div>
-        {props.label && <label htmlFor={id} className={classNames("pt-1", {"text-muted" : props.disabled})} {...props.label.props}/>}
+        {props.label && <label htmlFor={id} className={classNames({"text-muted" : props.disabled, "pt-1" : isPhy})} {...props.label.props}/>}
         <Spacer/>
     </div>;
 };

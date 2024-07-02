@@ -1,15 +1,19 @@
-import React, {useCallback, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {Button, Col, Form, Row} from "reactstrap";
 import {
+    below,
+    EXAM_BOARD,
     isAda,
-    isDefined,
     isLoggedIn,
     isPhy,
+    isStudent,
     isTeacherOrAbove,
-    isTutor,
     isTutorOrAbove,
     SITE_TITLE,
     siteSpecific,
+    STAGE,
+    useDeviceSize,
+    validateCountryCode,
     validateUserContexts,
     validateUserSchool
 } from "../../../services";
@@ -19,6 +23,18 @@ import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../Isaa
 import {useDispatch, useSelector} from "react-redux";
 import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
 import {Immutable} from "immer";
+import { CountryInput } from "../inputs/CountryInput";
+import { UserContext } from "../../../../IsaacApiTypes";
+import { RevisionModeInput } from "../panels/UserBetaFeatures";
+import classNames from "classnames";
+
+const adaModalText = (isTeacher: boolean) => {
+    return {
+        intro: <span>We use this information to show you relevant content. We recommend checking your details occasionally and updating them if anything has changed.</span>,
+        connections: <span>At the start of the new school year, you might also want to review your {isTeacher ? "student" : "teacher"} connections.</span>,
+        privacyPolicy: <span>Updating this information helps us continue to show you relevant content. Full details on how we use your personal information can be found in our <a target={"_blank"} rel={"noopener"} href={"/privacy"}>privacy policy</a>.</span>
+    };
+};
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
@@ -38,20 +54,27 @@ const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode,
     }
 });
 
-const UserContextReconfimationModalBody = () => {
+const UserContextReconfirmationModalBody = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
     const userPreferences = useSelector(selectors.user.preferences);
+    const deviceSize = useDeviceSize();
 
     const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>({...user, password: null});
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
-    const initialUserContexts = useMemo(() =>
-        user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : []
-    , [user]);
-    const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
+    const [userContexts, setUserContexts] = useState<UserContext[]>([{stage: STAGE.ALL, examBoard: EXAM_BOARD.ALL}]);
+
+    useEffect(() => {
+        // on first load `user` is undefined and so userToUpdate is incomplete, so wait for the `user` selector to return a value then update
+        if (user?.loggedIn && !userToUpdate?.id) {
+            setUserToUpdate({...user, password: null});
+            setUserContexts((user.registeredContexts ?? [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ALL}]) as UserContext[]);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
 
     const allFieldsAreValid = useMemo(() =>
         validateUserContexts(userContexts) && (isPhy || validateUserSchool(userToUpdate))
@@ -62,21 +85,27 @@ const UserContextReconfimationModalBody = () => {
             type: "REVIEW_TEACHER_CONNECTIONS"
         }));
 
-    const modalText = useMemo(() => buildModalText(
-        function buildConnectionsLink(text: string) {
-            return <a target={"_blank"} onClick={logReviewTeacherConnections} rel={"noopener"}
-                      href={"/account#teacherconnections"}>
-                {text}
-                <span className={"sr-only"}> (opens in new tab) </span>
-            </a>;
-        },
-        function buildPrivacyPolicyLink(text: string) {
-            return <a target={"_blank"} rel={"noopener"} href={"/privacy"}>
-                {text}
-                <span className={"sr-only"}> (opens in new tab) </span>
-            </a>;
-        })[isTutorOrAbove(user) ? (isTeacherOrAbove(user) ? "teacher" : "tutor") : "student"]
-    , [user]);
+    const modalText = useMemo(() => siteSpecific(
+        // phy
+        buildModalText(
+            function buildConnectionsLink(text: string) {
+                return <a target={"_blank"} onClick={logReviewTeacherConnections} rel={"noopener noreferrer"}
+                        href={"/account#teacherconnections"}>
+                    {text}
+                    <span className={"sr-only"}> (opens in new tab) </span>
+                </a>;
+            },
+
+            function buildPrivacyPolicyLink(text: string) {
+                return <a target={"_blank"} rel={"noopener noreferrer"} href={"/privacy"}>
+                    {text}
+                    <span className={"sr-only"}> (opens in new tab) </span>
+                </a>;
+        })[isTutorOrAbove(user) ? (isTeacherOrAbove(user) ? "teacher" : "tutor") : "student"],
+
+        // ada
+        adaModalText(isTeacherOrAbove(user))
+    ), [user]);
 
     // Form submission
     const formSubmission = useCallback((event: React.FormEvent<HTMLFormElement>) => {
@@ -95,25 +124,47 @@ const UserContextReconfimationModalBody = () => {
     return <Form onSubmit={formSubmission} className={"mb-2"}>
         <p>{modalText.intro}</p>
         <p>{modalText.connections}</p>
-        <div className="text-right text-muted required-before">
+        {isPhy && <div className="text-right text-muted required-before">
             Required
-        </div>
-        <Row className="my-2">
-            <Col xs={12} md={siteSpecific(6, 12)} lg={6}>
-                 <UserContextAccountInput
-                    user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
-                    displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
-                    setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
-                 />
-            </Col>
-            <Col xs={12} md={6}>
-                <SchoolInput
-                    userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                    submissionAttempted={submissionAttempted} idPrefix="modal"
-                    required={isAda && !isTutor(user)}
+        </div>}
+        <Col>
+            <Row className={siteSpecific("pb-1", "pb-3")}>
+                <CountryInput
+                    className={below["md"](deviceSize) ? "w-100" : "w-75"}
+                    userToUpdate={userToUpdate} 
+                    setUserToUpdate={setUserToUpdate}
+                    countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
+                    submissionAttempted={submissionAttempted}
+                    required={true}
                 />
-            </Col>
-        </Row>
+            </Row>
+            <Row className={siteSpecific("py-1", "pt-2")}>
+                <SchoolInput
+                    className={below["md"](deviceSize) ? "w-100" : "w-75"}
+                    userToUpdate={userToUpdate} 
+                    setUserToUpdate={setUserToUpdate}
+                    submissionAttempted={submissionAttempted} 
+                    idPrefix="modal"
+                    required={isAda && !isStudent(user)}
+                />
+            </Row>
+            <Row className={classNames({"pt-3": isAda})}>
+                <UserContextAccountInput
+                    className={below["md"](deviceSize) ? "w-100" : "w-75"}
+                    user={userToUpdate} 
+                    userContexts={userContexts} 
+                    setUserContexts={setUserContexts}
+                    displaySettings={displaySettings} 
+                    setDisplaySettings={setDisplaySettings}
+                    setBooleanNotation={setBooleanNotation} 
+                    submissionAttempted={submissionAttempted}
+                    required={false}
+                />
+            </Row>
+            <Row className={classNames({"py-2" : isPhy})}>
+                <RevisionModeInput displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}/>
+            </Row>
+        </Col>
         <div className="text-muted small pb-2">{modalText.privacyPolicy}</div>
 
         {submissionAttempted && !allFieldsAreValid && <div>
@@ -128,9 +179,9 @@ const UserContextReconfimationModalBody = () => {
             </Button>
         </div>
     </Form>;
-}
+};
 
-export const userContextReconfimationModal = {
-    title: "Please review your details",
-    body: <UserContextReconfimationModalBody />,
-}
+export const userContextReconfirmationModal = {
+    title: "Review your details",
+    body: <UserContextReconfirmationModalBody />,
+};
