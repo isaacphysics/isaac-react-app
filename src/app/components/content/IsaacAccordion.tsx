@@ -1,9 +1,10 @@
 import React from "react";
-import {ContentDTO} from "../../../IsaacApiTypes";
+import {ContentDTO, Stage} from "../../../IsaacApiTypes";
 import {Accordion} from "../elements/Accordion";
 import {IsaacContent} from "./IsaacContent";
 import {
     DOCUMENT_TYPE,
+    STAGE,
     isAda,
     isFound,
     isIntendedAudience,
@@ -53,7 +54,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
 
             // Handle conditional display settings
             .map(section => {
-                let sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
+                const sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
                 const sectionDisplaySettings = isIntendedAudience(section.audience, userContext, user) ?
                         sectionDisplay?.["audience"] : sectionDisplay?.["nonAudience"];
                 if (sectionDisplaySettings?.includes("open")) {section.startOpen = true;}
@@ -87,15 +88,25 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             // Filter out hidden sections before they mess up indexing
             .filter(section => !section.hidden)
 
-            .map((section , index) =>
-                <Accordion
+            .map((section , index) => {
+                let stagesSet: Set<Stage>;
+                if (!section.audience) {
+                    stagesSet = new Set<Stage>([STAGE.ALL]);
+                } else {
+                    stagesSet = new Set<Stage>();
+                    section.audience.forEach(audienceRecord => audienceRecord.stage?.forEach(stage => stagesSet.add(stage)));
+                }
+                const audienceStages = Array.from(stagesSet);
+
+                return <Accordion
                     key={`${section.sectionIndex} ${index}`} id={section.id} index={index}
                     startOpen={section.startOpen} deEmphasised={section.deEmphasised}
                     trustedTitle={section?.title || ""}
                     audienceString={stringifyAudience(section.audience, userContext)}
+                    audienceStages={audienceStages}
                 >
                     <IsaacContent doc={section} />
-                </Accordion>
-            )}
+                </Accordion>;
+            })}
     </div>;
 };

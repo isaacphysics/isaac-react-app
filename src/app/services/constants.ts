@@ -287,11 +287,14 @@ export enum STAGE {
     SCOTLAND_NATIONAL_5 = "scotland_national_5",
     SCOTLAND_HIGHER = "scotland_higher",
     SCOTLAND_ADVANCED_HIGHER = "scotland_advanced_higher",
+    CORE = "core",
+    ADVANCED = "advanced",
     ALL = "all",
+    NONE = "none",
 }
-export const STAGE_NULL_OPTIONS = [STAGE.ALL];
+export const STAGE_NULL_OPTIONS = [STAGE.ALL, STAGE.NONE];
 export const STAGES_PHY = [STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY] as const;
-export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER] as const;
+export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.CORE, STAGE.ADVANCED] as const;
 export const stagesOrdered: Stage[] = [...siteSpecific(STAGES_PHY, STAGES_CS), STAGE.ALL];
 export const stageLabelMap: {[stage in Stage]: string} = {
     year_7_and_8: "Year\u00A07&8",
@@ -303,7 +306,10 @@ export const stageLabelMap: {[stage in Stage]: string} = {
     scotland_national_5: "N5",
     scotland_higher: "Higher",
     scotland_advanced_higher: "Adv Higher",
+    core: "Core",
+    advanced: "Advanced",
     all: "All stages",
+    none: "No stage",
 };
 
 // EXAM BOARDS
@@ -315,7 +321,9 @@ export enum EXAM_BOARD {
     OCR = "ocr",
     WJEC = "wjec",
     SQA = "sqa",
+    ADA = "ada",
     ALL = "all",
+    NONE = "none",
 }
 export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.AQA]: "AQA",
@@ -325,7 +333,9 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
     [EXAM_BOARD.SQA]: "SQA",
+    [EXAM_BOARD.ADA]: "Ada",
     [EXAM_BOARD.ALL]: "All exam boards",
+    [EXAM_BOARD.NONE]: "No exam board",
 };
 
 export const CS_EXAM_BOARDS_BY_STAGE: {[stage in typeof STAGES_CS[number]]: ExamBoard[]} = {
@@ -334,6 +344,8 @@ export const CS_EXAM_BOARDS_BY_STAGE: {[stage in typeof STAGES_CS[number]]: Exam
     scotland_national_5: [EXAM_BOARD.SQA],
     scotland_higher: [EXAM_BOARD.SQA],
     scotland_advanced_higher: [EXAM_BOARD.SQA],
+    core: [EXAM_BOARD.ADA],
+    advanced: [EXAM_BOARD.ADA],
 };
 
 export const EXAM_BOARD_NULL_OPTIONS = [EXAM_BOARD.ALL];
@@ -356,7 +368,9 @@ export const examBoardBooleanNotationMap: {[examBoard in ExamBoard]: BOOLEAN_NOT
     [EXAM_BOARD.EDEXCEL]: BOOLEAN_NOTATION.MATH,
     [EXAM_BOARD.CIE]: BOOLEAN_NOTATION.ENG,
     [EXAM_BOARD.SQA]: BOOLEAN_NOTATION.MATH,
+    [EXAM_BOARD.ADA]: BOOLEAN_NOTATION.MATH,
     [EXAM_BOARD.ALL]: BOOLEAN_NOTATION.MATH,
+    [EXAM_BOARD.NONE]: BOOLEAN_NOTATION.MATH,
 };
 export const booleanNotationMap: {[notation: string]: string} = {
     [BOOLEAN_NOTATION.MATH]: "And (∧) Or (∨) Not (¬)",

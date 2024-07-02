@@ -1,6 +1,6 @@
 import React from "react";
 import * as RS from "reactstrap";
-import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
+import {ContentSummaryDTO, Stage} from "../../../../IsaacApiTypes";
 import {
     above,
     audienceStyle,
@@ -11,6 +11,8 @@ import {
     makeIntendedAudienceComparator,
     notRelevantMessage,
     siteSpecific,
+    STAGE,
+    stageLabelMap,
     stringifyAudience,
     useDeviceSize,
     useUserContext
@@ -46,6 +48,17 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
             // Render remaining items
             .map((item, index) => {
                 const audienceString = stringifyAudience(item.audience, userContext);
+                const intendedAudience = isIntendedAudience(item.audience, userContext, user);
+
+                let stagesSet: Set<Stage>;
+                if (!item.audience) {
+                    stagesSet = new Set<Stage>([STAGE.ALL]);
+                } else {
+                    stagesSet = new Set<Stage>();
+                    item.audience.forEach(audienceRecord => audienceRecord.stage?.forEach(stage => stagesSet.add(stage)));
+                }
+                const audienceStages = Array.from(stagesSet);
+
                 return <RS.ListGroupItem key={item.id} className="topic-summary-link">
                     <RS.Button
                         tag={Link} to={{pathname: `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`, search}}
@@ -53,10 +66,12 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                     >
                         <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
                             {siteSpecific(
-                            audienceString, 
-                            (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
-                                {line}{i < arr.length && <br/>}
-                            </>)
+                            audienceString,
+                            intendedAudience
+                                ? (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
+                                    {line}{i < arr.length && <br/>}
+                                </>)
+                                : audienceStages.includes(STAGE.CORE) ? stageLabelMap[STAGE.CORE] : stageLabelMap[STAGE.ADVANCED]
                         )}
                         </div>
                         <div className="title pl-3 d-flex">
