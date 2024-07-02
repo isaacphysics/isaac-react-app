@@ -33,7 +33,6 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
     const dispatch = useAppDispatch();
 
     const setValidDueDate = () => {
-        console.log(isUpdatingQuiz, numericQuizAssignmentId, !dueDate, currDueDate == dueDate);
         if (isUpdatingQuiz || !numericQuizAssignmentId || !dueDate || currDueDate == dueDate) {
             return;
         }
