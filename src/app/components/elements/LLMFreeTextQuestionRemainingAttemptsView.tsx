@@ -15,8 +15,9 @@ export function LLMFreeTextQuestionRemainingAttemptsView({canAttemptQuestionType
     if (!isDefined(remainingAttempts)) return null;
     
     return <p className="btn-link">
-        {remainingAttempts} attempts remaining today
-        <span id="attempt-limit-help" aria-haspopup="true" className="icon-help has-tip" />
+        <span id="attempt-limit-help" aria-haspopup="true" className="has-tip">
+            {remainingAttempts} attempts remaining today<span className="icon-help" />
+        </span>
         <UncontrolledPopover trigger="click" placement="bottom" target="attempt-limit-help">
             <PopoverBody>
                 Using a large language model (LLM) to mark free text questions costs money, and we have a fixed monthly budget.
