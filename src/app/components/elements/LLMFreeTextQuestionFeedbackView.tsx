@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import {LLMFreeTextQuestionValidationResponseDTO} from "../../../IsaacApiTypes";
-import {Alert, Button, Table} from "reactstrap";
+import {Alert, Button, Card, Table} from "reactstrap";
 import {siteSpecific} from "../../services/siteConstants";
 import {Immutable} from "immer";
 import { Link } from 'react-router-dom';
@@ -18,41 +18,57 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse}: {v
     const [feedback, setFeedback] = useState(noFeedback);
     const [feedbackSent, setFeedbackSent] = useState(false);
 
-    return <div className='question-component p-md-5'>
-        <h2>Do you agree with the LLM’s predicted marks?</h2>
-        <p>1 in 3 times the predicted mark will be wrong. Find out more in our <Link to="/support/student/general" target="_blank">FAQs</Link></p>
-        <Alert color="info">
-            <strong>{`Prediction: ${validationResponse.marksAwarded} out of ${validationResponse.maxMarks} marks`}</strong>
-        </Alert>
-        <Table>
-            <thead>
-                <tr>
-                    <th colSpan={2}>{siteSpecific("Mark Scheme", "Mark scheme")}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {validationResponse.markBreakdown?.map(mark => <tr key={mark.jsonField}>
-                    <td className="w-100">{mark.shortDescription}</td>
-                    <td>{mark.marks > 0 ? "✅" : " "}</td>
-                </tr>)}
-            </tbody>
-        </Table>
-        {!feedbackSent && <div>
-            <p>Before submitting another response, please say whether you agree with the predicted mark.</p>
-            <div>
-                <StyledCheckbox
-                    id="disagree"  label={<p>Disagree</p>}
-                    checked={feedback.disagree} onChange={() => setFeedback({...noFeedback, disagree: !feedback.disagree})}
-                />
-                <StyledCheckbox
-                    id="partlyAgree" label={<p>Partly agree</p>}
-                    checked={feedback.partlyAgree} onChange={() => setFeedback({...noFeedback, partlyAgree: !feedback.partlyAgree})}
-                />
-                <StyledCheckbox
-                    id="agree" label={<p>Agree</p>}
-                    checked={feedback.agree} onChange={() => setFeedback({...noFeedback, agree: !feedback.agree})}
-                />
+    return <div className='llm-feedback question-component p-md-5'>
+        <h2 className="mb-0">Do you agree with the LLM’s predicted marks?</h2>
+        <p className="mb-0">1 in 3 times the predicted mark will be wrong. Find out more in our <Link to="/support/student/general" target="_blank">FAQs</Link></p>
+        <div className="prediction my-4">
+            <div className='d-flex'>
+                <span className="icon-ai mr-2"/>
+                <strong>{`Prediction: ${validationResponse.marksAwarded} out of ${validationResponse.maxMarks} marks`}</strong>
             </div>
+        </div>
+        <div className="table-responsive card curved-table-wrapper mb-4">
+            <Table size='sm' className="mb-0" bordered={false}>
+                <thead>
+                    <tr>
+                        <th>{siteSpecific("Mark Scheme", "Mark scheme")}</th>
+                        <th><span className='sr-only'>Predicted correct</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {validationResponse.markBreakdown?.map(mark => <tr key={mark.jsonField}>
+                        <td className="w-100">{mark.shortDescription}</td>
+                        <td>{
+                            mark.marks > 0 ?
+                                <><span className="sr-only">Predicted as awarded</span><span className='icon-feedback-tick' /></> :
+                                <></>
+                        }</td>
+                    </tr>)}
+                </tbody>
+            </Table>
+        </div>
+        {!feedbackSent ? <div className="feedback-collection">
+            <p className="mb-4">Before submitting another response, please say whether you agree with the predicted mark.</p>
+            <ul className="no-bullet px-2 mb-4">
+                <li>
+                    <StyledCheckbox
+                        id="disagree"  label={<p>Disagree</p>} className='"mb-4'
+                        checked={feedback.disagree} onChange={() => setFeedback({...noFeedback, disagree: !feedback.disagree})}
+                    />
+                </li>
+                <li>
+                    <StyledCheckbox
+                        id="partlyAgree" label={<p>Partly agree</p>} className='"mb-4'
+                        checked={feedback.partlyAgree} onChange={() => setFeedback({...noFeedback, partlyAgree: !feedback.partlyAgree})}
+                    />
+                </li>
+                <li>
+                    <StyledCheckbox
+                        id="agree" label={<p>Agree</p>}
+                        checked={feedback.agree} onChange={() => setFeedback({...noFeedback, agree: !feedback.agree})}
+                    />
+                </li>
+            </ul>
             <Button
                 color="primary" outline disabled={Object.values(feedback).every(a => !a)}
                 onClick={() => {
@@ -62,6 +78,9 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse}: {v
             >
                 Send feedback
             </Button>
+        </div> :
+        <div className="feedback-collection submitted">
+            ✓ Feedback submitted
         </div>}
     </div>;
 }
