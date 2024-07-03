@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { PortalInHtmlHook } from "./utils";
 import { InlineContext } from "../../../../../IsaacAppTypes";
 import InlineEntryZoneBase from "./InlineEntryZone";
-import { siteSpecific } from "../../../../services";
 
 // See the comment on `PORTAL_HOOKS` constant for an explanation of how this works
 export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
