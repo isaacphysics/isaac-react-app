@@ -9,8 +9,7 @@ export default defineConfig({
     devServer: {
       framework: "react",
       bundler: "webpack",
-      webpackConfig: process.env.CYPRESS_SITE == 'ada' ?
-          require(`./config/webpack.config.ada.js`) : require(`./config/webpack.config.physics.js`)
+      webpackConfig: require(`./config/webpack.config.${SITE_STRING}.cypress.js`)
     },
     indexHtmlFile: `cypress/support/component-index-${SITE_STRING}.html`,
     supportFile: `cypress/support/component-${SITE_STRING}.tsx`,
