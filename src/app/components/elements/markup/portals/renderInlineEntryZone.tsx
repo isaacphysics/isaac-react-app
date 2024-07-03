@@ -35,7 +35,7 @@ export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
             }
         }
         const width = defaultWidth ? 100 : undefined;
-        const height = defaultHeight ? siteSpecific(27, 25) : undefined;
+        const height = defaultHeight ? 27 : undefined;
         inlineZoneConstructors.push({id: inlineZones[i].id, className, width, height});
     }
     
