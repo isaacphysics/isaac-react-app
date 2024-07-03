@@ -128,16 +128,18 @@ const UserContextReconfirmationModalBody = () => {
             Required
         </div>}
         <Col>
-            <Row className={siteSpecific("pb-1", "pb-3")}>
-                <CountryInput
-                    className={below["md"](deviceSize) ? "w-100" : "w-75"}
-                    userToUpdate={userToUpdate} 
-                    setUserToUpdate={setUserToUpdate}
-                    countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
-                    submissionAttempted={submissionAttempted}
-                    required={true}
-                />
-            </Row>
+            {isAda &&
+                <Row className={siteSpecific("pb-1", "pb-3")}>
+                    <CountryInput
+                        className={below["md"](deviceSize) ? "w-100" : "w-75"}
+                        userToUpdate={userToUpdate}
+                        setUserToUpdate={setUserToUpdate}
+                        countryCodeValid={validateCountryCode(userToUpdate.countryCode)}
+                        submissionAttempted={submissionAttempted}
+                        required={true}
+                    />
+                </Row>
+            }
             <Row className={siteSpecific("py-1", "pt-2")}>
                 <SchoolInput
                     className={below["md"](deviceSize) ? "w-100" : "w-75"}
