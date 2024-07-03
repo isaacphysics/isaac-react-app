@@ -7,7 +7,6 @@ import {
     useAppDispatch,
     useAppSelector
 } from "../../state";
-import * as RS from "reactstrap";
 import debounce from "lodash/debounce";
 import {MultiValue} from "react-select";
 import {
@@ -52,6 +51,7 @@ import classNames from "classnames";
 import queryString from "query-string";
 import { PageFragment } from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
+import { Button, Card, CardBody, CardHeader, Col, Container, Form, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -311,50 +311,51 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <IsaacSpinner />
     </div>;
 
-    return <RS.Container id="finder-page" className="mb-5">
+    return <Container id="finder-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={"Question Finder"} help={pageHelp}/>
         <MetaDescription description={metaDescription}/>
         <CanonicalHrefElement/>
         <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
-        <RS.Card id="finder-panel" className="mx-auto mt-4 mb-5">
-            <RS.CardBody className={"px-2 py-3 p-sm-4 pb-5"}>
-                <RS.Row className={"mb-3"}>
-                    <RS.Col>
+
+        <Card id="finder-panel" className="mx-auto mt-4 mb-5">
+            <CardBody className={"px-2 py-3 p-sm-4 pb-5"}>
+                <Row className={"mb-3"}>
+                    <Col>
                         <span>Specify your search criteria and we will find questions related to your chosen filter(s).</span>
-                    </RS.Col>
-                </RS.Row>
-                <RS.Row>
-                    <RS.Col lg={6} className={`text-wrap my-2`}>
-                        <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col lg={6} className={`text-wrap my-2`}>
+                        <Label htmlFor="question-search-stage">Stage</Label>
                         <StyledSelect
                             inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
                             value={getFilteredStageOptions().filter(o => searchStages.includes(o.value))}
                             options={getFilteredStageOptions()}
                             onChange={selectOnChange(setSearchStages, true)}
                         />
-                    </RS.Col>
-                    <RS.Col lg={6} className="text-wrap my-2">
-                        <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
+                    </Col>
+                    <Col lg={6} className="text-wrap my-2">
+                        <Label htmlFor="question-search-difficulty">Difficulty</Label>
                         <StyledSelect
                             inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
                             value={itemiseByValue(searchDifficulties, DIFFICULTY_ICON_ITEM_OPTIONS)}
                             options={DIFFICULTY_ICON_ITEM_OPTIONS}
                             onChange={selectOnChange(setSearchDifficulties, true)}
                         />
-                    </RS.Col>
-                    {isAda && <RS.Col lg={6} className="text-wrap my-2">
-                        <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
+                    </Col>
+                    {isAda && <Col lg={6} className="text-wrap my-2">
+                        <Label htmlFor="question-search-exam-board">Exam Board</Label>
                         <StyledSelect
                             inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
                             value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
                             options={getFilteredExamBoardOptions({byStages: searchStages})}
                             onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
                         />
-                    </RS.Col>}
-                </RS.Row>
-                <RS.Row>
-                    <RS.Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2`}>
-                        <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
+                    </Col>}
+                </Row>
+                <Row>
+                    <Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2`}>
+                        <Label htmlFor="question-search-topic">Topic</Label>
                         {siteSpecific(
                             <HierarchyFilterHexagonal {...{tiers, choices, selections: selections, setTierSelection}} />,
                             <StyledSelect
@@ -365,11 +366,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 }}
                             />
                         )}
-                    </RS.Col>
-                </RS.Row>
-                <RS.Row>
-                    {isPhy && <RS.Col lg={12} className="text-wrap my-2">
-                        <RS.Label htmlFor="question-search-book">Book</RS.Label>
+                    </Col>
+                </Row>
+                <Row>
+                    {isPhy && <Col lg={12} className="text-wrap my-2">
+                        <Label htmlFor="question-search-book">Book</Label>
                         <StyledSelect
                             inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
                             value={itemiseByValue(searchBook, bookOptions)}
@@ -378,29 +379,29 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             }}
                             options={bookOptions}
                         />
-                    </RS.Col>}
-                </RS.Row>
-                <RS.Row>
-                    {isPhy && isStaff(user) && <RS.Col className="text-wrap mb-2">
-                        <RS.Form>
-                            <RS.Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</RS.Label>
-                        </RS.Form>
-                    </RS.Col>}
-                </RS.Row>
-                <RS.Row>
-                    <RS.Col lg={12} className="text-wrap mt-2">
-                        <RS.Label htmlFor="question-search-title">Search</RS.Label>
-                        <RS.Input id="question-search-title"
+                    </Col>}
+                </Row>
+                <Row>
+                    {isPhy && isStaff(user) && <Col className="text-wrap mb-2">
+                        <Form>
+                            <Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</Label>
+                        </Form>
+                    </Col>}
+                </Row>
+                <Row>
+                    <Col lg={12} className="text-wrap mt-2">
+                        <Label htmlFor="question-search-title">Search</Label>
+                        <Input id="question-search-title"
                             type="text"
                             placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                             onChange={(e) => handleSearch(e.target.value)}
                         />
-                    </RS.Col>
-                </RS.Row>
+                    </Col>
+                </Row>
 
-                {user && isLoggedIn(user) && <RS.Row>
-                    <RS.Form>
-                        <RS.Col className="mt-4">
+                {user && isLoggedIn(user) && <Row>
+                    <Form>
+                        <Col className="mt-4">
                             <div className="d-flex">
                                 <StyledCheckbox
                                     checked={revisionMode}
@@ -411,9 +412,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     label={<p>Revision mode</p>}
                                 />
                                 <span id="revision-mode-checkbox" className="icon-help"/>
-                                <RS.UncontrolledTooltip target="revision-mode-checkbox" placement="top" autohide={false}>
+                                <UncontrolledTooltip target="revision-mode-checkbox" placement="top" autohide={false}>
                                     Revision mode hides your previous answers, so you can practice questions that you have answered before.
-                                </RS.UncontrolledTooltip>
+                                </UncontrolledTooltip>
                             </div>
                             <div className="d-flex">
                                 <StyledCheckbox
@@ -423,20 +424,20 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     disabled={revisionMode}
                                 />
                             </div>
-                        </RS.Col>
-                    </RS.Form>
-                </RS.Row>}
-            </RS.CardBody>
-        </RS.Card>
-        <RS.Card>
-            <RS.CardHeader className="finder-header">
-                <RS.Col className={"pr-0"}>
+                        </Col>
+                    </Form>
+                </Row>}
+            </CardBody>
+        </Card>
+        <Card>
+            <CardHeader className="finder-header">
+                <Col className={"pr-0"}>
                     <h3>
                         Results
                     </h3>
-                </RS.Col>
-            </RS.CardHeader>
-            <RS.CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
+                </Col>
+            </CardHeader>
+            <CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                     {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
                      selections.every(v => v.length === 0) ?
@@ -444,9 +445,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         (displayQuestions?.length ?
                             <>
                                 <LinkToContentSummaryList items={displayQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
-                                <RS.Row>
-                                    <RS.Col className="d-flex justify-content-center mb-3">
-                                        <RS.Button
+                                <Row>
+                                    <Col className="d-flex justify-content-center mb-3">
+                                        <Button
                                             onClick={() => {
                                                 searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
                                                 setPageCount(c => c + 1);
@@ -455,9 +456,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                             disabled={disableLoadMore}
                                         >
                                             Load more
-                                        </RS.Button>
-                                    </RS.Col>
-                                </RS.Row>
+                                        </Button>
+                                    </Col>
+                                </Row>
                                 {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
                                 <div role="status" className={"alert alert-light border"}>
                                         {`${totalQuestions} questions match your criteria.`}<br/>
@@ -467,7 +468,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             <em>No results found</em>)
                     }
                 </ShowLoading>
-            </RS.CardBody>
-        </RS.Card>
-    </RS.Container>;
+            </CardBody>
+        </Card>
+    </Container>;
 });
