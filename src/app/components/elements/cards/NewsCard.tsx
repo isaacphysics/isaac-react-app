@@ -4,6 +4,7 @@ import {Button, Card, CardBody, CardFooter, CardImg, CardProps, CardText, CardTi
 import {IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper, isAppLink, siteSpecific} from "../../../services";
 import classNames from "classnames";
+import { ExternalLink } from "../ExternalLink";
 
 interface NewsCardProps extends CardProps {
     newsItem: IsaacPodDTO;
@@ -13,7 +14,7 @@ interface NewsCardProps extends CardProps {
 const PhysicsNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
 
-    return <Card data-testid={"news-pod"} className={"card-neat news-card"} {...props}>
+    return <Card data-testid={"news-pod"} {...props} className={classNames("card-neat news-card", props.className)}>
         {image && <a href={url} className="focus-target">
             <CardImg
                 top
@@ -56,7 +57,7 @@ const PhysicsNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
 
 export const AdaNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
-    return <Card data-testid={"news-pod"} className={classNames("news-card border-0 pb-3 my-3 my-xl-0")} {...props}>
+    return <Card data-testid={"news-pod"} {...props} className={classNames("news-card card-neat border-0 pb-3 my-3 my-xl-0", props.className)}>
         {image && <a href={url} className={"w-100"}>
             <CardImg
                 className={"news-card-image"}
@@ -73,8 +74,12 @@ export const AdaNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
                 <p>{value}</p>
             </CardBody>
         </>}
-        {url && !url?.startsWith("http") && isAppLink(url) && <CardFooter className={"border-top-0 p-4"}>
-            <Button outline color={"secondary"} tag={Link} to={url}>Read more</Button>
+        {url && <CardFooter className={"border-top-0 p-4"}>
+            {!url?.startsWith("http") && isAppLink(url) ? (   
+                <Button outline color={"secondary"} tag={Link} to={url}>Read more</Button>
+            ) : (
+                <Button outline color={"secondary"} tag={ExternalLink} href={url}>Find out more</Button>
+            )}
         </CardFooter>}
     </Card>;
 };

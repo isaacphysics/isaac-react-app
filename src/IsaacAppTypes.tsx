@@ -31,6 +31,7 @@ import {
     TAG_LEVEL
 } from "./app/services";
 import {Immutable} from "immer";
+import { UniqueIdentifier } from "@dnd-kit/core";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -394,10 +395,12 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
 export const QuestionContext = React.createContext<string | undefined>(undefined);
 export const ClozeDropRegionContext = React.createContext<{
     register: (id: string, index: number) => void,
+    onSelect: (item: Immutable<ClozeItemDTO>, dropZoneId: UniqueIdentifier, clearSelection: boolean) => void,
     questionPartId: string, readonly: boolean,
     inlineDropValueMap: {[p: string]: ClozeItemDTO},
     dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
-    shouldGetFocus: (id: string) => boolean
+    shouldGetFocus: (id: string) => boolean,
+    nonSelectedItems: Immutable<ClozeItemDTO>[]
 } | undefined>(undefined);
 
 export const InlineContext = React.createContext<{

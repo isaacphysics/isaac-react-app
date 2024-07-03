@@ -1,4 +1,4 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {
     AppState,
     clearQuestionSearch,
@@ -24,8 +24,6 @@ import {
     logEvent,
     selectOnChange,
     siteSpecific,
-    SortOrder,
-    sortQuestions,
     STAGE,
     useUserContext,
     STAGE_NULL_OPTIONS,
@@ -38,9 +36,9 @@ import {
     isLoggedIn,
     SEARCH_RESULTS_PER_PAGE
 } from "../../services";
-import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
-import {Loading} from "../handlers/IsaacSpinner";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { RouteComponentProps, useHistory, withRouter } from "react-router";
 import { LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
@@ -52,6 +50,8 @@ import { HierarchyFilterHexagonal, Tier, TierID } from "../elements/svg/Hierarch
 import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 import classNames from "classnames";
 import queryString from "query-string";
+import { PageFragment } from "../elements/PageFragment";
+import {RenderNothing} from "../elements/RenderNothing";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -108,14 +108,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     }, [userContext.stage]);
 
     const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
-
     const [searchBook, setSearchBook] = useState<string[]>(arrayFromPossibleCsv(params.book));
-
-    const isBookSearch = searchBook.length > 0;
-
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(!!params.fasttrack);
-    const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({});
-
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
     const subjects = arrayFromPossibleCsv(params.subjects);
@@ -153,22 +147,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         {value: "chemistry_16", label: "A-Level Physical Chemistry"}
     ];
 
-    const creationContext: AudienceContext = useMemo(() => {
-        return !isBookSearch ? {
-            stage: searchStages.length > 0 ? searchStages : undefined,
-            difficulty: searchDifficulties.length > 0 ? searchDifficulties : undefined,
-            examBoard: searchExamBoards.length > 0 ? searchExamBoards : undefined,
-        } : {};
-    }, [isBookSearch, searchDifficulties, searchExamBoards, searchStages]);
-
     const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
                             debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], fasttrack: boolean, hideCompleted: boolean, startIndex: number) => {
-            // Clear front-end sorting so as not to override ElasticSearch's match ranking
-            setQuestionsSort({});
-
             if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && hierarchySelections.every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for
                 dispatch(clearQuestionSearch);
@@ -213,12 +196,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         []
     );
 
-    const sortQuestionUpdateState = (sortState: Record<string, SortOrder>, setSortState: React.Dispatch<React.SetStateAction<Record<string, SortOrder>>>, key: string) => (order: string) => {
-        const newSortState = {...sortState};
-        newSortState[key] = order as SortOrder;
-        setSortState(newSortState);
-    };
-
     const setTierSelection = (tierIndex: number) => {
         return ((values: Item<TAG_ID>[]) => {
             const newSelections = selections.slice(0, tierIndex);
@@ -242,6 +219,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     useEffect(() => {
         setPageCount(1);
         setDisableLoadMore(false);
+        setDisplayQuestions(undefined);
         searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, 0);
 
         const params: {[key: string]: string} = {};
@@ -267,16 +245,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, selections, hideCompleted]);
 
-    const sortedQuestions = useMemo(() => {
+    const questionList = useMemo(() => {
         if (questions) {
             if (questions.length < SEARCH_RESULTS_PER_PAGE + 1) {
                 setDisableLoadMore(true);
+            } else {
+                setDisableLoadMore(false);
             }
 
-            return sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
-                questions.slice(0, SEARCH_RESULTS_PER_PAGE)
-                // .filter(question => searchResultIsPublic(question, user))
-            );
+            return questions.slice(0, SEARCH_RESULTS_PER_PAGE);
         }
     }, [questions]);
 
@@ -285,11 +262,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         if (displayQuestions && nextSearchOffset && pageCount > 1) {
-            setDisplayQuestions(dqs => [...dqs ?? [], ...sortedQuestions ?? []]);
+            setDisplayQuestions(dqs => [...dqs ?? [], ...questionList ?? []]);
         } else {
-            setDisplayQuestions(sortedQuestions);
+            setDisplayQuestions(questionList);
         }
-    }, [sortedQuestions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [questionList]);
 
     const [revisionMode, setRevisionMode] = useState(!!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS);
 
@@ -328,10 +306,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         "Search for the perfect computer science questions to study. For revision. For homework. For the classroom."
     );
 
+    const loadingPlaceholder = <div className="w-100 text-center pb-2">
+        <h2 aria-hidden="true" className="pt-5">Searching...</h2>
+        <IsaacSpinner />
+    </div>;
+
     return <RS.Container id="finder-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={"Question Finder"} help={pageHelp}/>
         <MetaDescription description={metaDescription}/>
         <CanonicalHrefElement/>
+        <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
         <RS.Card id="finder-panel" className="mx-auto mt-4 mb-5">
             <RS.CardBody className={"px-2 py-3 p-sm-4 pb-5"}>
                 <RS.Row className={"mb-3"}>
@@ -391,7 +375,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             value={itemiseByValue(searchBook, bookOptions)}
                             onChange={(e) => {
                                 selectOnChange(setSearchBook, true)(e);
-                                sortQuestionUpdateState(questionsSort, setQuestionsSort, "title");
                             }}
                             options={bookOptions}
                         />
@@ -419,10 +402,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     <RS.Form>
                         <RS.Col className="mt-4">
                             <div className="d-flex">
-                                <StyledCheckbox 
-                                    checked={revisionMode} 
+                                <StyledCheckbox
+                                    checked={revisionMode}
                                     onChange={() => {
-                                        setRevisionMode(r => !r); 
+                                        setRevisionMode(r => !r);
                                         debouncedRevisionModeUpdate();
                                     }}
                                     label={<p>Revision mode</p>}
@@ -433,7 +416,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 </RS.UncontrolledTooltip>
                             </div>
                             <div className="d-flex">
-                                <StyledCheckbox 
+                                <StyledCheckbox
                                     checked={hideCompleted}
                                     onChange={() => setHideCompleted(h => !h)}
                                     label={<p>Hide completed questions</p>}
@@ -453,39 +436,38 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     </h3>
                 </RS.Col>
             </RS.CardHeader>
-            <Suspense fallback={<Loading/>}>
-                <RS.CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
-                    <ShowLoading until={displayQuestions}>
-                        {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
-                         selections.every(v => v.length === 0) ?
-                            <em>Please select filters</em> :
-                            (displayQuestions?.length ?
-                                <>
-                                    <LinkToContentSummaryList items={displayQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
-                                    <RS.Row>
-                                        <RS.Col className="d-flex justify-content-center mb-3">
-                                            <RS.Button
-                                                onClick={() => {
-                                                    searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
-                                                    setPageCount(c => c + 1);
-                                                }}
-                                                disabled={disableLoadMore}
-                                            >
-                                                Load more
-                                            </RS.Button>
-                                        </RS.Col>
-                                    </RS.Row>
-                                    {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
-                                    <div role="status" className={"alert alert-light border"}>
-                                            {`${totalQuestions} questions match your criteria.`}<br/>
-                                            Not found what you&apos;re looking for? Try refining your search filters.
-                                    </div>}
-                                </> :
-                                <em>No results found</em>)
-                        }
-                    </ShowLoading>
-                </RS.CardBody>
-            </Suspense>
+            <RS.CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
+                <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
+                    {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
+                     selections.every(v => v.length === 0) ?
+                        <em>Please select filters</em> :
+                        (displayQuestions?.length ?
+                            <>
+                                <LinkToContentSummaryList items={displayQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
+                                <RS.Row>
+                                    <RS.Col className="d-flex justify-content-center mb-3">
+                                        <RS.Button
+                                            onClick={() => {
+                                                searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
+                                                setPageCount(c => c + 1);
+                                                setDisableLoadMore(true);
+                                            }}
+                                            disabled={disableLoadMore}
+                                        >
+                                            Load more
+                                        </RS.Button>
+                                    </RS.Col>
+                                </RS.Row>
+                                {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
+                                <div role="status" className={"alert alert-light border"}>
+                                        {`${totalQuestions} questions match your criteria.`}<br/>
+                                        Not found what you&apos;re looking for? Try refining your search filters.
+                                </div>}
+                            </> :
+                            <em>No results found</em>)
+                    }
+                </ShowLoading>
+            </RS.CardBody>
         </RS.Card>
     </RS.Container>;
 });

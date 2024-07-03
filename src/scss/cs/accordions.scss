@@ -59,11 +59,7 @@
     margin-top: 0;
   }
 
-  .content-value {
-    h3, h4 {
-      font-size: 1.25rem !important;
-      font-weight: inherit;
-      line-height: inherit;
-    }
+  .content-value h4 {
+    margin-bottom: 1rem;
   }
 }

@@ -29,6 +29,7 @@ import {Events} from "../../pages/Events";
 import EventDetails from "../../pages/EventDetails";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import { QuestionFinder } from "../../pages/QuestionFinder";
+import { OnlineCourses } from "../../pages/OnlineCourses";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 
@@ -88,6 +89,9 @@ export const RoutesCS = [
 
     // News
     <TrackedRoute key={key++} exact path="/news" component={News} />,
+
+    // Online Courses
+    <TrackedRoute key={key++} exact path="/pages/online_courses" component={OnlineCourses} />,
 
     // Books: FIXME ADA are we going to include these?
     // <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,

@@ -13,7 +13,7 @@ import {Action} from "../../../IsaacAppTypes";
 import {AppDispatch, logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
-import {userContextReconfimationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
+import {userContextReconfirmationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
 
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: AppDispatch) => async (action: Action) => {
 
@@ -40,7 +40,7 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
             else if (needToUpdateUserContextDetails(user.registeredContextsLastConfirmed) &&
                      !withinLast50Minutes(persistence.load(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME))) {
                 persistence.save(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME, new Date().toString());
-                await dispatch(openActiveModal(userContextReconfimationModal));
+                await dispatch(openActiveModal(userContextReconfirmationModal));
             }
         }
     }

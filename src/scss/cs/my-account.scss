@@ -16,6 +16,9 @@
 .remove-stage-container {
   min-width: 24px;
   margin: 6px 0 0 6px;
+  > button:disabled {
+    @extend .text-muted;
+  }
 }
 
 .my-account-tab {
