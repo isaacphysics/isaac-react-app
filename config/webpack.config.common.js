@@ -30,6 +30,8 @@ module.exports = (env) => {
     }
 
     return {
+        cache: isProd ? false : {type: 'filesystem'},
+
         stats: {
             errorDetails: true
         },
