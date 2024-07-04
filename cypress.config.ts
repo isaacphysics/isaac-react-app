@@ -2,7 +2,7 @@ import { defineConfig } from "cypress";
 import { initPlugin } from "@frsource/cypress-plugin-visual-regression-diff/plugins";
 
 const SITE_STRING = process.env.CYPRESS_SITE == 'ada' ? 'ada' : 'phy';
-const UPDATE_BASELINE = !!process.env.CYPRESS_UPDATE_BASELINE;
+const UPDATE_BASELINE = process.env.CYPRESS_UPDATE_BASELINE == 'true';
 
 export default defineConfig({
   component: {
