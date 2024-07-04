@@ -2,7 +2,11 @@ import React, { PropsWithChildren, useState } from "react";
 import { Accordion } from "../Accordion";
 import { AppState, getEvent, recordEventAttendance, selectors, useAppDispatch, useAppSelector } from "../../../state";
 import { atLeastOne, isEventLeader, NOT_FOUND, sortOnPredicateAndReverse } from "../../../services";
-import { DetailedEventBookingDTO, UserSummaryWithEmailAddressAndGenderDTO } from "../../../../IsaacApiTypes";
+import {
+  BookingStatus,
+  DetailedEventBookingDTO,
+  UserSummaryWithEmailAddressAndGenderDTO,
+} from "../../../../IsaacApiTypes";
 import { DateString } from "../DateString";
 import { ATTENDANCE, PotentialUser } from "../../../../IsaacAppTypes";
 import {
@@ -41,6 +45,10 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
     (state: AppState) => (state && state.currentEvent !== NOT_FOUND && state.currentEvent) || null,
   );
   const bookings = useAppSelector(selectors.events.eventBookings);
+  const validStatuses = ["CONFIRMED", "ATTENDED", "ABSENT"] as BookingStatus[];
+  const validBookings = bookings.filter(
+    (booking) => booking.bookingStatus !== undefined && validStatuses.includes(booking.bookingStatus),
+  );
   const userIdToSchoolMapping = useAppSelector(selectors.admin.userSchoolLookup) || {};
 
   const [sortPredicate, setSortPredicate] = useState("bookingDate");
@@ -50,10 +58,10 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
   const [userUpdating, setUserUpdating] = useState(false);
 
   const selectAllToggle = () => {
-    if (bookings.length === selectedUserIds.length) {
+    if (validBookings.length === selectedUserIds.length) {
       setSelectedUserIds([]);
     } else {
-      setSelectedUserIds(bookings.filter((result) => !!result).map((result) => result.userBooked?.id as number));
+      setSelectedUserIds(validBookings.filter((result) => !!result).map((result) => result.userBooked?.id as number));
     }
   };
 
@@ -61,7 +69,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
     if (selectedUserIds.length !== 0) {
       setSelectedUserIds([]);
     } else {
-      const remainingUserIds = bookings
+      const remainingUserIds = validBookings
         .filter((result) => result.bookingStatus !== "ATTENDED" && result.bookingStatus !== "ABSENT")
         .map((result) => result.userBooked?.id as number);
       setSelectedUserIds(remainingUserIds);
@@ -107,7 +115,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
 
   return (
     <React.Fragment>
-      {canRecordAttendance && atLeastOne(bookings.length) && (
+      {canRecordAttendance && atLeastOne(validBookings.length) && (
         <Accordion
           trustedTitle="Record event attendance"
           disabled={selectedEvent?.isCancelled && "You cannot record attendance for a cancelled event"}
@@ -178,7 +186,7 @@ export const EventAttendance = ({ user, eventId }: { user: PotentialUser; eventI
                 </tr>
               </thead>
               <tbody>
-                {bookings
+                {validBookings
                   .sort(sortOnPredicateAndReverse(sortPredicate, reverse))
                   .filter(filterOnSurname)
                   .map((booking) => {

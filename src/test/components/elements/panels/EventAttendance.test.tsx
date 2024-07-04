@@ -190,7 +190,7 @@ describe("EventAttendance", () => {
     expect(eventAttendanceAccordion).not.toBeInTheDocument();
   });
 
-  const bookingStatuses: BookingStatus[] = ["WAITING_LIST", "CONFIRMED", "RESERVED", "ATTENDED", "ABSENT", "CANCELLED"];
+  const bookingStatuses: BookingStatus[] = ["CONFIRMED", "ATTENDED", "ABSENT"];
 
   it.each(bookingStatuses)("shows appropriate symbol based on event attendance status %s", async (bookingStatus) => {
     const modifiedBookings = mockEventBookings.map((booking) => ({
@@ -243,5 +243,46 @@ describe("EventAttendance", () => {
       const checkbox = within(row).getByRole("checkbox");
       expect(checkbox).toBeChecked();
     });
+  });
+
+  it("shows only confirmed, attended and absent bookings in the attendance panel", async () => {
+    const mockBookings = [
+      { ...mockEventBookings[0], bookingStatus: "RESERVED" as BookingStatus },
+      { ...mockEventBookings[1], bookingStatus: "CANCELLED" as BookingStatus },
+      { ...mockEventBookings[2], bookingStatus: "CONFIRMED" as BookingStatus },
+      { ...mockEventBookings[3], bookingStatus: "ATTENDED" as BookingStatus },
+      { ...mockEventBookings[4], bookingStatus: "ABSENT" as BookingStatus },
+      {
+        ...mockEventBookings[4],
+        bookingId: 1005,
+        bookingStatus: "WAITING_LIST" as BookingStatus,
+        userBooked: { ...mockEventBookings[4].userBooked, id: 305 },
+      },
+      {
+        ...mockEventBookings[4],
+        bookingId: 1006,
+        bookingStatus: "CONFIRMED" as BookingStatus,
+        userBooked: { ...mockEventBookings[4].userBooked, id: 305 },
+      },
+      {
+        ...mockEventBookings[4],
+        bookingId: 1007,
+        bookingStatus: "CONFIRMED" as BookingStatus,
+        userBooked: { ...mockEventBookings[4].userBooked, id: 306 },
+      },
+    ];
+    await setupTest("EVENT_MANAGER", mockBookings);
+    const { attendanceTable } = await findAttendanceSection();
+    const tableRows = within(attendanceTable).getAllByRole("row");
+    expect(tableRows.length).toBe(6);
+    const getCellTextContent = (row: HTMLElement, cellIndex: number) =>
+      within(row).getAllByRole("cell")[cellIndex].textContent;
+    const rowCells = tableRows.slice(1).map((row) => getCellTextContent(row, 1));
+    const numberOfAttendedBookings = rowCells.filter((text) => text === "✔️").length;
+    const numberOfUnmarkedBookings = rowCells.filter((text) => text === "").length;
+    const numberOfAbsentBookings = rowCells.filter((text) => text === "❌").length;
+    expect(numberOfAbsentBookings).toBe(1);
+    expect(numberOfAttendedBookings).toBe(1);
+    expect(numberOfUnmarkedBookings).toBe(3);
   });
 });
