@@ -1,5 +1,4 @@
 /* eslint-disable */
-const path = require('path');
 const configAda = require('./webpack.config.ada');
 const {merge} = require('webpack-merge');
 

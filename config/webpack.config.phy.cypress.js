@@ -1,5 +1,4 @@
 /* eslint-disable */
-const path = require('path');
 const configPhy = require('./webpack.config.physics');
 const {merge} = require('webpack-merge');
 
