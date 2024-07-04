@@ -294,3 +294,11 @@ iframe.email-html {
 //    }
 //  }
 //}
+
+.collapsible-head img {
+  transition: transform 0.1s ease;
+}
+
+.collapsible-body {
+  transition: max-height 0.3s ease;
+}

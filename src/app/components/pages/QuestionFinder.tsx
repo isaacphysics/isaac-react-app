@@ -51,7 +51,8 @@ import classNames from "classnames";
 import queryString from "query-string";
 import { PageFragment } from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { Button, Card, CardBody, CardHeader, Col, Container, Form, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { Button, Card, CardBody, CardHeader, Col, Container, Dropdown, DropdownMenu, DropdownToggle, Form, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { CollapsibleList } from "../elements/CollapsibleList";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -317,7 +318,133 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <CanonicalHrefElement/>
         <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
 
-        <Card id="finder-panel" className="mx-auto mt-4 mb-5">
+        <Row>
+            <Col xs={6}>
+                <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
+                <Input id="question-search-title"
+                    type="text"
+                    className="py-4"
+                    placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
+                    onChange={(e) => handleSearch(e.target.value)}
+                />
+                {/* TODO: add magnifying glass symbol to end of input */}
+            </Col>
+        </Row>
+
+        <Row className="mt-4">
+            <Col xs={4} className="text-wrap my-2" data-testid="question-finder-filters">
+                <Card>
+                    <CardHeader className="finder-header pl-3">
+                        <Col className={"px-0"}>
+                            Filter by
+                        </Col>
+                    </CardHeader>
+                    <CardBody className="p-0 m-0">
+                        <CollapsibleList title="Stage" expanded>
+                            {getFilteredStageOptions().map((stage, index) => (
+                                <div className="w-100 px-4 py-1 bg-white" key={index}>
+                                    <StyledCheckbox
+                                        color="primary"
+                                        checked={searchStages.includes(stage.value)}
+                                        onChange={() => setSearchStages(s => s.includes(stage.value) ? s.filter(v => v !== stage.value) : [...s, stage.value])}
+                                        label={<span>{stage.label}</span>}
+                                    />
+                                </div>
+                            ))}
+                        </CollapsibleList>
+                        {isAda && <CollapsibleList title="Exam board">
+                            {getFilteredExamBoardOptions().map((board, index) => (
+                                <div className="w-100 px-4 py-1 bg-white" key={index}>
+                                    <StyledCheckbox
+                                        color="primary"
+                                        checked={searchExamBoards.includes(board.value)}
+                                        onChange={() => setSearchExamBoards(s => s.includes(board.value) ? s.filter(v => v !== board.value) : [...s, board.value])}
+                                        label={<span>{board.label}</span>}
+                                    />
+                                </div>
+                            ))}
+                        </CollapsibleList>}
+                        {isAda && <CollapsibleList title="Topics">
+                            {/* TODO */}
+                        </CollapsibleList>}
+                        <CollapsibleList title="Difficulty">
+                            {/* TODO */}
+                        </CollapsibleList>
+                        <CollapsibleList title="Status">
+                            <div className="w-100 px-4 py-1 bg-white d-flex align-items-center">
+                                {/* TODO: merge in LLM branch and add "Show LLM qs" here */}
+                                <StyledCheckbox
+                                    // TODO: ignoreLabelHover doesn't work, the current css would need the *opposite* of + (checkbox.scss L92)
+                                    ignoreLabelHover
+                                    checked={revisionMode}
+                                    onChange={() => {
+                                        setRevisionMode(r => !r);
+                                        debouncedRevisionModeUpdate();
+                                    }}
+                                    label={<button 
+                                        className="p-0 mb-3 bg-white h-min-content" 
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            // TODO: add modal
+                                            console.log("show modal here");
+                                        }}>
+                                            Revision mode
+                                    </button>}
+                                />
+                            </div>
+                        </CollapsibleList>
+                    </CardBody>
+                </Card>
+            </Col>
+
+            {/* TODO: update styling of question block */}
+            <Col xs={8} className="text-wrap my-2" data-testid="question-finder-results">
+                <Card>
+                    <CardHeader className="finder-header pl-3">
+                        <Col className={"px-0"}>
+                            Showing <b>30</b> of <b>1235</b>.
+                        </Col>
+                    </CardHeader>
+                    <CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
+                        <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
+                            {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
+                            selections.every(v => v.length === 0) ?
+                                <em>Please select filters</em> :
+                                (displayQuestions?.length ?
+                                    <>
+                                        <LinkToContentSummaryList items={displayQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
+                                        <Row>
+                                            <Col className="d-flex justify-content-center mb-3">
+                                                <Button
+                                                    onClick={() => {
+                                                        searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
+                                                        setPageCount(c => c + 1);
+                                                        setDisableLoadMore(true);
+                                                    }}
+                                                    disabled={disableLoadMore}
+                                                >
+                                                    Load more
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                        {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
+                                        <div role="status" className={"alert alert-light border"}>
+                                                {`${totalQuestions} questions match your criteria.`}<br/>
+                                                Not found what you&apos;re looking for? Try refining your search filters.
+                                        </div>}
+                                    </> :
+                                    <em>No results found</em>)
+                            }
+                        </ShowLoading>
+                    </CardBody>
+                </Card>
+            </Col>
+        </Row>
+
+
+        {/* Previous finder. TODO: remove */}
+
+        {/* <Card id="finder-panel" className="mx-auto mt-4 mb-5">
             <CardBody className={"px-2 py-3 p-sm-4 pb-5"}>
                 <Row className={"mb-3"}>
                     <Col>
@@ -469,6 +596,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     }
                 </ShowLoading>
             </CardBody>
-        </Card>
+        </Card> */}
     </Container>;
 });
