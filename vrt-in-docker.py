@@ -10,7 +10,7 @@ def run(site: str, update_baselines: bool):
         "--rm",
         "-w", "/tests",
         "-v", "visual_testing_local:/tests",
-        "-v", f"{os.path.abspath('./docker-entrypoint-visual-testing.sh')}:/tests/docker-entrypoint-visual-testing.sh",
+        "-v", f"{os.path.abspath('docker-entrypoint-vrt.sh')}:/tests/docker-entrypoint-vrt.sh",
         "-v", f"{os.path.abspath('./src')}:/tests/src",
         "-v", f"{os.path.abspath('./package.json')}:/tests/package.json",
         "-v", f"{os.path.abspath('./yarn.lock')}:/tests/yarn.lock",
@@ -24,7 +24,7 @@ def run(site: str, update_baselines: bool):
         "-e", "CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT=300000",
         "-e", "CYPRESS_CACHE_FOLDER=/tests/.cache/Cypress",
         "cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1",
-        "/tests/docker-entrypoint-visual-testing.sh"
+        "/tests/docker-entrypoint-vrt.sh"
     ])
 
 if __name__ == "__main__":
