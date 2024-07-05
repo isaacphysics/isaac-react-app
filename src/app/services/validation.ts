@@ -18,7 +18,16 @@ export function zeroOrLess(possibleNumber?: number): boolean {
 }
 
 export function validateName(userName?: string | null) {
-  return userName && userName.length > 0 && userName.length <= 255 && !userName.includes("*");
+  const forbiddenWords = ["https", "www"];
+  const validPattern = /^[\p{L}\-'_! ]+$/u;
+
+  if (!userName) return false;
+
+  const isValidLength = userName.length > 0 && userName.length <= 50;
+  const isValidCharacters = validPattern.test(userName);
+  const containsForbiddenWords = forbiddenWords.some((word) => userName.includes(word));
+
+  return isValidLength && isValidCharacters && !containsForbiddenWords;
 }
 
 export const validateEmail = (email?: string) => {
@@ -91,7 +100,18 @@ export function validateUserContexts(userContexts?: UserContext[]): boolean {
 
 // Users school is valid if user is a tutor - their school is allowed to be undefined
 export const validateUserSchool = (user?: Immutable<ValidationUser> | null) => {
-  return !!user && (!!user.schoolId || (!!user.schoolOther && user.schoolOther.length > 0) || isTutor(user));
+  const forbiddenWords = ["https", "www"];
+  const maxSchoolOtherLength = 150;
+
+  if (!user) return false;
+
+  const isValidSchoolOther = user.schoolOther
+    ? user.schoolOther.length > 0 &&
+      user.schoolOther.length <= maxSchoolOtherLength &&
+      !forbiddenWords.some((word) => user.schoolOther!.includes(word))
+    : false;
+
+  return !!user.schoolId || isTutor(user) || isValidSchoolOther;
 };
 
 export const validateUserGender = (user?: Immutable<ValidationUser> | null) => {

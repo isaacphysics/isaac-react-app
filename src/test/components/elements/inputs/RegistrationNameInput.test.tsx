@@ -110,4 +110,30 @@ describe("RegistrationNameInput", () => {
       expect(error?.textContent).toHaveLength(0);
     });
   });
+
+  it("displays validation message when forbidden name is used in familyName is invalid and signup attempted", () => {
+    setupTest({
+      userToUpdate: {
+        ...mockUserToUpdate,
+        givenName: "Test",
+        familyName: "www",
+      },
+      attemptedSignUp: true,
+    });
+    const familyNameError = getValidationMessage("familyName");
+    expect(familyNameError?.textContent).toContain("Enter a valid name");
+  });
+
+  it("displays validation message when more than 50 charcters are used and signup attempted", () => {
+    setupTest({
+      userToUpdate: {
+        ...mockUserToUpdate,
+        givenName: "TestINGTestINGTestINGTestINGTestINGTestINGTestINGTestINGTestINGTestING",
+        familyName: "Student",
+      },
+      attemptedSignUp: true,
+    });
+    const givenNameError = getValidationMessage("givenName");
+    expect(givenNameError?.textContent).toContain("Enter a valid name");
+  });
 });
