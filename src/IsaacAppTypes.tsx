@@ -180,6 +180,7 @@ export interface IsaacQuestionProps<T extends QuestionDTO, R extends QuestionVal
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: Immutable<ApiTypes.QuestionValidationResponseDTO>;
     currentAttempt?: Immutable<ApiTypes.ChoiceDTO>;
+    loading?: boolean;
     canSubmit?: boolean;
     locked?: Date;
     accordionClientId?: string;

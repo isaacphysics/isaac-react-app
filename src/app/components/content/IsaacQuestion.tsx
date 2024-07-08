@@ -108,12 +108,12 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     // FastTrack buttons should only show up if on a FastTrack-enabled board
     const isFastTrack = fastTrackInfo.isFastTrackPage && currentGameboard?.id && fastTrackProgressEnabledBoards.includes(currentGameboard.id);
 
+    // Free text question
+    const isLLMFreeTextQuestion = doc.type === "isaacLLMFreeTextQuestion";
+
     // Inline questions
     const inlineContext = useContext(InlineContext);
     const isInlineQuestion = doc.type === "isaacInlineRegion" && inlineContext;
-
-    // Free text question
-    const isLLMFreeTextQuestion = doc.type === "isaacLLMFreeTextQuestion";
 
     const numInlineQuestions = isInlineQuestion ? Object.values(inlineContext?.elementToQuestionMap ?? {}).length : undefined;
     const numCorrectInlineQuestions = (isInlineQuestion && validationResponse) ? (questionPart as InlineQuestionDTO).validationResponse?.partsCorrect : undefined;
@@ -121,11 +121,14 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const almost = !correct && numCorrectInlineQuestions && numCorrectInlineQuestions > 0;
 
     // Determine Action Buttons
-    const primaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) :
-        doc.type === "isaacInlineRegion" ? {disabled: !canSubmit, value: "Check my answer", type: "submit", onClick: () => { 
+    const isLongRunningQuestionType = isLLMFreeTextQuestion;
+    const submitButtonLabel = isLongRunningQuestionType && questionPart?.loading ? "Marking your answer…" : "Check my answer";
+    const primaryAction =
+        isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) :
+        isInlineQuestion ? {disabled: !canSubmit, value: submitButtonLabel, type: "submit", onClick: () => { 
             submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts);
-    }} :
-        {disabled: !canSubmit, value: "Check my answer", type: "submit"};
+        }} :
+        /* else ? */ {disabled: !canSubmit, value: submitButtonLabel, type: "submit"};
 
     const secondaryAction = isFastTrack ?
         determineFastTrackSecondaryAction(fastTrackInfo) :
