@@ -14,7 +14,7 @@ import {
     NOT_FOUND, PATHS, siteSpecific,
     TAG_ID,
     useQueryParams,
-    useUserContext
+    useUserViewingContext
 } from "./";
 import {AudienceContext, ContentDTO, GameboardDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
@@ -49,7 +49,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
 
     const currentTopic = useAppSelector(selectors.topic.currentTopic);
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
 
     if (doc === null || doc === NOT_FOUND) {
         return defaultPageNavigation(currentGameboard);

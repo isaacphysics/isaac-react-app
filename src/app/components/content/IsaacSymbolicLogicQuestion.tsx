@@ -10,7 +10,7 @@ import {
     jsonHelper,
     sanitiseInequalityState, siteSpecific,
     useCurrentQuestionAttempt,
-    useUserContext
+    useUserPreferences
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
 import {Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip} from 'reactstrap';
@@ -83,7 +83,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const [modalVisible, setModalVisible] = useState(false);
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
-    const {preferredBooleanNotation} = useUserContext();
+    const {preferredBooleanNotation} = useUserPreferences();
     const [textInput, setTextInput] = useState('');
     const user = useAppSelector(selectors.user.orNull);
 

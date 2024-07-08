@@ -1,7 +1,7 @@
 import React, {lazy, ReactElement, useEffect, useState} from "react";
 import {Tabs} from "../elements/Tabs";
 import {CodeSnippetDTO} from "../../../IsaacApiTypes";
-import {isDefined, programmingLanguagesMap, useUserContext} from "../../services";
+import {isDefined, programmingLanguagesMap, useUserPreferences} from "../../services";
 
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
@@ -12,7 +12,7 @@ interface IsaacCodeTabsProps {
 export const IsaacCodeTabs = (props: any) => {
     const {doc: {children}} = props as IsaacCodeTabsProps;
     const tabTitlesToContent: {[title: string]: ReactElement} = {};
-    const {preferredProgrammingLanguage} = useUserContext();
+    const {preferredProgrammingLanguage} = useUserPreferences();
     const [defaultTabIndex, setDefaultTabIndex] = useState<number>(-1);
 
     children.forEach((child, index) => {

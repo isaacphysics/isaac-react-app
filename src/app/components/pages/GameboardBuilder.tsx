@@ -34,7 +34,7 @@ import {
     siteSpecific,
     STAGE,
     TAG_ID,
-    useUserContext
+    useUserViewingContext
 } from "../../services";
 import {useLocation} from "react-router-dom";
 import queryString from "query-string";
@@ -98,7 +98,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const concepts = queryParams && queryParams.concepts as string;
 
     const dispatch = useAppDispatch();
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const {data: wildcards} = useGetWildcardsQuery();
     const {data: baseGameboard} = useGetGameboardByIdQuery(baseGameboardId || skipToken);
     const [generateTemporaryGameboard] = useGenerateTemporaryGameboardMutation();

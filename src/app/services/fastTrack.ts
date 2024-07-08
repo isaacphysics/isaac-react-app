@@ -1,5 +1,5 @@
 import {getRelatedConcepts} from "./topics";
-import {DOCUMENT_TYPE, history, NOT_FOUND, PATHS, useUserContext, UseUserContextReturnType} from "./";
+import {DOCUMENT_TYPE, history, NOT_FOUND, PATHS, useUserViewingContext, UseUserContextReturnType} from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {ContentDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {AppState, selectors, useAppSelector} from "../state";
@@ -134,7 +134,7 @@ export function useFastTrackInformation(
     const page = useAppSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
     const isFastTrackPage = page?.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
     const pageCompleted = useAppSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : false);
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
 
     return {isFastTrackPage, doc, correct, page, pageCompleted, questionHistory, board, userContext, user, canSubmit}

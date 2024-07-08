@@ -8,7 +8,7 @@ import {
     SITE_TITLE,
     STAGE,
     stageLabelMap,
-    useUserContext
+    useUserViewingContext
 } from "../../services";
 import {
     AppState,
@@ -26,7 +26,7 @@ import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const viewsWithMyStage = audienceViews.filter(vc => vc.stage === userContext.stage);
     // If there is a possible audience view that is correct for our user context, show that specific one
     const viewsToUse = viewsWithMyStage.length > 0 ? viewsWithMyStage.slice(0, 1) : audienceViews;
