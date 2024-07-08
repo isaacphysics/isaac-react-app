@@ -118,7 +118,7 @@ export const Contact = () => {
                         <p>If you&apos;d like to find out more about our upcoming events, visit our <a href="/events">Events Page</a></p>
                     </>}
                     <h3>Problems with the site?</h3>
-                    <p>We always want to improve so please report any issues to <a className="small" href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></p>
+                    <p>We always want to improve so please report any issues to <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></p>
                     {isPhy && <div>
                         <h3>Call us</h3>
                         <p>Give us a call on <a href="tel:+441223337066">01223 337066</a></p>

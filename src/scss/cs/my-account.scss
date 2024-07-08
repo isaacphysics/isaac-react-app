@@ -3,6 +3,10 @@
 .linked-account-button-outer {
   border: 3px $cs-cultured solid;
   border-radius: 10px;
+
+  > label, > button {
+    width: max-content;
+  }
 }
 
 .linked-account-button {

@@ -99,9 +99,11 @@ export const RegistrationTeacherConnect = () => {
                                     aria-describedby="codeValidationMessage"
                                     value={authenticationToken}
                                 />
-                                <Button disabled={!codeIsValid} onClick={submit} color="secondary" outline>
-                                    Connect
-                                </Button>
+                                <div className="input-group-append">
+                                    <Button disabled={!codeIsValid} onClick={submit} color="secondary" outline>
+                                        Connect
+                                    </Button>
+                                </div>
                             </InputGroup>
                             <FormFeedback id="codeValidationMessage">
                                 Please enter a valid code.

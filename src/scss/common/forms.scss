@@ -241,10 +241,6 @@ select.form-control, input.form-control {
   margin-top: 0;
 }
 
-.form-label {
-  margin-bottom: 0;
-}
-
 @media (min-width: 576px) {
   .form-inline label {
     display: flex;
@@ -270,10 +266,15 @@ select.form-control, input.form-control {
 }
 
 label {
+  display: inline-block;
   margin-bottom: 0.5rem;
 }
 
 [type=search] {
   border-radius: 2.5rem;
   height: 2.6rem !important;
+}
+
+.text-dark {
+  color: #343a40 !important;
 }

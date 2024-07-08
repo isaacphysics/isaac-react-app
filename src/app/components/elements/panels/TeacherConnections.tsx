@@ -182,11 +182,11 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                             e.preventDefault(); 
                         }}}
                     />
-                    <>
+                    <div className="input-group-append">
                         <RS.Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark": isPhy})} color="secondary" outline disabled={editingOtherUser}>
                             Connect
                         </RS.Button>
-                    </>
+                    </div>
                 </RS.InputGroup>
             </RS.Form>
 
@@ -311,7 +311,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                             {sortedGroupMemberships && <FixedSizeList height={MEMBERSHIPS_ROW_HEIGHT * (Math.min(MEMBERSHIPS_MAX_VISIBLE_ROWS, sortedGroupMemberships.length ?? 0))} itemCount={sortedGroupMemberships.length ?? 0} itemSize={MEMBERSHIPS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                                 {({index, style}) => {
                                     const membership = sortedGroupMemberships[index];
-                                    return <li key={index} style={style} className={classNames("py-2", {"inactive-group" : isAda && membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE})}>
+                                    return <li key={index} style={style} className={classNames("p-2 ps-3", {"inactive-group" : isAda && membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE})}>
                                         <div className="d-flex">
                                             <RS.Col>
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE ?
