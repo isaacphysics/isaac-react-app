@@ -275,10 +275,15 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 // Node module imports
 @import "~bootstrap/scss/functions";
 
-$nav-link-hover-color: $cs-white !important;
+$nav-link-hover-color: $cs-jet;
+$border-color: $cs-black;
+// bootstrap 4 alert-warning colours
+$warning-bg-subtle: #fffef3;
+$warning-border-subtle: #fffeee;
 $toast-padding-x: 1.5rem;
 
-@import "~bootstrap/scss/variables"; // all Bootstrap default overrides must appear before this; anything that uses the defaults must come after
+// all Bootstrap !default overrides must appear before this; anything that uses the defaults must come after
+@import "~bootstrap/scss/variables"; 
 
 $grid-breakpoints: (
   xs: 0,
@@ -287,7 +292,15 @@ $grid-breakpoints: (
   lg: 992px,
   xl: 1200px,
   nav: 1256px,
-  xxl: 1400px
+  xxl: 1400px,
+);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+//   xxl: 1320px, // for large screens we keep the single-column layout and only expand the margin, so we don't use a larger container
 );
 
 $spacer: 1rem !default;
@@ -295,7 +308,8 @@ $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to ge
     6: ($spacer * 6.25) // 100px-ish
 ));
 
-@import "~bootstrap/scss/bootstrap"; // all Bootstrap overrides must appear before this
+// all Bootstrap overrides must appear before this
+@import "~bootstrap/scss/bootstrap"; 
 @import "~katex/dist/katex.min.css";
 @import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 @import "~billboard.js/dist/theme/insight.css";
