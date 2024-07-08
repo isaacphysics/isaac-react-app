@@ -57,12 +57,15 @@ $homepage-cards-per-line: (
   }
 }
 
+.card-container {
+  padding-bottom: $grid-gutter-width;
+}
 
 .cs-card, .news-card {
   position: relative;
   border-radius: 15px;
   display: inline-block;
-  margin-bottom: $grid-gutter-width !important;
+  height: 100%;
 
   &::before {
     content: " ";
