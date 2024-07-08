@@ -262,7 +262,7 @@ export const TeacherRequest = () => {
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>
-                                            <span className="d-block pb-3 pb-md-0 text-end text-md-left form-required">
+                                            <span className="d-block pb-3 pb-md-0 text-end text-md-start form-required">
                                                 Required field
                                             </span>
                                         </Col>

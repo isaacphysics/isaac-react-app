@@ -13,7 +13,7 @@ const getSocialIcon = (name: string) => {
 export const SocialLinksRow = () => {
     return (
         <div className='footer-links footer-links-social'>
-            <h2 className="h5">Get social</h2>
+            <h2>Get social</h2>
             {
                 siteSpecific(
                     // Physics

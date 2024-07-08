@@ -101,7 +101,7 @@ export const HomepagePhy = () => {
             {!(user && user.loggedIn) && <section className="row mb-4">
                 <Container>
                     <Col className="mt-4 py-4 px-5 d-flex align-items-center flex-column flex-md-row border bg-white">
-                        <h3 className="text-center text-md-left me-md-4 me-lg-0 mb-3 mb-md-0">
+                        <h3 className="text-center text-md-start me-md-4 me-lg-0 mb-3 mb-md-0">
                             Sign up to track your progress
                         </h3>
                         <Button tag={Link} size="lg" className="ms-md-auto me-md-3 me-lg-5 btn-xl" to={"/register"}>

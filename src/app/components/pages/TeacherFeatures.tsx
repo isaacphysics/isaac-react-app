@@ -28,7 +28,7 @@ export const TeacherFeatures = () => {
                     <p className="subtitle">
                         Isaac Physics provides you with a huge range of resources to support your teaching of Physics – all for free.                 </p>
                 </Col>}
-            {isDisabled && <Col md={6} className="text-center text-md-right">
+            {isDisabled && <Col md={6} className="text-center text-md-end">
                 <Button tag={Link} size="lg" color="secondary" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
                     {isLoggedIn(user) ? "Upgrade my Account" : "Get a Teacher Account"}
                 </Button>

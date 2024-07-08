@@ -23,7 +23,7 @@ export const TutorFeatures = () => {
             <Col md={isDisabled ? 6 : undefined}>
                 <p className="subtitle">Isaac Physics provides you with a huge range of resources to support your tutoring of Physics, Maths and Chemistry.</p>
             </Col>
-            {isDisabled && <Col md={6} className="text-center text-md-right">
+            {isDisabled && <Col md={6} className="text-center text-md-end">
                 <Button tag={Link} size="lg" color="secondary" to={isLoggedIn(user) ? "/tutor_account_request" : "/register"}>
                     {isLoggedIn(user) ? "Upgrade my Account" : "Get a Tutor Account"}
                 </Button>
