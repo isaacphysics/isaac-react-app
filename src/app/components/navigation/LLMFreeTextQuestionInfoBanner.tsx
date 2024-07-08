@@ -1,15 +1,22 @@
 import React from "react";
 
 import { Button, Col, Row } from "reactstrap";
-import { ACCOUNT_TAB, isLoggedIn, KEY, persistence, useUserConsent } from "../../services";
+import { ACCOUNT_TAB, isLoggedIn, KEY, persistence, useNavigation, useUserConsent } from "../../services";
 import { Link, useLocation } from "react-router-dom";
 import { selectors, updateCurrentUser, useAppDispatch, useAppSelector } from "../../state";
 import { PotentialUser } from "../../../IsaacAppTypes";
+import { ContentBaseDTO } from "../../../IsaacApiTypes";
 
 const locationOfFAQEntry = "/support/student/general";
 
-function LoggedOutCopy() {
+interface InfoBannerProps {
+    doc: ContentBaseDTO;
+}
+
+function LoggedOutCopy({doc}: InfoBannerProps) {
     const location = useLocation();
+    const navigation = useNavigation(doc);
+
     function setAfterAuthPath() {
         persistence.save(KEY.AFTER_AUTH_PATH, location.pathname + location.search + location.hash);
     }
@@ -30,17 +37,18 @@ function LoggedOutCopy() {
         <Row className="align-items-center mt-4">
             <Col div className="col-12 col-sm-auto mr-auto">
                 <Link to="/login" onClick={setAfterAuthPath} className="btn btn-primary mr-2">Log in</Link>
-                <Link to="/register" onClick={setAfterAuthPath} className="btn btn-outline-primary bg-cultured-grey">Sign up</Link>
+                <Link to="/register" onClick={setAfterAuthPath} className="btn btn-outline-primary bg-white">Sign up</Link>
             </Col>
-            <Col className="col-auto mt-4 mt-md-0">
-                <Link to="/">Skip question</Link> <strong>&gt;</strong>
-            </Col>
+            {navigation.nextItem && <Col className="col-auto mt-4 mt-md-0">
+                <Link to={{pathname: navigation.nextItem.to, search: navigation.search}}>Skip question</Link> <strong>&gt;</strong>
+            </Col>}
         </Row>
     </>;
 }
 
-function OpenAIConsentCopy() {
+function OpenAIConsentCopy({doc}: InfoBannerProps) {
     const dispatch = useAppDispatch();
+    const navigation = useNavigation(doc);
     const user = useAppSelector(selectors.user.orNull);
 
     function provideConsent() {
@@ -64,12 +72,14 @@ function OpenAIConsentCopy() {
         </p>
         <div className="mt-4">
             <Button color="primary" className="mr-2" onClick={provideConsent}>Consent</Button>
-            <Button color="outline-primary" className="bg-cultured-grey">Skip question</Button>
+            {navigation.nextItem && <Button tag={Link} color="outline-primary" className="bg-white" to={{pathname: navigation.nextItem.to, search: navigation.search}}>
+                Skip question
+            </Button>}
         </div>
     </>;
 }
 
-function GeneralInfoCopy() {
+function GeneralInfoCopy(_props: InfoBannerProps) {
     return <>
         <h2>Free text questions are marked by a large language model (LLM)</h2>
         <p>
@@ -83,7 +93,7 @@ function GeneralInfoCopy() {
     </>;
 }
 
-export function LLMFreeTextQuestionInfoBanner() {
+export function LLMFreeTextQuestionInfoBanner({doc}: InfoBannerProps) {
     const user = useAppSelector(selectors.user.orNull);
     const userConsent = useUserConsent();
 
@@ -97,6 +107,6 @@ export function LLMFreeTextQuestionInfoBanner() {
     }
 
     return <div className="d-print-none llm-info-banner mt-2">
-        <CopyToDisplay />
+        <CopyToDisplay doc={doc} />
     </div>;
 }

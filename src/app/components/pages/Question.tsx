@@ -109,7 +109,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
 
                         {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
-                        {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionInfoBanner />}
+                        {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionInfoBanner doc={doc} />}
 
                         <RevisionWarningBanner />
 
