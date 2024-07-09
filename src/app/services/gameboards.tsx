@@ -25,7 +25,8 @@ export enum BoardCompletions {
     "any" = "Any",
     "notStarted" = "Not Started",
     "inProgress" = "In Progress",
-    "completed" = "Completed"
+    "allAttempted" = "All Attempted",
+    "allCorrect" = "All Correct"
 }
 
 export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
@@ -41,7 +42,9 @@ export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
 export function boardCompletionSelection(board: GameboardDTO, boardCompletion: BoardCompletions) {
     if (boardCompletion == BoardCompletions.notStarted && (board.percentageAttempted == 0 || !board.percentageAttempted)) {
         return true;
-    } else if (boardCompletion == BoardCompletions.completed && board.percentageAttempted && board.percentageAttempted == 100) {
+    } else if (boardCompletion == BoardCompletions.allAttempted && board.percentageAttempted && board.percentageAttempted == 100) {
+        return true;
+    } else if (boardCompletion == BoardCompletions.allCorrect && board.percentageCorrect && board.percentageCorrect == 100) {
         return true;
     } else if (boardCompletion == BoardCompletions.inProgress && board.percentageAttempted && board.percentageAttempted != 100 && board.percentageAttempted != 0) {
         return true;
@@ -208,8 +211,8 @@ export const BOARD_ORDER_NAMES: {[key in BoardOrder]: string} = {
     "-visited": "Date Visited Descending",
     "title": "Title Ascending",
     "-title": "Title Descending",
-    "attempted": "Completion Ascending",
-    "-attempted": "Completion Descending",
+    "attempted": "Attempted Ascending",
+    "-attempted": "Attempted Descending",
     "correct": "Correctness Ascending",
     "-correct": "Correctness Descending"
 };

@@ -103,7 +103,7 @@ export const GameboardsFilters = ({boardCreator, setBoardCreator, boardCompletio
             </Col>
             <Col xs={6} lg={3}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>Filter by Completion</span>
+                    <span className={"text-nowrap"}>Filter by Status</span>
                     <Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as BoardCompletions)}>
                         {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
                     </Input>
