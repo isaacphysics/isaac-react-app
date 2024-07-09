@@ -12,6 +12,7 @@ const IsaacNumericQuestion = lazy(() => import("../components/content/IsaacNumer
 const IsaacStringMatchQuestion = lazy(() => import("../components/content/IsaacStringMatchQuestion"));
 const IsaacRegexMatchQuestion = lazy(() => import("../components/content/IsaacRegexMatchQuestion"));
 const IsaacFreeTextQuestion = lazy(() => import("../components/content/IsaacFreeTextQuestion"));
+const IsaacLLMFreeTextQuestion = lazy(() => import("../components/content/IsaacLLMFreeTextQuestion"));
 const IsaacSymbolicLogicQuestion = lazy(() => import("../components/content/IsaacSymbolicLogicQuestion"));
 const IsaacSymbolicQuestion = lazy(() => import("../components/content/IsaacSymbolicQuestion"));
 const IsaacSymbolicChemistryQuestion = lazy(() => import("../components/content/IsaacSymbolicChemistryQuestion"));
@@ -30,6 +31,7 @@ export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacSymbolicChemistryQuestion": "Chemistry",
     "isaacStringMatchQuestion": "String match",
     "isaacFreeTextQuestion": "Free text",
+    "isaacLLMFreeTextQuestion": "LLM-marked free text",
     "isaacSymbolicLogicQuestion": "Boolean logic",
     "isaacGraphSketcherQuestion": "Graph Sketcher",
     "isaacClozeQuestion": "Cloze drag and drop",
@@ -48,6 +50,7 @@ export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, qu
     "isaacStringMatchQuestion": IsaacStringMatchQuestion,
     "isaacRegexMatchQuestion": IsaacRegexMatchQuestion,
     "isaacFreeTextQuestion": IsaacFreeTextQuestion,
+    "isaacLLMFreeTextQuestion": IsaacLLMFreeTextQuestion,
     "isaacSymbolicLogicQuestion": IsaacSymbolicLogicQuestion,
     "isaacGraphSketcherQuestion": IsaacGraphSketcherQuestion,
     "isaacClozeQuestion": IsaacClozeQuestion,
@@ -168,7 +171,7 @@ export function useCurrentQuestionAttempt<T extends ChoiceDTO>(questionId: strin
     };
 }
 
-export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, currentGameboard: GameboardDTO | undefined, currentUser: any, dispatch: any, inlineContext?: ContextType<typeof InlineContext>) => {
+export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, docId: string, questionType: string, currentGameboard: GameboardDTO | undefined, currentUser: any, dispatch: any, inlineContext?: ContextType<typeof InlineContext>) => {
     if (questionPart?.currentAttempt) {
         // Notify Plausible that at least one question attempt has taken place today
         if (persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME) == null || !wasTodayUTC(persistence.load(KEY.INITIAL_DAILY_QUESTION_ATTEMPT_TIME))) {
@@ -176,7 +179,8 @@ export const submitCurrentAttempt = (questionPart: AppQuestionDTO | undefined, d
             trackEvent("question_attempted");
         }
 
-        dispatch(attemptQuestion(docId, questionPart?.currentAttempt, currentGameboard?.id, inlineContext));
+        dispatch(attemptQuestion(docId, questionPart?.currentAttempt, questionType, currentGameboard?.id, inlineContext));
+
         if (isLoggedIn(currentUser) && isNotPartiallyLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
             dispatch(saveGameboard({
                 boardId: currentGameboard.id,
