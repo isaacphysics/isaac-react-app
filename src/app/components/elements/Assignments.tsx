@@ -76,7 +76,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 <Row className="justify-content-end mr-0 mr-md-1">
                     <Col xs="auto d-none d-md-block">
                         <Label className="d-block w-100 text-center text-nowrap">
-                            %&nbsp;Attempted
+                            Attempted
                             <div className="d-flex justify-content-center">
                                 <div className="board-subject-hexagon-container justify-content-center">
                                     {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageAttempted === 100) ?
@@ -92,7 +92,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     </Col>
                     <Col xs="auto">
                         <Label className="d-block w-100 text-center text-nowrap">
-                            %&nbsp;Correct
+                            Correct
                             <div className="d-flex justify-content-center">
                                 <div className="board-subject-hexagon-container justify-content-center">
                                     {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCorrect === 100) ?
@@ -174,10 +174,10 @@ const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
         <Col xs={4} sm={3} md={5} lg={4} >
             <Row className="justify-content-end">
                 <Col xs="auto d-none d-md-block" className={"text-center px-3"}>
-                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageAttempted} label="%&nbsp;attempted"/>}
+                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageAttempted} label="Attempted"/>}
                 </Col>
                 <Col xs="auto" className={"text-center px-3"}>
-                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageCorrect} label="%&nbsp;correct"/>}
+                    {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageCorrect} label="Correct"/>}
                 </Col>
             </Row>
         </Col>
