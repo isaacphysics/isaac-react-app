@@ -13,7 +13,7 @@ import {
     siteSpecific,
     stringifyAudience,
     useDeviceSize,
-    useUserContext
+    useUserViewingContext
 } from "../../../services";
 import {Link} from "react-router-dom";
 import {selectors, useAppSelector} from "../../../state";
@@ -21,7 +21,7 @@ import classNames from "classnames";
 import {Markup} from "../markup";
 
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 

@@ -24,7 +24,11 @@ export const InlineStringEntryZone = ({width, height, questionDTO, focusRef, set
     return <div className={"feedback-zone inline-nq-feedback"}>
         <Input 
             {...rest}
-            className={classNames("force-print", rest.className, correctnessClass(correctness))}
+            className={classNames(
+                "force-print",
+                rest.className,
+                correctnessClass(correctness)
+            )}
             ref={focusRef}
             value={value}
             style={{width: `${width}px`, height: `${height}px`}}

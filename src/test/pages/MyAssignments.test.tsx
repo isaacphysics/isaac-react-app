@@ -31,20 +31,16 @@ describe("MyAssignments", () => {
         });
     };
 
-    it('should show my current assignments on render', async () => {
+    it('should show all my assignments on render', async () => {
         renderMyAssignments();
         const assignments = await screen.findAllByTestId("my-assignment");
         expect(assignments).toHaveLength(mockMyAssignments.length);
     });
 
-    it('should render with "To Do" tab open first', async () => {
+    it('should render with "All" assignment filter selected by default', async () => {
         renderMyAssignments();
-        const toDoTab = await screen.findByTitle(TAB_TITLE.TO_DO);
-        const olderTab = await screen.findByTitle(TAB_TITLE.OLDER);
-        const completedTab = await screen.findByTitle(TAB_TITLE.COMPLETED);
-        expect(toDoTab.parentElement?.classList).toContain("active");
-        expect(olderTab.parentElement?.classList).not.toContain("active");
-        expect(completedTab.parentElement?.classList).not.toContain("active");
+        const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
+        expect(assignmentTypeFilter).toHaveValue("All");
     });
 
     it('should allow users to filter assignments on gameboard title', async () => {
@@ -59,17 +55,10 @@ describe("MyAssignments", () => {
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.length);
     });
 
-    it('should open "Older" tab when tab is clicked, and tab should contain no assignments', async () => {
+    it('should filter to only display "Older" assignments when that filter type is selected, this should not display any assignments', async () => {
         renderMyAssignments();
-        const toDoTab = await screen.findByTitle(TAB_TITLE.TO_DO);
-        const olderTab = await screen.findByTitle(TAB_TITLE.OLDER);
-        const completedTab = await screen.findByTitle(TAB_TITLE.COMPLETED);
-        await userEvent.click(olderTab);
-        await waitFor(() => {
-            expect(toDoTab.parentElement?.classList).not.toContain("active");
-            expect(olderTab.parentElement?.classList).toContain("active");
-            expect(completedTab.parentElement?.classList).not.toContain("active");
-        }, {onTimeout: augmentErrorMessage("Tabs did not change to the correct state fast enough")});
+        const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
+        await userEvent.selectOptions(assignmentTypeFilter, "Older");
         expect(screen.queryAllByTestId("my-assignment")).toHaveLength(0);
     });
 
@@ -90,11 +79,11 @@ describe("MyAssignments", () => {
                 );
             })
         ]);
-        // Wait for the 3 "To Do" assignments to show up
-        expect(await screen.findAllByTestId("my-assignment")).toHaveLength(3);
-        // Click across to the "Older Assignments" tab
-        const olderTab = await screen.getByTitle(TAB_TITLE.OLDER);
-        await userEvent.click(olderTab);
+        // Wait for the 4 assignments to show up
+        expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.length);
+        // Select the "Older Assignments" filter
+const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
+        await userEvent.selectOptions(assignmentTypeFilter, "Older");
         // Wait for the one old assignment that we expect
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(1);
     });

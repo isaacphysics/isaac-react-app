@@ -66,7 +66,15 @@
   }
 }
 
+.inline-outer-container {
+  display: inline-flex;
+  justify-content: center;
+  width: max-content;
+  vertical-align: middle;
+}
+
 .inline-numeric-container {
+  display: inline-flex;
   border-radius: 5px;
 
   @media screen {
@@ -77,6 +85,7 @@
 
   .inline-unit-dropdown {
     button.btn {
+      display: block;
       height: 100%;
       min-width: 36px !important;
       border-radius: 0 5px 5px 0;
@@ -88,7 +97,6 @@
     &.display-unit {
       margin-bottom: -2px;
       button.btn {
-        height: calc(100% - 2px) !important;
         border: 1px solid black;
       }
     }
@@ -329,9 +337,19 @@
   }
 }
 
-.cloze-drop-zone {
+.cloze-drop-zone, .cloze-dropdown {
   &.incorrect {
     filter: drop-shadow(0 0 0.3rem red);
+  }
+}
+
+.cloze-dropdown {
+  min-width: unset !important; // Bootstrap thinks its important
+  &.empty.empty {
+    &, &:hover, &:active, &:focus { // Apply regardless of hover
+      border: grey solid 1px !important;
+      background-color: transparent !important;
+    }
   }
 }
 

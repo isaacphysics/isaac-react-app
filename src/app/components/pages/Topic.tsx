@@ -10,7 +10,7 @@ import {
     isAda,
     NOT_FOUND, PATHS,
     TAG_ID,
-    useUserContext
+    useUserViewingContext
 } from "../../services";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -24,7 +24,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     const dispatch = useAppDispatch();
     const topicPage = useAppSelector((state: AppState) => state ? state.currentTopic : null);
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
 
     useEffect(() => {dispatch(fetchTopicSummary(topicName));}, [dispatch, topicName]);
 
