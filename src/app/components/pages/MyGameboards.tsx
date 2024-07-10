@@ -178,7 +178,7 @@ export const MyGameboards = () => {
     };
 
     const cardProps: GameboardsCardsProps = {
-        user, boards, selectedBoards, setSelectedBoards, boardView, loading, viewMore
+        user, boards, selectedBoards, setSelectedBoards, boardView, boardTitleFilter, boardCreator, boardCompletion, loading, viewMore
     };
 
     return <Container> {/* fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})} */}

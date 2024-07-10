@@ -140,7 +140,7 @@
   min-width: unset;
   font-size: unset;
   &::after {
-    content: url(/assets/chevron_down.svg);
+    content: url(/assets/common/icons/chevron_down.svg);
     filter: invert(1);
     transform: rotate(-90deg);
     display: block;
