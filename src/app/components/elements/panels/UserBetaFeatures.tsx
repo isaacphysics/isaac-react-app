@@ -45,16 +45,8 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                 />
                 <p>
                     We use a large language model (LLM) to mark free-text questions on the site.
-                    The model typically returns a predicted mark in under 10 seconds; however the marks you receive may not be accurate.
-                    See our <Link to="/support/student/general" target="_blank">FAQs</Link> for more information.
-                </p>
-                <p>
                     We only send your answer to OpenAI, we do not send any personal data.
-                    OpenAI will not train their models using data you submit;
-                    you may wish to read OpenAI’s <a href="https://openai.com/policies/eu-privacy-policy" target="_blank" rel="noopener noreferrer">Privacy policy</a>.
-                </p>
-                <p>
-                    You can withdraw your consent at any time on this page.
+                    For more information, read our <Link to="/support/student/general" target="_blank">FAQs</Link>.
                 </p>
             </>}
         </>}
