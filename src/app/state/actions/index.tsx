@@ -259,6 +259,11 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
         await dispatch(requestCurrentUser() as any);
 
+        if (!editingOtherUser) {
+            // Invalidate tagged caches that are dependent on the current user's settings
+            dispatch(questionsApi.util.invalidateTags(['CanAttemptQuestionType']) as any);
+        }
+
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
             persistence.session.remove(KEY.FIRST_LOGIN);
