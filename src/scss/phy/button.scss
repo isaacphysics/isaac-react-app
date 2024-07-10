@@ -312,6 +312,24 @@ a.btn {
   }
 }
 
+.btn-close { // bootstrap <Button close/> components
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  min-height: 10px;
+  background-clip: content-box;
+  border-radius: 0;
+}
+
+button.close { // default <button class="close"/> components;
+  background-color: transparent;
+}
+
+.btn-plus.btn-plus { // need the specificity to be above bootstrap's .btn
+  @extend .btn-close;
+  background-image: url(/assets/common/icons/plus.svg);
+}
+
 .print-icon {
   @extend .hex-icon;
   background-image: url(/assets/common/icons/print.svg);
@@ -371,4 +389,15 @@ a.btn {
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-color: transparent;
+}
+
+.separate-input-group {
+  input {
+    border-radius: 0.25rem;
+  }
+  .input-group-append {
+    button {
+      border-radius: 0 0.25rem 0.25rem 0;
+    }
+  }
 }

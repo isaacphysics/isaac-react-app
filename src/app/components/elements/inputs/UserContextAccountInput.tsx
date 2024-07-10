@@ -30,7 +30,6 @@ interface UserContextRowProps {
     setBooleanNotation: (bn: BooleanNotation) => void;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     tutorOrAbove: boolean;
-    showPlusOption: boolean;
     userContexts: UserContext[];
     setUserContexts: (ucs: UserContext[]) => void;
     index: number;
@@ -39,7 +38,7 @@ interface UserContextRowProps {
 
 function UserContextRow({
     userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings,
-    tutorOrAbove, showPlusOption, userContexts, setUserContexts, index, required
+    tutorOrAbove, userContexts, setUserContexts, index, required
 }: UserContextRowProps) {
     const onlyUCWithThisStage = existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
 
@@ -107,23 +106,11 @@ function UserContextRow({
             </StyledDropdown>}
 
             <div className="remove-stage-container">
-                {tutorOrAbove && userContexts.length > 1 && <button
-                    type="button" className="close float-none" aria-label="clear stage row"
+                {tutorOrAbove && userContexts.length > 1 && <Button close
+                    className="close float-none bg-white p-2" aria-label="clear stage row"
                     onClick={() => setUserContexts(userContexts.filter((uc, i) => i !== index))}
-                >
-                    ×
-                </button>}
+                />}
             </div>
-
-            {!isAda && showPlusOption && validateUserContexts(userContexts) && <Label className="m-0 mt-1">
-                <button
-                    type="button" aria-label="Add stage"
-                    className={`ml-3 align-middle close float-none pointer-cursor`}
-                    onClick={() => setUserContexts([...userContexts, {}])}
-                >
-                    +
-                </button>
-            </Label>}
         </div>
     </React.Fragment>;
 }
@@ -185,7 +172,7 @@ export function UserContextAccountInput({
                         userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
                         setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
                         existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
-                        tutorOrAbove={tutorOrAbove} showPlusOption={showPlusOption} userContexts={userContexts} setUserContexts={setUserContexts}
+                        tutorOrAbove={tutorOrAbove} userContexts={userContexts} setUserContexts={setUserContexts}
                         index={index} required={required}
                     />
                     {isAda && index === userContexts.length - 1 && <>
@@ -208,6 +195,13 @@ export function UserContextAccountInput({
                     </>}
                 </FormGroup>;
             })}
+            {!isAda && validateUserContexts(userContexts) && <div className="mb-3 ms-2 align-content-center remove-stage-container">
+                <Button
+                    aria-label="Add stage"
+                    className={`ms-2 align-middle btn-plus float-none pointer-cursor bg-white`}
+                    onClick={() => setUserContexts([...userContexts, {}])}
+                />
+            </div>}
         </div>
     </div>;
 }
