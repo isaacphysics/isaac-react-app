@@ -65,7 +65,7 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
         <p>
             We only send your answer to OpenAI, we do not send any personal data.
             OpenAI will not train their models using data you submit;
-            you may wish to read OpenAI’s <a href="https://openai.com/policies/eu-privacy-policy" target="_blank" rel="noopener noreferrer">Privacy policy</a> before accepting.
+            you may wish to read OpenAI’s <a href="https://openai.com/policies/eu-privacy-policy" target="_blank" rel="noopener noreferrer">privacy policy</a> before accepting.
         </p>
         <p>
             You can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`}>account settings</Link>.
