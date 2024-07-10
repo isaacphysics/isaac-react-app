@@ -446,7 +446,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 <div className="d-inline text-nowrap">
                     <Label className="pe-2 mt-1">Sort assignments and tests:</Label>
                     <UncontrolledButtonDropdown size="sm">
-                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
+                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={siteSpecific("lg", "sm")}>
                             {assignmentOrder.type} ({assignmentOrder.order === SortOrder.ASC ? "ascending" : "descending"})
                         </DropdownToggle>
                         <DropdownMenu>
@@ -459,7 +459,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 <div className="d-inline text-nowrap ms-4">
                     <Label className="pe-2 mt-1">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">
-                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
+                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={siteSpecific("lg", "sm")}>
                             {groupSortOrder}
                         </DropdownToggle>
                         <DropdownMenu>
