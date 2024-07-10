@@ -18,7 +18,7 @@ const PhysicsCard = ({doc, imageClassName}: IsaacCardProps) => {
     const link = (clickUrl && isAppLink(clickUrl)) ? <Link to={clickUrl} className={classes + " stretched-link"} aria-label={title} aria-disabled={disabled}/> :
         <a href={clickUrl} className={classes + " stretched-link"} aria-label={title} aria-disabled={disabled}/>
 
-    return <Col className="d-flex px-3 justify-content-center">
+    return <Col className="d-flex justify-content-center">
         {verticalContent ?
             <Card className={classes}>
                 {image && <Row className={imageClassName}>
@@ -34,7 +34,7 @@ const PhysicsCard = ({doc, imageClassName}: IsaacCardProps) => {
                 </CardBody>
                 {clickUrl && link}
             </Card> :
-            <Card>
+            <Card className="w-100">
                 <CardTitle className="px-3 mb-sm-0 mb-lg-2">
                     {title}
                 </CardTitle>

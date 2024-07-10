@@ -13,7 +13,7 @@ interface NewsCardProps extends CardProps {
 const PhysicsNewsCard = ({newsItem, showTitle, ...props}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
 
-    return <Card data-testid={"news-pod"} className={"w-100 mx-3 card-neat news-card"} {...props}>
+    return <Card data-testid={"news-pod"} className={"w-100 mx-3 mb-0 card-neat news-card"} {...props}>
             {image && <a href={url} className="focus-target">
                 <CardImg
                     top
