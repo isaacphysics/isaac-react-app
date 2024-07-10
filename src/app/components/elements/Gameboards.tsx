@@ -30,6 +30,9 @@ export interface GameboardsCardsProps {
     boards: Boards | null;
     selectedBoards: GameboardDTO[];
     setSelectedBoards: (selectedBoards: GameboardDTO[]) => void;
+    boardTitleFilter: string;
+    boardCreator: BoardCreators;
+    boardCompletion: BoardCompletions;
     boardView: BoardViews;
     loading: boolean;
     viewMore: () => void;
@@ -118,25 +121,37 @@ const CSTable = (props: GameboardsTableProps) => {
 
 const Cards = (props: GameboardsCardsProps) => {
     const {
-        user, boards, selectedBoards, setSelectedBoards, boardView, loading, viewMore
+        user, boards, selectedBoards, setSelectedBoards, boardView, 
+        boardTitleFilter, boardCreator, boardCompletion, loading, viewMore
     } = props;
 
-    return boards && boards.boards && <>
+    const filteredBoards = boards && boards.boards && boards.boards
+        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+        .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+        .filter(board => boardCompletionSelection(board, boardCompletion));
+
+    return filteredBoards && <>
         {<Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
-            {boards.boards.map(board => <Col key={board.id}>
-                <BoardCard
-                    board={board}
-                    selectedBoards={selectedBoards}
-                    setSelectedBoards={setSelectedBoards}
-                    boardView={boardView}
-                    user={user}
-                    boards={boards}
-                />
-            </Col>)}
+            {filteredBoards.map(board => <Col key={board.id}>
+                    <BoardCard
+                        board={board}
+                        selectedBoards={selectedBoards}
+                        setSelectedBoards={setSelectedBoards}
+                        boardView={boardView}
+                        user={user}
+                        boards={boards}
+                    />
+                </Col>)}
         </Row>}
         <div className="text-center mt-3 mb-5" style={{clear: "both"}}>
-            <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
-            {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
+            {boards.boards.length === filteredBoards.length
+                ? <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong> results.</p>
+                : <p>Showing <strong>{filteredBoards.length}</strong> match from <strong>{boards.boards.length}</strong> results.</p>}
+            {boards.boards.length < boards.totalResults && <Button 
+                onClick={viewMore} disabled={loading}
+            >
+                {loading ? <Spinner /> : boards.boards.length === filteredBoards.length ? "View more" : "Load more"}
+            </Button>}
         </div>
     </>;
 };
