@@ -36,8 +36,8 @@ export interface GameboardsCardsProps {
 }
 
 const PhyTable = (props: GameboardsTableProps) => {
-    return <Card>
-        <CardBody id="boards-table">
+    return <Card className="mb-5 mt-3">
+        <CardBody id="boards-table" className="px-3 py-2">
             <CSTable {...props} />
         </CardBody>
     </Card>;
@@ -90,7 +90,7 @@ const CSTable = (props: GameboardsTableProps) => {
         )}
     </tr>;
 
-    return <div className={"mb-5 mb-md-6"}>
+    return <div className={siteSpecific("", "mb-5 mb-md-6")}>
         <Table className="my-gameboard-table" responsive>
             <thead>
                 {tableHeader}
