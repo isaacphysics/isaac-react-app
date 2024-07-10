@@ -7,7 +7,7 @@ import { selectors, updateCurrentUser, useAppDispatch, useAppSelector } from "..
 import { PotentialUser } from "../../../IsaacAppTypes";
 import { ContentBaseDTO } from "../../../IsaacApiTypes";
 
-const locationOfFAQEntry = "/support/student/general";
+const locationOfFAQEntry = "/support/student/general#llm_questions";
 
 interface InfoBannerProps {
     doc: ContentBaseDTO;
