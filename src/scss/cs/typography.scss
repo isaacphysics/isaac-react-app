@@ -1,6 +1,5 @@
 @use "sass:list";
 @import "../common/typography";
-@import "../common/_utils";
 
 // List of (font size, line height) pairs to generate font classes
 $sizes: [
