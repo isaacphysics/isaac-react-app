@@ -84,7 +84,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatFeeback = <p>
         Your answer is not in a format we recognise, please enter your answer as a decimal number.<br/>
         {invalidFormatErrorStdForm && <>When writing standard form, you must include <code>^</code> or <code>**</code> between the 10 and the exponent.<br/></>}
-        {isPhy && <>For help, see our <a target="_blank" href="/solving_problems#units">guide to answering numeric questions</a></>}.
+        {isPhy && <>For help, see our <a target="_blank" href="/solving_problems#units">guide to answering numeric questions</a>.</>}
     </p>;
 
     // Register Question Part in Redux
@@ -190,19 +190,17 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 ? <>
                             <span>You can view feedback for a specific box by either selecting it above, or by using the control panel below.</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
-                                <div className={`w-100 mt-2 d-flex feedback-panel-header`}>
+                                <div className={`w-100 mt-2 d-flex feedback-panel-header justify-content-around`}>
                                     <RS.Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
                                     }}>
                                         {below["xs"](deviceSize) ? "◀" : "Previous" }
                                     </RS.Button>
-                                    <Spacer/>
                                     <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
                                         inlineContext.feedbackIndex && inlineContext.setFocusSelection(true);
                                     }}>
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
                                     </RS.Button>
-                                    <Spacer/>
                                     <RS.Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
                                     }}>

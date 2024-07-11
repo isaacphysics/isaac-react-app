@@ -38,11 +38,6 @@
   }
 }
 
-input.form-control.is-unanswered {
-  border: solid 1px theme-color("warning");
-  @include border-radius($input-border-radius, 0);
-}
-
 .date-input .is-invalid, .date-input .is-valid {
   background: white;
 }
