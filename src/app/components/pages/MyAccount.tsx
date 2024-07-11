@@ -37,6 +37,7 @@ import {
     DisplaySettings,
     PotentialUser,
     ProgrammingLanguage,
+    UserConsent,
     UserPreferencesDTO,
 } from "../../../IsaacAppTypes";
 import {UserPassword} from "../elements/panels/UserPassword";
@@ -249,6 +250,15 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
         }));
     }
 
+    function setConsentSettings(newConsentSettings: UserConsent | ((oldCS?: UserConsent) => UserConsent)) {
+        setMyUserPreferences(oldPref => ({
+            ...oldPref,
+            CONSENT: typeof newConsentSettings === "function"
+                ? newConsentSettings(oldPref?.CONSENT)
+                : newConsentSettings
+        }));
+    }
+
     const accountInfoChanged = contextsChanged || userChanged || otherPreferencesChanged || (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
     useEffect(() => {
         if (accountInfoChanged && !saving) {
@@ -258,7 +268,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
 
     // Handling teachers changing school
     useEffect(() => {
-        const originalSchool: string | undefined = "schoolId" in user ? user.schoolId : undefined; 
+        const originalSchool: string | undefined = "schoolId" in user ? user.schoolId : undefined;
         const newSchool: string | undefined = userToUpdate.schoolId;
         if (isTeacherOrAbove(user) && !isStaff(user) && newSchool && (!originalSchool || originalSchool !== newSchool)) {
             dispatch(showChangeSchoolModal());
@@ -432,7 +442,10 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                             </TabPane>}
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
-                                <UserBetaFeatures displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings} />
+                                <UserBetaFeatures
+                                    displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
+                                    consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
+                                />
                             </TabPane>}
                         </TabContent>
 
@@ -461,11 +474,6 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                 </Card>
             }
         </ShowLoading>
-        {isPhy && <Row className="text-muted text-center mt-3">
-            <Col>
-                If you would like to delete your account please <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener noreferrer">contact us</a>.
-            </Col>
-        </Row>}
     </Container>;
 };
 

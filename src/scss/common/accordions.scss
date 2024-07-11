@@ -22,14 +22,19 @@
 .dynamic-x-padding .pad {
   &:first-of-type {
       padding-left: 0;
+      padding-right: 8px;
   }
 
   &:last-of-type {
+      padding-left: 8px;
       padding-right: 0;
   }
 
-  padding-left: 8px;
-  padding-right: 8px;
+  &:only-child {
+    padding: 0;
+  }
+
+  padding: 0 4px;
 
   @media (max-width: 991px) {
       padding-left: 0px;

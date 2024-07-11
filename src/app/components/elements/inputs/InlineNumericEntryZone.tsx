@@ -49,18 +49,24 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
         setModified(true);
     }, [value, unit, setModified]);
 
-    return <div {...rest} className={classNames("d-inline-flex inline-numeric-container", rest.className, correctnessClass(valueCorrectness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" : correctness))}>
-        <div className={"feedback-zone inline-nq-feedback"}>
+    return <div {...rest} 
+        className={classNames("inline-numeric-container", rest.className, correctnessClass(valueCorrectness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" : correctness))}
+    >
+        <div className={"feedback-zone inline-nq-feedback"}
+            style={{
+                ...(height && {height: `${height}px`}),
+            }}
+        >
             <Input 
                 ref={focusRef}
                 className={classNames(
-                    {"units-shown" : questionDTO.requireUnits || !noDisplayUnit}, 
+                    "force-print h-100",
+                    {"units-shown" : questionDTO.requireUnits || !noDisplayUnit},
                     // if the answer is incorrect because the units are wrong but the value is correct, hide the green outline from the value
                     correctnessClass((correctness === "INCORRECT" && valueCorrectness === "CORRECT") ? "NOT_SUBMITTED" : valueCorrectness)
                 )}
                 style={{
                     ...(width && {width: `${width}px`}), 
-                    ...(height && {height: `${height}px`}),
                 }}
                 value={value ?? ""}
                 onChange={(e) => {
@@ -75,7 +81,15 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
             </div>}
         </div>
 
-        {(questionDTO.requireUnits || !noDisplayUnit) && <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}} className={classNames("inline-unit-dropdown d-flex justify-content-center", {"display-unit": !noDisplayUnit})}>
+        {(questionDTO.requireUnits || !noDisplayUnit) && <Dropdown 
+                disabled={readonly} 
+                isOpen={isOpen && noDisplayUnit} 
+                toggle={() => {setIsOpen(!isOpen);}} 
+                className={classNames("inline-unit-dropdown justify-content-center", {"display-unit": !noDisplayUnit})}
+                style={{
+                    ...(height && {height: `${height}px`}),
+                }}
+        >
             <DropdownToggle
                 disabled={readonly || !noDisplayUnit}
                 className={classNames("feedback-zone ps-2 pe-0 py-0", {"pe-4": showFeedback(unitCorrectness), "border-dark": !noDisplayUnit})}

@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 import getpass
+from typing import Union
 
 # Global flag, whether commands should be executed by this script or not
 EXEC = False
@@ -58,8 +59,8 @@ def validate_args(args):
 
 def ask_to_run_command(command,
                        print_output=True,
-                       expected_nonzero_exit_codes: list = None,
-                       env_vars: dict = None,
+                       expected_nonzero_exit_codes: Union[list, None] = None,
+                       env_vars: Union[dict, None] = None,
                        chunk_size=1024,
                        run_anyway=False):
     if not EXEC:
@@ -86,7 +87,11 @@ def ask_to_run_command(command,
         with subprocess.Popen(command, stdout=subprocess.PIPE, shell=True, env=env_vars if env_vars else None) as proc:
             stdout_data = []
             while True:
-                chunk = proc.stdout.read(chunk_size)
+                output = proc.stdout
+                if output is None:
+                    break
+
+                chunk = output.read(chunk_size)
                 if not chunk:
                     break
                 decoded_chunk = chunk.decode('utf-8', errors='replace')
@@ -121,35 +126,43 @@ def build_docker_image_for_version(ctx):
 
 
 def get_old_versions(ctx):
+    if not ctx['previous_servers_exist']:
+        return
+
     print("# Finding old versions")
     app_name_prefix = f"{ctx['site']}-app-live-"
     previous_app_version = ""
 
     if 'old_app' not in ctx or ctx['old_api'] is None:
-        print("Find the previous app version")
-        automatic = 'y' == input("If docker containers are running this can be done automatically! Run automatically? [y/n]").lower()
-        if automatic:
-            while previous_app_version == "":
-                previous_app_version = ask_to_run_command(
-                    "docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-"
-                ).rstrip()
-            ctx['old_app'] = previous_app_version
-        else:
-            ctx['old_app'] = input(f"Enter old APP version (e.g. v1.2.3) for {ctx['site']} {ctx['env']}: ")
-            previous_app_version = ctx['old_app']
+        print("# Find the previous app version")
+        while previous_app_version == "":
+            previous_app_version = ask_to_run_command(
+                "docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-"
+            )
+
+            if previous_app_version is not None:
+                previous_app_version = previous_app_version.rstrip()
+            else:
+                print("\n# ! UNABLE TO FIND PREVIOUS APP VERSION !\n")
+                previous_app_version = input(f"Enter old APP version (e.g. v1.2.3) for {ctx['site']} {ctx['env']}: ")
+
+        ctx['old_app'] = previous_app_version
     else:
         previous_app_version = ctx['old_app']
 
     if 'old_api' not in ctx or ctx['old_api'] is None:
-        print("Find the previous api version")
-        automatic = 'y' == input("If docker containers are running this can be done automatically! Run automatically? [y/n]").lower()
-        if automatic:
-            previous_api_version = ask_to_run_command(
-                f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' {app_name_prefix}{previous_app_version}"
-            ).rstrip()
-            ctx['old_api'] = previous_api_version
+        print("# Find the previous api version")
+        previous_api_version = ask_to_run_command(
+            f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' {app_name_prefix}{previous_app_version}"
+        )
+
+        if previous_api_version is not None:
+            previous_api_version = previous_api_version.rstrip()
         else:
-            ctx['old_api'] = input(f"Enter old API version (e.g. v1.2.3) for {ctx['site']} {ctx['env']}: ")
+            print("\n# ! UNABLE TO FIND PREVIOUS API VERSION !\n")
+            previous_api_version = input(f"Enter old API version (e.g. v1.2.3) for {ctx['site']} {ctx['env']}: ")
+
+        ctx['old_api'] = previous_api_version
 
 
 def update_config(ctx):
@@ -167,7 +180,7 @@ def run_db_migrations(ctx):
     print("# Print migration SQL to terminal (to copy)?")
     ask_to_run_command(f"cd /local/src/isaac-api && git diff --name-only {ctx['old_api']} {ctx['api']} -- src/main/resources/db_scripts/migrations | xargs cat")
     print("# If there are any DB migrations, run them (in a transaction with a BEGIN; ROLLBACK; or COMMIT;). The following should be run in a separate terminal:")
-    input(f"docker exec -it {ctx['site']}-pg-{ctx['env']} psql -U rutherford")
+    print(f"docker exec -it {ctx['site']}-pg-{ctx['env']} psql -U rutherford")
 
 
 def write_changelog():
@@ -179,6 +192,7 @@ def bring_down_any_existing_containers(ctx):
     app_name_prefix = ctx['site'] + '-app-' + ctx['env'] + '-'
     print(f"# Find running {ctx['site']} {ctx['env']} versions:")
     ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-", expected_nonzero_exit_codes=[1])
+    # TODO: only prompt if containers found
     print(f"# Bring them down using:")
     ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}- | xargs -- bash -c './compose {ctx['site']} {ctx['env']} $0 down -v'", expected_nonzero_exit_codes=[1])
 
@@ -188,8 +202,49 @@ def bring_up_the_new_containers(ctx):
     ask_to_run_command(f"./compose {ctx['site']} {ctx['env']} {ctx['app']} up -d")
 
 
+def check_running_servers(ctx):
+    print("\n# Determining whether old services running\nMay return exit code 1.")
+
+    api_running = ask_to_run_command(
+        "docker ps --format '{{.Names}}' | grep api-live",
+        expected_nonzero_exit_codes=[1],
+        run_anyway=True
+    )
+    app_running = ask_to_run_command(
+        "docker ps --format '{{.Names}}' | grep app-live",
+        expected_nonzero_exit_codes=[1],
+        run_anyway=True
+    )
+    previous_servers_exist = api_running != "" and app_running != ""
+    ctx['previous_servers_exist'] = previous_servers_exist
+
+    if not previous_servers_exist:
+        print("# OLD CONTAINERS NOT FOUND.")
+        print("\n# ! THIS SCRIPT WILL NOT TAKE DOWN ALL RUNNING CONTAINERS SO CLEAN UP OLD CONTAINERS AFTER !\n")
+    else:
+        print("# Old containers found.\n")
+
+
+def volume_exists(ctx):
+    print("\n# Determining whether necessary containers exist\nMay return exit code 1.")
+
+    volume_grep = ask_to_run_command(
+        "docker volume list | " + f"grep {ctx['site']}-pg-{ctx['env']}",
+        expected_nonzero_exit_codes=[1],
+        run_anyway=True
+    )
+    volume_exists = volume_grep != ""
+
+    if not volume_exists:
+        print(f"\n# Could not find necessary volume {ctx['site']}-pg-{ctx['env']}.")
+        print(f"Create this volume if you want to deploy {ctx['env']}.")
+
+    return volume_exists
+
+
 def deploy_test(ctx):
     print(f"\n[DEPLOY {ctx['site'].upper()} TEST]")
+
     bring_down_any_existing_containers(ctx)
     print("Note: If there is a database schema change, you might need to alter the default data - usually through a migration followed by a snapshot.")
     print("# Reset the test database.")
@@ -200,10 +255,13 @@ def deploy_test(ctx):
 
 def deploy_staging_or_dev(ctx):
     print(f"\n[DEPLOY {ctx['site'].upper()} {ctx['env'].upper()}]")
-    continue_anyway = not ctx['live'] or 'y' == input("Currently deploying the live site, do you want to deploy staging?[y/n] ").lower()
+    continue_anyway = not ctx['live'] or 'y' == input("Currently deploying the live site, do you want to deploy staging? [y/n] ").lower()
     if continue_anyway:
         update_config(ctx)
-        run_db_migrations(ctx)
+
+        if ctx['previous_servers_exist']:
+            run_db_migrations(ctx)
+
         bring_down_any_existing_containers(ctx)
         bring_up_the_new_containers(ctx)
 
@@ -225,13 +283,17 @@ def deploy_live(ctx):
         print("# Front-end-only release - confirm the expected API is running:")
         ask_to_run_command(f"docker ps --format '{{{{.Names}}}}' | grep {ctx['site']}-api-live-{expected_api}")
     else:
-        print("# List possibly-unused live apis:")
-        ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {ctx['old_api']}", expected_nonzero_exit_codes=[1])
-        print("# Bring down and remove the penultimate live api(s), if that is sensible, using something like:")
-        ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {ctx['old_api']} | xargs -- bash -c 'docker stop $0 && docker rm $0'", expected_nonzero_exit_codes=[1])
+        if ctx['previous_servers_exist']:
+            print("# List possibly-unused live apis:")
+            ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {ctx['old_api']}", expected_nonzero_exit_codes=[1])
+            # TODO: only prompt if containers found
+            print("# Bring down and remove the penultimate live api(s), if that is sensible, using something like:")
+            ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {ctx['old_api']} | xargs -- bash -c 'docker stop $0 && docker rm $0'", expected_nonzero_exit_codes=[1])
 
         update_config(ctx)
-        run_db_migrations(ctx)
+
+        if ctx['previous_servers_exist']:
+            run_db_migrations(ctx)
 
         if 'api' not in ctx or ctx['api'] is None:
             ctx['api'] = input('What is the new api version? [v1.3.4 | master | some-branch] ')
@@ -244,26 +306,35 @@ def deploy_live(ctx):
         expected_response = '\'{"segueEnvironment":"PROD"}\''
         ask_to_run_command(f'while [ "$(curl --silent {api_endpoint})" != {expected_response} ]; do echo "Waiting for API..."; sleep 1; done && echo "The API is up!"')
 
-        print("# Let the monitoring service know there is a new api service to track:")
-        ask_to_run_command("cd /local/src/isaac-monitor && ./monitor_services.py --generate --no-prompt && ./monitor_services.py --reload --no-prompt && cd -", run_anyway=True)
+        if ctx['previous_servers_exist']:
+            print("# Let the monitoring service know there is a new api service to track:")
+            ask_to_run_command("cd /local/src/isaac-monitor && ./monitor_services.py --generate --no-prompt && ./monitor_services.py --reload --no-prompt && cd -", run_anyway=True)
 
-    print("# Bring up the new app and take down the old one:")
-    ask_to_run_command(f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-app-live-{ctx['app']} && "
-          "sleep 3 && "             
-          f"docker stop {ctx['site']}-app-live-{ctx['old_app']} && "
-          "../isaac-router/reload-router-config")
-    print("# Bring down the old preview renderer and bring up the new one")
-    ask_to_run_command(f"docker stop {ctx['site']}-renderer && docker rm {ctx['site']}-renderer && "
+    if ctx['previous_servers_exist']:
+        print(f"# Bring up the new app and take down the old one:")
+        ask_to_run_command(f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-app-live-{ctx['app']} && "
+              "sleep 3 && "
+              f"docker stop {ctx['site']}-app-live-{ctx['old_app']} && "
+              "../isaac-router/reload-router-config")
+        print("# Bring down the old preview renderer and bring up the new one")
+        ask_to_run_command(f"docker stop {ctx['site']}-renderer && docker rm {ctx['site']}-renderer && "
           f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-renderer")
+    else:
+        print(f"# Bring up the new app:")
+        ask_to_run_command(f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-app-live-{ctx['app']} && "
+              "../isaac-router/reload-router-config")
+        print("# Bring up the new preview renderer")
+        ask_to_run_command(f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-renderer")
 
 
 def deploy_etl(ctx):
     print(f"\n[DEPLOY {ctx['site'].upper()} ETL]")
     continue_anyway = 'y' == input("If there are changes to the content model you might want to delay deploying ETL until any old APIs are down.\nDeploy now? [y/n] ").lower()
     if continue_anyway:
-        print("# Bring down the old ETL service")
-        get_old_versions(ctx)
-        ask_to_run_command(f"./compose-etl {ctx['site']} {ctx['old_app']} down -v")
+        if ctx['previous_servers_exist']:
+            print("# Bring down the old ETL service")
+            get_old_versions(ctx)
+            ask_to_run_command(f"./compose-etl {ctx['site']} {ctx['old_app']} down -v")
         print("# Bring up the new ETL service")
         ask_to_run_command(f"./compose-etl {ctx['site']} {ctx['app']} up -d")
 
@@ -281,20 +352,23 @@ if __name__ == '__main__':
     check_repos_are_up_to_date()
 
     build_docker_image_for_version(context)
+    check_running_servers(context)
 
     sites = [Site.ADA, Site.PHY] if context['site'] == Site.BOTH else [context['site']]
     for site in sites:
         context['site'] = site
-        if context['env'] == 'test':
+        if context['env'] == 'test' and volume_exists(context):
             deploy_test(context)
-        elif context['env'] in ('staging', 'dev'):
+        elif context['env'] in ('staging', 'dev') and volume_exists(context):
             deploy_staging_or_dev(context)
         elif context['env'] == 'live':
-            print("# Bring down test containers")
-            context['env'] = 'test'
-            bring_down_any_existing_containers(context)
+            if context['previous_servers_exist']:
+                print("# Bring down test containers")
+                context['env'] = 'test'
+                bring_down_any_existing_containers(context)
             context['env'] = 'staging'
-            deploy_staging_or_dev(context)
+            if volume_exists(context):
+                deploy_staging_or_dev(context)
             context['env'] = 'live'
             deploy_live(context)
             context['env'] = 'etl'

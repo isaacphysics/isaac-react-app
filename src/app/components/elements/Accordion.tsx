@@ -14,7 +14,7 @@ import {
     scrollVerticallyIntoView,
     siteSpecific,
     useDeviceSize,
-    useUserContext
+    useUserViewingContext
 } from "../../services";
 import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";

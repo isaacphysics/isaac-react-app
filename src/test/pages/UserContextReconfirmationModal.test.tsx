@@ -2,7 +2,7 @@ import React from "react";
 import {screen} from "@testing-library/react";
 import {MOST_RECENT_AUGUST} from "../../app/state";
 import produce from "immer";
-import {renderTestEnvironment} from "../utils";
+import {renderTestEnvironment} from "../testUtils";
 
 describe("UserContextReconfirmationModal", () => {
 
@@ -14,7 +14,7 @@ describe("UserContextReconfirmationModal", () => {
         const modals = screen.queryAllByTestId("active-modal");
         if (modals.length > 0) {
             // If there is another modal, it shouldn't be the audience context update one
-            expect(modals[0]).not.toHaveModalTitle("Please review your details");
+            expect(modals[0]).not.toHaveModalTitle("Review your details");
             // There should only be one modal on the screen at a time
             expect(modals).toHaveLength(1);
         } else {
@@ -29,6 +29,6 @@ describe("UserContextReconfirmationModal", () => {
             })
         });
         const modal = await screen.findByTestId("active-modal");
-        expect(modal).toHaveModalTitle("Please review your details");
+        expect(modal).toHaveModalTitle("Review your details");
     });
 });

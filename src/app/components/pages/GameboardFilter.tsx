@@ -34,7 +34,7 @@ import {
     TAG_ID,
     tags,
     useDeviceSize,
-    useUserContext,
+    useUserViewingContext,
     toSimpleCSV,
     arrayFromPossibleCsv,
     itemiseByValue,
@@ -69,6 +69,7 @@ import {
 } from "reactstrap";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {Spacer} from '../elements/Spacer';
+import { QuestionFinderBanner } from '../navigation/QuestionFinderBanner';
 
 function itemiseConcepts(concepts: string[]): Item<string>[] {
     return concepts
@@ -450,7 +451,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
 };
 
 export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const {querySelections, queryStages, queryDifficulties, queryConcepts, queryExamBoards} = processQueryString(location.search);
 
     const history = useHistory();
@@ -637,6 +638,8 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="help_modal_gameboard_filter"/>
         <MetaDescription description={metaDescription} />
         <CanonicalHrefElement />
+
+        <QuestionFinderBanner />
 
         {/* The site-specific question filtering UI */}
         {siteSpecific(

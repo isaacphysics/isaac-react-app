@@ -12,6 +12,7 @@ import {
     ExamBoard,
     IsaacFastTrackQuestionPageDTO,
     IsaacQuestionPageDTO,
+    ItemDTO,
     QuantityDTO,
     Stage,
     StringChoiceDTO,
@@ -37,8 +38,8 @@ if (document.location.hostname === "localhost") {
     apiPath = "http://localhost:8080/isaac-api/api";
 } else if (EDITOR_PREVIEW) {
     apiPath = `${STAGING_URL}/api/any/api`;
-} else if (document.location.hostname.endsWith(".eu.ngrok.io")) {
-    apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
+} else if (document.location.hostname.endsWith(".ngrok.isaacscience.org")) {
+    apiPath = "https://isaac-api.ngrok.isaacscience.org/isaac-api/api";
 }
 let imagePath = `${apiPath}/images`;
 if (apiPath.indexOf(`/api/${API_VERSION}/api`) > -1) {
@@ -92,6 +93,7 @@ export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attemp
 
 export const NOT_FOUND: NOT_FOUND_TYPE = 404;
 export const NO_CONTENT = 204;
+export const TOO_MANY_REQUESTS = 429;
 
 export const MARKDOWN_RENDERER = new Remarkable({
     html: true
@@ -946,6 +948,8 @@ export const GRAY_120 = '#c9cad1';
 
 export const SEARCH_CHAR_LENGTH_LIMIT = 255;
 
+export const SEARCH_RESULTS_PER_PAGE = 30;
+
 export const GAMEBOARD_UNDO_STACK_SIZE_LIMIT = 10;
 
 export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
@@ -980,6 +984,11 @@ export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+export const NULL_CLOZE_ITEM_ID = "NULL_CLOZE_ITEM" as const;
+export const NULL_CLOZE_ITEM: ItemDTO = {
+    type: "item",
+    id: NULL_CLOZE_ITEM_ID
+};
 
 // Matches: [inline-question:questionId], [inline-question:questionId|w-50], [inline-question:questionId|h-50] or [inline-question:questionId|w-50h-200]
 export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+?)(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;

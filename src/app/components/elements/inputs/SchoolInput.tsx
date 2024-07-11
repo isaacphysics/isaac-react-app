@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
-import {isAda, schoolNameWithPostcode, validateUserSchool} from "../../../services";
+import {isAda, schoolNameWithPostcode, siteSpecific, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
@@ -136,7 +136,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                     Please specify your school association.
                 </FormFeedback>
             </RS.Input>
-            <Label for={`${idPrefix}-not-associated-with-school`} className="ms-2">Not associated with a school</Label>
+            <Label for={`${idPrefix}-not-associated-with-school`} className="ms-2">Not associated with a {siteSpecific("","UK ")}school</Label>
         </div>}
     </RS.FormGroup>;
 };

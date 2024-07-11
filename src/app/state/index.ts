@@ -40,6 +40,7 @@ export * from "./slices/api/contentApi";
 export * from "./slices/api/groupsApi";
 export * from "./slices/api/emailApi";
 export * from "./slices/api/eventsApi";
+export * from "./slices/api/questionsApi";
 export * from "./slices/api/quizApi";
 export * from "./slices/api/miscApi";
 export * from "./slices/gameboards";

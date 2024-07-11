@@ -12,7 +12,7 @@ import {
     STAGE,
     stageLabelMap,
     useQueryParams,
-    useUserContext
+    useUserViewingContext
 } from "../../../services";
 import {
     selectors,
@@ -26,7 +26,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const dispatch = useAppDispatch();
     const qParams = useQueryParams();
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
 
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
     const filteredStages = getFilteredStageOptions({byUser: user, includeNullOptions: true});
@@ -65,6 +65,10 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                                 // If we have possible valid exam board options but All is not one of them, use one of those.
                                 if (possibleExamBoards.length > 0 && !possibleExamBoards.includes(EXAM_BOARD.ALL)) {
                                     examBoard = possibleExamBoards[0];
+                                }
+                                // If we only have one possible exam board besides All, use that.
+                                else if (possibleExamBoards.length === 2 && possibleExamBoards.includes(EXAM_BOARD.ALL)) {
+                                    examBoard = possibleExamBoards.filter(eb => eb !== EXAM_BOARD.ALL)[0];
                                 }
                                 newParams.examBoard = examBoard;
                                 dispatch(transientUserContextSlice.actions.setExamBoard(examBoard));

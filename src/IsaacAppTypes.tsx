@@ -31,6 +31,7 @@ import {
     TAG_LEVEL
 } from "./app/services";
 import {Immutable} from "immer";
+import { UniqueIdentifier } from "@dnd-kit/core";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -179,6 +180,7 @@ export interface IsaacQuestionProps<T extends QuestionDTO, R extends QuestionVal
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: Immutable<ApiTypes.QuestionValidationResponseDTO>;
     currentAttempt?: Immutable<ApiTypes.ChoiceDTO>;
+    loading?: boolean;
     canSubmit?: boolean;
     locked?: Date;
     accordionClientId?: string;
@@ -242,6 +244,10 @@ export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
 }
 
+export interface UserConsent {
+    OPENAI?: boolean;
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
@@ -249,6 +255,7 @@ export interface UserPreferencesDTO {
     PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
     BOOLEAN_NOTATION?: BooleanNotation;
     DISPLAY_SETTING?: DisplaySettings;
+    CONSENT?: UserConsent;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
@@ -258,6 +265,10 @@ export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
 
 export function isValidatedChoice(choice: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>): choice is Immutable<ValidatedChoice<ApiTypes.ChoiceDTO>> {
     return choice.hasOwnProperty("frontEndValidation");
+}
+
+export interface CanAttemptQuestionTypeDTO {
+    remainingAttempts?: number;
 }
 
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO;
@@ -319,8 +330,10 @@ export enum BoardOrder {
     "-visited" = "-visited",
     "title" = "title",
     "-title" = "-title",
-    "completion" = "completion",
-    "-completion" = "-completion"
+    "attempted" = "attempted",
+    "-attempted" = "-attempted",
+    "correct" = "correct",
+    "-correct" = "-correct",
 }
 
 export enum AssignmentOrderType {
@@ -394,10 +407,12 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
 export const QuestionContext = React.createContext<string | undefined>(undefined);
 export const ClozeDropRegionContext = React.createContext<{
     register: (id: string, index: number) => void,
+    onSelect: (item: Immutable<ClozeItemDTO>, dropZoneId: UniqueIdentifier, clearSelection: boolean) => void,
     questionPartId: string, readonly: boolean,
     inlineDropValueMap: {[p: string]: ClozeItemDTO},
     dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
-    shouldGetFocus: (id: string) => boolean
+    shouldGetFocus: (id: string) => boolean,
+    nonSelectedItems: Immutable<ClozeItemDTO>[]
 } | undefined>(undefined);
 
 export const InlineContext = React.createContext<{
@@ -552,6 +567,7 @@ export interface QuestionSearchQuery {
     difficulties?: string;
     examBoards?: string;
     fasttrack?: boolean;
+    hideCompleted?: boolean;
     startIndex?: number;
     limit?: number;
 }

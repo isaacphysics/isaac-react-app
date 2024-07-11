@@ -47,10 +47,18 @@
   color: $cs-black;
 }
 
-.cloze-drop-zone {
+.cloze-drop-zone, .cloze-dropdown {
   &.border {
     border-style: dashed !important; // necessary because Bootstrap has no border style utilities
   }
+}
+
+.cloze-dropdown {
+    &:not(.empty) {
+        // Remove button styling when full
+        border: 0 !important;
+        border-radius: 0;
+    }
 }
 
 // Symbolic questions

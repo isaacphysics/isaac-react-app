@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import classNames from 'classnames';
 import { interstitialCookieSlice, useAppDispatch } from '../../state';
-import { useUserContext } from '../../services';
+import { useUserConsent } from '../../services';
 import { IsaacVideo } from '../content/IsaacVideo';
 
 const youtubeHomepageCookieText = <p className="text-muted m-0"><small>We use YouTube to show you videos on our website. By clicking the above, you agree to Google&apos;s <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer"><b>Cookie Policy</b></a> and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"><b>Privacy Policy</b></a>.</small></p>;
@@ -30,10 +30,10 @@ export const HomepageYoutubeCookieHandler = () => {
     const [copyActive, setCopyActive] = useState(false);
     const [linkCopied, setLinkCopied] = useState(false);
     const dispatch = useAppDispatch();
-    const context = useUserContext();
+    const userConsent = useUserConsent();
 
     return <InterstitialCookieHandler
-        accepted={context.cookieConsent?.youtubeCookieAccepted ?? false}
+        accepted={userConsent.cookieConsent?.youtubeCookieAccepted ?? false}
         beforeAccepted={<div className="homepage-video">
             <div className="position-relative">
                 <div className="youtube-fade" />
@@ -69,10 +69,10 @@ export const HomepageYoutubeCookieHandler = () => {
 
 export const YoutubeCookieHandler = ({afterAcceptedElement} : {afterAcceptedElement: JSX.Element}) => {
     const dispatch = useAppDispatch();
-    const context = useUserContext();
+    const userConsent = useUserConsent();
 
     return <InterstitialCookieHandler
-        accepted={context.cookieConsent?.youtubeCookieAccepted ?? false}
+        accepted={userConsent.cookieConsent?.youtubeCookieAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
             <h3>Allow YouTube content?</h3>
             {youtubeCookieText}
@@ -88,10 +88,10 @@ export const YoutubeCookieHandler = ({afterAcceptedElement} : {afterAcceptedElem
 
 export const AnvilCookieHandler = ({afterAcceptedElement} : {afterAcceptedElement: JSX.Element}) => {
     const dispatch = useAppDispatch();
-    const context = useUserContext();
+    const userConsent = useUserConsent();
 
     return <InterstitialCookieHandler
-        accepted={context.cookieConsent?.anvilCookieAccepted ?? false}
+        accepted={userConsent.cookieConsent?.anvilCookieAccepted ?? false}
         beforeAccepted={<div className="interstitial-cookie-page">
             <h3>Allow Anvil content?</h3>
             {anvilCookieText}

@@ -22,6 +22,7 @@ const CoordinateInput = (props: CoordinateInputProps) => {
         (
         <Input
             type="text"
+            className="force-print"
             placeholder={placeholderXValue ?? "x"}
             value={value.x ?? ""}
             onChange={event => onChange({...value, x: event.target.value === "" ? undefined : event.target.value})}
@@ -30,6 +31,7 @@ const CoordinateInput = (props: CoordinateInputProps) => {
         <span className="coordinate-input-separator">,&nbsp;</span>
         <Input
             type="text"
+            className="force-print"
             placeholder={placeholderYValue ?? "y"}
             value={value.y ?? ""}
             onChange={event => onChange({...value, y: event.target.value === "" ? undefined : event.target.value})}

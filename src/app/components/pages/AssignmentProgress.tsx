@@ -101,8 +101,8 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
     }), [assignment.gameboard.contents, assignment.progress, questions.length]);
 
     const progress = progressData.map(pd => pd[0]);
-    const studentsCorrect = progressData.reduce((sc, pd) => sc + (pd[1] ? 1 : 0), 0);
-
+    const noStudentsAttemptedAll = progress.reduce((sa, p) => sa + (p.notAttemptedPartResults.every(v => v === 0) ? 1 : 0), 0);
+    
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     const [assignmentAverages, assignmentTotalQuestionParts] = useMemo<[number[], number]>(() => {
         return questions?.reduce(([aAvg, aTQP], q, i) => {
@@ -148,8 +148,8 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
     }
 
     const tableHeader = <div className="progress-header">
-        <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong>
-        {` students have completed the assignment `}
+        <strong>{noStudentsAttemptedAll}</strong> of <strong>{progress.length}</strong>
+        {` students attempted all questions in `}
         <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link>.
     </div>;
         

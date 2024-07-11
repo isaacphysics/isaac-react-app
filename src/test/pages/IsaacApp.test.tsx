@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import zip from "lodash/zip";
 import {USER_ROLES, UserRole} from "../../IsaacApiTypes";
-import {NAV_BAR_MENU_TITLE, NavBarMenus, renderTestEnvironment} from "../utils";
+import {NAV_BAR_MENU_TITLE, NavBarMenus, renderTestEnvironment} from "../testUtils";
 import {history, isPhy, PATHS, SITE_SUBJECT, siteSpecific} from "../../app/services";
 
 const myIsaacLinks = siteSpecific(
