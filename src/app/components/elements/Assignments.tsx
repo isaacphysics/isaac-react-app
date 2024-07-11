@@ -73,7 +73,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
             </Col>
 
             <Col xs={4} md={5} lg={4}>
-                <Row className="justify-content-end mr-0 mr-md-1">
+                <Row className="justify-content-end me-0 me-md-1">
                     <Col xs="auto d-none d-md-block">
                         <Label className="d-block w-100 text-center text-nowrap">
                             Attempted
@@ -110,7 +110,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
             </Col>
         </Row>
         <Row>
-            <Button className="ml-3 my-2 btn-underline" color="link" onClick={() => setShowMore(!showMore)}>
+            <Button className="ms-3 my-2 btn-underline" color="link" onClick={() => setShowMore(!showMore)}>
                 {showMore ? "Show less" : "Show more"}
             </Button>
         </Row>
@@ -141,7 +141,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                                 <td className="w-50 align-baseline">
                                     {stageLabelMap[stage]}:
                                 </td>
-                                <td className="w-50 pl-1">
+                                <td className="w-50 ps-1">
                                     {difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}
                                 </td>
                             </tr>)}

@@ -204,7 +204,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     )}
                 </td>
                 <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
-                    <a href={boardLink} className={isAda ? "font-weight-semi-bold" : ""}>{board.title}</a>
+                    <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
                     {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
                 </td>
                 {stagesAndDifficultiesTD}
@@ -227,7 +227,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
             : 
             <>
                 <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
-                    <a href={boardLink} className={isAda ? "font-weight-semi-bold" : ""}>{board.title}</a>
+                    <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
                     {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
                 </td>
                 {stagesAndDifficultiesTD}
@@ -364,7 +364,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                                 <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
                             </Col>
                         ) : (
-                            deviceSize === "sm" ? <Col sm={5} className="pl-0 d-flex flex-sm-row">
+                            deviceSize === "sm" ? <Col sm={5} className="ps-0 d-flex flex-sm-row">
                                 <Col xs={12} sm={6} md={12} className="d-flex flex-column p-0 align-items-center">
                                     <span>Attempted</span>
                                     <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
@@ -374,7 +374,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                                     <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
                                 </Col>
                             </Col> :
-                            <Col xs={4} className="pl-0 d-flex flex-column">
+                            <Col xs={4} className="ps-0 d-flex flex-column">
                                 <Row className="d-flex flex-column p-0 align-items-center">
                                     <span>Attempted</span>
                                     <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />

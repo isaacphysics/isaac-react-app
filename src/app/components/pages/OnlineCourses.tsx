@@ -1,4 +1,4 @@
-import {Button, CardDeck, Container} from "reactstrap";
+import {Button, Container, Row} from "reactstrap";
 import {NewsCard} from "../elements/cards/NewsCard";
 import React, { useEffect } from "react";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -8,6 +8,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {NEWS_PODS_PER_PAGE} from "../../services";
 import { IsaacPodDTO } from "../../../IsaacApiTypes";
 import { PageFragment } from "../elements/PageFragment";
+import classNames from "classnames";
 
 export const OnlineCourses = () => {
     const [page, setPage] = React.useState(0);
@@ -36,13 +37,13 @@ export const OnlineCourses = () => {
         {allCourses.length === 0 ? 
             <ShowLoadingQuery
                 query={onlineCourseQuery}
-                thenRender={() => <div className={"w-100 text-left"}><h4>No courses to display...</h4></div>}
+                thenRender={() => <div className={"w-100 text-start"}><h4>No courses to display...</h4></div>}
                 defaultErrorTitle={"Error fetching online courses"}
             /> : 
             <>
-                <CardDeck className="justify-content-center mt-4">
+                <Row className={classNames("d-flex flex-row card-deck row-cols-1 row-cols-sm-2 justify-content-between my-3")}>
                     {allCourses.map(n => <NewsCard key={n.id} newsItem={n} className="ratio-5x3" showTitle />)}
-                </CardDeck>
+                </Row>
                 <div className="w-100 d-flex justify-content-center mb-5">
                     <Button className={"mt-3"} color={"primary"} disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load more courses</Button>
                 </div>
