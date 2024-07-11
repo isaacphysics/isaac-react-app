@@ -4,7 +4,7 @@ import {
     mockActiveGroups,
     buildMockTeacher,
     buildMockUserSummary} from "../../mocks/data";
-import { followHeaderNavLink, renderTestEnvironment, switchAccountTab } from "../utils";
+import { followHeaderNavLink, renderTestEnvironment, switchAccountTab } from "../testUtils";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor, within } from "@testing-library/react";
 
