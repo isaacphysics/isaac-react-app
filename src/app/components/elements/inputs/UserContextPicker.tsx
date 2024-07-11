@@ -12,7 +12,7 @@ import {
     STAGE,
     stageLabelMap,
     useQueryParams,
-    useUserContext
+    useUserViewingContext
 } from "../../../services";
 import {
     selectors,
@@ -26,7 +26,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const dispatch = useAppDispatch();
     const qParams = useQueryParams();
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
 
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
     const filteredStages = getFilteredStageOptions({byUser: user, includeNullOptions: true});

@@ -47,7 +47,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className, width, height, root}: Inl
     const questionType = inlineContext?.elementToQuestionMap?.[inlineInputId]?.type ?? "isaacStringMatchQuestion";
     const questionDTO = selectQuestionPart(pageQuestions, questionId);
 
-    const [elementIndex, _setElementIndex] = useState<number>(Object.keys(inlineContext?.elementToQuestionMap ?? {}).indexOf(inlineInputId));
+    const elementIndex = Object.keys(inlineContext?.elementToQuestionMap ?? {}).indexOf(inlineInputId);
     const [isSelectedFeedback, setIsSelectedFeedback] = useState<boolean>(false);
 
     const [correctness, setCorrectness] = useState<QuestionCorrectness>("NOT_SUBMITTED");
@@ -103,7 +103,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className, width, height, root}: Inl
     }, [inlineContext?.focusSelection]);
 
     if (!questionId || !questionDTO ) {
-        console.error(`Inline question element (id: ${questionId}, dto: ${questionDTO}) not found.`);
+        // On following a soft link, the way that we register questions and build elementToQuestionMap means that on first render this questionId and questionDTO will be undefined.
         return null;
     }
 

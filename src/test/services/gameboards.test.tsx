@@ -53,4 +53,4 @@ describe("Correct board owner is shown", () => {
         // Assert
         expect(actualOwnerName).toEqual(expectedOwnerName);
     })
-})
+});

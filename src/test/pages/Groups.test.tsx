@@ -1,5 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {renderTestEnvironment, followHeaderNavLink, switchAccountTab} from "../utils";
+import {renderTestEnvironment, followHeaderNavLink, switchAccountTab} from "../testUtils";
 import {
     mockActiveGroups,
     mockArchivedGroups,
@@ -642,7 +642,7 @@ describe("Groups", () => {
             const shareLink = within(inviteUsersModal as HTMLElement).getByTestId("share-link");
             expect(shareLink).toHaveTextContent(`/account?authToken=${mockToken}`);
         });
-        
+
         await closeActiveModal(inviteUsersModal);
 
         await waitFor(() => {
@@ -652,7 +652,7 @@ describe("Groups", () => {
 
     it("the shareable url for a group connects a student to the group", async () => {
         const mockToken = "3GGD0G";
-        
+
         const mockTeacher = buildMockTeacher(75);
         const mockManager = buildMockTeacher(76);
 
@@ -717,10 +717,10 @@ describe("Groups", () => {
         });
 
         jest.spyOn(queryString, "parse").mockImplementation(() => ({authToken: mockToken}));
-        
+
         await followHeaderNavLink("My Isaac", siteSpecific("My Account", "My account"));
         await switchAccountTab(ACCOUNT_TAB.teacherconnections);
-        
+
         expect(joinGroupHandler).toHaveBeenCalledTimes(0);
         expect(getGroupOwnerHandler).toHaveBeenCalledTimes(1);
         expect(membershipHandler).toHaveBeenCalledTimes(1);
@@ -758,7 +758,7 @@ describe("Groups", () => {
             expect(modal).not.toBeInTheDocument();
         });
     });
-    
+
     [true, false].forEach(async (additionalManagerPrivileges) => {
         it(additionalManagerPrivileges ? "allows managers to remove students from groups when they have permission" : "prevents managers removing students from groups without permission", async () => {
             const mockOwner = buildMockTeacher(2);

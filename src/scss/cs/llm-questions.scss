@@ -1,0 +1,89 @@
+.llm-indicator {
+    position: relative;
+    display: flex;
+    background-color: $cyan-700;
+    color: $cs-jet;
+    border: 1px solid $cs-silver;
+    border-radius:2rem;
+    padding: 0.5rem 0.75rem;
+    font-weight: 600;
+    font-size: medium;
+}
+
+.llm-info-banner {
+    background-color: $cyan-700;
+    color: $cs-jet;
+    border: 1px solid $cs-silver;
+    padding: 2rem 3rem;
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+    h2 {
+        font-size: x-large !important;
+    }
+    p a {
+        color: $dark-pink-300 !important;
+    }
+}
+
+.llm-feedback {
+    color: $cs-jet;
+    h2 {
+        font-size: larger !important;
+    }
+    .prediction {
+        display: inline-block;
+        background-color: $cyan-700;
+        border-radius: 0.5rem;
+        padding: 1rem 1rem;
+        margin-bottom: 1rem;
+    }
+    .curved-table-wrapper {
+        border-radius: 0.5rem;
+        border: 2px solid $cs-list-outline-gray;
+        table, thead, tbody {
+            border: 0;
+        }
+        tr {
+            border: 2px solid $cs-list-outline-gray;
+            border-left: 0;
+            border-right: 0;
+        }
+        table {
+            tr:first-child {
+                border-top: 0;
+            }
+            tr:last-child {
+                border-bottom: 0;
+            }
+            table-layout: fixed;
+            th {
+                font-family: $primary-font;
+                background-color: $cs-cultured !important;
+                border: 0;
+                padding: 0.5rem;
+                font-weight: 600;
+                &:last-child {
+                    width: 50px;
+                }
+            }
+            td {
+                border: 0;
+                padding: 0.5rem;
+                &:last-child {
+                    text-align: center;
+                    vertical-align: middle;
+                }
+            }
+        }
+        margin-bottom: 1rem;
+    }
+
+    .feedback-collection {
+        li + li {
+            margin-top: 1rem;
+        }
+        &.submitted {
+            color: $cs-perfect;
+        }
+    }
+}

@@ -59,9 +59,9 @@ $yellow-500: #FFFAC3;
 $yellow-600: #FFFFE6;
 $yellow-700: #FFFFF5;
 
-$cs-perfect: #358539;
+$cs-perfect: #05611E;
 $cs-in-progress: #FE8E15;
-$cs-failed: #C2423F;
+$cs-failed: #A90212;
 
 
 //Text Colour
@@ -323,6 +323,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "../common/filter";
 @import "../common/reservation-modal";
 @import "../common/fasttrack";
+@import "llm-questions";
 @import "../common/scroll";
 @import "../common/checkbox";
 @import "button";

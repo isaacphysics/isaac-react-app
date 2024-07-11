@@ -1,28 +1,24 @@
-import React, {useEffect, useRef} from "react";
+import React, { useCallback, useEffect } from "react";
+import classNames from "classnames";
 
-export const ScrollToTop = ({mainContent}: {mainContent: React.RefObject<any>}) => {
-    const scrollButton = useRef(null);
+export const ScrollToTop = ({mainContent}: {mainContent: React.MutableRefObject<HTMLElement | null>}) => {
+    const [sticky, setSticky] = React.useState(false);
 
-    const isSticky = () => {
-        const scrollTop = window.scrollY;
-        // @ts-ignore
-        scrollTop >= mainContent.current.offsetTop + 1 ? scrollButton.current.classList.add('is-sticky') : scrollButton.current.classList.remove('is-sticky');
-    }
-
-    const scroll = () => {
-        mainContent.current.scrollIntoView({behavior: 'smooth'});
-    }
+    const isSticky = useCallback(() => {
+        setSticky(!!mainContent.current && window.scrollY >= mainContent.current.offsetHeight * 0.2);
+    }, [mainContent]);
 
     useEffect(() => {
         window.addEventListener('scroll', isSticky);
         return () => {
             window.removeEventListener('scroll', isSticky);
         };
-    });
+    }, [isSticky]);
 
-    return <div ref={scrollButton} onClick={scroll} className="scroll-btn d-print-none">
-        <button>
-            <img src="/assets/common/icons/chevron-up.svg" alt="Scroll to top of page"/>
-        </button>
-    </div>
-}
+    return <button 
+        onClick={() => mainContent.current?.scrollIntoView({behavior: 'smooth'})} 
+        className={classNames("scroll-btn d-print-none", {"is-sticky": sticky})}
+    >
+        <img src="/assets/common/icons/chevron-up.svg" alt="Scroll to top of page"/>
+    </button>;
+};

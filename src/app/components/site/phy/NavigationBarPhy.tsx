@@ -56,6 +56,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/events">All Events</LinkItem>
             <LinkItem to="/pages/isaac_mentor">Student Mentoring</LinkItem>
             <LinkItem to="/pages/spc">Senior Physics Challenge</LinkItem>
+            <LinkItem to="/pages/stem_smart">STEM SMART</LinkItem>
         </NavigationSection>
 
         <NavigationSection title="Help">
