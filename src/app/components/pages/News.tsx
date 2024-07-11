@@ -40,7 +40,7 @@ export const News = () => {
                 defaultErrorTitle={"Error fetching news stories"}
             /> : 
             <>
-                <Row className="d-flex mx-2 flex-row card-deck row-cols-1 row-cols-sm-2 row-cols-lg-3 justify-content-center mt-4">
+                <Row className="d-flex flex-row card-deck row-cols-1 row-cols-sm-2 row-cols-lg-3 justify-content-center mt-4">
                     {allNews.map((n, i) => <Col key={i} className="d-flex my-3 px-0 justify-content-center">
                         <NewsCard key={n.id} newsItem={n} showTitle />
                     </Col>)}

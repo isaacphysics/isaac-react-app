@@ -56,16 +56,14 @@ const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, board
                 </Input>
             </Label>
         </Col>
-        <Spacer />
-        <Col xs={9} md={5} lg={4}>
+        <Col xs={9} md={5} lg={{size: 4, offset: 2}}>
             <Label className="w-100">
                 Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
                     {Object.values(BoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
                 </Input>
             </Label>
         </Col>
-        <span className="flex-grow-0 flex-sm-grow-1 flex-md-grow-0"/>
-        <Col xs={3} sm={2} lg={1}>
+        <Col xs={3} sm={{size: 2, offset: 1}} md={2} lg={1}>
             <Label className="w-100 d-flex flex-column">
                 Filters
                 <Button color="secondary" className={classNames("gameboards-filter-dropdown", {"selected": showFilters})} 

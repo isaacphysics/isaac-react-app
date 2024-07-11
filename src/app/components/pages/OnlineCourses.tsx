@@ -41,7 +41,7 @@ export const OnlineCourses = () => {
                 defaultErrorTitle={"Error fetching online courses"}
             /> : 
             <>
-                <Row className={classNames("d-flex flex-row card-deck row-cols-1 row-cols-sm-2 justify-content-between my-3")}>
+                <Row className={classNames("d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-between my-3")}>
                     {allCourses.map(n => <NewsCard key={n.id} newsItem={n} className="ratio-5x3" showTitle />)}
                 </Row>
                 <div className="w-100 d-flex justify-content-center mb-5">
