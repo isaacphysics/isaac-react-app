@@ -456,6 +456,7 @@
     > button {
       color: inherit;
       min-width: 176px;
+      flex-basis: 100%;
       @media (max-width: 576px) {
         min-width: 0;
       }
@@ -492,22 +493,6 @@
 .correct {
   .feedback-panel-dark {
     @include feedback-panel-classes(#000, 0.18);
-  }
-}
-
-.inline-part {
-  $shadow-size: 3px;
-  &.selected-feedback {
-    box-shadow: 0 0 0 $shadow-size #000;
-    &.is-valid {
-      box-shadow: 0 0 0 $shadow-size theme-color("success");
-    }
-    &.is-invalid {
-      box-shadow: 0 0 0 $shadow-size theme-color("danger");
-    }
-    &.is-unanswered {
-      box-shadow: 0 0 0 $shadow-size theme-color("warning");
-    }
   }
 }
 
