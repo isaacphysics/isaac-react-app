@@ -33,7 +33,8 @@ export const store = configureStore({
         const newMiddleware = getDefaultMiddleware(defaultMiddlewareOptions).concat(middleware);
         // @ts-ignore
         if (process.env.NODE_ENV !== 'production' && !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
-            newMiddleware.concat([reduxLogger]);
+            // newMiddleware.concat([reduxLogger]);
+            newMiddleware.push(reduxLogger as Middleware);
         }
         return newMiddleware;
     },
