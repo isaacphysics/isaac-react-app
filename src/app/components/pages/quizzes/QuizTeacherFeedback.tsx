@@ -19,7 +19,7 @@ import {
     isQuestion,
     PATHS
 } from "../../../services";
-import {AppAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
+import {AuthorisedAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
@@ -179,8 +179,8 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
             return "revoked";
         }
 
-        const correctParts = (studentProgress as AppAssignmentProgress).correctQuestionPartsCount;
-        const incorrectParts = (studentProgress as AppAssignmentProgress).incorrectQuestionPartsCount;
+        const correctParts = (studentProgress as AuthorisedAssignmentProgress).correctQuestionPartsCount;
+        const incorrectParts = (studentProgress as AuthorisedAssignmentProgress).incorrectQuestionPartsCount;
         const total = questions.reduce((acc, q) => acc + (q.questionPartsTotal ?? 0), 0);
 
         return markClassesInternal(studentProgress, correctParts, incorrectParts, total);
@@ -191,8 +191,8 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
             return "revoked";
         }
 
-        const correctParts = (studentProgress as AppAssignmentProgress).correctPartResults[index];
-        const incorrectParts = (studentProgress as AppAssignmentProgress).incorrectPartResults[index];
+        const correctParts = (studentProgress as AuthorisedAssignmentProgress).correctPartResults[index];
+        const incorrectParts = (studentProgress as AuthorisedAssignmentProgress).incorrectPartResults[index];
         const totalParts = questions[index].questionPartsTotal ?? 0;
 
         return markClassesInternal(studentProgress, correctParts, incorrectParts, totalParts);
@@ -216,7 +216,7 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
 
     const totalParts = questions.length;
 
-    const progress : AppAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
+    const progress : AuthorisedAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
         return {
             user: user.user as UserSummaryDTO,
             completed: user.feedback?.complete ?? false,

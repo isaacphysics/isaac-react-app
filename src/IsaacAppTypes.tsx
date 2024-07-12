@@ -448,15 +448,13 @@ export const AssignmentScheduleContext = React.createContext<{
     viewBy: "startDate" | "dueDate";
 }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 
-export interface AppAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
+export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
     completed?: boolean;
     tickCount: number;
     correctQuestionPartsCount: number;
     incorrectQuestionPartsCount: number;
     notAttemptedPartResults: number[];
 }
-// export interface AuthorisedAppAssignmentProgress extends Required<Pick<AppAssignmentProgress, "tickCount" | "correctQuestionPartsCount" | "incorrectQuestionPartsCount" | "notAttemptedPartResults">> {
-// }
 
 export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     isMultiDay?: boolean;

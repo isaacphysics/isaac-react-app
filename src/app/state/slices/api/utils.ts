@@ -9,7 +9,7 @@ import {
 } from "../../../services";
 import produce from "immer";
 import {
-    AppAssignmentProgress,
+    AuthorisedAssignmentProgress,
     AppGroup,
     AppQuizAssignment,
     GroupMembershipDetailDTO,
@@ -151,7 +151,7 @@ export const anonymiseListIfNeededWith = <T>(anonymisationCallback: (nonanonymou
     persistence.load(KEY.ANONYMISE_USERS) === "YES" ? nonanonymousData.map(d => anonymisationCallback(d, getAnonymisationOptions())) : nonanonymousData;
 
 export const anonymisationFunctions = {
-    progressState: produce<AppAssignmentProgress[]>((progress) => {
+    progressState: produce<AuthorisedAssignmentProgress[]>((progress) => {
         progress.forEach((userProgress, i) => {
             if (userProgress.user) {
                 userProgress.user.familyName = "";

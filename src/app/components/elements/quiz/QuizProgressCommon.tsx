@@ -1,6 +1,6 @@
 import React, {useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
-import {AppAssignmentProgress, AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
+import {AuthorisedAssignmentProgress, AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
 import {siteSpecific, TODAY} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
@@ -114,12 +114,12 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
     }
 
     const semiSortedProgress = useMemo(() => orderBy(progress, (item) => {
-        return item.user.authorisedFullAccess && -(item as AppAssignmentProgress).notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
+        return item.user.authorisedFullAccess && -(item as AuthorisedAssignmentProgress).notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
     }, [reverseOrder ? "desc" : "asc"]), [progress, reverseOrder]);
 
     const sortedProgress = useMemo(() => orderBy((semiSortedProgress), (item) => {
         if (!item.user.authorisedFullAccess) return -1;
-        const authorisedItem = item as AppAssignmentProgress;
+        const authorisedItem = item as AuthorisedAssignmentProgress;
             switch (sortOrder) {
                 case "name":
                     return (authorisedItem.user.familyName + ", " + authorisedItem.user.givenName).toLowerCase();
@@ -246,7 +246,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                                 </Button>
                                                 {!returningQuizToStudent && dropdownOpen?.[index] && <>
                                                     {(!duedate || duedate.valueOf() > TODAY().valueOf()) &&
-                                                        ((studentProgress as AppAssignmentProgress).completed) &&
+                                                        ((studentProgress as AuthorisedAssignmentProgress).completed) &&
                                                         <div className="py-2 px-3">
                                                             <Button size="sm" onClick={() => returnToStudent(studentProgress.user.id)}>Allow another attempt</Button>
                                                         </div>}
@@ -273,18 +273,18 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                 )}
                                 {isAssignment ? <>
                                     <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark((studentProgress as AppAssignmentProgress).correctQuestionPartsCount,
+                                        {fullAccess ? formatMark((studentProgress as AuthorisedAssignmentProgress).correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
                                             pageSettings.formatAsPercentage) : ""}
                                     </th>
                                     <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark((studentProgress as AppAssignmentProgress).tickCount,
+                                        {fullAccess ? formatMark((studentProgress as AuthorisedAssignmentProgress).tickCount,
                                             questions.length,
                                             pageSettings.formatAsPercentage) : ""}
                                     </th>
                                 </> : 
                                     <th className="total-column" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark((studentProgress as AppAssignmentProgress).correctQuestionPartsCount,
+                                        {fullAccess ? formatMark((studentProgress as AuthorisedAssignmentProgress).correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
                                             pageSettings.formatAsPercentage) : ""}
                                     </th>

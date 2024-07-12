@@ -25,7 +25,7 @@ import {
 } from "reactstrap";
 import sortBy from "lodash/sortBy";
 import {
-    AppAssignmentProgress,
+    AuthorisedAssignmentProgress,
     AppGroup,
     AssignmentOrder,
     AssignmentOrderSpec,
@@ -86,7 +86,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
             notAttemptedPartResults: []
         };
 
-        const ret = p.results.reduce<AppAssignmentProgress>((oldP, results, i) => {
+        const ret = p.results.reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
                 const tickCount = ["PASSED", "PERFECT"].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
                 const questions = assignment.gameboard.contents;
                 return {
@@ -104,7 +104,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
     }), [assignment.gameboard.contents, assignment.progress, questions.length]);
 
     const progress = progressData.map(pd => pd[0]);
-    const noStudentsAttemptedAll = progress.reduce((sa, p) => sa + (p.user.authorisedFullAccess && (p as AppAssignmentProgress).notAttemptedPartResults.every(v => v === 0) ? 1 : 0), 0);
+    const noStudentsAttemptedAll = progress.reduce((sa, p) => sa + (p.user.authorisedFullAccess && (p as AuthorisedAssignmentProgress).notAttemptedPartResults.every(v => v === 0) ? 1 : 0), 0);
     
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     const [assignmentAverages, assignmentTotalQuestionParts] = useMemo<[number[], number]>(() => {
@@ -136,8 +136,8 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
             return "revoked";
         }
 
-        const correctParts = (studentProgress as AppAssignmentProgress).correctQuestionPartsCount;
-        const incorrectParts = (studentProgress as AppAssignmentProgress).incorrectQuestionPartsCount;
+        const correctParts = (studentProgress as AuthorisedAssignmentProgress).correctQuestionPartsCount;
+        const incorrectParts = (studentProgress as AuthorisedAssignmentProgress).incorrectQuestionPartsCount;
         const status = null;
 
         return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
