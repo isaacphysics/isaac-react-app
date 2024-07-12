@@ -566,9 +566,8 @@ export const SetAssignments = () => {
                             </Input>
                         </Label>
                     </Col>}
-                    <Spacer />
                     {boardView === BoardViews.card && <>
-                        <Col xs={6} lg={2}>
+                        <Col xs={6} lg={{size: 2, offset: 3}}>
                             <Label className="w-100">
                                 Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
