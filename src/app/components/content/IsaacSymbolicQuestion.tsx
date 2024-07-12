@@ -79,7 +79,7 @@ export const symbolicInputValidator = (input: string) => {
     if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
         // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
         return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
-    } 
+    }
     return errors;
 };
 
@@ -92,13 +92,13 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const [textInput, setTextInput] = useState('');
 
+    let currentAttemptValue: any | undefined = undefined;
+
     function currentAttemptPythonExpression(): string {
         return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
     }
 
     const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
-
-    let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
