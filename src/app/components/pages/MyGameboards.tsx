@@ -25,7 +25,6 @@ import {Link} from "react-router-dom";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { Spacer } from "../elements/Spacer";
 import { GameboardsCards, GameboardsCardsProps, GameboardsTable, GameboardsTableProps } from "../elements/Gameboards";
 import classNames from "classnames";
 
@@ -63,7 +62,7 @@ const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, board
                 </Input>
             </Label>
         </Col>
-        <Col xs={3} sm={{size: 2, offset: 1}} md={2} lg={1}>
+        <Col xs={3} sm={{size: 2, offset: 1}} md={{size: 2, offset: 0}} lg={1}>
             <Label className="w-100 d-flex flex-column">
                 Filters
                 <Button color="secondary" className={classNames("gameboards-filter-dropdown", {"selected": showFilters})} 

@@ -48,17 +48,30 @@ interface HexagonGroupsButtonProps {
     id: string;
 }
 const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: HexagonGroupsButtonProps) =>
-    <button onClick={toggleAssignModal} id={id} className="board-subject-hexagon-container">
-        {generateGameboardSubjectHexagons(boardSubjects)}
-        <span className="groups-assigned" title={"Number of groups assigned"}>
-                <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>{" "}
-            group{(!assignees || assignees.length != 1) && "s"}
-            {isDefined(assignees) &&
-            <UncontrolledTooltip placement={"top"} target={"#" + id}>{assignees.length === 0 ?
-                "No groups have been assigned."
-                : (`${siteSpecific("Gameboard", "Quiz")} assigned to: ` + assignees.map(g => g.groupName).join(", "))}
-            </UncontrolledTooltip>}
-        </span>
+    // <div className="d-flex justify-content-center">
+    //     <div className="board-subject-hexagon-container justify-content-center">
+    //         {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCorrect === 100) ?
+    //             <span className="board-subject-hexagon subject-complete"/> :
+    //             <>
+    //                 {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
+    //                 <div className="board-percent-completed">{assignment.gameboard.percentageCorrect ?? 0}</div>
+    //             </>
+    //         )}
+    //     </div>
+    // </div>
+    <button onClick={toggleAssignModal} id={id} className="d-flex justify-content-center bg-white board-subject-hexagon-size">
+        <div className="board-subject-hexagon-container justify-content-center">
+            {generateGameboardSubjectHexagons(boardSubjects)}
+            <span className="groups-assigned" title={"Number of groups assigned"}>
+                    <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>{" "}
+                group{(!assignees || assignees.length != 1) && "s"}
+                {isDefined(assignees) &&
+                <UncontrolledTooltip placement={"top"} target={"#" + id}>{assignees.length === 0 ?
+                    "No groups have been assigned."
+                    : (`${siteSpecific("Gameboard", "Quiz")} assigned to: ` + assignees.map(g => g.groupName).join(", "))}
+                </UncontrolledTooltip>}
+            </span>
+        </div>
     </button>;
 
 interface InfoShapeProps {
@@ -233,13 +246,13 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                 {stagesAndDifficultiesTD}
                 {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
                 <td className="align-middle text-center">{formatDate(board.creationDate)}</td>
-                <td className={siteSpecific("", "align-middle text-center")}>
+                <td className={siteSpecific("align-content-center", "align-middle text-center")}>
                     {siteSpecific(
                         <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />,
                         <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
                     )}
                 </td>
-                <td className={siteSpecific("", "align-middle text-center")}>
+                <td className={siteSpecific("align-content-center", "align-middle text-center")}>
                     {siteSpecific(
                         <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />,
                         <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />

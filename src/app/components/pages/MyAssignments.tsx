@@ -69,7 +69,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                         {siteSpecific("Filter assignments", "Filter quizzes by name")} <Input type="text" onChange={(e) => setAssignmentTitleFilter(e.target.value)} placeholder={siteSpecific("Filter assignments by name", undefined)}/>
                                     </Label>
                                 </Col>
-                                <Col sm={6} md={4} lg={2} className="ms-lg-auto">
+                                <Col sm={6} md={4} lg={2} className="m-lg-auto">
                                     <Label className="w-100">
                                         Group
                                         <Input type="select" value={assignmentGroupFilter} onChange={e => setAssignmentGroupFilter(e.target.value)}>
