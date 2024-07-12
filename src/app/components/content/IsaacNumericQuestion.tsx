@@ -116,7 +116,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                 {!readonly && <>
                                     {siteSpecific(
                                         <Button type="button" className={classNames("numeric-help", {"py-0": isAda})} size="sm" id={helpTooltipId}>?</Button>,
-                                        <span id={helpTooltipId} className="icon-help-q my-auto"/>
+                                        <span id={helpTooltipId} className="icon-help-q my-auto ms-3"/>
                                     )}
                                     <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                                         Here are some examples of numbers you can write:<br /><br />
