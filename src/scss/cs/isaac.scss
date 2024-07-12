@@ -281,6 +281,7 @@ $border-color: $cs-black;
 $warning-bg-subtle: #fffef3;
 $warning-border-subtle: #fffeee;
 $toast-padding-x: 1.5rem;
+$border-color: $grey-300;
 
 // all Bootstrap !default overrides must appear before this; anything that uses the defaults must come after
 @import "~bootstrap/scss/variables"; 
