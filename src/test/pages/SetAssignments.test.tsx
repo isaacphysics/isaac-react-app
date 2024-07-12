@@ -10,7 +10,7 @@ import {rest} from "msw";
 
 const expectedPhysicsTopLinks = {
     "our books": null,
-    "our Boards for Lessons": "/pages/pre_made_gameboards",
+    "our Boards by Topic": "/pages/pre_made_gameboards",
     "create a gameboard": PATHS.GAMEBOARD_BUILDER
 };
 
