@@ -6,7 +6,7 @@ import {
 } from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
+import {AssignmentProgressDTO, ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
     extractTeacherName,
@@ -158,7 +158,7 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         return questions;
     }
 
-    function markClassesInternal(studentProgress: AppAssignmentProgress, correctParts: number, incorrectParts: number, totalParts: number) {
+    function markClassesInternal(studentProgress: AssignmentProgressDTO, correctParts: number, incorrectParts: number, totalParts: number) {
         if (!studentProgress.user.authorisedFullAccess) {
             return "revoked";
         } else if (correctParts === totalParts) {
@@ -174,17 +174,25 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         }
     }
 
-    function markClasses(studentProgress: AppAssignmentProgress) {
-        const correctParts = studentProgress.correctQuestionPartsCount;
-        const incorrectParts = studentProgress.incorrectQuestionPartsCount;
+    function markClasses(studentProgress: AssignmentProgressDTO) {
+        if (!studentProgress.user.authorisedFullAccess) {
+            return "revoked";
+        }
+
+        const correctParts = (studentProgress as AppAssignmentProgress).correctQuestionPartsCount;
+        const incorrectParts = (studentProgress as AppAssignmentProgress).incorrectQuestionPartsCount;
         const total = questions.reduce((acc, q) => acc + (q.questionPartsTotal ?? 0), 0);
 
         return markClassesInternal(studentProgress, correctParts, incorrectParts, total);
     }
 
-    function markQuestionClasses(studentProgress: AppAssignmentProgress, index: number) {
-        const correctParts = studentProgress.correctPartResults[index];
-        const incorrectParts = studentProgress.incorrectPartResults[index];
+    function markQuestionClasses(studentProgress: AssignmentProgressDTO, index: number) {
+        if (!studentProgress.user.authorisedFullAccess) {
+            return "revoked";
+        }
+
+        const correctParts = (studentProgress as AppAssignmentProgress).correctPartResults[index];
+        const incorrectParts = (studentProgress as AppAssignmentProgress).incorrectPartResults[index];
         const totalParts = questions[index].questionPartsTotal ?? 0;
 
         return markClassesInternal(studentProgress, correctParts, incorrectParts, totalParts);

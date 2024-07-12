@@ -35,6 +35,7 @@ import {
 } from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
+    AssignmentProgressDTO,
     GameboardItem,
     GameboardItemState,
     QuizAssignmentDTO,
@@ -74,8 +75,9 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     const questions = assignment.gameboard.contents;
 
-    const progressData = useMemo<[AppAssignmentProgress, boolean][]>(() => assignment.progress.map(p => {
+    const progressData = useMemo<[AssignmentProgressDTO, boolean][]>(() => assignment.progress.map(p => {
         if (!p.user.authorisedFullAccess) return [p, false];
+
         const initialState = {
             ...p,
             tickCount: 0,
@@ -83,6 +85,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
             incorrectQuestionPartsCount: 0,
             notAttemptedPartResults: []
         };
+
         const ret = p.results.reduce<AppAssignmentProgress>((oldP, results, i) => {
                 const tickCount = ["PASSED", "PERFECT"].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
                 const questions = assignment.gameboard.contents;
@@ -101,7 +104,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
     }), [assignment.gameboard.contents, assignment.progress, questions.length]);
 
     const progress = progressData.map(pd => pd[0]);
-    const noStudentsAttemptedAll = progress.reduce((sa, p) => sa + (p.notAttemptedPartResults.every(v => v === 0) ? 1 : 0), 0);
+    const noStudentsAttemptedAll = progress.reduce((sa, p) => sa + (p.user.authorisedFullAccess && (p as AppAssignmentProgress).notAttemptedPartResults.every(v => v === 0) ? 1 : 0), 0);
     
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     const [assignmentAverages, assignmentTotalQuestionParts] = useMemo<[number[], number]>(() => {
@@ -112,7 +115,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         }, [[] as number[], 0]) ?? [[], 0];
     }, [questions, progress]);
 
-    function markClassesInternal(studentProgress: AppAssignmentProgress, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
+    function markClassesInternal(studentProgress: AssignmentProgressDTO, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
         if (!studentProgress.user.authorisedFullAccess) {
             return "revoked";
         } else if (correctParts === totalParts) {
@@ -128,15 +131,24 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         }
     }
 
-    function markClasses(studentProgress: AppAssignmentProgress, totalParts: number) {
-        const correctParts = studentProgress.correctQuestionPartsCount;
-        const incorrectParts = studentProgress.incorrectQuestionPartsCount;
+    function markClasses(studentProgress: AssignmentProgressDTO, totalParts: number) {
+        if (!studentProgress.user.authorisedFullAccess) {
+            return "revoked";
+        }
+
+        const correctParts = (studentProgress as AppAssignmentProgress).correctQuestionPartsCount;
+        const incorrectParts = (studentProgress as AppAssignmentProgress).incorrectQuestionPartsCount;
         const status = null;
 
         return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }
 
-    function markQuestionClasses(studentProgress: AppAssignmentProgress, index: number) {
+    function markQuestionClasses(studentProgress: AssignmentProgressDTO, index: number) {
+        if (!studentProgress.user.authorisedFullAccess) {
+            return "revoked";
+        }
+
+
         const question = questions[index];
 
         const totalParts = question.questionPartsTotal;

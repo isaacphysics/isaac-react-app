@@ -7,6 +7,7 @@ import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
 import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation } from "../../../state";
 import { ProgressSortOrder, SortItemHeader } from "../SortableItemHeader";
+import { AssignmentProgressDTO } from "../../../../IsaacApiTypes";
 
 export const ICON = siteSpecific(
     {
@@ -42,14 +43,14 @@ export interface QuestionType {
 export interface ResultsTableProps<Q extends QuestionType> {
     assignmentId?: number;
     duedate?: Date;
-    progress?: AppAssignmentProgress[];
+    progress?: AssignmentProgressDTO[];
     questions: Q[];
     header: JSX.Element;
     getQuestionTitle: (question: Q) => JSX.Element;
     assignmentAverages: number[];
     assignmentTotalQuestionParts: number;
-    markClasses: (row: AppAssignmentProgress, assignmentTotalQuestionParts: number) => string;
-    markQuestionClasses: (row: AppAssignmentProgress, questionIndex: number) => string;
+    markClasses: (row: AssignmentProgressDTO, assignmentTotalQuestionParts: number) => string;
+    markQuestionClasses: (row: AssignmentProgressDTO, questionIndex: number) => string;
     isAssignment?: boolean;
 }
 
@@ -113,19 +114,21 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
     }
 
     const semiSortedProgress = useMemo(() => orderBy(progress, (item) => {
-        return item.user.authorisedFullAccess && -item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
+        return item.user.authorisedFullAccess && -(item as AppAssignmentProgress).notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
     }, [reverseOrder ? "desc" : "asc"]), [progress, reverseOrder]);
 
     const sortedProgress = useMemo(() => orderBy((semiSortedProgress), (item) => {
+        if (!item.user.authorisedFullAccess) return -1;
+        const authorisedItem = item as AppAssignmentProgress;
             switch (sortOrder) {
                 case "name":
-                    return (item.user.familyName + ", " + item.user.givenName).toLowerCase();
+                    return (authorisedItem.user.familyName + ", " + authorisedItem.user.givenName).toLowerCase();
                 case "totalQuestionPartPercentage":
-                    return -item.correctQuestionPartsCount;
+                    return -authorisedItem.correctQuestionPartsCount;
                 case "totalQuestionPercentage":
-                    return -item.tickCount;
+                    return -authorisedItem.tickCount;
                 default:
-                    return -item.correctPartResults[sortOrder];
+                    return -authorisedItem.correctPartResults[sortOrder];
             }
         }, [reverseOrder ? "desc" : "asc"])
     , [semiSortedProgress, reverseOrder, sortOrder]);
@@ -243,7 +246,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                                 </Button>
                                                 {!returningQuizToStudent && dropdownOpen?.[index] && <>
                                                     {(!duedate || duedate.valueOf() > TODAY().valueOf()) &&
-                                                        (studentProgress.completed) &&
+                                                        ((studentProgress as AppAssignmentProgress).completed) &&
                                                         <div className="py-2 px-3">
                                                             <Button size="sm" onClick={() => returnToStudent(studentProgress.user.id)}>Allow another attempt</Button>
                                                         </div>}
@@ -270,18 +273,18 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                 )}
                                 {isAssignment ? <>
                                     <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
+                                        {fullAccess ? formatMark((studentProgress as AppAssignmentProgress).correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
                                             pageSettings.formatAsPercentage) : ""}
                                     </th>
                                     <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark(studentProgress.tickCount,
+                                        {fullAccess ? formatMark((studentProgress as AppAssignmentProgress).tickCount,
                                             questions.length,
                                             pageSettings.formatAsPercentage) : ""}
                                     </th>
                                 </> : 
                                     <th className="total-column" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
+                                        {fullAccess ? formatMark((studentProgress as AppAssignmentProgress).correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
                                             pageSettings.formatAsPercentage) : ""}
                                     </th>

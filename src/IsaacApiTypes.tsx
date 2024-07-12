@@ -48,6 +48,13 @@ export interface AssignmentStatusDTO {
     errorMessage?: string;
 }
 
+export interface AssignmentProgressDTO { 
+    user: UserSummaryDTO;
+    correctPartResults: number[];
+    incorrectPartResults: number[];
+    results: GameboardItemState[];
+}
+
 export interface GameboardDTO extends HasTitleOrId {
     contents?: GameboardItem[];
     wildCard?: IsaacWildcard;
