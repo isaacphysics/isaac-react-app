@@ -48,55 +48,26 @@ export const HeaderCS = () => {
                     <Nav navbar className={"w-100"}>
                         <NavigationSection topLevelLink to="/" title={"Home"}/>
 
-                        <NavigationSection title="Learn">
+                        <NavigationSection title="Resources">
                             <LinkItem to="/topics">Topics</LinkItem>
-                            <LinkItem to={PATHS.QUESTION_FINDER}>Questions</LinkItem>
-                            {/* <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem> Hidden for Ada launch */}
+                            <LinkItem to={PATHS.QUESTION_FINDER}>Practice questions</LinkItem>
                             <LinkItem to="/glossary">Glossary</LinkItem>
-                            <LinkItem to="/pages/computer_science_stories">CS stories</LinkItem>
                             <LinkItem to={"/exam_specifications"}>Exam specifications</LinkItem>
                         </NavigationSection>
 
-                        {isTutorOrAbove(user) && <NavigationSection title="Teach">
-                            <LinkItem to="/groups">Groups</LinkItem>
-                            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Assignments</LinkItem>
-                            {isTeacherOrAbove(user) && <>
-                                <LinkItem to="/set_tests">Tests</LinkItem>
-                            </>}
-                            <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
-                            {isTeacherOrAbove(user) && <>
-                                <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
-                            </>}
-                        </NavigationSection>}
+                        <NavigationSection title="Students">
+                            <LinkItem to="/pages/student_challenges">Challenges</LinkItem>
+                            <LinkItem to="/support/student">Support</LinkItem>
+                        </NavigationSection>
 
-                        {isLoggedIn(user) && <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" />}</>}>
-                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
-                            <LinkItem to={PATHS.MY_GAMEBOARDS}>My quizzes</LinkItem>
-                            <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
-                            <LinkItem to="/progress">My progress</LinkItem>
-                            <LinkItem to="/account">My account</LinkItem>
-                            {/*<LinkItem to="/student_rewards">Student rewards</LinkItem>*/}
-                        </NavigationSection>}
-
-                        <NavigationSection title={"Events"}>
-                            <LinkItem to="/pages/teacher_mentoring_2024">Teacher mentoring</LinkItem>
-                            <LinkItem to="/pages/student_challenges">Student challenges</LinkItem>
+                        <NavigationSection title="Teachers">
+                            <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             <LinkItem to="/pages/online_courses">Online courses</LinkItem>
+                            <LinkItem to="/pages/teacher_mentoring_2024">Mentoring programme</LinkItem>
+                            <LinkItem to="/support/teacher">Support</LinkItem>
                         </NavigationSection>
 
-                        <NavigationSection title={"Help"}>
-                            <LinkItem to="/support/teacher">Teacher support</LinkItem>
-                            <LinkItem to="/support/student">Student support</LinkItem>
-                            <LinkItem to="/contact">Contact us</LinkItem>
-                        </NavigationSection>
-
-                        {(isStaff(user) || isEventLeader(user)) && <NavigationSection title="Admin">
-                            {isStaff(user) && <LinkItem to="/admin">Admin tools</LinkItem>}
-                            {isAdmin(user) && <LinkItem to="/admin/usermanager">User manager</LinkItem>}
-                            {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event admin</LinkItem>}
-                            {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
-                            {isStaff(user) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
-                        </NavigationSection>}
+                        <NavigationSection className={"text-center text-left-nav"} topLevelLink to="/contact" title={"Contact us"}/>
 
                         <div className={"navbar-separator d-nav-none d-block"}/>
 
@@ -105,7 +76,36 @@ export const HeaderCS = () => {
                                 <NavigationSection className={"ml-nav-auto text-center text-left-nav"} topLevelLink to="/register" title={"Sign up"}/>
                                 <NavigationSection className={"text-center text-left-nav"} topLevelLink to="/login" title={"Log in"}/>
                             </>
-                            : <NavigationSection className={"ml-nav-auto text-center text-left-nav"} topLevelLink to="/logout" title={"Log out"}/>
+                            :
+                            <>
+                                <div className={"ml-nav-auto"}></div>
+                                {(isStaff(user) || isEventLeader(user)) && <NavigationSection title="Admin">
+                                    {isStaff(user) && <LinkItem to="/admin">Admin tools</LinkItem>}
+                                    {isAdmin(user) && <LinkItem to="/admin/usermanager">User manager</LinkItem>}
+                                    {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event admin</LinkItem>}
+                                    {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
+                                    {isStaff(user) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
+                                </NavigationSection>}
+                                <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" />}</>}>
+                                    {isTeacherOrAbove(user) ?
+                                        <>
+                                            <LinkItem to="/groups">Teaching groups</LinkItem>
+                                            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Manage assignments</LinkItem>
+                                            <LinkItem to="/set_tests">Manage tests</LinkItem>
+                                            <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>My markbook</LinkItem>
+                                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>Work to do</LinkItem>
+                                        </>
+                                    :
+                                        <>
+                                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
+                                            <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
+                                            <LinkItem to="/progress">My progress</LinkItem>
+                                        </>
+                                    }
+                                    <LinkItem to="/account">My account</LinkItem>
+                                </NavigationSection>
+                                <NavigationSection className={"text-center text-left-nav"} topLevelLink to="/logout" title={"Log out"}/>
+                            </>
                         }
 
                         <div className={"navbar-separator d-nav-none d-block"}/>
