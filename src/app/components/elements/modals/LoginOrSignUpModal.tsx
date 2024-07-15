@@ -108,6 +108,6 @@ const LoginOrSignUpBody = () => {
 export const loginOrSignUpModal = {
     centered: true,
     noPadding: true,
-    closeAction: () => {store.dispatch(closeActiveModal())},
+    closeAction: () => {store.dispatch(closeActiveModal());},
     body: LoginOrSignUpBody
 };

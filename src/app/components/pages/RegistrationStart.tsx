@@ -13,9 +13,9 @@ export const RegistrationStart = () => {
     };
 
     const login = (event: React.MouseEvent) => {
-        event.preventDefault()
+        event.preventDefault();
         history.push("/login");
-    }
+    };
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
@@ -49,5 +49,5 @@ export const RegistrationStart = () => {
                 </Row>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};
