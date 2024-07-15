@@ -56,6 +56,7 @@ export const HeaderCS = () => {
                         </NavigationSection>
 
                         <NavigationSection title="Students">
+                            <LinkItem to="/pages/stem_smart_programme">STEM SMART</LinkItem>
                             <LinkItem to="/pages/student_challenges">Challenges</LinkItem>
                             <LinkItem to="/support/student">Support</LinkItem>
                         </NavigationSection>
