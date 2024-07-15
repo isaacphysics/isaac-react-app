@@ -40,11 +40,11 @@ interface UserContextRowProps {
 
 function UserContextRow({
     userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings,
-    tutorOrAbove, showPlusOption, userContexts, setUserContexts, index, required
+    tutorOrAbove, showPlusOption, userContexts, setUserContexts, index, required: _required
 }: UserContextRowProps) {
     const onlyUCWithThisStage = existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
 
-    const onStageUpdate = (e: any) => {
+    const onStageUpdate = (e: ChangeEvent<HTMLInputElement>) => {
         const stage = e.target.value as STAGE;
         if (!isAda) {
             setUserContext({...userContext, stage});
@@ -63,8 +63,8 @@ function UserContextRow({
         setUserContext({...userContext, stage, examBoard});
     };
 
-    const onExamBoardUpdate = (e: any) => {
-        const examBoard: EXAM_BOARD = e.target.value;
+    const onExamBoardUpdate = (e: ChangeEvent<HTMLInputElement>) => {
+        const examBoard: EXAM_BOARD = e.target.value as EXAM_BOARD;
         setUserContext({...userContext, examBoard: examBoard});
         if (e.target.value) {
             setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
@@ -120,7 +120,7 @@ function UserContextRow({
             <div className="remove-stage-container">
                 {tutorOrAbove && userContexts.length > 1 && <button
                     type="button" className="close float-none" aria-label="clear stage row"
-                    onClick={() => setUserContexts(userContexts.filter((uc, i) => i !== index))}
+                    onClick={() => setUserContexts(userContexts.filter((_uc, i) => i !== index))}
                 >
                     ×
                 </button>}

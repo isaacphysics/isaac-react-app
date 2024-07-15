@@ -78,14 +78,14 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     const errorMessage = extractErrorMessage(error);
 
     const register = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+        event.preventDefault();
         setAttemptedSignUp(true);
 
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && countryCodeIsValid &&
             ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
-            setAttemptedSignUp(true)
+            setAttemptedSignUp(true);
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(errorSlice.actions.clearError());
             dispatch(registerNewUser(registrationUser, {}, [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ADA}], null));
@@ -95,9 +95,9 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                             provider: "SEGUE"
                         }
                 }
-            )
+            );
         }
-    }
+    };
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
@@ -200,5 +200,5 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                 </Row>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};
