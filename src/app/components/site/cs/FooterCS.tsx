@@ -21,9 +21,9 @@ export const FooterCS = () => (
                     <Col xs={12} md={8} lg={"auto"}>
                         <ListGroupFooter />
                     </Col>
-                    <div className={"float-end ms-lg-auto"}>
+                    <Col className={"float-end ms-lg-auto"} lg={"auto"}>
                         <SocialLinksRow />
-                    </div>
+                    </Col>
                 </Row>
             </Container>
         </div>
