@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, {ChangeEvent, useEffect, useRef} from "react";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     EMPTY_BOOLEAN_NOTATION_RECORD,
@@ -20,6 +20,7 @@ import {v4 as uuid_v4} from "uuid";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
+import { isUndefined } from "lodash";
 
 interface UserContextRowProps {
     userContext: UserContext;
@@ -70,6 +71,16 @@ function UserContextRow({
         }
     };
 
+    useEffect(() => {
+        // Deliberately set default user context on Ada for users who have no context
+        if (isAda && (isUndefined(userContext.stage) || isUndefined(userContext.examBoard))) {
+            const stage = userContext.stage ?? STAGE.ALL;
+            const examBoard = userContext.examBoard ?? EXAM_BOARD.ADA;
+            setUserContext({stage, examBoard});
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [setUserContext]);
+
     return <React.Fragment>
         {/* Stage Selector */}
         <div className="d-flex flex-row justify-content-between">
@@ -80,7 +91,7 @@ function UserContextRow({
                 onChange={onStageUpdate}
                 value={userContext.stage}
             >
-                <option value=""/>
+                {isPhy && <option value="" className="d-none"/>}
                 {getFilteredStageOptions({
                     byUserContexts: existingUserContexts.filter(uc => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard)),
                     includeNullOptions: showNullStageOption, hideFurtherA: true
@@ -97,7 +108,6 @@ function UserContextRow({
                 onChange={onExamBoardUpdate}
                 value={userContext.examBoard}
             >
-                <option value="" />
                 {getFilteredExamBoardOptions({
                     byStages: [userContext.stage as STAGE || STAGE.ALL],
                     includeNullOptions: onlyUCWithThisStage,

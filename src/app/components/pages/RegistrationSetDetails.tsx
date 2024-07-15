@@ -14,11 +14,13 @@ import {
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
+    EXAM_BOARD,
     FIRST_LOGIN_STATE,
     history,
     KEY,
     persistence,
     SITE_TITLE,
+    STAGE,
     trackEvent,
     validateCountryCode,
     validateEmail,
@@ -86,7 +88,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             setAttemptedSignUp(true)
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(errorSlice.actions.clearError());
-            dispatch(registerNewUser(registrationUser, {}, undefined, null));
+            dispatch(registerNewUser(registrationUser, {}, [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ADA}], null));
             trackEvent("registration", {
                     props:
                         {

@@ -178,6 +178,7 @@ export function useUserContext(): UseUserContextReturnType {
 }
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
+    {label: "No Exam Board (Default)", value: EXAM_BOARD.ADA},
     {label: "AQA", value: EXAM_BOARD.AQA},
     {label: "CIE", value: EXAM_BOARD.CIE},
     {label: "EDEXCEL", value: EXAM_BOARD.EDEXCEL},
@@ -185,7 +186,6 @@ const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "WJEC", value: EXAM_BOARD.WJEC},
     {label: "SQA", value: EXAM_BOARD.SQA},
-    {label: "ADA", value: EXAM_BOARD.ADA},
     {label: "All Exam Boards", value: EXAM_BOARD.ALL},
 ];
 interface ExamBoardFilterOptions {
@@ -236,12 +236,14 @@ const _STAGE_ITEM_OPTIONS = siteSpecific([ /* best not to export - use getFilter
     {label: "University", value: STAGE.UNIVERSITY},
     {label: "All stages", value: STAGE.ALL},
 ], [
+    {label: "All Stages (Default)", value: STAGE.ALL},
     {label: "GCSE", value: STAGE.GCSE},
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "National 5", value: STAGE.SCOTLAND_NATIONAL_5},
     {label: "Higher", value: STAGE.SCOTLAND_HIGHER},
     {label: "Advanced Higher", value: STAGE.SCOTLAND_ADVANCED_HIGHER},
-    {label: "All stages", value: STAGE.ALL},
+    {label: "Core", value: STAGE.CORE},
+    {label: "Advanced", value: STAGE.ADVANCED},
 ]);
 interface StageFilterOptions {
     byUser?: Immutable<PotentialUser> | null;
