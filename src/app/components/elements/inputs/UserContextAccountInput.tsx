@@ -12,13 +12,11 @@ import {
     isTutorOrAbove,
     siteSpecific,
     STAGE,
-    TEACHER_REQUEST_ROUTE,
     validateUserContexts
 } from "../../../services";
 import {Button, Col, CustomInput, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
 import {UserContext} from "../../../../IsaacApiTypes";
 import {v4 as uuid_v4} from "uuid";
-import {Link} from "react-router-dom";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
@@ -55,7 +53,7 @@ function UserContextRow({
         const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
         const possibleExamBoards = getFilteredExamBoardOptions(
             {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
-            }) || [EXAM_BOARD.ALL];
+            }) || [EXAM_BOARD.ADA];
         const examBoard = possibleExamBoards.map(e => e.value).includes(userContext.examBoard as EXAM_BOARD) && userContext.examBoard || possibleExamBoards[0].value;
         setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
 
@@ -65,9 +63,10 @@ function UserContextRow({
     };
 
     const onExamBoardUpdate = (e: any) => {
-        setUserContext({...userContext, examBoard: e.target.value as EXAM_BOARD});
+        const examBoard: EXAM_BOARD = e.target.value;
+        setUserContext({...userContext, examBoard: examBoard});
         if (e.target.value) {
-            setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[e.target.value as EXAM_BOARD]]: true});
+            setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
         }
     };
 

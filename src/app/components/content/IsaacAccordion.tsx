@@ -104,6 +104,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
                     trustedTitle={section?.title || ""}
                     audienceString={stringifyAudience(section.audience, userContext)}
                     audienceStages={audienceStages}
+                    showAudienceString={!userContext.hasDefaultPreferences && isIntendedAudience(section.audience, userContext, user)}
                 >
                     <IsaacContent doc={section} />
                 </Accordion>;

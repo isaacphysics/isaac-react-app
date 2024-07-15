@@ -48,7 +48,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
             // Render remaining items
             .map((item, index) => {
                 const audienceString = stringifyAudience(item.audience, userContext);
-                const intendedAudience = isIntendedAudience(item.audience, userContext, user);
+                const showAudienceString = !userContext.hasDefaultPreferences && isIntendedAudience(item.audience, userContext, user);
 
                 let stagesSet: Set<Stage>;
                 if (!item.audience) {
@@ -59,15 +59,19 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                 }
                 const audienceStages = Array.from(stagesSet);
 
+                const badgeStyle = showAudienceString
+                    ? audienceStyle(audienceString)
+                    : audienceStages.includes(STAGE.CORE) ? "stage-label-core" : "stage-label-advanced";
+
                 return <RS.ListGroupItem key={item.id} className="topic-summary-link">
                     <RS.Button
                         tag={Link} to={{pathname: `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`, search}}
                         block color="link" className={"d-flex align-items-stretch " + classNames({"de-emphasised": item.deEmphasised})}
                     >
-                        <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
+                        <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[badgeStyle]: isAda})}>
                             {siteSpecific(
                             audienceString,
-                            intendedAudience
+                            showAudienceString
                                 ? (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
                                     {line}{i < arr.length && <br/>}
                                 </>)

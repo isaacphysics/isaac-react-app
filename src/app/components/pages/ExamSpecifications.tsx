@@ -36,8 +36,8 @@ export const ExamSpecifications = () => {
         [STAGE.SCOTLAND_NATIONAL_5]: "Discover our free National 5 computer science topics and questions. Learn or revise for your exams with us today.",
         [STAGE.SCOTLAND_HIGHER]: "Discover our free Higher computer science topics and questions. Learn or revise for your exams with us today.",
         [STAGE.SCOTLAND_ADVANCED_HIGHER]: "Discover our free Advanced Higher computer science topics and questions. Learn or revise for your exams with us today.",
-        [STAGE.CORE]: "Discover our free core computer science topics and questions. Learn or revise for you exams with us today.",
-        [STAGE.ADVANCED]: "Discover our free Advanced computer science topics and questions. Learn or revise for you exams with us today.",
+        [STAGE.CORE]: "Discover our free Core computer science topics and questions. Learn or revise for your exams with us today.",
+        [STAGE.ADVANCED]: "Discover our free Advanced computer science topics and questions. Learn or revise for your exams with us today.",
     })[stageTab];
         
     const examBoardTabs = STAGES_WITH_EXAM_SPECIFICATIONS.reduce((acc: {[stage: string]: React.JSX.Element}, stage) => ({

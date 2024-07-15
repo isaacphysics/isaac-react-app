@@ -36,11 +36,12 @@ interface AccordionsProps extends RouteComponentProps {
     disabled?: string | boolean;
     audienceString?: string;
     audienceStages?: Stage[];
+    showAudienceString?: boolean;
 }
 
 let nextClientId = 0;
 
-export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, audienceStages, location: {hash}}: AccordionsProps) => {
+export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, audienceStages, showAudienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useAppDispatch();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const page = useAppSelector((state: AppState) => (state && state.doc) || null);
@@ -149,6 +150,10 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     const isOpen = open && !disabled;
 
+    const badgeStyle = showAudienceString
+        ? audienceStyle(audienceString ?? "")
+        : audienceStages?.includes(STAGE.CORE) ? "stage-label-core" : "stage-label-advanced";
+
     return <div className="accordion">
         <div className="accordion-header">
             <RS.Button
@@ -175,14 +180,14 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 aria-expanded={isOpen ? "true" : "false"}
             >
                 {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center p-2 " +
-                    "justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
+                    "justify-content-center " + classNames({[badgeStyle]: isAda})}>
                     {siteSpecific(
                         audienceString,
-                        deEmphasised && audienceStages
-                            ? audienceStages.includes(STAGE.CORE) ? stageLabelMap[STAGE.CORE] : stageLabelMap[STAGE.ADVANCED]
-                            : (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
+                        showAudienceString
+                            ? (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
                                 {line}{i < arr.length && <br/>}
                             </>)
+                            : audienceStages?.includes(STAGE.CORE) ? stageLabelMap[STAGE.CORE] : stageLabelMap[STAGE.ADVANCED]
                     )}
                 </span>}
                 <div className="accordion-title pl-3">

@@ -39,6 +39,7 @@ export interface UseUserContextReturnType {
     preferredBooleanNotation?: BOOLEAN_NOTATION;
     explanation: {stage?: string, examBoard?: string};
     cookieConsent: InterstitialCookieState;
+    hasDefaultPreferences: boolean;
 }
 
 const urlMessage = "URL query parameters";
@@ -78,7 +79,7 @@ export function useUserContext(): UseUserContextReturnType {
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].stage) {
         stage = user.registeredContexts[0].stage as STAGE;
     } else {
-        stage = isAda ? STAGE.NONE : STAGE.ALL;
+        stage = STAGE.ALL;
     }
 
     // Exam Board
@@ -94,8 +95,11 @@ export function useUserContext(): UseUserContextReturnType {
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].examBoard) {
         examBoard = user.registeredContexts[0].examBoard as EXAM_BOARD;
     } else {
-        examBoard = isAda ? EXAM_BOARD.NONE : EXAM_BOARD.ALL;
+        examBoard = isAda ? EXAM_BOARD.ADA : EXAM_BOARD.ALL;
     }
+
+    // Whether stage and examboard are the default
+    const hasDefaultPreferences = isAda && stage === STAGE.ALL && examBoard === EXAM_BOARD.ADA;
 
     // Boolean notation preference -
     let preferredBooleanNotation: BOOLEAN_NOTATION | undefined;
@@ -169,7 +173,7 @@ export function useUserContext(): UseUserContextReturnType {
     return {
         stage, setStage, examBoard, setExamBoard, explanation,
         showOtherContent, preferredProgrammingLanguage, preferredBooleanNotation,
-        cookieConsent
+        cookieConsent, hasDefaultPreferences
     };
 }
 

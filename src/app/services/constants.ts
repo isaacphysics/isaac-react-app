@@ -289,9 +289,8 @@ export enum STAGE {
     CORE = "core",
     ADVANCED = "advanced",
     ALL = "all",
-    NONE = "none",
 }
-export const STAGE_NULL_OPTIONS = [STAGE.ALL, STAGE.NONE];
+export const STAGE_NULL_OPTIONS = [STAGE.ALL];
 export const STAGES_PHY = [STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY] as const;
 export const STAGES_CS = [STAGE.GCSE, STAGE.A_LEVEL, STAGE.SCOTLAND_NATIONAL_5, STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER, STAGE.CORE, STAGE.ADVANCED] as const;
 export const stagesOrdered: Stage[] = [...siteSpecific(STAGES_PHY, STAGES_CS), STAGE.ALL];
@@ -308,7 +307,6 @@ export const stageLabelMap: {[stage in Stage]: string} = {
     core: "Core",
     advanced: "Advanced",
     all: "All stages",
-    none: "No stage",
 };
 
 // EXAM BOARDS
@@ -322,7 +320,6 @@ export enum EXAM_BOARD {
     SQA = "sqa",
     ADA = "ada",
     ALL = "all",
-    NONE = "none",
 }
 export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.AQA]: "AQA",
@@ -334,7 +331,6 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.SQA]: "SQA",
     [EXAM_BOARD.ADA]: "Ada",
     [EXAM_BOARD.ALL]: "All exam boards",
-    [EXAM_BOARD.NONE]: "No exam board",
 };
 
 export const CS_EXAM_BOARDS_BY_STAGE: {[stage in typeof STAGES_CS[number]]: ExamBoard[]} = {
@@ -369,7 +365,6 @@ export const examBoardBooleanNotationMap: {[examBoard in ExamBoard]: BOOLEAN_NOT
     [EXAM_BOARD.SQA]: BOOLEAN_NOTATION.MATH,
     [EXAM_BOARD.ADA]: BOOLEAN_NOTATION.MATH,
     [EXAM_BOARD.ALL]: BOOLEAN_NOTATION.MATH,
-    [EXAM_BOARD.NONE]: BOOLEAN_NOTATION.MATH,
 };
 export const booleanNotationMap: {[notation: string]: string} = {
     [BOOLEAN_NOTATION.MATH]: "And (∧) Or (∨) Not (¬)",
