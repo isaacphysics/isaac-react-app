@@ -4,6 +4,8 @@
 .board-subject-hexagon-container {
   position: absolute;
   width: 63px;
+  left: -8px;
+  margin: auto;
 
   &.card-view {
     right: 45px;

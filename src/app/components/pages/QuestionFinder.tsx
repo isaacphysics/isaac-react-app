@@ -25,7 +25,7 @@ import {
     selectOnChange,
     siteSpecific,
     STAGE,
-    useUserContext,
+    useUserViewingContext,
     STAGE_NULL_OPTIONS,
     useQueryParams,
     arrayFromPossibleCsv,
@@ -51,6 +51,7 @@ import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 import classNames from "classnames";
 import queryString from "query-string";
 import { PageFragment } from "../elements/PageFragment";
+import {RenderNothing} from "../elements/RenderNothing";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -77,7 +78,7 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
 
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const params: {[key: string]: string | string[] | undefined} = useQueryParams(false);
     const history = useHistory();
     const eventLog = useRef<object[]>([]).current; // persist state but do not rerender on mutation
@@ -314,7 +315,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <TitleAndBreadcrumb currentPageTitle={"Question Finder"} help={pageHelp}/>
         <MetaDescription description={metaDescription}/>
         <CanonicalHrefElement/>
-        <PageFragment fragmentId={"question_finder_intro"}/>
+        <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
         <RS.Card id="finder-panel" className="mx-auto mt-4 mb-5">
             <RS.CardBody className={"px-2 py-3 p-sm-4 pb-5"}>
                 <RS.Row className={"mb-3"}>
@@ -401,10 +402,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     <RS.Form>
                         <RS.Col className="mt-4">
                             <div className="d-flex">
-                                <StyledCheckbox 
-                                    checked={revisionMode} 
+                                <StyledCheckbox
+                                    checked={revisionMode}
                                     onChange={() => {
-                                        setRevisionMode(r => !r); 
+                                        setRevisionMode(r => !r);
                                         debouncedRevisionModeUpdate();
                                     }}
                                     label={<p>Revision mode</p>}
@@ -415,7 +416,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 </RS.UncontrolledTooltip>
                             </div>
                             <div className="d-flex">
-                                <StyledCheckbox 
+                                <StyledCheckbox
                                     checked={hideCompleted}
                                     onChange={() => setHideCompleted(h => !h)}
                                     label={<p>Hide completed questions</p>}

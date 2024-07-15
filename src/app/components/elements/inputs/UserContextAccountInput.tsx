@@ -14,13 +14,14 @@ import {
     STAGE,
     validateUserContexts
 } from "../../../services";
-import {Button, Col, CustomInput, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
+import {Button, Col, FormGroup, Label, UncontrolledTooltip} from "reactstrap";
 import {UserContext} from "../../../../IsaacApiTypes";
 import {v4 as uuid_v4} from "uuid";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
 import { isUndefined } from "lodash";
+import { StyledCheckbox } from "./StyledCheckbox";
 
 interface UserContextRowProps {
     userContext: UserContext;
@@ -42,7 +43,7 @@ function UserContextRow({
     userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings,
     tutorOrAbove, showPlusOption, userContexts, setUserContexts, index, required: _required
 }: UserContextRowProps) {
-    const onlyUCWithThisStage = existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
+    const onlyUCWithThisStage = existingUserContexts.length === 0 || existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
 
     const onStageUpdate = (e: ChangeEvent<HTMLInputElement>) => {
         const stage = e.target.value as STAGE;
@@ -51,7 +52,7 @@ function UserContextRow({
             return;
         }
         // Set exam board to something sensible (for CS)
-        const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
+        const onlyOneAtThisStage = existingUserContexts.length === 0 || existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
         const possibleExamBoards = getFilteredExamBoardOptions(
             {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
             }) || [EXAM_BOARD.ADA];
@@ -118,8 +119,9 @@ function UserContextRow({
             </StyledDropdown>}
 
             <div className="remove-stage-container">
-                {tutorOrAbove && userContexts.length > 1 && <button
+                {tutorOrAbove && <button
                     type="button" className="close float-none" aria-label="clear stage row"
+                    disabled={userContexts.length <= 1}
                     onClick={() => setUserContexts(userContexts.filter((_uc, i) => i !== index))}
                 >
                     ×
@@ -148,14 +150,15 @@ interface UserContextAccountInputProps {
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     submissionAttempted: boolean;
     required?: boolean;
+    className?: string;
 }
 export function UserContextAccountInput({
-    user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted, required=true
+    user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted, required=true, className=""
 }: UserContextAccountInputProps) {
     const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
 
-    return <div>
+    return <div className={className}>
         <Label htmlFor="user-context-selector" className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}>
             {siteSpecific(
                 <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
@@ -185,7 +188,8 @@ export function UserContextAccountInput({
             </React.Fragment>
         )}
         <div id="user-context-selector" className={classNames({"d-flex flex-wrap": isPhy})}>
-            {userContexts.map((userContext, index) => {
+
+            {userContexts.length ? userContexts.map((userContext, index) => {
                 const showPlusOption = tutorOrAbove &&
                     index === userContexts.length - 1 &&
                     // at least one exam board for the potential stage
@@ -198,27 +202,36 @@ export function UserContextAccountInput({
                         existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
                         tutorOrAbove={tutorOrAbove} showPlusOption={showPlusOption} userContexts={userContexts} setUserContexts={setUserContexts}
                         index={index} required={required}
-                    />
-                    {isAda && index === userContexts.length - 1 && <>
-                        {tutorOrAbove &&
-                            <Col lg={6} className="p-0 pr-4 pr-lg-0">
-                                <Button color="primary" outline className="mt-3 mb-2 px-2 w-100"
-                                        onClick={() => setUserContexts([...userContexts, {}])}
-                                        disabled={!validateUserContexts(userContexts)}>
-                                    Add more content
-                                </Button>
-                            </Col>}
-                        {(userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <Label>
-                            <CustomInput
-                                type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block mt-1"
-                                checked={isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings?.HIDE_NON_AUDIENCE_CONTENT : true}
-                                onChange={e => setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: !e.target.checked}))}
-                            />
-                            <span>Show content that is not for my selected qualification(s).</span>
-                        </Label>}
-                    </>}
+                        />
                 </FormGroup>;
-            })}
+            }) : <FormGroup>
+                    <UserContextRow
+                        userContext={{stage: STAGE.ALL, examBoard: siteSpecific(undefined, EXAM_BOARD.ALL)}} showNullStageOption={true} submissionAttempted={submissionAttempted}
+                        // this component is replaced as soon as the user selects a stage, so this alternative setUserContext function is okay here, even if setting multiple
+                        setUserContext={newUc => setUserContexts([newUc])} existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation}
+                        setDisplaySettings={setDisplaySettings} tutorOrAbove={tutorOrAbove} showPlusOption={true} userContexts={userContexts} setUserContexts={setUserContexts}
+                        index={0} required={required}
+                    />
+                </FormGroup>
+            }
+            {isAda && <>
+                {tutorOrAbove &&
+                    <Col lg={6} className="p-0 pr-4 pr-lg-0">
+                        <Button color="primary" outline className="mb-3 px-2 w-100"
+                                onClick={() => setUserContexts([...userContexts, {}])}
+                                disabled={!validateUserContexts(userContexts)}>
+                            Add more content
+                        </Button>
+                    </Col>}
+                {(userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <Label>
+                    <StyledCheckbox
+                        id={`hide-content-check-${componentId}`}
+                        checked={isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings?.HIDE_NON_AUDIENCE_CONTENT : true}
+                        onChange={e => setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: !e.target.checked}))}
+                        label={<span>Show content that is not for my selected qualification(s)</span>}
+                    />
+                </Label>}
+            </>}
         </div>
     </div>;
 }

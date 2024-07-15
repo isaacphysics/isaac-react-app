@@ -14,7 +14,7 @@ import {
     siteSpecific,
     STAGE,
     stageLabelMap,
-    useDeviceSize
+    useDeviceSize,
 } from "../../services";
 import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";

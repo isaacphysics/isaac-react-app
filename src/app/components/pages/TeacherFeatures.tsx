@@ -103,7 +103,7 @@ export const TeacherFeatures = () => {
             />
             <IsaacCard doc={{ clickUrl: "/pages/pre_made_gameboards",
                 image: {src: "/assets/phy/icons/key_stage_sprite.svg#triple"},
-                title: "Boards for Lessons",
+                title: "Boards by Topic",
                 verticalContent: true,
                 subtitle: isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}}
                        imageClassName="teacher-features"

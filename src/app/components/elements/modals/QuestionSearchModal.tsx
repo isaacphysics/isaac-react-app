@@ -29,7 +29,7 @@ import {
     SortOrder,
     sortQuestions,
     STAGE,
-    useUserContext
+    useUserViewingContext
 } from "../../../services";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -56,7 +56,7 @@ interface QuestionSearchModalProps {
 export const QuestionSearchModal = (
     {currentQuestions, undoStack, redoStack, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
 
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
     const [searchQuestionName, setSearchQuestionName] = useState("");

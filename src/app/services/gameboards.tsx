@@ -25,7 +25,8 @@ export enum BoardCompletions {
     "any" = "Any",
     "notStarted" = "Not Started",
     "inProgress" = "In Progress",
-    "completed" = "Completed"
+    "allAttempted" = "All Attempted",
+    "allCorrect" = "All Correct"
 }
 
 export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
@@ -39,11 +40,13 @@ export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
 }
 
 export function boardCompletionSelection(board: GameboardDTO, boardCompletion: BoardCompletions) {
-    if (boardCompletion == BoardCompletions.notStarted && (board.percentageCompleted == 0 || !board.percentageCompleted)) {
+    if (boardCompletion == BoardCompletions.notStarted && (board.percentageAttempted == 0 || !board.percentageAttempted)) {
         return true;
-    } else if (boardCompletion == BoardCompletions.completed && board.percentageCompleted && board.percentageCompleted == 100) {
+    } else if (boardCompletion == BoardCompletions.allAttempted && board.percentageAttempted && board.percentageAttempted == 100) {
         return true;
-    } else if (boardCompletion == BoardCompletions.inProgress && board.percentageCompleted && board.percentageCompleted != 100 && board.percentageCompleted != 0) {
+    } else if (boardCompletion == BoardCompletions.allCorrect && board.percentageCorrect && board.percentageCorrect == 100) {
+        return true;
+    } else if (boardCompletion == BoardCompletions.inProgress && board.percentageAttempted && board.percentageAttempted != 100 && board.percentageAttempted != 0) {
         return true;
     } else return boardCompletion == BoardCompletions.any;
 }
@@ -208,15 +211,18 @@ export const BOARD_ORDER_NAMES: {[key in BoardOrder]: string} = {
     "-visited": "Date Visited Descending",
     "title": "Title Ascending",
     "-title": "Title Descending",
-    "completion": "Completion Ascending",
-    "-completion": "Completion Descending"
+    "attempted": "Attempted Ascending",
+    "-attempted": "Attempted Descending",
+    "correct": "Correctness Ascending",
+    "-correct": "Correctness Descending"
 };
 
 const BOARD_SORT_FUNCTIONS = {
     [BoardOrder.visited]: (b: GameboardDTO) => b.lastVisited?.valueOf(),
     [BoardOrder.created]: (b: GameboardDTO) => b.creationDate?.valueOf(),
     [BoardOrder.title]: (b: GameboardDTO) => b.title,
-    [BoardOrder.completion]: (b: GameboardDTO) => b.percentageCompleted,
+    [BoardOrder.attempted]: (b: GameboardDTO) => b.percentageAttempted,
+    [BoardOrder.correct]: (b: GameboardDTO) => b.percentageCorrect
 };
 
 const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: BoardLimit) =>
@@ -299,9 +305,9 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
             return boards;
         }
         const boardOrderNegative = boardOrder.at(0) == "-";
-        const boardOrderKind = (boardOrderNegative ? boardOrder.slice(1) : boardOrder) as "created" | "visited" | "completion" | "title";
+        const boardOrderKind = (boardOrderNegative ? boardOrder.slice(1) : boardOrder) as "created" | "visited" | "attempted" | "correct" | "title";
         const orderedBoards = sortBy(boards?.boards, BOARD_SORT_FUNCTIONS[boardOrderKind]);
-        if (["visited", "created", "-completion", "-title"].includes(boardOrder)) orderedBoards.reverse();
+        if (["visited", "created", "-attempted", "-correct", "-title"].includes(boardOrder)) orderedBoards.reverse();
         return {
             totalResults: boards?.totalResults ?? 0,
             boards: orderedBoards

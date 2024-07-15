@@ -58,7 +58,8 @@ export interface GameboardDTO extends HasTitleOrId {
     ownerUserInformation?: UserSummaryDTO;
     tags?: string[];
     creationMethod?: GameboardCreationMethod;
-    percentageCompleted?: number;
+    percentageAttempted?: number;
+    percentageCorrect?: number;
     lastVisited?: Date;
     startedQuestion?: boolean;
     savedToCurrentUser?: boolean;
@@ -117,6 +118,9 @@ export interface IsaacFeaturedProfileDTO extends ContentDTO {
 }
 
 export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
+}
+
+export interface IsaacLLMFreeTextQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
@@ -325,6 +329,14 @@ export interface InlineRegionValidationResponseDTO extends QuestionValidationRes
     partsTotal?: number;
 }
 
+export interface LLMFreeTextQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
+    markCalculationInstructions?: string;
+    additionalMarkingInstructions?: string;
+    maxMarks?: number;
+    marksAwarded?: number;
+    markBreakdown?: LLMFreeTextMarkSchemeEntryDTO[];
+}
+
 export interface UserGroupDTO {
     id?: number;
     groupName?: string;
@@ -481,6 +493,12 @@ export interface ItemDTO extends ContentDTO {
     altText?: string;
 }
 
+export interface LLMFreeTextMarkSchemeEntryDTO {
+    jsonField: string;
+    shortDescription: string;
+    marks: number;
+}
+
 export interface ParsonsItemDTO extends ItemDTO {
     indentation?: number;
 }
@@ -515,6 +533,10 @@ export interface SeguePageDTO extends ContentDTO {
 export interface StringChoiceDTO extends ChoiceDTO {
     caseInsensitive?: boolean;
 }
+
+export interface LLMFreeTextChoiceDTO extends ChoiceDTO {
+}
+
 
 export interface VideoDTO extends MediaDTO {
 }

@@ -1,5 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {renderTestEnvironment, followHeaderNavLink} from "../utils";
+import {renderTestEnvironment, followHeaderNavLink} from "../testUtils";
 import {
     mockActiveGroups,
     mockArchivedGroups,

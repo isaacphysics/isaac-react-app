@@ -4,7 +4,8 @@ import {
     registerQuestions,
     selectors,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useCanAttemptQuestionTypeQuery
 } from "../../state";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
@@ -31,6 +32,8 @@ import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
 import { Spacer } from "../elements/Spacer";
+import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
+import { LLMFreeTextQuestionRemainingAttemptsView } from "../elements/LLMFreeTextQuestionRemainingAttemptsView";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -39,12 +42,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
+    const canAttemptQuestionType = useCanAttemptQuestionTypeQuery(doc.type as string);
     const currentAttempt = questionPart?.currentAttempt;
     const validationResponse = questionPart?.validationResponse;
     const validationResponseTags = validationResponse?.explanation?.tags;
     const correct = validationResponse?.correct || false;
     const locked = questionPart?.locked;
-    const canSubmit = questionPart?.canSubmit && !locked || false;
+    const canSubmit = canAttemptQuestionType.isSuccess && questionPart?.canSubmit && !locked || false;
     const sigFigsError = isPhy && validationResponseTags?.includes("sig_figs");
     const tooManySigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_many");
     const tooFewSigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_few");
@@ -80,7 +84,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatFeeback = <p>
         Your answer is not in a format we recognise, please enter your answer as a decimal number.<br/>
         {invalidFormatErrorStdForm && <>When writing standard form, you must include <code>^</code> or <code>**</code> between the 10 and the exponent.<br/></>}
-        {isPhy && <>For help, see our <a target="_blank" href="/solving_problems#units">guide to answering numeric questions</a></>}.
+        {isPhy && <>For help, see our <a target="_blank" href="/solving_problems#units">guide to answering numeric questions</a>.</>}
     </p>;
 
     // Register Question Part in Redux
@@ -104,6 +108,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     // FastTrack buttons should only show up if on a FastTrack-enabled board
     const isFastTrack = fastTrackInfo.isFastTrackPage && currentGameboard?.id && fastTrackProgressEnabledBoards.includes(currentGameboard.id);
 
+    // Free text question
+    const isLLMFreeTextQuestion = doc.type === "isaacLLMFreeTextQuestion";
+
     // Inline questions
     const inlineContext = useContext(InlineContext);
     const isInlineQuestion = doc.type === "isaacInlineRegion" && inlineContext;
@@ -114,11 +121,14 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const almost = !correct && numCorrectInlineQuestions && numCorrectInlineQuestions > 0;
 
     // Determine Action Buttons
-    const primaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) :
-        doc.type === "isaacInlineRegion" ? {disabled: !canSubmit, value: "Check my answer", type: "submit", onClick: () => { 
+    const isLongRunningQuestionType = isLLMFreeTextQuestion;
+    const submitButtonLabel = isLongRunningQuestionType && questionPart?.loading ? "Marking your answer…" : "Check my answer";
+    const primaryAction =
+        isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) :
+        isInlineQuestion ? {disabled: !canSubmit, value: submitButtonLabel, type: "submit", onClick: () => { 
             submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts);
-    }} :
-        {disabled: !canSubmit, value: "Check my answer", type: "submit"};
+        }} :
+        /* else ? */ {disabled: !canSubmit, value: submitButtonLabel, type: "submit"};
 
     const secondaryAction = isFastTrack ?
         determineFastTrackSecondaryAction(fastTrackInfo) :
@@ -130,7 +140,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     return <ConfidenceContext.Provider value={{recordConfidence}}>
         <RS.Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
-            submitCurrentAttempt(questionPart, doc.id as string, currentGameboard, currentUser, dispatch);
+            submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
             setHasSubmitted(true);
         }}>
             <div className={
@@ -139,6 +149,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     doc.type,
                     {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)}
                 )}>
+                
+                {isLLMFreeTextQuestion && <LLMFreeTextQuestionRemainingAttemptsView canAttemptQuestionType={canAttemptQuestionType} />}
+
                 <Suspense fallback={<Loading/>}>
                     <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
                 </Suspense>
@@ -162,7 +175,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {isAda && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
 
                 {/* Validation Response */}
-                {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && <div
+                {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && !isLLMFreeTextQuestion && <div
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
                     {/*eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex*/}
@@ -177,19 +190,17 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 ? <>
                             <span>You can view feedback for a specific box by either selecting it above, or by using the control panel below.</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
-                                <div className={`w-100 mt-2 d-flex feedback-panel-header`}>
+                                <div className={`w-100 mt-2 d-flex feedback-panel-header justify-content-around`}>
                                     <RS.Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
                                     }}>
                                         {below["xs"](deviceSize) ? "◀" : "Previous" }
                                     </RS.Button>
-                                    <Spacer/>
                                     <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
                                         inlineContext.feedbackIndex && inlineContext.setFocusSelection(true);
                                     }}>
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
                                     </RS.Button>
-                                    <Spacer/>
                                     <RS.Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
                                     }}>
@@ -241,5 +252,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 </div>}
             </div>
         </RS.Form>
+
+        {/* LLM free-text question validation response */}
+        {isLLMFreeTextQuestion && showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit &&
+            <LLMFreeTextQuestionFeedbackView validationResponse={validationResponse} />
+        }
     </ConfidenceContext.Provider>;
 });

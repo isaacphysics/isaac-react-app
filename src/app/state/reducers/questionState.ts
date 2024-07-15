@@ -11,13 +11,13 @@ export const question = (question: AppQuestionDTO, action: Action) => {
                 return {...question, currentAttempt: action.attempt, canSubmit: true, validationResponse: undefined};
             }
         case ACTION_TYPE.QUESTION_ATTEMPT_REQUEST:
-            return {...question, canSubmit: false};
+            return {...question, loading: true, canSubmit: false};
         case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
             return (!question.bestAttempt || !question.bestAttempt.correct) ?
-                {...question, validationResponse: action.response, bestAttempt: action.response} :
-                {...question, validationResponse: action.response};
+                {...question, loading: false, validationResponse: action.response, bestAttempt: action.response} :
+                {...question, loading: false, validationResponse: action.response};
         case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE:
-            return {...question, locked: action.lock, canSubmit: true};
+            return {...question, loading: false, locked: action.lock, canSubmit: true};
         case ACTION_TYPE.QUESTION_UNLOCK:
             return {...question, locked: undefined};
         default:

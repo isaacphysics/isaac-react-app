@@ -1,17 +1,14 @@
 import {
-    BOOLEAN_NOTATION,
     comparatorFromOrderedValues,
     CS_EXAM_BOARDS_BY_STAGE,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
-    examBoardBooleanNotationMap,
     examBoardLabelMap,
     history,
     isAda,
     isDefined,
     isLoggedIn,
     isPhy,
-    PROGRAMMING_LANGUAGE,
     roleRequirements,
     siteSpecific,
     STAGE,
@@ -20,10 +17,10 @@ import {
     STAGES_CS,
     stagesOrdered,
     useQueryParams,
-} from "./";
+} from ".";
 import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext} from "../../IsaacApiTypes";
 import {useParams} from "react-router-dom";
-import {AppState, InterstitialCookieState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
+import {AppState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {useContext, useEffect} from "react";
@@ -35,25 +32,19 @@ export interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
     setExamBoard: (stage: EXAM_BOARD) => void;
     showOtherContent?: boolean;
-    preferredProgrammingLanguage?: PROGRAMMING_LANGUAGE;
-    preferredBooleanNotation?: BOOLEAN_NOTATION;
     explanation: {stage?: string, examBoard?: string};
-    cookieConsent: InterstitialCookieState;
     hasDefaultPreferences: boolean;
 }
 
 const urlMessage = "URL query parameters";
 const gameboardMessage = `${siteSpecific("gameboard", "quiz")} settings`;
 
-export function useUserContext(): UseUserContextReturnType {
+export function useUserViewingContext(): UseUserContextReturnType {
     const dispatch = useAppDispatch();
     const queryParams = useQueryParams(true);
 
     const user = useAppSelector((state: AppState) => state && state.user);
-    const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} =
-        useAppSelector((state: AppState) => state?.userPreferences) || {};
-
-    const cookieConsent = useAppSelector((state: AppState) => state?.cookieConsent ?? null);
+    const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
 
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext) || {};
 
@@ -61,12 +52,6 @@ export function useUserContext(): UseUserContextReturnType {
     const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));
 
     const explanation: UseUserContextReturnType["explanation"] = {};
-
-    // Programming Language
-    let preferredProgrammingLanguage;
-    if (programmingLanguage) {
-        preferredProgrammingLanguage = Object.values(PROGRAMMING_LANGUAGE).find(key => programmingLanguage[key] === true);
-    }
 
     // Stage
     let stage: STAGE;
@@ -100,16 +85,6 @@ export function useUserContext(): UseUserContextReturnType {
 
     // Whether stage and examboard are the default
     const hasDefaultPreferences = isAda && stage === STAGE.ALL && examBoard === EXAM_BOARD.ADA;
-
-    // Boolean notation preference -
-    let preferredBooleanNotation: BOOLEAN_NOTATION | undefined;
-    if (booleanNotation) {
-        preferredBooleanNotation = Object.values(BOOLEAN_NOTATION).find(key => booleanNotation[key] === true);
-    }
-    // if we don't have a boolean notation preference for the user, then set it based on the exam board
-    if (preferredBooleanNotation === undefined) {
-        preferredBooleanNotation = examBoardBooleanNotationMap[examBoard];
-    }
 
     // Gameboard views overrides all context options
     const currentGameboard = useContext(GameboardContext);
@@ -170,11 +145,7 @@ export function useUserContext(): UseUserContextReturnType {
         }
     }, [stage, examBoard]);
 
-    return {
-        stage, setStage, examBoard, setExamBoard, explanation,
-        showOtherContent, preferredProgrammingLanguage, preferredBooleanNotation,
-        cookieConsent, hasDefaultPreferences
-    };
+    return { stage, setStage, examBoard, setExamBoard, explanation, showOtherContent, hasDefaultPreferences };
 }
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */

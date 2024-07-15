@@ -16,7 +16,7 @@ import {
     TAG_LEVEL,
     tags,
     useDeviceSize,
-    useUserContext
+    useUserViewingContext
 } from "../../../services";
 import {Link} from "react-router-dom";
 import React, {useRef} from "react";
@@ -30,7 +30,7 @@ import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
     const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
     const hash = item.hash;
