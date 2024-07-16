@@ -51,18 +51,4 @@
       border-radius: 0 10px 10px 0;
     }
   }
-
-  .styled-dropdown-caret::after, .date-input-wrapper::after {
-    content: "";
-    position: absolute;
-    top: calc(50% - 4px);
-    right: 12px;
-    z-index: 2;
-    height: 8px;
-    width: 12px;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-image: url('/assets/common/icons/chevron_down.svg');
-    pointer-events: none;
-  }
 }
