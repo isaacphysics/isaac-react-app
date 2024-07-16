@@ -44,8 +44,8 @@
 
 .date-input {
   min-width: 280px;
-  
-  select.form-control {
+
+  select.form-select {
     padding: 0.5rem;
     .board-card & {
       padding: 0.15rem;
@@ -79,7 +79,7 @@ input {
 }
 
 select {
-  &.form-control {
+  &.form-select {
     border: solid 1px $black;
     height: 48px;
     padding: 0 1.2em;
@@ -202,7 +202,7 @@ input[type=date]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-select.form-control, input.form-control {
+select.form-select, input.form-control {
   height: calc(1.5em + 0.75rem + 2px);
 }
 
