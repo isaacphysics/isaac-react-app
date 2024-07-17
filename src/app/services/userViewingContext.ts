@@ -425,12 +425,16 @@ export function audienceStyle(audienceString: string): string {
             return "stage-label-higher";
         case stageLabelMap.scotland_advanced_higher:
             return "stage-label-advanced-higher";
+        case stageLabelMap.core:
+            return "stage-label-core";
+        case stageLabelMap.advanced:
+            return "stage-label-advanced";
         default:
             return "stage-label-all";
     }
 }
 
-export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType): string {
+export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType, intendedAudience: boolean): string {
     let stagesSet: Set<Stage>;
     if (!audience) {
         stagesSet = new Set<Stage>([STAGE.ALL]);
@@ -440,10 +444,8 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     }
     // order stages
     const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
-    // if you are one of the options - only show that option
     const stagesFilteredByUserContext = audienceStages.filter(s => userContext.stage === s);
-    const stagesToView = stagesFilteredByUserContext.length > 0 ? stagesFilteredByUserContext : audienceStages;
-    // If common, could find substrings and report ranges i.e, GCSE to University
+    let stagesToView: Stage[] = [];
 
     if (isAda) {
         // Ada currently (subject to change) want to show the stages as 3 groups:
@@ -452,6 +454,14 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
         // - Advanced Higher
         // with intra-group separation by commas, inter-group separation by newlines
 
+        const defaultStage = audienceStages.includes(STAGE.CORE) ? [STAGE.CORE] : [STAGE.ADVANCED];
+        stagesToView = userContext.hasDefaultPreferences || !intendedAudience
+            ? defaultStage
+            : stagesFilteredByUserContext.length > 0
+                ? stagesFilteredByUserContext
+                // only show Core and Advanced intentionally
+                : audienceStages.filter(s => ![STAGE.CORE, STAGE.ADVANCED].includes(s as STAGE));
+
         const result = stagesToView.reduce((acc, label) => {
             if ([STAGE.GCSE, STAGE.A_LEVEL].includes(label as STAGE)) {
                 acc[0].push(label);
@@ -459,9 +469,11 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
                 acc[1].push(label);
             } else if ([STAGE.SCOTLAND_ADVANCED_HIGHER].includes(label as STAGE)) {
                 acc[2].push(label);
+            } else if ([STAGE.CORE, STAGE.ADVANCED].includes(label as STAGE)) {
+                acc[3].push(label);
             }
             return acc;
-        }, [[], [], []] as Stage[][]);
+        }, [[], [], [], []] as Stage[][]);
 
         // FIXME: use result.findLastIndex when supported
         // const lastNonEmptyIndex = result.findLastIndex((labels) => labels.length > 0);
@@ -477,6 +489,8 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
         }, "");
     }
 
+    // if you are one of the options - only show that option
+    stagesToView = stagesFilteredByUserContext.length > 0 ? stagesFilteredByUserContext : audienceStages;
     return stagesToView.map(stage => stageLabelMap[stage]).join(" & ");
 }
 

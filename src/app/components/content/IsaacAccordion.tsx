@@ -1,10 +1,9 @@
 import React from "react";
-import {ContentDTO, Stage} from "../../../IsaacApiTypes";
+import {ContentDTO} from "../../../IsaacApiTypes";
 import {Accordion} from "../elements/Accordion";
 import {IsaacContent} from "./IsaacContent";
 import {
     DOCUMENT_TYPE,
-    STAGE,
     isAda,
     isFound,
     isIntendedAudience,
@@ -89,22 +88,12 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             .filter(section => !section.hidden)
 
             .map((section , index) => {
-                let stagesSet: Set<Stage>;
-                if (!section.audience) {
-                    stagesSet = new Set<Stage>([STAGE.ALL]);
-                } else {
-                    stagesSet = new Set<Stage>();
-                    section.audience.forEach(audienceRecord => audienceRecord.stage?.forEach(stage => stagesSet.add(stage)));
-                }
-                const audienceStages = Array.from(stagesSet);
-
+                const intendedAudience = isIntendedAudience(section.audience, userContext, user);
                 return <Accordion
                     key={`${section.sectionIndex} ${index}`} id={section.id} index={index}
                     startOpen={section.startOpen} deEmphasised={section.deEmphasised}
                     trustedTitle={section?.title || ""}
-                    audienceString={stringifyAudience(section.audience, userContext)}
-                    audienceStages={audienceStages}
-                    showAudienceString={!userContext.hasDefaultPreferences && isIntendedAudience(section.audience, userContext, user)}
+                    audienceString={stringifyAudience(section.audience, userContext, intendedAudience)}
                 >
                     <IsaacContent doc={section} />
                 </Accordion>;
