@@ -264,6 +264,10 @@ $failed-bg-size: 25%;
 .assignment-progress-gameboard .gameboard-title {
   display: flex;
   border: 0px;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .assignment-progress-gameboard .gameboard-header > *:first-child:before {
