@@ -126,7 +126,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                             </RS.Col>
                             <RS.Col sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)}>
                                 <RS.Form className="form-inline search-filters">
-                                    <RS.Row className="w-100 align-items-center justify-content-end m-0">
+                                    <div className="w-100 align-items-center justify-content-end m-0 d-flex">
                                         <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block me-1">
                                             {`Filter${siteSpecific("","s")}:`}
                                         </RS.Label>
@@ -146,8 +146,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                                 styles={selectStyle}
                                             />
                                         </div>
-
-                                    </RS.Row>
+                                    </div>
 
                                     <UserContextPicker />
                                 </RS.Form>
