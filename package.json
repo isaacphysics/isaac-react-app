@@ -201,5 +201,8 @@
   },
   "msw": {
     "workerDirectory": "public"
+  },
+  "resolutions": {
+    "headers-polyfill": "3.2.5"
   }
 }
