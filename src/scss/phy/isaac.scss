@@ -33,11 +33,6 @@ $inequality-background: darken($inequality-primary, 20%);
 $inequality-item-colour: white;
 $inequality-item-font-colour: black;
 
-// Grid Customisation
-$container-max-widths: (
-    md: 942px
-);
-
 //Greys
 $gray-103: #f8f8f8;
 $gray-107: #ececec;
@@ -109,11 +104,10 @@ $grid-breakpoints: (
 );
 
 $container-max-widths: (
-  sm: 540px,
-  md: 720px,
-  lg: 960px,
-  xl: 1140px,
-//   xxl: 1320px, // for large screens we keep the single-column layout and only expand the margin, so we don't use a larger container
+    md: 942px,
+    lg: 942px,
+    xl: 942px,
+    xxl: 942px,
 );
 
 $spacer: 1rem !default;
