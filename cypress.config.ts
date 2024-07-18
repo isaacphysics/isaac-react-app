@@ -15,6 +15,15 @@ export default defineConfig({
     supportFile: `cypress/support/component-${SITE_STRING}.tsx`,
     setupNodeEvents(on, config) {
       initPlugin(on, config);
+      on('before:browser:launch', (browser, launchOptions) => {
+        if (browser.family === 'chromium') {
+          // Disable smooth scrolling, which can interfere with screenshots
+          launchOptions.args.push('--force-color-profile=srgb');
+          launchOptions.args.push('--disable-low-res-tiling');
+          launchOptions.args.push('--disable-smooth-scrolling');
+        }
+        return launchOptions;
+      });
     }
   },
   env: {
