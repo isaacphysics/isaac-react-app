@@ -95,7 +95,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
     const compareCreationDates = (a: AssignedGroup, b: AssignedGroup) => _compareDates(a?.assignment?.creationDate, b?.assignment?.creationDate);
     const compareStartDates = (a: AssignedGroup, b: AssignedGroup) => _compareDates(a?.assignment?.scheduledStartDate ?? a?.assignment?.creationDate, b?.assignment?.scheduledStartDate ?? b?.assignment?.creationDate);
     const compareDueDates = (a: AssignedGroup, b: AssignedGroup) => _compareDates(a?.assignment?.dueDate, b?.assignment?.dueDate);
-    
+
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const [isExpanded, setIsExpanded] = useState(false);
@@ -106,7 +106,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [selectedQuiz, setSelectedQuiz] = useState<QuizAssignmentDTO | undefined>(undefined);
     const [_updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
-    
+
     if (assignedGroups.length === 0) return <></>;
 
     const setSort = (sort: (a: AssignedGroup, b: AssignedGroup) => number) => {
@@ -126,7 +126,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
         <span className={classNames("up", {"active": active && !reverseSort})} >▲</span>
         <span className={classNames("down", {"active": active && reverseSort})}>▼</span>
     </div>;
-    
+
     // assignedGroups[n].assignment is the same for all n *with the exception of the quizId*.
     const assignment = assignedGroups[0].assignment;
     const quizTitle = (assignment.quizSummary?.title || assignment.quizId);
@@ -148,7 +148,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
         above["sm"](deviceSize) ? {title: "Start date", sort: compareStartDates} : undefined,
         {title: "Due date", sort: compareDueDates}
     ].filter(isDefined);
-    
+
     return <>
         {selectedQuiz && selectedQuiz.dueDate && <ExtendDueDateModal
             isOpen={isModalOpen}
@@ -156,12 +156,12 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
             currDueDate={selectedQuiz.dueDate}
             numericQuizAssignmentId={selectedQuiz.id as number}
         />}
-        <tr className={`bg-white set-quiz-table-dropdown p-0 border-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0} 
-            onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))} 
+        <tr className={`bg-white set-quiz-table-dropdown p-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0}
+            onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))}
         >
             {isPhy && <td className="p-0">
                 <div id={"group-hex-" + index} className="board-subject-hexagon-container">
-                    <div className={`board-subject-hexagon ${subjects} d-flex justify-content-center align-items-center`}>    
+                    <div className={`board-subject-hexagon ${subjects} d-flex justify-content-center align-items-center`}>
                         <span className="set-quiz-table-group-hex" title={"Number of groups assigned"}>
                             <strong>{assignedGroups.length}</strong>
                             group{(!assignedGroups || assignedGroups.length != 1) && "s"}
@@ -222,7 +222,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                             <td className="text-center text-break">{assignedGroup.group}</td>
                             {above["md"](deviceSize) ? <td className="text-center">{formatDate(assignedGroup.assignment.creationDate)}</td> : <></>}
                             <td className="text-center">{formatDate(assignedGroup.assignment.scheduledStartDate ?? assignedGroup.assignment.creationDate)}</td>
-                            {above["sm"](deviceSize) ? 
+                            {above["sm"](deviceSize) ?
                                 <td className="text-center">
                                     {assignedGroup.assignment.dueDate ? <>
                                         <span>{formatDate(assignedGroup.assignment.dueDate)}</span>
@@ -292,7 +292,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     const [quizDueDateFilterType, setQuizDueDateFilterType] = useState('before');
     const [quizStartDate, setQuizStartDate] = useState<Date | undefined>(undefined);
     const [quizDueDate, setQuizDueDate] = useState<Date | undefined>(undefined);
-    
+
     const pageTitle= siteSpecific("Set / Manage Tests", "Manage tests");
     const pageHelp = <span>
         Use this page to manage and set tests to your groups. You can assign any test the {siteSpecific("Isaac", "Ada")} team have built.
@@ -403,7 +403,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                 </RS.DropdownItem>
                                             </Link>
                                         </RS.DropdownMenu>
-                                </RS.UncontrolledButtonDropdown> 
+                                </RS.UncontrolledButtonDropdown>
                                 <div className="d-none d-md-flex align-items-center">
                                     <Link className="my-3 me-2 ps-3 pe-4 quiz-list-separator" to={{pathname: `/test/preview/${quiz.id}`}}>
                                         <span>Preview</span>
@@ -495,7 +495,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                     </colgroup>
                                     <tbody>
                                         {quizAssignment.map((g, i) => <QuizAssignment key={g.assignedGroups?.[0].assignment.id ?? 0} user={g.user} assignedGroups={g.assignedGroups} index={i} />)}
-                                    </tbody>    
+                                    </tbody>
                                 </RS.Table>}
                             </>;
                         }}

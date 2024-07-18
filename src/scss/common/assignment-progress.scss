@@ -343,6 +343,7 @@ $failed-bg-size: 25%;
   z-index: 10;
   &.btn.disabled {
     opacity: 0.5;
+    border: 1px solid $gray-118;
   }
 }
 

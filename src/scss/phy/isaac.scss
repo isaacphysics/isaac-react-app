@@ -90,10 +90,13 @@ $border-color: black;
 // Node module imports
 @import "~bootstrap/scss/functions";
 
-$table-border-color: $gray-118;
-
 // all Bootstrap !default overrides must appear before this; anything that uses the defaults must come after
 @import "~bootstrap/scss/variables"; 
+
+// borders
+$table-border-color: $gray-107;
+$table-bg: #0000; // This gets in the way of our colouring
+$border-color: #dee2e6;
 
 $grid-breakpoints: (
   xs: 0,
@@ -134,6 +137,7 @@ $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to ge
 // Atoms
 @import "fonts";
 @import "typography";
+@import "table";
 @import "../common/headings";
 @import "../common/modals";
 @import "forms";
