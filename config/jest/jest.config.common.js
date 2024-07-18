@@ -22,7 +22,7 @@ module.exports = {
         '^.+\\.[jt]sx?$': "<rootDir>config/jest/tsTransform.js",
     },
     "transformIgnorePatterns": [
-        "/node_modules/(?!@popperjs|katex)",
+        "/node_modules/(?!@popperjs|katex|leaflet)",
         "^.+\\.module\\.(css|sass|scss)$"
     ],
     "moduleNameMapper": {
