@@ -115,6 +115,40 @@ $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to ge
     6: ($spacer * 6.25) // 100px-ish
 ));
 
+// Theme colours
+$custom-colors: (
+    physics: $phy_purple,
+    maths: $phy_maths,
+    chemistry: $phy_chemistry,
+    biology: $phy_biology,
+);
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+@import "~bootstrap/scss/bootstrap-utilities"; 
+
+$custom-colors-text: (
+    physics: $phy_purple,
+    maths: $phy_maths,
+    chemistry: $phy_chemistry,
+    biology: $phy_biology,
+);
+$custom-colors-bg-subtle: (
+    physics: tint-color($phy_purple, 80%),
+    maths: tint-color($phy_maths, 80%),
+    chemistry: tint-color($phy_chemistry, 80%),
+    biology: tint-color($phy_biology, 80%),
+);
+$custom-colors-border-subtle: (
+    physics: tint-color($phy_purple, 60%),
+    maths: tint-color($phy_maths, 60%),
+    chemistry: tint-color($phy_chemistry, 60%),
+    biology: tint-color($phy_biology, 60%),
+);
+
+$theme-colors-text: map-merge($theme-colors-text, $custom-colors-text);
+$theme-colors-bg-subtle: map-merge($theme-colors-bg-subtle, $custom-colors-bg-subtle);
+$theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colors-border-subtle);
+
 // all Bootstrap overrides must appear before this
 @import "~bootstrap/scss/bootstrap"; 
 @import "~katex/dist/katex.min.css";

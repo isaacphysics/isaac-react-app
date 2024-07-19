@@ -27,7 +27,7 @@
   }
 }
 
-@mixin apply-subject-classes($color) {
+@mixin apply-subject-classes($color, $subject) {
   /* background classes */
   @include bg-variant(".bg-secondary", $color);
   
@@ -119,6 +119,8 @@
   }
 
   .alert-secondary {
+    @extend .alert-#{$subject};
+    color: $dark; // override font colour to improve on default contrast
   }
 
   li {
@@ -140,18 +142,18 @@
 
 // FIXME: This is not nice at all, but does fix subject and email prefs!
 #account-page, #registration-page, #login-page {
-  @include apply-subject-classes($a11y_green);
+  @include apply-subject-classes($a11y_green, "secondary");
 }
 
 div.physics {
-  @include apply-subject-classes($phy_physics);
+  @include apply-subject-classes($phy_physics, "physics");
 }
 div.maths {
-  @include apply-subject-classes($phy_maths);
+  @include apply-subject-classes($phy_maths, "maths");
 }
 div.chemistry {
-  @include apply-subject-classes($phy_chemistry);
+  @include apply-subject-classes($phy_chemistry, "chemistry");
 }
 div.biology {
-  @include apply-subject-classes($phy_biology);
+  @include apply-subject-classes($phy_biology, "biology");
 }
