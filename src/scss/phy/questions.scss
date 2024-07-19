@@ -60,14 +60,14 @@
   // Make sure the banner does not overflow on reorder questions on Phy
   div:not(.expansion-layout) > .validation-response-panel {
     &.correct {
-      margin-left: -1.25rem;
-      margin-right: -1.25rem;
+      margin-left: -1rem;
+      margin-right: -1rem;
       margin-bottom: -2.75rem;
       padding-left: 1.5rem !important;
       padding-right: 1.5rem !important;
       @include media-breakpoint-up(md) {
-        margin-left: -4.25rem;
-        margin-right: -4.25rem;
+        margin-left: -4rem;
+        margin-right: -4rem;
       }
     }
   }
