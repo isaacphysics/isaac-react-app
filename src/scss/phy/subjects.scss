@@ -71,8 +71,8 @@
   // text-emphasis-color: $color;
 
   /* badge classes */
-  .badge-secondary {
-    // TODO
+  .text-bg-secondary {
+    @extend .text-bg-#{$subject};
   }
 
   /* borders */
