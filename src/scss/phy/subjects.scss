@@ -60,6 +60,9 @@
   /* btn classes */
   .btn-secondary {
     @include button-variant($color, $color);
+    &:not(:disabled):not(.disabled):active {
+      background-color: darken($color, 4);
+    }
   }
 
   //.btn-outline-primary {
