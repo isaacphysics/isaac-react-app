@@ -34,14 +34,14 @@ export const OnlineCourses = () => {
         <TitleAndBreadcrumb currentPageTitle={"Online courses"} />
         <MetaDescription description={metaDescription} />
         <PageFragment fragmentId={"online_courses_help"} />
-        {allCourses.length === 0 ? 
+        {allCourses.length === 0 ?
             <ShowLoadingQuery
                 query={onlineCourseQuery}
                 thenRender={() => <div className={"w-100 text-start"}><h4>No courses to display...</h4></div>}
                 defaultErrorTitle={"Error fetching online courses"}
-            /> : 
+            /> :
             <>
-                <Row className={classNames("d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-between my-3")}>
+                <Row className="d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 justify-content-between my-3">
                     {allCourses.map(n => <NewsCard key={n.id} newsItem={n} className="ratio-5x3" showTitle />)}
                 </Row>
                 <div className="w-100 d-flex justify-content-center mb-5">
