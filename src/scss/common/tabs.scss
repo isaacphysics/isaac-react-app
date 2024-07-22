@@ -118,7 +118,7 @@
   position: relative;
 
   .expand-button {
-    @include border-top-left-radius(4px);
+    border-top-left-radius: 4px;
     visibility: hidden;
     position: absolute;
     right: 1px;

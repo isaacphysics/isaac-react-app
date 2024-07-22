@@ -25,10 +25,6 @@ $focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 //Colours
 $primary: $a11y_green;
 $secondary: $a11y_green;
-$theme-colors: (
-    "primary": $primary, // Primary is always green.
-    "secondary": $secondary // Secondary gets overridden by the subject colour when a parent includes a subject class.
-);
 
 // Inequality colours
 $inequality-primary: $primary;
@@ -36,11 +32,6 @@ $inequality-stroke: darken($inequality-primary, 10%);
 $inequality-background: darken($inequality-primary, 20%);
 $inequality-item-colour: white;
 $inequality-item-font-colour: black;
-
-// Grid Customisation
-$container-max-widths: (
-    md: 942px
-);
 
 //Greys
 $gray-103: #f8f8f8;
@@ -87,9 +78,76 @@ $question-padding: 3rem;
 $question-font-size: 1.25rem;
 $question-font-weight: 600;
 
+// forms
+$border-color: black;
+
 // ISAAC
 // Node module imports
-@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/functions";
+
+// all Bootstrap !default overrides must appear before this; anything that uses the defaults must come after
+@import "~bootstrap/scss/variables"; 
+
+// borders
+$table-border-color: $gray-107;
+$table-bg: #0000; // This gets in the way of our colouring
+$border-color: #dee2e6;
+
+// Grid Customisation
+$container-max-widths: (
+    md: 942px
+);
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  // xxl: 1400px // we don't need xxl
+);
+
+$spacer: 1rem !default;
+$spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
+    6: ($spacer * 6.25) // 100px-ish
+));
+
+// Theme colours
+$custom-colors: (
+    physics: $phy_purple,
+    maths: $phy_maths,
+    chemistry: $phy_chemistry,
+    biology: $phy_biology,
+);
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+@import "~bootstrap/scss/bootstrap-utilities"; 
+
+$custom-colors-text: (
+    physics: $phy_purple,
+    maths: $phy_maths,
+    chemistry: $phy_chemistry,
+    biology: $phy_biology,
+);
+$custom-colors-bg-subtle: (
+    physics: tint-color($phy_purple, 80%),
+    maths: tint-color($phy_maths, 80%),
+    chemistry: tint-color($phy_chemistry, 80%),
+    biology: tint-color($phy_biology, 80%),
+);
+$custom-colors-border-subtle: (
+    physics: tint-color($phy_purple, 60%),
+    maths: tint-color($phy_maths, 60%),
+    chemistry: tint-color($phy_chemistry, 60%),
+    biology: tint-color($phy_biology, 60%),
+);
+
+$theme-colors-text: map-merge($theme-colors-text, $custom-colors-text);
+$theme-colors-bg-subtle: map-merge($theme-colors-bg-subtle, $custom-colors-bg-subtle);
+$theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colors-border-subtle);
+
+// all Bootstrap overrides must appear before this
+@import "~bootstrap/scss/bootstrap"; 
 @import "~katex/dist/katex.min.css";
 @import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 @import "~billboard.js/dist/theme/insight.css";
@@ -99,10 +157,12 @@ $question-font-weight: 600;
 
 // Utility
 @import "../common/mixins";
+@import "../common/_utils";
 
 // Atoms
 @import "fonts";
 @import "typography";
+@import "table";
 @import "../common/headings";
 @import "../common/modals";
 @import "forms";

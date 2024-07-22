@@ -5,11 +5,11 @@ import {
     CardBody,
     Col,
     Container,
-    CustomInput,
     Form,
     FormFeedback,
     FormGroup,
     Input,
+    Label,
     Row,
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -103,7 +103,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             <CardBody>
                 {errorMessage &&
                     <ExigentAlert color={"warning"}>
-                        <p className="alert-heading font-weight-bold">Unable to create your account</p>
+                        <p className="alert-heading fw-bold">Unable to create your account</p>
                         <p>{errorMessage}</p>
                     </ExigentAlert>
                 }
@@ -170,19 +170,19 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 required={false}
                             />
                             <hr />
-                            <FormGroup className="my-4">
-                                <CustomInput
+                            <FormGroup className="form-group my-4">
+                                <Input
                                     id="tos-confirmation"
                                     name="tos-confirmation"
                                     type="checkbox"
-                                    label={<div>I accept the <a href="/terms" target="_blank">terms of use</a></div>}
                                     onChange={(e) => setTosAccepted(e?.target.checked)}
                                     invalid={attemptedSignUp && !tosAccepted}
                                 >
                                     <FormFeedback>
                                         You must accept the terms to continue.
                                     </FormFeedback>
-                                </CustomInput>
+                                </Input>
+                                <Label for="tos-confirmation" className="ms-2">I accept the <a href="/terms" target="_blank">terms of use</a></Label>
                             </FormGroup>
                             <hr />
                             <Row>

@@ -58,7 +58,7 @@ export const BookModalBody = () => {
     return <Row className={"pb-2 justify-content-center"}>
         {isaacBooks.map((book: BookInfo) => <Col className="mb-3" lg={3} sm={6}>
             <Link className={"text-center w-100"} onClick={() => dispatch(closeActiveModal())} to={book.path}>
-                <img className="ml-auto mr-auto book-cover-small" src={book.image} alt="" />
+                <img className="ms-auto me-auto book-cover-small" src={book.image} alt="" />
                 <span>{book.title}</span>
             </Link>
         </Col>)}

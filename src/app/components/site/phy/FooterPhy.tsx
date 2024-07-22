@@ -6,7 +6,7 @@ import {SocialLinksRow} from "../../elements/list-groups/SocialLinks";
 
 const ExternalLink = ({href, children}: {href: string; children: any}) => (
     // eslint-disable-next-line react/jsx-no-target-blank
-    <a href={href} target="_blank" rel="noopener" className="d-inline font-weight-bold">
+    <a href={href} target="_blank" rel="noopener" className="d-inline fw-bold">
         {children}
     </a>
 );

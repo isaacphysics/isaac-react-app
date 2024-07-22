@@ -13,7 +13,6 @@ import {
     FormFeedback,
     Input,
     InputGroup,
-    InputGroupAddon,
     Label,
     Nav,
     NavItem,
@@ -115,9 +114,9 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                 {member.authorisedFullAccess ?
                     <Link to={`/progress/${member.groupMembershipInformation.userId}`}
                           className={"align-text-top d-flex align-items-stretch"}>
-                        <span className="pl-1">{member.givenName} {member.familyName}</span>
+                        <span className="ps-1">{member.givenName} {member.familyName}</span>
                     </Link> :
-                    <span className="not-authorised"><span className="pl-1 struck-out">{member.givenName} {member.familyName}</span> (Not Sharing)</span>
+                    <span className="not-authorised"><span className="ps-1 struck-out">{member.givenName} {member.familyName}</span> (Not Sharing)</span>
                 }
             </div>
             <div>
@@ -131,7 +130,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                     <Tooltip tipText="This user has not yet verified their email." className="icon-email-status unverified" />
                 }
                 {member.groupMembershipInformation && member.groupMembershipInformation.status == "INACTIVE" &&
-                    <Tooltip className="ml-1" tipText="This user has set their status to inactive for this group. This means they will no longer see new assignments.">(inactive in group)</Tooltip>
+                    <Tooltip className="ms-1" tipText="This user has set their status to inactive for this group. This means they will no longer see new assignments.">(inactive in group)</Tooltip>
                 }
             </div>
         </div>
@@ -154,7 +153,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                 </UncontrolledButtonDropdown>
             </> : <>
                 {isTeacherOrAbove(user) && <>
-                    <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-right d-none d-sm-block">
+                    <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-end d-none d-sm-block">
                         <Button color="link" size="sm" className="mx-2" onClick={resetPassword}
                                 disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
                             {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
@@ -162,7 +161,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                     </Tooltip>
                 </>}
                 {userHasAdditionalGroupPrivileges &&
-                    <Tooltip tipText="Remove this user from the group." className="text-right d-none d-sm-block">
+                    <Tooltip tipText="Remove this user from the group." className="text-end d-none d-sm-block">
                         <Button color="link" size="sm" className="mx-2" onClick={confirmDeleteMember} aria-label="Remove member">
                             Remove
                         </Button>
@@ -258,7 +257,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
             {isAda && <hr/>}
             <Row>
                 <Col xs={12} sm={canArchive ? 8 : 12}>
-                    <Form inline onSubmit={saveUpdatedGroup}>
+                    <Form className="form-inline" onSubmit={saveUpdatedGroup}>
                         <InputGroup className="w-100 separate-input-group">
                             <Input
                                 innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
@@ -266,16 +265,14 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                 invalid={isGroupNameInvalid}
                                 valid={isGroupNameValid}
                             />
-                            {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
-                                <Button
+                            {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <Button
                                     color={siteSpecific("secondary", "primary")}
                                     className={classNames("py-0", {"px-0 border-dark": isPhy})} disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
                                     onClick={saveUpdatedGroup}
                                     size="sm"
                                 >
                                     {group ? "Update" : "Create"}
-                                </Button>
-                            </InputGroupAddon>}
+                                </Button>}
                             <FormFeedback>A{existingGroupWithConflictingName?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
                         </InputGroup>
                     </Form>
@@ -287,7 +284,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                 </Col>}
             </Row>
             <Row className="pt-1 mb-3">
-                <Col className="text-right text-muted">
+                <Col className="text-end text-muted">
                     *Group name is shared with students
                 </Col>
             </Row>
@@ -296,7 +293,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                     <Col xs={12} sm={"auto"}>
                         <h4 className={isAda ? "py-1" : ""}>Group managers</h4>
                     </Col>
-                    {isTeacherOrAbove(user) && <Col xs={12} sm={"auto"} className={"mt-1 mt-sm-0 ml-auto"}>
+                    {isTeacherOrAbove(user) && <Col xs={12} sm={"auto"} className={"mt-1 mt-sm-0 ms-auto"}>
                         {/* Only teachers and above can add group managers */}
                         <Button outline={isAda} className="w-100 w-sm-auto d-inline-block text-nowrap" size="sm" color={siteSpecific("tertiary", "secondary")} onClick={() => dispatch(showGroupManagersModal({group, user}))}>
                             {isUserGroupOwner
@@ -338,7 +335,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                     <Col xs={12} sm={"auto"}>
                                         <h4 className={isAda ? "py-1" : ""}>Group members</h4>
                                     </Col>
-                                    <Col xs={canEmailUsers ? 6 : 12} sm={"auto"} className={classNames("ml-auto", {"pr-1": canEmailUsers})}>
+                                    <Col xs={canEmailUsers ? 6 : 12} sm={"auto"} className={classNames("ms-auto", {"pe-1": canEmailUsers})}>
                                         <Button
                                             size="sm" className={"d-inline-block text-nowrap w-100 w-sm-auto"}
                                             color={siteSpecific("primary", "secondary")}
@@ -347,7 +344,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                             Invite users
                                         </Button>
                                     </Col>
-                                    {isStaff(user) && usersInGroup.length > 0 && <Col xs={6} sm={"auto"} className={"pl-1"}>
+                                    {isStaff(user) && usersInGroup.length > 0 && <Col xs={6} sm={"auto"} className={"ps-1"}>
                                         <Button
                                             size="sm" className={"d-inline-block text-nowrap w-100 w-sm-auto"}
                                             color={siteSpecific("primary", "secondary")}
@@ -365,14 +362,14 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                                 onChange={toggleSelfRemoval}
                                                 checked={!!group.selfRemoval}
                                             />
-                                            <Label for="self-removal" className="d-inline-block mr-2">Allow students to remove themselves from this group</Label>
+                                            <Label for="self-removal" className="d-inline-block me-2">Allow students to remove themselves from this group</Label>
                                         </div>
                                     </Col>
                                 </Row>
                                 <div>
                                     There are {group.members.length} users in this group {" "}
                                     {bigGroup && !isExpanded &&
-                                        <ButtonDropdown className="float-right" toggle={() => setExpanded(true)}>
+                                        <ButtonDropdown className="float-end" toggle={() => setExpanded(true)}>
                                             <DropdownToggle caret>Show</DropdownToggle>
                                         </ButtonDropdown>
                                     }
@@ -418,7 +415,7 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
 
     return <Row className={className}>
         <Col size={12} className={siteSpecific("mt-2", "")}>
-            <h6 className={siteSpecific("", "font-weight-semi-bold")}>Create New Group</h6>
+            <h6 className={siteSpecific("", "fw-semi-bold")}>Create New Group</h6>
         </Col>
         <Col size={12} className="mb-2">
             <Form>
@@ -552,8 +549,8 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                 }}>Create new group</Button>
                             </div>
                             <hr/>
-                            <div className="text-left mt-3">
-                                <strong className={"mr-2"}>Groups:</strong>
+                            <div className="text-start mt-3">
+                                <strong className={"me-2"}>Groups:</strong>
                                 <UncontrolledButtonDropdown size="sm">
                                     <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={"sm"}>
                                         {sortOrder}
@@ -582,13 +579,13 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                     ? sortedGroups.map((g: AppGroup) =>
                                         <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                             <div className="d-flex justify-content-between align-items-center group-name-buttons">
-                                                <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link text-left" data-testid={"select-group"} className="px-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
+                                                <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
                                                     {g.groupName}
                                                 </Button>
                                                 {showArchived &&
                                                     <button
                                                         onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
-                                                        aria-label="Delete group" className="bin-icon ml-1" title={"Delete group"}
+                                                        aria-label="Delete group" className="bin-icon ms-1" title={"Delete group"}
                                                     >
                                                     </button>
                                                 }

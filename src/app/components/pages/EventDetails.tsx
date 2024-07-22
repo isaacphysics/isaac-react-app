@@ -251,7 +251,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                             {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
                                             {event.userBookingStatus === "WAITING_LIST" && <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
                                             {event.isStudentOnly && !studentOnlyRestrictionSatisfied &&
-                                                <div className="text-muted font-weight-normal">
+                                                <div className="text-muted fw-normal">
                                                     {studentOnlyEventMessage(eventId)}
                                                 </div>
                                                 }

@@ -95,7 +95,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
     const compareCreationDates = (a: AssignedGroup, b: AssignedGroup) => _compareDates(a?.assignment?.creationDate, b?.assignment?.creationDate);
     const compareStartDates = (a: AssignedGroup, b: AssignedGroup) => _compareDates(a?.assignment?.scheduledStartDate ?? a?.assignment?.creationDate, b?.assignment?.scheduledStartDate ?? b?.assignment?.creationDate);
     const compareDueDates = (a: AssignedGroup, b: AssignedGroup) => _compareDates(a?.assignment?.dueDate, b?.assignment?.dueDate);
-    
+
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const [isExpanded, setIsExpanded] = useState(false);
@@ -106,7 +106,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [selectedQuiz, setSelectedQuiz] = useState<QuizAssignmentDTO | undefined>(undefined);
     const [_updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
-    
+
     if (assignedGroups.length === 0) return <></>;
 
     const setSort = (sort: (a: AssignedGroup, b: AssignedGroup) => number) => {
@@ -126,7 +126,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
         <span className={classNames("up", {"active": active && !reverseSort})} >▲</span>
         <span className={classNames("down", {"active": active && reverseSort})}>▼</span>
     </div>;
-    
+
     // assignedGroups[n].assignment is the same for all n *with the exception of the quizId*.
     const assignment = assignedGroups[0].assignment;
     const quizTitle = (assignment.quizSummary?.title || assignment.quizId);
@@ -148,7 +148,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
         above["sm"](deviceSize) ? {title: "Start date", sort: compareStartDates} : undefined,
         {title: "Due date", sort: compareDueDates}
     ].filter(isDefined);
-    
+
     return <>
         {selectedQuiz && selectedQuiz.dueDate && <ExtendDueDateModal
             isOpen={isModalOpen}
@@ -156,12 +156,12 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
             currDueDate={selectedQuiz.dueDate}
             numericQuizAssignmentId={selectedQuiz.id as number}
         />}
-        <tr className={`bg-white set-quiz-table-dropdown p-0 border-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0} 
-            onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))} 
+        <tr className={`bg-white set-quiz-table-dropdown p-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0}
+            onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))}
         >
             {isPhy && <td className="p-0">
                 <div id={"group-hex-" + index} className="board-subject-hexagon-container">
-                    <div className={`board-subject-hexagon ${subjects} d-flex justify-content-center align-items-center`}>    
+                    <div className={`board-subject-hexagon ${subjects} d-flex justify-content-center align-items-center`}>
                         <span className="set-quiz-table-group-hex" title={"Number of groups assigned"}>
                             <strong>{assignedGroups.length}</strong>
                             group{(!assignedGroups || assignedGroups.length != 1) && "s"}
@@ -181,8 +181,8 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                     : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
                 </RS.UncontrolledTooltip>
             </td>}
-            <td className={classNames("set-quiz-table-title align-middle ", {"pl-4": isAda})}>{quizTitle}</td>
-            <td className="align-middle pr-0 d-none d-sm-table-cell">
+            <td className={classNames("set-quiz-table-title align-middle ", {"ps-4": isAda})}>{quizTitle}</td>
+            <td className="align-middle pe-0 d-none d-sm-table-cell">
                 <RS.Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
                     onClick={(e) => {
                         assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
@@ -222,7 +222,7 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                             <td className="text-center text-break">{assignedGroup.group}</td>
                             {above["md"](deviceSize) ? <td className="text-center">{formatDate(assignedGroup.assignment.creationDate)}</td> : <></>}
                             <td className="text-center">{formatDate(assignedGroup.assignment.scheduledStartDate ?? assignedGroup.assignment.creationDate)}</td>
-                            {above["sm"](deviceSize) ? 
+                            {above["sm"](deviceSize) ?
                                 <td className="text-center">
                                     {assignedGroup.assignment.dueDate ? <>
                                         <span>{formatDate(assignedGroup.assignment.dueDate)}</span>
@@ -230,13 +230,13 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                                 </td> :
                                 <></>
                             }
-                            <td className={isPhy ? "text-right" : "text-center"}>
+                            <td className={isPhy ? "text-end" : "text-center"}>
                                 <RS.Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className={`px-1 bg-transparent text-center ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`}>
                                     View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
                                 </RS.Button>
                             </td>
 
-                            <td className={isPhy ? "text-left" : "text-center"}>
+                            <td className={isPhy ? "text-start" : "text-center"}>
                                 <RS.UncontrolledButtonDropdown>
                                     <RS.DropdownToggle caret className={`text-nowrap ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`} size="sm" color="link">
                                         More
@@ -292,7 +292,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     const [quizDueDateFilterType, setQuizDueDateFilterType] = useState('before');
     const [quizStartDate, setQuizStartDate] = useState<Date | undefined>(undefined);
     const [quizDueDate, setQuizDueDate] = useState<Date | undefined>(undefined);
-    
+
     const pageTitle= siteSpecific("Set / Manage Tests", "Manage tests");
     const pageHelp = <span>
         Use this page to manage and set tests to your groups. You can assign any test the {siteSpecific("Isaac", "Ada")} team have built.
@@ -303,8 +303,8 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     // If the user is event admin or above, and the quiz is hidden from teachers, then show that
     // Otherwise, show if the quiz is visible to students
     const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
-        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ml-2">hidden from teachers</div>}
-        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ml-2">visible to students</div>}
+        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
+        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
     </>;
 
     const rowFiltersView = above["md"](deviceSize);
@@ -379,7 +379,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                             {filteredQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                 <div className="d-flex flex-grow-1 flex-row align-items-center p-3">
                                     <div className="d-flex flex-column">
-                                        <span className="mb-2 mb-sm-0 pr-2">{quiz.title}</span>
+                                        <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
                                         {roleVisibilitySummary(quiz)}
                                     </div>
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
@@ -403,9 +403,9 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                                 </RS.DropdownItem>
                                             </Link>
                                         </RS.DropdownMenu>
-                                </RS.UncontrolledButtonDropdown> 
+                                </RS.UncontrolledButtonDropdown>
                                 <div className="d-none d-md-flex align-items-center">
-                                    <Link className="my-3 mr-2 pl-3 pr-4 quiz-list-separator" to={{pathname: `/test/preview/${quiz.id}`}}>
+                                    <Link className="my-3 me-2 ps-3 pe-4 quiz-list-separator" to={{pathname: `/test/preview/${quiz.id}`}}>
                                         <span>Preview</span>
                                     </Link>
                                 </div>
@@ -495,7 +495,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                     </colgroup>
                                     <tbody>
                                         {quizAssignment.map((g, i) => <QuizAssignment key={g.assignedGroups?.[0].assignment.id ?? 0} user={g.user} assignedGroups={g.assignedGroups} index={i} />)}
-                                    </tbody>    
+                                    </tbody>
                                 </RS.Table>}
                             </>;
                         }}

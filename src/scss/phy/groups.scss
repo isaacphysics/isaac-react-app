@@ -1,11 +1,17 @@
 @import "../common/groups";
 
+.group-table {
+  tbody > *:last-child > * {
+    border-bottom: none;
+  }
+}
+
 .member-info-item {
   .icon-group-table-person {
     @extend .mt-2;
     width: 14px;
   }
   + .member-info-item {
-    border-top: $gray-107 solid 1px;
+    border-top: $table-border-color solid 1px;
   }
 }

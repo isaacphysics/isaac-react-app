@@ -391,7 +391,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                     <Form name="my-account" onSubmit={updateAccount}>
                         {error?.type == "generalError" &&
                                 <ExigentAlert color="warning">
-                                    <p className="alert-heading font-weight-bold">Unable to update your account</p>
+                                    <p className="alert-heading fw-bold">Unable to update your account</p>
                                     <p>{error.generalError}</p>
                                 </ExigentAlert>
                         }

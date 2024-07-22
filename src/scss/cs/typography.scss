@@ -1,6 +1,5 @@
 @use "sass:list";
 @import "../common/typography";
-@import "../common/_utils";
 
 // List of (font size, line height) pairs to generate font classes
 $sizes: [
@@ -49,57 +48,57 @@ $code_font_scale_ratio: 1.16;
   }
 }
 
-.font-weight-regular {
+.fw-regular {
   font-family: $secondary-font, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
-  font-weight: $font-weight-normal !important;
+  @extend .fw-normal;
 }
 
-.font-weight-bold {
-  // FIXME this is nasty (using semi-bold for bold) but some of the shared SCSS uses font-weight-bold
+.fw-bold {
+  // FIXME this is nasty (using semi-bold for bold) but some of the shared SCSS uses fw-bold
   font-family: $secondary-font-semi-bold, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
-  font-weight: $font-weight-normal !important;
+  @extend .fw-normal;
 }
 
-.font-weight-semi-bold {
+.fw-semi-bold {
   font-family: $secondary-font-semi-bold, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
 }
 
-.font-style-italic {
+.fst-italic {
   font-family: $secondary-font-italic, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
 }
 
 h1 {
-  @extend .font-weight-semi-bold;
+  @extend .fw-semi-bold;
   @extend .font-size-2-5;
 }
 h2 {
-  @extend .font-weight-semi-bold;
+  @extend .fw-semi-bold;
   @extend .font-size-2;
 }
 h3 {
-  @extend .font-weight-semi-bold;
+  @extend .fw-semi-bold;
   @extend .font-size-1-5;
 }
 h4 {
-  @extend .font-weight-semi-bold;
+  @extend .fw-semi-bold;
   @extend .font-size-1-25;
 }
 h5 {
-  @extend .font-weight-semi-bold;
+  @extend .fw-semi-bold;
   @extend .font-size-1;
 }
 body {
-  @extend .font-weight-regular;
+  @extend .fw-regular;
   @extend .font-size-1;
 }
 strong, b {
-  @extend .font-weight-semi-bold;
+  @extend .fw-semi-bold;
 }
 i, em {
-  @extend .font-style-italic;
+  @extend .fst-italic;
 }
 p, small, .alert {
-  @extend .font-weight-regular;
+  @extend .fw-regular;
   .btn-link {
     font-size: unset;
   }
@@ -131,4 +130,5 @@ pre {
 
 hr {
   border-top: solid $cs-silver 1px;
+  opacity: 100%;
 }

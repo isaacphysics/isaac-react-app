@@ -49,6 +49,9 @@
 }
 .toast-header {
   font-size: 1.6rem;
+  > svg {
+    min-width: 20px;
+  }
 }
 .toast-heading {
   padding-right: 1rem;

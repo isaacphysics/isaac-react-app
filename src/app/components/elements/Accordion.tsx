@@ -23,6 +23,7 @@ import {v4 as uuid_v4} from "uuid";
 import classNames from "classnames";
 import {Markup} from "./markup";
 import {ReportAccordionButton} from "./ReportAccordionButton";
+import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import { debounce } from "lodash";
 
 interface AccordionsProps extends RouteComponentProps {
@@ -172,7 +173,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }}
                 aria-expanded={isOpen ? "true" : "false"}
             >
-                {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center p-2 " +
+                {isConceptPage && audienceString && <span className={"stage-label text-bg-secondary d-flex align-items-center p-2 " +
                     "justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
                     {siteSpecific(
                         audienceString, 
@@ -181,29 +182,31 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                         </>)
                     )}
                 </span>}
-                <div className="accordion-title pl-3">
-                    <RS.Row className="h-100 align-items-center">
+                <div className="accordion-title ps-3">
+                    <RS.Row className="h-100">
+                        <div className="d-flex align-items-center p-0 h-100">
                         {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
-                        <span className="accordion-part p-3 text-secondary">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
-                        {trustedTitle && <div className="p-3">
-                            <h2>
-                                <Markup encoding={"latex"}>
-                                    {trustedTitle}
-                                </Markup>
-                            </h2>
-                        </div>}
-                        {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
-                            <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
-                            <RS.UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
-                                                    modifiers={{preventOverflow: {boundariesElement: "viewport"}}}>
-                                {disabled}
-                            </RS.UncontrolledTooltip>
-                        </div>}
+                            <span className="accordion-part p-3 text-secondary text-nowrap">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
+                            {trustedTitle && <div className="p-3">
+                                <h2>
+                                    <Markup encoding={"latex"}>
+                                        {trustedTitle}
+                                    </Markup>
+                                </h2>
+                            </div>}
+                            {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
+                                <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
+                                <RS.UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
+                                                        modifiers={[preventOverflow]}>
+                                    {disabled}
+                                </RS.UncontrolledTooltip>
+                            </div>}
+                        </div>
                     </RS.Row>
                 </div>
 
                 {accordionIcon && isPhy && <span className={"accordion-icon align-self-center accordion-icon-" + accordionIcon}>
-                    <span className="sr-only">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
+                    <span className="visually-hidden">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
                 </span>}
             </RS.Button>
         </div>

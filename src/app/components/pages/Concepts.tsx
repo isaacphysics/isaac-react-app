@@ -2,7 +2,7 @@ import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useS
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {AppState, fetchConcepts, selectors, useAppDispatch, useAppSelector} from "../../state";
 import * as RS from "reactstrap";
-import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
+import {Col, Container, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
@@ -85,7 +85,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             </Row>
             <Row>
                 <Col>
-                    <Form inline onSubmit={doSearch}>
+                    <Form className="form-inline" onSubmit={doSearch}>
                         <Input
                             className='search--filter-input mt-4'
                             type="search" value={searchText || ""}
@@ -105,23 +105,23 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                                 </h3>
                             </Col>
                             <Col lg={8} md={9} xs={12}>
-                                <Form id="concept-filter" inline className="search-filters">
+                                <Form id="concept-filter" className="form-inline search-filters">
                                     <Label for="concept-filter" className="d-none d-sm-inline-block">Filter:</Label>
                                     <Label>
-                                        <CustomInput id="problem-search-phy" type="checkbox" defaultChecked={conceptFilterPhysics} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterPhysics(e.target.checked)} />
-                                        <span className="sr-only">Show </span>Physics<span className="sr-only"> concept</span>
+                                        <Input id="problem-search-phy" type="checkbox" defaultChecked={conceptFilterPhysics} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterPhysics(e.target.checked)} />
+                                        <span className="visually-hidden">Show </span>Physics<span className="visually-hidden"> concept</span>
                                     </Label>
                                     <Label>
-                                        <CustomInput id="concept-search-maths" type="checkbox" defaultChecked={conceptFilterMaths} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterMaths(e.target.checked)} />
-                                        <span className="sr-only">Show </span>Maths<span className="sr-only"> concept</span>
+                                        <Input id="concept-search-maths" type="checkbox" defaultChecked={conceptFilterMaths} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterMaths(e.target.checked)} />
+                                        <span className="visually-hidden">Show </span>Maths<span className="visually-hidden"> concept</span>
                                     </Label>
                                     <Label>
-                                        <CustomInput id="concept-search-chem" type="checkbox" defaultChecked={conceptFilterChemistry} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterChemistry(e.target.checked)} />
-                                        <span className="sr-only">Show </span>Chemistry<span className="sr-only"> concept</span>
+                                        <Input id="concept-search-chem" type="checkbox" defaultChecked={conceptFilterChemistry} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterChemistry(e.target.checked)} />
+                                        <span className="visually-hidden">Show </span>Chemistry<span className="visually-hidden"> concept</span>
                                     </Label>
                                     <Label>
-                                        <CustomInput id="concept-search-bio" type="checkbox" defaultChecked={conceptFilterBiology} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterBiology(e.target.checked)} />
-                                        <span className="sr-only">Show </span>Biology<span className="sr-only"> concept</span>
+                                        <Input id="concept-search-bio" type="checkbox" defaultChecked={conceptFilterBiology} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterBiology(e.target.checked)} />
+                                        <span className="visually-hidden">Show </span>Biology<span className="visually-hidden"> concept</span>
                                     </Label>
                                 </Form>
                             </Col>

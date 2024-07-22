@@ -45,3 +45,22 @@ button {
   border: none;
   outline: none !important;
 }
+
+input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="button"].btn-block {
+  width: 100%;
+}
+
+.btn.btn-primary:focus-visible, .btn.btn-outline-primary:focus-visible {
+  background-color: unset !important;
+}
+
+.btn-close {
+  align-self: center;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}

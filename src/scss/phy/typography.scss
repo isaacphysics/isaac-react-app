@@ -33,6 +33,8 @@ hr {
   display: block;
   border-bottom: 1px solid $black;
   position: relative;
+  overflow: visible;
+  opacity: 1;
 
   &::before {
     @include pseudo-element;
@@ -225,7 +227,7 @@ h4 {
     }
   }
 
-  &.text-right {
+  &.text-end {
     &::before {
       margin-left: auto;
     }

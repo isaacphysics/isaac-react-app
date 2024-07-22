@@ -10,7 +10,7 @@ import {PortalInHtmlHook, useStatefulElementRef, useTableCompatiblePortalsInHtml
 const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLElement}) => {
     const parentElement = rootElement.querySelector(`#table-${id}`);
 
-    const tableHtml = `<table class="${classNames(classes, "table table-bordered w-100 bg-white m-0", siteSpecific("text-center", "text-left"))}">${html}</table>`;
+    const tableHtml = `<table class="${classNames(classes, "table table-bordered w-100 bg-white m-0", siteSpecific("text-center", "text-start"))}">${html}</table>`;
     const [modifiedHtml, renderPortalElements] = useTableCompatiblePortalsInHtml(tableHtml);
 
     const [scrollRef, updateScrollRef] = useStatefulElementRef<HTMLDivElement>();

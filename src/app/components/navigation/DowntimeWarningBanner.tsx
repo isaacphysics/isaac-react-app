@@ -28,7 +28,7 @@ export const DowntimeWarningBanner = () => {
                     </RS.Col>
                     <RS.Col xs={12} md={3} className="text-center">
                         <RS.Button color="primary" outline className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
-                            Dismiss<span className="sr-only"> downtime notification</span>
+                            Dismiss<span className="visually-hidden"> downtime notification</span>
                         </RS.Button>
                     </RS.Col>
                 </RS.Row>

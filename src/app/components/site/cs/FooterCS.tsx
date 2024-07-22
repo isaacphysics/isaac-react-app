@@ -9,7 +9,7 @@ export const FooterCS = () => (
         <div className="footer-top d-print-none">
             <Container fluid className="py-5">
                 <Row className="justify-content-start">
-                    <Col xs={"auto"} className={"mr-5 mb-4 mb-md-0"}>
+                    <Col xs={"auto"} className={"me-5 mb-4 mb-md-0"}>
                         <Link to="/">
                             <img
                                 src="/assets/common/logos/ada_logo_stamp_aqua.svg"
@@ -21,9 +21,9 @@ export const FooterCS = () => (
                     <Col xs={12} md={8} lg={"auto"}>
                         <ListGroupFooter />
                     </Col>
-                    <div className={"float-right ml-lg-auto ml-3"}>
+                    <Col className={"float-end ms-lg-auto"} lg={"auto"}>
                         <SocialLinksRow />
-                    </div>
+                    </Col>
                 </Row>
             </Container>
         </div>
@@ -32,7 +32,7 @@ export const FooterCS = () => (
                 <div className='footer-rule mb-4' />
                 <div className='footer-links footer-bottom pb-5'>
                     <Row className="justify-content-between">
-                        <Col xs={{size: 12}} md={{size: 7, order: 2}} lg={{size: 8}} xl={{size: 9}} className="text-cs-white text-left text-md-right">
+                        <Col xs={{size: 12}} md={{size: 7, order: 2}} lg={{size: 8}} xl={{size: 9}} className="text-cs-white text-start text-md-end">
                             <p>
                                 All teaching materials on this site are available under a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0" className="d-inline link-light text-white">CC BY-NC-SA 4.0</a> license, except where otherwise stated.
                             </p>

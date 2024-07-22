@@ -46,10 +46,10 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
             As an event leader, you are only able to see the details of events which you manage.
         </div>}
         <div className="clearfix">
-            {isAda && <div className="mb-3 float-left">
+            {isAda && <div className="mb-3 float-start">
                 <RS.Button color="primary" size="sm" tag={Link} to="/events_toolkit">Events toolkit</RS.Button>
             </div>}
-            <div className="float-left">
+            <div className="float-start">
                 {/* Load More Button */}
                 <RS.Button size={"sm"} disabled={!(eventOverviews && total && eventOverviews.length < total)} onClick={() => {
                     if (eventOverviews) {
@@ -62,9 +62,9 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                 }}>
                     Load more events
                 </RS.Button>
-                <span className="ml-2">(showing {eventOverviews?.length ?? 0} of {total ?? 0})</span>
+                <span className="ms-2">(showing {eventOverviews?.length ?? 0} of {total ?? 0})</span>
             </div>
-            <div className="float-right mb-4">
+            <div className="float-end mb-4">
                 <RS.Label>
                     <RS.Input type="select" value={eventOverviewFilter} onChange={e => {setEventOverviewFilter(e.target.value as EventOverviewFilter)}}>
                         {Object.entries(EventOverviewFilter).map(([filterLabel, filterValue]) =>

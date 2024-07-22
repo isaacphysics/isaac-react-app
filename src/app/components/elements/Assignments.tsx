@@ -70,14 +70,17 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 <p className="mb-0"><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>
                 }
                 {isDefined(assignment.notes) && <p className="mb-0"><strong>Notes:</strong> {assignment.notes}</p>}
+                <Button className="my-2 btn-underline" color="link" onClick={() => setShowMore(!showMore)}>
+                    {showMore ? "Show less" : "Show more"}
+                </Button>
             </Col>
 
             <Col xs={4} md={5} lg={4}>
-                <Row className="justify-content-end mr-0 mr-md-1">
+                <Row className="justify-content-end me-0 me-md-1">
                     <Col xs="auto d-none d-md-block">
-                        <Label className="d-block w-100 text-center text-nowrap">
+                        <div>
                             Attempted
-                            <div className="d-flex justify-content-center">
+                            <div className="d-flex w-100 justify-content-center board-subject-hexagon-size">
                                 <div className="board-subject-hexagon-container justify-content-center">
                                     {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageAttempted === 100) ?
                                         <span className="board-subject-hexagon subject-complete"/> :
@@ -88,7 +91,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                                     )}
                                 </div>
                             </div>
-                        </Label>
+                        </div>
                     </Col>
                     <Col xs="auto">
                         <Label className="d-block w-100 text-center text-nowrap">
@@ -108,11 +111,6 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     </Col>
                 </Row>
             </Col>
-        </Row>
-        <Row>
-            <Button className="ml-3 my-2 btn-underline" color="link" onClick={() => setShowMore(!showMore)}>
-                {showMore ? "Show less" : "Show more"}
-            </Button>
         </Row>
         <Collapse isOpen={showMore} className="w-100">
             <Row>
@@ -141,7 +139,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                                 <td className="w-50 align-baseline">
                                     {stageLabelMap[stage]}:
                                 </td>
-                                <td className="w-50 pl-1">
+                                <td className="w-50 ps-1">
                                     {difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}
                                 </td>
                             </tr>)}

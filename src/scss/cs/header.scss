@@ -80,6 +80,10 @@ header {
     color: $cs-white;
     position: relative;
     text-underline-offset: 6px;
+    &:focus {
+      // prevent BS5 nav-link override
+      color: $cs-white;
+    }
     &:hover, &:active, &.open {
       outline: none !important;
       box-shadow: none !important;
