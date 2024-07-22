@@ -25,7 +25,7 @@ import {
 } from "reactstrap";
 import sortBy from "lodash/sortBy";
 import {
-    AppAssignmentProgress,
+    AuthorisedAssignmentProgress,
     AppGroup,
     AssignmentOrder,
     AssignmentOrderSpec,
@@ -35,6 +35,7 @@ import {
 } from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
+    AssignmentProgressDTO,
     GameboardItem,
     GameboardItemState,
     QuizAssignmentDTO,
@@ -47,6 +48,7 @@ import {
     getAssignmentStartDate,
     getQuizAssignmentCSVDownloadLink,
     hasAssignmentStarted,
+    isAuthorisedFullAccess,
     isDefined,
     isPhy,
     MARKBOOK_TYPE_TAB,
@@ -74,8 +76,9 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     const questions = assignment.gameboard.contents;
 
-    const progressData = useMemo<[AppAssignmentProgress, boolean][]>(() => assignment.progress.map(p => {
-        if (!p.user.authorisedFullAccess) return [p, false];
+    const progressData = useMemo<[AssignmentProgressDTO, boolean][]>(() => assignment.progress.map(p => {
+        if (!isAuthorisedFullAccess(p)) return [p, false];
+
         const initialState = {
             ...p,
             tickCount: 0,
@@ -83,17 +86,18 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
             incorrectQuestionPartsCount: 0,
             notAttemptedPartResults: []
         };
-        const ret = p.results.reduce<AppAssignmentProgress>((oldP, results, i) => {
+
+        const ret = (p.results || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
                 const tickCount = ["PASSED", "PERFECT"].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
                 const questions = assignment.gameboard.contents;
                 return {
                     ...oldP,
                     tickCount,
-                    correctQuestionPartsCount: oldP.correctQuestionPartsCount + p.correctPartResults[i],
-                    incorrectQuestionPartsCount: oldP.incorrectQuestionPartsCount + p.incorrectPartResults[i],
+                    correctQuestionPartsCount: oldP.correctQuestionPartsCount + (p.correctPartResults || [])[i],
+                    incorrectQuestionPartsCount: oldP.incorrectQuestionPartsCount + (p.incorrectPartResults || [])[i],
                     notAttemptedPartResults: [
                         ...oldP.notAttemptedPartResults,
-                        (questions[i].questionPartsTotal - p.correctPartResults[i] - p.incorrectPartResults[i])
+                        (questions[i].questionPartsTotal - (p.correctPartResults || [])[i] - (p.incorrectPartResults || [])[i])
                     ]
                 };
             }, initialState);
@@ -101,19 +105,19 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
     }), [assignment.gameboard.contents, assignment.progress, questions.length]);
 
     const progress = progressData.map(pd => pd[0]);
-    const noStudentsAttemptedAll = progress.reduce((sa, p) => sa + (p.notAttemptedPartResults.every(v => v === 0) ? 1 : 0), 0);
+    const noStudentsAttemptedAll = progress.reduce((sa, p) => sa + (isAuthorisedFullAccess(p) && p.notAttemptedPartResults.every(v => v === 0) ? 1 : 0), 0);
     
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     const [assignmentAverages, assignmentTotalQuestionParts] = useMemo<[number[], number]>(() => {
         return questions?.reduce(([aAvg, aTQP], q, i) => {
-            const tickCount = progress.reduce((tc, p) => ["PASSED", "PERFECT"].includes(p.results[i]) ? tc + 1 : tc, 0);
+            const tickCount = progress.reduce((tc, p) => ["PASSED", "PERFECT"].includes((p.results || [])[i]) ? tc + 1 : tc, 0);
             const tickPercent = Math.round(100 * (tickCount / progress.length));
             return [[...aAvg, tickPercent], aTQP + (q.questionPartsTotal ?? 0)];
         }, [[] as number[], 0]) ?? [[], 0];
     }, [questions, progress]);
 
-    function markClassesInternal(studentProgress: AppAssignmentProgress, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
-        if (!studentProgress.user.authorisedFullAccess) {
+    function markClassesInternal(studentProgress: AssignmentProgressDTO, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
+        if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
         } else if (correctParts === totalParts) {
             return "completed";
@@ -128,7 +132,11 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         }
     }
 
-    function markClasses(studentProgress: AppAssignmentProgress, totalParts: number) {
+    function markClasses(studentProgress: AssignmentProgressDTO, totalParts: number) {
+        if (!isAuthorisedFullAccess(studentProgress)) {
+            return "revoked";
+        }
+
         const correctParts = studentProgress.correctQuestionPartsCount;
         const incorrectParts = studentProgress.incorrectQuestionPartsCount;
         const status = null;
@@ -136,13 +144,18 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }
 
-    function markQuestionClasses(studentProgress: AppAssignmentProgress, index: number) {
+    function markQuestionClasses(studentProgress: AssignmentProgressDTO, index: number) {
+        if (!isAuthorisedFullAccess(studentProgress)) {
+            return "revoked";
+        }
+
+
         const question = questions[index];
 
         const totalParts = question.questionPartsTotal;
-        const correctParts = studentProgress.correctPartResults[index];
-        const incorrectParts = studentProgress.incorrectPartResults[index];
-        const status = studentProgress.results[index];
+        const correctParts = (studentProgress.correctPartResults || [])[index];
+        const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
+        const status = (studentProgress.results || [])[index];
 
         return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }

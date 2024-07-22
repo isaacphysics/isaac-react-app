@@ -448,13 +448,8 @@ export const AssignmentScheduleContext = React.createContext<{
     viewBy: "startDate" | "dueDate";
 }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 
-export interface AppAssignmentProgress {
-    user: ApiTypes.UserSummaryDTO;
-    completed: boolean;
-    correctPartResults: number[];
-    incorrectPartResults: number[];
-    results: ApiTypes.GameboardItemState[];
-
+export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
+    completed?: boolean;
     tickCount: number;
     correctQuestionPartsCount: number;
     incorrectQuestionPartsCount: number;
@@ -678,7 +673,7 @@ export type EnhancedAssignment = AssignmentDTO & {
 };
 
 export type EnhancedAssignmentWithProgress = EnhancedAssignment & {
-    progress: AppAssignmentProgress[];
+    progress: ApiTypes.AssignmentProgressDTO[];
 };
 
 export interface PageSettings {

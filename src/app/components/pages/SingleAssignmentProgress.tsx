@@ -9,7 +9,6 @@ import {
     useGetSingleSetAssignmentQuery
 } from "../../state";
 import {
-    AppAssignmentProgress,
     AssignmentProgressPageSettingsContext,
     EnhancedAssignmentWithProgress
 } from "../../../IsaacAppTypes";
@@ -22,7 +21,7 @@ import {AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {combineQueries, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {AssignmentDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {AssignmentDTO, AssignmentProgressDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 
 const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
     const dispatch = useAppDispatch();
@@ -52,7 +51,7 @@ export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
     const { data: assignment } = assignmentQuery;
     const assignmentProgressQuery = useGetAssignmentProgressQuery(assignmentId || skipToken);
 
-    const augmentAssignmentWithProgress = (assignment: AssignmentDTO, assignmentProgress: AppAssignmentProgress[]): EnhancedAssignmentWithProgress => ({...assignment, progress: assignmentProgress} as EnhancedAssignmentWithProgress);
+    const augmentAssignmentWithProgress = (assignment: AssignmentDTO, assignmentProgress: AssignmentProgressDTO[]): EnhancedAssignmentWithProgress => ({...assignment, progress: assignmentProgress} as EnhancedAssignmentWithProgress);
 
     const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 

@@ -1,6 +1,6 @@
 import {isaacApi} from "./baseApi";
-import {AssignmentDTO, AssignmentStatusDTO, QuizAssignmentDTO} from "../../../../IsaacApiTypes";
-import {AppAssignmentProgress, EnhancedAssignment} from "../../../../IsaacAppTypes";
+import {AssignmentDTO, AssignmentProgressDTO, AssignmentStatusDTO, QuizAssignmentDTO} from "../../../../IsaacApiTypes";
+import {EnhancedAssignment} from "../../../../IsaacAppTypes";
 import {anonymisationFunctions, anonymiseIfNeededWith, onQueryLifecycleEvents} from "./utils";
 import {siteSpecific} from "../../../services";
 
@@ -36,7 +36,7 @@ export const assignmentsApi = isaacApi.injectEndpoints({
             providesTags: (result, _, groupId) => result ? (groupId ? [{type: "GroupTests", id: groupId}] : ["AllSetTests"]) : []
         }),
 
-        getAssignmentProgress: build.query<AppAssignmentProgress[], number>({
+        getAssignmentProgress: build.query<AssignmentProgressDTO[], number>({
             query: (assignmentId) => ({
                 url: `/assignments/assign/${assignmentId}/progress`
             }),
