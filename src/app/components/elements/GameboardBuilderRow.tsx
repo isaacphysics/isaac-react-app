@@ -42,7 +42,7 @@ const GameboardBuilderRow = (
         return tag && tag.title;
     };
     const tagIcon = (tag: string) => {
-        return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("badge-warning", "badge-primary"))}>{tag}</span>
+        return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</span>
     };
 
     const openQuestionModal = (urlQuestionId: string) => {

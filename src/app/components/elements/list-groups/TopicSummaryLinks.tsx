@@ -51,7 +51,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                         tag={Link} to={{pathname: `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`, search}}
                         block color="link" className={"d-flex align-items-stretch " + classNames({"de-emphasised": item.deEmphasised})}
                     >
-                        <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
+                        <div className={"stage-label text-bg-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
                             {siteSpecific(
                             audienceString, 
                             (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
