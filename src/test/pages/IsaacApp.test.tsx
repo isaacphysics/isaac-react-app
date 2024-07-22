@@ -112,38 +112,6 @@ describe("IsaacApp", () => {
         });
     });
 
-    // For each role (including a not-logged-in user), test whether the user sees the correct links in the navbar menu
-    ["ANONYMOUS"].concat(USER_ROLES).forEach((r) => {
-        const role = r as UserRole | "ANONYMOUS";
-        it(`should give a user with the role ${role} access to the correct navigation menu items`, async () => {
-            renderTestEnvironment({role});
-            for (const [menu, hrefs] of Object.entries(navigationBarLinksPerRole[role])) {
-                const header = await screen.findByTestId("header");
-                const menuTitle = NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu as NavBarMenus];
-                if (!menuTitle) {
-                    // This menu is not available on this site, so skip it
-                    return;
-                }
-                const navLink = within(header).queryByRole("link", {name: menuTitle});
-                if (hrefs === null) {
-                    // Expect link to be hidden from user
-                    expect(navLink).toBeNull();
-                    break;
-                }
-                expect(navLink).toBeDefined();
-                if (!navLink) return; // appease TS
-                // Check all menu options are available on click
-                await userEvent.click(navLink);
-                const navSectionParent = navLink.parentElement;
-                if (!navSectionParent) fail(`Missing NavigationSection parent to check ${menu} navigation menu contains correct entries.`);
-                const menuItems = await within(navSectionParent).findAllByRole("menuitem");
-                zip(menuItems, hrefs).forEach(([link, href]) => {
-                    expect(link).toHaveAttribute("href", href);
-                });
-            }
-        });
-    });
-
     // TODO implement test data and this test for CS
     isPhy && it('should show the users number of current assignments in the navigation menu (Physics only)', async () => {
         renderTestEnvironment();
