@@ -1,14 +1,13 @@
 import {Button, Container, Row} from "reactstrap";
 import {NewsCard} from "../elements/cards/NewsCard";
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {NEWS_PODS_PER_PAGE} from "../../services";
-import { IsaacPodDTO } from "../../../IsaacApiTypes";
-import { PageFragment } from "../elements/PageFragment";
-import classNames from "classnames";
+import {IsaacPodDTO} from "../../../IsaacApiTypes";
+import {PageFragment} from "../elements/PageFragment";
 
 export const OnlineCourses = () => {
     const [page, setPage] = React.useState(0);
