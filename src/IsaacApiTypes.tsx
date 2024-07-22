@@ -49,10 +49,10 @@ export interface AssignmentStatusDTO {
 }
 
 export interface AssignmentProgressDTO { 
-    user: UserSummaryDTO;
-    correctPartResults: number[];
-    incorrectPartResults: number[];
-    results: GameboardItemState[];
+    user?: UserSummaryDTO;
+    correctPartResults?: number[];
+    incorrectPartResults?: number[];
+    results?: GameboardItemState[];
 }
 
 export interface GameboardDTO extends HasTitleOrId {

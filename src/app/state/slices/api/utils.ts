@@ -1,5 +1,4 @@
 import {
-    isDefined,
     KEY,
     persistence,
     NOT_FOUND,
@@ -11,7 +10,6 @@ import produce from "immer";
 import {
     AuthorisedAssignmentProgress,
     AppGroup,
-    AppQuizAssignment,
     GroupMembershipDetailDTO,
     NOT_FOUND_TYPE,
     UserProgress

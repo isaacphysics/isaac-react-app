@@ -1,7 +1,7 @@
 import React, {useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
-import {AuthorisedAssignmentProgress, AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
-import {siteSpecific, TODAY} from "../../../services";
+import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
+import {isAuthorisedFullAccess, siteSpecific, TODAY} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
@@ -114,23 +114,22 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
     }
 
     const semiSortedProgress = useMemo(() => orderBy(progress, (item) => {
-        return item.user.authorisedFullAccess && -(item as AuthorisedAssignmentProgress).notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
+        return isAuthorisedFullAccess(item) && -item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
     }, [reverseOrder ? "desc" : "asc"]), [progress, reverseOrder]);
 
     const sortedProgress = useMemo(() => orderBy((semiSortedProgress), (item) => {
-        if (!item.user.authorisedFullAccess) return -1;
-        const authorisedItem = item as AuthorisedAssignmentProgress;
-            switch (sortOrder) {
-                case "name":
-                    return (authorisedItem.user.familyName + ", " + authorisedItem.user.givenName).toLowerCase();
-                case "totalQuestionPartPercentage":
-                    return -authorisedItem.correctQuestionPartsCount;
-                case "totalQuestionPercentage":
-                    return -authorisedItem.tickCount;
-                default:
-                    return -authorisedItem.correctPartResults[sortOrder];
-            }
-        }, [reverseOrder ? "desc" : "asc"])
+        if (!isAuthorisedFullAccess(item)) return -1;
+        switch (sortOrder) {
+            case "name":
+                return (item.user.familyName + ", " + item.user.givenName).toLowerCase();
+            case "totalQuestionPartPercentage":
+                return -item.correctQuestionPartsCount;
+            case "totalQuestionPercentage":
+                return -item.tickCount;
+            default:
+                return -item.correctPartResults[sortOrder];
+        }
+    }, [reverseOrder ? "desc" : "asc"])
     , [semiSortedProgress, reverseOrder, sortOrder]);
 
     const tableHeaderFooter = <tr className="progress-table-header-footer">
@@ -222,8 +221,8 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                     </thead>
                     <tbody>
                         {sortedProgress.map((studentProgress, index) => {
-                            const fullAccess = studentProgress.user.authorisedFullAccess;
-                            return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
+                            const fullAccess = isAuthorisedFullAccess(studentProgress);
+                            return <tr key={studentProgress.user?.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
                                 <th className="student-name">
                                     {fullAccess && pageSettings.isTeacher ?
                                         (
@@ -246,7 +245,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                                 </Button>
                                                 {!returningQuizToStudent && dropdownOpen?.[index] && <>
                                                     {(!duedate || duedate.valueOf() > TODAY().valueOf()) &&
-                                                        ((studentProgress as AuthorisedAssignmentProgress).completed) &&
+                                                        studentProgress.completed &&
                                                         <div className="py-2 px-3">
                                                             <Button size="sm" onClick={() => returnToStudent(studentProgress.user.id)}>Allow another attempt</Button>
                                                         </div>}
@@ -256,7 +255,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                                 </>}
                                             </>
                                         ) :
-                                        <span>{studentProgress.user.givenName} {studentProgress.user.familyName}</span>
+                                        <span>{studentProgress.user?.givenName} {studentProgress.user?.familyName}</span>
                                     }
                                 </th>
                                 {questions.map((q, index) =>
@@ -265,26 +264,26 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                             questions[index].questionPartsTotal as number,
                                             pageSettings.formatAsPercentage) : ""
                                         ) : 
-                                        studentProgress.correctPartResults[index] === 1 ? ICON.correct :
-                                            studentProgress.incorrectPartResults[index] === 1 ? ICON.incorrect :
+                                        (studentProgress.correctPartResults || [])[index] === 1 ? ICON.correct :
+                                            (studentProgress.incorrectPartResults || [])[index] === 1 ? ICON.incorrect :
                                             /* default */ ICON.notAttempted
                                         }
                                     </td> 
                                 )}
                                 {isAssignment ? <>
                                     <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark((studentProgress as AuthorisedAssignmentProgress).correctQuestionPartsCount,
+                                        {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
                                             pageSettings.formatAsPercentage) : ""}
                                     </th>
                                     <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark((studentProgress as AuthorisedAssignmentProgress).tickCount,
+                                        {fullAccess ? formatMark(studentProgress.tickCount,
                                             questions.length,
                                             pageSettings.formatAsPercentage) : ""}
                                     </th>
                                 </> : 
                                     <th className="total-column" title={fullAccess ? undefined : "Not Sharing"}>
-                                        {fullAccess ? formatMark((studentProgress as AuthorisedAssignmentProgress).correctQuestionPartsCount,
+                                        {fullAccess ? formatMark(studentProgress.correctQuestionPartsCount,
                                             assignmentTotalQuestionParts,
                                             pageSettings.formatAsPercentage) : ""}
                                     </th>

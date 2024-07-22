@@ -17,7 +17,8 @@ import {
     TODAY,
     useAssignmentProgressAccessibilitySettings,
     isQuestion,
-    PATHS
+    PATHS,
+    isAuthorisedFullAccess
 } from "../../../services";
 import {AuthorisedAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
@@ -159,7 +160,7 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
     }
 
     function markClassesInternal(studentProgress: AssignmentProgressDTO, correctParts: number, incorrectParts: number, totalParts: number) {
-        if (!studentProgress.user.authorisedFullAccess) {
+        if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
         } else if (correctParts === totalParts) {
             return "completed";
@@ -175,24 +176,24 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
     }
 
     function markClasses(studentProgress: AssignmentProgressDTO) {
-        if (!studentProgress.user.authorisedFullAccess) {
+        if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
         }
 
-        const correctParts = (studentProgress as AuthorisedAssignmentProgress).correctQuestionPartsCount;
-        const incorrectParts = (studentProgress as AuthorisedAssignmentProgress).incorrectQuestionPartsCount;
+        const correctParts = studentProgress.correctQuestionPartsCount;
+        const incorrectParts = studentProgress.incorrectQuestionPartsCount;
         const total = questions.reduce((acc, q) => acc + (q.questionPartsTotal ?? 0), 0);
 
         return markClassesInternal(studentProgress, correctParts, incorrectParts, total);
     }
 
     function markQuestionClasses(studentProgress: AssignmentProgressDTO, index: number) {
-        if (!studentProgress.user.authorisedFullAccess) {
+        if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
         }
 
-        const correctParts = (studentProgress as AuthorisedAssignmentProgress).correctPartResults[index];
-        const incorrectParts = (studentProgress as AuthorisedAssignmentProgress).incorrectPartResults[index];
+        const correctParts = studentProgress.correctPartResults[index];
+        const incorrectParts = studentProgress.incorrectPartResults[index];
         const totalParts = questions[index].questionPartsTotal ?? 0;
 
         return markClassesInternal(studentProgress, correctParts, incorrectParts, totalParts);
