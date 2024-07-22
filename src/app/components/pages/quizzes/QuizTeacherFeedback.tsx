@@ -192,8 +192,8 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
             return "revoked";
         }
 
-        const correctParts = studentProgress.correctPartResults[index];
-        const incorrectParts = studentProgress.incorrectPartResults[index];
+        const correctParts = (studentProgress.correctPartResults || [])[index];
+        const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
         const totalParts = questions[index].questionPartsTotal ?? 0;
 
         return markClassesInternal(studentProgress, correctParts, incorrectParts, totalParts);

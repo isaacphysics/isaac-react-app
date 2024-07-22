@@ -87,17 +87,17 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
             notAttemptedPartResults: []
         };
 
-        const ret = p.results.reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
+        const ret = (p.results || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
                 const tickCount = ["PASSED", "PERFECT"].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
                 const questions = assignment.gameboard.contents;
                 return {
                     ...oldP,
                     tickCount,
-                    correctQuestionPartsCount: oldP.correctQuestionPartsCount + p.correctPartResults[i],
-                    incorrectQuestionPartsCount: oldP.incorrectQuestionPartsCount + p.incorrectPartResults[i],
+                    correctQuestionPartsCount: oldP.correctQuestionPartsCount + (p.correctPartResults || [])[i],
+                    incorrectQuestionPartsCount: oldP.incorrectQuestionPartsCount + (p.incorrectPartResults || [])[i],
                     notAttemptedPartResults: [
                         ...oldP.notAttemptedPartResults,
-                        (questions[i].questionPartsTotal - p.correctPartResults[i] - p.incorrectPartResults[i])
+                        (questions[i].questionPartsTotal - (p.correctPartResults || [])[i] - (p.incorrectPartResults || [])[i])
                     ]
                 };
             }, initialState);
@@ -153,9 +153,9 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         const question = questions[index];
 
         const totalParts = question.questionPartsTotal;
-        const correctParts = studentProgress.correctPartResults[index];
-        const incorrectParts = studentProgress.incorrectPartResults[index];
-        const status = studentProgress.results[index];
+        const correctParts = (studentProgress.correctPartResults || [])[index];
+        const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
+        const status = (studentProgress.results || [])[index];
 
         return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }

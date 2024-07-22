@@ -448,7 +448,7 @@ export const AssignmentScheduleContext = React.createContext<{
     viewBy: "startDate" | "dueDate";
 }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 
-export interface AuthorisedAssignmentProgress extends Required<ApiTypes.AssignmentProgressDTO> {
+export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
     completed?: boolean;
     tickCount: number;
     correctQuestionPartsCount: number;
