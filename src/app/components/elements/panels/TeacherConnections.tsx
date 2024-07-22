@@ -172,7 +172,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </h3>
             <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
             {/* TODO Need to handle nested form complaint */}
-            <RS.Form onSubmit={processToken}>
+            <RS.Form onSubmit={processToken} data-testid="teacher-connect-form">
                 <RS.InputGroup className={"separate-input-group mb-4 d-flex flex-row justify-content-center"}>
                     <RS.Input
                         type="text" placeholder="Enter your code in here" value={authToken || undefined} className="py-4"
@@ -190,7 +190,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 </RS.InputGroup>
             </RS.Form>
 
-            <div className="connect-list">
+            <div className="connect-list" data-testid="teacher-connections">
                 <ConnectionsHeader title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch} setSearchText={setTeacherSearchText}/>
                 <div className="connect-list-inner">
                     <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>

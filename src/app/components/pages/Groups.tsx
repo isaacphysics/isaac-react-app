@@ -330,7 +330,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                 <Row className="mt-2 mb-1">
                     <Col>
                         <ShowLoading until={group.members}>
-                            {group.members && <div>
+                            {group.members && <div data-testid="group-members">
                                 <Row className={siteSpecific("mb-2", "mb-3")}>
                                     <Col xs={12} sm={"auto"}>
                                         <h4 className={isAda ? "py-1" : ""}>Group members</h4>

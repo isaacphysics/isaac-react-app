@@ -431,7 +431,7 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
             </Col>
             <Col md={6} lg={4} className="pt-1">
                 <Button tag={Link} to={"/pages/pre_made_gameboards"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
-                    our Boards for Lessons
+                    our Boards by Topic
                 </Button>
             </Col>
             <Col md={12} lg={4} className="pt-1">
