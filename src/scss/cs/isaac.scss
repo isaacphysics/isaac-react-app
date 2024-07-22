@@ -293,7 +293,7 @@ $grid-breakpoints: (
   lg: 992px,
   xl: 1200px,
   nav: 1256px,
-  xxl: 1400px,
+  // xxl: 1400px // we don't need xxl
 );
 
 $container-max-widths: (
@@ -301,7 +301,7 @@ $container-max-widths: (
   md: 720px,
   lg: 960px,
   xl: 1140px,
-//   xxl: 1320px, // for large screens we keep the single-column layout and only expand the margin, so we don't use a larger container
+  // xxl: 1320px, // for large screens we keep the single-column layout and only expand the margin, so we don't use a larger container
 );
 
 $spacer: 1rem !default;

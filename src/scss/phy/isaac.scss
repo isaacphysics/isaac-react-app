@@ -93,21 +93,18 @@ $table-border-color: $gray-107;
 $table-bg: #0000; // This gets in the way of our colouring
 $border-color: #dee2e6;
 
+// Grid Customisation
+$container-max-widths: (
+    md: 942px
+);
+
 $grid-breakpoints: (
   xs: 0,
   sm: 576px,
   md: 768px,
   lg: 992px,
   xl: 1200px,
-  nav: 1256px,
-  xxl: 1400px,
-);
-
-$container-max-widths: (
-    md: 942px,
-    lg: 942px,
-    xl: 942px,
-    xxl: 942px,
+  // xxl: 1400px // we don't need xxl
 );
 
 $spacer: 1rem !default;
