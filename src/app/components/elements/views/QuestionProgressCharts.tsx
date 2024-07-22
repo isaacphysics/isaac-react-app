@@ -153,10 +153,10 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     <strong>{isAllZero(categoryColumns) ? "No data" : ""}</strong>
                 </div>
                 {isAllZero(categoryColumns) ?
-                    <span className={"sr-only"}>
+                    <span className={"visually-hidden"}>
                         No data
                     </span> :
-                    <table className={"sr-only"}>
+                    <table className={"visually-hidden"}>
                     <thead>
                     <tr>
                         <th>Subject</th>
@@ -182,23 +182,23 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 <StyledSelect
                     inputId={`${subId}-subcategory-select`}
                     name="subcategory"
-                    className="d-inline-block text-left pr-2 w-50"
+                    className="d-inline-block text-start pe-2 w-50"
                     classNamePrefix="select"
                     defaultValue={{value: defaultSearchChoiceTag.id, label: defaultSearchChoiceTag.title}}
                     options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title};})}
                     onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
                 />
-                <span className={siteSpecific("", "d-inline-block ml-2")}>questions</span>
+                <span className={siteSpecific("", "d-inline-block ms-2")}>questions</span>
             </div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-topicChart`} className="text-center-width doughnut-binding  align-self-center">
                     <strong>{isAllZero(topicColumns) ? "No data" : ""}</strong>
                 </div>
                 {isAllZero(topicColumns) ?
-                    <span className={"sr-only"}>
+                    <span className={"visually-hidden"}>
                         No data
                     </span> :
-                    <table className={"sr-only"}>
+                    <table className={"visually-hidden"}>
                         <thead>
                         <tr>
                             <th>Topic</th>
@@ -224,7 +224,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 <StyledSelect
                     inputId={`${subId}-stage-select`}
                     name="stage"
-                    className="d-inline-block text-left pr-2 w-50"
+                    className="d-inline-block text-start pe-2 w-50"
                     classNamePrefix="select"
                     defaultValue={{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}}
                     options={getFilteredStageOptions()}
@@ -237,10 +237,10 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     <strong>{isAllZero(difficultyColumns) ? "No data" : ""}</strong>
                 </div>
                 {isAllZero(difficultyColumns) ?
-                    <span className={"sr-only"}>
+                    <span className={"visually-hidden"}>
                         No data
                     </span> :
-                    <table className={"sr-only"}>
+                    <table className={"visually-hidden"}>
                         <thead>
                         <tr>
                             <th>Stage</th>

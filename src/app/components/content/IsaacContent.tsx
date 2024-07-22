@@ -26,10 +26,10 @@ import InlineContextProvider from "../elements/InlineContextProvider";
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
 const classBasedLayouts = {
-    left: "align-left",
-    right: "align-right",
-    righthalf: "align-right-half",
-    textleft: "text-left",
+    left: "align-start",
+    right: "align-end",
+    righthalf: "align-end-half",
+    textleft: "text-start",
     textcentre: "text-center",
     textcentrecolumn: "text-center-column",
     clearfix: "clearfix w-100"

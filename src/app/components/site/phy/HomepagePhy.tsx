@@ -35,18 +35,18 @@ export const HomepagePhy = () => {
                         </Col>
                         <Col lg={7} className={above["lg"](deviceSize) ? `align-items-stretch d-flex flex-column` : ""}>
                             {!(user && user.loggedIn) && <Row className="align-self-end mt-2 mt-lg-0 mb-1 mb-lg-0">
-                                <Col className="col-6 col-lg-auto pl-lg-0 pr-1 pr-sm-2">
+                                <Col className="col-6 col-lg-auto ps-lg-0 pe-1 pe-sm-2">
                                     <Button size={above['lg'](deviceSize) || deviceSize === "xs" ? "sm" : ""} tag={Link} to="/login" color="primary" outline className="btn-block">
                                         Log in
                                     </Button>
                                 </Col>
-                                <Col className="col-6 col-lg-auto pl-lg-0 pl-1 pl-sm-2">
+                                <Col className="col-6 col-lg-auto ps-lg-0 ps-1 ps-sm-2">
                                     <Button size={above['lg'](deviceSize) || deviceSize === "xs" ? "sm" : ""} tag={Link} to="/register" color="secondary" className="btn-block">
                                         Sign up
                                     </Button>
                                 </Col>
                             </Row>}
-                            <div className={`h-100 pl-lg-4 content-video-container w-100 ${user?.loggedIn ? "pt-1 pt-sm-2 pt-lg-2" : "pt-4 pt-lg-3"} ${userConsent.cookieConsent?.youtubeCookieAccepted ?? false ? "ratio-16x9" : ""}`}>
+                            <div className={`h-100 ps-lg-4 content-video-container w-100 ${user?.loggedIn ? "pt-1 pt-sm-2 pt-lg-2" : "pt-4 pt-lg-3"} ${userConsent.cookieConsent?.youtubeCookieAccepted ?? false ? "ratio-16x9" : ""}`}>
                                 <HomepageYoutubeCookieHandler />
                             </div>
                         </Col>
@@ -55,7 +55,7 @@ export const HomepagePhy = () => {
                     <div className="physics-site-intro mt-4 mt-lg-2">
                         <strong>Show me resources for...</strong>
                         <Row className="mt-2">
-                            <Col xs={12} lg={3} className="pr-lg-1 py-1">
+                            <Col xs={12} lg={3} className="pe-lg-1 py-1">
                                 <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/11_14" className="h-100 d-inline-flex align-items-center justify-content-center">
                                     11-14
                                 </Button>
@@ -74,7 +74,7 @@ export const HomepagePhy = () => {
                                         "A\u00A0Level"}
                                 </Button>
                             </Col>
-                            <Col xs={12} lg={3} className="pl-lg-1 py-1">
+                            <Col xs={12} lg={3} className="ps-lg-1 py-1">
                                 <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/teacher_features" className="h-100 d-inline-flex align-items-center justify-content-center">
                                     teachers
                                 </Button>
@@ -88,7 +88,7 @@ export const HomepagePhy = () => {
                 <Container>
                     <div className="h-underline mb-4 mt-4 pt-2 mt-sm-5 pt-sm-0 d-flex align-items-center">
                         <h2>News and features</h2>
-                        <Link to="/news" className="ml-auto">See all news</Link>
+                        <Link to="/news" className="ms-auto">See all news</Link>
                     </div>
                     <Row className="eventList pt-1">
                         <Col>
@@ -98,16 +98,16 @@ export const HomepagePhy = () => {
                 </Container>
             </section>
 
-            {!(user && user.loggedIn) && <section className="row mb-4">
+            {!user?.loggedIn && <section className="mb-4">
                 <Container>
-                    <Col className="mt-4 py-4 px-5 d-flex align-items-center flex-column flex-md-row border bg-white">
-                        <h3 className="text-center text-md-left mr-md-4 mr-lg-0 mb-3 mb-md-0">
+                    <div className="mt-4 py-4 px-5 d-flex align-items-center flex-column flex-md-row border bg-white">
+                        <h3 className="text-center text-md-start me-md-4 me-lg-0 mb-3 mb-md-0">
                             Sign up to track your progress
                         </h3>
-                        <Button tag={Link} size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-xl" to={"/register"}>
+                        <Button tag={Link} size="lg" className="ms-md-auto me-md-3 me-lg-5 btn-xl" to={"/register"}>
                             Sign up
                         </Button>
-                    </Col>
+                    </div>
                 </Container>
             </section>}
         </div>

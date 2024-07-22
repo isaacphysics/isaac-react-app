@@ -35,8 +35,8 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
             You can read more in our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link>.
         </p>
         <Row className="align-items-center mt-4">
-            <Col div className="col-12 col-sm-auto mr-auto">
-                <Link to="/login" onClick={setAfterAuthPath} className="btn btn-primary mr-2">Log in</Link>
+            <Col div className="col-12 col-sm-auto me-auto">
+                <Link to="/login" onClick={setAfterAuthPath} className="btn btn-primary me-2">Log in</Link>
                 <Link to="/register" onClick={setAfterAuthPath} className="btn btn-outline-primary bg-white">Sign up</Link>
             </Col>
             {navigation.nextItem && <Col className="col-auto mt-4 mt-md-0">
@@ -71,7 +71,7 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
             You can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`}>account settings</Link>.
         </p>
         <div className="mt-4">
-            <Button color="primary" className="mr-2" onClick={provideConsent}>Consent</Button>
+            <Button color="primary" className="me-2" onClick={provideConsent}>Consent</Button>
             {navigation.nextItem && <Button tag={Link} color="outline-primary" className="bg-white" to={{pathname: navigation.nextItem.to, search: navigation.search}}>
                 Skip question
             </Button>}

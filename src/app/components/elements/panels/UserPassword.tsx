@@ -43,10 +43,10 @@ const ThirdPartyAccount = ({provider, isLinked, imgCss} : {provider: Authenticat
             className={`linked-account-button ${imgCss}`}
             onClick={() => dispatch(isLinked ? unlinkAccount(provider) : linkAccount(provider))}
         />
-        <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
+        <Label htmlFor="linked-accounts-no-password" className="ms-2 mb-0">
             {AUTHENTICATOR_FRIENDLY_NAMES_MAP[provider]}
         </Label>
-        <Button color="link" className="ml-auto mr-3 btn-sm">
+        <Button color="link" className="ms-auto me-3 btn-sm">
             {isLinked ? <span>Unlink</span> : <span>Link</span>}
         </Button>
     </Row>;
@@ -97,7 +97,7 @@ export const UserPassword = (
                     {(isPhy || (isAda && showPasswordFields)) && 
                     <>
                         {!editingOtherUser && 
-                        <FormGroup>
+                        <FormGroup className="form-group">
                             <Label htmlFor="password-current">Current password</Label>
                             <TogglablePasswordInput
                                 id="password-current" type="password" name="current-password"
@@ -106,7 +106,7 @@ export const UserPassword = (
                                 }
                             />
                         </FormGroup>}
-                        <FormGroup>
+                        <FormGroup className="form-group">
                             <Label htmlFor="new-password">New password</Label>
                             <TogglablePasswordInput
                                 invalid={submissionAttempted && !isNewPasswordValid}
@@ -124,7 +124,7 @@ export const UserPassword = (
                                 disabled={!editingOtherUser && currentPassword == ""}
                             />
                             {passwordFeedback &&
-                            <span className='float-right small mt-1'>
+                            <span className='float-end small mt-1'>
                                 <strong>Password strength: </strong>
                                 <span id="password-strength-feedback">
                                     {passwordFeedback.feedbackText}
@@ -168,7 +168,7 @@ export const UserPassword = (
             }
             <React.Fragment>
                 <hr className="text-center" />
-                {connectedAccounts.length > 0 && <FormGroup>
+                {connectedAccounts.length > 0 && <FormGroup className="form-group">
                     <h4>Linked {siteSpecific("Accounts", "accounts")}</h4>
                     <Col>
                         {connectedAccounts.map((provider) => {
@@ -176,7 +176,7 @@ export const UserPassword = (
                         })}
                     </Col>
                 </FormGroup>}
-                {unconnectedAccounts.length > 0 && <FormGroup>
+                {unconnectedAccounts.length > 0 && <FormGroup className="form-group">
                     <h4>Link other accounts</h4>
                     <Col>
                         {unconnectedAccounts.map((provider) => {
@@ -187,7 +187,7 @@ export const UserPassword = (
             </React.Fragment>
             <React.Fragment>
                 <hr className="text-center"/>
-                <FormGroup>
+                <FormGroup className="form-group">
                     <h4>Log Out</h4>
                     <p>
                         {"This button will log you out on all devices, including this one. " +

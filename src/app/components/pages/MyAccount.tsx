@@ -334,7 +334,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <Card>
-                    <Nav tabs className={classNames("my-4 flex-wrap", {"mx-4": isAda})}>
+                    <Nav tabs className={classNames("my-4 flex-wrap", {"mx-4": isAda})} data-testid="account-nav">
                     <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.account})}>
                             <NavLink
                                 className={siteSpecific("mx-2", "px-2")} tabIndex={0}
@@ -391,7 +391,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                     <Form name="my-account" onSubmit={updateAccount}>
                         {error?.type == "generalError" &&
                                 <ExigentAlert color="warning">
-                                    <p className="alert-heading font-weight-bold">Unable to update your account</p>
+                                    <p className="alert-heading fw-bold">Unable to update your account</p>
                                     <p>{error.generalError}</p>
                                 </ExigentAlert>
                         }

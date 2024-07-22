@@ -93,7 +93,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                         />}
                                     </div>
 
-                                    <FormGroup>
+                                    <FormGroup className="form-group">
                                         <p><strong>Step 2:</strong> Enter the code provided by your app</p>
                                         <Label htmlFor="setup-verification-code">Verification Code</Label>
                                         <Input
@@ -102,7 +102,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                             onChange={e => setMFAVerificationCode(e.target.value.replace(/ /g, ""))}
                                         />
                                     </FormGroup>
-                                    <FormGroup>
+                                    <FormGroup className="form-group">
                                         <Button
                                             type="submit"
                                             className="btn-secondary w-100"
@@ -117,7 +117,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                         :
                         <Row>
                             <Col>
-                                <FormGroup>
+                                <FormGroup className="form-group">
                                     <Button
                                         type="button"
                                         className="btn-secondary w-100"
@@ -149,7 +149,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
             <Row className="pt-4">
                 <Col xs={{size: 6, offset: 3}} className="text-center px-4">
                     {userAuthSettings && <p>
-                        <FormGroup>
+                        <FormGroup className="form-group">
                             <Button
                                 className="btn-secondary"
                                 onClick={() => userToUpdate.id && disableAccountMFA(userToUpdate.id)}

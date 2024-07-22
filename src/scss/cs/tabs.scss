@@ -41,7 +41,7 @@ $link-text-bottom-padding: 4px;
       border-radius: 0 !important;
       transform: translateY(#{$nav-bottom-line - 0.1});
       @extend .font-size-1-25;
-      @extend .font-weight-regular;
+      @extend .fw-regular;
       transition-property: border-bottom-color, color;
       transition-duration: 0.15s;
       transition-timing-function: ease-out;

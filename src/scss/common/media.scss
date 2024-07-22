@@ -23,19 +23,19 @@ figure {
 }
 
 @include respond-above(md) {
-  .align-left {
+  .align-start {
     float: left;
     width: 300px;
     padding-right: 30px;
   }
 
-  .align-right {
+  .align-end {
     float: right;
     width: 300px;
     padding-left: 30px;
   }
 
-  .align-right-half {
+  .align-end-half {
     float: right;
     width: 50%;
     padding-left: 30px;

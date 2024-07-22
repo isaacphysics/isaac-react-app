@@ -32,7 +32,6 @@ interface UserContextRowProps {
     setBooleanNotation: (bn: BooleanNotation) => void;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     tutorOrAbove: boolean;
-    showPlusOption: boolean;
     userContexts: UserContext[];
     setUserContexts: (ucs: UserContext[]) => void;
     index: number;
@@ -41,7 +40,7 @@ interface UserContextRowProps {
 
 function UserContextRow({
     userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings,
-    tutorOrAbove, showPlusOption, userContexts, setUserContexts, index, required: _required
+    tutorOrAbove, userContexts, setUserContexts, index, required: _required
 }: UserContextRowProps) {
     const onlyUCWithThisStage = existingUserContexts.length === 0 || existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
 
@@ -86,7 +85,7 @@ function UserContextRow({
         {/* Stage Selector */}
         <div className="d-flex flex-row justify-content-between">
             <StyledDropdown
-                className={classNames("account-dropdown", {"mr-1" : isAda})}
+                className={classNames("account-dropdown", {"me-1" : isAda})}
                 aria-label="Stage"
                 invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
                 onChange={onStageUpdate}
@@ -103,7 +102,7 @@ function UserContextRow({
 
             {/* Exam Board Selector */}
             {isAda && <StyledDropdown
-                className="account-dropdown ml-1"
+                className="account-dropdown ms-1"
                 aria-label="Exam Board"
                 invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
                 onChange={onExamBoardUpdate}
@@ -119,24 +118,12 @@ function UserContextRow({
             </StyledDropdown>}
 
             <div className="remove-stage-container">
-                {tutorOrAbove && <button
-                    type="button" className="close float-none" aria-label="clear stage row"
+                {tutorOrAbove && userContexts.length > 1 && <Button close
+                    className="close float-none bg-white p-2" aria-label="clear stage row"
                     disabled={userContexts.length <= 1}
                     onClick={() => setUserContexts(userContexts.filter((_uc, i) => i !== index))}
-                >
-                    ×
-                </button>}
+                />}
             </div>
-
-            {!isAda && showPlusOption && validateUserContexts(userContexts) && <Label className="m-0 mt-1">
-                <button
-                    type="button" aria-label="Add stage"
-                    className={`ml-3 align-middle close float-none pointer-cursor`}
-                    onClick={() => setUserContexts([...userContexts, {}])}
-                >
-                    +
-                </button>
-            </Label>}
         </div>
     </React.Fragment>;
 }
@@ -159,7 +146,7 @@ export function UserContextAccountInput({
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
 
     return <div className={className}>
-        <Label htmlFor="user-context-selector" className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}>
+        <Label htmlFor="user-context-selector" className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
             {siteSpecific(
                 <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
                 <span>Show me content for...</span>
@@ -200,7 +187,7 @@ export function UserContextAccountInput({
                         userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
                         setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
                         existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
-                        tutorOrAbove={tutorOrAbove} showPlusOption={showPlusOption} userContexts={userContexts} setUserContexts={setUserContexts}
+                        tutorOrAbove={tutorOrAbove} userContexts={userContexts} setUserContexts={setUserContexts}
                         index={index} required={required}
                         />
                 </FormGroup>;
@@ -209,14 +196,14 @@ export function UserContextAccountInput({
                         userContext={{stage: STAGE.ALL, examBoard: siteSpecific(undefined, EXAM_BOARD.ALL)}} showNullStageOption={true} submissionAttempted={submissionAttempted}
                         // this component is replaced as soon as the user selects a stage, so this alternative setUserContext function is okay here, even if setting multiple
                         setUserContext={newUc => setUserContexts([newUc])} existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation}
-                        setDisplaySettings={setDisplaySettings} tutorOrAbove={tutorOrAbove} showPlusOption={true} userContexts={userContexts} setUserContexts={setUserContexts}
+                        setDisplaySettings={setDisplaySettings} tutorOrAbove={tutorOrAbove} userContexts={userContexts} setUserContexts={setUserContexts}
                         index={0} required={required}
                     />
                 </FormGroup>
             }
             {isAda && <>
                 {tutorOrAbove &&
-                    <Col lg={6} className="p-0 pr-4 pr-lg-0">
+                    <Col lg={6} className="p-0 pe-4 pe-lg-0">
                         <Button color="primary" outline className="mb-3 px-2 w-100"
                                 onClick={() => setUserContexts([...userContexts, {}])}
                                 disabled={!validateUserContexts(userContexts)}>
@@ -232,6 +219,13 @@ export function UserContextAccountInput({
                     />
                 </Label>}
             </>}
+            {!isAda && validateUserContexts(userContexts) && <div className="mb-3 ms-2 align-content-center remove-stage-container">
+                <Button
+                    aria-label="Add stage"
+                    className={`ms-2 align-middle btn-plus float-none pointer-cursor bg-white`}
+                    onClick={() => setUserContexts([...userContexts, {}])}
+                />
+            </div>}
         </div>
     </div>;
 }

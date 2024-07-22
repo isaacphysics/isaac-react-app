@@ -11,7 +11,7 @@ const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
     const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
     return <React.Fragment>
         {printHints && hints?.map((hint, index) => (
-            <div key={index} className={"question-hints pl-0 py-1 only-print"}>
+            <div key={index} className={"question-hints ps-0 py-1 only-print"}>
                 <h4>{`Hint ${index + 1}`}</h4>
                 <IsaacContent doc={hint}/>
             </div>

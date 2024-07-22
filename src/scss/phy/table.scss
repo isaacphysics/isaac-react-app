@@ -1,0 +1,11 @@
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid $border-color;
+}
+
+.table {
+    th, td {
+        border-top: 1px solid $border-color;
+        border-bottom-style: none;
+    }
+}

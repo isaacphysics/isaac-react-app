@@ -133,7 +133,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             {!event.isStudentOnly && <option value="OTHER">N/A - Other</option>}
                         </RS.Input>
                         {event.isStudentOnly && <div className="text-muted">{studentOnlyEventMessage(event.id)}</div>}
-                        {(event.isATeacherEvent || additionalInformation.yearGroup == 'TEACHER') && <div className="mt-2 text-right">
+                        {(event.isATeacherEvent || additionalInformation.yearGroup == 'TEACHER') && <div className="mt-2 text-end">
                             <a href="/pages/teacher_accounts" target="_blank">Click to upgrade to a teacher account</a> for free!
                         </div>}
                     </React.Fragment>}

@@ -1,5 +1,5 @@
 import React, {ChangeEvent} from "react";
-import {Button, Input, InputGroup, InputGroupAddon, Label} from "reactstrap";
+import {Button, Input, InputGroup, Label} from "reactstrap";
 import {siteSpecific, withSearch} from "../../services";
 
 const PhysicsSearchButton = () => (
@@ -10,7 +10,7 @@ const PhysicsSearchButton = () => (
                 <path fill='#FFF' d='M27.5 25.333l-4.43-4.396a6.82 6.82 0 0 0 1.325-4.045c0-3.8-3.116-6.892-6.948-6.892-3.83 0-6.947 3.092-6.947 6.892 0 3.801 3.117 6.892 6.947 6.892a6.95 6.95 0 0 0 3.918-1.203L25.82 27l1.681-1.667zm-14.962-8.44c0-2.687 2.203-4.872 4.91-4.872 2.708 0 4.91 2.185 4.91 4.871 0 2.686-2.202 4.871-4.91 4.871s-4.91-2.185-4.91-4.87z' />
             </g>
         </svg>
-        <span className='sr-only'>Search</span>
+        <span className='visually-hidden'>Search</span>
     </Button>
 );
 
@@ -21,7 +21,7 @@ const AdaSearchButton = () => (
                 <path fill='#000' d='M27.5 25.333l-4.43-4.396a6.82 6.82 0 0 0 1.325-4.045c0-3.8-3.116-6.892-6.948-6.892-3.83 0-6.947 3.092-6.947 6.892 0 3.801 3.117 6.892 6.947 6.892a6.95 6.95 0 0 0 3.918-1.203L25.82 27l1.681-1.667zm-14.962-8.44c0-2.687 2.203-4.872 4.91-4.872 2.708 0 4.91 2.185 4.91 4.871 0 2.686-2.202 4.871-4.91 4.871s-4.91-2.185-4.91-4.87z' />
             </g>
         </svg>
-        <span className='sr-only'>Search</span>
+        <span className='visually-hidden'>Search</span>
     </Button>
 );
 
@@ -34,7 +34,7 @@ const LongSearchButton = () => (
                 <path fill='#FFF' d='M27.5 25.333l-4.43-4.396a6.82 6.82 0 0 0 1.325-4.045c0-3.8-3.116-6.892-6.948-6.892-3.83 0-6.947 3.092-6.947 6.892 0 3.801 3.117 6.892 6.947 6.892a6.95 6.95 0 0 0 3.918-1.203L25.82 27l1.681-1.667zm-14.962-8.44c0-2.687 2.203-4.872 4.91-4.872 2.708 0 4.91 2.185 4.91 4.871 0 2.686-2.202 4.871-4.91 4.871s-4.91-2.185-4.91-4.87z' />
             </g>
         </svg>
-        <span className='sr-only'>Search</span>
+        <span className='visually-hidden'>Search</span>
     </Button>
 );
 
@@ -43,7 +43,7 @@ export const MainSearchInput = withSearch(({inputProps, setSearchText, searchTex
         setSearchText(e.target.value);
     }
     return <>
-        <Label for='header-search' className='sr-only'>Search</Label>
+        <Label for='header-search' className='visually-hidden'>Search</Label>
         <Input
             id="header-search" {...inputProps}
             value={searchText} onChange={setSearchTextAsValue}
@@ -68,15 +68,13 @@ export const AdaHomepageSearch = withSearch(({inputProps, setSearchText, searchT
         setSearchText(e.target.value);
     }
     return <>
-        <Label for='homepage-search' className='sr-only'>Search</Label>
+        <Label for='homepage-search' className='visually-hidden'>Search</Label>
         <InputGroup id={"homepage-search-group"}>
             <Input
                 id="homepage-search" {...inputProps} placeholder={"Search your topic here"}
                 value={searchText} onChange={setSearchTextAsValue}
             />
-            <InputGroupAddon addonType={"append"}>
-                <LongSearchButton/>
-            </InputGroupAddon>
+            <LongSearchButton/>
         </InputGroup>
     </>
 });
@@ -86,17 +84,15 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
         setSearchText(e.target.value);
     }
     return <>
-        <Label for='header-search' className='sr-only'>Search</Label>
+        <Label for='header-search' className='visually-hidden'>Search</Label>
         <InputGroup id={"header-search-group"}>
             <Input
                 id="header-search" {...inputProps}
                 value={searchText} onChange={setSearchTextAsValue}
             />
-            <InputGroupAddon addonType={"append"}>
-                <button>
-                    <img src={"/assets/cs/icons/search-jet.svg"}/>
-                </button>
-            </InputGroupAddon>
+            <button>
+                <img src={"/assets/cs/icons/search-jet.svg"}/>
+            </button>
         </InputGroup>
     </>;
 });

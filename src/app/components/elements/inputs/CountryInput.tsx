@@ -23,7 +23,7 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryC
     const {data: priorityCountryOptions} = useGetPriorityCountriesQuery();
 
     return <RS.FormGroup className={className}>
-        <Label htmlFor={`${idPrefix}-country-select`} className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}>Country</Label>
+        <Label htmlFor={`${idPrefix}-country-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>Country</Label>
         {isAda && <p className="d-block input-description mb-2">This helps us personalise the platform for you.</p>}
         <StyledDropdown
             id={`${idPrefix}-country-select`}

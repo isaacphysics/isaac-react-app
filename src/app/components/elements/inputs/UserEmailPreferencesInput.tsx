@@ -30,7 +30,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
         )
     };
 
-    return <FormGroup className="overflow-auto">
+    return <FormGroup className="form-group overflow-auto">
         {isPhy && submissionAttempted !== undefined ? <> {/* submissionAttempted should always exist on phy, just here for typing */}
             <Table className="mb-0">
                 <thead>

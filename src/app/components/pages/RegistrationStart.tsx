@@ -33,7 +33,9 @@ export const RegistrationStart = () => {
                         </div>
                         <div className="my-5">
                             <h3>Or log in with:</h3>
-                            {isAda && <RaspberryPiSignInButton />}
+                            {isAda && <div className="mb-2">
+                                <RaspberryPiSignInButton />
+                            </div>}
                             <GoogleSignInButton />
                         </div>
                         <hr />

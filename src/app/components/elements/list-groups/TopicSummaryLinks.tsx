@@ -55,7 +55,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                         tag={Link} to={{pathname: `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`, search}}
                         block color="link" className={"d-flex align-items-stretch " + classNames({"de-emphasised": item.deEmphasised})}
                     >
-                        <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
+                        <div className={"stage-label text-bg-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
                             {siteSpecific(
                             audienceString,
                             above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
@@ -63,13 +63,13 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                                 </>
                         )}
                         </div>
-                        <div className="title pl-3 d-flex">
+                        <div className="title ps-3 d-flex">
                             <div className="p-3">
                                 <Markup encoding={"latex"}>
                                     {item.title}
                                 </Markup>
                             </div>
-                            {item.deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
+                            {item.deEmphasised && <div className="ms-auto me-3 d-flex align-items-center">
                                 <span id={`audience-help-${index}`} className="icon-help mx-1" />
                                 <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${index}`}>
                                     {`This content has ${notRelevantMessage(userContext)}.`}

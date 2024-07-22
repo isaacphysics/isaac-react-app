@@ -10,7 +10,7 @@ export const StreakPanel = ({userProgress}: {userProgress?: UserProgress | null}
         <div className={"text-center-width"}>
             Weekly Streak
         </div>
-        <div className={"progress-gauge text-center-width ml-4 mr-4"}>
+        <div className={"progress-gauge text-center-width ms-4 me-4"}>
             <StreakGauge streakRecord={userProgress?.userSnapshot}/>
         </div>
         <div id="streak-help" className={"text-center-width"}>
@@ -18,7 +18,7 @@ export const StreakPanel = ({userProgress}: {userProgress?: UserProgress | null}
             {currentDailyStreak !== 0 && `Daily streak: ${currentDailyStreak} Day${currentDailyStreak !== 1 ? "s" : ""}`}
         </div>
         <RS.UncontrolledTooltip placement="bottom" target="streak-help">
-            <div className="text-left">
+            <div className="text-start">
                 The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/>
                 Answer at least <b>ten question parts</b> correctly per week to fill up your daily progress bar and increase your streak!
             </div>
