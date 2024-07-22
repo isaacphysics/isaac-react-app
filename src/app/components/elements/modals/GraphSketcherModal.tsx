@@ -183,7 +183,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                 }
                 <br/><br/>
                 <input type="checkbox" id="graph-sketcher-ui-show-slop" tabIndex={0} checked={showSlop} onChange={() => setShowSlop(s => !s)} />
-                <label htmlFor="graph-sketcher-ui-show-slop" className="ml-2">Show slop</label>
+                <label htmlFor="graph-sketcher-ui-show-slop" className="ms-2">Show slop</label>
             </code>}
 
             <input className={"d-none"} id="graph-sketcher-ui-color-select" value={drawingColorName} readOnly />

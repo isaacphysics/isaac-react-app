@@ -23,7 +23,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse}: {v
         <p className="mb-0">1 in 3 times the predicted mark will be wrong. Find out more in our <Link to="/support/student/general" target="_blank">FAQs</Link></p>
         <div className="prediction my-4">
             <div className='d-flex'>
-                <span className="icon-ai mr-2"/>
+                <span className="icon-ai me-2"/>
                 <strong>{`Prediction: ${validationResponse.marksAwarded} out of ${validationResponse.maxMarks} marks`}</strong>
             </div>
         </div>
@@ -32,7 +32,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse}: {v
                 <thead>
                     <tr>
                         <th>{siteSpecific("Mark Scheme", "Mark scheme")}</th>
-                        <th><span className='sr-only'>Predicted correct</span></th>
+                        <th><span className='visually-hidden'>Predicted correct</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,7 +40,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse}: {v
                         <td className="w-100">{mark.shortDescription}</td>
                         <td>{
                             mark.marks > 0 ?
-                                <><span className="sr-only">Predicted as awarded</span><span className='icon-feedback-tick' /></> :
+                                <><span className="visually-hidden">Predicted as awarded</span><span className='icon-feedback-tick' /></> :
                                 <></>
                         }</td>
                     </tr>)}

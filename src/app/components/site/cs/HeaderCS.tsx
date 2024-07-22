@@ -29,20 +29,20 @@ export const HeaderCS = () => {
 
     return <header className="light" data-testid={"header"}>
         <Navbar expand="nav" className={"px-0 px-nav-3 pb-0 pb-nav-2"}>
-            <NavbarBrand href="/" className="header-logo ml-3 mb-2 mb-nav-0 link-light">
+            <NavbarBrand href="/" className="header-logo ms-3 mb-2 mb-nav-0 link-light">
                 <img src="/assets/common/logos/ada_logo_3-stack_aqua_white_text.svg" alt="Ada Computer Science" />
             </NavbarBrand>
 
             <a href={`#${mainContentId}`} className="skip-main position-absolute">Skip to main content</a>
 
-            <button aria-label="Toggle search bar" className={"ml-auto mr-4 search-toggler d-nav-none"} onClick={() => setIsSearchOpen(!isSearchOpen)}>
+            <button aria-label="Toggle search bar" className={"ms-auto me-4 search-toggler d-nav-none"} onClick={() => setIsSearchOpen(!isSearchOpen)}>
                 <span className={"search-toggler-icon"}/>
             </button>
-            <NavbarToggler className={classNames("mr-4", {"open": isOpen})} onClick={() => setIsOpen(!isOpen)} />
+            <NavbarToggler className={classNames("me-4", {"open": isOpen})} onClick={() => setIsOpen(!isOpen)} />
 
             <MenuOpenContext.Provider value={{menuOpen: isOpen, setMenuOpen: setIsOpen}}>
-                <Collapse className={"search-collapse p-3 p-nav-0 mr-nav-2 border-nav-0"} isOpen={isSearchOpen} navbar>
-                    <AdaHeaderSearch className={"ml-nav-2 d-nav-inline-block d-block"} onSearch={closeWholeNavbar} />
+                <Collapse className={"search-collapse p-3 p-nav-0 me-nav-2 border-nav-0"} isOpen={isSearchOpen} navbar>
+                    <AdaHeaderSearch className={"ms-nav-2 d-nav-inline-block d-block"} onSearch={closeWholeNavbar} />
                 </Collapse>
                 <Collapse isOpen={isOpen} navbar>
                     <Nav navbar className={"w-100"}>
@@ -68,14 +68,14 @@ export const HeaderCS = () => {
                             <LinkItem to="/support/teacher">Support</LinkItem>
                         </NavigationSection>
 
-                        <NavigationSection className={"text-center text-left-nav"} topLevelLink to="/contact" title={"Contact us"}/>
+                        <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/contact" title={"Contact us"}/>
 
                         <div className={"navbar-separator d-nav-none d-block"}/>
 
                         {!isLoggedIn(user)
                             ? <>
-                                <NavigationSection className={"ml-nav-auto text-center text-left-nav"} topLevelLink to="/register" title={"Sign up"}/>
-                                <NavigationSection className={"text-center text-left-nav"} topLevelLink to="/login" title={"Log in"}/>
+                                <NavigationSection className={"ms-nav-auto text-center text-start-nav"} topLevelLink to="/register" title={"Sign up"}/>
+                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/login" title={"Log in"}/>
                             </>
                             :
                             <>
@@ -105,8 +105,7 @@ export const HeaderCS = () => {
                                     }
                                     <LinkItem to="/account">My account</LinkItem>
                                 </NavigationSection>
-                                <NavigationSection className={"text-center text-left-nav"} topLevelLink to="/logout" title={"Log out"}/>
-                            </>
+                                <NavigationSection className={"ms-nav-auto text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>                            </>
                         }
 
                         <div className={"navbar-separator d-nav-none d-block"}/>

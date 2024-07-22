@@ -99,7 +99,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         <p>Due date: {formatDate(quizAssignment.dueDate)}</p>
                     </Col>}
                     <Col>
-                        <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br/>
+                        <Label for="feedbackMode" className="pe-1">Student feedback mode:</Label><br/>
                         <UncontrolledButtonDropdown size="sm">
                             <DropdownToggle color={siteSpecific("tertiary", "secondary")} className={siteSpecific("border", "")} caret size={siteSpecific("lg", "sm")} disabled={isUpdatingQuiz}>
                                 {feedbackNames[quizAssignment.quizFeedbackMode as QuizFeedbackMode]}
@@ -115,7 +115,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
                     </Col>
-                    <Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
+                    <Col sm={12} md={"auto"} className={"text-end mt-2 mt-md-0"}>
                         <Button
                             color="primary" outline className="btn-md mt-1 text-nowrap"
                             href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}

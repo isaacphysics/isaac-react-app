@@ -5,9 +5,32 @@
   @return mix($color-base, $color, $level * $theme-color-interval);
 }
 
-@mixin apply-subject-classes($color) {
+@mixin bg-variant($parent, $color) {
+  #{$parent} {
+    background-color: $color !important;
+  }
+  a#{$parent},
+  button#{$parent} {
+    &:hover, &:focus {
+      background-color: darken($color, 10%) !important;
+    }
+  }
+}
+
+@mixin text-emphasis-variant($parent, $color) {
+  #{$parent} {
+    color: $color !important;
+  }
+  a#{$parent}:hover,
+  a#{$parent}:focus {
+    color: darken($color, 10%) !important;
+  }
+}
+
+@mixin apply-subject-classes($color, $subject) {
   /* background classes */
   @include bg-variant(".bg-secondary", $color);
+  
 
   /* correct answer */
   .validation-response-panel {
@@ -37,6 +60,9 @@
   /* btn classes */
   .btn-secondary {
     @include button-variant($color, $color);
+    &:not(:disabled):not(.disabled):active {
+      background-color: darken($color, 4);
+    }
   }
 
   //.btn-outline-primary {
@@ -45,10 +71,11 @@
 
   /* text- classes */
   @include text-emphasis-variant(".text-secondary", $color);
+  // text-emphasis-color: $color;
 
   /* badge classes */
-  .badge-secondary {
-    @include badge-variant($color);
+  .text-bg-secondary {
+    @extend .text-bg-#{$subject};
   }
 
   /* borders */
@@ -56,19 +83,24 @@
     border-color: $color !important;
   }
 
-  /* checkboxes and radio buttons */
-  .custom-control-input {
-    &:checked ~ .custom-control-label::before {
+  /* BS5 checkboxes and radio buttons */
+  .form-check-input {
+    width: 24px;
+    height: 24px;
+    transition: all 0.1s ease-in-out;
+    outline: none;
+    box-shadow: none;
+    &:checked {
       border-color: $color;
       background-color: $color;
     }
-    &:focus ~ .custom-control-label::before {
-      box-shadow: 0 0 0 $input-btn-focus-width rgba($color, .25);
-    }
-    &:focus:not(:checked) ~ .custom-control-label::before {
+    &:focus {
       border-color: $color;
+      &:checked {
+        box-shadow: 0 0 0 0.25rem rgba($color, 0.25);
+      }
     }
-    &:not(:disabled):active ~ .custom-control-label::before {
+    &:not(:disabled):active {
       background-color: lighten($color, 35%);
       border-color: lighten($color, 35%);
     }
@@ -84,17 +116,14 @@
         @include button-variant($color, $color);
       }
       &:focus {
-        box-shadow: 0 0 0 $input-btn-focus-width rgba($color, .25);
+        box-shadow: 0 0 0 0.25rem rgba($color, .25);
       }
     }
   }
 
   .alert-secondary {
-    @include alert-variant(
-      color-level($color, $alert-bg-level),
-      color-level($color, $alert-border-level),
-      color-level($color, $alert-color-level)
-    );
+    @extend .alert-#{$subject};
+    color: $dark; // override font colour to improve on default contrast
   }
 
   li {
@@ -116,18 +145,18 @@
 
 // FIXME: This is not nice at all, but does fix subject and email prefs!
 #account-page, #registration-page, #login-page {
-  @include apply-subject-classes($a11y_green);
+  @include apply-subject-classes($a11y_green, "secondary");
 }
 
 div.physics {
-  @include apply-subject-classes($phy_physics);
+  @include apply-subject-classes($phy_physics, "physics");
 }
 div.maths {
-  @include apply-subject-classes($phy_maths);
+  @include apply-subject-classes($phy_maths, "maths");
 }
 div.chemistry {
-  @include apply-subject-classes($phy_chemistry);
+  @include apply-subject-classes($phy_chemistry, "chemistry");
 }
 div.biology {
-  @include apply-subject-classes($phy_biology);
+  @include apply-subject-classes($phy_biology, "biology");
 }

@@ -209,7 +209,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
                 </span>
             </Button>
             <div className="gameboard-links align-items-center">
-                <Button color="link" tag="a" className="mr-md-0">
+                <Button color="link" tag="a" className="me-md-0">
                     {isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span>
                 </Button>
                 <span className="d-none d-md-inline">,</span>
@@ -331,7 +331,7 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
                 </span>
             </Button>
             <div className="gameboard-links align-items-center">
-                <Button color="link" tag="a" className="mr-md-0">
+                <Button color="link" tag="a" className="me-md-0">
                     {isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span>
                 </Button>
                 <span className="d-none d-md-inline">,</span>
@@ -410,7 +410,7 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
             </a></div>}
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
                 <img src={siteSpecific("/assets/common/icons/icon-expand-arrow.png", "/assets/common/icons/chevron-up.svg")} alt="" className="accordion-arrow" />
-                <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
+                <span className="visually-hidden">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
             </Button>
         </div>
         {isExpanded && <GroupDetails group={group} user={user} />}
@@ -442,11 +442,11 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 modalId="help_modal_assignment_progress"
             />
             <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_help")} ifNotFound={RenderNothing} />
-            <div className="w-100 text-right">
-                <InputGroup className="d-inline text-nowrap">
-                    <Label className="pr-2 mt-1">Sort assignments and tests:</Label>
+            <div className="w-100 text-end">
+                <div className="d-inline text-nowrap">
+                    <Label className="pe-2 mt-1">Sort assignments and tests:</Label>
                     <UncontrolledButtonDropdown size="sm">
-                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
+                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={siteSpecific("lg", "sm")}>
                             {assignmentOrder.type} ({assignmentOrder.order === SortOrder.ASC ? "ascending" : "descending"})
                         </DropdownToggle>
                         <DropdownMenu>
@@ -455,11 +455,11 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                             )}
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
-                </InputGroup>
-                <InputGroup className="d-inline text-nowrap ml-4">
-                    <Label className="pr-2 mt-1">Sort groups:</Label>
+                </div>
+                <div className="d-inline text-nowrap ms-4">
+                    <Label className="pe-2 mt-1">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">
-                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
+                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={siteSpecific("lg", "sm")}>
                             {groupSortOrder}
                         </DropdownToggle>
                         <DropdownMenu>
@@ -468,7 +468,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                             )}
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
-                </InputGroup>
+                </div>
             </div>
         </Container>
         <ShowLoadingQuery

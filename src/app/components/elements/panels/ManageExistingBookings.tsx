@@ -226,9 +226,9 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                 </RS.Table>
             </div>
 
-            <div className="mt-3 text-right">
+            <div className="mt-3 text-end">
                 <RS.ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
-                    <RS.DropdownToggle caret color="primary" outline className="mr-3 mt-1">
+                    <RS.DropdownToggle caret color="primary" outline className="me-3 mt-1">
                         Email Users
                     </RS.DropdownToggle>
                     <RS.DropdownMenu>

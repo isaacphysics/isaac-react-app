@@ -44,13 +44,13 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
             {subtitle && <RS.CardText className='m-0 my-auto card-date-time'>{subtitle}</RS.CardText>}
             <RS.CardText className="m-0 my-auto card-date-time">
                 <span className="d-block my-2">
-                    <span className="font-weight-bold">When:</span>
+                    <span className="fw-bold">When:</span>
                     <span className="d-block">
                         {formatEventCardDate(event, pod)}
                     </span>
                 </span>
                 {location && location.address && <span className='d-block my-2'>
-                    <span className="font-weight-bold">Location:</span> {" "}
+                    <span className="fw-bold">Location:</span> {" "}
                     {!event.isVirtual ?
                         <span>{location.address.addressLine1}{location.address.town && `, ${location.address.town}`}</span> :
                         <span>Online</span>
@@ -60,7 +60,7 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
             <RS.CardText className="d-flex">
                 <Link className="focus-target" to={`/events/${id}`}>
                     View details
-                    <span className='sr-only'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
+                    <span className='visually-hidden'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
                 </Link>
                 {isPhy && <div className="event-card-icons">
                     {isTeacherEvent && <img src="/assets/phy/icons/key_stage_sprite.svg#teacher-hat" alt="Teacher event" title="Teacher event"/>}

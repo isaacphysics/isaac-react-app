@@ -13,9 +13,9 @@ export const RegistrationStart = () => {
     };
 
     const login = (event: React.MouseEvent) => {
-        event.preventDefault()
+        event.preventDefault();
         history.push("/login");
-    }
+    };
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
@@ -33,7 +33,9 @@ export const RegistrationStart = () => {
                         </div>
                         <div className="my-5">
                             <h3>Or log in with:</h3>
-                            {isAda && <RaspberryPiSignInButton />}
+                            {isAda && <div className="mb-2">
+                                <RaspberryPiSignInButton />
+                            </div>}
                             <GoogleSignInButton />
                         </div>
                         <hr />
@@ -49,5 +51,5 @@ export const RegistrationStart = () => {
                 </Row>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};

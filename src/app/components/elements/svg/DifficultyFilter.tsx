@@ -28,7 +28,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
     const practiceOptionsRow = difficultyOptions.slice(0, 3);
     const challengeOptionsRow = difficultyOptions.slice(3, 6);
 
-    return <Container className="ml-0 pl-0 text-center" style={{width: 2 * focusPadding + 6 * (hexagon.halfWidth + 2 * hexagon.padding)}}>
+    return <Container className="ms-0 ps-0 text-center" style={{width: 2 * focusPadding + 6 * (hexagon.halfWidth + 2 * hexagon.padding)}}>
         <span>Practice</span>
         <svg width={`${2 * focusPadding + 6 * (hexagon.halfWidth + hexagon.padding)}`} height={`${2 * focusPadding + 4 * hexagon.quarterHeight + 2 * hexagon.padding}px`}>
             <title>Difficulties filter selector</title>

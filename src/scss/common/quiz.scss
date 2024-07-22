@@ -39,15 +39,15 @@
   min-height: 100%;
 }
 
-.card-grid-sm *, .card-grid-xs * {
+.card-grid-xs * {
   flex-basis: 100%;
 }
 
-.card-grid-md *, .card-grid-lg * {
+.card-grid-sm *, .card-grid-md * {
   flex-basis: 50%;
 }
 
-.card-grid-xl * {
+.card-grid-lg *, .card-grid-xl * {
   flex-basis: 33.333333%;
 }
 

@@ -14,11 +14,11 @@ export const Toasts = () => {
         toasts.map((toast) => <RS.Toast key={toast.id} isOpen={toast.showing}>
             <RS.ToastHeader icon={toast.color} className={siteSpecific("py-2 px-3", "")}
                 toggle={toast.closable ? (() => toast.id && dispatch(hideToast(toast.id))): undefined}>
-                <span className={`pl-1 toast-heading text-${toast.color}`}>{toast.title}</span>
+                <span className={`ps-1 toast-heading text-${toast.color}`}>{toast.title}</span>
             </RS.ToastHeader>
             {toast.body && <RS.ToastBody className="p-3">
                 {toast.body}
-                {toast.buttons && <div className="text-right">{toast.buttons}</div>}
+                {toast.buttons && <div className="text-end">{toast.buttons}</div>}
             </RS.ToastBody>}
         </RS.Toast>)
     }</div>;

@@ -1,8 +1,17 @@
 import React, {FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {AppState, fetchSearch, selectors, useAppDispatch, useAppSelector} from "../../state";
-import * as RS from "reactstrap";
-import {Col, Container, Row} from "reactstrap";
+import {
+    Card,
+    CardBody,
+    CardHeader,
+    Badge,
+    Col,
+    Form,
+    Label,
+    Container,
+    Row
+} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {
@@ -117,19 +126,19 @@ export const Search = withRouter((props: RouteComponentProps) => {
             </Row>
             <Row>
                 <Col className="py-4">
-                    <RS.Card>
-                        <RS.CardHeader className="search-header">
-                            <RS.Col sm={12} md={5} lg={siteSpecific(5, 4)} xl={siteSpecific(5, 3)}>
+                    <Card>
+                        <CardHeader className="search-header">
+                            <Col sm={12} md={5} lg={siteSpecific(5, 4)} xl={siteSpecific(5, 3)}>
                                 <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <IsaacSpinner /> : null}
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
                                 </h3>
-                            </RS.Col>
-                            <RS.Col sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)}>
-                                <RS.Form inline className="search-filters">
-                                    <RS.Row className="w-100 align-items-center justify-content-end m-0">
-                                        <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
+                            </Col>
+                            <Col sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)}>
+                                <Form className="form-inline search-filters">
+                                    <div className="w-100 align-items-center justify-content-end m-0 d-flex">
+                                        <Label htmlFor="document-filter" className="d-none d-lg-inline-block me-1">
                                             {`Filter${siteSpecific("","s")}:`}
-                                        </RS.Label>
+                                        </Label>
                                         <div className="search-filters-select-container">
                                             <StyledSelect
                                                 inputId="document-filter" isMulti
@@ -146,21 +155,20 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                                 styles={selectStyle}
                                             />
                                         </div>
-
-                                    </RS.Row>
+                                    </div>
 
                                     <UserContextPicker />
-                                </RS.Form>
-                            </RS.Col>
-                        </RS.CardHeader>
-                        {urlQuery != "" && <RS.CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
+                                </Form>
+                            </Col>
+                        </CardHeader>
+                        {urlQuery != "" && <CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {gotResults ?
                                     <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={true}/>
                                     : <em>No results found</em>}
                             </ShowLoading>
-                        </RS.CardBody>}
-                    </RS.Card>
+                        </CardBody>}
+                    </Card>
                 </Col>
             </Row>
         </Container>

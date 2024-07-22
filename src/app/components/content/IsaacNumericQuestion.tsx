@@ -12,7 +12,6 @@ import {
     DropdownToggle,
     Input,
     InputGroup,
-    InputGroupAddon,
     Label,
     Row,
     UncontrolledTooltip
@@ -114,10 +113,10 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                 {currentAttemptValueWrong && <div className={"feedback-box"}>
                                     <span className={"feedback incorrect"}><b>!</b></span>
                                 </div>}
-                                {!readonly && <InputGroupAddon addonType="append">
+                                {!readonly && <>
                                     {siteSpecific(
                                         <Button type="button" className={classNames("numeric-help", {"py-0": isAda})} size="sm" id={helpTooltipId}>?</Button>,
-                                        <span id={helpTooltipId} className="icon-help-q my-auto"/>
+                                        <span id={helpTooltipId} className="icon-help-q my-auto ms-3"/>
                                     )}
                                     <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                                         Here are some examples of numbers you can write:<br /><br />
@@ -126,12 +125,12 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                         2.8e-12<br /><br />
                                         Do not use commas or spaces.
                                     </UncontrolledTooltip>
-                                </InputGroupAddon>}
+                                </>}
                             </InputGroup>
                         </Label>
                     </div>
                     {(doc.requireUnits || doc.displayUnit) && <div className="unit-selection w-100 w-md-50">
-                        <Label className="w-100 w-md-auto pl-md-5">
+                        <Label className="w-100 w-md-auto ps-md-5">
                             Unit{noDisplayUnit && "s"} <br/>
                             <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle
@@ -146,7 +145,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                         <span className={"feedback incorrect"}>✘</span>
                                     </div>}
                                 </DropdownToggle>
-                                <DropdownMenu right>
+                                <DropdownMenu end>
                                     {selectedUnits.map((unit) =>
                                         <DropdownItem key={wrapUnitForSelect(unit)}
                                             data-unit={unit || 'None'}

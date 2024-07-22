@@ -79,7 +79,7 @@ export const symbolicInputValidator = (input: string) => {
     if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
         // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
         return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
-    } 
+    }
     return errors;
 };
 
@@ -92,13 +92,13 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const [textInput, setTextInput] = useState('');
 
+    let currentAttemptValue: any | undefined = undefined;
+
     function currentAttemptPythonExpression(): string {
         return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
     }
 
     const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
-
-    let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
@@ -222,7 +222,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 <RS.InputGroup className="my-2 separate-input-group">
                     <RS.Input type="text" onChange={updateEquation} value={textInput}
                               placeholder="Type your formula here"/>
-                    <RS.InputGroupAddon addonType="append">
+                    <>
                         {siteSpecific(
                             <RS.Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>,
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
@@ -237,7 +237,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                             <br />
                             As you type, the box below will preview the result.
                         </RS.UncontrolledTooltip>
-                    </RS.InputGroupAddon>
+                    </>
                 </RS.InputGroup>
                 <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
                 {symbolList && <div className="eqn-editor-symbols">

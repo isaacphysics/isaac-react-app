@@ -60,7 +60,7 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ClozeItemDTO>[]}
 
     return <div className={"mb-3"}>
         <Label className="mt-3">Items: </Label>
-        <Label className={"sr-only"} id={"item-section-info"}>
+        <Label className={"visually-hidden"} id={"item-section-info"}>
             To pick up an item, press space or enter.
             Use the up and down arrow keys to navigate between drop zones and items in the question.
             Press space or enter again to drop the item into a new position, or to swap it with another

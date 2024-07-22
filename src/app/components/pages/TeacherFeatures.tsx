@@ -28,7 +28,7 @@ export const TeacherFeatures = () => {
                     <p className="subtitle">
                         Isaac Physics provides you with a huge range of resources to support your teaching of Physics – all for free.                 </p>
                 </Col>}
-            {isDisabled && <Col md={6} className="text-center text-md-right">
+            {isDisabled && <Col md={6} className="text-center text-md-end">
                 <Button tag={Link} size="lg" color="secondary" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
                     {isLoggedIn(user) ? "Upgrade my Account" : "Get a Teacher Account"}
                 </Button>
@@ -90,7 +90,7 @@ export const TeacherFeatures = () => {
         </Row>
         <Row className="my-4">
             <Col>
-                <h3 className="h-title text-right">Teacher Resources</h3>
+                <h3 className="h-title text-end">Teacher Resources</h3>
             </Col>
         </Row>
         <Row className="card-deck isaac-cards-body mb-5 mt-2 px-3">

@@ -273,7 +273,7 @@ export const Glossary = () => {
                 <Col md={{size: 9}} className="py-4">
                     <Row className="no-print">
                         {isPhy && <Col className="mt-3 mt-md-0">
-                            <Label for='subject-select' className='sr-only'>Subject</Label>
+                            <Label for='subject-select' className='visually-hidden'>Subject</Label>
                             <Select inputId="subject-select"
                                 options={subjects.map(s => ({ value: s.id, label: s.title}))}
                                 value={filterSubject ? ({value: filterSubject.id, label: filterSubject.title}) : undefined}
@@ -286,14 +286,14 @@ export const Glossary = () => {
                             />
                         </Col>}
                         <Col md={{size: 4}}>
-                            <Label for='terms-search' className='sr-only'>Search by term</Label>
+                            <Label for='terms-search' className='visually-hidden'>Search by term</Label>
                             <Input
                                 id="terms-search" type="search" name="query" placeholder="Search by term" aria-label="Search by term"
                                 value={searchText} onChange={e => setSearchText(e.target.value)}
                             />
                         </Col>
                         {isAda && <Col className="mt-3 mt-md-0">
-                            <Label for='topic-select' className='sr-only'>Topic</Label>
+                            <Label for='topic-select' className='visually-hidden'>Topic</Label>
                             <StyledSelect inputId="topic-select"
                                 options={ topics.map(t => ({ value: t.id, label: t.title}))}
                                 name="topic-select"
@@ -303,7 +303,7 @@ export const Glossary = () => {
                             />
                         </Col>}
                         {isPhy && <Col className="mt-3 mt-md-0">
-                            <Label for='stage-select' className='sr-only'>Stage</Label>
+                            <Label for='stage-select' className='visually-hidden'>Stage</Label>
                             <StyledSelect inputId="stage-select"
                                 options={ stages.map(s => ({ value: s, label: stageLabelMap[s]})) }
                                 value={filterStage ? ({value: filterStage, label: stageLabelMap[filterStage]}) : undefined}
@@ -316,8 +316,8 @@ export const Glossary = () => {
                     </Row>
                     <Row className="only-print">
                         <Col>
-                            {searchText !== "" && <span className="pr-4">Search: <strong>{searchText}</strong></span>}
-                            {isDefined(filterTopic) && <span className="pr-4">Topic: <strong>{filterTopic.title}</strong></span>}
+                            {searchText !== "" && <span className="pe-4">Search: <strong>{searchText}</strong></span>}
+                            {isDefined(filterTopic) && <span className="pe-4">Topic: <strong>{filterTopic.title}</strong></span>}
                         </Col>
                     </Row>
                 </Col>

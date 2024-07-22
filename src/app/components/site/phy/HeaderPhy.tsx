@@ -15,7 +15,7 @@ export const HeaderPhy = () => {
     return <header className="bg-white" data-testid={"header"}>
         <Container className="container-fluid px-0">
             <Row className="align-items-center">
-                <Col>
+                <Col className="d-grid">
                     <div className="header-bar mx-3 mx-md-0 d-md-flex">
                         <div className="header-logo">
                             <Link to="/">
@@ -26,7 +26,7 @@ export const HeaderPhy = () => {
 
                         <a href={`#${mainContentId}`} className="skip-main">Skip to main content</a>
 
-                        <div className="m-md-0 d-none d-md-block d-flex align-self-center d-print-none pl-4">
+                        <div className="m-md-0 d-none d-md-block d-flex align-self-center d-print-none ps-4">
                             {user?.loggedIn &&
                                 <React.Fragment>
                                     <div id="header-progress" className="d-none d-md-block">
@@ -40,7 +40,7 @@ export const HeaderPhy = () => {
                                 </React.Fragment>}
                         </div>
 
-                        <div className="header-links ml-auto pr-3 px-md-3 d-flex align-items-center d-print-none pt-lg-3">
+                        <div className="header-links ms-auto pe-3 px-md-3 d-flex align-items-center d-print-none pt-lg-3">
                             {user &&
                                 (!user.loggedIn ?
                                     <React.Fragment>
@@ -49,7 +49,7 @@ export const HeaderPhy = () => {
                                                 <span>LOG IN</span>
                                             </Link>
                                         </div>
-                                        <div className="signup m-0 mr-md-4 ml-md-3">
+                                        <div className="signup m-0 me-md-4 ms-md-3">
                                             <Link to="/register">
                                                 <span>SIGN UP</span>
                                             </Link>
@@ -65,7 +65,7 @@ export const HeaderPhy = () => {
                                                 <span>{`${!["xs"].includes(deviceSize) ? "MY " : ""}ACCOUNT`}</span>
                                             </Link>
                                         </div>
-                                        <div className="logout m-0 mr-md-4 ml-md-3">
+                                        <div className="logout m-0 me-md-4 ms-md-3">
                                             <Link to="/logout">
                                                 <span>LOG OUT</span>
                                             </Link>
@@ -75,7 +75,7 @@ export const HeaderPhy = () => {
                             }
                         </div>
 
-                        <div className="header-search m-md-0 ml-md-auto align-items-center d-print-none pt-3">
+                        <div className="header-search m-md-0 ms-md-auto align-items-center d-print-none pt-3">
                             <MainSearch />
                         </div>
                     </div>

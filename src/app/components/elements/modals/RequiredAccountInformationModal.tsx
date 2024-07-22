@@ -88,7 +88,7 @@ const RequiredAccountInfoBody = () => {
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
-            <div className="text-right text-muted required-before">
+            <div className="text-end text-muted required-before">
                 Required
             </div>
             <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage/>

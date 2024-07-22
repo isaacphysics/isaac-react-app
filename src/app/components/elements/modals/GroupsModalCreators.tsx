@@ -16,7 +16,7 @@ import {
 } from "../../../state";
 import sortBy from "lodash/sortBy";
 import {history, isAda, isDefined, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
-import {Jumbotron, Row, Col, Form, Input, Table, CustomInput, Alert} from "reactstrap";
+import {Row, Col, Form, Input, Table, Alert, Label} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {AppGroup, AppGroupTokenDTO} from "../../../../IsaacAppTypes";
@@ -70,19 +70,19 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
             query={tokenQuery}
             defaultErrorTitle={"Error fetching group joining token"}
             thenRender={token => <>
-                <Jumbotron>
+                <div className="jumbotron rounded px-3 px-sm-4 py-3 py-sm-5">
                     <h2 className={classNames({"font-size-1-5": isAda})}>Option 1: Share link</h2>
                     <p>Share the following link with your students to have them join your group:</p>
                     <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1" data-testid={"share-link"}>
                         {location.origin}/account?authToken={token?.token}
                     </span>
-                </Jumbotron>
+                </div>
 
-                <Jumbotron>
+                <div className="jumbotron rounded px-3 px-sm-4 py-3 py-sm-5">
                     <h2 className={classNames({"font-size-1-5": isAda})}>Option 2: Share code</h2>
                     <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
                     <h3 className="text-center user-select-all d-block border bg-light p-1" data-testid={"share-code"}>{token?.token}</h3>
-                </Jumbotron>
+                </div>
             </>}
         />
         <p>
@@ -277,17 +277,19 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
         </Table>
 
         {userIsOwner && <Alert className={classNames("px-2 py-2 mb-2", {"my-3": isAda})} color={group.additionalManagerPrivileges ? "danger" : "warning"}>
-            <CustomInput
-                id="additional-manager-privileges-check"
-                checked={group.additionalManagerPrivileges}
-                className={"mb-2"}
-                type="checkbox"
-                label={"Give additional managers extra privileges"}
-                onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
-            />
+            <div>
+                <Input
+                    id="additional-manager-privileges-check"
+                    checked={group.additionalManagerPrivileges}
+                    className={"mb-2"}
+                    type="checkbox"
+                    onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
+                />
+                <Label for="additional-manager-privileges-check" className="ms-2 mb-0">Give additional managers extra privileges</Label>
+            </div>
             {group.additionalManagerPrivileges
                 ? <>
-                    <span className={"font-weight-bold"}>Caution</span>: All other group managers are allowed delete
+                    <span className={"fw-bold"}>Caution</span>: All other group managers are allowed delete
                     and modify any assignments set to this group (by any other manager including the owner), remove
                     group members, and archive and rename the group. <br/>
                     Additional managers cannot add or remove other managers. <br/>

@@ -34,7 +34,7 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
             <Card>
                 <CardBody>
                     <Form name="passwordReset">
-                        <FormGroup>
+                        <FormGroup className="form-group">
                             <Label htmlFor="password">New password</Label>
                             <Input id="password" type="password" name="password-new"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +45,7 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
                                 }}
                                 required/>
                             {passwordFeedback &&
-                            <span className='float-right small mt-1'>
+                            <span className='float-end small mt-1'>
                                 <strong>Password strength: </strong>
                                 <span id="password-strength-feedback">
                                     {passwordFeedback.feedbackText}
@@ -53,7 +53,7 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
                             </span>
                             }
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className="form-group">
                             <Label htmlFor="password-confirm">Re-enter new password</Label>
                             <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password-new-confirm" onBlur={e => {
                                 validateAndSetPassword(e);
