@@ -1,21 +1,16 @@
 import {screen, waitFor, within} from "@testing-library/react";
+import {navigateToGroups, navigateToMyAccount, renderTestEnvironment, switchAccountTab} from "../testUtils";
 import {
-    renderTestEnvironment,
-    switchAccountTab,
-    navigateToGroups,
-    navigateToMyAccount
-} from "../testUtils";
-import {
+    buildMockStudent,
+    buildMockTeacher,
+    buildMockUserSummary,
+    buildMockUserSummaryWithGroupMembership,
     mockActiveGroups,
     mockArchivedGroups,
-    buildMockTeacher,
-    mockUser,
-    buildMockUserSummary,
     mockGroups,
-    buildMockStudent,
-    buildMockUserSummaryWithGroupMembership
+    mockUser
 } from "../../mocks/data";
-import {ACCOUNT_TAB, API_PATH, extractTeacherName, isDefined, isPhy, siteSpecific} from "../../app/services";
+import {ACCOUNT_TAB, API_PATH, extractTeacherName, isDefined} from "../../app/services";
 import difference from "lodash/difference";
 import isEqual from "lodash/isEqual";
 import userEvent from "@testing-library/user-event";
@@ -23,8 +18,8 @@ import {ResponseResolver, rest} from "msw";
 import {
     buildAuthTokenHandler,
     buildGroupHandler,
-    handlerThatReturns,
-    buildNewManagerHandler
+    buildNewManagerHandler,
+    handlerThatReturns
 } from "../../mocks/handlers";
 import queryString from "query-string";
 

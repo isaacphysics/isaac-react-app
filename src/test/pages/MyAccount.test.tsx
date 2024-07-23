@@ -1,12 +1,9 @@
-import { rest } from "msw";
-import { ACCOUNT_TAB, API_PATH, extractTeacherName, siteSpecific } from "../../app/services";
-import {
-    mockActiveGroups,
-    buildMockTeacher,
-    buildMockUserSummary} from "../../mocks/data";
-import {followHeaderNavLink, navigateToMyAccount, renderTestEnvironment, switchAccountTab} from "../testUtils";
+import {rest} from "msw";
+import {ACCOUNT_TAB, API_PATH, extractTeacherName} from "../../app/services";
+import {buildMockTeacher, buildMockUserSummary, mockActiveGroups} from "../../mocks/data";
+import {navigateToMyAccount, renderTestEnvironment, switchAccountTab} from "../testUtils";
 import userEvent from "@testing-library/user-event";
-import { screen, waitFor, within } from "@testing-library/react";
+import {screen, waitFor, within} from "@testing-library/react";
 
 describe("My Account", () => {
     it("students can join a group by entering a group code", async () => {
