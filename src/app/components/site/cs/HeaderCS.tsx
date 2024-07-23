@@ -7,7 +7,7 @@ import {
     isEventLeader,
     isLoggedIn,
     isStaff,
-    isTeacherOrAbove,
+    isTutorOrAbove,
     PATHS
 } from "../../../services";
 import {
@@ -95,7 +95,7 @@ export const HeaderCS = () => {
                                     {isStaff(user) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
                                 </NavigationSection>}
                                 <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments" />}</>}>
-                                    {isTeacherOrAbove(user) ?
+                                    {isTutorOrAbove(user) ?
                                         <>
                                             <LinkItem to="/groups">Teaching groups</LinkItem>
                                             <LinkItem to={PATHS.SET_ASSIGNMENTS}>Manage assignments</LinkItem>
