@@ -54,8 +54,9 @@ function UserContextRow({
         const onlyOneAtThisStage = existingUserContexts.length === 0 || existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
         const possibleExamBoards = getFilteredExamBoardOptions(
             {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
-            }) || [EXAM_BOARD.ADA];
-        const examBoard = possibleExamBoards.map(e => e.value).includes(userContext.examBoard as EXAM_BOARD) && userContext.examBoard || possibleExamBoards[0].value;
+            });
+        const examBoards = possibleExamBoards.map(e => e.value) || [EXAM_BOARD.ADA];
+        const examBoard = examBoards.includes(userContext.examBoard as EXAM_BOARD) && userContext.examBoard || possibleExamBoards[0].value;
         setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
 
         // Set display settings default values
