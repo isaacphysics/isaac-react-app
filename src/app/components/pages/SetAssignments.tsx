@@ -201,10 +201,10 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                 <Label>{siteSpecific("Board", "Quiz")} currently assigned to:</Label>
                 {startedAssignees.length > 0
                     ? <Container className="mb-4">{startedAssignees.map(assignee =>
-                        <Row data-testid={"current-assignment"} key={assignee.groupId} className="px-1">
+                        <div data-testid={"current-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
-                        </Row>
+                        </div>
                     )}</Container>
                     : <p>No groups.</p>}
             </div>
@@ -216,7 +216,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                 </UncontrolledTooltip>
                 {scheduledAssignees.length > 0
                     ? <Container className="mb-4">{scheduledAssignees.map(assignee =>
-                        <Row data-testid={"pending-assignment"} key={assignee.groupId} className="px-1">
+                        <div data-testid={"pending-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             {assignee.startDate && <>
                                     <span id={`start-date-${assignee.groupId}`} className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
@@ -225,7 +225,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                                     </span>
                             </>}
                             <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
-                        </Row>
+                        </div>
                     )}</Container>
                     : <p>No groups.</p>}
             </div>
