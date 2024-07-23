@@ -62,7 +62,7 @@ export const RegistrationVerifyEmail = () => {
             <CardBody>
                 {!emailVerified && userFromParamVerificationFailed &&
                     <ExigentAlert color="warning">
-                        <p className="alert-heading font-weight-bold">Unable to verify your email address</p>
+                        <p className="alert-heading fw-bold">Unable to verify your email address</p>
                         <p>{getRTKQueryErrorMessage(userFromParamVerificationErrored).message}</p>
                     </ExigentAlert>
                 }

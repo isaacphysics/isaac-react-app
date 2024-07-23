@@ -1,13 +1,13 @@
-import {Button, CardDeck, Container} from "reactstrap";
+import {Button, Container, Row} from "reactstrap";
 import {NewsCard} from "../elements/cards/NewsCard";
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {NEWS_PODS_PER_PAGE} from "../../services";
-import { IsaacPodDTO } from "../../../IsaacApiTypes";
-import { PageFragment } from "../elements/PageFragment";
+import {IsaacPodDTO} from "../../../IsaacApiTypes";
+import {PageFragment} from "../elements/PageFragment";
 
 export const OnlineCourses = () => {
     const [page, setPage] = React.useState(0);
@@ -33,16 +33,16 @@ export const OnlineCourses = () => {
         <TitleAndBreadcrumb currentPageTitle={"Online courses"} />
         <MetaDescription description={metaDescription} />
         <PageFragment fragmentId={"online_courses_help"} />
-        {allCourses.length === 0 ? 
+        {allCourses.length === 0 ?
             <ShowLoadingQuery
                 query={onlineCourseQuery}
-                thenRender={() => <div className={"w-100 text-left"}><h4>No courses to display...</h4></div>}
+                thenRender={() => <div className={"w-100 text-start"}><h4>No courses to display...</h4></div>}
                 defaultErrorTitle={"Error fetching online courses"}
-            /> : 
+            /> :
             <>
-                <CardDeck className="justify-content-center mt-4">
+                <Row className="d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 justify-content-between my-3">
                     {allCourses.map(n => <NewsCard key={n.id} newsItem={n} className="ratio-5x3" showTitle />)}
-                </CardDeck>
+                </Row>
                 <div className="w-100 d-flex justify-content-center mb-5">
                     <Button className={"mt-3"} color={"primary"} disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load more courses</Button>
                 </div>

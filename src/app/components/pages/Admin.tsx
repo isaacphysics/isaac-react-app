@@ -86,27 +86,23 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                                 onChange={e => setNewVersion(e.target.value)}
                                                 placeholder="Enter commit SHA"
                                             />
-                                            <RS.InputGroupAddon addonType="append">
-                                                <a
-                                                    className={classnames("btn btn-secondary", {
-                                                        "p-1 border-dark": isPhy,
-                                                        "disabled": displayVersion === liveContentVersion
-                                                    })}
-                                                    href={`${EDITOR_COMPARE_URL}/${liveContentVersion}/${displayVersion}`}
-                                                    target="_blank" rel="noopener"
-                                                >
-                                                    Preview Changes
-                                                </a>
-                                            </RS.InputGroupAddon>
-                                            <RS.InputGroupAddon addonType="append">
-                                                <RS.Button
-                                                    type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
-                                                    onClick={startVersionUpdate}
-                                                    disabled={!isAdmin(user) || displayVersion === liveContentVersion}
-                                                >
-                                                    Set Version
-                                                </RS.Button>
-                                            </RS.InputGroupAddon>
+                                            <a
+                                                className={classnames("btn btn-secondary", {
+                                                    "p-1 border-dark": isPhy,
+                                                    "disabled": displayVersion === liveContentVersion
+                                                })}
+                                                href={`${EDITOR_COMPARE_URL}/${liveContentVersion}/${displayVersion}`}
+                                                target="_blank" rel="noopener"
+                                            >
+                                                Preview Changes
+                                            </a>
+                                            <RS.Button
+                                                type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
+                                                onClick={startVersionUpdate}
+                                                disabled={!isAdmin(user) || displayVersion === liveContentVersion}
+                                            >
+                                                Set Version
+                                            </RS.Button>
                                         </RS.InputGroup>
                                     </RS.Form>
                                 }

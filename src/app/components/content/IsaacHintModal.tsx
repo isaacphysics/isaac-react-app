@@ -5,6 +5,7 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {logAction, useAppDispatch} from "../../state";
 import {ConfidenceContext} from "../../../IsaacAppTypes";
 import {siteSpecific} from "../../services";
+import classNames from "classnames";
 
 interface HintModalProps {
     label: string;
@@ -47,7 +48,7 @@ export const IsaacHintModal = (props: HintModalProps) => {
         </Button>
 
         <Modal isOpen={isOpen} toggle={toggle} size={"lg"} {...restOfProps}>
-            <ModalHeader close={closeButton}>
+            <ModalHeader close={closeButton} className={classNames({"d-flex justify-content-between": closeButton})}>
                 {title}
             </ModalHeader>
             <ModalBody className={"mx-3 mb-3"}>

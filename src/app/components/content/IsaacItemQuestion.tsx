@@ -1,7 +1,7 @@
 import React, {ChangeEvent} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacItemQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
-import {CustomInput, Label} from "reactstrap";
+import {Input, Label} from "reactstrap";
 import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
@@ -37,7 +37,7 @@ const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaac
             <ul>{doc.items && doc.items.map((item) =>
                 <li key={item.value} className="list-unstyled">
                     <Label className="label-radio multichoice-option d-flex">
-                        <CustomInput
+                        <Input
                             id={`${questionId}|${item.id}`}
                             color="secondary"
                             type="checkbox"

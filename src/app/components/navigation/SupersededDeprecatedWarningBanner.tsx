@@ -28,7 +28,7 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: SeguePageDTO}) {
     const teacherMessage = isTutorOrAbove(user) && <React.Fragment>
         <span id="superseded-help" className="icon-help" />
         <RS.UncontrolledTooltip placement="bottom" target="superseded-help">
-            <div className="text-left">
+            <div className="text-start">
                 {supersededBy && <>
                     We periodically update questions into new formats.<br />
                     If this question appears on one of your gameboards, you may want to update the gameboard.<br />

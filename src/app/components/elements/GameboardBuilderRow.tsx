@@ -42,7 +42,7 @@ const GameboardBuilderRow = (
         return tag && tag.title;
     };
     const tagIcon = (tag: string) => {
-        return <span key={tag} className={classNames("badge badge-pill mx-1", siteSpecific("badge-warning", "badge-primary"))}>{tag}</span>
+        return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</span>
     };
 
     const openQuestionModal = (urlQuestionId: string) => {
@@ -57,7 +57,7 @@ const GameboardBuilderRow = (
         AUDIENCE_DISPLAY_FIELDS
     );
 
-    const cellClasses = "text-left align-middle";
+    const cellClasses = "text-start align-middle";
     const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
 
     return <tr
@@ -66,13 +66,13 @@ const GameboardBuilderRow = (
         {...(provided && provided.draggableProps)} {...(provided && provided.dragHandleProps)}
     >
         <td className="w-5 text-center align-middle">
-            <RS.CustomInput
+            <RS.Input
                 type="checkbox"
                 id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                 aria-label={!isSelected ? "Select question" : "Deselect question"}
                 title={!isSelected ? "Select question" : "Deselect question"}
                 color="secondary"
-                className={!provided ? "isaac-checkbox mr-n2 ml-1" : undefined}
+                className={!provided ? "isaac-checkbox me-n2 ms-1" : undefined}
                 checked={isSelected}
                 onChange={() => {
                     if (question.id) {
@@ -96,8 +96,8 @@ const GameboardBuilderRow = (
             />
         </td>
         <td className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
-            {provided && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="mr-1 grab-cursor" />}
-            <a className="mr-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
+            {provided && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
+            <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
                 {generateQuestionTitle(question)}
             </a>
             <input

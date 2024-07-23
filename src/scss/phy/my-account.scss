@@ -12,3 +12,9 @@
     color: #666;
   }
 }
+
+.linked-account-button-outer {
+  > label, > button {
+    width: max-content;
+  }
+}

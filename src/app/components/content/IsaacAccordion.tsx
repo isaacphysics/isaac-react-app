@@ -11,7 +11,7 @@ import {
     mergeDisplayOptions,
     siteSpecific,
     stringifyAudience,
-    useUserContext
+    useUserViewingContext
 } from "../../services";
 import {AppState, selectors, useAppSelector} from "../../state";
 import {useLocation} from "react-router-dom";
@@ -30,7 +30,7 @@ interface SectionWithDisplaySettings extends ContentDTO {
 export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
     const page = useAppSelector((state: AppState) => (state && state.doc) || null);
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
 
     // Select different default display depending on page type
     const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
@@ -53,7 +53,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
 
             // Handle conditional display settings
             .map(section => {
-                let sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
+                const sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
                 const sectionDisplaySettings = isIntendedAudience(section.audience, userContext, user) ?
                         sectionDisplay?.["audience"] : sectionDisplay?.["nonAudience"];
                 if (sectionDisplaySettings?.includes("open")) {section.startOpen = true;}
@@ -87,15 +87,16 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             // Filter out hidden sections before they mess up indexing
             .filter(section => !section.hidden)
 
-            .map((section , index) =>
-                <Accordion
+            .map((section , index) => {
+                const intendedAudience = isIntendedAudience(section.audience, userContext, user);
+                return <Accordion
                     key={`${section.sectionIndex} ${index}`} id={section.id} index={index}
                     startOpen={section.startOpen} deEmphasised={section.deEmphasised}
                     trustedTitle={section?.title || ""}
-                    audienceString={stringifyAudience(section.audience, userContext)}
+                    audienceString={stringifyAudience(section.audience, userContext, intendedAudience)}
                 >
                     <IsaacContent doc={section} />
-                </Accordion>
-            )}
+                </Accordion>;
+            })}
     </div>;
 };

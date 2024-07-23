@@ -1,5 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {followHeaderNavLink, renderTestEnvironment} from "../utils";
+import {followHeaderNavLink, renderTestEnvironment} from "../testUtils";
 import {rest} from "msw";
 import {API_PATH, isPhy, useQueryParams} from "../../app/services";
 import {handlerThatReturns} from "../../mocks/handlers";

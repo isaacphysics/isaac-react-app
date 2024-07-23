@@ -2,7 +2,7 @@ import React from "react";
 import {screen} from "@testing-library/react";
 import {MOST_RECENT_AUGUST} from "../../app/state";
 import produce from "immer";
-import {renderTestEnvironment} from "../utils";
+import {renderTestEnvironment} from "../testUtils";
 
 describe("UserContextReconfirmationModal", () => {
 

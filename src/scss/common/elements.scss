@@ -295,8 +295,13 @@ iframe.email-html {
 //  }
 //}
 
-.collapsible-head img {
-  transition: transform 0.1s ease;
+.collapsible-head {
+  margin-left: 0;
+  margin-right: 0;
+
+  img {
+    transition: transform 0.1s ease;
+  }
 }
 
 .collapsible-body {

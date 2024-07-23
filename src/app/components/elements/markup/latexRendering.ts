@@ -2,7 +2,7 @@ import {useContext} from "react";
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../../state";
 import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
-import {dropZoneRegex, renderA11yString, BOOLEAN_NOTATION, isAda, useUserContext} from "../../../services";
+import {dropZoneRegex, renderA11yString, BOOLEAN_NOTATION, isAda, useUserPreferences} from "../../../services";
 import katex, {KatexOptions} from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
 import {Immutable} from "immer";
@@ -290,7 +290,7 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
                 // If katex-a11y fails, generate MathML using KaTeX for accessibility
                 if (screenReaderText) {
                     katexRenderResult = katexRenderResult.replace('<span class="katex">',
-                        `<span class="katex"><span class="sr-only" aria-label="${screenReaderText}" role="text"></span>`);
+                        `<span class="katex"><span class="visually-hidden" aria-label="${screenReaderText}" role="text"></span>`);
                 } else {
                     const katexMathML = katex.renderToString(latexMunged.replace(dropZoneRegex, "clickable drop zone"), {...katexOptions, output: "mathml"})
                         .replace(`class="katex"`, `class="katex-mathml"`);
@@ -335,7 +335,7 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
 export const useRenderKatex = () => {
     const user = useAppSelector(selectors.user.orNull);
     const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
-    const {preferredBooleanNotation} = useUserContext();
+    const {preferredBooleanNotation} = useUserPreferences();
     const figureNumbers = useContext(FigureNumberingContext);
 
     return (markup: string) => katexify(markup, user, preferredBooleanNotation && BOOLEAN_NOTATION[preferredBooleanNotation], segueEnvironment === "DEV", figureNumbers);

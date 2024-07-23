@@ -6,7 +6,7 @@ import {
 } from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
+import {AssignmentProgressDTO, ContentBaseDTO, IsaacQuizDTO, IsaacQuizSectionDTO, QuizAssignmentDTO, QuizFeedbackMode, RegisteredUserDTO, UserSummaryDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
     extractTeacherName,
@@ -17,9 +17,10 @@ import {
     TODAY,
     useAssignmentProgressAccessibilitySettings,
     isQuestion,
-    PATHS
+    PATHS,
+    isAuthorisedFullAccess
 } from "../../../services";
-import {AppAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
+import {AuthorisedAssignmentProgress, AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
@@ -99,7 +100,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         <p>Due date: {formatDate(quizAssignment.dueDate)}</p>
                     </Col>}
                     <Col>
-                        <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br/>
+                        <Label for="feedbackMode" className="pe-1">Student feedback mode:</Label><br/>
                         <UncontrolledButtonDropdown size="sm">
                             <DropdownToggle color={siteSpecific("tertiary", "secondary")} className={siteSpecific("border", "")} caret size={siteSpecific("lg", "sm")} disabled={isUpdatingQuiz}>
                                 {feedbackNames[quizAssignment.quizFeedbackMode as QuizFeedbackMode]}
@@ -115,7 +116,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
                     </Col>
-                    <Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
+                    <Col sm={12} md={"auto"} className={"text-end mt-2 mt-md-0"}>
                         <Button
                             color="primary" outline className="btn-md mt-1 text-nowrap"
                             href={getQuizAssignmentCSVDownloadLink(quizAssignment.id as number)}
@@ -158,8 +159,8 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         return questions;
     }
 
-    function markClassesInternal(studentProgress: AppAssignmentProgress, correctParts: number, incorrectParts: number, totalParts: number) {
-        if (!studentProgress.user.authorisedFullAccess) {
+    function markClassesInternal(studentProgress: AssignmentProgressDTO, correctParts: number, incorrectParts: number, totalParts: number) {
+        if (!isAuthorisedFullAccess(studentProgress)) {
             return "revoked";
         } else if (correctParts === totalParts) {
             return "completed";
@@ -174,7 +175,11 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         }
     }
 
-    function markClasses(studentProgress: AppAssignmentProgress) {
+    function markClasses(studentProgress: AssignmentProgressDTO) {
+        if (!isAuthorisedFullAccess(studentProgress)) {
+            return "revoked";
+        }
+
         const correctParts = studentProgress.correctQuestionPartsCount;
         const incorrectParts = studentProgress.incorrectQuestionPartsCount;
         const total = questions.reduce((acc, q) => acc + (q.questionPartsTotal ?? 0), 0);
@@ -182,9 +187,13 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         return markClassesInternal(studentProgress, correctParts, incorrectParts, total);
     }
 
-    function markQuestionClasses(studentProgress: AppAssignmentProgress, index: number) {
-        const correctParts = studentProgress.correctPartResults[index];
-        const incorrectParts = studentProgress.incorrectPartResults[index];
+    function markQuestionClasses(studentProgress: AssignmentProgressDTO, index: number) {
+        if (!isAuthorisedFullAccess(studentProgress)) {
+            return "revoked";
+        }
+
+        const correctParts = (studentProgress.correctPartResults || [])[index];
+        const incorrectParts = (studentProgress.incorrectPartResults || [])[index];
         const totalParts = questions[index].questionPartsTotal ?? 0;
 
         return markClassesInternal(studentProgress, correctParts, incorrectParts, totalParts);
@@ -208,7 +217,7 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
 
     const totalParts = questions.length;
 
-    const progress : AppAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
+    const progress : AuthorisedAssignmentProgress[] = !assignment.userFeedback ? [] : assignment.userFeedback.map(user => {
         return {
             user: user.user as UserSummaryDTO,
             completed: user.feedback?.complete ?? false,

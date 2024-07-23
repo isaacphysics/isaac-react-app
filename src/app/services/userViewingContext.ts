@@ -1,17 +1,14 @@
 import {
-    BOOLEAN_NOTATION,
     comparatorFromOrderedValues,
     CS_EXAM_BOARDS_BY_STAGE,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
-    examBoardBooleanNotationMap,
     examBoardLabelMap,
     history,
     isAda,
     isDefined,
     isLoggedIn,
     isPhy,
-    PROGRAMMING_LANGUAGE,
     roleRequirements,
     siteSpecific,
     STAGE,
@@ -20,10 +17,10 @@ import {
     STAGES_CS,
     stagesOrdered,
     useQueryParams,
-} from "./";
+} from ".";
 import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext} from "../../IsaacApiTypes";
 import {useParams} from "react-router-dom";
-import {AppState, InterstitialCookieState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
+import {AppState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {useContext, useEffect} from "react";
@@ -35,24 +32,19 @@ export interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
     setExamBoard: (stage: EXAM_BOARD) => void;
     showOtherContent?: boolean;
-    preferredProgrammingLanguage?: PROGRAMMING_LANGUAGE;
-    preferredBooleanNotation?: BOOLEAN_NOTATION;
     explanation: {stage?: string, examBoard?: string};
-    cookieConsent: InterstitialCookieState;
+    hasDefaultPreferences: boolean;
 }
 
 const urlMessage = "URL query parameters";
 const gameboardMessage = `${siteSpecific("gameboard", "quiz")} settings`;
 
-export function useUserContext(): UseUserContextReturnType {
+export function useUserViewingContext(): UseUserContextReturnType {
     const dispatch = useAppDispatch();
     const queryParams = useQueryParams(true);
 
     const user = useAppSelector((state: AppState) => state && state.user);
-    const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} =
-        useAppSelector((state: AppState) => state?.userPreferences) || {};
-
-    const cookieConsent = useAppSelector((state: AppState) => state?.cookieConsent ?? null);
+    const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
 
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext) || {};
 
@@ -60,12 +52,6 @@ export function useUserContext(): UseUserContextReturnType {
     const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));
 
     const explanation: UseUserContextReturnType["explanation"] = {};
-
-    // Programming Language
-    let preferredProgrammingLanguage;
-    if (programmingLanguage) {
-        preferredProgrammingLanguage = Object.values(PROGRAMMING_LANGUAGE).find(key => programmingLanguage[key] === true);
-    }
 
     // Stage
     let stage: STAGE;
@@ -94,18 +80,11 @@ export function useUserContext(): UseUserContextReturnType {
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].examBoard) {
         examBoard = user.registeredContexts[0].examBoard as EXAM_BOARD;
     } else {
-        examBoard = EXAM_BOARD.ALL;
+        examBoard = isAda ? EXAM_BOARD.ADA : EXAM_BOARD.ALL;
     }
 
-    // Boolean notation preference -
-    let preferredBooleanNotation: BOOLEAN_NOTATION | undefined;
-    if (booleanNotation) {
-        preferredBooleanNotation = Object.values(BOOLEAN_NOTATION).find(key => booleanNotation[key] === true);
-    }
-    // if we don't have a boolean notation preference for the user, then set it based on the exam board
-    if (preferredBooleanNotation === undefined) {
-        preferredBooleanNotation = examBoardBooleanNotationMap[examBoard];
-    }
+    // Whether stage and examboard are the default
+    const hasDefaultPreferences = isAda && stage === STAGE.ALL && examBoard === EXAM_BOARD.ADA;
 
     // Gameboard views overrides all context options
     const currentGameboard = useContext(GameboardContext);
@@ -166,14 +145,11 @@ export function useUserContext(): UseUserContextReturnType {
         }
     }, [stage, examBoard]);
 
-    return {
-        stage, setStage, examBoard, setExamBoard, explanation,
-        showOtherContent, preferredProgrammingLanguage, preferredBooleanNotation,
-        cookieConsent
-    };
+    return { stage, setStage, examBoard, setExamBoard, explanation, showOtherContent, hasDefaultPreferences };
 }
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
+    {label: "ADA (Default)", value: EXAM_BOARD.ADA},
     {label: "AQA", value: EXAM_BOARD.AQA},
     {label: "CIE", value: EXAM_BOARD.CIE},
     {label: "EDEXCEL", value: EXAM_BOARD.EDEXCEL},
@@ -231,12 +207,14 @@ const _STAGE_ITEM_OPTIONS = siteSpecific([ /* best not to export - use getFilter
     {label: "University", value: STAGE.UNIVERSITY},
     {label: "All stages", value: STAGE.ALL},
 ], [
+    {label: "All Stages (Default)", value: STAGE.ALL},
     {label: "GCSE", value: STAGE.GCSE},
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "National 5", value: STAGE.SCOTLAND_NATIONAL_5},
     {label: "Higher", value: STAGE.SCOTLAND_HIGHER},
     {label: "Advanced Higher", value: STAGE.SCOTLAND_ADVANCED_HIGHER},
-    {label: "All stages", value: STAGE.ALL},
+    {label: "Core", value: STAGE.CORE},
+    {label: "Advanced", value: STAGE.ADVANCED},
 ]);
 interface StageFilterOptions {
     byUser?: Immutable<PotentialUser> | null;
@@ -447,12 +425,16 @@ export function audienceStyle(audienceString: string): string {
             return "stage-label-higher";
         case stageLabelMap.scotland_advanced_higher:
             return "stage-label-advanced-higher";
+        case stageLabelMap.core:
+            return "stage-label-core";
+        case stageLabelMap.advanced:
+            return "stage-label-advanced";
         default:
             return "stage-label-all";
     }
 }
 
-export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType): string {
+export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType, intendedAudience: boolean): string {
     let stagesSet: Set<Stage>;
     if (!audience) {
         stagesSet = new Set<Stage>([STAGE.ALL]);
@@ -462,17 +444,23 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     }
     // order stages
     const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
-    // if you are one of the options - only show that option
     const stagesFilteredByUserContext = audienceStages.filter(s => userContext.stage === s);
-    const stagesToView = stagesFilteredByUserContext.length > 0 ? stagesFilteredByUserContext : audienceStages;
-    // If common, could find substrings and report ranges i.e, GCSE to University
-    
+    let stagesToView: Stage[] = [];
+
     if (isAda) {
         // Ada currently (subject to change) want to show the stages as 3 groups:
         // - GCSE & A Level
         // - National 5 & Higher
         // - Advanced Higher
         // with intra-group separation by commas, inter-group separation by newlines
+
+        const defaultStage = audienceStages.includes(STAGE.CORE) ? [STAGE.CORE] : [STAGE.ADVANCED];
+        stagesToView = userContext.hasDefaultPreferences || !intendedAudience
+            ? defaultStage
+            : stagesFilteredByUserContext.length > 0
+                ? stagesFilteredByUserContext
+                // only show Core and Advanced intentionally
+                : audienceStages.filter(s => ![STAGE.CORE, STAGE.ADVANCED].includes(s as STAGE));
 
         const result = stagesToView.reduce((acc, label) => {
             if ([STAGE.GCSE, STAGE.A_LEVEL].includes(label as STAGE)) {
@@ -481,9 +469,11 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
                 acc[1].push(label);
             } else if ([STAGE.SCOTLAND_ADVANCED_HIGHER].includes(label as STAGE)) {
                 acc[2].push(label);
+            } else if ([STAGE.CORE, STAGE.ADVANCED].includes(label as STAGE)) {
+                acc[3].push(label);
             }
             return acc;
-        }, [[], [], []] as Stage[][]);
+        }, [[], [], [], []] as Stage[][]);
 
         // FIXME: use result.findLastIndex when supported
         // const lastNonEmptyIndex = result.findLastIndex((labels) => labels.length > 0);
@@ -499,6 +489,8 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
         }, "");
     }
 
+    // if you are one of the options - only show that option
+    stagesToView = stagesFilteredByUserContext.length > 0 ? stagesFilteredByUserContext : audienceStages;
     return stagesToView.map(stage => stageLabelMap[stage]).join(" & ");
 }
 

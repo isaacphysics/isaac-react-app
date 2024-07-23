@@ -99,7 +99,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
     return <RS.FormGroup className={`school mb-4 ${className} `}>
-        <Label htmlFor={`school-input-${randomNumber}`} className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}>School</Label>
+        <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>School</Label>
         {isAda && <p className="d-block input-description">This helps us measure our reach and impact.</p>}
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect
@@ -118,7 +118,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         </React.Fragment>}
 
         {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex mt-2">
-            <RS.CustomInput
+            <RS.Input
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
                 invalid={isInvalid}
@@ -131,12 +131,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                         setUserToUpdate?.(userWithoutSchoolInfo);
                     }
                 })}
-                label={`Not associated with a ${siteSpecific("","UK ")}school`}
             >
                 <FormFeedback>
                     Please specify your school association.
                 </FormFeedback>
-            </RS.CustomInput>
+            </RS.Input>
+            <Label for={`${idPrefix}-not-associated-with-school`} className="ms-2">Not associated with a {siteSpecific("","UK ")}school</Label>
         </div>}
     </RS.FormGroup>;
 };

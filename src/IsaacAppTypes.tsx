@@ -180,6 +180,7 @@ export interface IsaacQuestionProps<T extends QuestionDTO, R extends QuestionVal
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: Immutable<ApiTypes.QuestionValidationResponseDTO>;
     currentAttempt?: Immutable<ApiTypes.ChoiceDTO>;
+    loading?: boolean;
     canSubmit?: boolean;
     locked?: Date;
     accordionClientId?: string;
@@ -243,6 +244,10 @@ export interface DisplaySettings {
     HIDE_QUESTION_ATTEMPTS?: boolean;
 }
 
+export interface UserConsent {
+    OPENAI?: boolean;
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
@@ -250,6 +255,7 @@ export interface UserPreferencesDTO {
     PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
     BOOLEAN_NOTATION?: BooleanNotation;
     DISPLAY_SETTING?: DisplaySettings;
+    CONSENT?: UserConsent;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
@@ -259,6 +265,10 @@ export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
 
 export function isValidatedChoice(choice: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>): choice is Immutable<ValidatedChoice<ApiTypes.ChoiceDTO>> {
     return choice.hasOwnProperty("frontEndValidation");
+}
+
+export interface CanAttemptQuestionTypeDTO {
+    remainingAttempts?: number;
 }
 
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO;
@@ -320,8 +330,10 @@ export enum BoardOrder {
     "-visited" = "-visited",
     "title" = "title",
     "-title" = "-title",
-    "completion" = "completion",
-    "-completion" = "-completion"
+    "attempted" = "attempted",
+    "-attempted" = "-attempted",
+    "correct" = "correct",
+    "-correct" = "-correct",
 }
 
 export enum AssignmentOrderType {
@@ -436,13 +448,8 @@ export const AssignmentScheduleContext = React.createContext<{
     viewBy: "startDate" | "dueDate";
 }>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 
-export interface AppAssignmentProgress {
-    user: ApiTypes.UserSummaryDTO;
-    completed: boolean;
-    correctPartResults: number[];
-    incorrectPartResults: number[];
-    results: ApiTypes.GameboardItemState[];
-
+export interface AuthorisedAssignmentProgress extends ApiTypes.AssignmentProgressDTO {
+    completed?: boolean;
     tickCount: number;
     correctQuestionPartsCount: number;
     incorrectQuestionPartsCount: number;
@@ -666,7 +673,7 @@ export type EnhancedAssignment = AssignmentDTO & {
 };
 
 export type EnhancedAssignmentWithProgress = EnhancedAssignment & {
-    progress: AppAssignmentProgress[];
+    progress: ApiTypes.AssignmentProgressDTO[];
 };
 
 export interface PageSettings {

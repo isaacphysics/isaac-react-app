@@ -1,5 +1,8 @@
 @import "../common/icons";
 
+.has-tip {
+  cursor: help;
+}
 .icon-help {
   display: inline-block;
   cursor: help;
@@ -74,6 +77,26 @@
   background: url(/assets/cs/icons/person.svg) no-repeat;
   margin-bottom: -4px;
   margin-right: 10px;
+}
+.icon-ai {
+  display: inline-block;
+  background: url('/assets/cs/icons/ai.svg') no-repeat;
+  width: 24px;
+  height: 24px;
+}
+.icon-lock {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background: url(/assets/cs/icons/lock.svg) no-repeat;
+  margin-bottom: -4px;
+}
+.icon-feedback-tick {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url(/assets/cs/icons/tick-rp-green.svg) no-repeat;
+  margin-bottom: -5px;
 }
 
 // This class is used in a number of non-icon-related places on both sites

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import {
     Button,
@@ -69,12 +69,12 @@ export const RegistrationTeacherConnect = () => {
 
     useEffect(() => {
         // If the AFTER_AUTH_PATH is a teacher connection URL, we'll deal with it here instead.
-        const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH)
+        const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH);
         if (afterAuthPath && afterAuthPath.includes("authToken")) {
-            setAuthenticationToken(afterAuthPath.split("?authToken=").at(-1)?.toUpperCase().replace(/ /g,''))
-            persistence.remove(KEY.AFTER_AUTH_PATH)
+            setAuthenticationToken(afterAuthPath.split("?authToken=").at(-1)?.toUpperCase().replace(/ /g,''));
+            persistence.remove(KEY.AFTER_AUTH_PATH);
         }
-    }, [])
+    }, []);
 
 
     return <Container>
@@ -86,8 +86,8 @@ export const RegistrationTeacherConnect = () => {
                     <p>This lets you see the work your teacher sets, and lets your teacher see your progress. You can join more than one group and you always have control over which groups you are in. <a href="/support/student/general">Learn more</a></p>
                     <p>You can always skip this now and connect to your teacher later.</p>
                     <Col xs={12} lg={5}>
-                        <FormGroup>
-                            <Label className={"font-weight-bold"} htmlFor="connect-code-input">{"Teacher connection code"}</Label>
+                        <FormGroup className="form-group">
+                            <Label className={"fw-bold"} htmlFor="connect-code-input">{"Teacher connection code"}</Label>
                             <p className={"input-description"}>Enter the code given by your teacher to join a group</p>
                             <InputGroup className={"separate-input-group mb-4 d-flex flex-row align-items-center"}>
                                 <Input
@@ -99,11 +99,11 @@ export const RegistrationTeacherConnect = () => {
                                     aria-describedby="codeValidationMessage"
                                     value={authenticationToken}
                                 />
-                                <RS.InputGroupAddon addonType="append">
+                                <div className="input-group-append">
                                     <Button disabled={!codeIsValid} onClick={submit} color="secondary" outline>
                                         Connect
                                     </Button>
-                                </RS.InputGroupAddon>
+                                </div>
                             </InputGroup>
                             <FormFeedback id="codeValidationMessage">
                                 Please enter a valid code.
@@ -119,5 +119,5 @@ export const RegistrationTeacherConnect = () => {
                 </Form>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};

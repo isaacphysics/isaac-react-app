@@ -38,19 +38,14 @@
   }
 }
 
-input.form-control.is-unanswered {
-  border: solid 1px theme-color("warning");
-  @include border-radius($input-border-radius, 0);
-}
-
 .date-input .is-invalid, .date-input .is-valid {
   background: white;
 }
 
 .date-input {
   min-width: 280px;
-  
-  select.form-control {
+
+  select.form-select {
     padding: 0.5rem;
     .board-card & {
       padding: 0.15rem;
@@ -84,7 +79,7 @@ input {
 }
 
 select {
-  &.form-control {
+  &.form-select {
     border: solid 1px $black;
     height: 48px;
     padding: 0 1.2em;
@@ -196,7 +191,6 @@ label.label-radio > div {
 .form-inline .form-check-input {
   position: relative;
   flex-shrink: 0;
-  margin-top: 0;
   margin-right: 0.25rem;
   margin-left: 0;
 }
@@ -208,7 +202,7 @@ input[type=date]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-select.form-control {
+select.form-select, input.form-control {
   height: calc(1.5em + 0.75rem + 2px);
 }
 
@@ -216,5 +210,66 @@ select.form-control {
   background-color: transparent;
   border-style: solid;
   border-width: 1px;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 4px 4px 0 !important;
+}
+
+// Bootstrap 5 forms migration
+// FIXME: anything using these is old and should be updated -- see https://getbootstrap.com/docs/5.0/migration/#forms
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-inline .form-control {
+  display: inline-block;
+  // width: auto;
+  vertical-align: middle;
+}
+
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.form-check-input {
+  margin-top: 0;
+}
+
+@media (min-width: 576px) {
+  .form-inline label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+    > *:not([type='checkbox']) { // checkboxes in BS5 have no content so would be made 0 width
+      width: max-content;
+    }
+  }
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.form-row > .col {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+[type=search] {
+  border-radius: 2.5rem;
+  height: 2.6rem !important;
+}
+
+.text-dark {
+  color: #343a40 !important;
 }

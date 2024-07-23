@@ -15,8 +15,8 @@ interface EmailInputProps {
 }
 
 export const EmailInput = ({className, userToUpdate, setUserToUpdate, emailIsValid, submissionAttempted, required}: EmailInputProps) => {
-    return <FormGroup className={className}>
-        <Label className={classNames("font-weight-bold", (required ? "form-required" : "form-optional"))}
+    return <FormGroup className={`form-group ${className}`}>
+        <Label className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}
                htmlFor="email-input">Email address</Label>
         {isAda &&
                 <p className="d-block input-description">

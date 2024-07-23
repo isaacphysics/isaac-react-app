@@ -80,6 +80,10 @@ header {
     color: $cs-white;
     position: relative;
     text-underline-offset: 6px;
+    &:focus {
+      // prevent BS5 nav-link override
+      color: $cs-white;
+    }
     &:hover, &:active, &.open {
       outline: none !important;
       box-shadow: none !important;
@@ -124,7 +128,7 @@ header {
       }
     }
     @include media-breakpoint-up(nav) {
-      left: 50%;
+      left: 50% !important;
       transform: translateX(-50%);
     }
     background: $cs-jet;

@@ -124,7 +124,7 @@ export const TutorRequest = () => {
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="first-name-input" className="form-required">First name</Label>
                                                 <Input disabled id="first-name-input" type="text" name="first-name"
                                                     defaultValue={user?.loggedIn ? user.givenName : ""}
@@ -132,7 +132,7 @@ export const TutorRequest = () => {
                                             </FormGroup>
                                         </Col>
                                         <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="last-name-input" className="form-required">Last name</Label>
                                                 <Input disabled id="last-name-input" type="text" name="last-name"
                                                     defaultValue={user?.loggedIn ? user.familyName : ""}
@@ -142,7 +142,7 @@ export const TutorRequest = () => {
                                     </Row>
                                     <Row>
                                         <Col size={12} md={isPhy ? 6 : undefined}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="email-input" className="form-required">Email address</Label>
                                                 <Input disabled invalid={!isValidEmail || !emailVerified} id="email-input"
                                                     type="email" name="email"
@@ -152,7 +152,7 @@ export const TutorRequest = () => {
                                             </FormGroup>
                                         </Col>
                                         {isPhy && <Col size={12} md={6}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="subject-input">Subjects</Label>
                                                 <StyledSelect
                                                     inputId="subject-input"
@@ -167,7 +167,7 @@ export const TutorRequest = () => {
                                     </Row>
                                     <Row>
                                         <Col size={12}>
-                                            <FormGroup>
+                                            <FormGroup className="form-group">
                                                 <Label htmlFor="other-info-input" className="form-required">
                                                     Please tell us why you would like to apply for a tutor account
                                                 </Label>
@@ -179,7 +179,7 @@ export const TutorRequest = () => {
                                     {!emailVerified &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-left">Your email address is not verified —
+                                            <small className="text-danger text-start">Your email address is not verified —
                                                 please click on the link in the verification email to confirm your
                                                 email address. You can <Button color="link primary-font-link" onClick={requestVerificationEmail}>request a
                                                 new verification email</Button> if necessary.
@@ -194,11 +194,11 @@ export const TutorRequest = () => {
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>
-                                            <span className="d-block pb-3 pb-md-0 text-right text-md-left form-required">
+                                            <span className="d-block pb-3 pb-md-0 text-end text-md-start form-required">
                                                 Required field
                                             </span>
                                         </Col>
-                                        <Col size={12} md={6} className="text-right">
+                                        <Col size={12} md={6} className="text-end">
                                             <Input type="submit" value="Submit" disabled={!emailVerified} className="btn btn-block btn-secondary border-0" />
                                         </Col>
                                     </Row>

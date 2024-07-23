@@ -17,7 +17,7 @@ import {
     sortByNumberStringValue,
     sortByStringValue,
     stageLabelMap,
-    useUserContext
+    useUserViewingContext
 } from "../../services";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ConceptGameboardButton} from "./ConceptGameboardButton";
@@ -76,16 +76,16 @@ function renderQuestionsCS(audienceQuestions: ContentSummaryDTO[], remainingQues
             <div className="flex-fill simple-card my-3 p-3 text-wrap">
                 <Row className="related-questions related-title">
                     <Col xs={12} sm={"auto"}>
-                        <img className={"related-q-icon mt-n2 ml-2 mr-3"} src={"/assets/cs/icons/question-not-started.svg"} alt=""/>
+                        <img className={"related-q-icon mt-n2 ms-2 me-3"} src={"/assets/cs/icons/question-not-started.svg"} alt=""/>
                         <h3 className="d-inline-block mt-2">Related questions</h3>
                     </Col>
-                    {showConceptGameboardButton && <Col xs={12} sm={"auto"} className={"ml-md-auto mt-2 mt-md-0 vertical-center justify-content-start"}>
+                    {showConceptGameboardButton && <Col xs={12} sm={"auto"} className={"ms-md-auto mt-2 mt-md-0 vertical-center justify-content-start"}>
                         <ConceptGameboardButton conceptId={conceptId}/>
                     </Col>}
                 </Row>
                 <hr/>
                 {/* Large devices - multi column */}
-                <div className="d-none d-lg-flex text-left">
+                <div className="d-none d-lg-flex text-start">
                     <ListGroup className="w-50">
                         <h4 className="related-question-header">On your specification:</h4>
                         {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
@@ -96,13 +96,13 @@ function renderQuestionsCS(audienceQuestions: ContentSummaryDTO[], remainingQues
                     </ListGroup>
                 </div>
                 {/* Small devices - single column */}
-                <div className="d-lg-none text-left">
+                <div className="d-lg-none text-start">
                     <ListGroup>
                         {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                 </div>
                 <h4 className="d-lg-none related-question-header mt-4">Outside your specification:</h4>
-                <div className="d-lg-none text-left">
+                <div className="d-lg-none text-start">
                     <ListGroup>
                         {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
@@ -116,35 +116,35 @@ function renderConceptsAndQuestionsPhy(concepts: ContentSummaryDTO[], questions:
     if (concepts.length == 0 && questions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 w-lg-50 d-flex">
-            <div className="flex-fill simple-card mr-lg-3 my-3 p-3 text-wrap">
+            <div className="flex-fill simple-card me-lg-3 my-3 p-3 text-wrap">
                 <div className="related-concepts related-title">
                     <h5 className="mb-2">Related Concepts</h5>
                 </div>
                 <hr/>
                 <div className="d-lg-flex">
-                    <ListGroup className="mr-lg-3">
+                    <ListGroup className="me-lg-3">
                         {concepts.length > 0 ?
                             concepts.map(contentSummary => renderItem(contentSummary)):
-                            <div className="mt-2 ml-3">There are no related concepts</div>
+                            <div className="mt-2 ms-3">There are no related concepts</div>
                         }
                     </ListGroup>
                 </div>
             </div>
         </div>
         <div className="w-100 w-lg-50 d-flex">
-            <div className="flex-fill simple-card ml-lg-3 my-3 p-3 text-wrap">
+            <div className="flex-fill simple-card ms-lg-3 my-3 p-3 text-wrap">
                 <div className="related-questions related-title">
                     <h5 className="mb-2">Related Questions</h5>
-                    {showConceptGameboardButton && questions.length > 0 && <p className="text-right">
+                    {showConceptGameboardButton && questions.length > 0 && <p className="text-end">
                         <ConceptGameboardButton conceptId={conceptId}/>
                     </p>}
                 </div>
                 <hr/>
                 <div className="d-lg-flex">
-                    <ListGroup className="mr-lg-3">
+                    <ListGroup className="me-lg-3">
                         {questions.length > 0 ?
                             questions.map(contentSummary => renderItem(contentSummary)) :
-                            <div className="mt-2 ml-3">There are no related questions</div>
+                            <div className="mt-2 ms-3">There are no related questions</div>
                         }
                     </ListGroup>
                 </div>
@@ -156,7 +156,7 @@ function renderConceptsAndQuestionsPhy(concepts: ContentSummaryDTO[], questions:
 export function RelatedContent({content, parentPage, conceptId = ""}: RelatedContentProps) {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
     const remainingContent: ContentSummaryDTO[] = isAda && userContext.showOtherContent ? content.filter(c => !isIntendedAudience(c.audience, userContext, user)) : [];
     const showConceptGameboardButton = isAda && isTutorOrAbove(useAppSelector(selectors.user.orNull));
@@ -181,15 +181,15 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
 
     const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO) => {
         const audienceViews = filterAudienceViewsByProperties(determineAudienceViews(contentSummary.audience), AUDIENCE_DISPLAY_FIELDS);
-        return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
+        return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 me-lg-3">
             <Link
-                className={classNames({"btn-link btn text-left": isAda})}
+                className={classNames({"btn-link btn text-start": isAda})}
                 to={getURLForContent(contentSummary)}
                 onClick={() => {
                     dispatch(logAction(getEventDetails(contentSummary, parentPage)));
                 }}
             >
-                <span className={classNames({"font-size-1 font-weight-regular": isAda})}>
+                <span className={classNames({"font-size-1 fw-regular": isAda})}>
                     {contentSummary.title}
                     {isPhy && <React.Fragment>
                         {audienceViews.length > 0 && " ("}

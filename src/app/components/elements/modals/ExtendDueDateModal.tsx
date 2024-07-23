@@ -51,7 +51,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
     };
 
     return <Modal isOpen={isOpen} toggle={toggle}>
-        <ModalHeader role={"heading"} className={"text-break"} close={
+        <ModalHeader role={"heading"} className={"text-break d-flex justify-content-between"} close={
             <button className={"text-nowrap close"} onClick={toggle}>
                 Close
             </button>
@@ -62,7 +62,7 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
             <p className="px-1">{`Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.`}</p>
             <hr className="text-center"/>
             <Container className="py-2">
-                <Label for="dueDate" className="pr-1">Extend the due date:
+                <Label for="dueDate" className="pe-1">Extend the due date:
                 <DateInput id="dueDate" value={dueDate} invalid={dueDate && ((dueDate < currDueDate) || dueDate <= TODAY())}
                     yearRange={yearRange} noClear disabled={isUpdatingQuiz} className="text-center"
                     onChange={(e) => e.target.valueAsDate && setDueDate(e.target.valueAsDate)}

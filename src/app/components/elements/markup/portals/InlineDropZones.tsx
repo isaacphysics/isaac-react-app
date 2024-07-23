@@ -39,7 +39,7 @@ export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable
     }, [dropRegionContext?.shouldGetFocus]);
 
     return <Badge id={id} className={classNames(type === "item-section" && "m-2", "p-2 cloze-item feedback-zone", isDefined(isCorrect) && "feedback-showing")} style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
-        <span className={"sr-only"}>{item.altText ?? item.value ?? "cloze item without a description"}</span>
+        <span className={"visually-hidden"}>{item.altText ?? item.value ?? "cloze item without a description"}</span>
         <span aria-hidden={true}>
             <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
                 {item.children as ContentDTO[]}
@@ -91,7 +91,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
     >
         {item
             ? <Item item={item} id={item.replacementId as string} isCorrect={isCorrect} type={"drop-zone"} overrideOver={isOver}/>
-            : <>&nbsp;<span className={"sr-only"}>drop zone</span></>
+            : <>&nbsp;<span className={"visually-hidden"}>drop zone</span></>
         }
     </span>;
 
@@ -101,7 +101,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
     >
         <DropdownToggle className={classNames(`cloze-dropdown ${siteSpecific("p-1", "p-0")}`, {"empty": !item})} style={{minHeight: height, width: width}}>
             <div className={classNames("d-flex cloze-item feedback-zone", {"feedback-showing": isDefined(isCorrect), "p-2": isAda && !!item})}>
-                <span className={"sr-only"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
+                <span className={"visually-hidden"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
                 <span aria-hidden={true}>
                     <Markup trusted-markup-encoding={"html"}>
                         {item?.value ?? ""}
@@ -113,7 +113,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
                 {!item && <img className={classNames("dropzone-dropdown", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"></img>}
             </div>
         </DropdownToggle>
-        <DropdownMenu right>
+        <DropdownMenu end>
             {/* Dummy option added to clear selection */}
             <DropdownItem
                 data-unit={'None'}

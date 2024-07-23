@@ -12,45 +12,48 @@ interface IsaacCardProps {
 
 const PhysicsCard = ({doc, imageClassName}: IsaacCardProps) => {
     const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
-    const classes = classNames({"menu-card": true, "disabled": disabled, "isaac-card-vertical": verticalContent});
+    const classes = classNames("menu-card", {"disabled": disabled, "isaac-card-vertical": verticalContent});
     const imgSrc = image?.src && apiHelper.determineImageUrl(image.src);
 
     const link = (clickUrl && isAppLink(clickUrl)) ? <Link to={clickUrl} className={classes + " stretched-link"} aria-label={title} aria-disabled={disabled}/> :
         <a href={clickUrl} className={classes + " stretched-link"} aria-label={title} aria-disabled={disabled}/>
 
-    return verticalContent ?
-        <Card className={classes}>
-            {image && <Row className={imageClassName}>
-                <Col className="justify-content-md-center">
-                    <img className={[classes, imageClassName].join(" ")} src={imgSrc} alt={image.altText}/>
-                </Col>
-            </Row>}
-            <CardTitle className="px-3">
-                {title}
-            </CardTitle>
-            <CardBody className="px-3">
-                {subtitle}
-            </CardBody>
-            {clickUrl && link}
-        </Card> :
-        <Card>
-            <CardTitle className="px-3 mb-sm-0 mb-lg-2">
-                {title}
-            </CardTitle>
-            <CardBody>
-                <Row className="mx-2">
-                    {image && <Col xs={4} sm={12} lg={4} className="col-centered">
-                        <img className={classes} src={imgSrc} alt=""/>
-                    </Col>}
-                    <Col xs={image ? 8 : 12} sm={12} lg={image ? 8 : 12}>
-                        <aside>
-                            {subtitle}
-                        </aside>
+    return <Col className="d-flex justify-content-center">
+        {verticalContent ?
+            <Card className={classes}>
+                {image && <Row className={imageClassName}>
+                    <Col className="justify-content-md-center">
+                        <img className={[classes, imageClassName].join(" ")} src={imgSrc} alt={image.altText}/>
                     </Col>
-                </Row>
-            </CardBody>
-            {clickUrl && link}
-        </Card>;
+                </Row>}
+                <CardTitle className="px-3">
+                    {title}
+                </CardTitle>
+                <CardBody className="px-3">
+                    {subtitle}
+                </CardBody>
+                {clickUrl && link}
+            </Card> :
+            <Card className="w-100">
+                <CardTitle className="px-3 mb-sm-0 mb-lg-2">
+                    {title}
+                </CardTitle>
+                <CardBody>
+                    <Row className="mx-2">
+                        {image && <Col xs={4} sm={12} lg={4} className="col-centered">
+                            <img className={classes} src={imgSrc} alt=""/>
+                        </Col>}
+                        <Col xs={image ? 8 : 12} sm={12} lg={image ? 8 : 12}>
+                            <aside>
+                                {subtitle}
+                            </aside>
+                        </Col>
+                    </Row>
+                </CardBody>
+                {clickUrl && link}
+            </Card>
+        }
+    </Col>;
 };
 
 const AdaCard = ({doc, imageClassName}: IsaacCardProps) => {

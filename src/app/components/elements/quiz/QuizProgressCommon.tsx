@@ -1,12 +1,13 @@
 import React, {useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
-import {AppAssignmentProgress, AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
-import {siteSpecific, TODAY} from "../../../services";
+import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
+import {isAuthorisedFullAccess, siteSpecific, TODAY} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
 import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation } from "../../../state";
 import { ProgressSortOrder, SortItemHeader } from "../SortableItemHeader";
+import { AssignmentProgressDTO } from "../../../../IsaacApiTypes";
 
 export const ICON = siteSpecific(
     {
@@ -42,14 +43,14 @@ export interface QuestionType {
 export interface ResultsTableProps<Q extends QuestionType> {
     assignmentId?: number;
     duedate?: Date;
-    progress?: AppAssignmentProgress[];
+    progress?: AssignmentProgressDTO[];
     questions: Q[];
     header: JSX.Element;
     getQuestionTitle: (question: Q) => JSX.Element;
     assignmentAverages: number[];
     assignmentTotalQuestionParts: number;
-    markClasses: (row: AppAssignmentProgress, assignmentTotalQuestionParts: number) => string;
-    markQuestionClasses: (row: AppAssignmentProgress, questionIndex: number) => string;
+    markClasses: (row: AssignmentProgressDTO, assignmentTotalQuestionParts: number) => string;
+    markQuestionClasses: (row: AssignmentProgressDTO, questionIndex: number) => string;
     isAssignment?: boolean;
 }
 
@@ -113,21 +114,22 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
     }
 
     const semiSortedProgress = useMemo(() => orderBy(progress, (item) => {
-        return item.user.authorisedFullAccess && -item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
+        return isAuthorisedFullAccess(item) && -item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
     }, [reverseOrder ? "desc" : "asc"]), [progress, reverseOrder]);
 
     const sortedProgress = useMemo(() => orderBy((semiSortedProgress), (item) => {
-            switch (sortOrder) {
-                case "name":
-                    return (item.user.familyName + ", " + item.user.givenName).toLowerCase();
-                case "totalQuestionPartPercentage":
-                    return -item.correctQuestionPartsCount;
-                case "totalQuestionPercentage":
-                    return -item.tickCount;
-                default:
-                    return -item.correctPartResults[sortOrder];
-            }
-        }, [reverseOrder ? "desc" : "asc"])
+        if (!isAuthorisedFullAccess(item)) return -1;
+        switch (sortOrder) {
+            case "name":
+                return (item.user?.familyName + ", " + item.user?.givenName).toLowerCase();
+            case "totalQuestionPartPercentage":
+                return -item.correctQuestionPartsCount;
+            case "totalQuestionPercentage":
+                return -item.tickCount;
+            default:
+                return -(item.correctPartResults || [])[sortOrder];
+        }
+    }, [reverseOrder ? "desc" : "asc"])
     , [semiSortedProgress, reverseOrder, sortOrder]);
 
     const tableHeaderFooter = <tr className="progress-table-header-footer">
@@ -219,23 +221,23 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                     </thead>
                     <tbody>
                         {sortedProgress.map((studentProgress, index) => {
-                            const fullAccess = studentProgress.user.authorisedFullAccess;
-                            return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
+                            const fullAccess = isAuthorisedFullAccess(studentProgress);
+                            return <tr key={studentProgress.user?.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user?.givenName + " " + studentProgress.user?.familyName}`}>
                                 <th className="student-name">
                                     {fullAccess && pageSettings.isTeacher ?
                                         (
                                             isAssignment ?
-                                            <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
-                                                {studentProgress.user.givenName}
-                                                <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                            <Link to={`/progress/${studentProgress.user?.id}`} target="_blank">
+                                                {studentProgress.user?.givenName}
+                                                <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
                                             </Link>
                                             : <>
                                                 <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
                                                     <div
                                                         className="quiz-student-name"
                                                     >
-                                                        {studentProgress.user.givenName}
-                                                        <span className="d-none d-lg-inline"> {studentProgress.user.familyName}</span>
+                                                        {studentProgress.user?.givenName}
+                                                        <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
                                                     </div>
                                                     <div className="quiz-student-menu-icon">
                                                         {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/common/icons/menu.svg" alt="Menu" />}
@@ -243,27 +245,27 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                                 </Button>
                                                 {!returningQuizToStudent && dropdownOpen?.[index] && <>
                                                     {(!duedate || duedate.valueOf() > TODAY().valueOf()) &&
-                                                        (studentProgress.completed) &&
+                                                        studentProgress.completed &&
                                                         <div className="py-2 px-3">
-                                                            <Button size="sm" onClick={() => returnToStudent(studentProgress.user.id)}>Allow another attempt</Button>
+                                                            <Button size="sm" onClick={() => returnToStudent(studentProgress.user?.id)}>Allow another attempt</Button>
                                                         </div>}
                                                     <div className="py-2 px-3">
-                                                        <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user.id}`}>View answers</Button>
+                                                        <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user?.id}`}>View answers</Button>
                                                     </div>
                                                 </>}
                                             </>
                                         ) :
-                                        <span>{studentProgress.user.givenName} {studentProgress.user.familyName}</span>
+                                        <span>{studentProgress.user?.givenName} {studentProgress.user?.familyName}</span>
                                     }
                                 </th>
                                 {questions.map((q, index) =>
                                     <td key={q.id} className={isSelected(questions[index]) + " " + markQuestionClasses(studentProgress, index)} onClick={() => setSelectedQuestionNumber(index)}>
-                                        {isAssignment ? (fullAccess ? formatMark(studentProgress.correctPartResults[index],
+                                        {isAssignment ? (fullAccess ? formatMark((studentProgress.correctPartResults || [])[index],
                                             questions[index].questionPartsTotal as number,
                                             pageSettings.formatAsPercentage) : ""
                                         ) : 
-                                        studentProgress.correctPartResults[index] === 1 ? ICON.correct :
-                                            studentProgress.incorrectPartResults[index] === 1 ? ICON.incorrect :
+                                        (studentProgress.correctPartResults || [])[index] === 1 ? ICON.correct :
+                                            (studentProgress.incorrectPartResults || [])[index] === 1 ? ICON.incorrect :
                                             /* default */ ICON.notAttempted
                                         }
                                     </td> 

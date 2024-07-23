@@ -8,7 +8,7 @@ import {
     SITE_TITLE,
     STAGE,
     stageLabelMap,
-    useUserContext
+    useUserViewingContext
 } from "../../services";
 import {
     AppState,
@@ -26,18 +26,18 @@ import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const viewsWithMyStage = audienceViews.filter(vc => vc.stage === userContext.stage);
     // If there is a possible audience view that is correct for our user context, show that specific one
     const viewsToUse = viewsWithMyStage.length > 0 ? viewsWithMyStage.slice(0, 1) : audienceViews;
     const filteredViews = filterAudienceViewsByProperties(viewsToUse, AUDIENCE_DISPLAY_FIELDS);
 
     return <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
-        {filteredViews.map((view, i) => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classNames("d-flex d-sm-block", {"ml-sm-2": i > 0})}>
-            {view.stage && view.stage !== STAGE.ALL && <div className={classNames("text-center align-self-center", {"font-weight-regular": isAda})}>
+        {filteredViews.map((view, i) => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classNames("d-flex d-sm-block", {"ms-sm-2": i > 0})}>
+            {view.stage && view.stage !== STAGE.ALL && <div className={classNames("text-center align-self-center", {"fw-regular": isAda})}>
                 {stageLabelMap[view.stage]}
             </div>}
-            {view.difficulty && <div className={"ml-2 ml-sm-0 text-center"}>
+            {view.difficulty && <div className={"ms-2 ms-sm-0 text-center"}>
                 <DifficultyIcons difficulty={view.difficulty} />
             </div>}
         </div>)}
@@ -92,7 +92,7 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
     }
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary d-sm-flex ${className ? className : ""}`}>
-        <div className="mr-auto" data-testid={"main-heading"}>
+        <div className="me-auto" data-testid={"main-heading"}>
             {formatPageTitle(currentPageTitle, disallowLaTeX)}
             {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
         </div>

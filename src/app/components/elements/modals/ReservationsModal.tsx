@@ -16,7 +16,6 @@ import {
 import {
     Button,
     Col,
-    CustomInput,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
@@ -258,13 +257,13 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                 </tr>
                                     <tr>
                                         <th className="align-middle checkbox">
-                                            <CustomInput
+                                            <Input
                                                 id="check_all_reserved"
                                                 type="checkbox"
-                                                label="All"
                                                 checked={checkAllCancelReservationsCheckbox || false}
                                                 onChange={() => toggleAllCancelReservationCheckboxes()}
                                             />
+                                            <Label for="check_all_reserved" className="ms-2">All</Label>
                                         </th>
                                         <th className="align-middle student-name">
                                             Student
@@ -282,7 +281,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                         const bookingCancelled = booking.bookingStatus === "CANCELLED";
                                         return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id} className={classNames({"bg-light text-muted": bookingCancelled})}>
                                             <td className="align-middle">
-                                                <CustomInput key={booking.userBooked.id}
+                                                <Input key={booking.userBooked.id}
                                                     id={`${booking.userBooked.id}`}
                                                     type="checkbox"
                                                     name={`reserved_student-${booking.userBooked.id}`}
@@ -318,14 +317,14 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                     </tr>
                                     <tr>
                                         <th className="w-auto text-nowrap align-middle">
-                                            <CustomInput
+                                            <Input
                                                 id="check_all_unbooked"
                                                 type="checkbox"
-                                                label="All"
                                                 checked={checkAllCheckbox || false}
                                                 onChange={() => toggleAllUnbooked()}
                                                 disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
                                             />
+                                            <Label for="check_all_unbooked" className="ms-2">All</Label>
                                         </th>
                                         <th className="w-100 align-middle student-name">
                                             Student
@@ -336,7 +335,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                     {unbookedUsers.length > 0 && unbookedUsers.map(user => {
                                         return (user.id && <tr key={user.id}>
                                             <td className="align-middle">
-                                                <CustomInput
+                                                <Input
                                                     key={user.id}
                                                     id={`${user.id}`}
                                                     type="checkbox"

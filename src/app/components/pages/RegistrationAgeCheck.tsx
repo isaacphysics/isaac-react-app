@@ -5,11 +5,11 @@ import {
     CardBody,
     Col,
     Container,
-    CustomInput,
     Form,
     FormFeedback,
     FormGroup,
     Input,
+    Label,
     Row
 } from "reactstrap";
 import {history, SITE_TITLE} from "../../services";
@@ -28,7 +28,7 @@ export const RegistrationAgeCheck = () => {
             over13 ?
                 history.push("/register/student/details")
                 :
-                history.push("/register/student/age_denied")
+                history.push("/register/student/age_denied");
         }
     };
 
@@ -40,32 +40,32 @@ export const RegistrationAgeCheck = () => {
                 <p>We can only create accounts for people over 13 years old.</p>
                 <Form onSubmit={submit}>
                     <FormGroup check className="my-2">
-                        <CustomInput
+                        <Input
                             id="registration-age-check-over"
                             className="d-inline"
                             type="radio"
                             checked={over13 === true}
-                            onChange={() => {setOver13(true)}}
+                            onChange={() => {setOver13(true);}}
                             color="secondary"
                             invalid={submissionAttempted && over13 === undefined}
-                            label={"13 and over"}
                         />
+                        <Label for="registration-age-check-over" className="ms-2">13 and over</Label>
                     </FormGroup>
                     <FormGroup check className="my-2">
-                        <CustomInput
+                        <Input
                             id="registration-age-check-under"
                             className="d-inline"
                             type="radio"
                             checked={over13 === false}
-                            onChange={() => {setOver13(false)}}
+                            onChange={() => {setOver13(false);}}
                             color="secondary"
                             invalid={submissionAttempted && over13 === undefined}
-                            label={"Under 13"}
                         >
                             <FormFeedback>
                                 Please make a selection.
                             </FormFeedback>
-                        </CustomInput>
+                        </Input>
+                        <Label for="registration-age-check-under" className="ms-2">Under 13</Label>
                     </FormGroup>
                     <hr />
                     <Row className="justify-content-end">
@@ -79,5 +79,5 @@ export const RegistrationAgeCheck = () => {
                 </Form>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};

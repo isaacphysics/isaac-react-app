@@ -38,7 +38,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     const navigation = useNavigation(doc);
     const deviceSize = useDeviceSize();
 
-    const ManageButtons = () => <div className="no-print d-flex justify-content-end mt-1 ml-2">
+    const ManageButtons = () => <div className="no-print d-flex justify-content-end mt-1 ms-2">
         <div className="question-actions">
             <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
             </div>
@@ -69,7 +69,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
 
                 {below["sm"](deviceSize) && <ManageButtons />}
 
-                <div className="d-flex align-items-center mr-sm-1 flex-grow-1">
+                <div className="d-flex align-items-center me-sm-1 flex-grow-1">
                     <UserContextPicker />
                     {above["md"](deviceSize) && <ManageButtons />}
                 </div>

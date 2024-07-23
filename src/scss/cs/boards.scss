@@ -1,7 +1,7 @@
 @import "../common/boards";
 
 .board-percent-completed {
-  @extend .font-weight-semi-bold;
+  @extend .fw-semi-bold;
   @extend .font-size-1;
   color: #fff;
   z-index: 10;
@@ -60,7 +60,7 @@
     }
     .icon-title {
       @extend .font-size-0-75;
-      @extend .font-weight-bold;
+      @extend .fw-bold;
       margin-top: 15px;
       color: $cs-jet;
     }

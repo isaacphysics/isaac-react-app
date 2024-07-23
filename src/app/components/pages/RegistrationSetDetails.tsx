@@ -5,20 +5,22 @@ import {
     CardBody,
     Col,
     Container,
-    CustomInput,
     Form,
     FormFeedback,
     FormGroup,
     Input,
+    Label,
     Row,
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
+    EXAM_BOARD,
     FIRST_LOGIN_STATE,
     history,
     KEY,
     persistence,
     SITE_TITLE,
+    STAGE,
     trackEvent,
     validateCountryCode,
     validateEmail,
@@ -76,26 +78,26 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     const errorMessage = extractErrorMessage(error);
 
     const register = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+        event.preventDefault();
         setAttemptedSignUp(true);
 
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && countryCodeIsValid &&
             ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
-            setAttemptedSignUp(true)
+            setAttemptedSignUp(true);
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(errorSlice.actions.clearError());
-            dispatch(registerNewUser(registrationUser, {}, undefined, null));
+            dispatch(registerNewUser(registrationUser, {}, [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ADA}], null));
             trackEvent("registration", {
                     props:
                         {
                             provider: "SEGUE"
                         }
                 }
-            )
+            );
         }
-    }
+    };
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
@@ -103,7 +105,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             <CardBody>
                 {errorMessage &&
                     <ExigentAlert color={"warning"}>
-                        <p className="alert-heading font-weight-bold">Unable to create your account</p>
+                        <p className="alert-heading fw-bold">Unable to create your account</p>
                         <p>{errorMessage}</p>
                     </ExigentAlert>
                 }
@@ -170,19 +172,19 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 required={false}
                             />
                             <hr />
-                            <FormGroup className="my-4">
-                                <CustomInput
+                            <FormGroup className="form-group my-4">
+                                <Input
                                     id="tos-confirmation"
                                     name="tos-confirmation"
                                     type="checkbox"
-                                    label={<div>I accept the <a href="/terms" target="_blank">terms of use</a></div>}
                                     onChange={(e) => setTosAccepted(e?.target.checked)}
                                     invalid={attemptedSignUp && !tosAccepted}
                                 >
                                     <FormFeedback>
                                         You must accept the terms to continue.
                                     </FormFeedback>
-                                </CustomInput>
+                                </Input>
+                                <Label for="tos-confirmation" className="ms-2">I accept the <a href="/terms" target="_blank">terms of use</a></Label>
                             </FormGroup>
                             <hr />
                             <Row>
@@ -198,5 +200,5 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                 </Row>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};

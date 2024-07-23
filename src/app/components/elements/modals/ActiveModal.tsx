@@ -22,7 +22,12 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
             {<RS.ModalHeader
                 data-testid={"modal-header"}
                 tag={siteSpecific(undefined, "h2")}
-                className={classNames({"h-title mb-4": !!activeModal.title, "position-absolute": !activeModal.title, "pb-5": isPhy && !!activeModal.title})}
+                className={classNames({
+                    "d-flex justify-content-between": activeModal.closeAction,
+                    "h-title mb-4": !!activeModal.title,
+                    "position-absolute": !activeModal.title,
+                    "pb-5": isPhy && !!activeModal.title
+                })}
                 style={activeModal.title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
                 close={
                     activeModal.closeAction ?

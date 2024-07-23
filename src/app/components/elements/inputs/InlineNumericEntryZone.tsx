@@ -92,14 +92,14 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
         >
             <DropdownToggle
                 disabled={readonly || !noDisplayUnit}
-                className={classNames("feedback-zone pl-2 pr-0 py-0", {"pr-4": showFeedback(unitCorrectness), "border-dark": !noDisplayUnit})}
+                className={classNames("feedback-zone ps-2 pe-0 py-0", {"pe-4": showFeedback(unitCorrectness), "border-dark": !noDisplayUnit})}
                 color={noDisplayUnit ? undefined : "white"}
             >
-                <div className={showFeedback(unitCorrectness) ? "pr-4" : "pr-2"}>
+                <div className={showFeedback(unitCorrectness) ? "pe-4" : "pe-2"}>
                     <Markup encoding={"latex"}>
                         {unit !== undefined ? wrapUnitForSelect(noDisplayUnit ? unit : questionDTO.displayUnit) : "Unit..."}
                     </Markup>
-                    {showFeedback(unitCorrectness) && noDisplayUnit && <div className={"feedback-box pl-2"}>
+                    {showFeedback(unitCorrectness) && noDisplayUnit && <div className={"feedback-box ps-2"}>
                         {unitCorrectness === "NOT_ANSWERED" ? 
                             <span className={"feedback unanswered px-1"}><b>!</b></span> : 
                             <span className={"feedback incorrect"}>✘</span>
@@ -107,7 +107,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
                     </div>}
                 </div>
             </DropdownToggle>
-            <DropdownMenu right>
+            <DropdownMenu end>
                 {selectedUnits.map((unit) =>
                     <DropdownItem key={wrapUnitForSelect(unit)}
                         data-unit={unit || 'None'}

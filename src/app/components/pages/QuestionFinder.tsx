@@ -24,7 +24,7 @@ import {
     selectOnChange,
     siteSpecific,
     STAGE,
-    useUserContext,
+    useUserViewingContext,
     STAGE_NULL_OPTIONS,
     useQueryParams,
     arrayFromPossibleCsv,
@@ -79,7 +79,7 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
 
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const params: {[key: string]: string | string[] | undefined} = useQueryParams(false);
     const history = useHistory();
     const eventLog = useRef<object[]>([]).current; // persist state but do not rerender on mutation
@@ -558,7 +558,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         </Card>
         <Card>
             <CardHeader className="finder-header">
-                <Col className={"pr-0"}>
+                <Col className={"pe-0"}>
                     <h3>
                         Results
                     </h3>

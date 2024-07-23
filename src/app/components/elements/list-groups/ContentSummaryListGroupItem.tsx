@@ -16,7 +16,7 @@ import {
     TAG_LEVEL,
     tags,
     useDeviceSize,
-    useUserContext
+    useUserViewingContext
 } from "../../../services";
 import {Link} from "react-router-dom";
 import React, {useRef} from "react";
@@ -30,7 +30,7 @@ import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
-    const userContext = useUserContext();
+    const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
     const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
     const hash = item.hash;
@@ -126,13 +126,13 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                     </div>
                 )}
             </span>
-            <div className={classNames("flex-fill", {"d-flex py-3 pr-3": isAda, "d-md-flex": isPhy})}>
+            <div className={classNames("flex-fill", {"d-flex py-3 pe-3": isAda, "d-md-flex": isPhy})}>
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
                         <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-secondary": isPhy})}>
                             {title ?? ""}
                         </Markup>
-                        {isPhy && typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2 mb-1"}>
+                        {isPhy && typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ms-2 mb-1"}>
                             ({typeLabel})
                         </span>}
                     </div>
@@ -147,7 +147,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                     </div>}
                 </div>
 
-                {!isContentsIntendedAudience && <div className="ml-auto mr-3 d-flex align-items-center">
+                {isPhy && !isContentsIntendedAudience && <div className="ms-auto me-3 d-flex align-items-center">
                     <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
                     <UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
                         {`This content has ${notRelevantMessage(userContext)}.`}

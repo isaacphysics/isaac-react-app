@@ -1,6 +1,6 @@
 import {siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
-import {DAYS_AGO} from "../test/utils";
+import {DAYS_AGO, SOME_FIXED_FUTURE_DATE} from "../test/dateUtils";
 import {
     BookingStatus,
     EmailVerificationStatus,
@@ -16,7 +16,7 @@ export const mockUser = {
     email: "test-admin@test.com",
     dateOfBirth: 777777777777,
     gender: "MALE",
-    registrationDate: DAYS_AGO(100),
+    registrationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 100),
     role: "ADMIN" as UserRole,
     schoolOther: "N/A",
     registeredContexts: [
@@ -25,10 +25,10 @@ export const mockUser = {
             examBoard: "all"
         }
     ],
-    registeredContextsLastConfirmed: DAYS_AGO(-1),
+    registeredContextsLastConfirmed: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1),
     firstLogin: false,
-    lastUpdated: DAYS_AGO(1),
-    lastSeen: DAYS_AGO(1),
+    lastUpdated: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
+    lastSeen: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
     emailVerificationStatus: "VERIFIED" as EmailVerificationStatus,
     id: 1 as const
 };
@@ -41,17 +41,17 @@ export const buildMockStudent = <T extends number>(id: T extends (typeof mockUse
         email: `test-student-${id}@test.com`,
         dateOfBirth: 888888888888,
         gender: id as number % 2 === 0 ? "MALE" : "FEMALE",
-        registrationDate: DAYS_AGO(50),
+        registrationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 50),
         role: "STUDENT",
         schoolOther: "N/A",
         registeredContexts: [{
             stage: "all",
             examBoard: "all"
         }],
-        registeredContextsLastConfirmed: DAYS_AGO(-1),
+        registeredContextsLastConfirmed: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1),
         firstLogin: false,
-        lastUpdated: DAYS_AGO(1),
-        lastSeen: DAYS_AGO(1),
+        lastUpdated: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
+        lastSeen: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         emailVerificationStatus: "VERIFIED",
         id: id,
     };
@@ -65,24 +65,24 @@ export const buildMockTeacher = <T extends number>(id: T extends (typeof mockUse
         email: `test-teacher-${id}@test.com`,
         dateOfBirth: 888888888888,
         gender: id as number % 2 === 0 ? "MALE" : "FEMALE",
-        registrationDate: DAYS_AGO(50),
+        registrationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 50),
         role: "TEACHER",
         schoolOther: "N/A",
         registeredContexts: [{
             stage: "all",
             examBoard: "all"
         }],
-        registeredContextsLastConfirmed: DAYS_AGO(-1),
+        registeredContextsLastConfirmed: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1),
         firstLogin: false,
-        lastUpdated: DAYS_AGO(1),
-        lastSeen: DAYS_AGO(1),
+        lastUpdated: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
+        lastSeen: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         emailVerificationStatus: "VERIFIED",
         id: id,
     };
 };
 
 export const buildMockUserSummary = (user: any, authorisedFullAccess: boolean) => {
-    const email = authorisedFullAccess ? user.email : undefined;
+    const email = user.role !== "STUDENT" || authorisedFullAccess ? user.email : undefined;
     return Object.assign({
         givenName: user.givenName,
         familyName: user.familyName,
@@ -183,7 +183,7 @@ export const mockGameboards = {
                 url: "/solving_problems#acc_solving_problems_sig_figs"
             },
             wildCardPosition: 0,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "physics"
@@ -397,7 +397,7 @@ export const mockGameboards = {
                 url: "/about"
             },
             wildCardPosition: 0,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "maths"
@@ -754,7 +754,7 @@ export const mockGameboards = {
                 url: "/pages/isaac_mentor"
             },
             wildCardPosition: 7,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "physics",
@@ -1129,7 +1129,7 @@ export const mockGameboards = {
                 url: "/pages/isaac_mentor"
             },
             wildCardPosition: 0,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "maths"
@@ -1470,7 +1470,7 @@ export const mockGameboards = {
                 url: "/pages/eqn_editor_help"
             },
             wildCardPosition: 4,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "physics"
@@ -1923,7 +1923,7 @@ export const mockGameboards = {
                 url: "/pages/isaac_mentor"
             },
             wildCardPosition: 5,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "physics",
@@ -2223,7 +2223,7 @@ export const mockGameboards = {
                 url: "http://www.rsc.org/periodic-table"
             },
             wildCardPosition: 1,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "chemistry"
@@ -2491,7 +2491,7 @@ export const mockMyAssignments = [
                 url: "/about"
             },
             wildCardPosition: 0,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "maths"
@@ -2517,8 +2517,8 @@ export const mockMyAssignments = [
         groupName: "Test Group 1",
         ownerId: mockUser.id,
         assignerSummary: buildMockUserSummary(mockUser, false),
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         //scheduledStartDate: undefined,
         _id: 37
     },
@@ -2757,7 +2757,7 @@ export const mockMyAssignments = [
                 url: "/about"
             },
             wildCardPosition: 0,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "maths"
@@ -2783,9 +2783,9 @@ export const mockMyAssignments = [
         groupName: "Test Group 2",
         ownerId: mockUser.id,
         assignerSummary: buildMockUserSummary(mockUser, false),
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         _id: 38
     },
     {
@@ -2888,7 +2888,7 @@ export const mockMyAssignments = [
                 url: "/solving_problems#acc_solving_problems_sig_figs"
             },
             wildCardPosition: 0,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "physics"
@@ -2914,9 +2914,9 @@ export const mockMyAssignments = [
         groupName: "Test Group 1",
         ownerId: mockUser.id,
         assignerSummary: buildMockUserSummary(mockUser, false),
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         _id: 40
     },
     {
@@ -3348,7 +3348,7 @@ export const mockMyAssignments = [
                 url: "/pages/isaac_mentor"
             },
             wildCardPosition: 7,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "physics",
@@ -3366,9 +3366,9 @@ export const mockMyAssignments = [
         ownerId: mockUser.id,
         notes: "This is cool ",
         assignerSummary: buildMockUserSummary(mockUser, false),
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         _id: 45
     }
 ];
@@ -3380,9 +3380,9 @@ export const mockSetAssignments = [
         groupId: 2,
         groupName: "Test Group 1",
         ownerId: mockUser.id,
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
     },
     {
         id: 38,
@@ -3390,9 +3390,9 @@ export const mockSetAssignments = [
         groupId: 6,
         groupName: "Test Group 2",
         ownerId: mockUser.id,
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
     },
     {
         id: 40,
@@ -3400,9 +3400,9 @@ export const mockSetAssignments = [
         groupId: 2,
         groupName: "Test Group 1",
         ownerId: mockUser.id,
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
     },
     {
         id: 45,
@@ -3411,9 +3411,9 @@ export const mockSetAssignments = [
         groupName: "Test Group 1",
         ownerId: mockUser.id,
         notes: "This is cool ",
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
     }
 ];
 
@@ -3424,16 +3424,16 @@ export const mockQuizAssignments = [
         groupId: 2,
         ownerId: mockUser.id,
         assignerSummary: buildMockUserSummary(mockUser, false),
-        creationDate: DAYS_AGO(5),
-        dueDate: DAYS_AGO(-5),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 5),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         quizFeedbackMode: "DETAILED_FEEDBACK",
         attempt: {
             id: 6,
             userId: 1,
             quizId: "test-quiz-assignment-1",
             quizAssignmentId: 9,
-            startDate: DAYS_AGO(3),
-            completedDate: DAYS_AGO(2)
+            startDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+            completedDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 2)
         },
         quizSummary: {
             id: "test-quiz-assignment-1",
@@ -3466,16 +3466,16 @@ export const mockQuizAssignments = [
         groupId: 2,
         ownerId: mockUser.id,
         assignerSummary: buildMockUserSummary(mockUser, false),
-        creationDate: DAYS_AGO(5),
-        dueDate: DAYS_AGO(-5),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 5),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
         quizFeedbackMode: "DETAILED_FEEDBACK",
         attempt: {
             id: 7,
             userId: 1,
             quizId: "test-quiz-assignment-2",
             quizAssignmentId: 10,
-            startDate: DAYS_AGO(3),
-            completedDate: DAYS_AGO(2)
+            startDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+            completedDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 2)
         }
     }
 ];
@@ -3485,8 +3485,8 @@ export const mockGroups = [
         id: 2,
         groupName: "Test Group 1",
         ownerId: mockUser.id,
-        created: DAYS_AGO(-20),
-        lastUpdated: DAYS_AGO(-20),
+        created: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -20),
+        lastUpdated: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -20),
         archived: false,
         ownerSummary: buildMockUserSummary(mockUser, false),
         additionalManagers: [],
@@ -3495,8 +3495,8 @@ export const mockGroups = [
         id: 6,
         groupName: "Test Group 2",
         ownerId: mockUser.id,
-        created: DAYS_AGO(-25),
-        lastUpdated: DAYS_AGO(-25),
+        created: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -25),
+        lastUpdated: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -25),
         archived: false,
         ownerSummary: buildMockUserSummary(mockUser, false),
         additionalManagers: [],
@@ -3505,8 +3505,8 @@ export const mockGroups = [
         id: 7,
         groupName: "Test Group 3",
         ownerId: mockUser.id,
-        created: DAYS_AGO(-50),
-        lastUpdated: DAYS_AGO(-30),
+        created: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -50),
+        lastUpdated: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -30),
         archived: true,
         ownerSummary: buildMockUserSummary(mockUser, false),
         additionalManagers: [],
@@ -3751,7 +3751,7 @@ export const mockAssignmentsGroup2 = [
                 url: "/about"
             },
             wildCardPosition: 0,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "maths"
@@ -3775,9 +3775,9 @@ export const mockAssignmentsGroup2 = [
         },
         groupId: 2,
         ownerId: mockUser.id,
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         _id: 37
     },
     {
@@ -3880,7 +3880,7 @@ export const mockAssignmentsGroup2 = [
                 url: "/solving_problems#acc_solving_problems_sig_figs"
             },
             wildCardPosition: 0,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "physics"
@@ -3904,9 +3904,9 @@ export const mockAssignmentsGroup2 = [
         },
         groupId: 2,
         ownerId: mockUser.id,
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         _id: 40
     },
     {
@@ -4338,7 +4338,7 @@ export const mockAssignmentsGroup2 = [
                 url: "/pages/isaac_mentor"
             },
             wildCardPosition: 7,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "physics",
@@ -4354,9 +4354,9 @@ export const mockAssignmentsGroup2 = [
         groupId: 2,
         ownerId: mockUser.id,
         notes: "This is cool ",
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         _id: 45
     }
 ];
@@ -4597,7 +4597,7 @@ export const mockAssignmentsGroup6 = [
                 url: "/about"
             },
             wildCardPosition: 0,
-            creationDate: DAYS_AGO(3),
+            creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
             gameFilter: {
                 subjects: [
                     "maths"
@@ -4621,9 +4621,9 @@ export const mockAssignmentsGroup6 = [
         },
         groupId: 6,
         ownerId: mockUser.id,
-        creationDate: DAYS_AGO(3),
-        dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5),
+        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         _id: 38
     }
 ];

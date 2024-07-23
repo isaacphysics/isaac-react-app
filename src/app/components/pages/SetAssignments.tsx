@@ -185,7 +185,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
     );
 
     return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle}>
-        <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break"} close={
+        <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break d-flex justify-content-between"} close={
             <button className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy})} onClick={toggle}>
                 Close
             </button>
@@ -201,10 +201,10 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                 <Label>{siteSpecific("Board", "Quiz")} currently assigned to:</Label>
                 {startedAssignees.length > 0
                     ? <Container className="mb-4">{startedAssignees.map(assignee =>
-                        <Row data-testid={"current-assignment"} key={assignee.groupId} className="px-1">
+                        <div data-testid={"current-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
-                        </Row>
+                        </div>
                     )}</Container>
                     : <p>No groups.</p>}
             </div>
@@ -216,16 +216,16 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                 </UncontrolledTooltip>
                 {scheduledAssignees.length > 0
                     ? <Container className="mb-4">{scheduledAssignees.map(assignee =>
-                        <Row data-testid={"pending-assignment"} key={assignee.groupId} className="px-1">
+                        <div data-testid={"pending-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             {assignee.startDate && <>
-                                    <span id={`start-date-${assignee.groupId}`} className="ml-auto mr-2">🕑 {(typeof assignee.startDate === "number"
+                                    <span id={`start-date-${assignee.groupId}`} className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
                                         ? new Date(assignee.startDate)
                                         : assignee.startDate).toDateString()}
                                     </span>
                             </>}
                             <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
-                        </Row>
+                        </div>
                     )}</Container>
                     : <p>No groups.</p>}
             </div>
@@ -263,7 +263,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
     } = props;
 
     const tableHeader = <tr className="my-gameboard-table-header">
-        <th className="text-center align-middle"><span className="pl-2 pr-2">Groups</span></th>
+        <th className="text-center align-middle"><span className="ps-2 pe-2">Groups</span></th>
         <SortItemHeader defaultOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
             Board name
         </SortItemHeader>
@@ -431,7 +431,7 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
             </Col>
             <Col md={6} lg={4} className="pt-1">
                 <Button tag={Link} to={"/pages/pre_made_gameboards"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
-                    our Boards for Lessons
+                    our Boards by Topic
                 </Button>
             </Col>
             <Col md={12} lg={4} className="pt-1">
@@ -538,7 +538,7 @@ export const SetAssignments = () => {
                 You have no {siteSpecific("gameboards", "quizzes")} to assign
                 {siteSpecific(
                     "; use one of the options above to find one.",
-                    <Button className={"ml-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} size="sm" color="secondary">
+                    <Button className={"ms-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} size="sm" color="secondary">
                         Create a quiz
                     </Button>
                 )}
@@ -566,9 +566,8 @@ export const SetAssignments = () => {
                             </Input>
                         </Label>
                     </Col>}
-                    <Spacer />
                     {boardView === BoardViews.card && <>
-                        <Col xs={6} lg={2}>
+                        <Col xs={6} lg={{size: 2, offset: 3}}>
                             <Label className="w-100">
                                 Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
                                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}

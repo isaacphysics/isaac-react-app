@@ -92,14 +92,14 @@ const UserContextReconfirmationModalBody = () => {
                 return <a target={"_blank"} onClick={logReviewTeacherConnections} rel={"noopener noreferrer"}
                         href={"/account#teacherconnections"}>
                     {text}
-                    <span className={"sr-only"}> (opens in new tab) </span>
+                    <span className={"visually-hidden"}> (opens in new tab) </span>
                 </a>;
             },
 
             function buildPrivacyPolicyLink(text: string) {
                 return <a target={"_blank"} rel={"noopener noreferrer"} href={"/privacy"}>
                     {text}
-                    <span className={"sr-only"}> (opens in new tab) </span>
+                    <span className={"visually-hidden"}> (opens in new tab) </span>
                 </a>;
         })[isTutorOrAbove(user) ? (isTeacherOrAbove(user) ? "teacher" : "tutor") : "student"],
 
@@ -124,7 +124,7 @@ const UserContextReconfirmationModalBody = () => {
     return <Form onSubmit={formSubmission} className={"mb-2"}>
         <p>{modalText.intro}</p>
         <p>{modalText.connections}</p>
-        {isPhy && <div className="text-right text-muted required-before">
+        {isPhy && <div className="text-end text-muted required-before">
             Required
         </div>}
         <Col>

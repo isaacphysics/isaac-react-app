@@ -48,6 +48,13 @@ export interface AssignmentStatusDTO {
     errorMessage?: string;
 }
 
+export interface AssignmentProgressDTO { 
+    user?: UserSummaryDTO;
+    correctPartResults?: number[];
+    incorrectPartResults?: number[];
+    results?: GameboardItemState[];
+}
+
 export interface GameboardDTO extends HasTitleOrId {
     contents?: GameboardItem[];
     wildCard?: IsaacWildcard;
@@ -58,7 +65,8 @@ export interface GameboardDTO extends HasTitleOrId {
     ownerUserInformation?: UserSummaryDTO;
     tags?: string[];
     creationMethod?: GameboardCreationMethod;
-    percentageCompleted?: number;
+    percentageAttempted?: number;
+    percentageCorrect?: number;
     lastVisited?: Date;
     startedQuestion?: boolean;
     savedToCurrentUser?: boolean;
@@ -117,6 +125,9 @@ export interface IsaacFeaturedProfileDTO extends ContentDTO {
 }
 
 export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
+}
+
+export interface IsaacLLMFreeTextQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
@@ -325,6 +336,14 @@ export interface InlineRegionValidationResponseDTO extends QuestionValidationRes
     partsTotal?: number;
 }
 
+export interface LLMFreeTextQuestionValidationResponseDTO extends QuestionValidationResponseDTO {
+    markCalculationInstructions?: string;
+    additionalMarkingInstructions?: string;
+    maxMarks?: number;
+    marksAwarded?: number;
+    markBreakdown?: LLMFreeTextMarkSchemeEntryDTO[];
+}
+
 export interface UserGroupDTO {
     id?: number;
     groupName?: string;
@@ -481,6 +500,12 @@ export interface ItemDTO extends ContentDTO {
     altText?: string;
 }
 
+export interface LLMFreeTextMarkSchemeEntryDTO {
+    jsonField: string;
+    shortDescription: string;
+    marks: number;
+}
+
 export interface ParsonsItemDTO extends ItemDTO {
     indentation?: number;
 }
@@ -516,6 +541,10 @@ export interface StringChoiceDTO extends ChoiceDTO {
     caseInsensitive?: boolean;
 }
 
+export interface LLMFreeTextChoiceDTO extends ChoiceDTO {
+}
+
+
 export interface VideoDTO extends MediaDTO {
 }
 
@@ -537,9 +566,9 @@ export interface GroupMembershipDTO {
     created?: Date;
 }
 
-export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "all";
+export type Stage = "year_7_and_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "scotland_national_5" | "scotland_higher" | "scotland_advanced_higher" | "core" | "advanced" | "all";
 
-export type ExamBoard = "aqa" | "cie" | "edexcel" | "eduqas" | "ocr" | "wjec" | "sqa" | "all";
+export type ExamBoard = "aqa" | "cie" | "edexcel" | "eduqas" | "ocr" | "wjec" | "sqa" | "ada" | "all";
 
 export type Difficulty = "practice_1" | "practice_2" | "practice_3" | "challenge_1" | "challenge_2" | "challenge_3";
 

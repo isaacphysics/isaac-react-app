@@ -10,10 +10,10 @@ import {
     jsonHelper,
     sanitiseInequalityState, siteSpecific,
     useCurrentQuestionAttempt,
-    useUserContext
+    useUserPreferences
 } from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
-import {Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip} from 'reactstrap';
+import {Button, Input, InputGroup, UncontrolledTooltip} from 'reactstrap';
 import {v4 as uuid_v4} from "uuid";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
@@ -83,17 +83,17 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const [modalVisible, setModalVisible] = useState(false);
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
-    const {preferredBooleanNotation} = useUserContext();
+    const {preferredBooleanNotation} = useUserPreferences();
     const [textInput, setTextInput] = useState('');
     const user = useAppSelector(selectors.user.orNull);
+
+    let currentAttemptValue: any | undefined = undefined;
 
     function currentAttemptPythonExpression(): string {
         return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
     }
 
     const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
-
-    let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
@@ -150,7 +150,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             }
         );
         if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
-        
+
         sketch.log = { initialState: [], actions: [] };
         sketch.onNewEditorState = updateState;
         sketch.onCloseMenus = () => undefined;
@@ -228,7 +228,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 <InputGroup className="my-2 separate-input-group">
                     <Input type="text" onChange={updateEquation} value={textInput}
                            placeholder="or type your expression here"/>
-                    <InputGroupAddon addonType="append">
+                    <>
                         {siteSpecific(
                             <Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId}>?</Button>,
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
@@ -242,7 +242,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                             1 . ~(0 + A)<br />
                             As you type, the box above will preview the result.
                         </UncontrolledTooltip>
-                    </InputGroupAddon>
+                    </>
                 </InputGroup>
                 <QuestionInputValidation userInput={textInput} validator={symbolicLogicInputValidator} />
                 {symbolList && <div className="eqn-editor-symbols">

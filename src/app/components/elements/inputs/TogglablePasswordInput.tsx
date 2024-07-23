@@ -1,4 +1,4 @@
-import {FormFeedback, Input, InputGroup, InputGroupAddon, InputProps} from "reactstrap";
+import {FormFeedback, Input, InputGroup, InputProps} from "reactstrap";
 import React, {useState} from "react";
 
 export const TogglablePasswordInput = (props: InputProps) => {
@@ -9,11 +9,9 @@ export const TogglablePasswordInput = (props: InputProps) => {
             {...props}
             type={showPassword ? "text" : "password"}
         />
-        <InputGroupAddon addonType="append">
-            <button type="button" className="inline-form-input-btn" onClick={() => {setShowPassword(!showPassword)}}>
-                {showPassword ? "Hide" : "Show"}
-            </button>
-        </InputGroupAddon>
+        <button type="button" className="inline-form-input-btn" onClick={() => {setShowPassword(!showPassword)}}>
+            {showPassword ? "Hide" : "Show"}
+        </button>
         <FormFeedback>
             Please enter a valid password.
         </FormFeedback>
