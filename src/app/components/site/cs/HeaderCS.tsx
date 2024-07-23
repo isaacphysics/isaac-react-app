@@ -112,7 +112,9 @@ export const HeaderCS = () => {
                                     }
                                     <LinkItem to="/account">My account</LinkItem>
                                 </NavigationSection>
-                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>                            </>
+                                <div className={"navbar-separator d-nav-none d-block"}/>
+                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>
+                            </>
                         }
 
                         <div className={"navbar-separator d-nav-none d-block"}/>
