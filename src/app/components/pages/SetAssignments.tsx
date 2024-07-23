@@ -185,7 +185,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
     );
 
     return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle}>
-        <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break"} close={
+        <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break d-flex justify-content-between"} close={
             <button className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy})} onClick={toggle}>
                 Close
             </button>
