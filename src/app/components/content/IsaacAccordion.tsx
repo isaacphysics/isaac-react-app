@@ -53,7 +53,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
 
             // Handle conditional display settings
             .map(section => {
-                let sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
+                const sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
                 const sectionDisplaySettings = isIntendedAudience(section.audience, userContext, user) ?
                         sectionDisplay?.["audience"] : sectionDisplay?.["nonAudience"];
                 if (sectionDisplaySettings?.includes("open")) {section.startOpen = true;}
@@ -87,15 +87,16 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             // Filter out hidden sections before they mess up indexing
             .filter(section => !section.hidden)
 
-            .map((section , index) =>
-                <Accordion
+            .map((section , index) => {
+                const intendedAudience = isIntendedAudience(section.audience, userContext, user);
+                return <Accordion
                     key={`${section.sectionIndex} ${index}`} id={section.id} index={index}
                     startOpen={section.startOpen} deEmphasised={section.deEmphasised}
                     trustedTitle={section?.title || ""}
-                    audienceString={stringifyAudience(section.audience, userContext)}
+                    audienceString={stringifyAudience(section.audience, userContext, intendedAudience)}
                 >
                     <IsaacContent doc={section} />
-                </Accordion>
-            )}
+                </Accordion>;
+            })}
     </div>;
 };

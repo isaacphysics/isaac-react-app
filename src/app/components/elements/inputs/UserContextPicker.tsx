@@ -57,8 +57,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                             const newParams: {[key: string]: unknown} = {...qParams, stage: e.target.value};
                             const stage = e.target.value as STAGE;
                             if (isAda) {
-                                // Drive exam board selection so that it is a valid option - by default use All.
-                                let examBoard = EXAM_BOARD.ALL;
+                                // Derive exam board selection so that it is a valid option
+                                // Try to use default preferences (Stage All, Ada) otherwise default to All.
+                                let examBoard = stage === STAGE.ALL ? EXAM_BOARD.ADA : EXAM_BOARD.ALL;
                                 const possibleExamBoards =
                                     getFilteredExamBoardOptions({byUser: user, byStages: [stage], includeNullOptions: true})
                                         .map(eb => eb.value);

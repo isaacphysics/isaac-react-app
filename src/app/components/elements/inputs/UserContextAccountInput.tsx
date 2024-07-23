@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, {ChangeEvent, useEffect, useRef} from "react";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     EMPTY_BOOLEAN_NOTATION_RECORD,
@@ -20,6 +20,7 @@ import {v4 as uuid_v4} from "uuid";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
+import { isUndefined } from "lodash";
 import { StyledCheckbox } from "./StyledCheckbox";
 
 interface UserContextRowProps {
@@ -39,11 +40,11 @@ interface UserContextRowProps {
 
 function UserContextRow({
     userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings,
-    tutorOrAbove, userContexts, setUserContexts, index, required
+    tutorOrAbove, userContexts, setUserContexts, index, required: _required
 }: UserContextRowProps) {
     const onlyUCWithThisStage = existingUserContexts.length === 0 || existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
 
-    const onStageUpdate = (e: any) => {
+    const onStageUpdate = (e: ChangeEvent<HTMLInputElement>) => {
         const stage = e.target.value as STAGE;
         if (!isAda) {
             setUserContext({...userContext, stage});
@@ -53,8 +54,9 @@ function UserContextRow({
         const onlyOneAtThisStage = existingUserContexts.length === 0 || existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
         const possibleExamBoards = getFilteredExamBoardOptions(
             {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
-            }) || [EXAM_BOARD.ALL];
-        const examBoard = possibleExamBoards.map(e => e.value).includes(userContext.examBoard as EXAM_BOARD) && userContext.examBoard || possibleExamBoards[0].value;
+            });
+        const examBoards = possibleExamBoards.map(e => e.value) || [EXAM_BOARD.ADA];
+        const examBoard = examBoards.includes(userContext.examBoard as EXAM_BOARD) && userContext.examBoard || possibleExamBoards[0].value;
         setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
 
         // Set display settings default values
@@ -62,12 +64,23 @@ function UserContextRow({
         setUserContext({...userContext, stage, examBoard});
     };
 
-    const onExamBoardUpdate = (e: any) => {
-        setUserContext({...userContext, examBoard: e.target.value as EXAM_BOARD});
+    const onExamBoardUpdate = (e: ChangeEvent<HTMLInputElement>) => {
+        const examBoard: EXAM_BOARD = e.target.value as EXAM_BOARD;
+        setUserContext({...userContext, examBoard: examBoard});
         if (e.target.value) {
-            setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[e.target.value as EXAM_BOARD]]: true});
+            setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
         }
     };
+
+    useEffect(() => {
+        // Deliberately set default user context on Ada for users who have no context
+        if (isAda && (isUndefined(userContext.stage) || isUndefined(userContext.examBoard))) {
+            const stage = userContext.stage ?? STAGE.ALL;
+            const examBoard = userContext.examBoard ?? EXAM_BOARD.ADA;
+            setUserContext({stage, examBoard});
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [setUserContext]);
 
     return <React.Fragment>
         {/* Stage Selector */}
@@ -79,7 +92,7 @@ function UserContextRow({
                 onChange={onStageUpdate}
                 value={userContext.stage}
             >
-                <option value=""/>
+                {isPhy && <option value="" className="d-none"/>}
                 {getFilteredStageOptions({
                     byUserContexts: existingUserContexts.filter(uc => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard)),
                     includeNullOptions: showNullStageOption, hideFurtherA: true
@@ -96,7 +109,6 @@ function UserContextRow({
                 onChange={onExamBoardUpdate}
                 value={userContext.examBoard}
             >
-                <option value="" />
                 {getFilteredExamBoardOptions({
                     byStages: [userContext.stage as STAGE || STAGE.ALL],
                     includeNullOptions: onlyUCWithThisStage,
@@ -110,7 +122,7 @@ function UserContextRow({
                 {tutorOrAbove && userContexts.length > 1 && <Button close
                     className="close float-none bg-white p-2" aria-label="clear stage row"
                     disabled={userContexts.length <= 1}
-                    onClick={() => setUserContexts(userContexts.filter((uc, i) => i !== index))}
+                    onClick={() => setUserContexts(userContexts.filter((_uc, i) => i !== index))}
                 />}
             </div>
         </div>

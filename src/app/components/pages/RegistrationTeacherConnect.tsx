@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import {
     Button,
@@ -69,12 +69,12 @@ export const RegistrationTeacherConnect = () => {
 
     useEffect(() => {
         // If the AFTER_AUTH_PATH is a teacher connection URL, we'll deal with it here instead.
-        const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH)
+        const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH);
         if (afterAuthPath && afterAuthPath.includes("authToken")) {
-            setAuthenticationToken(afterAuthPath.split("?authToken=").at(-1)?.toUpperCase().replace(/ /g,''))
-            persistence.remove(KEY.AFTER_AUTH_PATH)
+            setAuthenticationToken(afterAuthPath.split("?authToken=").at(-1)?.toUpperCase().replace(/ /g,''));
+            persistence.remove(KEY.AFTER_AUTH_PATH);
         }
-    }, [])
+    }, []);
 
 
     return <Container>
@@ -119,5 +119,5 @@ export const RegistrationTeacherConnect = () => {
                 </Form>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};

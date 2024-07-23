@@ -13,8 +13,8 @@ export const RegistrationRoleSelect = () => {
 
     const studentSignup = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/register/student/age")
-    }
+        history.push("/register/student/age");
+    };
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
@@ -65,5 +65,5 @@ export const RegistrationRoleSelect = () => {
                 </Row>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};

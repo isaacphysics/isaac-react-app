@@ -5,7 +5,6 @@ import {
     above,
     ALPHABET,
     audienceStyle,
-    below,
     DOCUMENT_TYPE,
     isAda,
     isAQuestionLikeDoc,
@@ -14,7 +13,6 @@ import {
     scrollVerticallyIntoView,
     siteSpecific,
     useDeviceSize,
-    useUserViewingContext
 } from "../../services";
 import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
@@ -176,10 +174,10 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 {isConceptPage && audienceString && <span className={"stage-label d-flex align-items-center p-2 " +
                     "justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
                     {siteSpecific(
-                        audienceString, 
-                        (above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
+                        audienceString,
+                        above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
                             {line}{i < arr.length && <br/>}
-                        </>)
+                        </>
                     )}
                 </span>}
                 <div className="accordion-title ps-3">

@@ -73,7 +73,7 @@ export const useLoginLogic = () => {
         setStateFunctions: {setEmail, setPassword, setRememberMe, setPasswordResetAttempted},
         loginValues: {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword}
     };
-}
+};
 
 // Handles display and logic of the two-factor authentication form (usually shown after the first login step)
 export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {rememberMe: boolean}, ref: React.Ref<HTMLHeadingElement>) {
@@ -106,7 +106,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
                 onClick={(event) => {
                     event.preventDefault();
                     if (mfaVerificationCode)
-                        dispatch(submitTotpChallengeResponse(mfaVerificationCode, rememberMe))
+                        dispatch(submitTotpChallengeResponse(mfaVerificationCode, rememberMe));
                 }}
             />
         </FormGroup>
@@ -141,7 +141,7 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
                 Please check your inbox.
             </strong>}
         </p>;
-}
+};
 
 interface EmailPasswordInputsProps {
     setEmail: (email: string) => void;
@@ -183,7 +183,7 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
             </FormFeedback>
         </FormGroup>
     </>;
-}
+};
 
 // Main login page component, utilises all of the components defined above
 export const LogIn = () => {

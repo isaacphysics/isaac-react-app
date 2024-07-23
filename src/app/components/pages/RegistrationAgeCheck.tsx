@@ -28,7 +28,7 @@ export const RegistrationAgeCheck = () => {
             over13 ?
                 history.push("/register/student/details")
                 :
-                history.push("/register/student/age_denied")
+                history.push("/register/student/age_denied");
         }
     };
 
@@ -45,7 +45,7 @@ export const RegistrationAgeCheck = () => {
                             className="d-inline"
                             type="radio"
                             checked={over13 === true}
-                            onChange={() => {setOver13(true)}}
+                            onChange={() => {setOver13(true);}}
                             color="secondary"
                             invalid={submissionAttempted && over13 === undefined}
                         />
@@ -57,7 +57,7 @@ export const RegistrationAgeCheck = () => {
                             className="d-inline"
                             type="radio"
                             checked={over13 === false}
-                            onChange={() => {setOver13(false)}}
+                            onChange={() => {setOver13(false);}}
                             color="secondary"
                             invalid={submissionAttempted && over13 === undefined}
                         >
@@ -79,5 +79,5 @@ export const RegistrationAgeCheck = () => {
                 </Form>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};

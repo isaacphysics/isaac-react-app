@@ -14,11 +14,13 @@ import {
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
+    EXAM_BOARD,
     FIRST_LOGIN_STATE,
     history,
     KEY,
     persistence,
     SITE_TITLE,
+    STAGE,
     trackEvent,
     validateCountryCode,
     validateEmail,
@@ -76,26 +78,26 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     const errorMessage = extractErrorMessage(error);
 
     const register = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+        event.preventDefault();
         setAttemptedSignUp(true);
 
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && countryCodeIsValid &&
             ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
-            setAttemptedSignUp(true)
+            setAttemptedSignUp(true);
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(errorSlice.actions.clearError());
-            dispatch(registerNewUser(registrationUser, {}, undefined, null));
+            dispatch(registerNewUser(registrationUser, {}, [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ADA}], null));
             trackEvent("registration", {
                     props:
                         {
                             provider: "SEGUE"
                         }
                 }
-            )
+            );
         }
-    }
+    };
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
@@ -198,5 +200,5 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                 </Row>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};
