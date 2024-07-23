@@ -86,7 +86,7 @@ export const HeaderCS = () => {
                             </>
                             :
                             <>
-                                <div className={"ml-nav-auto"}></div>
+                                <div className={"ms-nav-auto"}></div>
                                 {(isStaff(user) || isEventLeader(user)) && <NavigationSection title="Admin">
                                     {isStaff(user) && <LinkItem to="/admin">Admin tools</LinkItem>}
                                     {isAdmin(user) && <LinkItem to="/admin/usermanager">User manager</LinkItem>}
@@ -112,7 +112,7 @@ export const HeaderCS = () => {
                                     }
                                     <LinkItem to="/account">My account</LinkItem>
                                 </NavigationSection>
-                                <NavigationSection className={"ms-nav-auto text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>                            </>
+                                <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/logout" title={"Log out"}/>                            </>
                         }
 
                         <div className={"navbar-separator d-nav-none d-block"}/>
