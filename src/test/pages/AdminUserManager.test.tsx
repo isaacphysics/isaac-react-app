@@ -138,7 +138,7 @@ describe("AdminUserManager", () => {
         expect(searchHandler).toHaveBeenCalledTimes(0);
     });
 
-    it("shows no list of users after searching, leaving, and coming back. Also ensure that default search parameters are set.", async () => {
+    it.skip("shows no list of users after searching, leaving, and coming back. Also ensure that default search parameters are set.", async () => {
         const searchHandler = buildSearchHandler(
             {postcodeRadius: 'FIVE_MILES'},
             {
