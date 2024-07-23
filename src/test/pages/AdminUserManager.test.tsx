@@ -1,6 +1,6 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {renderTestEnvironment, followHeaderNavLink, paramsToObject} from "../testUtils";
-import {API_PATH, isDefined, siteSpecific} from "../../app/services";
+import {navigateToUserManager, paramsToObject, renderTestEnvironment} from "../testUtils";
+import {API_PATH, isDefined} from "../../app/services";
 import {rest} from "msw";
 import {handlerThatReturns} from "../../mocks/handlers";
 import {buildMockUserSummary, mockSchool, mockUser} from "../../mocks/data";
@@ -130,7 +130,7 @@ describe("AdminUserManager", () => {
                 rest.get(API_PATH + "/admin/users", searchHandler),
             ]
         });
-        await followHeaderNavLink("Admin", siteSpecific("User Manager", "User manager"));
+        await navigateToUserManager();
         const tableExists = await screen.findAllByTestId("user-search-results-table")
             .then(() => true)
             .catch(() => false);
@@ -151,12 +151,12 @@ describe("AdminUserManager", () => {
                 rest.get(API_PATH + "/admin/users", searchHandler),
             ]
         });
-        await followHeaderNavLink("Admin", siteSpecific("User Manager", "User manager"));
+        await navigateToUserManager();
         await searchWithParams({}, {expectNumberOfResults: 1, searchHandler});
         // Navigate away from the page
-        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+
         // Go back to the admin user manager page
-        await followHeaderNavLink("Admin", siteSpecific("User Manager", "User manager"));
+        await navigateToUserManager();
         // The table should no longer be there, and the search endpoint should not have been accessed again
         const tableExists = await screen.findAllByTestId("user-search-results-table")
             .then(() => true)
@@ -179,7 +179,7 @@ describe("AdminUserManager", () => {
                 rest.get(API_PATH + "/admin/users", searchHandler),
             ]
         });
-        await followHeaderNavLink("Admin", siteSpecific("User Manager", "User manager"));
+        await navigateToUserManager();
         await searchWithParams({}, {expectNumberOfResults: 2, searchHandler});
         searchHandler.mockClear();
         await searchWithParams(
@@ -199,7 +199,7 @@ describe("AdminUserManager", () => {
                 rest.get(API_PATH + "/admin/users", searchHandler),
             ]
         });
-        await followHeaderNavLink("Admin", siteSpecific("User Manager", "User manager"));
+        await navigateToUserManager();
         await searchWithParams(
             {role: mockUser.role, schoolURN: mockSchool.urn},
             {
@@ -223,7 +223,7 @@ describe("AdminUserManager", () => {
                 rest.delete(API_PATH + "/admin/users/:userId", deleteHandler)
             ]
         });
-        await followHeaderNavLink("Admin", siteSpecific("User Manager", "User manager"));
+        await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
             {},
             {
@@ -263,7 +263,7 @@ describe("AdminUserManager", () => {
                 rest.post(API_PATH + `/admin/users/change_role/:role`, roleChangeHandler)
             ]
         });
-        await followHeaderNavLink("Admin", siteSpecific("User Manager", "User manager"));
+        await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
             {},
             {
@@ -319,7 +319,7 @@ describe("AdminUserManager", () => {
                 rest.post(API_PATH + "/admin/users/change_email_verification_status/:status/true", statusChangeHandler)
             ]
         });
-        await followHeaderNavLink("Admin", siteSpecific("User Manager", "User manager"));
+        await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
             {},
             {
@@ -389,7 +389,7 @@ describe("AdminUserManager", () => {
                 rest.post(API_PATH + "/users/resetpassword", resetPasswordHandler)
             ]
         });
-        await followHeaderNavLink("Admin", siteSpecific("User Manager", "User manager"));
+        await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
             {},
             {

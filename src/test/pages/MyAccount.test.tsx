@@ -4,7 +4,7 @@ import {
     mockActiveGroups,
     buildMockTeacher,
     buildMockUserSummary} from "../../mocks/data";
-import { followHeaderNavLink, renderTestEnvironment, switchAccountTab } from "../testUtils";
+import {followHeaderNavLink, navigateToMyAccount, renderTestEnvironment, switchAccountTab} from "../testUtils";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor, within } from "@testing-library/react";
 
@@ -75,7 +75,7 @@ describe("My Account", () => {
         });
 
         // Navigate to the teacher connections tab
-        await followHeaderNavLink("My Isaac", siteSpecific("My Account", "My account"));
+        await navigateToMyAccount();
         await switchAccountTab(ACCOUNT_TAB.teacherconnections);
         // Enter the group code and connect
         const teacherConnectForm = await screen.findByTestId("teacher-connect-form");
@@ -182,7 +182,7 @@ describe("My Account", () => {
         });
 
         // Navigate to the teacher connections tab
-        await followHeaderNavLink("My Isaac", siteSpecific("My Account", "My account"));
+        await navigateToMyAccount();
         await switchAccountTab(ACCOUNT_TAB.teacherconnections);
 
         // Check that the teacher is displayed in the list of teacher connections

@@ -4,12 +4,19 @@ import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler} from "reactstrap";
 import {
     isAdmin,
     isAdminOrEventManager,
-    isEventLeader, isLoggedIn,
+    isEventLeader,
+    isLoggedIn,
     isStaff,
     isTeacherOrAbove,
-    isTutorOrAbove, PATHS
+    PATHS
 } from "../../../services";
-import {LinkItem, MenuBadge, MenuOpenContext, NavigationSection, useAssignmentsCount} from "../../navigation/NavigationBar";
+import {
+    LinkItem,
+    MenuBadge,
+    MenuOpenContext,
+    NavigationSection,
+    useAssignmentsCount
+} from "../../navigation/NavigationBar";
 import classNames from "classnames";
 import {AdaHeaderSearch} from "../../elements/SearchInputs";
 

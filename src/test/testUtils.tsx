@@ -2,14 +2,13 @@ import {UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {rest, RestHandler} from "msw";
-import {ACCOUNT_TAB, ACTION_TYPE, API_PATH, SITE, SITE_SUBJECT} from "../app/services";
+import {ACCOUNT_TAB, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
 import produce from "immer";
 import {mockUser} from "../mocks/data";
 import {isaacApi, requestCurrentUser, store} from "../app/state";
 import {Provider} from "react-redux";
 import {IsaacApp} from "../app/components/navigation/IsaacApp";
 import React from "react";
-import {isDefined} from "../app/services";
 import {MemoryRouter} from "react-router";
 import {screen, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -107,6 +106,34 @@ export const followHeaderNavLink = async (menu: string, linkName: string) => {
     if (!adminMenuSectionParent) fail(`Missing NavigationSection parent - cannot locate entries in ${menu} navigation menu.`);
     const link = await within(adminMenuSectionParent).findByRole("menuitem", {name: linkName, exact: false});
     await userEvent.click(link);
+};
+
+export const navigateToGroups = async () => {
+    isPhy ?
+        await followHeaderNavLink("Teach", "Manage Groups")
+        :
+        await followHeaderNavLink("My Ada", "Teaching groups");
+};
+
+export const navigateToMyAccount = async () => {
+    isPhy ?
+        await followHeaderNavLink("My Isaac", "My Account")
+        :
+        await followHeaderNavLink("My Ada", "My account");
+};
+
+export const navigateToUserManager = async () => {
+    isPhy ?
+        await followHeaderNavLink("Admin", "User Manager")
+        :
+        await followHeaderNavLink("Admin", "User manager");
+};
+
+export const navigateToAssignmentProgress = async () => {
+    isPhy ?
+        await followHeaderNavLink("Teach", "Assignment Progress")
+        :
+        await followHeaderNavLink("My Ada", "My markbook");
 };
 
 // Open a given tab in the account page.
