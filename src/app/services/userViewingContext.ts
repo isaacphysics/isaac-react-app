@@ -149,7 +149,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
 }
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
-    {label: "No Exam Board (Default)", value: EXAM_BOARD.ADA},
+    {label: "ADA (Default)", value: EXAM_BOARD.ADA},
     {label: "AQA", value: EXAM_BOARD.AQA},
     {label: "CIE", value: EXAM_BOARD.CIE},
     {label: "EDEXCEL", value: EXAM_BOARD.EDEXCEL},
