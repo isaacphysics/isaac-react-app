@@ -1,12 +1,9 @@
-import { rest } from "msw";
-import { ACCOUNT_TAB, API_PATH, extractTeacherName, siteSpecific } from "../../app/services";
-import {
-    mockActiveGroups,
-    buildMockTeacher,
-    buildMockUserSummary} from "../../mocks/data";
-import { followHeaderNavLink, renderTestEnvironment, switchAccountTab } from "../testUtils";
+import {rest} from "msw";
+import {ACCOUNT_TAB, API_PATH, extractTeacherName} from "../../app/services";
+import {buildMockTeacher, buildMockUserSummary, mockActiveGroups} from "../../mocks/data";
+import {navigateToMyAccount, renderTestEnvironment, switchAccountTab} from "../testUtils";
 import userEvent from "@testing-library/user-event";
-import { screen, waitFor, within } from "@testing-library/react";
+import {screen, waitFor, within} from "@testing-library/react";
 
 describe("My Account", () => {
     it("students can join a group by entering a group code", async () => {
@@ -75,7 +72,7 @@ describe("My Account", () => {
         });
 
         // Navigate to the teacher connections tab
-        await followHeaderNavLink("My Isaac", siteSpecific("My Account", "My account"));
+        await navigateToMyAccount();
         await switchAccountTab(ACCOUNT_TAB.teacherconnections);
         // Enter the group code and connect
         const teacherConnectForm = await screen.findByTestId("teacher-connect-form");
@@ -182,7 +179,7 @@ describe("My Account", () => {
         });
 
         // Navigate to the teacher connections tab
-        await followHeaderNavLink("My Isaac", siteSpecific("My Account", "My account"));
+        await navigateToMyAccount();
         await switchAccountTab(ACCOUNT_TAB.teacherconnections);
 
         // Check that the teacher is displayed in the list of teacher connections

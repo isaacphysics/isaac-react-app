@@ -1,6 +1,6 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {renderTestEnvironment, followHeaderNavLink} from "../testUtils";
-import {API_PATH, siteSpecific, utf8ByteLength} from "../../app/services";
+import {navigateToAssignmentProgress, renderTestEnvironment} from "../testUtils";
+import {API_PATH, utf8ByteLength} from "../../app/services";
 import {mockActiveGroups, mockAssignmentsGroup2, mockQuizAssignments} from "../../mocks/data";
 import userEvent from "@testing-library/user-event";
 import {buildGroupHandler} from "../../mocks/handlers";
@@ -12,7 +12,7 @@ describe("AssignmentProgress", () => {
         renderTestEnvironment({
             role: "TUTOR",
         });
-        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+        await navigateToAssignmentProgress();
         const groupTitles = await screen.findAllByTestId("group-name");
         expect(groupTitles).toHaveLength(mockActiveGroups.length);
     });
@@ -39,7 +39,7 @@ describe("AssignmentProgress", () => {
                 })
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+        await navigateToAssignmentProgress();
         // Should only be one group
         const groupTitle = await screen.findByTestId("group-name");
         // Clicking on the group title should suffice to open the accordion
@@ -79,7 +79,7 @@ describe("AssignmentProgress", () => {
                 })
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+        await navigateToAssignmentProgress();
         // Should only be one group
         const groupTitle = await screen.findByTestId("group-name");
         // Clicking on the group title should suffice to open the accordion
@@ -111,7 +111,7 @@ describe("AssignmentProgress", () => {
                 }),
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+        await navigateToAssignmentProgress();
         const groupDownloadLinks = await screen.findAllByText("(Download group assignments CSV)");
 
         // Act
@@ -144,7 +144,7 @@ describe("AssignmentProgress", () => {
                 }),
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+        await navigateToAssignmentProgress();
 
         const groupTitles = await screen.findAllByTestId("group-name");
         // Clicking on the group title should suffice to open the accordion
@@ -182,7 +182,7 @@ describe("AssignmentProgress", () => {
                 }),
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+        await navigateToAssignmentProgress();
         const groupDownloadLinks = await screen.findAllByText("(Download group tests CSV)");
 
         // Act
