@@ -75,7 +75,7 @@ export const HeaderCS = () => {
                             <LinkItem to="/support/teacher">Support</LinkItem>
                         </NavigationSection>
 
-                        <NavigationSection className={"text-center text-start-nav"} topLevelLink to="/contact" title={"Contact us"}/>
+                        <NavigationSection className={"text-start-nav"} topLevelLink to="/contact" title={"Contact us"}/>
 
                         <div className={"navbar-separator d-nav-none d-block"}/>
 
