@@ -1,10 +1,8 @@
 .scroll-btn {
   position: fixed;
-  opacity: 0; // If not in use hide
+  display: none; // If not in use hide
   height: 45px;
   width: 45px;
-  display: flex;
-  background-color: #fff;
   justify-content: center;
   align-items: center;
   bottom: 10px;
@@ -13,7 +11,7 @@
   background-color: #fff !important;
   border-radius: 50%;
   transition: opacity 0.1s linear;
-  z-index: 999;
+  z-index: 101;
   img {
     margin-top: -4px;
     height: 80%;
@@ -22,5 +20,5 @@
 }
 
 .is-sticky {
-  opacity: 1;
+  display: flex;
 }
