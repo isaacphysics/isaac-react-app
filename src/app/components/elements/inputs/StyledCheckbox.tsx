@@ -17,14 +17,14 @@ export const StyledCheckbox = (props : InputProps) => {
         props.onChange && props.onChange(e);
         setChecked(e.target.checked);
     };
-    
+
     // if `checked` is changed externally, reflect this here
     useEffect(() => {
         setChecked(props.checked ?? false);
     }, [props.checked]);
 
     return <div className="styled-checkbox-wrapper">
-        <div className="me-2 mb-3">
+        <div className="me-2 my-2">
             {checked && <div className="tick"/>}
             <Input {...rest} id={id} type="checkbox" className={classNames(className ?? "", {"checked" : checked})}
                 onChange={(e) => onCheckChange(e)}

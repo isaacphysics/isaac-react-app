@@ -1,13 +1,14 @@
 .styled-checkbox-wrapper {
     display: flex;
     justify-content: center;
-  
+    align-items: center;
+
     div {
       width: 1.6em;
       min-width: 1.6em;
       height: 1.6em;
       position: relative;
-  
+
       input[type="checkbox"] {
         position: relative;
         appearance: none;
@@ -19,11 +20,11 @@
         outline: none;
         cursor: pointer;
         transition: all 250ms cubic-bezier(0.1, 0.75, 0.5, 1);
-        
+
         &.checked {
           background: #000;
           border-color: #000;
-  
+
           &:hover, &:disabled {
             background: #333;
             border-color: #333;
@@ -39,7 +40,7 @@
             }
           }
         }
-  
+
         &:not(.checked):hover, &:not(.checked):disabled {
           background: #f8f8f8;
           border-color: #666;
@@ -49,7 +50,7 @@
           box-shadow: 0 0 0 0.1em #000;
         }
       }
-  
+
       .tick {
         position: absolute;
         display: inline-block;
@@ -61,7 +62,7 @@
         -ms-transform: rotate(45deg);
         pointer-events: none;
         z-index: 1;
-      
+
         &::before {
           content: "";
           position: absolute;
@@ -71,7 +72,7 @@
           left: 11px;
           top: 2px;
         }
-  
+
         &::after{
           content: "";
           position: absolute;
@@ -83,7 +84,7 @@
         }
       }
     }
-  
+
     > label {
       width: fit-content;
       margin: 0;

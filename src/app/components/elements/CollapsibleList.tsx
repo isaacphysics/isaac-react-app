@@ -6,6 +6,7 @@ import classNames from "classnames";
 export interface CollapsibleListProps {
     title?: string;
     expanded?: boolean; // initial expanded state only
+    subList?: boolean;
     children?: React.ReactNode;
 }
 
@@ -21,10 +22,12 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         }
     }, [expanded]);
 
+    const title = props.title && props.subList ? props.title : <b>{props.title}</b>;
+
     return <Col>
         <Row className="collapsible-head">
-            <button className="w-100 d-flex align-items-center p-3 bg-white" onClick={() => setExpanded(e => !e)}>
-                {props.title && <span><b>{props.title}</b></span>}
+            <button className={classNames("w-100 d-flex align-items-center p-3 bg-white text-start", {"ps-4": props.subList})} onClick={() => setExpanded(e => !e)}>
+                {title && <span>{title}</span>}
                 <Spacer/>
                 <img className={classNames("icon-dropdown-90", {"active": expanded})} src={"/assets/common/icons/chevron_right.svg"} alt="" />
             </button>

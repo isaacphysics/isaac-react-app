@@ -33,7 +33,8 @@ import {
     TAG_ID,
     itemiseTag,
     isLoggedIn,
-    SEARCH_RESULTS_PER_PAGE
+    SEARCH_RESULTS_PER_PAGE,
+    DIFFICULTY_ITEM_OPTIONS
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
@@ -51,8 +52,9 @@ import classNames from "classnames";
 import queryString from "query-string";
 import { PageFragment } from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { Button, Card, CardBody, CardHeader, Col, Container, Dropdown, DropdownMenu, DropdownToggle, Form, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
+import { Button, Card, CardBody, CardFooter, CardHeader, Col, Container, Dropdown, DropdownMenu, DropdownToggle, Form, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
 import { CollapsibleList } from "../elements/CollapsibleList";
+import { DifficultyIcons } from "../elements/svg/DifficultyIcons";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -75,6 +77,13 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
     });
 
     return selectionItems;
+}
+
+function simplifyDifficultyLabel(difficultyLabel: string): string {
+    const labelLength = difficultyLabel.length;
+    const type = difficultyLabel.slice(0, labelLength - 4);
+    const level = difficultyLabel.slice(labelLength - 2, labelLength - 1);
+    return type + level;
 }
 
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
@@ -271,6 +280,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     }, [questionList]);
 
     const [revisionMode, setRevisionMode] = useState(!!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS);
+    // TODO: Should be taken from the URI? Or from consent? Or default true?
+    const [llmMarked, setLlmMarked] = useState(false);
 
     useEffect(() => {
         if (revisionMode) {
@@ -327,22 +338,36 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                     onChange={(e) => handleSearch(e.target.value)}
                 />
-                {/* TODO: add magnifying glass symbol to end of input */}
+                {/* TODO: bring this into the search box
+                <img
+                    src="/assets/common/icons/search-icon.svg"
+                    alt="Search"
+                    style={{width: 18}}
+                    className="ms-1"
+                /> */}
             </Col>
         </Row>
 
         <Row className="mt-4">
-            <Col xs={4} className="text-wrap my-2" data-testid="question-finder-filters">
+            <Col xs={3} className="text-wrap my-2" data-testid="question-finder-filters">
                 <Card>
                     <CardHeader className="finder-header pl-3">
-                        <Col className={"px-0"}>
-                            Filter by
+                        <Col xs={2}>
+                            <img
+                                src="/assets/common/icons/filter-icon.svg"
+                                alt="Filter"
+                                style={{width: 18}}
+                                className="ms-1"
+                            />
+                        </Col>
+                        <Col className={"px-0 mt-1"}>
+                            <b>Filter by</b>
                         </Col>
                     </CardHeader>
                     <CardBody className="p-0 m-0">
-                        <CollapsibleList title="Stage" expanded>
+                        <CollapsibleList title="Stage" expanded subList={false}>
                             {getFilteredStageOptions().map((stage, index) => (
-                                <div className="w-100 px-4 py-1 bg-white" key={index}>
+                                <div className="w-100 ps-3 py-1 bg-white" key={index}>
                                     <StyledCheckbox
                                         color="primary"
                                         checked={searchStages.includes(stage.value)}
@@ -352,9 +377,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 </div>
                             ))}
                         </CollapsibleList>
-                        {isAda && <CollapsibleList title="Exam board">
+                        {isAda && <CollapsibleList title="Exam board" subList={false}>
                             {getFilteredExamBoardOptions().map((board, index) => (
-                                <div className="w-100 px-4 py-1 bg-white" key={index}>
+                                <div className="w-100 ps-3 py-1 bg-white" key={index}>
                                     <StyledCheckbox
                                         color="primary"
                                         checked={searchExamBoards.includes(board.value)}
@@ -364,41 +389,146 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 </div>
                             ))}
                         </CollapsibleList>}
-                        {isAda && <CollapsibleList title="Topics">
-                            {/* TODO */}
+                        {isAda && <CollapsibleList title="Topics" subList={false}>
+                            {groupBaseTagOptions.map((tag, index) => (
+                                // TODO: adjust positioning
+                                // TODO: make subList
+                                <CollapsibleList title={tag.label} key={index} subList={true}>
+                                    {tag.options.map((topic, index) => (
+                                        <div className="w-100 ps-4 py-1 bg-white" key={index}>
+                                            <StyledCheckbox
+                                                color="primary"
+                                                checked={searchTopics.includes(topic.value)}
+                                                onChange={() => setSearchTopics(
+                                                    s => s.includes(topic.value)
+                                                        ? s.filter(v => v !== topic.value)
+                                                        : [...s, topic.value]
+                                                )}
+                                                label={<span>{topic.label}</span>}
+                                                className="ps-3"
+                                            />
+                                        </div>
+                                    ))}
+                                </CollapsibleList>
+                            ))}
                         </CollapsibleList>}
-                        <CollapsibleList title="Difficulty">
-                            {/* TODO */}
+                        <CollapsibleList title="Question difficulty" subList={false}>
+                            {DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
+                                // TODO: style to use coloured indicators
+                                <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                                    <StyledCheckbox
+                                        color="primary"
+                                        checked={searchDifficulties.includes(difficulty.value)}
+                                        onChange={() => setSearchDifficulties(
+                                            s => s.includes(difficulty.value)
+                                                ? s.filter(v => v !== difficulty.value)
+                                                : [...s, difficulty.value]
+                                        )}
+                                        label={<div className="d-flex">
+                                            <span className="me-2">{simplifyDifficultyLabel(difficulty.label)}</span>
+                                            <DifficultyIcons difficulty={difficulty.value} blank={true}/>
+                                        </div>}
+                                    />
+                                </div>
+                            ))}
                         </CollapsibleList>
-                        <CollapsibleList title="Status">
-                            <div className="w-100 px-4 py-1 bg-white d-flex align-items-center">
-                                {/* TODO: merge in LLM branch and add "Show LLM qs" here */}
+                        <CollapsibleList title="Question status" subList={false}>
+                            {/* TODO: actually make these buttons do something */}
+                            {/* TODO: add images to attempt status */}
+                            <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                                 <StyledCheckbox
-                                    // TODO: ignoreLabelHover doesn't work, the current css would need the *opposite* of + (checkbox.scss L92)
-                                    ignoreLabelHover
+                                    label={<div>
+                                        <span>Not attempted</span>
+                                        <img
+                                            src="/assets/common/icons/not-started.svg"
+                                            alt="Not attempted"
+                                            style={{width: 23}}
+                                            className="ms-1"
+                                        />
+                                    </div>}
+                                />
+                            </div>
+                            <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
+                                <StyledCheckbox
+                                    label={<div>
+                                        <span>Completed</span>
+                                        <img
+                                            src="/assets/common/icons/completed.svg"
+                                            alt="Completed"
+                                            style={{width: 23}}
+                                            className="ms-1"
+                                        />
+                                    </div>}
+                                />
+                            </div>
+                            <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
+                                <StyledCheckbox
+                                    label={<div>
+                                        <span>Try again</span>
+                                        <img
+                                            src="/assets/common/icons/incorrect.svg"
+                                            alt="Try again"
+                                            style={{width: 23}}
+                                            className="ms-1"
+                                        />
+                                    </div>}
+                                />
+                            </div>
+                            <div className="pb-2">
+                                <hr className="m-0"/>
+                            </div>
+                            {isAda && <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
+                                <StyledCheckbox
+                                    checked={llmMarked}
+                                    onChange={() => {setLlmMarked(p => !p);}}
+                                    label={<span>
+                                        {"Include "}
+                                        <button
+                                        className="p-0 bg-white h-min-content btn-link"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            // TODO: add modal
+                                            console.log("show LLM modal here");
+                                        }}>
+                                            LLM marked
+                                        </button>
+                                        {" questions"}
+                                    </span>}
+                                />
+                            </div>}
+                            <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                                <StyledCheckbox
                                     checked={revisionMode}
                                     onChange={() => {
                                         setRevisionMode(r => !r);
                                         debouncedRevisionModeUpdate();
                                     }}
-                                    label={<button 
-                                        className="p-0 mb-3 bg-white h-min-content" 
+                                    label={<span><button
+                                        className="p-0 bg-white h-min-content btn-link"
                                         onClick={(e) => {
                                             e.preventDefault();
                                             // TODO: add modal
-                                            console.log("show modal here");
+                                            console.log("show LLM modal here");
                                         }}>
                                             Revision mode
-                                    </button>}
+                                    </button></span>}
                                 />
                             </div>
                         </CollapsibleList>
+                        <Row className="text-center my-3">
+                            <Col size={12}>
+                                <Button>
+                                    {/* TODO: make this do something */}
+                                    Apply filters
+                                </Button>
+                            </Col>
+                        </Row>
                     </CardBody>
                 </Card>
             </Col>
 
             {/* TODO: update styling of question block */}
-            <Col xs={8} className="text-wrap my-2" data-testid="question-finder-results">
+            <Col xs={9} className="text-wrap my-2" data-testid="question-finder-results">
                 <Card>
                     <CardHeader className="finder-header pl-3">
                         <Col className={"px-0"}>
