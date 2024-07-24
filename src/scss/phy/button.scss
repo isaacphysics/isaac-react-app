@@ -395,9 +395,7 @@ button.close { // default <button class="close"/> components;
   input {
     border-radius: 0.25rem;
   }
-  .input-group-append {
-    button {
-      border-radius: 0 0.25rem 0.25rem 0;
-    }
+  button {
+    border-radius: 0 0.25rem 0.25rem 0;
   }
 }

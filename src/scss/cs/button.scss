@@ -276,11 +276,9 @@
   input {
     border-radius: 0.25rem !important;
   }
-  .input-group-append {
+  button {
     margin-left: 1rem !important;
-    button {
-      border-radius: 50px !important;
-    }
+    border-radius: 50px !important;
   }
 }
 
