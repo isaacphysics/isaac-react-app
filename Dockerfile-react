@@ -14,9 +14,7 @@ COPY . /build
 RUN yarn $BUILD_TARGET
 
 FROM nginx:stable
-ENV DEPLOYMENT_PATH=/usr/share/nginx/html
 ARG BUILD_TARGET
 
 COPY --from=builder /build/$BUILD_TARGET/ /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY docker-entrypoint-setup-envars.sh /docker-entrypoint.d/

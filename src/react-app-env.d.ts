@@ -70,15 +70,10 @@ declare module "math-random-seed";
 
 declare const MathJax: any;
 declare const ISAAC_SITE: string;
-declare const REACT_APP_API_VERSION_ENV: string;
-declare const GOOGLE_RECAPTCHA_SITE_KEY_ENV: string;
+declare const REACT_APP_API_VERSION: string;
+declare const GOOGLE_RECAPTCHA_SITE_KEY: string;
 declare const ENV_QUIZ_FEATURE_FLAG: boolean;
 declare const EDITOR_PREVIEW: boolean;
-declare const REACT_APP_STAGING_URL_ENV: string;
-declare const REACT_APP_API_PATH_LOCAL_ENV: string;
-declare const REACT_APP_EDITOR_ORIGIN_ENV: string;
-declare const REACT_APP_GOOGLE_ANALYTICS_ENV: string;
-declare const REACT_APP_CODE_EDITOR_BASE_URL_ENV: string;
 
 declare module "inequality-grammar" {
   export const parseMathsExpression: (exp: string) => any[] | ParsingError;

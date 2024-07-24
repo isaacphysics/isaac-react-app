@@ -10,10 +10,6 @@ const webpack = require('webpack');
 // Read in the .env file and put into `process.env`:
 require('dotenv').config();
 
-function getEnvVar(envVarName) {
-    return process.env.NODE_ENV === "production" ? envVarName : process.env[envVarName];
-  }
-
 // Loader to remove test ids (only used in production builds)
 const removeTestPropsLoader = {
     loader: "react-remove-props-loader",
@@ -159,15 +155,10 @@ module.exports = (env) => {
                 }
             ]}),
             new webpack.DefinePlugin({
-                REACT_APP_API_VERSION_ENV: `"${getEnvVar("REACT_APP_API_VERSION")}"`,
-                GOOGLE_RECAPTCHA_SITE_KEY_ENV: `"${getEnvVar("GOOGLE_RECAPTCHA_SITE_KEY")}"`,
-                ENV_QUIZ_FEATURE_FLAG: getEnvVar("QUIZ_FEATURE") && getEnvVar("QUIZ_FEATURE").trim() === "true",
-                EDITOR_PREVIEW: JSON.stringify(isRenderer),
-                REACT_APP_STAGING_URL_ENV: `"${getEnvVar("REACT_APP_STAGING_URL")}"`,
-                REACT_APP_API_PATH_LOCAL_ENV: `"${getEnvVar("REACT_APP_API_PATH_LOCAL")}"`,
-                REACT_APP_EDITOR_ORIGIN_ENV: `"${getEnvVar("REACT_APP_EDITOR_ORIGIN")}"`,
-                REACT_APP_GOOGLE_ANALYTICS_ENV: `"${getEnvVar("REACT_APP_GOOGLE_ANALYTICS")}"`,
-                REACT_APP_CODE_EDITOR_BASE_URL_ENV: `"${getEnvVar("REACT_APP_CODE_EDITOR_BASE_URL")}"`,
+                REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
+                GOOGLE_RECAPTCHA_SITE_KEY: `"${process.env.GOOGLE_RECAPTCHA_SITE_KEY}"`,
+                ENV_QUIZ_FEATURE_FLAG: process.env.QUIZ_FEATURE && process.env.QUIZ_FEATURE.trim() === "true",
+                EDITOR_PREVIEW: JSON.stringify(isRenderer)
             }),
         ].filter(Boolean),
     };

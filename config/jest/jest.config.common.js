@@ -49,12 +49,7 @@ module.exports = {
         "<rootDir>node_modules/jest-watch-typeahead/testname.js"
     ],
     "globals": {
-        REACT_APP_API_VERSION_ENV: "any",
-        GOOGLE_RECAPTCHA_SITE_KEY_ENV: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
-        REACT_APP_STAGING_URL_ENV: "any",
-        REACT_APP_API_PATH_LOCAL_ENV: "http://localhost:8080/isaac-api/api",
-        REACT_APP_EDITOR_ORIGIN_ENV: "any",
-        REACT_APP_GOOGLE_ANALYTICS_ENV: "any",
-        REACT_APP_CODE_EDITOR_BASE_URL_ENV: "any",
+        REACT_APP_API_VERSION: "any",
+        GOOGLE_RECAPTCHA_SITE_KEY: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
     }
 };
