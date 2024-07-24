@@ -56,6 +56,14 @@ import { Button, Card, CardBody, CardFooter, CardHeader, Col, Container, Dropdow
 import { CollapsibleList } from "../elements/CollapsibleList";
 import { DifficultyIcons } from "../elements/svg/DifficultyIcons";
 
+interface questionStatus {
+    notAttempted: boolean;
+    complete: boolean;
+    incorrect: boolean;
+    llmMarked: boolean;
+    revisionMode: boolean;
+}
+
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
     menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 9999})}
@@ -89,6 +97,7 @@ function simplifyDifficultyLabel(difficultyLabel: string): string {
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserViewingContext();
+    const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
     const params: {[key: string]: string | string[] | undefined} = useQueryParams(false);
     const history = useHistory();
     const eventLog = useRef<object[]>([]).current; // persist state but do not rerender on mutation
@@ -108,6 +117,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(
         arrayFromPossibleCsv(params.examBoards) as ExamBoard[]
     );
+    const [questionStatuses, setQuestionStatuses] = useState<questionStatus>(
+        {
+            notAttempted: false,
+            complete: false,
+            incorrect: false,
+            llmMarked: false,
+            revisionMode: !!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS
+        }
+    );
 
     useEffect(function populateExamBoardFromUserContext() {
         if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
@@ -117,7 +135,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) setSearchStages([userContext.stage]);
     }, [userContext.stage]);
 
-    const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
     const [searchBook, setSearchBook] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(!!params.fasttrack);
     const [disableLoadMore, setDisableLoadMore] = useState(false);
@@ -279,15 +296,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [questionList]);
 
-    const [revisionMode, setRevisionMode] = useState(!!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS);
-    // TODO: Should be taken from the URI? Or from consent? Or default true?
-    const [llmMarked, setLlmMarked] = useState(false);
-
     useEffect(() => {
-        if (revisionMode) {
+        if (questionStatuses.revisionMode) {
             setHideCompleted(false);
         }
-    }, [revisionMode]);
+    }, [questionStatuses.revisionMode]);
 
     const debouncedRevisionModeUpdate = useCallback(debounce(() => {
         if (user && isLoggedIn(user)) {
@@ -365,7 +378,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         </Col>
                     </CardHeader>
                     <CardBody className="p-0 m-0">
-                        <CollapsibleList title="Stage" expanded subList={false}>
+                        <CollapsibleList
+                            title="Stage" expanded subList={false}
+                            numberSelected={searchStages.length}
+                        >
                             {getFilteredStageOptions().map((stage, index) => (
                                 <div className="w-100 ps-3 py-1 bg-white" key={index}>
                                     <StyledCheckbox
@@ -377,7 +393,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 </div>
                             ))}
                         </CollapsibleList>
-                        {isAda && <CollapsibleList title="Exam board" subList={false}>
+                        {isAda && <CollapsibleList
+                            title="Exam board" subList={false}
+                            numberSelected={searchExamBoards.length}
+                        >
                             {getFilteredExamBoardOptions().map((board, index) => (
                                 <div className="w-100 ps-3 py-1 bg-white" key={index}>
                                     <StyledCheckbox
@@ -389,13 +408,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 </div>
                             ))}
                         </CollapsibleList>}
-                        {isAda && <CollapsibleList title="Topics" subList={false}>
+                        {isAda && <CollapsibleList
+                            title="Topics" subList={false}
+                            numberSelected={searchTopics.length}
+                        >
                             {groupBaseTagOptions.map((tag, index) => (
-                                // TODO: adjust positioning
                                 // TODO: make subList
                                 <CollapsibleList title={tag.label} key={index} subList={true}>
                                     {tag.options.map((topic, index) => (
-                                        <div className="w-100 ps-4 py-1 bg-white" key={index}>
+                                        <div className="w-100 ps-3 py-1 bg-white" key={index}>
                                             <StyledCheckbox
                                                 color="primary"
                                                 checked={searchTopics.includes(topic.value)}
@@ -412,7 +433,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 </CollapsibleList>
                             ))}
                         </CollapsibleList>}
-                        <CollapsibleList title="Question difficulty" subList={false}>
+                        <CollapsibleList
+                            title="Question difficulty" subList={false}
+                            numberSelected={searchDifficulties.length}
+                        >
                             {DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
                                 // TODO: style to use coloured indicators
                                 <div className="w-100 ps-3 py-1 bg-white" key={index}>
@@ -432,11 +456,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 </div>
                             ))}
                         </CollapsibleList>
-                        <CollapsibleList title="Question status" subList={false}>
+                        <CollapsibleList
+                            title="Question status" subList={false}
+                            numberSelected={Object.values(questionStatuses).reduce((acc, item) => acc + item, 0)}
+                        >
                             {/* TODO: actually make these buttons do something */}
-                            {/* TODO: add images to attempt status */}
                             <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                                 <StyledCheckbox
+                                    color="primary"
+                                    checked={questionStatuses.notAttempted}
+                                    onChange={() => setQuestionStatuses(s => {return {...s, notAttempted: !s.notAttempted};})}
                                     label={<div>
                                         <span>Not attempted</span>
                                         <img
@@ -450,6 +479,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             </div>
                             <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                                 <StyledCheckbox
+                                    color="primary"
+                                    checked={questionStatuses.complete}
+                                    onChange={() => setQuestionStatuses(s => {return {...s, complete: !s.complete};})}
                                     label={<div>
                                         <span>Completed</span>
                                         <img
@@ -463,6 +495,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             </div>
                             <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                                 <StyledCheckbox
+                                    color="primary"
+                                    checked={questionStatuses.incorrect}
+                                    onChange={() => setQuestionStatuses(s => {return {...s, incorrect: !s.incorrect};})}
                                     label={<div>
                                         <span>Try again</span>
                                         <img
@@ -479,8 +514,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             </div>
                             {isAda && <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                                 <StyledCheckbox
-                                    checked={llmMarked}
-                                    onChange={() => {setLlmMarked(p => !p);}}
+                                    color="primary"
+                                    checked={questionStatuses.llmMarked}
+                                    onChange={() => setQuestionStatuses(s => {return {...s, llmMarked: !s.llmMarked};})}
                                     label={<span>
                                         {"Include "}
                                         <button
@@ -498,9 +534,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             </div>}
                             <div className="w-100 ps-3 py-1 bg-white" key={index}>
                                 <StyledCheckbox
-                                    checked={revisionMode}
+                                    color="primary"
+                                    checked={questionStatuses.revisionMode}
                                     onChange={() => {
-                                        setRevisionMode(r => !r);
+                                        setQuestionStatuses(s => {return {...s, revisionMode: !s.revisionMode};});
                                         debouncedRevisionModeUpdate();
                                     }}
                                     label={<span><button
@@ -542,7 +579,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 <em>Please select filters</em> :
                                 (displayQuestions?.length ?
                                     <>
-                                        <LinkToContentSummaryList items={displayQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
+                                        <LinkToContentSummaryList items={displayQuestions.map(q => 
+                                            ({...q, correct: questionStatuses.revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
                                         <Row>
                                             <Col className="d-flex justify-content-center mb-3">
                                                 <Button
