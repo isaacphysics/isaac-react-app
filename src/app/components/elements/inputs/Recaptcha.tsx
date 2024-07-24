@@ -18,7 +18,7 @@ export const Recaptcha: React.FC<RecaptchaComponentProps> = ({ setIsRecaptchaTic
   return (
     <Row className="justify-content-center">
       <ReCAPTCHA
-        sitekey={GOOGLE_RECAPTCHA_SITE_KEY}
+        sitekey={GOOGLE_RECAPTCHA_SITE_KEY_ENV}
         ref={recaptchaRef}
         onChange={handleRecaptchaChange}
         onExpired={handleRecaptchaExpired}
