@@ -126,6 +126,19 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             revisionMode: !!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS
         }
     );
+    const [numExpanded, setExpanded] = useState<number>(0);
+    const [allExpanded, setAllExpanded] = useState<boolean | undefined>(undefined);
+
+    useEffect(function syncAllExpandedAndNumExpanded() {
+        // If the user manually close all the list after expanding them
+        // OR if the user manually opens a list after closing them all
+        if ((numExpanded === 0 && allExpanded)
+           || (numExpanded > 0 && !allExpanded)) {
+            // Go into the undefined state until being clicked
+            setAllExpanded(undefined);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [numExpanded]);
 
     useEffect(function populateExamBoardFromUserContext() {
         if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
@@ -296,6 +309,33 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [questionList]);
 
+    const filtersSelected = useMemo(() => {
+        return searchDifficulties.length > 0
+            || searchTopics.length > 0
+            || searchExamBoards.length > 0
+            || searchStages.length > 0
+            || Object.entries(questionStatuses)
+                .filter(e => e[0] !== "revisionMode") // Ignore revision mode as it isn't really a filter
+                .some(e => e[1])
+            || searchQuery.length > 0;
+    }, [questionStatuses, searchDifficulties, searchExamBoards, searchQuery, searchStages, searchTopics]);
+
+    const clearFilters = () => {
+        setSearchDifficulties([]);
+        setSearchTopics([]);
+        setSearchExamBoards([]);
+        setSearchStages([]);
+        setQuestionStatuses(
+        {
+            notAttempted: false,
+            complete: false,
+            incorrect: false,
+            llmMarked: false,
+            revisionMode: !!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS
+        });
+        setSearchQuery("");
+    };
+
     useEffect(() => {
         if (questionStatuses.revisionMode) {
             setHideCompleted(false);
@@ -376,11 +416,26 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         <Col className={"px-0 mt-1"}>
                             <b>Filter by</b>
                         </Col>
+                        {filtersSelected && <div className="pe-1">
+                            <button
+                                className={"text-black mt-1 bg-white bg-opacity-10 btn-link"}
+                                onClick={clearFilters}
+                            >Clear all</button>
+                        </div>}
+                        <div>
+                            <button
+                                className="bg-white bg-opacity-10 p-0"
+                                onClick={() => setAllExpanded(numExpanded === 0)}
+                            >
+                                <img className={classNames("icon-dropdown-90", {"active": numExpanded > 0})} src={"/assets/common/icons/chevron_right.svg"} alt="" />
+                            </button>
+                        </div>
                     </CardHeader>
                     <CardBody className="p-0 m-0">
                         <CollapsibleList
-                            title="Stage" expanded subList={false}
+                            title="Stage" expanded allExpanded={allExpanded}
                             numberSelected={searchStages.length}
+                            onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
                             {getFilteredStageOptions().map((stage, index) => (
                                 <div className="w-100 ps-3 py-1 bg-white" key={index}>
@@ -394,8 +449,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             ))}
                         </CollapsibleList>
                         {isAda && <CollapsibleList
-                            title="Exam board" subList={false}
+                            title="Exam board" allExpanded={allExpanded}
                             numberSelected={searchExamBoards.length}
+                            onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
                             {getFilteredExamBoardOptions().map((board, index) => (
                                 <div className="w-100 ps-3 py-1 bg-white" key={index}>
@@ -409,12 +465,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             ))}
                         </CollapsibleList>}
                         {isAda && <CollapsibleList
-                            title="Topics" subList={false}
+                            title="Topics" allExpanded={allExpanded}
                             numberSelected={searchTopics.length}
+                            onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
                             {groupBaseTagOptions.map((tag, index) => (
                                 // TODO: make subList
-                                <CollapsibleList title={tag.label} key={index} subList={true}>
+                                <CollapsibleList
+                                    title={tag.label} key={index} subList
+                                    allExpanded={allExpanded}
+                                >
                                     {tag.options.map((topic, index) => (
                                         <div className="w-100 ps-3 py-1 bg-white" key={index}>
                                             <StyledCheckbox
@@ -434,11 +494,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             ))}
                         </CollapsibleList>}
                         <CollapsibleList
-                            title="Question difficulty" subList={false}
+                            title="Question difficulty" allExpanded={allExpanded}
                             numberSelected={searchDifficulties.length}
+                            onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
                             {DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
-                                // TODO: style to use coloured indicators
                                 <div className="w-100 ps-3 py-1 bg-white" key={index}>
                                     <StyledCheckbox
                                         color="primary"
@@ -457,8 +517,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             ))}
                         </CollapsibleList>
                         <CollapsibleList
-                            title="Question status" subList={false}
+                            title="Question status" allExpanded={allExpanded}
                             numberSelected={Object.values(questionStatuses).reduce((acc, item) => acc + item, 0)}
+                            onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
                             {/* TODO: actually make these buttons do something */}
                             <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
