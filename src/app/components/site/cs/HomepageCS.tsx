@@ -7,14 +7,14 @@ import {
     useGetNewsPodListQuery
 } from "../../../state";
 import {Link} from "react-router-dom";
-import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
-import {EXAM_BOARD, history, isLoggedIn, SITE_TITLE, STAGE, useDeviceSize} from "../../../services";
+import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
+import {EXAM_BOARD, isLoggedIn, SITE_TITLE, STAGE, useDeviceSize} from "../../../services";
 import {AdaHero2x1} from "../../elements/svg/AdaHero";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
-import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
 import {AdaHomepageSearch} from "../../elements/SearchInputs";
 import {MetaDescription} from "../../elements/MetaDescription";
+import classNames from "classnames";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
@@ -36,11 +36,8 @@ export const HomepageCS = () => {
                         <Col xs={12} lg={7} className={"my-auto"}>
                             <h1 className={"font-size-1-75 font-size-md-2-5"}>
                                 <span className={"text-pink"}>/</span><br/>
-                                Computer science education should be accessible for everyone
+                                The free learning platform for computing teachers and students
                             </h1>
-                            <p className={"font-size-1-25 py-3"}>
-                                We create free resources to help teachers and students around the world
-                            </p>
                             <Row className="justify-content-start align-items-center my-3">
                                 <Col xs={6} sm={3}>
                                     <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
@@ -53,7 +50,7 @@ export const HomepageCS = () => {
                                     </a>
                                 </Col>
                             </Row>
-                            <Button className="mt-3" tag={Link} to="/topics" color="dark-primary">Explore topics</Button>
+                            <Button className="mt-3" tag={Link} to="/topics" color="dark-primary">Explore our resources</Button>
                         </Col>
                         <Col xs={12} lg={5} className={"mb-1 mb-sm-3 mb-lg-0"}>
                             {isLoggedIn(user) ?
@@ -68,43 +65,19 @@ export const HomepageCS = () => {
                     </Row>
                 </Container>
             </section>
-            <section id="scotland-slice">
-                <Container className={"py-5 px-md-4 px-xxl-5"}>
-                    <Card id="scotland-slice-card" className={"border-0"}>
-                        <CardBody>
-                            <Row className="align-items-center justify-content-between">
-                                <Col xs={12} lg={8}>
-                                    <h4>Hey, folks in Scotland! <img className="pb-1" height="24px" src="/assets/cs/icons/flag-sco.svg" alt=""/> Looking for SQA resources?</h4>
-                                    <p>We&apos;ve mapped our content to the N5 and Higher specifications.</p>
-                                </Col>
-                                <Col xs={12} lg={3}>
-                                    <Button
-                                        className={"align-self-end mt-auto"}
-                                        onClick={
-                                            () => {
-                                                setStage(STAGE.ALL);
-                                                setExamBoard(EXAM_BOARD.SQA);
-                                                history.push("/concepts/sqa_computing_science");
-                                            }
-                                        }>Show me</Button>
-                                </Col>
-                            </Row>
-                        </CardBody>
-                    </Card>
-                </Container>
-            </section>
             <section id="benefits-for-teachers-and-students">
                 <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
                     <Row className={"align-items-center"}>
                         <Col xs={12} lg={6}>
-                            <h2 className={"font-size-1-75 mb-4"}>Why use Ada Computer Science?</h2>
+                            <h2 className={"font-size-1-75 mb-4"}>What we offer</h2>
                             <ul className={"font-size-1 font-size-md-1-25"}>
-                                <li>Made by the University of Cambridge and the Raspberry Pi Foundation</li>
-                                <li>Mapped to <strong><Link to={"/exam_specifications"}>computer science exam specifications</Link></strong>, including GCSE and A level</li>
-                                <li>A great way to save time when planning lessons and homework</li>
-                                <li>Perfect for learning a topic after class or preparing for exams</li>
-                                <li>Free forever — no hidden costs</li>
+                                <li><b>Free computer science resources:</b> Tailored for students aged 14 to 19</li>
+                                <li><b>Interactive questions:</b> Over 1000 questions with instant marking and feedback</li>
+                                <li><b>Teacher tools:</b> Set quizzes and assignments effortlessly</li>
+                                <li><b>AI and machine learning resources:</b> Stay ahead of the AI curve</li>
+                                <li><b>Complete curriculums:</b> For GCSE, A Level, National 5, Higher, and Advanced Higher</li>
                             </ul>
+                            <Button className="mt-3" tag={Link} to="/register" color="primary">Join</Button>
                         </Col>
                         <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>
                             <picture>
@@ -120,16 +93,14 @@ export const HomepageCS = () => {
                 <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
                     <Row className={"align-items-center"}>
                         <Col xs={12} lg={6}>
-                            <h2 className={"font-size-1-75 mb-4"}>Explore our questions</h2>
+                            <h2 className={"font-size-1-75 mb-4"}>Questions for classwork, homework, and exam prep</h2>
                             <p>
-                                Use the question finder to explore more than 1,000 self-marking questions, filtering by
-                                topic, concept and qualification. Written by experts and updated frequently, they
-                                address common misconceptions with tailored feedback.
+                                Explore our bank of over 1000 self-marking questions. Filter by topic, concept, and qualification.
                             </p>
-                            <p><b>Students</b>: review key topics and get instant feedback</p>
-                            <p><b>Teachers</b>: save time by creating self-marking quizzes</p>
+                            <p><b>For students</b>: Learn or revise a topic and receive instant feedback.</p>
+                            <p><b>For teachers</b>: Save time by creating self-marking quizzes for your class.</p>
                             <Button className={"mt-4"} tag={Link} to="/quizzes/new" color='primary'>
-                                Try our question finder
+                                Find questions
                             </Button>
                         </Col>
                         <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>
@@ -144,39 +115,44 @@ export const HomepageCS = () => {
 
             <section id="what-resources">
                 <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
-                    <h2 className={"font-size-1-75 mb-5"}>What resources are you looking for?</h2>
-                    <IsaacCardDeck
-                        doc={{
-                            cards: [{
-                                title: "Core",
-                                subtitle: "Aimed at students aged 14-16, these resources cover core concepts in computer science for students working towards qualifications like GCSEs and National 5s.",
-                                imageClassName: "backslash-1"
-                            }, {
-                                title: "Advanced",
-                                subtitle: "Aimed at students aged 16-19, these resources cover advanced concepts. They are useful for students studying for A levels and Advanced Placement courses, and those heading towards further education.",
-                                imageClassName: "backslash-2"
-                            }]
-                        }}
-                        className={"homepage-cards"}
-                        containerClassName={"mw-1600"}
-                    />
-                    <Col xs={12} sm={{size: 8, offset: 2}} md={{size: 6, offset: 3}} lg={{size: 4, offset: 4}} className="d-flex justify-content-center">
-                        <Button className="w-100" tag={Link} to="/topics" color="primary" outline>Explore all resources</Button>
-                    </Col>
-                </Container>
-            </section>
-
-            <section id="computer-science-stories">
-                <Container className={"py-5 px-md-4 px-xxl-5 mw-1600"}>
-                    <Row>
-                        <Col xs={12} lg={6} id={"cs-stories-text"}>
-                            <h2 className={"font-size-1-75 mb-4"}>Computer science stories</h2>
-                            <p className={"mb-4"}>
-                                Discover our monthly interview series and learn from passionate educators within the
-                                Ada community, and recently-graduated computer scientists who are doing AMAZING things
-                                in a huge range of computing-related fields!
-                            </p>
-                            <Button tag={Link} to="/pages/computer_science_stories" color="primary">Read their stories</Button>
+                    <h2 className={"font-size-1-75 mb-4"}>Our Core and Advanced global resources</h2>
+                    <p>
+                        Teaching or learning from outside the UK? We&apos;ve organised our learning resources by prior
+                        knowledge and age group to make them easy to adapt for curricula in other countries.
+                    </p>
+                    <Row className={"mt-5"}>
+                        <Col xs={12} xl={6} className={"mb-5 mb-xl-0"}>
+                            <Card className={classNames("cs-card border-0 backslash-1 w-100")}>
+                                <CardTitle className={"px-4 mt-5"}>
+                                    <h3 className={"mt-1 font-size-1-5"}>Core</h3>
+                                </CardTitle>
+                                <CardBody className={"px-4"}>
+                                    <ul>
+                                        <li>For students aged 14 to 16</li>
+                                        <li>Gives learners a strong theoretical and practical knowledge of the basics of
+                                            computer science
+                                        </li>
+                                        <li>Suitable for students with no previous knowledge</li>
+                                    </ul>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                        <Col>
+                            <Card className={classNames("cs-card border-0 backslash-2 w-100")}>
+                                <CardTitle className={"px-4 mt-5 font-size-1-5"}>
+                                    <h3 className={"mt-1"}>Advanced</h3>
+                                </CardTitle>
+                                <CardBody className={"px-4"}>
+                                    <ul>
+                                        <li>For students aged 16 to 19</li>
+                                        <li>Expands on the concepts learnt in the Core curriculum with more detail</li>
+                                        <li>Covers more advanced concepts that are not in the Core curriculum</li>
+                                        <li>Prepares students for a university degree / degree apprenticeship
+                                            programme
+                                        </li>
+                                    </ul>
+                                </CardBody>
+                            </Card>
                         </Col>
                     </Row>
                 </Container>
