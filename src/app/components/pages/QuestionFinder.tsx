@@ -383,7 +383,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
 
         <Row>
-            <Col xs={6}>
+            <Col xs={6} className="finder-search">
                 <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
                 <Input id="question-search-title"
                     type="text"
@@ -391,13 +391,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                     onChange={(e) => handleSearch(e.target.value)}
                 />
-                {/* TODO: bring this into the search box
-                <img
-                    src="/assets/common/icons/search-icon.svg"
-                    alt="Search"
-                    style={{width: 18}}
-                    className="ms-1"
-                /> */}
             </Col>
         </Row>
 

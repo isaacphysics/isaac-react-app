@@ -1,8 +1,35 @@
 #finder-page {
   .finder-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
+     display: flex;
+     flex-wrap: wrap;
+     align-items: center;
+  }
+
+  .finder-search {
+    &::after {
+      content: "";
+      background-image: url(/assets/cs/icons/search-jet.svg);
+      background-repeat: no-repeat;
+      background-size: 18px 18px;
+      position: relative;
+      float: right;
+      width: 18px;
+      height: 18px;
+      top: -33px;
+      padding-right: 2rem;
+    }
+
+    &::before {
+      content: "";
+      display: block;
+      position: relative;
+      float: right;
+      width: 1px;
+      height: 34px;
+      top: 48px;
+      right: 46px;
+      background: #c2c2c2;
+    }
   }
 
   .search-item-icon {
