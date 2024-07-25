@@ -77,7 +77,9 @@ export const HomepageCS = () => {
                                 <li><b>AI and machine learning resources:</b> Stay ahead of the AI curve</li>
                                 <li><b>Complete curriculums:</b> For GCSE, A Level, National 5, Higher, and Advanced Higher</li>
                             </ul>
-                            <Button className="mt-3" tag={Link} to="/register" color="primary">Join</Button>
+                            {!isLoggedIn(user) &&
+                                <Button className="mt-3" tag={Link} to="/register" color="primary">Join</Button>
+                            }
                         </Col>
                         <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>
                             <picture>
@@ -155,6 +157,9 @@ export const HomepageCS = () => {
                             </Card>
                         </Col>
                     </Row>
+                    <Col xs={12} sm={{size: 8, offset: 2}} md={{size: 6, offset: 3}} lg={{size: 4, offset: 4}} className=" mt-5 d-flex justify-content-center">
+                        <Button className="w-100" tag={Link} to="/topics" color="primary" outline>Explore all resources</Button>
+                    </Col>
                 </Container>
             </section>
 
