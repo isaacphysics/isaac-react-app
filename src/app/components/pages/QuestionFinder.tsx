@@ -256,7 +256,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchStages]);
 
-    useEffect(() => {
+    const searchAndUpdateURL = () => {
         setPageCount(1);
         setDisableLoadMore(false);
         setDisplayQuestions(undefined);
@@ -282,8 +282,17 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
+    };
+
+    const [filtersApplied, setFiltersApplied] = useState<boolean>(false);
+    const applyFilters = () => {
+        setFiltersApplied(true);
+        searchAndUpdateURL();
+    };
+
+    // search for content whenever the searchQuery changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties, selections, hideCompleted]);
+    useEffect(searchAndUpdateURL, [searchQuery]);
 
     const questionList = useMemo(() => {
         if (questions) {
@@ -297,7 +306,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
     }, [questions]);
 
-    const [displayQuestions, setDisplayQuestions] = useState<ContentSummaryDTO[] | undefined>(undefined);
+    const [displayQuestions, setDisplayQuestions] = useState<ContentSummaryDTO[] | undefined>([]);
     const [pageCount, setPageCount] = useState(1);
 
     useEffect(() => {
@@ -316,9 +325,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || searchStages.length > 0
             || Object.entries(questionStatuses)
                 .filter(e => e[0] !== "revisionMode") // Ignore revision mode as it isn't really a filter
-                .some(e => e[1])
-            || searchQuery.length > 0;
-    }, [questionStatuses, searchDifficulties, searchExamBoards, searchQuery, searchStages, searchTopics]);
+                .some(e => e[1]);
+    }, [questionStatuses, searchDifficulties, searchExamBoards, searchStages, searchTopics]);
 
     const clearFilters = () => {
         setSearchDifficulties([]);
@@ -333,7 +341,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             llmMarked: false,
             revisionMode: !!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS
         });
-        setSearchQuery("");
     };
 
     useEffect(() => {
@@ -388,6 +395,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 <Input id="question-search-title"
                     type="text"
                     className="py-4"
+                    defaultValue={searchQuery}
                     placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                     onChange={(e) => handleSearch(e.target.value)}
                 />
@@ -608,8 +616,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         </CollapsibleList>
                         <Row className="text-center my-3">
                             <Col size={12}>
-                                <Button>
-                                    {/* TODO: make this do something */}
+                                <Button
+                                    onClick={applyFilters}
+                                    disabled={[
+                                        searchQuery, searchTopics, searchBook,
+                                        searchStages, searchDifficulties, searchExamBoards
+                                    ].every(v => v.length === 0)
+                                    && selections.every(v => v.length === 0)}
+                                >
                                     Apply filters
                                 </Button>
                             </Col>
@@ -628,9 +642,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     </CardHeader>
                     <CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
                         <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
-                            {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
-                            selections.every(v => v.length === 0) ?
-                                <em>Please select filters</em> :
+                            {!filtersApplied && searchQuery === "" ?
+                                <em>Please select and apply filters</em> :
                                 (displayQuestions?.length ?
                                     <>
                                         <LinkToContentSummaryList items={displayQuestions.map(q => 
@@ -655,7 +668,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                                 Not found what you&apos;re looking for? Try refining your search filters.
                                         </div>}
                                     </> :
-                                    <em>No results found</em>)
+                                    <em>No results match your criteria</em>)
                             }
                         </ShowLoading>
                     </CardBody>
