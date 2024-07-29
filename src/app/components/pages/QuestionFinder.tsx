@@ -620,20 +620,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 />
                             </div>
                         </CollapsibleList>
-                        <Row className="text-center my-3">
-                            <Col size={12}>
-                                <Button
-                                    onClick={applyFilters}
-                                    disabled={[
-                                        searchQuery, searchTopics, searchBook,
-                                        searchStages, searchDifficulties, searchExamBoards
-                                    ].every(v => v.length === 0)
-                                    && selections.every(v => v.length === 0)}
-                                >
-                                    Apply filters
-                                </Button>
-                            </Col>
-                        </Row>
+                        <Col className="text-center my-3 filter-btn">
+                            <Button
+                                onClick={applyFilters}
+                                disabled={[
+                                    searchQuery, searchTopics, searchBook,
+                                    searchStages, searchDifficulties, searchExamBoards
+                                ].every(v => v.length === 0)
+                                && selections.every(v => v.length === 0)}
+                            >
+                                Apply filters
+                            </Button>
+                        </Col>
                     </CardBody>
                 </Card>
             </Col>

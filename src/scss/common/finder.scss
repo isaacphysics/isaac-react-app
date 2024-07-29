@@ -51,5 +51,11 @@
       margin-right: 0.5rem;
     }
   }
+
+  .filter-btn {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 1rem;
+  }
 }
 
