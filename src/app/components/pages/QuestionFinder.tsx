@@ -62,6 +62,7 @@ interface questionStatus {
     incorrect: boolean;
     llmMarked: boolean;
     revisionMode: boolean;
+    hideCompleted: boolean; // TODO: remove when implementing desired filters
 }
 
 const selectStyle = {
@@ -123,7 +124,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             complete: false,
             incorrect: false,
             llmMarked: false,
-            revisionMode: !!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS
+            revisionMode: !!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS,
+            hideCompleted: !!params.hideCompleted
         }
     );
     const [numExpanded, setExpanded] = useState<number>(0);
@@ -158,8 +160,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(
         processTagHierarchy(subjects, fields, topics)
     );
-
-    const [hideCompleted, setHideCompleted] = useState(!!params.hideCompleted);
 
     const choices = [tags.allSubjectTags.map(itemiseTag)];
     let index;
@@ -260,7 +260,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setPageCount(1);
         setDisableLoadMore(false);
         setDisplayQuestions(undefined);
-        searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, 0);
+        searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, questionStatuses.hideCompleted, 0);
 
         const params: {[key: string]: string} = {};
         if (searchStages.length) params.stages = toSimpleCSV(searchStages);
@@ -270,7 +270,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (isAda && searchExamBoards.length) params.examBoards = toSimpleCSV(searchExamBoards);
         if (isPhy && searchBook.length) params.book = toSimpleCSV(searchBook);
         if (isPhy && searchFastTrack) params.fasttrack = "set";
-        if (hideCompleted) params.hideCompleted = "set";
+        if (questionStatuses.hideCompleted) params.hideCompleted = "set";
 
         if (isPhy) {
             tiers.forEach((tier, i) => {
@@ -339,15 +339,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             complete: false,
             incorrect: false,
             llmMarked: false,
-            revisionMode: !!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS
+            revisionMode: !!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS,
+            hideCompleted: false
         });
     };
-
-    useEffect(() => {
-        if (questionStatuses.revisionMode) {
-            setHideCompleted(false);
-        }
-    }, [questionStatuses.revisionMode]);
 
     const debouncedRevisionModeUpdate = useCallback(debounce(() => {
         if (user && isLoggedIn(user)) {
@@ -522,7 +517,17 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             numberSelected={Object.values(questionStatuses).reduce((acc, item) => acc + item, 0)}
                             onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
-                            {/* TODO: actually make these buttons do something */}
+                            <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
+                                <StyledCheckbox
+                                    color="primary"
+                                    checked={questionStatuses.hideCompleted}
+                                    onChange={() => setQuestionStatuses(s => {return {...s, hideCompleted: !s.hideCompleted};})}
+                                    label={<div>
+                                        <span>Hide complete</span>
+                                    </div>}
+                                />
+                            </div>
+                            {/* TODO: implement new completeness filters
                             <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                                 <StyledCheckbox
                                     color="primary"
@@ -570,10 +575,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         />
                                     </div>}
                                 />
-                            </div>
+                            </div>*/}
                             <div className="pb-2">
                                 <hr className="m-0"/>
                             </div>
+                            {/* TODO: implement once necessary tags are available
                             {isAda && <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                                 <StyledCheckbox
                                     color="primary"
@@ -593,7 +599,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         {" questions"}
                                     </span>}
                                 />
-                            </div>}
+                            </div>}*/}
                             <div className="w-100 ps-3 py-1 bg-white" key={index}>
                                 <StyledCheckbox
                                     color="primary"
@@ -652,7 +658,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                             <Col className="d-flex justify-content-center mb-3">
                                                 <Button
                                                     onClick={() => {
-                                                        searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
+                                                        searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, questionStatuses.hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
                                                         setPageCount(c => c + 1);
                                                         setDisableLoadMore(true);
                                                     }}
