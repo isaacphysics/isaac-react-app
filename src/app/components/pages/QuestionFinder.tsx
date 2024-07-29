@@ -494,6 +494,17 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             numberSelected={searchDifficulties.length}
                             onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
+                            <div>
+                                <button
+                                    className="p-0 bg-white h-min-content btn-link"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        // TODO: add modal
+                                        console.log("show difficulty modal here");
+                                }}>
+                                    <small><b>What do the different difficulty levels mean?</b></small>
+                                </button>
+                            </div>
                             {DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
                                 <div className="w-100 ps-3 py-1 bg-white" key={index}>
                                     <StyledCheckbox
@@ -613,7 +624,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         onClick={(e) => {
                                             e.preventDefault();
                                             // TODO: add modal
-                                            console.log("show LLM modal here");
+                                            console.log("show revision mode modal here");
                                         }}>
                                             Revision mode
                                     </button></span>}
