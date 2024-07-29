@@ -398,7 +398,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         </Row>
 
         <Row className="mt-4">
-            <Col xs={3} className="text-wrap my-2" data-testid="question-finder-filters">
+            <Col xs={siteSpecific(4, 3)} className="text-wrap my-2" data-testid="question-finder-filters">
                 <Card>
                     <CardHeader className="finder-header pl-3">
                         <Col xs={2}>
@@ -588,7 +588,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 />
                             </div>*/}
                             <div className="pb-2">
-                                <hr className="m-0"/>
+                                <hr className="m-0 filter-separator"/>
                             </div>
                             {/* TODO: implement once necessary tags are available
                             {isAda && <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
@@ -648,7 +648,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             </Col>
 
             {/* TODO: update styling of question block */}
-            <Col xs={9} className="text-wrap my-2" data-testid="question-finder-results">
+            <Col xs={siteSpecific(8, 9)} className="text-wrap my-2" data-testid="question-finder-results">
                 <Card>
                     <CardHeader className="finder-header pl-3">
                         <Col className={"px-0"}>

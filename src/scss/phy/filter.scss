@@ -107,6 +107,11 @@ svg {
         stroke: $phy_extra_force_yellow;
       }
 
+      &.filter-count {
+        fill: $gray-120;
+        stroke: none;
+      }
+
       &:focus {
         outline: none;
         stroke: black !important;

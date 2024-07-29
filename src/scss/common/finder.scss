@@ -57,5 +57,11 @@
     position: sticky;
     bottom: 1rem;
   }
+
+  .filter-separator {
+    overflow: hidden;
+    border-top: solid #c2c2c2 1px;
+    border-bottom: none;
+  }
 }
 
