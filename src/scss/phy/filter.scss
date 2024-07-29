@@ -44,7 +44,7 @@
   }
 }
 
-$shapes: hex, square, octagon, diamond;
+$shapes: hex, square, octagon, diamond, circle;
 
 svg {
   @each $shape in $shapes {
