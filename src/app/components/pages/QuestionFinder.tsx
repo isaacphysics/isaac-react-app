@@ -463,35 +463,40 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 </div>
                             ))}
                         </CollapsibleList>}
-                        {isAda && <CollapsibleList
+                        <CollapsibleList
                             title="Topics" allExpanded={allExpanded}
                             numberSelected={searchTopics.length}
                             onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
-                            {groupBaseTagOptions.map((tag, index) => (
-                                // TODO: make subList
-                                <CollapsibleList
-                                    title={tag.label} key={index} subList
-                                    allExpanded={allExpanded}
-                                >
-                                    {tag.options.map((topic, index) => (
-                                        <div className="w-100 ps-3 py-1 bg-white" key={index}>
-                                            <StyledCheckbox
-                                                color="primary"
-                                                checked={searchTopics.includes(topic.value)}
-                                                onChange={() => setSearchTopics(
-                                                    s => s.includes(topic.value)
-                                                        ? s.filter(v => v !== topic.value)
-                                                        : [...s, topic.value]
-                                                )}
-                                                label={<span>{topic.label}</span>}
-                                                className="ps-3"
-                                            />
-                                        </div>
-                                    ))}
-                                </CollapsibleList>
-                            ))}
-                        </CollapsibleList>}
+                            {siteSpecific(
+                                <div>
+                                    <HierarchyFilterHexagonal {...{tiers, choices, selections: selections, questionFinderFilter: true, setTierSelection}} />
+                                </div>,
+                                groupBaseTagOptions.map((tag, index) => (
+                                    // TODO: make subList
+                                    <CollapsibleList
+                                        title={tag.label} key={index} subList
+                                        allExpanded={allExpanded}
+                                    >
+                                        {tag.options.map((topic, index) => (
+                                            <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                                                <StyledCheckbox
+                                                    color="primary"
+                                                    checked={searchTopics.includes(topic.value)}
+                                                    onChange={() => setSearchTopics(
+                                                        s => s.includes(topic.value)
+                                                            ? s.filter(v => v !== topic.value)
+                                                            : [...s, topic.value]
+                                                    )}
+                                                    label={<span>{topic.label}</span>}
+                                                    className="ps-3"
+                                                />
+                                            </div>
+                                        ))}
+                                    </CollapsibleList>
+                                ))
+                            )}
+                        </CollapsibleList>
                         <CollapsibleList
                             title="Question difficulty" allExpanded={allExpanded}
                             numberSelected={searchDifficulties.length}
