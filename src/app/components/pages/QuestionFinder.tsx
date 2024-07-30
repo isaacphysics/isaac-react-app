@@ -381,7 +381,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <IsaacSpinner />
     </div>;
 
-    return <Container id="finder-page" className="mb-5">
+    return <Container id="finder-page" className={classNames("mb-5", {"question-finder-container": isPhy})}>
         <TitleAndBreadcrumb currentPageTitle={"Question Finder"} help={pageHelp}/>
         <MetaDescription description={metaDescription}/>
         <CanonicalHrefElement/>
