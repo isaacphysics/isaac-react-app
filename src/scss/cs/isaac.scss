@@ -312,6 +312,8 @@ $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to ge
     6: ($spacer * 6.25) // 100px-ish
 ));
 
+$enable-negative-margins: true;
+
 // all Bootstrap overrides must appear before this
 @import "~bootstrap/scss/bootstrap"; 
 @import "~katex/dist/katex.min.css";

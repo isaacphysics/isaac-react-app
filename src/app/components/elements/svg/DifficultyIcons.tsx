@@ -38,12 +38,12 @@ function SingleDifficultyIconShape({difficultyCategory, difficultyCategoryLevel,
     </g>;
 }
 
-export function DifficultyIcons({difficulty, blank} : {difficulty: Difficulty, blank?: boolean}) {
+export function DifficultyIcons({difficulty, blank, classnames} : {difficulty: Difficulty, blank?: boolean, classnames?: string}) {
     const difficultyLabel = difficultyShortLabelMap[difficulty];
     const difficultyCategory = difficultyLabel[0];
     const difficultyLevel = parseInt(difficultyLabel[1]);
 
-    return <div>
+    return <div className={classnames}>
         <svg
             role={"img"}
             width={`${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding}px`}

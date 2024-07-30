@@ -498,11 +498,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             )}
                         </CollapsibleList>
                         <CollapsibleList
-                            title="Question difficulty" allExpanded={allExpanded}
+                            title={siteSpecific("Difficulty", "Question difficulty")}
+                            allExpanded={allExpanded}
                             numberSelected={searchDifficulties.length}
                             onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
-                            <div>
+                            <div className="ps-3">
                                 <button
                                     className="p-0 bg-white h-min-content btn-link"
                                     onClick={(e) => {
@@ -523,15 +524,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                                 ? s.filter(v => v !== difficulty.value)
                                                 : [...s, difficulty.value]
                                         )}
-                                        label={<div className="d-flex">
+                                        label={<div className="d-flex align-items-center">
                                             <span className="me-2">{simplifyDifficultyLabel(difficulty.label)}</span>
-                                            <DifficultyIcons difficulty={difficulty.value} blank={true}/>
+                                            <DifficultyIcons difficulty={difficulty.value} blank={true} classnames="mt-n2"/>
                                         </div>}
                                     />
                                 </div>
                             ))}
                         </CollapsibleList>
-                        <CollapsibleList
+                        {isPhy && <CollapsibleList
                             title="Book" allExpanded={allExpanded}
                             numberSelected={searchBooks.length}
                             onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
@@ -550,9 +551,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     />
                                 </div>
                             ))}
-                        </CollapsibleList>
+                        </CollapsibleList>}
                         <CollapsibleList
-                            title="Question status" allExpanded={allExpanded}
+                            title={siteSpecific("Status", "Question status")}
+                            allExpanded={allExpanded}
                             numberSelected={Object.values(questionStatuses).reduce((acc, item) => acc + item, 0)}
                             onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
