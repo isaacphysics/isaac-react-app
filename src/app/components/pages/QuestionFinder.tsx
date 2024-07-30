@@ -3,25 +3,18 @@ import {
     AppState,
     clearQuestionSearch,
     searchQuestions,
-    updateCurrentUser,
     useAppDispatch,
     useAppSelector
 } from "../../state";
 import debounce from "lodash/debounce";
-import {MultiValue} from "react-select";
 import {
     tags,
-    DIFFICULTY_ICON_ITEM_OPTIONS,
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
-    getFilteredStageOptions,
-    groupTagSelectionsByParent,
     isAda,
     isPhy,
-    isStaff,
     Item,
     logEvent,
-    selectOnChange,
     siteSpecific,
     STAGE,
     useUserViewingContext,
@@ -29,34 +22,27 @@ import {
     useQueryParams,
     arrayFromPossibleCsv,
     toSimpleCSV,
-    itemiseByValue,
     TAG_ID,
     itemiseTag,
-    isLoggedIn,
     SEARCH_RESULTS_PER_PAGE,
-    DIFFICULTY_ITEM_OPTIONS
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
-import {GroupBase} from "react-select/dist/declarations/src/types";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {StyledSelect} from "../elements/inputs/StyledSelect";
 import { RouteComponentProps, useHistory, withRouter } from "react-router";
 import { LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { ShowLoading } from "../handlers/ShowLoading";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
 import { MetaDescription } from "../elements/MetaDescription";
 import { CanonicalHrefElement } from "../navigation/CanonicalHrefElement";
-import { HierarchyFilterHexagonal, Tier, TierID } from "../elements/svg/HierarchyFilter";
-import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 import classNames from "classnames";
 import queryString from "query-string";
 import { PageFragment } from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { Button, Card, CardBody, CardFooter, CardHeader, Col, Container, Dropdown, DropdownMenu, DropdownToggle, Form, Input, Label, Row, UncontrolledTooltip } from "reactstrap";
-import { CollapsibleList } from "../elements/CollapsibleList";
-import { DifficultyIcons } from "../elements/svg/DifficultyIcons";
+import { Button, Card, CardBody, CardHeader, Col, Container, Input, Label, Row } from "reactstrap";
+import { QuestionFinderFilterPanel } from "../elements/panels/QuestionFinderFilterPanel";
+import { Tier, TierID } from "../elements/svg/HierarchyFilter";
 
-interface questionStatus {
+export interface QuestionStatus {
     notAttempted: boolean;
     complete: boolean;
     incorrect: boolean;
@@ -88,13 +74,6 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
     return selectionItems;
 }
 
-function simplifyDifficultyLabel(difficultyLabel: string): string {
-    const labelLength = difficultyLabel.length;
-    const type = difficultyLabel.slice(0, labelLength - 4);
-    const level = difficultyLabel.slice(labelLength - 2, labelLength - 1);
-    return type + level;
-}
-
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserViewingContext();
@@ -118,7 +97,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(
         arrayFromPossibleCsv(params.examBoards) as ExamBoard[]
     );
-    const [questionStatuses, setQuestionStatuses] = useState<questionStatus>(
+    const [questionStatuses, setQuestionStatuses] = useState<QuestionStatus>(
         {
             notAttempted: false,
             complete: false,
@@ -128,19 +107,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             hideCompleted: !!params.hideCompleted
         }
     );
-    const [numExpanded, setExpanded] = useState<number>(0);
-    const [allExpanded, setAllExpanded] = useState<boolean | undefined>(undefined);
-
-    useEffect(function syncAllExpandedAndNumExpanded() {
-        // If the user manually close all the list after expanding them
-        // OR if the user manually opens a list after closing them all
-        if ((numExpanded === 0 && allExpanded)
-           || (numExpanded > 0 && !allExpanded)) {
-            // Go into the undefined state until being clicked
-            setAllExpanded(undefined);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [numExpanded]);
 
     useEffect(function populateExamBoardFromUserContext() {
         if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
@@ -176,25 +142,22 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         {id: "topics" as TierID, name: "Topic"}
     ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, index + 1);
 
-    const tagOptions: { options: Item<string>[]; label: string }[] = isPhy ? tags.allTags.map(groupTagSelectionsByParent) : tags.allSubcategoryTags.map(groupTagSelectionsByParent);
-    const groupBaseTagOptions: GroupBase<Item<string>>[] = tagOptions;
-    const bookOptions: Item<string>[] = [
-        {value: "phys_book_step_up", label: "Step Up to GCSE Physics"},
-        {value: "phys_book_gcse", label: "GCSE Physics"},
-        {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
-        {value: "physics_linking_concepts", label: "Linking Concepts in Pre-Uni Physics"},
-        {value: "maths_book_gcse", label: "GCSE Maths"},
-        {value: "maths_book", label: "Pre-Uni Maths"},
-        {value: "chemistry_16", label: "A-Level Physical Chemistry"}
-    ];
+    const setTierSelection = (tierIndex: number) => {
+        return ((values: Item<TAG_ID>[]) => {
+            const newSelections = selections.slice(0, tierIndex);
+            newSelections.push(values);
+            setSelections(newSelections);
+        }) as React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
+    };
 
     const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
-    const user = useAppSelector((state: AppState) => state && state.user);
+    const nothingToSearchFor =
+        [searchQuery, searchTopics, searchBooks, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
+        selections.every(v => v.length === 0) && !searchFastTrack && !excludeBooks;
 
     const searchDebounce = useCallback(
-                                      debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], excludeBooks: boolean, fasttrack: boolean, hideCompleted: boolean, startIndex: number) => {
-            if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && hierarchySelections.every(v => v.length === 0) && !fasttrack) {
-                // Nothing to search for
+        debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], excludeBooks: boolean, fasttrack: boolean, hideCompleted: boolean, startIndex: number) => {
+            if (nothingToSearchFor) {
                 dispatch(clearQuestionSearch);
                 return;
             }
@@ -237,14 +200,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }, 250),
         []
     );
-
-    const setTierSelection = (tierIndex: number) => {
-        return ((values: Item<TAG_ID>[]) => {
-            const newSelections = selections.slice(0, tierIndex);
-            newSelections.push(values);
-            setSelections(newSelections);
-        }) as React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
-    };
 
     useEffect(() => {
         // If a certain stage excludes a selected examboard remove it from query params
@@ -360,16 +315,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         });
     };
 
-    const debouncedRevisionModeUpdate = useCallback(debounce(() => {
-        if (user && isLoggedIn(user)) {
-            const userToUpdate = {...user, password: null};
-            const userPreferencesToUpdate = {
-                DISPLAY_SETTING: {...userPreferences?.DISPLAY_SETTING, HIDE_QUESTION_ATTEMPTS: !userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS}
-            };
-            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, undefined, null, user, false));
-        }}, 250, {trailing: true}
-    ), []);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const handleSearch = useCallback(
         debounce((searchTerm: string) => {
@@ -415,292 +360,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
         <Row className="mt-4">
             <Col xs={siteSpecific(4, 3)} className="text-wrap my-2" data-testid="question-finder-filters">
-                <Card>
-                    <CardHeader className="finder-header pl-3">
-                        <Col xs={2}>
-                            <img
-                                src="/assets/common/icons/filter-icon.svg"
-                                alt="Filter"
-                                style={{width: 18}}
-                                className="ms-1"
-                            />
-                        </Col>
-                        <Col className={"px-0 mt-1"}>
-                            <b>Filter by</b>
-                        </Col>
-                        {filtersSelected && <div className="pe-1">
-                            <button
-                                className={"text-black mt-1 bg-white bg-opacity-10 btn-link"}
-                                onClick={clearFilters}
-                            >Clear all</button>
-                        </div>}
-                        <div>
-                            <button
-                                className="bg-white bg-opacity-10 p-0"
-                                onClick={() => setAllExpanded(numExpanded === 0)}
-                            >
-                                <img className={classNames("icon-dropdown-90", {"active": numExpanded > 0})} src={"/assets/common/icons/chevron_right.svg"} alt="" />
-                            </button>
-                        </div>
-                    </CardHeader>
-                    <CardBody className="p-0 m-0">
-                        <CollapsibleList
-                            title="Stage" expanded allExpanded={allExpanded}
-                            numberSelected={searchStages.length}
-                            onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
-                        >
-                            {getFilteredStageOptions().map((stage, index) => (
-                                <div className="w-100 ps-3 py-1 bg-white" key={index}>
-                                    <StyledCheckbox
-                                        color="primary"
-                                        checked={searchStages.includes(stage.value)}
-                                        onChange={() => setSearchStages(s => s.includes(stage.value) ? s.filter(v => v !== stage.value) : [...s, stage.value])}
-                                        label={<span>{stage.label}</span>}
-                                    />
-                                </div>
-                            ))}
-                        </CollapsibleList>
-                        {isAda && <CollapsibleList
-                            title="Exam board" allExpanded={allExpanded}
-                            numberSelected={searchExamBoards.length}
-                            onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
-                        >
-                            {getFilteredExamBoardOptions().map((board, index) => (
-                                <div className="w-100 ps-3 py-1 bg-white" key={index}>
-                                    <StyledCheckbox
-                                        color="primary"
-                                        checked={searchExamBoards.includes(board.value)}
-                                        onChange={() => setSearchExamBoards(s => s.includes(board.value) ? s.filter(v => v !== board.value) : [...s, board.value])}
-                                        label={<span>{board.label}</span>}
-                                    />
-                                </div>
-                            ))}
-                        </CollapsibleList>}
-                        <CollapsibleList
-                            title="Topics" allExpanded={allExpanded}
-                            numberSelected={siteSpecific(
-                                // Find the last non-zero tier in the tree
-                                // FIXME: Use `filter` and `at` when Safari supports it
-                                selections.map(tier => tier.length)
-                                    .reverse()
-                                    .find(l => l > 0),
-                                searchTopics.length
-                            )}
-                            onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
-                        >
-                            {siteSpecific(
-                                <div>
-                                    <HierarchyFilterHexagonal {...{tiers, choices, selections: selections, questionFinderFilter: true, setTierSelection}} />
-                                </div>,
-                                groupBaseTagOptions.map((tag, index) => (
-                                    // TODO: make subList
-                                    <CollapsibleList
-                                        title={tag.label} key={index} subList
-                                        allExpanded={allExpanded}
-                                    >
-                                        {tag.options.map((topic, index) => (
-                                            <div className="w-100 ps-3 py-1 bg-white" key={index}>
-                                                <StyledCheckbox
-                                                    color="primary"
-                                                    checked={searchTopics.includes(topic.value)}
-                                                    onChange={() => setSearchTopics(
-                                                        s => s.includes(topic.value)
-                                                            ? s.filter(v => v !== topic.value)
-                                                            : [...s, topic.value]
-                                                    )}
-                                                    label={<span>{topic.label}</span>}
-                                                    className="ps-3"
-                                                />
-                                            </div>
-                                        ))}
-                                    </CollapsibleList>
-                                ))
-                            )}
-                        </CollapsibleList>
-                        <CollapsibleList
-                            title={siteSpecific("Difficulty", "Question difficulty")}
-                            allExpanded={allExpanded}
-                            numberSelected={searchDifficulties.length}
-                            onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
-                        >
-                            <div className="ps-3">
-                                <button
-                                    className="p-0 bg-white h-min-content btn-link"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        // TODO: add modal
-                                        console.log("show difficulty modal here");
-                                }}>
-                                    <small><b>What do the different difficulty levels mean?</b></small>
-                                </button>
-                            </div>
-                            {DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
-                                <div className="w-100 ps-3 py-1 bg-white" key={index}>
-                                    <StyledCheckbox
-                                        color="primary"
-                                        checked={searchDifficulties.includes(difficulty.value)}
-                                        onChange={() => setSearchDifficulties(
-                                            s => s.includes(difficulty.value)
-                                                ? s.filter(v => v !== difficulty.value)
-                                                : [...s, difficulty.value]
-                                        )}
-                                        label={<div className="d-flex align-items-center">
-                                            <span className="me-2">{simplifyDifficultyLabel(difficulty.label)}</span>
-                                            <DifficultyIcons difficulty={difficulty.value} blank={true} classnames="mt-n2"/>
-                                        </div>}
-                                    />
-                                </div>
-                            ))}
-                        </CollapsibleList>
-                        {isPhy && <CollapsibleList
-                            title="Book" allExpanded={allExpanded}
-                            numberSelected={excludeBooks ? 1 : searchBooks.length}
-                            onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
-                        >
-                            <>
-                                <div className="w-100 ps-3 py-1 bg-white" key={index}>
-                                    <StyledCheckbox
-                                        color="primary"
-                                        checked={excludeBooks}
-                                        onChange={() => setExcludeBooks(p => !p)}
-                                        label={<span className="me-2">Exclude skills book questions</span>}
-                                    />
-                                </div>
-                                {bookOptions.map((book, index) => (
-                                    <div className="w-100 ps-3 py-1 bg-white" key={index}>
-                                        <StyledCheckbox
-                                            color="primary" disabled={excludeBooks}
-                                            checked={searchBooks.includes(book.value) && !excludeBooks}
-                                            onChange={() => setSearchBooks(
-                                                s => s.includes(book.value)
-                                                    ? s.filter(v => v !== book.value)
-                                                    : [...s, book.value]
-                                            )}
-                                            label={<span className="me-2">{book.label}</span>}
-                                        />
-                                    </div>
-                                ))}
-                            </>
-                        </CollapsibleList>}
-                        <CollapsibleList
-                            title={siteSpecific("Status", "Question status")}
-                            allExpanded={allExpanded}
-                            numberSelected={Object.values(questionStatuses).reduce((acc, item) => acc + item, 0)}
-                            onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
-                        >
-                            <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
-                                <StyledCheckbox
-                                    color="primary"
-                                    checked={questionStatuses.hideCompleted}
-                                    onChange={() => setQuestionStatuses(s => {return {...s, hideCompleted: !s.hideCompleted};})}
-                                    label={<div>
-                                        <span>Hide complete</span>
-                                    </div>}
-                                />
-                            </div>
-                            {/* TODO: implement new completeness filters
-                            <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
-                                <StyledCheckbox
-                                    color="primary"
-                                    checked={questionStatuses.notAttempted}
-                                    onChange={() => setQuestionStatuses(s => {return {...s, notAttempted: !s.notAttempted};})}
-                                    label={<div>
-                                        <span>Not attempted</span>
-                                        <img
-                                            src="/assets/common/icons/not-started.svg"
-                                            alt="Not attempted"
-                                            style={{width: 23}}
-                                            className="ms-1"
-                                        />
-                                    </div>}
-                                />
-                            </div>
-                            <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
-                                <StyledCheckbox
-                                    color="primary"
-                                    checked={questionStatuses.complete}
-                                    onChange={() => setQuestionStatuses(s => {return {...s, complete: !s.complete};})}
-                                    label={<div>
-                                        <span>Completed</span>
-                                        <img
-                                            src="/assets/common/icons/completed.svg"
-                                            alt="Completed"
-                                            style={{width: 23}}
-                                            className="ms-1"
-                                        />
-                                    </div>}
-                                />
-                            </div>
-                            <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
-                                <StyledCheckbox
-                                    color="primary"
-                                    checked={questionStatuses.incorrect}
-                                    onChange={() => setQuestionStatuses(s => {return {...s, incorrect: !s.incorrect};})}
-                                    label={<div>
-                                        <span>Try again</span>
-                                        <img
-                                            src="/assets/common/icons/incorrect.svg"
-                                            alt="Try again"
-                                            style={{width: 23}}
-                                            className="ms-1"
-                                        />
-                                    </div>}
-                                />
-                            </div>*/}
-                            <div className="pb-2">
-                                <hr className="m-0 filter-separator"/>
-                            </div>
-                            {/* TODO: implement once necessary tags are available
-                            {isAda && <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
-                                <StyledCheckbox
-                                    color="primary"
-                                    checked={questionStatuses.llmMarked}
-                                    onChange={() => setQuestionStatuses(s => {return {...s, llmMarked: !s.llmMarked};})}
-                                    label={<span>
-                                        {"Include "}
-                                        <button
-                                        className="p-0 bg-white h-min-content btn-link"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            // TODO: add modal
-                                            console.log("show LLM modal here");
-                                        }}>
-                                            LLM marked
-                                        </button>
-                                        {" questions"}
-                                    </span>}
-                                />
-                            </div>}*/}
-                            <div className="w-100 ps-3 py-1 bg-white" key={index}>
-                                <StyledCheckbox
-                                    color="primary"
-                                    checked={questionStatuses.revisionMode}
-                                    onChange={() => {
-                                        setQuestionStatuses(s => {return {...s, revisionMode: !s.revisionMode};});
-                                        debouncedRevisionModeUpdate();
-                                    }}
-                                    label={<span><button
-                                        className="p-0 bg-white h-min-content btn-link"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            // TODO: add modal
-                                            console.log("show revision mode modal here");
-                                        }}>
-                                            Revision mode
-                                    </button></span>}
-                                />
-                            </div>
-                        </CollapsibleList>
-                        <Col className="text-center my-3 filter-btn">
-                            <Button
-                                onClick={applyFilters}
-                                disabled={filtersApplied || !filtersSelected}
-                            >
-                                Apply filters
-                            </Button>
-                        </Col>
-                    </CardBody>
-                </Card>
+                <QuestionFinderFilterPanel {...{
+                    searchDifficulties, setSearchDifficulties,
+                    searchTopics, setSearchTopics,
+                    searchStages, setSearchStages,
+                    searchExamBoards, setSearchExamBoards,
+                    questionStatuses, setQuestionStatuses,
+                    searchBooks, setSearchBooks,
+                    excludeBooks, setExcludeBooks,
+                    tiers, choices, selections, setTierSelection,
+                    applyFilters, clearFilters,
+                    filtersSelected, searchDisabled: filtersApplied || !filtersSelected
+                }} />
             </Col>
 
             {/* TODO: update styling of question block */}
@@ -883,7 +554,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             <CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                     {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
-                     selections.every(v => v.length === 0) ?
+                     selections.every(v => v.length === 0) ? // TODO: consider replacing with nothingToSearchFor
                         <em>Please select filters</em> :
                         (displayQuestions?.length ?
                             <>
