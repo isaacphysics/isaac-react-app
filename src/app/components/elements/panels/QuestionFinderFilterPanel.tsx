@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useReducer } from "react";
 import { Button, Card, CardBody, CardHeader, Col } from "reactstrap";
 import { CollapsibleList } from "../CollapsibleList";
 import { DIFFICULTY_ITEM_OPTIONS, getFilteredExamBoardOptions, getFilteredStageOptions, groupTagSelectionsByParent, isAda, isLoggedIn, isPhy, Item, siteSpecific, STAGE, TAG_ID, tags } from "../../../services";
@@ -29,6 +29,46 @@ function simplifyDifficultyLabel(difficultyLabel: string): string {
     return type + level;
 }
 
+const sublistDelimiter = " >>> ";
+type TopLevelListsState = {
+    stage: boolean,
+    examBoard: boolean,
+    topics: boolean,
+    difficulty: boolean,
+    books: boolean,
+    questionStatus: boolean,
+};
+type OpenListsState = TopLevelListsState & {
+    [sublistId: string]: boolean
+};
+type ListStateActions = {type: "toggle", id: string} | {type: "expandAll", expand: boolean};
+function listStateReducer(state: OpenListsState, action: ListStateActions): OpenListsState {
+    switch (action.type) {
+        case "toggle":
+            return {...state, [action.id]: !(state[action.id])};
+        case "expandAll":
+            return Object.fromEntries(Object.keys(state).map((title) => [title, action.expand])) as OpenListsState;
+        default:
+            return state;
+    }
+}
+const initialListState: TopLevelListsState = {
+    stage: true,
+    examBoard: false,
+    topics: false,
+    difficulty: false,
+    books: false,
+    questionStatus: false
+};
+
+const listTitles: { [field in keyof TopLevelListsState]: string } = {
+    stage: "Stage",
+    examBoard: "Exam board",
+    topics: "Topics",
+    difficulty: siteSpecific("Difficulty", "Question difficulty"),
+    books: "Book",
+    questionStatus: siteSpecific("Status", "Question status")
+};
 
 interface QuestionFinderFilterPanelProps {
     searchDifficulties: Difficulty[]; setSearchDifficulties: Dispatch<SetStateAction<Difficulty[]>>;
@@ -58,19 +98,9 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     const user = useAppSelector((state: AppState) => state?.user);
     const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
 
-    const [numExpanded, setExpanded] = useState<number>(0);
-    const [allExpanded, setAllExpanded] = useState<boolean | undefined>(undefined);
+    const [listState, listStateDispatch] = useReducer(listStateReducer, initialListState);
+    const anyExpandedLists = Object.values(listState).some(v => v);
 
-    useEffect(function syncAllExpandedAndNumExpanded() {
-        // If the user manually close all the list after expanding them
-        // OR if the user manually opens a list after closing them all
-        if ((numExpanded === 0 && allExpanded)
-           || (numExpanded > 0 && !allExpanded)) {
-            // Go into the undefined state until being clicked
-            setAllExpanded(undefined);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [numExpanded]);
 
     const debouncedRevisionModeUpdate = useCallback(debounce(() => {
         if (user && isLoggedIn(user)) {
@@ -107,17 +137,17 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             <div>
                 <button
                     className="bg-white bg-opacity-10 p-0"
-                    onClick={() => setAllExpanded(numExpanded === 0)}
+                    onClick={() => listStateDispatch({type: "expandAll", expand: !anyExpandedLists})}
                 >
-                    <img className={classNames("icon-dropdown-90", {"active": numExpanded > 0})} src={"/assets/common/icons/chevron_right.svg"} alt="" />
+                    <img className={classNames("icon-dropdown-90", {"active": anyExpandedLists})} src={"/assets/common/icons/chevron_right.svg"} alt="" />
                 </button>
             </div>
         </CardHeader>
         <CardBody className="p-0 m-0">
             <CollapsibleList
-                title="Stage" expanded allExpanded={allExpanded}
+                title={listTitles.stage} expanded={listState.stage}
+                toggle={() => listStateDispatch({type: "toggle", id: "stage"})}
                 numberSelected={searchStages.length}
-                onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
             >
                 {getFilteredStageOptions().map((stage, index) => (
                     <div className="w-100 ps-3 py-1 bg-white" key={index}>
@@ -131,9 +161,9 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 ))}
             </CollapsibleList>
             {isAda && <CollapsibleList
-                title="Exam board" allExpanded={allExpanded}
+                title={listTitles.examBoard} expanded={listState.examBoard}
+                toggle={() => listStateDispatch({type: "toggle", id: "examBoard"})}
                 numberSelected={searchExamBoards.length}
-                onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
             >
                 {getFilteredExamBoardOptions().map((board, index) => (
                     <div className="w-100 ps-3 py-1 bg-white" key={index}>
@@ -147,7 +177,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 ))}
             </CollapsibleList>}
             <CollapsibleList
-                title="Topics" allExpanded={allExpanded}
+                title={listTitles.topics} expanded={listState.topics}
+                toggle={() => listStateDispatch({type: "toggle", id: "topics"})}
                 numberSelected={siteSpecific(
                     // Find the last non-zero tier in the tree
                     // FIXME: Use `filter` and `at` when Safari supports it
@@ -156,7 +187,6 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         .find(l => l > 0),
                     searchTopics.length
                 )}
-                onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
             >
                 {siteSpecific(
                     <div>
@@ -165,8 +195,9 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     groupBaseTagOptions.map((tag, index) => (
                         // TODO: make subList
                         <CollapsibleList
-                            title={tag.label} key={index} subList
-                            allExpanded={allExpanded}
+                            title={tag.label} key={index} asSubList
+                            expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]}
+                            toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`})}
                         >
                             {tag.options.map((topic, index) => (
                                 <div className="w-100 ps-3 py-1 bg-white" key={index}>
@@ -184,14 +215,14 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 </div>
                             ))}
                         </CollapsibleList>
-                    ))
-                )}
+                    )))
+                }
             </CollapsibleList>
+
             <CollapsibleList
-                title={siteSpecific("Difficulty", "Question difficulty")}
-                allExpanded={allExpanded}
+                title={listTitles.difficulty} expanded={listState.difficulty}
+                toggle={() => listStateDispatch({type: "toggle", id: "difficulty"})}
                 numberSelected={searchDifficulties.length}
-                onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
             >
                 <div className="ps-3">
                     <button
@@ -223,9 +254,9 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 ))}
             </CollapsibleList>
             {isPhy && <CollapsibleList
-                title="Book" allExpanded={allExpanded}
+                title={listTitles.books} expanded={listState.books}
+                toggle={() => listStateDispatch({type: "toggle", id: "books"})}
                 numberSelected={excludeBooks ? 1 : searchBooks.length}
-                onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
             >
                 <>
                     <div className="w-100 ps-3 py-1 bg-white">
@@ -253,10 +284,9 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 </>
             </CollapsibleList>}
             <CollapsibleList
-                title={siteSpecific("Status", "Question status")}
-                allExpanded={allExpanded}
+                title={listTitles.questionStatus} expanded={listState.questionStatus}
+                toggle={() => listStateDispatch({type: "toggle", id: "questionStatus"})}
                 numberSelected={Object.values(questionStatuses).reduce((acc, item) => acc + item, 0)}
-                onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
             >
                 <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                     <StyledCheckbox
