@@ -309,5 +309,9 @@ iframe.email-html {
 }
 
 .collapsible-body {
-  transition: max-height 0.3s ease;
+  transition: max-height 0.3s ease-in-out;
+  max-height: 0;
+  &.open {
+    max-height: 500vh; // Sufficiently large max-height to allow for nested lists
+  }
 }
