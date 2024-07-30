@@ -151,7 +151,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     }, [userContext.stage]);
 
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
-    const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(!!params.fasttrack);
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
@@ -269,10 +268,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (searchQuery.length) params.query = encodeURIComponent(searchQuery);
         if (isAda && searchTopics.length) params.topics = toSimpleCSV(searchTopics);
         if (isAda && searchExamBoards.length) params.examBoards = toSimpleCSV(searchExamBoards);
-        if (isPhy && !excludeBooks && searchBooks.length) {
-            params.book = toSimpleCSV(searchBooks);
-        }
-        if (isPhy && excludeBooks) params.excludeBooks = "set";
+        if (isPhy && searchBooks.length) params.book = toSimpleCSV(searchBooks);
         if (isPhy && searchFastTrack) params.fasttrack = "set";
         if (questionStatuses.hideCompleted) params.hideCompleted = "set";
 
@@ -329,11 +325,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || searchExamBoards.length > 0
             || searchStages.length > 0
             || searchBooks.length > 0
-            || excludeBooks
             || Object.entries(questionStatuses)
                 .filter(e => e[0] !== "revisionMode") // Ignore revision mode as it isn't really a filter
                 .some(e => e[1]);
-    }, [excludeBooks, questionStatuses, searchBooks.length, searchDifficulties.length, searchExamBoards.length, searchStages.length, searchTopics.length]);
+    }, [questionStatuses, searchBooks.length, searchDifficulties.length, searchExamBoards.length, searchStages.length, searchTopics.length]);
 
     const clearFilters = () => {
         setSearchDifficulties([]);
@@ -341,7 +336,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setSearchExamBoards([]);
         setSearchStages([]);
         setSearchBooks([]);
-        setExcludeBooks(false);
         setQuestionStatuses(
         {
             notAttempted: false,
@@ -534,33 +528,23 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         </CollapsibleList>
                         <CollapsibleList
                             title="Book" allExpanded={allExpanded}
-                            numberSelected={excludeBooks ? 1 : searchBooks.length}
+                            numberSelected={searchBooks.length}
                             onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
-                            <>
+                            {bookOptions.map((book, index) => (
                                 <div className="w-100 ps-3 py-1 bg-white" key={index}>
                                     <StyledCheckbox
                                         color="primary"
-                                        checked={excludeBooks}
-                                        onChange={() => setExcludeBooks(p => !p)}
-                                        label={<span className="me-2">Exclude skills book questions</span>}
+                                        checked={searchBooks.includes(book.value)}
+                                        onChange={() => setSearchBooks(
+                                            s => s.includes(book.value)
+                                                ? s.filter(v => v !== book.value)
+                                                : [...s, book.value]
+                                        )}
+                                        label={<span className="me-2">{book.label}</span>}
                                     />
                                 </div>
-                                {bookOptions.map((book, index) => (
-                                    <div className="w-100 ps-3 py-1 bg-white" key={index}>
-                                        <StyledCheckbox
-                                            color="primary" disabled={excludeBooks}
-                                            checked={searchBooks.includes(book.value) && !excludeBooks}
-                                            onChange={() => setSearchBooks(
-                                                s => s.includes(book.value)
-                                                    ? s.filter(v => v !== book.value)
-                                                    : [...s, book.value]
-                                            )}
-                                            label={<span className="me-2">{book.label}</span>}
-                                        />
-                                    </div>
-                                ))}
-                            </>
+                            ))}
                         </CollapsibleList>
                         <CollapsibleList
                             title="Question status" allExpanded={allExpanded}
@@ -673,12 +657,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         <Col className="text-center my-3 filter-btn">
                             <Button
                                 onClick={applyFilters}
-                                disabled={([
+                                disabled={[
                                     searchQuery, searchTopics, searchBooks,
                                     searchStages, searchDifficulties, searchExamBoards
                                 ].every(v => v.length === 0)
-                                && selections.every(v => v.length === 0))
-                                || (excludeBooks && searchBooks.length > 0)}
+                                && selections.every(v => v.length === 0)}
                             >
                                 Apply filters
                             </Button>
