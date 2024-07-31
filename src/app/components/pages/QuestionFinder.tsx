@@ -328,6 +328,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     }, [questionList]);
 
     const filtersSelected = useMemo(() => {
+        setFiltersApplied(false);
         return searchDifficulties.length > 0
             || searchTopics.length > 0
             || searchExamBoards.length > 0
@@ -335,7 +336,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || searchBooks.length > 0
             || selections.some(tier => tier.length > 0)
             || Object.entries(questionStatuses)
-                .filter(e => e[0] !== "revisionMode") // Ignore revision mode as it isn't really a filter
+                .filter(e => e[0] !== "revisionMode"
+                        && e[0] !== "hideCompleted") // Ignore revision mode as it isn't really a filter
                 .some(e => e[1]);
     }, [questionStatuses, searchBooks, searchDifficulties, searchExamBoards, searchStages, searchTopics, selections]);
 
@@ -692,12 +694,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         <Col className="text-center my-3 filter-btn">
                             <Button
                                 onClick={applyFilters}
-                                disabled={[
-                                    searchQuery, searchTopics,
-                                    searchStages, searchDifficulties, searchExamBoards
-                                ].every(v => v.length === 0)
-                                && (searchBooks.length === 0 || excludeBooks)
-                                && selections.every(v => v.length === 0)}
+                                disabled={filtersApplied || !filtersSelected}
                             >
                                 Apply filters
                             </Button>
