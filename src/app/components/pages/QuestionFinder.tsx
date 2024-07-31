@@ -47,7 +47,6 @@ export interface QuestionStatus {
     complete: boolean;
     incorrect: boolean;
     llmMarked: boolean;
-    revisionMode: boolean;
     hideCompleted: boolean; // TODO: remove when implementing desired filters
 }
 
@@ -72,7 +71,6 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserViewingContext();
-    const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
     const params: {[key: string]: string | string[] | undefined} = useQueryParams(false);
     const history = useHistory();
     const eventLog = useRef<object[]>([]).current; // persist state but do not rerender on mutation
@@ -98,7 +96,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             complete: false,
             incorrect: false,
             llmMarked: false,
-            revisionMode: !!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS,
             hideCompleted: !!params.hideCompleted
         }
     );
@@ -302,7 +299,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             complete: false,
             incorrect: false,
             llmMarked: false,
-            revisionMode: !!userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS,
             hideCompleted: false
         });
     };
@@ -380,8 +376,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 <em>Please select and apply filters</em> :
                                 (displayQuestions?.length ?
                                     <>
-                                        <LinkToContentSummaryList items={displayQuestions.map(q => 
-                                            ({...q, correct: questionStatuses.revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
+                                        <LinkToContentSummaryList items={displayQuestions} />
                                         <Row>
                                             <Col className="d-flex justify-content-center mb-3">
                                                 <Button

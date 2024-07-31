@@ -1,9 +1,7 @@
-import React, { Dispatch, SetStateAction, useCallback, useReducer } from "react";
+import React, { Dispatch, SetStateAction, useReducer } from "react";
 import { Button, Card, CardBody, CardHeader, Col } from "reactstrap";
 import { CollapsibleList } from "../CollapsibleList";
-import { DIFFICULTY_ITEM_OPTIONS, getFilteredExamBoardOptions, getFilteredStageOptions, groupTagSelectionsByParent, isAda, isLoggedIn, isPhy, Item, siteSpecific, STAGE, TAG_ID, tags } from "../../../services";
-import { debounce } from "lodash";
-import { AppState, updateCurrentUser, useAppDispatch, useAppSelector } from "../../../state";
+import { DIFFICULTY_ITEM_OPTIONS, getFilteredExamBoardOptions, getFilteredStageOptions, groupTagSelectionsByParent, isAda, isPhy, Item, siteSpecific, STAGE, TAG_ID, tags } from "../../../services";
 import { Difficulty, ExamBoard } from "../../../../IsaacApiTypes";
 import { QuestionStatus } from "../../pages/QuestionFinder";
 import classNames from "classnames";
@@ -94,23 +92,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         tiers, choices, selections, setTierSelection,
         applyFilters, clearFilters, filtersSelected, searchDisabled
     } = props;
-    const dispatch = useAppDispatch();
-    const user = useAppSelector((state: AppState) => state?.user);
-    const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
-
     const [listState, listStateDispatch] = useReducer(listStateReducer, initialListState);
     const anyExpandedLists = Object.values(listState).some(v => v);
-
-
-    const debouncedRevisionModeUpdate = useCallback(debounce(() => {
-        if (user && isLoggedIn(user)) {
-            const userToUpdate = {...user, password: null};
-            const userPreferencesToUpdate = {
-                DISPLAY_SETTING: {...userPreferences?.DISPLAY_SETTING, HIDE_QUESTION_ATTEMPTS: !userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS}
-            };
-            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, undefined, null, user, false));
-        }}, 250, {trailing: true}
-    ), []);
 
     const tagOptions: { options: Item<string>[]; label: string }[] = isPhy ? tags.allTags.map(groupTagSelectionsByParent) : tags.allSubcategoryTags.map(groupTagSelectionsByParent);
     const groupBaseTagOptions: GroupBase<Item<string>>[] = tagOptions;
@@ -347,50 +330,31 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         </div>}
                     />
                 </div>*/}
-                <div className="pb-2">
-                    <hr className="m-0 filter-separator"/>
-                </div>
-                {/* TODO: implement once necessary tags are available
-                {isAda && <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
-                    <StyledCheckbox
-                        color="primary"
-                        checked={questionStatuses.llmMarked}
-                        onChange={() => setQuestionStatuses(s => {return {...s, llmMarked: !s.llmMarked};})}
-                        label={<span>
-                            {"Include "}
-                            <button
-                            className="p-0 bg-white h-min-content btn-link"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                // TODO: add modal
-                                console.log("show LLM modal here");
-                            }}>
-                                LLM marked
-                            </button>
-                            {" questions"}
-                        </span>}
-                    />
-                </div>}*/}
-                <div className="w-100 ps-3 py-1 bg-white">
-                    <StyledCheckbox
-                        color="primary"
-                        checked={questionStatuses.revisionMode}
-                        onChange={() => {
-                            setQuestionStatuses(s => {return {...s, revisionMode: !s.revisionMode};});
-                            debouncedRevisionModeUpdate();
-                        }}
-                        label={<span><button
-                            className="p-0 bg-white h-min-content btn-link"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                // TODO: add modal
-                                console.log("show revision mode modal here");
-                            }}>
-                                Revision mode
-                        </button></span>}
-                    />
-                </div>
             </CollapsibleList>
+            {/* TODO: implement once necessary tags are available
+            <div className="pb-2">
+                <hr className="m-0 filter-separator"/>
+            </div>
+            {isAda && <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
+                <StyledCheckbox
+                    color="primary"
+                    checked={questionStatuses.llmMarked}
+                    onChange={() => setQuestionStatuses(s => {return {...s, llmMarked: !s.llmMarked};})}
+                    label={<span>
+                        {"Include "}
+                        <button
+                        className="p-0 bg-white h-min-content btn-link"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            // TODO: add modal
+                            console.log("show LLM modal here");
+                        }}>
+                            LLM marked
+                        </button>
+                        {" questions"}
+                    </span>}
+                />
+            </div>}*/}
             <Col className="text-center my-3 filter-btn">
                 <Button onClick={applyFilters} disabled={searchDisabled}>
                     Apply filters
