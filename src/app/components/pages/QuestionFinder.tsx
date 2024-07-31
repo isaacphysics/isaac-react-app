@@ -153,7 +153,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const nothingToSearchFor =
         [searchQuery, searchTopics, searchBooks, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
-        selections.every(v => v.length === 0) && !searchFastTrack && !excludeBooks;
+        selections.every(v => v.length === 0) && !searchFastTrack;
 
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], excludeBooks: boolean, fasttrack: boolean, hideCompleted: boolean, startIndex: number) => {
