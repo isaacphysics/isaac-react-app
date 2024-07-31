@@ -333,10 +333,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || searchExamBoards.length > 0
             || searchStages.length > 0
             || searchBooks.length > 0
+            || selections.some(tier => tier.length > 0)
             || Object.entries(questionStatuses)
                 .filter(e => e[0] !== "revisionMode") // Ignore revision mode as it isn't really a filter
                 .some(e => e[1]);
-    }, [questionStatuses, searchBooks.length, searchDifficulties.length, searchExamBoards.length, searchStages.length, searchTopics.length]);
+    }, [questionStatuses, searchBooks, searchDifficulties, searchExamBoards, searchStages, searchTopics, selections]);
 
     const clearFilters = () => {
         setSearchDifficulties([]);
@@ -345,6 +346,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setSearchStages([]);
         setSearchBooks([]);
         setExcludeBooks(false);
+        setSelections([[], [], []]);
         setQuestionStatuses(
         {
             notAttempted: false,
@@ -474,7 +476,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         </CollapsibleList>}
                         <CollapsibleList
                             title="Topics" allExpanded={allExpanded}
-                            numberSelected={searchTopics.length}
+                            numberSelected={siteSpecific(
+                                // Find the last non-zero tier in the tree
+                                // FIXME: Use `filter` and `at` when Safari supports it
+                                selections.map(tier => tier.length)
+                                    .reverse()
+                                    .find(l => l > 0),
+                                searchTopics.length
+                            )}
                             onExpand={(isExpanded) => {isExpanded ? setExpanded(prevExpanded => prevExpanded + 1) : setExpanded(prevExpanded => prevExpanded - 1);}}
                         >
                             {siteSpecific(
