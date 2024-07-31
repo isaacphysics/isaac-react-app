@@ -51,11 +51,6 @@ export interface QuestionStatus {
     hideCompleted: boolean; // TODO: remove when implementing desired filters
 }
 
-const selectStyle = {
-    className: "basic-multi-select", classNamePrefix: "select",
-    menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 9999})}
-};
-
 function processTagHierarchy(subjects: string[], fields: string[], topics: string[]): Item<TAG_ID>[][] {
     const tagHierarchy = tags.getTagHierarchy();
     const selectionItems: Item<TAG_ID>[][] = [];
@@ -118,7 +113,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
-    const [searchFastTrack, setSearchFastTrack] = useState<boolean>(!!params.fasttrack);
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
     const subjects = arrayFromPossibleCsv(params.subjects);
@@ -153,10 +147,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const nothingToSearchFor =
         [searchQuery, searchTopics, searchBooks, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
-        selections.every(v => v.length === 0) && !searchFastTrack;
+        selections.every(v => v.length === 0);
 
     const searchDebounce = useCallback(
-        debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], excludeBooks: boolean, fasttrack: boolean, hideCompleted: boolean, startIndex: number) => {
+        debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], excludeBooks: boolean, hideCompleted: boolean, startIndex: number) => {
             if (nothingToSearchFor) {
                 dispatch(clearQuestionSearch);
                 return;
@@ -190,13 +184,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 difficulties: difficulties.join(",") || undefined,
                 examBoards: examBoardString,
                 questionCategories: excludeBooks ? "problem_solving" : "problem_solving,book",
-                fasttrack,
+                fasttrack: false,
                 hideCompleted,
                 startIndex,
                 limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need, as to know if there are more results
             }));
 
-            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
+            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, startIndex});
         }, 250),
         []
     );
@@ -219,8 +213,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setDisplayQuestions(undefined);
         searchDebounce(
             searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages,
-            searchDifficulties, selections, tiers, excludeBooks, searchFastTrack,
-            questionStatuses.hideCompleted, 0);
+            searchDifficulties, selections, tiers, excludeBooks, questionStatuses.hideCompleted, 0);
 
         const params: {[key: string]: string} = {};
         if (searchStages.length) params.stages = toSimpleCSV(searchStages);
@@ -232,7 +225,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             params.book = toSimpleCSV(searchBooks);
         }
         if (isPhy && excludeBooks) params.excludeBooks = "set";
-        if (isPhy && searchFastTrack) params.fasttrack = "set";
         if (questionStatuses.hideCompleted) params.hideCompleted = "set";
 
         if (isPhy) {
@@ -400,7 +392,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                                             searchBooks, searchStages,
                                                             searchDifficulties,
                                                             selections, tiers,
-                                                            excludeBooks, searchFastTrack,
+                                                            excludeBooks,
                                                             questionStatuses.hideCompleted,
                                                             nextSearchOffset
                                                                 ? nextSearchOffset - 1
@@ -427,162 +419,5 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 </Card>
             </Col>
         </Row>
-
-
-        {/* Previous finder. TODO: remove */}
-
-        {/* <Card id="finder-panel" className="mx-auto mt-4 mb-5">
-            <CardBody className={"px-2 py-3 p-sm-4 pb-5"}>
-                <Row className={"mb-3"}>
-                    <Col>
-                        <span>Specify your search criteria and we will find questions related to your chosen filter(s).</span>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col lg={6} className={`text-wrap my-2`}>
-                        <Label htmlFor="question-search-stage">Stage</Label>
-                        <StyledSelect
-                            inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
-                            value={getFilteredStageOptions().filter(o => searchStages.includes(o.value))}
-                            options={getFilteredStageOptions()}
-                            onChange={selectOnChange(setSearchStages, true)}
-                        />
-                    </Col>
-                    <Col lg={6} className="text-wrap my-2">
-                        <Label htmlFor="question-search-difficulty">Difficulty</Label>
-                        <StyledSelect
-                            inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                            value={itemiseByValue(searchDifficulties, DIFFICULTY_ICON_ITEM_OPTIONS)}
-                            options={DIFFICULTY_ICON_ITEM_OPTIONS}
-                            onChange={selectOnChange(setSearchDifficulties, true)}
-                        />
-                    </Col>
-                    {isAda && <Col lg={6} className="text-wrap my-2">
-                        <Label htmlFor="question-search-exam-board">Exam Board</Label>
-                        <StyledSelect
-                            inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
-                            value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
-                            options={getFilteredExamBoardOptions({byStages: searchStages})}
-                            onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
-                        />
-                    </Col>}
-                </Row>
-                <Row>
-                    <Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2`}>
-                        <Label htmlFor="question-search-topic">Topic</Label>
-                        {siteSpecific(
-                            <HierarchyFilterHexagonal {...{tiers, choices, selections: selections, setTierSelection}} />,
-                            <StyledSelect
-                                inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
-                                value={itemiseByValue(searchTopics, groupBaseTagOptions.flatMap(tag => tag.options))}
-                                options={groupBaseTagOptions} onChange={(x : readonly Item<string>[], {action: _action}) => {
-                                    selectOnChange(setSearchTopics, true)(x);
-                                }}
-                            />
-                        )}
-                    </Col>
-                </Row>
-                <Row>
-                    {isPhy && <Col lg={12} className="text-wrap my-2">
-                        <Label htmlFor="question-search-book">Book</Label>
-                        <StyledSelect
-                            inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
-                            value={itemiseByValue(searchBook, bookOptions)}
-                            onChange={(e) => {
-                                selectOnChange(setSearchBook, true)(e);
-                            }}
-                            options={bookOptions}
-                        />
-                    </Col>}
-                </Row>
-                <Row>
-                    {isPhy && isStaff(user) && <Col className="text-wrap mb-2">
-                        <Form>
-                            <Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</Label>
-                        </Form>
-                    </Col>}
-                </Row>
-                <Row>
-                    <Col lg={12} className="text-wrap mt-2">
-                        <Label htmlFor="question-search-title">Search</Label>
-                        <Input id="question-search-title"
-                            type="text"
-                            placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                            onChange={(e) => handleSearch(e.target.value)}
-                        />
-                    </Col>
-                </Row>
-
-                {user && isLoggedIn(user) && <Row>
-                    <Form>
-                        <Col className="mt-4">
-                            <div className="d-flex">
-                                <StyledCheckbox
-                                    checked={revisionMode}
-                                    onChange={() => {
-                                        setRevisionMode(r => !r);
-                                        debouncedRevisionModeUpdate();
-                                    }}
-                                    label={<p>Revision mode</p>}
-                                />
-                                <span id="revision-mode-checkbox" className="icon-help"/>
-                                <UncontrolledTooltip target="revision-mode-checkbox" placement="top" autohide={false}>
-                                    Revision mode hides your previous answers, so you can practice questions that you have answered before.
-                                </UncontrolledTooltip>
-                            </div>
-                            <div className="d-flex">
-                                <StyledCheckbox
-                                    checked={hideCompleted}
-                                    onChange={() => setHideCompleted(h => !h)}
-                                    label={<p>Hide completed questions</p>}
-                                    disabled={revisionMode}
-                                />
-                            </div>
-                        </Col>
-                    </Form>
-                </Row>}
-            </CardBody>
-        </Card>
-        <Card>
-            <CardHeader className="finder-header">
-                <Col className={"pe-0"}>
-                    <h3>
-                        Results
-                    </h3>
-                </Col>
-            </CardHeader>
-            <CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
-                <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
-                    {[searchQuery, searchTopics, searchBook, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
-                     selections.every(v => v.length === 0) ? // TODO: consider replacing with nothingToSearchFor
-                        <em>Please select filters</em> :
-                        (displayQuestions?.length ?
-                            <>
-                                <LinkToContentSummaryList items={displayQuestions.map(q => ({...q, correct: revisionMode ? undefined : q.correct}) as ContentSummaryDTO)}/>
-                                <Row>
-                                    <Col className="d-flex justify-content-center mb-3">
-                                        <Button
-                                            onClick={() => {
-                                                searchDebounce(searchQuery, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, selections, tiers, searchFastTrack, hideCompleted, nextSearchOffset ? nextSearchOffset - 1 : 0);
-                                                setPageCount(c => c + 1);
-                                                setDisableLoadMore(true);
-                                            }}
-                                            disabled={disableLoadMore}
-                                        >
-                                            Load more
-                                        </Button>
-                                    </Col>
-                                </Row>
-                                {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
-                                <div role="status" className={"alert alert-light border"}>
-                                        {`${totalQuestions} questions match your criteria.`}<br/>
-                                        Not found what you&apos;re looking for? Try refining your search filters.
-                                </div>}
-                            </> :
-                            <em>No results found</em>)
-                    }
-                </ShowLoading>
-            </CardBody>
-        </Card> */}
     </Container>;
 });
