@@ -101,11 +101,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     );
 
     useEffect(function populateExamBoardFromUserContext() {
-        if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
+        if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
+            setSearchExamBoards(arr => arr.length > 0 ? arr : [userContext.examBoard]);
+        }
     }, [userContext.examBoard]);
 
     useEffect(function populateStageFromUserContext() {
-        if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) setSearchStages([userContext.stage]);
+        if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
+            setSearchStages(arr => arr.length > 0 ? arr : [userContext.stage]);
+        }
     }, [userContext.stage]);
 
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
@@ -180,7 +184,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 stages: stages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
                 examBoards: examBoardString,
-                questionCategories: excludeBooks ? "problem_solving" : "problem_solving,book",
+                questionCategories: isPhy
+                    ? (excludeBooks ? "problem_solving" : "problem_solving,book")
+                    : undefined,
                 fasttrack: false,
                 hideCompleted,
                 startIndex,

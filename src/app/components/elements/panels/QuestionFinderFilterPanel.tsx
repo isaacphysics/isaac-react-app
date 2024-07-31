@@ -148,7 +148,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 toggle={() => listStateDispatch({type: "toggle", id: "examBoard"})}
                 numberSelected={searchExamBoards.length}
             >
-                {getFilteredExamBoardOptions().map((board, index) => (
+                {getFilteredExamBoardOptions({byStages: searchStages}).map((board, index) => (
                     <div className="w-100 ps-3 py-1 bg-white" key={index}>
                         <StyledCheckbox
                             color="primary"
