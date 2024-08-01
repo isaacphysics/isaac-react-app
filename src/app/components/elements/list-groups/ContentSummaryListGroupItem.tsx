@@ -27,6 +27,7 @@ import {ShortcutResponse} from "../../../../IsaacAppTypes";
 import {Markup} from "../markup";
 import classNames from "classnames";
 import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
+import { CSSModule } from "reactstrap/types/lib/utils";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -47,7 +48,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     }
     const iconClasses = `search-item-icon ${itemSubject?.id}-fill`;
     const hierarchyTags = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[])
-        .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
+        .filter((_t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
     // FIXME "correct" never actually exists on questions here...
     const questionIconLabel = item.correct ? "Completed question icon" : "Question icon";
@@ -100,7 +101,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
         case (DOCUMENT_TYPE.TOPIC_SUMMARY):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
             icon = <img src={siteSpecific("/assets/common/icons/work-md.svg", "/assets/cs/icons/topic.svg")} alt="Topic summary page icon"/>;
-            typeLabel = "Topic"
+            typeLabel = "Topic";
             break;
         case (DOCUMENT_TYPE.GENERIC):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
@@ -167,7 +168,7 @@ export const LinkToContentSummaryList = ({items, search, displayTopicTitle, ...r
     tag?: React.ElementType;
     flush?: boolean;
     className?: string;
-    cssModule?: any;
+    cssModule?: CSSModule;
 }) => {
     return <ListGroup {...rest} className="link-list list-group-links mb-3">
         {items.map(item => <ContentSummaryListGroupItem item={item} search={search} key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}/>)}

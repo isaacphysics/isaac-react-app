@@ -390,6 +390,14 @@ export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_2: "Challenge\u00A0(C2)",
     challenge_3: "Challenge\u00A0(C3)",
 };
+export const simpleDifficultyLabelMap: {[difficulty in Difficulty]: string} = {
+    practice_1: "Practice\u00A01",
+    practice_2: "Practice\u00A02",
+    practice_3: "Practice\u00A03",
+    challenge_1: "Challenge\u00A01",
+    challenge_2: "Challenge\u00A02",
+    challenge_3: "Challenge\u00A03",
+};
 export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
     practice_1: `Practice (P1) ${siteSpecific("\u2B22\u2B21\u2B21", "\u25CF\u25CB")}`,
     practice_2: `Practice (P2) ${siteSpecific("\u2B22\u2B22\u2B21", "\u25CF\u25CF")}`,
@@ -404,6 +412,9 @@ export const difficultiesOrdered: Difficulty[] = siteSpecific(
 );
 export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
     {value: d, label: difficultyLabelMap[d]}
+));
+export const SIMPLE_DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
+    {value: d, label: simpleDifficultyLabelMap[d]}
 ));
 export const DIFFICULTY_ICON_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
     {value: d, label: difficultyIconLabelMap[d]}

@@ -4,13 +4,13 @@ import { CollapsibleList } from "../CollapsibleList";
 import {
     above,
     below,
-    DIFFICULTY_ITEM_OPTIONS,
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     groupTagSelectionsByParent,
     isAda,
     isPhy,
     Item,
+    SIMPLE_DIFFICULTY_ITEM_OPTIONS,
     siteSpecific,
     STAGE,
     TAG_ID,
@@ -35,12 +35,6 @@ const bookOptions: Item<string>[] = [
     {value: "maths_book", label: "Pre-Uni Maths"},
     {value: "chemistry_16", label: "A-Level Physical Chemistry"}
 ];
-function simplifyDifficultyLabel(difficultyLabel: string): string {
-    const labelLength = difficultyLabel.length;
-    const type = difficultyLabel.slice(0, labelLength - 4);
-    const level = difficultyLabel.slice(labelLength - 2, labelLength - 1);
-    return type + level;
-}
 
 const sublistDelimiter = " >>> ";
 type TopLevelListsState = {
@@ -288,7 +282,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         <small><b>What do the different difficulty levels mean?</b></small>
                     </button>
                 </div>
-                {DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
+                {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
                     <div className="w-100 ps-3 py-1 bg-white" key={index}>
                         <StyledCheckbox
                             color="primary"
@@ -299,8 +293,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                     : [...s, difficulty.value]
                             )}
                             label={<div className="d-flex align-items-center">
-                                <span className="me-2">{simplifyDifficultyLabel(difficulty.label)}</span>
-                                <DifficultyIcons difficulty={difficulty.value} blank={true} classnames="mt-n2"/>
+                                <span className="me-2">{difficulty.label}</span>
+                                <DifficultyIcons difficulty={difficulty.value} blank classnames="mt-n2"/>
                             </div>}
                         />
                     </div>
