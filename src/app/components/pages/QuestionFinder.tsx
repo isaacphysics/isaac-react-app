@@ -340,7 +340,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
 
         <Row>
-            <Col xs={6} className="finder-search">
+            <Col lg={6} md={12} xs={12} className="finder-search">
                 <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
                 <Input id="question-search-title"
                     type="text"
@@ -353,7 +353,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         </Row>
 
         <Row className="mt-4">
-            <Col xs={siteSpecific(4, 3)} className="text-wrap my-2" data-testid="question-finder-filters">
+            <Col lg={siteSpecific(4, 3)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-filters">
                 <QuestionFinderFilterPanel {...{
                     searchDifficulties, setSearchDifficulties,
                     searchTopics, setSearchTopics,
@@ -369,7 +369,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             </Col>
 
             {/* TODO: update styling of question block */}
-            <Col xs={siteSpecific(8, 9)} className="text-wrap my-2" data-testid="question-finder-results">
+            <Col lg={siteSpecific(8, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
                 <Card>
                     <CardHeader className="finder-header pl-3">
                         <Col className={"px-0"}>

@@ -1,7 +1,22 @@
-import React, { Dispatch, SetStateAction, useReducer } from "react";
+import React, { Dispatch, SetStateAction, useReducer, useState } from "react";
 import { Button, Card, CardBody, CardHeader, Col } from "reactstrap";
 import { CollapsibleList } from "../CollapsibleList";
-import { DIFFICULTY_ITEM_OPTIONS, getFilteredExamBoardOptions, getFilteredStageOptions, groupTagSelectionsByParent, isAda, isPhy, Item, siteSpecific, STAGE, TAG_ID, tags } from "../../../services";
+import {
+    above,
+    below,
+    DIFFICULTY_ITEM_OPTIONS,
+    getFilteredExamBoardOptions,
+    getFilteredStageOptions,
+    groupTagSelectionsByParent,
+    isAda,
+    isPhy,
+    Item,
+    siteSpecific,
+    STAGE,
+    TAG_ID,
+    tags,
+    useDeviceSize
+} from "../../../services";
 import { Difficulty, ExamBoard } from "../../../../IsaacApiTypes";
 import { QuestionStatus } from "../../pages/QuestionFinder";
 import classNames from "classnames";
@@ -29,35 +44,71 @@ function simplifyDifficultyLabel(difficultyLabel: string): string {
 
 const sublistDelimiter = " >>> ";
 type TopLevelListsState = {
-    stage: boolean,
-    examBoard: boolean,
-    topics: boolean,
-    difficulty: boolean,
-    books: boolean,
-    questionStatus: boolean,
+    stage: {state: boolean, subList: boolean},
+    examBoard: {state: boolean, subList: boolean},
+    topics: {state: boolean, subList: boolean},
+    difficulty: {state: boolean, subList: boolean},
+    books: {state: boolean, subList: boolean},
+    questionStatus: {state: boolean, subList: boolean},
 };
 type OpenListsState = TopLevelListsState & {
-    [sublistId: string]: boolean
+    [sublistId: string]: {state: boolean, subList: boolean}
 };
-type ListStateActions = {type: "toggle", id: string} | {type: "expandAll", expand: boolean};
+type ListStateActions = {type: "toggle", id: string, focus: boolean}
+    | {type: "expandAll", expand: boolean};
 function listStateReducer(state: OpenListsState, action: ListStateActions): OpenListsState {
     switch (action.type) {
         case "toggle":
-            return {...state, [action.id]: !(state[action.id])};
+            return action.focus
+                ? Object.fromEntries(Object.keys(state).map(
+                    (title) => [
+                        title,
+                        {
+                            // Close all lists except this one
+                            state: action.id === title && !(state[action.id]?.state)
+                            // But if this is a sublist don't change top-level lists
+                            || (state[action.id]?.subList
+                                && !(state[title]?.subList)
+                                && state[title]?.state),
+                            subList: state[title]?.subList
+                        }
+                    ])
+                ) as OpenListsState
+                : {...state, [action.id]: {
+                    state: !(state[action.id]?.state),
+                    subList: state[action.id]?.subList
+                }};
         case "expandAll":
-            return Object.fromEntries(Object.keys(state).map((title) => [title, action.expand])) as OpenListsState;
+            return Object.fromEntries(Object.keys(state).map(
+                (title) => [
+                    title,
+                    {
+                        state: action.expand && !(state[title]?.subList),
+                        subList: state[title]?.subList
+                    }
+                ])) as OpenListsState;
         default:
             return state;
     }
 }
-const initialListState: TopLevelListsState = {
-    stage: true,
-    examBoard: false,
-    topics: false,
-    difficulty: false,
-    books: false,
-    questionStatus: false
-};
+function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsState {
+    const subListState = Object.fromEntries(
+        tags.filter(tag => tag.label)
+        .map(tag => [
+            `topics ${sublistDelimiter} ${tag.label}`,
+            {state: false, subList: true}
+        ])
+    );
+    return {
+        ...subListState,
+        stage: {state: true, subList: false},
+        examBoard: {state: false, subList: false},
+        topics: {state: false, subList: false},
+        difficulty: {state: false, subList: false},
+        books: {state: false, subList: false},
+        questionStatus: {state: false, subList: false}
+    };
+}
 
 const listTitles: { [field in keyof TopLevelListsState]: string } = {
     stage: "Stage",
@@ -92,11 +143,24 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         tiers, choices, selections, setTierSelection,
         applyFilters, clearFilters, filtersSelected, searchDisabled
     } = props;
-    const [listState, listStateDispatch] = useReducer(listStateReducer, initialListState);
-    const anyExpandedLists = Object.values(listState).some(v => v);
+    const groupBaseTagOptions: GroupBase<Item<string>>[] = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
 
-    const tagOptions: { options: Item<string>[]; label: string }[] = isPhy ? tags.allTags.map(groupTagSelectionsByParent) : tags.allSubcategoryTags.map(groupTagSelectionsByParent);
-    const groupBaseTagOptions: GroupBase<Item<string>>[] = tagOptions;
+    const [listState, listStateDispatch] = useReducer(listStateReducer, groupBaseTagOptions, initialiseListState);
+    const deviceSize = useDeviceSize();
+
+    const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));
+
+    const handleFilterPanelExpansion = () => {
+        if (below["md"](deviceSize)) {
+            listStateDispatch({type: "expandAll", expand: false});
+            setFiltersVisible(p => !p);
+        } else {
+            listStateDispatch({
+                type: "expandAll",
+                expand: !Object.values(listState).some(v => v.state && !v.subList
+            )});
+        }
+    };
 
     return <Card>
         <CardHeader className="finder-header pl-3">
@@ -120,16 +184,22 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             <div>
                 <button
                     className="bg-white bg-opacity-10 p-0"
-                    onClick={() => listStateDispatch({type: "expandAll", expand: !anyExpandedLists})}
+                    onClick={handleFilterPanelExpansion}
                 >
-                    <img className={classNames("icon-dropdown-90", {"active": anyExpandedLists})} src={"/assets/common/icons/chevron_right.svg"} alt="" />
+                    <img
+                    className={classNames(
+                        "icon-dropdown-90",
+                        {"active": above["lg"](deviceSize)
+                            ? Object.values(listState).some(v => v.state && !v.subList)
+                            : filtersVisible})}
+                    src={"/assets/common/icons/chevron_right.svg"} alt="" />
                 </button>
             </div>
         </CardHeader>
-        <CardBody className="p-0 m-0">
+        <CardBody className={classNames("p-0 m-0", {"d-none": !filtersVisible})}>
             <CollapsibleList
-                title={listTitles.stage} expanded={listState.stage}
-                toggle={() => listStateDispatch({type: "toggle", id: "stage"})}
+                title={listTitles.stage} expanded={listState.stage.state}
+                toggle={() => listStateDispatch({type: "toggle", id: "stage", focus: below["md"](deviceSize)})}
                 numberSelected={searchStages.length}
             >
                 {getFilteredStageOptions().map((stage, index) => (
@@ -144,8 +214,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 ))}
             </CollapsibleList>
             {isAda && <CollapsibleList
-                title={listTitles.examBoard} expanded={listState.examBoard}
-                toggle={() => listStateDispatch({type: "toggle", id: "examBoard"})}
+                title={listTitles.examBoard} expanded={listState.examBoard.state}
+                toggle={() => listStateDispatch({type: "toggle", id: "examBoard", focus: below["md"](deviceSize)})}
                 numberSelected={searchExamBoards.length}
             >
                 {getFilteredExamBoardOptions({byStages: searchStages}).map((board, index) => (
@@ -160,8 +230,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 ))}
             </CollapsibleList>}
             <CollapsibleList
-                title={listTitles.topics} expanded={listState.topics}
-                toggle={() => listStateDispatch({type: "toggle", id: "topics"})}
+                title={listTitles.topics} expanded={listState.topics.state}
+                toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
                 numberSelected={siteSpecific(
                     // Find the last non-zero tier in the tree
                     // FIXME: Use `filter` and `at` when Safari supports it
@@ -179,8 +249,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         // TODO: make subList
                         <CollapsibleList
                             title={tag.label} key={index} asSubList
-                            expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]}
-                            toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`})}
+                            expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
+                            toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
                         >
                             {tag.options.map((topic, index) => (
                                 <div className="w-100 ps-3 py-1 bg-white" key={index}>
@@ -203,8 +273,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             </CollapsibleList>
 
             <CollapsibleList
-                title={listTitles.difficulty} expanded={listState.difficulty}
-                toggle={() => listStateDispatch({type: "toggle", id: "difficulty"})}
+                title={listTitles.difficulty} expanded={listState.difficulty.state}
+                toggle={() => listStateDispatch({type: "toggle", id: "difficulty", focus: below["md"](deviceSize)})}
                 numberSelected={searchDifficulties.length}
             >
                 <div className="ps-3">
@@ -237,8 +307,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 ))}
             </CollapsibleList>
             {isPhy && <CollapsibleList
-                title={listTitles.books} expanded={listState.books}
-                toggle={() => listStateDispatch({type: "toggle", id: "books"})}
+                title={listTitles.books} expanded={listState.books.state}
+                toggle={() => listStateDispatch({type: "toggle", id: "books", focus: below["md"](deviceSize)})}
                 numberSelected={excludeBooks ? 1 : searchBooks.length}
             >
                 <>
@@ -267,8 +337,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 </>
             </CollapsibleList>}
             <CollapsibleList
-                title={listTitles.questionStatus} expanded={listState.questionStatus}
-                toggle={() => listStateDispatch({type: "toggle", id: "questionStatus"})}
+                title={listTitles.questionStatus} expanded={listState.questionStatus.state}
+                toggle={() => listStateDispatch({type: "toggle", id: "questionStatus", focus: below["md"](deviceSize)})}
                 numberSelected={Object.values(questionStatuses).reduce((acc, item) => acc + item, 0)}
             >
                 <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
