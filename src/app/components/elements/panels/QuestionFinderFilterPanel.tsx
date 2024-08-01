@@ -196,7 +196,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 </button>
             </div>
         </CardHeader>
-        <CardBody className={classNames("p-0 m-0", {"d-none": !filtersVisible})}>
+        <CardBody className={classNames("p-0 m-0", {"d-none": below["md"](deviceSize) && !filtersVisible})}>
             <CollapsibleList
                 title={listTitles.stage} expanded={listState.stage.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "stage", focus: below["md"](deviceSize)})}
