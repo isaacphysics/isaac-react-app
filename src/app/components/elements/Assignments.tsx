@@ -52,7 +52,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     return <>
         <hr />
         <Row className="board-card" data-testid="my-assignment">
-            <Col xs={8} md={7} lg={8}>
+            <Col xs={8} sm={10} md={8}>
                 <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
                     <h4 className="text-break">{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
                 </Link>
@@ -75,10 +75,10 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 </Button>
             </Col>
 
-            <Col xs={4} md={5} lg={4}>
+            <Col xs={4} sm={2} md={4}>
                 <Row className="justify-content-end me-0 me-md-1">
-                    <Col xs="auto d-none d-md-block">
-                        <div>
+                    <Col md="auto">
+                        <Label className="d-block w-100 text-center text-nowrap">
                             Attempted
                             <div className="d-flex w-100 justify-content-center board-subject-hexagon-size">
                                 <div className="board-subject-hexagon-container justify-content-center">
@@ -91,12 +91,12 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                                     )}
                                 </div>
                             </div>
-                        </div>
+                        </Label>
                     </Col>
-                    <Col xs="auto">
+                    <Col md="auto">
                         <Label className="d-block w-100 text-center text-nowrap">
                             Correct
-                            <div className="d-flex justify-content-center">
+                            <div className="d-flex w-100 justify-content-center board-subject-hexagon-size">
                                 <div className="board-subject-hexagon-container justify-content-center">
                                     {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCorrect === 100) ?
                                         <span className="board-subject-hexagon subject-complete"/> :
@@ -171,10 +171,10 @@ const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
         </Col>
         <Col xs={4} sm={3} md={5} lg={4} >
             <Row className="justify-content-end">
-                <Col xs="auto d-none d-md-block" className={"text-center px-3"}>
+                <Col md="auto" className={"text-center px-3"}>
                     {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageAttempted} label="Attempted"/>}
                 </Col>
-                <Col xs="auto" className={"text-center px-3"}>
+                <Col md="auto" className={"text-center px-3"}>
                     {assignment.gameboard && <CSCircle percentage={assignment.gameboard.percentageCorrect} label="Correct"/>}
                 </Col>
             </Row>
