@@ -4,7 +4,7 @@ import {AllTopics} from "../../pages/AllTopics";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Topic} from "../../pages/Topic";
 import {Redirect} from "react-router";
-import {isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove} from "../../../services";
+import {EXAM_BOARD, isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {ExamSpecifications} from "../../pages/ExamSpecifications";
 import {News} from "../../pages/News";
@@ -30,6 +30,7 @@ import EventDetails from "../../pages/EventDetails";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import { QuestionFinder } from "../../pages/QuestionFinder";
 import { OnlineCourses } from "../../pages/OnlineCourses";
+import {ExamSpecificationsDirectory} from "../../pages/ExamSpecificationsDirectory";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 
@@ -85,7 +86,9 @@ export const RoutesCS = [
     // Topics and content
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
-    <TrackedRoute key={key++} exact path="/exam_specifications" component={ExamSpecifications} />,
+    <TrackedRoute key={key++} exact path="/exam_specifications_england" component={ExamSpecifications} />,
+    <TrackedRoute key={key++} exact path="/exam_specifications_wales" component={ExamSpecifications} componentProps={{'examBoardFilter': [EXAM_BOARD.WJEC]}} />,
+    <TrackedRoute key={key++} exact path="/exam_specifications" component={ExamSpecificationsDirectory} />,
 
     // News
     <TrackedRoute key={key++} exact path="/news" component={News} />,
