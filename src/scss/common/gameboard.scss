@@ -128,8 +128,11 @@
 .my-gameboards-cards-hex-container {
   height: 125px;
   text-align: center;
-  > div > div.board-subject-hexagon-container {
-    left: 23px;
+  .col {
+    position: relative;
+    .board-subject-hexagon-container {
+      position: relative;
+    }  
   }
 }
 

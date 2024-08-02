@@ -2,6 +2,7 @@
 
 .board-subject-hexagon-size {
   width: 63px;
+  min-width: 63px;
   height: 74px;
 }
 
@@ -60,6 +61,7 @@
 
 .board-subject-hexagon {
   background: url(/assets/phy/icons/hexagons_sprite.png) no-repeat -256px 0;
+  left: 0;
 }
 .subject-physics {
   background-position: 0 0;
