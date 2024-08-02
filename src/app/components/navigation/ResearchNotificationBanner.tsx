@@ -5,19 +5,19 @@ import Cookies from 'js-cookie';
 import {logAction, useAppDispatch} from "../../state";
 import {isAda, isPhy, siteSpecific} from "../../services";
 
-const COOKIE_COOKIE = "isaacCookiesAccepted";
+const RESEARCH_NOTIFICATION_COOKIE = "researchNotificationDismissed";
 
-export const CookieBanner = () => {
+export const ResearchNotificationBanner = () => {
     const dispatch = useAppDispatch();
     const [show, setShown] = useState(() => {
-        const currentCookieValue = Cookies.get(COOKIE_COOKIE);
+        const currentCookieValue = Cookies.get(RESEARCH_NOTIFICATION_COOKIE);
         return currentCookieValue != "1";
     });
 
     function clickDismiss() {
         setShown(false);
-        Cookies.set(COOKIE_COOKIE, "1", {expires: 720 /* days*/});
-        const eventDetails = {type: "ACCEPT_COOKIES"};
+        Cookies.set(RESEARCH_NOTIFICATION_COOKIE, "1", {expires: 720 /* days*/});
+        const eventDetails = {type: "RESEARCH_NOTIFICATION_DISMISSED"};
         dispatch(logAction(eventDetails));
     }
 
