@@ -40,6 +40,8 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     let itemClasses = "p-0 content-summary-link ";
     itemClasses += isContentsIntendedAudience ? "bg-transparent " : "de-emphasised ";
 
+    let caret = true;
+
     let title = item.title;
     let titleClasses = "content-summary-link-title flex-grow-1 ";
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[]);
@@ -57,8 +59,8 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/tick-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/></svg> :
             <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/question-hex.svg#icon`} xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/></svg>,
         item.correct ?
-            <img src="/assets/cs/icons/question-correct.svg" alt={questionIconLabel}/> :
-            <img src="/assets/cs/icons/question-not-started.svg" alt={questionIconLabel}/>
+            <img src="/assets/common/icons/completed.svg" alt={questionIconLabel}/> :
+            <img src="/assets/common/icons/not-started.svg" alt={questionIconLabel}/>
     );
 
     const deviceSize = useDeviceSize();
@@ -82,9 +84,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = questionIcon;
             audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
-            if (isAda) {
-                typeLabel = "Question";
-            }
+            caret = false;
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
@@ -121,7 +121,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
                 {siteSpecific(
                     icon,
-                    <div className={"inner-progress-icon"}>
+                    <div className={"inner-progress-icon mt-n2"}>
                         {icon}<br/>
                         <span className={"icon-title"}>{typeLabel}</span>
                     </div>
@@ -156,7 +156,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                 </div>}
                 {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} />}
             </div>
-            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to page"}/></div>}
+            {isAda && caret && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to page"}/></div>}
         </Link>
     </ListGroupItem>;
 };

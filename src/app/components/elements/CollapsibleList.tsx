@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React from "react";
 import { Col, Row } from "reactstrap";
 import { Spacer } from "./Spacer";
 import { FilterCount } from "./svg/FilterCount";
@@ -11,7 +11,6 @@ export interface CollapsibleListProps {
     toggle: () => void;
     numberSelected?: number;
     children?: React.ReactNode;
-    
 }
 
 export const CollapsibleList = (props: CollapsibleListProps) => {

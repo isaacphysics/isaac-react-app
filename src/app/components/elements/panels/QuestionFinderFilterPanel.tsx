@@ -243,7 +243,6 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         <HierarchyFilterHexagonal {...{tiers, choices, selections: selections, questionFinderFilter: true, setTierSelection}} />
                     </div>,
                     groupBaseTagOptions.map((tag, index) => (
-                        // TODO: make subList
                         <CollapsibleList
                             title={tag.label} key={index} asSubList
                             expanded={listState[`topics ${sublistDelimiter} ${tag.label}`]?.state}
