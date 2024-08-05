@@ -6,17 +6,18 @@
   }
 
   .finder-search {
-    &::after {
-      content: "";
-      background-image: url(/assets/cs/icons/search-jet.svg);
-      background-repeat: no-repeat;
-      background-size: 18px 18px;
-      position: relative;
-      float: right;
-      width: 18px;
-      height: 18px;
-      top: -33px;
-      padding-right: 2rem;
+    $search-button-offset: 50px;
+    .question-search-button {
+      background: white url(/assets/cs/icons/search-jet.svg) no-repeat center;
+      background-size: 20px 20px;
+      border: 1px solid black;
+      border-left: none;
+      border-radius: 0 var(--bs-border-radius) var(--bs-border-radius) 0;
+      padding: 0.45rem 0;
+      width: $search-button-offset;
+      &:active {
+        background-color: lightgray !important;
+      }
     }
 
     &::before {
@@ -27,8 +28,14 @@
       width: 1px;
       height: 34px;
       top: 48px;
-      right: 46px;
+      right: $search-button-offset;
       background: #c2c2c2;
+      z-index: 4;
+    }
+
+    input#question-search-title {
+      padding-right: calc($search-button-offset + 1.2em) !important; // offset plus the default padding inside an input
+      height: 50px;
     }
   }
 

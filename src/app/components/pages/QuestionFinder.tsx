@@ -38,7 +38,7 @@ import classNames from "classnames";
 import queryString from "query-string";
 import { PageFragment } from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { Button, Card, CardBody, CardHeader, Col, Container, Input, Label, Row } from "reactstrap";
+import { Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row } from "reactstrap";
 import { QuestionFinderFilterPanel } from "../elements/panels/QuestionFinderFilterPanel";
 import { Tier, TierID } from "../elements/svg/HierarchyFilter";
 
@@ -342,13 +342,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <Row>
             <Col lg={6} md={12} xs={12} className="finder-search">
                 <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
-                <Input id="question-search-title"
-                    type="text"
-                    className="py-4"
-                    defaultValue={searchQuery}
-                    placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                    onChange={(e) => handleSearch(e.target.value)}
-                />
+                <InputGroup>
+                    <Input id="question-search-title"
+                        type="text"
+                        defaultValue={searchQuery}
+                        placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        />
+                    <Button className="question-search-button" onClick={searchAndUpdateURL}/>
+                </InputGroup>
             </Col>
         </Row>
 
