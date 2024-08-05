@@ -24,6 +24,8 @@ import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { DifficultyIcons } from "../svg/DifficultyIcons";
 import { GroupBase } from "react-select";
 import { HierarchyFilterHexagonal, Tier } from "../svg/HierarchyFilter";
+import { openActiveModal, useAppDispatch } from "../../../state";
+import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 
 
 const bookOptions: Item<string>[] = [
@@ -141,6 +143,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
 
     const [listState, listStateDispatch] = useReducer(listStateReducer, groupBaseTagOptions, initialiseListState);
     const deviceSize = useDeviceSize();
+    const dispatch = useAppDispatch();
 
     const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));
 
@@ -271,17 +274,14 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 toggle={() => listStateDispatch({type: "toggle", id: "difficulty", focus: below["md"](deviceSize)})}
                 numberSelected={searchDifficulties.length}
             >
-                <div className="ps-3">
-                    <button
-                        className="p-0 bg-white h-min-content btn-link"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            // TODO: add modal
-                            console.log("show difficulty modal here");
-                    }}>
-                        <small><b>What do the different difficulty levels mean?</b></small>
-                    </button>
-                </div>
+                <button
+                    className="p-0 bg-white h-min-content btn-link d-flex ps-3 py-2"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        dispatch(openActiveModal(questionFinderDifficultyModal()));
+                }}>
+                    <b className="small text-start">Learn more about difficulty levels</b>
+                </button>
                 {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
                     <div className="w-100 ps-3 py-1 bg-white" key={index}>
                         <StyledCheckbox
