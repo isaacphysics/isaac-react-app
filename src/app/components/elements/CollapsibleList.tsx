@@ -26,7 +26,6 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
     }, [expanded, props.children]);
 
     const title = props.title && props.asSubList ? props.title : <b>{props.title}</b>;
-    const children = <div className="w-100" ref={listRef}>{props.children}</div>;
 
     return <Col>
         <Row className="collapsible-head">
@@ -41,8 +40,8 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         {/* TODO: <hr className="mb-3 p-0"/> */}
         <Row className={`collapsible-body overflow-hidden ${expanded ? "open" : "closed"}`} style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0}}>
             <Col>
-                <div className={classNames({"ms-2": props.asSubList})}>
-                    {children}
+                <div ref={listRef} className={classNames("w-100", {"ms-2": props.asSubList})}>
+                    {props.children}
                 </div>
             </Col>
         </Row>
