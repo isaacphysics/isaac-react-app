@@ -354,7 +354,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             </Col>
         </Row>
 
-        <Row className="mt-4">
+        <Row className="mt-4 finder-panel">
             <Col lg={siteSpecific(4, 3)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-filters">
                 <QuestionFinderFilterPanel {...{
                     searchDifficulties, setSearchDifficulties,
