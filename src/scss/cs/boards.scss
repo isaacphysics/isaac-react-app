@@ -43,23 +43,19 @@
 }
 
 .question-progress-icon {
-  // FIXME: commented code is based on trial and error so far
-  // width: 95px !important;
-  // min-width: 95px !important;
   height: 88px;
   display: block;
   padding: 14px 0 !important;
   position: relative;
+  align-content: center;
   .inner-progress-icon {
     @extend .text-center;
     @extend .px-2;
     position: relative;
-    top: calc(50% + 5px);
-    transform: translateY(-50%);
-    /* img {
-      width: 2rem;
+    img {
+      max-width: 2rem;
       max-height: 2rem;
-    } */
+    }
     .icon-title {
       @extend .font-size-0-75;
       @extend .fw-bold;

@@ -121,7 +121,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
                 {siteSpecific(
                     icon,
-                    <div className={"inner-progress-icon mt-n2"}>
+                    <div className={"inner-progress-icon"}>
                         {icon}<br/>
                         <span className={"icon-title"}>{typeLabel}</span>
                     </div>
