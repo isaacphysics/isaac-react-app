@@ -26,6 +26,7 @@ import { GroupBase } from "react-select";
 import { HierarchyFilterHexagonal, Tier } from "../svg/HierarchyFilter";
 import { openActiveModal, useAppDispatch } from "../../../state";
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
+import { Spacer } from "../Spacer";
 
 
 const bookOptions: Item<string>[] = [
@@ -161,24 +162,25 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
 
     return <Card>
         <CardHeader className="finder-header pl-3">
-            <Col xs={2}>
+            <div>
                 <img
                     src="/assets/common/icons/filter-icon.svg"
                     alt="Filter"
                     style={{width: 18}}
-                    className="ms-1"
+                    className="ms-1 me-2"
                 />
-            </Col>
-            <Col className={"px-0 mt-1"}>
                 <b>Filter by</b>
-            </Col>
-            {filtersSelected && <div className="pe-1">
+            </div>
+            <Spacer/>
+            {filtersSelected && <div className="pe-1 pe-lg-0">
                 <button
-                    className={"text-black mt-1 bg-white bg-opacity-10 btn-link"}
+                    className={"text-black pe-lg-0 me-2 me-lg-0 bg-white bg-opacity-10 btn-link"}
                     onClick={clearFilters}
-                >Clear all</button>
+                >
+                    Clear all
+                </button>
             </div>}
-            <div>
+            {below["md"](deviceSize) && <div>
                 <button
                     className="bg-white bg-opacity-10 p-0"
                     onClick={handleFilterPanelExpansion}
@@ -191,7 +193,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             : filtersVisible})}
                     src={"/assets/common/icons/chevron_right.svg"} alt="" />
                 </button>
-            </div>
+            </div>}
         </CardHeader>
         <CardBody className={classNames("p-0 m-0", {"d-none": below["md"](deviceSize) && !filtersVisible})}>
             <CollapsibleList

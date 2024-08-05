@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { Col, Row } from "reactstrap";
 import { Spacer } from "./Spacer";
 import { FilterCount } from "./svg/FilterCount";
@@ -39,7 +39,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         {/* TODO: <hr className="mb-3 p-0"/> */}
         <Row className={`collapsible-body overflow-hidden ${expanded ? "open" : "closed"}`} style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0}}>
             <Col>
-                <div ref={listRef} className={classNames("w-100", {"ms-2": props.asSubList})}>
+                <div ref={listRef} className={classNames({"ms-2": props.asSubList})}>
                     {props.children}
                 </div>
             </Col>
