@@ -16,9 +16,17 @@ export interface CollapsibleListProps {
 
 export const CollapsibleList = (props: CollapsibleListProps) => {
     const {expanded, toggle} = props;
+    const [expandedHeight, setExpandedHeight] = useState(0);
+    const listRef = useRef<HTMLDivElement>(null);
+
+    useLayoutEffect(() => {
+        if (expanded) {
+            setExpandedHeight(listRef?.current ? [...listRef.current.children].map(c => c.clientHeight).reduce((a, b) => a + b, 0) : 0);
+        }
+    }, [expanded, props.children]);
 
     const title = props.title && props.asSubList ? props.title : <b>{props.title}</b>;
-    const children = <div className="w-100">{props.children}</div>;
+    const children = <div className="w-100" ref={listRef}>{props.children}</div>;
 
     return <Col>
         <Row className="collapsible-head">
@@ -31,9 +39,12 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
             </button>
         </Row>
         {/* TODO: <hr className="mb-3 p-0"/> */}
-        <Row className={`collapsible-body overflow-hidden ${expanded ? "open" : "closed"}`}>
-            {/* TODO: this feels wrong find a better way */}
-            {props.asSubList ? <div><div className="ps-2">{children}</div></div> : children}
+        <Row className={`collapsible-body overflow-hidden ${expanded ? "open" : "closed"}`} style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0}}>
+            <Col>
+                <div className={classNames({"ms-2": props.asSubList})}>
+                    {children}
+                </div>
+            </Col>
         </Row>
     </Col>;
 };

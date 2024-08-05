@@ -309,9 +309,7 @@ iframe.email-html {
 }
 
 .collapsible-body {
-  transition: max-height 0.3s ease-in-out;
+  transition: max-height 0.3s ease-in-out, height 0.3s ease-in-out;
+  // height must be animated alongside max-height to prevent jumping if the inner content changes height during the animation
   max-height: 0;
-  &.open {
-    max-height: 500vh; // Sufficiently large max-height to allow for nested lists
-  }
 }
