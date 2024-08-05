@@ -378,7 +378,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             Showing <b>30</b> of <b>1235</b>.
                         </Col>
                     </CardHeader>
-                    <CardBody className={classNames({"p-0 m-0": isAda && displayQuestions?.length})}>
+                    <CardBody className={classNames({"m-0": isAda && displayQuestions?.length})}>
                         <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                             {!filtersApplied && searchQuery === "" ?
                                 <em>Please select and apply filters</em> :
