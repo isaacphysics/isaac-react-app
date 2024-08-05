@@ -383,30 +383,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 (displayQuestions?.length ?
                                     <>
                                         <LinkToContentSummaryList items={displayQuestions} />
-                                        <Row>
-                                            <Col className="d-flex justify-content-center mb-3">
-                                                <Button
-                                                    onClick={() => {
-                                                        searchDebounce(
-                                                            searchQuery, searchTopics,
-                                                            searchExamBoards,
-                                                            searchBooks, searchStages,
-                                                            searchDifficulties,
-                                                            selections, tiers,
-                                                            excludeBooks,
-                                                            questionStatuses.hideCompleted,
-                                                            nextSearchOffset
-                                                                ? nextSearchOffset - 1
-                                                                : 0);
-                                                        setPageCount(c => c + 1);
-                                                        setDisableLoadMore(true);
-                                                    }}
-                                                    disabled={disableLoadMore}
-                                                >
-                                                    Load more
-                                                </Button>
-                                            </Col>
-                                        </Row>
                                         {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
                                         <div role="status" className={"alert alert-light border"}>
                                                 {`${totalQuestions} questions match your criteria.`}<br/>
@@ -418,6 +394,33 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         </ShowLoading>
                     </CardBody>
                 </Card>
+                {(filtersApplied || searchQuery !== "") &&
+                    (displayQuestions?.length ?? 0) > 0 &&
+                    <Row className="pt-3">
+                        <Col className="d-flex justify-content-center mb-3">
+                            <Button
+                                onClick={() => {
+                                    searchDebounce(
+                                        searchQuery, searchTopics,
+                                        searchExamBoards,
+                                        searchBooks, searchStages,
+                                        searchDifficulties,
+                                        selections, tiers,
+                                        excludeBooks,
+                                        questionStatuses.hideCompleted,
+                                        nextSearchOffset
+                                            ? nextSearchOffset - 1
+                                            : 0);
+                                    setPageCount(c => c + 1);
+                                    setDisableLoadMore(true);
+                                }}
+                                disabled={disableLoadMore}
+                                outline
+                            >
+                                Load more
+                            </Button>
+                        </Col>
+                    </Row>}
             </Col>
         </Row>
     </Container>;
