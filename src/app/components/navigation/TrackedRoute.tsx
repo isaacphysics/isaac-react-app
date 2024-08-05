@@ -33,6 +33,7 @@ interface UserFilterProps {
 type TrackedRouteProps = RouteProps & {
   trackingOptions?: FieldsObject;
   componentProps?: FieldsObject;
+  userAgent?: string;
 } & UserFilterProps;
 type TrackedRouteComponentProps = RouteComponentProps & {
   component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
@@ -52,11 +53,16 @@ const WrapperComponent = function ({ component: Component, trackingOptions, ...p
   );
 };
 
+export const isGoogleBot = function (userAgent?: string): boolean {
+  const googleBotUserAgents: string = "compatible; Googlebot/2.1; +http://www.google.com/bot.html";
+  return userAgent?.includes(googleBotUserAgents) ?? false;
+};
+
 export const TrackedRoute = function ({ component, trackingOptions, componentProps, ...rest }: TrackedRouteProps) {
   const user = useAppSelector(selectors.user.orNull);
   if (component) {
     if (rest.ifUser !== undefined) {
-      const { ifUser, ...rest$ } = rest;
+      const { ifUser, userAgent, ...rest$ } = rest;
       return (
         <Route
           {...rest$}
@@ -66,7 +72,7 @@ export const TrackedRoute = function ({ component, trackingOptions, componentPro
               rest.ifUser && [isTutorOrAbove.name, isTeacherOrAbove.name].includes(rest.ifUser.name); // TODO we should try to find a more robust way than this
             return (
               <ShowLoading until={user}>
-                {user && ifUser(user) ? (
+                {(user && ifUser(user)) || isGoogleBot(userAgent) ? (
                   <WrapperComponent
                     component={component}
                     trackingOptions={trackingOptions}

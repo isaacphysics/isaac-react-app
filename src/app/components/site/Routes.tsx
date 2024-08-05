@@ -39,19 +39,47 @@ export const Routes = [
   <Redirect key={key++} from="/topics/number_bases" to="/topics/number_representation" />,
   <Redirect key={key++} from="/topics/string_manipulation" to="/topics/string_handling" />,
 
-  <TrackedRoute key={key++} exact path="/topics" component={AllTopicsWithoutAStage} />,
-  <TrackedRoute key={key++} exact path="/topics/gcse" component={AllTopics} componentProps={{ stage: STAGE.GCSE }} />,
+  <TrackedRoute
+    key={key++}
+    exact
+    path="/topics"
+    component={AllTopicsWithoutAStage}
+    userAgent={window.navigator.userAgent}
+  />,
+  <TrackedRoute
+    key={key++}
+    exact
+    path="/topics/gcse"
+    component={AllTopics}
+    componentProps={{ stage: STAGE.GCSE }}
+    userAgent={window.navigator.userAgent}
+  />,
   <TrackedRoute
     key={key++}
     exact
     path="/topics/a_level"
+    userAgent={window.navigator.userAgent}
     component={AllTopics}
     componentProps={{ stage: STAGE.A_LEVEL }}
   />,
-  <TrackedRoute key={key++} exact path="/topics/:topicName" ifUser={isLoggedIn} component={Topic} />,
+  <TrackedRoute
+    key={key++}
+    exact
+    path="/topics/:topicName"
+    ifUser={isLoggedIn}
+    userAgent={window.navigator.userAgent}
+    component={Topic}
+  />,
 
   // Glossary:
-  <TrackedRoute key={key++} exact path="/glossary" ifUser={isLoggedIn} component={Glossary} />,
+  <TrackedRoute
+    key={key++}
+    exact
+    path="/glossary"
+    ifUser={isLoggedIn}
+    component={Glossary}
+    userAgent={window.navigator.userAgent}
+  />,
 
   // Static pages:
   <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
