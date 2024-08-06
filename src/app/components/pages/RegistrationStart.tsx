@@ -3,13 +3,14 @@ import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
-import {history, isAda, SITE_TITLE} from "../../services";
+import {history, isAda, SITE_TITLE, siteSpecific} from "../../services";
 
 export const RegistrationStart = () => {
 
     const emailSignUp = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/register/role");
+        // TODO: push /register/role on both sites when teacher registration is implemented on phy
+        history.push(siteSpecific("register/student/age", "/register/role"));
     };
 
     const login = (event: React.MouseEvent) => {
@@ -25,7 +26,7 @@ export const RegistrationStart = () => {
                     <Col xs={12} lg={6}>
                         <div className="mb-5">
                             <h2>How would you like to sign up?</h2>
-                            <p>Here, you can create an Ada Computer Science account, or log in to an existing one.</p>
+                            <p>Here, you can create an {SITE_TITLE} account, or log in to an existing one.</p>
                         </div>
                         <div className="my-5">
                             <h3>Create a new account with your email:</h3>
@@ -45,8 +46,17 @@ export const RegistrationStart = () => {
                         </div>
                     </Col>
                     <Col xs={12} lg={6}>
-                        <img className="d-none d-lg-block img-fluid mx-auto" src={"/assets/cs/decor/register-3x4.png"} alt="" />
-                        <img className="d-block d-lg-none img-fluid mt-4 mx-auto " src={"/assets/cs/decor/register-4x3.png"} alt="" />
+                        {siteSpecific(
+                        <>
+                            <div className="d-flex justify-content-center">
+                                <img className="w-50 h-50" src="/assets/phy/icons/bin-black.svg" alt="" />
+                            </div>
+                        </>,
+                        <>
+                            <img className="d-none d-lg-block img-fluid mx-auto" src={"/assets/cs/decor/register-3x4.png"} alt="" />
+                            <img className="d-block d-lg-none img-fluid mt-4 mx-auto " src={"/assets/cs/decor/register-4x3.png"} alt="" />
+                        </>
+                        )}
                     </Col>
                 </Row>
             </CardBody>

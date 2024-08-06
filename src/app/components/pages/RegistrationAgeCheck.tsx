@@ -12,23 +12,30 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history, SITE_TITLE} from "../../services";
+import {history, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+
+type AgePermission = "denied" | "additional_info" | "allowed";
 
 export const RegistrationAgeCheck = () => {
 
-    const [over13, setOver13] = useState<boolean | undefined>(undefined);
+    const [over13, setOver13] = useState<AgePermission | undefined>(undefined);
     const [submissionAttempted, setSubmissionAttempted] = useState<boolean>(false);
 
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSubmissionAttempted(true);
 
-        if (over13 !== undefined) {
-            over13 ?
-                history.push("/register/student/details")
-                :
+        switch (over13) {
+            case "allowed":
+                history.push("/register/student/details");
+                break;
+            case "additional_info":
+                history.push("/register/student/additional_info");
+                break;
+            case "denied":
                 history.push("/register/student/age_denied");
+                break;
         }
     };
 
@@ -37,35 +44,48 @@ export const RegistrationAgeCheck = () => {
         <Card className="my-5">
             <CardBody>
                 <h3>How old are you?</h3>
-                <p>We can only create accounts for people over 13 years old.</p>
+                <p>We can only create accounts for people over {siteSpecific("10", "13")} years old.</p>
                 <Form onSubmit={submit}>
                     <FormGroup check className="my-2">
                         <Input
                             id="registration-age-check-over"
                             className="d-inline"
                             type="radio"
-                            checked={over13 === true}
-                            onChange={() => {setOver13(true);}}
+                            checked={over13 === "allowed"}
+                            onChange={() => {setOver13("allowed");}}
                             color="secondary"
                             invalid={submissionAttempted && over13 === undefined}
                         />
                         <Label for="registration-age-check-over" className="ms-2">13 and over</Label>
                     </FormGroup>
+                    {isPhy && <FormGroup check className="my-2">
+                        <Input
+                            id="registration-age-check-additional-info"
+                            className="d-inline"
+                            type="radio"
+                            checked={over13 === "additional_info"}
+                            onChange={() => {setOver13("additional_info");}}
+                            color="secondary"
+                            invalid={submissionAttempted && over13 === undefined}
+                        >
+                        </Input>
+                        <Label for="registration-age-check-additional-info" className="ms-2">Between 10 and 12</Label>
+                    </FormGroup>}
                     <FormGroup check className="my-2">
                         <Input
                             id="registration-age-check-under"
                             className="d-inline"
                             type="radio"
-                            checked={over13 === false}
-                            onChange={() => {setOver13(false);}}
+                            checked={over13 === "denied"}
+                            onChange={() => {setOver13("denied");}}
                             color="secondary"
                             invalid={submissionAttempted && over13 === undefined}
                         >
-                            <FormFeedback>
-                                Please make a selection.
-                            </FormFeedback>
                         </Input>
-                        <Label for="registration-age-check-under" className="ms-2">Under 13</Label>
+                        <Label for="registration-age-check-under" className="ms-2">Under {siteSpecific("10", "13")}</Label>
+                        <FormFeedback>
+                            Please make a selection.
+                        </FormFeedback>
                     </FormGroup>
                     <hr />
                     <Row className="justify-content-end">

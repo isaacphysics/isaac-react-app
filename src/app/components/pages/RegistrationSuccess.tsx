@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
-import {history} from "../../services";
+import {history, siteSpecific} from "../../services";
 
 
 export const RegistrationSuccess = () => {
@@ -24,7 +24,7 @@ export const RegistrationSuccess = () => {
                 </Row>
                 <Row className="justify-content-center">
                     <Col>
-                        <img className="img-fluid mx-auto my-5" src={"/assets/cs/decor/verify_done.svg"} alt="" />
+                        <img className="img-fluid mx-auto my-5" src={siteSpecific("/assets/common/icons/tick.svg", "/assets/cs/decor/verify_done.svg")} alt="" />
                     </Col>
                 </Row>
                 <Row className="justify-content-center">

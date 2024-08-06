@@ -17,6 +17,7 @@ import {
     EXAM_BOARD,
     FIRST_LOGIN_STATE,
     history,
+    isAda,
     KEY,
     persistence,
     SITE_TITLE,
@@ -81,7 +82,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
-        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && countryCodeIsValid &&
+        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && (!isAda || countryCodeIsValid) &&
             ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
@@ -147,14 +148,14 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
-                            <CountryInput
+                            {isAda && <CountryInput
                                 className="my-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 countryCodeValid={countryCodeIsValid}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
-                            />
+                            />}
                             <hr className={classNames({"d-none": role == 'TEACHER'}, "my-4")} />
                             <SchoolInput
                                 className="my-4"
@@ -180,11 +181,11 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                     onChange={(e) => setTosAccepted(e?.target.checked)}
                                     invalid={attemptedSignUp && !tosAccepted}
                                 >
-                                    <FormFeedback>
-                                        You must accept the terms to continue.
-                                    </FormFeedback>
                                 </Input>
                                 <Label for="tos-confirmation" className="ms-2">I accept the <a href="/terms" target="_blank">terms of use</a></Label>
+                                <FormFeedback>
+                                    You must accept the terms to continue.
+                                </FormFeedback>
                             </FormGroup>
                             <hr />
                             <Row>
