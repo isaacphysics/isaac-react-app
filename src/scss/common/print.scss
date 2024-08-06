@@ -9,6 +9,13 @@
     min-width: unset !important;
   }
 
+  header {
+    box-shadow: none;
+    nav {
+      display: none !important;
+    }
+  }
+
   div#root {
     display: block !important;
     overflow: visible !important;

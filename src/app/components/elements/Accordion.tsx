@@ -171,8 +171,9 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }}
                 aria-expanded={isOpen ? "true" : "false"}
             >
-                {isConceptPage && audienceString && <span className={"stage-label d-flex align-items-center p-2 " +
-                    "justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
+                {isConceptPage && audienceString && <span className={
+                    classNames("stage-label d-flex align-items-center p-2 justify-content-center ", {[audienceStyle(audienceString)]: isAda, "text-bg-secondary": isPhy})
+                }>
                     {siteSpecific(
                         audienceString,
                         above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>

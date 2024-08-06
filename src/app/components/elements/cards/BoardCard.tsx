@@ -88,12 +88,14 @@ const PhyHexagon = ({hexagonId, percentageDisplayed, boardSubjects, assignees, t
     const isSetAssignments = isDefined(toggleAssignModal) && isDefined(assignees);
 
     return <div className={classNames("board-subject-hexagon-container", isTable ? "table-view" : "card-view")}>
-        {isSetAssignments
-            ? <HexagonGroupsButton toggleAssignModal={toggleAssignModal} boardSubjects={boardSubjects} assignees={assignees} id={hexagonId} />
-            : <>
+        {
+            isSetAssignments ? <HexagonGroupsButton toggleAssignModal={toggleAssignModal} boardSubjects={boardSubjects} assignees={assignees} id={hexagonId} />
+            : percentageDisplayed === 100 ? <span className="board-subject-hexagon subject-complete"/>
+            : /* else show percentage */ <>
                 {generateGameboardSubjectHexagons(boardSubjects)}
                 <div className="board-percent-completed">{percentageDisplayed}</div>
-            </>}
+            </>
+        }
     </div>;
 };
 

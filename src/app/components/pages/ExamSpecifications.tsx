@@ -5,30 +5,49 @@ import {PageFragment} from "../elements/PageFragment";
 import {CS_EXAM_BOARDS_BY_STAGE, EXAM_BOARD, STAGE, STAGES_CS, stageLabelMap} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
+import {ExamBoard} from "../../../IsaacApiTypes";
 
-const getStageFromURL = () => {
+interface ExamSpecificationsProps {
+    // Show only tabs for the following stages
+    stageFilter?: STAGE[]
+    // Show only tabs for the following exam boards
+    examBoardFilter?: ExamBoard[]
+}
+
+const getStageFromURL = (stageFilter: STAGE[]) => {
     const urlStage = window.location.hash.split("/")[0].slice(1);
-    return STAGES_CS.includes(urlStage as typeof STAGES_CS[number])
-        ? urlStage as typeof STAGES_CS[number] 
-        : STAGE.A_LEVEL;
+    return stageFilter.includes(urlStage as typeof STAGES_CS[number])
+        ? urlStage as typeof STAGES_CS[number]
+        : stageFilter[0];
 };
 
-const getExamBoardFromURL = () => {
+const getExamBoardFromURL = (examBoardFilter: ExamBoard[]) => {
     const urlExamBoard = window.location.hash.split("/")[1];
-    return Object.values(EXAM_BOARD).includes(urlExamBoard as EXAM_BOARD)
+    return examBoardFilter.includes(urlExamBoard as EXAM_BOARD)
         ? urlExamBoard as EXAM_BOARD
-        : EXAM_BOARD.AQA;
+        : examBoardFilter[0];
 };
 
-export const ExamSpecifications = () => {
-    const STAGES_WITH_EXAM_SPECIFICATIONS = [STAGE.A_LEVEL, STAGE.GCSE];
-    const [stageTab, setStageTab] = useState<typeof STAGES_CS[number]>(getStageFromURL());
-    const [examBoardTab, setExamBoardTab] = useState<EXAM_BOARD>(getExamBoardFromURL());
-    const [stageTabOverride, _setStageTabOverride] = useState<number | undefined>(STAGES_WITH_EXAM_SPECIFICATIONS.indexOf(stageTab) + 1 || undefined);
-    const [examBoardTabOverride, setExamBoardTabOverride] = useState<number | undefined>(CS_EXAM_BOARDS_BY_STAGE[stageTab].indexOf(examBoardTab) + 1 || undefined);
+export const getFilteredExamBoardsByStage = (stages: STAGE[], examBoards: ExamBoard[]) => {
+    return Object.fromEntries(
+        Object.entries(CS_EXAM_BOARDS_BY_STAGE).filter(([stage, _board]) => {
+            return stages.includes(stage as STAGE);
+        }).map(([stage, boards]) => [stage, boards.filter(board => examBoards.includes(board))])
+    );
+};
+
+export const ExamSpecifications = ({stageFilter, examBoardFilter}: ExamSpecificationsProps) => {
+    const STAGES: STAGE[] = stageFilter ?? [STAGE.A_LEVEL, STAGE.GCSE];
+    const EXAM_BOARDS: ExamBoard[] = examBoardFilter ?? [EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS];
+    const FILTERED_EXAM_BOARDS_BY_STAGE = getFilteredExamBoardsByStage(STAGES, EXAM_BOARDS);
+
+    const [stageTab, setStageTab] = useState<typeof STAGES_CS[number]>(getStageFromURL(STAGES) as typeof STAGES_CS[number]);
+    const [examBoardTab, setExamBoardTab] = useState<ExamBoard>(getExamBoardFromURL(EXAM_BOARDS));
+    const [stageTabOverride, _setStageTabOverride] = useState<number | undefined>(Object.keys(FILTERED_EXAM_BOARDS_BY_STAGE).indexOf(stageTab) + 1 || undefined);
+    const [examBoardTabOverride, setExamBoardTabOverride] = useState<number | undefined>(FILTERED_EXAM_BOARDS_BY_STAGE[stageTab].indexOf(examBoardTab) + 1 || undefined);
     const [fragmentId, setFragmentId] = useState<string>("");
 
-    const stageExamBoards = CS_EXAM_BOARDS_BY_STAGE[stageTab];
+    const stageExamBoards = FILTERED_EXAM_BOARDS_BY_STAGE[stageTab];
 
     const metaDescription = ({
         [STAGE.A_LEVEL]: "Discover our free A level computer science topics and questions. We cover AQA, CIE, OCR, Eduqas, and WJEC. Learn or revise for your exams with us today.",
@@ -40,13 +59,13 @@ export const ExamSpecifications = () => {
         [STAGE.ADVANCED]: "Discover our free Advanced computer science topics and questions. Learn or revise for your exams with us today.",
     })[stageTab];
         
-    const examBoardTabs = STAGES_WITH_EXAM_SPECIFICATIONS.reduce((acc: {[stage: string]: React.JSX.Element}, stage) => ({
+    const examBoardTabs = Object.keys(FILTERED_EXAM_BOARDS_BY_STAGE).reduce((acc: {[stage: string]: React.JSX.Element}, stage) => ({
         ...acc, 
-        [stageLabelMap[stage]]: <Tabs 
+        [stageLabelMap[stage as STAGE]]: <Tabs
             style="tabs" className="pt-3" tabContentClass="pt-3" 
             activeTabOverride={examBoardTabOverride} 
             onActiveTabChange={(n) => {
-                setExamBoardTab(CS_EXAM_BOARDS_BY_STAGE[stageTab][n - 1] as EXAM_BOARD);
+                setExamBoardTab(FILTERED_EXAM_BOARDS_BY_STAGE[stageTab][n - 1] as EXAM_BOARD);
                 setExamBoardTabOverride(undefined);
             }}
         >
@@ -58,11 +77,11 @@ export const ExamSpecifications = () => {
     const stageTabs = <Tabs style={"buttons"} className={"mt-3"} tabContentClass={"mt-3"}
         activeTabOverride={stageTabOverride}
         onActiveTabChange={(n) => {
-            const newStage = STAGES_WITH_EXAM_SPECIFICATIONS[n - 1] as typeof STAGES_CS[number];
-            const newExamBoard = CS_EXAM_BOARDS_BY_STAGE[newStage].includes(examBoardTab) ? examBoardTab : CS_EXAM_BOARDS_BY_STAGE[newStage][0];
+            const newStage = Object.keys(FILTERED_EXAM_BOARDS_BY_STAGE)[n - 1] as typeof STAGES_CS[number];
+            const newExamBoard = FILTERED_EXAM_BOARDS_BY_STAGE[newStage].includes(examBoardTab) ? examBoardTab : FILTERED_EXAM_BOARDS_BY_STAGE[newStage][0];
             setStageTab(newStage);
             setExamBoardTab(newExamBoard as EXAM_BOARD);
-            setExamBoardTabOverride(CS_EXAM_BOARDS_BY_STAGE[newStage].indexOf(newExamBoard) + 1);
+            setExamBoardTabOverride(FILTERED_EXAM_BOARDS_BY_STAGE[newStage].indexOf(newExamBoard) + 1);
         }}
     >
         {examBoardTabs}
