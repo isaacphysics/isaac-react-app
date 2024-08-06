@@ -24,15 +24,15 @@ export function StageAndDifficultySummaryIcons({audienceViews, className, stack}
                 </div>)
             }
         </div>,
-        <div className={classNames(className, "d-sm-flex flex-wrap align-items-baseline", {"mt-1 justify-content-end": !stack})}>
+        <div className={classNames(className, "d-sm-flex flex-wrap mt-1 align-items-baseline", {"justify-content-end": !stack})}>
             {
                 difficulties.every((v, _i, arr) => v === arr[0])
                 ? <div key={`${difficulties[0]}`} className={classNames("align-self-center d-flex align-items-center")}>
                     {difficulties.length > 0 && <>
-                        <div className="hierarchy-tags text-center d-none d-sm-block">
+                        <div className="hierarchy-tags text-center me-2">
                             {simpleDifficultyLabelMap[difficulties[0]]}
                         </div>
-                        <div className="hierarchy-tags text-center ms-2">
+                        <div className="hierarchy-tags text-center">
                             <DifficultyIcons difficulty={difficulties[0]} blank classnames="mt-n1"/>
                         </div>
                     </>}
