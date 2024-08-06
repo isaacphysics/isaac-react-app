@@ -10,7 +10,6 @@ export function StageAndDifficultySummaryIcons({audienceViews, className, stack}
     className?: string,
     stack?: boolean,
 }) {
-    // FIXME find a better way than hiding the whole thing on mobile for Physics
     const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
     return siteSpecific(
         <div className={classNames(className, "mt-1 d-sm-flex mt-md-0")}>

@@ -408,7 +408,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     setDisableLoadMore(true);
                                 }}
                                 disabled={disableLoadMore}
-                                outline
+                                outline={isAda}
                             >
                                 Load more
                             </Button>
