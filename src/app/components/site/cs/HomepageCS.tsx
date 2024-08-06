@@ -66,7 +66,12 @@ export const HomepageCS = () => {
                                 <li><b>Interactive questions:</b> Over 1000 questions with instant marking and feedback</li>
                                 <li><b>Teacher tools:</b> Set quizzes and assignments effortlessly</li>
                                 <li><b>AI and machine learning resources:</b> Stay ahead of the AI curve</li>
-                                <li><b>Complete curriculums:</b> For GCSE, A Level, National 5, Higher, and Advanced Higher</li>
+                                <li><b>Complete curriculums:</b> For
+                                    &#20;<a href={"/exam_specifications_england#gcse/aqa"}>GCSE</a>,
+                                    &#20;<a href={"/exam_specifications_england#a_level/aqa"}>A&nbsp;Level</a>,
+                                    &#20;<a href={"/concepts/sqa_computing_science?examBoard=sqa&stage=scotland_national_5"}>National&nbsp;5</a>,
+                                    &#20;<a href={"/concepts/sqa_computing_science?examBoard=sqa&stage=scotland_higher"}>Higher</a>, and
+                                    &#20;<a href={"/concepts/sqa_computing_science?examBoard=sqa&stage=scotland_advanced_higher"}>Advanced&nbsp;Higher</a></li>
                             </ul>
                             {!isLoggedIn(user) &&
                                 <Button className="mt-3" tag={Link} to="/register" color="primary">Join</Button>
