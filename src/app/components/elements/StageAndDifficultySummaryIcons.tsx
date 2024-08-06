@@ -5,9 +5,12 @@ import {DifficultyIcons} from "./svg/DifficultyIcons";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import { Difficulty } from "../../../IsaacApiTypes";
 
-export function StageAndDifficultySummaryIcons({audienceViews, className}: {audienceViews: ViewingContext[], className?: string}) {
-    // FIXME find a better way than hiding the whole thing on mobile
-    // ^ fixed in new redesign
+export function StageAndDifficultySummaryIcons({audienceViews, className, stack}: {
+    audienceViews: ViewingContext[],
+    className?: string,
+    stack?: boolean,
+}) {
+    // FIXME find a better way than hiding the whole thing on mobile for Physics
     const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
     return siteSpecific(
         <div className={classNames(className, "mt-1 d-sm-flex mt-md-0")}>
@@ -22,7 +25,7 @@ export function StageAndDifficultySummaryIcons({audienceViews, className}: {audi
                 </div>)
             }
         </div>,
-        <div className={classNames(className, "mt-1 d-sm-flex flex-wrap justify-content-end align-items-baseline")}>
+        <div className={classNames(className, "d-sm-flex flex-wrap align-items-baseline", {"mt-1 justify-content-end": !stack})}>
             {
                 difficulties.every((v, _i, arr) => v === arr[0])
                 ? <div key={`${difficulties[0]}`} className={classNames("align-self-center d-flex align-items-center")}>
