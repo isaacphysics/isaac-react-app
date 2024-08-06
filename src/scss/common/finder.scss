@@ -15,6 +15,7 @@
       border-radius: 0 var(--bs-border-radius) var(--bs-border-radius) 0;
       padding: 0.45rem 0;
       width: $search-button-offset;
+      min-width: 0;
       &:active {
         background-color: lightgray !important;
       }

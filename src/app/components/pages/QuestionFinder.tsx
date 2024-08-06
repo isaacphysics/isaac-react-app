@@ -369,30 +369,20 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     filtersSelected, searchDisabled: filtersApplied || !filtersSelected
                 }} />
             </Col>
-
-            {/* TODO: update styling of question block */}
             <Col lg={siteSpecific(8, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
                 <Card>
                     <CardHeader className="finder-header pl-3">
                         <Col className={"px-0"}>
-                            Showing <b>30</b> of <b>1235</b>.
+                            Showing <b>{displayQuestions?.length ?? 0}</b> of <b>{totalQuestions}</b>.
                         </Col>
                     </CardHeader>
-                    <CardBody className={classNames({"m-0": isAda && displayQuestions?.length})}>
+                    <CardBody className={classNames({"m-0 p-0": isAda && displayQuestions?.length})}>
                         <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
-                            {!filtersApplied && searchQuery === "" ?
-                                <em>Please select and apply filters</em> :
-                                (displayQuestions?.length ?
-                                    <>
-                                        <LinkToContentSummaryList items={displayQuestions} />
-                                        {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
-                                        <div role="status" className={"alert alert-light py-0"}>
-                                                {`${totalQuestions} questions match your criteria.`}<br/>
-                                                Not found what you&apos;re looking for? Try refining your search filters.
-                                        </div>}
-                                    </> :
-                                    <span>No results match your criteria.</span>
-                                )
+                            {displayQuestions?.length
+                                ? <LinkToContentSummaryList items={displayQuestions} />
+                                : (!filtersApplied && searchQuery === ""
+                                    ? <em>Please select and apply filters</em>
+                                    : <em>No results match your criteria</em>)
                             }
                         </ShowLoading>
                     </CardBody>
