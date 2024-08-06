@@ -148,7 +148,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
 
     const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));
 
-    const handleFilterPanelExpansion = () => {
+    const handleFilterPanelExpansion = (e? : React.MouseEvent<HTMLElement>) => {
+        e?.stopPropagation();
         if (below["md"](deviceSize)) {
             listStateDispatch({type: "expandAll", expand: false});
             setFiltersVisible(p => !p);
@@ -161,7 +162,11 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     };
 
     return <Card>
-        <CardHeader className="finder-header pl-3">
+        <CardHeader className="finder-header pl-3" onClick={(e) => {
+            // the filters panel can only be collapsed when it is not a sidebar
+            // (changing screen size after collapsing does not re-expand it but the options become visible)
+            if (below["md"](deviceSize)) handleFilterPanelExpansion(e);
+        }}>
             <div>
                 <img
                     src="/assets/common/icons/filter-icon.svg"
@@ -175,7 +180,10 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             {filtersSelected && <div className="pe-1 pe-lg-0">
                 <button
                     className={"text-black pe-lg-0 me-2 me-lg-0 bg-white bg-opacity-10 btn-link"}
-                    onClick={clearFilters}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        clearFilters();
+                    }}
                 >
                     Clear all
                 </button>
