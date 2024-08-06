@@ -11,6 +11,7 @@ export interface CollapsibleListProps {
     toggle: () => void;
     numberSelected?: number;
     children?: React.ReactNode;
+    className?: string;
 }
 
 export const CollapsibleList = (props: CollapsibleListProps) => {
@@ -26,7 +27,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
 
     const title = props.title && props.asSubList ? props.title : <b>{props.title}</b>;
 
-    return <Col>
+    return <Col className={props.className}>
         <Row className="collapsible-head">
             <button className={classNames("w-100 d-flex align-items-center p-3 bg-white text-start", {"ps-4": props.asSubList})} onClick={toggle}>
                 {title && <span>{title}</span>}

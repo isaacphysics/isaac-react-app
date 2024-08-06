@@ -386,12 +386,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                     <>
                                         <LinkToContentSummaryList items={displayQuestions} />
                                         {displayQuestions && (totalQuestions ?? 0) > displayQuestions.length &&
-                                        <div role="status" className={"alert alert-light border"}>
+                                        <div role="status" className={"alert alert-light py-0"}>
                                                 {`${totalQuestions} questions match your criteria.`}<br/>
                                                 Not found what you&apos;re looking for? Try refining your search filters.
                                         </div>}
                                     </> :
-                                    <em>No results match your criteria</em>)
+                                    <span>No results match your criteria.</span>
+                                )
                             }
                         </ShowLoading>
                     </CardBody>
