@@ -38,7 +38,7 @@ export const getFilteredExamBoardsByStage = (stages: STAGE[], examBoards: ExamBo
 
 export const ExamSpecifications = ({stageFilter, examBoardFilter}: ExamSpecificationsProps) => {
     const STAGES: STAGE[] = stageFilter ?? [STAGE.A_LEVEL, STAGE.GCSE];
-    const EXAM_BOARDS: ExamBoard[] = examBoardFilter ?? [EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS];
+    const EXAM_BOARDS: ExamBoard[] = examBoardFilter ?? [EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.EDEXCEL];
     const FILTERED_EXAM_BOARDS_BY_STAGE = getFilteredExamBoardsByStage(STAGES, EXAM_BOARDS);
 
     const [stageTab, setStageTab] = useState<typeof STAGES_CS[number]>(getStageFromURL(STAGES) as typeof STAGES_CS[number]);
