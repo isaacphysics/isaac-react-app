@@ -71,6 +71,9 @@
 
   section#what-resources {
     background-color: $cs-cultured;
+    ul {
+      padding-inline-start: 20px;
+    }
   }
 
   section#computer-science-stories {
