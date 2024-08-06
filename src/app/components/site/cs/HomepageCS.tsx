@@ -1,14 +1,8 @@
 import React, {useEffect} from "react";
-import {
-    selectors,
-    transientUserContextSlice,
-    useAppDispatch,
-    useAppSelector,
-    useGetNewsPodListQuery
-} from "../../../state";
+import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
-import {EXAM_BOARD, isLoggedIn, SITE_TITLE, STAGE, useDeviceSize} from "../../../services";
+import {isLoggedIn, SITE_TITLE, useDeviceSize} from "../../../services";
 import {AdaHero2x1} from "../../elements/svg/AdaHero";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import {NewsCard} from "../../elements/cards/NewsCard";
@@ -21,10 +15,7 @@ export const HomepageCS = () => {
     const user = useAppSelector(selectors.user.orNull);
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
     const featuredNewsItem = (news && user?.loggedIn) ? news[0] : undefined;
-    const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
-    const setStage = (stage: STAGE) => dispatch(transientUserContextSlice?.actions.setStage(stage));
-    const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));
 
     return <>
         {/*<WarningBanner/>*/}
