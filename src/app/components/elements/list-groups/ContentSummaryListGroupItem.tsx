@@ -128,7 +128,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                 )}
             </span>
             <div className={classNames("flex-fill", {"d-flex py-3 pe-3": isAda, "d-md-flex": isPhy})}>
-                <div className={"align-self-center " + titleClasses}>
+                <div className={"align-self-sm-center " + titleClasses}>
                     <div className="d-flex">
                         <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-secondary": isPhy})}>
                             {title ?? ""}
