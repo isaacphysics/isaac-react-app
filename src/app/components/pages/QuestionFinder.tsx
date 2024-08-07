@@ -100,17 +100,23 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
     );
 
-    useEffect(function populateExamBoardFromUserContext() {
-        if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
-            setSearchExamBoards(arr => arr.length > 0 ? arr : [userContext.examBoard]);
-        }
-    }, [userContext.examBoard]);
+    const [populatedUserContext, setPopulatedUserContext] = useState(false);
 
-    useEffect(function populateStageFromUserContext() {
+    useEffect(function populateFromUserContext() {
         if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
             setSearchStages(arr => arr.length > 0 ? arr : [userContext.stage]);
         }
-    }, [userContext.stage]);
+        if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
+            setSearchExamBoards(arr => arr.length > 0 ? arr : [userContext.examBoard]);
+        }
+        setPopulatedUserContext(!!userContext.stage && !!userContext.examBoard);
+    }, [userContext.stage, userContext.examBoard]);
+
+    // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context
+    useEffect(() => {
+        searchAndUpdateURL();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [populatedUserContext]);
 
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
@@ -195,7 +201,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, startIndex});
         }, 250),
-        []
+        [nothingToSearchFor]
     );
 
     useEffect(() => {
