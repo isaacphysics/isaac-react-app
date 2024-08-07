@@ -121,7 +121,7 @@ interface QuestionFinderFilterPanelProps {
     searchTopics: string[], setSearchTopics: Dispatch<SetStateAction<string[]>>;
     searchStages: STAGE[], setSearchStages: Dispatch<SetStateAction<STAGE[]>>;
     searchExamBoards: ExamBoard[], setSearchExamBoards: Dispatch<SetStateAction<ExamBoard[]>>;
-    questionStatuses: QuestionStatus, setQuestionStatuses: Dispatch<SetStateAction<QuestionStatus>>;
+    searchStatuses: QuestionStatus, setSearchStatuses: Dispatch<SetStateAction<QuestionStatus>>;
     searchBooks: string[], setSearchBooks: Dispatch<SetStateAction<string[]>>;
     excludeBooks: boolean, setExcludeBooks: Dispatch<SetStateAction<boolean>>;
     tiers: Tier[], choices: Item<TAG_ID>[][], selections: Item<TAG_ID>[][], setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>,
@@ -134,7 +134,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         searchTopics, setSearchTopics,
         searchStages, setSearchStages,
         searchExamBoards, setSearchExamBoards,
-        questionStatuses, setQuestionStatuses,
+        searchStatuses, setSearchStatuses,
         searchBooks, setSearchBooks,
         excludeBooks, setExcludeBooks,
         tiers, choices, selections, setTierSelection,
@@ -342,13 +342,13 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             <CollapsibleList
                 title={listTitles.questionStatus} expanded={listState.questionStatus.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "questionStatus", focus: below["md"](deviceSize)})}
-                numberSelected={Object.values(questionStatuses).reduce((acc, item) => acc + item, 0)}
+                numberSelected={Object.values(searchStatuses).reduce((acc, item) => acc + item, 0)}
             >
                 <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                     <StyledCheckbox
                         color="primary"
-                        checked={questionStatuses.hideCompleted}
-                        onChange={() => setQuestionStatuses(s => {return {...s, hideCompleted: !s.hideCompleted};})}
+                        checked={searchStatuses.hideCompleted}
+                        onChange={() => setSearchStatuses(s => {return {...s, hideCompleted: !s.hideCompleted};})}
                         label={<div>
                             <span>Hide complete</span>
                         </div>}

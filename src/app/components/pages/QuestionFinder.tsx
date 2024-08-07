@@ -75,22 +75,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const history = useHistory();
     const eventLog = useRef<object[]>([]).current; // persist state but do not rerender on mutation
 
-    const [searchTopics, setSearchTopics] = useState<string[]>(
-        arrayFromPossibleCsv(params.topics)
-    );
-    const [searchQuery, setSearchQuery] = useState<string>(
-        params.query ? (params.query instanceof Array ? params.query[0] : params.query) : ""
-    );
-    const [searchStages, setSearchStages] = useState<STAGE[]>(
-        arrayFromPossibleCsv(params.stages) as STAGE[]
-    );
-    const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(
-        arrayFromPossibleCsv(params.difficulties) as Difficulty[]
-    );
-    const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(
-        arrayFromPossibleCsv(params.examBoards) as ExamBoard[]
-    );
-    const [questionStatuses, setQuestionStatuses] = useState<QuestionStatus>(
+    const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
+    const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
+    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]);
+    const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
+    const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
+    const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(
         {
             notAttempted: false,
             complete: false,
@@ -99,6 +89,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             hideCompleted: !!params.hideCompleted
         }
     );
+    const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
+    const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
 
     const [populatedUserContext, setPopulatedUserContext] = useState(false);
 
@@ -112,27 +104,26 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setPopulatedUserContext(!!userContext.stage && !!userContext.examBoard);
     }, [userContext.stage, userContext.examBoard]);
 
-    // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context
+    // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates
     useEffect(() => {
         searchAndUpdateURL();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [populatedUserContext]);
 
-    const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
-    const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
-    const subjects = arrayFromPossibleCsv(params.subjects);
-    const fields = arrayFromPossibleCsv(params.fields);
-    const topics = arrayFromPossibleCsv(params.topics);
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(
-        processTagHierarchy(subjects, fields, topics)
+        processTagHierarchy(
+            arrayFromPossibleCsv(params.subjects), 
+            arrayFromPossibleCsv(params.fields), 
+            arrayFromPossibleCsv(params.topics)
+        )
     );
 
     const choices = [tags.allSubjectTags.map(itemiseTag)];
-    let index;
-    for (index = 0; index < selections.length && index < 2; index++)  {
-        const selection = selections[index];
+    let tierIndex;
+    for (tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
+        const selection = selections[tierIndex];
         if (selection.length !== 1) break;
         choices.push(tags.getChildren(selection[0].value).map(itemiseTag));
     }
@@ -141,7 +132,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         {id: "subjects" as TierID, name: "Subject"},
         {id: "fields" as TierID, name: "Field"},
         {id: "topics" as TierID, name: "Topic"}
-    ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, index + 1);
+    ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, tierIndex + 1);
 
     const setTierSelection = (tierIndex: number) => {
         return ((values: Item<TAG_ID>[]) => {
@@ -210,7 +201,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setDisplayQuestions(undefined);
         searchDebounce(
             searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages,
-            searchDifficulties, selections, tiers, excludeBooks, questionStatuses.hideCompleted, 0);
+            searchDifficulties, selections, tiers, excludeBooks, searchStatuses.hideCompleted, 0
+        );
 
         const params: {[key: string]: string} = {};
         if (searchStages.length) params.stages = toSimpleCSV(searchStages);
@@ -222,7 +214,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             params.book = toSimpleCSV(searchBooks);
         }
         if (isPhy && excludeBooks) params.excludeBooks = "set";
-        if (questionStatuses.hideCompleted) params.hideCompleted = "set";
+        if (searchStatuses.hideCompleted) params.hideCompleted = "set";
 
         if (isPhy) {
             tiers.forEach((tier, i) => {
@@ -234,7 +226,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
-    }, [excludeBooks, history, location.state, questionStatuses.hideCompleted, searchBooks, searchDebounce, searchDifficulties, searchExamBoards, searchQuery, searchStages, searchTopics, selections, tiers]);
+    }, [excludeBooks, history, location.state, searchStatuses.hideCompleted, searchBooks, searchDebounce, searchDifficulties, searchExamBoards, searchQuery, searchStages, searchTopics, selections, tiers]);
 
     const [filtersApplied, setFiltersApplied] = useState<boolean>(false);
     const applyFilters = () => {
@@ -289,11 +281,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || searchStages.length > 0
             || searchBooks.length > 0
             || selections.some(tier => tier.length > 0)
-            || Object.entries(questionStatuses)
+            || Object.entries(searchStatuses)
                 .filter(e => e[0] !== "revisionMode"
                         && e[0] !== "hideCompleted") // Ignore revision mode as it isn't really a filter
                 .some(e => e[1]);
-    }, [questionStatuses, searchBooks, searchDifficulties, searchExamBoards, searchStages, searchTopics, selections]);
+    }, [searchStatuses, searchBooks, searchDifficulties, searchExamBoards, searchStages, searchTopics, selections]);
 
     const clearFilters = useCallback(() => {
         setSearchDifficulties([]);
@@ -303,7 +295,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setSearchBooks([]);
         setExcludeBooks(false);
         setSelections([[], [], []]);
-        setQuestionStatuses(
+        setSearchStatuses(
         {
             notAttempted: false,
             complete: false,
@@ -365,7 +357,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     searchTopics, setSearchTopics,
                     searchStages, setSearchStages,
                     searchExamBoards, setSearchExamBoards,
-                    questionStatuses, setQuestionStatuses,
+                    searchStatuses, setSearchStatuses,
                     searchBooks, setSearchBooks,
                     excludeBooks, setExcludeBooks,
                     tiers, choices, selections, setTierSelection,
@@ -404,7 +396,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         searchDifficulties,
                                         selections, tiers,
                                         excludeBooks,
-                                        questionStatuses.hideCompleted,
+                                        searchStatuses.hideCompleted,
                                         nextSearchOffset
                                             ? nextSearchOffset - 1
                                             : 0);
