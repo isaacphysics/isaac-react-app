@@ -204,19 +204,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         [nothingToSearchFor]
     );
 
-    useEffect(() => {
-        // If a certain stage excludes a selected examboard remove it from query params
-        if (isAda) {
-            setSearchExamBoards(
-                getFilteredExamBoardOptions({byStages: searchStages})
-                    .filter(o => searchExamBoards.includes(o.value))
-                    .map(o => o.value)
-            );
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchStages]);
-
-    const searchAndUpdateURL = () => {
+    const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
         setDisableLoadMore(false);
         setDisplayQuestions(undefined);
@@ -246,7 +234,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
-    };
+    }, [excludeBooks, history, location.state, questionStatuses.hideCompleted, searchBooks, searchDebounce, searchDifficulties, searchExamBoards, searchQuery, searchStages, searchTopics, selections, tiers]);
 
     const [filtersApplied, setFiltersApplied] = useState<boolean>(false);
     const applyFilters = () => {
@@ -254,10 +242,20 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         searchAndUpdateURL();
     };
 
-    // search for content whenever the searchQuery changes
-    // but do not change whether filters have been applied or not
+    // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(searchAndUpdateURL, [searchQuery]);
+
+    // If the stages filter changes, update the exam board filter selections to remove now-incompatible ones
+    useEffect(() => {
+        if (isAda) {
+            setSearchExamBoards(examBoards =>
+                getFilteredExamBoardOptions({byStages: searchStages})
+                    .filter(o => examBoards.includes(o.value))
+                    .map(o => o.value)
+            );
+        }
+    }, [searchStages]);
 
     const questionList = useMemo(() => {
         if (questions) {
@@ -297,7 +295,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 .some(e => e[1]);
     }, [questionStatuses, searchBooks, searchDifficulties, searchExamBoards, searchStages, searchTopics, selections]);
 
-    const clearFilters = () => {
+    const clearFilters = useCallback(() => {
         setSearchDifficulties([]);
         setSearchTopics([]);
         setSearchExamBoards([]);
@@ -313,7 +311,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             llmMarked: false,
             hideCompleted: false
         });
-    };
+    }, []);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const handleSearch = useCallback(
