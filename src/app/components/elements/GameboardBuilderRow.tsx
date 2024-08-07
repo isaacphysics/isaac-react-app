@@ -72,7 +72,7 @@ const GameboardBuilderRow = (
                 aria-label={!isSelected ? "Select question" : "Deselect question"}
                 title={!isSelected ? "Select question" : "Deselect question"}
                 color="secondary"
-                className={!provided ? "isaac-checkbox me-n2 ms-1" : undefined}
+                className="isaac-checkbox mt-1"
                 checked={isSelected}
                 onChange={() => {
                     if (question.id) {
