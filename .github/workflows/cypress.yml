@@ -16,6 +16,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Check commit message for VRT keyword
+        id: check-commit-message
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            COMMIT_SHA=${GITHUB_SHA}
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            COMMIT_SHA=$(echo "${{ github.event.pull_request.head.sha }}")
+          else
+            exit 1
+          fi
+          COMMIT_MESSAGE=$(git log -1 --format=%B "$COMMIT_SHA")
+          if echo "$COMMIT_MESSAGE" | grep -q "update-vrt-baselines"; then
+            echo "UPDATE_VRT_BASELINES=true" >> $GITHUB_OUTPUT
+          else
+            echo "UPDATE_VRT_BASELINES=false" >> $GITHUB_OUTPUT
+          fi
       - name: Cypress run (Ada)
         uses: cypress-io/github-action@v6
         with:
@@ -23,6 +39,7 @@ jobs:
           browser: chrome
         env:
           CYPRESS_SITE: ada
+          CYPRESS_UPDATE_BASELINE: ${{ steps.check-commit-message.outputs.UPDATE_VRT_BASELINES }}
       - name: Cypress run (Physics)
         uses: cypress-io/github-action@v6
         with:
@@ -30,6 +47,16 @@ jobs:
           browser: chrome
         env:
           CYPRESS_SITE: phy
+          CYPRESS_UPDATE_BASELINE: ${{ steps.check-commit-message.outputs.UPDATE_VRT_BASELINES }}
+      - name: Cypress update baselines
+        if: ${{ steps.check-commit-message.outputs.UPDATE_VRT_BASELINES }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add src/test/**/*.png
+          git commit -m "Update VRT baselines"
+          git push origin HEAD:${{ github.ref }} --force
+
       - name: Upload artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
