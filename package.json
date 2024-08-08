@@ -11,9 +11,11 @@
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/sortable": "^7.0.2",
     "@dnd-kit/utilities": "^3.2.2",
+    "@eslint/compat": "^1.1.1",
     "@popperjs/core": "^2.11.8",
     "@reduxjs/toolkit": "^1.9.7",
     "axios": "^0.28.1",
+    "babel-eslint": "^10.1.0",
     "billboard.js": "^1.12.12",
     "core-js": "^3.36.1",
     "dayjs": "^1.11.10",
@@ -79,44 +81,6 @@
     "start-phy-renderer": "webpack-dev-server --hot --port 3002 --history-api-fallback --config config/webpack.config.phy.renderer.js --allowed-hosts=true",
     "build-renderer": "yarn run build-ada-renderer && yarn run build-phy-renderer"
   },
-  "eslintConfig": {
-    "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:jsx-a11y/strict"
-    ],
-    "plugins": [
-      "react-hooks",
-      "@typescript-eslint",
-      "jsx-a11y"
-    ],
-    "rules": {
-      "no-prototype-builtins": "off",
-      "prefer-const": "warn",
-      "semi": "warn",
-      "jsx-a11y/no-static-element-interactions": "warn",
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          "argsIgnorePattern": "^_",
-          "varsIgnorePattern": "^_"
-        }
-      ],
-      "@typescript-eslint/ban-ts-comment": "off",
-      "@typescript-eslint/explicit-function-return-type": "off",
-      "@typescript-eslint/no-empty-interface": "warn",
-      "@typescript-eslint/explicit-module-boundary-types": "off"
-    },
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "ecmaFeatures": {
-        "jsx": true
-      }
-    }
-  },
   "browserslist": [
     ">0.2%",
     "not dead",
@@ -132,6 +96,7 @@
     "@babel/preset-env": "^7.24.3",
     "@babel/preset-react": "^7.24.1",
     "@babel/preset-typescript": "^7.24.1",
+    "@eslint/js": "^9.8.0",
     "@frsource/cypress-plugin-visual-regression-diff": "^3.3.10",
     "@testing-library/dom": "^9.3.4",
     "@testing-library/jest-dom": "^6.4.2",
@@ -170,11 +135,12 @@
     "css-loader": "^6.10.0",
     "cypress": "13.6.4",
     "dotenv": "^10.0.0",
-    "eslint": "^8.57.0",
+    "eslint": "9.x",
     "eslint-plugin-jsx-a11y": "^6.8.0",
-    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "file-loader": "^6.2.0",
+    "globals": "^15.9.0",
     "graphql": "^16.8.1",
     "html-webpack-plugin": "^5.6.0",
     "jest": "^29.7.0",
@@ -194,6 +160,7 @@
     "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.3",
+    "typescript-eslint": "^8.0.1",
     "webpack": "^5.91.0",
     "webpack-bundle-analyzer": "^4.10.1",
     "webpack-cli": "^5.1.4",
