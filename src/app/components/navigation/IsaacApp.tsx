@@ -47,7 +47,7 @@ import {AuthError} from "../pages/AuthError";
 import {SessionExpired} from "../pages/SessionExpired";
 import {ConsistencyError} from "../pages/ConsistencyError";
 import {Search} from "../pages/Search";
-import {CookieBanner} from "./CookieBanner";
+import {ResearchNotificationBanner} from "./ResearchNotificationBanner";
 import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
 import {AdminUserManager} from "../pages/AdminUserManager";
@@ -143,7 +143,7 @@ export const IsaacApp = () => {
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
-        <CookieBanner />
+        <ResearchNotificationBanner />
         <UnsupportedBrowserBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
