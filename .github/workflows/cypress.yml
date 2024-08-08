@@ -54,7 +54,7 @@ jobs:
           CYPRESS_SITE: phy
           CYPRESS_UPDATE_BASELINE: ${{ steps.check-commit-message.outputs.UPDATE_VRT_BASELINES }}
       - name: Cypress update baselines
-        if: ${{ steps.check-commit-message.outputs.UPDATE_VRT_BASELINES }}
+        if: ${{ steps.check-commit-message.outputs.UPDATE_VRT_BASELINES == 'true' }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
