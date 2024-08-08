@@ -154,7 +154,7 @@ export const HomepageCS = () => {
                         </Col>
                     </Row>
                     <Col xs={12} sm={{size: 8, offset: 2}} md={{size: 6, offset: 3}} lg={{size: 4, offset: 4}} className=" mt-5 d-flex justify-content-center">
-                        <Button className="w-100" tag={Link} to="/topics" color="primary" outline>Explore all resources</Button>
+                        <Button className="w-100" tag={Link} to="/topics" color="primary">Explore all resources</Button>
                     </Col>
                 </Container>
             </section>
