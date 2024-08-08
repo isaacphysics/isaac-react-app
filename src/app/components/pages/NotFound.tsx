@@ -26,7 +26,7 @@ export const NotFound = () => {
             <p>
                 Expecting to find something here?
                 <a className="ps-1" href={buildContactUrl(state, pathname)} >
-                    Let us know <span className="visually-hidden">about this missing page</span>
+                    Let us know<span className="visually-hidden"> about this missing page</span>
                 </a>.
             </p>
         </div>
