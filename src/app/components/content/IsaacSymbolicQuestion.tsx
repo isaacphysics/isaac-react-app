@@ -76,6 +76,18 @@ export const symbolicInputValidator = (input: string) => {
     if (/\.[0-9]/.test(input)) {
         errors.push('Please convert decimal numbers to fractions.');
     }
+    if (/((sin|cos|tan|sec|cosec|cot)h?(\^|\*\*)[({]?-1[)}]?)/.test(input)) {
+        const match = input.match(/(sin|cos|tan|sec|cosec|cot)h?/);
+        if (match != null) {
+            const trigFunction = match[0];
+            if(trigFunction.slice(-1) == 'h') {
+                errors.push("To create the inverse " + trigFunction + " function, use 'ar" + trigFunction +"'.");
+            }
+            else {
+                errors.push("To create the inverse " + trigFunction + " function, use 'arc" + trigFunction +"'.");
+            }
+        }      
+    }
     if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
         // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
         return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
