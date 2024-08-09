@@ -172,30 +172,6 @@ $dark-primary: $pink-300;
 $dark-secondary: $pink-300;
 $tertiary: $cyan-300;
 
-// Theme
-$theme-colors: ( // Special Bootstrap variable that is used to generate colour classes (e.g. text-pink)
-    // Primary and secondary are the same - we use other properties (outline) to distinguish primary/secondary buttons
-    "primary": $primary,
-    "secondary": $secondary,
-    "warning": $yellow-500,
-    "dark-primary": $dark-primary,
-    "dark-secondary": $dark-secondary,
-    "info": $tertiary,
-
-    "turquoise-blue": $cyan-300,
-    "pink" : $pink-300,
-    "dark-pink" : $dark-pink-300,
-    "yellow" : $yellow-300,
-    "jet-grey" : $cs-jet,
-    "silver-grey" : $cs-silver,
-    "light-grey" : $cs-light-gray,
-    "cultured-grey" : $cs-cultured,
-
-    "perfect": $cs-perfect,
-    "in-progress": $cs-in-progress,
-    "failed": $cs-failed,
-);
-
 // Override Bootstrap warning alert text colour - it doesn't look like we can set it in the theme
 .alert-warning {
     color: $cs-black !important;
@@ -288,6 +264,31 @@ $border-color: $cs-light-gray;
 
 // all Bootstrap !default overrides must appear before this; anything that uses the defaults must come after
 @import "~bootstrap/scss/variables"; 
+
+// Theme
+$theme-colour-overrides: (
+    // Primary and secondary are the same - we use other properties (outline) to distinguish primary/secondary buttons
+    "primary": $primary,
+    "secondary": $secondary,
+    "warning": $yellow-500,
+    "dark-primary": $dark-primary,
+    "dark-secondary": $dark-secondary,
+    "info": $tertiary,
+
+    "turquoise-blue": $cyan-300,
+    "pink" : $pink-300,
+    "dark-pink" : $dark-pink-300,
+    "yellow" : $yellow-300,
+    "jet-grey" : $cs-jet,
+    "silver-grey" : $cs-silver,
+    "light-grey" : $cs-light-gray,
+    "cultured-grey" : $cs-cultured,
+
+    "perfect": $cs-perfect,
+    "in-progress": $cs-in-progress,
+    "failed": $cs-failed,
+);
+$theme-colors: map-merge($theme-colors, $theme-colour-overrides);
 
 $grid-breakpoints: (
   xs: 0,
