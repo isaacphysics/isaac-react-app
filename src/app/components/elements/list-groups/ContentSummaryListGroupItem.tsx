@@ -1,6 +1,7 @@
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {
     AUDIENCE_DISPLAY_FIELDS,
+    below,
     determineAudienceViews,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
@@ -27,8 +28,14 @@ import {ShortcutResponse} from "../../../../IsaacAppTypes";
 import {Markup} from "../markup";
 import classNames from "classnames";
 import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
+import { CSSModule } from "reactstrap/types/lib/utils";
 
-export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
+export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, noCaret}: {
+    item: ShortcutResponse;
+    search?: string;
+    displayTopicTitle?: boolean;
+    noCaret?: boolean;
+}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
@@ -39,6 +46,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     let itemClasses = "p-0 content-summary-link ";
     itemClasses += isContentsIntendedAudience ? "bg-transparent " : "de-emphasised ";
 
+    let stack = false;
     let title = item.title;
     let titleClasses = "content-summary-link-title flex-grow-1 ";
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[]);
@@ -47,17 +55,16 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     }
     const iconClasses = `search-item-icon ${itemSubject?.id}-fill`;
     const hierarchyTags = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[])
-        .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
+        .filter((_t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
-    // FIXME "correct" never actually exists on questions here...
     const questionIconLabel = item.correct ? "Completed question icon" : "Question icon";
     const questionIcon = siteSpecific(
         item.correct ?
             <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/tick-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/></svg> :
             <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/question-hex.svg#icon`} xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/></svg>,
         item.correct ?
-            <img src="/assets/cs/icons/question-correct.svg" alt={questionIconLabel}/> :
-            <img src="/assets/cs/icons/question-not-started.svg" alt={questionIconLabel}/>
+            <img src="/assets/common/icons/completed.svg" alt={questionIconLabel}/> :
+            <img src="/assets/common/icons/not-started.svg" alt={questionIconLabel}/>
     );
 
     const deviceSize = useDeviceSize();
@@ -81,9 +88,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = questionIcon;
             audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
-            if (isAda) {
-                typeLabel = "Question";
-            }
+            stack = below["md"](deviceSize);
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
@@ -100,7 +105,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
         case (DOCUMENT_TYPE.TOPIC_SUMMARY):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
             icon = <img src={siteSpecific("/assets/common/icons/work-md.svg", "/assets/cs/icons/topic.svg")} alt="Topic summary page icon"/>;
-            typeLabel = "Topic"
+            typeLabel = "Topic";
             break;
         case (DOCUMENT_TYPE.GENERIC):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
@@ -126,7 +131,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                     </div>
                 )}
             </span>
-            <div className={classNames("flex-fill", {"d-flex py-3 pe-3": isAda, "d-md-flex": isPhy})}>
+            <div className={classNames("flex-fill", {"py-3 pe-3 align-content-center": isAda, "d-flex": isAda && !stack, "d-md-flex": isPhy})}>
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
                         <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-secondary": isPhy})}>
@@ -153,23 +158,27 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                         {`This content has ${notRelevantMessage(userContext)}.`}
                     </UncontrolledTooltip>
                 </div>}
-                {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} />}
+                {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={stack}/>}
             </div>
-            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to page"}/></div>}
+            {isAda && !noCaret && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to page"}/></div>}
         </Link>
     </ListGroupItem>;
 };
 
-export const LinkToContentSummaryList = ({items, search, displayTopicTitle, ...rest}: {
+export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCaret, ...rest}: {
     items: ContentSummaryDTO[];
     search?: string;
     displayTopicTitle?: boolean;
+    noCaret?: boolean;
     tag?: React.ElementType;
     flush?: boolean;
     className?: string;
-    cssModule?: any;
+    cssModule?: CSSModule;
 }) => {
     return <ListGroup {...rest} className="link-list list-group-links mb-3">
-        {items.map(item => <ContentSummaryListGroupItem item={item} search={search} key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}/>)}
+        {items.map(item => <ContentSummaryListGroupItem
+            item={item} search={search} noCaret={noCaret}
+            key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}
+        />)}
     </ListGroup>;
 };

@@ -561,6 +561,7 @@ export interface QuestionSearchQuery {
     stages?: string;
     difficulties?: string;
     examBoards?: string;
+    questionCategories?: string;
     fasttrack?: boolean;
     hideCompleted?: boolean;
     startIndex?: number;

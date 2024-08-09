@@ -35,7 +35,7 @@
   }
 }
 
-$shapes: hex, square, octagon, diamond;
+$shapes: hex, square, octagon, diamond, circle;
 
 svg {
   @each $shape in $shapes {
@@ -69,6 +69,11 @@ svg {
         fill: $cyan-300;
         stroke: $cs-black;
         stroke-width: 1px;
+      }
+
+      &.filter-count {
+        fill: $pink-300;
+        opacity: .05;
       }
 
       &:focus {

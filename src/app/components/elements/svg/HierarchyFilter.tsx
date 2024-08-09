@@ -31,7 +31,8 @@ interface HierarchySummaryProps {
 }
 
 interface HierarchyFilterProps extends HierarchySummaryProps {
-    setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>
+    questionFinderFilter?: boolean;
+    setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
 }
 
 function naturalLanguageList(list: string[]) {
@@ -42,8 +43,8 @@ function naturalLanguageList(list: string[]) {
     return `${lowerCaseList.slice(0, lastIndex).join(", ")} and ${lowerCaseList[lastIndex]}`;
 }
 
-function hexRowTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions, i: number) {
-    if (i == 0 || deviceSize != "xs") {
+function hexRowTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions, i: number, questionFinderFilter: boolean) {
+    if (i == 0 || (deviceSize != "xs" && !questionFinderFilter)) {
         return `translate(0,${i * (6 * hexagon.quarterHeight + 2 * hexagon.padding)})`;
     } else {
         const x = (i * 2 - 1) * (hexagon.halfWidth + hexagon.padding);
@@ -52,52 +53,58 @@ function hexRowTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions, 
     }
 }
 
-function connectionRowTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions, i: number) {
-    if (deviceSize != "xs") {
+function connectionRowTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions, i: number, questionFinderFilter: boolean) {
+    if (deviceSize != "xs" && !questionFinderFilter) {
         return `translate(${hexagon.halfWidth + hexagon.padding},${3 * hexagon.quarterHeight + hexagon.padding + i * (6 * hexagon.quarterHeight + 2 * hexagon.padding)})`;
     } else {
         return `translate(0,0)`; // positioning is managed absolutely not through transformation
     }
 }
 
-function hexagonTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions, i: number, j: number) {
-    if (i == 0 || deviceSize != "xs") {
+function hexagonTranslation(deviceSize: DeviceSize, hexagon: HexagonProportions, i: number, j: number, questionFinderFilter: boolean) {
+    if (i == 0 || (deviceSize != "xs" && !questionFinderFilter)) {
         return `translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)},0)`;
     } else {
         return `translate(0,${j * (4 * hexagon.quarterHeight + hexagon.padding)})`;
     }
 }
 
-export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSelection}: HierarchyFilterProps) {
+export function HierarchyFilterHexagonal({tiers, choices, selections, questionFinderFilter, setTierSelection}: HierarchyFilterProps) {
     const deviceSize = useDeviceSize();
     const leadingHexagon = calculateHexagonProportions(36, deviceSize === "xs" ? 2 : 8);
-    const hexagon = calculateHexagonProportions(36, deviceSize === "xs" ? 16 : 8);
+    const hexagon = calculateHexagonProportions(36, deviceSize === "xs" || !!questionFinderFilter ? 16 : 8);
     const focusPadding = 3;
 
     const maxOptions = choices.slice(1).map(c => c.length).reduce((a, b) => Math.max(a, b), 0);
-    const height = deviceSize != "xs" ?
+    const height = (deviceSize != "xs" && !questionFinderFilter) ?
         2 * focusPadding + 4 * hexagon.quarterHeight + (tiers.length - 1) * (6 * hexagon.quarterHeight + 2 * hexagon.padding) :
         2 * focusPadding + 4 * hexagon.quarterHeight + maxOptions * (4 * hexagon.quarterHeight + hexagon.padding) + (maxOptions ? hexagon.padding : 0);
+    const width = (8 * leadingHexagon.halfWidth) + (6 * leadingHexagon.padding) + (2 * focusPadding);
 
-    return <svg width="100%" height={`${height}px`}>
+    return <svg
+        viewBox={questionFinderFilter ? `0 0 ${width} ${height}` : ""}
+        width={questionFinderFilter ? "auto" : "100%"}
+        className={classNames({"mx-auto d-block": questionFinderFilter})}
+        height={`${height}px`}
+    >
         <title>Topic filter selector</title>
         <g id="hexagonal-filter" transform={`translate(${focusPadding},${focusPadding})`}>
             {/* Connections */}
             {tiers.slice(1).map((tier, i) => {
                 const subject = selections?.[0]?.[0] ? selections[0][0].value : "";
-                return <g key={tier.for} transform={connectionRowTranslation(deviceSize, hexagon, i)}>
+                return <g key={tier.for} transform={connectionRowTranslation(deviceSize, hexagon, i, !!questionFinderFilter)}>
                     <HexagonConnection
                         sourceIndex={choices[i].map(c => c.value).indexOf(selections[i][0]?.value)}
                         optionIndices={[...choices[i+1].keys()]} // range from 0 to choices[i+1].length
                         targetIndices={selections[i+1]?.map(s => choices[i+1].map(c => c.value).indexOf(s.value)) || [-1]}
                         leadingHexagonProportions={leadingHexagon} hexagonProportions={hexagon} connectionProperties={connectionProperties}
-                        rowIndex={i} mobile={deviceSize === "xs"} className={`connection ${subject}`}
+                        rowIndex={i} mobile={deviceSize === "xs" || !!questionFinderFilter} className={`connection ${subject}`}
                     />
                 </g>;
             })}
 
             {/* Hexagons */}
-            {tiers.map((tier, i) => <g key={tier.for} transform={hexRowTranslation(deviceSize, hexagon, i)}>
+            {tiers.map((tier, i) => <g key={tier.for} transform={hexRowTranslation(deviceSize, hexagon, i, !!questionFinderFilter)}>
                 {choices[i].map((choice, j) => {
                     const subject = i == 0 ? choice.value : selections[0][0].value;
                     const isSelected = !!selections[i]?.map(s => s.value).includes(choice.value);
@@ -111,7 +118,7 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                         );
                     }
 
-                    return <g key={choice.value} transform={hexagonTranslation(deviceSize, i === 0 ? leadingHexagon : hexagon, i, j)}>
+                    return <g key={choice.value} transform={hexagonTranslation(deviceSize, i === 0 ? leadingHexagon : hexagon, i, j, !!questionFinderFilter)}>
                         <Hexagon {...hexagon} className={classNames("hex", subject, {"active": isSelected && !isComingSoon, "de-emph": isComingSoon})} />
                         <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
                             <div className={classNames("hexagon-tier-title", {"active": isSelected && !isComingSoon, "de-emph": isComingSoon, "small": longWordInLabel})}>
@@ -144,7 +151,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
     const hexagon = calculateHexagonProportions(10, 2);
     const hexKeyPoints = addHexagonKeyPoints(hexagon);
     const connection = {length: 60};
-    const height = `${hexagon.quarterHeight * 4 + hexagon.padding * 2 + 32}px`
+    const height = `${hexagon.quarterHeight * 4 + hexagon.padding * 2 + 32}px`;
 
     if (! selections[0]?.length) {
         return <span className="text-muted ms-3 d-inline-block" style={{height}}>
@@ -176,7 +183,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
                             className={`connection`}
                         />}
                         <Hexagon className={`hex active ${selections[0]?.length ? selections[0][0].value : choices[0][0].value}`} {...hexagon} />
-                    </g>
+                    </g>;
                 })}
             </g>
 
@@ -190,7 +197,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
                             </div>
                         </foreignObject>
                     </g>
-                </g>
+                </g>;
             })}
         </g>
     </svg>;

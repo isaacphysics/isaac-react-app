@@ -17,7 +17,7 @@ const defaultPlaceholder = <div className="w-100 text-center pb-2">
     <IsaacSpinner />
 </div>;
 
-export const ShowLoading = <T extends {}>({until, children, thenRender, placeholder=defaultPlaceholder, ifNotFound=<NotFound />}: ShowLoadingProps<T>) => {
+export const ShowLoading = <T extends NonNullable<unknown>>({until, children, thenRender, placeholder=defaultPlaceholder, ifNotFound=<NotFound />}: ShowLoadingProps<T>) => {
     const [duringLoad, setDuringLoad] = useState(false);
     useEffect( () => {
         let timeout: number;
