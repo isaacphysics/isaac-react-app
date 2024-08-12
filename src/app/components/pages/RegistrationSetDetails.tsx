@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
+    EMAIL_PREFERENCE_DEFAULTS,
     EXAM_BOARD,
     FIRST_LOGIN_STATE,
     history,
@@ -88,7 +89,8 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             setAttemptedSignUp(true);
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(errorSlice.actions.clearError());
-            dispatch(registerNewUser(registrationUser, {}, [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ADA}], null));
+            dispatch(registerNewUser(registrationUser, {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
+                [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ADA}], null));
             trackEvent("registration", {
                     props:
                         {
