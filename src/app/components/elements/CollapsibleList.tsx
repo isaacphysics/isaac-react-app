@@ -49,7 +49,6 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
         <Row 
             className={`collapsible-body overflow-hidden ${expanded ? "open" : "closed"}`} 
             style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0}}
-            data-targetHeight={expanded ? expandedHeight : 0}
         >
             <Col>
                 <div ref={listRef} className={classNames({"ms-2": props.asSubList})}>
