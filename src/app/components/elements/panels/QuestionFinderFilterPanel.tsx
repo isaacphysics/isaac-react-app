@@ -428,7 +428,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     </span>}
                 />
             </div>}*/}
-            <Col className="text-center my-3 filter-btn">
+            <Col className="text-center py-3 filter-btn bg-white">
                 <Button onClick={applyFilters} disabled={searchDisabled}>
                     Apply filters
                 </Button>
