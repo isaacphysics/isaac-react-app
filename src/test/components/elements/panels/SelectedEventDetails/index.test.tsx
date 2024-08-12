@@ -54,6 +54,8 @@ describe("SelectedEventDetails", () => {
       "0 (0%)",
       "1 (50%)",
       "0 (0%)",
+      "3",
+      "2",
     ];
     expectedValues.forEach((each) => expect(eventInfo).toHaveTextContent(each));
     const title = screen.getByText("Selected event details");

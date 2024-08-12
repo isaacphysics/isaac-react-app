@@ -12,7 +12,7 @@ const findTableDetails = () => {
   });
   const studentGenders = [...studentRow.getElementsByTagName("td")];
   const teacherGenders = [...teacherRow.getElementsByTagName("td")];
-  [studentGenders, teacherGenders].forEach((each) => expect(each).toHaveLength(5));
+  [studentGenders, teacherGenders].forEach((each) => expect(each).toHaveLength(6));
   return { studentGenders, teacherGenders };
 };
 
@@ -36,12 +36,12 @@ describe("EventGenderDetails", () => {
   it("shows a table with correct column headers for genders", () => {
     setupTest({ eventBookings: [] });
     const eventGenders = screen.getByTestId("event-genders");
-    expect(eventGenders).toHaveTextContent("Gender:");
+    expect(eventGenders).toHaveTextContent("Attended bookings table:");
     const genderStatsTable = screen.getByRole("table");
     expect(genderStatsTable).toBeInTheDocument();
     const tableHeader = within(genderStatsTable).getAllByRole("columnheader");
-    expect(tableHeader).toHaveLength(6);
-    const genders = ["Male", "Female", "Other", "Prefer not to say", "Unknown"];
+    expect(tableHeader).toHaveLength(7);
+    const genders = ["Male", "Female", "Other", "Prefer not to say", "Unknown", "Total"];
     tableHeader.slice(1).forEach((columnHeader, index) => expect(columnHeader).toHaveTextContent(genders[index]));
   });
 
@@ -59,15 +59,15 @@ describe("EventGenderDetails", () => {
   it("renders 0 count genders when there are no event bookings", () => {
     setupTest({ eventBookings: [] });
     const { studentGenders, teacherGenders } = findTableDetails();
-    checkGenderCounts(studentGenders, ["0 (0%)", "0 (0%)", "0 (0%)", "0 (0%)", "0 (0%)"]);
-    checkGenderCounts(teacherGenders, ["0 (0%)", "0 (0%)", "0 (0%)", "0 (0%)", "0 (0%)"]);
+    checkGenderCounts(studentGenders, ["0 (0%)", "0 (0%)", "0 (0%)", "0 (0%)", "0 (0%)", "0"]);
+    checkGenderCounts(teacherGenders, ["0 (0%)", "0 (0%)", "0 (0%)", "0 (0%)", "0 (0%)", "0"]);
   });
 
   it("renders a list of genders with correct counts when there are event bookings", () => {
     setupTest({ eventBookings: mockEventBookings });
     const { studentGenders, teacherGenders } = findTableDetails();
-    const expectedStudentCounts = ["1 (33%)", "0 (0%)", "1 (33%)", "0 (0%)", "1 (33%)"];
-    const expectedTeacherCounts = ["0 (0%)", "1 (50%)", "0 (0%)", "1 (50%)", "0 (0%)"];
+    const expectedStudentCounts = ["1 (33%)", "0 (0%)", "1 (33%)", "0 (0%)", "1 (33%)", "3"];
+    const expectedTeacherCounts = ["0 (0%)", "1 (50%)", "0 (0%)", "1 (50%)", "0 (0%)", "2"];
     checkGenderCounts(studentGenders, expectedStudentCounts);
     checkGenderCounts(teacherGenders, expectedTeacherCounts);
   });

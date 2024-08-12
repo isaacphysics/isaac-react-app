@@ -66,17 +66,17 @@ export const EventGenderDetails = ({ eventBookings }: { eventBookings: DetailedE
   return (
     <>
       <p data-testid="event-genders">
-        <strong>Gender:</strong>
+        <strong>Attended bookings table:</strong>
         <span id={`gender-stats-tooltip`} className="icon-help ml-1" />
         <UncontrolledTooltip className="text-nowrap" target={`gender-stats-tooltip`} placement="right">
-          User gender of CONFIRMED or ATTENDED bookings
+          ATTENDED bookings by GENDER
         </UncontrolledTooltip>
       </p>
       <Col xs={12} md={10} className="overflow-auto">
         <Table bordered className="mb-0 bg-white table-hover table-sm" style={{ maxWidth: "100%" }}>
           <thead>
             <tr>
-              {["", "Male", "Female", "Other", "Prefer not to say", "Unknown"].map((columnHeader) => (
+              {["", "Male", "Female", "Other", "Prefer not to say", "Unknown", "Total"].map((columnHeader) => (
                 <th scope="col" key={columnHeader} className="text-nowrap">
                   {columnHeader}
                 </th>
@@ -92,6 +92,7 @@ export const EventGenderDetails = ({ eventBookings }: { eventBookings: DetailedE
                   studentDetails.numberOfConfirmedOrAttendedBookings,
                 )}%)`}</td>
               ))}
+              <td>{studentDetails.numberOfConfirmedOrAttendedBookings}</td>
             </tr>
             <tr>
               <th scope="row">Teacher</th>
@@ -101,6 +102,7 @@ export const EventGenderDetails = ({ eventBookings }: { eventBookings: DetailedE
                   teacherDetails.numberOfConfirmedOrAttendedBookings,
                 )}%)`}</td>
               ))}
+              <td>{teacherDetails.numberOfConfirmedOrAttendedBookings}</td>
             </tr>
           </tbody>
         </Table>

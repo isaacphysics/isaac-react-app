@@ -107,11 +107,11 @@ export const SelectedEventDetails = ({ eventId }: { eventId: string }) => {
               {selectedEvent.placesAvailable} / {selectedEvent.numberOfPlaces}
             </p>
             <p className="mb-0">
-              <strong>Number of students: </strong>
+              <strong>Number of students confirmed: </strong>
               {studentCount} / {selectedEvent.numberOfPlaces}
             </p>
             <p className="mb-0">
-              <strong>Number of teachers: </strong>
+              <strong>Number of teachers confirmed: </strong>
               {teacherCount} / {selectedEvent.numberOfPlaces}
             </p>
             <EventGenderDetails eventBookings={eventBookings} />
