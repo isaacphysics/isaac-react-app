@@ -283,7 +283,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || excludeBooks
             || selections.some(tier => tier.length > 0)
             || Object.entries(searchStatuses).some(e => e[1]);
-    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, excludeBooks, selections, searchStatuses]);
+    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
 
     const clearFilters = useCallback(() => {
         setSearchDifficulties([]);
