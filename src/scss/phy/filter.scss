@@ -108,7 +108,8 @@ svg {
       }
 
       &.filter-count {
-        fill: $gray-120;
+        fill: $phy_green;
+        opacity: .1;
         stroke: none;
       }
 
