@@ -350,7 +350,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         checked={searchStatuses.hideCompleted}
                         onChange={() => setSearchStatuses(s => {return {...s, hideCompleted: !s.hideCompleted};})}
                         label={<div>
-                            <span>Hide complete</span>
+                            <span>{siteSpecific("Hide fully correct", "Hide complete")}</span>
                         </div>}
                     />
                 </div>
