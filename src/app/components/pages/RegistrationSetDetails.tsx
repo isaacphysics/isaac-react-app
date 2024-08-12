@@ -92,11 +92,11 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             dispatch(registerNewUser(registrationUser, {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
                 [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ADA}], null));
             trackEvent("registration", {
-                    props:
+                props:
                         {
                             provider: "SEGUE"
                         }
-                }
+            }
             );
         }
     };
