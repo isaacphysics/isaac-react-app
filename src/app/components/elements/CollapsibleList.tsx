@@ -22,7 +22,6 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
 
     useLayoutEffect(() => {
         if (!listRef.current) return;
-        console.log(listRef.current.clientHeight);
         setExpandedHeight(listRef.current.clientHeight);
     }, [listRef.current]);
 
