@@ -4,7 +4,7 @@ import {AllTopics} from "../../pages/AllTopics";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Topic} from "../../pages/Topic";
 import {Redirect} from "react-router";
-import {EXAM_BOARD, isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove} from "../../../services";
+import {EXAM_BOARD, isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove, STAGE} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {ExamSpecifications} from "../../pages/ExamSpecifications";
 import {News} from "../../pages/News";
@@ -88,6 +88,9 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_england" component={ExamSpecifications} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_wales" component={ExamSpecifications} componentProps={{'examBoardFilter': [EXAM_BOARD.WJEC]}} />,
+    <TrackedRoute key={key++} exact path="/exam_specifications_scotland" component={ExamSpecifications}
+        componentProps={{'examBoardFilter': [EXAM_BOARD.SQA], 'stageFilter': [STAGE.SCOTLAND_NATIONAL_5,
+            STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER]}} />,
     <TrackedRoute key={key++} exact path="/exam_specifications" component={ExamSpecificationsDirectory} />,
 
     // News
