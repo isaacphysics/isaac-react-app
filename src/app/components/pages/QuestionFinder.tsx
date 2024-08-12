@@ -280,12 +280,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || searchExamBoards.length > 0
             || searchStages.length > 0
             || searchBooks.length > 0
+            || excludeBooks
             || selections.some(tier => tier.length > 0)
-            || Object.entries(searchStatuses)
-                .filter(e => e[0] !== "revisionMode"
-                        && e[0] !== "hideCompleted") // Ignore revision mode as it isn't really a filter
-                .some(e => e[1]);
-    }, [searchStatuses, searchBooks, searchDifficulties, searchExamBoards, searchStages, searchTopics, selections]);
+            || Object.entries(searchStatuses).some(e => e[1]);
+    }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, excludeBooks, selections, searchStatuses]);
 
     const clearFilters = useCallback(() => {
         setSearchDifficulties([]);
