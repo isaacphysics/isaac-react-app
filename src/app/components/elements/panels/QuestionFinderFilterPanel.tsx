@@ -289,7 +289,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         e.preventDefault();
                         dispatch(openActiveModal(questionFinderDifficultyModal()));
                 }}>
-                    <b className="small text-start">Learn more about difficulty levels</b>
+                    <b className="small text-start">{siteSpecific("Learn more about difficulty levels", "What do the difficulty levels mean?")}</b>
                 </button>
                 {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
                     <div className="w-100 ps-3 py-1 bg-white" key={index}>
