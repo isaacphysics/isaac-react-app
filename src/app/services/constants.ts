@@ -12,7 +12,7 @@ import {
   Stage,
 } from "../../IsaacApiTypes";
 
-export const STAGING_URL = "https://www.staging.isaaccomputerscience.org";
+export const STAGING_URL = "https://www.staging.development.isaaccomputerscience.org";
 
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
