@@ -76,10 +76,11 @@ export const symbolicInputValidator = (input: string) => {
     if (/\.[0-9]/.test(input)) {
         errors.push('Please convert decimal numbers to fractions.');
     }
-    if (/((sin|cos|tan|sec|cosec|cot)h?(\^|\*\*)[({]?-1[)}]?)/.test(input)) {
-        const match = input.match(/(sin|cos|tan|sec|cosec|cot)h?/);
+    const invRegex = /((sin|cos|tan|sec|cosec|cot)h?(\^|\*\*)[({]?-1[)}]?)/;
+    if (invRegex.test(input)) {
+        const match = input.match(invRegex);
         if (match != null) {
-            const trigFunction = match[0];
+            const trigFunction = match[0].toString().replace(/[^a-zA-Z]+/g, '');
             if(trigFunction.slice(-1) == 'h') {
                 errors.push("To create the inverse " + trigFunction + " function, use 'ar" + trigFunction +"'.");
             }
