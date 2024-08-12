@@ -22,10 +22,10 @@ export const RegistrationStart = () => {
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
         <Card className="my-5">
             <CardBody>
-                <Row className="align-items-center">
+                <Row className="align-items-start">
                     <Col xs={12} lg={6}>
                         <div className="mb-5">
-                            <h2>How would you like to sign up?</h2>
+                            <h2>{siteSpecific("Hello!", "How would you like to sign up?")}</h2>
                             <p>Here, you can create an {SITE_TITLE} account, or log in to an existing one.</p>
                         </div>
                         <div className="my-5">
@@ -47,15 +47,8 @@ export const RegistrationStart = () => {
                     </Col>
                     <Col xs={12} lg={6}>
                         {siteSpecific(
-                        <>
-                            <div className="d-flex justify-content-center">
-                                <img className="w-50 h-50" src="/assets/phy/icons/bin-black.svg" alt="" />
-                            </div>
-                        </>,
-                        <>
+                            <img className="d-none d-lg-block img-fluid mx-auto p-2 border-radius-3" src={"/assets/phy/decor/physics-bg-3x5.png"} alt="" />,
                             <img className="d-none d-lg-block img-fluid mx-auto" src={"/assets/cs/decor/register-3x4.png"} alt="" />
-                            <img className="d-block d-lg-none img-fluid mt-4 mx-auto " src={"/assets/cs/decor/register-4x3.png"} alt="" />
-                        </>
                         )}
                     </Col>
                 </Row>

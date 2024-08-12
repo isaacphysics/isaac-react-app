@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import * as RS from "reactstrap";
 import {
     Button,
     Card,
@@ -85,7 +84,7 @@ export const RegistrationTeacherConnect = () => {
                     <h3>Connect your account to your teacher</h3>
                     <p>This lets you see the work your teacher sets, and lets your teacher see your progress. You can join more than one group and you always have control over which groups you are in. <a href="/support/student/general">Learn more</a></p>
                     <p>You can always skip this now and connect to your teacher later.</p>
-                    <Col xs={12} lg={5}>
+                    <Col xs={12} lg={6}>
                         <FormGroup className="form-group">
                             <Label className={"fw-bold"} htmlFor="connect-code-input">{"Teacher connection code"}</Label>
                             <p className={"input-description"}>Enter the code given by your teacher to join a group</p>
@@ -112,8 +111,8 @@ export const RegistrationTeacherConnect = () => {
                     </Col>
                     <hr />
                     <Row className="justify-content-end">
-                        <Col xs={7} md={4} lg={2}>
-                            <Button color="primary" onClick={continueToSuccess}>Continue</Button>
+                        <Col xs={7} md={4} lg={3}>
+                            <Button className="w-100" color="primary" onClick={continueToSuccess}>Continue</Button>
                         </Col>
                     </Row>
                 </Form>

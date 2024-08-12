@@ -44,7 +44,10 @@ export const RegistrationAgeCheck = () => {
         <Card className="my-5">
             <CardBody>
                 <h3>How old are you?</h3>
-                <p>We can only create accounts for people over {siteSpecific("10", "13")} years old.</p>
+                <p>{siteSpecific(
+                    "We can only create accounts for users 10 years old or over.",
+                    "We can only create accounts for people over 13 years old."
+                )}</p>
                 <Form onSubmit={submit}>
                     <FormGroup check className="my-2">
                         <Input
@@ -69,7 +72,7 @@ export const RegistrationAgeCheck = () => {
                             invalid={submissionAttempted && over13 === undefined}
                         >
                         </Input>
-                        <Label for="registration-age-check-additional-info" className="ms-2">Between 10 and 12</Label>
+                        <Label for="registration-age-check-additional-info" className="ms-2">10 - 12 years old</Label>
                     </FormGroup>}
                     <FormGroup check className="my-2">
                         <Input
@@ -82,7 +85,7 @@ export const RegistrationAgeCheck = () => {
                             invalid={submissionAttempted && over13 === undefined}
                         >
                         </Input>
-                        <Label for="registration-age-check-under" className="ms-2">Under {siteSpecific("10", "13")}</Label>
+                        <Label for="registration-age-check-under" className="ms-2">Under {siteSpecific("10 years old", "13")}</Label>
                         <FormFeedback>
                             Please make a selection.
                         </FormFeedback>
@@ -90,10 +93,10 @@ export const RegistrationAgeCheck = () => {
                     <hr />
                     <Row className="justify-content-end">
                         <Col sm={6} lg={3} className="d-flex justify-content-end">
-                            <Button className={"mt-2"} outline color="secondary" onClick={history.goBack}>Back</Button>
+                            <Button outline color="secondary" onClick={history.goBack}>Back</Button>
                         </Col>
                         <Col sm={6} lg={3}>
-                            <Input type="submit" value="Continue" className="btn btn-primary mt-2" />
+                            <Button type="submit" className="w-100 h-100">Continue</Button>
                         </Col>
                     </Row>
                 </Form>

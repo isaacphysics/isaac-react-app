@@ -8,8 +8,6 @@ import {
     Form,
     FormFeedback,
     FormGroup,
-    Input,
-    Label,
     Row,
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -18,6 +16,7 @@ import {
     FIRST_LOGIN_STATE,
     history,
     isAda,
+    isPhy,
     KEY,
     persistence,
     SITE_TITLE,
@@ -42,6 +41,7 @@ import {GenderInput} from "../elements/inputs/GenderInput";
 import {extractErrorMessage} from "../../services/errors";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import classNames from "classnames";
+import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
 
 
 interface RegistrationSetDetailsProps {
@@ -67,12 +67,13 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         })
     );
 
+    const [confirmedPassword, setConfirmedPassword] = useState("");
     const [tosAccepted, setTosAccepted] = useState(false);
 
     const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
     const givenNameIsValid = validateName(registrationUser.givenName);
     const familyNameIsValid = validateName(registrationUser.familyName);
-    const passwordIsValid = validatePassword(registrationUser.password || "");
+    const passwordIsValid = (!isPhy || confirmedPassword === registrationUser.password) && validatePassword(registrationUser.password || "");
     const schoolIsValid = validateUserSchool(registrationUser);
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
     const error = useAppSelector((state) => state?.error);
@@ -85,6 +86,9 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && (!isAda || countryCodeIsValid) &&
             ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
+
+            // stop the Required account information modal appearing before the signup flow has completed
+            persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
 
             setAttemptedSignUp(true);
             Object.assign(registrationUser, {loggedIn: false});
@@ -145,6 +149,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 passwordValid={passwordIsValid}
+                                setConfirmedPassword={setConfirmedPassword}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
@@ -174,26 +179,25 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                             />
                             <hr />
                             <FormGroup className="form-group my-4">
-                                <Input
+                                <StyledCheckbox
                                     id="tos-confirmation"
                                     name="tos-confirmation"
                                     type="checkbox"
                                     onChange={(e) => setTosAccepted(e?.target.checked)}
                                     invalid={attemptedSignUp && !tosAccepted}
-                                >
-                                </Input>
-                                <Label for="tos-confirmation" className="ms-2">I accept the <a href="/terms" target="_blank">terms of use</a></Label>
-                                <FormFeedback>
+                                    label={<span>I accept the <a href="/terms" target="_blank">terms of use</a>.</span>}
+                                />
+                                <FormFeedback className="mt-0">
                                     You must accept the terms to continue.
                                 </FormFeedback>
                             </FormGroup>
                             <hr />
                             <Row>
                                 <Col className="d-flex justify-content-end" xs={12} sm={6} lg={6}>
-                                    <Button className={"mt-2"} outline color="secondary" onClick={history.goBack}>Back</Button>
+                                    <Button className="mt-2" outline color="secondary" onClick={history.goBack}>Back</Button>
                                 </Col>
                                 <Col xs={12} sm={6} lg={6}>
-                                    <Input type="submit" value="Continue" className="btn btn-primary mt-2" />
+                                    <Button type="submit" value="Continue" className="mt-2">Continue</Button>
                                 </Col>
                             </Row>
                         </Form>

@@ -36,7 +36,7 @@ import {News} from "../../pages/News";
 import {QuestionFinder} from "../../pages/QuestionFinder";
 import { RegistrationAgeCheck } from "../../pages/RegistrationAgeCheck";
 import { RegistrationAgeCheckFailed } from "../../pages/RegistrationAgeCheckFailed";
-import { RegistrationAgeCheckAdditionalInfo } from "../../pages/RegistrationAgeCheckAdditionalInfo";
+import { RegistrationAgeCheckParentalConsent } from "../../pages/RegistrationAgeCheckParentalConsent";
 import { RegistrationSetDetails } from "../../pages/RegistrationSetDetails";
 import { RegistrationTeacherConnect } from "../../pages/RegistrationTeacherConnect";
 import { RegistrationSuccess } from "../../pages/RegistrationSuccess";
@@ -52,7 +52,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/register" component={RegistrationStart} />,
     <TrackedRoute key={key++} exact path="/verifyemail" component={EmailAlterHandler}/>,
     <TrackedRoute key={key++} exact path="/register/student/age" component={RegistrationAgeCheck} />,
-    <TrackedRoute key={key++} exact path="/register/student/additional_info" component={RegistrationAgeCheckAdditionalInfo} />,
+    <TrackedRoute key={key++} exact path="/register/student/additional_info" component={RegistrationAgeCheckParentalConsent} />,
     <TrackedRoute key={key++} exact path="/register/student/age_denied" component={RegistrationAgeCheckFailed} />,
     <TrackedRoute key={key++} exact path="/register/student/details" component={RegistrationSetDetails} componentProps={{'role': 'STUDENT'}} />,
     <TrackedRoute key={key++} exact path="/register/connect" ifUser={isLoggedIn} component={RegistrationTeacherConnect} />,
