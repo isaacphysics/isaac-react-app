@@ -18,17 +18,26 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
     const {expanded, toggle} = props;
     const [expandedHeight, setExpandedHeight] = useState(0);
     const listRef = useRef<HTMLDivElement>(null);
+    const headRef = useRef<HTMLDivElement>(null);
+
+    useLayoutEffect(() => {
+        if (!listRef.current) return;
+        console.log(listRef.current.clientHeight);
+        setExpandedHeight(listRef.current.clientHeight);
+    }, [listRef.current]);
 
     useLayoutEffect(() => {
         if (expanded) {
-            setExpandedHeight(listRef?.current ? [...listRef.current.children].map(c => c.clientHeight).reduce((a, b) => a + b, 0) : 0);
+            setExpandedHeight(listRef?.current ? [...listRef.current.children].map(c => 
+                c.getAttribute("data-targetHeight") ? parseInt(c.getAttribute("data-targetHeight") as string) : c.clientHeight
+            ).reduce((a, b) => a + b, 0) : 0);
         }
     }, [expanded, props.children]);
 
     const title = props.title && props.asSubList ? props.title : <b>{props.title}</b>;
 
-    return <Col className={props.className}>
-        <Row className="collapsible-head">
+    return <Col className={props.className} data-targetHeight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
+        <div className="row collapsible-head" ref={headRef}>
             <button className={classNames("w-100 d-flex align-items-center p-3 bg-white text-start", {"ps-4": props.asSubList})} onClick={toggle}>
                 {title && <span>{title}</span>}
                 <Spacer/>
@@ -36,9 +45,12 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
                     && <FilterCount count={props.numberSelected ?? 0} />}
                 <img className={classNames("icon-dropdown-90", {"active": expanded})} src={"/assets/common/icons/chevron_right.svg"} alt="" />
             </button>
-        </Row>
-        {/* TODO: <hr className="mb-3 p-0"/> */}
-        <Row className={`collapsible-body overflow-hidden ${expanded ? "open" : "closed"}`} style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0}}>
+        </div>
+        <Row 
+            className={`collapsible-body overflow-hidden ${expanded ? "open" : "closed"}`} 
+            style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0}}
+            data-targetHeight={expanded ? expandedHeight : 0}
+        >
             <Col>
                 <div ref={listRef} className={classNames({"ms-2": props.asSubList})}>
                     {props.children}
