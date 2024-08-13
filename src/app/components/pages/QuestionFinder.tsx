@@ -315,11 +315,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         [setSearchQuery]
     );
 
-    const pageHelp = <span>
+    const pageHelp = siteSpecific(<span>
         You can find a question by selecting the areas of interest, stage and difficulties.
         <br/>
         You can select more than one entry in each area.
-    </span>;
+    </span>, undefined);
 
     const metaDescription = siteSpecific(
         "Find physics, maths, chemistry and biology questions by topic and difficulty.",
