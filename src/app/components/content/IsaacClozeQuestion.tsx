@@ -362,7 +362,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         if (!withReplacement && previousItem) {
             // Add the previously selected item back to the options
             // if it wasn't duplicated
-            nsis.push(previousItem)
+            nsis.push(previousItem);
         }
 
         if (clearSelection) {
