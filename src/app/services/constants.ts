@@ -992,7 +992,7 @@ export const PATHS = siteSpecific({
     ASSIGNMENT_PROGRESS: "/my_markbook",
     MY_GAMEBOARDS: "/quizzes",
     MY_ASSIGNMENTS: "/assignments",
-    QUESTION_FINDER: "/quizzes/new",
+    QUESTION_FINDER: "/questions",
     GAMEBOARD: "/quizzes/view",
     SET_ASSIGNMENTS: "/quizzes/set",
     GAMEBOARD_BUILDER: "/quizzes/builder",
