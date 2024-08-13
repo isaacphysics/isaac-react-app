@@ -140,6 +140,8 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
 
     const [nonSelectedItems, setNonSelectedItems] = useState<Immutable<ClozeItemDTO>[]>(doc.items ? [...doc.items].map(augmentNonSelectedItemWithReplacementID) : []);
 
+    const allItems = doc.items ? [...doc.items].map(augmentNonSelectedItemWithReplacementID) : [];
+
     const registeredDropRegionIDs = useRef<Map<string, number>>(new Map()).current;
 
     const [inlineDropValues, setInlineDropValues] = useState<(Immutable<ClozeItemDTO> | undefined)[]>(() => currentAttempt?.items || []);
@@ -357,25 +359,15 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         if (dropZoneIndex === -1) return;
         const previousItem = idvs[dropZoneIndex];
 
-        if (clearSelection && previousItem) {
-            if (!withReplacement) {
-                // Add the previously selected item back to the options
-                // if it wasn't duplicated
-                nsis.push(previousItem);
-            }
-            // and remove the item from the current drop zone values
+        if (!withReplacement && previousItem) {
+            // Add the previously selected item back to the options
+            // if it wasn't duplicated
+            nsis.push(previousItem)
+        }
+
+        if (clearSelection) {
             idvs[dropZoneIndex] = undefined;
         } else if (!clearSelection) {
-            const itemIndex = nsis.indexOf(item);
-
-            // Otherwise remove from item section and add to drop-zone, swapping out the previous item if it exists
-            if (!withReplacement) {
-                if (previousItem) {
-                    nsis.splice(itemIndex, 1, previousItem);
-                } else {
-                    nsis.splice(itemIndex, 1);
-                }
-            }
             idvs[dropZoneIndex] = augmentInlineItemWithUniqueReplacementID(item);
         }
 
@@ -489,7 +481,8 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             inlineDropValueMap,
             shouldGetFocus,
             dropZoneValidationMap,
-            nonSelectedItems
+            nonSelectedItems,
+            allItems
         }}>
             <DndContext
                 sensors={sensors}
