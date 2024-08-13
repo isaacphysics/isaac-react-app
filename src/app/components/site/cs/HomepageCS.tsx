@@ -69,9 +69,9 @@ export const HomepageCS = () => {
                                 <li><b>Complete curriculums:</b> For
                                     {" "}<a href={"/exam_specifications_england#gcse/aqa"}>GCSE</a>,
                                     {" "}<a href={"/exam_specifications_england#a_level/aqa"}>A&nbsp;Level</a>,
-                                    {" "}<a href={"/concepts/sqa_computing_science?examBoard=sqa&stage=scotland_national_5"}>National&nbsp;5</a>,
-                                    {" "}<a href={"/concepts/sqa_computing_science?examBoard=sqa&stage=scotland_higher"}>Higher</a>, and
-                                    {" "}<a href={"/concepts/sqa_computing_science?examBoard=sqa&stage=scotland_advanced_higher"}>Advanced&nbsp;Higher</a></li>
+                                    {" "}<a href={"/exam_specifications_scotland#scotland_national_5/sqa"}>National&nbsp;5</a>,
+                                    {" "}<a href={"/exam_specifications_scotland#scotland_higher/sqa"}>Higher</a>, and
+                                    {" "}<a href={"/exam_specifications_scotland#scotland_advanced_higher/sqa"}>Advanced&nbsp;Higher</a></li>
                             </ul>
                             {!isLoggedIn(user) &&
                                 <Button className="mt-3" tag={Link} to="/register" color="primary">Join</Button>
