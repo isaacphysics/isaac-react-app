@@ -385,8 +385,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         </ShowLoading>
                     </CardBody>
                 </Card>
-                {(applyFiltersClicked || searchQuery !== "") &&
-                    (displayQuestions?.length ?? 0) > 0 &&
+                {(displayQuestions?.length ?? 0) > 0 &&
                     <Row className="pt-3">
                         <Col className="d-flex justify-content-center mb-3">
                             <Button
