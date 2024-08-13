@@ -306,11 +306,11 @@
     * {
       pointer-events: none;
     }
-    .cloze-item {
+    .cloze-item, .cloze-dropdown * {
       pointer-events: all;
     }
   }
-  .cloze-item {
+  .cloze-item, .cloze-dropdown * {
     pointer-events: all;
     .katex-display {
       display: unset;
@@ -343,7 +343,7 @@
   }
 }
 
-.cloze-dropdown {
+.cloze-dropdown .toggle {
   min-width: unset !important; // Bootstrap thinks its important
   &.empty.empty {
     &, &:hover, &:active, &:focus { // Apply regardless of hover
