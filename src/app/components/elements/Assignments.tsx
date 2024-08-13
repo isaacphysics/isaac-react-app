@@ -191,7 +191,7 @@ export const Assignments = ({assignments}: AssignmentsProps) => {
     return <>
         {assignments.map((assignment, index) => <AssignmentCard assignment={assignment} key={index}/>)}
         {assignments.length === 0 &&
-            <p className="text-center py-4"><strong>There are no {siteSpecific("assignments", "quizzes")} to display.</strong></p>
+            <p className="text-center py-4"><strong>There are no {siteSpecific("assignments", "quizzes")} to display for the selected filters.</strong></p>
         }
     </>;
 };
