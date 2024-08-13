@@ -126,7 +126,9 @@ interface QuestionFinderFilterPanelProps {
     excludeBooks: boolean, setExcludeBooks: Dispatch<SetStateAction<boolean>>;
     tiers: Tier[], choices: Item<TAG_ID>[][], selections: Item<TAG_ID>[][], setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>,
     applyFilters: () => void; clearFilters: () => void;
-    filtersSelected: boolean; searchDisabled: boolean;
+    validFiltersSelected: boolean; 
+    searchDisabled: boolean;
+    setSearchDisabled: Dispatch<SetStateAction<boolean>>;
 }
 export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps) {
     const {
@@ -138,7 +140,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         searchBooks, setSearchBooks,
         excludeBooks, setExcludeBooks,
         tiers, choices, selections, setTierSelection,
-        applyFilters, clearFilters, filtersSelected, searchDisabled
+        applyFilters, clearFilters, validFiltersSelected, 
+        searchDisabled, setSearchDisabled
     } = props;
     const groupBaseTagOptions: GroupBase<Item<string>>[] = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
 
@@ -177,7 +180,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 <b>Filter by</b>
             </div>
             <Spacer/>
-            {filtersSelected && <div className="pe-1 pe-lg-0">
+            {validFiltersSelected && <div className="pe-1 pe-lg-0">
                 <button
                     className={"text-black pe-lg-0 me-2 me-lg-0 bg-white bg-opacity-10 btn-link"}
                     onClick={(e) => {
@@ -429,7 +432,10 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 />
             </div>}*/}
             <Col className="text-center py-3 filter-btn bg-white">
-                <Button onClick={applyFilters} disabled={searchDisabled}>
+                <Button onClick={() => {
+                    applyFilters();
+                    setSearchDisabled(true);
+                }} disabled={searchDisabled}>
                     Apply filters
                 </Button>
             </Col>

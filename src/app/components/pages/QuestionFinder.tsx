@@ -91,6 +91,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     );
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
+    const [searchDisabled, setSearchDisabled] = useState(true);
 
     const [populatedUserContext, setPopulatedUserContext] = useState(false);
 
@@ -228,9 +229,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
     }, [excludeBooks, history, location.state, searchStatuses.hideCompleted, searchBooks, searchDebounce, searchDifficulties, searchExamBoards, searchQuery, searchStages, searchTopics, selections, tiers]);
 
-    const [filtersApplied, setFiltersApplied] = useState<boolean>(false);
+    const [applyFiltersClicked, setApplyFiltersClicked] = useState<boolean>(false);
     const applyFilters = () => {
-        setFiltersApplied(true);
+        setApplyFiltersClicked(true);
         searchAndUpdateURL();
     };
 
@@ -264,6 +265,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [displayQuestions, setDisplayQuestions] = useState<ContentSummaryDTO[] | undefined>([]);
     const [pageCount, setPageCount] = useState(1);
 
+    const [validFiltersSelected, setValidFiltersSelected] = useState(false);
+
     useEffect(() => {
         if (displayQuestions && nextSearchOffset && pageCount > 1) {
             setDisplayQuestions(dqs => [...dqs ?? [], ...questionList ?? []]);
@@ -273,16 +276,16 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [questionList]);
 
-    const filtersSelected = useMemo(() => {
-        setFiltersApplied(false);
-        return searchDifficulties.length > 0
+    useEffect(() => {
+        setSearchDisabled(false);
+        setValidFiltersSelected(searchDifficulties.length > 0
             || searchTopics.length > 0
             || searchExamBoards.length > 0
             || searchStages.length > 0
             || searchBooks.length > 0
             || excludeBooks
             || selections.some(tier => tier.length > 0)
-            || Object.entries(searchStatuses).some(e => e[1]);
+            || Object.entries(searchStatuses).some(e => e[1]));
     }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
 
     const clearFilters = useCallback(() => {
@@ -301,6 +304,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             llmMarked: false,
             hideCompleted: false
         });
+        setSearchDisabled(!searchQuery);
     }, []);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -360,7 +364,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     excludeBooks, setExcludeBooks,
                     tiers, choices, selections, setTierSelection,
                     applyFilters, clearFilters,
-                    filtersSelected, searchDisabled: filtersApplied || !filtersSelected
+                    validFiltersSelected, searchDisabled, setSearchDisabled
                 }} />
             </Col>
             <Col lg={siteSpecific(8, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
@@ -374,14 +378,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                             {displayQuestions?.length
                                 ? <LinkToContentSummaryList items={displayQuestions} noCaret />
-                                : (!filtersApplied && searchQuery === ""
+                                : (!applyFiltersClicked && searchQuery === ""
                                     ? <em>Please select and apply filters</em>
                                     : <em>No results match your criteria</em>)
                             }
                         </ShowLoading>
                     </CardBody>
                 </Card>
-                {(filtersApplied || searchQuery !== "") &&
+                {(applyFiltersClicked || searchQuery !== "") &&
                     (displayQuestions?.length ?? 0) > 0 &&
                     <Row className="pt-3">
                         <Col className="d-flex justify-content-center mb-3">
