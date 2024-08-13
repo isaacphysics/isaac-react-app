@@ -38,8 +38,8 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     const pageHelp = <span>
         Any {siteSpecific("assignments", "quizzes")} you have been set will appear here.<br />
-        Overdue {siteSpecific("assignments", "quizzes")} which have not been fully attempted will be treated as {siteSpecific("assignments", "quizzes")} <em>To do</em> until they are due,
-        after which they are considered <em>Older</em> {siteSpecific("assignments", "quizzes")}.
+        Overdue {siteSpecific("assignments", "quizzes")} which have not been fully attempted will be treated as {siteSpecific("assignments", "quizzes")} <strong>To do</strong> until they are due,
+        after which they are considered <strong>Older</strong> {siteSpecific("assignments", "quizzes")}.
     </span>;
 
     return <Container>
