@@ -30,10 +30,13 @@ export const FooterPhy = () => (
                             <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="mt-2 mb-3">
                                 <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='footer-org-logo' />
                             </a>
-                            Funded by&nbsp;<ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">
-                            <strong>Department for Education</strong>
+                            Funded by {' '} <ExternalLink href="https://www.cam.ac.uk/">
+                                <strong>University of Cambridge</strong>
                             </ExternalLink>.
-                            <br />Supported by {' '}
+                            
+                            <br />Supported by {' '} <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">
+                            <strong>Department for Education</strong>
+                            </ExternalLink> and {' '} 
                             <ExternalLink href="https://www.ogdentrust.com/">
                                 <strong>The&nbsp;Ogden&nbsp;Trust</strong>
                             </ExternalLink>.
