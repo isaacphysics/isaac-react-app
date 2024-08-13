@@ -1,4 +1,8 @@
-.hexagon-tier-title, .hexagon-level-title, .hexagon-tier-summary, .difficulty-title {
+.hexagon-tier-title,
+.hexagon-level-title,
+.hexagon-tier-summary,
+.difficulty-title,
+.filter-count-title {
   pointer-events: none;
   height: 100%;
   display: flex;
@@ -35,7 +39,7 @@
   font-weight: 100;
 }
 
-.difficulty-title {
+.difficulty-title, .filter-count-title {
   font-weight: 400;
   font-size: 0.92rem;
   &.active {color: white;}
@@ -44,4 +48,3 @@
     font-size: 0.8rem;
   }
 }
-
