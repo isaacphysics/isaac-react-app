@@ -374,10 +374,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             Showing <b>{displayQuestions?.length ?? 0}</b> of <b>{totalQuestions}</b>.
                         </Col>
                     </CardHeader>
-                    <CardBody className={classNames({"m-0 p-0": isAda && displayQuestions?.length})}>
+                    <CardBody className={classNames({"p-0 border-0": isPhy, "p-0 m-0": isAda && displayQuestions?.length})}>
                         <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                             {displayQuestions?.length
-                                ? <LinkToContentSummaryList items={displayQuestions} noCaret />
+                                ? <LinkToContentSummaryList items={displayQuestions} noCaret className="m-0" />
                                 : (!applyFiltersClicked && searchQuery === ""
                                     ? <em>Please select and apply filters</em>
                                     : <em>No results match your criteria</em>)

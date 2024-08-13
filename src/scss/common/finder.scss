@@ -63,6 +63,7 @@
   .filter-btn {
     position: -webkit-sticky;
     position: sticky;
+    border-radius: 0 0 $card-border-radius;
     bottom: 0;
   }
 

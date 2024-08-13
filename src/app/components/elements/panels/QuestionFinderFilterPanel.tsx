@@ -182,7 +182,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             <Spacer/>
             {validFiltersSelected && <div className="pe-1 pe-lg-0">
                 <button
-                    className={"text-black pe-lg-0 me-2 me-lg-0 bg-white bg-opacity-10 btn-link"}
+                    className={"text-black pe-lg-0 py-0 me-2 me-lg-0 bg-white bg-opacity-10 btn-link"}
                     onClick={(e) => {
                         e.stopPropagation();
                         clearFilters();
@@ -431,7 +431,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     </span>}
                 />
             </div>}*/}
-            <Col className="text-center py-3 filter-btn bg-white">
+            <Col className="text-center py-3 filter-btn bg-white border-radius-2">
                 <Button onClick={() => {
                     applyFilters();
                     setSearchDisabled(true);
