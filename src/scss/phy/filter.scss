@@ -44,7 +44,7 @@
   }
 }
 
-$shapes: hex, square, octagon, diamond;
+$shapes: hex, square, octagon, diamond, circle;
 
 svg {
   @each $shape in $shapes {
@@ -105,6 +105,12 @@ svg {
       &.active.difficulty.challenge {
         fill: $phy_extra_force_yellow;
         stroke: $phy_extra_force_yellow;
+      }
+
+      &.filter-count {
+        fill: $phy_green;
+        opacity: .1;
+        stroke: none;
       }
 
       &:focus {

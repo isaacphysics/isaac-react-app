@@ -32,10 +32,9 @@ export default [
             "react-hooks/rules-of-hooks": "error",
             "react-hooks/exhaustive-deps": "warn",
             "@typescript-eslint/no-unused-vars": ["warn", {
-                    "argsIgnorePattern": "^_",
-                    "varsIgnorePattern": "^_"
-                }
-            ],
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_"
+            }],
             "@typescript-eslint/ban-ts-comment": "off",
             "@typescript-eslint/explicit-function-return-type": "off",
             "@typescript-eslint/no-empty-interface": "warn",

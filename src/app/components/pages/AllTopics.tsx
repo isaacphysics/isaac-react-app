@@ -4,9 +4,11 @@ import {Badge, Button, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Tag} from "../../../IsaacAppTypes";
 import {
+    PATHS,
     STAGE,
     TAG_ID,
-    tags} from "../../services";
+    tags
+} from "../../services";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -98,7 +100,7 @@ export const AllTopics = () => {
                             mistakes.</p>
                         <p><b>Teachers</b> might want to try our question finder to create quizzes and assign them to
                             students.</p>
-                        <Button className={"mt-4"} tag={Link} to="/quizzes/new" color='dark-primary'>
+                        <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color='dark-primary'>
                             Try our question finder
                         </Button>
                     </Col>

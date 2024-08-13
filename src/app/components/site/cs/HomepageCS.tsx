@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
-import {isLoggedIn, SITE_TITLE, useDeviceSize} from "../../../services";
+import {isLoggedIn, PATHS, SITE_TITLE, useDeviceSize} from "../../../services";
 import {AdaHero2x1} from "../../elements/svg/AdaHero";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import {NewsCard} from "../../elements/cards/NewsCard";
@@ -97,7 +97,7 @@ export const HomepageCS = () => {
                             </p>
                             <p><b>For students</b>: Learn or revise a topic and receive instant feedback.</p>
                             <p><b>For teachers</b>: Save time by creating self-marking quizzes for your class.</p>
-                            <Button className={"mt-4"} tag={Link} to="/quizzes/new" color='primary'>
+                            <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color='primary'>
                                 Find questions
                             </Button>
                         </Col>

@@ -1,8 +1,43 @@
 #finder-page {
   .finder-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
+     display: flex;
+     flex-wrap: wrap;
+     align-items: center;
+  }
+
+  .finder-search {
+    $search-button-offset: 50px;
+    .question-search-button {
+      background: white url(/assets/cs/icons/search-jet.svg) no-repeat center;
+      background-size: 20px 20px;
+      border: 1px solid black;
+      border-left: none;
+      border-radius: 0 var(--bs-border-radius) var(--bs-border-radius) 0;
+      padding: 0.45rem 0;
+      width: $search-button-offset;
+      min-width: 0;
+      &:active {
+        background-color: lightgray !important;
+      }
+    }
+
+    &::before {
+      content: "";
+      display: block;
+      position: relative;
+      float: right;
+      width: 1px;
+      height: 34px;
+      top: 48px;
+      right: $search-button-offset;
+      background: #c2c2c2;
+      z-index: 4;
+    }
+
+    input#question-search-title {
+      padding-right: calc($search-button-offset + 1.2em) !important; // offset plus the default padding inside an input
+      height: 50px;
+    }
   }
 
   .search-item-icon {
@@ -23,6 +58,18 @@
     @include respond-below(xs) {
       margin-right: 0.5rem;
     }
+  }
+
+  .filter-btn {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+  }
+
+  .filter-separator {
+    overflow: hidden;
+    border-top: solid #c2c2c2 1px;
+    border-bottom: none;
   }
 }
 
