@@ -346,6 +346,7 @@ export const CS_EXAM_BOARDS_BY_STAGE: {[stage in typeof STAGES_CS[number]]: Exam
 };
 
 export const EXAM_BOARD_NULL_OPTIONS = [EXAM_BOARD.ALL];
+export const EXAM_BOARD_DEFAULT_OPTION = siteSpecific(EXAM_BOARD.ALL, EXAM_BOARD.ADA);
 
 export const EXAM_BOARD_ITEM_OPTIONS = Object.keys(EXAM_BOARD).map(s => ({value: s, label: examBoardLabelMap[s as EXAM_BOARD]}));
 
