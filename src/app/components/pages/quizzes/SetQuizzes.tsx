@@ -340,7 +340,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         </RS.DropdownMenu>
     </RS.UncontrolledDropdown>;
 
-    const setDateFilterInput = <RS.Row className="d-flex align-items-baseline">
+    const setDateFilterInput = <div className="d-flex align-items-baseline">
         <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Starting</span>
         {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
         <RS.Input
@@ -348,9 +348,9 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
             value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
             placeholder="Filter by set date" aria-label="Filter by set date"
         />
-    </RS.Row>;
+    </div>;
 
-    const dueDateFilterInput = <RS.Row className="d-flex align-items-baseline">
+    const dueDateFilterInput = <div className="d-flex align-items-baseline">
         <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Due</span>
         {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
         <RS.Input
@@ -358,7 +358,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
             value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
             placeholder="Filter by due date" aria-label="Filter by due date"
         />
-    </RS.Row>;
+    </div>;
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} />
