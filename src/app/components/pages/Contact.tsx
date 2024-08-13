@@ -203,7 +203,10 @@ export const Contact = () => {
                                         <Alert color="danger" isOpen={!!errorMessage}><>{errorMessage} You can contact us at <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></></Alert>
                                     </div>
                                     <Row>
-                                        <Col size={12} md={6}>                                   
+                                        <Col size={12} md={6}>
+                                            {isPhy && <span className="d-block pb-3 pb-md-0 text-end text-md-start form-required">
+                                                Required field
+                                            </span>}                                  
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
                                             <Input type="submit" value="Submit" className="btn btn-block btn-secondary border-0" />
