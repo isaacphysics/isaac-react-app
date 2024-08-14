@@ -983,7 +983,7 @@ export const PATHS = siteSpecific({
     ASSIGNMENT_PROGRESS: "/assignment_progress",
     MY_GAMEBOARDS: "/my_gameboards",
     MY_ASSIGNMENTS: "/assignments",
-    QUESTION_FINDER: "/gameboards/new",
+    QUESTION_FINDER: "/questions",
     GAMEBOARD: "/gameboards",
     SET_ASSIGNMENTS: "/set_assignments",
     GAMEBOARD_BUILDER: "/gameboard_builder",
