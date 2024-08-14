@@ -413,6 +413,7 @@ export const ClozeDropRegionContext = React.createContext<{
     dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
     shouldGetFocus: (id: string) => boolean,
     nonSelectedItems: Immutable<ClozeItemDTO>[]
+    allItems: Immutable<ClozeItemDTO>[]
 } | undefined>(undefined);
 
 export const InlineContext = React.createContext<{
