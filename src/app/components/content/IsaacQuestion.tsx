@@ -48,7 +48,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const validationResponseTags = validationResponse?.explanation?.tags;
     const correct = validationResponse?.correct || false;
     const locked = questionPart?.locked;
-    const canSubmit = canAttemptQuestionType.isSuccess && questionPart?.canSubmit && !locked || false;
+    const hasValue = (currentAttempt?.type === "quantity") ? (currentAttempt.value != null && currentAttempt.value != "") : true;
+    const canSubmit = hasValue && canAttemptQuestionType.isSuccess && questionPart?.canSubmit && !locked || false;
     const sigFigsError = isPhy && validationResponseTags?.includes("sig_figs");
     const tooManySigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_many");
     const tooFewSigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_few");
