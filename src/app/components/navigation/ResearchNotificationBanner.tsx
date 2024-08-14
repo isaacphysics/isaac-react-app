@@ -41,7 +41,7 @@ export const ResearchNotificationBanner = () => {
                 </RS.Col>
                 <RS.Col xs={12} md={3} className="text-center">
                     <RS.Button color="primary" outline={isPhy} className="mt-3 mb-2 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
-                        {siteSpecific("Got It", "Got it")}
+                        Got it
                     </RS.Button>
                 </RS.Col>
             </RS.Row>
