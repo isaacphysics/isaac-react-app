@@ -253,15 +253,6 @@ p small {
     }
 }
 
-// Double class to give this more specificity
-.katex.katex {
-    font-size: 1.1em;
-    white-space: nowrap !important;
-    padding-top: 0.25rem !important;
-    padding-bottom: 0.25rem !important;
-    display: inline-flex;
-}
-
 body {
     color: $black;
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
