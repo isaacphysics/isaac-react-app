@@ -58,8 +58,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const droppableId = CLOZE_DROP_ZONE_ID_PREFIX + `${index + 1}`;
     const dropdownItems = dropRegionContext?.allItems ?? [];
-    const nonSelectedItems = dropRegionContext?.nonSelectedItems ?? [];
-    const nonSelectedItemIds = nonSelectedItems.map(item => item.id);
+    const nonSelectedItemIds = (dropRegionContext?.nonSelectedItems ?? []).map(item => item.id);
 
     useEffect(() => {
         // Register with the current cloze question on first render
@@ -124,26 +123,15 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
                 <span className="d-inline-block"></span>
             </DropdownItem>
             {dropdownItems.map((item, i) => {
-                if (nonSelectedItemIds.includes(item.id))
-                {
-                    return <DropdownItem key={i}
-                    data-unit={item || 'None'}
-                    onClick={() => {dropRegionContext?.onSelect(item, droppableId, false);}}
-                    >
-                        <Markup trusted-markup-encoding={"html"}>
-                            {item.value ?? ""}
-                        </Markup>
-                    </DropdownItem>;
-                }
-                else 
-                {
-                    return <DropdownItem key={i} style={{color:"darkgray", backgroundColor:"lightgray", pointerEvents:"none"}}>
-                        <Markup trusted-markup-encoding={"html"}>
-                            {item.value ?? ""}
-                        </Markup>
-                    </DropdownItem>
-                }
-                
+                return <DropdownItem key={i}
+                data-unit={item || 'None'}
+                onClick={() => {dropRegionContext?.onSelect(item, droppableId, false);}}
+                disabled={!nonSelectedItemIds.includes(item.id)}
+                >
+                    <Markup trusted-markup-encoding={"html"}>
+                        {item.value ?? ""}
+                    </Markup>
+                </DropdownItem>;
             })}
         </DropdownMenu>
     </Dropdown>;

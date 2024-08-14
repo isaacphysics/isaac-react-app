@@ -367,7 +367,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
 
         if (clearSelection) {
             idvs[dropZoneIndex] = undefined;
-        } else if (!clearSelection) {
+        } else {
             idvs[dropZoneIndex] = augmentInlineItemWithUniqueReplacementID(item);
         }
 
