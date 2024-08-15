@@ -19,14 +19,14 @@ type AgePermission = "denied" | "additional_info" | "allowed";
 
 export const RegistrationAgeCheck = () => {
 
-    const [over13, setOver13] = useState<AgePermission | undefined>(undefined);
+    const [agePermission, setAgePermission] = useState<AgePermission | undefined>(undefined);
     const [submissionAttempted, setSubmissionAttempted] = useState<boolean>(false);
 
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSubmissionAttempted(true);
 
-        switch (over13) {
+        switch (agePermission) {
             case "allowed":
                 history.push("/register/student/details");
                 break;
@@ -54,10 +54,10 @@ export const RegistrationAgeCheck = () => {
                             id="registration-age-check-over"
                             className="d-inline"
                             type="radio"
-                            checked={over13 === "allowed"}
-                            onChange={() => {setOver13("allowed");}}
+                            checked={agePermission === "allowed"}
+                            onChange={() => {setAgePermission("allowed");}}
                             color="secondary"
-                            invalid={submissionAttempted && over13 === undefined}
+                            invalid={submissionAttempted && agePermission === undefined}
                         />
                         <Label for="registration-age-check-over" className="ms-2">13 and over</Label>
                     </FormGroup>
@@ -66,10 +66,10 @@ export const RegistrationAgeCheck = () => {
                             id="registration-age-check-additional-info"
                             className="d-inline"
                             type="radio"
-                            checked={over13 === "additional_info"}
-                            onChange={() => {setOver13("additional_info");}}
+                            checked={agePermission === "additional_info"}
+                            onChange={() => {setAgePermission("additional_info");}}
                             color="secondary"
-                            invalid={submissionAttempted && over13 === undefined}
+                            invalid={submissionAttempted && agePermission === undefined}
                         >
                         </Input>
                         <Label for="registration-age-check-additional-info" className="ms-2">10 - 12 years old</Label>
@@ -79,10 +79,10 @@ export const RegistrationAgeCheck = () => {
                             id="registration-age-check-under"
                             className="d-inline"
                             type="radio"
-                            checked={over13 === "denied"}
-                            onChange={() => {setOver13("denied");}}
+                            checked={agePermission === "denied"}
+                            onChange={() => {setAgePermission("denied");}}
                             color="secondary"
-                            invalid={submissionAttempted && over13 === undefined}
+                            invalid={submissionAttempted && agePermission === undefined}
                         >
                         </Input>
                         <Label for="registration-age-check-under" className="ms-2">Under {siteSpecific("10 years old", "13")}</Label>
