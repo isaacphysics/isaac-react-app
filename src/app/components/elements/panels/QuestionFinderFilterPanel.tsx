@@ -350,19 +350,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                     <StyledCheckbox
                         color="primary"
-                        checked={searchStatuses.hideCompleted}
-                        onChange={() => setSearchStatuses(s => {return {...s, hideCompleted: !s.hideCompleted};})}
-                        label={<div>
-                            <span>{siteSpecific("Hide fully correct", "Hide complete")}</span>
-                        </div>}
-                    />
-                </div>
-                {/* TODO: implement new completeness filters
-                <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
-                    <StyledCheckbox
-                        color="primary"
-                        checked={questionStatuses.notAttempted}
-                        onChange={() => setQuestionStatuses(s => {return {...s, notAttempted: !s.notAttempted};})}
+                        checked={searchStatuses.notAttempted}
+                        onChange={() => setSearchStatuses(s => {return {...s, notAttempted: !s.notAttempted};})}
                         label={<div>
                             <span>Not attempted</span>
                             <img
@@ -377,8 +366,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                     <StyledCheckbox
                         color="primary"
-                        checked={questionStatuses.complete}
-                        onChange={() => setQuestionStatuses(s => {return {...s, complete: !s.complete};})}
+                        checked={searchStatuses.complete}
+                        onChange={() => setSearchStatuses(s => {return {...s, complete: !s.complete};})}
                         label={<div>
                             <span>Completed</span>
                             <img
@@ -393,8 +382,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                     <StyledCheckbox
                         color="primary"
-                        checked={questionStatuses.incorrect}
-                        onChange={() => setQuestionStatuses(s => {return {...s, incorrect: !s.incorrect};})}
+                        checked={searchStatuses.incorrect}
+                        onChange={() => setSearchStatuses(s => {return {...s, incorrect: !s.incorrect};})}
                         label={<div>
                             <span>Try again</span>
                             <img
@@ -405,7 +394,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             />
                         </div>}
                     />
-                </div>*/}
+                </div>
             </CollapsibleList>
             {/* TODO: implement once necessary tags are available
             <div className="pb-2">

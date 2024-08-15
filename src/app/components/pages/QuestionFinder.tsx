@@ -25,6 +25,7 @@ import {
     TAG_ID,
     itemiseTag,
     SEARCH_RESULTS_PER_PAGE,
+    listParams,
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -47,7 +48,19 @@ export interface QuestionStatus {
     complete: boolean;
     incorrect: boolean;
     llmMarked: boolean;
-    hideCompleted: boolean; // TODO: remove when implementing desired filters
+}
+
+function questionStatusToURIComponent(statuses: QuestionStatus): string {
+    return Object.entries(statuses)
+        .filter(e => e[0] !== "llmMarked" && e[1])
+        .map(e => {
+            switch(e[0]) {
+                case "notAttempted": return "NOT_ATTEMPTED";
+                case "complete": return "ALL_CORRECT";
+                case "incorrect": return "IN_PROGRESS";
+            }
+        })
+        .join(",");
 }
 
 function processTagHierarchy(subjects: string[], fields: string[], topics: string[]): Item<TAG_ID>[][] {
@@ -68,10 +81,32 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
     return selectionItems;
 }
 
+function getInitialQuestionStatuses(params: listParams): QuestionStatus {
+    const statuses = arrayFromPossibleCsv(params.statuses);
+    if (statuses.length < 1) {
+        // If no statuses set use default
+        return {
+            notAttempted: true,
+            complete: true,
+            incorrect: true,
+            llmMarked: false
+        };
+    }
+    else {
+        // otherwise set use the URI components
+        return {
+            notAttempted: statuses.includes("notAttempted"),
+            complete: statuses.includes("complete"),
+            incorrect: statuses.includes("tryAgain"),
+            llmMarked: false
+        };
+    }
+}
+
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserViewingContext();
-    const params: {[key: string]: string | string[] | undefined} = useQueryParams(false);
+    const params: listParams = useQueryParams(false);
     const history = useHistory();
     const eventLog = useRef<object[]>([]).current; // persist state but do not rerender on mutation
 
@@ -81,13 +116,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(
-        {
-            notAttempted: false,
-            complete: false,
-            incorrect: false,
-            llmMarked: false,
-            hideCompleted: !!params.hideCompleted
-        }
+        getInitialQuestionStatuses(params)
     );
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
@@ -149,7 +178,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         selections.every(v => v.length === 0);
 
     const searchDebounce = useCallback(
-        debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], excludeBooks: boolean, hideCompleted: boolean, startIndex: number) => {
+        debounce((searchString: string, topics: string[], examBoards: string[],
+            book: string[], stages: string[], difficulties: string[],
+            hierarchySelections: Item<TAG_ID>[][], tiers: Tier[],
+            excludeBooks: boolean, questionStatuses: QuestionStatus,
+            startIndex: number) => {
             if (nothingToSearchFor) {
                 dispatch(clearQuestionSearch);
                 return;
@@ -185,10 +218,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 questionCategories: isPhy
                     ? (excludeBooks ? "problem_solving" : "problem_solving,book")
                     : undefined,
+                statuses: questionStatusToURIComponent(questionStatuses),
                 fasttrack: false,
-                hideCompleted,
                 startIndex,
-                limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need, as to know if there are more results
+                limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need to know if there are more results
             }));
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, startIndex});
@@ -202,7 +235,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setDisplayQuestions(undefined);
         searchDebounce(
             searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages,
-            searchDifficulties, selections, tiers, excludeBooks, searchStatuses.hideCompleted, 0
+            searchDifficulties, selections, tiers, excludeBooks, searchStatuses, 0
         );
 
         const params: {[key: string]: string} = {};
@@ -215,7 +248,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             params.book = toSimpleCSV(searchBooks);
         }
         if (isPhy && excludeBooks) params.excludeBooks = "set";
-        if (searchStatuses.hideCompleted) params.hideCompleted = "set";
+        if (!(searchStatuses.notAttempted
+            && searchStatuses.complete
+            && searchStatuses.incorrect)
+        ) {
+            params.statuses = Object.entries(searchStatuses)
+                .filter(e => e[0] !== "llmMarked" && e[1])
+                .map(e => e[0] === "incorrect" ? "tryAgain" : e[0])
+                .join(",");
+        }
 
         if (isPhy) {
             tiers.forEach((tier, i) => {
@@ -227,7 +268,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
-    }, [excludeBooks, history, location.state, searchStatuses.hideCompleted, searchBooks, searchDebounce, searchDifficulties, searchExamBoards, searchQuery, searchStages, searchTopics, selections, tiers]);
+    }, [excludeBooks, history, location.state, searchStatuses, searchBooks, searchDebounce, searchDifficulties, searchExamBoards, searchQuery, searchStages, searchTopics, selections, tiers]);
 
     const [applyFiltersClicked, setApplyFiltersClicked] = useState<boolean>(false);
     const applyFilters = () => {
@@ -297,13 +338,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setExcludeBooks(false);
         setSelections([[], [], []]);
         setSearchStatuses(
-        {
-            notAttempted: false,
-            complete: false,
-            incorrect: false,
-            llmMarked: false,
-            hideCompleted: false
-        });
+            {
+                notAttempted: false,
+                complete: false,
+                incorrect: false,
+                llmMarked: false,
+            });
         setSearchDisabled(!searchQuery);
     }, []);
 
@@ -346,7 +386,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         defaultValue={searchQuery}
                         placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                         onChange={(e) => handleSearch(e.target.value)}
-                        />
+                    />
                     <Button className="question-search-button" onClick={searchAndUpdateURL}/>
                 </InputGroup>
             </Col>
@@ -397,7 +437,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         searchDifficulties,
                                         selections, tiers,
                                         excludeBooks,
-                                        searchStatuses.hideCompleted,
+                                        searchStatuses,
                                         nextSearchOffset
                                             ? nextSearchOffset - 1
                                             : 0);
