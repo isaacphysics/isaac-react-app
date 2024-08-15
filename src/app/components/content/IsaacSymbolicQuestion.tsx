@@ -76,6 +76,9 @@ export const symbolicInputValidator = (input: string) => {
     if (/\.[0-9]/.test(input)) {
         errors.push('Please convert decimal numbers to fractions.');
     }
+    if (/[<>=].*[<>=]/.test(input)) {
+        errors.push('We are not able to accept double equations or inequalities.');
+    }
     const invTrig = input.match(/(((sin|cos|tan|sec|cosec|cot)(h?))(\^|\*\*)[({]?-1[)}]?)/);
     if (invTrig != null) {
         const trigFunction = invTrig[2];
