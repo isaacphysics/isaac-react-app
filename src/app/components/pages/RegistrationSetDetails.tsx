@@ -73,7 +73,8 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
     const givenNameIsValid = validateName(registrationUser.givenName);
     const familyNameIsValid = validateName(registrationUser.familyName);
-    const passwordIsValid = (!isPhy || confirmedPassword === registrationUser.password) && validatePassword(registrationUser.password || "");
+    const passwordIsValid = validatePassword(registrationUser.password || "");
+    const passwordsMatch = (!isPhy || confirmedPassword === registrationUser.password);
     const schoolIsValid = validateUserSchool(registrationUser);
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
     const error = useAppSelector((state) => state?.error);
@@ -149,6 +150,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 passwordValid={passwordIsValid}
+                                passwordsMatch={passwordsMatch}
                                 setConfirmedPassword={setConfirmedPassword}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}

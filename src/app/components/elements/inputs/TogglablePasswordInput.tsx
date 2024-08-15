@@ -1,7 +1,11 @@
 import {FormFeedback, Input, InputGroup, InputProps} from "reactstrap";
 import React, {useState} from "react";
 
-export const TogglablePasswordInput = (props: InputProps) => {
+interface TogglablePasswordInputProps extends InputProps {
+    feedbackText?: string;
+}
+
+export const TogglablePasswordInput = (props: TogglablePasswordInputProps) => {
     const [showPassword, setShowPassword] = useState(false);
 
     return <InputGroup>
@@ -13,7 +17,7 @@ export const TogglablePasswordInput = (props: InputProps) => {
             {showPassword ? "Hide" : "Show"}
         </button>
         <FormFeedback>
-            Please enter a valid password.
+            {props.feedbackText ?? "Please enter a valid password."}
         </FormFeedback>
     </InputGroup>
 };

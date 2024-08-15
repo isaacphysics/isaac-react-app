@@ -10,6 +10,7 @@ interface SetPasswordInputProps {
     userToUpdate: Immutable<ValidationUser>;
     setUserToUpdate: (user: Immutable<ValidationUser>) => void;
     passwordValid: boolean;
+    passwordsMatch: boolean;
     setConfirmedPassword: (password: string) => void;
     submissionAttempted: boolean;
     idPrefix?: string;
@@ -17,7 +18,7 @@ interface SetPasswordInputProps {
 }
 
 
-export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, submissionAttempted, passwordValid, setConfirmedPassword, required, idPrefix="account"}: SetPasswordInputProps) => {
+export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, submissionAttempted, passwordValid, passwordsMatch, setConfirmedPassword, required, idPrefix="account"}: SetPasswordInputProps) => {
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
 
     loadZxcvbnIfNotPresent();
@@ -28,13 +29,14 @@ export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, subm
             <p className="d-block input-description">Your password must be at least {MINIMUM_PASSWORD_LENGTH} characters long.</p>
             <TogglablePasswordInput
                 id={`${idPrefix}-password-set`} name="password" type="password"
-                required aria-describedby="invalidPassword"
+                aria-describedby="invalidPassword"
+                feedbackText={(!passwordValid || passwordsMatch) ? "Please enter a valid password" : "Please ensure your passwords match."}
                 value={userToUpdate.password ? userToUpdate.password : undefined}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {password: e.target.value} : {password: null}))
                     passwordDebounce(e.target.value, setPasswordFeedback);
                 }}
-                invalid={required && submissionAttempted && !passwordValid}
+                invalid={required && submissionAttempted && !(passwordValid && passwordsMatch) }
             />
             {passwordFeedback &&
                 <span className='float-end small mt-1'>
