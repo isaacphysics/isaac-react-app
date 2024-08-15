@@ -135,7 +135,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
 
     // Replace query params
     useEffect(() => {
-        const actualParams = queryString.parse(window.location.search);
+        const actualParams = queryString.parse(window.location.search, {decode: false});
         if (stage !== actualParams.stage || (!isPhy && examBoard !== actualParams.examBoard)) {
             try {
                 history.replace({
