@@ -345,6 +345,10 @@
   }
 }
 
+.dropdown .cloze-item {
+  border: none;
+}
+
 .cloze-drop-zone, .cloze-dropdown {
   &.incorrect {
     filter: drop-shadow(0 0 0.3rem red);
