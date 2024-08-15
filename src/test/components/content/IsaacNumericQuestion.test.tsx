@@ -54,6 +54,8 @@ describe("IsaacNumericQuestion", () => {
         expect(symbolicInputValidator("1/2")).toEqual([]);
         expect(symbolicInputValidator("asin(x)")).toEqual([]);
         expect(symbolicInputValidator("bsin(x)")).toEqual(["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"]);
+        expect(symbolicInputValidator("a<=b")).toEqual([]);
+        expect(symbolicInputValidator("a<b<c")).toEqual(['We are not able to accept double equations or inequalities.']);
     });
 
     it("Symbolic Question Validator matches correctly", async () => {
