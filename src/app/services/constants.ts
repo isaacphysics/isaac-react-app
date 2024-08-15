@@ -346,6 +346,7 @@ export const CS_EXAM_BOARDS_BY_STAGE: {[stage in typeof STAGES_CS[number]]: Exam
 };
 
 export const EXAM_BOARD_NULL_OPTIONS = [EXAM_BOARD.ALL];
+export const EXAM_BOARD_DEFAULT_OPTION = siteSpecific(EXAM_BOARD.ALL, EXAM_BOARD.ADA);
 
 export const EXAM_BOARD_ITEM_OPTIONS = Object.keys(EXAM_BOARD).map(s => ({value: s, label: examBoardLabelMap[s as EXAM_BOARD]}));
 
@@ -390,6 +391,14 @@ export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_2: "Challenge\u00A0(C2)",
     challenge_3: "Challenge\u00A0(C3)",
 };
+export const simpleDifficultyLabelMap: {[difficulty in Difficulty]: string} = {
+    practice_1: "Practice\u00A01",
+    practice_2: "Practice\u00A02",
+    practice_3: "Practice\u00A03",
+    challenge_1: "Challenge\u00A01",
+    challenge_2: "Challenge\u00A02",
+    challenge_3: "Challenge\u00A03",
+};
 export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
     practice_1: `Practice (P1) ${siteSpecific("\u2B22\u2B21\u2B21", "\u25CF\u25CB")}`,
     practice_2: `Practice (P2) ${siteSpecific("\u2B22\u2B22\u2B21", "\u25CF\u25CF")}`,
@@ -404,6 +413,9 @@ export const difficultiesOrdered: Difficulty[] = siteSpecific(
 );
 export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
     {value: d, label: difficultyLabelMap[d]}
+));
+export const SIMPLE_DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
+    {value: d, label: simpleDifficultyLabelMap[d]}
 ));
 export const DIFFICULTY_ICON_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
     {value: d, label: difficultyIconLabelMap[d]}
@@ -971,7 +983,8 @@ export const PATHS = siteSpecific({
     ASSIGNMENT_PROGRESS: "/assignment_progress",
     MY_GAMEBOARDS: "/my_gameboards",
     MY_ASSIGNMENTS: "/assignments",
-    QUESTION_FINDER: "/gameboards/new",
+    QUESTION_FINDER: "/questions",
+    GAMEBOARD_FILTER: "/gameboards/new",
     GAMEBOARD: "/gameboards",
     SET_ASSIGNMENTS: "/set_assignments",
     GAMEBOARD_BUILDER: "/gameboard_builder",
@@ -981,7 +994,8 @@ export const PATHS = siteSpecific({
     ASSIGNMENT_PROGRESS: "/my_markbook",
     MY_GAMEBOARDS: "/quizzes",
     MY_ASSIGNMENTS: "/assignments",
-    QUESTION_FINDER: "/quizzes/new",
+    QUESTION_FINDER: "/questions",
+    GAMEBOARD_FILTER: "/quizzes/new",
     GAMEBOARD: "/quizzes/view",
     SET_ASSIGNMENTS: "/quizzes/set",
     GAMEBOARD_BUILDER: "/quizzes/builder",

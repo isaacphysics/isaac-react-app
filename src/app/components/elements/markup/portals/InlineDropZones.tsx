@@ -57,7 +57,8 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
     const deviceSize = useDeviceSize();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const droppableId = CLOZE_DROP_ZONE_ID_PREFIX + `${index + 1}`;
-    const dropdownItems = dropRegionContext?.nonSelectedItems ?? [];
+    const dropdownItems = dropRegionContext?.allItems ?? [];
+    const nonSelectedItemIds = (dropRegionContext?.nonSelectedItems ?? []).map(item => item.id);
 
     useEffect(() => {
         // Register with the current cloze question on first render
@@ -111,7 +112,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
                 {isDefined(isCorrect) && <div className={"feedback-box"}>
                     <span className={classNames("feedback", isCorrect ? "correct" : "incorrect")}>{isCorrect ? "✔" : "✘"}</span>
                 </div>}
-                {!item && <img className={classNames("icon-dropdown", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"></img>}
+                {!item && <img className={classNames("dropzone-dropdown", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"></img>}
             </div>
         </DropdownToggle>
         <DropdownMenu end>
@@ -124,8 +125,9 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
             </DropdownItem>
             {dropdownItems.map((item, i) => {
                 return <DropdownItem key={i}
-                    data-unit={item || 'None'}
-                    onClick={() => {dropRegionContext?.onSelect(item, droppableId, false);}}
+                className={!nonSelectedItemIds.includes(item.id) ? "invalid" : ""}
+                data-unit={item || 'None'}
+                onClick={nonSelectedItemIds.includes(item.id) ? (() => {dropRegionContext?.onSelect(item, droppableId, false);}) : undefined}
                 >
                     <Markup trusted-markup-encoding={"html"}>
                         {item.value ?? ""}

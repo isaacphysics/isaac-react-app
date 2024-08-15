@@ -47,7 +47,7 @@ import {AuthError} from "../pages/AuthError";
 import {SessionExpired} from "../pages/SessionExpired";
 import {ConsistencyError} from "../pages/ConsistencyError";
 import {Search} from "../pages/Search";
-import {CookieBanner} from "./CookieBanner";
+import {ResearchNotificationBanner} from "./ResearchNotificationBanner";
 import {EmailVerificationBanner} from "./EmailVerificationBanner";
 import {Toasts} from "./Toasts";
 import {AdminUserManager} from "../pages/AdminUserManager";
@@ -78,6 +78,7 @@ import {AssignmentProgress} from "../pages/AssignmentProgress";
 import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
+import {QuestionFinder} from "../pages/QuestionFinder";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -143,7 +144,7 @@ export const IsaacApp = () => {
         <SiteSpecific.Header />
         <Toasts />
         <ActiveModals />
-        <CookieBanner />
+        <ResearchNotificationBanner />
         <UnsupportedBrowserBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
@@ -182,7 +183,8 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path={PATHS.MY_GAMEBOARDS} ifUser={isLoggedIn} component={MyGameboards} />
-                        <TrackedRoute exact path={PATHS.QUESTION_FINDER} ifUser={isNotPartiallyLoggedIn} component={GameboardFilter} />
+                        <TrackedRoute exact path={PATHS.GAMEBOARD_FILTER} ifUser={isNotPartiallyLoggedIn} component={GameboardFilter} />
+                        <TrackedRoute exact path={PATHS.QUESTION_FINDER} component={QuestionFinder} />
 
                         {/* Teacher pages */}
                         {/* Tutors can set and manage assignments, but not tests/quizzes */}

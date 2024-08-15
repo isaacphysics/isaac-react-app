@@ -79,7 +79,7 @@
 
   @media screen {
     .units-shown {
-      border-radius: 5px 0 0 5px;
+      border-radius: 5px 0 0 5px !important;
     }
   }
 
@@ -316,6 +316,13 @@
       display: unset;
     }
   }
+  .dropdown-menu {
+    max-height: 300px;
+    overflow-y: scroll;
+    .invalid{
+      color: darkgray;
+    }
+  }
 }
 
 .item-section {
@@ -332,9 +339,14 @@
   touch-action: none;
   position: relative;
   font-size: 1rem !important;
+  border: 1px solid $border-color;
   &.is-dragging {
     opacity: 0.666;
   }
+}
+
+.dropdown .cloze-item {
+  border: none;
 }
 
 .cloze-drop-zone, .cloze-dropdown {
