@@ -1,4 +1,4 @@
-import {SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific} from "./";
+import {PATHS, SEARCH_RESULT_TYPE, SITE_TITLE, siteSpecific} from "./";
 import {SearchShortcut} from "../../IsaacAppTypes";
 
 export const searchList: SearchShortcut[] = [
@@ -75,7 +75,7 @@ export const searchList: SearchShortcut[] = [
         title: "Question finder",
         terms: ["question finder", "questions", "question search"],
         summary: "Search for questions on the site.",
-        url: siteSpecific("/gameboards/new", "/quizzes/new"),
+        url: PATHS.QUESTION_FINDER,
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "a_level",

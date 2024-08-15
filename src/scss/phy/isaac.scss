@@ -81,6 +81,8 @@ $question-font-weight: 600;
 // forms
 $border-color: black;
 
+$enable-negative-margins: true;
+
 // ISAAC
 // Node module imports
 @import "~bootstrap/scss/functions";
@@ -210,7 +212,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "my-account";
 @import "../common/topic";
 @import "../common/search";
-@import "../common/finder";
+@import "finder";
 @import "../common/my-progress";
 @import "gameboard";
 @import "groups";
@@ -257,10 +259,11 @@ p small {
 .katex.katex {
     font-size: 1.1em;
     white-space: nowrap !important;
-    overflow-x: auto;
+    overflow-x: clip;
     overflow-y: hidden;
     padding-top: 0.25rem !important;
     padding-bottom: 0.25rem !important;
+    display: inline-flex;
 }
 
 body {

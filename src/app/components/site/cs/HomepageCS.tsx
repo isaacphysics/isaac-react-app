@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
-import {isLoggedIn, SITE_TITLE, useDeviceSize} from "../../../services";
+import {isLoggedIn, PATHS, SITE_TITLE, useDeviceSize} from "../../../services";
 import {AdaHero2x1} from "../../elements/svg/AdaHero";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import {NewsCard} from "../../elements/cards/NewsCard";
@@ -66,12 +66,12 @@ export const HomepageCS = () => {
                                 <li><b>Interactive questions:</b> Over 1000 questions with instant marking and feedback</li>
                                 <li><b>Teacher tools:</b> Set quizzes and assignments effortlessly</li>
                                 <li><b>AI and machine learning resources:</b> Stay ahead of the AI curve</li>
-                                <li><b>Complete curriculums:</b>For
+                                <li><b>Complete curriculums:</b> For
                                     {" "}<a href={"/exam_specifications_england#gcse/aqa"}>GCSE</a>,
                                     {" "}<a href={"/exam_specifications_england#a_level/aqa"}>A&nbsp;Level</a>,
-                                    {" "}<a href={"/concepts/sqa_computing_science?examBoard=sqa&stage=scotland_national_5"}>National&nbsp;5</a>,
-                                    {" "}<a href={"/concepts/sqa_computing_science?examBoard=sqa&stage=scotland_higher"}>Higher</a>, and
-                                    {" "}<a href={"/concepts/sqa_computing_science?examBoard=sqa&stage=scotland_advanced_higher"}>Advanced&nbsp;Higher</a></li>
+                                    {" "}<a href={"/exam_specifications_scotland#scotland_national_5/sqa"}>National&nbsp;5</a>,
+                                    {" "}<a href={"/exam_specifications_scotland#scotland_higher/sqa"}>Higher</a>, and
+                                    {" "}<a href={"/exam_specifications_scotland#scotland_advanced_higher/sqa"}>Advanced&nbsp;Higher</a></li>
                             </ul>
                             {!isLoggedIn(user) &&
                                 <Button className="mt-3" tag={Link} to="/register" color="primary">Join</Button>
@@ -97,7 +97,7 @@ export const HomepageCS = () => {
                             </p>
                             <p><b>For students</b>: Learn or revise a topic and receive instant feedback.</p>
                             <p><b>For teachers</b>: Save time by creating self-marking quizzes for your class.</p>
-                            <Button className={"mt-4"} tag={Link} to="/quizzes/new" color='primary'>
+                            <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color='primary'>
                                 Find questions
                             </Button>
                         </Col>
@@ -154,7 +154,7 @@ export const HomepageCS = () => {
                         </Col>
                     </Row>
                     <Col xs={12} sm={{size: 8, offset: 2}} md={{size: 6, offset: 3}} lg={{size: 4, offset: 4}} className=" mt-5 d-flex justify-content-center">
-                        <Button className="w-100" tag={Link} to="/topics" color="primary" outline>Explore all resources</Button>
+                        <Button className="w-100" tag={Link} to="/topics" color="primary">Explore all resources</Button>
                     </Col>
                 </Container>
             </section>
