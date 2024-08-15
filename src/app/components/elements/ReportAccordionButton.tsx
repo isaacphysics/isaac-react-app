@@ -22,7 +22,7 @@ export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionI
             params +=`&page=${pageId}`
             // In absence of an ID, the section titles are likely most useful in locating the problem
             if (sectionTitle) {
-                params +=`&section=${sectionTitle}`
+                params +=`&section=${sectionTitle.replaceAll("&", "_")}`
             }
         }
         return params
