@@ -143,15 +143,10 @@ input.form-control.is-unanswered {
 // cloze dropdowns inside katex are normally cut off due to content-driven overflows we cannot control easily. this:
 //    a) enforces that dropdowns are provided $cloze-dropdown-height of space (maximum height before scrolling);
 //    b) sets the correct overflow behaviour for the parent of the katex containing the dropdown;
-//        (note that this does not apply for all katex, only those with cloze-dropdowns)
-//    c) recreates the scrollbar to forcibly display it on OSX.
+//    c) if webkit exists, recreates the scrollbar to forcibly display it on OSX.
 
 $cloze-dropdown-height: 300px;
 $cloze-scrollbar-height: 0px;
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  // if webkit exists, enable an offset to include scrollbar padding in calculations
-  $cloze-scrollbar-height: 4px;
-}
 
 p:has(> .katex.katex .cloze-dropdown.show) {
   padding-bottom: calc(1rem + $cloze-dropdown-height + $cloze-scrollbar-height) !important;
@@ -165,14 +160,14 @@ p:has(> .katex.katex .cloze-dropdown.show) {
   overflow-x: hidden !important;
 }
 
-p:has(> .katex.katex .cloze-dropdown), .katex-display:has(.cloze-dropdown) {
+p:has(> .katex.katex), .katex-display {
   overflow: scroll hidden;
-  
-  .dropdown-menu {
-    position: absolute;
-  }
 
   &::-webkit-scrollbar {
+    // if the webkit scrollbar exists we can customise it;
+    // so enable the offset to include our scrollbar padding in calculations
+    $cloze-scrollbar-height: 4px !important;
+
     -webkit-appearance: none;
     height: $cloze-scrollbar-height;
   }
@@ -181,5 +176,9 @@ p:has(> .katex.katex .cloze-dropdown), .katex-display:has(.cloze-dropdown) {
     border-radius: 4px;
     background-color: rgba(0, 0, 0, .3);
     box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+  }
+
+  .dropdown-menu {
+    position: absolute;
   }
 }
