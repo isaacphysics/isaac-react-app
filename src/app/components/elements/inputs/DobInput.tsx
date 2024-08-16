@@ -3,9 +3,10 @@ import * as RS from "reactstrap";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {isDefined, isDobOldEnoughForSite, isDobOverTen, isDobOverThirteen, siteSpecific} from "../../../services";
 import {DateInput} from "./DateInput";
+import { Immutable } from "immer";
 
 interface DobInputProps {
-    userToUpdate: ValidationUser;
+    userToUpdate: Immutable<ValidationUser>;
     setUserToUpdate: (user: any) => void;
     submissionAttempted: boolean;
     editingOtherUser?: boolean;

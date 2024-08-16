@@ -43,6 +43,7 @@ import {extractErrorMessage} from "../../services/errors";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import classNames from "classnames";
 import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
+import { DobInput } from "../elements/inputs/DobInput";
 
 
 interface RegistrationSetDetailsProps {
@@ -173,6 +174,13 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 submissionAttempted={attemptedSignUp}
                                 required={role == 'TEACHER'}
                             />
+                            {isPhy &&
+                                <DobInput
+                                    userToUpdate={registrationUser}
+                                    setUserToUpdate={setRegistrationUser}
+                                    submissionAttempted={attemptedSignUp}
+                                />
+                            }
                             <hr className={classNames({"d-none": role != 'TEACHER'}, "my-4")} />
                             <GenderInput
                                 className="mt-4 mb-5"
