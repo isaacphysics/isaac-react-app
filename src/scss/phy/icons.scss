@@ -37,13 +37,17 @@
   background: url(/assets/phy/ru.png) -357px -320px no-repeat;
   margin: 8px 10px 0 0;
 }
+.icon-status {
+  width: 46;
+  margin-top: -1px;
+}
 
 .icon-person-active,
 .icon-person,
 .icon-warning,
 .icon-help,
 .icon-group,
-.icon-group-table-person,
+.icon-group-table-person
 {
   background-image: url(/assets/phy/ru.png) !important;
 }
@@ -63,5 +67,13 @@ svg {
 
   &.biology-fill {
     fill: $phy_biology;
+  }
+
+  &.almost-fill {
+    fill: $phy_extra_force_yellow;
+  }
+
+  &.correct-fill {
+    fill: $phy_green;
   }
 }

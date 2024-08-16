@@ -1,6 +1,6 @@
 import {determineAudienceViews, difficultiesOrdered, SortOrder, sortStringsNumerically, tags} from "./";
 import orderBy from "lodash/orderBy";
-import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
+import {AudienceContext, CompletionState, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem, GameboardItemState} from "../../IsaacApiTypes";
 import {ContentSummary, Tag} from "../../IsaacAppTypes";
 
 export const sortQuestions = (sortState: {[s: string]: string}, creationContext?: AudienceContext) => (questions: ContentSummaryDTO[]) => {
@@ -30,6 +30,26 @@ export const sortQuestions = (sortState: {[s: string]: string}, creationContext?
     return orderBy(questions, keys, order);
 };
 
+function completionStateToGameboardItemState(state?: CompletionState): GameboardItemState | undefined {
+    if (state === undefined) return undefined;
+    switch(state) {
+        case CompletionState.ALL_CORRECT: return "PERFECT";
+        case CompletionState.IN_PROGRESS: return "IN_PROGRESS";
+        case CompletionState.NOT_ATTEMPTED: return "NOT_ATTEMPTED";
+    }
+}
+
+function gameboardItemStateToCompleteState(state?: GameboardItemState): CompletionState | undefined {
+    if (state === undefined) return undefined;
+    switch(state) {
+        case "PERFECT": return CompletionState.ALL_CORRECT;
+        case "IN_PROGRESS": return CompletionState.IN_PROGRESS;
+        case "NOT_ATTEMPTED":
+        default:
+            return CompletionState.NOT_ATTEMPTED;
+    }
+}
+
 type ContentSummaryFieldsNotInGameboardItem = Exclude<keyof ContentSummary, keyof GameboardItem>;
 export const convertContentSummaryToGameboardItem = (question: ContentSummary): GameboardItem => {
     // We use the type system to ensure we remove fields that are not in a GameboardItem as it would otherwise cause serialization errors in the backend.
@@ -39,11 +59,11 @@ export const convertContentSummaryToGameboardItem = (question: ContentSummary): 
         summary: undefined,
         level: undefined,
         url: undefined,
-        correct: undefined,
         deprecated: undefined,
     };
     const newQuestion = {
         ...question,
+        state: completionStateToGameboardItemState(question.state),
         contentType: question.type,
         ...fieldsThatMustBeRemoved
     };
@@ -51,7 +71,11 @@ export const convertContentSummaryToGameboardItem = (question: ContentSummary): 
 };
 
 export const convertGameboardItemToContentSummary = (question: GameboardItem): ContentSummaryDTO => {
-    return {...question, type: question.contentType};
+    return {
+        ...question,
+        state: gameboardItemStateToCompleteState(question.state),
+        type: question.contentType
+    };
 };
 
 export const convertTagToSelectionOption = (tag: Tag) => {
