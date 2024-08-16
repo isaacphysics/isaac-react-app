@@ -463,7 +463,8 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
         // - Advanced Higher
         // with intra-group separation by commas, inter-group separation by newlines
 
-        const defaultStage = audienceStages.includes(STAGE.CORE) ? [STAGE.CORE] : [STAGE.ADVANCED];
+        const coreOrAdvanced =  audienceStages.includes(STAGE.CORE) ? [STAGE.CORE] : [STAGE.ADVANCED];
+        const defaultStage = (audienceStages.includes(STAGE.CORE) && audienceStages.includes(STAGE.ADVANCED)) ? [STAGE.CORE, STAGE.ADVANCED] : coreOrAdvanced;
         stagesToView = userContext.hasDefaultPreferences || !intendedAudience
             ? defaultStage
             : stagesFilteredByUserContext.length > 0
