@@ -101,6 +101,10 @@
       }
     }
   }
+
+  input {
+    padding: 0 calc(min(1.2em, 20%));
+  }
 }
 
 .symbolic-question, .equality-page {

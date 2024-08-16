@@ -215,28 +215,14 @@ button.btn.btn-link.login-b,
   cursor: grab;
 }
 
-.w-5 {
-  width: 5% !important;
-}
+@each $name, $size in $element-sizes {
+  .w-#{$name} {
+    width: $size !important;
+  }
 
-.w-10 {
-  width: 10% !important;
-}
-
-.w-15 {
-  width: 15% !important;
-}
-
-.w-20 {
-  width: 20% !important;
-}
-
-.w-30 {
-  width: 30% !important;
-}
-
-.w-40 {
-  width: 40% !important;
+  .h-#{$name} {
+    height: $size !important;
+  }
 }
 
 .overflow-visible {
