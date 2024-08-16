@@ -12,6 +12,7 @@ import {
     isAda,
     isDefined,
     isLoggedIn,
+    isPhy,
     KEY,
     persistence,
     SITE_TITLE,
@@ -64,6 +65,8 @@ export const RegistrationSetPreferences = () => {
             dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, true));
         }
+
+        if (isPhy) continueToAfterAuthPath();
     }
 
     return <Container>

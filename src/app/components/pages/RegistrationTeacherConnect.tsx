@@ -14,7 +14,7 @@ import {
     Row
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {history, KEY, persistence, SITE_TITLE} from "../../services";
+import {history, KEY, persistence, SITE_TITLE, siteSpecific} from "../../services";
 import {
     openActiveModal,
     selectors,
@@ -61,9 +61,9 @@ export const RegistrationTeacherConnect = () => {
         }
     }
 
-    const continueToSuccess = (event: React.MouseEvent) => {
+    const continueToNext = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/register/success");
+        history.push(siteSpecific("/register/preferences", "/register/success"));
     };
 
     useEffect(() => {
@@ -112,7 +112,7 @@ export const RegistrationTeacherConnect = () => {
                     <hr />
                     <Row className="justify-content-end">
                         <Col xs={7} md={4} lg={3}>
-                            <Button className="w-100" color="primary" onClick={continueToSuccess}>Continue</Button>
+                            <Button className="w-100" color="primary" onClick={continueToNext}>Continue</Button>
                         </Col>
                     </Row>
                 </Form>
