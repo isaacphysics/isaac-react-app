@@ -47,7 +47,7 @@ export const RegistrationStart = () => {
                     </Col>
                     <Col xs={12} lg={6}>
                         {siteSpecific(
-                            <img className="d-none d-lg-block img-fluid mx-auto p-2 border-radius-3" src={"/assets/phy/decor/physics-bg-3x5.png"} alt="" />,
+                            <img className="d-none d-lg-block img-fluid mx-auto p-2 border-radius-3" src={"/assets/phy/decor/physics-bg-light-3x5.png"} alt="" />,
                             <img className="d-none d-lg-block img-fluid mx-auto" src={"/assets/cs/decor/register-3x4.png"} alt="" />
                         )}
                     </Col>
