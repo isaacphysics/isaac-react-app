@@ -47,12 +47,11 @@ export interface QuestionStatus {
     notAttempted: boolean;
     complete: boolean;
     incorrect: boolean;
-    llmMarked: boolean;
 }
 
 function questionStatusToURIComponent(statuses: QuestionStatus): string {
     return Object.entries(statuses)
-        .filter(e => e[0] !== "llmMarked" && e[1])
+        .filter(e => e[1])
         .map(e => {
             switch(e[0]) {
                 case "notAttempted": return "NOT_ATTEMPTED";
@@ -89,7 +88,6 @@ function getInitialQuestionStatuses(params: listParams): QuestionStatus {
             notAttempted: true,
             complete: true,
             incorrect: true,
-            llmMarked: false
         };
     }
     else {
@@ -98,7 +96,6 @@ function getInitialQuestionStatuses(params: listParams): QuestionStatus {
             notAttempted: statuses.includes("notAttempted"),
             complete: statuses.includes("complete"),
             incorrect: statuses.includes("tryAgain"),
-            llmMarked: false
         };
     }
 }
@@ -252,10 +249,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             && searchStatuses.complete
             && searchStatuses.incorrect)
         ) {
-            params.statuses = Object.entries(searchStatuses)
-                .filter(e => e[0] !== "llmMarked" && e[1])
-                .map(e => e[0] === "incorrect" ? "tryAgain" : e[0])
-                .join(",");
+            params.statuses = Object.entries(searchStatuses).filter(e => e[1])
+                .map(e => e[0] === "incorrect" ? "tryAgain" : e[0]).join(",");
         }
 
         if (isPhy) {
@@ -275,6 +270,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setApplyFiltersClicked(true);
         searchAndUpdateURL();
     };
+
+    const [showTotalQuestions, setShowTotalQuestions] = useState<boolean>(false);
+    useEffect(function updateShowTotalQuestions() {
+        if (applyFiltersClicked) {
+            setShowTotalQuestions(
+                totalQuestions !== undefined
+                && (Object.values(searchStatuses).every(v => v)
+                    || Object.values(searchStatuses).every(v => !v))
+            );
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [applyFiltersClicked]);
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -342,7 +349,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 notAttempted: false,
                 complete: false,
                 incorrect: false,
-                llmMarked: false,
             });
         setSearchDisabled(!searchQuery);
     }, []);
@@ -411,10 +417,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 <Card>
                     <CardHeader className="finder-header pl-3">
                         <Col className={"px-0"}>
-                            Showing <b>{displayQuestions?.length ?? 0}</b> of <b>{totalQuestions}</b>.
+                            {displayQuestions && displayQuestions.length > 0
+                                ? <>Showing <b>{displayQuestions.length}</b></>
+                                : <>No results</>}
+                            {showTotalQuestions && <>{" "}of <b>{totalQuestions}</b></>}
+                            .
                         </Col>
                     </CardHeader>
-                    <CardBody className={classNames({"p-0 border-0": isPhy, "p-0 m-0": isAda && displayQuestions?.length})}>
+                    <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                         <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                             {displayQuestions?.length
                                 ? <LinkToContentSummaryList items={displayQuestions} noCaret className="m-0" />
