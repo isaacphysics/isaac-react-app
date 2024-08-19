@@ -119,7 +119,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const numInlineQuestions = isInlineQuestion ? Object.values(inlineContext?.elementToQuestionMap ?? {}).length : undefined;
     const numCorrectInlineQuestions = (isInlineQuestion && validationResponse) ? (questionPart as InlineQuestionDTO).validationResponse?.partsCorrect : undefined;
     const showInlineAttemptStatus = !isInlineQuestion || !inlineContext?.isModifiedSinceLastSubmission;
-    const almost = !correct && numCorrectInlineQuestions && numCorrectInlineQuestions > 0;
+
+    const almost = !correct && (
+        (numCorrectInlineQuestions && numCorrectInlineQuestions > 0) ||                                                   // inline
+        (doc.type === "isaacClozeQuestion" && [true, false].every(
+            b => (validationResponse as ApiTypes.ItemValidationResponseDTO)?.itemsCorrect?.includes(b))                   // cloze (detailedFeedback only)
+        )
+    );
 
     // Determine Action Buttons
     const isLongRunningQuestionType = isLLMFreeTextQuestion;
@@ -179,12 +185,15 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && !isLLMFreeTextQuestion && <div
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
-                    {/*eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex*/}
                     <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
                         {
-                            isInlineQuestion && numCorrectInlineQuestions ? 
-                                <h1 className="m-0">{correct ? "Correct!" : numCorrectInlineQuestions > 0 ? "Partly correct..." : "Incorrect"}</h1> :
-                                <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
+                            <h1 className="m-0">
+                                {correct ? "Correct!" : (
+                                    sigFigsError ? "Significant Figures" : (
+                                        almost ? "Partly correct..." : "Incorrect"
+                                    )
+                                )}
+                            </h1>
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
@@ -198,7 +207,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                         {below["xs"](deviceSize) ? "◀" : "Previous" }
                                     </RS.Button>
                                     <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
-                                        inlineContext.feedbackIndex && inlineContext.setFocusSelection(true);
+                                        if (inlineContext.feedbackIndex) inlineContext.setFocusSelection(true);
                                     }}>
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
                                     </RS.Button>
