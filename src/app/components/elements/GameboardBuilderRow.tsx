@@ -33,7 +33,7 @@ interface GameboardBuilderRowInterface {
 }
 
 const GameboardBuilderRow = (
-    {provided, snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
+    {provided, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useAppDispatch();
 
@@ -42,14 +42,14 @@ const GameboardBuilderRow = (
         return tag && tag.title;
     };
     const tagIcon = (tag: string) => {
-        return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</span>
+        return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</span>;
     };
 
     const openQuestionModal = (urlQuestionId: string) => {
         dispatch(openActiveModal({
-            closeAction: () => {dispatch(closeActiveModal())}, size: "xl",
+            closeAction: () => {dispatch(closeActiveModal());}, size: "xl",
             title: "Question preview", body: <Question questionIdOverride={urlQuestionId} preview />
-        }))
+        }));
     };
 
     const filteredAudienceViews = filterAudienceViewsByProperties(
@@ -102,7 +102,7 @@ const GameboardBuilderRow = (
             </a>
             <input
                 type="image" src="/assets/common/icons/new-tab.svg" alt="Preview question" title="Preview question in modal"
-                className="pointer-cursor align-middle new-tab" onClick={() => {question.id && openQuestionModal(question.id)}}
+                className="pointer-cursor align-middle new-tab" onClick={() => question.id && openQuestionModal(question.id)}
             />
             {question.subtitle && <>
                 <br/>
