@@ -271,13 +271,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         searchAndUpdateURL();
     };
 
-    const [showTotalQuestions, setShowTotalQuestions] = useState<boolean>(false);
-    useEffect(function updateShowTotalQuestions() {
+    const [filteringByStatus, setFilteringByStatus] = useState<boolean>(
+        !(Object.values(searchStatuses).every(v => v)
+          || Object.values(searchStatuses).every(v => !v))
+    );
+    useEffect(() => {
         if (applyFiltersClicked) {
-            setShowTotalQuestions(
-                totalQuestions !== undefined
-                && (Object.values(searchStatuses).every(v => v)
-                    || Object.values(searchStatuses).every(v => !v))
+            setFilteringByStatus(
+                !(Object.values(searchStatuses).every(v => v)
+                || Object.values(searchStatuses).every(v => !v))
             );
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -326,6 +328,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         setSearchDisabled(false);
+        setApplyFiltersClicked(false);
         setValidFiltersSelected(searchDifficulties.length > 0
             || searchTopics.length > 0
             || searchExamBoards.length > 0
@@ -420,7 +423,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             {displayQuestions && displayQuestions.length > 0
                                 ? <>Showing <b>{displayQuestions.length}</b></>
                                 : <>No results</>}
-                            {showTotalQuestions && <>{" "}of <b>{totalQuestions}</b></>}
+                            {(totalQuestions ?? 0) > 0
+                            && !filteringByStatus
+                            && <>{" "}of <b>{totalQuestions}</b></>}
                             .
                         </Col>
                     </CardHeader>
@@ -430,7 +435,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                 ? <LinkToContentSummaryList items={displayQuestions} noCaret className="m-0" />
                                 : (!applyFiltersClicked && searchQuery === ""
                                     ? <em>Please select and apply filters</em>
-                                    : <em>No results match your criteria</em>)
+                                    : filteringByStatus
+                                        ? <em>Expecting results? Try narrowing down your filters</em>
+                                        : <em>No results match your criteria</em>)
                             }
                         </ShowLoading>
                     </CardBody>
