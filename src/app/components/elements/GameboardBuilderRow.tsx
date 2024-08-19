@@ -123,7 +123,7 @@ const GameboardBuilderRow = (
                     {difficulty && <DifficultyIcons difficulty={difficulty} />}
                 </div>),
                 <div>
-                    {filteredAudienceViews[0].difficulty && <DifficultyIcons difficulty={filteredAudienceViews[0].difficulty} />}
+                    {filteredAudienceViews[0]?.difficulty && <DifficultyIcons difficulty={filteredAudienceViews[0].difficulty} />}
                 </div>
             )}
         </td>
