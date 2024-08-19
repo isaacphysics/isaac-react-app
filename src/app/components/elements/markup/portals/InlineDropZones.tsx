@@ -120,7 +120,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
                 data-unit={'None'}
                 onClick={() => {dropRegionContext?.onSelect(NULL_CLOZE_ITEM, droppableId, true);}}
             >
-                <span className="d-inline-block"></span>
+                <span className="fst-italic">Clear</span>
             </DropdownItem>
             {dropdownItems.map((item, i) => {
                 return <DropdownItem key={i}

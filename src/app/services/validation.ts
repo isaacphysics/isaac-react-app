@@ -22,7 +22,7 @@ export function validateCountryCode(countryCode: string | undefined) {
 }
 
 export const validateEmail = (email?: string) => {
-    return email && email.length > 0 && email.includes("@");
+    return email && email.length > 0 && /.*@.+\.[^.]+$/.test(email);
 };
 
 export const isValidGameboardId = (gameboardId?: string) => {

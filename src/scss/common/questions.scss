@@ -79,7 +79,7 @@
 
   @media screen {
     .units-shown {
-      border-radius: 5px 0 0 5px;
+      border-radius: 5px 0 0 5px !important;
     }
   }
 
@@ -100,6 +100,10 @@
         border: 1px solid black;
       }
     }
+  }
+
+  input {
+    padding: 0 calc(min(1.2em, 20%));
   }
 }
 
@@ -343,6 +347,10 @@
   &.is-dragging {
     opacity: 0.666;
   }
+}
+
+.dropdown .cloze-item {
+  border: none;
 }
 
 .cloze-drop-zone, .cloze-dropdown {

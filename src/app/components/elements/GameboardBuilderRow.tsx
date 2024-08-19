@@ -130,7 +130,7 @@ const GameboardBuilderRow = (
         {isAda && <td className={classNames(cellClasses, "w-15")}>
             {filteredAudienceViews.map((audienceView, i, collection) => <>
                 {/* was `findAudienceRecordsMatchingPartial(question.audience, audienceView).map(...)` but it seemed to be broken */}
-                {question.audience?.map((audienceRecord) => audienceRecord.examBoard?.map((examBoard) => tagIcon(examBoardLabelMap[examBoard])))}
+                {Array.from(new Set(question.audience?.map((audienceRecord) => audienceRecord.examBoard).flat())).map((examBoard) => tagIcon(examBoardLabelMap[examBoard!]))}
                 {/* When this becomes more common we should solve separation via a new row and merge other columns */}
                 {i + 1 < collection.length && <hr className="text-center" />}
             </>)}
