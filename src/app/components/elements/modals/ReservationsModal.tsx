@@ -71,12 +71,14 @@ const ReservationsModal = () => {
   }, [dispatch, selectedEvent]);
 
   useEffect(() => {
-    const flattenedGroupBookings = eventBookingsForAllGroups.flat();
-    const uniqueBookings = flattenedGroupBookings.filter(
-      (v, i, a) => a.findIndex((t) => t.bookingId === v.bookingId) === i,
-    );
-    setModifiedBookingsForAllGroups(uniqueBookings);
-  }, [eventBookingsForAllGroups]);
+    if (selectedGroup?.id) {
+      const flattenedGroupBookings = eventBookingsForGroup.flat();
+      const uniqueBookings = flattenedGroupBookings.filter(
+        (v, i, a) => a.findIndex((t) => t.bookingId === v.bookingId) === i,
+      );
+      setModifiedBookingsForAllGroups(uniqueBookings);
+    }
+  }, [selectedGroup, eventBookingsForGroup]);
 
   useEffect(() => {
     if (selectedGroup?.id && !selectedGroup.members) {
@@ -286,7 +288,7 @@ const ReservationsModal = () => {
                   <Table bordered responsive className="bg-white reserved">
                     <thead>
                       <tr>
-                        <th colSpan={4}>All current reservations</th>
+                        <th colSpan={4}>All reservations in group</th>
                       </tr>
                       <tr>
                         <th className="align-middle checkbox">
