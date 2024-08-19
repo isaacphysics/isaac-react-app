@@ -9,7 +9,7 @@ import {useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import {useSortable} from "@dnd-kit/sortable";
 import classNames from "classnames";
-import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, isAda, isDefined, siteSpecific, useDeviceSize} from "../../../../services";
+import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, isAda, isDefined, isPhy, useDeviceSize} from "../../../../services";
 import { Markup } from "..";
 
 export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean, isCorrect?: boolean}) {
@@ -99,8 +99,9 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
     const dropdownZone = <Dropdown
         isOpen={isOpen}
         toggle={() => {setIsOpen(!isOpen);}}
+        className="cloze-dropdown"
     >
-        <DropdownToggle className={classNames(`cloze-dropdown ${siteSpecific("p-1", "p-0")}`, {"empty": !item})} style={{minHeight: height, width: width}}>
+        <DropdownToggle className={classNames("toggle", {"empty": !item, "p-1": isPhy, "p-2": isAda})} style={{minHeight: height, width: width}}>
             <div className={classNames("d-flex cloze-item feedback-zone", {"feedback-showing": isDefined(isCorrect), "p-2": isAda && !!item})}>
                 <span className={"visually-hidden"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
                 <span aria-hidden={true}>
