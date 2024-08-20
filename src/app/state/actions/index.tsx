@@ -745,6 +745,7 @@ export const redirectTo = (path: string) => {
 
 export const registerPageChange = (path: string) => {
     store.dispatch(routerPageChange(path));
+    store.dispatch(closeActiveModal());
 };
 
 export const handleServerError = () => {
