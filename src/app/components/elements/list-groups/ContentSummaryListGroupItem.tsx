@@ -64,7 +64,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
             <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/question-hex.svg#icon`} xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/></svg>,
         item.correct ?
             <img src="/assets/common/icons/completed.svg" alt={questionIconLabel}/> :
-            <img src="/assets/common/icons/not-started.svg" alt={questionIconLabel}/>
+            <img src="/assets/common/icons/not-started.svg" height="34px" alt={questionIconLabel}/>
     );
 
     const deviceSize = useDeviceSize();
