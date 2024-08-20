@@ -19,6 +19,7 @@ import {
     isAda,
     isPhy,
     QUESTION_TYPES,
+    RESTRICTED_QUESTION_TYPES,
     selectQuestionPart,
     submitCurrentAttempt,
     useDeviceSize,
@@ -35,13 +36,12 @@ import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeed
 import { LLMFreeTextQuestionRemainingAttemptsView } from "../elements/LLMFreeTextQuestionRemainingAttemptsView";
 import { skipToken } from "@reduxjs/toolkit/query";
 
-const restrictedQuestionTypes = ["isaacLLMFreeTextQuestion"];
 function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof useCanAttemptQuestionTypeQuery> {
     // We skip the check with the API if the question type is not a restricted question type
     const canAttemptRestrictedQuestionType =
-        useCanAttemptQuestionTypeQuery(questionType && restrictedQuestionTypes.includes(questionType) ? questionType : skipToken);
+        useCanAttemptQuestionTypeQuery(questionType && RESTRICTED_QUESTION_TYPES.includes(questionType) ? questionType : skipToken);
     // non-restricted question types are always allowed
-    if (questionType && !restrictedQuestionTypes.includes(questionType)) {
+    if (questionType && !RESTRICTED_QUESTION_TYPES.includes(questionType)) {
         return { ...canAttemptRestrictedQuestionType, isSuccess: true };
     } else {
         return canAttemptRestrictedQuestionType;
