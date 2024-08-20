@@ -343,10 +343,21 @@ export function filterAudienceViewsByProperties(views: ViewingContext[], propert
     return filteredViews;
 }
 
-// FIXME I have no idea what this does and why but I have deprecated it for now (i.e. it is no longer used on CS)
-export function findAudienceRecordsMatchingPartial(audience: ContentBaseDTO['audience'], partialViewingContext: Partial<ViewingContext>) {
+/* Given a list of audience contexts (each potentially containing multiple stages or
+ * examboards) and a viewing context return a list of audience contexts such that the
+ * view context is a subset of the audience record.
+ *
+ * This is used to get all the examboards for a question when only a single stage,
+ * examboard pair is known by finding which audience record it belongs to.
+ */
+export function findAudienceRecordsMatchingPartial(
+    audience: AudienceContext[] | undefined,
+    partialViewingContext: Partial<ViewingContext>
+) {
     return audience?.filter((audienceRecord) => {
-        return Object.entries(partialViewingContext).every(([key, value]) => audienceRecord[key as keyof AudienceContext]?.[0] === value);
+        return Object.entries(partialViewingContext)
+            .every(([key, value]) =>
+                audienceRecord[key as keyof AudienceContext]?.[0] === value);
     }) ?? [];
 }
 
