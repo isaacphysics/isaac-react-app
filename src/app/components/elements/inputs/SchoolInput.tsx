@@ -8,6 +8,8 @@ import classNames from "classnames";
 import {Immutable} from "immer";
 import {useLazyGetSchoolByUrnQuery, useLazySearchSchoolsQuery} from "../../../state";
 import {FormFeedback, Label} from "reactstrap";
+import { components, ControlProps, ValueContainerProps } from "react-select";
+import { StyledCheckbox } from "./StyledCheckbox";
 
 interface SchoolInputProps {
     userToUpdate: Immutable<ValidationUser>;
@@ -108,6 +110,11 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 inputId={`school-input-${randomNumber}`}
                 placeholder={"Type your school name"}
                 value={schoolValue}
+                components={{ 
+                    IndicatorSeparator: () => null, 
+                    DropdownIndicator: () => null, 
+                    ValueContainer: ((props: ValueContainerProps) => <components.ValueContainer {...props} className="form-select border-0" />) as () => React.JSX.Element,
+                    Control: ((props: ControlProps) => <components.Control {...props} className="form-control p-0" />) as () => React.JSX.Element}}
                 className={(isInvalid ? "react-select-error " : "") + "basic-multi-select"}
                 classNamePrefix="select"
                 onChange={handleSetSchool}
@@ -117,8 +124,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             />
         </React.Fragment>}
 
-        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex mt-2">
-            <RS.Input
+        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex mt-2 align-content-center">
+            <StyledCheckbox
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
                 invalid={isInvalid}
@@ -135,8 +142,8 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 <FormFeedback>
                     Please specify your school association.
                 </FormFeedback>
-            </RS.Input>
-            <Label for={`${idPrefix}-not-associated-with-school`} className="ms-2">Not associated with a {siteSpecific("","UK ")}school</Label>
+            </StyledCheckbox>
+            <Label for={`${idPrefix}-not-associated-with-school`} className="ms-0 m-auto">Not associated with a {siteSpecific("","UK ")}school</Label>
         </div>}
     </RS.FormGroup>;
 };
