@@ -85,6 +85,9 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
             if (isPhy) {
                 itemClasses += item.correct ? "bg-success" : "text-info";
             }
+            if (isAda) {
+                typeLabel = "Question";
+            }
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = questionIcon;
             audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
