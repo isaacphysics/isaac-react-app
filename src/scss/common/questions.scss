@@ -396,7 +396,7 @@ p:has(> .katex.katex .cloze-dropdown.show) {
 }
 
 p:has(> .katex.katex), .katex-display {
-  overflow: scroll hidden;
+  overflow: auto hidden;
 
   .katex .vlist-t2 {
     margin-right: 0 !important;
