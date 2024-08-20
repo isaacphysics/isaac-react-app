@@ -13,11 +13,11 @@ export const TogglablePasswordInput = (props: TogglablePasswordInputProps) => {
             {...props}
             type={showPassword ? "text" : "password"}
         />
-        <button type="button" className="inline-form-input-btn" onClick={() => {setShowPassword(!showPassword)}}>
+        <button type="button" tabIndex={-1} className="inline-form-input-btn" onClick={() => {setShowPassword(!showPassword);}}>
             {showPassword ? "Hide" : "Show"}
         </button>
         <FormFeedback>
             {props.feedbackText ?? "Please enter a valid password."}
         </FormFeedback>
-    </InputGroup>
+    </InputGroup>;
 };
