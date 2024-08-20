@@ -59,6 +59,8 @@ export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, qu
     "default": IsaacMultiChoiceQuestion
 };
 
+export const RESTRICTED_QUESTION_TYPES = ["isaacLLMFreeTextQuestion"];
+
 export function isQuestion(doc: ContentDTO) {
     return doc.type ? doc.type in QUESTION_TYPES : false;
 }
