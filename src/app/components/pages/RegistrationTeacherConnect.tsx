@@ -21,6 +21,7 @@ import {
     showErrorToast,
     useAppDispatch,
     useAppSelector,
+    useGetActiveAuthorisationsQuery,
     useLazyGetTokenOwnerQuery
 } from "../../state";
 import {tokenVerificationModal} from "../elements/modals/TeacherConnectionModalCreators";
@@ -44,12 +45,14 @@ export const RegistrationTeacherConnect = () => {
         }
         const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
         if (usersToGrantAccess && usersToGrantAccess.length) {
-            dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
+            dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)));
         }
     };
 
     const [authenticationToken, setAuthenticationToken] = useState<string | undefined>("");
     const [submissionAttempted, setSubmissionAttempted] = useState<boolean>(false);
+
+    const {data: activeAuthorisations} = useGetActiveAuthorisationsQuery(user && user.loggedIn && user.id || undefined);
 
     const codeIsValid = authenticationToken && authenticationToken.length > 0;
 
@@ -119,9 +122,22 @@ export const RegistrationTeacherConnect = () => {
                     </Col>
                     <hr />
                     <Row className="justify-content-end">
-                        <Col xs={7} md={4} lg={3}>
-                            <Button className="w-100" color="primary" onClick={continueToNext}>Continue</Button>
-                        </Col>
+                        {siteSpecific(
+                            <>
+                                <Col xs={6} md={4} lg={3}>
+                                    <Button className="w-100 my-2 px-2" outline color="secondary" onClick={continueToNext}>Skip</Button>
+                                </Col>
+                                <Col xs={6} md={4} lg={3}>
+                                    <Button className="w-100 my-2 px-2" color="primary" disabled={!activeAuthorisations?.length} onClick={continueToNext}>Continue</Button>
+                                </Col>
+                            </>, 
+                            <>
+                                <Col xs={6} md={4} lg={3}>
+                                    <Button className="w-100 my-2 px-2" color="primary" onClick={continueToNext}>Continue</Button>
+                                </Col>
+                            </>
+                        )}
+                        
                     </Row>
                 </Form>
             </CardBody>
