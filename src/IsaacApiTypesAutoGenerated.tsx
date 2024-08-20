@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-08-12 12:21:32.
+// Generated using typescript-generator version 3.2.1263 on 2024-08-20 12:58:07.
 
 export interface AssignmentDTO extends IAssignmentLike {
   gameboardId?: string;
@@ -97,7 +97,6 @@ export interface IsaacEventPageDTO extends ContentDTO {
   date?: EpochTimeStamp;
   bookingDeadline?: EpochTimeStamp;
   prepWorkDeadline?: EpochTimeStamp;
-  publicationDate?: EpochTimeStamp;
   location?: Location;
   eventThumbnail?: ImageDTO;
   numberOfPlaces?: number;
@@ -111,9 +110,10 @@ export interface IsaacEventPageDTO extends ContentDTO {
   userBookingStatus?: BookingStatus;
   placesAvailable?: number;
   end_date?: EpochTimeStamp;
+  publicationDate?: EpochTimeStamp;
   preResources?: ExternalReference[];
   postResources?: ExternalReference[];
-  eventSurvey?: ExternalReference[];
+  eventSurvey?: string;
   EventStatus?: EventStatus;
 }
 
