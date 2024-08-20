@@ -44,7 +44,7 @@
 
 .question-progress-icon {
   height: 88px;
-  width: 75px;
+  min-width: 75px !important;
   display: block;
   padding: 14px 0 !important;
   position: relative;
