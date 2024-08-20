@@ -17,6 +17,7 @@ import {
     FIRST_LOGIN_STATE,
     history,
     isAda,
+    isDobOldEnoughForSite,
     isPhy,
     KEY,
     persistence,
@@ -80,6 +81,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
     const passwordsMatch = (!isPhy || confirmedPassword === registrationUser.password);
     const schoolIsValid = validateUserSchool(registrationUser);
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
+    const dobValidOrUnset = !isPhy || !registrationUser.dateOfBirth || isDobOldEnoughForSite(registrationUser.dateOfBirth);
     const error = useAppSelector((state) => state?.error);
     const errorMessage = extractErrorMessage(error);
 
@@ -87,7 +89,8 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
-        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && (!isAda || countryCodeIsValid) &&
+        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && 
+            (!isAda || countryCodeIsValid) && (!isPhy || dobValidOrUnset) &&
             ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
 
