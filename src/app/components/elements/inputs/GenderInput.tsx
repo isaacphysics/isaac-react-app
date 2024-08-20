@@ -1,7 +1,7 @@
 import React, {ChangeEvent} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import * as RS from "reactstrap";
-import {isAda, validateUserGender} from "../../../services";
+import {siteSpecific, validateUserGender} from "../../../services";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
@@ -19,12 +19,18 @@ export const GenderInput = ({className, userToUpdate, setUserToUpdate, submissio
         <RS.Label htmlFor={`${idPrefix}-gender-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
             Gender
         </RS.Label>
-        {isAda && <p className="d-block input-description mb-2">
-            We conduct academic research, including&nbsp;
-            <a href={"https://www.raspberrypi.org/blog/gender-balance-in-computing-big-picture/"} target={"_blank"}>
-                research like this
-            </a>
-            &nbsp;on gender balance in computing. Answering this question helps inform our work.</p>}
+        <p className="d-block input-description mb-2">
+            We conduct academic research, including
+            {siteSpecific(
+                <>{" "}research on gender balance in STEM</>,
+                <>
+                    &nbsp;
+                    <a href={"https://www.raspberrypi.org/blog/gender-balance-in-computing-big-picture/"} target={"_blank"}>research like this</a>&nbsp;
+                    on gender balance in computing
+                </>
+            )}
+            . Answering this question helps inform our work.
+        </p>
         <StyledDropdown 
             id={`${idPrefix}-gender-select`}
             value={userToUpdate && userToUpdate.gender}

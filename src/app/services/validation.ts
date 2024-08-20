@@ -44,7 +44,7 @@ export const isDobOverThirteen = (dateOfBirth?: Date) => isDobOverN(13, dateOfBi
 export const isDobOverTen = (dateOfBirth?: Date) => isDobOverN(10, dateOfBirth);
 export const isDobOldEnoughForSite = siteSpecific(isDobOverTen, isDobOverThirteen);
 
-export const MINIMUM_PASSWORD_LENGTH = 6;
+export const MINIMUM_PASSWORD_LENGTH = 8;
 export const validatePassword = (password: string) => {
     return password.length >= MINIMUM_PASSWORD_LENGTH;
 };
