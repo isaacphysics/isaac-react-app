@@ -25,28 +25,16 @@ export function StageAndDifficultySummaryIcons({audienceViews, className, stack}
             }
         </div>,
         <div className={classNames(className, "d-sm-flex flex-wrap mt-1 align-items-baseline", {"justify-content-end": !stack})}>
-            {
-                difficulties.every((v, _i, arr) => v === arr[0])
-                ? <div key={`${difficulties[0]}`} className={classNames("align-self-center d-flex align-items-center")}>
-                    {difficulties.length > 0 && <>
-                        <div className="hierarchy-tags text-center me-2">
-                            {simpleDifficultyLabelMap[difficulties[0]]}
-                        </div>
-                        <div className="hierarchy-tags text-center">
-                            <DifficultyIcons difficulty={difficulties[0]} blank classnames="mt-n1"/>
-                        </div>
-                    </>}
-                </div>
-                : audienceViews.map(view =>
-                <div key={`${view.difficulty}`} className={classNames("align-self-center d-block text-center mx-2 my-1")}>
-                    {view.stage && view.stage !== STAGE.ALL && <div className="hierarchy-tags text-center">
-                        {stageLabelMap[view.stage]}
-                    </div>}
-                    {view.difficulty && <div className="hierarchy-tags text-center">
-                        <DifficultyIcons difficulty={view.difficulty} />
-                    </div>}
-                </div>)
-            }
+            <div key={`${difficulties[0]}`} className={classNames("align-self-center d-flex align-items-center")}>
+                {difficulties.length > 0 && <>
+                    <div className="hierarchy-tags text-center me-2">
+                        {simpleDifficultyLabelMap[difficulties[0]]}
+                    </div>
+                    <div className="hierarchy-tags text-center">
+                        <DifficultyIcons difficulty={difficulties[0]} blank classnames="mt-n1"/>
+                    </div>
+                </>}
+            </div>
         </div>,
    );
 }
