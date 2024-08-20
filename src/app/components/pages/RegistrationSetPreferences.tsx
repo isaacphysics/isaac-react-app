@@ -113,7 +113,7 @@ export const RegistrationSetPreferences = () => {
                             <hr />
                             <Row>
                                 <Col xs={12} sm={6} lg={6} className={classNames("d-flex justify-content-center", {"justify-content-lg-end": isAda})}>
-                                    <Button className={`my-2 px-2 ${siteSpecific("px-lg-0", "px-lg-3")}`} outline color="secondary" onClick={continueToAfterAuthPath}>I'll do this later</Button>
+                                    <Button className={`my-2 px-2 ${siteSpecific("px-lg-0", "px-lg-3")}`} outline color="secondary" onClick={continueToAfterAuthPath}>I&apos;ll do this later</Button>
                                 </Col>
                                 <Col xs={12} sm={6} lg={6} className="d-flex justify-content-center">
                                     <Button type="submit" className={`btn btn-primary my-2 px-2", ${siteSpecific("px-lg-0", "px-lg-3")}`}>Save preferences</Button>
@@ -124,5 +124,5 @@ export const RegistrationSetPreferences = () => {
                 </Row>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};
