@@ -21,6 +21,7 @@ import {
     KEY,
     persistence,
     SITE_TITLE,
+    siteSpecific,
     STAGE,
     trackEvent,
     validateCountryCode,
@@ -120,7 +121,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                 }
                 <Row>
                     <Col xs={12} lg={6}>
-                        <h3>Create your {role.toLowerCase()} account</h3>
+                        <h3>Create your{siteSpecific("", ` ${role.toLowerCase()}`)} account</h3>
                     </Col>
                     <Col xs={12} lg={5}>
                         <Form onSubmit={register}>
