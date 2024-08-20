@@ -31,9 +31,22 @@ import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inp
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
-import { Spacer } from "../elements/Spacer";
 import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
 import { LLMFreeTextQuestionRemainingAttemptsView } from "../elements/LLMFreeTextQuestionRemainingAttemptsView";
+import { skipToken } from "@reduxjs/toolkit/query";
+
+const restrictedQuestionTypes = ["isaacLLMFreeTextQuestion"];
+function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof useCanAttemptQuestionTypeQuery> {
+    // We skip the check with the API if the question type is not a restricted question type
+    const canAttemptRestrictedQuestionType =
+        useCanAttemptQuestionTypeQuery(questionType && restrictedQuestionTypes.includes(questionType) ? questionType : skipToken);
+    // non-restricted question types are always allowed
+    if (questionType && !restrictedQuestionTypes.includes(questionType)) {
+        return { ...canAttemptRestrictedQuestionType, isSuccess: true };
+    } else {
+        return canAttemptRestrictedQuestionType;
+    }
+}
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -42,7 +55,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
-    const canAttemptQuestionType = useCanAttemptQuestionTypeQuery(doc.type as string);
+    const canAttemptQuestionType = useCanAttemptQuestionType(doc.type);
     const currentAttempt = questionPart?.currentAttempt;
     const validationResponse = questionPart?.validationResponse;
     const validationResponseTags = validationResponse?.explanation?.tags;
