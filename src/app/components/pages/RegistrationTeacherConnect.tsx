@@ -87,8 +87,8 @@ export const RegistrationTeacherConnect = () => {
                     <h3>Connect your account to your teacher</h3>
                     {siteSpecific(
                         <>
-                            <p>If your teacher has given you a group code, enter it here to join the group. This lets you see the work your teacher sets, and lets your teacher see your progress. You can join more than one group and you always have control over which groups you are in. <a href="/support/student/homework#join_group">Learn more</a>.</p>
-                            <p>You do not need to be connected to a teacher to use Isaac. You can skip this for now and connect with your teacher later.</p>
+                            <p>If you&apos;ve been given a group code by your teachers, enter it below. This lets your teachers set you work and see your progress. <a href="/support/student/homework#join_group" target="_blank">Learn more</a>.</p>
+                            <p>You can skip this. You don&apos;t need to join a group to use Isaac, and you can always do this later from the My Account page.</p>
                         </>,
                         <>
                             <p>This lets you see the work your teacher sets, and lets your teacher see your progress. You can join more than one group and you always have control over which groups you are in. <a href="/support/student/general">Learn more</a></p>
