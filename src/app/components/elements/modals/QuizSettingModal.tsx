@@ -7,7 +7,8 @@ import {
     useAppDispatch,
     useAppSelector,
     useAssignQuizMutation,
-    useGetGroupsQuery
+    useGetGroupsQuery,
+    useGetQuizAssignmentsSetByMeQuery,
 } from "../../../state";
 import {assignMultipleQuiz, isDefined, Item, selectOnChange, TODAY} from "../../../services";
 import range from "lodash/range";
@@ -59,6 +60,8 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
     const [scheduledStartDate, setScheduledStartDate] = useState<Date | null>(initialScheduledStartDate ?? null);
     const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | null>(initialFeedbackMode ?? null);
 
+    const allQuizAssignments = useGetQuizAssignmentsSetByMeQuery().data;
+
     const yearRange = range(currentYear, currentYear + 5);
 
     function addValidated(what: ControlName) {
@@ -86,7 +89,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         });
     }
 
-    const groupInvalid = validated.has('group') && selectedGroups.length === 0;
+    const groupInvalid = validated.has('group') && selectedGroups.length === 0 || selectedGroups.some(group => allQuizAssignments?.some(assignment => assignment.quizId === quiz.id && assignment.groupId === group.value));
     const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false) || dueDate.valueOf() < Date.now());
     const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() < TODAY().valueOf();
     const feedbackModeInvalid = validated.has('feedbackMode') && feedbackMode === null;
@@ -117,7 +120,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                     />;
                 }}
             />
-            {groupInvalid && <FormFeedback className="d-block" valid={false}>You must select a group</FormFeedback>}
+            {groupInvalid && (selectedGroups.length === 0 ? <FormFeedback className="d-block" valid={false}>You must select a group</FormFeedback> : <FormFeedback className="d-block" valid={false}>You cannot reassign a test to this group(s) until the due date has passed.</FormFeedback>)}
         </Label>
         <Label className="w-100 mb-4">What level of feedback should students get:<br/>
             <StyledSelect
@@ -168,7 +171,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
             </Button>
             <Button
                 className={"float-end mb-4"}
-                disabled={selectedGroups.length === 0 || !feedbackMode || isAssigning || dueDateInvalid || scheduledStartDateInvalid}
+                disabled={groupInvalid || !feedbackMode || isAssigning || dueDateInvalid || scheduledStartDateInvalid}
                 onMouseEnter={() => setValidated(new Set(['group', 'feedbackMode']))}
                 onClick={assign}
             >
