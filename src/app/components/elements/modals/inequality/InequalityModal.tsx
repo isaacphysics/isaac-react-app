@@ -82,7 +82,6 @@ const InequalityMenuNumber = ({n, update}: {n: number, update: () => void}) => {
         tabIndex={0}
         data-item={JSON.stringify({ type: "Num", properties: { significand: n.toString() } })}
         onClick={update}
-        onTouchEnd={update}
         onKeyUp={update}
     >
         <VShape/><Markup encoding={"latex"}>{`$${n.toString()}$`}</Markup>
@@ -207,7 +206,6 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                             {[7,8,9,0].map(n => <InequalityMenuNumber key={n} n={n} update={() => updateNumberInputValue(n)}/>)}
                             <div className={"key plus-minus"} role="button" tabIndex={0}
                                  onClick={flipNumberInputValueSign}
-                                 onTouchEnd={flipNumberInputValueSign}
                                  onKeyUp={flipNumberInputValueSign}
                             >
                                 <VShape/><Markup encoding={"latex"}>{"$\\pm$"}</Markup>
