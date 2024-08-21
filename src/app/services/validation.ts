@@ -110,7 +110,7 @@ export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser>
     return user && userPreferences && validateName(user.givenName) && validateName(user.familyName)
         && validateUserContexts(userContexts, isAda)
         && (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE))
-        && (isPhy || (!isTeacherOrAbove(user) || validateUserSchool(user)))
+        && (isPhy || (!isTeacherOrAbove(user) || validateUserSchool(user)));
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: Immutable<UserSummaryWithEmailAddressDTO>, additionalInformation: AdditionalInformation) {
