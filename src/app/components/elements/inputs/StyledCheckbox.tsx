@@ -23,7 +23,7 @@ export const StyledCheckbox = (props : InputProps) => {
         setChecked(props.checked ?? false);
     }, [props.checked]);
 
-    return <div className="styled-checkbox-wrapper">
+    return <div className={classNames("styled-checkbox-wrapper", {"is-invalid": props.invalid})}>
         <div className="me-2 my-2">
             {checked && <div className="tick"/>}
             <Input {...rest} id={id} type="checkbox" className={classNames(className ?? "", {"checked" : checked})}

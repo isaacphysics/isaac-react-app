@@ -19,6 +19,7 @@ import {
     isAda,
     isPhy,
     QUESTION_TYPES,
+    RESTRICTED_QUESTION_TYPES,
     selectQuestionPart,
     submitCurrentAttempt,
     useDeviceSize,
@@ -31,9 +32,21 @@ import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inp
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
-import { Spacer } from "../elements/Spacer";
 import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
 import { LLMFreeTextQuestionRemainingAttemptsView } from "../elements/LLMFreeTextQuestionRemainingAttemptsView";
+import { skipToken } from "@reduxjs/toolkit/query";
+
+function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof useCanAttemptQuestionTypeQuery> {
+    // We skip the check with the API if the question type is not a restricted question type
+    const canAttemptRestrictedQuestionType =
+        useCanAttemptQuestionTypeQuery(questionType && RESTRICTED_QUESTION_TYPES.includes(questionType) ? questionType : skipToken);
+    // non-restricted question types are always allowed
+    if (questionType && !RESTRICTED_QUESTION_TYPES.includes(questionType)) {
+        return { ...canAttemptRestrictedQuestionType, isSuccess: true };
+    } else {
+        return canAttemptRestrictedQuestionType;
+    }
+}
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -42,7 +55,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
-    const canAttemptQuestionType = useCanAttemptQuestionTypeQuery(doc.type as string);
+    const canAttemptQuestionType = useCanAttemptQuestionType(doc.type);
     const currentAttempt = questionPart?.currentAttempt;
     const validationResponse = questionPart?.validationResponse;
     const validationResponseTags = validationResponse?.explanation?.tags;
@@ -119,7 +132,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const numInlineQuestions = isInlineQuestion ? Object.values(inlineContext?.elementToQuestionMap ?? {}).length : undefined;
     const numCorrectInlineQuestions = (isInlineQuestion && validationResponse) ? (questionPart as InlineQuestionDTO).validationResponse?.partsCorrect : undefined;
     const showInlineAttemptStatus = !isInlineQuestion || !inlineContext?.isModifiedSinceLastSubmission;
-    const almost = !correct && numCorrectInlineQuestions && numCorrectInlineQuestions > 0;
+
+    const almost = !correct && (
+        (numCorrectInlineQuestions && numCorrectInlineQuestions > 0) ||                                                   // inline
+        (doc.type === "isaacClozeQuestion" && [true, false].every(
+            b => (validationResponse as ApiTypes.ItemValidationResponseDTO)?.itemsCorrect?.includes(b))                   // cloze (detailedFeedback only)
+        )
+    );
 
     // Determine Action Buttons
     const isLongRunningQuestionType = isLLMFreeTextQuestion;
@@ -179,12 +198,15 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && !isLLMFreeTextQuestion && <div
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
-                    {/*eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex*/}
                     <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
                         {
-                            isInlineQuestion && numCorrectInlineQuestions ? 
-                                <h1 className="m-0">{correct ? "Correct!" : numCorrectInlineQuestions > 0 ? "Partly correct..." : "Incorrect"}</h1> :
-                                <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
+                            <h1 className="m-0">
+                                {correct ? "Correct!" : (
+                                    sigFigsError ? "Significant Figures" : (
+                                        almost ? "Partly correct..." : "Incorrect"
+                                    )
+                                )}
+                            </h1>
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
@@ -198,7 +220,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                         {below["xs"](deviceSize) ? "◀" : "Previous" }
                                     </RS.Button>
                                     <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
-                                        inlineContext.feedbackIndex && inlineContext.setFocusSelection(true);
+                                        if (inlineContext.feedbackIndex) inlineContext.setFocusSelection(true);
                                     }}>
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
                                     </RS.Button>
