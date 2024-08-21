@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState} from "react";
-import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
+import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {
     AppDispatch,
     closeActiveModal,
@@ -47,6 +47,8 @@ interface QuizSettingModalProps {
     feedbackMode?: QuizFeedbackMode | null;
 }
 
+let allQuizAssignments: QuizAssignmentDTO[] | undefined;
+
 export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
@@ -60,7 +62,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
     const [scheduledStartDate, setScheduledStartDate] = useState<Date | null>(initialScheduledStartDate ?? null);
     const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | null>(initialFeedbackMode ?? null);
 
-    const allQuizAssignments = useGetQuizAssignmentsSetByMeQuery().data;
+    allQuizAssignments = !allQuizAssignments ? useGetQuizAssignmentsSetByMeQuery().data : allQuizAssignments;
 
     const yearRange = range(currentYear, currentYear + 5);
 
@@ -85,6 +87,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 setDueDate(null);
                 setScheduledStartDate(null);
                 setFeedbackMode(null);
+                allQuizAssignments = undefined;
             }
         });
     }
