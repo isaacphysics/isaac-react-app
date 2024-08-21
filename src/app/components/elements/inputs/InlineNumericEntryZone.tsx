@@ -50,9 +50,9 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
     }, [value, unit, setModified]);
 
     return <div {...rest} 
-        className={classNames("inline-numeric-container", rest.className, correctnessClass(valueCorrectness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" : correctness))}
+        className={classNames("inline-numeric-container w-100", rest.className, correctnessClass(valueCorrectness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" : correctness))}
     >
-        <div className={"feedback-zone inline-nq-feedback"}
+        <div className={"feedback-zone inline-nq-feedback w-100"}
             style={{
                 ...(height && {height: `${height}px`}),
             }}

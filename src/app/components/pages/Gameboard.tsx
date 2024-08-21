@@ -173,7 +173,7 @@ export const Gameboard = withRouter(({ location }) => {
                 {`We're sorry, we were not able to find a ${siteSpecific("gameboard", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
             </small>
             {isPhy && <div className="mt-4 text-center">
-                <Button tag={Link} to={PATHS.QUESTION_FINDER} color="primary" outline className="btn-lg">
+                <Button tag={Link} to={PATHS.GAMEBOARD_FILTER} color="primary" outline className="btn-lg">
                     Generate a new gameboard
                 </Button>
             </div>}
@@ -181,7 +181,7 @@ export const Gameboard = withRouter(({ location }) => {
     </Container>;
 
     return !gameboardId
-        ? <Redirect to={PATHS.QUESTION_FINDER} />
+        ? <Redirect to={PATHS.GAMEBOARD_FILTER} />
         : <Container className="mb-5">
             <ShowLoadingQuery
                 query={gameboardQuery}
@@ -189,7 +189,7 @@ export const Gameboard = withRouter(({ location }) => {
                 ifNotFound={notFoundComponent}
                 thenRender={(gameboard) => {
                     if (showFilter) {
-                        return <Redirect to={`${PATHS.QUESTION_FINDER}?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
+                        return <Redirect to={`${PATHS.GAMEBOARD_FILTER}?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
                     }
                     return <>
                         <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || `Filter Generated ${siteSpecific("Gameboard", "Quiz")}`}/>

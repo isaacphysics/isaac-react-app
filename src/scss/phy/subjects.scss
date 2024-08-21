@@ -110,8 +110,8 @@ $alert-text-colours: (
       }
     }
     &:not(:disabled):active {
-      background-color: lighten($color, 35%);
-      border-color: lighten($color, 35%);
+      background-color: rgba($color, 0.25);
+      border-color: rgba($color, 0.25);
     }
   }
 

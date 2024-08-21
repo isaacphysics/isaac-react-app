@@ -29,6 +29,14 @@
   overflow-x: auto !important;
 }
 
+.h-min-content {
+  height: min-content !important;
+}
+
+.h-max-content {
+  height: max-content !important;
+}
+
 .w-min-content {
   width: min-content !important;
 }
@@ -39,4 +47,20 @@
 
 .w-max-content {
   width: max-content !important;
+}
+
+.border-radius-0 {
+  border-radius: 0 !important;
+}
+
+.border-radius-1 {
+  border-radius: 0.25rem !important;
+}
+
+.border-radius-2 {
+  border-radius: 0.5rem !important;
+}
+
+.border-radius-3 {
+  border-radius: 1rem !important;
 }

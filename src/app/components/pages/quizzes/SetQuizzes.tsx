@@ -12,7 +12,6 @@ import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {Spacer} from "../../elements/Spacer";
 import {formatDate, formatISODateOnly} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
@@ -377,38 +376,42 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                         {filteredQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
                         <RS.ListGroup className="mb-2 quiz-list">
                             {filteredQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                                <div className="d-flex flex-grow-1 flex-row align-items-center p-3">
-                                    <div className="d-flex flex-column">
-                                        <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
-                                        {roleVisibilitySummary(quiz)}
-                                    </div>
-                                    {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
-                                    <Spacer />
-                                    <RS.Button className={`d-none d-md-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`} onClick={() => dispatch(showQuizSettingModal(quiz))}>
-                                        {siteSpecific("Set Test", "Set test")}
-                                    </RS.Button>
-                                </div>
-                                <RS.UncontrolledButtonDropdown className="d-flex d-md-none">
-                                    <RS.DropdownToggle caret className="text-nowrap" size="sm" color="link">
-                                        Actions
-                                    </RS.DropdownToggle>
-                                    <RS.DropdownMenu>
-                                            <RS.DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz))} style={{zIndex: '1'}}>
-                                                {siteSpecific("Set Test", "Set test")}
-                                            </RS.DropdownItem>
-                                            <RS.DropdownItem divider />
-                                            <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                <RS.DropdownItem>
-                                                    Preview
-                                                </RS.DropdownItem>
-                                            </Link>
-                                        </RS.DropdownMenu>
-                                </RS.UncontrolledButtonDropdown>
-                                <div className="d-none d-md-flex align-items-center">
-                                    <Link className="my-3 me-2 ps-3 pe-4 quiz-list-separator" to={{pathname: `/test/preview/${quiz.id}`}}>
-                                        <span>Preview</span>
-                                    </Link>
-                                </div>
+                                <RS.Row className="w-100">
+                                    <RS.Col xs={9} md={8} lg={9} className="d-flex align-items-center">
+                                        <div className="p-3">
+                                            <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
+                                            {roleVisibilitySummary(quiz)}
+                                        </div>
+                                    </RS.Col>
+                                    <RS.Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
+                                        <RS.Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(showQuizSettingModal(quiz))}>
+                                            {siteSpecific("Set Test", "Set test")}
+                                        </RS.Button>
+                                    </RS.Col>
+                                    <RS.Col md={1} className="d-flex justify-content-end align-items-center d-none d-md-flex p-0">
+                                        <Link className={`my-3 d-flex justify-content-end me-1`} to={{pathname: `/test/preview/${quiz.id}`}}>
+                                            <span>Preview</span>
+                                        </Link>
+                                    </RS.Col>
+                                    <RS.Col xs={3} className="d-flex align-items-center justify-content-end">
+                                        <RS.UncontrolledButtonDropdown className="d-flex d-md-none ">
+                                            <RS.DropdownToggle caret className="text-nowrap" size="sm" color="link">
+                                                Actions
+                                            </RS.DropdownToggle>
+                                            <RS.DropdownMenu>
+                                                    <RS.DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz))} style={{zIndex: '1'}}>
+                                                        {siteSpecific("Set Test", "Set test")}
+                                                    </RS.DropdownItem>
+                                                    <RS.DropdownItem divider />
+                                                    <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
+                                                        <RS.DropdownItem>
+                                                            Preview
+                                                        </RS.DropdownItem>
+                                                    </Link>
+                                                </RS.DropdownMenu>
+                                        </RS.UncontrolledButtonDropdown>
+                                    </RS.Col>
+                                </RS.Row>
                             </RS.ListGroupItem>)}
                         </RS.ListGroup>
                     </>}
