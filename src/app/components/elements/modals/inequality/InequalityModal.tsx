@@ -54,7 +54,7 @@ const VShape = siteSpecific(VHexagon, VCircle);
 
 const TabTriangle = () =>
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 136 23" className="tab-triangle" xmlSpace="preserve" enableBackground={"new 0 0 76 23"}>
-          <polygon points="0,0 136,0 68,23"/>
+        <polygon points="0,0 136,0 68,23"/>
     </svg>;
 const TabShape = siteSpecific(TabTriangle, () => null);
 
@@ -85,7 +85,7 @@ const InequalityMenuNumber = ({n, update}: {n: number, update: () => void}) => {
         onKeyUp={update}
     >
         <VShape/><Markup encoding={"latex"}>{`$${n.toString()}$`}</Markup>
-    </div>
+    </div>;
 };
 
 const MathOtherFunctionsMenu = ({defaultMenu, menuItems, activeSubMenu}: {defaultMenu: boolean; menuItems: MenuItems, activeSubMenu: InequalityMenuSubMenuTabType}) => {
@@ -103,12 +103,12 @@ const MathOtherFunctionsMenu = ({defaultMenu, menuItems, activeSubMenu}: {defaul
             {activeSubMenu === "derivatives" && <ul className="sub-menu derivatives">{menuItems.mathsDerivatives.map(buildIndexedMenuItem)}</ul>}
         </div>;
     } else {
-         return <div className="top-menu maths other-functions">
+        return <div className="top-menu maths other-functions">
             <ul className="sub-menu functions">
                 {menuItems.otherFunctions.map(buildIndexedMenuItem)}
                 {menuItems.mathsDerivatives.map(buildIndexedMenuItem)}
             </ul>
-        </div>
+        </div>;
     }
 };
 
@@ -147,7 +147,7 @@ interface InequalityMenuProps {
     menuItems: MenuItems;
     availableSymbols: string[] | undefined;
 }
-const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({open, setOpen, editorMode, logicSyntax, defaultMenu, disableLetters, menuItems, availableSymbols}, menuRef) => {
+const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({open, setOpen, editorMode, logicSyntax, defaultMenu, disableLetters, menuItems, availableSymbols} : InequalityMenuProps, menuRef) => {
     // Logic for what menu tab is currently open
     const [[activeMenu, activeSubMenu], setActiveMenu] = useState<[InequalityMenuTabType, InequalityMenuSubMenuTabType]>([null, editorMode === "logic" ? "upperCaseLetters" : "lowerCaseLetters"]);
     const openNewMenuTab: (newMenu: [InequalityMenuTabType, InequalityMenuSubMenuTabType]) => void = ([newMenu, newSubMenu]) => {
@@ -158,7 +158,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
             setOpen(true);
             setActiveMenu([newMenu, newSubMenu]);
         }
-    }
+    };
 
     // Logic for user to enter a custom draggable numerical value
     const [numberInputValue, setNumberInputValue] = useState<number>();
@@ -166,7 +166,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
         if (!isDefined(numberInputValue) || numberInputValue === 0) return setNumberInputValue(n);
         // Past this point, we know that `numberInputValue` is defined and non-zero
         setNumberInputValue(numberInputValue * 10 + (Math.sign(numberInputValue) * n));
-    }
+    };
     const flipNumberInputValueSign = () => setNumberInputValue(-(numberInputValue ?? 0));
     const clearNumberInputValue = () => setNumberInputValue(undefined);
 
@@ -205,8 +205,8 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                         <div className="bottom-row">
                             {[7,8,9,0].map(n => <InequalityMenuNumber key={n} n={n} update={() => updateNumberInputValue(n)}/>)}
                             <div className={"key plus-minus"} role="button" tabIndex={0}
-                                 onClick={flipNumberInputValueSign}
-                                 onKeyUp={flipNumberInputValueSign}
+                                onClick={flipNumberInputValueSign}
+                                onKeyUp={flipNumberInputValueSign}
                             >
                                 <VShape/><Markup encoding={"latex"}>{"$\\pm$"}</Markup>
                             </div>
@@ -214,7 +214,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                     </div>
                     <div className="input-box">
                         <div className={classNames("menu-item", isDefined(numberInputValue) ? "active" : "inactive")}
-                             data-item={isDefined(numberInputValue) ? JSON.stringify({ type: "Num", properties: { significand: `${numberInputValue}`} }) : null}
+                            data-item={isDefined(numberInputValue) ? JSON.stringify({ type: "Num", properties: { significand: `${numberInputValue}`} }) : null}
                         >
                             {/* The `span` with a `katex` class is for some reason required for the empty hexagon to have correct layout */}
                             <VShape/>{isDefined(numberInputValue) ? <Markup encoding={"latex"} className={"d-block"}>{`$${numberInputValue}$`}</Markup> : <span className={"katex"}/>}
@@ -338,7 +338,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     // Help modal logic
     const dispatch = useAppDispatch();
     const showHelpModal = () => dispatch(openActiveModal({
-        closeAction: () => { store.dispatch(closeActiveModal()) },
+        closeAction: () => { store.dispatch(closeActiveModal()); },
         size: "xl",
         title: "Quick Help",
         body: <PageFragment fragmentId={`eqn_editor_help_modal_${editorMode}`}/>
@@ -414,13 +414,13 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
         handleMove(e.target as HTMLElement, Math.round(e.clientX), Math.round(e.clientY));
     }, []);
 
-	const onTouchMove = useCallback((e: TouchEvent) => {
+    const onTouchMove = useCallback((e: TouchEvent) => {
         // preventDefault here to stop iOS' elastic-banding while moving around (messes with coordinates)
         e.preventDefault();
         handleMove(e.target as HTMLElement, Math.round(e.touches[0].clientX), Math.round(e.touches[0].clientY));
     }, []);
 
-	const onCursorMoveEnd = useCallback(() => {
+    const onCursorMoveEnd = useCallback(() => {
         onCursorMoveEndCallback(handlerState);
     }, []);
 
@@ -492,7 +492,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
         </div>
 
         <div id="inequality-reset" className="inequality-ui reset button"
-             role="button" tabIndex={-1} onClick={resetToInitialState} onKeyUp={resetToInitialState}
+            role="button" tabIndex={-1} onClick={resetToInitialState} onKeyUp={resetToInitialState}
         >
             Reset
         </div>
@@ -525,4 +525,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
         />
     </div>;
 };
+
+InequalityMenu.displayName = "InequalityMenu";
+
 export default InequalityModal;
