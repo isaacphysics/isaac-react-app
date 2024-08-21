@@ -182,7 +182,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                             e.preventDefault(); 
                         }}}
                     />
-                    <RS.Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark h-100": isPhy})} color="secondary" outline disabled={editingOtherUser}>
+                    <RS.Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark": isPhy})} color="secondary" outline disabled={editingOtherUser}>
                         Connect
                     </RS.Button>
                 </RS.InputGroup>
