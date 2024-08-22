@@ -1,6 +1,6 @@
 import {determineAudienceViews, difficultiesOrdered, SortOrder, sortStringsNumerically, tags} from "./";
 import orderBy from "lodash/orderBy";
-import {AudienceContext, CompletionState, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem, GameboardItemState} from "../../IsaacApiTypes";
+import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
 import {ContentSummary, Tag} from "../../IsaacAppTypes";
 
 export const sortQuestions = (sortState: {[s: string]: string}, creationContext?: AudienceContext) => (questions: ContentSummaryDTO[]) => {
@@ -82,7 +82,9 @@ export const loadGameboardQuestionOrder = (gameboard: GameboardDTO) => {
 
 export const loadGameboardSelectedQuestions = (gameboard: GameboardDTO) => {
     return gameboard.contents && gameboard.contents.map(convertGameboardItemToContentSummary).reduce((map, question) => {
-        question.id && map.set(question.id, question);
+        if (question.id) {
+            map.set(question.id, question);
+        }
         return map;
     }, new Map<string, ContentSummary>());
 };
