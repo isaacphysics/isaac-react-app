@@ -46,7 +46,7 @@ import { Tier, TierID } from "../elements/svg/HierarchyFilter";
 export interface QuestionStatus {
     notAttempted: boolean;
     complete: boolean;
-    incorrect: boolean;
+    tryAgain: boolean;
 }
 
 function questionStatusToURIComponent(statuses: QuestionStatus): string {
@@ -56,7 +56,7 @@ function questionStatusToURIComponent(statuses: QuestionStatus): string {
             switch(e[0]) {
                 case "notAttempted": return "NOT_ATTEMPTED";
                 case "complete": return "ALL_CORRECT";
-                case "incorrect": return "IN_PROGRESS";
+                case "tryAgain": return "IN_PROGRESS";
             }
         })
         .join(",");
@@ -87,7 +87,7 @@ function getInitialQuestionStatuses(params: listParams): QuestionStatus {
         return {
             notAttempted: false,
             complete: false,
-            incorrect: false,
+            tryAgain: false,
         };
     }
     else {
@@ -95,7 +95,7 @@ function getInitialQuestionStatuses(params: listParams): QuestionStatus {
         return {
             notAttempted: statuses.includes("notAttempted"),
             complete: statuses.includes("complete"),
-            incorrect: statuses.includes("tryAgain"),
+            tryAgain: statuses.includes("tryAgain"),
         };
     }
 }
@@ -259,8 +259,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
         if (isPhy && excludeBooks) params.excludeBooks = "set";
         if (filteringByStatus) {
-            params.statuses = Object.entries(searchStatuses).filter(e => e[1])
-                .map(e => e[0] === "incorrect" ? "tryAgain" : e[0]).join(",");
+            params.statuses = Object.entries(searchStatuses)
+                .filter(([_k, isSet]) => isSet)
+                .map(([status, _v]) => status).join(",");
         }
 
         if (isPhy) {
@@ -341,7 +342,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             {
                 notAttempted: false,
                 complete: false,
-                incorrect: false,
+                tryAgain: false,
             });
         setSearchDisabled(!searchQuery);
     }, []);

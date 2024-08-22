@@ -396,8 +396,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
                     <StyledCheckbox
                         color="primary"
-                        checked={searchStatuses.incorrect}
-                        onChange={() => setSearchStatuses(s => {return {...s, incorrect: !s.incorrect};})}
+                        checked={searchStatuses.tryAgain}
+                        onChange={() => setSearchStatuses(s => {return {...s, tryAgain: !s.tryAgain};})}
                         label={<div>
                             <span>{siteSpecific("In progress", "Try again")}</span>
                             {siteSpecific(
