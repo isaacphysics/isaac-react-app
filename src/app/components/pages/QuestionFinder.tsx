@@ -271,19 +271,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         searchAndUpdateURL();
     };
 
-    const [filteringByStatus, setFilteringByStatus] = useState<boolean>(
-        !(Object.values(searchStatuses).every(v => v)
-          || Object.values(searchStatuses).every(v => !v))
-    );
-    useEffect(() => {
-        if (applyFiltersClicked) {
-            setFilteringByStatus(
-                !(Object.values(searchStatuses).every(v => v)
-                || Object.values(searchStatuses).every(v => !v))
-            );
-        };
+    const filteringByStatus = useMemo(() => {
+        return !( Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v) );
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [applyFiltersClicked]);
+    [applyFiltersClicked]
+    );
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     // eslint-disable-next-line react-hooks/exhaustive-deps
