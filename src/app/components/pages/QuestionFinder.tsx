@@ -85,9 +85,9 @@ function getInitialQuestionStatuses(params: listParams): QuestionStatus {
     if (statuses.length < 1) {
         // If no statuses set use default
         return {
-            notAttempted: true,
-            complete: true,
-            incorrect: true,
+            notAttempted: false,
+            complete: false,
+            incorrect: false,
         };
     }
     else {
@@ -226,6 +226,19 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         [nothingToSearchFor]
     );
 
+    const [applyFiltersClicked, setApplyFiltersClicked] = useState<boolean>(false);
+    const applyFilters = () => {
+        setApplyFiltersClicked(true);
+        searchAndUpdateURL();
+    };
+
+    const filteringByStatus = useMemo(() => {
+        return !( Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v) );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [applyFiltersClicked]
+    );
+
     const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
         setDisableLoadMore(false);
@@ -245,10 +258,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             params.book = toSimpleCSV(searchBooks);
         }
         if (isPhy && excludeBooks) params.excludeBooks = "set";
-        if (!(searchStatuses.notAttempted
-            && searchStatuses.complete
-            && searchStatuses.incorrect)
-        ) {
+        if (filteringByStatus) {
             params.statuses = Object.entries(searchStatuses).filter(e => e[1])
                 .map(e => e[0] === "incorrect" ? "tryAgain" : e[0]).join(",");
         }
@@ -263,20 +273,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
-    }, [excludeBooks, history, location.state, searchStatuses, searchBooks, searchDebounce, searchDifficulties, searchExamBoards, searchQuery, searchStages, searchTopics, selections, tiers]);
-
-    const [applyFiltersClicked, setApplyFiltersClicked] = useState<boolean>(false);
-    const applyFilters = () => {
-        setApplyFiltersClicked(true);
-        searchAndUpdateURL();
-    };
-
-    const filteringByStatus = useMemo(() => {
-        return !( Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v) );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [applyFiltersClicked]
-    );
+    }, [searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages, searchDifficulties, selections, tiers, excludeBooks, searchStatuses, filteringByStatus]);
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     // eslint-disable-next-line react-hooks/exhaustive-deps
