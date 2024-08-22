@@ -85,7 +85,7 @@ export const symbolicInputValidator = (input: string) => {
         else {
             errors.push("To create the inverse " + trigFunction + " function, use 'arc" + trigFunction +"'.");
         }
-    }      
+    }
     if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
         // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
         return ["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"];
@@ -98,6 +98,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<FormulaDTO>(questionId);
 
     const [modalVisible, setModalVisible] = useState(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const [textInput, setTextInput] = useState('');
@@ -133,6 +134,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
         if (inputState.pythonExpression !== pythonExpression) {
             setInputState({...inputState, userInput: textInput, pythonExpression});
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentAttempt]);
 
     const closeModalAndReturnToScrollPosition = useCallback(function(previousYPosition: number) {
@@ -182,6 +184,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             }
             p.remove();
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
@@ -198,11 +201,11 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             } else if (parsedExpression.length === 1) {
                 // This and the next one are using input instead of textInput because React will update the state whenever it sees fit
                 // so textInput will almost certainly be out of sync with input which is the current content of the text box.
-                sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, input);
+                sketchRef.current?.parseSubtreeObject(parsedExpression[0], true, true, input);
             } else {
                 const sizes = parsedExpression.map(countChildren);
                 const i = sizes.indexOf(Math.max.apply(null, sizes));
-                sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, input);
+                sketchRef.current?.parseSubtreeObject(parsedExpression[i], true, true, input);
             }
         }
     };
@@ -231,7 +234,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <RS.InputGroup className="my-2 separate-input-group">
                     <RS.Input type="text" onChange={updateEquation} value={textInput}
-                              placeholder="Type your formula here"/>
+                        placeholder="Type your formula here"/>
                     <>
                         {siteSpecific(
                             <RS.Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>,
@@ -254,6 +257,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}
             </div>}
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div
                 role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}

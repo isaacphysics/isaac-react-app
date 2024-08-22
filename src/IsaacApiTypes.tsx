@@ -18,10 +18,6 @@ export interface IsaacCardDeckDTO extends ContentDTO {
     cards?: (IsaacCardDTO & { imageClassName?: string; buttonText?: string })[];
 }
 
-export interface ChemicalFormulaDTO extends ChoiceDTO {
-    mhchemExpression?: string;
-}
-
 export interface TestCaseDTO extends QuestionValidationResponseDTO {
     expected?: boolean;
 }
@@ -210,6 +206,7 @@ export interface IsaacRegexMatchQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestionDTO {
+    isNuclear?: boolean;
 }
 
 export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO {
