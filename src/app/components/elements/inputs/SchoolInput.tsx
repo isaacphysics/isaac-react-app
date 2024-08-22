@@ -8,7 +8,7 @@ import classNames from "classnames";
 import {Immutable} from "immer";
 import {useLazyGetSchoolByUrnQuery, useLazySearchSchoolsQuery} from "../../../state";
 import {FormFeedback, Label} from "reactstrap";
-import { components, ControlProps, ValueContainerProps } from "react-select";
+import { components, ControlProps, InputProps, SingleValueProps, ValueContainerProps } from "react-select";
 import { StyledCheckbox } from "./StyledCheckbox";
 
 interface SchoolInputProps {
@@ -31,6 +31,14 @@ const schoolSearch = (searchFn: (school : string) => Promise<School[]>) => (scho
 };
 // Must define this debounced function _outside_ the component to ensure it doesn't get overwritten each rerender!
 const throttledSchoolSearch = (searchFn: (school : string) => Promise<School[]>) => throttle(schoolSearch(searchFn), 450, {trailing: true, leading: true});
+
+const customComponents = {
+    IndicatorSeparator: () => null, 
+    DropdownIndicator: () => null, 
+    ValueContainer: ((props: ValueContainerProps) => <components.ValueContainer {...props} className="form-select border-0 ps-3" />) as () => React.JSX.Element, 
+    Control: ((props: ControlProps) => <components.Control {...props} className="form-control p-0 rounded" />) as () => React.JSX.Element, 
+    SingleValue: ((props: SingleValueProps) => <components.SingleValue {...props} className="ms-1" />) as () => React.JSX.Element, 
+    Input: ((props: InputProps) => <components.Input {...props} className="ms-1" />) as () => React.JSX.Element };
 
 export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput, required}: SchoolInputProps) => {
     const [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
@@ -112,11 +120,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 inputId={`school-input-${randomNumber}`}
                 placeholder={"Type your school name"}
                 value={schoolValue}
-                components={{ 
-                    IndicatorSeparator: () => null, 
-                    DropdownIndicator: () => null, 
-                    ValueContainer: ((props: ValueContainerProps) => <components.ValueContainer {...props} className="form-select border-0" />) as () => React.JSX.Element,
-                    Control: ((props: ControlProps) => <components.Control {...props} className="form-control p-0" />) as () => React.JSX.Element}}
+                components={customComponents}
                 className={(isInvalid ? "react-select-error " : "") + "basic-multi-select"}
                 classNamePrefix="select"
                 onChange={handleSetSchool}
@@ -126,7 +130,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             />
         </React.Fragment>}
 
-        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex mt-2 align-content-center">
+        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex-column mt-2 align-content-center">
             <StyledCheckbox
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
@@ -140,12 +144,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                         setUserToUpdate?.(userWithoutSchoolInfo);
                     }
                 })}
+                label={<span>Not associated with a {siteSpecific("","UK ")}school</span>} 
             >
-                <FormFeedback>
-                    Please specify your school association.
-                </FormFeedback>
             </StyledCheckbox>
-            <Label for={`${idPrefix}-not-associated-with-school`} className="ms-0 m-auto">Not associated with a {siteSpecific("","UK ")}school</Label>
+            <FormFeedback>
+                Please specify your school association.
+            </FormFeedback>
         </div>}
     </RS.FormGroup>;
 };
