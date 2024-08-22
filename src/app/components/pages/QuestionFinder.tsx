@@ -25,6 +25,7 @@ import {
     TAG_ID,
     itemiseTag,
     SEARCH_RESULTS_PER_PAGE,
+    SEARCH_CHAR_LENGTH_LIMIT,
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -336,13 +337,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <MetaDescription description={metaDescription}/>
         <CanonicalHrefElement/>
         <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
-
+        
         <Row>
             <Col lg={6} md={12} xs={12} className="finder-search">
                 <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
                 <InputGroup>
                     <Input id="question-search-title"
                         type="text"
+                        maxLength={SEARCH_CHAR_LENGTH_LIMIT}
                         defaultValue={searchQuery}
                         placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                         onChange={(e) => handleSearch(e.target.value)}
