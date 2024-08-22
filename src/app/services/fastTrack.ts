@@ -97,8 +97,9 @@ function getRelatedUnansweredEasierQuestions(doc: ApiTypes.QuestionDTO, level: n
     return doc.relatedContent ? doc.relatedContent.filter((relatedContent) => {
         const isQuestionPage = relatedContent.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].indexOf(relatedContent.type as DOCUMENT_TYPE) >= 0;
         const isEasier = relatedContent.level && (parseInt(relatedContent.level, 10) < level);
-        const isUnanswered = relatedContent.state === ApiTypes.CompletionState.NOT_ATTEMPTED;
-        return isQuestionPage && isEasier && isUnanswered;
+        const inProgress = relatedContent.state && [ApiTypes.CompletionState.NOT_ATTEMPTED, ApiTypes.CompletionState.IN_PROGRESS]
+            .includes(relatedContent.state);
+        return isQuestionPage && isEasier && inProgress;
     }) : [];
 }
 
@@ -106,8 +107,9 @@ function getRelatedUnansweredSupportingQuestions(doc: ApiTypes.QuestionDTO, leve
     return doc.relatedContent ? doc.relatedContent.filter((relatedContent) => {
         const isQuestionPage = relatedContent.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].indexOf(relatedContent.type as DOCUMENT_TYPE) >= 0;
         const isEqualOrHarder = relatedContent.level && (parseInt(relatedContent.level, 10) >= level);
-        const isUnanswered = relatedContent.state === ApiTypes.CompletionState.NOT_ATTEMPTED;
-        return isQuestionPage && isEqualOrHarder && isUnanswered;
+        const inProgress = relatedContent.state && [ApiTypes.CompletionState.NOT_ATTEMPTED, ApiTypes.CompletionState.IN_PROGRESS]
+            .includes(relatedContent.state);
+        return isQuestionPage && isEqualOrHarder && inProgress;
     }) : [];
 }
 

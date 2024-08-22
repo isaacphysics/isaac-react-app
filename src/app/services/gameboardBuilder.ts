@@ -30,26 +30,6 @@ export const sortQuestions = (sortState: {[s: string]: string}, creationContext?
     return orderBy(questions, keys, order);
 };
 
-function completionStateToGameboardItemState(state?: CompletionState): GameboardItemState | undefined {
-    if (state === undefined) return undefined;
-    switch(state) {
-        case CompletionState.ALL_CORRECT: return "PERFECT";
-        case CompletionState.IN_PROGRESS: return "IN_PROGRESS";
-        case CompletionState.NOT_ATTEMPTED: return "NOT_ATTEMPTED";
-    }
-}
-
-function gameboardItemStateToCompleteState(state?: GameboardItemState): CompletionState | undefined {
-    if (state === undefined) return undefined;
-    switch(state) {
-        case "PERFECT": return CompletionState.ALL_CORRECT;
-        case "IN_PROGRESS": return CompletionState.IN_PROGRESS;
-        case "NOT_ATTEMPTED":
-        default:
-            return CompletionState.NOT_ATTEMPTED;
-    }
-}
-
 type ContentSummaryFieldsNotInGameboardItem = Exclude<keyof ContentSummary, keyof GameboardItem>;
 export const convertContentSummaryToGameboardItem = (question: ContentSummary): GameboardItem => {
     // We use the type system to ensure we remove fields that are not in a GameboardItem as it would otherwise cause serialization errors in the backend.
@@ -63,7 +43,7 @@ export const convertContentSummaryToGameboardItem = (question: ContentSummary): 
     };
     const newQuestion = {
         ...question,
-        state: completionStateToGameboardItemState(question.state),
+        state: undefined,
         contentType: question.type,
         ...fieldsThatMustBeRemoved
     };
@@ -73,7 +53,7 @@ export const convertContentSummaryToGameboardItem = (question: ContentSummary): 
 export const convertGameboardItemToContentSummary = (question: GameboardItem): ContentSummaryDTO => {
     return {
         ...question,
-        state: gameboardItemStateToCompleteState(question.state),
+        state: undefined,
         type: question.contentType
     };
 };
