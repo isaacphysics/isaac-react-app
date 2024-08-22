@@ -242,17 +242,15 @@ export const LogIn = () => {
                                         errorMessage={errorMessage} displayLabels={true} />
 
                                     <Row className={classNames("mb-4", {"mt-2": isAda})}>
-                                        <Col className={"col-5 mt-1 d-flex"} style={{height:"min-content"}}>
+                                        <Col className={"col-5 mt-1"}>
                                             <Input
-                                                className="align-self-center"
                                                 id="login-remember-me"
                                                 type="checkbox"
                                                 onChange={e => setRememberMe(e.target.checked)}
                                             />
-                                            <Label for="login-remember-me" className="ms-2 mb-0">Remember me</Label>
+                                            <Label for="login-remember-me" className="ms-2">Remember me</Label>
                                         </Col>
-                                        <Col xs={2} md={1} />
-                                        <Col xs={5} md={6} className="text-end justify-content-end">
+                                        <Col className="text-end">
                                             <div>
                                                 <h4 role="alert" className="text-danger text-end mb-0">
                                                     {errorMessage}
