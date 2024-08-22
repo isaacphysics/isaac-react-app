@@ -25,7 +25,7 @@ import {
     TAG_ID,
     itemiseTag,
     SEARCH_RESULTS_PER_PAGE,
-    listParams,
+    ListParams,
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -80,7 +80,7 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
     return selectionItems;
 }
 
-function getInitialQuestionStatuses(params: listParams): QuestionStatus {
+function getInitialQuestionStatuses(params: ListParams): QuestionStatus {
     const statuses = arrayFromPossibleCsv(params.statuses);
     if (statuses.length < 1) {
         // If no statuses set use default
@@ -103,7 +103,7 @@ function getInitialQuestionStatuses(params: listParams): QuestionStatus {
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserViewingContext();
-    const params: listParams = useQueryParams(false);
+    const params: ListParams = useQueryParams(false);
     const history = useHistory();
     const eventLog = useRef<object[]>([]).current; // persist state but do not rerender on mutation
 
