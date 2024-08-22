@@ -19,7 +19,7 @@ import {
     stagesOrdered,
     useQueryParams,
 } from ".";
-import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext, ExamBoard} from "../../IsaacApiTypes";
+import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext} from "../../IsaacApiTypes";
 import {useParams} from "react-router-dom";
 import {AppState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
