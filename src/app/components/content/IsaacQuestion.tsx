@@ -19,6 +19,7 @@ import {
     isAda,
     isPhy,
     QUESTION_TYPES,
+    RESTRICTED_QUESTION_TYPES,
     selectQuestionPart,
     submitCurrentAttempt,
     useDeviceSize,
@@ -31,9 +32,21 @@ import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inp
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
-import { Spacer } from "../elements/Spacer";
 import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
 import { LLMFreeTextQuestionRemainingAttemptsView } from "../elements/LLMFreeTextQuestionRemainingAttemptsView";
+import { skipToken } from "@reduxjs/toolkit/query";
+
+function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof useCanAttemptQuestionTypeQuery> {
+    // We skip the check with the API if the question type is not a restricted question type
+    const canAttemptRestrictedQuestionType =
+        useCanAttemptQuestionTypeQuery(questionType && RESTRICTED_QUESTION_TYPES.includes(questionType) ? questionType : skipToken);
+    // non-restricted question types are always allowed
+    if (questionType && !RESTRICTED_QUESTION_TYPES.includes(questionType)) {
+        return { ...canAttemptRestrictedQuestionType, isSuccess: true };
+    } else {
+        return canAttemptRestrictedQuestionType;
+    }
+}
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -42,13 +55,14 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
-    const canAttemptQuestionType = useCanAttemptQuestionTypeQuery(doc.type as string);
+    const canAttemptQuestionType = useCanAttemptQuestionType(doc.type);
     const currentAttempt = questionPart?.currentAttempt;
     const validationResponse = questionPart?.validationResponse;
     const validationResponseTags = validationResponse?.explanation?.tags;
     const correct = validationResponse?.correct || false;
     const locked = questionPart?.locked;
-    const canSubmit = canAttemptQuestionType.isSuccess && questionPart?.canSubmit && !locked || false;
+    const hasValue = (currentAttempt?.type === "quantity") ? (currentAttempt.value != null && currentAttempt.value != "") : true;
+    const canSubmit = hasValue && canAttemptQuestionType.isSuccess && questionPart?.canSubmit && !locked || false;
     const sigFigsError = isPhy && validationResponseTags?.includes("sig_figs");
     const tooManySigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_many");
     const tooFewSigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_few");
@@ -89,6 +103,12 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     // Register Question Part in Redux
     useEffect(() => {
+        if (doc.type === "isaacInlineRegion") {
+            // register the inline questions inside this region (but not the region itself)
+            const inlineQuestions = (doc as ApiTypes.IsaacInlineRegionDTO).inlineQuestions ?? [];
+            dispatch(registerQuestions(inlineQuestions, accordion.clientId));
+            return () => dispatch(deregisterQuestions(inlineQuestions.map(q => q.id as string)));
+        }
         dispatch(registerQuestions([doc], accordion.clientId));
         return () => dispatch(deregisterQuestions([doc.id as string]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -118,7 +138,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const numInlineQuestions = isInlineQuestion ? Object.values(inlineContext?.elementToQuestionMap ?? {}).length : undefined;
     const numCorrectInlineQuestions = (isInlineQuestion && validationResponse) ? (questionPart as InlineQuestionDTO).validationResponse?.partsCorrect : undefined;
     const showInlineAttemptStatus = !isInlineQuestion || !inlineContext?.isModifiedSinceLastSubmission;
-    const almost = !correct && numCorrectInlineQuestions && numCorrectInlineQuestions > 0;
+
+    const almost = !correct && (
+        (numCorrectInlineQuestions && numCorrectInlineQuestions > 0) ||                                                   // inline
+        (doc.type === "isaacClozeQuestion" && [true, false].every(
+            b => (validationResponse as ApiTypes.ItemValidationResponseDTO)?.itemsCorrect?.includes(b))                   // cloze (detailedFeedback only)
+        )
+    );
 
     // Determine Action Buttons
     const isLongRunningQuestionType = isLLMFreeTextQuestion;
@@ -178,12 +204,15 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit && !isLLMFreeTextQuestion && <div
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
-                    {/*eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex*/}
                     <div tabIndex={-1} className="pb-1" ref={feedbackRef}>
                         {
-                            isInlineQuestion && numCorrectInlineQuestions ? 
-                                <h1 className="m-0">{correct ? "Correct!" : numCorrectInlineQuestions > 0 ? "Partly correct..." : "Incorrect"}</h1> :
-                                <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
+                            <h1 className="m-0">
+                                {correct ? "Correct!" : (
+                                    sigFigsError ? "Significant Figures" : (
+                                        almost ? "Partly correct..." : "Incorrect"
+                                    )
+                                )}
+                            </h1>
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
@@ -197,7 +226,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                                         {below["xs"](deviceSize) ? "◀" : "Previous" }
                                     </RS.Button>
                                     <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
-                                        inlineContext.feedbackIndex && inlineContext.setFocusSelection(true);
+                                        if (inlineContext.feedbackIndex) inlineContext.setFocusSelection(true);
                                     }}>
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
                                     </RS.Button>
@@ -233,13 +262,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                             className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-5 mb-n3": correct})}>
                             {secondaryAction &&
                             <div
-                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3": primaryAction})}>
+                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3": primaryAction})}>
                                 <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block"/>
                             </div>
                             }
                             {primaryAction &&
                             <div
-                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {"ps-sm-2 ps-md-0 ps-lg-3": secondaryAction})}>
+                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"ps-sm-2 ps-md-0 ps-lg-3": secondaryAction})}>
                                 <input {...primaryAction} className="h-100 btn btn-secondary btn-block"/>
                             </div>
                             }

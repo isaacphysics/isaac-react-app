@@ -65,7 +65,7 @@ const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, board
         <Col xs={3} sm={{size: 2, offset: 1}} md={{size: 2, offset: 0}} lg={1}>
             <Label className="w-100 d-flex flex-column">
                 Filters
-                <Button color="secondary" className={classNames("gameboards-filter-dropdown", {"selected": showFilters})} 
+                <Button color="secondary" className={classNames("gameboards-filter-dropdown", {"selected": showFilters})}
                 onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"/>
             </Label>
         </Col>
@@ -185,7 +185,7 @@ export const MyGameboards = () => {
             <>
                 <h3 className="text-center mt-4">You have no {siteSpecific("gameboards", "quizzes")} to view.</h3>
                 {isPhy && <div className="text-center mt-3 mb-5">
-                    <Button color="secondary" tag={Link} to={PATHS.QUESTION_FINDER}>Create a gameboard</Button>
+                    <Button color="secondary" tag={Link} to={PATHS.GAMEBOARD_FILTER}>Create a gameboard</Button>
                 </div>}
             </>
             :
@@ -194,17 +194,17 @@ export const MyGameboards = () => {
                     {boards && <h4>Showing <strong>{inProgress + notStarted}</strong> gameboards, with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
                     {!boards && <IsaacSpinner size="sm" inline />}
                 </div>
-                <GameboardsDisplaySettings 
+                <GameboardsDisplaySettings
                     boardView={boardView} switchViewAndClearSelected={switchViewAndClearSelected} boardLimit={boardLimit}
                     setBoardLimit={setBoardLimit} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
                     showFilters={showFilters} setShowFilters={setShowFilters}
                 />
-                <GameboardsFilters boardCreator={boardCreator} setBoardCreator={setBoardCreator} boardCompletion={boardCompletion} 
+                <GameboardsFilters boardCreator={boardCreator} setBoardCreator={setBoardCreator} boardCompletion={boardCompletion}
                     setBoardCompletion={setBoardCompletion} setBoardTitleFilter={setBoardTitleFilter} showFilters={showFilters}
                 />
                 <ShowLoading until={boards}>
                     {boards && boards.boards && <>
-                        {(boardView === BoardViews.card 
+                        {(boardView === BoardViews.card
                             ? <GameboardsCards {...cardProps}/>
                             : <GameboardsTable {...tableProps}/>
                         )}

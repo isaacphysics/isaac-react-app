@@ -8,8 +8,6 @@ import {
     Form,
     FormFeedback,
     FormGroup,
-    Input,
-    Label,
     Row,
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -18,9 +16,13 @@ import {
     EXAM_BOARD,
     FIRST_LOGIN_STATE,
     history,
+    isAda,
+    isDobOldEnoughForSite,
+    isPhy,
     KEY,
     persistence,
     SITE_TITLE,
+    siteSpecific,
     STAGE,
     trackEvent,
     validateCountryCode,
@@ -42,6 +44,8 @@ import {GenderInput} from "../elements/inputs/GenderInput";
 import {extractErrorMessage} from "../../services/errors";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import classNames from "classnames";
+import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
+import { DobInput } from "../elements/inputs/DobInput";
 
 
 interface RegistrationSetDetailsProps {
@@ -67,14 +71,17 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         })
     );
 
+    const [confirmedPassword, setConfirmedPassword] = useState("");
     const [tosAccepted, setTosAccepted] = useState(false);
 
     const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
     const givenNameIsValid = validateName(registrationUser.givenName);
     const familyNameIsValid = validateName(registrationUser.familyName);
     const passwordIsValid = validatePassword(registrationUser.password || "");
+    const passwordsMatch = (!isPhy || confirmedPassword === registrationUser.password);
     const schoolIsValid = validateUserSchool(registrationUser);
     const countryCodeIsValid = validateCountryCode(registrationUser.countryCode);
+    const dobValidOrUnset = !isPhy || !registrationUser.dateOfBirth || isDobOldEnoughForSite(registrationUser.dateOfBirth);
     const error = useAppSelector((state) => state?.error);
     const errorMessage = extractErrorMessage(error);
 
@@ -82,9 +89,13 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
-        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && countryCodeIsValid &&
+        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && 
+            (!isAda || countryCodeIsValid) && (!isPhy || dobValidOrUnset) &&
             ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
+
+            // stop the Required account information modal appearing before the signup flow has completed
+            persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
 
             setAttemptedSignUp(true);
             Object.assign(registrationUser, {loggedIn: false});
@@ -113,7 +124,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                 }
                 <Row>
                     <Col xs={12} lg={6}>
-                        <h3>Create your {role.toLowerCase()} account</h3>
+                        <h3>Create your{siteSpecific("", ` ${role.toLowerCase()}`)} account</h3>
                     </Col>
                     <Col xs={12} lg={5}>
                         <Form onSubmit={register}>
@@ -146,18 +157,20 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 passwordValid={passwordIsValid}
+                                passwordsMatch={passwordsMatch}
+                                setConfirmedPassword={setConfirmedPassword}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />
-                            <CountryInput
+                            {isAda && <CountryInput
                                 className="my-4"
                                 userToUpdate={registrationUser}
                                 setUserToUpdate={setRegistrationUser}
                                 countryCodeValid={countryCodeIsValid}
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
-                            />
-                            <hr className={classNames({"d-none": role == 'TEACHER'}, "my-4")} />
+                            />}
+                            <hr className={classNames({"d-none": role == 'TEACHER'}, "my-4 text-center")} />
                             <SchoolInput
                                 className="my-4"
                                 userToUpdate={registrationUser}
@@ -165,6 +178,13 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 submissionAttempted={attemptedSignUp}
                                 required={role == 'TEACHER'}
                             />
+                            {isPhy &&
+                                <DobInput
+                                    userToUpdate={registrationUser}
+                                    setUserToUpdate={setRegistrationUser}
+                                    submissionAttempted={attemptedSignUp}
+                                />
+                            }
                             <hr className={classNames({"d-none": role != 'TEACHER'}, "my-4")} />
                             <GenderInput
                                 className="mt-4 mb-5"
@@ -173,28 +193,27 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 submissionAttempted={attemptedSignUp}
                                 required={false}
                             />
-                            <hr />
+                            <hr className="text-center"/>
                             <FormGroup className="form-group my-4">
-                                <Input
+                                <StyledCheckbox
                                     id="tos-confirmation"
                                     name="tos-confirmation"
                                     type="checkbox"
                                     onChange={(e) => setTosAccepted(e?.target.checked)}
                                     invalid={attemptedSignUp && !tosAccepted}
-                                >
-                                    <FormFeedback>
-                                        You must accept the terms to continue.
-                                    </FormFeedback>
-                                </Input>
-                                <Label for="tos-confirmation" className="ms-2">I accept the <a href="/terms" target="_blank">terms of use</a></Label>
+                                    label={<span>I accept the <a href="/terms" target="_blank">terms of use</a>.</span>}
+                                />
+                                <FormFeedback className="mt-0">
+                                    You must accept the terms to continue.
+                                </FormFeedback>
                             </FormGroup>
-                            <hr />
+                            <hr className="text-center"/>
                             <Row>
                                 <Col className="d-flex justify-content-end" xs={12} sm={6} lg={6}>
-                                    <Button className={"mt-2"} outline color="secondary" onClick={history.goBack}>Back</Button>
+                                    <Button className="mt-2" outline color="secondary" onClick={history.goBack}>Back</Button>
                                 </Col>
                                 <Col xs={12} sm={6} lg={6}>
-                                    <Input type="submit" value="Continue" className="btn btn-primary mt-2" />
+                                    <Button type="submit" value="Continue" className="mt-2">Continue</Button>
                                 </Col>
                             </Row>
                         </Form>

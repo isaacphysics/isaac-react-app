@@ -26,6 +26,7 @@ import {
     itemiseTag,
     SEARCH_RESULTS_PER_PAGE,
     ListParams,
+    SEARCH_CHAR_LENGTH_LIMIT,
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -397,6 +398,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 <InputGroup>
                     <Input id="question-search-title"
                         type="text"
+                        maxLength={SEARCH_CHAR_LENGTH_LIMIT}
                         defaultValue={searchQuery}
                         placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                         onChange={(e) => handleSearch(e.target.value)}

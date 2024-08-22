@@ -26,9 +26,9 @@
 }
 
 .my-account-tab {
-  select.form-select, input.form-control {
+  select.form-select, input.form-control, div.form-control {
     height: 45px;
-    border-radius: 10px;
+    border-radius: 10px !important;
     border: solid 2px #666;
   }
 

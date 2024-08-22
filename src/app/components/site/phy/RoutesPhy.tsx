@@ -30,10 +30,17 @@ import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
 import {TeacherRequest} from "../../pages/TeacherRequest";
-import {Registration} from "../../pages/Registration";
+import { RegistrationStart } from "../../pages/RegistrationStart";
 import {EmailAlterHandler} from "../../handlers/EmailAlterHandler";
 import {News} from "../../pages/News";
 import {QuestionFinder} from "../../pages/QuestionFinder";
+import { RegistrationAgeCheck } from "../../pages/RegistrationAgeCheck";
+import { RegistrationAgeCheckFailed } from "../../pages/RegistrationAgeCheckFailed";
+import { RegistrationAgeCheckParentalConsent } from "../../pages/RegistrationAgeCheckParentalConsent";
+import { RegistrationSetDetails } from "../../pages/RegistrationSetDetails";
+import { RegistrationTeacherConnect } from "../../pages/RegistrationTeacherConnect";
+import { RegistrationSuccess } from "../../pages/RegistrationSuccess";
+import { RegistrationSetPreferences } from "../../pages/RegistrationSetPreferences";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -42,11 +49,15 @@ const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 let key = 0;
 export const RoutesPhy = [
     // Registration
-    <TrackedRoute key={key++} exact path="/register" component={Registration} />,
+    <TrackedRoute key={key++} exact path="/register" component={RegistrationStart} />,
     <TrackedRoute key={key++} exact path="/verifyemail" component={EmailAlterHandler}/>,
-
-    // Questions
-    <TrackedRoute key={key++} exact path="/questions" component={QuestionFinder} />,
+    <TrackedRoute key={key++} exact path="/register/student/age" component={RegistrationAgeCheck} />,
+    <TrackedRoute key={key++} exact path="/register/student/additional_info" component={RegistrationAgeCheckParentalConsent} />,
+    <TrackedRoute key={key++} exact path="/register/student/age_denied" component={RegistrationAgeCheckFailed} />,
+    <TrackedRoute key={key++} exact path="/register/student/details" component={RegistrationSetDetails} componentProps={{'role': 'STUDENT'}} />,
+    <TrackedRoute key={key++} exact path="/register/connect" ifUser={isLoggedIn} component={RegistrationTeacherConnect} />,
+    <TrackedRoute key={key++} exact path="/register/preferences" ifUser={isLoggedIn} component={RegistrationSetPreferences} />,
+    <TrackedRoute key={key++} exact path="/register/success" ifUser={isLoggedIn} component={RegistrationSuccess} />,
 
     // Assignments
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,

@@ -73,8 +73,8 @@ export const searchList: SearchShortcut[] = [
     }, {
         id: "question_finder",
         title: "Question finder",
-        terms: ["question finder", "questions", "question search"],
-        summary: "Search for questions on the site.",
+        terms: ["question finder", "questions", "question search", "practice questions"],
+        summary: "Find questions to try by topic and difficulty.",
         url: PATHS.QUESTION_FINDER,
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
