@@ -127,8 +127,8 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
     };
 
     return !passwordResetRequest ?
-        <div className={small ? "mt-1 w-100 text-end" : ""}>
-            <Button color="link" onClick={attemptPasswordReset}>
+        <div className={"d-flex justify-content-end " + small ? "mt-1 w-100 text-end" : ""}>
+            <Button className="text-end" color="link" onClick={attemptPasswordReset}>
                 {small ? <small>Forgotten your password?</small> : "Forgotten your password?"}
             </Button>
         </div>
@@ -242,22 +242,21 @@ export const LogIn = () => {
                                         errorMessage={errorMessage} displayLabels={true} />
 
                                     <Row className={classNames("mb-4", {"mt-2": isAda})}>
-                                        <Col className={"col-5 mt-1"}>
+                                        <Col className={"col-5 mt-1 d-flex"} style={{height:"min-content"}}>
                                             <Input
+                                                className="align-self-center"
                                                 id="login-remember-me"
                                                 type="checkbox"
                                                 onChange={e => setRememberMe(e.target.checked)}
                                             />
-                                            <Label for="login-remember-me" className="ms-2">Remember me</Label>
+                                            <Label for="login-remember-me" className="ms-2 mb-0">Remember me</Label>
                                         </Col>
-                                        <Col className="text-end">
-                                            <div>
+                                        <Col>
                                                 <h4 role="alert" className="text-danger text-end mb-0">
                                                     {errorMessage}
                                                 </h4>
                                                 <PasswordResetButton email={email} isValidEmail={isValidEmail}
                                                                      setPasswordResetAttempted={setPasswordResetAttempted}/>
-                                            </div>
                                         </Col>
                                     </Row>
 
