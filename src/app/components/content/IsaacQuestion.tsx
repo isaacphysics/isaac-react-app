@@ -103,6 +103,12 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     // Register Question Part in Redux
     useEffect(() => {
+        if (doc.type === "isaacInlineRegion") {
+            // register the inline questions inside this region (but not the region itself)
+            const inlineQuestions = (doc as ApiTypes.IsaacInlineRegionDTO).inlineQuestions ?? [];
+            dispatch(registerQuestions(inlineQuestions, accordion.clientId));
+            return () => dispatch(deregisterQuestions(inlineQuestions.map(q => q.id as string)));
+        }
         dispatch(registerQuestions([doc], accordion.clientId));
         return () => dispatch(deregisterQuestions([doc.id as string]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
