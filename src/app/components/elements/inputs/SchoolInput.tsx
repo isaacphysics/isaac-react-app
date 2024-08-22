@@ -130,7 +130,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             />
         </React.Fragment>}
 
-        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex-column mt-2 align-content-center">
+        {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) || userToUpdate.schoolOther == NOT_APPLICABLE) && <div className="d-flex flex-column mt-2 align-content-center">
             <StyledCheckbox
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
