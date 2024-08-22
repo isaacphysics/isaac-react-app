@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {
     AppState,
     clearQuestionSearch,
@@ -226,18 +226,33 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         [nothingToSearchFor]
     );
 
-    const [applyFiltersClicked, setApplyFiltersClicked] = useState<boolean>(false);
+    const [filteringByStatus, setFilteringByStatus] = useState<boolean>(
+        !( Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v) )
+    );
+
+    const [noResultsMessage, setNoResultsMessage] = useState<ReactNode>(<em>No results match your criteria</em>);
+
     const applyFilters = () => {
-        setApplyFiltersClicked(true);
+        // Have to use a local variable as React won't update state in time
+        const isFilteringByStatus = !(
+            Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v)
+        );
+
+        if (nothingToSearchFor) {
+            if (isFilteringByStatus) {
+                setNoResultsMessage(<em>Please select more filters</em>);
+            } else {
+                setNoResultsMessage(<em>Please select and apply filters</em>);
+            }
+        } else if (isFilteringByStatus) {
+            setNoResultsMessage(<em>Expecting results? Try narrowing down your filters</em>);
+        } else {
+            setNoResultsMessage(<em>No results match your criteria</em>);
+        }
+
+        setFilteringByStatus(isFilteringByStatus);
         searchAndUpdateURL();
     };
-
-    const filteringByStatus = useMemo(() => {
-        return !( Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v) );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [applyFiltersClicked]
-    );
 
     const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
@@ -319,7 +334,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         setSearchDisabled(false);
-        setApplyFiltersClicked(false);
         setValidFiltersSelected(searchDifficulties.length > 0
             || searchTopics.length > 0
             || searchExamBoards.length > 0
@@ -424,12 +438,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                             {displayQuestions?.length
                                 ? <LinkToContentSummaryList items={displayQuestions} noCaret className="m-0" />
-                                : (!applyFiltersClicked && searchQuery === ""
-                                    ? <em>Please select and apply filters</em>
-                                    : filteringByStatus
-                                        ? <em>Expecting results? Try narrowing down your filters</em>
-                                        : <em>No results match your criteria</em>)
-                            }
+                                : noResultsMessage }
                         </ShowLoading>
                     </CardBody>
                 </Card>
