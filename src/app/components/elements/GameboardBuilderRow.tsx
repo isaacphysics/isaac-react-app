@@ -12,7 +12,6 @@ import {
     stageLabelMap,
     TAG_ID,
     TAG_LEVEL,
-    findAudienceRecordsMatchingPartial,
     isPhy
 } from "../../services";
 import React from "react";
@@ -54,10 +53,8 @@ const GameboardBuilderRow = (
         }));
     };
 
-    const filteredAudienceViews = filterAudienceViewsByProperties(
-        determineAudienceViews(question.audience, creationContext),
-        AUDIENCE_DISPLAY_FIELDS
-    );
+    const audienceViews = determineAudienceViews(question.audience, creationContext);
+    const filteredAudienceViews = filterAudienceViewsByProperties(audienceViews, AUDIENCE_DISPLAY_FIELDS);
 
     const cellClasses = "text-start align-middle";
     const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
@@ -126,11 +123,8 @@ const GameboardBuilderRow = (
             </div>
         </td>}
         {isAda && <td className={classNames(cellClasses, "w-15")}>
-            {/* Convert the single audience view examboard into all relevant examboards for this stage */}
-            {findAudienceRecordsMatchingPartial(question.audience, view)
-                .map((audienceRecord) => audienceRecord.examBoard?.map((examBoard) =>
-                    tagIcon(examBoardLabelMap[examBoard])
-                ))}
+            {audienceViews.filter(audienceView => view.stage === audienceView.stage)
+                .map(audienceView => audienceView.examBoard && tagIcon(examBoardLabelMap[audienceView.examBoard]))}
         </td>}
     </tr>);
 };

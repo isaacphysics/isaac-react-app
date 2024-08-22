@@ -19,7 +19,7 @@ import {
     stagesOrdered,
     useQueryParams,
 } from ".";
-import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext} from "../../IsaacApiTypes";
+import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext, ExamBoard} from "../../IsaacApiTypes";
 import {useParams} from "react-router-dom";
 import {AppState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
@@ -341,24 +341,6 @@ export function filterAudienceViewsByProperties(views: ViewingContext[], propert
         }
     });
     return filteredViews;
-}
-
-/* Given a list of audience contexts (each potentially containing multiple stages or
- * examboards) and a viewing context return a list of audience contexts such that the
- * view context is a subset of the audience record.
- *
- * This is used to get all the examboards for a question when only a single stage,
- * examboard pair is known by finding which audience record it belongs to.
- */
-export function findAudienceRecordsMatchingPartial(
-    audience: AudienceContext[] | undefined,
-    partialViewingContext: Partial<ViewingContext>
-) {
-    return audience?.filter((audienceRecord) => {
-        return Object.entries(partialViewingContext)
-            .every(([key, value]) =>
-                audienceRecord[key as keyof AudienceContext]?.[0] === value);
-    }) ?? [];
 }
 
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null): boolean {
