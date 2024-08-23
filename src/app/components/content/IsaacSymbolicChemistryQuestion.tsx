@@ -18,7 +18,7 @@ import { Button, Input, InputGroup, UncontrolledTooltip } from "reactstrap";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 import { v4 as uuid_v4 } from "uuid";
 import { Inequality, makeInequality } from "inequality";
-import { parseInequalityChemistryExpression, ParsingError } from "inequality-grammar";
+import { parseInequalityChemistryExpression, parseInequalityNuclearExpression, ParsingError } from "inequality-grammar";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -188,7 +188,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         setTextInput(input);
         setInputState({...inputState, mhchemExpression: input, userInput: textInput});
 
-        const parsedExpression = parseInequalityChemistryExpression(input);
+        const parsedExpression = doc.isNuclear ? parseInequalityNuclearExpression(input) : parseInequalityChemistryExpression(input);
         if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
             if (input === '') {
                 const state = {result: {tex: "", python: "", mathml: ""}};
@@ -234,8 +234,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 editorMode="chemistry"
                 questionDoc={doc}
             />}
-            {/* TODO: implement nuclear */}
-            {!readonly && !doc.isNuclear && <div className="eqn-editor-input">
+            {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
                     <Input type="text" onChange={updateEquation} value={textInput}
@@ -246,6 +245,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
                         )}
                         <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
+                            {/* TODO: specific help for nuclear versus chemistry */}
                             Here are some examples of expressions you can type:<br />
                             <br />
                             H2O<br />
