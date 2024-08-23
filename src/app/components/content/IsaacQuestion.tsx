@@ -103,6 +103,12 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     // Register Question Part in Redux
     useEffect(() => {
+        if (doc.type === "isaacInlineRegion") {
+            // register the inline questions inside this region (but not the region itself)
+            const inlineQuestions = (doc as ApiTypes.IsaacInlineRegionDTO).inlineQuestions ?? [];
+            dispatch(registerQuestions(inlineQuestions, accordion.clientId));
+            return () => dispatch(deregisterQuestions(inlineQuestions.map(q => q.id as string)));
+        }
         dispatch(registerQuestions([doc], accordion.clientId));
         return () => dispatch(deregisterQuestions([doc.id as string]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -256,13 +262,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                             className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-5 mb-n3": correct})}>
                             {secondaryAction &&
                             <div
-                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3": primaryAction})}>
+                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3": primaryAction})}>
                                 <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block"/>
                             </div>
                             }
                             {primaryAction &&
                             <div
-                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {"ps-sm-2 ps-md-0 ps-lg-3": secondaryAction})}>
+                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"ps-sm-2 ps-md-0 ps-lg-3": secondaryAction})}>
                                 <input {...primaryAction} className="h-100 btn btn-secondary btn-block"/>
                             </div>
                             }

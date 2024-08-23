@@ -1,4 +1,4 @@
-import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
+import {CompletionState, ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     below,
@@ -57,15 +57,30 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
     const hierarchyTags = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[])
         .filter((_t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
-    const questionIconLabel = item.correct ? "Completed question icon" : "Question icon";
-    const questionIcon = siteSpecific(
-        item.correct ?
-            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/tick-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/></svg> :
-            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/question-hex.svg#icon`} xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/></svg>,
-        item.correct ?
-            <img src="/assets/common/icons/completed.svg" alt={questionIconLabel}/> :
-            <img src="/assets/common/icons/not-started.svg" alt={questionIconLabel}/>
-    );
+    let questionIconLabel, questionIcon;
+    switch(item.state) {
+        case CompletionState.NOT_ATTEMPTED:
+            questionIconLabel = "Not attempted question icon";
+            questionIcon = siteSpecific(
+                <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/question-hex.svg#icon`} xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/></svg>,
+                <img src="/assets/common/icons/not-started.svg" alt={questionIconLabel}/>
+            );
+            break;
+        case CompletionState.IN_PROGRESS:
+            questionIconLabel = "In progress question icon";
+            questionIcon = siteSpecific(
+                <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/incomplete-hex.svg#icon`} xlinkHref={`/assets/phy/icons/incomplete-hex.svg#icon`}/></svg>,
+                <img src="/assets/common/icons/incorrect.svg" alt={questionIconLabel}/>
+            );
+            break;
+        case CompletionState.ALL_CORRECT:
+            questionIconLabel = "Complete question icon";
+            questionIcon = siteSpecific(
+                <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/tick-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/></svg>,
+                <img src="/assets/common/icons/completed.svg" alt={questionIconLabel}/>
+            );
+            break;
+    }
 
     const deviceSize = useDeviceSize();
 
@@ -83,7 +98,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
         case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
             title = generateQuestionTitle(item);
             if (isPhy) {
-                itemClasses += item.correct ? "bg-success" : "text-info";
+                itemClasses += item.state === CompletionState.ALL_CORRECT ? "bg-success" : "text-info";
             }
             if (isAda) {
                 typeLabel = "Question";
