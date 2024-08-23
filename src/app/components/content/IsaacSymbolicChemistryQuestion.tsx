@@ -49,15 +49,9 @@ function isError(p: ParsingError | any[]): p is ParsingError {
 export const symbolicInputValidator = (input: string) => {
     const openBracketsCount = input.split('(').length - 1;
     const closeBracketsCount = input.split(')').length - 1;
-    const regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_]+";
+    const regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_]+/;
     const badCharacters = new RegExp(regexStr);
     const errors = [];
-    if (/\\[a-zA-Z()]|[{}]/.test(input)) {
-        errors.push('LaTeX syntax is not supported.');
-    }
-    if (/\|.+?\|/.test(input)) {
-        errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
-    }
     if (badCharacters.test(input)) {
         const usedBadChars: string[] = [];
         for(let i = 0; i < input.length; i++) {
@@ -245,15 +239,15 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
                         )}
                         <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
-                            {/* TODO: specific help for nuclear versus chemistry */}
                             Here are some examples of expressions you can type:<br />
                             <br />
                             H2O<br />
                             2 H2 + O2 -&gt; 2 H2O<br />
                             CH3(CH2)3CH3<br />
                             {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br />
+                            {"^{238}_{92}U"}<br />
                             <br />
-                            As you type, the box below will preview the result.
+                            As you type, the box above will preview the result.
                         </UncontrolledTooltip>
                     </>
                 </InputGroup>
