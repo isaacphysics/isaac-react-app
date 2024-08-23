@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {
     AppState,
-    clearQuestionSearch,
+    clearQuestionSearch, logAction,
     searchQuestions,
     useAppDispatch,
     useAppSelector
@@ -74,7 +74,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const userContext = useUserViewingContext();
     const params: {[key: string]: string | string[] | undefined} = useQueryParams(false);
     const history = useHistory();
-    const eventLog = useRef<object[]>([]).current; // persist state but do not rerender on mutation
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
@@ -192,7 +191,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need, as to know if there are more results
             }));
 
-            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, startIndex});
+            dispatch(logAction({
+                type: "SEARCH_QUESTIONS",
+                events: {searchString, topics, examBoards, book, stages, difficulties, startIndex}
+            }));
         }, 250),
         [nothingToSearchFor]
     );
