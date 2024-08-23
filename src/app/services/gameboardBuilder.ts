@@ -39,11 +39,11 @@ export const convertContentSummaryToGameboardItem = (question: ContentSummary): 
         summary: undefined,
         level: undefined,
         url: undefined,
-        correct: undefined,
         deprecated: undefined,
     };
     const newQuestion = {
         ...question,
+        state: undefined,
         contentType: question.type,
         ...fieldsThatMustBeRemoved
     };
@@ -51,7 +51,11 @@ export const convertContentSummaryToGameboardItem = (question: ContentSummary): 
 };
 
 export const convertGameboardItemToContentSummary = (question: GameboardItem): ContentSummaryDTO => {
-    return {...question, type: question.contentType};
+    return {
+        ...question,
+        state: undefined,
+        type: question.contentType
+    };
 };
 
 export const convertTagToSelectionOption = (tag: Tag) => {
@@ -78,7 +82,9 @@ export const loadGameboardQuestionOrder = (gameboard: GameboardDTO) => {
 
 export const loadGameboardSelectedQuestions = (gameboard: GameboardDTO) => {
     return gameboard.contents && gameboard.contents.map(convertGameboardItemToContentSummary).reduce((map, question) => {
-        question.id && map.set(question.id, question);
+        if (question.id) {
+            map.set(question.id, question);
+        }
         return map;
     }, new Map<string, ContentSummary>());
 };
