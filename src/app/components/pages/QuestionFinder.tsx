@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
 import {AppState, clearQuestionSearch, logAction, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
 import debounce from "lodash/debounce";
 import {
@@ -9,6 +9,7 @@ import {
     isPhy,
     Item,
     itemiseTag,
+    ListParams,
     SEARCH_CHAR_LENGTH_LIMIT,
     SEARCH_RESULTS_PER_PAGE,
     siteSpecific,
@@ -39,9 +40,20 @@ import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 export interface QuestionStatus {
     notAttempted: boolean;
     complete: boolean;
-    incorrect: boolean;
-    llmMarked: boolean;
-    hideCompleted: boolean; // TODO: remove when implementing desired filters
+    tryAgain: boolean;
+}
+
+function questionStatusToURIComponent(statuses: QuestionStatus): string {
+    return Object.entries(statuses)
+        .filter(e => e[1])
+        .map(e => {
+            switch(e[0]) {
+                case "notAttempted": return "NOT_ATTEMPTED";
+                case "complete": return "ALL_CORRECT";
+                case "tryAgain": return "IN_PROGRESS";
+            }
+        })
+        .join(",");
 }
 
 function processTagHierarchy(subjects: string[], fields: string[], topics: string[]): Item<TAG_ID>[][] {
@@ -62,10 +74,30 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
     return selectionItems;
 }
 
+function getInitialQuestionStatuses(params: ListParams): QuestionStatus {
+    const statuses = arrayFromPossibleCsv(params.statuses);
+    if (statuses.length < 1) {
+        // If no statuses set use default
+        return {
+            notAttempted: false,
+            complete: false,
+            tryAgain: false,
+        };
+    }
+    else {
+        // otherwise set use the URI components
+        return {
+            notAttempted: statuses.includes("notAttempted"),
+            complete: statuses.includes("complete"),
+            tryAgain: statuses.includes("tryAgain"),
+        };
+    }
+}
+
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserViewingContext();
-    const params: {[key: string]: string | string[] | undefined} = useQueryParams(false);
+    const params: ListParams = useQueryParams(false);
     const history = useHistory();
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
@@ -74,13 +106,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(
-        {
-            notAttempted: false,
-            complete: false,
-            incorrect: false,
-            llmMarked: false,
-            hideCompleted: !!params.hideCompleted
-        }
+        getInitialQuestionStatuses(params)
     );
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
@@ -142,7 +168,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         selections.every(v => v.length === 0);
 
     const searchDebounce = useCallback(
-        debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], hierarchySelections: Item<TAG_ID>[][], tiers: Tier[], excludeBooks: boolean, hideCompleted: boolean, startIndex: number) => {
+        debounce((searchString: string, topics: string[], examBoards: string[],
+            book: string[], stages: string[], difficulties: string[],
+            hierarchySelections: Item<TAG_ID>[][], tiers: Tier[],
+            excludeBooks: boolean, questionStatuses: QuestionStatus,
+            startIndex: number) => {
             if (nothingToSearchFor) {
                 dispatch(clearQuestionSearch);
                 return;
@@ -178,10 +208,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 questionCategories: isPhy
                     ? (excludeBooks ? "problem_solving" : "problem_solving,book")
                     : undefined,
+                statuses: questionStatusToURIComponent(questionStatuses),
                 fasttrack: false,
-                hideCompleted,
                 startIndex,
-                limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need, as to know if there are more results
+                limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need to know if there are more results
             }));
 
             dispatch(logAction({
@@ -192,13 +222,41 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         [nothingToSearchFor]
     );
 
+    const [filteringByStatus, setFilteringByStatus] = useState<boolean>(
+        !( Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v) )
+    );
+
+    const [noResultsMessage, setNoResultsMessage] = useState<ReactNode>(<em>No results match your criteria</em>);
+
+    const applyFilters = () => {
+        // Have to use a local variable as React won't update state in time
+        const isFilteringByStatus = !(
+            Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v)
+        );
+
+        if (nothingToSearchFor) {
+            if (isFilteringByStatus) {
+                setNoResultsMessage(<em>Please select more filters</em>);
+            } else {
+                setNoResultsMessage(<em>Please select and apply filters</em>);
+            }
+        } else if (isFilteringByStatus) {
+            setNoResultsMessage(<em>Expecting results? Try narrowing down your filters</em>);
+        } else {
+            setNoResultsMessage(<em>No results match your criteria</em>);
+        }
+
+        setFilteringByStatus(isFilteringByStatus);
+        searchAndUpdateURL();
+    };
+
     const searchAndUpdateURL = useCallback(() => {
         setPageCount(1);
         setDisableLoadMore(false);
         setDisplayQuestions(undefined);
         searchDebounce(
             searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages,
-            searchDifficulties, selections, tiers, excludeBooks, searchStatuses.hideCompleted, 0
+            searchDifficulties, selections, tiers, excludeBooks, searchStatuses, 0
         );
 
         const params: {[key: string]: string} = {};
@@ -211,7 +269,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             params.book = toSimpleCSV(searchBooks);
         }
         if (isPhy && excludeBooks) params.excludeBooks = "set";
-        if (searchStatuses.hideCompleted) params.hideCompleted = "set";
+        if (filteringByStatus) {
+            params.statuses = Object.entries(searchStatuses)
+                .filter(([_k, isSet]) => isSet)
+                .map(([status, _v]) => status).join(",");
+        }
 
         if (isPhy) {
             tiers.forEach((tier, i) => {
@@ -223,13 +285,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         }
 
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
-    }, [excludeBooks, history, location.state, searchStatuses.hideCompleted, searchBooks, searchDebounce, searchDifficulties, searchExamBoards, searchQuery, searchStages, searchTopics, selections, tiers]);
-
-    const [applyFiltersClicked, setApplyFiltersClicked] = useState<boolean>(false);
-    const applyFilters = () => {
-        setApplyFiltersClicked(true);
-        searchAndUpdateURL();
-    };
+    }, [searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages, searchDifficulties, selections, tiers, excludeBooks, searchStatuses, filteringByStatus]);
 
     // Automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -293,13 +349,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setExcludeBooks(false);
         setSelections([[], [], []]);
         setSearchStatuses(
-        {
-            notAttempted: false,
-            complete: false,
-            incorrect: false,
-            llmMarked: false,
-            hideCompleted: false
-        });
+            {
+                notAttempted: false,
+                complete: false,
+                tryAgain: false,
+            });
         setSearchDisabled(!searchQuery);
     }, []);
 
@@ -332,7 +386,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <MetaDescription description={metaDescription}/>
         <CanonicalHrefElement/>
         <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
-        
+
         <Row>
             <Col lg={6} md={12} xs={12} className="finder-search">
                 <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
@@ -343,7 +397,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         defaultValue={searchQuery}
                         placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                         onChange={(e) => handleSearch(e.target.value)}
-                        />
+                    />
                     <Button className="question-search-button" onClick={searchAndUpdateURL}/>
                 </InputGroup>
             </Col>
@@ -368,17 +422,20 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 <Card>
                     <CardHeader className="finder-header pl-3">
                         <Col className={"px-0"}>
-                            Showing <b>{displayQuestions?.length ?? 0}</b> of <b>{totalQuestions}</b>.
+                            {displayQuestions && displayQuestions.length > 0
+                                ? <>Showing <b>{displayQuestions.length}</b></>
+                                : <>No results</>}
+                            {(totalQuestions ?? 0) > 0
+                            && !filteringByStatus
+                            && <>{" "}of <b>{totalQuestions}</b></>}
+                            .
                         </Col>
                     </CardHeader>
-                    <CardBody className={classNames({"p-0 border-0": isPhy, "p-0 m-0": isAda && displayQuestions?.length})}>
+                    <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                         <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                             {displayQuestions?.length
                                 ? <LinkToContentSummaryList items={displayQuestions} noCaret className="m-0" />
-                                : (!applyFiltersClicked && searchQuery === ""
-                                    ? <em>Please select and apply filters</em>
-                                    : <em>No results match your criteria</em>)
-                            }
+                                : noResultsMessage }
                         </ShowLoading>
                     </CardBody>
                 </Card>
@@ -394,7 +451,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                         searchDifficulties,
                                         selections, tiers,
                                         excludeBooks,
-                                        searchStatuses.hideCompleted,
+                                        searchStatuses,
                                         nextSearchOffset
                                             ? nextSearchOffset - 1
                                             : 0);

@@ -46,7 +46,7 @@ export function DifficultyIcons({difficulty, blank, classnames} : {difficulty: D
     return <div className={classnames}>
         <svg
             role={"img"}
-            width={`${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding}px`}
+            width={`${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) + difficultyIconXPadding}px`}
             height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`}
         >
             <title>{difficultyLabelMap[difficulty]}</title>
