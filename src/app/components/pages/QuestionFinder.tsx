@@ -216,7 +216,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
             dispatch(logAction({
                 type: "SEARCH_QUESTIONS",
-                events: {searchString, topics, examBoards, book, stages, difficulties, startIndex}
+                events: {searchString, topics, book, stages, difficulties, examBoards, questionStatuses, startIndex}
             }));
         }, 250),
         [nothingToSearchFor]
