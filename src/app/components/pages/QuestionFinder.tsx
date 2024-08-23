@@ -1,47 +1,40 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {
-    AppState,
-    clearQuestionSearch, logAction,
-    searchQuestions,
-    useAppDispatch,
-    useAppSelector
-} from "../../state";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {AppState, clearQuestionSearch, logAction, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
 import debounce from "lodash/debounce";
 import {
-    tags,
+    arrayFromPossibleCsv,
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     isAda,
     isPhy,
     Item,
-    logEvent,
+    itemiseTag,
+    SEARCH_CHAR_LENGTH_LIMIT,
+    SEARCH_RESULTS_PER_PAGE,
     siteSpecific,
     STAGE,
-    useUserViewingContext,
     STAGE_NULL_OPTIONS,
-    useQueryParams,
-    arrayFromPossibleCsv,
-    toSimpleCSV,
     TAG_ID,
-    itemiseTag,
-    SEARCH_RESULTS_PER_PAGE,
-    SEARCH_CHAR_LENGTH_LIMIT,
+    tags,
+    toSimpleCSV,
+    useQueryParams,
+    useUserViewingContext,
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import { RouteComponentProps, useHistory, withRouter } from "react-router";
-import { LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
-import { ShowLoading } from "../handlers/ShowLoading";
-import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { MetaDescription } from "../elements/MetaDescription";
-import { CanonicalHrefElement } from "../navigation/CanonicalHrefElement";
+import {RouteComponentProps, useHistory, withRouter} from "react-router";
+import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {MetaDescription} from "../elements/MetaDescription";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import { PageFragment } from "../elements/PageFragment";
+import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row } from "reactstrap";
-import { QuestionFinderFilterPanel } from "../elements/panels/QuestionFinderFilterPanel";
-import { Tier, TierID } from "../elements/svg/HierarchyFilter";
+import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
+import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
+import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 
 export interface QuestionStatus {
     notAttempted: boolean;
