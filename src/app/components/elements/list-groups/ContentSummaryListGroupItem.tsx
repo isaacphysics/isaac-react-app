@@ -59,13 +59,6 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
 
     let questionIconLabel, questionIcon;
     switch(item.state) {
-        case CompletionState.NOT_ATTEMPTED:
-            questionIconLabel = "Not attempted question icon";
-            questionIcon = siteSpecific(
-                <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/question-hex.svg#icon`} xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/></svg>,
-                <img src="/assets/common/icons/not-started.svg" alt={questionIconLabel}/>
-            );
-            break;
         case CompletionState.IN_PROGRESS:
             questionIconLabel = "In progress question icon";
             questionIcon = siteSpecific(
@@ -78,6 +71,14 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
             questionIcon = siteSpecific(
                 <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/tick-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/></svg>,
                 <img src="/assets/common/icons/completed.svg" alt={questionIconLabel}/>
+            );
+            break;
+        case CompletionState.NOT_ATTEMPTED:
+        default:
+            questionIconLabel = "Not attempted question icon";
+            questionIcon = siteSpecific(
+                <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/question-hex.svg#icon`} xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/></svg>,
+                <img src="/assets/common/icons/not-started.svg" alt={questionIconLabel}/>
             );
             break;
     }
