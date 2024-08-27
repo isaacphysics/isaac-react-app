@@ -215,9 +215,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             }));
 
             dispatch(logAction({
-                type: "QUESTION_FINDER_SEARCH",
-                events: {searchString, topics, book, stages, difficulties, examBoards, questionStatuses, startIndex}
-            }));
+                type: "QUESTION_FINDER_SEARCH", searchString, ...filterParams, book, stages, difficulties, examBoards, questionStatuses, startIndex}));
         }, 250),
         [nothingToSearchFor]
     );
