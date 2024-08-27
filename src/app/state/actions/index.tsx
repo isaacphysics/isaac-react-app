@@ -216,7 +216,7 @@ export const registerNewUser = (
         if (isTeacherOrAbove(newUser)) {
             // Redirect to email verification page
             history.push('/verifyemail');
-        } else  {
+        } else {
             history.push(siteSpecific('/register/preferences', '/register/connect'));
         }
     } catch (e: any) {
