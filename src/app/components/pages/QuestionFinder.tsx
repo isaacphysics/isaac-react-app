@@ -1,48 +1,41 @@
-import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {
-    AppState,
-    clearQuestionSearch,
-    searchQuestions,
-    useAppDispatch,
-    useAppSelector
-} from "../../state";
+import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
+import {AppState, clearQuestionSearch, logAction, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
 import debounce from "lodash/debounce";
 import {
-    tags,
+    arrayFromPossibleCsv,
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     isAda,
     isPhy,
     Item,
-    logEvent,
-    siteSpecific,
-    STAGE,
-    useUserViewingContext,
-    STAGE_NULL_OPTIONS,
-    useQueryParams,
-    arrayFromPossibleCsv,
-    toSimpleCSV,
-    TAG_ID,
     itemiseTag,
-    SEARCH_RESULTS_PER_PAGE,
     ListParams,
     SEARCH_CHAR_LENGTH_LIMIT,
+    SEARCH_RESULTS_PER_PAGE,
+    siteSpecific,
+    STAGE,
+    STAGE_NULL_OPTIONS,
+    TAG_ID,
+    tags,
+    toSimpleCSV,
+    useQueryParams,
+    useUserViewingContext,
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import { RouteComponentProps, useHistory, withRouter } from "react-router";
-import { LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
-import { ShowLoading } from "../handlers/ShowLoading";
-import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { MetaDescription } from "../elements/MetaDescription";
-import { CanonicalHrefElement } from "../navigation/CanonicalHrefElement";
+import {RouteComponentProps, useHistory, withRouter} from "react-router";
+import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {MetaDescription} from "../elements/MetaDescription";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import { PageFragment } from "../elements/PageFragment";
+import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row } from "reactstrap";
-import { QuestionFinderFilterPanel } from "../elements/panels/QuestionFinderFilterPanel";
-import { Tier, TierID } from "../elements/svg/HierarchyFilter";
+import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
+import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
+import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 
 export interface QuestionStatus {
     notAttempted: boolean;
@@ -106,7 +99,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const userContext = useUserViewingContext();
     const params: ListParams = useQueryParams(false);
     const history = useHistory();
-    const eventLog = useRef<object[]>([]).current; // persist state but do not rerender on mutation
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
@@ -222,7 +214,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need to know if there are more results
             }));
 
-            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, startIndex});
+            dispatch(logAction({
+                type: "QUESTION_FINDER_SEARCH", searchString, ...filterParams, book, stages, difficulties, examBoards, questionStatuses, startIndex}));
         }, 250),
         [nothingToSearchFor]
     );
