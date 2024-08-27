@@ -13,7 +13,8 @@ import {
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     TAG_ID,
-    trackEvent
+    trackEvent,
+    siteSpecific
 } from "../../services";
 import {
     Action,
@@ -215,8 +216,8 @@ export const registerNewUser = (
         if (isTeacherOrAbove(newUser)) {
             // Redirect to email verification page
             history.push('/verifyemail');
-        } else {
-            history.push('/register/connect')
+        } else  {
+            history.push(siteSpecific('/register/preferences', '/register/connect'));
         }
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
