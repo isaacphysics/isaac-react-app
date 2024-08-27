@@ -297,6 +297,12 @@ export function determineAudienceViews(audience?: AudienceContext[], creationCon
     const allViews: ViewingContext[] = [];
     let viewsFilteredByCreationContext: ViewingContext[]  = [];
 
+    // Set all Ada audience contexts to the same difficulty level, if not already
+    if (isAda) {
+        const questionDifficulty = audience.find(audienceContext => audienceContext.difficulty != undefined)?.difficulty;
+        audience = audience.map(audienceContext => { return {...audienceContext, difficulty: questionDifficulty}; });
+    }
+
     // Create a list of all intended viewing context combinations from the audience
     audience.forEach(audienceContext => {
         allViews.push(...produceAudienceViewingCombinations(audienceContext));
