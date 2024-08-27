@@ -89,6 +89,7 @@ const LoginOrSignUpBody = () => {
                             id="log-in"
                             tag="input" value="Log in"
                             color="secondary" type="submit" block
+                            className="mb-2"
                             onClick={attemptLogIn}
                             disabled={!!user?.requesting}
                         />
@@ -100,7 +101,9 @@ const LoginOrSignUpBody = () => {
                         </Button>
 
                         <hr className="text-center hr-or" />
-                        {isAda && <RaspberryPiSignInButton concise={true} />}
+                        {isAda && <div className="mb-2">
+                            <RaspberryPiSignInButton concise={true} />
+                        </div>}
                         <GoogleSignInButton/>
                     </>}
             </Form>
