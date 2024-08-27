@@ -30,11 +30,12 @@ import classNames from "classnames";
 import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 import { CSSModule } from "reactstrap/types/lib/utils";
 
-export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, noCaret}: {
+export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, noCaret, hideContentType}: {
     item: ShortcutResponse;
     search?: string;
     displayTopicTitle?: boolean;
     noCaret?: boolean;
+    hideContentType?: boolean;
 }) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContext = useUserViewingContext();
@@ -145,8 +146,11 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
                 {siteSpecific(
                     icon,
                     <div className={"inner-progress-icon"}>
-                        {icon}<br/>
-                        <span className={"icon-title"}>{typeLabel}</span>
+                        {icon}
+                        {!hideContentType && <>
+                            <br/>
+                            <span className={"icon-title"}>{typeLabel}</span>
+                        </>}
                     </div>
                 )}
             </span>
@@ -184,11 +188,12 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
     </ListGroupItem>;
 };
 
-export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCaret, ...rest}: {
+export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCaret, hideContentType, ...rest}: {
     items: ContentSummaryDTO[];
     search?: string;
     displayTopicTitle?: boolean;
     noCaret?: boolean;
+    hideContentType?: boolean;
     tag?: React.ElementType;
     flush?: boolean;
     className?: string;
@@ -198,6 +203,7 @@ export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCa
         {items.map(item => <ContentSummaryListGroupItem
             item={item} search={search} noCaret={noCaret}
             key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}
+            hideContentType={hideContentType}
         />)}
     </ListGroup>;
 };
