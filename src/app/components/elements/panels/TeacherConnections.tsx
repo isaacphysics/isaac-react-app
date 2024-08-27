@@ -182,7 +182,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                             e.preventDefault(); 
                         }}}
                     />
-                    <RS.Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark h-100": isPhy})} color="secondary" outline disabled={editingOtherUser}>
+                    <RS.Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark": isPhy})} color="secondary" outline disabled={editingOtherUser}>
                         Connect
                     </RS.Button>
                 </RS.InputGroup>
@@ -229,7 +229,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </div>
 
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
-                <hr className={siteSpecific("my-5", "my-4")} />
+                <hr className={siteSpecific("my-5 text-center", "my-4")} />
                 <h3>
                     <span>Your student connections<span id="student-connections-title" className="icon-help" /></span>
                     <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
@@ -285,7 +285,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 </div>
             </React.Fragment>}
 
-            <hr className={siteSpecific("my-5", "my-4")} />
+            <hr className={siteSpecific("my-5 text-center", "my-4")} />
             <h3>
                 <span>
                     Your group memberships

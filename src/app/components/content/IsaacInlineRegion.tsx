@@ -1,9 +1,9 @@
-import React, { ContextType, useContext, useEffect } from "react";
+import React, { ContextType, useContext, useEffect, useMemo } from "react";
 import { IsaacContentValueOrChildren } from "./IsaacContentValueOrChildren";
 import { AppQuestionDTO, InlineQuestionDTO, InlineContext, QuestionCorrectness } from "../../../IsaacAppTypes";
 import { ContentDTO, GameboardDTO, IsaacInlineRegionDTO } from "../../../IsaacApiTypes";
-import { deregisterQuestions, registerQuestions, selectors, useAppDispatch, useAppSelector } from "../../state";
-import { selectQuestionPart, submitCurrentAttempt } from "../../services";
+import { selectors, useAppSelector } from "../../state";
+import { submitCurrentAttempt } from "../../services";
 
 // TODO: generify this (IsaacContentProps?), reuse also for IsaacCardDeck
 interface IsaacInlineRegionProps {
@@ -92,29 +92,33 @@ export const submitInlineRegion = (inlineContext: ContextType<typeof InlineConte
             );
         }
         inlineContext.canShowWarningToast = true;
-        Object.keys(inlineContext.elementToQuestionMap).length > 1 && inlineContext.setFeedbackIndex(0);
+        if (Object.keys(inlineContext.elementToQuestionMap).length > 1) inlineContext.setFeedbackIndex(0);
     }
 };
 
+function getInlineQuestions(questions?: AppQuestionDTO[], inlineRegionId?: string) {
+    if (!questions || !inlineRegionId) return;
+    return questions.filter(question => question.id?.startsWith(inlineRegionId + "|inline-question:"));
+}
 
 const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
 
-    const dispatch = useAppDispatch();
     const inlineContext = useContext(InlineContext);
 
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
-    const inlineRegionDTO = selectQuestionPart(pageQuestions, doc.id) as IsaacInlineRegionDTO | undefined;
+    const inlineQuestions = useMemo(() => getInlineQuestions(pageQuestions, doc.id), [doc.id, pageQuestions]);
 
     useEffect(() => {
         if (inlineContext) {
-            inlineRegionDTO?.inlineQuestions?.forEach(inlineQuestion => {
+            inlineQuestions?.forEach(inlineQuestion => {
                 if (inlineQuestion.id && inlineQuestion.type) {
-                    const elementId = (inlineQuestion.id.split("|").at(-1)?.replace("inline-question:", "inline-question-") + "-input") ?? "unknown";
+                    const questionId = inlineQuestion.id.split("|").at(-1);
+                    const elementId = questionId ? (questionId.replace("inline-question:", "inline-question-") + "-input") : "unknown";
                     inlineContext.elementToQuestionMap[elementId] = {questionId: inlineQuestion.id, type: inlineQuestion.type};
                 }
             });
         }
-    }, [inlineRegionDTO?.inlineQuestions]);
+    }, [inlineQuestions]);
 
     useEffect(() => {
         // once the final question part to a region has been submitted, show the feedback box
@@ -126,13 +130,7 @@ const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
         }
     }, [inlineContext?.modifiedQuestionIds]);
 
-    // Register the inline question parts in Redux, so we can access previous/current attempts
-    useEffect(() => {
-        inlineRegionDTO?.inlineQuestions && dispatch(registerQuestions(inlineRegionDTO.inlineQuestions, inlineContext?.docId));
-        return () => dispatch(deregisterQuestions([inlineContext?.docId as string]));
-    }, [dispatch, inlineContext?.docId, inlineRegionDTO?.inlineQuestions]);
-
-    return <div className={`question-content inline-region ${className}`}>
+    return <div className={`question-content inline-region ${className ?? ""}`}>
         <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
             {doc.children}
         </IsaacContentValueOrChildren>

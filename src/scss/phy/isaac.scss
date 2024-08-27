@@ -128,13 +128,13 @@ $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to ge
 ));
 
 // Theme colours
-$custom-colors: (
+$theme-colour-overrides: (
     physics: $phy_purple,
     maths: $phy_maths,
     chemistry: $phy_chemistry,
     biology: $phy_biology,
 );
-$theme-colors: map-merge($theme-colors, $custom-colors);
+$theme-colors: map-merge($theme-colors, $theme-colour-overrides);
 
 @import "~bootstrap/scss/bootstrap-utilities"; 
 

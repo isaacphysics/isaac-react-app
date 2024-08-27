@@ -44,5 +44,5 @@ export function TrueFalseRadioInput({id, stateObject, propertyName, setStateFunc
         {invalid && <div id={`${id}-feedback`} className="required-before d-flex flex-nowrap text-center">
             required
         </div>}
-    </RS.FormGroup>
+    </RS.FormGroup>;
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import * as AppTypes from "../../../../IsaacAppTypes";
 import {closeActiveModal, useAppDispatch} from "../../../state";
@@ -16,6 +16,13 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
     const toggle = () => {
         dispatch(closeActiveModal());
     };
+
+    useEffect(() => {
+        window.addEventListener("popstate", toggle);
+        return () => {
+            window.removeEventListener("popstate", toggle);
+        };
+    });
 
     return <RS.Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={(activeModal && activeModal.size) || "lg"} centered={activeModal?.centered}>
         {activeModal && <React.Fragment>

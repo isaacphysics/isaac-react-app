@@ -563,8 +563,8 @@ export interface QuestionSearchQuery {
     difficulties?: string;
     examBoards?: string;
     questionCategories?: string;
+    statuses?: string;
     fasttrack?: boolean;
-    hideCompleted?: boolean;
     startIndex?: number;
     limit?: number;
 }

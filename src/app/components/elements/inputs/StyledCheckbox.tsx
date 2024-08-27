@@ -23,7 +23,7 @@ export const StyledCheckbox = (props : InputProps) => {
         setChecked(props.checked ?? false);
     }, [props.checked]);
 
-    return <div className="styled-checkbox-wrapper">
+    return <div className={classNames("styled-checkbox-wrapper", {"is-invalid": props.invalid})}>
         <div className="me-2 my-2">
             {checked && <div className="tick"/>}
             <Input {...rest} id={id} type="checkbox" className={classNames(className ?? "", {"checked" : checked})}
@@ -33,7 +33,7 @@ export const StyledCheckbox = (props : InputProps) => {
                 onKeyDown={(e) => ifKeyIsEnter(() => {onCheckChange({...e, target: {...e.currentTarget, checked: !e.currentTarget.checked}}); e.preventDefault();})(e)}
             />
         </div>
-        {label && <label htmlFor={id} className={classNames({"text-muted" : props.disabled, "pt-1" : isPhy, "hover-override" : ignoreLabelHover})} {...label.props}/>}
+        {label && <label htmlFor={id} className={classNames({"text-muted" : props.disabled, "hover-override" : ignoreLabelHover})} {...label.props}/>}
         <Spacer/>
     </div>;
 };
