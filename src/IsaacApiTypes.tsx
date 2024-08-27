@@ -397,6 +397,11 @@ export interface ContentDTO extends ContentBaseDTO {
     level?: number;
 }
 
+export enum CompletionState {
+    ALL_CORRECT = "ALL_CORRECT",
+    IN_PROGRESS = "IN_PROGRESS",
+    NOT_ATTEMPTED = "NOT_ATTEMPTED",
+}
 export interface ContentSummaryDTO {
     id?: string;
     title?: string;
@@ -406,7 +411,7 @@ export interface ContentSummaryDTO {
     level?: string;
     tags?: string[];
     url?: string;
-    correct?: boolean;
+    state?: CompletionState;
     supersededBy?: string;
     deprecated?: boolean;
     difficulty?: string;

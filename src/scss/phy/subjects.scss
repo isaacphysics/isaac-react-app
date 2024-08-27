@@ -1,3 +1,12 @@
+@use "sass:map";
+
+$alert-text-colours: (
+  "physics": #4d2863,
+  "maths": #004258,
+  "chemistry": #761813,
+  "biology": #002b08,
+);
+
 @function color-level($color, $level: 0) {
   $color-base: if($level > 0, $black, $white);
   $level: abs($level);
@@ -113,7 +122,8 @@
     }
     .dropdown-item {
       &:active {
-        @include button-variant($color, $color);
+        background-color: $color;
+        color: white;
       }
       &:focus {
         box-shadow: 0 0 0 0.25rem rgba($color, .25);
@@ -123,7 +133,7 @@
 
   .alert-secondary {
     @extend .alert-#{$subject};
-    color: $dark; // override font colour to improve on default contrast
+    color: map.get($alert-text-colours, $subject);
   }
 
   li {

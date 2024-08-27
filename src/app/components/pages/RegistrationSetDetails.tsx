@@ -170,7 +170,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />}
-                            <hr className={classNames({"d-none": role == 'TEACHER'}, "my-4")} />
+                            <hr className={classNames({"d-none": role == 'TEACHER'}, "my-4 text-center")} />
                             <SchoolInput
                                 className="my-4"
                                 userToUpdate={registrationUser}
@@ -193,7 +193,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 submissionAttempted={attemptedSignUp}
                                 required={false}
                             />
-                            <hr />
+                            <hr className="text-center"/>
                             <FormGroup className="form-group my-4">
                                 <StyledCheckbox
                                     id="tos-confirmation"
@@ -207,7 +207,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                     You must accept the terms to continue.
                                 </FormFeedback>
                             </FormGroup>
-                            <hr />
+                            <hr className="text-center"/>
                             <Row>
                                 <Col className="d-flex justify-content-end" xs={12} sm={6} lg={6}>
                                     <Button className="mt-2" outline color="secondary" onClick={history.goBack}>Back</Button>

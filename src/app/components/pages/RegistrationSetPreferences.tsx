@@ -55,7 +55,7 @@ export const RegistrationSetPreferences = () => {
 
     const userPreferencesToUpdate = {
         EMAIL_PREFERENCE: emailPreferences, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings
-    }
+    };
 
     function submit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -64,10 +64,11 @@ export const RegistrationSetPreferences = () => {
         if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
             dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, true));
+            if (isPhy) continueToAfterAuthPath();
         }
-
-        if (isPhy) continueToAfterAuthPath();
     }
+
+    const canSavePreferences = !isPhy || allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts);
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Customise your account`} className="mb-4" />
@@ -92,7 +93,7 @@ export const RegistrationSetPreferences = () => {
                             <UserContextAccountInput user={userToUpdate} userContexts={userContexts}
                                 setUserContexts={setUserContexts} setBooleanNotation={setBooleanNotation}
                                 displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
-                                submissionAttempted={submissionAttempted} required={false} />
+                                submissionAttempted={submissionAttempted} required={isPhy} />
                             <hr />
 
                             {isAda && <>
@@ -112,11 +113,11 @@ export const RegistrationSetPreferences = () => {
                             />
                             <hr />
                             <Row>
-                                <Col xs={12} sm={6} lg={6} className={classNames("d-flex justify-content-center", {"justify-content-lg-end": isAda})}>
+                                <Col xs={12} sm={6} className={classNames("d-flex justify-content-center", {"justify-content-lg-end": isAda})}>
                                     <Button className={`my-2 px-2 ${siteSpecific("px-lg-0", "px-lg-3")}`} outline color="secondary" onClick={continueToAfterAuthPath}>I&apos;ll do this later</Button>
                                 </Col>
-                                <Col xs={12} sm={6} lg={6} className="d-flex justify-content-center">
-                                    <Button type="submit" className={`btn btn-primary my-2 px-2", ${siteSpecific("px-lg-0", "px-lg-3")}`}>Save preferences</Button>
+                                <Col xs={12} sm={6} className="d-flex justify-content-center">
+                                    <Button type="submit" className={`btn btn-primary my-2 px-2", ${siteSpecific("px-lg-0", "px-lg-3")}`} disabled={!canSavePreferences}>Save preferences</Button>
                                 </Col>
                             </Row>
                         </Form>
