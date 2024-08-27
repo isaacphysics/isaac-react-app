@@ -432,7 +432,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                         <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                             {displayQuestions?.length
-                                ? <LinkToContentSummaryList items={displayQuestions} noCaret className="m-0" />
+                                ? <LinkToContentSummaryList items={displayQuestions} noCaret hideContentType className="m-0" />
                                 : noResultsMessage }
                         </ShowLoading>
                     </CardBody>
