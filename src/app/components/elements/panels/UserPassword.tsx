@@ -5,6 +5,7 @@ import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../..
 import {
     AUTHENTICATOR_FRIENDLY_NAMES_MAP,
     AUTHENTICATOR_PROVIDERS,
+    MINIMUM_PASSWORD_LENGTH,
     above,
     isAda,
     isPhy,
@@ -120,6 +121,7 @@ export const UserPassword = (
                                     passwordDebounce(e.target.value, setPasswordFeedback);
                                 }}
                                 onFocus={loadZxcvbnIfNotPresent}
+                                feedbackText={`Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long.`}
                                 aria-describedby="passwordValidationMessage"
                                 disabled={!editingOtherUser && currentPassword == ""}
                             />
