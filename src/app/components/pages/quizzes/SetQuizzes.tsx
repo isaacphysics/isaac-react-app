@@ -158,17 +158,19 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
         <tr className={`bg-white set-quiz-table-dropdown p-0 w-100 ${isExpanded ? "active" : ""}`} tabIndex={0}
             onClick={() => setIsExpanded(e => !e)} onKeyDown={ifKeyIsEnter(() => setIsExpanded(e => !e))}
         >
-            {isPhy && <td className="p-0">
-                <div id={"group-hex-" + index} className="board-subject-hexagon-container">
-                    <div className={`board-subject-hexagon ${subjects} d-flex justify-content-center align-items-center`}>
-                        <span className="set-quiz-table-group-hex" title={"Number of groups assigned"}>
-                            <strong>{assignedGroups.length}</strong>
-                            group{(!assignedGroups || assignedGroups.length != 1) && "s"}
-                            <RS.UncontrolledTooltip placement={"top"} target={"#group-hex-" + index}>{assignedGroups.length === 0 ?
-                                "No groups have been assigned."
-                                : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
-                            </RS.UncontrolledTooltip>
-                        </span>
+            {isPhy && <td className="p-0 align-content-center">
+                <div className="board-subject-hexagon-size m-auto">
+                    <div id={"group-hex-" + index} className="board-subject-hexagon-container">
+                        <div className={`board-subject-hexagon ${subjects} d-flex justify-content-center align-items-center`}>
+                            <span className="set-quiz-table-group-hex" title={"Number of groups assigned"}>
+                                <strong>{assignedGroups.length}</strong>
+                                group{(!assignedGroups || assignedGroups.length != 1) && "s"}
+                                <RS.UncontrolledTooltip placement={"top"} target={"#group-hex-" + index}>{assignedGroups.length === 0 ?
+                                    "No groups have been assigned."
+                                    : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
+                                </RS.UncontrolledTooltip>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </td>}
