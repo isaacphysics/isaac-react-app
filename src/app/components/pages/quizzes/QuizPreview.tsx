@@ -13,7 +13,7 @@ import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Alert, Button, Container} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
-import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 
 const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
