@@ -315,12 +315,9 @@ export const updateCurrentUser = (
     }
 
     // Confirm email change
-    if (currentUser.loggedIn && currentUser.email !== updatedUser.email ) {
-        if (currentUser.id == updatedUser.id) {
-            showEmailChangeModal();
-        }
-    }
-    else {
+    if (currentUser.loggedIn && currentUser.id == updatedUser.id && currentUser.email !== updatedUser.email) {
+        showEmailChangeModal();
+    } else {
         continueSettingsUpdate();
     }
 };
