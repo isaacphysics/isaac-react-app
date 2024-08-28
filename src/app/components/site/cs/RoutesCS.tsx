@@ -27,7 +27,6 @@ import {RegistrationSetPreferences} from "../../pages/RegistrationSetPreferences
 import {RegistrationSuccess} from "../../pages/RegistrationSuccess";
 import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
-import { QuestionFinder } from "../../pages/QuestionFinder";
 import { OnlineCourses } from "../../pages/OnlineCourses";
 import {ExamSpecificationsDirectory} from "../../pages/ExamSpecificationsDirectory";
 
