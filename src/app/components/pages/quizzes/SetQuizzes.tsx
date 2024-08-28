@@ -283,6 +283,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     }, [hashAnchor]);
 
     const {titleFilter, setTitleFilter, filteredQuizzes} = useFilteredQuizzes(user);
+    const undeprecatedQuizzes = filteredQuizzes?.filter(quiz => !quiz.deprecated);
 
     const [showFilters, setShowFilters] = useState(false);
     const [manageQuizzesTitleFilter, setManageQuizzesTitleFilter] = useState("");
@@ -365,17 +366,17 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
             {{
                 [siteSpecific("Set Tests", "Available tests")]:
-                <ShowLoading until={filteredQuizzes}>
-                    {filteredQuizzes && <>
+                <ShowLoading until={undeprecatedQuizzes}>
+                    {undeprecatedQuizzes && <>
                         <p>The following tests are available to set to your groups.</p>
                         <RS.Input
                             id="available-quizzes-title-filter" type="search" className="mb-4"
                             value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
                             placeholder="Search by title" aria-label="Search by title"
                         />
-                        {filteredQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
+                        {undeprecatedQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
                         <RS.ListGroup className="mb-2 quiz-list">
-                            {filteredQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                            {undeprecatedQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                 <RS.Row className="w-100">
                                     <RS.Col xs={9} md={8} lg={9} className="d-flex align-items-center">
                                         <div className="p-3">
