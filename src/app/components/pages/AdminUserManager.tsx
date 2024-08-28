@@ -64,13 +64,19 @@ export const AdminUserManager = () => {
         }));
     }, [setSearchQuery]);
 
-    const selectAllToggle = () => {
-        if (isDefined(searchResults) && searchResults.length === selectedUserIds.length) {
-            setSelectedUserIds([]);
-        } else if (searchResults) {
+    const selectAll = () => {
+        if (searchResults) {
             setSelectedUserIds(searchResults.filter((result => !!result)).map(result => result.id as number));
         }
     };
+    const selectDeliveryFailed = () => {
+        if (searchResults) {
+            setSelectedUserIds(searchResults.filter((result => result.emailVerificationStatus === "DELIVERY_FAILED")).map(result => result.id as number));
+        }
+    };
+    const clearSelection = () => {
+        setSelectedUserIds([]);
+    }
     const updateUserSelection = (userId: number, checked: boolean) => {
         if (checked) {
             setSelectedUserIds([...selectedUserIds, userId]);
@@ -298,7 +304,14 @@ export const AdminUserManager = () => {
                                         <thead>
                                             <tr>
                                                 <th>
-                                                    <RS.Button onClick={selectAllToggle} color="link">Select</RS.Button>
+                                                    <RS.UncontrolledButtonDropdown>
+                                                        <RS.DropdownToggle color="link">Select</RS.DropdownToggle>
+                                                        <RS.DropdownMenu>
+                                                            <RS.DropdownItem onClick={clearSelection} className="fst-italic">Clear</RS.DropdownItem>
+                                                            <RS.DropdownItem onClick={selectAll}>Select all users</RS.DropdownItem>
+                                                            <RS.DropdownItem onClick={selectDeliveryFailed}>Select &quot;delivery failed&quot; users</RS.DropdownItem>
+                                                        </RS.DropdownMenu>
+                                                    </RS.UncontrolledButtonDropdown>
                                                 </th>
                                                 <th>Actions</th>
                                                 <th>Name</th>
