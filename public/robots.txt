@@ -1,0 +1,11 @@
+# User-agent: * means the rules apply to all web crawlers.
+# Disallow: /private/ prevents crawlers from accessing the /private/ directory.
+# Allow: / allows crawlers to access everything else.
+
+# Block a specific crawler
+User-agent: AdsBot-Google
+Disallow: /
+
+# Allow Googlebot access to everything
+User-agent: Googlebot
+Disallow:
