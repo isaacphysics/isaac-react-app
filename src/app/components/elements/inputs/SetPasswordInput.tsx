@@ -30,7 +30,7 @@ export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, subm
             <TogglablePasswordInput
                 id={`${idPrefix}-password-set`} name="password" type="password"
                 aria-describedby="invalidPassword"
-                feedbackText={(!passwordValid || passwordsMatch) ? "Please enter a valid password" : "Please ensure your passwords match."}
+                feedbackText={(!passwordValid || passwordsMatch) ? `Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long.` : "Please ensure your passwords match."}
                 value={userToUpdate.password ? userToUpdate.password : undefined}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {password: e.target.value} : {password: null}))
