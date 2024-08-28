@@ -46,7 +46,7 @@ const ThirdPartyAccount = ({provider, isLinked, imgCss} : {provider: Authenticat
             e.stopPropagation();
         }}
     >
-        <span id="linked-accounts-no-password" className={`linked-account-button ${imgCss}`}/>
+        <span className={`linked-account-button ${imgCss}`}/>
         <span className="ms-2">{AUTHENTICATOR_FRIENDLY_NAMES_MAP[provider]}</span>
         <Spacer/>
         <span className="me-4 btn btn-link">
