@@ -17,6 +17,7 @@ import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {StyledSelect} from "../inputs/StyledSelect";
 import {Button, FormFeedback, Label, UncontrolledTooltip} from "reactstrap";
+import { AppGroup } from "../../../../IsaacAppTypes";
 
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
@@ -47,8 +48,6 @@ interface QuizSettingModalProps {
     feedbackMode?: QuizFeedbackMode | null;
 }
 
-let allQuizAssignments: QuizAssignmentDTO[] | undefined;
-
 export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartDate: initialScheduledStartDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
     const groupsQuery = useGetGroupsQuery(false);
@@ -61,8 +60,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
     const [dueDate, setDueDate] = useState<Date | null>(initialDueDate ?? null);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date | null>(initialScheduledStartDate ?? null);
     const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | null>(initialFeedbackMode ?? null);
-
-    allQuizAssignments = !allQuizAssignments ? useGetQuizAssignmentsSetByMeQuery().data : allQuizAssignments;
+    const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery();
 
     const yearRange = range(currentYear, currentYear + 5);
 
@@ -87,12 +85,14 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 setDueDate(null);
                 setScheduledStartDate(null);
                 setFeedbackMode(null);
-                allQuizAssignments = undefined;
             }
         });
     }
 
-    const groupInvalid = validated.has('group') && selectedGroups.length === 0 || selectedGroups.some(group => allQuizAssignments?.some(assignment => assignment.quizId === quiz.id && assignment.groupId === group.value));
+    const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.quizId === quiz.id && assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() < Date.now() : true)) : false;
+    const alreadyAssignedToAGroup = selectedGroups.some(group => quizAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
+    
+    const groupInvalid = validated.has('group') && selectedGroups.length === 0 || alreadyAssignedToAGroup;    
     const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false) || dueDate.valueOf() < Date.now());
     const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() < TODAY().valueOf();
     const feedbackModeInvalid = validated.has('feedbackMode') && feedbackMode === null;
@@ -105,7 +105,11 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 query={groupsQuery}
                 defaultErrorTitle={"Error fetching groups"}
                 thenRender={groups => {
-                    const groupOptions: Item<number>[] = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
+                    function appGroupToItem(g: AppGroup): Item<number> {return {label: g.groupName as string, value: g.id as number}; }
+                    function quizToAssignment(g: AppGroup): QuizAssignmentDTO | undefined { return quizAssignments?.find(assignment => assignment.quizId === quiz.id && assignment.groupId === g.id); }
+                    
+                    const groupOptions = groups.map((g: AppGroup) => ({...appGroupToItem(g), isDisabled: isAssignmentSetToThisGroup(appGroupToItem(g), quizToAssignment(g))}));
+
                     return <StyledSelect isMulti placeholder="Select groups"
                         options={groupOptions}
                         onChange={(s) => {
@@ -117,6 +121,10 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                         isSearchable
                         menuPortalTarget={document.body}
                         styles={{
+                            option: (base, selectProps) => ({
+                                ...base,
+                                backgroundColor: selectProps.isFocused && selectProps.isDisabled ? 'transparent' : base.backgroundColor
+                            }),
                             control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
                             menuPortal: base => ({...base, zIndex: 9999}),
                         }}
