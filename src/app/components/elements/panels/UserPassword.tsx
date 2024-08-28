@@ -19,6 +19,7 @@ import classNames from "classnames";
 import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
 import {TogglablePasswordInput} from "../inputs/TogglablePasswordInput";
 import { MyAccountTab } from "./MyAccountTab";
+import { Spacer } from "../Spacer";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -37,20 +38,21 @@ interface UserPasswordProps {
 const ThirdPartyAccount = ({provider, isLinked, imgCss} : {provider: AuthenticationProvider, isLinked: boolean, imgCss: string}) => {
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
-    return <Row className={classNames("align-items-center linked-account-button-outer mb-1", {"mx-2" : above['sm'](deviceSize)})}>
-        <input
-            type="button"
-            id="linked-accounts-no-password"
-            className={`linked-account-button ${imgCss}`}
-            onClick={() => dispatch(isLinked ? unlinkAccount(provider) : linkAccount(provider))}
-        />
-        <Label htmlFor="linked-accounts-no-password" className="ms-2 mb-0">
-            {AUTHENTICATOR_FRIENDLY_NAMES_MAP[provider]}
-        </Label>
-        <Button color="link" className="ms-auto me-3 btn-sm">
+    return <button 
+        type="button"
+        className={classNames("w-100 d-flex align-items-center linked-account-button-outer bg-white mb-1", {"mx-2" : above['sm'](deviceSize)})}
+        onClick={(e) => {
+            dispatch(isLinked ? unlinkAccount(provider) : linkAccount(provider));
+            e.stopPropagation();
+        }}
+    >
+        <span id="linked-accounts-no-password" className={`linked-account-button ${imgCss}`}/>
+        <span className="ms-2">{AUTHENTICATOR_FRIENDLY_NAMES_MAP[provider]}</span>
+        <Spacer/>
+        <span className="me-4 btn btn-link">
             {isLinked ? <span>Unlink</span> : <span>Link</span>}
-        </Button>
-    </Row>;
+        </span>
+    </button>;
 };
 
 export const UserPassword = (
