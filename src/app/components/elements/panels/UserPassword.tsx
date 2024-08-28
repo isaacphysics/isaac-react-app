@@ -109,7 +109,7 @@ export const UserPassword = (
                                 }
                             />
                         </FormGroup>}
-                        <FormGroup className="form-group">
+                        <FormGroup className="form-group pb-2">
                             <Label htmlFor="new-password">New password</Label>
                             <TogglablePasswordInput
                                 invalid={submissionAttempted && !isNewPasswordValid}
@@ -127,14 +127,12 @@ export const UserPassword = (
                                 aria-describedby="passwordValidationMessage"
                                 disabled={!editingOtherUser && currentPassword == ""}
                             />
-                            {passwordFeedback &&
-                            <span className='float-end small mt-1'>
+                            {passwordFeedback && <span className='float-end small'>
                                 <strong>Password strength: </strong>
                                 <span id="password-strength-feedback">
                                     {passwordFeedback.feedbackText}
                                 </span>
-                            </span>
-                            }
+                            </span>}
                         </FormGroup>
                     </>}
                     {isAda && !showPasswordFields && <Button className="w-100 py-2 mt-3 mb-2" outline onClick={() => setShowPasswordFields(true)}>Change password</Button>}
