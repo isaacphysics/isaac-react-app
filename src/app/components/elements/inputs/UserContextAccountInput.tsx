@@ -20,7 +20,7 @@ import {v4 as uuid_v4} from "uuid";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
-import { isUndefined } from "lodash";
+import isUndefined from "lodash/isUndefined";
 import { StyledCheckbox } from "./StyledCheckbox";
 
 interface UserContextRowProps {
