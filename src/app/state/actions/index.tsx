@@ -54,6 +54,7 @@ import {
     store,
 } from "../index";
 import {Immutable} from "immer";
+import { Button } from "reactstrap";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError<{errorMessage?: string}, unknown> {
@@ -232,65 +233,95 @@ export const updateCurrentUser = (
     currentUser: Immutable<PotentialUser>,
     redirect: boolean
 ) => async (dispatch: Dispatch<Action>) => {
-    // Confirm email change
-    if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
-        if (currentUser.loggedIn && currentUser.email !== updatedUser.email) {
-            const emailChangeConfirmed = window.confirm(
-                "You have edited your email address. Your current address will continue to work until you verify your " +
-                "new address by following the verification link sent to it via email. Continue?"
-            );
-            if (!emailChangeConfirmed) {
+ 
+    function showEmailChangeModal() { 
+        dispatch(openActiveModal({
+            title: `Editing your email address`,
+            body: <div> 
+                Your current address will continue to work until you verify your new address by following the verification link sent to it via email. 
+                <br/> <br/>
+                Would you like to continue?
+                <br/> <br/>
+                <div className="w-100">
+                    <Button
+                        className={"float-start mb-4"}
+                        color="tertiary"
+                        onClick={() => { cancelSettingsUpdate(); dispatch(closeActiveModal() as any); }} 
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        className={"float-end mb-4"}
+                        onClick={() => { continueSettingsUpdate(); dispatch(closeActiveModal() as any); }} 
+                    >
+                        OK
+                    </Button>
+                </div>
+            </div>
+        }) as any);
+    }
+    
+    function cancelSettingsUpdate() {
+        dispatch(showToast({
+            title: "Account settings not updated",
+            body: "Your account settings update was cancelled.",
+            color: "danger",
+            timeout: 5000,
+            closable: false,
+        }) as any);
+    }
+
+    async function continueSettingsUpdate() {
+        const editingOtherUser = currentUser.loggedIn && currentUser.id != updatedUser.id;
+    
+        try {
+            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
+            const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
+            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
+            await dispatch(requestCurrentUser() as any);
+    
+            if (!editingOtherUser) {
+            // Invalidate tagged caches that are dependent on the current user's settings
+                dispatch(questionsApi.util.invalidateTags(['CanAttemptQuestionType']) as any);
+            }
+    
+            const isFirstLogin = isFirstLoginInPersistence() || false;
+            if (isFirstLogin) {
+                persistence.session.remove(KEY.FIRST_LOGIN);
+                if (redirect) {
+                    history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
+                }
+            } else if (!editingOtherUser) {
                 dispatch(showToast({
-                    title: "Account settings not updated",
-                    body: "Your account settings update was cancelled.",
-                    color: "danger",
+                    title: "Account settings updated",
+                    body: "Your account settings were updated successfully.",
+                    color: "success",
                     timeout: 5000,
                     closable: false,
                 }) as any);
-                return; //early
+            } else if (editingOtherUser) {
+                redirect && history.push('/');
+                dispatch(showToast({
+                    title: "Account settings updated",
+                    body: "The user's account settings were updated successfully.",
+                    color: "success",
+                    timeout: 5000,
+                    closable: false,
+                }) as any);
             }
+        } catch (e: any) {
+            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
         }
     }
 
-    const editingOtherUser = currentUser.loggedIn && currentUser.id != updatedUser.id;
-
-    try {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-        const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        await dispatch(requestCurrentUser() as any);
-
-        if (!editingOtherUser) {
-            // Invalidate tagged caches that are dependent on the current user's settings
-            dispatch(questionsApi.util.invalidateTags(['CanAttemptQuestionType']) as any);
+    // Confirm email change
+    if (currentUser.loggedIn && currentUser.email !== updatedUser.email ) {
+        if (currentUser.id == updatedUser.id) {
+            showEmailChangeModal();
         }
-
-        const isFirstLogin = isFirstLoginInPersistence() || false;
-        if (isFirstLogin) {
-            persistence.session.remove(KEY.FIRST_LOGIN);
-            if (redirect) {
-                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
-            }
-        } else if (!editingOtherUser) {
-            dispatch(showToast({
-                title: "Account settings updated",
-                body: "Your account settings were updated successfully.",
-                color: "success",
-                timeout: 5000,
-                closable: false,
-            }) as any);
-        } else if (editingOtherUser) {
-            redirect && history.push('/');
-            dispatch(showToast({
-                title: "Account settings updated",
-                body: "The user's account settings were updated successfully.",
-                color: "success",
-                timeout: 5000,
-                closable: false,
-            }) as any);
-        }
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+    }
+    else {
+        continueSettingsUpdate();
     }
 };
 
