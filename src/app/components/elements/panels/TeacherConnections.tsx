@@ -58,18 +58,19 @@ interface ConnectionsHeaderProps {
     setEnableSearch: React.Dispatch<React.SetStateAction<boolean>>;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
     title: string;
+    searchPlaceholderText: string;
 }
 
-const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title}: ConnectionsHeaderProps) => {
+const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title, searchPlaceholderText}: ConnectionsHeaderProps) => {
     const deviceSize = useDeviceSize();
 
     return <div className="connect-list-header">
-        {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ? 
-            <>{enableSearch ? 
+        {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ?
+            <>{enableSearch ?
                 <>
-                    <RS.Input type="text" autoFocus placeholder="Search teachers" className="connections-search" onChange={e => setSearchText(e.target.value)}/>
+                    <RS.Input type="text" autoFocus placeholder={searchPlaceholderText} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
                     <Spacer />
-                </> : 
+                </> :
                 <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
                     <span className={siteSpecific("icon-person-active", "icon-group-white")} />
                     {title}
@@ -82,7 +83,7 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title}
                     {title}
                 </h4>
                 <Spacer />
-                {enableSearch && <RS.Input type="text" autoFocus style={{width: "200px"}} placeholder="Search teachers" className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
+                {enableSearch && <RS.Input type="text" autoFocus style={{width: "200px"}} placeholder={searchPlaceholderText} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
             </>
         }
         {!enableSearch && <Spacer />}
@@ -158,7 +159,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         }
     }
 
-    return <MyAccountTab 
+    return <MyAccountTab
         leftColumn={<>
             <h3>Connect to your teacher</h3>
             <PageFragment fragmentId={`teacher_connections_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
@@ -178,8 +179,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         type="text" placeholder="Enter your code in here" value={authToken || undefined} className="py-4"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                         onKeyDown={(e) => {if (e.key === 'Enter') {
-                            processToken(e); 
-                            e.preventDefault(); 
+                            processToken(e);
+                            e.preventDefault();
                         }}}
                     />
                     <RS.Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark": isPhy})} color="secondary" outline disabled={editingOtherUser}>
@@ -189,7 +190,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </RS.Form>
 
             <div className="connect-list" data-testid="teacher-connections">
-                <ConnectionsHeader title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch} setSearchText={setTeacherSearchText}/>
+                <ConnectionsHeader title="Teacher connections" searchPlaceholderText="Search teachers" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch} setSearchText={setTeacherSearchText}/>
                 <div className="connect-list-inner">
                     <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                         <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredActiveAuthorisations?.length ?? 0))} itemCount={filteredActiveAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
@@ -242,7 +243,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     <Link to="/groups">{siteSpecific("group management page", "Manage groups")}</Link>{siteSpecific(".", " page.")}
                 </p>
                 <div className="connect-list">
-                    <ConnectionsHeader title="Student connections" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch} setSearchText={setStudentSearchText}/>
+                    <ConnectionsHeader title="Student connections" searchPlaceholderText="Search students" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch} setSearchText={setStudentSearchText}/>
                     <div className="connect-list-inner">
                         <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                             <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredStudentAuthorisations?.length ?? 0))} itemCount={filteredStudentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
@@ -303,7 +304,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </ul>
             <div className="my-groups-table-section overflow-auto">
                 <div className="connect-list">
-                    <ConnectionsHeader title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch} setSearchText={setGroupSearchText}/>
+                    <ConnectionsHeader title="Group memberships" searchPlaceholderText="Search groups" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch} setSearchText={setGroupSearchText}/>
                     <div className="connect-list-inner">
                         <ul className={classNames("teachers-connected list-unstyled m-0")}>
                             {sortedGroupMemberships && <FixedSizeList height={MEMBERSHIPS_ROW_HEIGHT * (Math.min(MEMBERSHIPS_MAX_VISIBLE_ROWS, sortedGroupMemberships.length ?? 0))} itemCount={sortedGroupMemberships.length ?? 0} itemSize={MEMBERSHIPS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
@@ -319,7 +320,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                 }
                                                 {membership.group.selfRemoval && <img className="self-removal-group ms-1" src={siteSpecific("/assets/phy/icons/teacher_features_sprite.svg#groups", "/assets/cs/icons/group.svg")} alt=""/>}
                                                 <br/>
-                                                {membership.group.ownerSummary && 
+                                                {membership.group.ownerSummary &&
                                                     <span className="text-muted">Teacher{membership.group.additionalManagers && membership.group.additionalManagers.length > 0 ? "s" : ""}: {
                                                     [membership.group.ownerSummary, ...membership.group.additionalManagers ?? []].map(extractTeacherName).join(", ")
                                                 }</span>}
@@ -327,7 +328,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                             <RS.Col className="d-flex flex-col justify-content-end flex-grow-0 pe-1">
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
                                                     <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
-                                                        membership.group.selfRemoval 
+                                                        membership.group.selfRemoval
                                                             ? dispatch(openActiveModal(confirmSelfRemovalModal((user as LoggedInUser).id as number, membership.group.id as number)))
                                                             : changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.INACTIVE})
                                                     }>
