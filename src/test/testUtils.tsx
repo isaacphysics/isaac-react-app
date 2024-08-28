@@ -3,7 +3,7 @@ import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {rest, RestHandler} from "msw";
 import {ACCOUNT_TAB, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
-import produce from "immer";
+import {produce} from "immer";
 import {mockUser} from "../mocks/data";
 import {isaacApi, requestCurrentUser, store} from "../app/state";
 import {Provider} from "react-redux";

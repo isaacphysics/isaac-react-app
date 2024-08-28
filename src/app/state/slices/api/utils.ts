@@ -6,7 +6,7 @@ import {
     NO_CONTENT,
     API_REQUEST_FAILURE_MESSAGE
 } from "../../../services";
-import produce from "immer";
+import {produce} from "immer";
 import {
     AuthorisedAssignmentProgress,
     AppGroup,
