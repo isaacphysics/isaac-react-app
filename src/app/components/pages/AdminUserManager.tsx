@@ -178,9 +178,7 @@ export const AdminUserManager = () => {
                                     id="verification-status-search" type="select" defaultValue={searchQuery.emailVerificationStatus}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         const verificationStatus = e.target.value as EmailVerificationStatus;
-                                        console.log(verificationStatus);
                                         setParamIfNotDefault("emailVerificationStatus", verificationStatus, searchQuery.emailVerificationStatus!);
-                                        console.log(verificationStatus===searchQuery.emailVerificationStatus);
                                     }}
                                 >
                                     <option value="null">Any verification status</option>
