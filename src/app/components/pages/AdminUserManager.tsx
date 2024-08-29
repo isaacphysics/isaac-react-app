@@ -175,10 +175,9 @@ export const AdminUserManager = () => {
                             <RS.FormGroup>
                                 <RS.Label htmlFor="verification-status-search">Find by email verification status:</RS.Label>
                                 <RS.Input
-                                    id="verification-status-search" type="select" defaultValue={searchQuery.emailVerificationStatus || undefined}
+                                    id="verification-status-search" type="select" defaultValue={String(searchQuery.emailVerificationStatus)}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        const verificationStatus = e.target.value as EmailVerificationStatus;
-                                        setParamIfNotDefault("emailVerificationStatus", verificationStatus, "");
+                                        setParamIfNotDefault("emailVerificationStatus", e.target.value === "null" ? "" : e.target.value, "");
                                     }}
                                 >
                                     <option value="null">Any verification status</option>
