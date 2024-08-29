@@ -312,7 +312,9 @@ export const AdminUserManager = () => {
                                     <RS.Table bordered data-testid="user-search-results-table">
                                         <thead>
                                             <tr>
-                                                <th><RS.Button onClick={selectAllToggle} color="link">Select</RS.Button></th>
+                                                <th>
+                                                    <RS.Button onClick={selectAllToggle} color="link">Select</RS.Button>
+                                                </th>
                                                 <th>Actions</th>
                                                 <th>Name</th>
                                                 <th>Email</th>
