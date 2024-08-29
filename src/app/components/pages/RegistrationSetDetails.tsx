@@ -201,7 +201,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                     type="checkbox"
                                     onChange={(e) => setTosAccepted(e?.target.checked)}
                                     invalid={attemptedSignUp && !tosAccepted}
-                                    label={<span>I accept the <a href="/terms" target="_blank">terms of use</a>.</span>}
+                                    label={<span className={classNames({"form-required": isPhy})}>I accept the <a href="/terms" target="_blank">terms of use</a>.</span>}
                                 />
                                 <FormFeedback className="mt-0">
                                     You must accept the terms to continue.
