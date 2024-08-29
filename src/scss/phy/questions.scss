@@ -59,16 +59,19 @@
   }
   // Make sure the banner does not overflow on reorder questions on Phy
   div:not(.expansion-layout) > .validation-response-panel {
-    &.correct {
+    &.correct, &.almost {
       margin-left: -1rem;
       margin-right: -1rem;
-      margin-bottom: -2.75rem;
       padding-left: 1.5rem !important;
       padding-right: 1.5rem !important;
       @include media-breakpoint-up(md) {
         margin-left: -4rem;
         margin-right: -4rem;
       }
+    }
+    &.correct {
+      // correct (only) hides the "Check my answer" button, so does not need the bottom spacing
+      margin-bottom: -2.75rem;
     }
   }
 
