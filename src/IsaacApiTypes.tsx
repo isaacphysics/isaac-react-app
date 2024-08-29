@@ -647,7 +647,6 @@ export interface UserSummaryForAdminUsersDTO extends UserSummaryWithEmailAddress
     registrationDate?: Date;
     schoolId?: string;
     schoolOther?: string;
-    emailVerificationStatus?: EmailVerificationStatus;
 }
 
 export interface UserSummaryWithEmailAddressDTO extends UserSummaryDTO {
