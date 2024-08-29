@@ -64,19 +64,13 @@ export const AdminUserManager = () => {
         }));
     }, [setSearchQuery]);
 
-    const selectAll = () => {
-        if (searchResults) {
+    const selectAllToggle = () => {
+        if (isDefined(searchResults) && searchResults.length === selectedUserIds.length) {
+            setSelectedUserIds([]);
+        } else if (searchResults) {
             setSelectedUserIds(searchResults.filter((result => !!result)).map(result => result.id as number));
         }
     };
-    const selectDeliveryFailed = () => {
-        if (searchResults) {
-            setSelectedUserIds(searchResults.filter((result => result.emailVerificationStatus === "DELIVERY_FAILED")).map(result => result.id as number));
-        }
-    };
-    const clearSelection = () => {
-        setSelectedUserIds([]);
-    }
     const updateUserSelection = (userId: number, checked: boolean) => {
         if (checked) {
             setSelectedUserIds([...selectedUserIds, userId]);
@@ -177,6 +171,23 @@ export const AdminUserManager = () => {
                                     id="school-other-search" type="text" defaultValue={searchQuery.schoolOther || undefined}
                                     onChange={e => setParamIfNotDefault("schoolOther", e.target.value, "")}
                                 />
+                            </RS.FormGroup>
+                            <RS.FormGroup>
+                                <RS.Label htmlFor="verification-status-search">Find by email verification status:</RS.Label>
+                                <RS.Input
+                                    id="verification-status-search" type="select" defaultValue={searchQuery.emailVerificationStatus}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        const verificationStatus = e.target.value as EmailVerificationStatus;
+                                        console.log(verificationStatus);
+                                        setParamIfNotDefault("emailVerificationStatus", verificationStatus, searchQuery.emailVerificationStatus!);
+                                        console.log(verificationStatus===searchQuery.emailVerificationStatus);
+                                    }}
+                                >
+                                    <option value="null">Any verification status</option>
+                                    <option value="VERIFIED">Verified</option>
+                                    <option value="NOT_VERIFIED">Not verified</option>
+                                    <option value="DELIVERY_FAILED">Delivery failed</option>
+                                </RS.Input>
                             </RS.FormGroup>
                         </RS.Col>
 
@@ -303,16 +314,7 @@ export const AdminUserManager = () => {
                                     <RS.Table bordered data-testid="user-search-results-table">
                                         <thead>
                                             <tr>
-                                                <th>
-                                                    <RS.UncontrolledButtonDropdown>
-                                                        <RS.DropdownToggle color="link">Select</RS.DropdownToggle>
-                                                        <RS.DropdownMenu>
-                                                            <RS.DropdownItem onClick={clearSelection} className="fst-italic">Clear</RS.DropdownItem>
-                                                            <RS.DropdownItem onClick={selectAll}>Select all users</RS.DropdownItem>
-                                                            <RS.DropdownItem onClick={selectDeliveryFailed}>Select &quot;delivery failed&quot; users</RS.DropdownItem>
-                                                        </RS.DropdownMenu>
-                                                    </RS.UncontrolledButtonDropdown>
-                                                </th>
+                                                <th><RS.Button onClick={selectAllToggle} color="link">Select</RS.Button></th>
                                                 <th>Actions</th>
                                                 <th>Name</th>
                                                 <th>Email</th>

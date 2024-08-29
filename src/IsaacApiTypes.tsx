@@ -647,6 +647,7 @@ export interface UserSummaryForAdminUsersDTO extends UserSummaryWithEmailAddress
     registrationDate?: Date;
     schoolId?: string;
     schoolOther?: string;
+    emailVerificationStatus?: EmailVerificationStatus;
 }
 
 export interface UserSummaryWithEmailAddressDTO extends UserSummaryDTO {
@@ -701,6 +702,7 @@ export interface AdminSearchEndpointParams {
     postcode?: string;
     postcodeRadius?: string;
     schoolURN?: string;
+    emailVerificationStatus?: EmailVerificationStatus;
     subjectOfInterest?: string;
 }
 
