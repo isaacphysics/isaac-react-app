@@ -23,7 +23,7 @@ export function paramsToObject(entries: URLSearchParams): {[key: string]: string
 
 export const augmentErrorMessage = (message?: string) => (e: Error) => {
     return new Error(`${e.message}\n${message ? "Extra info: " + message : ""}`);
-}
+};
 
 interface RenderTestEnvironmentOptions {
     role?: UserRole | "ANONYMOUS";
@@ -104,36 +104,40 @@ export const followHeaderNavLink = async (menu: string, linkName: string) => {
     // related to a given title
     const adminMenuSectionParent = navLink.closest("li[class*='nav-item']") as HTMLLIElement | null;
     if (!adminMenuSectionParent) fail(`Missing NavigationSection parent - cannot locate entries in ${menu} navigation menu.`);
-    const link = await within(adminMenuSectionParent).findByRole("menuitem", {name: linkName, exact: false});
+    const link = await within(adminMenuSectionParent).findByRole("menuitem", {name: linkName});
     await userEvent.click(link);
 };
 
 export const navigateToGroups = async () => {
-    isPhy ?
-        await followHeaderNavLink("Teach", "Manage Groups")
-        :
+    if (isPhy) {
+        await followHeaderNavLink("Teach", "Manage Groups");
+    } else {
         await followHeaderNavLink("My Ada", "Teaching groups");
+    }
 };
 
 export const navigateToMyAccount = async () => {
-    isPhy ?
-        await followHeaderNavLink("My Isaac", "My Account")
-        :
+    if (isPhy) {
+        await followHeaderNavLink("My Isaac", "My Account");
+    } else {
         await followHeaderNavLink("My Ada", "My account");
+    }
 };
 
 export const navigateToUserManager = async () => {
-    isPhy ?
-        await followHeaderNavLink("Admin", "User Manager")
-        :
+    if (isPhy) {
+        await followHeaderNavLink("Admin", "User Manager");
+    } else {
         await followHeaderNavLink("Admin", "User manager");
+    }
 };
 
 export const navigateToAssignmentProgress = async () => {
-    isPhy ?
-        await followHeaderNavLink("Teach", "Assignment Progress")
-        :
+    if (isPhy) {
+        await followHeaderNavLink("Teach", "Assignment Progress");
+    } else {
         await followHeaderNavLink("My Ada", "My markbook");
+    }
 };
 
 // Open a given tab in the account page.
