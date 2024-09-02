@@ -701,6 +701,7 @@ export interface AdminSearchEndpointParams {
     postcode?: string;
     postcodeRadius?: string;
     schoolURN?: string;
+    emailVerificationStatus?: EmailVerificationStatus;
     subjectOfInterest?: string;
 }
 
