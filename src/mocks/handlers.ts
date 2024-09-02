@@ -14,7 +14,7 @@ import {
     mockUserPreferences
 } from "./data";
 import {API_PATH} from "../app/services";
-import produce from "immer";
+import {produce} from "immer";
 import {School} from "../IsaacAppTypes";
 
 export const handlers = [

@@ -3,8 +3,8 @@ import * as RS from "reactstrap";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {isDefined, isDobOldEnoughForSite, siteSpecific} from "../../../services";
 import {currentYear, DateInput} from "./DateInput";
-import { Immutable } from "immer";
-import { range } from "lodash";
+import {Immutable} from "immer";
+import range from "lodash/range";
 
 interface DobInputProps {
     userToUpdate: Immutable<ValidationUser>;
