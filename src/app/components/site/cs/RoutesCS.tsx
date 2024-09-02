@@ -4,7 +4,7 @@ import {AllTopics} from "../../pages/AllTopics";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Topic} from "../../pages/Topic";
 import {Redirect} from "react-router";
-import {EXAM_BOARD, isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove} from "../../../services";
+import {EXAM_BOARD, isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove, STAGE} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {ExamSpecifications} from "../../pages/ExamSpecifications";
 import {News} from "../../pages/News";
@@ -26,13 +26,12 @@ import {RegistrationTeacherConnect} from "../../pages/RegistrationTeacherConnect
 import {RegistrationSetPreferences} from "../../pages/RegistrationSetPreferences";
 import {RegistrationSuccess} from "../../pages/RegistrationSuccess";
 import {Events} from "../../pages/Events";
-import EventDetails from "../../pages/EventDetails";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
-import { QuestionFinder } from "../../pages/QuestionFinder";
 import { OnlineCourses } from "../../pages/OnlineCourses";
 import {ExamSpecificationsDirectory} from "../../pages/ExamSpecificationsDirectory";
 
 const Equality = lazy(() => import('../../pages/Equality'));
+const EventDetails = lazy(() => import('../../pages/EventDetails'));
 
 let key = 0;
 export const RoutesCS = [
@@ -55,9 +54,6 @@ export const RoutesCS = [
     // <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,
     <Redirect key={key++} exact from="/students" to="/support/student/general" />,
     <Redirect key={key++} exact from="/teachers" to="/support/teacher/general" />,
-
-    // Questions
-    <TrackedRoute key={key++} exact path="/questions" component={QuestionFinder} />,
 
     // Assignments
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,
@@ -88,6 +84,10 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_england" component={ExamSpecifications} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_wales" component={ExamSpecifications} componentProps={{'examBoardFilter': [EXAM_BOARD.WJEC]}} />,
+    <Redirect key={key++} from="/concepts/sqa_computing_science" to="/exam_specifications_scotland" />,
+    <TrackedRoute key={key++} exact path="/exam_specifications_scotland" component={ExamSpecifications}
+        componentProps={{'examBoardFilter': [EXAM_BOARD.SQA], 'stageFilter': [STAGE.SCOTLAND_NATIONAL_5,
+            STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER]}} />,
     <TrackedRoute key={key++} exact path="/exam_specifications" component={ExamSpecificationsDirectory} />,
 
     // News

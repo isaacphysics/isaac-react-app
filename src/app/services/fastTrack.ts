@@ -26,8 +26,8 @@ function goToUrl(url: string, queryParams?: {[key: string]: string | undefined})
 
 function retryPreviousQuestion(questionHistory: string[], board?: string) {
     questionHistory = questionHistory.slice();
-    let previousQuestionId = questionHistory.pop();
-    let commaSeparatedQuestionHistory = questionHistory.join(',');
+    const previousQuestionId = questionHistory.pop();
+    const commaSeparatedQuestionHistory = questionHistory.join(',');
 
     return {
         value: "Retry previous question page",
@@ -95,19 +95,21 @@ function trySupportingQuestion(supportingQuestion: ApiTypes.ContentSummaryDTO, c
 
 function getRelatedUnansweredEasierQuestions(doc: ApiTypes.QuestionDTO, level: number) {
     return doc.relatedContent ? doc.relatedContent.filter((relatedContent) => {
-        let isQuestionPage = relatedContent.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].indexOf(relatedContent.type as DOCUMENT_TYPE) >= 0;
-        let isEasier = relatedContent.level && (parseInt(relatedContent.level, 10) < level);
-        let isUnanswered = !relatedContent.correct;
-        return isQuestionPage && isEasier && isUnanswered;
+        const isQuestionPage = relatedContent.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].indexOf(relatedContent.type as DOCUMENT_TYPE) >= 0;
+        const isEasier = relatedContent.level && (parseInt(relatedContent.level, 10) < level);
+        const inProgress = relatedContent.state && [ApiTypes.CompletionState.NOT_ATTEMPTED, ApiTypes.CompletionState.IN_PROGRESS]
+            .includes(relatedContent.state);
+        return isQuestionPage && isEasier && inProgress;
     }) : [];
 }
 
 function getRelatedUnansweredSupportingQuestions(doc: ApiTypes.QuestionDTO, level: number) {
     return doc.relatedContent ? doc.relatedContent.filter((relatedContent) => {
-        let isQuestionPage = relatedContent.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].indexOf(relatedContent.type as DOCUMENT_TYPE) >= 0;
-        let isEqualOrHarder = relatedContent.level && (parseInt(relatedContent.level, 10) >= level);
-        let isUnanswered = !relatedContent.correct;
-        return isQuestionPage && isEqualOrHarder && isUnanswered;
+        const isQuestionPage = relatedContent.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].indexOf(relatedContent.type as DOCUMENT_TYPE) >= 0;
+        const isEqualOrHarder = relatedContent.level && (parseInt(relatedContent.level, 10) >= level);
+        const inProgress = relatedContent.state && [ApiTypes.CompletionState.NOT_ATTEMPTED, ApiTypes.CompletionState.IN_PROGRESS]
+            .includes(relatedContent.state);
+        return isQuestionPage && isEqualOrHarder && inProgress;
     }) : [];
 }
 
@@ -137,7 +139,7 @@ export function useFastTrackInformation(
     const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
 
-    return {isFastTrackPage, doc, correct, page, pageCompleted, questionHistory, board, userContext, user, canSubmit}
+    return {isFastTrackPage, doc, correct, page, pageCompleted, questionHistory, board, userContext, user, canSubmit};
 }
 
 export function determineFastTrackPrimaryAction(questionPart: FastTrackPageProperties) {

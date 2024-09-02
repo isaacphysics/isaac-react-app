@@ -8,8 +8,7 @@ import {
 } from "../../../../IsaacAppTypes";
 import {GameboardDTO, IsaacQuizDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import sortBy from "lodash/sortBy";
-import produce from "immer";
-import { skipToken } from "@reduxjs/toolkit/dist/query";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 // Returns summary assignment objects without data on gameboard contents - much faster to request these from the API
 // than those returned from useGroupAssignments

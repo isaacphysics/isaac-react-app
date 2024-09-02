@@ -21,7 +21,7 @@ import {ADMIN_CRUMB, isAdmin, isDefined, isPhy} from "../../services";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
 import {ShowLoading} from "../handlers/ShowLoading";
-import produce from "immer";
+import {produce} from "immer";
 import {skipToken} from "@reduxjs/toolkit/query";
 
 export const AdminUserManager = () => {

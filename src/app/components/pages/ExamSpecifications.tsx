@@ -58,12 +58,12 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter}: ExamSpecifica
         [STAGE.CORE]: "Discover our free Core computer science topics and questions. Learn or revise for your exams with us today.",
         [STAGE.ADVANCED]: "Discover our free Advanced computer science topics and questions. Learn or revise for your exams with us today.",
     })[stageTab];
-        
+
     const examBoardTabs = Object.keys(FILTERED_EXAM_BOARDS_BY_STAGE).reduce((acc: {[stage: string]: React.JSX.Element}, stage) => ({
-        ...acc, 
+        ...acc,
         [stageLabelMap[stage as STAGE]]: <Tabs
-            style="tabs" className="pt-3" tabContentClass="pt-3" 
-            activeTabOverride={examBoardTabOverride} 
+            style="tabs" className="pt-3" tabContentClass="pt-3"
+            activeTabOverride={examBoardTabOverride}
             onActiveTabChange={(n) => {
                 setExamBoardTab(FILTERED_EXAM_BOARDS_BY_STAGE[stageTab][n - 1] as EXAM_BOARD);
                 setExamBoardTabOverride(undefined);
@@ -98,7 +98,7 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter}: ExamSpecifica
         {stageTabs}
         <Row>
             <Col lg={{size: 8, offset: 2}}>
-                <PageFragment fragmentId={fragmentId}/>
+                {fragmentId && <PageFragment fragmentId={fragmentId}/>}
             </Col>
         </Row>
     </Container>;

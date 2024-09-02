@@ -2,6 +2,7 @@ import {
     comparatorFromOrderedValues,
     CS_EXAM_BOARDS_BY_STAGE,
     EXAM_BOARD,
+    EXAM_BOARD_DEFAULT_OPTION,
     EXAM_BOARD_NULL_OPTIONS,
     examBoardLabelMap,
     history,
@@ -70,17 +71,25 @@ export function useUserViewingContext(): UseUserContextReturnType {
     // Exam Board
     let examBoard: EXAM_BOARD;
     const examBoardQueryParam = queryParams.examBoard as EXAM_BOARD | undefined;
-    if (isPhy) {
+    // Set the exam board in order of precedence:
+    if (isPhy) { // Physics has no exam boards and so use the "null" option of ALL.
         examBoard = EXAM_BOARD.ALL;
-    } else if (examBoardQueryParam && Object.values(EXAM_BOARD).includes(examBoardQueryParam) && !EXAM_BOARD_NULL_OPTIONS.includes(examBoardQueryParam)) {
+    } else if ( // A valid exam board is specified by the query params (but is not the default exam board option).
+        examBoardQueryParam && Object.values(EXAM_BOARD).includes(examBoardQueryParam) &&
+        EXAM_BOARD_DEFAULT_OPTION !== examBoardQueryParam
+    ) {
         examBoard = examBoardQueryParam;
         explanation.examBoard = urlMessage;
-    } else if (isDefined(transientUserContext?.examBoard)) {
+    } else if ( // An exam board has been selected via the context picker within this (redux) session.
+        isDefined(transientUserContext?.examBoard)
+    ) {
         examBoard = transientUserContext?.examBoard;
-    } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].examBoard) {
+    } else if ( // An exam board preference has been set on the account.
+        isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].examBoard
+    ) {
         examBoard = user.registeredContexts[0].examBoard as EXAM_BOARD;
-    } else {
-        examBoard = isAda ? EXAM_BOARD.ADA : EXAM_BOARD.ALL;
+    } else {  // We use the default exam board option.
+        examBoard = EXAM_BOARD_DEFAULT_OPTION;
     }
 
     // Whether stage and examboard are the default
@@ -126,7 +135,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
 
     // Replace query params
     useEffect(() => {
-        const actualParams = queryString.parse(window.location.search);
+        const actualParams = queryString.parse(window.location.search, {decode: false});
         if (stage !== actualParams.stage || (!isPhy && examBoard !== actualParams.examBoard)) {
             try {
                 history.replace({
@@ -454,7 +463,8 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
         // - Advanced Higher
         // with intra-group separation by commas, inter-group separation by newlines
 
-        const defaultStage = audienceStages.includes(STAGE.CORE) ? [STAGE.CORE] : [STAGE.ADVANCED];
+        const coreOrAdvanced =  audienceStages.includes(STAGE.CORE) ? [STAGE.CORE] : [STAGE.ADVANCED];
+        const defaultStage = (audienceStages.includes(STAGE.CORE) && audienceStages.includes(STAGE.ADVANCED)) ? [STAGE.CORE, STAGE.ADVANCED] : coreOrAdvanced;
         stagesToView = userContext.hasDefaultPreferences || !intendedAudience
             ? defaultStage
             : stagesFilteredByUserContext.length > 0

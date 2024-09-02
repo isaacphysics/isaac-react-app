@@ -204,9 +204,9 @@ export const Contact = () => {
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>
-                                            <span className="d-block pb-3 pb-md-0 text-end text-md-start form-required">
+                                            {isPhy && <span className="d-block pb-3 pb-md-0 text-end text-md-start form-required">
                                                 Required field
-                                            </span>
+                                            </span>}                                  
                                         </Col>
                                         <Col size={12} md={6} className="text-end">
                                             <Input type="submit" value="Submit" className="btn btn-block btn-secondary border-0" />

@@ -215,28 +215,14 @@ button.btn.btn-link.login-b,
   cursor: grab;
 }
 
-.w-5 {
-  width: 5% !important;
-}
+@each $name, $size in $element-sizes {
+  .w-#{$name} {
+    width: $size !important;
+  }
 
-.w-10 {
-  width: 10% !important;
-}
-
-.w-15 {
-  width: 15% !important;
-}
-
-.w-20 {
-  width: 20% !important;
-}
-
-.w-30 {
-  width: 30% !important;
-}
-
-.w-40 {
-  width: 40% !important;
+  .h-#{$name} {
+    height: $size !important;
+  }
 }
 
 .overflow-visible {
@@ -294,3 +280,22 @@ iframe.email-html {
 //    }
 //  }
 //}
+
+.collapsible-head {
+  margin-left: 0;
+  margin-right: 0;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: $gray-107;
+
+  img {
+    transition: transform 0.1s ease;
+  }
+}
+
+.collapsible-body {
+  transition: max-height 0.3s ease-in-out, height 0.3s ease-in-out;
+  // height must be animated alongside max-height to prevent jumping if the inner content changes height during the animation
+  max-height: 0;
+}
