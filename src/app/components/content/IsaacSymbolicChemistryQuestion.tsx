@@ -47,9 +47,13 @@ function isError(p: ParsingError | any[]): p is ParsingError {
 }
 
 export const symbolicInputValidator = (input: string) => {
-    const openBracketsCount = input.split('(').length - 1;
-    const closeBracketsCount = input.split(')').length - 1;
-    const regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_]+/;
+    const openRoundBracketsCount = input.split("(").length - 1;
+    const closeRoundBracketsCount = input.split(")").length - 1;
+    const openSquareBracketsCount = input.split("[").length - 1;
+    const closeSquareBracketsCount = input.split("]").length - 1;
+    const openCurlyBracketsCount = input.split("{").length - 1;
+    const closeCurlyBracketsCount = input.split("}").length - 1;
+    const regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
     const badCharacters = new RegExp(regexStr);
     const errors = [];
     if (badCharacters.test(input)) {
@@ -64,8 +68,11 @@ export const symbolicInputValidator = (input: string) => {
         }
         errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
     }
-    if (openBracketsCount !== closeBracketsCount) {
-        errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+    if (openRoundBracketsCount !== closeRoundBracketsCount
+       || openSquareBracketsCount !== closeSquareBracketsCount
+       || openCurlyBracketsCount !== closeCurlyBracketsCount) {
+        // Rather than a long message about which brackets need closing
+        errors.push('You are missing some brackets.');
     }
     if (/\.[0-9]/.test(input)) {
         errors.push('Please convert decimal numbers to fractions.');
