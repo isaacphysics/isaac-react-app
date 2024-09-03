@@ -91,10 +91,10 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
         >
             <DropdownToggle
                 disabled={readonly || !noDisplayUnit}
-                className={classNames("feedback-zone ps-2 pe-0 py-0", {"pe-4": showFeedback(unitCorrectness), "border-dark": !noDisplayUnit})}
+                className={classNames("feedback-zone ps-2 pe-0 py-0", {"pe-4": showFeedback(unitCorrectness) && noDisplayUnit, "border-dark": !noDisplayUnit})}
                 color={noDisplayUnit ? undefined : "white"}
             >
-                <div className={showFeedback(unitCorrectness) ? "pe-4" : "pe-2"}>
+                <div className={showFeedback(unitCorrectness) && noDisplayUnit ? "pe-4" : "pe-2"}>
                     <Markup encoding={"latex"}>
                         {isDefined(unit) ? wrapUnitForSelect(unit) : "Unit..."}
                     </Markup>
