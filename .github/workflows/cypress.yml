@@ -43,7 +43,7 @@ jobs:
           git add . && git commit -m "Update VRT baselines"
           git push --set-upstream origin vrt/${{ github.head_ref || github.ref_name }} --force
       - name: Create or update Cypress PR
-        if: steps.cypress-create-branch.outcome == 'success'
+        if: ${{ steps.cypress-create-branch.outcome == 'success' }}
         uses: actions/github-script@v6
         with:
           script: |
