@@ -239,7 +239,10 @@ export const updateCurrentUser = (
         dispatch(openActiveModal({
             title: `Editing your email address`,
             body: <div> 
-                <p> Your current address will continue to work until you verify your new address by following the verification link sent to it via email. </p>
+                <p> 
+                    Your new email address won&#39;t work until you click on the verification link sent to it. 
+                    Until then, your old email address will keep working as usual. 
+                </p>
                 <p> Would you like to continue? </p>
                 <div className="w-100">
                     <Button
