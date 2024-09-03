@@ -26,6 +26,7 @@ import {
     isPhy,
     KEY,
     loadZxcvbnIfNotPresent,
+    MINIMUM_PASSWORD_LENGTH,
     passwordDebounce,
     persistence,
     SITE_TITLE,
@@ -227,7 +228,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                 />
                                 <FormFeedback id="password-validation-feedback">
                                     {attemptedSignUp && !passwordIsValid &&
-                                        "Passwords must match and be at least 6 characters long"}
+                                        `Passwords must match and be at least ${MINIMUM_PASSWORD_LENGTH} characters long`}
                                 </FormFeedback>
                             </FormGroup>
                         </Col>

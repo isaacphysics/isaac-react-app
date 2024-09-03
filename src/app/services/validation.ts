@@ -22,7 +22,7 @@ export function validateCountryCode(countryCode: string | undefined) {
 }
 
 export const validateEmail = (email?: string) => {
-    return email && email.length > 0 && email.includes("@");
+    return email && email.length > 0 && /.*@.+\.[^.]+$/.test(email);
 };
 
 export const isValidGameboardId = (gameboardId?: string) => {
@@ -44,7 +44,7 @@ export const isDobOverThirteen = (dateOfBirth?: Date) => isDobOverN(13, dateOfBi
 export const isDobOverTen = (dateOfBirth?: Date) => isDobOverN(10, dateOfBirth);
 export const isDobOldEnoughForSite = siteSpecific(isDobOverTen, isDobOverThirteen);
 
-export const MINIMUM_PASSWORD_LENGTH = 6;
+export const MINIMUM_PASSWORD_LENGTH = 8;
 export const validatePassword = (password: string) => {
     return password.length >= MINIMUM_PASSWORD_LENGTH;
 };
@@ -110,7 +110,7 @@ export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser>
     return user && userPreferences && validateName(user.givenName) && validateName(user.familyName)
         && validateUserContexts(userContexts, isAda)
         && (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE))
-        && (isPhy || (!isTeacherOrAbove(user) || validateUserSchool(user)))
+        && (isPhy || (!isTeacherOrAbove(user) || validateUserSchool(user)));
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: Immutable<UserSummaryWithEmailAddressDTO>, additionalInformation: AdditionalInformation) {

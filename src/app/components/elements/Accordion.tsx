@@ -22,7 +22,7 @@ import classNames from "classnames";
 import {Markup} from "./markup";
 import {ReportAccordionButton} from "./ReportAccordionButton";
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;

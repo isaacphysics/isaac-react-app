@@ -29,7 +29,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     //  that require refetching.
     const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
 
-    const [assignmentStateFilter, setAssignmentStateFilter] = useState<AssignmentState>("All");
+    const [assignmentStateFilter, setAssignmentStateFilter] = useState<AssignmentState>("To do");
     const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
     const [assignmentSetByFilter, setAssignmentSetByFilter] = useState<string>("All");
     const [assignmentGroupFilter, setAssignmentGroupFilter] = useState<string>("All");
@@ -38,7 +38,8 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     const pageHelp = <span>
         Any {siteSpecific("assignments", "quizzes")} you have been set will appear here.<br />
-        Unfinished overdue {siteSpecific("assignments", "quizzes")} will show in {siteSpecific("Assignments", "Quizzes")} To Do until they are due, after which they move to Older {siteSpecific("Assignments", "Quizzes")}.
+        Overdue {siteSpecific("assignments", "quizzes")} which have not been fully attempted will be treated as {siteSpecific("assignments", "quizzes")} <strong>To do</strong> until they are due,
+        after which they are considered <strong>Older</strong> {siteSpecific("assignments", "quizzes")}.
     </span>;
 
     return <Container>
@@ -102,7 +103,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                             {limit < filteredAssignments.length && <div className="text-center">
                                 <hr className="text-center" />
                                 <p className="mt-4">
-                                    Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered assignments.
+                                    Showing <strong>{limit}</strong> of <strong>{filteredAssignments.length}</strong> filtered {siteSpecific("assignments", "quizzes")}.
                                 </p>
                                 <Button color="primary" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
                                     Show more

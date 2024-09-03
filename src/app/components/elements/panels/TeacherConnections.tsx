@@ -58,16 +58,17 @@ interface ConnectionsHeaderProps {
     setEnableSearch: React.Dispatch<React.SetStateAction<boolean>>;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
     title: string;
+    placeholder: string;
 }
 
-const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title}: ConnectionsHeaderProps) => {
+const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title, placeholder}: ConnectionsHeaderProps) => {
     const deviceSize = useDeviceSize();
 
     return <div className="connect-list-header">
         {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ? 
             <>{enableSearch ? 
                 <>
-                    <RS.Input type="text" autoFocus placeholder="Search teachers" className="connections-search" onChange={e => setSearchText(e.target.value)}/>
+                    <RS.Input type="text" autoFocus placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
                     <Spacer />
                 </> : 
                 <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
@@ -82,7 +83,7 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title}
                     {title}
                 </h4>
                 <Spacer />
-                {enableSearch && <RS.Input type="text" autoFocus style={{width: "200px"}} placeholder="Search teachers" className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
+                {enableSearch && <RS.Input type="text" autoFocus style={{width: "200px"}} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
             </>
         }
         {!enableSearch && <Spacer />}
@@ -182,14 +183,16 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                             e.preventDefault(); 
                         }}}
                     />
-                    <RS.Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark h-100": isPhy})} color="secondary" outline disabled={editingOtherUser}>
+                    <RS.Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark": isPhy})} color="secondary" outline disabled={editingOtherUser}>
                         Connect
                     </RS.Button>
                 </RS.InputGroup>
             </RS.Form>
 
             <div className="connect-list" data-testid="teacher-connections">
-                <ConnectionsHeader title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch} setSearchText={setTeacherSearchText}/>
+                <ConnectionsHeader 
+                    title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch} 
+                    setSearchText={setTeacherSearchText} placeholder="Search teachers"/>
                 <div className="connect-list-inner">
                     <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                         <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredActiveAuthorisations?.length ?? 0))} itemCount={filteredActiveAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
@@ -229,7 +232,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </div>
 
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
-                <hr className={siteSpecific("my-5", "my-4")} />
+                <hr className={siteSpecific("my-5 text-center", "my-4")} />
                 <h3>
                     <span>Your student connections<span id="student-connections-title" className="icon-help" /></span>
                     <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
@@ -242,7 +245,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     <Link to="/groups">{siteSpecific("group management page", "Manage groups")}</Link>{siteSpecific(".", " page.")}
                 </p>
                 <div className="connect-list">
-                    <ConnectionsHeader title="Student connections" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch} setSearchText={setStudentSearchText}/>
+                    <ConnectionsHeader 
+                        title="Student connections" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch} 
+                        setSearchText={setStudentSearchText} placeholder="Search students"/>
                     <div className="connect-list-inner">
                         <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                             <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredStudentAuthorisations?.length ?? 0))} itemCount={filteredStudentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
@@ -285,7 +290,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 </div>
             </React.Fragment>}
 
-            <hr className={siteSpecific("my-5", "my-4")} />
+            <hr className={siteSpecific("my-5 text-center", "my-4")} />
             <h3>
                 <span>
                     Your group memberships
@@ -303,7 +308,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </ul>
             <div className="my-groups-table-section overflow-auto">
                 <div className="connect-list">
-                    <ConnectionsHeader title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch} setSearchText={setGroupSearchText}/>
+                    <ConnectionsHeader 
+                        title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch} 
+                        setSearchText={setGroupSearchText} placeholder="Search groups"/>
                     <div className="connect-list-inner">
                         <ul className={classNames("teachers-connected list-unstyled m-0")}>
                             {sortedGroupMemberships && <FixedSizeList height={MEMBERSHIPS_ROW_HEIGHT * (Math.min(MEMBERSHIPS_MAX_VISIBLE_ROWS, sortedGroupMemberships.length ?? 0))} itemCount={sortedGroupMemberships.length ?? 0} itemSize={MEMBERSHIPS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>

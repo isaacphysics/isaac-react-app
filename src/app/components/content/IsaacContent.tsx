@@ -72,7 +72,6 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
             case "isaacCard": selectedComponent = <IsaacCard {...props} />; break;
             case "isaacCardDeck": selectedComponent = <IsaacCardDeck {...props} />; break;
             case "codeTabs": selectedComponent = <IsaacCodeTabs {...props} />; break;
-            case "isaacInlineRegion": selectedComponent = <IsaacInlineRegion {...props} />; break;
             default:
                 switch (layout) {
                     case "tabs": selectedComponent = <IsaacTabs {...props} />; break;

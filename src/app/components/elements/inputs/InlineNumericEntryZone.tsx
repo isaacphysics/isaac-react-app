@@ -1,10 +1,10 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from "reactstrap";
 import classNames from "classnames";
 import { Markup } from "../markup";
 import { IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO } from "../../../../IsaacApiTypes";
 import { selectors, useAppSelector, useGetConstantUnitsQuery } from "../../../state";
-import { isLoggedIn, useCurrentQuestionAttempt } from "../../../services";
+import { isDefined, isLoggedIn, useCurrentQuestionAttempt } from "../../../services";
 import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
 import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
 import { QuestionCorrectness } from "../../../../IsaacAppTypes";
@@ -13,9 +13,6 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
 
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId as string);
-
-    const [value, setValue] = useState<string | undefined>(questionDTO?.bestAttempt?.answer?.value);
-    const [unit, setUnit] = useState<string | undefined>(questionDTO.displayUnit ?? (questionDTO?.bestAttempt?.answer as QuantityDTO)?.units);
 
     const user = useAppSelector(selectors.user.orNull);
     const {data: units} = useGetConstantUnitsQuery();
@@ -39,20 +36,22 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
         return correctness === "INCORRECT" || correctness === "NOT_ANSWERED";
     };
 
-    useEffect(function updateCurrentAttempt() {
+    function updateCurrentAttempt({newValue, newUnits} : {newValue?: string, newUnits?: string}) {
         const attempt = {
             type: "quantity",
-            value: value,
-            units: unit,
+            value: newValue ?? currentAttempt?.value,
+            units: newUnits ?? currentAttempt?.units,
         };
         dispatchSetCurrentAttempt(attempt);
         setModified(true);
-    }, [value, unit, setModified]);
+    }
+
+    const unit = questionDTO.displayUnit ?? currentAttempt?.units;
 
     return <div {...rest} 
-        className={classNames("inline-numeric-container", rest.className, correctnessClass(valueCorrectness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" : correctness))}
+        className={classNames("inline-numeric-container w-100", rest.className, correctnessClass(valueCorrectness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" : correctness))}
     >
-        <div className={"feedback-zone inline-nq-feedback"}
+        <div className={"feedback-zone inline-nq-feedback w-100"}
             style={{
                 ...(height && {height: `${height}px`}),
             }}
@@ -68,9 +67,9 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
                 style={{
                     ...(width && {width: `${width}px`}), 
                 }}
-                value={value ?? ""}
+                value={currentAttempt?.value ?? ""}
                 onChange={(e) => {
-                    setValue(e.target.value);
+                    updateCurrentAttempt({newValue: e.target.value});
                 }}
             />
             {showFeedback(valueCorrectness) && <div className={"feedback-box"}>
@@ -97,7 +96,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
             >
                 <div className={showFeedback(unitCorrectness) ? "pe-4" : "pe-2"}>
                     <Markup encoding={"latex"}>
-                        {unit !== undefined ? wrapUnitForSelect(noDisplayUnit ? unit : questionDTO.displayUnit) : "Unit..."}
+                        {isDefined(unit) ? wrapUnitForSelect(unit) : "Unit..."}
                     </Markup>
                     {showFeedback(unitCorrectness) && noDisplayUnit && <div className={"feedback-box ps-2"}>
                         {unitCorrectness === "NOT_ANSWERED" ? 
@@ -112,7 +111,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
                     <DropdownItem key={wrapUnitForSelect(unit)}
                         data-unit={unit || 'None'}
                         className={unit && unit === currentAttempt?.units ? "btn bg-grey selected" : ""}
-                        onClick={(e: FormEvent) => {setUnit(unit); e.preventDefault();}}
+                        onClick={(e: FormEvent) => {updateCurrentAttempt({newUnits: unit}); e.preventDefault();}}
                     >
                         <Markup encoding={"latex"}>
                             {wrapUnitForSelect(unit)}
