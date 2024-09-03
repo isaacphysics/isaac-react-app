@@ -51,7 +51,7 @@ jobs:
             const pulls = await github.rest.pulls.list({
               owner: owner,
               repo: repo,
-              head: vrt/${{ github.head_ref || github.ref_name }},
+              head: 'vrt/${{ github.head_ref || github.ref_name }}',
               base: ${{ github.head_ref || github.ref_name }},
               state: 'open',
             });
@@ -61,7 +61,7 @@ jobs:
                 title: '[VRT] Update baselines for ${{ github.head_ref || github.ref_name }}',
                 owner: owner,
                 repo: repo,
-                head: vrt/${{ github.head_ref || github.ref_name }},
+                head: 'vrt/${{ github.head_ref || github.ref_name }}',
                 base: ${{ github.head_ref || github.ref_name }},
                 body: 'Updates VRT baslines for ${{ github.head_ref || github.ref_name }}.'
               });
