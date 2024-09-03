@@ -104,7 +104,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         if (state.userInput !== "" || modalVisible) {
             // Only call dispatch if the user has inputted text or is interacting with the modal
             // Otherwise this causes the response to reset on reload removing the banner
-            dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), mhchemExpression});
+            dispatchSetCurrentAttempt({type: 'chemicalFormula', value: JSON.stringify(newState), mhchemExpression});
         }
         initialEditorSymbols.current = state.symbols;
     };
@@ -186,7 +186,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         if (!isError(parsedExpression) && !(parsedExpression.length === 0 && input !== '')) {
             if (input === '') {
                 const state = {result: {tex: "", python: "", mathml: ""}};
-                dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), mhchemExpression: ""});
+                dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(sanitiseInequalityState(state)), mhchemExpression: ""});
                 initialEditorSymbols.current = [];
             } else if (parsedExpression.length === 1) {
                 // This and the next one are using input instead of textInput because React will update the state whenever it sees fit
