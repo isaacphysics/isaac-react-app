@@ -14,7 +14,8 @@ import {
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     TAG_ID,
     trackEvent,
-    siteSpecific
+    siteSpecific,
+    isAda
 } from "../../services";
 import {
     Action,
@@ -238,14 +239,13 @@ export const updateCurrentUser = (
         dispatch(openActiveModal({
             title: `Editing your email address`,
             body: <div> 
-                Your current address will continue to work until you verify your new address by following the verification link sent to it via email. 
-                <br/> <br/>
-                Would you like to continue?
-                <br/> <br/>
+                <p> Your current address will continue to work until you verify your new address by following the verification link sent to it via email. </p>
+                <p> Would you like to continue? </p>
                 <div className="w-100">
                     <Button
                         className={"float-start mb-4"}
-                        color="tertiary"
+                        color={siteSpecific("tertiary", "secondary")}  
+                        outline={isAda} 
                         onClick={() => { cancelSettingsUpdate(); dispatch(closeActiveModal() as any); }} 
                     >
                         Cancel
