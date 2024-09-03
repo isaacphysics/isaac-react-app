@@ -37,11 +37,13 @@ jobs:
         if: ${{ failure() }}
         run: |
           find ./src/test/pages/__image_snapshots__ -type f -name "*.actual.png" -exec bash -c 'mv "$1" "${1/.actual./.}"' shell {} \;
+          echo "TARGET_REF=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
+          echo "UPDATE_BRANCH_NAME=vrt/${{ env.TARGET_REF }}" >> $GITHUB_ENV
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git checkout vrt/${{ github.head_ref || github.ref_name }} || git checkout -b vrt/${{ github.head_ref || github.ref_name }}
+          git checkout ${{ env.UPDATE_BRANCH_NAME }} || git checkout -b ${{ env.UPDATE_BRANCH_NAME }}
           git add . && git commit -m "Update VRT baselines"
-          git push --set-upstream origin vrt/${{ github.head_ref || github.ref_name }} --force
+          git push --set-upstream origin ${{ env.UPDATE_BRANCH_NAME }} --force
       - name: Create or update Cypress PR
         if: ${{ failure() && steps.cypress-create-branch.outcome == 'success' }}
         uses: actions/github-script@v6
@@ -51,19 +53,19 @@ jobs:
             const pulls = await github.rest.pulls.list({
               owner: owner,
               repo: repo,
-              head: 'vrt/${{ github.head_ref || github.ref_name }}',
-              base: ${{ github.head_ref || github.ref_name }},
+              head: ${{ env.UPDATE_BRANCH_NAME }},
+              base: ${{ env.TARGET_REF }},
               state: 'open',
             });
             
             if (pulls.data.length == 0) {
               await github.rest.pulls.create({
-                title: '[VRT] Update baselines for ${{ github.head_ref || github.ref_name }}',
+                title: '[VRT] Update baselines',
                 owner: owner,
                 repo: repo,
-                head: 'vrt/${{ github.head_ref || github.ref_name }}',
-                base: ${{ github.head_ref || github.ref_name }},
-                body: 'Updates VRT baslines for ${{ github.head_ref || github.ref_name }}.'
+                head: ${{ env.UPDATE_BRANCH_NAME }},
+                base: ${{ env.TARGET_REF }},
+                body: 'Updates VRT baselines.'
               });
             }
         env:
