@@ -34,7 +34,6 @@
 
   .fade {
     transition: opacity 0.4s linear, max-height 0.3s ease-out, margin-bottom 0.3s linear, border-width 0.3s linear;
-    max-height: 300px;
   }
   .toast:not(.show) {
     max-height: 0;
