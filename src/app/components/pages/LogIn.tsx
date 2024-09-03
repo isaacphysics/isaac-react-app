@@ -29,6 +29,7 @@ import classNames from "classnames";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {extractErrorMessage} from '../../services/errors';
+import { StyledCheckbox } from '../elements/inputs/StyledCheckbox';
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -127,7 +128,7 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
     };
 
     return !passwordResetRequest ?
-        <div className={"d-flex justify-content-end " + small ? "mt-1 w-100 text-end" : ""}>
+        <div className={"d-flex justify-content-end " + (small ? "mt-1 w-100 text-end" : "")}>
             <Button className="text-end" color="link" onClick={attemptPasswordReset}>
                 {small ? <small>Forgotten your password?</small> : "Forgotten your password?"}
             </Button>
@@ -242,21 +243,20 @@ export const LogIn = () => {
                                         errorMessage={errorMessage} displayLabels={true} />
 
                                     <Row className={classNames("mb-4", {"mt-2": isAda})}>
-                                        <Col className={"col-5 mt-1 d-flex"} style={{height:"min-content"}}>
-                                            <Input
-                                                className="align-self-center"
-                                                id="login-remember-me"
-                                                type="checkbox"
+                                        <Col className={"col-5 mt-1 d-flex"}>
+                                            <StyledCheckbox
+                                                id="rememberMe" 
+                                                checked={rememberMe} 
                                                 onChange={e => setRememberMe(e.target.checked)}
+                                                label={<p>Remember me</p>} className='mb-4'
                                             />
-                                            <Label for="login-remember-me" className="ms-2 mb-0">Remember me</Label>
                                         </Col>
-                                        <Col>
-                                                <h4 role="alert" className="text-danger text-end mb-0">
-                                                    {errorMessage}
-                                                </h4>
-                                                <PasswordResetButton email={email} isValidEmail={isValidEmail}
-                                                                     setPasswordResetAttempted={setPasswordResetAttempted}/>
+                                        <Col className={"align-content-center"}>
+                                            <h4 role="alert" className="text-danger text-end mb-0">
+                                                {errorMessage}
+                                            </h4>
+                                            <PasswordResetButton email={email} isValidEmail={isValidEmail}
+                                                setPasswordResetAttempted={setPasswordResetAttempted}/>
                                         </Col>
                                     </Row>
 
@@ -272,7 +272,7 @@ export const LogIn = () => {
                                         </Col>
                                         <Col sm={6}>
                                             <Button id="sign-up" color="primary" className="mb-2" onClick={signUp}
-                                                    outline block>
+                                                outline block>
                                                 Sign up
                                             </Button>
                                         </Col>

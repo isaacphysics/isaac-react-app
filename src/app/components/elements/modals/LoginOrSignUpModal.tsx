@@ -72,7 +72,7 @@ const LoginOrSignUpBody = () => {
                         <div>
                             <Input
                                 id="login-remember-me"
-                                className={"mb-2"}
+                                className={"mb-2" + siteSpecific("", " mt-1")}
                                 type="checkbox"
                                 onChange={e => setRememberMe(e.target.checked)}
                             />
@@ -80,7 +80,7 @@ const LoginOrSignUpBody = () => {
                         </div>
                         
                         <div className="text-end">
-                           <h4 role="alert" className="text-danger text-end mb-0">
+                            <h4 role="alert" className="text-danger text-end mb-0">
                                 {errorMessage}
                             </h4>
                         </div>

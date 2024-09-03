@@ -19,6 +19,7 @@ export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProp
                     }
                     window.location.reload();
                 }}
+                className="mt-1"
             />
             <Label for="anonymise-users-checkbox" className="ms-2 mb-0">Disguise only user names and emails in teacher tools</Label>
         </div>
@@ -33,6 +34,7 @@ export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProp
                     }
                     window.location.reload();
                 }}
+                className="mt-1"
             />
             <Label for="anonymise-groups-checkbox" className="ms-2 mb-0">Disguise both user and group details in teacher tools</Label>
         </div>

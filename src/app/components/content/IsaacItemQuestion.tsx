@@ -2,7 +2,7 @@ import React, {ChangeEvent} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacItemQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
 import {Input, Label} from "reactstrap";
-import {useCurrentQuestionAttempt} from "../../services";
+import {siteSpecific, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacItemQuestionDTO>) => {
@@ -44,6 +44,7 @@ const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaac
                             checked={!!(currentAttempt && currentAttempt.items && currentAttempt.items.filter(i => i.id == item.id).length == 1)}
                             onChange={(changeEvent: ChangeEvent<HTMLInputElement>) => updateItems(changeEvent, item)}
                             disabled={readonly}
+                            className={siteSpecific("", " mt-1")}
                         />
                         <div className="flex-fill overflow-x-auto">
                             <IsaacContentValueOrChildren value={item.value} encoding={doc.encoding} />
