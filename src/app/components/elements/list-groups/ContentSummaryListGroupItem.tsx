@@ -47,7 +47,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
 
     let linkDestination, icon, audienceViews;
     let itemClasses = "p-0 content-summary-link ";
-    itemClasses += isContentsIntendedAudience ? "bg-transparent " : "de-emphasised ";
+    itemClasses += isContentsIntendedAudience && !item.supersededBy ? "bg-transparent " : "de-emphasised ";
 
     let stack = false;
     let title = item.title;
