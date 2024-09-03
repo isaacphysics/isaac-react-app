@@ -20,7 +20,7 @@ import {v4 as uuid_v4} from "uuid";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
-import { isUndefined } from "lodash";
+import isUndefined from "lodash/isUndefined";
 import { StyledCheckbox } from "./StyledCheckbox";
 
 interface UserContextRowProps {
@@ -178,11 +178,6 @@ export function UserContextAccountInput({
         <div id="user-context-selector" className={classNames({"d-flex flex-wrap": isPhy})}>
 
             {userContexts.length ? userContexts.map((userContext, index) => {
-                const showPlusOption = tutorOrAbove &&
-                    index === userContexts.length - 1 &&
-                    // at least one exam board for the potential stage
-                    getFilteredStageOptions({byUserContexts: userContexts, hideFurtherA: true}).length > 0;
-
                 return <FormGroup key={index}>
                     <UserContextRow
                         userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
@@ -220,7 +215,7 @@ export function UserContextAccountInput({
                     />
                 </Label>}
             </>}
-            {!isAda && validateUserContexts(userContexts) && <div className="mb-3 ms-2 align-content-center remove-stage-container">
+            {!isAda && tutorOrAbove && validateUserContexts(userContexts) && <div className="mb-3 ms-2 align-content-center remove-stage-container">
                 <Button
                     aria-label="Add stage"
                     className={`ms-2 align-middle btn-plus float-none pointer-cursor bg-white`}

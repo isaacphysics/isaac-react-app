@@ -1,6 +1,6 @@
 import {createBrowserHistory} from "history";
 import {registerPageChange} from "../state";
-import {TypeGuard} from "@reduxjs/toolkit/dist/tsHelpers";
+import type {TypeGuard} from "@reduxjs/toolkit/dist/tsHelpers";
 import {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
 

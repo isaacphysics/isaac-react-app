@@ -12,7 +12,7 @@ import {
 } from "../index";
 import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
 import {QuizSettingModal} from "../../components/elements/modals/QuizSettingModal";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 
 export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, dueDate?: Date | null, scheduledStartDate?: Date | null, feedbackMode?: QuizFeedbackMode | null) => (dispatch: AppDispatch) => {
     dispatch(openActiveModal({

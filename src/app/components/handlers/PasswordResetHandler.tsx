@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {AppState, handlePasswordReset, useAppDispatch, useAppSelector, verifyPasswordReset} from "../../state";
 import {Button, Card, CardBody, CardFooter, Container, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
 import {PasswordFeedback} from "../../../IsaacAppTypes";
-import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../services";
+import {loadZxcvbnIfNotPresent, MINIMUM_PASSWORD_LENGTH, passwordDebounce} from "../../services";
 import {RouteComponentProps} from "react-router";
 import { extractErrorMessage } from '../../services/errors';
 
@@ -61,7 +61,7 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
                                     setCurrentPassword(e.target.value)
                                 }
                             }} aria-describedby="invalidPassword" required/>
-                            <FormFeedback id="invalidPassword">{(!isValidPassword) ? "Passwords must match and be at least 6 characters long" : null}</FormFeedback>
+                            <FormFeedback id="invalidPassword">{(!isValidPassword) ? `Passwords must match and be at least ${MINIMUM_PASSWORD_LENGTH} characters long` : null}</FormFeedback>
                         </FormGroup>
                     </Form>
                 </CardBody>

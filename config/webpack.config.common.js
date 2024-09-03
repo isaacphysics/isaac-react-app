@@ -32,9 +32,8 @@ module.exports = (env) => {
         mode: isProd ? "production" : "development",
 
         ignoreWarnings: [
-            { message: /node\_modules\/bootstrap\/scss\/vendor\/\_rfs\.scss/ }, // Suppress a warning which cannot be fixed without updating bootstrap
-            { message: /text-emphasis-variant()/ },
-            { message: /bg-variant()/ },
+            { message: /mixed-decls/ },
+            { message: /repetitive deprecation warnings/ },
         ],
 
         devServer: {

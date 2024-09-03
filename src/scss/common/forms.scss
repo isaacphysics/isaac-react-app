@@ -202,8 +202,13 @@ input[type=date]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-select.form-select, input.form-control {
+select.form-select, input.form-control, .separate-input-group > .form-control + .input-group-append {
   height: calc(1.5em + 0.75rem + 2px);
+  &.input-group-append > button {
+    height: 100%;
+    padding: 0;
+    border: none;
+  }
 }
 
 .inline-form-input-btn {

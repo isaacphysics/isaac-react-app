@@ -2,7 +2,7 @@ import React from 'react';
 import {closeActiveModal, getRTKQueryErrorMessage, useAppDispatch} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Label, Row} from "reactstrap";
-import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {PATHS, siteSpecific} from "../../../services";
 

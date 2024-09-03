@@ -4,7 +4,7 @@ import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {isDefined, siteSpecific} from "../../services";
-import produce from "immer";
+import {produce} from "immer";
 
 function asPercentage(value: number | undefined, total: number)  {
     return value !== undefined ? Math.round(100 * value / total) : 0;

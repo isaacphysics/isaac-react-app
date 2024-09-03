@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import * as RS from "reactstrap";
 import {
     Button,
     Card,
@@ -15,13 +14,14 @@ import {
     Row
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {history, KEY, persistence, SITE_TITLE} from "../../services";
+import {history, isAda, KEY, persistence, SITE_TITLE, siteSpecific} from "../../services";
 import {
     openActiveModal,
     selectors,
     showErrorToast,
     useAppDispatch,
     useAppSelector,
+    useGetActiveAuthorisationsQuery,
     useLazyGetTokenOwnerQuery
 } from "../../state";
 import {tokenVerificationModal} from "../elements/modals/TeacherConnectionModalCreators";
@@ -45,12 +45,14 @@ export const RegistrationTeacherConnect = () => {
         }
         const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
         if (usersToGrantAccess && usersToGrantAccess.length) {
-            dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
+            dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)));
         }
     };
 
     const [authenticationToken, setAuthenticationToken] = useState<string | undefined>("");
     const [submissionAttempted, setSubmissionAttempted] = useState<boolean>(false);
+
+    const {data: activeAuthorisations} = useGetActiveAuthorisationsQuery(user && user.loggedIn && user.id || undefined);
 
     const codeIsValid = authenticationToken && authenticationToken.length > 0;
 
@@ -62,9 +64,9 @@ export const RegistrationTeacherConnect = () => {
         }
     }
 
-    const continueToSuccess = (event: React.MouseEvent) => {
+    const continueToNext = (event: React.MouseEvent) => {
         event.preventDefault();
-        history.push("/register/success");
+        history.push(siteSpecific("/register/preferences", "/register/success"));
     };
 
     useEffect(() => {
@@ -83,12 +85,20 @@ export const RegistrationTeacherConnect = () => {
             <CardBody>
                 <Form onSubmit={submit}>
                     <h3>Connect your account to your teacher</h3>
-                    <p>This lets you see the work your teacher sets, and lets your teacher see your progress. You can join more than one group and you always have control over which groups you are in. <a href="/support/student/general">Learn more</a></p>
-                    <p>You can always skip this now and connect to your teacher later.</p>
-                    <Col xs={12} lg={5}>
+                    {siteSpecific(
+                        <>
+                            <p>If you&apos;ve been given a group code by your teachers, enter it below. This lets your teachers set you work and see your progress. <a href="/support/student/homework#join_group" target="_blank">Learn more</a>.</p>
+                            <p>You can skip this. You don&apos;t need to join a group to use Isaac, and you can always do this later from the My Account page.</p>
+                        </>,
+                        <>
+                            <p>This lets you see the work your teacher sets, and lets your teacher see your progress. You can join more than one group and you always have control over which groups you are in. <a href="/support/student/general">Learn more</a></p>
+                            <p>You can always skip this now and connect to your teacher later.</p>
+                        </>
+                    )}
+                    <Col xs={12} lg={6}>
                         <FormGroup className="form-group">
                             <Label className={"fw-bold"} htmlFor="connect-code-input">{"Teacher connection code"}</Label>
-                            <p className={"input-description"}>Enter the code given by your teacher to join a group</p>
+                            {isAda && <p className={"input-description"}>Enter the code given by your teacher to join a group</p>}
                             <InputGroup className={"separate-input-group mb-4 d-flex flex-row align-items-center"}>
                                 <Input
                                     id="connect-code-input"
@@ -112,9 +122,22 @@ export const RegistrationTeacherConnect = () => {
                     </Col>
                     <hr />
                     <Row className="justify-content-end">
-                        <Col xs={7} md={4} lg={2}>
-                            <Button color="primary" onClick={continueToSuccess}>Continue</Button>
-                        </Col>
+                        {siteSpecific(
+                            <>
+                                <Col xs={6} md={4} lg={3}>
+                                    <Button className="w-100 my-2 px-2" outline color="secondary" onClick={continueToNext}>Skip</Button>
+                                </Col>
+                                <Col xs={6} md={4} lg={3}>
+                                    <Button className="w-100 my-2 px-2" color="primary" disabled={!activeAuthorisations?.length} onClick={continueToNext}>Continue</Button>
+                                </Col>
+                            </>, 
+                            <>
+                                <Col xs={6} md={4} lg={3}>
+                                    <Button className="w-100 my-2 px-2" color="primary" onClick={continueToNext}>Continue</Button>
+                                </Col>
+                            </>
+                        )}
+                        
                     </Row>
                 </Form>
             </CardBody>

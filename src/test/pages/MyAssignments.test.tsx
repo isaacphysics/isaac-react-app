@@ -1,11 +1,11 @@
 import React from "react";
 import {rest, RestHandler} from "msw";
 import {API_PATH, PATHS, siteSpecific} from "../../app/services";
-import {screen, waitFor, within} from "@testing-library/react";
+import {screen, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
 import {mockMyAssignments, mockUser} from "../../mocks/data";
-import {augmentErrorMessage, renderTestEnvironment} from "../testUtils";
+import {renderTestEnvironment} from "../testUtils";
 import {DDMMYYYY_REGEX, DAYS_AGO, dayMonthYearStringToDate, SOME_FIXED_FUTURE_DATE} from "../dateUtils";
 import produce from "immer";
 
@@ -31,16 +31,16 @@ describe("MyAssignments", () => {
         });
     };
 
-    it('should show all my assignments on render', async () => {
+    it('should show assignments "to do" on render', async () => {
         renderMyAssignments();
         const assignments = await screen.findAllByTestId("my-assignment");
         expect(assignments).toHaveLength(mockMyAssignments.length);
     });
 
-    it('should render with "All" assignment filter selected by default', async () => {
+    it('should render with "To do" assignment filter selected by default', async () => {
         renderMyAssignments();
         const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
-        expect(assignmentTypeFilter).toHaveValue("All");
+        expect(assignmentTypeFilter).toHaveValue("To do");
     });
 
     it('should allow users to filter assignments on gameboard title', async () => {
@@ -62,7 +62,7 @@ describe("MyAssignments", () => {
         expect(screen.queryAllByTestId("my-assignment")).toHaveLength(0);
     });
 
-    it('should contain assignments with undefined due date and older than a month in the "Older Assignments" tab', async () => {
+    it('should contain assignments with undefined due date and older than a month when the "Older" assignments filter is selected', async () => {
         renderMyAssignments([
             rest.get(API_PATH + "/assignments", (req, res, ctx) => {
                 let d = new Date();
@@ -79,8 +79,9 @@ describe("MyAssignments", () => {
                 );
             })
         ]);
-        // Wait for the 4 assignments to show up
-        expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.length);
+        // Wait for the assignments "to do" to show up
+        const numberOfAssignemntsToDoInMockMyAssignments = 3; 
+        expect(await screen.findAllByTestId("my-assignment")).toHaveLength(numberOfAssignemntsToDoInMockMyAssignments);
         // Select the "Older Assignments" filter
 const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
         await userEvent.selectOptions(assignmentTypeFilter, "Older");

@@ -43,19 +43,17 @@
 }
 
 .question-progress-icon {
-  width: 95px !important;
-  min-width: 95px !important;
+  min-width: 75px !important;
   display: block;
   padding: 14px 0 !important;
   position: relative;
+  align-content: center;
   .inner-progress-icon {
     @extend .text-center;
     @extend .px-2;
     position: relative;
-    top: calc(50% + 5px);
-    transform: translateY(-50%);
     img {
-      width: 2rem;
+      max-width: 2rem;
       max-height: 2rem;
     }
     .icon-title {
