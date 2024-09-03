@@ -32,13 +32,16 @@ jobs:
           browser: chrome
         env:
           CYPRESS_SITE: phy
-      - name: Create or update Cypress update PR
+      - name: Create or update Cypress branch
+        id: cypress-create-branch
         if: ${{ failure() }}
         run: |
           find ./src/test/pages/__image_snapshots__ -type f -name "*.actual.png" -exec bash -c 'mv "$1" "${1/.actual./.}"' shell {} \;
           git checkout vrt/${{ github.head_ref || github.ref_name }} || git checkout -b vrt/${{ github.head_ref || github.ref_name }}
           git add . && git commit -m "Update VRT baselines"
           git push --force
+      - name: Create or update Cypress PR
+        if: steps.cypress-create-branch.outcome == 'success'
         uses: actions/github-script@v6
         with:
           script: |
