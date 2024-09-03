@@ -32,9 +32,34 @@ jobs:
           browser: chrome
         env:
           CYPRESS_SITE: phy
-      - name: Open Cypress baseline update PR (WIP)
+      - name: Create or update Cypress update PR
         if: ${{ failure() }}
         run: |
-          ls ./src/test/pages/__image_snapshots__/ada
           find ./src/test/pages/__image_snapshots__ -type f -name "*.actual.png" -exec bash -c 'mv "$1" "${1/.actual./.}"' shell {} \;
-          ls ./src/test/pages/__image_snapshots__/ada
+          git checkout vrt/${{ github.head_ref || github.ref_name }} || git checkout -b vrt/${{ github.head_ref || github.ref_name }}
+          git add . && git commit -m "Update VRT baselines"
+          git push --force
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { repo, owner } = context.repo;
+            const pulls = await github.rest.pulls.list({
+              owner: owner,
+              repo: repo,
+              head: vrt/${{ github.head_ref || github.ref_name }},
+              base: ${{ github.head_ref || github.ref_name }},
+              state: 'open',
+            });
+            
+            if (pulls.data.length == 0) {
+              await github.rest.pulls.create({
+                title: '[VRT] Update baselines for ${{ github.head_ref || github.ref_name }}',
+                owner: owner,
+                repo: repo,
+                head: vrt/${{ github.head_ref || github.ref_name }},
+                base: ${{ github.head_ref || github.ref_name }},
+                body: 'Updates VRT baslines for ${{ github.head_ref || github.ref_name }}.'
+              });
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
