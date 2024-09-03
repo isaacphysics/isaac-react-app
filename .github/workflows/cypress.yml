@@ -39,6 +39,8 @@ jobs:
           find ./src/test/pages/__image_snapshots__ -type f -name "*.actual.png" -exec bash -c 'mv "$1" "${1/.actual./.}"' shell {} \;
           echo "TARGET_REF=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
           echo "UPDATE_BRANCH_NAME=vrt/${{ env.TARGET_REF }}" >> $GITHUB_ENV
+          echo ${{ env.UPDATE_BRANCH_NAME }}
+          echo ${{ env.TARGET_REF }}
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           git checkout ${{ env.UPDATE_BRANCH_NAME }} || git checkout -b ${{ env.UPDATE_BRANCH_NAME }}
