@@ -26,6 +26,7 @@ jobs:
         env:
           CYPRESS_SITE: ada
       - name: Cypress run (Physics)
+        if: ${{ success() || failure() }}
         uses: cypress-io/github-action@v6
         with:
           component: true
