@@ -33,7 +33,7 @@ jobs:
           browser: chrome
         env:
           CYPRESS_SITE: phy
-      - name: Create or update Cypress branch
+      - name: VRT update - create or update branch
         id: cypress-create-branch
         if: ${{ failure() }}
         run: |
@@ -47,7 +47,8 @@ jobs:
           git push --set-upstream origin $update_branch_name --force
           echo "TARGET_REF=$target_ref" >> "$GITHUB_ENV"
           echo "UPDATE_BRANCH_NAME=$update_branch_name" >> "$GITHUB_ENV"
-      - name: Create or update Cypress PR
+      - name: VRT update - create PR if required
+        id: cypress-create-pr
         if: ${{ failure() && steps.cypress-create-branch.outcome == 'success' }}
         uses: actions/github-script@v6
         with:
@@ -62,7 +63,7 @@ jobs:
             });
             
             if (pulls.data.length == 0) {
-              await github.rest.pulls.create({
+              const pr = await github.rest.pulls.create({
                 title: '[VRT] Update baselines',
                 owner: owner,
                 repo: repo,
@@ -70,6 +71,20 @@ jobs:
                 base: "${{ env.TARGET_REF }}",
                 body: 'Updates VRT baselines.'
               });
+              return {
+                action: "created",
+                pr_url: pr.html_url
+              };
+            } else {
+              return {
+                action: "exists",
+                pr_url: pulls[0].html_url
+              };
             }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: VRT update - job summary
+        if: ${{ failure() && steps.cypress-create-pr.outcome == 'success' }}
+        run: |
+          echo 'Visual regression test update PR ${{ steps.cypress-create-pr.outputs.action }}. Please review it here: ${{ steps.cypress-create-pr.outputs.pr_url }}' >> $GITHUB_STEP_SUMMARY
+
