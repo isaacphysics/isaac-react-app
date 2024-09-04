@@ -39,12 +39,10 @@ jobs:
           find ./src/test/pages/__image_snapshots__ -type f -name "*.actual.png" -exec bash -c 'mv "$1" "${1/.actual./.}"' shell {} \;
           target_ref=${{ github.head_ref || github.ref_name }}
           update_branch_name=vrt/$target_ref
-          echo $target_ref
-          echo $update_branch_name
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git checkout $update_branch_name || git checkout -b $update_branch_name
-          git add . && git commit -m "Update VRT baselines"
+          git checkout $update_branch_name || (git checkout $target_ref && git checkout -b $update_branch_name)
+          git commit -am "Update VRT baselines"
           git push --set-upstream origin $update_branch_name --force
           echo "TARGET_REF=$target_ref" >> "$GITHUB_ENV"
           echo "UPDATE_BRANCH_NAME=$update_branch_name" >> "$GITHUB_ENV"
