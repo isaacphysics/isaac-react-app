@@ -52,6 +52,7 @@ jobs:
         if: ${{ failure() && steps.cypress-create-branch.outcome == 'success' }}
         uses: actions/github-script@v7
         with:
+          result-encoding: string
           script: |
             const { repo, owner } = context.repo;
             const pulls = await github.rest.pulls.list({
@@ -71,20 +72,15 @@ jobs:
                 base: "${{ env.TARGET_REF }}",
                 body: 'Updates VRT baselines.'
               });
-              return {
-                action: "created",
-                pr_url: pr.data.html_url
-              };
+              return pr.data.html_url;
             } else {
-              return {
-                action: "updated",
-                pr_url: pulls.data[0].html_url
-              };
-            }
+              return pulls.data[0].html_url;
+            };
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: VRT update - write job summary
         if: ${{ failure() && steps.cypress-create-pr.outcome == 'success' }}
         run: |
-          echo 'Visual regression test update PR ${{ steps.cypress-create-pr.outputs.result.action }}. Please review it here: ${{ steps.cypress-create-pr.outputs.result.pr_url }}' >> $GITHUB_STEP_SUMMARY
+          echo '# Visual Regression Test updates 👀' >> $GITHUB_STEP_SUMMARY
+          echo 'This run failed due to visual differences compared to our baseline images. A PR with new baseline images has been generated. Please review it [here](${{ steps.cypress-create-pr.outputs.result }}) and merge it if the differences are expected. >> $GITHUB_STEP_SUMMARY
 
