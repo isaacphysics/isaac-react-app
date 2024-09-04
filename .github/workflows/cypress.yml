@@ -86,5 +86,5 @@ jobs:
       - name: VRT update - write job summary
         if: ${{ failure() && steps.cypress-create-pr.outcome == 'success' }}
         run: |
-          echo 'Visual regression test update PR ${{ steps.cypress-create-pr.outputs.action }}. Please review it here: ${{ steps.cypress-create-pr.outputs.pr_url }}' >> $GITHUB_STEP_SUMMARY
+          echo 'Visual regression test update PR ${{ steps.cypress-create-pr.outputs.result.action }}. Please review it here: ${{ steps.cypress-create-pr.outputs.result.pr_url }}' >> $GITHUB_STEP_SUMMARY
 
