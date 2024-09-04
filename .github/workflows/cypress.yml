@@ -2,7 +2,7 @@ name: Cypress visual regression tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, a-pretend-master-branch ]
   pull_request:
     branches: [ master ]
 
