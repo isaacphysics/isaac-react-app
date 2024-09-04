@@ -50,7 +50,7 @@ jobs:
       - name: VRT update - create PR if required
         id: cypress-create-pr
         if: ${{ failure() && steps.cypress-create-branch.outcome == 'success' }}
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const { repo, owner } = context.repo;
