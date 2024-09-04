@@ -71,13 +71,15 @@ jobs:
                 base: "${{ env.TARGET_REF }}",
                 body: 'Updates VRT baselines.'
               });
+              console.log(pr);
               return {
                 action: "created",
                 pr_url: pr.html_url
               };
             } else {
+              console.log(pulls);     
               return {
-                action: "exists",
+                action: "updated",
                 pr_url: pulls[0].html_url
               };
             }
