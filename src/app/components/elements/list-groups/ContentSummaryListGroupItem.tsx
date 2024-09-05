@@ -10,6 +10,8 @@ import {
     isAda,
     isIntendedAudience,
     isPhy,
+    isStaff,
+    isTeacherOrAbove,
     notRelevantMessage,
     SEARCH_RESULT_TYPE,
     siteSpecific,
@@ -45,7 +47,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
 
     let linkDestination, icon, audienceViews;
     let itemClasses = "p-0 content-summary-link ";
-    itemClasses += isContentsIntendedAudience ? "bg-transparent " : "de-emphasised ";
+    itemClasses += isContentsIntendedAudience && !item.supersededBy ? "bg-transparent " : "de-emphasised ";
 
     let stack = false;
     let title = item.title;
@@ -163,6 +165,14 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
                         {isPhy && typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ms-2 mb-1"}>
                             ({typeLabel})
                         </span>}
+                        {isPhy && item.supersededBy && isTeacherOrAbove(user) ? <a 
+                            className="superseded-tag ms-1 ms-sm-3" 
+                            href={`/questions/${item.supersededBy}`}
+                            onClick={(e) => e.stopPropagation()}
+                        >SUPERSEDED</a> : null}
+                        {isPhy && item.tags && item.tags.includes("nofilter") && isStaff(user) ? <span
+                            className="superseded-tag ms-1 ms-sm-3"
+                        >NO-FILTER</span> : null}
                     </div>
                     {(isPhy && item.summary) && <div className="small text-muted d-none d-sm-block">
                         {item.summary}

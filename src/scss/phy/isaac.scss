@@ -224,7 +224,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "../common/assignments";
 @import "my-account";
 @import "../common/topic";
-@import "../common/search";
+@import "search";
 @import "finder";
 @import "../common/my-progress";
 @import "gameboard";
