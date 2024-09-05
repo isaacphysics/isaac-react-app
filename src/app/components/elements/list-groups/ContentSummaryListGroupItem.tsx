@@ -32,17 +32,18 @@ import classNames from "classnames";
 import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 import { CSSModule } from "reactstrap/types/lib/utils";
 
-export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, noCaret, hideContentType}: {
+export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, noCaret, hideContentType, ignoreIntendedAudience}: {
     item: ShortcutResponse;
     search?: string;
     displayTopicTitle?: boolean;
     noCaret?: boolean;
     hideContentType?: boolean;
+    ignoreIntendedAudience?: boolean;
 }) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
-    const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
+    const isContentsIntendedAudience = ignoreIntendedAudience || isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
     const hash = item.hash;
 
     let linkDestination, icon, audienceViews;
@@ -198,12 +199,13 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
     </ListGroupItem>;
 };
 
-export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCaret, hideContentType, ...rest}: {
+export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCaret, hideContentType, ignoreIntendedAudience, ...rest}: {
     items: ContentSummaryDTO[];
     search?: string;
     displayTopicTitle?: boolean;
     noCaret?: boolean;
     hideContentType?: boolean;
+    ignoreIntendedAudience?: boolean;
     tag?: React.ElementType;
     flush?: boolean;
     className?: string;
@@ -213,7 +215,7 @@ export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCa
         {items.map(item => <ContentSummaryListGroupItem
             item={item} search={search} noCaret={noCaret}
             key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}
-            hideContentType={hideContentType}
+            hideContentType={hideContentType} ignoreIntendedAudience={ignoreIntendedAudience}
         />)}
     </ListGroup>;
 };
