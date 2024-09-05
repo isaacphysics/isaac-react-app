@@ -109,7 +109,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
             <DropdownMenu end>
                 {selectedUnits.map((unit) =>
                     <DropdownItem key={wrapUnitForSelect(unit)}
-                        data-unit={unit || 'None'}
+                        data-unit={isDefined(unit) ? (unit || 'None') : undefined}
                         className={unit && unit === currentAttempt?.units ? "btn bg-grey selected" : ""}
                         onClick={(e: FormEvent) => {updateCurrentAttempt({newUnits: unit}); e.preventDefault();}}
                     >
