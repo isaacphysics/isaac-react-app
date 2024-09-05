@@ -57,7 +57,7 @@ export const HomepageYoutubeCookieHandler = () => {
                     setAutoplay(true);
                 }} onFocus={() => setVideoActive(true)} onBlur={() => setVideoActive(false)}>
                 </button>
-                <img src="/assets/phy/isaac-homepage-video-thumbnail.jpeg" alt="A group of students solving problems at an in-person Isaac event." className="w-100 h-100"/>  
+                <img data-testid={"yt-thumbnail"} src="/assets/phy/isaac-homepage-video-thumbnail.jpeg" alt="A group of students solving problems at an in-person Isaac event." className="w-100 h-100"/>
             </div>
             {youtubeHomepageCookieText}
         </div>}

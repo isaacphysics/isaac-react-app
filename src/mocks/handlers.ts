@@ -138,7 +138,7 @@ export const handlers = [
             ctx.json([])
         );
     }),
-    rest.get(API_PATH + "/pages/pods/:tag", (req, res, ctx) => {
+    rest.get(API_PATH + "/pages/pods/:tag/0", (req, res, ctx) => {
         const {tag} = req.params;
         const podsFilteredByTag = produce(mockNewsPods, pods => {
             pods.results = pods.results.filter(p => p.tags.includes(tag as string))
