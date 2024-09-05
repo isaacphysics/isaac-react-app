@@ -62,6 +62,8 @@ export function useUserViewingContext(): UseUserContextReturnType {
         explanation.stage = urlMessage;
     } else if (isDefined(transientUserContext.stage)) {
         stage = transientUserContext.stage;
+    } else if (isAda && isLoggedIn(user) && user.registeredContexts && user.registeredContexts.length > 1) {
+        stage = STAGE.ALL;
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].stage) {
         stage = user.registeredContexts[0].stage as STAGE;
     } else {
@@ -84,6 +86,10 @@ export function useUserViewingContext(): UseUserContextReturnType {
         isDefined(transientUserContext?.examBoard)
     ) {
         examBoard = transientUserContext?.examBoard;
+    } else if ( // On Ada: multiple exam board preferences have been set on the account.
+        isAda && isLoggedIn(user) && user.registeredContexts && user.registeredContexts.length > 1
+    ) {
+        examBoard = EXAM_BOARD.ALL;
     } else if ( // An exam board preference has been set on the account.
         isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].examBoard
     ) {
