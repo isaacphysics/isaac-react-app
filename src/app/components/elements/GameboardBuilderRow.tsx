@@ -11,7 +11,8 @@ import {
     siteSpecific,
     stageLabelMap,
     TAG_ID,
-    TAG_LEVEL
+    TAG_LEVEL,
+    isPhy
 } from "../../services";
 import React from "react";
 import {AudienceContext} from "../../../IsaacApiTypes";
@@ -21,6 +22,7 @@ import {Question} from "../pages/Question";
 import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
+import { Spacer } from "./Spacer";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -97,15 +99,28 @@ const GameboardBuilderRow = (
         </td>
         <td className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
             {provided && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
-            <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
-                {generateQuestionTitle(question)}
-            </a>
-            <input
-                type="image" src="/assets/common/icons/new-tab.svg" alt="Preview question" title="Preview question in modal"
-                className="pointer-cursor align-middle new-tab" onClick={() => {question.id && openQuestionModal(question.id)}}
-            />
+            <div className="d-flex">
+                <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
+                    {generateQuestionTitle(question)}
+                </a>
+                <input
+                    type="image" src="/assets/common/icons/new-tab.svg" alt="Preview question" title="Preview question in modal"
+                    className="pointer-cursor align-middle new-tab" onClick={() => {if (question.id) openQuestionModal(question.id);}}
+                />
+                <Spacer />
+                {isPhy && <div className="d-flex flex-column justify-self-end">
+                    {question.supersededBy && <a 
+                        className="superseded-tag ms-1 ms-sm-3 my-1 align-self-end" 
+                        href={`/questions/${question.supersededBy}`}
+                        onClick={(e) => e.stopPropagation()}
+                    >SUPERSEDED</a>}
+                    {question.tags?.includes("nofilter") && <span
+                        className="superseded-tag ms-1 ms-sm-3 my-1 align-self-end" 
+                    >NO-FILTER</span>}
+                </div>}
+            </div>
+
             {question.subtitle && <>
-                <br/>
                 <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
             </>}
         </td>

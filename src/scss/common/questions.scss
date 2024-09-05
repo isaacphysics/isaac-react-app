@@ -1,7 +1,7 @@
 // ISAAC
 
 $cloze-dropdown-height: 300px;
-$cloze-scrollbar-height: 0px;
+$cloze-scrollbar-height: 4px;
 
 .question-panel, .question-panel > .examboard-special-tabs {
   > .content-chunk > .content-value {
@@ -379,7 +379,7 @@ $cloze-scrollbar-height: 0px;
   white-space: nowrap !important;
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
-  display: inline-flex;
+  display: inline-table;
 }
 
 // cloze dropdowns inside katex are normally cut off due to content-driven overflows we cannot control easily. this:
@@ -387,19 +387,13 @@ $cloze-scrollbar-height: 0px;
 //    b) sets the correct overflow behaviour for the parent of the katex containing the dropdown;
 //    c) if webkit exists, recreates the scrollbar to forcibly display it on OSX.
 
-p:has(> .katex.katex .cloze-dropdown.show) {
-  padding-bottom: calc(1rem + $cloze-dropdown-height + $cloze-scrollbar-height) !important;
+p > .katex:has(.cloze-dropdown.show), .katex-display:has(.cloze-dropdown.show) {
+  padding-bottom: calc(0.25rem + $cloze-dropdown-height) !important;
   margin-bottom: -$cloze-dropdown-height !important;
   overflow-x: hidden !important;
 }
 
-.katex-display:has(.cloze-dropdown.show) {
-  padding-bottom: calc(0.25rem + $cloze-dropdown-height + $cloze-scrollbar-height) !important;
-  margin-bottom: -$cloze-dropdown-height !important;
-  overflow-x: hidden !important;
-}
-
-p:has(> .katex.katex), .katex-display {
+p > .katex, .katex-display { 
   overflow: auto hidden;
 
   .katex .vlist-t2 {
@@ -407,10 +401,6 @@ p:has(> .katex.katex), .katex-display {
   }
 
   &::-webkit-scrollbar {
-    // if the webkit scrollbar exists we can customise it;
-    // so enable the offset to include our scrollbar padding in calculations
-    $cloze-scrollbar-height: 4px !important;
-
     -webkit-appearance: none;
     height: $cloze-scrollbar-height;
   }

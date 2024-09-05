@@ -218,7 +218,7 @@ export const IsaacApp = () => {
                         <StaticPageRoute exact path="/cyberessentials" />
 
                         {/* External redirects */}
-                        <ExternalRedirect<{qId: string}> from={"/survey/:qId"} to={({qId}, user) => `https://cambridge.eu.qualtrics.com/jfe/form/${qId}?UID=${user.id}`} ifUser={isLoggedIn} />
+                        <ExternalRedirect<{qId: string, refNo: string}> from={"/survey/:qId/:refNo?"} to={({qId, refNo}, user) => `https://cambridge.eu.qualtrics.com/jfe/form/${qId}?UID=${user.id}${refNo ? `&refno=${refNo}` : ''}`} ifUser={isLoggedIn} />
 
                         {/*
                         // TODO: schools and other admin stats
