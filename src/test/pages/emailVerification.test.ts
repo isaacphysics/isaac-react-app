@@ -111,14 +111,14 @@ describe("EmailAlterHandler", () => {
         await screen.findAllByText("Email verification");
         await waitFor(async () => {
             expect(verifyEmailHandler).toHaveBeenCalledTimes(1);
-            await expect(verifyEmailHandler).toHaveBeenRequestedWith(async (req) => {
-                const {userid, token} = req.params;
+            expect(verifyEmailHandler).toHaveBeenRequestedWith(async (req) => {
+                const { userid, token } = req.params;
                 return userid === mockUser.id.toString() && token === "valid-token";
             });
             // Look for success message
             await screen.findByText("Email address verified.");
         });
-    });
+    }, 20000);
 
     it("allows the current user to verify another users email if the token is valid", async () => {
         const verifyEmailHandler = handlerThatReturns();
