@@ -2,8 +2,9 @@ import React from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
 import {Input, Label} from "reactstrap";
-import {siteSpecific, useCurrentQuestionAttempt} from "../../services";
+import {isAda, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import classNames from "classnames";
 
 const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacMultiChoiceQuestionDTO>) => {
 
@@ -23,7 +24,7 @@ const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
                         checked={currentAttempt?.value === choice.value}
                         onChange={() => dispatchSetCurrentAttempt(choice)}
                         disabled={readonly}
-                        className={siteSpecific("", " mt-1")}
+                        className={classNames({"mt-1": isAda})}
                     />
                     <div className="flex-fill overflow-x-auto">
                         <IsaacContentValueOrChildren value={choice.value} encoding={doc.encoding} />

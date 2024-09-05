@@ -251,7 +251,7 @@ export const LogIn = () => {
                                                 label={<p>Remember me</p>} className='mb-4'
                                             />
                                         </Col>
-                                        <Col className={"align-content-center"}>
+                                        <Col className="align-content-center">
                                             <h4 role="alert" className="text-danger text-end mb-0">
                                                 {errorMessage}
                                             </h4>
