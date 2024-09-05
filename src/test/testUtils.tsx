@@ -104,7 +104,7 @@ export const followHeaderNavLink = async (menu: string, linkName: string) => {
     // related to a given title
     const adminMenuSectionParent = navLink.closest("li[class*='nav-item']") as HTMLLIElement | null;
     if (!adminMenuSectionParent) fail(`Missing NavigationSection parent - cannot locate entries in ${menu} navigation menu.`);
-    const link = await within(adminMenuSectionParent).findByRole("menuitem", {name: linkName, exact: false});
+    const link = await within(adminMenuSectionParent).findByRole("menuitem", {name: linkName});
     await userEvent.click(link);
 };
 
