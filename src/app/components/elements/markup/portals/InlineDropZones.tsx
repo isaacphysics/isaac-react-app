@@ -125,9 +125,9 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
             </DropdownItem>
             {dropdownItems.map((item, i) => {
                 return <DropdownItem key={i}
-                className={!nonSelectedItemIds.includes(item.id) ? "invalid" : ""}
-                data-unit={item || 'None'}
-                onClick={nonSelectedItemIds.includes(item.id) ? (() => {dropRegionContext?.onSelect(item, droppableId, false);}) : undefined}
+                    className={!nonSelectedItemIds.includes(item.id) ? "invalid" : ""}
+                    data-unit={item || 'None'}
+                    onClick={nonSelectedItemIds.includes(item.id) ? (() => {dropRegionContext?.onSelect(item, droppableId, false);}) : undefined}
                 >
                     <Markup trusted-markup-encoding={"html"}>
                         {item.value ?? ""}
