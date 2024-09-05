@@ -139,7 +139,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
 
     if (dropRegionContext && droppableTarget) {
         return ReactDOM.createPortal(
-            deviceSize === "xs" ? dropdownZone : draggableDropZone,
+            ((navigator.maxTouchPoints) || (deviceSize === "xs")) ? dropdownZone : draggableDropZone,
             droppableTarget
         );
     }
