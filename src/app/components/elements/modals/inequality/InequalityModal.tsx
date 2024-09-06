@@ -352,6 +352,8 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     const movingMenuItem = useRef<HTMLElement | null>(null);
     const movingMenuBar = useRef<HTMLElement | null>(null);
     const disappearingMenuItem = useRef<HTMLElement | null>(null);
+    const isMouseDown = useRef<boolean>(false);
+    const isDragging = useRef<boolean>(false);
 
     const handlerState = {
         previousCursor,
@@ -390,9 +392,8 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     const onMouseDown = useCallback((e: MouseEvent) => {
         // preventDefault here to stop selection on desktop
         e.preventDefault();
+        isMouseDown.current = true;
         previousCursor.current = { x: Math.round(e.clientX), y: Math.round(e.clientY) };
-        const element = document.elementFromPoint(previousCursor.current.x, previousCursor.current.y);
-        prepareAbsoluteElement(element);
         if (potentialSymbolSpec.current && sketch.current) {
             sketch.current.updatePotentialSymbol(potentialSymbolSpec.current as WidgetSpec, previousCursor.current.x, previousCursor.current.y);
         }
@@ -401,24 +402,35 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     const onTouchStart = useCallback((e: TouchEvent) =>  {
         // DO NOT preventDefault here
         previousCursor.current = { x: Math.round(e.touches[0].clientX), y: Math.round(e.touches[0].clientY) };
-        const element = document.elementFromPoint(previousCursor.current.x, previousCursor.current.y);
-        prepareAbsoluteElement(element);
         if (potentialSymbolSpec.current && sketch.current) {
             sketch.current.updatePotentialSymbol(potentialSymbolSpec.current as WidgetSpec, previousCursor.current.x, previousCursor.current.y);
         }
     }, []);
 
     const onMouseMove = useCallback((e: MouseEvent) => {
+        if (!isDragging.current && isMouseDown.current && previousCursor.current) {
+            const element = document.elementFromPoint(previousCursor.current.x, previousCursor.current.y);
+            prepareAbsoluteElement(element);
+            isDragging.current = true;
+        }
         handleMove(e.target as HTMLElement, Math.round(e.clientX), Math.round(e.clientY));
     }, []);
 
     const onTouchMove = useCallback((e: TouchEvent) => {
         // preventDefault here to stop iOS' elastic-banding while moving around (messes with coordinates)
         e.preventDefault();
+
+        if (!isDragging.current && previousCursor.current) {
+            const element = document.elementFromPoint(previousCursor.current.x, previousCursor.current.y);
+            prepareAbsoluteElement(element);
+            isDragging.current = true;
+        }
         handleMove(e.target as HTMLElement, Math.round(e.touches[0].clientX), Math.round(e.touches[0].clientY));
     }, []);
 
     const onCursorMoveEnd = useCallback(() => {
+        isDragging.current = false;
+        isMouseDown.current = false;
         onCursorMoveEndCallback(handlerState);
     }, []);
 
