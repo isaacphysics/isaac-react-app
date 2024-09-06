@@ -67,12 +67,12 @@ jobs:
             
             if (pulls.data.length == 0) {
               const pr = await github.rest.pulls.create({
-                title: '[VRT] Update baselines',
+                title: '[VRT] Update baselines for ${{ env.TARGET_REF }}',
                 owner: owner,
                 repo: repo,
                 head: "${{ env.UPDATE_BRANCH_NAME }}",
                 base: "${{ env.TARGET_REF }}",
-                body: 'Updates VRT baselines.'
+                body: 'Updates VRT baselines'
               });
               return pr.data.html_url;
             } else {
