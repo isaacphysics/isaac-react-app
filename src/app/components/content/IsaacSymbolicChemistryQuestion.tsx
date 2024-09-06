@@ -255,7 +255,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                                 </UncontrolledTooltip>
                                 : <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
                                     Here are some examples of expressions you can type:<br />
-                                    <br />
                                     H2O<br />
                                     2 H2 + O2 -&gt; 2 H2O<br />
                                     CH3(CH2)3CH3<br />
