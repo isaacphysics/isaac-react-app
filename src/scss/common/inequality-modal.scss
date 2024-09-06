@@ -191,6 +191,9 @@
             overflow: visible;
             background: $inequality-primary;
 
+            -webkit-user-select: none; /* Safari */
+            user-select: none;
+
             &.closed {
                 height: 0;
                 overflow: hidden;
@@ -308,11 +311,13 @@
                                 height: 57px;
                                 text-align: center;
                                 font-size: 1.8em;
+                                padding: 0;
+                                background-color: transparent;
 
                                 .katex {
                                     text-align: center;
                                     display: block;
-                                    line-height: 57px;
+                                    line-height: 52px;
                                     height: 57px;
                                     width: 100%;
                                     margin: 0 auto;
