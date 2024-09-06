@@ -45,7 +45,7 @@ jobs:
           git commit -am "Update VRT baselines"
           vrt_commit=$(git rev-parse HEAD)
           git checkout $update_branch_name || (git checkout $target_ref && git checkout -b $update_branch_name)
-          git cherry-pick $vrt-commit
+          git cherry-pick $vrt_commit
           git push --set-upstream origin $update_branch_name --force
           echo "TARGET_REF=$target_ref" >> "$GITHUB_ENV"
           echo "UPDATE_BRANCH_NAME=$update_branch_name" >> "$GITHUB_ENV"
