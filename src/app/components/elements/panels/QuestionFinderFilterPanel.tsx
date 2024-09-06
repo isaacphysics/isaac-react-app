@@ -210,7 +210,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             <CollapsibleList
                 title={listTitles.stage} expanded={listState.stage.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "stage", focus: below["md"](deviceSize)})}
-                numberSelected={searchStages.includes(STAGE.ALL) ? 0 : searchStages.length}
+                numberSelected={searchStages.includes(STAGE.ALL) ? searchStages.length - 1 : searchStages.length}
             >
                 {getFilteredStageOptions().map((stage, index) => (
                     <div className="w-100 ps-3 py-1 bg-white" key={index}>
