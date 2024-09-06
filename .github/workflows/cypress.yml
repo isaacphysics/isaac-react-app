@@ -37,12 +37,13 @@ jobs:
         id: cypress-create-branch
         if: ${{ failure() }}
         run: |
-          find ./src/test/pages/__image_snapshots__ -type f -name "*.actual.png" -exec bash -c 'mv "$1" "${1/.actual./.}"' shell {} \;
           target_ref=${{ github.head_ref || github.ref_name }}
           update_branch_name=vrt/$target_ref
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git checkout $update_branch_name || (git checkout $target_ref && git checkout -b $update_branch_name)
+          find ./src/test/pages/__image_snapshots__ -type f -name "*.actual.png" -exec bash -c 'mv "$1" "${1/.actual./.}"' shell {} \;
+          git fetch origin $target_ref
+          git checkout -B $update_branch_name origin/$target_ref
           git commit -am "Update VRT baselines"
           git push --set-upstream origin $update_branch_name --force
           echo "TARGET_REF=$target_ref" >> "$GITHUB_ENV"
@@ -65,12 +66,12 @@ jobs:
             
             if (pulls.data.length == 0) {
               const pr = await github.rest.pulls.create({
-                title: '[VRT] Update baselines',
+                title: '[VRT] Update baselines for ${{ env.TARGET_REF }}',
                 owner: owner,
                 repo: repo,
                 head: "${{ env.UPDATE_BRANCH_NAME }}",
                 base: "${{ env.TARGET_REF }}",
-                body: 'Updates VRT baselines.'
+                body: 'Updates VRT baselines'
               });
               return pr.data.html_url;
             } else {
