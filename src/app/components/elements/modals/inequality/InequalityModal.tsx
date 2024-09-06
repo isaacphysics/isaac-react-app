@@ -320,7 +320,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             onEditorStateChange,
             setEditorState
         });
-    }, [inequalityModalRef.current]);
+    }, [!!inequalityModalRef]);
     useEffect(() => {
         if (!isDefined(sketch.current)) return;
         sketch.current.onNewEditorState = (state: any) => {
@@ -448,7 +448,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             onTouchMove,
             onCursorMoveEnd
         });
-    }, [inequalityModalRef.current]);
+    }, [!!inequalityModalRef]);
 
     const previewTexString = editorState.result?.tex as string;
 
