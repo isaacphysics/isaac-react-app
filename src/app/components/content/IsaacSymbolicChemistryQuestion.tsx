@@ -246,22 +246,20 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
                         )}
                         {doc.isNuclear
-                                ? <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
+                                ? <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
                                     Here are some examples of expressions you can type:<br />
                                     {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
                                     {"^{0}_{-1}e"}<br />
                                     {"\\gammaray"}<br />
-                                    <br />
                                     As you type, the box above will preview the result.
                                 </UncontrolledTooltip>
-                                : <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
+                                : <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
                                     Here are some examples of expressions you can type:<br />
                                     <br />
                                     H2O<br />
                                     2 H2 + O2 -&gt; 2 H2O<br />
                                     CH3(CH2)3CH3<br />
                                     {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br />
-                                    <br />
                                     As you type, the box above will preview the result.
                                 </UncontrolledTooltip>}
                     </>
