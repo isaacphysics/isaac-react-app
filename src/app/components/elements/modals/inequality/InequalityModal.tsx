@@ -76,16 +76,15 @@ const InequalityMenuTab = ({menu, latexTitle, subMenu, className, isSubMenu = fa
 };
 
 const InequalityMenuNumber = ({n, update}: {n: number, update: () => void}) => {
-    return <div
+    return <button
         className="key menu-item number"
-        role="button"
+        type="button"
         tabIndex={0}
         data-item={JSON.stringify({ type: "Num", properties: { significand: n.toString() } })}
         onClick={update}
-        onKeyUp={update}
     >
         <VShape/><Markup encoding={"latex"}>{`$${n.toString()}$`}</Markup>
-    </div>;
+    </button>;
 };
 
 const MathOtherFunctionsMenu = ({defaultMenu, menuItems, activeSubMenu}: {defaultMenu: boolean; menuItems: MenuItems, activeSubMenu: InequalityMenuSubMenuTabType}) => {
@@ -204,12 +203,11 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                         </div>
                         <div className="bottom-row">
                             {[7,8,9,0].map(n => <InequalityMenuNumber key={n} n={n} update={() => updateNumberInputValue(n)}/>)}
-                            <div className={"key plus-minus"} role="button" tabIndex={0}
+                            <button type="button" className={"key plus-minus"} tabIndex={0}
                                 onClick={flipNumberInputValueSign}
-                                onKeyUp={flipNumberInputValueSign}
                             >
                                 <VShape/><Markup encoding={"latex"}>{"$\\pm$"}</Markup>
-                            </div>
+                            </button>
                         </div>
                     </div>
                     <div className="input-box">
