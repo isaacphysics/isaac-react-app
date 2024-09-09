@@ -9,7 +9,7 @@ import {useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import {useSortable} from "@dnd-kit/sortable";
 import classNames from "classnames";
-import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, isAda, isDefined, isPhy, useDeviceSize} from "../../../../services";
+import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, isAda, isDefined, isPhy, isTouchDevice, useDeviceSize} from "../../../../services";
 import { Markup } from "..";
 
 export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean, isCorrect?: boolean}) {
@@ -125,9 +125,9 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
             </DropdownItem>
             {dropdownItems.map((item, i) => {
                 return <DropdownItem key={i}
-                className={!nonSelectedItemIds.includes(item.id) ? "invalid" : ""}
-                data-unit={item || 'None'}
-                onClick={nonSelectedItemIds.includes(item.id) ? (() => {dropRegionContext?.onSelect(item, droppableId, false);}) : undefined}
+                    className={!nonSelectedItemIds.includes(item.id) ? "invalid" : ""}
+                    data-unit={item || 'None'}
+                    onClick={nonSelectedItemIds.includes(item.id) ? (() => {dropRegionContext?.onSelect(item, droppableId, false);}) : undefined}
                 >
                     <Markup trusted-markup-encoding={"html"}>
                         {item.value ?? ""}
@@ -139,7 +139,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
 
     if (dropRegionContext && droppableTarget) {
         return ReactDOM.createPortal(
-            deviceSize === "xs" ? dropdownZone : draggableDropZone,
+            ((isTouchDevice()) || (deviceSize === "xs")) ? dropdownZone : draggableDropZone,
             droppableTarget
         );
     }
