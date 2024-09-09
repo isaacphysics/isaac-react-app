@@ -20,8 +20,7 @@ interface CoordinateInputProps {
 
 export const coordinateInputValidator = (input: string) => {
     const errors = [];
-    const operatorExpression = new RegExp(".*[0-9][+/÷-]\\.?[0-9]+");
-    if (operatorExpression.test(input)) {
+    if (/[0-9]\s*[+/÷\-x×]\s*[0-9]/.test(input)) {
         errors.push('Simplify your answer into a single decimal number.');
     }
     return errors;
