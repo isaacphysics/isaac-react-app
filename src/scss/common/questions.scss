@@ -352,10 +352,6 @@ $cloze-scrollbar-height: 4px;
   &.is-dragging {
     opacity: 0.666;
   }
-
-  .katex.katex {
-    padding-top: 0.25rem !important;
-  }
 }
 
 .dropdown .cloze-item {
@@ -382,7 +378,7 @@ $cloze-scrollbar-height: 4px;
 .katex.katex {
   font-size: 1.1em;
   white-space: nowrap !important;
-  padding-top: 0.5rem !important;
+  padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
   display: inline-table;
 }
