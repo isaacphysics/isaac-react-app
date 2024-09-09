@@ -12,7 +12,7 @@ import {atLeastOne, formatManageBookingActionButtonMessage, zeroOrLess} from "..
 import {DateString} from "../DateString";
 import {userBookingModal} from "../modals/UserBookingModal";
 import {AdminSearchEndpointParams} from "../../../../IsaacApiTypes";
-import produce from "immer";
+import {produce} from "immer";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
 
 interface AddUsersToBookingProps {

@@ -52,7 +52,7 @@ export const RegistrationAgeCheck = () => {
                     <FormGroup check className="my-2">
                         <Input
                             id="registration-age-check-over"
-                            className="d-inline"
+                            className="d-inline mt-1"
                             type="radio"
                             checked={agePermission === "allowed"}
                             onChange={() => {setAgePermission("allowed");}}
@@ -64,7 +64,7 @@ export const RegistrationAgeCheck = () => {
                     {isPhy && <FormGroup check className="my-2">
                         <Input
                             id="registration-age-check-additional-info"
-                            className="d-inline"
+                            className="d-inline mt-1"
                             type="radio"
                             checked={agePermission === "additional_info"}
                             onChange={() => {setAgePermission("additional_info");}}
@@ -77,7 +77,7 @@ export const RegistrationAgeCheck = () => {
                     <FormGroup check className="my-2">
                         <Input
                             id="registration-age-check-under"
-                            className="d-inline"
+                            className="d-inline mt-1"
                             type="radio"
                             checked={agePermission === "denied"}
                             onChange={() => {setAgePermission("denied");}}
@@ -92,7 +92,7 @@ export const RegistrationAgeCheck = () => {
                     </FormGroup>
                     <hr />
                     <Row className="justify-content-end">
-                        <Col sm={6} lg={3} className="d-flex justify-content-end">
+                        <Col sm={6} lg={3} className="d-flex justify-content-end mb-1 mb-sm-0">
                             <Button outline color="secondary" onClick={history.goBack}>Back</Button>
                         </Col>
                         <Col sm={6} lg={3}>

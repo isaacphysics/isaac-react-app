@@ -6,7 +6,7 @@ import {
     NO_CONTENT,
     API_REQUEST_FAILURE_MESSAGE
 } from "../../../services";
-import produce from "immer";
+import {produce} from "immer";
 import {
     AuthorisedAssignmentProgress,
     AppGroup,
@@ -22,13 +22,14 @@ import {
     UserSummaryWithEmailAddressDTO
 } from "../../../../IsaacApiTypes";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
-import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
-import {fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
+import {FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import type {FetchBaseQueryArgs} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
+import {fetchBaseQuery} from "@reduxjs/toolkit/query";
 import {errorSlice} from "../internalAppState";
 import {SerializedError} from "@reduxjs/toolkit";
 import {Dispatch} from "redux";
-import {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";
-import {showErrorToast, showRTKQueryErrorToastIfNeeded, showSuccessToast} from "../../actions/popups";
+import type {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";
+import {showRTKQueryErrorToastIfNeeded, showSuccessToast} from "../../actions/popups";
 
 // This is used by default as the `baseQuery` of our API slice
 export const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {

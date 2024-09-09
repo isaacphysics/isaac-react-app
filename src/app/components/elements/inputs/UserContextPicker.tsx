@@ -116,6 +116,21 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         }
                     </Input>
                 </>}
+                
+                {showUnusualContextMessage && <div className="mt-2 ms-1">
+                    <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
+                    <RS.UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
+                        You are seeing {stageLabelMap[userContext.stage]} {isAda ? examBoardLabelMap[userContext.examBoard] : ""}{" "}
+                        content, which is different to your account settings. <br />
+                        {unusual.stage && unusual.examBoard && <>
+                            {userContext.explanation.stage === userContext.explanation.examBoard ?
+                                `The stage and exam board were specified by your ${userContext.explanation.stage}.` :
+                                `The stage was specified by your ${userContext.explanation.stage} and the exam board by your ${userContext.explanation.examBoard}.`}
+                        </>}
+                        {unusual.stage && !unusual.examBoard && `The stage was specified by your ${userContext.explanation.stage}.`}
+                        {unusual.examBoard && !unusual.stage && `The exam board was specified by your ${userContext.explanation.examBoard}.`}
+                    </RS.UncontrolledTooltip>
+                </div>}
             </FormGroup>
         </RS.Row>
         
@@ -125,26 +140,11 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
             <FormGroup className="form-group w-auto m-0">
                 <Label className="d-inline-block m-0" htmlFor="uc-show-other-content-check">Show other content? </Label>
                 <Input
-                    className="d-inline-block ms-2 pe-0" type="checkbox" id="uc-show-other-content-check"
+                    className="d-inline-block ms-2 pe-0 mt-1" type="checkbox" id="uc-show-other-content-check"
                     checked={userContext.showOtherContent}
                     onChange={e => dispatch(transientUserContextSlice.actions.setShowOtherContent(e.target.checked))}
                 />
             </FormGroup>
         </RS.Row>}
-
-        {showUnusualContextMessage && <div className="mt-2 ms-1">
-            <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
-            <RS.UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
-                You are seeing {stageLabelMap[userContext.stage]} {isAda ? examBoardLabelMap[userContext.examBoard] : ""}{" "}
-                content, which is different to your account settings. <br />
-                {unusual.stage && unusual.examBoard && <>
-                    {userContext.explanation.stage === userContext.explanation.examBoard ?
-                        `The stage and exam board were specified by your ${userContext.explanation.stage}.` :
-                        `The stage was specified by your ${userContext.explanation.stage} and the exam board by your ${userContext.explanation.examBoard}.`}
-                </>}
-                {unusual.stage && !unusual.examBoard && `The stage was specified by your ${userContext.explanation.stage}.`}
-                {unusual.examBoard && !unusual.stage && `The exam board was specified by your ${userContext.explanation.examBoard}.`}
-            </RS.UncontrolledTooltip>
-        </div>}
     </RS.Col>;
 };

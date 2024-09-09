@@ -10,6 +10,8 @@ import {
     isAda,
     isIntendedAudience,
     isPhy,
+    isStaff,
+    isTeacherOrAbove,
     notRelevantMessage,
     SEARCH_RESULT_TYPE,
     siteSpecific,
@@ -30,21 +32,23 @@ import classNames from "classnames";
 import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 import { CSSModule } from "reactstrap/types/lib/utils";
 
-export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, noCaret}: {
+export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, noCaret, hideContentType, ignoreIntendedAudience}: {
     item: ShortcutResponse;
     search?: string;
     displayTopicTitle?: boolean;
     noCaret?: boolean;
+    hideContentType?: boolean;
+    ignoreIntendedAudience?: boolean;
 }) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
-    const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
+    const isContentsIntendedAudience = ignoreIntendedAudience || isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
     const hash = item.hash;
 
     let linkDestination, icon, audienceViews;
     let itemClasses = "p-0 content-summary-link ";
-    itemClasses += isContentsIntendedAudience ? "bg-transparent " : "de-emphasised ";
+    itemClasses += isContentsIntendedAudience && !item.supersededBy ? "bg-transparent " : "de-emphasised ";
 
     let stack = false;
     let title = item.title;
@@ -101,6 +105,9 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
             if (isPhy) {
                 itemClasses += item.state === CompletionState.ALL_CORRECT ? "bg-success" : "text-info";
             }
+            if (isAda) {
+                typeLabel = "Question";
+            }
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = questionIcon;
             audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
@@ -136,14 +143,17 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
             return null;
     }
 
-    return <ListGroupItem className={classNames("content-summary-item", itemClasses, {"p-3 d-md-flex flex-column justify-content-center": isPhy})} key={linkDestination}>
+    return <ListGroupItem className={classNames(itemClasses, {"p-3 d-md-flex flex-column justify-content-center content-summary-item": isPhy})} key={linkDestination}>
         <Link className={classNames({"position-relative justify-content-center": isAda})} to={{pathname: linkDestination, search: search, hash: hash}}>
             <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
                 {siteSpecific(
                     icon,
                     <div className={"inner-progress-icon"}>
-                        {icon}<br/>
-                        <span className={"icon-title"}>{typeLabel}</span>
+                        {icon}
+                        {!hideContentType && <>
+                            <br/>
+                            <span className={"icon-title"}>{typeLabel}</span>
+                        </>}
                     </div>
                 )}
             </span>
@@ -156,6 +166,14 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
                         {isPhy && typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ms-2 mb-1"}>
                             ({typeLabel})
                         </span>}
+                        {isPhy && item.supersededBy && isTeacherOrAbove(user) ? <a 
+                            className="superseded-tag ms-1 ms-sm-3" 
+                            href={`/questions/${item.supersededBy}`}
+                            onClick={(e) => e.stopPropagation()}
+                        >SUPERSEDED</a> : null}
+                        {isPhy && item.tags && item.tags.includes("nofilter") && isStaff(user) ? <span
+                            className="superseded-tag ms-1 ms-sm-3"
+                        >NO-FILTER</span> : null}
                     </div>
                     {(isPhy && item.summary) && <div className="small text-muted d-none d-sm-block">
                         {item.summary}
@@ -181,11 +199,13 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
     </ListGroupItem>;
 };
 
-export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCaret, ...rest}: {
+export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCaret, hideContentType, ignoreIntendedAudience, ...rest}: {
     items: ContentSummaryDTO[];
     search?: string;
     displayTopicTitle?: boolean;
     noCaret?: boolean;
+    hideContentType?: boolean;
+    ignoreIntendedAudience?: boolean;
     tag?: React.ElementType;
     flush?: boolean;
     className?: string;
@@ -195,6 +215,7 @@ export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCa
         {items.map(item => <ContentSummaryListGroupItem
             item={item} search={search} noCaret={noCaret}
             key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}
+            hideContentType={hideContentType} ignoreIntendedAudience={ignoreIntendedAudience}
         />)}
     </ListGroup>;
 };

@@ -58,16 +58,17 @@ interface ConnectionsHeaderProps {
     setEnableSearch: React.Dispatch<React.SetStateAction<boolean>>;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
     title: string;
+    placeholder: string;
 }
 
-const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title}: ConnectionsHeaderProps) => {
+const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title, placeholder}: ConnectionsHeaderProps) => {
     const deviceSize = useDeviceSize();
 
     return <div className="connect-list-header">
         {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ? 
             <>{enableSearch ? 
                 <>
-                    <RS.Input type="text" autoFocus placeholder="Search teachers" className="connections-search" onChange={e => setSearchText(e.target.value)}/>
+                    <RS.Input type="text" autoFocus placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
                     <Spacer />
                 </> : 
                 <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
@@ -82,7 +83,7 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title}
                     {title}
                 </h4>
                 <Spacer />
-                {enableSearch && <RS.Input type="text" autoFocus style={{width: "200px"}} placeholder="Search teachers" className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
+                {enableSearch && <RS.Input type="text" autoFocus style={{width: "200px"}} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
             </>
         }
         {!enableSearch && <Spacer />}
@@ -189,7 +190,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </RS.Form>
 
             <div className="connect-list" data-testid="teacher-connections">
-                <ConnectionsHeader title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch} setSearchText={setTeacherSearchText}/>
+                <ConnectionsHeader 
+                    title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch} 
+                    setSearchText={setTeacherSearchText} placeholder="Search teachers"/>
                 <div className="connect-list-inner">
                     <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                         <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredActiveAuthorisations?.length ?? 0))} itemCount={filteredActiveAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
@@ -201,7 +204,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                 return <React.Fragment key={teacherAuthorisation.id}>
                                 <li style={style} className="py-2">
                                     <span className="icon-person-active" />
-                                    <span id={`teacher-authorisation-${teacherAuthorisation.id}`}>
+                                    <span id={`teacher-authorisation-${teacherAuthorisation.id}`} className="connections-fixed-length-text">
                                         {extractTeacherName(teacherAuthorisation)}
                                     </span>
                                     <RS.UncontrolledTooltip
@@ -242,7 +245,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     <Link to="/groups">{siteSpecific("group management page", "Manage groups")}</Link>{siteSpecific(".", " page.")}
                 </p>
                 <div className="connect-list">
-                    <ConnectionsHeader title="Student connections" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch} setSearchText={setStudentSearchText}/>
+                    <ConnectionsHeader 
+                        title="Student connections" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch} 
+                        setSearchText={setStudentSearchText} placeholder="Search students"/>
                     <div className="connect-list-inner">
                         <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                             <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredStudentAuthorisations?.length ?? 0))} itemCount={filteredStudentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
@@ -253,7 +258,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                     }
                                     return <li key={student.id} style={style} className="py-2">
                                         <span className="icon-person-active" />
-                                        <span id={`student-authorisation-${student.id}`}>
+                                        <span id={`student-authorisation-${student.id}`} className="connections-fixed-length-text">
                                             {student.givenName} {student.familyName}
                                         </span>
                                         <RS.UncontrolledTooltip
@@ -303,28 +308,39 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </ul>
             <div className="my-groups-table-section overflow-auto">
                 <div className="connect-list">
-                    <ConnectionsHeader title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch} setSearchText={setGroupSearchText}/>
+                    <ConnectionsHeader 
+                        title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch} 
+                        setSearchText={setGroupSearchText} placeholder="Search groups"/>
                     <div className="connect-list-inner">
                         <ul className={classNames("teachers-connected list-unstyled m-0")}>
                             {sortedGroupMemberships && <FixedSizeList height={MEMBERSHIPS_ROW_HEIGHT * (Math.min(MEMBERSHIPS_MAX_VISIBLE_ROWS, sortedGroupMemberships.length ?? 0))} itemCount={sortedGroupMemberships.length ?? 0} itemSize={MEMBERSHIPS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                                 {({index, style}) => {
                                     const membership = sortedGroupMemberships[index];
-                                    return <li key={index} style={style} className={classNames("p-2 ps-3", {"inactive-group" : isAda && membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE})}>
+                                    const inactiveInGroup = membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE;
+                                    return <li key={index} style={style} className={classNames("p-2 ps-3", {"inactive-group" : isAda && inactiveInGroup})}>
                                         <div className="d-flex">
-                                            <RS.Col>
-                                                {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE ?
-                                                    <span className="text-muted"><b>{(membership.group.groupName ?? "Group " + membership.group.id)}</b>{" ("}<i>inactive</i>{")"}</span>
-                                                    :
-                                                    <span><b>{(membership.group.groupName ?? "Group " + membership.group.id)}</b></span>
-                                                }
-                                                {membership.group.selfRemoval && <img className="self-removal-group ms-1" src={siteSpecific("/assets/phy/icons/teacher_features_sprite.svg#groups", "/assets/cs/icons/group.svg")} alt=""/>}
-                                                <br/>
-                                                {membership.group.ownerSummary && 
-                                                    <span className="text-muted">Teacher{membership.group.additionalManagers && membership.group.additionalManagers.length > 0 ? "s" : ""}: {
-                                                    [membership.group.ownerSummary, ...membership.group.additionalManagers ?? []].map(extractTeacherName).join(", ")
-                                                }</span>}
+                                            <RS.Col className="me-1">
+                                                <div className="d-flex">
+                                                    <span id={`group-membership-${index}`} className={classNames("connections-fixed-length-text", {"text-muted connection-inactive": inactiveInGroup})}>
+                                                        <b>{(membership.group.groupName ?? "Group " + membership.group.id)}</b>
+                                                    </span>
+                                                    {inactiveInGroup && <span>{" ("}<i>inactive</i>{")"}</span>}
+                                                    {membership.group.selfRemoval && <img className={classNames("self-removal-group", {"ms-1": !inactiveInGroup})} src={siteSpecific("/assets/phy/icons/teacher_features_sprite.svg#groups", "/assets/cs/icons/group.svg")} alt=""/>}
+                                                    <RS.UncontrolledTooltip
+                                                        placement="top" target={`group-membership-${index}`}
+                                                    >
+                                                        {membership.group.groupName ? membership.group.groupName : `Group ${membership.group.id}`}
+                                                    </RS.UncontrolledTooltip>
+                                                </div>
+                                                <div className="d-flex">
+                                                    {membership.group.ownerSummary && <span className="connections-fixed-length-text text-muted">
+                                                        Teacher{membership.group.additionalManagers && membership.group.additionalManagers.length > 0 ? "s" : ""}: {
+                                                            [membership.group.ownerSummary, ...membership.group.additionalManagers ?? []].map(extractTeacherName).join(", ")
+                                                        }
+                                                    </span>}
+                                                </div>
                                             </RS.Col>
-                                            <RS.Col className="d-flex flex-col justify-content-end flex-grow-0 pe-1">
+                                            <RS.Col className="d-flex flex-col justify-content-end align-items-center flex-grow-0 pe-1">
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
                                                     <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
                                                         membership.group.selfRemoval 

@@ -21,7 +21,7 @@ import {ADMIN_CRUMB, isAdmin, isDefined, isPhy} from "../../services";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
 import {ShowLoading} from "../handlers/ShowLoading";
-import produce from "immer";
+import {produce} from "immer";
 import {skipToken} from "@reduxjs/toolkit/query";
 
 export const AdminUserManager = () => {
@@ -172,6 +172,20 @@ export const AdminUserManager = () => {
                                     onChange={e => setParamIfNotDefault("schoolOther", e.target.value, "")}
                                 />
                             </RS.FormGroup>
+                            <RS.FormGroup>
+                                <RS.Label htmlFor="verification-status-search">Find by email verification status:</RS.Label>
+                                <RS.Input
+                                    id="verification-status-search" type="select" defaultValue={String(searchQuery.emailVerificationStatus)}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        setParamIfNotDefault("emailVerificationStatus", e.target.value === "null" ? "" : e.target.value, "");
+                                    }}
+                                >
+                                    <option value="null">Any verification status</option>
+                                    <option value="VERIFIED">Verified</option>
+                                    <option value="NOT_VERIFIED">Not verified</option>
+                                    <option value="DELIVERY_FAILED">Delivery failed</option>
+                                </RS.Input>
+                            </RS.FormGroup>
                         </RS.Col>
 
                         <RS.Col md={6}>
@@ -296,95 +310,95 @@ export const AdminUserManager = () => {
                                 <div className="overflow-auto">
                                     <RS.Table bordered data-testid="user-search-results-table">
                                         <thead>
-                                        <tr>
-                                            <th>
-                                                <RS.Button onClick={selectAllToggle} color="link">Select</RS.Button>
-                                            </th>
-                                            <th>Actions</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>User role</th>
-                                            <th>School</th>
-                                            <th>Verification status</th>
-                                            <th>Member since</th>
-                                            <th>Last seen</th>
-                                        </tr>
+                                            <tr>
+                                                <th>
+                                                    <RS.Button onClick={selectAllToggle} color="link">Select</RS.Button>
+                                                </th>
+                                                <th>Actions</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>User role</th>
+                                                <th>School</th>
+                                                <th>Verification status</th>
+                                                <th>Member since</th>
+                                                <th>Last seen</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        {searchResults.map((user) =>
-                                            <tr key={user.id} data-testid="user-search-result-row">
-                                                <td className="text-center">
-                                                    <RS.Input
-                                                        type="checkbox" className="m-0 position-relative"
-                                                        checked={user.id && selectedUserIds.includes(user.id) || undefined}
-                                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                            user.id && updateUserSelection(user.id, event.target.checked)
-                                                        }}
-                                                    />
-                                                </td>
-                                                <td className="text-center">
-                                                    <RS.Button color="secondary btn-sm m-1" tag={Link} to={`/progress/${user.id}`} target="_blank">
-                                                        View
-                                                    </RS.Button>
-                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => editUser(user.id)}>
-                                                        Edit
-                                                    </RS.Button>
-                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => confirmDeleteUser(user.id)}>
-                                                        Delete
-                                                    </RS.Button>
-                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => attemptPasswordReset(user.email)} disabled={user.emailVerificationStatus === "DELIVERY_FAILED"}>
-                                                        Reset password
-                                                    </RS.Button>
-                                                </td>
-                                                <td>{user.familyName}, {user.givenName}</td>
-                                                <td>{user.email}</td>
-                                                <td>{user.role}</td>
-                                                <td>{isDefined(user.id) && isDefined(userIdToSchoolMapping) && isDefined(userIdToSchoolMapping[user.id]) && (userIdToSchoolMapping[user.id].name ?? "")}</td>
-                                                <td>{user.emailVerificationStatus}</td>
-                                                <td><DateString>{user.registrationDate}</DateString></td>
-                                                <td><DateString>{user.lastSeen}</DateString></td>
-                                            </tr>
-                                        )}
+                                            {searchResults.map((user) =>
+                                                <tr key={user.id} data-testid="user-search-result-row">
+                                                    <td className="text-center">
+                                                        <RS.Input
+                                                            type="checkbox" className="m-0 position-relative"
+                                                            checked={user.id && selectedUserIds.includes(user.id) || undefined}
+                                                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                                user.id && updateUserSelection(user.id, event.target.checked)
+                                                            }}
+                                                        />
+                                                    </td>
+                                                    <td className="text-center">
+                                                        <RS.Button color="secondary btn-sm m-1" tag={Link} to={`/progress/${user.id}`} target="_blank">
+                                                            View
+                                                        </RS.Button>
+                                                        <RS.Button color="secondary btn-sm m-1" onClick={() => editUser(user.id)}>
+                                                            Edit
+                                                        </RS.Button>
+                                                        <RS.Button color="secondary btn-sm m-1" onClick={() => confirmDeleteUser(user.id)}>
+                                                            Delete
+                                                        </RS.Button>
+                                                        <RS.Button color="secondary btn-sm m-1" onClick={() => attemptPasswordReset(user.email)} disabled={user.emailVerificationStatus === "DELIVERY_FAILED"}>
+                                                            Reset password
+                                                        </RS.Button>
+                                                    </td>
+                                                    <td>{user.familyName}, {user.givenName}</td>
+                                                    <td>{user.email}</td>
+                                                    <td>{user.role}</td>
+                                                    <td>{isDefined(user.id) && isDefined(userIdToSchoolMapping) && isDefined(userIdToSchoolMapping[user.id]) && (userIdToSchoolMapping[user.id].name ?? "")}</td>
+                                                    <td>{user.emailVerificationStatus}</td>
+                                                    <td><DateString>{user.registrationDate}</DateString></td>
+                                                    <td><DateString>{user.lastSeen}</DateString></td>
+                                                </tr>
+                                            )}
                                         </tbody>
                                     </RS.Table>
                                 </div>
                                 :
                                 <div data-testid="user-search-results-table" className="text-center"><em>No results found</em></div>;
                         }
-                    }/>
+                        }/>
                 }
             </RS.CardBody>
         </RS.Card>
         {isAdmin(currentUser) && <>
-        <hr/>
-        <RS.Card className={"my-4"}>
-            <RS.CardBody>
-                <h3>Merge user accounts</h3>
-                <FormGroup className="form-group">
-                    <RS.InputGroup className={"separate-input-group"}>
-                        <RS.Input
-                            type="text"
-                            placeholder="User ID to keep"
-                            value={mergeTargetId}
-                            onChange={(e => setMergeTargetId(e.target.value))}
-                        />
-                        <RS.Input
-                            type="text"
-                            placeholder="User ID to delete"
-                            value={mergeSourceId}
-                            onChange={(e => setMergeSourceId(e.target.value))}
-                        />
-                        <RS.Button
-                            type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
-                            disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
-                            onClick={confirmMergeUsers}
-                        >
-                            Merge
-                        </RS.Button>
-                    </RS.InputGroup>
-                </FormGroup>
-            </RS.CardBody>
-        </RS.Card>
+            <hr/>
+            <RS.Card className={"my-4"}>
+                <RS.CardBody>
+                    <h3>Merge user accounts</h3>
+                    <FormGroup className="form-group">
+                        <RS.InputGroup className={"separate-input-group"}>
+                            <RS.Input
+                                type="text"
+                                placeholder="User ID to keep"
+                                value={mergeTargetId}
+                                onChange={(e => setMergeTargetId(e.target.value))}
+                            />
+                            <RS.Input
+                                type="text"
+                                placeholder="User ID to delete"
+                                value={mergeSourceId}
+                                onChange={(e => setMergeSourceId(e.target.value))}
+                            />
+                            <RS.Button
+                                type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
+                                disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
+                                onClick={confirmMergeUsers}
+                            >
+                                Merge
+                            </RS.Button>
+                        </RS.InputGroup>
+                    </FormGroup>
+                </RS.CardBody>
+            </RS.Card>
         </>}
     </RS.Container>;
 };

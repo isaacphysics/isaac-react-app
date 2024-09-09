@@ -24,7 +24,7 @@ import {
 import {PotentialUser, UserSchoolLookup} from "../../../../IsaacAppTypes";
 import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
-import produce from "immer";
+import {produce} from "immer";
 import {RenderNothing} from "../RenderNothing";
 
 interface ManageExistingBookingsProps {

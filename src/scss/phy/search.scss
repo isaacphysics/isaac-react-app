@@ -1,0 +1,21 @@
+@import "../common/search";
+
+.superseded-tag.superseded-tag {
+    width: max-content;
+    padding: 0 0.4em;
+    align-self: center;
+    font-size: small;
+    text-decoration: none;
+    color: $gray-160;
+    background-color: white;
+    border: 1px solid $gray-120;
+    border-radius: 8px;
+    transition: color 0.2s;
+    &::after {
+        display: none;
+    }
+
+    &:is(a):hover {
+        color: $gray-194;
+    }
+}

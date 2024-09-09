@@ -4670,8 +4670,8 @@ export const mockNewsPods = {
                 type: "image",
                 children: [],
                 published: false,
-                src: "content/pods/figures/consolidation_small.jpg",
-                altText: ""
+                src: "/assets/phy/events/teacher.jpg",
+                altText: "Image of students problem solving together."
             },
             url: "/pages/summer_programmes_2021",
             published: true
@@ -4691,8 +4691,8 @@ export const mockNewsPods = {
                 type: "image",
                 children: [],
                 published: false,
-                src: "content/pods/figures/eye.png",
-                altText: "Image of an eye inside a magnifying glass."
+                src: "/assets/phy/events/teacher.jpg",
+                altText: "Image of students problem solving together."
             },
             url: "/pages/gcse_quizzes",
             published: true
@@ -4732,8 +4732,8 @@ export const mockNewsPods = {
                 type: "image",
                 children: [],
                 published: false,
-                src: "content/pods/figures/isaaccomputerscience.png",
-                altText: "Isaac Computer Science Logo."
+                src: "/assets/phy/events/teacher.jpg",
+                altText: "Image of students problem solving together."
             },
             url: "/pages/isaac_computer_science",
             published: true
@@ -4752,8 +4752,8 @@ export const mockNewsPods = {
                 type: "image",
                 children: [],
                 published: false,
-                src: "content/pods/figures/3_books_pod.jpg",
-                altText: ""
+                src: "/assets/phy/events/teacher.jpg",
+                altText: "Image of students problem solving together."
             },
             url: "/pages/book_launch_2022",
             published: true

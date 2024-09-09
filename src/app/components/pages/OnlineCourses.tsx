@@ -41,7 +41,7 @@ export const OnlineCourses = () => {
             /> :
             <>
                 <Row className="d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 justify-content-between my-3">
-                    {allCourses.map(n => <NewsCard key={n.id} newsItem={n} className="ratio-5x3" showTitle />)}
+                    {allCourses.map(n => <NewsCard key={n.id} newsItem={n} showTitle />)}
                 </Row>
                 <div className="w-100 d-flex justify-content-center mb-5">
                     <Button className={"mt-3"} color={"primary"} disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>Load more courses</Button>

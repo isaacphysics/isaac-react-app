@@ -4,7 +4,7 @@ import {
     ChoiceDTO,
     QuizAttemptDTO,
 } from "../../../IsaacApiTypes";
-import produce, {Immutable} from "immer";
+import {produce, Immutable} from "immer";
 
 const updateQuizAttemptQuestion = (questionId: string, questionAttempt: Immutable<ChoiceDTO>) => produce<{attempt: QuizAttemptDTO}>((quizAttempt) => {
     const quizQuestions = extractQuestions(quizAttempt?.attempt.quiz);

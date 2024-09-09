@@ -147,6 +147,19 @@
   .icon-person-active {
     margin-top: 2px;
   }
+
+  .connections-fixed-length-text {
+    display: inline-block;
+    max-height: 24px;
+    width: max-content;
+    max-width: 264px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    &.connection-inactive {
+      max-width: 207px; // include space for "(inactive)" (57px)
+    }
+  }
 }
 .revoke-teacher {
   float: right;

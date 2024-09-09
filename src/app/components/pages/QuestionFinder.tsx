@@ -1,48 +1,43 @@
-import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {
-    AppState,
-    clearQuestionSearch,
-    searchQuestions,
-    useAppDispatch,
-    useAppSelector
-} from "../../state";
+import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
+import {AppState, clearQuestionSearch, logAction, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
 import debounce from "lodash/debounce";
 import {
-    tags,
+    arrayFromPossibleCsv,
+    EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     isAda,
+    isLoggedIn,
     isPhy,
     Item,
-    logEvent,
-    siteSpecific,
-    STAGE,
-    useUserViewingContext,
-    STAGE_NULL_OPTIONS,
-    useQueryParams,
-    arrayFromPossibleCsv,
-    toSimpleCSV,
-    TAG_ID,
     itemiseTag,
-    SEARCH_RESULTS_PER_PAGE,
     ListParams,
     SEARCH_CHAR_LENGTH_LIMIT,
+    SEARCH_RESULTS_PER_PAGE,
+    siteSpecific,
+    STAGE,
+    STAGE_NULL_OPTIONS,
+    TAG_ID,
+    tags,
+    toSimpleCSV,
+    useQueryParams,
+    useUserViewingContext,
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import { RouteComponentProps, useHistory, withRouter } from "react-router";
-import { LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
-import { ShowLoading } from "../handlers/ShowLoading";
-import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
-import { MetaDescription } from "../elements/MetaDescription";
-import { CanonicalHrefElement } from "../navigation/CanonicalHrefElement";
+import {RouteComponentProps, useHistory, withRouter} from "react-router";
+import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {MetaDescription} from "../elements/MetaDescription";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import { PageFragment } from "../elements/PageFragment";
+import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row } from "reactstrap";
-import { QuestionFinderFilterPanel } from "../elements/panels/QuestionFinderFilterPanel";
-import { Tier, TierID } from "../elements/svg/HierarchyFilter";
+import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
+import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
+import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 
 export interface QuestionStatus {
     notAttempted: boolean;
@@ -103,10 +98,10 @@ function getInitialQuestionStatuses(params: ListParams): QuestionStatus {
 
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
+    const user = useAppSelector((state: AppState) => state && state.user);
     const userContext = useUserViewingContext();
     const params: ListParams = useQueryParams(false);
     const history = useHistory();
-    const eventLog = useRef<object[]>([]).current; // persist state but do not rerender on mutation
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
@@ -123,14 +118,20 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [populatedUserContext, setPopulatedUserContext] = useState(false);
 
     useEffect(function populateFromUserContext() {
-        if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
-            setSearchStages(arr => arr.length > 0 ? arr : [userContext.stage]);
+        if (isAda && isLoggedIn(user) && user.registeredContexts && user.registeredContexts.length > 1) {
+            setSearchStages([STAGE.ALL]);
+            setSearchExamBoards([EXAM_BOARD.ALL]);
         }
-        if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
-            setSearchExamBoards(arr => arr.length > 0 ? arr : [userContext.examBoard]);
+        else  {
+            if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
+                setSearchStages(arr => arr.length > 0 ? arr : [userContext.stage]);
+            }
+            if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
+                setSearchExamBoards(arr => arr.length > 0 ? arr : [userContext.examBoard]);
+            }
         }
         setPopulatedUserContext(!!userContext.stage && !!userContext.examBoard);
-    }, [userContext.stage, userContext.examBoard]);
+    }, [userContext.stage, userContext.examBoard, user]);
 
     // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates
     useEffect(() => {
@@ -222,7 +223,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need to know if there are more results
             }));
 
-            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, startIndex});
+            dispatch(logAction({
+                type: "QUESTION_FINDER_SEARCH", searchString, ...filterParams, book, stages, difficulties, examBoards, questionStatuses, startIndex}));
         }, 250),
         [nothingToSearchFor]
     );
@@ -439,7 +441,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                         <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                             {displayQuestions?.length
-                                ? <LinkToContentSummaryList items={displayQuestions} noCaret className="m-0" />
+                                ? <LinkToContentSummaryList items={displayQuestions} noCaret hideContentType ignoreIntendedAudience className="m-0" />
                                 : noResultsMessage }
                         </ShowLoading>
                     </CardBody>

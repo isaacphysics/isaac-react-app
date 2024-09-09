@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { Markup } from "../markup";
 import { IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO } from "../../../../IsaacApiTypes";
 import { selectors, useAppSelector, useGetConstantUnitsQuery } from "../../../state";
-import { isLoggedIn, useCurrentQuestionAttempt } from "../../../services";
+import { isDefined, isLoggedIn, useCurrentQuestionAttempt } from "../../../services";
 import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
 import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
 import { QuestionCorrectness } from "../../../../IsaacAppTypes";
@@ -45,6 +45,8 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
         dispatchSetCurrentAttempt(attempt);
         setModified(true);
     }
+
+    const unit = questionDTO.displayUnit ?? currentAttempt?.units;
 
     return <div {...rest} 
         className={classNames("inline-numeric-container w-100", rest.className, correctnessClass(valueCorrectness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" : correctness))}
@@ -89,12 +91,12 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
         >
             <DropdownToggle
                 disabled={readonly || !noDisplayUnit}
-                className={classNames("feedback-zone ps-2 pe-0 py-0", {"pe-4": showFeedback(unitCorrectness), "border-dark": !noDisplayUnit})}
+                className={classNames("feedback-zone ps-2 pe-0 py-0", {"pe-4": showFeedback(unitCorrectness) && noDisplayUnit, "border-dark": !noDisplayUnit})}
                 color={noDisplayUnit ? undefined : "white"}
             >
-                <div className={showFeedback(unitCorrectness) ? "pe-4" : "pe-2"}>
+                <div className={showFeedback(unitCorrectness) && noDisplayUnit ? "pe-4" : "pe-2"}>
                     <Markup encoding={"latex"}>
-                        {currentAttempt?.units !== undefined ? wrapUnitForSelect(noDisplayUnit ? currentAttempt.units : questionDTO.displayUnit) : "Unit..."}
+                        {isDefined(unit) ? wrapUnitForSelect(unit) : "Unit..."}
                     </Markup>
                     {showFeedback(unitCorrectness) && noDisplayUnit && <div className={"feedback-box ps-2"}>
                         {unitCorrectness === "NOT_ANSWERED" ? 
@@ -107,7 +109,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
             <DropdownMenu end>
                 {selectedUnits.map((unit) =>
                     <DropdownItem key={wrapUnitForSelect(unit)}
-                        data-unit={unit || 'None'}
+                        data-unit={isDefined(unit) ? (unit || 'None') : undefined}
                         className={unit && unit === currentAttempt?.units ? "btn bg-grey selected" : ""}
                         onClick={(e: FormEvent) => {updateCurrentAttempt({newUnits: unit}); e.preventDefault();}}
                     >
