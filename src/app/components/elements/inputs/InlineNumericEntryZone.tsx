@@ -106,7 +106,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
                     </div>}
                 </div>
             </DropdownToggle>
-            <DropdownMenu end>
+            <DropdownMenu container="body" end>
                 {selectedUnits.map((unit) =>
                     <DropdownItem key={wrapUnitForSelect(unit)}
                         data-unit={isDefined(unit) ? (unit || 'None') : undefined}

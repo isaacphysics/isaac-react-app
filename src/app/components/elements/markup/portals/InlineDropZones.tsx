@@ -115,7 +115,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
                 {!item && <img className={classNames("dropzone-dropdown", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"></img>}
             </div>
         </DropdownToggle>
-        <DropdownMenu end>
+        <DropdownMenu container="body" end>
             {/* Dummy option added to clear selection */}
             <DropdownItem
                 data-unit={'None'}
