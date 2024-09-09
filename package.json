@@ -31,7 +31,7 @@
     "leaflet": "^1.7.1",
     "lodash": "^4.17.21",
     "object-hash": "^3.0.0",
-    "p5": "^1.9.2",
+    "p5": "^1.10.0",
     "plausible-tracker": "^0.3.8",
     "qrcode": "^1.5.3",
     "query-string": "^7.1.3",
