@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from "reactstrap";
 import classNames from "classnames";
 import { Markup } from "../markup";
@@ -48,7 +48,9 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
 
     const unit = questionDTO.displayUnit ?? currentAttempt?.units;
 
-    return <div {...rest} 
+    const entryZoneRef = useRef<HTMLDivElement>(null);
+
+    return <div {...rest} ref={entryZoneRef}
         className={classNames("inline-numeric-container w-100", rest.className, correctnessClass(valueCorrectness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" : correctness))}
     >
         <div className={"feedback-zone inline-nq-feedback w-100"}
@@ -106,7 +108,7 @@ export const InlineNumericEntryZone = ({width, height, questionDTO, setModified,
                     </div>}
                 </div>
             </DropdownToggle>
-            <DropdownMenu container="body" end>
+            <DropdownMenu container={entryZoneRef.current?.closest(".question-content") as HTMLElement || "body"} end>
                 {selectedUnits.map((unit) =>
                     <DropdownItem key={wrapUnitForSelect(unit)}
                         data-unit={isDefined(unit) ? (unit || 'None') : undefined}
