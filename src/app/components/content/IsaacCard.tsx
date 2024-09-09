@@ -15,10 +15,10 @@ const PhysicsCard = ({doc, imageClassName}: IsaacCardProps) => {
     const classes = classNames("menu-card", {"disabled": disabled, "isaac-card-vertical": verticalContent});
     const imgSrc = image?.src && apiHelper.determineImageUrl(image.src);
 
-    const link = (clickUrl && isAppLink(clickUrl)) ? <Link to={clickUrl} className={classes + " stretched-link"} aria-label={title} aria-disabled={disabled}/> :
-        <a href={clickUrl} className={classes + " stretched-link"} aria-label={title} aria-disabled={disabled}/>
+    const link = (clickUrl && isAppLink(clickUrl)) ? <Link to={clickUrl} className={"stretched-link"} aria-label={title} aria-disabled={disabled}/> :
+        <a href={clickUrl} className={"stretched-link"} aria-label={title} aria-disabled={disabled}/>
 
-    return <Col className="d-flex justify-content-center">
+    return <Col className="d-flex h-100 justify-content-center">
         {verticalContent ?
             <Card className={classes}>
                 {image && <Row className={imageClassName}>
@@ -39,7 +39,7 @@ const PhysicsCard = ({doc, imageClassName}: IsaacCardProps) => {
                     {title}
                 </CardTitle>
                 <CardBody>
-                    <Row className="mx-2">
+                    <Row className="h-100 mx-2">
                         {image && <Col xs={4} sm={12} lg={4} className="col-centered">
                             <img className={classes} src={imgSrc} alt=""/>
                         </Col>}

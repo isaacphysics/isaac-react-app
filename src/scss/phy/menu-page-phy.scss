@@ -58,7 +58,7 @@
     font-size: 1.4rem;
     font-weight: 600;
     font-family: exo_2regular, 'sans-serif';
-    line-height: 1.6rem;
+    line-height: 1.8rem;
     padding-top: 10px;
   }
 
@@ -70,6 +70,7 @@
     border-width: 1px;
     border-color: $phy_green;
     border-radius: 0;
+    min-height: 170px;
     &.disabled {
       border-color: #ccc !important;
     }
