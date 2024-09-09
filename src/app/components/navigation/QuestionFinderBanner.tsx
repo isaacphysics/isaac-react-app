@@ -4,6 +4,7 @@ import * as RS from 'reactstrap';
 
 export const QuestionFinderBanner = () => {
     return <RS.Alert color="info" className={"no-print mt-3"}>
-        We&apos;ll be retiring this version of our question finder in August. You can try our improved question finder <Link to="/questions">here</Link>.
+        This page will be removed by the end of 2024; you can <Link to="/questions">find our new and improved question finder here</Link>.
+        <br/><Link to="/contact?subject=Old%20question%20finder">Let us know any feedback about this change</Link>.
     </RS.Alert>;
 };
