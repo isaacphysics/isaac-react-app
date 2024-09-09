@@ -5,6 +5,7 @@ import {Button, Input} from "reactstrap";
 import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Immutable} from "immer";
+import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
 // Custom input component for coordinates - a pair of inputs, one for x and one for y, formatted with brackets
 // and a comma in between.
@@ -16,6 +17,16 @@ interface CoordinateInputProps {
     readonly?: boolean;
     remove?: () => void;
 }
+
+export const coordinateInputValidator = (input: string) => {
+    const errors = [];
+    const operatorExpression = new RegExp(".*[0-9][+/÷-]\\.?[0-9]+");
+    if (operatorExpression.test(input)) {
+        errors.push('Simplify your answer into a single decimal number.');
+    }
+    return errors;
+};
+
 const CoordinateInput = (props: CoordinateInputProps) => {
     const {value, placeholderXValue, placeholderYValue, onChange, readonly, remove} = props;
     return <span className="coordinate-input">
@@ -95,6 +106,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                             remove={(currentAttempt?.items && currentAttempt?.items.length > 1) ? () => removeItem(index) : undefined}
                         />
                     )}
+                    <QuestionInputValidation userInput={currentAttempt.items.map(answer => ((answer.x ?? "").concat(" ", answer.y ?? ""))).toString() ?? ""} validator={coordinateInputValidator}/>
                 </>
                 : <CoordinateInput
                     key={0}
