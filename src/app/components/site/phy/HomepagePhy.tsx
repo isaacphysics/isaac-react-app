@@ -76,7 +76,7 @@ export const HomepagePhy = () => {
                             </Col>
                             <Col xs={12} lg={3} className="ps-lg-1 py-1">
                                 <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/teacher_features" className="h-100 d-inline-flex align-items-center justify-content-center">
-                                    teachers
+                                    Teachers
                                 </Button>
                             </Col>
                         </Row>
