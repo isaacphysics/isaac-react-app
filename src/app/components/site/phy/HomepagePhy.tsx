@@ -12,7 +12,7 @@ export const HomepagePhy = () => {
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
-    const userConsent = useUserConsent();
+    const consent = useUserConsent();
 
     return <>
         {/*<WarningBanner/>*/}
@@ -46,7 +46,7 @@ export const HomepagePhy = () => {
                                     </Button>
                                 </Col>
                             </Row>}
-                            <div className={`h-100 ps-lg-4 content-video-container w-100 ${user?.loggedIn ? "pt-1 pt-sm-2 pt-lg-2" : "pt-4 pt-lg-3"} ${userConsent.cookieConsent?.youtubeCookieAccepted ?? false ? "ratio-16x9" : ""}`}>
+                            <div className={`h-100 ps-lg-4 content-video-container w-100 ${user?.loggedIn ? "pt-1 pt-sm-2 pt-lg-2" : "pt-4 pt-lg-3"} ${consent.cookieConsent?.youtubeCookieAccepted ?? false ? "ratio-16x9" : ""}`}>
                                 <HomepageYoutubeCookieHandler />
                             </div>
                         </Col>
