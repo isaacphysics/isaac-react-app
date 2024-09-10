@@ -35,7 +35,7 @@ interface GameboardBuilderRowInterface {
 }
 
 const GameboardBuilderRow = (
-    {provided, snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
+    {provided, snapshot: _snapshot, question, undoStack, currentQuestions, redoStack, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useAppDispatch();
 
@@ -44,112 +44,102 @@ const GameboardBuilderRow = (
         return tag && tag.title;
     };
     const tagIcon = (tag: string) => {
-        return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</span>
+        return <span key={tag} className={classNames("badge rounded-pill mx-1", siteSpecific("text-bg-warning", "text-bg-primary"))}>{tag}</span>;
     };
 
     const openQuestionModal = (urlQuestionId: string) => {
         dispatch(openActiveModal({
-            closeAction: () => {dispatch(closeActiveModal())}, size: "xl",
+            closeAction: () => {dispatch(closeActiveModal());}, size: "xl",
             title: "Question preview", body: <Question questionIdOverride={urlQuestionId} preview />
-        }))
+        }));
     };
 
-    const filteredAudienceViews = filterAudienceViewsByProperties(
-        determineAudienceViews(question.audience, creationContext),
-        AUDIENCE_DISPLAY_FIELDS
-    );
+    const audienceViews = determineAudienceViews(question.audience, creationContext);
+    const filteredAudienceViews = filterAudienceViewsByProperties(audienceViews, AUDIENCE_DISPLAY_FIELDS);
 
     const cellClasses = "text-start align-middle";
     const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
 
-    return <tr
-        key={question.id} ref={provided && provided.innerRef}
+    return filteredAudienceViews.map((view, i, arr) => <tr
+        key={`${question.id} ${i}`} ref={provided && provided.innerRef}
         className={classnames({selected: isSelected})}
         {...(provided && provided.draggableProps)} {...(provided && provided.dragHandleProps)}
     >
-        <td className="w-5 text-center align-middle">
-            <RS.Input
-                type="checkbox"
-                id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
-                aria-label={!isSelected ? "Select question" : "Deselect question"}
-                title={!isSelected ? "Select question" : "Deselect question"}
-                color="secondary"
-                className="isaac-checkbox mt-1"
-                checked={isSelected}
-                onChange={() => {
-                    if (question.id) {
-                        const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
-                        const newQuestionOrder = [...currentQuestions.questionOrder];
-                        if (newSelectedQuestions.has(question.id)) {
-                            newSelectedQuestions.delete(question.id);
-                            newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
-                        } else {
-                            newSelectedQuestions.set(question.id, {...question, creationContext});
-                            newQuestionOrder.push(question.id);
+        {i === 0 && <>
+            <td rowSpan={arr.length} className="w-5 text-center align-middle">
+                <RS.Input
+                    type="checkbox"
+                    id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
+                    aria-label={!isSelected ? "Select question" : "Deselect question"}
+                    title={!isSelected ? "Select question" : "Deselect question"}
+                    color="secondary"
+                    className={!provided ? "isaac-checkbox mt-1" : undefined}
+                    checked={isSelected}
+                    onChange={() => {
+                        if (question.id) {
+                            const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
+                            const newQuestionOrder = [...currentQuestions.questionOrder];
+                            if (newSelectedQuestions.has(question.id)) {
+                                newSelectedQuestions.delete(question.id);
+                                newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
+                            } else {
+                                newSelectedQuestions.set(question.id, {...question, creationContext});
+                                newQuestionOrder.push(question.id);
+                            }
+                            currentQuestions.setSelectedQuestions(newSelectedQuestions);
+                            currentQuestions.setQuestionOrder(newQuestionOrder);
+                            if (provided) {
+                                undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
+                                redoStack.clear();
+                            }
                         }
-                        currentQuestions.setSelectedQuestions(newSelectedQuestions);
-                        currentQuestions.setQuestionOrder(newQuestionOrder);
-                        if (provided) {
-                            undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
-                            redoStack.clear();
-                        }
-                    }
-                }}
-            />
-        </td>
-        <td className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
-            {provided && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
-            <div className="d-flex">
-                <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
-                    {generateQuestionTitle(question)}
-                </a>
-                <input
-                    type="image" src="/assets/common/icons/new-tab.svg" alt="Preview question" title="Preview question in modal"
-                    className="pointer-cursor align-middle new-tab" onClick={() => {if (question.id) openQuestionModal(question.id);}}
+                    }}
                 />
-                <Spacer />
-                {isPhy && <div className="d-flex flex-column justify-self-end">
-                    {question.supersededBy && <a 
-                        className="superseded-tag ms-1 ms-sm-3 my-1 align-self-end" 
-                        href={`/questions/${question.supersededBy}`}
-                        onClick={(e) => e.stopPropagation()}
-                    >SUPERSEDED</a>}
-                    {question.tags?.includes("nofilter") && <span
-                        className="superseded-tag ms-1 ms-sm-3 my-1 align-self-end" 
-                    >NO-FILTER</span>}
-                </div>}
-            </div>
-
-            {question.subtitle && <>
-                <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
-            </>}
-        </td>
-        <td className={classNames(cellClasses, siteSpecific("w-25", "w-20"))}>
-            {topicTag()}
-        </td>
-        <td className={classNames(cellClasses, "w-15")}>
-            {filteredAudienceViews.map(v => v.stage).map(stage => <div key={stage}>
-                {stage && <span>{stageLabelMap[stage]}</span>}
-            </div>)}
-        </td>
-        <td className={classNames(cellClasses, "w-15")}>
-            {siteSpecific(
-                filteredAudienceViews.map(v => v.difficulty).map((difficulty, i) => <div key={`${difficulty} ${i}`}>
-                    {difficulty && <DifficultyIcons difficulty={difficulty} />}
-                </div>),
-                <div>
-                    {filteredAudienceViews[0]?.difficulty && <DifficultyIcons difficulty={filteredAudienceViews[0].difficulty} />}
+            </td>
+            <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
+                {provided && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
+                <div className="d-flex">
+                    <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
+                        {generateQuestionTitle(question)}
+                    </a>
+                    <input
+                        type="image" src="/assets/common/icons/new-tab.svg" alt="Preview question" title="Preview question in modal"
+                        className="pointer-cursor align-middle new-tab" onClick={() => question.id && openQuestionModal(question.id)}
+                    />
+                    <Spacer />
+                    {isPhy && <div className="d-flex flex-column justify-self-end">
+                        {question.supersededBy && <a 
+                            className="superseded-tag ms-1 ms-sm-3 my-1 align-self-end" 
+                            href={`/questions/${question.supersededBy}`}
+                            onClick={(e) => e.stopPropagation()}
+                        >SUPERSEDED</a>}
+                        {question.tags?.includes("nofilter") && <span
+                            className="superseded-tag ms-1 ms-sm-3 my-1 align-self-end" 
+                        >NO-FILTER</span>}
+                    </div>}
                 </div>
-            )}
+
+                {question.subtitle && <>
+                    <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
+                </>}
+            </td>
+            <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-25", "w-20"))}>
+                {topicTag()}
+            </td>
+        </>}
+        <td className={classNames(cellClasses, "w-15")}>
+            {view.stage && <span>{stageLabelMap[view.stage]}</span>}
         </td>
-        {isAda && <td className={classNames(cellClasses, "w-15")}>
-            {filteredAudienceViews.map((audienceView, i, collection) => <>
-                {/* was `findAudienceRecordsMatchingPartial(question.audience, audienceView).map(...)` but it seemed to be broken */}
-                {Array.from(new Set(question.audience?.map((audienceRecord) => audienceRecord.examBoard).flat())).map((examBoard) => tagIcon(examBoardLabelMap[examBoard!]))}
-                {/* When this becomes more common we should solve separation via a new row and merge other columns */}
-                {i + 1 < collection.length && <hr className="text-center" />}
-            </>)}
+        {(isPhy || i === 0) && <td rowSpan={siteSpecific(1, arr.length)} className={classNames(cellClasses, "w-15")}>
+            {/* Show each difficulty icon for Physics or just the first one for Ada */}
+            <div>
+                {view.difficulty && <DifficultyIcons difficulty={view.difficulty} />}
+            </div>
         </td>}
-    </tr>;
+        {isAda && <td className={classNames(cellClasses, "w-15")}>
+            {audienceViews.filter(audienceView => view.stage === audienceView.stage)
+                .map(audienceView => audienceView.examBoard && tagIcon(examBoardLabelMap[audienceView.examBoard]))}
+        </td>}
+    </tr>);
 };
 export default GameboardBuilderRow;
