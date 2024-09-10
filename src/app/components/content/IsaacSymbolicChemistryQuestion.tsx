@@ -6,6 +6,7 @@ import katex from "katex";
 import {
     ifKeyIsEnter,
     isDefined,
+    isStaff,
     jsonHelper,
     sanitiseInequalityState,
     siteSpecific,
@@ -19,6 +20,7 @@ import QuestionInputValidation from "../elements/inputs/QuestionInputValidation"
 import { v4 as uuid_v4 } from "uuid";
 import { Inequality, makeInequality } from "inequality";
 import { parseInequalityChemistryExpression, parseInequalityNuclearExpression, ParsingError } from "inequality-grammar";
+import { AppState, useAppSelector } from "../../state";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -89,6 +91,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
     const initialEditorSymbols = useRef(editorSeed ?? []);
     const [textInput, setTextInput] = useState('');
+    const user = useAppSelector((state: AppState) => state && state.user);
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -235,7 +238,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 editorMode="chemistry"
                 questionDoc={doc}
             />}
-            {!readonly && <div className="eqn-editor-input">
+            {!readonly && isStaff(user) && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
                     <Input type="text" onChange={updateEquation} value={textInput}
