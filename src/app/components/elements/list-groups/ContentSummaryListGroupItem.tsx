@@ -173,12 +173,12 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                             ({typeLabel})
                         </span>}
                         {isPhy && item.supersededBy && isTeacherOrAbove(user) ? <a 
-                            className="superseded-tag ms-1 ms-sm-3" 
+                            className="superseded-tag mx-1 ms-sm-3" 
                             href={`/questions/${item.supersededBy}`}
                             onClick={(e) => e.stopPropagation()}
                         >SUPERSEDED</a> : null}
                         {isPhy && item.tags && item.tags.includes("nofilter") && isStaff(user) ? <span
-                            className="superseded-tag ms-1 ms-sm-3"
+                            className="superseded-tag mx-1 ms-sm-3"
                         >NO-FILTER</span> : null}
                     </div>
                     {(isPhy && item.summary) && <div className="small text-muted d-none d-sm-block">
