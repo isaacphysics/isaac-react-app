@@ -38,7 +38,7 @@ export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dropRegionContext?.shouldGetFocus]);
 
-    return <Badge id={id} className={classNames(type === "item-section" && "m-2", "px-1 py-0 cloze-item feedback-zone", isDefined(isCorrect) && "feedback-showing")} style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
+    return <Badge id={id} className={classNames(type === "item-section" && "m-2", "p-1 cloze-item feedback-zone", isDefined(isCorrect) && "feedback-showing")} style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
         <span className={"visually-hidden"}>{item.altText ?? item.value ?? "cloze item without a description"}</span>
         <span aria-hidden={true}>
             <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
