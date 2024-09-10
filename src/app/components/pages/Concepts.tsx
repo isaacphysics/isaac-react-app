@@ -129,7 +129,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                         <RS.CardBody>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {shortcutAndFilteredSearchResults ?
-                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={false}/>
+                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} showBreadcrumb={false}/>
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </RS.CardBody>

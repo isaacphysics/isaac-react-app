@@ -38,9 +38,10 @@ export enum HiddenContentType {
     SHOWN
 }
 
+export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCaret, hideContentType, ignoreIntendedAudience}: {
     item: ShortcutResponse;
     search?: string;
-    displayTopicTitle?: boolean;
+    showBreadcrumb?: boolean;
     noCaret?: boolean;
     hideContentType?: HiddenContentType;
     ignoreIntendedAudience?: boolean;
@@ -186,7 +187,7 @@ export enum HiddenContentType {
                     {(!item.summary || deviceSize === "xs") && item.subtitle && <div className="small text-muted d-block">
                         {item.subtitle}
                     </div>}
-                    {displayTopicTitle && hierarchyTags && <div className={"hierarchy-tags d-none d-md-block"}>
+                    {showBreadcrumb && hierarchyTags && <div className={"hierarchy-tags d-none d-md-block"}>
                         {hierarchyTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
                 </div>
@@ -204,10 +205,10 @@ export enum HiddenContentType {
     </ListGroupItem>;
 };
 
-export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCaret, hideContentType, ignoreIntendedAudience, ...rest}: {
+export const LinkToContentSummaryList = ({items, search, showBreadcrumb, noCaret, hideContentType, ignoreIntendedAudience, ...rest}: {
     items: ContentSummaryDTO[];
     search?: string;
-    displayTopicTitle?: boolean;
+    showBreadcrumb?: boolean;
     noCaret?: boolean;
     hideContentType?: HiddenContentType;
     ignoreIntendedAudience?: boolean;
@@ -219,7 +220,7 @@ export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCa
     return <ListGroup {...rest} className={"link-list list-group-links mb-3" + rest.className}>
         {items.map(item => <ContentSummaryListGroupItem
             item={item} search={search} noCaret={noCaret}
-            key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}
+            key={item.type + "/" + item.id} showBreadcrumb={showBreadcrumb}
             hideContentType={hideContentType} ignoreIntendedAudience={ignoreIntendedAudience}
         />)}
     </ListGroup>;
