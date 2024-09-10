@@ -32,12 +32,17 @@ import classNames from "classnames";
 import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 import { CSSModule } from "reactstrap/types/lib/utils";
 
-export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, noCaret, hideContentType, ignoreIntendedAudience}: {
+export enum HiddenContentType {
+    FULLY_HIDDEN,
+    ICON_ONLY,
+    SHOWN
+}
+
     item: ShortcutResponse;
     search?: string;
     displayTopicTitle?: boolean;
     noCaret?: boolean;
-    hideContentType?: boolean;
+    hideContentType?: HiddenContentType;
     ignoreIntendedAudience?: boolean;
 }) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -145,18 +150,18 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
 
     return <ListGroupItem className={classNames(itemClasses, {"p-3 d-md-flex flex-column justify-content-center content-summary-item": isPhy})} key={linkDestination}>
         <Link className={classNames({"position-relative justify-content-center": isAda})} to={{pathname: linkDestination, search: search, hash: hash}}>
-            <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
+            {hideContentType !== HiddenContentType.FULLY_HIDDEN && <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
                 {siteSpecific(
                     icon,
                     <div className={"inner-progress-icon"}>
                         {icon}
-                        {!hideContentType && <>
+                        {hideContentType === HiddenContentType.SHOWN && <>
                             <br/>
                             <span className={"icon-title"}>{typeLabel}</span>
                         </>}
                     </div>
                 )}
-            </span>
+            </span>}
             <div className={classNames("flex-fill", {"py-3 pe-3 align-content-center": isAda, "d-flex": isAda && !stack, "d-md-flex": isPhy})}>
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
@@ -204,7 +209,7 @@ export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCa
     search?: string;
     displayTopicTitle?: boolean;
     noCaret?: boolean;
-    hideContentType?: boolean;
+    hideContentType?: HiddenContentType;
     ignoreIntendedAudience?: boolean;
     tag?: React.ElementType;
     flush?: boolean;

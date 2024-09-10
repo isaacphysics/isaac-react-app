@@ -26,7 +26,7 @@ import {
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {RouteComponentProps, useHistory, withRouter} from "react-router";
-import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {HiddenContentType, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -441,7 +441,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                         <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                             {displayQuestions?.length
-                                ? <LinkToContentSummaryList items={displayQuestions} noCaret hideContentType ignoreIntendedAudience className="m-0" />
+                                ? <LinkToContentSummaryList 
+                                    items={displayQuestions} className="m-0" 
+                                    hideContentType={HiddenContentType.ICON_ONLY} 
+                                    ignoreIntendedAudience noCaret 
+                                />
                                 : noResultsMessage }
                         </ShowLoading>
                     </CardBody>
