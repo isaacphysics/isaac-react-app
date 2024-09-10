@@ -1,6 +1,6 @@
 import {ClozeDropRegionContext} from "../../../../../IsaacAppTypes";
 import ReactDOM from "react-dom";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {ContentDTO, ItemDTO} from "../../../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "../../../content/IsaacContentValueOrChildren";
 import {Badge, Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from "reactstrap";
@@ -96,12 +96,14 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
         }
     </span>;
 
+    const zoneRef = useRef<HTMLDivElement>(null);
+
     const dropdownZone = <Dropdown
         isOpen={isOpen}
         toggle={() => {setIsOpen(!isOpen);}}
         className="cloze-dropdown"
     >
-        <DropdownToggle className={classNames("toggle", {"empty": !item, "px-1 py-0": isPhy, "p-0": isAda})} style={{minHeight: height, width: width}}>
+        <DropdownToggle className={classNames("toggle", {"empty": !item, "px-1 py-0": isPhy, "p-2": isAda})} style={{minHeight: height, width: width}} innerRef={zoneRef}>
             <div className={classNames("d-flex cloze-item feedback-zone", {"feedback-showing": isDefined(isCorrect), "p-2": isAda && !!item})}>
                 <span className={"visually-hidden"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
                 <span aria-hidden={true}>
@@ -115,7 +117,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
                 {!item && <img className={classNames("dropzone-dropdown", {"active": isOpen})} src="/assets/common/icons/chevron_down.svg" alt="expand dropdown"></img>}
             </div>
         </DropdownToggle>
-        <DropdownMenu end>
+        <DropdownMenu container={zoneRef.current?.closest(".question-content") as HTMLElement || "body"} end>
             {/* Dummy option added to clear selection */}
             <DropdownItem
                 data-unit={'None'}

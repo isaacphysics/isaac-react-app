@@ -3,9 +3,11 @@ import {AppState, clearQuestionSearch, logAction, searchQuestions, useAppDispatc
 import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
+    EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     isAda,
+    isLoggedIn,
     isPhy,
     Item,
     itemiseTag,
@@ -96,6 +98,7 @@ function getInitialQuestionStatuses(params: ListParams): QuestionStatus {
 
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
+    const user = useAppSelector((state: AppState) => state && state.user);
     const userContext = useUserViewingContext();
     const params: ListParams = useQueryParams(false);
     const history = useHistory();
@@ -115,14 +118,20 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [populatedUserContext, setPopulatedUserContext] = useState(false);
 
     useEffect(function populateFromUserContext() {
-        if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
-            setSearchStages(arr => arr.length > 0 ? arr : [userContext.stage]);
+        if (isAda && isLoggedIn(user) && user.registeredContexts && user.registeredContexts.length > 1) {
+            setSearchStages([STAGE.ALL]);
+            setSearchExamBoards([EXAM_BOARD.ALL]);
         }
-        if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
-            setSearchExamBoards(arr => arr.length > 0 ? arr : [userContext.examBoard]);
+        else  {
+            if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
+                setSearchStages(arr => arr.length > 0 ? arr : [userContext.stage]);
+            }
+            if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
+                setSearchExamBoards(arr => arr.length > 0 ? arr : [userContext.examBoard]);
+            }
         }
         setPopulatedUserContext(!!userContext.stage && !!userContext.examBoard);
-    }, [userContext.stage, userContext.examBoard]);
+    }, [userContext.stage, userContext.examBoard, user]);
 
     // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates
     useEffect(() => {

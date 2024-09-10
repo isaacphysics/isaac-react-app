@@ -563,3 +563,7 @@ p > .katex, .katex-display {
 .inline-dropdown {
   min-width: unset !important;
 }
+
+.spaced-tooltip br {
+    margin-bottom: 0.5rem;
+}

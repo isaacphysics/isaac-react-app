@@ -69,7 +69,6 @@ import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { Spacer } from "../elements/Spacer";
 import { SortItemHeader } from "../elements/SortableItemHeader";
 
 interface AssignGroupProps {
@@ -115,15 +114,15 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
     return <Container className="py-2">
         <Label className="w-100 pb-2">Group(s):
             <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
-                    value={selectedGroups}
-                    closeMenuOnSelect={false}
-                    onChange={selectOnChange(setSelectedGroups, false)}
-                    options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
+                value={selectedGroups}
+                closeMenuOnSelect={false}
+                onChange={selectOnChange(setSelectedGroups, false)}
+                options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
             />
         </Label>
         <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
-                       onChange={setScheduledStartDateAtSevenAM} />
+                onChange={setScheduledStartDateAtSevenAM} />
             {startDateInvalid && <small className={"pt-2 text-danger"}>Start date must be in the future.</small>}
         </Label>
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
@@ -134,15 +133,15 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
         </Label>
         {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
-                   spellCheck={true}
-                   rows={3}
-                   value={assignmentNotes}
-                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
-                />
-                <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
-                {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
+                spellCheck={true}
+                rows={3}
+                value={assignmentNotes}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
+            />
+            <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
+            {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
                     <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
-                }
+            }
         </Label>}
         <Button
             className="mt-2 mb-2"
@@ -219,10 +218,10 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
                         <div data-testid={"pending-assignment"} key={assignee.groupId} className="px-1 d-flex justify-content-between">
                             <span className="flex-grow-1">{assignee.groupName}</span>
                             {assignee.startDate && <>
-                                    <span id={`start-date-${assignee.groupId}`} className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
-                                        ? new Date(assignee.startDate)
-                                        : assignee.startDate).toDateString()}
-                                    </span>
+                                <span id={`start-date-${assignee.groupId}`} className="ms-auto me-2">🕑 {(typeof assignee.startDate === "number"
+                                    ? new Date(assignee.startDate)
+                                    : assignee.startDate).toDateString()}
+                                </span>
                             </>}
                             <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
                         </div>
@@ -287,26 +286,26 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                 <Col lg={4}>
                     <Label className="w-100">
                         Filter boards <Input type="text"
-                                             onChange={(e) => setBoardTitleFilter(e.target.value)}
-                                             placeholder="Filter boards by name"/>
+                            onChange={(e) => setBoardTitleFilter(e.target.value)}
+                            placeholder="Filter boards by name"/>
                     </Label>
                 </Col>
                 <Col sm={6} lg={2}>
                     <Label className="w-100">
                         Subject <Input type="select" value={boardSubject}
-                                       onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
-                        {Object.values(BoardSubjects).map(subject => <option key={subject}
-                                                                             value={subject}>{subject}</option>)}
-                    </Input>
+                            onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
+                            {Object.values(BoardSubjects).map(subject => <option key={subject}
+                                value={subject}>{subject}</option>)}
+                        </Input>
                     </Label>
                 </Col>
                 <Col lg={2}>
                     <Label className="w-100">
                         Creator <Input type="select" value={boardCreator}
-                                       onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                        {Object.values(BoardCreators).map(creator => <option key={creator}
-                                                                             value={creator}>{creator}</option>)}
-                    </Input>
+                            onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
+                            {Object.values(BoardCreators).map(creator => <option key={creator}
+                                value={creator}>{creator}</option>)}
+                        </Input>
                     </Label>
                 </Col>
             </Row>
@@ -317,20 +316,20 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                         {tableHeader}
                     </thead>
                     <tbody>
-                    {boards?.boards
-                        .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
-                        .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                        .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
-                        .map(board =>
-                            <BoardCard
-                                key={board.id}
-                                user={user}
-                                board={board}
-                                boardView={boardView}
-                                assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                                toggleAssignModal={() => openAssignModal(board)}
-                            />)
-                    }
+                        {boards?.boards
+                            .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                            .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                            .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
+                            .map(board =>
+                                <BoardCard
+                                    key={board.id}
+                                    user={user}
+                                    board={board}
+                                    boardView={boardView}
+                                    assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                    toggleAssignModal={() => openAssignModal(board)}
+                                />)
+                        }
                     </tbody>
                 </Table>
             </div>
@@ -373,8 +372,8 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             <Col xs={6} md={4} lg={3} xl={3}>
                 <Label className="w-100">
                     Display in <Input type="select" value={boardView} onChange={switchView}>
-                    {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
-                </Input>
+                        {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                    </Input>
                 </Label>
             </Col>
             <Col xs={{size: 12, order: 3}} md={{size: 4, offset: 1, order: 1}} lg={{size: 4, offset: 3}} xl={{size: 4, offset: 3}}>
@@ -385,8 +384,8 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             <Col xs={6} md={{size: 3, order: 2}} lg={2} xl={2}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by Creator</span><Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                    {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-                </Input>
+                        {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+                    </Input>
                 </Label>
             </Col>
         </Row>
@@ -395,19 +394,19 @@ const CSTable = (props: SetAssignmentsTableProps) => {
                 {tableHeader}
             </thead>
             <tbody>
-            {boards?.boards
-                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter)
+                {boards?.boards
+                    .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter)
                     && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All"))
-                .map(board =>
-                    <BoardCard
-                        key={board.id}
-                        user={user}
-                        board={board}
-                        boardView={boardView}
-                        assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                        toggleAssignModal={() => openAssignModal(board)}
-                    />)
-            }
+                    .map(board =>
+                        <BoardCard
+                            key={board.id}
+                            user={user}
+                            board={board}
+                            boardView={boardView}
+                            assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                            toggleAssignModal={() => openAssignModal(board)}
+                        />)
+                }
             </tbody>
         </Table>
     </div>;
