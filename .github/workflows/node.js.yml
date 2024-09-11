@@ -30,6 +30,7 @@ jobs:
     - run: yarn run build-ada
       env:
         GITHUB_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     - run: yarn run test-phy --silent
     - run: yarn run test-ada --silent --coverage
     - uses: codecov/codecov-action@v4
