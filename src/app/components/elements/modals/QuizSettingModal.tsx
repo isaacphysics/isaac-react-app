@@ -89,7 +89,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         });
     }
 
-    const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.quizId === quiz.id && assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() < Date.now() : true)) : false;
+    const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.quizId === quiz.id && assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() > Date.now() : true)) : false;
     const alreadyAssignedToAGroup = selectedGroups.some(group => quizAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
     
     const groupInvalid = validated.has('group') && selectedGroups.length === 0 || alreadyAssignedToAGroup;    
@@ -105,10 +105,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 query={groupsQuery}
                 defaultErrorTitle={"Error fetching groups"}
                 thenRender={groups => {
-                    function appGroupToItem(g: AppGroup): Item<number> {return {label: g.groupName as string, value: g.id as number}; }
-                    function quizToAssignment(g: AppGroup): QuizAssignmentDTO | undefined { return quizAssignments?.find(assignment => assignment.quizId === quiz.id && assignment.groupId === g.id); }
-                    
-                    const groupOptions = groups.map((g: AppGroup) => ({...appGroupToItem(g), isDisabled: isAssignmentSetToThisGroup(appGroupToItem(g), quizToAssignment(g))}));
+                    const groupOptions = groups.map((g: AppGroup) => {return {label: g.groupName as string, value: g.id as number}; });
 
                     return <StyledSelect isMulti placeholder="Select groups"
                         options={groupOptions}
@@ -121,10 +118,6 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                         isSearchable
                         menuPortalTarget={document.body}
                         styles={{
-                            option: (base, selectProps) => ({
-                                ...base,
-                                backgroundColor: selectProps.isFocused && selectProps.isDisabled ? 'transparent' : base.backgroundColor
-                            }),
                             control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
                             menuPortal: base => ({...base, zIndex: 9999}),
                         }}
