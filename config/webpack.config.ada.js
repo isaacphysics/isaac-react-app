@@ -7,6 +7,7 @@ const configCommon = require('./webpack.config.common');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { merge } = require('webpack-merge');
 const webpack = require('webpack');
+const {codecovWebpackPlugin} = require("@codecov/webpack-plugin");
 
 module.exports = env => {
 
@@ -34,6 +35,15 @@ module.exports = env => {
                     from: resolve('public/unsupported_browsers/unsupported-ada.html'),
                     to: 'unsupported_browser.html',
                 }]
+            }),
+            // This one goes last:
+            new codecovWebpackPlugin({
+                enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+                bundleName: 'web-ada',
+                uploadToken: process.env.CODECOV_TOKEN,
+                uploadOverrides: {
+                    sha: process.env.GITHUB_COMMIT_SHA,
+                }
             }),
         ],
     };
