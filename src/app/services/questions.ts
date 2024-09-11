@@ -152,30 +152,6 @@ export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[])
         } else if (theseSymbols[i] === '_no_alphabet') {
             theseSymbols.splice(i, 1);
             i += 1;
-        } else if (theseSymbols[i] === 'electron') {
-            theseSymbols.splice(i, 1, 'e');
-            i += 1;
-        } else if (theseSymbols[i] === 'alpha') {
-            theseSymbols.splice(i, 1, '\\alphaparticle');
-            i += 1;
-        } else if (theseSymbols[i] === 'beta') {
-            theseSymbols.splice(i, 1, '\\betaparticle');
-            i += 1;
-        } else if (theseSymbols[i] === 'gamma') {
-            theseSymbols.splice(i, 1, '\\gammaray');
-            i += 1;
-        } else if (['neutron', 'n'].includes(theseSymbols[i])) {
-            theseSymbols.splice(i, 1, '\\neutron');
-            i += 1;
-        } else if (theseSymbols[i] === 'proton') {
-            theseSymbols.splice(i, 1, '\\proton');
-            i += 1;
-        } else if (theseSymbols[i] === 'neutrino') {
-            theseSymbols.splice(i, 1, '\\neutrino');
-            i += 1;
-        } else if (theseSymbols[i] === 'antineutrino') {
-            theseSymbols.splice(i, 1, '\\antineutrino');
-            i += 1;
         } else {
             i += 1;
         }

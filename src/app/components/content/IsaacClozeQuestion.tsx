@@ -13,6 +13,7 @@ import {
     NULL_CLOZE_ITEM,
     NULL_CLOZE_ITEM_ID,
     isDefined,
+    isTouchDevice,
     useCurrentQuestionAttempt,
     useDeviceSize
 } from "../../services";
@@ -497,7 +498,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
-                {deviceSize !== "xs" && <>
+                {(!(deviceSize === "xs" || isTouchDevice())) && <>
                     {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
                     <DragOverlay>
                         {activeItem && <Badge className="p-2 cloze-item is-dragging">

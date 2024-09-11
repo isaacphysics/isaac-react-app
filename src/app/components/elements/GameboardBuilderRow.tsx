@@ -61,67 +61,71 @@ const GameboardBuilderRow = (
     const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
 
     return filteredAudienceViews.map((view, i, arr) => <tr
-        key={`${question.id} ${i}`} ref={provided && provided.innerRef}
-        className={classnames({selected: isSelected})}
-        {...(provided && provided.draggableProps)} {...(provided && provided.dragHandleProps)}
+        key={`${question.id} ${i}`} className={classnames({selected: isSelected})}
     >
         {i === 0 && <>
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
-                <RS.Input
-                    type="checkbox"
-                    id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
-                    aria-label={!isSelected ? "Select question" : "Deselect question"}
-                    title={!isSelected ? "Select question" : "Deselect question"}
-                    color="secondary"
-                    className={!provided ? "isaac-checkbox mt-1" : undefined}
-                    checked={isSelected}
-                    onChange={() => {
-                        if (question.id) {
-                            const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
-                            const newQuestionOrder = [...currentQuestions.questionOrder];
-                            if (newSelectedQuestions.has(question.id)) {
-                                newSelectedQuestions.delete(question.id);
-                                newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
-                            } else {
-                                newSelectedQuestions.set(question.id, {...question, creationContext});
-                                newQuestionOrder.push(question.id);
+                <div className="d-flex justify-content-center">
+                    <RS.Input
+                        type="checkbox"
+                        id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
+                        aria-label={!isSelected ? "Select question" : "Deselect question"}
+                        title={!isSelected ? "Select question" : "Deselect question"}
+                        color="secondary"
+                        className={!provided ? "isaac-checkbox mt-1" : undefined}
+                        checked={isSelected}
+                        onChange={() => {
+                            if (question.id) {
+                                const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
+                                const newQuestionOrder = [...currentQuestions.questionOrder];
+                                if (newSelectedQuestions.has(question.id)) {
+                                    newSelectedQuestions.delete(question.id);
+                                    newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
+                                } else {
+                                    newSelectedQuestions.set(question.id, {...question, creationContext});
+                                    newQuestionOrder.push(question.id);
+                                }
+                                currentQuestions.setSelectedQuestions(newSelectedQuestions);
+                                currentQuestions.setQuestionOrder(newQuestionOrder);
+                                if (provided) {
+                                    undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
+                                    redoStack.clear();
+                                }
                             }
-                            currentQuestions.setSelectedQuestions(newSelectedQuestions);
-                            currentQuestions.setQuestionOrder(newQuestionOrder);
-                            if (provided) {
-                                undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
-                                redoStack.clear();
-                            }
-                        }
-                    }}
-                />
+                        }}
+                    />
+                </div>
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
-                {provided && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
                 <div className="d-flex">
-                    <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
-                        {generateQuestionTitle(question)}
-                    </a>
-                    <input
-                        type="image" src="/assets/common/icons/new-tab.svg" alt="Preview question" title="Preview question in modal"
-                        className="pointer-cursor align-middle new-tab" onClick={() => question.id && openQuestionModal(question.id)}
-                    />
-                    <Spacer />
-                    {isPhy && <div className="d-flex flex-column justify-self-end">
-                        {question.supersededBy && <a 
-                            className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
-                            href={`/questions/${question.supersededBy}`}
-                            onClick={(e) => e.stopPropagation()}
-                        >SUPERSEDED</a>} 
-                        {question.tags?.includes("nofilter") && <span
-                            className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
-                        >NO-FILTER</span>}
-                    </div>}
-                </div>
+                    {provided && <img src="/assets/common/icons/drag_indicator.svg" alt="Drag to reorder" className="me-1 grab-cursor" />}
+                    <div>
+                        <div className="d-flex">
+                            <a className="me-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
+                                {generateQuestionTitle(question)}
+                            </a>
+                            <input
+                                type="image" src="/assets/common/icons/new-tab.svg" alt="Preview question" title="Preview question in modal"
+                                className="pointer-cursor align-middle new-tab" onClick={() => question.id && openQuestionModal(question.id)}
+                            />
+                            <Spacer />
+                            {isPhy && <div className="d-flex flex-column justify-self-end">
+                                {question.supersededBy && <a 
+                                    className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
+                                    href={`/questions/${question.supersededBy}`}
+                                    onClick={(e) => e.stopPropagation()}
+                                >SUPERSEDED</a>}
+                                {question.tags?.includes("nofilter") && <span
+                                    className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
+                                >NO-FILTER</span>}
+                            </div>}
+                        </div>
 
-                {question.subtitle && <>
-                    <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
-                </>}
+                        {question.subtitle && <>
+                            <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
+                        </>}
+                    </div>
+                </div>
             </td>
             <td rowSpan={arr.length} className={classNames(cellClasses, siteSpecific("w-25", "w-20"))}>
                 {topicTag()}
@@ -142,4 +146,5 @@ const GameboardBuilderRow = (
         </td>}
     </tr>);
 };
+
 export default GameboardBuilderRow;

@@ -234,28 +234,28 @@ export const updateCurrentUser = (
     currentUser: Immutable<PotentialUser>,
     redirect: boolean
 ) => async (dispatch: Dispatch<Action>) => {
- 
-    function showEmailChangeModal() { 
+
+    function showEmailChangeModal() {
         dispatch(openActiveModal({
             title: `Editing your email address`,
-            body: <div> 
-                <p> 
-                    Your new email address won&#39;t work until you click on the verification link sent to it. 
-                    Until then, your old email address will keep working as usual. 
+            body: <div>
+                <p>
+                    You have changed your account email address. This new email address won&#39;t be used until you click the verification link sent to it.
+                    Until then, we will use the old email address and you will still need to use that when logging in by email and password.
                 </p>
                 <p> Would you like to continue? </p>
                 <div className="w-100">
                     <Button
                         className={"float-start mb-4"}
-                        color={siteSpecific("tertiary", "secondary")}  
-                        outline={isAda} 
-                        onClick={() => { cancelSettingsUpdate(); dispatch(closeActiveModal() as any); }} 
+                        color={siteSpecific("tertiary", "secondary")}
+                        outline={isAda}
+                        onClick={() => { cancelSettingsUpdate(); dispatch(closeActiveModal() as any); }}
                     >
                         Cancel
                     </Button>
                     <Button
                         className={"float-end mb-4"}
-                        onClick={() => { continueSettingsUpdate(); dispatch(closeActiveModal() as any); }} 
+                        onClick={() => { continueSettingsUpdate(); dispatch(closeActiveModal() as any); }}
                     >
                         OK
                     </Button>
@@ -263,7 +263,7 @@ export const updateCurrentUser = (
             </div>
         }) as any);
     }
-    
+
     function cancelSettingsUpdate() {
         dispatch(showToast({
             title: "Account settings not updated",
@@ -276,18 +276,18 @@ export const updateCurrentUser = (
 
     async function continueSettingsUpdate() {
         const editingOtherUser = currentUser.loggedIn && currentUser.id != updatedUser.id;
-    
+
         try {
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
             const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
             dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
             await dispatch(requestCurrentUser() as any);
-    
+
             if (!editingOtherUser) {
             // Invalidate tagged caches that are dependent on the current user's settings
                 dispatch(questionsApi.util.invalidateTags(['CanAttemptQuestionType']) as any);
             }
-    
+
             const isFirstLogin = isFirstLoginInPersistence() || false;
             if (isFirstLogin) {
                 persistence.session.remove(KEY.FIRST_LOGIN);
