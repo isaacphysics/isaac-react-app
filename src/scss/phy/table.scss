@@ -1,3 +1,5 @@
+@import "../common/table";
+
 .table:not(.table-borderless) thead th {
     vertical-align: bottom;
     border-bottom: 2px solid $border-color;
@@ -8,8 +10,4 @@
         border-top: 1px solid $border-color;
         border-bottom-style: none;
     }
-}
-
-.table-row-dragging {
-    display: table;
 }
