@@ -105,7 +105,6 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                             remove={(currentAttempt?.items && currentAttempt?.items.length > 1) ? () => removeItem(index) : undefined}
                         />
                     )}
-                    <QuestionInputValidation userInput={currentAttempt.items.map(answer => ((answer.x ?? "").concat(" ", answer.y ?? ""))).toString() ?? ""} validator={coordinateInputValidator}/>
                 </>
                 : <CoordinateInput
                     key={0}
@@ -116,6 +115,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                     onChange={value => updateItem(0, value)}
                 />
         }
+        <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => ((answer.x ?? "").concat(" ", answer.y ?? ""))).toString() ?? ""} validator={coordinateInputValidator}/>
         {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={() => updateItem(currentAttempt?.items?.length ?? 1, {...DEFAULT_COORDINATE_ITEM})}>Add coordinate</Button>}
     </div>;
 };
