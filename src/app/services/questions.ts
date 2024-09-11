@@ -151,6 +151,7 @@ export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[])
             i += 2;
         } else if (theseSymbols[i] === '_no_alphabet') {
             theseSymbols.splice(i, 1);
+            i += 1;
         } else {
             i += 1;
         }

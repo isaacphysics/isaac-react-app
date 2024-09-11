@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState} from "react";
-import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
+import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {
     AppDispatch,
     closeActiveModal,
@@ -7,7 +7,8 @@ import {
     useAppDispatch,
     useAppSelector,
     useAssignQuizMutation,
-    useGetGroupsQuery
+    useGetGroupsQuery,
+    useGetQuizAssignmentsSetByMeQuery,
 } from "../../../state";
 import {assignMultipleQuiz, isDefined, Item, selectOnChange, TODAY} from "../../../services";
 import range from "lodash/range";
@@ -16,6 +17,7 @@ import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {StyledSelect} from "../inputs/StyledSelect";
 import {Button, FormFeedback, Label, UncontrolledTooltip} from "reactstrap";
+import { AppGroup } from "../../../../IsaacAppTypes";
 
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
@@ -58,6 +60,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
     const [dueDate, setDueDate] = useState<Date | null>(initialDueDate ?? null);
     const [scheduledStartDate, setScheduledStartDate] = useState<Date | null>(initialScheduledStartDate ?? null);
     const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | null>(initialFeedbackMode ?? null);
+    const {data: quizAssignments} = useGetQuizAssignmentsSetByMeQuery();
 
     const yearRange = range(currentYear, currentYear + 5);
 
@@ -86,7 +89,10 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         });
     }
 
-    const groupInvalid = validated.has('group') && selectedGroups.length === 0;
+    const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.quizId === quiz.id && assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() > Date.now() : true)) : false;
+    const alreadyAssignedToAGroup = selectedGroups.some(group => quizAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
+    
+    const groupInvalid = validated.has('group') && selectedGroups.length === 0 || alreadyAssignedToAGroup;    
     const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false) || dueDate.valueOf() < Date.now());
     const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() < TODAY().valueOf();
     const feedbackModeInvalid = validated.has('feedbackMode') && feedbackMode === null;
@@ -99,7 +105,8 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 query={groupsQuery}
                 defaultErrorTitle={"Error fetching groups"}
                 thenRender={groups => {
-                    const groupOptions: Item<number>[] = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
+                    const groupOptions = groups.map((g: AppGroup) => {return {label: g.groupName as string, value: g.id as number}; });
+
                     return <StyledSelect isMulti placeholder="Select groups"
                         options={groupOptions}
                         onChange={(s) => {
@@ -117,7 +124,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                     />;
                 }}
             />
-            {groupInvalid && <FormFeedback className="d-block" valid={false}>You must select a group</FormFeedback>}
+            {groupInvalid && (selectedGroups.length === 0 ? <FormFeedback className="d-block" valid={false}>You must select a group</FormFeedback> : <FormFeedback className="d-block" valid={false}>You cannot reassign a test to this group(s) until the due date has passed.</FormFeedback>)}
         </Label>
         <Label className="w-100 mb-4">What level of feedback should students get:<br/>
             <StyledSelect
@@ -168,7 +175,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
             </Button>
             <Button
                 className={"float-end mb-4"}
-                disabled={selectedGroups.length === 0 || !feedbackMode || isAssigning || dueDateInvalid || scheduledStartDateInvalid}
+                disabled={groupInvalid || !feedbackMode || isAssigning || dueDateInvalid || scheduledStartDateInvalid}
                 onMouseEnter={() => setValidated(new Set(['group', 'feedbackMode']))}
                 onClick={assign}
             >

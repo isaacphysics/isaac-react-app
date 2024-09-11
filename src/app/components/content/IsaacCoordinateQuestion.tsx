@@ -5,6 +5,7 @@ import {Button, Input} from "reactstrap";
 import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Immutable} from "immer";
+import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
 // Custom input component for coordinates - a pair of inputs, one for x and one for y, formatted with brackets
 // and a comma in between.
@@ -16,6 +17,15 @@ interface CoordinateInputProps {
     readonly?: boolean;
     remove?: () => void;
 }
+
+export const coordinateInputValidator = (input: string) => {
+    const errors = [];
+    if (/[0-9]\s*[+/÷\-x×]\s*[0-9]/.test(input)) {
+        errors.push('Simplify your answer into a single decimal number.');
+    }
+    return errors;
+};
+
 const CoordinateInput = (props: CoordinateInputProps) => {
     const {value, placeholderXValue, placeholderYValue, onChange, readonly, remove} = props;
     return <span className="coordinate-input">
@@ -105,6 +115,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                     onChange={value => updateItem(0, value)}
                 />
         }
+        <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => ((answer.x ?? "").concat(" ", answer.y ?? ""))).toString() ?? ""} validator={coordinateInputValidator}/>
         {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={() => updateItem(currentAttempt?.items?.length ?? 1, {...DEFAULT_COORDINATE_ITEM})}>Add coordinate</Button>}
     </div>;
 };

@@ -297,6 +297,12 @@ export function determineAudienceViews(audience?: AudienceContext[], creationCon
     const allViews: ViewingContext[] = [];
     let viewsFilteredByCreationContext: ViewingContext[]  = [];
 
+    // Set all Ada audience contexts to the same difficulty level, if not already
+    if (isAda) {
+        const questionDifficulty = audience.find(audienceContext => audienceContext.difficulty != undefined)?.difficulty;
+        audience = audience.map(audienceContext => { return {...audienceContext, difficulty: questionDifficulty}; });
+    }
+
     // Create a list of all intended viewing context combinations from the audience
     audience.forEach(audienceContext => {
         allViews.push(...produceAudienceViewingCombinations(audienceContext));
@@ -341,13 +347,6 @@ export function filterAudienceViewsByProperties(views: ViewingContext[], propert
         }
     });
     return filteredViews;
-}
-
-// FIXME I have no idea what this does and why but I have deprecated it for now (i.e. it is no longer used on CS)
-export function findAudienceRecordsMatchingPartial(audience: ContentBaseDTO['audience'], partialViewingContext: Partial<ViewingContext>) {
-    return audience?.filter((audienceRecord) => {
-        return Object.entries(partialViewingContext).every(([key, value]) => audienceRecord[key as keyof AudienceContext]?.[0] === value);
-    }) ?? [];
 }
 
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null): boolean {

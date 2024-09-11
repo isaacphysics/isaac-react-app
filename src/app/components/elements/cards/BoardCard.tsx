@@ -63,7 +63,7 @@ const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: 
         <div className="board-subject-hexagon-container justify-content-center">
             {generateGameboardSubjectHexagons(boardSubjects)}
             <span className="groups-assigned" title={"Number of groups assigned"}>
-                    <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>{" "}
+                <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>{" "}
                 group{(!assignees || assignees.length != 1) && "s"}
                 {isDefined(assignees) &&
                 <UncontrolledTooltip placement={"top"} target={"#" + id}>{assignees.length === 0 ?
@@ -90,11 +90,11 @@ const PhyHexagon = ({hexagonId, percentageDisplayed, boardSubjects, assignees, t
     return <div className={classNames("board-subject-hexagon-container", isTable ? "table-view" : "card-view")}>
         {
             isSetAssignments ? <HexagonGroupsButton toggleAssignModal={toggleAssignModal} boardSubjects={boardSubjects} assignees={assignees} id={hexagonId} />
-            : percentageDisplayed === 100 ? <span className="board-subject-hexagon subject-complete"/>
-            : /* else show percentage */ <>
-                {generateGameboardSubjectHexagons(boardSubjects)}
-                <div className="board-percent-completed">{percentageDisplayed}</div>
-            </>
+                : percentageDisplayed === 100 ? <span className="board-subject-hexagon subject-complete"/>
+                    : /* else show percentage */ <>
+                        {generateGameboardSubjectHexagons(boardSubjects)}
+                        <div className="board-percent-completed">{percentageDisplayed}</div>
+                    </>
         }
     </div>;
 };
@@ -122,7 +122,7 @@ const AdaCircle = ({hexagonId, percentageDisplayed, assignees, toggleAssignModal
             }
         </foreignObject>
     </svg>;
-}
+};
 
 type BoardCardProps = {
     user: RegisteredUserDTO;
@@ -133,7 +133,7 @@ type BoardCardProps = {
     assignees?: BoardAssignee[];
     toggleAssignModal?: () => void;
     // My gameboards only
-    setSelectedBoards?: (e: any) => void;
+    setSelectedBoards?: (selectedBoards: GameboardDTO[]) => void;
     selectedBoards?: GameboardDTO[];
 };
 
@@ -195,16 +195,16 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     const stagesAndDifficultiesTD = <td className={basicCellClasses + " p-0"} colSpan={2}>
         {boardStagesAndDifficulties.length > 0 && <table className="w-100 border-0">
             <tbody>
-            {boardStagesAndDifficulties.map(([stage,difficulties], i) => {
-                return <tr key={stage} className={classNames({"border-0": i === 0, "border-start-0 border-end-0 border-bottom-0": i >= 1})}>
-                    <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
-                        {stageLabelMap[stage]}
-                    </td>
-                    <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
-                        {isAda && "("}{sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")}{isAda && ")"}
-                    </td>
-                </tr>;
-            })}
+                {boardStagesAndDifficulties.map(([stage,difficulties], i) => {
+                    return <tr key={stage} className={classNames({"border-0": i === 0, "border-start-0 border-end-0 border-bottom-0": i >= 1})}>
+                        <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
+                            {stageLabelMap[stage]}
+                        </td>
+                        <td className={`text-center align-middle ${stagesAndDifficultiesBorders(i)} p-1 w-50`}>
+                            {isAda && "("}{sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")}{isAda && ")"}
+                        </td>
+                    </tr>;
+                })}
             </tbody>
         </table>}
     </td>;
@@ -239,53 +239,53 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <Button outline color={"secondary"} className={"bin-icon d-inline-block outline"} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
                 </td>}
             </> 
-            : 
-            <>
-                <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
-                    <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
-                    {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
-                </td>
-                {stagesAndDifficultiesTD}
-                {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
-                <td className="align-middle text-center">{formatDate(board.creationDate)}</td>
-                <td className={siteSpecific("align-content-center", "align-middle text-center")}>
-                    {siteSpecific(
-                        <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />,
-                        <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                    )}
-                </td>
-                <td className={siteSpecific("align-content-center", "align-middle text-center")}>
-                    {siteSpecific(
-                        <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />,
-                        <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
-                    )}
-                </td>
-                {isAda && <td className={basicCellClasses}>
-                    <div className="table-share-link">
-                        <ShareLink linkUrl={boardLink} gameboardId={board.id} outline={isAda} clickAwayClose={isAda} />
-                    </div>
-                </td>}
-                {siteSpecific(
-                    <td className={"text-center align-middle"}>
-                        <Button outline color="primary" className={"bin-icon d-inline-block outline"} style={{
-                            width: "20px",
-                            minWidth: "20px",
-                        }} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
-                    </td>,
-                    <td className={"text-center align-middle overflow-hidden"}>
-                        <Input
-                            id={`board-delete-${board.id}`}
-                            type="checkbox"
-                            color="secondary"
-                            className={"isaac-checkbox me-n2"}
-                            checked={board && selectedBoards?.some(e => e.id === board.id)}
-                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                board && updateBoardSelection(board, event.target.checked);
-                            }} aria-label="Delete quiz"
-                        />
+                : 
+                <>
+                    <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
+                        <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
+                        {isPhy && <span className="text-muted"><br/>Created by {<span data-testid={"owner"}>{formatBoardOwner(user, board)}</span>}</span>}
                     </td>
-                )}
-            </>}
+                    {stagesAndDifficultiesTD}
+                    {isAda && <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>}
+                    <td className="align-middle text-center">{formatDate(board.creationDate)}</td>
+                    <td className={siteSpecific("align-content-center", "align-middle text-center")}>
+                        {siteSpecific(
+                            <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />,
+                            <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                        )}
+                    </td>
+                    <td className={siteSpecific("align-content-center", "align-middle text-center")}>
+                        {siteSpecific(
+                            <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />,
+                            <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
+                        )}
+                    </td>
+                    {isAda && <td className={basicCellClasses}>
+                        <div className="table-share-link">
+                            <ShareLink linkUrl={boardLink} gameboardId={board.id} outline={isAda} clickAwayClose={isAda} />
+                        </div>
+                    </td>}
+                    {siteSpecific(
+                        <td className={"text-center align-middle"}>
+                            <Button outline color="primary" className={"bin-icon d-inline-block outline"} style={{
+                                width: "20px",
+                                minWidth: "20px",
+                            }} onClick={confirmDeleteBoard} aria-label="Delete quiz"/>
+                        </td>,
+                        <td className={"text-center align-middle overflow-hidden"}>
+                            <Input
+                                id={`board-delete-${board.id}`}
+                                type="checkbox"
+                                color="secondary"
+                                className={"isaac-checkbox me-n2"}
+                                checked={board && selectedBoards?.some(e => e.id === board.id)}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                                    board && updateBoardSelection(board, event.target.checked)
+                                } aria-label="Delete quiz"
+                            />
+                        </td>
+                    )}
+                </>}
         </tr>)
         :
         siteSpecific(
@@ -300,44 +300,44 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         {isSetAssignments ? <Col>
                             <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
                         </Col>
-                        : <>
-                            <Spacer/>
-                            <Col xs={2} className="card-share-link col-auto">
-                                <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
-                            </Col>
-                        </>}
+                            : <>
+                                <Spacer/>
+                                <Col xs={2} className="card-share-link col-auto">
+                                    <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
+                                </Col>
+                            </>}
                     </Row>
                     <CardSubtitle data-testid={"created-date"}>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                     <CardSubtitle data-testid={"last-visited"}>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
                     <br />
                     <table className="w-100">
                         <thead>
-                        <tr>
-                            <th className="w-50">
-                                <strong>{`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}`}</strong>
-                            </th>
-                            <th className="w-50 ps-1">
-                                <strong>{`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}</strong>
-                            </th>
-                        </tr>
+                            <tr>
+                                <th className="w-50">
+                                    <strong>{`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}`}</strong>
+                                </th>
+                                <th className="w-50 ps-1">
+                                    <strong>{`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}</strong>
+                                </th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
-                            <td className="w-50 align-baseline text-lg">
-                                {stageLabelMap[stage]}
-                            </td>
-                            <td className="w-50 ps-1">
-                                {difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}
-                            </td>
-                        </tr>)}
-                        {boardStagesAndDifficulties.length === 0 && <tr>
-                            <td className="w-50 align-baseline text-lg">
+                            {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
+                                <td className="w-50 align-baseline text-lg">
+                                    {stageLabelMap[stage]}
+                                </td>
+                                <td className="w-50 ps-1">
+                                    {difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}
+                                </td>
+                            </tr>)}
+                            {boardStagesAndDifficulties.length === 0 && <tr>
+                                <td className="w-50 align-baseline text-lg">
                                 N/A
-                            </td>
-                            <td className="w-50 ps-1">
+                                </td>
+                                <td className="w-50 ps-1">
                                 -
-                            </td>
-                        </tr>}
+                                </td>
+                            </tr>}
                         </tbody>
                     </table>
                     <Spacer />
@@ -345,17 +345,17 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         {isSetAssignments ? <Col xs={2} className="card-share-link col-auto">
                             <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
                         </Col>
-                        :
-                        <>
-                            <Col>
-                                <b>Attempted:</b>
-                                <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                            </Col>
-                            <Col>
-                                <b>Correct:</b>
-                                <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />                    
-                            </Col>
-                        </>}
+                            :
+                            <>
+                                <Col>
+                                    <b>Attempted:</b>
+                                    <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                                </Col>
+                                <Col>
+                                    <b>Correct:</b>
+                                    <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />                    
+                                </Col>
+                            </>}
                     </Row>
                 </CardBody>
                 {isSetAssignments && <CardFooter>
@@ -389,16 +389,16 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                                     <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
                                 </Col>
                             </Col> :
-                            <Col xs={4} className="ps-0 d-flex flex-column">
-                                <Row className="d-flex flex-column p-0 align-items-center">
-                                    <span>Attempted</span>
-                                    <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                                </Row>
-                                <Row className="d-flex flex-column p-0 align-items-center">
-                                    <span className="pt-2">Correct</span>
-                                    <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
-                                </Row>
-                            </Col>
+                                <Col xs={4} className="ps-0 d-flex flex-column">
+                                    <Row className="d-flex flex-column p-0 align-items-center">
+                                        <span>Attempted</span>
+                                        <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                                    </Row>
+                                    <Row className="d-flex flex-column p-0 align-items-center">
+                                        <span className="pt-2">Correct</span>
+                                        <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
+                                    </Row>
+                                </Col>
                         )}
                         <Col className="pt-3">
                             <b>Stages and difficulties</b>:<br/> {boardStagesAndDifficulties.map(([stage,difficulties], _) =>

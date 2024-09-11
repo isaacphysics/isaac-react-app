@@ -83,7 +83,10 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_england" component={ExamSpecifications} />,
-    <TrackedRoute key={key++} exact path="/exam_specifications_wales" component={ExamSpecifications} componentProps={{'examBoardFilter': [EXAM_BOARD.WJEC]}} />,
+    <TrackedRoute key={key++} exact path="/exam_specifications_wales" component={ExamSpecifications}
+        componentProps={{'examBoardFilter': [EXAM_BOARD.WJEC]}} />,
+    <TrackedRoute key={key++} exact path="/exam_specifications_ada" component={ExamSpecifications}
+        componentProps={{'examBoardFilter': [EXAM_BOARD.ADA], 'stageFilter': [STAGE.CORE, STAGE.ADVANCED]}} />,
     <Redirect key={key++} from="/concepts/sqa_computing_science" to="/exam_specifications_scotland" />,
     <TrackedRoute key={key++} exact path="/exam_specifications_scotland" component={ExamSpecifications}
         componentProps={{'examBoardFilter': [EXAM_BOARD.SQA], 'stageFilter': [STAGE.SCOTLAND_NATIONAL_5,

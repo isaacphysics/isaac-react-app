@@ -281,28 +281,30 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
                 <div className="my-4 responsive">
                     <DragDropContext onDragEnd={reorder}>
-                        <Table bordered className="m-0">
-                            <thead>
-                            <tr>
-                                <th className="w-5"/>
-                                <th className={siteSpecific("w-40", "w-30")}>Question title</th>
-                                <th className={siteSpecific("w-25", "w-20")}>Topic</th>
-                                <th className="w-15">Stage</th>
-                                <th className="w-15">Difficulty</th>
-                                {isAda && <th className="w-15">Exam boards</th>}
-                            </tr>
-                            </thead>
-                            <Droppable droppableId="droppable">
-                                {(provided) => {
-                                    return (
-                                        <tbody ref={provided.innerRef}>
+                        <Droppable droppableId="droppable">
+                            {(providedDrop) => {
+                                return (
+                                    <Table bordered className="m-0" innerRef={providedDrop.innerRef}>
+                                        <thead>
+                                            <tr>
+                                                <th className="w-5"/>
+                                                <th className={siteSpecific("w-40", "w-30")}>Question title</th>
+                                                <th className={siteSpecific("w-25", "w-20")}>Topic</th>
+                                                <th className="w-15">Stage</th>
+                                                <th className="w-15">Difficulty</th>
+                                                {isAda && <th className="w-15">Exam boards</th>}
+                                            </tr>
+                                        </thead>
                                         {questionOrder.map((questionId, index: number) => {
                                             const question = selectedQuestions.get(questionId);
-                                            return question && question.id &&
-                                                <Draggable key={question.id} draggableId={question.id} index={index}>
-                                                    {(provided, snapshot) => (
+                                            return question && question.id && <Draggable key={question.id} draggableId={question.id} index={index}>
+                                                {(providedDrag, snapshot) => {
+                                                    return <tbody ref={providedDrag && providedDrag.innerRef} 
+                                                        className={classNames({"table-row-dragging" : snapshot.isDragging})}
+                                                        {...(providedDrag && providedDrag.draggableProps)} {...(providedDrag && providedDrag.dragHandleProps)}
+                                                    >
                                                         <GameboardBuilderRow
-                                                            provided={provided}
+                                                            provided={providedDrag}
                                                             snapshot={snapshot}
                                                             key={`gameboard-builder-row-${question.id}`}
                                                             question={question}
@@ -310,19 +312,22 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                             undoStack={undoStack}
                                                             redoStack={redoStack}
                                                             creationContext={question.creationContext}
-                                                        />)}
-                                                </Draggable>;
+                                                        />
+                                                    </tbody>;
+                                                }}
+                                            </Draggable>;
                                         })}
-                                        {provided.placeholder}
-                                        {selectedQuestions?.size === 0 && <tr>
-                                            <td colSpan={20}>
-                                            </td>
-                                        </tr>}
+                                        <tbody >
+                                            {providedDrop.placeholder}
+                                            {selectedQuestions?.size === 0 && <tr>
+                                                <td colSpan={20}>
+                                                </td>
+                                            </tr>}
                                         </tbody>
-                                    );
-                                }}
-                            </Droppable>
-                        </Table>
+                                    </Table>
+                                );
+                            }}
+                        </Droppable>
                     </DragDropContext>
                 </div>
 

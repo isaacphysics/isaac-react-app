@@ -24,8 +24,8 @@ export const ExamSpecificationsDirectory = () => {
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
-                        <Button className="justify-content-end" color='secondary' disabled outline tag={Link} to="/">
-                            Coming soon
+                        <Button className="justify-content-end" color='secondary' outline tag={Link} to="/exam_specifications_ada">
+                            Show me
                         </Button>
                     </CardFooter>
                 </Card>
