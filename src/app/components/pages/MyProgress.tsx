@@ -27,7 +27,7 @@ import {Tabs} from "../elements/Tabs";
 import {FlushableRef, QuestionProgressCharts} from "../elements/views/QuestionProgressCharts";
 import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
-import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 
 const siteSpecificStats = siteSpecific(
     // Physics
@@ -201,11 +201,19 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                         <Row id="progress-questions">
                             {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                                 <h4>Most recently answered questions</h4>
-                                <LinkToContentSummaryList items={progress.mostRecentQuestions}/>
+                                <LinkToContentSummaryList 
+                                    items={progress.mostRecentQuestions} 
+                                    contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN} 
+                                    ignoreIntendedAudience
+                                />
                             </Col>}
                             {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                                 <h4>Oldest unsolved questions</h4>
-                                <LinkToContentSummaryList items={progress.oldestIncompleteQuestions}/>
+                                <LinkToContentSummaryList 
+                                    items={progress.oldestIncompleteQuestions} 
+                                    contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN} 
+                                    ignoreIntendedAudience
+                                />
                             </Col>}
                         </Row>
                     </div>,
