@@ -8,7 +8,7 @@ export const isMobile = () => {
 export const isNotMobile = !isMobile();
 
 export const isTouchDevice = () => {
-    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0 && navigator.maxTouchPoints != 256);
 };
 
 export const isNotTouchDevice = () => !isTouchDevice();
