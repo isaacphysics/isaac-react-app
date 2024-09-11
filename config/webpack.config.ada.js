@@ -37,7 +37,7 @@ module.exports = env => {
                 }]
             }),
             // This one goes last:
-            new codecovWebpackPlugin({
+            codecovWebpackPlugin({
                 enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
                 bundleName: 'web-ada',
                 uploadToken: process.env.CODECOV_TOKEN,
