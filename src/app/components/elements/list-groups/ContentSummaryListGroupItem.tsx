@@ -32,18 +32,18 @@ import classNames from "classnames";
 import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 import { CSSModule } from "reactstrap/types/lib/utils";
 
-export enum HiddenContentType {
-    FULLY_HIDDEN,
+export enum ContentTypeVisibility {
+    SHOWN, // default if not specified
     ICON_ONLY,
-    SHOWN
+    FULLY_HIDDEN
 }
 
-export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCaret, hideContentType, ignoreIntendedAudience}: {
+export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCaret, contentTypeVisibility, ignoreIntendedAudience}: {
     item: ShortcutResponse;
     search?: string;
     showBreadcrumb?: boolean;
     noCaret?: boolean;
-    hideContentType?: HiddenContentType;
+    contentTypeVisibility?: ContentTypeVisibility;
     ignoreIntendedAudience?: boolean;
 }) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -151,12 +151,12 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
 
     return <ListGroupItem className={classNames(itemClasses, {"p-3 d-md-flex flex-column justify-content-center content-summary-item": isPhy})} key={linkDestination}>
         <Link className={classNames({"position-relative justify-content-center": isAda})} to={{pathname: linkDestination, search: search, hash: hash}}>
-            {hideContentType !== HiddenContentType.FULLY_HIDDEN && <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
+            {contentTypeVisibility !== ContentTypeVisibility.FULLY_HIDDEN && <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
                 {siteSpecific(
                     icon,
                     <div className={"inner-progress-icon"}>
                         {icon}
-                        {hideContentType === HiddenContentType.SHOWN && <>
+                        {contentTypeVisibility !== ContentTypeVisibility.ICON_ONLY && <>
                             <br/>
                             <span className={"icon-title"}>{typeLabel}</span>
                         </>}
@@ -205,12 +205,12 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
     </ListGroupItem>;
 };
 
-export const LinkToContentSummaryList = ({items, search, showBreadcrumb, noCaret, hideContentType, ignoreIntendedAudience, ...rest}: {
+export const LinkToContentSummaryList = ({items, search, showBreadcrumb, noCaret, contentTypeVisibility, ignoreIntendedAudience, ...rest}: {
     items: ContentSummaryDTO[];
     search?: string;
     showBreadcrumb?: boolean;
     noCaret?: boolean;
-    hideContentType?: HiddenContentType;
+    contentTypeVisibility?: ContentTypeVisibility;
     ignoreIntendedAudience?: boolean;
     tag?: React.ElementType;
     flush?: boolean;
@@ -221,7 +221,7 @@ export const LinkToContentSummaryList = ({items, search, showBreadcrumb, noCaret
         {items.map(item => <ContentSummaryListGroupItem
             item={item} search={search} noCaret={noCaret}
             key={item.type + "/" + item.id} showBreadcrumb={showBreadcrumb}
-            hideContentType={hideContentType} ignoreIntendedAudience={ignoreIntendedAudience}
+            contentTypeVisibility={contentTypeVisibility} ignoreIntendedAudience={ignoreIntendedAudience}
         />)}
     </ListGroup>;
 };

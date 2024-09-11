@@ -5,7 +5,7 @@ import * as RS from "reactstrap";
 import {Col, Container, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
@@ -129,7 +129,10 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                         <RS.CardBody>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {shortcutAndFilteredSearchResults ?
-                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} showBreadcrumb={false}/>
+                                    <LinkToContentSummaryList 
+                                        items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
+                                        contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
+                                    />
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </RS.CardBody>

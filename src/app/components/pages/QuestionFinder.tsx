@@ -26,7 +26,7 @@ import {
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {RouteComponentProps, useHistory, withRouter} from "react-router";
-import {HiddenContentType, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -443,7 +443,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             {displayQuestions?.length
                                 ? <LinkToContentSummaryList 
                                     items={displayQuestions} className="m-0" 
-                                    hideContentType={HiddenContentType.ICON_ONLY} 
+                                    contentTypeVisibility={ContentTypeVisibility.ICON_ONLY} 
                                     ignoreIntendedAudience noCaret 
                                 />
                                 : noResultsMessage }

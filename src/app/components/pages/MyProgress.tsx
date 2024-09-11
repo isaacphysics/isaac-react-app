@@ -27,7 +27,7 @@ import {Tabs} from "../elements/Tabs";
 import {FlushableRef, QuestionProgressCharts} from "../elements/views/QuestionProgressCharts";
 import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
-import {HiddenContentType, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 
 const siteSpecificStats = siteSpecific(
     // Physics
@@ -203,7 +203,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                 <h4>Most recently answered questions</h4>
                                 <LinkToContentSummaryList 
                                     items={progress.mostRecentQuestions} 
-                                    hideContentType={HiddenContentType.FULLY_HIDDEN} 
+                                    contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN} 
                                     ignoreIntendedAudience
                                 />
                             </Col>}
@@ -211,7 +211,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                 <h4>Oldest unsolved questions</h4>
                                 <LinkToContentSummaryList 
                                     items={progress.oldestIncompleteQuestions} 
-                                    hideContentType={HiddenContentType.FULLY_HIDDEN} 
+                                    contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN} 
                                     ignoreIntendedAudience
                                 />
                             </Col>}
