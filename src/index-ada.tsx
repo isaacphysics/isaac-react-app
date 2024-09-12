@@ -1,7 +1,7 @@
 import "regenerator-runtime/runtime";
 import './scss/cs/isaac.scss';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import {Provider} from "react-redux";
 import {store} from "./app/state";
 import {IsaacApp} from './app/components/navigation/IsaacApp';
@@ -10,7 +10,9 @@ import {Helmet} from "react-helmet";
 
 printAsciiArtLogoToConsoleAda();
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!);
+
+root.render(
     <React.StrictMode>
         <Provider store={store}>
             {/*
@@ -30,5 +32,4 @@ ReactDOM.render(
             <IsaacApp />
         </Provider>
     </React.StrictMode>,
-    document.getElementById('root')
 );

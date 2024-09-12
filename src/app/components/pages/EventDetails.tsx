@@ -50,7 +50,7 @@ import {EventBookingForm} from "../elements/EventBookingForm";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
 import {EditContentButton} from "../elements/EditContentButton";
-import {Map, Marker, Popup, TileLayer} from "react-leaflet";
+import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
 import * as L from "leaflet";
 import {teacherEventConfirmationModal} from "../elements/modals/TeacherEventConfirmationModal";
 import {skipToken} from "@reduxjs/toolkit/query";
@@ -187,7 +187,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 isDefined(event.location?.latitude) &&
                                 isDefined(event.location?.longitude) &&
                                 <div className="border px-2 py-1 mt-3 bg-light">
-                                    <Map center={[event.location.latitude, event.location.longitude]} zoom={13}>
+                                    <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13}>
                                         <TileLayer
                                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
@@ -198,7 +198,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                                 {event.location?.address?.addressLine1}<br/>{event.location?.address?.addressLine2}<br/>{event.location?.address?.town}<br/>{event.location?.address?.postalCode}
                                             </Popup>
                                         </Marker>
-                                    </Map>
+                                    </MapContainer>
                                 </div>
                                 }
                             </div>}
