@@ -1,6 +1,6 @@
-import {AnyAction, Dispatch, Middleware, MiddlewareAPI} from "redux";
+import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {ACTION_TYPE, isDefined, KEY, persistence} from "../../services";
+import {ACTION_TYPE, isDefined} from "../../services";
 import {redirectTo, getUserId, logAction, setUserId, AppDispatch} from "../index";
 
 let timeoutHandle: number | undefined;
