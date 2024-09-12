@@ -141,13 +141,14 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             // TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
             //      their data
             // TODO highlight teachers who have already been granted access? (see verification modal code)
-            history.push("register/group_invitation");
+            dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
         }
     };
 
     useEffect(() => {
         if (authToken && user.loggedIn && user.id) {
-            authenticateWithTokenAfterPrompt(user.id, authToken);
+            const path = "/register/group_invitation?authToken=" + authToken;
+            history.push(path);
         }
     }, [authToken]);
 

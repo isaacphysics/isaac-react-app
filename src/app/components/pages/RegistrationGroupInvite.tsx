@@ -8,31 +8,40 @@ import { UserSummaryWithEmailAddressDTO } from "../../../IsaacApiTypes";
 
 export const RegistrationGroupInvite = ()  => {
     const [getTokenOwner] = useLazyGetTokenOwnerQuery();
-    const authenticateWithTokenAfterPrompt = async (token: string | null) => {
-        const sanitisedToken = token?.split("?authToken=").at(-1)?.toUpperCase().replace(/ /g,'') ?? "";
+    const [usersToGrantAccess, setUsersToGrantAccess] = useState<UserSummaryWithEmailAddressDTO[] | undefined>();
+    const [isGroupValid, setIsGroupValid] = useState<boolean>(true);
+    const urlParams = new URLSearchParams(location.search);
+    const token =  urlParams.get("authToken") ?? "";
+    const [authenticationToken, _] = useState<string>(token);
+    const afterAuthPath = window.location.pathname;
+
+    const getGroupOwners = async (token: string | null) => {
+        const sanitisedToken = token?.toUpperCase().replace(/ /g,'') ?? "";
         const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
         if (usersToGrantAccess && usersToGrantAccess.length){
             return usersToGrantAccess;
         }
+        else {
+            setIsGroupValid(false);
+        }
     };
-    
-    persistence.save(KEY.AFTER_AUTH_PATH, window.location.pathname);
-    const urlParams = new URLSearchParams(location.search);
-    const afterAuthPath = urlParams.get("authToken") ?? "";
-    const [authenticationToken, _] = useState<string>(afterAuthPath);
-    // need to handle persistence.remove etc
-    const codeIsValid = authenticationToken && authenticationToken.length > 0;
-    
-    const [usersToGrantAccess, setUsersToGrantAccess] = useState<UserSummaryWithEmailAddressDTO[] | undefined>();
 
     useEffect(()=>{
-        if (codeIsValid) {
-            authenticateWithTokenAfterPrompt(authenticationToken).then((result) => {
+        if (authenticationToken && authenticationToken.length > 0) {
+            getGroupOwners(authenticationToken).then((result) => {
                 setUsersToGrantAccess(result);
             });
         }
-    }, []) ;
+    }, []);
 
+    persistence.save(KEY.AFTER_AUTH_PATH, afterAuthPath);
+
+    if(!isGroupValid){
+        return <Container>
+            <TitleAndBreadcrumb currentPageTitle={`Group not found`} className="mb-4" />
+            <p>You came here via a group join link, but the group code is invalid.</p>
+        </Container>;
+    }
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Join group`} className="mb-4" />
         <p>You came here via a group join link. Are you happy to join the group and allow
@@ -50,7 +59,8 @@ export const RegistrationGroupInvite = ()  => {
         <RS.Button color="primary" outline onClick={() => {history.push("/account");}}>
             No, skip this
         </RS.Button>
-        <RS.Button color="secondary" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate("NGVZVB")); history.push("/account");}}>
+        {" "}
+        <RS.Button color="secondary" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
             Yes, join the group
         </RS.Button>
     </Container>;
