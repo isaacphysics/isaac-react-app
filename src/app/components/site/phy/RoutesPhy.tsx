@@ -56,7 +56,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/register/student/additional_info" component={RegistrationAgeCheckParentalConsent} />,
     <TrackedRoute key={key++} exact path="/register/student/age_denied" component={RegistrationAgeCheckFailed} />,
     <TrackedRoute key={key++} exact path="/register/student/details" component={RegistrationSetDetails} componentProps={{'role': 'STUDENT'}} />,
-    <TrackedRoute key={key++} exact path="/register/group_invitation" component={RegistrationGroupInvite} componentProps={{'role': 'STUDENT'}} />,
+    <TrackedRoute key={key++} exact path="/register/group_invitation" component={RegistrationGroupInvite} />,
     <TrackedRoute key={key++} exact path="/register/connect" ifUser={isLoggedIn} component={RegistrationTeacherConnect} />,
     <TrackedRoute key={key++} exact path="/register/preferences" ifUser={isLoggedIn} component={RegistrationSetPreferences} />,
     <TrackedRoute key={key++} exact path="/register/success" ifUser={isLoggedIn} component={RegistrationSuccess} />,
