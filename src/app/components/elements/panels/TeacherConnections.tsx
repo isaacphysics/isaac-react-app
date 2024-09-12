@@ -14,6 +14,7 @@ import {
 } from "../../../state";
 import {
     extractTeacherName,
+    history,
     isAda,
     isLoggedIn,
     isPhy,
@@ -140,7 +141,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             // TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
             //      their data
             // TODO highlight teachers who have already been granted access? (see verification modal code)
-            dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
+            history.push("register/group_invitation");
         }
     };
 
