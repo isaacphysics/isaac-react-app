@@ -190,7 +190,10 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
                 dispatch(getUserPreferences() as any)
             ]);
         }
-        dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: currentUser.data});
+        const expiry = currentUser.headers["x-session-expires"] ?
+            Date.parse(currentUser.headers["x-session-expires"]) : undefined;
+        dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS,
+            user: {loggedIn: true, sessionExpiry: expiry, ...currentUser.data}});
     } catch (e) {
         dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE});
     }
@@ -395,11 +398,8 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
                 return;
             }
         }
-        // Request user preferences, as we do in the requestCurrentUser action:
-        await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
-        ]);
+        // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
+        dispatch(requestCurrentUser() as any);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
     } catch (e: any) {

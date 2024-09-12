@@ -79,6 +79,7 @@ import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
 import {QuestionFinder} from "../pages/QuestionFinder";
+import {ExigentAlert} from "../elements/ExigentAlert";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -157,6 +158,12 @@ export const IsaacApp = () => {
                         <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
                         <TrackedRoute exact path={"/auth_error"} component={AuthError} />
                         <TrackedRoute exact path={"/consistency-error"} component={ConsistencyError} />
+                        <TrackedRoute exact path={"/login_expired"} component={LogIn} componentProps={{'redirectExplanation':
+                                <ExigentAlert color="warning">
+                                    <p className="alert-heading fw-bold">Your session has expired</p>
+                                    <p>Sorry, your session has expired. Please log in again to continue.</p>
+                                </ExigentAlert>
+                        }}/>
 
                         {/* Site specific pages */}
                         {SiteSpecific.Routes}

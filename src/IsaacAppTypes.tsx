@@ -39,7 +39,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE; userSnapshot: UserSnapshot}
 
     | {type: ACTION_TYPE.CURRENT_USER_REQUEST}
-    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
+    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: Immutable<LoggedInUser>}
     | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
@@ -271,7 +271,7 @@ export interface CanAttemptQuestionTypeDTO {
     remainingAttempts?: number;
 }
 
-export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO;
+export type LoggedInUser = {loggedIn: true, sessionExpiry?: number} & ApiTypes.RegisteredUserDTO;
 export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean;};
 
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
