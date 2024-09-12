@@ -430,6 +430,8 @@ export const InlineContext = React.createContext<{
     setFeedbackIndex: React.Dispatch<React.SetStateAction<number | undefined>>,
     focusSelection?: boolean,
     setFocusSelection: React.Dispatch<React.SetStateAction<boolean>>,
+    initialised?: boolean,
+    setInitialised: React.Dispatch<React.SetStateAction<boolean>>,
 } | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
