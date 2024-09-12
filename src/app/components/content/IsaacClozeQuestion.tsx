@@ -501,7 +501,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                 {(!(deviceSize === "xs" || isTouchDevice())) && <>
                     {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
                     <DragOverlay>
-                        {activeItem && <Badge className="p-2 cloze-item is-dragging">
+                        {activeItem && <Badge className="p-1 cloze-item is-dragging">
                             <IsaacContentValueOrChildren value={activeItem.value} encoding={activeItem.encoding || "html"}>
                                 {activeItem.children as ContentDTO[]}
                             </IsaacContentValueOrChildren>

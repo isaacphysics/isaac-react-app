@@ -348,6 +348,7 @@ $cloze-scrollbar-height: 4px;
   position: relative;
   font-size: 1rem !important;
   border: 1px solid $border-color;
+
   &.is-dragging {
     opacity: 0.666;
   }
