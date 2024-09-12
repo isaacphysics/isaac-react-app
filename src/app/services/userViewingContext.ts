@@ -216,7 +216,7 @@ const _STAGE_ITEM_OPTIONS = siteSpecific([ /* best not to export - use getFilter
     {label: "University", value: STAGE.UNIVERSITY},
     {label: "All stages", value: STAGE.ALL},
 ], [
-    {label: "All Stages", value: STAGE.ALL},
+    {label: "All Stages (Default)", value: STAGE.ALL},
     {label: "Core", value: STAGE.CORE},
     {label: "Advanced", value: STAGE.ADVANCED},
     {label: "GCSE", value: STAGE.GCSE},
