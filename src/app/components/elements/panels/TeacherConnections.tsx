@@ -138,7 +138,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             return;
         }
         else if (isFirstLoginInPersistence()) {
-            history.push("/register/group_invitation?authToken="+sanitisedToken);
+            history.push("/register/group_invitation?authToken=" + encodeURIComponent(sanitisedToken));
         }
         else {
             const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
