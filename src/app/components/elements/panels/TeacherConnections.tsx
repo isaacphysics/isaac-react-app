@@ -14,7 +14,6 @@ import {
 } from "../../../state";
 import {
     extractTeacherName,
-    history,
     isAda,
     isLoggedIn,
     isPhy,
@@ -305,7 +304,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             <ul>
                 <li>{`Active group memberships mean you ${siteSpecific("will receive assignments set to that group by teachers in it." ,"can receive assignments from the teachers in that group.")}`}</li>
                 <li>{`Setting your membership inactive means you won’t receive any assignments ${siteSpecific("set to", "from the teachers in")} that group. You can set yourself as active again at any time.`}</li>
-                <li>If you want to permanently leave a group, ask you teacher remove you.</li>
+                <li>If you want to permanently leave a group, ask your teacher to remove you.</li>
             </ul>
             <div className="my-groups-table-section overflow-auto">
                 <div className="connect-list">
