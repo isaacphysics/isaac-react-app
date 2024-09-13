@@ -5920,10 +5920,10 @@ inequality-grammar@1.3.2:
     moo "^0.5.2"
     nearley "^2.20.1"
 
-inequality@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/inequality/-/inequality-1.1.1.tgz#ca6669bc03128bad6478d0d5e6e2edf5101ac080"
-  integrity sha512-PcyPYjmyffWZbZtUhoCIr7pChIzlQg05h013rhFpxjPB+fCjl53N65vfbM5TH3nPA1HSj5qXms9ucHppTeFEbw==
+inequality@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/inequality/-/inequality-1.1.2.tgz#421ee2c0c129a74290d505bc5794fd33d261e68d"
+  integrity sha512-0aDaHc9liL0C1OrfjKd2dbHZqZKQi358WDdUrquh5AMTJvy1P66JH6/15pfj8MANaUvEk6YlFjHrZYWk6jZeLA==
 
 inflight@^1.0.4:
   version "1.0.6"
