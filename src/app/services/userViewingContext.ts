@@ -158,15 +158,15 @@ export function useUserViewingContext(): UseUserContextReturnType {
 }
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
-    {label: "ADA (Default)", value: EXAM_BOARD.ADA},
+    {label: "All Exam Boards", value: EXAM_BOARD.ALL},
+    {label: "Ada (Default)", value: EXAM_BOARD.ADA},
     {label: "AQA", value: EXAM_BOARD.AQA},
     {label: "CIE", value: EXAM_BOARD.CIE},
-    {label: "EDEXCEL", value: EXAM_BOARD.EDEXCEL},
-    {label: "EDUQAS", value: EXAM_BOARD.EDUQAS},
+    {label: "Edexcel", value: EXAM_BOARD.EDEXCEL},
+    {label: "Eduqas", value: EXAM_BOARD.EDUQAS},
     {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "WJEC", value: EXAM_BOARD.WJEC},
     {label: "SQA", value: EXAM_BOARD.SQA},
-    {label: "All Exam Boards", value: EXAM_BOARD.ALL},
 ];
 interface ExamBoardFilterOptions {
     byUser?: Immutable<PotentialUser> | null;
@@ -217,13 +217,13 @@ const _STAGE_ITEM_OPTIONS = siteSpecific([ /* best not to export - use getFilter
     {label: "All stages", value: STAGE.ALL},
 ], [
     {label: "All Stages (Default)", value: STAGE.ALL},
+    {label: "Core", value: STAGE.CORE},
+    {label: "Advanced", value: STAGE.ADVANCED},
     {label: "GCSE", value: STAGE.GCSE},
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "National 5", value: STAGE.SCOTLAND_NATIONAL_5},
     {label: "Higher", value: STAGE.SCOTLAND_HIGHER},
     {label: "Advanced Higher", value: STAGE.SCOTLAND_ADVANCED_HIGHER},
-    {label: "Core", value: STAGE.CORE},
-    {label: "Advanced", value: STAGE.ADVANCED},
 ]);
 interface StageFilterOptions {
     byUser?: Immutable<PotentialUser> | null;
