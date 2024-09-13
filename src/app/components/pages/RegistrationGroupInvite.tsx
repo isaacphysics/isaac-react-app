@@ -40,6 +40,9 @@ export const RegistrationGroupInvite = ()  => {
         return <Container>
             <TitleAndBreadcrumb currentPageTitle={`Group not found`} className="mb-4" />
             <p>You came here via a group join link, but the group code is invalid.</p>
+            <RS.Button color="primary" outline onClick={() => {history.push("/account#teacherconnections");}}>
+                Go to teacher connections
+            </RS.Button>
         </Container>;
     }
     return <Container>
