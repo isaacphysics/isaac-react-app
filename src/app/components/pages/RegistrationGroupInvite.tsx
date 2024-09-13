@@ -39,32 +39,40 @@ export const RegistrationGroupInvite = ()  => {
     if(!isGroupValid){
         return <Container>
             <TitleAndBreadcrumb currentPageTitle={`Group not found`} className="mb-4" />
-            <p>You came here via a group join link, but the group code is invalid.</p>
-            <RS.Button color="primary" outline onClick={() => {history.push("/account#teacherconnections");}}>
-                Go to teacher connections
-            </RS.Button>
+            <RS.Card className="my-5">
+                <RS.CardBody>
+                    <p>You came here via a group join link, but the group code is invalid.</p>
+                    <RS.Button color="primary" outline onClick={() => {history.push("/account#teacherconnections");}}>
+                        Go to teacher connections
+                    </RS.Button>
+                </RS.CardBody>
+            </RS.Card>
         </Container>;
     }
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Join group`} className="mb-4" />
-        <p>You came here via a group join link. Are you happy to join the group and allow
-        these teachers to see your work and progress?</p>
-        <RS.Table bordered>
-            <tbody>
-                {usersToGrantAccess?.map((member: any) => (<tr key={member.id}>
-                    <td>
-                        <span className="group-table-person" />
-                        {extractTeacherName(member)} - ({member.email})
-                    </td>
-                </tr>))}
-            </tbody>
-        </RS.Table>
-        <RS.Button color="primary" outline onClick={() => {history.push("/account");}}>
-            No, skip this
-        </RS.Button>
-        {" "}
-        <RS.Button color="secondary" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
-            Yes, join the group
-        </RS.Button>
+        <RS.Card className="my-5">
+            <RS.CardBody>
+                <p>You came here via a group join link. Are you happy to join the group and allow
+                these teachers to see your work and progress?</p>
+                <RS.Table bordered>
+                    <tbody>
+                        {usersToGrantAccess?.map((member: any) => (<tr key={member.id}>
+                            <td>
+                                <span className="group-table-person" />
+                                {extractTeacherName(member)} - ({member.email})
+                            </td>
+                        </tr>))}
+                    </tbody>
+                </RS.Table>
+                <RS.Button color="primary" outline onClick={() => {history.push("/account");}}>
+                    No, skip this
+                </RS.Button>
+                {" "}
+                <RS.Button color="secondary" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
+                    Yes, join the group
+                </RS.Button>
+            </RS.CardBody>  
+        </RS.Card>
     </Container>;
 };
