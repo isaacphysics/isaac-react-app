@@ -137,15 +137,15 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
             return;
         }
-        const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
-        if (usersToGrantAccess && usersToGrantAccess.length) {
-            // TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
-            //      their data
-            // TODO highlight teachers who have already been granted access? (see verification modal code)
-            if (isFirstLoginInPersistence() && sanitisedToken) {
-                history.push("/register/group_invitation?authToken="+sanitisedToken);
-            }
-            else {
+        else if (isFirstLoginInPersistence()) {
+            history.push("/register/group_invitation?authToken="+sanitisedToken);
+        }
+        else {
+            const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
+            if (usersToGrantAccess && usersToGrantAccess.length) {
+                // TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
+                //      their data
+                // TODO highlight teachers who have already been granted access? (see verification modal code)
                 dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
             }
         }
