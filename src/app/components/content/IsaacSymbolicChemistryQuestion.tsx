@@ -223,24 +223,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                     {doc.children}
                 </IsaacContentValueOrChildren>
             </div>
-            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-            <div
-                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
-                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
-                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
-            />
-            {modalVisible && <InequalityModal
-                close={closeModalAndReturnToScrollPosition}
-                onEditorStateChange={(state: any) => {
-                    dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" });
-                    initialEditorSymbols.current = state.symbols;
-                }}
-                availableSymbols={doc.availableSymbols}
-                initialEditorSymbols={initialEditorSymbols.current}
-                editorSeed={editorSeed}
-                editorMode="chemistry"
-                questionDoc={doc}
-            />}
             {!readonly && isStaff(user) && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
@@ -274,6 +256,24 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}
             </div>}
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+            <div
+                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
+                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
+                dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
+            />
+            {modalVisible && <InequalityModal
+                close={closeModalAndReturnToScrollPosition}
+                onEditorStateChange={(state: any) => {
+                    dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" });
+                    initialEditorSymbols.current = state.symbols;
+                }}
+                availableSymbols={doc.availableSymbols}
+                initialEditorSymbols={initialEditorSymbols.current}
+                editorSeed={editorSeed}
+                editorMode="chemistry"
+                questionDoc={doc}
+            />}
         </div>
     );
 };
