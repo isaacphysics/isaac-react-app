@@ -17,17 +17,21 @@ import {Immutable} from "immer";
 
 interface UserFilterProps {
     ifUser?: (user: Immutable<PotentialUser>) => boolean;
+    disableTracking?: boolean;
 }
 
 type TrackedRouteProps = RouteProps & {componentProps?: any} & UserFilterProps;
 type TrackedRouteComponentProps = RouteComponentProps & {
     component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
+    disableTracking?: boolean;
 };
 
 const WrapperComponent = function({component: Component, ...props}: TrackedRouteComponentProps) {
     useEffect(() => {
-        trackPageview();
-    }, [props.location.pathname]);
+        if (!props.disableTracking) {
+            trackPageview();
+        }
+    }, [props.location.pathname, props.disableTracking]);
     return <FigureNumberingContext.Provider value={{}}> {/* Create a figure numbering scope for each page */}
         <Component {...props} />
     </FigureNumberingContext.Provider>;
@@ -45,7 +49,7 @@ export const TrackedRoute = function({component, componentProps, ...rest}: Track
                     {!isNotPartiallyLoggedIn(user) && ifUser.name ?
                         <Redirect to="/verifyemail"/> :
                         user && ifUser(user) ?
-                            <WrapperComponent component={component} {...propsWithUser} {...componentProps} /> :
+                            <WrapperComponent component={component} disableTracking={rest.disableTracking} {...propsWithUser} {...componentProps} /> :
                             user && !user.loggedIn && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
                                 persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                                 :
@@ -61,7 +65,7 @@ export const TrackedRoute = function({component, componentProps, ...rest}: Track
             }}/>;
         } else {
             return <Route {...rest} render={props => {
-                return <WrapperComponent component={component} {...props} {...componentProps} />;
+                return <WrapperComponent component={component} disableTracking={rest.disableTracking} {...props} {...componentProps} />;
             }}/>;
         }
     } else {
