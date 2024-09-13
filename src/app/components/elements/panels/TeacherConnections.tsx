@@ -147,8 +147,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
     useEffect(() => {
         if (authToken && user.loggedIn && user.id) {
-            const path = "/register/group_invitation?authToken=" + authToken;
-            history.push(path);
+            authenticateWithTokenAfterPrompt(user.id, authToken);
         }
     }, [authToken]);
 
