@@ -14,7 +14,9 @@ import {
 } from "../../../state";
 import {
     extractTeacherName,
+    history,
     isAda,
+    isFirstLoginInPersistence,
     isLoggedIn,
     isPhy,
     isStudent,
@@ -135,12 +137,17 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
             return;
         }
-        const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
-        if (usersToGrantAccess && usersToGrantAccess.length) {
-            // TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
-            //      their data
-            // TODO highlight teachers who have already been granted access? (see verification modal code)
-            dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
+        else if (isFirstLoginInPersistence()) {
+            history.push("/register/group_invitation?authToken=" + encodeURIComponent(sanitisedToken));
+        }
+        else {
+            const {data: usersToGrantAccess} = await getTokenOwner(sanitisedToken);
+            if (usersToGrantAccess && usersToGrantAccess.length) {
+                // TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
+                //      their data
+                // TODO highlight teachers who have already been granted access? (see verification modal code)
+                dispatch(openActiveModal(tokenVerificationModal(userId, sanitisedToken, usersToGrantAccess)) as any);
+            }
         }
     };
 
@@ -304,7 +311,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             <ul>
                 <li>{`Active group memberships mean you ${siteSpecific("will receive assignments set to that group by teachers in it." ,"can receive assignments from the teachers in that group.")}`}</li>
                 <li>{`Setting your membership inactive means you won’t receive any assignments ${siteSpecific("set to", "from the teachers in")} that group. You can set yourself as active again at any time.`}</li>
-                <li>If you want to permanently leave a group, ask you teacher remove you.</li>
+                <li>If you want to permanently leave a group, ask your teacher to remove you.</li>
             </ul>
             <div className="my-groups-table-section overflow-auto">
                 <div className="connect-list">
