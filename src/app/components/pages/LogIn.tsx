@@ -21,7 +21,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history, isAda, SITE_TITLE, siteSpecific} from "../../services";
+import {history, isAda, MINIMUM_PASSWORD_LENGTH, SITE_TITLE, siteSpecific} from "../../services";
 import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Loading} from "../handlers/IsaacSpinner";
@@ -156,7 +156,7 @@ interface EmailPasswordInputsProps {
 }
 export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPassword, logInAttempted, passwordResetAttempted, errorMessage, displayLabels = true}: EmailPasswordInputsProps) => {
     return <>
-        <FormGroup className="form-group">
+        <div className="form-group">
             {displayLabels && <Label htmlFor="email-input">Email address</Label>}
             <Input
                 id="email-input" type="email" name="email" placeholder="Email address"
@@ -168,9 +168,9 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
             <FormFeedback id="emailValidationMessage">
                 {!validEmail && "Please enter a valid email address"}
             </FormFeedback>
-        </FormGroup>
+        </div>
 
-        <FormGroup className="form-group mb-0">
+        <div className="form-group mb-0">
             {displayLabels && <Label htmlFor="password-input">Password</Label>}
             <Input
                 id="password-input" type="password" name="password" placeholder="Password"
@@ -180,9 +180,9 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
                 required
             />
             <FormFeedback id="passwordValidationMessage">
-                {!validPassword && "Passwords must be at least six characters long"}
+                {!validPassword && `Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long`}
             </FormFeedback>
-        </FormGroup>
+        </div>
     </>;
 };
 
