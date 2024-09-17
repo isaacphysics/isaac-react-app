@@ -100,7 +100,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
     const userContext = useUserViewingContext();
-    console.log(userContext);
     const params: ListParams = useQueryParams(false);
     const history = useHistory();
 
@@ -123,7 +122,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (isAda && isLoggedIn(user) && user.registeredContexts && user.registeredContexts.length > 1) {
             setSearchStages([STAGE.ALL]);
             setSearchExamBoards([EXAM_BOARD.ALL]);
-            console.log("set stages and exam boards to all");
         }
         else  {
             if (userContextDefault && !userContext.hasDefaultPreferences) {
@@ -144,13 +142,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 }
             }
         }
-        setPopulatedUserContext(!!userContext.stage && !!userContext.examBoard);
+        setPopulatedUserContext(!!userContext.stage && !!userContext.examBoard && !userContextDefault);
         searchAndUpdateURL();
     }, [userContext.stage, userContext.examBoard, user]);
 
     // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates
     useEffect(() => {
-        console.log("on complete load")
         searchAndUpdateURL();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [populatedUserContext]);
@@ -252,14 +249,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [noResultsMessage, setNoResultsMessage] = useState<ReactNode>(<em>Please select and apply filters</em>);
 
     const applyFilters = () => {
-        console.log("applying filters");
         // Have to use a local variable as React won't update state in time
         const isFilteringByStatus = !(
             Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v)
         );
 
         if (nothingToSearchFor) {
-            console.log("nothing to search for");
             if (isFilteringByStatus) {
                 setNoResultsMessage(<em>Please select more filters</em>);
             } else {
@@ -276,7 +271,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     };
 
     const searchAndUpdateURL = useCallback(() => {
-        console.log("clearing");
         setPageCount(1);
         setDisableLoadMore(false);
         setDisplayQuestions(undefined);
@@ -309,7 +303,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 params[tier.id] = selections[i].map(item => item.value).join(",");
             });
         }
-        console.log("params", params);
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
     }, [searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages, searchDifficulties, selections, tiers, excludeBooks, searchStatuses, filteringByStatus]);
 
@@ -320,13 +313,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // If the stages filter changes, update the exam board filter selections to remove now-incompatible ones
     useEffect(() => {
         if (isAda) {
-            console.log("search stages change before", searchExamBoards);
             setSearchExamBoards(examBoards =>
                 getFilteredExamBoardOptions({byStages: searchStages})
                     .filter(o => examBoards.includes(o.value))
                     .map(o => o.value)
             );
-            console.log("search stages change after", searchExamBoards);
         }
     }, [searchStages]);
 
@@ -337,7 +328,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             } else {
                 setDisableLoadMore(false);
             }
-            console.log("question list change", questions.length);
 
             return questions.slice(0, SEARCH_RESULTS_PER_PAGE);
         }
@@ -353,7 +343,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             setDisplayQuestions(dqs => [...dqs ?? [], ...questionList ?? []]);
         } else {
             setDisplayQuestions(questionList);
-            console.log("setting display questions 2");
         }
         
     // eslint-disable-next-line react-hooks/exhaustive-deps
