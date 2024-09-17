@@ -142,9 +142,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 }
             }
         }
+
         setPopulatedUserContext(!!userContext.stage && !!userContext.examBoard && !userContextDefault);
         searchAndUpdateURL();
-    }, [userContext.stage, userContext.examBoard, user]);
+    }, [userContext.stage, userContext.examBoard, user, userContextDefault]);
 
     // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates
     useEffect(() => {
@@ -265,7 +266,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         } else {
             setNoResultsMessage(<em>No results match your criteria</em>);
         }
+
         setFilteringByStatus(isFilteringByStatus);
+        searchAndUpdateURL();
     };
 
     const searchAndUpdateURL = useCallback(() => {
