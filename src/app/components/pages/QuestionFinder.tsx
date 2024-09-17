@@ -304,7 +304,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 params[tier.id] = selections[i].map(item => item.value).join(",");
             });
         }
-        
+
         history.replace({search: queryString.stringify(params, {encode: false}), state: location.state});
     }, [searchDebounce, searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages, searchDifficulties, selections, tiers, excludeBooks, searchStatuses, filteringByStatus]);
 
