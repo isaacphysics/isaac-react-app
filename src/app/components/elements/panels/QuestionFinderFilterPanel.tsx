@@ -35,7 +35,8 @@ const bookOptions: Item<string>[] = [
     {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
     {value: "physics_linking_concepts", label: "Linking Concepts in Pre-Uni Physics"},
     {value: "maths_book_gcse", label: "GCSE Maths"},
-    {value: "maths_book", label: "Pre-Uni Maths"},
+    {value: "maths_book", label: "Pre-Uni Maths (1st edition)"},
+    {value: "maths_book_2e", label: "Pre-Uni Maths (2nd edition)"},
     {value: "chemistry_16", label: "A-Level Physical Chemistry"}
 ];
 

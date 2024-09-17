@@ -72,7 +72,8 @@ export const HUMAN_QUESTION_TAGS = new Map([
     ["physics_skills_19", "Mastering Essential Pre-University Physics (3rd Edition)"],
     ["physics_linking_concepts", "Linking Concepts in Pre-University Physics"],
     ["maths_book_gcse", "Using Essential GCSE Mathematics"],
-    ["maths_book", "Pre-University Mathematics for Sciences"],
+    ["maths_book", "Pre-University Mathematics for Sciences (1st edition)"],
+    ["maths_book_2e", "Pre-University Mathematics for Sciences (2nd edition)"],
     ["chemistry_16", "Mastering Essential Pre-University Physical Chemistry"]
 ]);
 
