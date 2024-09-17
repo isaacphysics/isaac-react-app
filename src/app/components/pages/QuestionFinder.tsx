@@ -265,9 +265,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         } else {
             setNoResultsMessage(<em>No results match your criteria</em>);
         }
-
         setFilteringByStatus(isFilteringByStatus);
-        searchAndUpdateURL();
     };
 
     const searchAndUpdateURL = useCallback(() => {
