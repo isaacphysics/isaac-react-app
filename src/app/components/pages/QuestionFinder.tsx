@@ -345,7 +345,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         } else {
             setDisplayQuestions(questionList);
         }
-        
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [questionList]);
 
