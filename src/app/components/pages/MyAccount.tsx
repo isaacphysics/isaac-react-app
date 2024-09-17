@@ -56,7 +56,8 @@ import {
     validateEmail,
     validateEmailPreferences,
     validatePassword,
-    isTeacherOrAbove
+    isTeacherOrAbove,
+    isFirstLoginInPersistence
 } from "../../services";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
@@ -261,7 +262,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
 
     const accountInfoChanged = contextsChanged || userChanged || otherPreferencesChanged || (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
     useEffect(() => {
-        if (accountInfoChanged && !saving) {
+        if (accountInfoChanged && !isFirstLoginInPersistence() && !saving) {
             return history.block("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?");
         }
     }, [accountInfoChanged, saving]);
