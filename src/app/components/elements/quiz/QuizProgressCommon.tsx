@@ -133,7 +133,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
     , [semiSortedProgress, reverseOrder, sortOrder]);
 
     const tableHeaderFooter = <tr className="progress-table-header-footer">
-        <SortItemHeader defaultOrder={"name"} reverseOrder={"name"} currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}/>
+        <SortItemHeader className="student-name" defaultOrder={"name"} reverseOrder={"name"} currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}/>
         {questions.map((q, index) =>
             <SortItemHeader
                 key={q.id} className={`${isSelected(q)}`}
@@ -148,12 +148,14 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
         )}
         {isAssignment ? <>
             <SortItemHeader
+                className="total-column left"
                 defaultOrder={"totalQuestionPartPercentage"}
                 reverseOrder={"totalQuestionPartPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}>
                 Total Parts
             </SortItemHeader>
             <SortItemHeader
+                className="total-column right"
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}>
