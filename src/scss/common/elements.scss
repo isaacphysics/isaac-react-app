@@ -299,3 +299,36 @@ iframe.email-html {
   // height must be animated alongside max-height to prevent jumping if the inner content changes height during the animation
   max-height: 0;
 }
+
+@mixin pill-tag($text-color, $bg-color: white, $border-color: null) {
+  width: max-content;
+  padding: 0 0.4em;
+  align-self: center;
+  font-size: small;
+  text-decoration: none;
+  color: $text-color;
+  background-color: $bg-color;
+  border-radius: 8px;
+  transition: color 0.2s;
+  &::after {
+      display: none;
+  }
+
+  @if $border-color {
+    border: 1px solid $border-color;
+  }
+
+  &:is(a):hover {
+      color: darken($text-color, 20%);
+  }
+}
+
+.superseded-tag.superseded-tag {
+  @include pill-tag($gray-160, white, $gray-194)
+}
+
+.assignment-count-pill {
+  @include pill-tag(white, darken($phy_green, 20));
+  min-width: 25px;
+  text-align: center;
+}

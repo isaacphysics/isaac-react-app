@@ -410,10 +410,20 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     const {assignmentCount} = useGroupAssignmentSummary(user, group.id);
 
+    const deviceSize = useDeviceSize();
+
     return <>
         <div  onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
-            <div className="group-name"><span className="icon-group"/><span data-testid={"group-name"}>{group.groupName}</span></div>
-            <div className="flex-grow-1" />
+            <div className={classNames("group-name ps-2 ps-md-3 justify-content-between", {"flex-grow-1" : below['xs'](deviceSize)})}>
+                <div className="d-flex align-items-center">
+                    <span className="icon-group"/>
+                    <span data-testid={"group-name"}>{group.groupName}</span>
+                </div>
+                <div className="flex-grow-1 flex-grow-sm-0"/>
+                <div className="d-block d-sm-none justify-self-end ms-2 assignment-count-pill">{assignmentCount}</div>
+            </div>
+
+            <div className="flex-sm-grow-1"/>
 
             <div className="d-none d-sm-block py-2"><strong>{assignmentCount}</strong> assignment{assignmentCount != 1 && "s"} or test{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
 
