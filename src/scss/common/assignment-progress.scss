@@ -59,9 +59,10 @@
 
 .accordion-arrow {
   transform: rotate(180deg);
+  transition: transform 0.2s ease-in-out;
 }
 
-.active .accordion-arrow {
+.active.accordion-arrow {
   transform: rotate(0deg);
 }
 
@@ -207,9 +208,6 @@ $failed-bg-size: 25%;
     font-weight: 400;
     margin: 0;
     padding: 0;
-    @include respond-above(sm) {
-      margin-left: 0.75rem;
-    }
   }
 }
 
@@ -302,6 +300,7 @@ $failed-bg-size: 25%;
 }
 .gameboard-links > * {
   margin-right: 0.3rem;
+  min-width: max-content !important;
 }
 
 .assignment-progress-table-wrapper {
