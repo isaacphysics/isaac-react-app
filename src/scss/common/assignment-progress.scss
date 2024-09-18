@@ -278,12 +278,15 @@ $failed-bg-size: 25%;
   counter-increment: board-count;
   content: counter(board-count) ". ";
   display: inline-block;
+  height: 100%;
   padding: 0.5rem 1rem;
   font-weight: bold;
+  align-content: center;
 }
 .assignment-progress-gameboard .gameboard-title span {
   padding-left: 0.75rem;
   font-size: 1.2rem;
+  text-align: start;
 }
 .gameboard-due-date {
   font-weight: normal;
