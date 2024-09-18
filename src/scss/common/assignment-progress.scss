@@ -45,6 +45,10 @@
   @include respond-above(sm) {
     font-size: 1.1rem;
   }
+
+  @include respond-below(xs) {
+    width: unset;
+  }
 }
 .assignment-progress-group .group-name span {
   margin: auto 0;
