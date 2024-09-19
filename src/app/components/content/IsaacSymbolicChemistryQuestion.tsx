@@ -233,7 +233,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                             <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
                         )}
-                        {doc.isNuclear
+                        {!modalVisible ? 
+                            (doc.isNuclear
                                 ? <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
                                     Here are some examples of expressions you can type:<br />
                                     {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
@@ -248,7 +249,9 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                                     CH3(CH2)3CH3<br />
                                     {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br />
                                     As you type, the box above will preview the result.
-                                </UncontrolledTooltip>}
+                                </UncontrolledTooltip>
+                            )
+                        : null}
                     </>
                 </InputGroup>
                 <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
