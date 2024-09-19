@@ -64,3 +64,11 @@
 .border-radius-3 {
   border-radius: 1rem !important;
 }
+
+.flip-x {
+  transform: scaleX(-1);
+}
+
+.flip-y {
+  transform: scaleY(-1);
+}

@@ -209,7 +209,9 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
         {progress && progress.length > 0 && <>
             <div className="progress-questions">
                 <Button color="tertiary" disabled={selectedQuestionNumber == 0}
-                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber - 1)}>◄</Button>
+                    // on OSX chrome, the left- and right- pointing triangles are different, so construct these by flipping the same one
+                    className="flip-x"
+                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber - 1)}>►</Button>
                 <div>
                     {getQuestionTitle(selectedQuestion)}
                 </div>
