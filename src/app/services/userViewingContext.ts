@@ -133,27 +133,6 @@ export function useUserViewingContext(): UseUserContextReturnType {
         showOtherContent = true;
     }
 
-    // Replace query params
-    useEffect(() => {
-        const actualParams = queryString.parse(window.location.search, {decode: false});
-        if (stage !== actualParams.stage || (!isPhy && examBoard !== actualParams.examBoard)) {
-            try {
-                history.replace({
-                    ...window.location,
-                    search: queryString.stringify({
-                        ...actualParams,
-                        stage,
-                        examBoard: isAda ? examBoard : undefined,
-                    }, {encode: false})
-                });
-            } catch (e) {
-                // This is to handle the case where the existingLocation pathname is invalid, i.e. "isaacphysics.org//".
-                // In that case history.replace(...) throws an exception, and it will do this while the ErrorBoundary is
-                // trying to render, causing a loop and a spike in client-side errors.
-            }
-        }
-    }, [stage, examBoard]);
-
     return { stage, setStage, examBoard, setExamBoard, explanation, showOtherContent, hasDefaultPreferences };
 }
 
