@@ -21,6 +21,7 @@ import {
 import {ACTION_TYPE} from "../../app/services";
 import {Action} from "../../IsaacAppTypes";
 import {jest} from "@jest/globals";
+import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "../dateUtils";
 
 const mockStore = configureMockStore([thunk, ...middleware]);
 const axiosMock = new MockAdapter(endpoint);
@@ -50,7 +51,8 @@ describe("requestCurrentUser action", () => {
         const userAuthSettings = userAuthenticationSettings[dameShirley.id as number];
         const userPreferences = userPreferencesSettings[dameShirley.id as number];
 
-        axiosMock.onGet(`/users/current_user`).replyOnce(200, dameShirley);
+        axiosMock.onGet(`/users/current_user`).replyOnce(200, dameShirley,
+            {"x-session-expires": SOME_FIXED_FUTURE_DATE_AS_STRING});
         axiosMock.onGet(`/auth/user_authentication_settings`).replyOnce(200, userAuthSettings);
         axiosMock.onGet(`/users/user_preferences`).replyOnce(200, userPreferences);
 
@@ -63,7 +65,9 @@ describe("requestCurrentUser action", () => {
             {type: ACTION_TYPE.USER_PREFERENCES_REQUEST},
             {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences}
         ];
-        const expectedFinalActions = [{type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: dameShirley}];
+        const expectedFinalActions = [
+            {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: {...dameShirley, loggedIn: true, sessionExpiry: 2525860800000}}
+        ];
 
         const actualActions = store.getActions();
 

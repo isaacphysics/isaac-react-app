@@ -23,7 +23,7 @@ const checkUserConsistency = (middleware: MiddlewareAPI) => {
         dispatch(logAction({type: "USER_CONSISTENCY_WARNING_SHOWN", userAgent: navigator.userAgent}));
         // Mark error after this check has finished, else the error will be snuffed by the error reducer.
         window.setTimeout(() => middleware.dispatch({type: ACTION_TYPE.USER_CONSISTENCY_ERROR}));
-    } else if (state.user?.sessionExpiry && state.user?.sessionExpiry - Date.now() <= 0) {
+    } else if (state?.user?.sessionExpiry && state.user.sessionExpiry - Date.now() <= 0) {
         window.setTimeout(() => middleware.dispatch({type: ACTION_TYPE.USER_SESSION_EXPIRED}));
     } else {
         scheduleNextCheck(middleware);
