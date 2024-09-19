@@ -238,17 +238,17 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
     </div>;
 };
 
-const QuestionKey = ({icon, description}: {icon?: React.JSX.Element, description?: string}) => {
+const QuestionKey = ({icon, description}: {icon: React.JSX.Element, description?: string}) => {
     return <li className="d-flex flex-column flex-md-row flex-wrap px-1 align-items-center justify-content-center">
         <div className="key-cell me-0 me-md-2">{icon}</div>
-        <div className="key-description">{description}</div>
+        {description && <div className="key-description">{description}</div>}
     </li>;
 };
 
-const LegendKey = ({cellClass, description}: {cellClass?: string, description?: string}) => {
+const LegendKey = ({cellClass, description}: {cellClass: string, description?: string}) => {
     return <li className="d-flex flex-row flex-md-column flex-lg-row flex-wrap px-1 py-1 py-md-2 justify-content-start justify-content-md-center align-items-center">
-        <div className="key-cell d-flex me-2 me-md-0 me-lg-2"><span className={cellClass ?? ""}/></div>
-        <div className="key-description">{description ?? ""}</div>
+        <div className="key-cell d-flex me-2 me-md-0 me-lg-2"><span className={cellClass}/></div>
+        {description && <div className="key-description">{description}</div>}
     </li>;
 };
 
