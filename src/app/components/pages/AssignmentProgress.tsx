@@ -326,15 +326,12 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
                 </span>
             </Button>
             <div className="gameboard-links align-items-center">
-                <Button color="link" tag="a" className="me-md-0">
-                    {isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span>
-                </Button>
-                <span className="d-none d-md-inline">,</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>
+                <Button className="d-none d-md-inline me-0" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>
                     Download CSV
                 </Button>
-                <span className="d-none d-md-inline mx-1">or</span>
+                <span className="d-none d-md-inline mx-1">&middot;</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={`/test/assignment/${quizAssignment.id}/feedback`} onClick={openSingleAssignment}>View individual test</Button>
+                <img src={"/assets/common/icons/chevron-up.svg"} alt="" className={classNames("accordion-arrow", {"active" : isExpanded})}/>
             </div>
         </div>
         {isExpanded && <QuizProgressLoader key={quizAssignment.quizId} quizAssignmentId={quizAssignment.id} />}
