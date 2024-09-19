@@ -240,7 +240,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                         placeholder="Type your formula here"/>
                     <>
                         {siteSpecific(
-                            <RS.Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>,
+                            <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>,
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
                         )}
                         {!modalVisible && <RS.UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
