@@ -326,9 +326,3 @@ iframe.email-html {
 .superseded-tag.superseded-tag {
   @include pill-tag($gray-160, white, $gray-194)
 }
-
-.assignment-count-pill {
-  @include pill-tag(white, darken($phy_green, 20));
-  min-width: 25px;
-  text-align: center;
-}
