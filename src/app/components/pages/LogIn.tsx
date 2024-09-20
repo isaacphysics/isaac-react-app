@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     AppState,
     logInUser,
@@ -186,12 +186,8 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
     </>;
 };
 
-interface LogInProps {
-    redirectExplanation?: ReactElement
-}
-
 // Main login page component, utilises all of the components defined above
-export const LogIn = ({redirectExplanation}: LogInProps) => {
+export const LogIn = () => {
 
     const user = useAppSelector(selectors.user.orNull);
 
@@ -228,7 +224,6 @@ export const LogIn = ({redirectExplanation}: LogInProps) => {
     return <Container id="login-page" className="my-4 mb-5">
         <MetaDescription description={metaDescription} />
         <Row>
-            {redirectExplanation}
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card>
                     <CardBody>

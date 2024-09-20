@@ -1,6 +1,6 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {ACTION_TYPE, isDefined} from "../../services";
+import {ACTION_TYPE, isDefined, trackEvent} from "../../services";
 import {redirectTo, getUserId, logAction, setUserId, AppDispatch} from "../index";
 
 let timeoutHandle: number | undefined;
@@ -65,7 +65,7 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
             clearCurrentUser();
             break;
         case ACTION_TYPE.USER_SESSION_EXPIRED:
-            redirect = "/login_expired";
+            redirect = "/error_expired";
             break;
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
