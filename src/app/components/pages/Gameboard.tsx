@@ -1,5 +1,6 @@
 import React, {useEffect} from "react";
 import {
+    AppState,
     logAction,
     selectors,
     setAssignBoardPath,
@@ -24,7 +25,8 @@ import {
     siteSpecific,
     TAG_ID,
     TAG_LEVEL,
-    tags
+    tags,
+    useUserViewingContext
 } from "../../services";
 import {Redirect} from "react-router";
 import queryString from "query-string";
@@ -74,6 +76,19 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     const questionTags = tags.getByIdsAsHierarchy((question.tags || []) as TAG_ID[])
         .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
+    const questionViewingContexts = filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS);
+    const userViewingContext = useUserViewingContext();
+    const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
+    let uniqueStage = null;
+    if (isPhy && !isTutorOrAbove(currentUser)){
+        for (const context of questionViewingContexts) {
+            if(context.stage === userViewingContext.stage) {
+                uniqueStage = context;
+                break;
+            }
+        }
+    }
+
     return <ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "justify-content-center": isAda})}>
             <span className={"question-progress-icon"}>
@@ -100,8 +115,11 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     </div>}
                 </div>
 
-                {question.audience && <StageAndDifficultySummaryIcons audienceViews={
-                    filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS)
+                {(question.audience && !uniqueStage) && <StageAndDifficultySummaryIcons audienceViews={
+                    questionViewingContexts                 
+                } />}
+                {(question.audience && uniqueStage) && <StageAndDifficultySummaryIcons audienceViews={
+                    [uniqueStage]
                 } />}
             </div>
             {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to question"}/></div>}
