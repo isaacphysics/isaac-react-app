@@ -25,7 +25,7 @@ describe("SessionExpired", () => {
         // Assert
         //  Check we were redirected to the login page. Ideally we'd check the page itself, but this is the best we can
         //  do for the reasons described above.
-        expect(redirectTo).toHaveBeenLastCalledWith("/login_expired");
+        expect(redirectTo).toHaveBeenLastCalledWith("/error_expired");
 
         // Teardown
         // @ts-ignore
@@ -51,6 +51,6 @@ describe("SessionExpired", () => {
         // Assert
         //  We should still be where we were.
         expect(window.location.pathname).toEqual("/account");
-        expect(redirectTo).not.toHaveBeenLastCalledWith("/login_expired");
+        expect(redirectTo).not.toHaveBeenLastCalledWith("/error_expired");
     });
 });
