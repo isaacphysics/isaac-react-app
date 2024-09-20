@@ -79,7 +79,6 @@ import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
 import {QuestionFinder} from "../pages/QuestionFinder";
-import {ExigentAlert} from "../elements/ExigentAlert";
 import {SessionCookieExpired} from "../pages/SessionCookieExpired";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
