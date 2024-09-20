@@ -418,8 +418,8 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
                     <span className="visually-hidden">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
                 </Button>
             </div>
-            <UncontrolledButtonDropdown className="d-flex d-lg-none p-0">
-                <DropdownToggle caret className="text-nowrap" size="sm" color="link" onClick={e => e.stopPropagation()}>
+            <UncontrolledButtonDropdown className="d-flex d-lg-none align-self-center align-self-sm-start p-0">
+                <DropdownToggle caret className="text-nowrap py-2 me-2" size="sm" color="link" onClick={e => e.stopPropagation()}>
                     Downloads
                 </DropdownToggle>
                 <DropdownMenu>
@@ -463,7 +463,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
             />
             <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_help")} ifNotFound={RenderNothing} />
             <div className="w-100 text-end">
-                <div className="d-inline text-nowrap">
+                <div className="d-lg-inline text-nowrap">
                     <Label className="pe-2 mt-1">Sort assignments and tests:</Label>
                     <UncontrolledButtonDropdown size="sm">
                         <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={siteSpecific("lg", "sm")}>
@@ -476,7 +476,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
                 </div>
-                <div className="d-inline text-nowrap ms-4">
+                <div className="d-lg-inline text-nowrap ms-4">
                     <Label className="pe-2 mt-1">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">
                         <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={siteSpecific("lg", "sm")}>
