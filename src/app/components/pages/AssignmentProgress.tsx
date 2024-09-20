@@ -413,8 +413,8 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
                 {pageSettings.isTeacher && <a className={"download-csv-link ms-2"} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noreferrer noopener" onClick={openDownloadLink}>
                     (Download group tests CSV)
                 </a>}
-                <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
-                    <img src={siteSpecific("/assets/common/icons/icon-expand-arrow.png", "/assets/common/icons/chevron-up.svg")} alt="" className="accordion-arrow" />
+                <Button color="link" className={classNames("d-inline-flex", {"px-2": isPhy})} tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
+                    <img src={"/assets/common/icons/chevron-up.svg"} alt="" className={classNames("accordion-arrow", {"active": isExpanded})} />
                     <span className="visually-hidden">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
                 </Button>
             </div>
