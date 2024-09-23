@@ -31,6 +31,7 @@ import {
     Row, Table
 } from "reactstrap";
 import {
+    above,
     BoardLimit, determineGameboardStagesAndDifficulties, determineGameboardSubjects, difficultyShortLabelMap,
     formatBoardOwner,
     getAssignmentStartDate,
@@ -42,7 +43,8 @@ import {
     nthHourOf, PATHS,
     selectOnChange,
     siteSpecific, stageLabelMap, TAG_ID, TAG_LEVEL, tags,
-    TODAY
+    TODAY,
+    useDeviceSize
 } from "../../services";
 import {AppGroup, AssignmentScheduleContext, BoardOrder, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
@@ -72,6 +74,7 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
     const headerScrollerFlag = useRef(false);
     const headerScrollerObserver = useRef<IntersectionObserver>();
     const stickyHeaderListContainer = useRef<HTMLDivElement>(null);
+    const deviceSize = useDeviceSize();
 
     const headerScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
         for (const entry of entries) {
@@ -140,13 +143,13 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 {/*</Button>*/}
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
                     <ButtonGroup className={"w-100 pt-3"}>
-                        <Button size={"md"} className={"border-end-0"} id={"start-date-button"}
+                        <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-end-0 px-1 px-lg-3"} id={"start-date-button"}
                                 color={viewBy === "startDate" ? "secondary" : "primary"}
                                 outline={viewBy !== "startDate"}
                                 onClick={() => setViewBy("startDate")}>
                             By start date
                         </Button>
-                        <Button size={"md"} className={"border-start-0"} id={"due-date-button"}
+                        <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-start-0 px-1 px-lg-3"} id={"due-date-button"}
                                 color={viewBy === "dueDate" ? "secondary" : "primary"}
                                 outline={viewBy !== "dueDate"}
                                 onClick={() => setViewBy("dueDate")}>
