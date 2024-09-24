@@ -16,4 +16,5 @@ export const DAYS_AGO = (date: Date = new Date(NOW), delta_days: number, roundDo
     return date.valueOf();
 };
 
-export const SOME_FIXED_FUTURE_DATE = Date.parse('15 Jan 2050 12:00:00 GMT');
+export const SOME_FIXED_FUTURE_DATE_AS_STRING = '15 Jan 2050 12:00:00 GMT';
+export const SOME_FIXED_FUTURE_DATE = Date.parse(SOME_FIXED_FUTURE_DATE_AS_STRING);

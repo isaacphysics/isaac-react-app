@@ -31,7 +31,7 @@ export const userSlice = createSlice({
             () => ({loggedIn: false, requesting: true}),
         ).addMatcher(
             loggedInMatcher,
-            (_, action) => ({loggedIn: true, ...action.user}),
+            (_, action) => ({sessionExpiry: undefined, loggedIn: true, ...action.user}),
         ).addMatcher(
             loggedOutMatcher,
             () => ({loggedIn: false}),

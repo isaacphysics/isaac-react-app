@@ -1,4 +1,4 @@
-import {AnyAction, Dispatch, Middleware, MiddlewareAPI} from "redux";
+import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE, isDefined} from "../../services";
 import {redirectTo, getUserId, logAction, setUserId, AppDispatch} from "../index";
@@ -23,6 +23,8 @@ const checkUserConsistency = (middleware: MiddlewareAPI) => {
         dispatch(logAction({type: "USER_CONSISTENCY_WARNING_SHOWN", userAgent: navigator.userAgent}));
         // Mark error after this check has finished, else the error will be snuffed by the error reducer.
         window.setTimeout(() => middleware.dispatch({type: ACTION_TYPE.USER_CONSISTENCY_ERROR}));
+    } else if (state?.user?.sessionExpiry && state.user.sessionExpiry - Date.now() <= 0) {
+        window.setTimeout(() => middleware.dispatch({type: ACTION_TYPE.USER_SESSION_EXPIRED}));
     } else {
         scheduleNextCheck(middleware);
     }
@@ -61,6 +63,9 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
             redirect = "/consistency-error";
             clearCurrentUser();
+            break;
+        case ACTION_TYPE.USER_SESSION_EXPIRED:
+            redirect = "/error_expired";
             break;
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
