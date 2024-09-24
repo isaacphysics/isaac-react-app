@@ -26,12 +26,12 @@ import {RegistrationTeacherConnect} from "../../pages/RegistrationTeacherConnect
 import {RegistrationSetPreferences} from "../../pages/RegistrationSetPreferences";
 import {RegistrationSuccess} from "../../pages/RegistrationSuccess";
 import {Events} from "../../pages/Events";
+import EventDetails from "../../pages/EventDetails";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import { OnlineCourses } from "../../pages/OnlineCourses";
 import {ExamSpecificationsDirectory} from "../../pages/ExamSpecificationsDirectory";
 
 const Equality = lazy(() => import('../../pages/Equality'));
-const EventDetails = lazy(() => import('../../pages/EventDetails'));
 
 let key = 0;
 export const RoutesCS = [
