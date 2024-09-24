@@ -13,7 +13,7 @@ import {
     Row
 } from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {
     DOCUMENT_TYPE,
     documentDescription,
@@ -164,7 +164,10 @@ export const Search = withRouter((props: RouteComponentProps) => {
                         {urlQuery != "" && <CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {gotResults ?
-                                    <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={true}/>
+                                    <LinkToContentSummaryList 
+                                        items={shortcutAndFilteredSearchResults} showBreadcrumb={true}
+                                        contentTypeVisibility={ContentTypeVisibility.SHOWN}   
+                                    />
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </CardBody>}

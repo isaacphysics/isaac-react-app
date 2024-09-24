@@ -100,8 +100,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
             setAttemptedSignUp(true);
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(errorSlice.actions.clearError());
-            dispatch(registerNewUser(registrationUser, {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS},
-                [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ADA}], null));
+            dispatch(registerNewUser(registrationUser, {EMAIL_PREFERENCE: EMAIL_PREFERENCE_DEFAULTS}, undefined, null));
             trackEvent("registration", {
                 props:
                         {

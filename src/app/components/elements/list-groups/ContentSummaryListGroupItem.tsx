@@ -32,12 +32,18 @@ import classNames from "classnames";
 import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 import { CSSModule } from "reactstrap/types/lib/utils";
 
-export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, noCaret, hideContentType, ignoreIntendedAudience}: {
+export enum ContentTypeVisibility {
+    SHOWN, // default if not specified
+    ICON_ONLY,
+    FULLY_HIDDEN
+}
+
+export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCaret, contentTypeVisibility, ignoreIntendedAudience}: {
     item: ShortcutResponse;
     search?: string;
-    displayTopicTitle?: boolean;
+    showBreadcrumb?: boolean;
     noCaret?: boolean;
-    hideContentType?: boolean;
+    contentTypeVisibility?: ContentTypeVisibility;
     ignoreIntendedAudience?: boolean;
 }) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -145,18 +151,18 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
 
     return <ListGroupItem className={classNames(itemClasses, {"p-3 d-md-flex flex-column justify-content-center content-summary-item": isPhy})} key={linkDestination}>
         <Link className={classNames({"position-relative justify-content-center": isAda})} to={{pathname: linkDestination, search: search, hash: hash}}>
-            <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
+            {contentTypeVisibility !== ContentTypeVisibility.FULLY_HIDDEN && <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
                 {siteSpecific(
                     icon,
                     <div className={"inner-progress-icon"}>
                         {icon}
-                        {!hideContentType && <>
+                        {contentTypeVisibility !== ContentTypeVisibility.ICON_ONLY && <>
                             <br/>
                             <span className={"icon-title"}>{typeLabel}</span>
                         </>}
                     </div>
                 )}
-            </span>
+            </span>}
             <div className={classNames("flex-fill", {"py-3 pe-3 align-content-center": isAda, "d-flex": isAda && !stack, "d-md-flex": isPhy})}>
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
@@ -167,12 +173,12 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
                             ({typeLabel})
                         </span>}
                         {isPhy && item.supersededBy && isTeacherOrAbove(user) ? <a 
-                            className="superseded-tag ms-1 ms-sm-3" 
+                            className="superseded-tag mx-1 ms-sm-3" 
                             href={`/questions/${item.supersededBy}`}
                             onClick={(e) => e.stopPropagation()}
                         >SUPERSEDED</a> : null}
                         {isPhy && item.tags && item.tags.includes("nofilter") && isStaff(user) ? <span
-                            className="superseded-tag ms-1 ms-sm-3"
+                            className="superseded-tag mx-1 ms-sm-3"
                         >NO-FILTER</span> : null}
                     </div>
                     {(isPhy && item.summary) && <div className="small text-muted d-none d-sm-block">
@@ -181,7 +187,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
                     {(!item.summary || deviceSize === "xs") && item.subtitle && <div className="small text-muted d-block">
                         {item.subtitle}
                     </div>}
-                    {displayTopicTitle && hierarchyTags && <div className={"hierarchy-tags d-none d-md-block"}>
+                    {showBreadcrumb && hierarchyTags && <div className={"hierarchy-tags d-none d-md-block"}>
                         {hierarchyTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
                 </div>
@@ -199,12 +205,12 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, no
     </ListGroupItem>;
 };
 
-export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCaret, hideContentType, ignoreIntendedAudience, ...rest}: {
+export const LinkToContentSummaryList = ({items, search, showBreadcrumb, noCaret, contentTypeVisibility, ignoreIntendedAudience, ...rest}: {
     items: ContentSummaryDTO[];
     search?: string;
-    displayTopicTitle?: boolean;
+    showBreadcrumb?: boolean;
     noCaret?: boolean;
-    hideContentType?: boolean;
+    contentTypeVisibility?: ContentTypeVisibility;
     ignoreIntendedAudience?: boolean;
     tag?: React.ElementType;
     flush?: boolean;
@@ -214,8 +220,8 @@ export const LinkToContentSummaryList = ({items, search, displayTopicTitle, noCa
     return <ListGroup {...rest} className={"link-list list-group-links mb-3" + rest.className}>
         {items.map(item => <ContentSummaryListGroupItem
             item={item} search={search} noCaret={noCaret}
-            key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}
-            hideContentType={hideContentType} ignoreIntendedAudience={ignoreIntendedAudience}
+            key={item.type + "/" + item.id} showBreadcrumb={showBreadcrumb}
+            contentTypeVisibility={contentTypeVisibility} ignoreIntendedAudience={ignoreIntendedAudience}
         />)}
     </ListGroup>;
 };

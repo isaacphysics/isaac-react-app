@@ -79,6 +79,7 @@ import {MyGameboards} from "../pages/MyGameboards";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
 import {QuestionFinder} from "../pages/QuestionFinder";
+import {SessionCookieExpired} from "../pages/SessionCookieExpired";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -155,6 +156,7 @@ export const IsaacApp = () => {
                         {/* Errors; these paths work but aren't really used */}
                         <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
                         <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
+                        <Route exact path={"/error_expired"} component={SessionCookieExpired} />
                         <TrackedRoute exact path={"/auth_error"} component={AuthError} />
                         <TrackedRoute exact path={"/consistency-error"} component={ConsistencyError} />
 

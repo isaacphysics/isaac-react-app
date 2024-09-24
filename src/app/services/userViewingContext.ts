@@ -158,15 +158,15 @@ export function useUserViewingContext(): UseUserContextReturnType {
 }
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
-    {label: "ADA (Default)", value: EXAM_BOARD.ADA},
+    {label: "All Exam Boards", value: EXAM_BOARD.ALL},
+    {label: "Ada (Default)", value: EXAM_BOARD.ADA},
     {label: "AQA", value: EXAM_BOARD.AQA},
     {label: "CIE", value: EXAM_BOARD.CIE},
-    {label: "EDEXCEL", value: EXAM_BOARD.EDEXCEL},
-    {label: "EDUQAS", value: EXAM_BOARD.EDUQAS},
+    {label: "Edexcel", value: EXAM_BOARD.EDEXCEL},
+    {label: "Eduqas", value: EXAM_BOARD.EDUQAS},
     {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "WJEC", value: EXAM_BOARD.WJEC},
     {label: "SQA", value: EXAM_BOARD.SQA},
-    {label: "All Exam Boards", value: EXAM_BOARD.ALL},
 ];
 interface ExamBoardFilterOptions {
     byUser?: Immutable<PotentialUser> | null;
@@ -217,13 +217,13 @@ const _STAGE_ITEM_OPTIONS = siteSpecific([ /* best not to export - use getFilter
     {label: "All stages", value: STAGE.ALL},
 ], [
     {label: "All Stages (Default)", value: STAGE.ALL},
+    {label: "Core", value: STAGE.CORE},
+    {label: "Advanced", value: STAGE.ADVANCED},
     {label: "GCSE", value: STAGE.GCSE},
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "National 5", value: STAGE.SCOTLAND_NATIONAL_5},
     {label: "Higher", value: STAGE.SCOTLAND_HIGHER},
     {label: "Advanced Higher", value: STAGE.SCOTLAND_ADVANCED_HIGHER},
-    {label: "Core", value: STAGE.CORE},
-    {label: "Advanced", value: STAGE.ADVANCED},
 ]);
 interface StageFilterOptions {
     byUser?: Immutable<PotentialUser> | null;
@@ -422,24 +422,36 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
 }
 
 export function audienceStyle(audienceString: string): string {
-    switch (audienceString) {
-        case stageLabelMap.a_level:
-            return "stage-label-alevel";
-        case stageLabelMap.gcse:
-            return "stage-label-gcse";
-        case stageLabelMap.scotland_national_5:
-            return "stage-label-national-5";
-        case stageLabelMap.scotland_higher:
-            return "stage-label-higher";
-        case stageLabelMap.scotland_advanced_higher:
-            return "stage-label-advanced-higher";
-        case stageLabelMap.core:
-            return "stage-label-core";
-        case stageLabelMap.advanced:
-            return "stage-label-advanced";
-        default:
-            return "stage-label-all";
-    }
+    const audienceStages = audienceString.split('\n').flatMap(line => line.split(', '));
+
+    // Convert to css labels
+    const stageLabels = audienceStages.map(
+        stage => {switch (stage) {
+            case stageLabelMap.core:
+            case stageLabelMap.gcse:
+            case stageLabelMap.scotland_national_5:
+                return "stage-label-core";
+
+            case stageLabelMap.advanced:
+            case stageLabelMap.a_level:
+            case stageLabelMap.scotland_advanced_higher:
+                return "stage-label-advanced";
+
+            case stageLabelMap.scotland_higher:
+                // Scotland higher has a unique styling
+                return "stage-label-higher";
+
+            default:
+                return "stage-label-all";
+        }}
+    );
+    const uniqueLabels = audienceStages.length === 1
+        ? new Set(stageLabels)
+        // If multiple stages are present group into "advanced" and "core"
+        : new Set(stageLabels.map(v => v === "stage-label-higher" ? "stage-label-advanced" : v));
+
+    // If only one group exists use that colour, otherwise, use the mixed colour
+    return uniqueLabels.size === 1 ? uniqueLabels.values().next().value : "stage-label-all";
 }
 
 export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType, intendedAudience: boolean): string {

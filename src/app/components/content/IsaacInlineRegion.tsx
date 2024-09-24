@@ -117,6 +117,7 @@ const IsaacInlineRegion = ({doc, className}: IsaacInlineRegionProps) => {
                     inlineContext.elementToQuestionMap[elementId] = {questionId: inlineQuestion.id, type: inlineQuestion.type};
                 }
             });
+            inlineContext.setInitialised(true);
         }
     }, [inlineQuestions]);
 
