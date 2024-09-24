@@ -46,17 +46,53 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Cypress {
         interface Chainable {
-            mountWithStoreAndRouter(component: ReactNode, routes: string[], options: MountOptions): Chainable<Element>;
+            mountWithStoreAndRouter(component: ReactNode, routes: string[], options?: MountOptions): Chainable<Element>;
         }
     }
 }
 
 import React, {ReactNode} from "react";
 import {Provider} from "react-redux";
-import {store} from "../../src/app/state";
+import {server} from "../../src/mocks/server";
+import {mockUser} from "../../src/mocks/data";
+import {http, HttpResponse} from "msw";
+import {produce} from "immer";
+import {isaacApi, requestCurrentUser, store} from "../../src/app/state";
 import {MemoryRouter} from "react-router";
 
 Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, options) => {
+    store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
+    store.dispatch(isaacApi.util.resetApiState());
+    server.resetHandlers();
+
+    // FIXME: not hard-coded
+    const role = "TEACHER" as "TEACHER" | "STUDENT" | "ADMIN" | "ANONYMOUS" | undefined;
+    const modifyUser = undefined as ((u: typeof mockUser) => typeof mockUser) | undefined;
+
+    if (role || modifyUser) {
+        server.use(
+            http.get(API_PATH + "/users/current_user", () => {
+                if (role === "ANONYMOUS") {
+                    return HttpResponse.json({
+                        responseCode: 401,
+                        responseCodeType: "Unauthorized",
+                        errorMessage: "You must be logged in to access this resource.",
+                        bypassGenericSiteErrorPage: false
+                    }, {
+                        status: 401,
+                    });
+                }
+                const userWithRole = produce(mockUser, user => {
+                    user.role = role ?? mockUser.role;
+                });
+                return HttpResponse.json(modifyUser ? modifyUser(userWithRole) : userWithRole, {
+                    status: 200,
+                });
+            }),
+        );
+    }
+
+    store.dispatch(requestCurrentUser());
     mount(
         <Provider store={store}>
             <MemoryRouter initialEntries={routes}>
@@ -68,6 +104,7 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, options) => 
 });
 
 import "@frsource/cypress-plugin-visual-regression-diff/dist/support";
+import { ACTION_TYPE, API_PATH } from '../../src/app/services';
 
 // Skip visual regression tests in interactive mode - the results are not consistent with headless.
 // It may be useful to comment this out when debugging tests locally, but don't commit the snapshots.

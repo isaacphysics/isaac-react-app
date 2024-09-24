@@ -1,12 +1,14 @@
 // Custom jest matchers for MSW handler functions
-import {RestRequest} from "msw";
+import {DefaultBodyType, PathParams, StrictRequest} from "msw";
 import {within} from "@testing-library/react";
 
+export type HttpRequestArguments = {request: StrictRequest<DefaultBodyType>, requestId: string, params: PathParams<keyof PathParams>, cookies: Record<string, string>};
+
 expect.extend({
-    async toHaveBeenRequestedWith(received: jest.MockedFn<any>, predicate: (req: RestRequest) => (Promise<boolean> | boolean)) {
+    async toHaveBeenRequestedWith(received: jest.MockedFn<any>, predicate: (req: HttpRequestArguments) => (Promise<boolean> | boolean)) {
         const reqList: any[] = [];
         for (const call of received.mock.calls) {
-            const req = call[0] as RestRequest;
+            const req = call[0] as HttpRequestArguments;
             reqList.push(req);
             if (await predicate(req)) {
                 return {
@@ -21,8 +23,8 @@ expect.extend({
             pass: false,
         };
     },
-    async toHaveBeenRequestedWithNth(received: jest.MockedFn<any>, predicate: (req: RestRequest) => (Promise<boolean> | boolean), n: number) {
-        const req = received.mock.calls[n] as unknown as RestRequest | undefined;
+    async toHaveBeenRequestedWithNth(received: jest.MockedFn<any>, predicate: (req: HttpRequestArguments) => (Promise<boolean> | boolean), n: number) {
+        const req = received.mock.calls[n] as unknown as HttpRequestArguments | undefined;
         if (!req) {
             return {
                 message: () =>
@@ -62,8 +64,8 @@ expect.extend({
 declare global {
     namespace jest {
         interface Matchers<R> {
-            toHaveBeenRequestedWith(predicate: (req: RestRequest) => (Promise<boolean> | boolean)): R;
-            toHaveBeenRequestedWithNth(predicate: (req: RestRequest) => (Promise<boolean> | boolean), n: number): R;
+            toHaveBeenRequestedWith(predicate: (req: HttpRequestArguments) => (Promise<boolean> | boolean)): R;
+            toHaveBeenRequestedWithNth(predicate: (req: HttpRequestArguments) => (Promise<boolean> | boolean), n: number): R;
             toHaveModalTitle(title: string): R;
         }
     }

@@ -1,7 +1,7 @@
 import {UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
-import {rest, RestHandler} from "msw";
+import {http, HttpResponse, HttpHandler} from "msw";
 import {ACCOUNT_TAB, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
 import {produce} from "immer";
 import {mockUser} from "../mocks/data";
@@ -30,7 +30,7 @@ interface RenderTestEnvironmentOptions {
     modifyUser?: (u: typeof mockUser) => typeof mockUser;
     PageComponent?: React.FC<any>;
     initalRouteEntries?: string[];
-    extraEndpoints?: RestHandler<any>[];
+    extraEndpoints?: HttpHandler[];
 }
 // Flexible helper function to set up different kinds of test environments. You can:
 //  - Choose the role of the mock user (defaults to ADMIN)
@@ -49,25 +49,24 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     server.resetHandlers();
     if (role || modifyUser) {
         server.use(
-            rest.get(API_PATH + "/users/current_user", (req, res, ctx) => {
+            http.get(API_PATH + "/users/current_user", ({request, params, cookies}) => {
                 if (role === "ANONYMOUS") {
-                    return res(
-                        ctx.status(401),
-                        ctx.json({
-                            responseCode: 401,
-                            responseCodeType: "Unauthorized",
-                            errorMessage: "You must be logged in to access this resource.",
-                            bypassGenericSiteErrorPage: false
-                        })
+                    return HttpResponse.json({
+                        responseCode: 401,
+                        responseCodeType: "Unauthorized",
+                        errorMessage: "You must be logged in to access this resource.",
+                        bypassGenericSiteErrorPage: false
+                    }, {
+                        status: 401,
+                    }
                     );
                 }
                 const userWithRole = produce(mockUser, user => {
                     user.role = role ?? mockUser.role;
                 });
-                return res(
-                    ctx.status(200),
-                    ctx.json(modifyUser ? modifyUser(userWithRole) : userWithRole)
-                );
+                return HttpResponse.json(modifyUser ? modifyUser(userWithRole) : userWithRole, {
+                    status: 200,
+                });
             }),
         );
     }
