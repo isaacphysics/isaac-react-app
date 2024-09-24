@@ -14,7 +14,7 @@ import {ACCOUNT_TAB, API_PATH, extractTeacherName, isDefined} from "../../app/se
 import difference from "lodash/difference";
 import isEqual from "lodash/isEqual";
 import userEvent from "@testing-library/user-event";
-import {ResponseResolver, rest} from "msw";
+import {DefaultRequestMultipartBody, HttpResponse, ResponseResolver, http} from "msw";
 import {
     buildAuthTokenHandler,
     buildGroupHandler,
@@ -22,6 +22,7 @@ import {
     handlerThatReturns
 } from "../../mocks/handlers";
 import queryString from "query-string";
+import { HttpRequestArguments } from "../matchers";
 
 // --- Helper functions ---
 
@@ -66,8 +67,8 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
     await waitFor(() => {
         expect(managerHandler).toHaveBeenCalledTimes(1);
     });
-    await expect(managerHandler).toHaveBeenRequestedWith(async (req) => {
-        const {email} = await req.json();
+    await expect(managerHandler).toHaveBeenRequestedWith(async ({request}) => {
+        const email = await request.json();
         return email === newManager.email;
     });
     // Expect that new additional manager is shown in modal
@@ -119,8 +120,8 @@ describe("Groups", () => {
         renderTestEnvironment({
             role: "TUTOR",
             extraEndpoints: [
-                rest.post(API_PATH + "/groups", newGroupHandler),
-                rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, authTokenHandler),
+                http.post(API_PATH + "/groups", newGroupHandler),
+                http.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, authTokenHandler),
             ]
         });
         await navigateToGroups();
@@ -133,8 +134,8 @@ describe("Groups", () => {
         await waitFor(() => {
             expect(newGroupHandler).toHaveBeenCalledTimes(1);
         });
-        await expect(newGroupHandler).toHaveBeenRequestedWith(async (req) => {
-            const body = await req.json();
+        await expect(newGroupHandler).toHaveBeenRequestedWith(async ({request}) => {
+            const body = await request.json() as Record<string, any> | DefaultRequestMultipartBody;
             return "groupName" in body && body.groupName === mockNewGroup.groupName;
         });
         const modal = await screen.findByTestId("active-modal");
@@ -156,12 +157,12 @@ describe("Groups", () => {
         let correctDeleteRequests = 0;
         renderTestEnvironment({
             extraEndpoints: [
-                rest.delete(API_PATH + "/groups/:groupId", async (req, res, ctx) => {
-                    const {groupId} = req.params;
+                http.delete(API_PATH + "/groups/:groupId", async ({params}) => {
+                    const {groupId} = params;
                     if (parseInt(groupId as string) === groupToDelete.id) {
                         correctDeleteRequests++;
                     }
-                    return res(ctx.status(204));
+                    return HttpResponse.json(null, {status: 204,});
                 }),
             ]
         });
@@ -200,13 +201,13 @@ describe("Groups", () => {
             let correctUpdateRequests = 0;
             renderTestEnvironment({
                 extraEndpoints: [
-                    rest.post(API_PATH + "/groups/:groupId", async (req, res, ctx) => {
-                        const {groupId} = req.params;
-                        const updatedGroup = await req.json();
-                        if (parseInt(groupId as string) === groupToRename.id && updatedGroup.groupName === newGroupName && isEqual(groupToRename, {...updatedGroup, groupName: groupToRename.groupName})) {
+                    http.post(API_PATH + "/groups/:groupId", async ({request, params}) => {
+                        const {groupId} = params;
+                        const updatedGroup = await request.json() as Record<string, string> | DefaultRequestMultipartBody;
+                        if (parseInt(groupId as string) === groupToRename.id && updatedGroup?.groupName === newGroupName && isEqual(groupToRename, {...updatedGroup, groupName: groupToRename.groupName})) {
                             correctUpdateRequests++;
                         }
-                        return res(ctx.status(204));
+                        return HttpResponse.json(null, {status: 204,});
                     }),
                 ]
             });
@@ -245,33 +246,34 @@ describe("Groups", () => {
                 const groupToModify = mockGroups[0];
                 const newArchivedValue = activeOrArchived === "active";
                 // Request handlers
-                const updateGroup = jest.fn(async (req, res, ctx) => {
-                    return res(
-                        ctx.status(200),
-                        ctx.json({...groupToModify, archived: newArchivedValue})
-                    );
+                const updateGroup = jest.fn(async () => {
+                    return HttpResponse.json({...groupToModify, archived: newArchivedValue}, {
+                        status: 200,
+                    });
                 });
-                const getGroups = jest.fn((req, res, ctx) => {
-                    const archived = req.url.searchParams.get("archived_groups_only") === "true";
+                const getGroups = jest.fn(({request} : HttpRequestArguments) => {
+                    const url = new URL(request.url);
+                    const archived = url.searchParams.get("archived_groups_only") === "true";
                     const groups = archived === newArchivedValue ? (shouldTryToShowArchivedTabFirst ? mockOtherGroups : [...mockOtherGroups, {
                         ...groupToModify,
                         archived: newArchivedValue
                     }]) : mockGroups;
-                    return res(
-                        ctx.status(200),
-                        ctx.json(groups)
-                    );
+                    return HttpResponse.json(groups, {
+                        status: 200,
+                    });
                 });
                 renderTestEnvironment({
                     extraEndpoints: [
-                        rest.post(API_PATH + "/groups/:groupId", updateGroup),
+                        http.post(API_PATH + "/groups/:groupId", updateGroup),
                         // We need to handle when the Archived tab requests the list of archived groups, because in this case
                         // the optimistic update to the archived list falls flat - RTKQ cache updates can only occur if the
                         // cache entry exists, but in this test the archived tab only gets visited for the first time AFTER
                         // we try to update the cache.
                         // If RTKQ cache gets an "upsert" function, then we can use that instead, and the below request handler
                         // can be removed.
-                        rest.get(API_PATH + "/groups", getGroups)
+                        // http.get(API_PATH + "/groups", getGroups)
+
+                        http.get(API_PATH + "/groups", getGroups as any)
                     ]
                 });
                 await navigateToGroups();
@@ -297,9 +299,9 @@ describe("Groups", () => {
                     expect(newGroupNames).toHaveLength(groups.length - 1);
                 });
                 // Assert that the request was what we expected
-                await expect(updateGroup).toHaveBeenRequestedWith(async (req) => {
-                    const {groupId} = req.params;
-                    const updatedGroup = await req.json();
+                await expect(updateGroup).toHaveBeenRequestedWith(async ({request, params}) => {
+                    const {groupId} = params;
+                    const updatedGroup = await request.json() as Record<string, any> | DefaultRequestMultipartBody;
                     // Request is correct if and only if the archived status has changed for the group that we expect
                     return parseInt(groupId as string) === groupToModify.id && updatedGroup.archived === newArchivedValue && isEqual(groupToModify, {
                         ...updatedGroup,
@@ -317,11 +319,13 @@ describe("Groups", () => {
                 // Ensure that in any case (whether we switched to the archived tab before doing anything or not), only
                 // two GET requests to the /groups endpoint were made, one for each tab
                 expect(getGroups).toHaveBeenCalledTimes(2);
-                await expect(getGroups).toHaveBeenRequestedWith((req) => {
-                    return req.url.searchParams.get("archived_groups_only") === "true";
+                await expect(getGroups).toHaveBeenRequestedWith(({request}) => {
+                    const url = new URL(request.url);
+                    return url.searchParams.get("archived_groups_only") === "true";
                 });
-                await expect(getGroups).toHaveBeenRequestedWith((req) => {
-                    return req.url.searchParams.get("archived_groups_only") === "false";
+                await expect(getGroups).toHaveBeenRequestedWith(({request}) => {
+                    const url = new URL(request.url);
+                    return url.searchParams.get("archived_groups_only") === "false";
                 });
             });
         });
@@ -337,8 +341,8 @@ describe("Groups", () => {
             renderTestEnvironment({
                 role: "TEACHER",
                 extraEndpoints: [
-                    rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
-                    rest.post(API_PATH + `/groups/${mockGroup.id}/manager`, existingGroupManagerHandler)
+                    http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
+                    http.post(API_PATH + `/groups/${mockGroup.id}/manager`, existingGroupManagerHandler)
                 ]
             });
             await navigateToGroups();
@@ -360,7 +364,7 @@ describe("Groups", () => {
             renderTestEnvironment({
                 role: "TUTOR",
                 extraEndpoints: [
-                    rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup]))
+                    http.get(API_PATH + "/groups", buildGroupHandler([mockGroup]))
                 ]
             });
             await navigateToGroups();
@@ -386,15 +390,17 @@ describe("Groups", () => {
         renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
-                rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
+                http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
                 // Group members consist of one student who has authorised full access, and one student that hasn't
-                rest.get(API_PATH + `/groups/${mockGroup.id}/membership`, handlerThatReturns({data: [
+                http.get(API_PATH + `/groups/${mockGroup.id}/membership`, handlerThatReturns({data: [
                     buildMockUserSummaryWithGroupMembership(buildMockStudent(10), mockGroup.id, true),
                     buildMockUserSummaryWithGroupMembership(buildMockStudent(11), mockGroup.id, false)
                 ]})),
-                rest.post(API_PATH + `/users/10/resetpassword`, (req, res, ctx) => {
+                http.post(API_PATH + `/users/10/resetpassword`, () => {
                     passwordResetSuccessfullySent = true;
-                    return res(ctx.status(200));
+                    return HttpResponse.json(null, {
+                        status: 200,
+                    });
                 })
             ]
         });
@@ -430,9 +436,9 @@ describe("Groups", () => {
         renderTestEnvironment({
             role: "TUTOR",
             extraEndpoints: [
-                rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
+                http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
                 // Group members consist of one student who has authorised full access, and one student that hasn't
-                rest.get(API_PATH + `/groups/${mockGroup.id}/membership`, handlerThatReturns({data: [
+                http.get(API_PATH + `/groups/${mockGroup.id}/membership`, handlerThatReturns({data: [
                     buildMockUserSummaryWithGroupMembership(buildMockStudent(10), mockGroup.id, true),
                     buildMockUserSummaryWithGroupMembership(buildMockStudent(11), mockGroup.id, false)
                 ]}))
@@ -467,9 +473,9 @@ describe("Groups", () => {
         renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
-                rest.post(API_PATH + "/groups", handlerThatReturns({data: mockNewGroup})),
-                rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, buildAuthTokenHandler(mockNewGroup, "G3N30M")),
-                rest.post(API_PATH + `/groups/${mockNewGroup.id}/manager`, newGroupManagerHandler)
+                http.post(API_PATH + "/groups", handlerThatReturns({data: mockNewGroup})),
+                http.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, buildAuthTokenHandler(mockNewGroup, "G3N30M")),
+                http.post(API_PATH + `/groups/${mockNewGroup.id}/manager`, newGroupManagerHandler)
             ]
         });
         await navigateToGroups();
@@ -497,8 +503,8 @@ describe("Groups", () => {
         renderTestEnvironment({
             role: "TUTOR",
             extraEndpoints: [
-                rest.post(API_PATH + "/groups", handlerThatReturns({data: mockNewGroup})),
-                rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, buildAuthTokenHandler(mockNewGroup, "G3N30M"))
+                http.post(API_PATH + "/groups", handlerThatReturns({data: mockNewGroup})),
+                http.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, buildAuthTokenHandler(mockNewGroup, "G3N30M"))
             ]
         });
         await navigateToGroups();
@@ -522,20 +528,19 @@ describe("Groups", () => {
             ownerSummary: buildMockUserSummary(mockOwner, true),
             additionalManagers: [buildMockUserSummary(mockUser, true), buildMockUserSummary(mockOtherManager, true)]
         };
-        const removeSelfAsManagerHandler = jest.fn((req, res, ctx) => {
-            return res(
-                ctx.status(200),
-                ctx.json({
-                    ...mockGroup,
-                    additionalManagers: mockGroup.additionalManagers.filter(m => m.id !== mockUser.id)
-                })
-            );
+        const removeSelfAsManagerHandler = jest.fn(() => {
+            return HttpResponse.json({
+                ...mockGroup,
+                additionalManagers: mockGroup.additionalManagers.filter(m => m.id !== mockUser.id)
+            }, {
+                status: 200,
+            });
         });
         renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
-                rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
-                rest.delete(API_PATH + "/groups/:groupId/manager/:userId", removeSelfAsManagerHandler)
+                http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
+                http.delete(API_PATH + "/groups/:groupId/manager/:userId", removeSelfAsManagerHandler)
             ]
         });
         await navigateToGroups();
@@ -616,8 +621,8 @@ describe("Groups", () => {
         renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
-                rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
-                rest.get(API_PATH + `/authorisations/token/${mockGroup.id}`, buildAuthTokenHandler(mockGroup, mockToken))
+                http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
+                http.get(API_PATH + `/authorisations/token/${mockGroup.id}`, buildAuthTokenHandler(mockGroup, mockToken))
             ]
         });
 
@@ -665,54 +670,47 @@ describe("Groups", () => {
 
         let joinedGroup = false;
 
-        const getAuthorisationsHandler = jest.fn(async (req, res, ctx) => {
-            return res(
-                ctx.status(200),
-                ctx.json(joinedGroup ? [mockTeacher, mockManager] : [])
-            );
+        const getAuthorisationsHandler = jest.fn(async () => {
+            return HttpResponse.json(joinedGroup ? [mockTeacher, mockManager] : [], {
+                status: 200,
+            });
         });
 
-        const getGroupOwnerHandler = jest.fn(async (req, res, ctx) => {
-            return res(
-                ctx.status(200),
-                ctx.json([
-                    ...mockGroup.ownerSummary, 
-                    ...mockGroup.additionalManagers.flat()
-                ])
-            );
+        const getGroupOwnerHandler = jest.fn(async () => {
+            return HttpResponse.json([...mockGroup.ownerSummary, ...mockGroup.additionalManagers.flat()], {
+                status: 200,
+            });
         });
 
-        const joinGroupHandler = jest.fn(async (req, res, ctx) => {
-            const token = req.params.token;
-            if (token !== mockToken) return res(ctx.status(400));
+        const joinGroupHandler = jest.fn(async ({request}) => {
+            // TODO unconvinced this is correct
+            const url = new URL(request.url);
+            const token = url.searchParams.get("token");
+            if (token !== mockToken) return HttpResponse.json(null, {status: 400,});
 
             joinedGroup = true;
 
-            return res(
-                ctx.status(200),
-                ctx.json({
-                    result: "success",
-                })
-            );
+            return HttpResponse.json({result: "success"}, {
+                status: 200,
+            });
         });
 
-        const membershipHandler = jest.fn(async (req, res, ctx) => {
-            return res(
-                ctx.status(200),
-                ctx.json(joinedGroup ? [{
-                    "group": mockGroup,
-                    "membershipStatus": "ACTIVE",
-                }] : [])
-            );
+        const membershipHandler = jest.fn(async () => {
+            return HttpResponse.json(joinedGroup ? [{
+                "group": mockGroup,
+                "membershipStatus": "ACTIVE",
+            }] : [], {
+                status: 200,
+            });
         });
 
         renderTestEnvironment({
             role: "STUDENT",
             extraEndpoints: [
-                rest.get(API_PATH + `/authorisations/token/:token/owner`, getGroupOwnerHandler),
-                rest.get(API_PATH + "/authorisations", getAuthorisationsHandler),
-                rest.post(API_PATH + `/authorisations/use_token/:token`, joinGroupHandler),
-                rest.get(API_PATH + "/groups/membership", membershipHandler),
+                http.get(API_PATH + `/authorisations/token/:token/owner`, getGroupOwnerHandler),
+                http.get(API_PATH + "/authorisations", getAuthorisationsHandler),
+                http.post(API_PATH + `/authorisations/use_token/:token`, joinGroupHandler),
+                http.get(API_PATH + "/groups/membership", membershipHandler),
             ],
         });
 
@@ -775,18 +773,18 @@ describe("Groups", () => {
                 ],
                 additionalManagerPrivileges: additionalManagerPrivileges,
             };
-            const removeStudentHandler = jest.fn((req, res, ctx) => {
-                return res(
-                    ctx.status(200)
-                );
+            const removeStudentHandler = jest.fn(() => {
+                return HttpResponse.json(null, {
+                    status: 200,
+                });
             });
             const getGroupMembershipHandler = handlerThatReturns({data: mockGroup.members});
             renderTestEnvironment({
                 role: "TEACHER",
                 extraEndpoints: [
-                    rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
-                    rest.get(API_PATH + "/groups/:groupId/membership", getGroupMembershipHandler),
-                    rest.delete(API_PATH + "/groups/:groupId/membership/:userId", removeStudentHandler),
+                    http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
+                    http.get(API_PATH + "/groups/:groupId/membership", getGroupMembershipHandler),
+                    http.delete(API_PATH + "/groups/:groupId/membership/:userId", removeStudentHandler),
                 ]
             });
             await navigateToGroups();

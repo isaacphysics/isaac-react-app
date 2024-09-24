@@ -1,6 +1,6 @@
 import {screen, waitFor, within} from "@testing-library/react";
 import {followHeaderNavLink, renderTestEnvironment} from "../testUtils";
-import {rest} from "msw";
+import {http} from "msw";
 import {API_PATH, isPhy, useQueryParams} from "../../app/services";
 import {handlerThatReturns} from "../../mocks/handlers";
 import {buildMockEvent, mockUser} from "../../mocks/data";
@@ -17,9 +17,9 @@ if (isPhy) {
             renderTestEnvironment({
                 modifyUser: (user) => ({...user, emailVerificationStatus: "NOT_VERIFIED", role: "STUDENT"}),
                 extraEndpoints: [
-                    rest.get(API_PATH + `/events`, handlerThatReturns({data: {results: [mockEvent], totalResults: 0}})),
-                    rest.get(API_PATH + `/events/test-event`, handlerThatReturns({data: mockEvent})),
-                    rest.post(API_PATH + `/users/verifyemail`, emailVerificationRequestHandler)
+                    http.get(API_PATH + `/events`, handlerThatReturns({data: {results: [mockEvent], totalResults: 0}})),
+                    http.get(API_PATH + `/events/test-event`, handlerThatReturns({data: mockEvent})),
+                    http.post(API_PATH + `/users/verifyemail`, emailVerificationRequestHandler)
                 ]
             });
             await followHeaderNavLink("Events", "All Events");
@@ -42,8 +42,8 @@ if (isPhy) {
             // Click the button to request a verification email
             await userEvent.click(requestVerificationEmailButton);
             await waitFor(async () => {
-                await expect(emailVerificationRequestHandler).toHaveBeenRequestedWith(async (req) => {
-                    const {email} = await req.json();
+                expect(emailVerificationRequestHandler).toHaveBeenRequestedWith(async ({request}) => {
+                    const email = await request.json();
                     return email === mockUser.email;
                 });
                 // Look for success message
@@ -56,9 +56,9 @@ if (isPhy) {
             renderTestEnvironment({
                 role: "ADMIN",
                 extraEndpoints: [
-                    rest.get(API_PATH + `/events/overview`, handlerThatReturns({data: {results: [mockEvent], totalResults: 0}})),
-                    rest.get(API_PATH + `/events/test-event`, handlerThatReturns({data: mockEvent})),
-                    rest.get(API_PATH + `/admin/users`, handlerThatReturns({data: [{...mockUser, id: mockUser.id + 1, email: "test@test.com", emailVerificationStatus: "NOT_VERIFIED"}]})),
+                    http.get(API_PATH + `/events/overview`, handlerThatReturns({data: {results: [mockEvent], totalResults: 0}})),
+                    http.get(API_PATH + `/events/test-event`, handlerThatReturns({data: mockEvent})),
+                    http.get(API_PATH + `/admin/users`, handlerThatReturns({data: [{...mockUser, id: mockUser.id + 1, email: "test@test.com", emailVerificationStatus: "NOT_VERIFIED"}]})),
                 ]
             });
             await followHeaderNavLink("Admin", "Event Admin");
@@ -104,7 +104,7 @@ describe("EmailAlterHandler", () => {
             PageComponent: EmailAlterHandler,
             modifyUser: (user) => ({...user, emailVerificationStatus: "NOT_VERIFIED", role: "STUDENT"}),
             extraEndpoints: [
-                rest.get(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
+                http.get(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
             ],
             initalRouteEntries: ["/verifyemail"]
         });
@@ -129,7 +129,7 @@ describe("EmailAlterHandler", () => {
             PageComponent: EmailAlterHandler,
             modifyUser: (user) => ({...user, id: 1, emailVerificationStatus: "VERIFIED", role: "STUDENT"}),
             extraEndpoints: [
-                rest.get(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
+                http.get(API_PATH + "/users/verifyemail/:userid/:token", verifyEmailHandler)
             ],
             initalRouteEntries: ["/verifyemail"]
         });
@@ -137,8 +137,8 @@ describe("EmailAlterHandler", () => {
         await screen.findAllByText("Email verification");
         await waitFor(async () => {
             expect(verifyEmailHandler).toHaveBeenCalledTimes(1);
-            await expect(verifyEmailHandler).toHaveBeenRequestedWith(async (req) => {
-                const {userid, token} = req.params;
+            await expect(verifyEmailHandler).toHaveBeenRequestedWith(async ({params}) => {
+                const {userid, token} = params;
                 return userid === "2" && token === "valid-token";
             });
             // Look for success message
