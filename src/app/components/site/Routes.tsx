@@ -84,7 +84,14 @@ export const Routes = [
   // Static pages:
   <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
   <StaticPageRoute key={key++} exact path="/safeguarding" pageId="events_safeguarding" />,
-  <StaticPageRoute key={key++} exact path="/teaching_order" pageId="teaching_order" />,
+  <StaticPageRoute
+    key={key++}
+    exact
+    ifUser={isTutorOrAbove}
+    path="/teaching_order_g_ocr"
+    pageId="teaching_order_g_ocr"
+  />,
+  <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teaching_order" pageId="teaching_order" />,
   <StaticPageRoute key={key++} exact path="/teachcomputing" pageId="teach_computing" />,
 
   <TrackedRoute key={key++} exact path="/coming_soon" component={ComingSoon} />,

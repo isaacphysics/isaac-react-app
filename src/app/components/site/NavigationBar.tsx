@@ -39,7 +39,8 @@ export const NavigationBar = () => {
           {isTeacherOrAbove(user) && (
             <>
               <LinkItem to="/set_tests">Manage tests</LinkItem>
-              <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
+              <LinkItem to="/teaching_order_g_ocr">GCSE suggested teaching order</LinkItem>
+              <LinkItem to="/teaching_order">A Level suggested teaching order</LinkItem>
             </>
           )}
         </NavigationSection>
