@@ -7,7 +7,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, improvement/codecov-bundle-analysis ]
 
 jobs:
   build-and-test:
