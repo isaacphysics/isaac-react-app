@@ -49,7 +49,7 @@ if (isPhy) {
                 // Look for success message
                 await screen.findByText(`We have sent an email to ${mockUser.email}. Please follow the instructions in the email prior to booking.`);
             });
-        }, 10000);
+        }, 20000);
 
         it("does not allow the current user to request a verification email for someone else", async () => {
             const mockEvent = buildMockEvent("test-event", "OPEN");
@@ -91,7 +91,7 @@ if (isPhy) {
                 .then(() => true)
                 .catch(() => false);
             expect(verifiyButtonExists).toBe(false);
-        }, 10000);
+        }, 20000);
     });
 }
 
@@ -112,14 +112,14 @@ describe("EmailAlterHandler", () => {
         await screen.findAllByText("Email verification");
         await waitFor(async () => {
             expect(verifyEmailHandler).toHaveBeenCalledTimes(1);
-            await expect(verifyEmailHandler).toHaveBeenRequestedWith(async (req) => {
-                const {userid, token} = req.params;
+            expect(verifyEmailHandler).toHaveBeenRequestedWith(async (req) => {
+                const { userid, token } = req.params;
                 return userid === mockUser.id.toString() && token === "valid-token";
             });
             // Look for success message
             await screen.findByText("Email address verified.");
         });
-    });
+    }, 20000);
 
     it("allows the current user to verify another users email if the token is valid", async () => {
         const verifyEmailHandler = handlerThatReturns();

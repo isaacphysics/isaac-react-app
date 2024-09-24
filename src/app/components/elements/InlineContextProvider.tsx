@@ -13,12 +13,14 @@ const InlineContextProvider = (props: InlineContextProviderProps) => {
     const [isModifiedSinceLastSubmission, setIsModifiedSinceLastSubmission] = React.useState(false);
     const [submitting, setSubmitting] = React.useState(false);
     const [focusSelection, setFocusSelection] = React.useState(false);
+    const [initialised, setInitialised] = React.useState(false);
     const canShowWarningToast = useRef(true).current; 
     // above is a ref because multiple questions are submitted during the same render cycle; this value needs to update during this time, which setState doesn't guarantee.
 
     return <InlineContext.Provider value={{ 
         docId: props.docId, elementToQuestionMap: questionPartIdMap, modifiedQuestionIds, setModifiedQuestionIds, isModifiedSinceLastSubmission,
-        canShowWarningToast, setIsModifiedSinceLastSubmission, feedbackIndex, setFeedbackIndex, submitting, setSubmitting, focusSelection, setFocusSelection }}
+        canShowWarningToast, setIsModifiedSinceLastSubmission, feedbackIndex, setFeedbackIndex, submitting, setSubmitting, focusSelection, setFocusSelection,
+        initialised, setInitialised}}
     >
         {props.children}
     </InlineContext.Provider>;

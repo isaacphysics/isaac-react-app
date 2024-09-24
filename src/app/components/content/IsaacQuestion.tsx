@@ -52,6 +52,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const dispatch = useAppDispatch();
     const accordion = useContext(AccordionSectionContext);
     const currentGameboard = useContext(GameboardContext);
+    const inlineContext = useContext(InlineContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = (doc.type === "isaacInlineRegion") ? useInlineRegionPart(pageQuestions) : selectQuestionPart(pageQuestions, doc.id);
@@ -104,7 +105,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     // Register Question Part in Redux
     useEffect(() => {
         if (doc.type === "isaacInlineRegion") {
-            // register the inline questions inside this region (but not the region itself)
+            // register the inline questions inside this region (but not the region itself).
+            // note that this must happen after the inline entry spans have been created, and on soft link navigation this is not guaranteed by the
+            // portals rendering order; as such, this hook is also dependent on inlineContext.initialised, which updates strictly after span creation.
             const inlineQuestions = (doc as ApiTypes.IsaacInlineRegionDTO).inlineQuestions ?? [];
             dispatch(registerQuestions(inlineQuestions, accordion.clientId));
             return () => dispatch(deregisterQuestions(inlineQuestions.map(q => q.id as string)));
@@ -112,7 +115,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         dispatch(registerQuestions([doc], accordion.clientId));
         return () => dispatch(deregisterQuestions([doc.id as string]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, doc.id]);
+    }, [dispatch, doc.id, inlineContext?.initialised]);
 
     // Focus on the feedback banner after submission
     useEffect(() => {
@@ -132,7 +135,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const isLLMFreeTextQuestion = doc.type === "isaacLLMFreeTextQuestion";
 
     // Inline questions
-    const inlineContext = useContext(InlineContext);
     const isInlineQuestion = doc.type === "isaacInlineRegion" && inlineContext;
 
     const numInlineQuestions = isInlineQuestion ? Object.values(inlineContext?.elementToQuestionMap ?? {}).length : undefined;

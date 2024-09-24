@@ -111,12 +111,12 @@ const GameboardBuilderRow = (
                             <Spacer />
                             {isPhy && <div className="d-flex flex-column justify-self-end">
                                 {question.supersededBy && <a 
-                                    className="superseded-tag ms-1 ms-sm-3 my-1 align-self-end" 
+                                    className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
                                     href={`/questions/${question.supersededBy}`}
                                     onClick={(e) => e.stopPropagation()}
                                 >SUPERSEDED</a>}
                                 {question.tags?.includes("nofilter") && <span
-                                    className="superseded-tag ms-1 ms-sm-3 my-1 align-self-end" 
+                                    className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
                                 >NO-FILTER</span>}
                             </div>}
                         </div>

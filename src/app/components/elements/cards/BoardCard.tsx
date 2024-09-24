@@ -141,7 +141,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     // Decides whether we show the "Assign/Unassign" button, along with other "Set Assignments"-specific stuff
     const isSetAssignments = isDefined(toggleAssignModal) && isDefined(assignees);
 
-    const hexagonId = `board-hex-${board.id}`;
+    const hexagonId = (`board-hex-${board.id}`).replace(/[^a-z0-9-]+/gi, '');
     const boardLink = isSetAssignments ? `/assignment/${board.id}` : `${PATHS.GAMEBOARD}#${board.id}`;
     const hasAssignedGroups = assignees && assignees.length > 0;
 

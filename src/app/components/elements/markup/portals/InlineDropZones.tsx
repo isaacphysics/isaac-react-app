@@ -38,7 +38,7 @@ export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dropRegionContext?.shouldGetFocus]);
 
-    return <Badge id={id} className={classNames(type === "item-section" && "m-2", "p-2 cloze-item feedback-zone", isDefined(isCorrect) && "feedback-showing")} style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
+    return <Badge id={id} className={classNames(type === "item-section" && "m-2", "p-1 cloze-item feedback-zone", isDefined(isCorrect) && "feedback-showing")} style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
         <span className={"visually-hidden"}>{item.altText ?? item.value ?? "cloze item without a description"}</span>
         <span aria-hidden={true}>
             <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
@@ -103,7 +103,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
         toggle={() => {setIsOpen(!isOpen);}}
         className="cloze-dropdown"
     >
-        <DropdownToggle className={classNames("toggle", {"empty": !item, "p-1": isPhy, "p-2": isAda})} style={{minHeight: height, width: width}} innerRef={zoneRef}>
+        <DropdownToggle className={classNames("toggle", {"empty": !item, "px-1 py-0": isPhy, "p-2": isAda})} style={{minHeight: height, width: width}} innerRef={zoneRef}>
             <div className={classNames("d-flex cloze-item feedback-zone", {"feedback-showing": isDefined(isCorrect), "p-2": isAda && !!item})}>
                 <span className={"visually-hidden"}>{item?.altText ?? item?.value ?? "cloze item without a description"}</span>
                 <span aria-hidden={true}>

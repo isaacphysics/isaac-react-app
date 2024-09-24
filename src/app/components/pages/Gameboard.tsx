@@ -110,7 +110,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
 };
 
 export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
-    const itemClasses = "p-3 content-summary-link text-info bg-transparent";
+    const itemClasses = classNames("content-summary-link text-info bg-white", {"p-3": isPhy, "p-0": isAda});
     const icon = <img src="/assets/common/wildcard.svg" alt="Optional extra information icon"/>;
     return <ListGroupItem key={wildcard.id} className={itemClasses}>
         <a href={wildcard.url} className="align-items-center">

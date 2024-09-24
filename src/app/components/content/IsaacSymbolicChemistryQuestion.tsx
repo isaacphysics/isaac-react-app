@@ -223,6 +223,42 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                     {doc.children}
                 </IsaacContentValueOrChildren>
             </div>
+            {!readonly && isStaff(user) && <div className="eqn-editor-input">
+                <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
+                <InputGroup className="my-2 separate-input-group">
+                    <Input type="text" onChange={updateEquation} value={textInput}
+                              placeholder="Type your formula here"/>
+                    <>
+                        {siteSpecific(
+                            <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
+                            <span id={helpTooltipId} className="icon-help-q my-auto"/>
+                        )}
+                        {!modalVisible ? 
+                            (doc.isNuclear
+                                ? <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
+                                    Here are some examples of expressions you can type:<br />
+                                    {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
+                                    {"^{0}_{-1}e"}<br />
+                                    {"\\gammaray"}<br />
+                                    As you type, the box above will preview the result.
+                                </UncontrolledTooltip>
+                                : <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
+                                    Here are some examples of expressions you can type:<br />
+                                    H2O<br />
+                                    2 H2 + O2 -&gt; 2 H2O<br />
+                                    CH3(CH2)3CH3<br />
+                                    {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br />
+                                    As you type, the box above will preview the result.
+                                </UncontrolledTooltip>
+                            )
+                        : null}
+                    </>
+                </InputGroup>
+                <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
+                {symbolList && <div className="eqn-editor-symbols">
+                    The following symbols may be useful: <pre>{symbolList}</pre>
+                </div>}
+            </div>}
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div
                 role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
@@ -241,39 +277,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 editorMode="chemistry"
                 questionDoc={doc}
             />}
-            {!readonly && isStaff(user) && <div className="eqn-editor-input">
-                <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                <InputGroup className="my-2 separate-input-group">
-                    <Input type="text" onChange={updateEquation} value={textInput}
-                              placeholder="Type your formula here"/>
-                    <>
-                        {siteSpecific(
-                            <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                            <span id={helpTooltipId} className="icon-help-q my-auto"/>
-                        )}
-                        {doc.isNuclear
-                                ? <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
-                                    Here are some examples of expressions you can type:<br />
-                                    {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
-                                    {"^{0}_{-1}e"}<br />
-                                    {"\\gammaray"}<br />
-                                    As you type, the box above will preview the result.
-                                </UncontrolledTooltip>
-                                : <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target={helpTooltipId}>
-                                    Here are some examples of expressions you can type:<br />
-                                    H2O<br />
-                                    2 H2 + O2 -&gt; 2 H2O<br />
-                                    CH3(CH2)3CH3<br />
-                                    {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br />
-                                    As you type, the box above will preview the result.
-                                </UncontrolledTooltip>}
-                    </>
-                </InputGroup>
-                <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
-                {symbolList && <div className="eqn-editor-symbols">
-                    The following symbols may be useful: <pre>{symbolList}</pre>
-                </div>}
-            </div>}
         </div>
     );
 };
