@@ -25,7 +25,7 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
                 contentChunks.push(currentChunk);
             }
             currentChunk = [child];
-        } else if (child.layout == "accordion" || child.layout == "tabs") {
+        } else if (child.layout == "accordion" || child.layout == "tabs" || child.type == "codeTabs") {
             if (currentChunk.length > 0) {
                 contentChunks.push(currentChunk);
             }
