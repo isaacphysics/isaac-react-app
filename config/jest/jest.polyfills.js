@@ -9,7 +9,8 @@
  * you don't want to deal with this.
  */
  
-import { TextDecoder, TextEncoder, ReadableStream } from 'node:util';
+import { TextDecoder, TextEncoder } from 'node:util';
+import { ReadableStream } from 'node:stream/web';
  
 Object.defineProperties(globalThis, {
     TextDecoder: { value: TextDecoder },
