@@ -3,3 +3,15 @@
 .profile-description {
   padding: 0.5rem 1.5rem 0 1.5rem;
 }
+
+div:has(> .featured-profile) {
+  @extend .card-deck;
+  @extend .row-cols-1;
+  @extend .row-cols-sm-2;
+  @extend .row-cols-md-3;
+  @extend .flex-row; // for <=md
+}
+
+.featured-profile {
+  @extend .mb-4;
+}
