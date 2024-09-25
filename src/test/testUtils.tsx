@@ -12,6 +12,7 @@ import React from "react";
 import {MemoryRouter} from "react-router";
 import {screen, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import {SOME_FIXED_FUTURE_DATE_AS_STRING} from "./dateUtils";
 
 export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
     const result: {[key: string]: string} = {};
@@ -28,6 +29,7 @@ export const augmentErrorMessage = (message?: string) => (e: Error) => {
 interface RenderTestEnvironmentOptions {
     role?: UserRole | "ANONYMOUS";
     modifyUser?: (u: typeof mockUser) => typeof mockUser;
+    sessionExpires?: string;
     PageComponent?: React.FC<any>;
     initalRouteEntries?: string[];
     extraEndpoints?: HttpHandler[];
@@ -43,7 +45,7 @@ interface RenderTestEnvironmentOptions {
 // When called, the Redux store will be cleaned completely, and other the MSW server handlers will be reset to
 // defaults (those in handlers.ts).
 export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
-    const {role, modifyUser, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
+    const {role, modifyUser, sessionExpires, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch(isaacApi.util.resetApiState());
     server.resetHandlers();
@@ -66,6 +68,9 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
                 });
                 return HttpResponse.json(modifyUser ? modifyUser(userWithRole) : userWithRole, {
                     status: 200,
+                    headers: {
+                        "x-session-expires": sessionExpires ?? SOME_FIXED_FUTURE_DATE_AS_STRING,
+                    }
                 });
             }),
         );
