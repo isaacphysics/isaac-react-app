@@ -102,7 +102,7 @@ export const navTabTitles: Record<ACCOUNT_TAB, string> = {
 // Clicks on the given navigation menu entry, allowing navigation around the app as a user would
 export const followHeaderNavLink = async (menu: string, linkName: string) => {
     const header = await screen.findByTestId("header");
-    const navLink = await within(header).findByRole("link", {name: siteSpecific(menu, new RegExp(`^${menu}`))});
+    const navLink = await within(header).findByRole("link", {name: new RegExp(`^${menu}`)});
     await userEvent.click(navLink);
     // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
     // related to a given title
