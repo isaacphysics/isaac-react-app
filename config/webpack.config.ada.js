@@ -36,20 +36,20 @@ module.exports = env => {
                     to: 'unsupported_browser.html',
                 }]
             }),
+            codecovWebpackPlugin({
+                enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+                bundleName: 'web-ada',
+                debug: true,
+                uploadToken: process.env.CODECOV_TOKEN,
+                uploadOverrides: {
+                    sha: process.env.GITHUB_COMMIT_SHA,
+                }
+            })
         ],
     };
 
-    let ccPlugin = codecovWebpackPlugin({
-        enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
-        bundleName: 'web-ada',
-        debug: true,
-        uploadToken: process.env.CODECOV_TOKEN,
-        uploadOverrides: {
-            sha: process.env.GITHUB_COMMIT_SHA,
-        }
-    });
+    console.log("enableBundleAnalysis:", process.env.CODECOV_TOKEN !== undefined);
+    console.log("sha:", process.env.GITHUB_COMMIT_SHA);
 
-    let mergedConfig = merge(configCommon(env), configCS);
-    mergedConfig.plugins.push(ccPlugin)
-    return mergedConfig;
+    return merge(configCommon(env), configCS);
 };
