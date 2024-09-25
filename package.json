@@ -94,7 +94,7 @@
     "@babel/preset-env": "^7.25.4",
     "@babel/preset-react": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
-    "@codecov/webpack-plugin": "^1.0.1",
+    "@codecov/webpack-plugin": "^1.2.0",
     "@eslint/compat": "^1.1.1",
     "@eslint/js": "^9.9.1",
     "@frsource/cypress-plugin-visual-regression-diff": "^3.3.10",

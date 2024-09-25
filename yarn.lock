@@ -1337,10 +1337,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@codecov/bundler-plugin-core@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@codecov/bundler-plugin-core/-/bundler-plugin-core-1.0.1.tgz#68292fcba017365cf8d333d217ad6e67cd49bd98"
-  integrity sha512-Uo150Qb2s/mMqqfZMdh6rC1+Cp+bCij5DAB6LqWNI6J9dGbimeNvpU1+jdQ6vlMJOiz5w5jAOhtgZvFNrc8jUw==
+"@codecov/bundler-plugin-core@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@codecov/bundler-plugin-core/-/bundler-plugin-core-1.2.0.tgz#4a896dd3bd9f9f98a60519aadcf8e3daff37ae5d"
+  integrity sha512-ublUP5V0tW6oDnaJ1UBWvEmVAkvMmPNEwWkpF+WwJSCBWNLvWrkSwG84S3Gt5Xbnh17xEyAxXBmNzF+mXVXBgw==
   dependencies:
     "@actions/core" "^1.10.1"
     "@actions/github" "^6.0.0"
@@ -1349,12 +1349,12 @@
     unplugin "^1.10.1"
     zod "^3.22.4"
 
-"@codecov/webpack-plugin@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@codecov/webpack-plugin/-/webpack-plugin-1.0.1.tgz#c6d918e7b3bcf48edb645b5734c59712f99ef1a7"
-  integrity sha512-e6VpcP3adF5ig2OXjb/mrdZ4o8gluKc/IvTAAZfhjX4CWIsnuyRQqFobKyC9nKMRWpIGCsuxdmamyQSrfwXIUw==
+"@codecov/webpack-plugin@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@codecov/webpack-plugin/-/webpack-plugin-1.2.0.tgz#db0466f0494f9a141697af4665830c650d030991"
+  integrity sha512-yawRyKgC8tXj/C/UoTJ+kRMePfhkYJtJey+xmywRqmVmvbxQGnYFkg+Dzix/HxKt4iGpSwKT4p8Glz2MNQ7gTQ==
   dependencies:
-    "@codecov/bundler-plugin-core" "^1.0.1"
+    "@codecov/bundler-plugin-core" "^1.2.0"
     unplugin "^1.10.1"
 
 "@colors/colors@1.5.0":
