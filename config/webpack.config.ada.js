@@ -41,9 +41,7 @@ module.exports = env => {
                 enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
                 bundleName: 'web-ada',
                 uploadToken: process.env.CODECOV_TOKEN,
-                uploadOverrides: {
-                    sha: process.env.GITHUB_COMMIT_SHA,
-                }
+                debug: true
             }),
         ],
     };
