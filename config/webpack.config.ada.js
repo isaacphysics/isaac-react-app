@@ -42,7 +42,7 @@ module.exports = env => {
                 bundleName: 'web-ada',
                 uploadToken: process.env.CODECOV_TOKEN,
                 uploadOverrides: {
-                    sha: process.env.GITHUB_COMMIT_SHA,
+                    compareSha: process.env.GITHUB_COMMIT_SHA,
                 }
             }),
         ],
