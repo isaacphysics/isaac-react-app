@@ -40,6 +40,7 @@ module.exports = env => {
             codecovWebpackPlugin({
                 enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
                 bundleName: 'web-ada',
+                debug: true,
                 uploadToken: process.env.CODECOV_TOKEN,
                 uploadOverrides: {
                     sha: process.env.GITHUB_COMMIT_SHA,
