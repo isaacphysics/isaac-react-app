@@ -6,13 +6,11 @@
 
 // Detecting a div with any number of featured-profile children
 div:has(> .featured-profile) {
+  @extend .flex-row;
   @extend .card-deck;
   @extend .row-cols-1;
   @extend .row-cols-sm-2;
   @extend .row-cols-md-3;
-
-  display: flex;
-  flex-direction: row;
 
   .featured-profile {
     margin-bottom: 1rem;
@@ -21,16 +19,21 @@ div:has(> .featured-profile) {
 
 // Detecting a div with exactly two featured-profile children (co-founders)
 div:has(> .featured-profile:first-child:nth-last-child(2)) {
+  @extend .flex-row;
   @extend .row-cols-1;
   @extend .row-cols-sm-2;
 
   .featured-profile {
     @extend .isaac-tab;
-    
+
     width: 45%;
+    @media (max-width: 575px) {
+      width: 100%;
+    }
     margin-top: 0%;
     margin-right: 5%;
     padding: 2.5%;
+    overflow-x: hidden;
 
     .profile-description {
       padding: 1% 0 1% 0;
