@@ -10,12 +10,15 @@
  */
  
 import { TextDecoder, TextEncoder } from 'node:util';
-import { ReadableStream } from 'node:stream/web';
+import { ReadableStream, TransformStream } from 'node:stream/web';
+import { performance } from 'node:perf_hooks';
  
 Object.defineProperties(globalThis, {
     TextDecoder: { value: TextDecoder },
     TextEncoder: { value: TextEncoder },
     ReadableStream: { value: ReadableStream },
+    TransformStream: { value: TransformStream },
+    performance: { value: performance, writable: true }, // writeable for jest fake timers
 });
 
 import { Blob, File } from 'node:buffer';

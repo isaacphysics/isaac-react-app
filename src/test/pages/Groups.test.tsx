@@ -68,7 +68,7 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
         expect(managerHandler).toHaveBeenCalledTimes(1);
     });
     await expect(managerHandler).toHaveBeenRequestedWith(async ({request}) => {
-        const email = await request.json();
+        const { email } = await request.json().then(data => data as Record<string, string>);
         return email === newManager.email;
     });
     // Expect that new additional manager is shown in modal
@@ -162,7 +162,7 @@ describe("Groups", () => {
                     if (parseInt(groupId as string) === groupToDelete.id) {
                         correctDeleteRequests++;
                     }
-                    return HttpResponse.json(null, {status: 204,});
+                    return HttpResponse.json(null, {status: 200,});
                 }),
             ]
         });
@@ -207,7 +207,7 @@ describe("Groups", () => {
                         if (parseInt(groupId as string) === groupToRename.id && updatedGroup?.groupName === newGroupName && isEqual(groupToRename, {...updatedGroup, groupName: groupToRename.groupName})) {
                             correctUpdateRequests++;
                         }
-                        return HttpResponse.json(null, {status: 204,});
+                        return HttpResponse.json(null, {status: 200,});
                     }),
                 ]
             });
@@ -682,10 +682,8 @@ describe("Groups", () => {
             });
         });
 
-        const joinGroupHandler = jest.fn(async ({request}) => {
-            // TODO unconvinced this is correct
-            const url = new URL(request.url);
-            const token = url.searchParams.get("token");
+        const joinGroupHandler = jest.fn(async ({params}) => {
+            const { token } = params;
             if (token !== mockToken) return HttpResponse.json(null, {status: 400,});
 
             joinedGroup = true;
@@ -757,8 +755,8 @@ describe("Groups", () => {
         });
     });
 
-    [true, false].forEach(async (additionalManagerPrivileges) => {
-        it(additionalManagerPrivileges ? "allows managers to remove students from groups when they have permission" : "prevents managers removing students from groups without permission", async () => {
+    (["with", "without"] as const).forEach(async (permission) => {it(`are managers able to remove students from groups ${permission} the correct permissions`, async () => {
+            const additionalManagerPrivileges = permission === "with";
             const mockOwner = buildMockTeacher(2);
             const mockStudent10 = buildMockStudent(10);
             const mockStudent11 = buildMockStudent(11);

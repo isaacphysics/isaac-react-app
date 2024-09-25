@@ -49,7 +49,7 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     server.resetHandlers();
     if (role || modifyUser) {
         server.use(
-            http.get(API_PATH + "/users/current_user", ({request, params, cookies}) => {
+            http.get(API_PATH + "/users/current_user", () => {
                 if (role === "ANONYMOUS") {
                     return HttpResponse.json({
                         responseCode: 401,

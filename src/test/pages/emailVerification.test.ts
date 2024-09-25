@@ -43,7 +43,7 @@ if (isPhy) {
             await userEvent.click(requestVerificationEmailButton);
             await waitFor(async () => {
                 expect(emailVerificationRequestHandler).toHaveBeenRequestedWith(async ({request}) => {
-                    const email = await request.json();
+                    const { email } = await request.json().then(data => data as Record<string, string>);
                     return email === mockUser.email;
                 });
                 // Look for success message

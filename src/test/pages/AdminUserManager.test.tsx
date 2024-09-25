@@ -403,7 +403,7 @@ describe("AdminUserManager", () => {
         await waitFor(async () => {
             expect(resetPasswordHandler).toHaveBeenCalledTimes(1);
             await expect(resetPasswordHandler).toHaveBeenRequestedWith(async ({request}) => {
-                const email = await request.json();
+                const { email } = await request.json().then(data => data as Record<string, string>);;
                 return email === mockUser.email;
             });
         });
