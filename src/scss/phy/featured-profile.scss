@@ -4,14 +4,42 @@
   padding: 0.5rem 1.5rem 0 1.5rem;
 }
 
+// Detecting a div with any number of featured-profile children
 div:has(> .featured-profile) {
   @extend .card-deck;
   @extend .row-cols-1;
   @extend .row-cols-sm-2;
   @extend .row-cols-md-3;
-  @extend .flex-row; // for <=md
+
+  display: flex;
+  flex-direction: row;
+
+  .featured-profile {
+    margin-bottom: 1rem;
+  }
 }
 
-.featured-profile {
-  @extend .mb-4;
+// Detecting a div with exactly two featured-profile children (co-founders)
+div:has(> .featured-profile:first-child:nth-last-child(2)) {
+  @extend .row-cols-1;
+  @extend .row-cols-sm-2;
+
+  .featured-profile {
+    @extend .isaac-tab;
+    
+    width: 45%;
+    margin-top: 0%;
+    margin-right: 5%;
+    padding: 2.5%;
+
+    .profile-description {
+      padding: 1% 0 1% 0;
+      font-size: initial;
+      color: black;
+    }
+
+    .profile-image {
+      padding-bottom: 10%;
+    }
+  }
 }
