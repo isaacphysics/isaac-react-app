@@ -44,6 +44,7 @@ import {
 import {Link} from "react-router-dom";
 import {
     API_PATH,
+    below,
     getAssignmentCSVDownloadLink,
     getAssignmentStartDate,
     getQuizAssignmentCSVDownloadLink,
@@ -55,7 +56,8 @@ import {
     PATHS,
     siteSpecific,
     SortOrder,
-    useAssignmentProgressAccessibilitySettings
+    useAssignmentProgressAccessibilitySettings,
+    useDeviceSize
 } from "../../services";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
@@ -209,7 +211,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
 
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
         <div className={classNames("gameboard-header", {"text-muted": assignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)}>
-            <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
+            <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)} alt={`Expand assignment ${assignment.gameboard?.title}`}>
                 <span className={classNames({"text-muted": assignmentHasNotStarted})}>
                     {assignment.gameboard?.title}
                     {assignmentHasNotStarted && <span className="gameboard-due-date">
@@ -222,21 +224,32 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
                 </span>
             </Button>
             <div className="gameboard-links align-items-center">
-                <Button color="link" tag="a" className="me-md-0">
-                    {isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span>
-                </Button>
-                <span className="d-none d-md-inline">,</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id as number)} onClick={openAssignmentDownloadLink}>
+                <Button className="d-none d-md-inline me-0" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id as number)} onClick={openAssignmentDownloadLink}>
                     Download CSV
                 </Button>
-                <span className="d-none d-md-inline mx-1">or</span>
+                <span className="d-none d-md-inline mx-1">&middot;</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={`${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} onClick={openSingleAssignment}>
                     View individual assignment
                 </Button>
+                <img src={"/assets/common/icons/chevron-up.svg"} alt="" className={classNames("accordion-arrow", {"active" : isExpanded})}/>
             </div>
         </div>
         {isExpanded && <ProgressLoader assignment={assignment} />}
     </div>;
+};
+
+const QuestionKey = ({icon, description}: {icon: React.JSX.Element, description?: string}) => {
+    return <li className="d-flex flex-column flex-md-row flex-wrap px-1 align-items-center justify-content-center">
+        <div className="key-cell me-0 me-md-2">{icon}</div>
+        {description && <div className="key-description">{description}</div>}
+    </li>;
+};
+
+const LegendKey = ({cellClass, description}: {cellClass: string, description?: string}) => {
+    return <li className="d-flex flex-row flex-md-column flex-lg-row flex-wrap px-1 py-1 py-md-2 justify-content-start justify-content-md-center align-items-center">
+        <div className="key-cell d-flex me-2 me-md-0 me-lg-2"><span className={cellClass}/></div>
+        {description && <div className="key-description">{description}</div>}
+    </li>;
 };
 
 export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: boolean}) => {
@@ -245,55 +258,24 @@ export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: b
         {showQuestionKey && <>
             <Label htmlFor="question-key">Question key:</Label>
             <ul id="question-key" className="block-grid-xs-3">
-                <li className="d-flex flex-wrap align-items-center justify-content-center">
-                    <div className="key-cell">{ICON.correct}</div>
-                    <div className="key-description">Correct</div>
-                </li>
-                <li className="d-flex flex-wrap align-items-center justify-content-center">
-                    <div className="key-cell">{ICON.notAttempted}</div>
-                    <div className="key-description">Not attempted</div>
-                </li>
-                <li className="d-flex flex-wrap align-items-center justify-content-center">
-                    <div className="key-cell">{ICON.incorrect}</div>
-                    <div className="key-description">Incorrect</div>
-                </li>
+                <QuestionKey icon={ICON.correct} description="Correct"/>
+                <QuestionKey icon={ICON.notAttempted} description="Not&nbsp;attempted"/>
+                <QuestionKey icon={ICON.incorrect} description="Incorrect"/>
             </ul>
         </>}
         {showQuestionKey && <Label htmlFor="key" className="mt-2">Section key:</Label>}
-        <ul id="key" className="block-grid-xs-5">
-            <li className="d-flex flex-wrap px-2">
-                <div className="key-cell">
-                    <span className="completed" />
-                </div>
-                <div className="key-description">100% correct</div>
-            </li>
-            <li className="d-flex flex-wrap px-2">
-                <div className="key-cell"><span className="passed">&nbsp;</span>
-                </div>
-                <div className="key-description">&ge;{passMark * 100}% correct
-                    {/*<span className="d-none d-xl-inline"> (or Mastery)</span>*/}
-                </div>
-            </li>
-            <li className="d-flex flex-wrap px-2">
-                <div className="key-cell"><span className="in-progress">&nbsp;</span>
-                </div>
-                <div className="key-description">&lt;{passMark * 100}% correct</div>
-            </li>
-            <li className="d-flex flex-wrap px-2">
-                <div className="key-cell"><span>&nbsp;</span>
-                </div>
-                <div className="key-description"><span className="d-none d-md-inline">Not attempted</span><span
-                    className="d-inline d-md-none">No attempt</span></div>
-            </li>
-            <li className="d-flex flex-wrap px-2">
-                <div className="key-cell"><span className="failed">&nbsp;</span>
-                </div>
-                <div className="key-description">&gt;{100 -(passMark * 100)}% incorrect</div>
-            </li>
-        </ul>
-        <div className="assignment-progress-options">
-            <label>Colour-blind&nbsp;<input type="checkbox" checked={pageSettings.colourBlind} onChange={e => pageSettings.setColourBlind(e.target.checked)}/></label>
-            <label>Percent view&nbsp;<input type="checkbox" checked={pageSettings.formatAsPercentage} onChange={e => pageSettings.setFormatAsPercentage(e.target.checked)}/></label>
+        <div className="d-flex flex-row flex-sm-column justify-content-between">
+            <ul id="key" className="block-grid-xs-1 block-grid-sm-2 block-grid-md-5 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
+                <LegendKey cellClass="completed" description={`100% correct`}/>
+                <LegendKey cellClass="passed" description={`≥${passMark * 100}% correct`}/>
+                <LegendKey cellClass="in-progress" description={`<${passMark * 100}% correct`}/>
+                <LegendKey cellClass="" description={`Not attempted`}/>
+                <LegendKey cellClass="failed" description={`>${100 - (passMark * 100)}% incorrect`}/>
+            </ul>
+            <div className="d-flex flex-column flex-sm-row assignment-progress-options justify-content-end">
+                <label>Colour-blind&nbsp;<input type="checkbox" checked={pageSettings.colourBlind} onChange={e => pageSettings.setColourBlind(e.target.checked)}/></label>
+                <label>Percent view&nbsp;<input type="checkbox" checked={pageSettings.formatAsPercentage} onChange={e => pageSettings.setFormatAsPercentage(e.target.checked)}/></label>
+            </div>
         </div>
     </div></div>;
 };
@@ -344,15 +326,12 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
                 </span>
             </Button>
             <div className="gameboard-links align-items-center">
-                <Button color="link" tag="a" className="me-md-0">
-                    {isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span>
-                </Button>
-                <span className="d-none d-md-inline">,</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>
+                <Button className="d-none d-md-inline me-0" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>
                     Download CSV
                 </Button>
-                <span className="d-none d-md-inline mx-1">or</span>
+                <span className="d-none d-md-inline mx-1">&middot;</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={`/test/assignment/${quizAssignment.id}/feedback`} onClick={openSingleAssignment}>View individual test</Button>
+                <img src={"/assets/common/icons/chevron-up.svg"} alt="" className={classNames("accordion-arrow", {"active" : isExpanded})}/>
             </div>
         </div>
         {isExpanded && <QuizProgressLoader key={quizAssignment.quizId} quizAssignmentId={quizAssignment.id} />}
@@ -410,21 +389,49 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     const {assignmentCount} = useGroupAssignmentSummary(user, group.id);
 
+    const deviceSize = useDeviceSize();
+
     return <>
         <div  onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
-            <div className="group-name"><span className="icon-group"/><span data-testid={"group-name"}>{group.groupName}</span></div>
-            <div className="flex-grow-1" />
-            <div className="py-2"><strong>{assignmentCount}</strong> assignment{assignmentCount != 1 && "s"} or test{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
-            <div className="d-none d-md-inline-block"><a className={"download-csv-link"} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
-                (Download group assignments CSV)
-            </a></div>
-            {pageSettings.isTeacher && <div className="d-none d-md-inline-block"><a className={"download-csv-link"} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
-                (Download group tests CSV)
-            </a></div>}
-            <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
-                <img src={siteSpecific("/assets/common/icons/icon-expand-arrow.png", "/assets/common/icons/chevron-up.svg")} alt="" className="accordion-arrow" />
-                <span className="visually-hidden">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
-            </Button>
+            <div className={classNames("group-name ps-2 ps-md-3 justify-content-between", {"flex-grow-1" : below['xs'](deviceSize)})}>
+                <div className="d-flex align-items-center">
+                    <span className="icon-group"/>
+                    <span data-testid={"group-name"}>{group.groupName}</span>
+                </div>
+                <div className="flex-grow-1 flex-grow-sm-0"/>
+                <div className="d-block d-sm-none justify-self-end ms-2 assignment-count-pill">{assignmentCount}</div>
+            </div>
+
+            <div className="flex-sm-grow-1"/>
+
+            <div className="d-none d-sm-block py-2"><strong>{assignmentCount}</strong> assignment{assignmentCount != 1 && "s"} or test{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
+
+            <div className="d-none d-lg-inline-block">
+                <a className={"download-csv-link"} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
+                    (Download group assignments CSV)
+                </a>
+                {pageSettings.isTeacher && <a className={"download-csv-link ms-2"} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
+                    (Download group tests CSV)
+                </a>}
+                <Button color="link" className={classNames("d-inline-flex", {"px-2": isPhy})} tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
+                    <img src={"/assets/common/icons/chevron-up.svg"} alt="" className={classNames("accordion-arrow", {"active": isExpanded})} />
+                    <span className="visually-hidden">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
+                </Button>
+            </div>
+            <UncontrolledButtonDropdown className="d-flex d-lg-none align-self-center align-self-sm-start p-0">
+                <DropdownToggle caret className="text-nowrap py-2 me-2" size="sm" color="link" onClick={e => e.stopPropagation()}>
+                    Downloads
+                </DropdownToggle>
+                <DropdownMenu>
+                    <a className={"download-csv-link mx-3 w-max-content"} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
+                        Group assignments CSV
+                    </a>
+                    <DropdownItem divider />
+                    {pageSettings.isTeacher && <a className={"download-csv-link mx-3 w-max-content"} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
+                        Group tests CSV
+                    </a>}
+                </DropdownMenu>
+            </UncontrolledButtonDropdown>
         </div>
         {isExpanded && <GroupDetails group={group} user={user} />}
     </>;
@@ -456,7 +463,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
             />
             <PageFragment fragmentId={siteSpecific("help_toptext_assignment_progress", "markbook_help")} ifNotFound={RenderNothing} />
             <div className="w-100 text-end">
-                <div className="d-inline text-nowrap">
+                <div className="d-lg-inline text-nowrap">
                     <Label className="pe-2 mt-1">Sort assignments and tests:</Label>
                     <UncontrolledButtonDropdown size="sm">
                         <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={siteSpecific("lg", "sm")}>
@@ -469,7 +476,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
                 </div>
-                <div className="d-inline text-nowrap ms-4">
+                <div className="d-lg-inline text-nowrap ms-4">
                     <Label className="pe-2 mt-1">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">
                         <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={siteSpecific("lg", "sm")}>

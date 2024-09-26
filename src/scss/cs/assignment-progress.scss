@@ -5,7 +5,8 @@
   padding-left: 13px;
   background: $yellow-300;
   .icon-group {
-    width: 2rem;
+    width: 25px;
+    min-width: 25px;
     height: 1.75rem;
     background-size: contain;
   }
@@ -40,4 +41,10 @@
 
 .accordion-arrow {
   @extend .mx-2;
+}
+
+.assignment-count-pill {
+  @include pill-tag(black, white);
+  min-width: 25px;
+  text-align: center;
 }

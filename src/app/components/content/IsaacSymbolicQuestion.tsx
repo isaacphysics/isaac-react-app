@@ -240,10 +240,10 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                         placeholder="Type your formula here"/>
                     <>
                         {siteSpecific(
-                            <RS.Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>,
+                            <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>,
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
                         )}
-                        <RS.UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
+                        {!modalVisible && <RS.UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
                             a*x^2 + b x + c<br />
@@ -252,7 +252,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                             log(x_a, 2) == log(x_a) / log(2)<br />
                             <br />
                             As you type, the box below will preview the result.
-                        </RS.UncontrolledTooltip>
+                        </RS.UncontrolledTooltip>}
                     </>
                 </RS.InputGroup>
                 <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
