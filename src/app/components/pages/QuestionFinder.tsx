@@ -115,43 +115,32 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
     const [searchDisabled, setSearchDisabled] = useState(true);
 
-    const [userContextDefault, setUserContextDefault] = useState(userContext.hasDefaultPreferences);
     const [populatedUserContext, setPopulatedUserContext] = useState(false);
 
     useEffect(function populateFromUserContext() {
         if (isAda && isLoggedIn(user) && user.registeredContexts && user.registeredContexts.length > 1) {
-            setSearchStages([STAGE.ALL]);
-            setSearchExamBoards([EXAM_BOARD.ALL]);
+            if (!params.stages) setSearchStages([STAGE.ALL]);
+            if (!params.examBoards) setSearchExamBoards([EXAM_BOARD.ALL]);
         }
         else  {
-            if (userContextDefault && !userContext.hasDefaultPreferences) {
-                setUserContextDefault(false);
-                if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
-                    setSearchStages([userContext.stage]);
-                }
-                if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
-                    setSearchExamBoards([userContext.examBoard]);
-                }
+            if (!STAGE_NULL_OPTIONS.includes(userContext.stage) && !params.stages) {
+                setSearchStages([userContext.stage]);
             }
-            else {
-                if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
-                    setSearchStages(arr => arr.length > 0 ? arr : [userContext.stage]);
-                }
-                if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
-                    setSearchExamBoards(arr => arr.length > 0 ? arr : [userContext.examBoard]);
-                }
+            if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard) && !params.examBoards) {
+                setSearchExamBoards([userContext.examBoard]);
             }
         }
-
-        setPopulatedUserContext(!!userContext.stage && !!userContext.examBoard && !userContextDefault);
-        searchAndUpdateURL();
-    }, [userContext.stage, userContext.examBoard, user, userContextDefault]);
+        setPopulatedUserContext(!!userContext.stage && !!userContext.examBoard);
+    }, [userContext.stage, userContext.examBoard, user]);
 
     // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates
     useEffect(() => {
-        searchAndUpdateURL();
+        if (populatedUserContext && (searchStages[0] === userContext.stage && (isPhy || searchExamBoards[0] === userContext.examBoard) || !isLoggedIn(user))) { 
+            searchAndUpdateURL();
+            setPopulatedUserContext(false);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [populatedUserContext]);
+    }, [populatedUserContext, searchStages, searchExamBoards]);
 
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
