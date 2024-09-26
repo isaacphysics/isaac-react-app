@@ -84,4 +84,5 @@ jobs:
         run: |
           echo '## 👀 Visual Regression Test updates' >> $GITHUB_STEP_SUMMARY
           echo 'This run failed due to visual differences compared to our baseline images. A PR with new baseline images has been generated. Please review it [here](${{ steps.cypress-create-pr.outputs.result }}) and merge it if the differences are expected.' >> $GITHUB_STEP_SUMMARY
+          echo 'See [this wiki page](https://github.com/isaacphysics/isaac-wiki/wiki/Visual-regression-tests) for more information and troubleshooting steps.' >> $GITHUB_STEP_SUMMARY
 
