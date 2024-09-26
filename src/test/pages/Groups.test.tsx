@@ -162,7 +162,7 @@ describe("Groups", () => {
                     if (parseInt(groupId as string) === groupToDelete.id) {
                         correctDeleteRequests++;
                     }
-                    return HttpResponse.json(null, {status: 200,});
+                    return new HttpResponse(null, {status: 204,});
                 }),
             ]
         });
@@ -207,7 +207,7 @@ describe("Groups", () => {
                         if (parseInt(groupId as string) === groupToRename.id && updatedGroup?.groupName === newGroupName && isEqual(groupToRename, {...updatedGroup, groupName: groupToRename.groupName})) {
                             correctUpdateRequests++;
                         }
-                        return HttpResponse.json(null, {status: 200,});
+                        return new HttpResponse(null, {status: 204,});
                     }),
                 ]
             });
