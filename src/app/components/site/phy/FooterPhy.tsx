@@ -53,7 +53,7 @@ export const FooterPhy = () => (
         </div>
         <div className="footerBottom">
             <Container>
-                <Row className="pt-3 px-3 px-sm-0 pb-3">
+                <Row className="pt-3 px-3 px-sm-0 pb-3 bg-white">
                     <div className="w-100">
                         <div className='text-center'>
                             All materials on this site are licensed under the {" "}

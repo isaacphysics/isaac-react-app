@@ -46,6 +46,7 @@
 
   .accordion {
     page-break-inside: avoid;
+    box-shadow: none;
   }
 
   .content-body {
@@ -59,6 +60,10 @@
   .container {
     max-width: none;
     min-width: unset !important;
+  }
+
+  figure {
+    box-shadow: none;
   }
 
   .question-panel {
