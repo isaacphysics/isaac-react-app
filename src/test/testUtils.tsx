@@ -1,7 +1,7 @@
 import {UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
-import {rest, RestHandler} from "msw";
+import {http, HttpResponse, HttpHandler} from "msw";
 import {ACCOUNT_TAB, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
 import {produce} from "immer";
 import {mockUser} from "../mocks/data";
@@ -32,7 +32,7 @@ interface RenderTestEnvironmentOptions {
     sessionExpires?: string;
     PageComponent?: React.FC<any>;
     initalRouteEntries?: string[];
-    extraEndpoints?: RestHandler<any>[];
+    extraEndpoints?: HttpHandler[];
 }
 // Flexible helper function to set up different kinds of test environments. You can:
 //  - Choose the role of the mock user (defaults to ADMIN)
@@ -51,26 +51,27 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     server.resetHandlers();
     if (role || modifyUser) {
         server.use(
-            rest.get(API_PATH + "/users/current_user", (req, res, ctx) => {
+            http.get(API_PATH + "/users/current_user", () => {
                 if (role === "ANONYMOUS") {
-                    return res(
-                        ctx.status(401),
-                        ctx.json({
-                            responseCode: 401,
-                            responseCodeType: "Unauthorized",
-                            errorMessage: "You must be logged in to access this resource.",
-                            bypassGenericSiteErrorPage: false
-                        })
+                    return HttpResponse.json({
+                        responseCode: 401,
+                        responseCodeType: "Unauthorized",
+                        errorMessage: "You must be logged in to access this resource.",
+                        bypassGenericSiteErrorPage: false
+                    }, {
+                        status: 401,
+                    }
                     );
                 }
                 const userWithRole = produce(mockUser, user => {
                     user.role = role ?? mockUser.role;
                 });
-                return res(
-                    ctx.status(200),
-                    ctx.json(modifyUser ? modifyUser(userWithRole) : userWithRole),
-                    ctx.set("x-session-expires", sessionExpires ?? SOME_FIXED_FUTURE_DATE_AS_STRING)
-                );
+                return HttpResponse.json(modifyUser ? modifyUser(userWithRole) : userWithRole, {
+                    status: 200,
+                    headers: {
+                        "x-session-expires": sessionExpires ?? SOME_FIXED_FUTURE_DATE_AS_STRING,
+                    }
+                });
             }),
         );
     }
@@ -101,7 +102,7 @@ export const navTabTitles: Record<ACCOUNT_TAB, string> = {
 // Clicks on the given navigation menu entry, allowing navigation around the app as a user would
 export const followHeaderNavLink = async (menu: string, linkName: string) => {
     const header = await screen.findByTestId("header");
-    const navLink = await within(header).findByRole("link",  {name: menu});
+    const navLink = await within(header).findByRole("link", {name: new RegExp(`^${menu}`)});
     await userEvent.click(navLink);
     // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
     // related to a given title

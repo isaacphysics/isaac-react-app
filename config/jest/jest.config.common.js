@@ -4,6 +4,9 @@ module.exports = {
         "!src/**/*.d.ts"
     ],
     "resolver": "jest-pnp-resolver",
+    setupFiles: [
+        "<rootDir>/config/jest/jest.polyfills.js"
+    ],
     "setupFilesAfterEnv": [
         "<rootDir>src/test/setupTests.ts",
         "react-app-polyfill/jsdom"
@@ -15,6 +18,7 @@ module.exports = {
     "testEnvironment": "jsdom",
     "testEnvironmentOptions": {
         "url": "http://localhost",
+        customExportConditions: [''],
     },
     "transform": {
         "^.+\\.css$": "<rootDir>config/jest/cssTransform.js",
@@ -27,7 +31,8 @@ module.exports = {
     ],
     "moduleNameMapper": {
         "^react-native$": "react-native-web",
-        "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+        "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
+        "uuid": "uuid"
     },
     "moduleFileExtensions": [
         "web.js",

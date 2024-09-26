@@ -36,7 +36,7 @@
 //   }
 // }
 
-import {mount, MountOptions} from 'cypress/react';
+import {mount, MountOptions} from 'cypress/react18';
 
 // Augment the Cypress namespace to include type definitions for
 // your custom command.
@@ -46,7 +46,7 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Cypress {
         interface Chainable {
-            mountWithStoreAndRouter(component: ReactNode, routes: string[], options: MountOptions): Chainable<Element>;
+            mountWithStoreAndRouter(component: ReactNode, routes: string[], mountOptions?: MountOptions): Chainable<Element>;
         }
     }
 }
@@ -56,14 +56,14 @@ import {Provider} from "react-redux";
 import {store} from "../../src/app/state";
 import {MemoryRouter} from "react-router";
 
-Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, options) => {
+Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, mountOptions) => {
     mount(
         <Provider store={store}>
             <MemoryRouter initialEntries={routes}>
                 {component}
             </MemoryRouter>
         </Provider>
-        , options
+        , mountOptions
     );
 });
 

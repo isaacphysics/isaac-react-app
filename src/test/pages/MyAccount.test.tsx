@@ -1,4 +1,4 @@
-import {rest} from "msw";
+import {http, HttpResponse} from "msw";
 import {ACCOUNT_TAB, API_PATH, extractTeacherName} from "../../app/services";
 import {buildMockTeacher, buildMockUserSummary, mockActiveGroups} from "../../mocks/data";
 import {navigateToMyAccount, renderTestEnvironment, switchAccountTab} from "../testUtils";
@@ -20,54 +20,50 @@ describe("My Account", () => {
 
         let joinedGroup = false;
 
-        const getAuthorisationsHandler = jest.fn(async (req, res, ctx) => {
-            return res(
-                ctx.status(200),
-                ctx.json(joinedGroup ? [mockTeacher] : [])
-            );
+        const getAuthorisationsHandler = jest.fn(async () => {
+            return HttpResponse.json(joinedGroup ? [mockTeacher] : [], {
+                status: 200,
+            });
         });
 
-        const getGroupOwnerHandler = jest.fn(async (req, res, ctx) => {
-            const token = req.params.token;
-            if (token !== mockToken) return res(ctx.status(400));
+        const getGroupOwnerHandler = jest.fn(async ({params}) => {
+            const { token } = params;
+            if (token !== mockToken) return HttpResponse.json(null, {status: 400,});
 
-            return res(
-                ctx.status(200),
-                ctx.json([buildMockUserSummary(mockTeacher, false)])
-            );
+            return HttpResponse.json([buildMockUserSummary(mockTeacher, false)], {
+                status: 200,
+            });
         });
 
-        const joinGroupHandler = jest.fn(async (req, res, ctx) => {
-            const token = req.params.token;
-            if (token !== mockToken) return res(ctx.status(400));
+        const joinGroupHandler = jest.fn(async ({params}) => {
+            const { token } = params;
+            if (token !== mockToken) HttpResponse.json(null, {status: 400,});
 
             joinedGroup = true;
 
-            return res(
-                ctx.status(200),
-                ctx.json({
-                    result: "success",
-                })
-            );
+            return HttpResponse.json({
+                result: "success",
+            }, {
+                status: 200
+            });
         });
 
-        const membershipHandler = jest.fn(async (req, res, ctx) => {
-            return res(
-                ctx.status(200),
-                ctx.json(joinedGroup ? [{
-                    "group": mockGroup,
-                    "membershipStatus": "ACTIVE",
-                }] : [])
-            );
+        const membershipHandler = jest.fn(async () => {
+            return HttpResponse.json(joinedGroup ? [{
+                "group": mockGroup,
+                "membershipStatus": "ACTIVE",
+            }] : [], {
+                status: 200,
+            });
         });
 
         renderTestEnvironment({
             role: "STUDENT",
             extraEndpoints: [
-                rest.get(API_PATH + `/authorisations/token/:token/owner`, getGroupOwnerHandler),
-                rest.get(API_PATH + "/authorisations", getAuthorisationsHandler),
-                rest.post(API_PATH + `/authorisations/use_token/:token`, joinGroupHandler),
-                rest.get(API_PATH + "/groups/membership", membershipHandler),
+                http.get(API_PATH + `/authorisations/token/:token/owner`, getGroupOwnerHandler),
+                http.get(API_PATH + "/authorisations", getAuthorisationsHandler),
+                http.post(API_PATH + `/authorisations/use_token/:token`, joinGroupHandler),
+                http.get(API_PATH + "/groups/membership", membershipHandler),
             ]
         });
 
@@ -121,60 +117,55 @@ describe("My Account", () => {
             members: [],
         };
 
-        const getAuthorisationsHandler = jest.fn(async (req, res, ctx) => {
-            return res(
-                ctx.status(200),
-                ctx.json([mockTeacher, mockTeacher2])
-            );
+        const getAuthorisationsHandler = jest.fn(async () => {
+            return HttpResponse.json([mockTeacher, mockTeacher2], {
+                status: 200,
+            });
         });
 
-        const getGroupOwnerHandler = jest.fn(async (req, res, ctx) => {
-            const token = req.params.token;
-            if (token !== mockToken) return res(ctx.status(400));
+        const getGroupOwnerHandler = jest.fn(async ({params}) => {
+            const { token } = params;
+            if (token !== mockToken) return HttpResponse.json(null, {status: 400,});
 
-            return res(
-                ctx.status(200),
-                ctx.json([buildMockUserSummary(mockTeacher, false)])
-            );
+            return HttpResponse.json([buildMockUserSummary(mockTeacher, false)], {
+                status: 200,
+            });
         });
 
-        const membershipHandler = jest.fn(async (req, res, ctx) => {
-            return res(
-                ctx.status(200),
-                ctx.json([{
-                    "group": mockGroup,
-                    "membershipStatus": "ACTIVE",
-                }])
-            );
+        const membershipHandler = jest.fn(async () => {
+            return HttpResponse.json([{
+                "group": mockGroup,
+                "membershipStatus": "ACTIVE",
+            }], {
+                status: 200,
+            });
         });
 
-        const getOtherUserAuthorisationsHandler = jest.fn(async (req, res, ctx) => {
-            return res(
-                ctx.status(200),
-                ctx.json([])
-            );
+        const getOtherUserAuthorisationsHandler = jest.fn(async () => {
+            return HttpResponse.json([], {
+                status: 200,
+            });
         });
 
-        const deleteAuthorisationHandler = jest.fn(async (req, res, ctx) => {
-            const id = req.params.id;
-            if (id !== mockTeacher.id) return res(ctx.status(400));
+        const deleteAuthorisationHandler = jest.fn(async ({params}) => {
+            const { id } = params;
+            if (id !== mockTeacher.id) return HttpResponse.json(null, {status: 400,});
 
-            return res(
-                ctx.status(204),
-                ctx.json({
-                    result: "success",
-                })
-            );
+            return HttpResponse.json({
+                result: "success",
+            }, {
+                status: 204,
+            });
         });
 
         renderTestEnvironment({
             role: "STUDENT",
             extraEndpoints: [
-                rest.get(API_PATH + `/authorisations/token/:token/owner`, getGroupOwnerHandler),
-                rest.get(API_PATH + "/authorisations", getAuthorisationsHandler),
-                rest.get(API_PATH + "/groups/membership", membershipHandler),
-                rest.get(API_PATH + "/authorisations/other_users", getOtherUserAuthorisationsHandler),
-                rest.delete(API_PATH + "/authorisations/:id", deleteAuthorisationHandler),
+                http.get(API_PATH + `/authorisations/token/:token/owner`, getGroupOwnerHandler),
+                http.get(API_PATH + "/authorisations", getAuthorisationsHandler),
+                http.get(API_PATH + "/groups/membership", membershipHandler),
+                http.get(API_PATH + "/authorisations/other_users", getOtherUserAuthorisationsHandler),
+                http.delete(API_PATH + "/authorisations/:id", deleteAuthorisationHandler),
             ]
         });
 

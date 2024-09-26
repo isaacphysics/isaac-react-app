@@ -4,7 +4,7 @@ import {API_PATH, utf8ByteLength} from "../../app/services";
 import {mockActiveGroups, mockAssignmentsGroup2, mockQuizAssignments} from "../../mocks/data";
 import userEvent from "@testing-library/user-event";
 import {buildGroupHandler} from "../../mocks/handlers";
-import {rest} from "msw";
+import {http, HttpResponse} from "msw";
 
 describe("AssignmentProgress", () => {
 
@@ -24,18 +24,16 @@ describe("AssignmentProgress", () => {
         renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
-                rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
-                rest.get(API_PATH + "/assignments/assign", (req, res, ctx) => {
-                    return res(
-                        ctx.status(200),
-                        ctx.json(mockAssignments)
-                    );
+                http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
+                http.get(API_PATH + "/assignments/assign", ({request, params, cookies}) => {
+                    return HttpResponse.json(mockAssignments, {
+                        status: 200,
+                    });
                 }),
-                rest.get(API_PATH + "/quiz/assigned", (req, res, ctx) => {
-                    return res(
-                        ctx.status(200),
-                        ctx.json(mockTestAssignments)
-                    );
+                http.get(API_PATH + "/quiz/assigned", ({request, params, cookies}) => {
+                    return HttpResponse.json(mockTestAssignments, {
+                        status: 200,
+                    });
                 })
             ]
         });
@@ -64,18 +62,16 @@ describe("AssignmentProgress", () => {
         renderTestEnvironment({
             role: "TUTOR",
             extraEndpoints: [
-                rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
-                rest.get(API_PATH + "/assignments/assign", (req, res, ctx) => {
-                    return res(
-                        ctx.status(200),
-                        ctx.json(mockAssignments)
-                    );
+                http.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
+                http.get(API_PATH + "/assignments/assign", ({request, params, cookies}) => {
+                    return HttpResponse.json(mockAssignments, {
+                        status: 200,
+                    });
                 }),
-                rest.get(API_PATH + "/quiz/assigned", (req, res, ctx) => {
-                    return res(
-                        ctx.status(200),
-                        ctx.json(mockTestAssignments)
-                    );
+                http.get(API_PATH + "/quiz/assigned", ({request, params, cookies}) => {
+                    return HttpResponse.json(mockTestAssignments, {
+                        status: 200,
+                    });
                 })
             ]
         });
@@ -102,12 +98,14 @@ describe("AssignmentProgress", () => {
         renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
-                rest.get(API_PATH + "/assignments/assign/group/2/progress/download", (req, res, ctx) => {
-                    return res(
-                        ctx.set('Content-Length', utf8ByteLength(mockData).toString()),
-                        ctx.set('Content-Type', 'text/csv'),
-                        ctx.body(mockData),
-                    );
+                http.get(API_PATH + "/assignments/assign/group/2/progress/download", ({request, params, cookies}) => {
+                    return HttpResponse.text(mockData, {
+                        status: 200,
+                        headers: {
+                            "Content-Type": "text/csv",
+                            "Content-Length": utf8ByteLength(mockData).toString(),
+                        }
+                    });
                 }),
             ]
         });
@@ -135,12 +133,14 @@ describe("AssignmentProgress", () => {
         renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
-                rest.get(API_PATH + "/assignments/assign/2/progress/download", (req, res, ctx) => {
-                    return res(
-                        ctx.set('Content-Length', utf8ByteLength(mockData).toString()),
-                        ctx.set('Content-Type', 'text/csv'),
-                        ctx.body(mockData),
-                    );
+                http.get(API_PATH + "/assignments/assign/2/progress/download", ({request, params, cookies}) => {
+                    return HttpResponse.text(mockData, {
+                        status: 200,
+                        headers: {
+                            "Content-Type": "text/csv",
+                            "Content-Length": utf8ByteLength(mockData).toString(),
+                        }
+                    });
                 }),
             ]
         });
@@ -173,12 +173,14 @@ describe("AssignmentProgress", () => {
         renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
-                rest.get(API_PATH + "/quiz/group/2/download", (req, res, ctx) => {
-                    return res(
-                        ctx.set('Content-Length', utf8ByteLength(mockData).toString()),
-                        ctx.set('Content-Type', 'text/csv'),
-                        ctx.body(mockData),
-                    );
+                http.get(API_PATH + "/quiz/group/2/download", ({request, params, cookies}) => {
+                    return HttpResponse.text(mockData, {
+                        status: 200,
+                        headers: {
+                            "Content-Type": "text/csv",
+                            "Content-Length": utf8ByteLength(mockData).toString(),
+                        }
+                    });
                 }),
             ]
         });
