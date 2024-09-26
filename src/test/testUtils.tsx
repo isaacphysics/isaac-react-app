@@ -2,7 +2,7 @@ import {UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {http, HttpResponse, HttpHandler} from "msw";
-import {ACCOUNT_TAB, ACTION_TYPE, API_PATH, isDefined, isPhy, siteSpecific} from "../app/services";
+import {ACCOUNT_TAB, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
 import {produce} from "immer";
 import {mockUser} from "../mocks/data";
 import {isaacApi, requestCurrentUser, store} from "../app/state";
