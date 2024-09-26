@@ -38,7 +38,8 @@ export default [
             "@typescript-eslint/ban-ts-comment": "off",
             "@typescript-eslint/explicit-function-return-type": "off",
             "@typescript-eslint/no-empty-interface": "warn",
-            "@typescript-eslint/explicit-module-boundary-types": "off"
+            "@typescript-eslint/explicit-module-boundary-types": "off",
+            "react/jsx-no-target-blank": "off", // https://github.com/isaacphysics/isaac-react-app/pull/1134#discussion_r1774839755
         },
         languageOptions: {
             parser: tsParser,
