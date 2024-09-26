@@ -133,7 +133,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
     , [semiSortedProgress, reverseOrder, sortOrder]);
 
     const tableHeaderFooter = <tr className="progress-table-header-footer">
-        <SortItemHeader defaultOrder={"name"} reverseOrder={"name"} currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}/>
+        <SortItemHeader className="student-name" defaultOrder={"name"} reverseOrder={"name"} currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}/>
         {questions.map((q, index) =>
             <SortItemHeader
                 key={q.id} className={`${isSelected(q)}`}
@@ -148,12 +148,14 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
         )}
         {isAssignment ? <>
             <SortItemHeader
+                className="total-column left"
                 defaultOrder={"totalQuestionPartPercentage"}
                 reverseOrder={"totalQuestionPartPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}>
                 Total Parts
             </SortItemHeader>
             <SortItemHeader
+                className="total-column right"
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}>
@@ -207,7 +209,9 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
         {progress && progress.length > 0 && <>
             <div className="progress-questions">
                 <Button color="tertiary" disabled={selectedQuestionNumber == 0}
-                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber - 1)}>◄</Button>
+                    // on OSX chrome, the left- and right- pointing triangles are different, so construct these by flipping the same one
+                    className="flip-x"
+                    onClick={() => setSelectedQuestionNumber(selectedQuestionNumber - 1)}>►</Button>
                 <div>
                     {getQuestionTitle(selectedQuestion)}
                 </div>
