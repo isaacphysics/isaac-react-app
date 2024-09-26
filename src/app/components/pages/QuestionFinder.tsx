@@ -119,15 +119,15 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(function populateFromUserContext() {
         if (isAda && isLoggedIn(user) && user.registeredContexts && user.registeredContexts.length > 1) {
-            setSearchStages([STAGE.ALL]);
-            setSearchExamBoards([EXAM_BOARD.ALL]);
+            if (!params.stages) setSearchStages([STAGE.ALL]);
+            if (!params.examBoards) setSearchExamBoards([EXAM_BOARD.ALL]);
         }
         else  {
-            if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
-                setSearchStages(arr => arr.length > 0 ? arr : [userContext.stage]);
+            if (!STAGE_NULL_OPTIONS.includes(userContext.stage) && !params.stages) {
+                setSearchStages([userContext.stage]);
             }
-            if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
-                setSearchExamBoards(arr => arr.length > 0 ? arr : [userContext.examBoard]);
+            if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard) && !params.examBoards) {
+                setSearchExamBoards([userContext.examBoard]);
             }
         }
         setPopulatedUserContext(!!userContext.stage && !!userContext.examBoard);
@@ -135,9 +135,12 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates
     useEffect(() => {
-        searchAndUpdateURL();
+        if (populatedUserContext && (searchStages[0] === userContext.stage && (isPhy || searchExamBoards[0] === userContext.examBoard) || !isLoggedIn(user))) { 
+            searchAndUpdateURL();
+            setPopulatedUserContext(false);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [populatedUserContext]);
+    }, [populatedUserContext, searchStages, searchExamBoards]);
 
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
@@ -233,7 +236,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         !( Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v) )
     );
 
-    const [noResultsMessage, setNoResultsMessage] = useState<ReactNode>(<em>No results match your criteria</em>);
+    const [noResultsMessage, setNoResultsMessage] = useState<ReactNode>(<em>Please select and apply filters</em>);
 
     const applyFilters = () => {
         // Have to use a local variable as React won't update state in time
