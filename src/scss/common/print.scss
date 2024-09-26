@@ -94,6 +94,17 @@
   .content-value > div {
       display: block !important;
   }
+
+  .difficulty-title {
+    // force colour when printing hierarchy tags to ensure text is visible
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    &.active {
+      // firefox printed SVG text is rendered via stroke, not color. this is NOT true when emulating media style, so we set both for consistency
+      color: white !important;
+      stroke: white !important;
+    }
+  }
 }
 
 .only-print {
