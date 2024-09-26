@@ -407,10 +407,10 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
             <div className="d-none d-sm-block py-2"><strong>{assignmentCount}</strong> assignment{assignmentCount != 1 && "s"} or test{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
 
             <div className="d-none d-lg-inline-block">
-                <a className={"download-csv-link"} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noreferrer noopener" onClick={openDownloadLink}>
+                <a className={"download-csv-link"} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
                     (Download group assignments CSV)
                 </a>
-                {pageSettings.isTeacher && <a className={"download-csv-link ms-2"} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noreferrer noopener" onClick={openDownloadLink}>
+                {pageSettings.isTeacher && <a className={"download-csv-link ms-2"} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
                     (Download group tests CSV)
                 </a>}
                 <Button color="link" className={classNames("d-inline-flex", {"px-2": isPhy})} tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
@@ -423,11 +423,11 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
                     Downloads
                 </DropdownToggle>
                 <DropdownMenu>
-                    <a className={"download-csv-link mx-3 w-max-content"} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noreferrer noopener" onClick={openDownloadLink}>
+                    <a className={"download-csv-link mx-3 w-max-content"} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
                         Group assignments CSV
                     </a>
                     <DropdownItem divider />
-                    {pageSettings.isTeacher && <a className={"download-csv-link mx-3 w-max-content"} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noreferrer noopener" onClick={openDownloadLink}>
+                    {pageSettings.isTeacher && <a className={"download-csv-link mx-3 w-max-content"} href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
                         Group tests CSV
                     </a>}
                 </DropdownMenu>
