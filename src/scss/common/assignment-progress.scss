@@ -41,10 +41,13 @@
   display: flex;
   font-weight: bold;
   flex-shrink: 1;
-  padding: 0.5rem 1.5rem;
   width: 300px;
   @include respond-above(sm) {
     font-size: 1.1rem;
+  }
+
+  @include respond-below(xs) {
+    width: unset;
   }
 }
 .assignment-progress-group .group-name span {
@@ -56,9 +59,10 @@
 
 .accordion-arrow {
   transform: rotate(180deg);
+  transition: transform 0.2s ease-in-out;
 }
 
-.active .accordion-arrow {
+.active.accordion-arrow {
   transform: rotate(0deg);
 }
 
@@ -204,9 +208,6 @@ $failed-bg-size: 25%;
     font-weight: 400;
     margin: 0;
     padding: 0;
-    @include respond-above(sm) {
-      margin-left: 0.75rem;
-    }
   }
 }
 
@@ -275,12 +276,15 @@ $failed-bg-size: 25%;
   counter-increment: board-count;
   content: counter(board-count) ". ";
   display: inline-block;
+  height: 100%;
   padding: 0.5rem 1rem;
   font-weight: bold;
+  align-content: center;
 }
 .assignment-progress-gameboard .gameboard-title span {
   padding-left: 0.75rem;
   font-size: 1.2rem;
+  text-align: start;
 }
 .gameboard-due-date {
   font-weight: normal;
@@ -296,6 +300,7 @@ $failed-bg-size: 25%;
 }
 .gameboard-links > * {
   margin-right: 0.3rem;
+  min-width: max-content !important;
 }
 
 .assignment-progress-table-wrapper {

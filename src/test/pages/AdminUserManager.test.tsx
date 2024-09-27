@@ -1,7 +1,7 @@
 import {screen, waitFor, within} from "@testing-library/react";
 import {navigateToUserManager, paramsToObject, renderTestEnvironment} from "../testUtils";
 import {API_PATH, isDefined} from "../../app/services";
-import {rest} from "msw";
+import {http, HttpResponse} from "msw";
 import {handlerThatReturns} from "../../mocks/handlers";
 import {buildMockUserSummary, mockSchool, mockUser} from "../../mocks/data";
 import userEvent from "@testing-library/user-event";
@@ -15,28 +15,29 @@ describe("AdminUserManager", () => {
      *
      * Will return the usersToReturn if provided, otherwise will return [mockUser].map(buildMockUserSummary).
      */
-    const buildSearchHandler = (params: AdminSearchEndpointParams, {usersToReturn, defaultUsersToReturn}: {usersToReturn?: any[], defaultUsersToReturn?: any[]}) => jest.fn((req, res, ctx) => {
-        if (Object.entries(params).length === 0) return res(ctx.json(usersToReturn
+    const buildSearchHandler = (adminSearchParams: AdminSearchEndpointParams, {usersToReturn, defaultUsersToReturn}: {usersToReturn?: any[], defaultUsersToReturn?: any[]}) => jest.fn(({request, params, cookies}) => {
+        if (Object.entries(adminSearchParams).length === 0) return HttpResponse.json(usersToReturn
             ? usersToReturn.map(u => buildMockUserSummary(u, true))
-            : [buildMockUserSummary(mockUser, true)]
-        ));
-        const searchParams = paramsToObject(req.url.searchParams);
+            : [buildMockUserSummary(mockUser, true)],
+        );
+        const url = new URL(request.url);
+        const searchParams = paramsToObject(url.searchParams);
         // If default params, return an empty array or defaultUsersToReturn
         if (!isDefined(params.postcodeRadius) && (Object.entries(searchParams).length === 1 && searchParams["postcodeRadius"] === "FIVE_MILES")) {
-            return res(ctx.json(defaultUsersToReturn
+            return HttpResponse.json(defaultUsersToReturn
                 ? defaultUsersToReturn.map(u => buildMockUserSummary(u, true))
                 : []
-            ));
+            );
         }
         // Check that the search parameters are as expected
-        const paramsAreAsExpected = Object.entries(params).every(([key, value]) => searchParams[key] === value);
+        const paramsAreAsExpected = Object.entries(adminSearchParams).every(([key, value]) => searchParams[key] === value);
         if (paramsAreAsExpected) {
-            return res(ctx.json(usersToReturn
+            return HttpResponse.json(usersToReturn
                 ? usersToReturn.map(u => buildMockUserSummary(u, true))
                 : [buildMockUserSummary(mockUser, true)]
-            ));
+            );
         }
-        return res(ctx.json([]));
+        return HttpResponse.json([]);
     });
 
     /**
@@ -127,7 +128,7 @@ describe("AdminUserManager", () => {
         renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
-                rest.get(API_PATH + "/admin/users", searchHandler),
+                http.get(API_PATH + "/admin/users", searchHandler),
             ]
         });
         await navigateToUserManager();
@@ -148,7 +149,7 @@ describe("AdminUserManager", () => {
         renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
-                rest.get(API_PATH + "/admin/users", searchHandler),
+                http.get(API_PATH + "/admin/users", searchHandler),
             ]
         });
         await navigateToUserManager();
@@ -176,7 +177,7 @@ describe("AdminUserManager", () => {
         renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
-                rest.get(API_PATH + "/admin/users", searchHandler),
+                http.get(API_PATH + "/admin/users", searchHandler),
             ]
         });
         await navigateToUserManager();
@@ -196,7 +197,7 @@ describe("AdminUserManager", () => {
         renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
-                rest.get(API_PATH + "/admin/users", searchHandler),
+                http.get(API_PATH + "/admin/users", searchHandler),
             ]
         });
         await navigateToUserManager();
@@ -219,8 +220,8 @@ describe("AdminUserManager", () => {
         renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
-                rest.get(API_PATH + "/admin/users", searchHandler),
-                rest.delete(API_PATH + "/admin/users/:userId", deleteHandler)
+                http.get(API_PATH + "/admin/users", searchHandler),
+                http.delete(API_PATH + "/admin/users/:userId", deleteHandler)
             ]
         });
         await navigateToUserManager();
@@ -259,8 +260,8 @@ describe("AdminUserManager", () => {
         renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
-                rest.get(API_PATH + "/admin/users", searchHandler),
-                rest.post(API_PATH + `/admin/users/change_role/:role`, roleChangeHandler)
+                http.get(API_PATH + "/admin/users", searchHandler),
+                http.post(API_PATH + `/admin/users/change_role/:role`, roleChangeHandler)
             ]
         });
         await navigateToUserManager();
@@ -315,8 +316,8 @@ describe("AdminUserManager", () => {
         renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
-                rest.get(API_PATH + "/admin/users", searchHandler),
-                rest.post(API_PATH + "/admin/users/change_email_verification_status/:status/true", statusChangeHandler)
+                http.get(API_PATH + "/admin/users", searchHandler),
+                http.post(API_PATH + "/admin/users/change_email_verification_status/:status/true", statusChangeHandler)
             ]
         });
         await navigateToUserManager();
@@ -385,8 +386,8 @@ describe("AdminUserManager", () => {
         renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
-                rest.get(API_PATH + "/admin/users", searchHandler),
-                rest.post(API_PATH + "/users/resetpassword", resetPasswordHandler)
+                http.get(API_PATH + "/admin/users", searchHandler),
+                http.post(API_PATH + "/users/resetpassword", resetPasswordHandler)
             ]
         });
         await navigateToUserManager();
@@ -401,8 +402,8 @@ describe("AdminUserManager", () => {
         await userEvent.click(resetPasswordButton);
         await waitFor(async () => {
             expect(resetPasswordHandler).toHaveBeenCalledTimes(1);
-            await expect(resetPasswordHandler).toHaveBeenRequestedWith(async (req) => {
-                const {email} = await req.json();
+            await expect(resetPasswordHandler).toHaveBeenRequestedWith(async ({request}) => {
+                const { email } = await request.json().then(data => data as Record<string, string>);;
                 return email === mockUser.email;
             });
         });

@@ -1,5 +1,5 @@
 import React from "react";
-import {rest, RestHandler} from "msw";
+import {http, HttpResponse, HttpHandler} from "msw";
 import {API_PATH, PATHS, siteSpecific} from "../../app/services";
 import {screen, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -9,21 +9,12 @@ import {renderTestEnvironment} from "../testUtils";
 import {DDMMYYYY_REGEX, DAYS_AGO, dayMonthYearStringToDate, SOME_FIXED_FUTURE_DATE} from "../dateUtils";
 import produce from "immer";
 
-const TAB_TITLE = siteSpecific({
-    TO_DO: "Assignments To Do tab",
-    OLDER: "Older Assignments tab",
-    COMPLETED: "Completed Assignments tab"
-}, {
-    TO_DO: "Quizzes To Do tab",
-    OLDER: "Older quizzes tab",
-    COMPLETED: "Completed quizzes tab"
-});
 
 const FILTER_LABEL_TEXT = siteSpecific("Filter assignments by name", "Filter quizzes by name");
 
 describe("MyAssignments", () => {
 
-    const renderMyAssignments = (extraEndpoints?: RestHandler<any>[]) => {
+    const renderMyAssignments = (extraEndpoints?: HttpHandler[]) => {
         renderTestEnvironment({
             PageComponent: MyAssignments,
             initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
@@ -64,7 +55,7 @@ describe("MyAssignments", () => {
 
     it('should contain assignments with undefined due date and older than a month when the "Older" assignments filter is selected', async () => {
         renderMyAssignments([
-            rest.get(API_PATH + "/assignments", (req, res, ctx) => {
+            http.get(API_PATH + "/assignments", () => {
                 let d = new Date();
                 d.setUTCDate(d.getUTCDate() - 1);
                 d.setUTCMonth(d.getUTCMonth() - 1);
@@ -73,17 +64,16 @@ describe("MyAssignments", () => {
                     as[0].scheduledStartDate = d.valueOf();
                     delete as[0].dueDate;
                 });
-                return res(
-                    ctx.status(200),
-                    ctx.json(assignmentsWithOneOld)
-                );
+                return HttpResponse.json(assignmentsWithOneOld, {
+                    status: 200,
+                });
             })
         ]);
         // Wait for the assignments "to do" to show up
         const numberOfAssignemntsToDoInMockMyAssignments = 3; 
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(numberOfAssignemntsToDoInMockMyAssignments);
         // Select the "Older Assignments" filter
-const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
+        const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
         await userEvent.selectOptions(assignmentTypeFilter, "Older");
         // Wait for the one old assignment that we expect
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(1);
@@ -91,32 +81,32 @@ const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter")
 
     it('should show the scheduled start date as the "Assigned" date if it exists', async () => {
         renderMyAssignments([
-            rest.get(API_PATH + "/assignments", (req, res, ctx) => {
-                return res(
-                    ctx.status(200),
-                    ctx.json([
-                        {
-                            id: 37,
-                            gameboardId: "test-gameboard",
-                            gameboard: {
-                                id: "test-gameboard",
-                                title: "Test Gameboard",
-                                creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
-                                ownerUserId: 1,
-                                tags: [
-                                    "ISAAC_BOARD"
-                                ],
-                                creationMethod: "BUILDER"
-                            },
-                            groupId: 2,
-                            groupName: "Test Group 1",
-                            ownerUserId: mockUser.id,
+            http.get(API_PATH + "/assignments", () => {
+                return HttpResponse.json([
+                    {
+                        id: 37,
+                        gameboardId: "test-gameboard",
+                        gameboard: {
+                            id: "test-gameboard",
+                            title: "Test Gameboard",
                             creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
-                            dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5, true),
-                            scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1, true),
-                        }
-                    ])
-                );
+                            ownerUserId: 1,
+                            tags: [
+                                "ISAAC_BOARD"
+                            ],
+                            creationMethod: "BUILDER"
+                        },
+                        groupId: 2,
+                        groupName: "Test Group 1",
+                        ownerUserId: mockUser.id,
+                        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+                        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5, true),
+                        scheduledStartDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -1, true),
+                    }
+                ],
+                {
+                    status: 200,
+                });
             })
         ]);
         const myAssignment = await screen.findByTestId("my-assignment");
@@ -128,31 +118,31 @@ const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter")
 
     it('should show the assignment creation date as the "Assigned" date if the scheduled start date does not exist', async () => {
         renderMyAssignments([
-            rest.get(API_PATH + "/assignments", (req, res, ctx) => {
-                return res(
-                    ctx.status(200),
-                    ctx.json([
-                        {
-                            id: 37,
-                            gameboardId: "test-gameboard",
-                            gameboard: {
-                                id: "test-gameboard",
-                                title: "Test Gameboard",
-                                creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
-                                ownerUserId: 1,
-                                tags: [
-                                    "ISAAC_BOARD"
-                                ],
-                                creationMethod: "BUILDER"
-                            },
-                            groupId: 2,
-                            groupName: "Test Group 1",
-                            ownerUserId: mockUser.id,
+            http.get(API_PATH + "/assignments", () => {
+                return HttpResponse.json([
+                    {
+                        id: 37,
+                        gameboardId: "test-gameboard",
+                        gameboard: {
+                            id: "test-gameboard",
+                            title: "Test Gameboard",
                             creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
-                            dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5, true)
-                        }
-                    ])
-                );
+                            ownerUserId: 1,
+                            tags: [
+                                "ISAAC_BOARD"
+                            ],
+                            creationMethod: "BUILDER"
+                        },
+                        groupId: 2,
+                        groupName: "Test Group 1",
+                        ownerUserId: mockUser.id,
+                        creationDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 3),
+                        dueDate: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), -5, true)
+                    }
+                ],
+                {
+                    status: 200,
+                });
             })
         ]);
         const myAssignment = await screen.findByTestId("my-assignment");

@@ -1,4 +1,4 @@
-import {rest} from "msw";
+import {http, HttpResponse} from "msw";
 import {
     buildMockUserSummary,
     mockAssignmentsGroup2,
@@ -18,10 +18,11 @@ import {produce} from "immer";
 import {School} from "../IsaacAppTypes";
 
 export const handlers = [
-    rest.get(API_PATH + "/gameboards/user_gameboards", (req, res, ctx) => {
-        const startIndexStr = req.url.searchParams.get("start_index");
+    http.get(API_PATH + "/gameboards/user_gameboards", ({request}) => {
+        const url = new URL(request.url);
+        const startIndexStr = url.searchParams.get("start_index");
         const startIndex = (startIndexStr && parseInt(startIndexStr)) || 0;
-        const limitStr = req.url.searchParams.get("limit");
+        const limitStr = url.searchParams.get("limit");
         const limit = (limitStr && parseInt(limitStr)) || mockGameboards.totalResults;
 
         const limitedGameboards = produce(mockGameboards, g => {
@@ -31,53 +32,50 @@ export const handlers = [
             g.totalResults = g.results.length;
         });
 
-        return res(
-            ctx.status(200),
-            ctx.json(limitedGameboards)
-        )
+        return HttpResponse.json(limitedGameboards, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/groups", (req, res, ctx) => {
-        const archived = req.url.searchParams.get("archived_groups_only") === "true";
+    http.get(API_PATH + "/groups", ({request}) => {
+        const url = new URL(request.url);
+        const archived = url.searchParams.get("archived_groups_only") === "true";
         const groups = mockGroups.filter(g => g.archived === archived);
-        return res(
-            ctx.status(200),
-            ctx.json(groups)
-        );
+        return HttpResponse.json(groups, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/groups/:groupId/membership", (req, res, ctx) => {
+    http.get(API_PATH + "/groups/:groupId/membership", () => {
         // TODO could get members from mock data if groupId refers to a known mock group
-        return res(
-            ctx.status(200),
-            ctx.json([])
-        );
+        return HttpResponse.json([], {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/assignments", (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json(mockMyAssignments)
-        );
+    http.get(API_PATH + "/assignments", () => {
+        return HttpResponse.json(mockMyAssignments, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/quiz/assignments", (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json(mockQuizAssignments)
-        );
+    http.get(API_PATH + "/quiz/assignments", () => {
+        return HttpResponse.json(mockQuizAssignments, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/assignments/assign/:assignmentId", (req, res, ctx) => {
-        const {assignmentId: _assignmentId} = req.params;
+    http.get(API_PATH + "/assignments/assign/:assignmentId", ({params}) => {
+        const {assignmentId: _assignmentId} = params;
         const assignmentId = parseInt(_assignmentId as string);
         // FIXME augment the returned assignment like in the API
         const assignments = mockSetAssignments.filter(a => a.id === assignmentId);
         if (assignments.length === 1) {
-            return res(ctx.json(assignments[0]));
+            return HttpResponse.json(assignments[0]);
         }
-        return res(
-            ctx.status(404),
-            ctx.json({error: `Assignment with id ${_assignmentId} not found.`})  // FIXME this is probably the wrong format for errors
-        );
+        // FIXME this is probably the wrong format for errors
+        return HttpResponse.json({error: `Assignment with id ${_assignmentId} not found.`}, {
+            status: 404,
+        });
     }),
-    rest.get(API_PATH + "/assignments/assign", (req, res, ctx) => {
-        const groupIdStr = req.url.searchParams.get("group");
+    http.get(API_PATH + "/assignments/assign", ({request}) => {
+        const url = new URL(request.url);
+        const groupIdStr = url.searchParams.get("group");
         const groupId = groupIdStr && parseInt(groupIdStr) || undefined;
 
         let setAssignments;
@@ -91,155 +89,142 @@ export const handlers = [
             default:
                 setAssignments = mockSetAssignments;
         }
-        return res(
-            ctx.status(200),
-            ctx.json(setAssignments)
-        );
+        return HttpResponse.json(setAssignments, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/users/current_user", (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json(mockUser)
-        );
+    http.get(API_PATH + "/users/current_user", () => {
+
+        return HttpResponse.json(mockUser, {
+            status: 200,
+        });
     }),
-    rest.post(API_PATH + "/auth/logout", (req, res, ctx) => {
-        return res(ctx.status(200));
+    http.post(API_PATH + "/auth/logout", () => {
+        return HttpResponse.json(null, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/users/user_preferences", (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json(mockUserPreferences)
-        );
+    http.get(API_PATH + "/users/user_preferences", () => {
+        return HttpResponse.json(mockUserPreferences, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/users/current_user/snapshot", (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json({
-                dailyStreakRecord: {currentStreak: 0, largestStreak: 0, currentActivity: 0},
-                weeklyStreakRecord: {currentStreak: 0, currentActivity: 0, largestWeeklyStreak: 0}
-            })
-        );
+    http.get(API_PATH + "/users/current_user/snapshot", () => {
+        return HttpResponse.json({
+            dailyStreakRecord: {currentStreak: 0, largestStreak: 0, currentActivity: 0},
+            weeklyStreakRecord: {currentStreak: 0, currentActivity: 0, largestWeeklyStreak: 0}
+        }, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/auth/user_authentication_settings", (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json(mockUserAuthSettings)
-        );
+    http.get(API_PATH + "/auth/user_authentication_settings", () => {
+        return HttpResponse.json(mockUserAuthSettings, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/info/segue_environment", (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json({segueEnvironment: "DEV"})
-        );
+    http.get(API_PATH + "/info/segue_environment", () => {
+        return HttpResponse.json({segueEnvironment: "DEV"}, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/notifications", (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json([])
-        );
+    http.get(API_PATH + "/notifications", () => {
+        return HttpResponse.json([], {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/pages/pods/:tag/0", (req, res, ctx) => {
-        const {tag} = req.params;
+    http.get(API_PATH + "/pages/pods/:tag/0", ({request, params}) => {
+        const {tag} = params;
         const podsFilteredByTag = produce(mockNewsPods, pods => {
-            pods.results = pods.results.filter(p => p.tags.includes(tag as string))
+            pods.results = pods.results.filter(p => p.tags.includes(tag as string));
             pods.totalResults = pods.results.length;
         });
-        return res(
-            ctx.status(200),
-            ctx.json(podsFilteredByTag)
-        );
+        return HttpResponse.json(podsFilteredByTag, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/pages/fragments/:fragmentId", (req, res, ctx) => {
-        const {fragmentId} = req.params;
-        return res(
-            ctx.status(200),
-            ctx.json(mockFragment(fragmentId as string))
-        );
+    http.get(API_PATH + "/pages/fragments/:fragmentId", ({params}) => {
+        const {fragmentId} = params;
+        return HttpResponse.json(mockFragment(fragmentId as string), {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/pages/:pageId", (req, res, ctx) => {
-        const {pageId} = req.params;
-        return res(
-            ctx.status(200),
-            ctx.json(buildMockPage(pageId as string))
-        );
+    http.get(API_PATH + "/pages/:pageId", ({params}) => {
+        const {pageId} = params;
+
+        return HttpResponse.json(buildMockPage(pageId as string), {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/glossary/terms", (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json({
-                results: [],
-                totalResults: 0
-            })
-        );
+    http.get(API_PATH + "/glossary/terms", () => {
+        return HttpResponse.json({results: [], totalResults: 0}, {
+            status: 200,
+        });
     }),
-    rest.post(API_PATH + "/log", async (req, res, ctx) => {
-        const json = await req.json();
+    http.post(API_PATH + "/log", async ({request}) => {
+        const json = await request.json();
         console.info("Log event: ", json);
-        return res(
-            ctx.status(200)
+        return HttpResponse.json(null, {status: 200,}
         );
     }),
-    rest.get(API_PATH + "/user-alerts", (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json({})
-        );
+    http.get(API_PATH + "/user-alerts", () => {
+        return HttpResponse.json({}, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/events", (req, res, ctx) => {
-        return res(
-            ctx.status(200),
-            ctx.json({results: [], totalResults: 0})
-        );
+    http.get(API_PATH + "/events", () => {
+        return HttpResponse.json({results: [], totalResults: 0}, {
+            status: 200,
+        });
     }),
-    rest.get(API_PATH + "/users/school_lookup", (req, res, ctx) => {
-        const {user_ids} = req.params;
+    http.get(API_PATH + "/users/school_lookup", ({request}) => {
+        // TODO should we actually be using query params here?
+        const url = new URL(request.url);
+        const user_ids = url.searchParams.get("user_ids");
         // Turn into map from user id to school
         const schools: {[userId: number]: School} = (user_ids as string).split(",").reduce((acc: any, userId: string) => {
             acc[userId] = mockSchool;
             return acc;
         }, {});
-        return res(
-            ctx.status(200),
-            ctx.json(schools)
-        );
+        return HttpResponse.json(schools, {
+            status: 200,
+        });
     }),
 ];
 
 // --- Extra handler builder functions ---
 
-export const handlerThatReturns = (options?: {data?: any, status?: number}) => jest.fn((req, res, ctx) => {
+export const handlerThatReturns = (options?: {data?: any, status?: number}) => jest.fn(() => {
     if (!options?.data) {
-        return res(ctx.status(options?.status ?? 200));
+        return HttpResponse.json(null, {
+            status: (options?.status ?? 200)
+        });
     }
-    return res(
-        ctx.status(options?.status ?? 200),
-        ctx.json(options.data)
-    );
+    return HttpResponse.json(options.data, {
+        status: (options?.status ?? 200)
+    });
 });
-export const buildAuthTokenHandler = (newGroup: any, token: string) => jest.fn((req, res, ctx) => {
-    return res(
-        ctx.status(200),
-        ctx.json({
-            token,
-            ownerUserId: newGroup.ownerId,
-            groupId: newGroup.id
-        })
-    );
+export const buildAuthTokenHandler = (newGroup: any, token: string) => jest.fn(() => {
+    return HttpResponse.json({
+        token,
+        ownerUserId: newGroup.ownerId,
+        groupId: newGroup.id
+    }, {
+        status: 200,
+    });
 });
-export const buildNewManagerHandler = (groupToAddManagerTo: any, newManager: any) => jest.fn((req, res, ctx) => {
-    return res(
-        ctx.status(200),
-        ctx.json({
-            ...groupToAddManagerTo,
-            additionalManagers: [buildMockUserSummary(newManager, true)]
-        })
-    );
+export const buildNewManagerHandler = (groupToAddManagerTo: any, newManager: any) => jest.fn(() => {
+    return HttpResponse.json({
+        ...groupToAddManagerTo,
+        additionalManagers: [buildMockUserSummary(newManager, true)]
+    }, {
+        status: 200,
+    });
 });
-export const buildGroupHandler = (groups?: any[]) => jest.fn((req, res, ctx) => {
-    const archived = req.url.searchParams.get("archived_groups_only") === "true";
+export const buildGroupHandler = (groups?: any[]) => jest.fn(({request}) => {
+    const url = new URL(request.url);
+    const archived = url.searchParams.get("archived_groups_only") === "true";
     const filteredGroups = (groups ?? mockGroups).filter(g => g.archived === archived);
-    return res(
-        ctx.status(200),
-        ctx.json(filteredGroups)
-    );
+    return HttpResponse.json(filteredGroups, {
+        status: 200,
+    });
 });
