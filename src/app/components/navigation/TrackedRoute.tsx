@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
+import {Redirect, Route, RouteComponentProps, RouteProps, useLocation} from "react-router";
 import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors, useAppSelector} from "../../state";
@@ -17,21 +17,22 @@ import {Immutable} from "immer";
 
 interface UserFilterProps {
     ifUser?: (user: Immutable<PotentialUser>) => boolean;
-    disableTracking?: boolean;
 }
 
 type TrackedRouteProps = RouteProps & {componentProps?: any} & UserFilterProps;
 type TrackedRouteComponentProps = RouteComponentProps & {
     component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
-    disableTracking?: boolean;
 };
 
 const WrapperComponent = function({component: Component, ...props}: TrackedRouteComponentProps) {
+    // Store react-router's location, rather than window's location, during the react render to track changes in history so that we
+    // can ensure it handles the location correctly even if there is a react-router <Redirect ...> before the useEffect is called.
+    const location = useLocation();
     useEffect(() => {
-        if (!props.disableTracking) {
-            trackPageview();
-        }
-    }, [props.location.pathname, props.disableTracking]);
+        // Use window's location for the origin to match trackPageview's normal URL format - react-router does not record origin.
+        trackPageview({ url: window.location.origin + location.pathname + location.search + location.hash });
+    }, [location.pathname]);
+
     return <FigureNumberingContext.Provider value={{}}> {/* Create a figure numbering scope for each page */}
         <Component {...props} />
     </FigureNumberingContext.Provider>;
@@ -49,7 +50,7 @@ export const TrackedRoute = function({component, componentProps, ...rest}: Track
                     {!isNotPartiallyLoggedIn(user) && ifUser.name ?
                         <Redirect to="/verifyemail"/> :
                         user && ifUser(user) ?
-                            <WrapperComponent component={component} disableTracking={rest.disableTracking} {...propsWithUser} {...componentProps} /> :
+                            <WrapperComponent component={component} {...propsWithUser} {...componentProps} /> :
                             user && !user.loggedIn && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
                                 persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                                 :
@@ -65,7 +66,7 @@ export const TrackedRoute = function({component, componentProps, ...rest}: Track
             }}/>;
         } else {
             return <Route {...rest} render={props => {
-                return <WrapperComponent component={component} disableTracking={rest.disableTracking} {...props} {...componentProps} />;
+                return <WrapperComponent component={component} {...props} {...componentProps} />;
             }}/>;
         }
     } else {
