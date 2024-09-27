@@ -292,17 +292,16 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
             <Card className="board-card card-neat" data-testid={"gameboard-card"}>
                 <CardBody className="d-flex flex-column pb-4 pt-4">
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
-                    <Row className="mt-1 mb-2">
+                    <Row className="mt-1 mb-2 justify-content-between">
                         <Col lg={8} md={8} sm={10} xs={8}>
                             <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
                             <CardSubtitle data-testid={"owner"}>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                         </Col>
-                        {isSetAssignments ? <Col>
+                        {isSetAssignments ? <Col className="d-flex justify-content-center">
                             <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
                         </Col>
                             : <>
-                                <Spacer/>
-                                <Col xs={2} className="card-share-link col-auto">
+                                <Col xs={2} className="card-share-link col-auto px-3">
                                     <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
                                 </Col>
                             </>}
@@ -389,14 +388,18 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                                     <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
                                 </Col>
                             </Col> :
-                                <Col xs={4} className="ps-0 d-flex flex-column">
-                                    <Row className="d-flex flex-column p-0 align-items-center">
-                                        <span>Attempted</span>
-                                        <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                                <Col xs={4} className="ps-0 d-flex flex-column justify-content-start">
+                                    <Row className="p-0 align-items-center">
+                                        <Col className="d-flex flex-column align-items-center">
+                                            <span>Attempted</span>
+                                            <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+                                        </Col>
                                     </Row>
-                                    <Row className="d-flex flex-column p-0 align-items-center">
-                                        <span className="pt-2">Correct</span>
-                                        <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
+                                    <Row className="p-0 align-items-center">
+                                        <Col className="d-flex flex-column align-items-center">
+                                            <span className="pt-2">Correct</span>
+                                            <AdaCircle {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />
+                                        </Col>
                                     </Row>
                                 </Col>
                         )}
