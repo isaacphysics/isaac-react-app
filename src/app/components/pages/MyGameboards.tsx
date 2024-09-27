@@ -43,7 +43,7 @@ const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, board
     return <Row>
         <Col xs={6} md={3}>
             <Label className="w-100">
-                Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected}>
+                Display in <Input type="select" data-testid={"display-select"} value={boardView} onChange={switchViewAndClearSelected}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
             </Label>
