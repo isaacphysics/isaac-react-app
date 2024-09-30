@@ -48,39 +48,8 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-export const symbolicInputValidator = (input: string) => {
-    const openRoundBracketsCount = input.split("(").length - 1;
-    const closeRoundBracketsCount = input.split(")").length - 1;
-    const openSquareBracketsCount = input.split("[").length - 1;
-    const closeSquareBracketsCount = input.split("]").length - 1;
-    const openCurlyBracketsCount = input.split("{").length - 1;
-    const closeCurlyBracketsCount = input.split("}").length - 1;
-    const regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
-    const badCharacters = new RegExp(regexStr);
-    const errors = [];
-    if (badCharacters.test(input)) {
-        const usedBadChars: string[] = [];
-        for(let i = 0; i < input.length; i++) {
-            const char = input.charAt(i);
-            if (badCharacters.test(char)) {
-                if (!usedBadChars.includes(char)) {
-                    usedBadChars.push(char);
-                }
-            }
-        }
-        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-    }
-    if (openRoundBracketsCount !== closeRoundBracketsCount
-       || openSquareBracketsCount !== closeSquareBracketsCount
-       || openCurlyBracketsCount !== closeCurlyBracketsCount) {
-        // Rather than a long message about which brackets need closing
-        errors.push('You are missing some brackets.');
-    }
-    if (/\.[0-9]/.test(input)) {
-        errors.push('Please convert decimal numbers to fractions.');
-    }
-    return errors;
-};
+const possibleMetaSymbols = ["_state_symbols", "_plus","_minus", "_fraction", "_right_arrow", 
+    "_equilibrium_arrow", "_brackets_round", "_brackets_square", "_dot"];
 
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
 
@@ -97,6 +66,46 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
+
+    const symbolicInputValidator = (input: string) => {
+        const openRoundBracketsCount = input.split("(").length - 1;
+        const closeRoundBracketsCount = input.split(")").length - 1;
+        const openSquareBracketsCount = input.split("[").length - 1;
+        const closeSquareBracketsCount = input.split("]").length - 1;
+        const openCurlyBracketsCount = input.split("{").length - 1;
+        const closeCurlyBracketsCount = input.split("}").length - 1;
+        const regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
+        const badCharacters = new RegExp(regexStr);
+        const errors = [];
+        if (badCharacters.test(input)) {
+            const usedBadChars: string[] = [];
+            for(let i = 0; i < input.length; i++) {
+                const char = input.charAt(i);
+                if (badCharacters.test(char)) {
+                    if (!usedBadChars.includes(char)) {
+                        usedBadChars.push(char);
+                    }
+                }
+            }
+            errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+        }
+
+        const hasMetaSymbols = possibleMetaSymbols.some(metaSymbol => input.includes(metaSymbol));
+
+        if (openRoundBracketsCount !== closeRoundBracketsCount
+           || openSquareBracketsCount !== closeSquareBracketsCount
+           || openCurlyBracketsCount !== closeCurlyBracketsCount) {
+            // Rather than a long message about which brackets need closing
+            errors.push('You are missing some brackets.');
+        }
+        if (/\.[0-9]/.test(input)) {
+            errors.push('Please convert decimal numbers to fractions.');
+        }
+        if (/\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !hasMetaSymbols && !doc.availableSymbols?.includes("_state_symbols")) {
+            errors.push('This question does not require state symbols.');
+        }
+        return errors;
+    };
 
     function currentAttemptMhchemExpression(): string {
         return (currentAttemptValue?.result && currentAttemptValue.result.mhchem) || "";
