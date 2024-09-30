@@ -38,14 +38,14 @@ const isaacBooks: BookInfo[] = siteSpecific(
             path: "/books/maths_book_gcse"
         },
         {
-            title: "Mathematics for Sciences (1st edition)",
-            image: "assets/phy/books/pre_uni_maths.jpg",
-            path: "/books/pre_uni_maths"
-        },
-        {
             title: "Mathematics for Sciences (2nd edition)",
             image: "assets/phy/books/pre_uni_maths_2e.jpg",
             path: "/books/pre_uni_maths_2e"
+        },
+        {
+            title: "Mathematics for Sciences (1st edition)",
+            image: "assets/phy/books/pre_uni_maths.jpg",
+            path: "/books/pre_uni_maths"
         },
         {
             title: "Pre-University Physical Chemistry",
