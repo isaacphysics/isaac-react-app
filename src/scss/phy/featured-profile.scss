@@ -27,7 +27,7 @@ div:has(> .featured-profile:first-child:nth-last-child(2)) {
     @extend .isaac-tab;
 
     width: 47.5%;
-    @media (max-width: 575px) {
+    @include media-breakpoint-down(sm) {
       width: 100%;
     }
 
@@ -52,3 +52,10 @@ div:has(> .featured-profile:first-child:nth-last-child(2)) {
     margin-right: 5%;
   }
 }
+
+@include media-breakpoint-down(lg) {
+  div.pad:has(> div > .featured-profile:first-child:nth-last-child(2)) {
+    padding-left: 0;
+  }
+}
+
