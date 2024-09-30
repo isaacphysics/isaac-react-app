@@ -3,6 +3,7 @@ import {IsaacFeaturedProfileDTO} from "../../../IsaacApiTypes";
 import {apiHelper, isDefined} from "../../services";
 import {IsaacContent} from "./IsaacContent";
 import {Col, Row} from "reactstrap";
+import { Spacer } from "../elements/Spacer";
 
 interface IsaacFeaturedProfileProps {
     doc: IsaacFeaturedProfileDTO;
@@ -13,7 +14,7 @@ export const IsaacFeaturedProfile = ({doc, contentIndex}: IsaacFeaturedProfilePr
     const path = doc.image && doc.image.src && apiHelper.determineImageUrl(doc.image.src);
     const summary = doc.children && doc.children[0];
 
-    return <div className={`text-center featured-profile ${contentIndex && contentIndex % 3 === 0 ? "featured-profile-new-row" : ""}`}>
+    return <div className={`text-center featured-profile d-flex flex-column ${contentIndex && contentIndex % 3 === 0 ? "featured-profile-new-row" : ""}`}>
         <div>
             <img className="profile-image" src={path} alt=""/>
         </div>
@@ -33,6 +34,7 @@ export const IsaacFeaturedProfile = ({doc, contentIndex}: IsaacFeaturedProfilePr
         <div className="profile-description">
             {isDefined(summary) && <IsaacContent doc={summary} />}
         </div>
+        <Spacer/>
         {doc.emailAddress && <a href={"mailto:" + doc.emailAddress} className="mb-4">
             <img src='/assets/phy/icons/icon-mailto.png' alt=""/>
             <span className="visually-hidden">{"Email " + doc.title}</span>
