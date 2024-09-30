@@ -19,9 +19,22 @@ interface CoordinateInputProps {
 }
 
 export const coordinateInputValidator = (input: string) => {
-    const errors = [];
+    const errors: string[] = [];
+    const badChars = new RegExp("[^ 0-9-.,]+");
+    if (badChars.test(input)) {
+        const usedBadChars: string[] = []; 
+        for (let i = 0; i < input.length; i++) {
+            const char = input.charAt(i);
+            if (badChars.test(char)) {
+                if (!usedBadChars.includes(char)) {
+                    usedBadChars.push(char === ' ' ? 'space' : char);
+                }
+            }
+        }
+        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+    }
     if (/[0-9]\s*[+/÷\-x×]\s*[0-9]/.test(input)) {
-        errors.push('Simplify your answer into a single decimal number.');
+        errors.push('Simplify each part of your answer into a single decimal number.');
     }
     return errors;
 };
@@ -115,7 +128,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                     onChange={value => updateItem(0, value)}
                 />
         }
-        <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => ((answer.x ?? "").concat(" ", answer.y ?? ""))).toString() ?? ""} validator={coordinateInputValidator}/>
+        <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => ((answer.x ?? "").concat(",", answer.y ?? ""))).toString() ?? ""} validator={coordinateInputValidator}/>
         {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={() => updateItem(currentAttempt?.items?.length ?? 1, {...DEFAULT_COORDINATE_ITEM})}>Add coordinate</Button>}
     </div>;
 };
