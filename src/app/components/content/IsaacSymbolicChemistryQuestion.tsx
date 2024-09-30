@@ -48,7 +48,7 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-const possibleMetaSymbols = ["_state_symbols", "_plus","_minus", "_fraction", "_right_arrow", 
+const possibleMetaSymbols = ["_state_symbols", "_plus", "_minus", "_fraction", "_right_arrow", 
     "_equilibrium_arrow", "_brackets_round", "_brackets_square", "_dot"];
 
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
