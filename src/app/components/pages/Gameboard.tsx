@@ -107,7 +107,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 </div>
 
                 {question.audience && <StageAndDifficultySummaryIcons audienceViews={
-                    isPhy && !isTutorOrAbove(currentUser)) && uniqueStage ? [uniqueStage] : questionViewingContexts                 
+                    isPhy && !isTutorOrAbove(currentUser) && uniqueStage ? [uniqueStage] : questionViewingContexts                 
                 } />}
             </div>
             {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to question"}/></div>}
