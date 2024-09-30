@@ -6,7 +6,7 @@ import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, SOME_FIXED_FUTU
 import {renderTestEnvironment} from "../testUtils";
 
 import {API_PATH, isAda, isPhy, PATHS, siteSpecific} from "../../app/services";
-import {rest} from "msw";
+import {DefaultRequestMultipartBody, http, HttpResponse} from "msw";
 
 const expectedPhysicsTopLinks = {
     "our books": null,
@@ -132,14 +132,13 @@ describe("SetAssignments", () => {
             PageComponent: SetAssignments,
             initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
             extraEndpoints: [
-                rest.post(API_PATH + "/assignments/assign_bulk", async (req, res, ctx) => {
-                    const json = await req.json();
-                    requestGroupIds = json.map((x: any) => x.groupId);
+                http.post(API_PATH + "/assignments/assign_bulk", async ({request}) => {
+                    const json = await request.json() as Record<string, any> | DefaultRequestMultipartBody;
+                    requestGroupIds = json?.map((x: any) => x.groupId);
                     requestAssignment = json[0];
-                    return res(
-                        ctx.status(200),
-                        ctx.json(json.map((x: any) => ({groupId: x.groupId, assignmentId: x.groupId * 2})))
-                    );
+                    return HttpResponse.json(json.map((x: any) => ({groupId: x.groupId, assignmentId: x.groupId * 2})), {
+                        status: 200,
+                    });
                 })
             ]
         });
@@ -225,10 +224,10 @@ describe("SetAssignments", () => {
             PageComponent: SetAssignments,
             initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
             extraEndpoints: [
-                rest.delete(API_PATH + "/assignments/assign/test-gameboard-1/2", async (req, res, ctx) => {
-                    return res(
-                        ctx.status(204),
-                    );
+                http.delete(API_PATH + "/assignments/assign/test-gameboard-1/2", async () => {
+                    return HttpResponse.json(null, {
+                        status: 204,
+                    });
                 })
             ]
         });
@@ -274,12 +273,15 @@ describe("SetAssignments", () => {
             PageComponent: SetAssignments,
             initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
             extraEndpoints: [
-                rest.post(API_PATH + "/assignments/assign_bulk", async (req, res, ctx) => {
-                    return res(
-                        ctx.status(200),
-                        ctx.json(
-                            "[{\"groupId\":1,\"errorMessage\":\"You cannot assign the same work to a group more than once.\"}]")
-                    );
+                http.post(API_PATH + "/assignments/assign_bulk", async () => {
+                    return HttpResponse.json([
+                        {
+                            groupId: 1,
+                            errorMessage: "You cannot assign the same work to a group more than once."
+                        }
+                    ], {
+                        status: 200,
+                    });
                 })
             ]
         });

@@ -193,7 +193,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {/* CS Hint Reminder */}
                 {isAda && (!validationResponse || !correct || canSubmit) && <RS.Row>
                     <RS.Col xl={{size: 10}} >
-                        {doc.hints && <p className="no-print mb-0">
+                        {doc.hints && !!doc.hints.length && <p className="no-print mb-0">
                             <small>{"Don't forget to use the hints if you need help."}</small>
                         </p>}
                     </RS.Col>
