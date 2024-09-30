@@ -27,7 +27,7 @@ export const coordinateInputValidator = (input: string) => {
             const char = input.charAt(i);
             if (badChars.test(char)) {
                 if (!usedBadChars.includes(char)) {
-                    usedBadChars.push(char === ' ' ? 'space' : char);
+                    usedBadChars.push(char);
                 }
             }
         }
