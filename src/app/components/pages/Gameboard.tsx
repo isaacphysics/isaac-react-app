@@ -79,16 +79,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     const questionViewingContexts = filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS);
     const userViewingContext = useUserViewingContext();
     const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
-    let uniqueStage = null;
-    if (isPhy && !isTutorOrAbove(currentUser)){
-        for (const context of questionViewingContexts) {
-            if(context.stage === userViewingContext.stage) {
-                uniqueStage = context;
-                break;
-            }
-        }
-    }
-
+    const uniqueStage = questionViewingContexts.find(context => context.stage === userViewingContext.stage);
     return <ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "justify-content-center": isAda})}>
             <span className={"question-progress-icon"}>
