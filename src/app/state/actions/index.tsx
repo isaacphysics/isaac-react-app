@@ -154,13 +154,10 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
     try {
         const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
-        // Request user preferences, as we do in the requestCurrentUser action:
-        await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
-        ]);
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+        // requestCurrentUser gives us extra information like auth settings, preferences and time until session expiry
+        await dispatch(requestCurrentUser() as any);
         history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
@@ -395,6 +392,8 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
                 history.push("/verifyemail");
                 // A partial login is still "successful", though we are unable to request user preferences and auth settings
                 dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
+                // We can, however, request the current user. This lets us set the session expiry time.
+                dispatch(requestCurrentUser() as any);
                 return;
             }
         }
