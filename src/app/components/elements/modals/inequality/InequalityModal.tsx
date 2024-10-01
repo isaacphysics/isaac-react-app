@@ -193,6 +193,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
         }
     }
 
+
     return <nav className="inequality-ui" ref={menuRef}>
         <InequalityMenuContext.Provider value={{activeMenu: [activeMenu, activeSubMenu], openNewMenuTab}}>
             <div className={classNames("inequality-ui menu-bar", open ? "open" : "closed")}>
@@ -228,7 +229,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                 {editorMode === "maths" && activeMenu === "mathsOtherFunctions" && <MathOtherFunctionsMenu activeSubMenu={activeSubMenu} menuItems={menuItems} defaultMenu={defaultMenu}/>}
 
                 {editorMode === "chemistry" && <>
-                    {activeMenu === "elements" && (isDefined(menuItems.chemicalElements) && menuItems.chemicalElements.length > 0
+                    {activeMenu === "elements" && (isDefined(availableSymbols) && availableSymbols.length > 0
                         ? <div className="top-menu chemistry elements">
                             <ul className="sub-menu elements">
                                 {menuItems.chemicalElements.map(buildIndexedMenuItem)}
@@ -246,7 +247,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                             </div>
                         </div>
                     )}
-                    {activeMenu === "particles" && (!isDefined(menuItems.chemicalElements) || (isDefined(menuItems.chemicalElements) && menuItems.chemicalElements.length === 0)) && <div className="top-menu chemistry particles">
+                    {activeMenu === "particles" && (!isDefined(availableSymbols) || (isDefined(availableSymbols) && availableSymbols.length === 0)) && <div className="top-menu chemistry particles">
                         <ul className="sub-menu particles">
                             {menuItems.chemicalParticles.map(buildIndexedMenuItem)}
                         </ul>

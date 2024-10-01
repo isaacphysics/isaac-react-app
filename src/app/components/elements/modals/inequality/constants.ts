@@ -73,6 +73,7 @@ export const CHEMICAL_PARTICLES: {[key: string]: MenuItemProps} = {
         properties: { particle: 'e', type: 'electron' }
     }
 };
+export const CHEMICAL_STATES = ["(g)", "(l)", "(aq)", "(s)"];
 
 export const LOWER_CASE_GREEK_LETTERS = ["alpha", "beta", "gamma", "delta", "varepsilon", "zeta", "eta", "theta", "iota", "kappa", "lambda", "mu", "nu", "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega"];
 export const UPPER_CASE_GREEK_LETTERS = ["Gamma", "Delta", "Theta", "Lambda", "Xi", "Pi", "Sigma", "Upsilon", "Phi", "Psi", "Omega"];
