@@ -44,7 +44,7 @@ export const coordinateInputValidator = (input: string[][]) => {
         errors.push('Simplify each part of your answer into a single decimal number.');
     }
     if (allBadChars.length > 0) {
-        const uniqueBadChars = [...new Set(allBadChars.toString())].toString().replaceAll(","," ");
+        const uniqueBadChars = [...new Set(allBadChars.toString())].filter(e => e !== ",").join(" ");
         errors.push('Some of the characters you are using are not allowed: ' + uniqueBadChars);
     }
     return errors;
