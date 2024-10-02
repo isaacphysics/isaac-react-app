@@ -32,7 +32,7 @@ export const numericInputValidator = (input: string) => {
     const errors = [];
 
     const usedBadChars =  [...input.matchAll(badCharacters)];
-    const uniqueBadChars = [...new Set([...usedBadChars.toString()])].toString().replaceAll(",", " ");
+    const uniqueBadChars = [...new Set([...usedBadChars.toString()])].filter(e => e !== ",").join(" ");
     if (usedBadChars.length > 0) {
         errors.push('Some of the characters you are using are not allowed: ' + uniqueBadChars);
     }
