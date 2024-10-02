@@ -379,6 +379,8 @@ export const generateDefaultMenuItems = (parsedAvailableSymbols: string[], logic
     // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
     letters: [],
     otherFunctions: [],
+    otherChemistryFunctions: [],
+    otherChemicalStates: [],
     chemicalElements: [],
     chemicalParticles: [],
     parsedChemicalElements: []
@@ -459,13 +461,13 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
     if (parsedAvailableSymbols.length > 0) {
         // ~~~ Assuming these are only letters... might become more complicated in the future.
         // THE FUTURE IS HERE! Sorry.
-        const customMenuItems: {mathsDerivatives: MenuItemProps[]; letters: MenuItemProps[]; otherFunctions: MenuItemProps[]; chemicalElements: MenuItemProps[]; chemicalOperations: MenuItemProps[]; chemicalStates: MenuItemProps[]} = {
+        const customMenuItems: {mathsDerivatives: MenuItemProps[]; letters: MenuItemProps[]; otherFunctions: MenuItemProps[]; otherChemistryFunctions: MenuItemProps[]; chemicalElements: MenuItemProps[]; otherChemicalStates: MenuItemProps[]} = {
             mathsDerivatives: new Array<MenuItemProps>(),
             letters: new Array<MenuItemProps>(),
             otherFunctions: new Array<MenuItemProps>(),
+            otherChemistryFunctions: new Array<MenuItemProps>(),
             chemicalElements: new Array<MenuItemProps>(),
-            chemicalOperations: new Array<MenuItemProps>(),
-            chemicalStates: new Array<MenuItemProps>(),
+            otherChemicalStates: new Array<MenuItemProps>(),
         };
 
         parsedAvailableSymbols.forEach((l) => {
@@ -515,12 +517,12 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                     } else if (CHEMICAL_STATES.includes(availableSymbol)) {
                         const item = generateChemicalStateMenuItem(availableSymbol);
                         if (item) {
-                            customMenuItems.chemicalStates.push(item);
+                            customMenuItems.otherChemicalStates.push(item);
                         }
                     } else {
                         const item = generateChemicalOperationsMenuItem(availableSymbol);
                         if (item) {
-                            customMenuItems.chemicalOperations.push(item);
+                            customMenuItems.otherChemistryFunctions.push(item);
                         }
                     }
                 } else {
@@ -552,6 +554,7 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                     })*/,
             otherFunctions: [ ...baseItems.otherFunctions, ...customMenuItems.otherFunctions ],
             chemicalElements: [ ...baseItems.chemicalElements, ...customMenuItems.chemicalElements ],
+            otherChemistryFunctions: [ ...baseItems.otherChemistryFunctions, ...customMenuItems.otherChemistryFunctions ],
         }, false] as [MenuItems, boolean];
     } else {
         if (editorMode === "logic") {

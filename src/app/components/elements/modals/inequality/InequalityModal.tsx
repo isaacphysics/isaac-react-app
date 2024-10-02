@@ -12,6 +12,7 @@ import classNames from "classnames";
 import {Markup} from "../../markup";
 import {
     CHEMICAL_ELEMENTS,
+    CHEMICAL_PARTICLES,
     EditorMode,
     LogicSyntax,
     MenuItemProps,
@@ -110,6 +111,20 @@ const MathOtherFunctionsMenu = ({defaultMenu, menuItems, activeSubMenu}: {defaul
         </div>;
     }
 };
+
+const ChemistryOtherFunctionsMenu = ({defaultMenu, menuItems}: {defaultMenu: boolean; menuItems: MenuItems}) => {
+    if (defaultMenu || (menuItems.otherChemistryFunctions.length === 0)) {
+        return <div className="top-menu chemistry operations">
+            <ul className="sub-menu operations">{menuItems.chemicalOperations.map(buildIndexedMenuItem)}</ul>
+        </div>;
+    } else {
+        return <div className="top-menu chemistry operations"> 
+            <ul className="sub-menu operations">
+                {menuItems.otherChemistryFunctions.map(buildIndexedMenuItem)}
+            </ul>
+        </div>;
+    }
+}
 
 const LettersMenu = ({defaultMenu, menuItems, editorMode, activeSubMenu}: {defaultMenu: boolean; menuItems: MenuItems, editorMode: EditorMode, activeSubMenu: InequalityMenuSubMenuTabType}) => {
     if (defaultMenu) {
@@ -229,7 +244,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                 {editorMode === "maths" && activeMenu === "mathsOtherFunctions" && <MathOtherFunctionsMenu activeSubMenu={activeSubMenu} menuItems={menuItems} defaultMenu={defaultMenu}/>}
 
                 {editorMode === "chemistry" && <>
-                    {activeMenu === "elements" && (isDefined(availableSymbols) && availableSymbols.length > 0
+                    {activeMenu === "elements" && (isDefined(availableSymbols) && availableSymbols.some(symbol => CHEMICAL_ELEMENTS.includes(symbol) || CHEMICAL_PARTICLES.hasOwnProperty(symbol))
                         ? <div className="top-menu chemistry elements">
                             <ul className="sub-menu elements">
                                 {menuItems.chemicalElements.map(buildIndexedMenuItem)}
@@ -252,16 +267,12 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                             {menuItems.chemicalParticles.map(buildIndexedMenuItem)}
                         </ul>
                     </div>}
-                    {activeMenu === "states" && <div className="top-menu chemistry states">
+                    {activeMenu === "states" && (menuItems.otherChemicalStates.length > 0 || menuItems.otherChemistryFunctions.length == 0) && <div className="top-menu chemistry states">
                         <ul className="sub-menu states">
                             {menuItems.chemicalStates.map(buildIndexedMenuItem)}
                         </ul>
                     </div>}
-                    {editorMode === "chemistry" && activeMenu === "operations" && <div className="top-menu chemistry operations">
-                        <ul className="sub-menu operations">
-                            {menuItems.chemicalOperations.map(buildIndexedMenuItem)}
-                        </ul>
-                    </div>}
+                    {editorMode === "chemistry" && activeMenu === "operations" && <ChemistryOtherFunctionsMenu menuItems={menuItems} defaultMenu={defaultMenu}/>}
                 </>}
             </div>
             <div id="inequality-menu-tabs" className="menu-tabs">
@@ -275,7 +286,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                     {editorMode === "chemistry" && <>
                         <InequalityMenuTab menu={"elements"} latexTitle={isDefined(availableSymbols) && availableSymbols.length > 0 && menuItems.chemicalElements.map(i => i.type).includes("Particle") ? "\\text{He Li}\\ \\alpha" : "\\text{H He Li}"}/>
                         {menuItems.chemicalParticles.length > 0 && <InequalityMenuTab menu={"particles"} latexTitle={"\\alpha\\ \\gamma\\ \\text{e}"}/>}
-                        <InequalityMenuTab menu={"states"} latexTitle={"(aq)\\, (g)\\, (l)"}/>
+                        {(menuItems.otherChemicalStates.length > 0 || menuItems.otherChemistryFunctions.length == 0) && <InequalityMenuTab menu={"states"} latexTitle={"(aq)\\, (g)\\, (l)"}/>}
                         <InequalityMenuTab menu={"operations"} latexTitle={"\\rightarrow\\, \\rightleftharpoons\\, +"}/>
                     </>}
                 </ul>

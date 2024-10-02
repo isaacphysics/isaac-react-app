@@ -21,6 +21,7 @@ import { v4 as uuid_v4 } from "uuid";
 import { Inequality, makeInequality } from "inequality";
 import { parseInequalityChemistryExpression, parseInequalityNuclearExpression, ParsingError } from "inequality-grammar";
 import { AppState, useAppSelector } from "../../state";
+import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -90,7 +91,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
         }
 
-        const hasMetaSymbols = possibleMetaSymbols.some(metaSymbol => input.includes(metaSymbol));
+        const hasMetaSymbols = !doc.availableSymbols?.every(symbol => CHEMICAL_ELEMENTS.includes(symbol) || CHEMICAL_PARTICLES.hasOwnProperty(symbol));
 
         if (openRoundBracketsCount !== closeRoundBracketsCount
            || openSquareBracketsCount !== closeSquareBracketsCount
@@ -101,7 +102,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         if (/\.[0-9]/.test(input)) {
             errors.push('Please convert decimal numbers to fractions.');
         }
-        if (/\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !hasMetaSymbols && !doc.availableSymbols?.includes("_state_symbols")) {
+        if (/\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && hasMetaSymbols && !doc.availableSymbols?.some(symbol => CHEMICAL_STATES.includes(symbol))) {
             errors.push('This question does not require state symbols.');
         }
         return errors;

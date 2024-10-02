@@ -135,14 +135,14 @@ const pseudoToSymbolDict: {[key: string]: string[]} = {
     '_no_alphabet': [],
     // Chemistry pseudosymbols
     '_state_symbols': ['(s)', '(l)', '(g)', '(aq)'],
-    '_plus': [],
-    '_minus': [],
-    '_fraction': [],
-    '_right_arrow': [],
-    '_equilibrium_arrow': [],
-    '_brackets_round': [],
-    '_brackets_square': [],
-    '_dot': [],
+    '_plus': ['+'],
+    '_minus': ['-'],
+    '_fraction': ['/'],
+    '_right_arrow': ['->'],
+    '_equilibrium_arrow': ['<=>'],
+    '_brackets_round': ['()'],
+    '_brackets_square': ['[]'],
+    '_dot': ['.'],
     // Previously adding a pseudosymbol to an empty list would add a comma and so cause this empty string to be in the list of available symbols
     '': [] 
 };
