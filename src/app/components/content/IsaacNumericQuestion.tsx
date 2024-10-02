@@ -26,23 +26,17 @@ import { selectUnits, wrapUnitForSelect } from "../../services/numericUnits";
 
 export const numericInputValidator = (input: string) => {
     const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]+";
-    const badCharacters = new RegExp(regexStr);
+    const badCharacters = new RegExp(regexStr, "g");
     const operatorExpression = new RegExp(".*[0-9][+/÷-]\\.?[0-9]+");
     const missingExponentSymbol = new RegExp(".*?10-([0-9]+).*?");
     const errors = [];
 
-    if (badCharacters.test(input)) {
-        const usedBadChars: string[] = []; 
-        for(let i = 0; i < input.length; i++) {
-            const char = input.charAt(i);
-            if (badCharacters.test(char)) {
-                if (!usedBadChars.includes(char)) {
-                    usedBadChars.push(char === ' ' ? 'space' : char);
-                }
-            }
-        }
-        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+    const usedBadChars =  [...input.matchAll(badCharacters)];
+    const uniqueBadChars = [...new Set([...usedBadChars.toString()])].toString().replaceAll(",", " ");
+    if (usedBadChars.length > 0) {
+        errors.push('Some of the characters you are using are not allowed: ' + uniqueBadChars);
     }
+
     if (missingExponentSymbol.test(input)) {
         errors.push('Use a correct exponent symbol, e.g. 10^-3 or 10**-3.');
     } else if (operatorExpression.test(input)) {
