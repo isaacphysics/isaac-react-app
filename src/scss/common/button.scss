@@ -37,6 +37,10 @@
             margin-bottom: 0.5rem;
         }
     }
+
+    .col-xs-12 .col-sm-6 > button {
+      width: 100%;
+    }
 }
 
 // What on earth does this do and why when I remove it does it break input addon buttons?
