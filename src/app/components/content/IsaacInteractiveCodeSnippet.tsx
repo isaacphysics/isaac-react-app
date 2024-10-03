@@ -1,6 +1,6 @@
 import React, {lazy, useEffect, useRef, useState} from "react";
 import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
-import {CODE_EDITOR_BASE_URL, SITE_TITLE_SHORT, useIFrameMessages} from "../../services";
+import {CODE_EDITOR_BASE_URL, CODE_EDITOR_IFRAME_HEIGHT_LARGE, CODE_EDITOR_IFRAME_HEIGHT_SMALL, CODE_EDITOR_RUN_BUTTON_SPACING, SITE_TITLE_SHORT, useIFrameMessages} from "../../services";
 import {v4 as uuid_v4} from "uuid";
 import {logAction, useAppDispatch, useGetSegueEnvironmentQuery} from "../../state";
 import {Alert, Button} from "reactstrap";
@@ -18,6 +18,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
     const {receivedData, sendMessage} = useIFrameMessages(uid.current, iframeRef);
     const [iframeState, setIframeState] = useState<"loading" | "loaded" | "initialised" | "timeout">("loading");
     const [initDelay, setInitDelay] = useState<number>(50);
+    const [iFrameHeight, setIFrameHeight] = useState(doc.language === "sql" ? CODE_EDITOR_IFRAME_HEIGHT_SMALL : CODE_EDITOR_IFRAME_HEIGHT_LARGE);
 
     function sendQuestion() {
         sendMessage({
@@ -27,7 +28,8 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
             test: doc.testCode,
             wrapCodeInMain: doc.wrapCodeInMain,
             language: doc.language,
-            dataUrl: doc.dataUrl
+            dataUrl: doc.dataUrl,
+            iFrameHeight: iFrameHeight - CODE_EDITOR_RUN_BUTTON_SPACING,
         });
     }
 
@@ -47,7 +49,6 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
     }, [iframeState, initDelay]);
 
     const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
-    const [iFrameHeight, setIFrameHeight] = useState(100);
 
     useEffect(() => {
         if (!iframeState || undefined === receivedData) return;

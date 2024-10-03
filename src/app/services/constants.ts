@@ -1057,3 +1057,7 @@ export const EMAIL_PREFERENCE_DEFAULTS = siteSpecific(
         EVENTS: false
     }
 );
+
+export const CODE_EDITOR_IFRAME_HEIGHT_SMALL = 278;
+export const CODE_EDITOR_IFRAME_HEIGHT_LARGE = 354;
+export const CODE_EDITOR_RUN_BUTTON_SPACING = 96;
