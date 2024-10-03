@@ -33,5 +33,8 @@ describe("IsaacNumericQuestion", () => {
         expect(numericInputValidator("5 000 000")).toEqual(['Do not use commas or spaces as thousand separators when entering your answer.']);
         expect(numericInputValidator("5,000,000")).toEqual(['Do not use commas or spaces as thousand separators when entering your answer.']);
         expect(numericInputValidator("5,0001e234")).toEqual(['Do not use commas or spaces as thousand separators when entering your answer.']);
+
+        expect(numericInputValidator("5,25")).toEqual(['Use points instead of commas as decimal separators.']);
+        expect(numericInputValidator(",25")).toEqual(['Use points instead of commas as decimal separators.']);
     });
 });
