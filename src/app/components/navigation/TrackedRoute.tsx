@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
+import {Redirect, Route, RouteComponentProps, RouteProps, useLocation} from "react-router";
 import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors, useAppSelector} from "../../state";
@@ -25,9 +25,14 @@ type TrackedRouteComponentProps = RouteComponentProps & {
 };
 
 const WrapperComponent = function({component: Component, ...props}: TrackedRouteComponentProps) {
+    // Store react-router's location, rather than window's location, during the react render to track changes in history so that we
+    // can ensure it handles the location correctly even if there is a react-router <Redirect ...> before the useEffect is called.
+    const location = useLocation();
     useEffect(() => {
-        trackPageview();
-    }, [props.location.pathname]);
+        // Use window's location for the origin to match trackPageview's normal URL format - react-router does not record origin.
+        trackPageview({ url: window.location.origin + location.pathname + location.search + location.hash });
+    }, [location.pathname]);
+
     return <FigureNumberingContext.Provider value={{}}> {/* Create a figure numbering scope for each page */}
         <Component {...props} />
     </FigureNumberingContext.Provider>;
