@@ -221,7 +221,9 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     };
 
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
-    let symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
+
+    const removedSymbols = ["+","-","/","->","<=>","()","[]","."];
+    let symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
     symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')//
     .replace('proton', '\\proton').replace('neutrino', '\\neutrino').replace('antineutrino', '\\antineutrino');
