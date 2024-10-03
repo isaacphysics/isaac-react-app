@@ -1,6 +1,6 @@
 import React, {lazy, useEffect, useRef, useState} from "react";
 import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
-import {CODE_EDITOR_BASE_URL, CODE_EDITOR_IFRAME_HEIGHT_LARGE, CODE_EDITOR_IFRAME_HEIGHT_SMALL, SITE_TITLE_SHORT, useIFrameMessages} from "../../services";
+import {CODE_EDITOR_BASE_URL, CODE_EDITOR_IFRAME_HEIGHT_LARGE, CODE_EDITOR_IFRAME_HEIGHT_SMALL, CODE_EDITOR_RUN_BUTTON_SPACING, SITE_TITLE_SHORT, useIFrameMessages} from "../../services";
 import {v4 as uuid_v4} from "uuid";
 import {logAction, useAppDispatch, useGetSegueEnvironmentQuery} from "../../state";
 import {Alert, Button} from "reactstrap";
@@ -29,7 +29,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
             wrapCodeInMain: doc.wrapCodeInMain,
             language: doc.language,
             dataUrl: doc.dataUrl,
-            iFrameHeight: iFrameHeight - 96,
+            iFrameHeight: iFrameHeight - CODE_EDITOR_RUN_BUTTON_SPACING,
         });
     }
 
