@@ -45,7 +45,7 @@ export const TeachingOrders = () => {
     </Tabs>;
 
     useEffect(() => {
-        const sanitisedStageTab = stageTab.replace(" ", "_").toLowerCase();
+        const sanitisedStageTab = sanitiseStageTab(stageTab);
         setFragmentId(`ada_teaching_order_${sanitisedStageTab}`);
         location.replace(`#${sanitisedStageTab}`);
     }, [stageTab]);
