@@ -12,10 +12,18 @@ enum TEACHING_ORDER_STAGE {
     ADVANCED_Y2 = "Advanced Y2"
 }
 
+const sanitiseStageTab = (stageTab: string) => stageTab.replace(" ", "_").toLowerCase();
+const sanitisedStageTabsMap = Object.fromEntries(Object.keys(TEACHING_ORDER_STAGE).map(stage => [sanitiseStageTab(stage), stage]));
+
+const getStageFromURL = () : TEACHING_ORDER_STAGE | undefined => {
+    const urlStage = window.location.hash.slice(1);
+    return sanitisedStageTabsMap[urlStage] as TEACHING_ORDER_STAGE | undefined;
+};
+
 export const TeachingOrders = () => {
     const TEACHING_ORDER_STAGES = Object.keys(TEACHING_ORDER_STAGE);
-    const [stageTab, setStageTab] = useState<typeof TEACHING_ORDER_STAGES[number]>(TEACHING_ORDER_STAGES[0]);
-    const [stageTabOverride, _setStageTabOverride] = useState<number | undefined>(TEACHING_ORDER_STAGES.indexOf(stageTab) + 1 || undefined);
+    const [stageTab, setStageTab] = useState<typeof TEACHING_ORDER_STAGES[number]>(getStageFromURL() || TEACHING_ORDER_STAGE.CORE_Y1);
+    const [stageTabOverride, _setStageTabOverride] = useState<number | undefined>(Object.values(sanitisedStageTabsMap).indexOf(stageTab) + 1 || undefined);
     const [fragmentId, setFragmentId] = useState<string>("");
 
     const metaDescription = (stageTab === TEACHING_ORDER_STAGE.CORE_Y1 || stageTab === TEACHING_ORDER_STAGE.CORE_Y2)
