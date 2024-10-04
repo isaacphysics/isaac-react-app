@@ -22,11 +22,11 @@ export const RegistrationAgeCheckFailed = () => {
                 )}</p>
                 <hr />
                 <Row className="justify-content-end">
-                    {isAda && <Col sm={6} lg={siteSpecific(4, 3)} className="d-flex justify-content-end">
-                        <Button className={"mt-2"} outline color="secondary" onClick={history.goBack}>Back</Button>
+                    {isAda && <Col sm={4} lg={3} className="d-flex justify-content-end">
+                        <Button className="mt-2 w-100" outline color="secondary" onClick={history.goBack}>Back</Button>
                     </Col>}
-                    <Col sm={6} lg={siteSpecific(4, 3)}>
-                        <Button className={"mt-2 w-100"} color="primary" onClick={returnToHomepage}>{siteSpecific("Take me back", "Back to the site")}</Button>
+                    <Col sm={6} lg={4}>
+                        <Button className="mt-2 w-100" color="primary" onClick={returnToHomepage}>{siteSpecific("Take me back", "Back to the site")}</Button>
                     </Col>
                 </Row>
             </CardBody>

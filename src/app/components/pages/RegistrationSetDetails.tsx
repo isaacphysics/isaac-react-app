@@ -207,12 +207,12 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 </FormFeedback>
                             </FormGroup>
                             <hr className="text-center"/>
-                            <Row>
-                                <Col className="d-flex justify-content-end" xs={12} sm={6} lg={6}>
-                                    <Button className="mt-2" outline color="secondary" onClick={history.goBack}>Back</Button>
+                            <Row className="justify-content-end">
+                                <Col className="d-flex justify-content-end" xs={12} sm={3} lg={6}>
+                                    <Button className="mt-2 w-100" outline color="secondary" onClick={history.goBack}>Back</Button>
                                 </Col>
-                                <Col xs={12} sm={6} lg={6}>
-                                    <Button type="submit" value="Continue" className="mt-2">Continue</Button>
+                                <Col xs={12} sm={4} lg={6}>
+                                    <Button type="submit" value="Continue" className="mt-2 w-100">Continue</Button>
                                 </Col>
                             </Row>
                         </Form>
