@@ -18,7 +18,7 @@ import {
     StringChoiceDTO,
     UserRole
 } from "../../IsaacApiTypes";
-import {siteSpecific} from "./";
+import {isPhy, siteSpecific} from "./";
 import Plausible from "plausible-tracker";
 
 export const STAGING_URL = siteSpecific(
@@ -803,6 +803,23 @@ export enum MEMBERSHIP_STATUS {
 }
 
 export enum ACCOUNT_TAB {account, customise, passwordreset, teacherconnections, emailpreferences, betafeatures}
+
+export interface AccountTabs {
+    tab: ACCOUNT_TAB,
+    title: string,
+    titleShort?: string,
+    hidden?: boolean,
+    hiddenIfEditingOtherUser?: boolean,
+}
+
+export const ACCOUNT_TABS : AccountTabs[] = [
+    {tab: ACCOUNT_TAB.account, title: "Profile"},
+    {tab: ACCOUNT_TAB.customise, title: "Customise", hidden: isPhy},
+    {tab: ACCOUNT_TAB.passwordreset, title: "Security"},
+    {tab: ACCOUNT_TAB.teacherconnections, title: "Teacher connections", titleShort: "Connections"},
+    {tab: ACCOUNT_TAB.emailpreferences, title: "Notifications", hiddenIfEditingOtherUser: true},
+    {tab: ACCOUNT_TAB.betafeatures, title: "Beta", hiddenIfEditingOtherUser: true},
+];
 
 export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
 export enum MARKBOOK_TYPE_TAB {assignments = 1, tests = 2}
