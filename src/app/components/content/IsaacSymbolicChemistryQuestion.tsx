@@ -65,6 +65,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
 
+    const hasMetaSymbols = !doc.availableSymbols?.every(symbol => CHEMICAL_ELEMENTS.includes(symbol) || CHEMICAL_PARTICLES.hasOwnProperty(symbol));
+
     const symbolicInputValidator = (input: string) => {
         const openRoundBracketsCount = input.split("(").length - 1;
         const closeRoundBracketsCount = input.split(")").length - 1;
@@ -87,8 +89,6 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             }
             errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
         }
-
-        const hasMetaSymbols = !doc.availableSymbols?.every(symbol => CHEMICAL_ELEMENTS.includes(symbol) || CHEMICAL_PARTICLES.hasOwnProperty(symbol));
 
         if (openRoundBracketsCount !== closeRoundBracketsCount
            || openSquareBracketsCount !== closeSquareBracketsCount
@@ -219,9 +219,15 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
 
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
 
+    // Automatically filters out state symbols/brackets/etc from Nuclear Physics questions
+    const modifiedAvailableSymbols = doc.availableSymbols ? doc.availableSymbols : [];
+    if (doc.isNuclear && !hasMetaSymbols) {
+        modifiedAvailableSymbols.push("_plus", "_minus", "_fraction", "_right_arrow");
+    }
+
     // We need these symbols available to do processing with, but don't want to display them to the user as available.
     const removedSymbols = ["+","-","/","->","<=>","()","[]","."];
-    let symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
+    let symbolList = parsePseudoSymbolicAvailableSymbols(modifiedAvailableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
     symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')//
     .replace('proton', '\\proton').replace('neutrino', '\\neutrino').replace('antineutrino', '\\antineutrino');
@@ -281,7 +287,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                     dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" });
                     initialEditorSymbols.current = state.symbols;
                 }}
-                availableSymbols={doc.availableSymbols}
+                availableSymbols={modifiedAvailableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
                 editorSeed={editorSeed}
                 editorMode="chemistry"
