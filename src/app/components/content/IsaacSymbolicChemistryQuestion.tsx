@@ -49,9 +49,6 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-const possibleMetaSymbols = ["_state_symbols", "_plus", "_minus", "_fraction", "_right_arrow", 
-    "_equilibrium_arrow", "_brackets_round", "_brackets_square", "_dot"];
-
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
@@ -222,6 +219,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
 
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
 
+    // We need these symbols available to do processing with, but don't want to display them to the user as available.
     const removedSymbols = ["+","-","/","->","<=>","()","[]","."];
     let symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
