@@ -44,8 +44,7 @@ jobs:
           find ./src/test/pages/__image_snapshots__ -type f -name "*.actual.png" -exec bash -c 'mv "$1" "${1/.actual./.}"' shell {} \;
           git fetch origin $target_ref
           git checkout -B $update_branch_name origin/$target_ref
-          git add ./src/test/pages/__image_snapshots__
-          git commit -m "Update VRT baselines"
+          git commit -am "Update VRT baselines"
           git push --set-upstream origin $update_branch_name --force
           echo "TARGET_REF=$target_ref" >> "$GITHUB_ENV"
           echo "UPDATE_BRANCH_NAME=$update_branch_name" >> "$GITHUB_ENV"
