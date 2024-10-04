@@ -124,7 +124,7 @@ const ChemistryOtherFunctionsMenu = ({defaultMenu, menuItems}: {defaultMenu: boo
             </ul>
         </div>;
     }
-}
+};
 
 const LettersMenu = ({defaultMenu, menuItems, editorMode, activeSubMenu}: {defaultMenu: boolean; menuItems: MenuItems, editorMode: EditorMode, activeSubMenu: InequalityMenuSubMenuTabType}) => {
     if (defaultMenu) {
@@ -207,7 +207,6 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
             functionsTabLabel = "\\cdot\\ \\overline{x}";
         }
     }
-
 
     return <nav className="inequality-ui" ref={menuRef}>
         <InequalityMenuContext.Provider value={{activeMenu: [activeMenu, activeSubMenu], openNewMenuTab}}>
