@@ -278,11 +278,8 @@ export const updateCurrentUser = (
         const editingOtherUser = currentUser.loggedIn && currentUser.id != updatedUser.id;
 
         try {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-            const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
             await dispatch(requestCurrentUser() as any);
-
+            
             if (!editingOtherUser) {
             // Invalidate tagged caches that are dependent on the current user's settings
                 dispatch(questionsApi.util.invalidateTags(['CanAttemptQuestionType']) as any);
@@ -321,6 +318,9 @@ export const updateCurrentUser = (
     if (currentUser.loggedIn && currentUser.id == updatedUser.id && currentUser.email !== updatedUser.email) {
         showEmailChangeModal();
     } else {
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
+        const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
+        dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
         continueSettingsUpdate();
     }
 };
