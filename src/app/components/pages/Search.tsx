@@ -128,13 +128,13 @@ export const Search = withRouter((props: RouteComponentProps) => {
                 <Col className="py-4">
                     <Card>
                         <CardHeader className="search-header">
-                            <Col sm={12} md={5} lg={siteSpecific(5, 4)} xl={siteSpecific(5, 3)}>
+                            <Col sm={6} md={5} lg={siteSpecific(5, 4)} xl={siteSpecific(5, 3)}>
                                 <h3>
                                     <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
                                 </h3>
                             </Col>
-                            <Col sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)}>
-                                <Form className="form-inline search-filters">
+                            <Col sm={6} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className="d-flex justify-content-end flex-grow-1">
+                                <Form className="form-inline search-filters w-100">
                                     <div className="w-100 align-items-center justify-content-end m-0 d-flex">
                                         <Label htmlFor="document-filter" className="d-none d-lg-inline-block me-1">
                                             {`Filter${siteSpecific("","s")}:`}
@@ -157,7 +157,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         </div>
                                     </div>
 
-                                    <UserContextPicker />
+                                    <UserContextPicker className="searchContextPicker"/>
                                 </Form>
                             </Col>
                         </CardHeader>
