@@ -362,7 +362,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     </Col>
                     <div className="w-100 d-md-none"></div>
                     {/* Main two centre buttons: */}
-                    <Col className="col-12 col-md-4 order-3 order-md-2 d-flex justify-content-center justify-content-md-end">
+                    <Col className="col-12 col-md-4 order-3 order-md-2 d-flex justify-content-center justify-content-md-end pb-2 pb-md-0">
                         <ShowLoading
                             placeholder={<div className="text-center"><IsaacSpinner/></div>}
                             until={!baseGameboardId || baseGameboard}

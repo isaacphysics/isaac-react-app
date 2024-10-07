@@ -203,7 +203,7 @@ export const Gameboard = withRouter(({ location }) => {
                         {user && isTutorOrAbove(user)
                             ? <Row className="col-8 offset-2">
                                 <Col className="mt-4">
-                                    <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="primary" outline className="btn-block">
+                                    <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="primary" outline block>
                                         {siteSpecific("Set as Assignment", "Set as assignment")}
                                     </Button>
                                 </Col>
@@ -217,7 +217,7 @@ export const Gameboard = withRouter(({ location }) => {
                                 <Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
                                     <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`}
                                                onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
-                                               color="primary" outline className="btn-block"
+                                               color="primary" outline block
                                     >
                                         {siteSpecific("Save to My Gameboards", "Save to My quizzes")}
                                     </Button>
