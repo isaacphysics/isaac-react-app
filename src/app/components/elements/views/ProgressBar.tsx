@@ -18,6 +18,7 @@ const BAR_COLOURS = new Map([
     ["physics_linking_concepts", "bar-alevel"],
     ["maths_book_gcse", "bar-maths"],
     ["maths_book", "bar-maths"],
+    ["maths_book_2e", "bar-maths"],
     ["chemistry_16", "bar-chemistry"]
 ]);
 
