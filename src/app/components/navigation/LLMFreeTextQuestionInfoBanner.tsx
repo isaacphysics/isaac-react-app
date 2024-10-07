@@ -87,8 +87,9 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
             This means that the marks you receive will not always be accurate. For more information, read our <Link to={locationOfFAQEntry} target="_blank">FAQs</Link>.
         </p>
         <p>
-            We only send your answer to OpenAI, we do not send any personal data;
-            you can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`}>account settings</Link>.
+            Do not include personal data in your answer as we send your answer to OpenAI.
+            We only send your answer, we do not send any personal data with it.
+            You can withdraw your consent at any time in your <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`}>account settings</Link>.
         </p>
     </>;
 }
