@@ -216,8 +216,8 @@ export const Gameboard = withRouter(({ location }) => {
                             : gameboard && !gameboard.savedToCurrentUser && <Row>
                                 <Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
                                     <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`}
-                                               onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
-                                               color="primary" outline block
+                                        onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
+                                        color="primary" outline block
                                     >
                                         {siteSpecific("Save to My Gameboards", "Save to My quizzes")}
                                     </Button>
