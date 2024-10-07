@@ -14,13 +14,14 @@ const noFeedback = {disagree: false, partlyAgree: false, agree: false};
 interface LLMFreeTextQuestionFeedbackViewProps {
     validationResponse: Immutable<LLMFreeTextQuestionValidationResponseDTO>;
     hasSubmitted: boolean;
+    sentFeedback: boolean;
+    setSentFeedback: (value: boolean) => void;
 }
-export default function LLMFreeTextQuestionFeedbackView({validationResponse, hasSubmitted}: LLMFreeTextQuestionFeedbackViewProps) {
+export default function LLMFreeTextQuestionFeedbackView({validationResponse, hasSubmitted, sentFeedback, setSentFeedback}: LLMFreeTextQuestionFeedbackViewProps) {
     const dispatch = useAppDispatch();
     const page = useAppSelector(selectors.doc.get);
     const pageId = page && page !== NOT_FOUND && page.id || undefined;
     const [feedback, setFeedback] = useState(noFeedback);
-    const [feedbackSent, setFeedbackSent] = useState(false);
 
     return <div className='llm-feedback question-component p-md-5'>
         <h2 className="mb-0">Do you agree with the LLM’s predicted marks?</h2>
@@ -52,7 +53,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
             </Table>
         </div>
         {hasSubmitted && <>
-            {!feedbackSent ? <div className="feedback-collection">
+            {!sentFeedback ? <div className="feedback-collection">
                 <p className="mb-4">Before submitting another response, please say whether you agree with the predicted mark.</p>
                 <ul className="no-bullet px-2 mb-4">
                     <li>
@@ -78,7 +79,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                     color="primary" outline disabled={Object.values(feedback).every(a => !a)}
                     onClick={() => {
                         dispatch(logAction({type: "LLM_FREE_TEXT_QUESTION_FEEDBACK", events: {...validationResponse, pageId, userFeedback: feedback}}));
-                        setFeedbackSent(true);
+                        setSentFeedback(true);
                     }}
                 >
                     Send feedback

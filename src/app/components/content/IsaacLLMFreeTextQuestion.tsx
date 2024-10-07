@@ -84,7 +84,7 @@ const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
             </div>
             <FormGroup className="mb-4">
                 <Input type="textarea"
-                    disabled={canAttemptQuestionType.isError}
+                    disabled={canAttemptQuestionType.isError || readonly}
                     spellCheck={true}
                     rows={3}
                     value={currentAttemptValue}
