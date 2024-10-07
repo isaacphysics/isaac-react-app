@@ -286,7 +286,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
         {/* LLM free-text question validation response */}
         {isLLMFreeTextQuestion && showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit &&
-            <LLMFreeTextQuestionFeedbackView validationResponse={validationResponse} />
+            <LLMFreeTextQuestionFeedbackView validationResponse={validationResponse} hasSubmitted={hasSubmitted} />
         }
     </ConfidenceContext.Provider>;
 });
