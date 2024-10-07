@@ -2,6 +2,7 @@ import React from "react";
 import {Col, Row} from "reactstrap";
 import {SITE_TITLE, siteSpecific, SOCIAL_LINKS} from "../../../services";
 import {ExternalLink} from "../ExternalLink";
+import chunk from 'lodash/chunk';
 
 const getSocialIcon = (name: string) => {
     if (name === "x (twitter)") {
@@ -11,7 +12,7 @@ const getSocialIcon = (name: string) => {
 };
 
 export const SocialLinksRow = () => {
-    const linksByColumn = [Object.entries(SOCIAL_LINKS).slice(0, 2), Object.entries(SOCIAL_LINKS).slice(2, 4)];
+    const linksByColumn = chunk(Object.entries(SOCIAL_LINKS), 2);
     return (
         <div className='footer-links footer-links-social'>
             {
