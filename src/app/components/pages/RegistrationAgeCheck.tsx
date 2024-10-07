@@ -92,10 +92,10 @@ export const RegistrationAgeCheck = () => {
                     </FormGroup>
                     <hr />
                     <Row className="justify-content-end">
-                        <Col sm={3} lg={3} className="d-flex justify-content-end mb-1 mb-sm-0">
+                        <Col sm={siteSpecific(3,4)} lg={3} className="d-flex justify-content-end mb-1 mb-sm-0">
                             <Button className="w-100 h-100" outline color="secondary" onClick={history.goBack}>Back</Button>
                         </Col>
-                        <Col sm={4} lg={3}>
+                        <Col sm={siteSpecific(4,5)} lg={3}>
                             <Button type="submit" className="w-100 h-100">Continue</Button>
                         </Col>
                     </Row>

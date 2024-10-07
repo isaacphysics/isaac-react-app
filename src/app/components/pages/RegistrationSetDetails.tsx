@@ -208,10 +208,10 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                             </FormGroup>
                             <hr className="text-center"/>
                             <Row className="justify-content-end">
-                                <Col className="d-flex justify-content-end" xs={12} sm={3} lg={6}>
+                                <Col className="d-flex justify-content-end" xs={12} sm={siteSpecific(3,4)} lg={6}>
                                     <Button className="mt-2 w-100" outline color="secondary" onClick={history.goBack}>Back</Button>
                                 </Col>
-                                <Col xs={12} sm={4} lg={6}>
+                                <Col xs={12} sm={siteSpecific(4,5)} lg={6}>
                                     <Button type="submit" value="Continue" className="mt-2 w-100">Continue</Button>
                                 </Col>
                             </Row>
