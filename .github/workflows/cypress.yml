@@ -40,6 +40,7 @@ jobs:
           # Temporary hack to mitigate https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/322
           apt update && apt install exiftool -y
           echo "%Image::ExifTool::UserDefined = ('Image::ExifTool::PNG::TextualData' => {FRSOURCE_CPVRD_V => { }});" > ~/.ExifTool_config
+          git config --global --add safe.directory $(pwd)
           # Create or update VRT branch
           target_ref=${{ github.head_ref || github.ref_name }}
           update_branch_name=vrt/$target_ref
