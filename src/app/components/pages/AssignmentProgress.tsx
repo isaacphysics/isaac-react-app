@@ -21,7 +21,8 @@ import {
     DropdownToggle,
     InputGroup,
     Label,
-    UncontrolledButtonDropdown
+    UncontrolledButtonDropdown,
+    UncontrolledTooltip
 } from "reactstrap";
 import sortBy from "lodash/sortBy";
 import {
@@ -68,6 +69,7 @@ import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { QuizProgressDetails } from "./quizzes/QuizTeacherFeedback";
+import StyledToggle from "../elements/inputs/StyledToggle";
 
 enum GroupSortOrder {
     Alphabetical = "Alphabetical",
@@ -75,6 +77,8 @@ enum GroupSortOrder {
 }
 
 export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
+
+    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
 
     const questions = assignment.gameboard.contents;
 
@@ -111,11 +115,22 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
     
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     const [assignmentAverages, assignmentTotalQuestionParts] = useMemo<[number[], number]>(() => {
-        return questions?.reduce(([aAvg, aTQP], q, i) => {
-            const tickCount = progress.reduce((tc, p) => ["PASSED", "PERFECT"].includes((p.results || [])[i]) ? tc + 1 : tc, 0);
-            const tickPercent = Math.round(100 * (tickCount / progress.length));
-            return [[...aAvg, tickPercent], aTQP + (q.questionPartsTotal ?? 0)];
-        }, [[] as number[], 0]) ?? [[], 0];
+        if (assignmentProgressContext.attemptedOrCorrect === "ATTEMPTED") {
+            // for each column, calculate the percentage of students who attempted at all parts of the question
+            return questions?.reduce(([aAvg, aTQP], q, i) => {
+                const attemptedAllPartsCount = progress.reduce((tc, p) => ((p as AuthorisedAssignmentProgress)?.notAttemptedPartResults?.[i] === 0) ? tc + 1 : tc, 0);
+                const attemptedAllPartsPercent = Math.round(100 * (attemptedAllPartsCount / progress.length));
+                return [[...aAvg, attemptedAllPartsPercent], aTQP + (q.questionPartsTotal ?? 0)];
+            }, [[] as number[], 0]) ?? [[], 0];
+
+        } else {
+            // for each column, calculate the percentage of students who got all parts of the question correct
+            return questions?.reduce(([aAvg, aTQP], q, i) => {
+                const tickCount = progress.reduce((tc, p) => ((p.results || [])[i] === "PERFECT") ? tc + 1 : tc, 0);
+                const tickPercent = Math.round(100 * (tickCount / progress.length));
+                return [[...aAvg, tickPercent], aTQP + (q.questionPartsTotal ?? 0)];
+            }, [[] as number[], 0]) ?? [[], 0];
+        }
     }, [questions, progress]);
 
     function markClassesInternal(studentProgress: AssignmentProgressDTO, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
@@ -272,9 +287,29 @@ export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey
                 <LegendKey cellClass="" description={`Not attempted`}/>
                 <LegendKey cellClass="failed" description={`>${100 - (passMark * 100)}% incorrect`}/>
             </ul>
-            <div className="d-flex flex-column flex-sm-row assignment-progress-options justify-content-end">
-                <label>Colour-blind&nbsp;<input type="checkbox" checked={pageSettings.colourBlind} onChange={e => pageSettings.setColourBlind(e.target.checked)}/></label>
-                <label>Percent view&nbsp;<input type="checkbox" checked={pageSettings.formatAsPercentage} onChange={e => pageSettings.setFormatAsPercentage(e.target.checked)}/></label>
+            <div className="d-sm-flex flex-sm-row justify-content-sm-evenly assignment-progress-options">
+                <div className="d-flex flex-column align-items-center mt-sm-2">
+                    <span>Colour-blind mode</span>
+                    <StyledToggle falseLabel="Disabled" trueLabel="Enabled" onChange={(e) => pageSettings.setColourBlind?.(e.currentTarget.checked)} />
+                </div>
+                
+                <div className="d-flex flex-column align-items-center mt-2">
+                    <span>Table display mode</span>
+                    <StyledToggle falseLabel="Fractions" trueLabel="Percentages" onChange={(e) => pageSettings.setFormatAsPercentage?.(e.currentTarget.checked)} />
+                </div>
+
+                <div className="d-flex flex-column align-items-center mt-2">
+                    <div className="d-flex flex-row h-100">
+                        <span>Class average mode</span>
+                        <span id={`attempted-toggle-${id}`} className="icon-help my-auto"/>
+                        <UncontrolledTooltip className="spaced-tooltip" placement="left" autohide={false} target={`attempted-toggle-${id}`}>
+                            This toggle changes what the percentages at the top and bottom of the table represent.<br/><br/>
+                            <b>Attempted</b> displays the percentage of students who have attempted all parts of that question.<br/><br/>
+                            <b>Correct</b> displays the percentage of students who have achieved full marks on that question.
+                        </UncontrolledTooltip>
+                    </div>
+                    <StyledToggle falseLabel="Attempted" trueLabel="Correct" onChange={(e) => pageSettings.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} />
+                </div>
             </div>
         </div>
     </div></div>;
