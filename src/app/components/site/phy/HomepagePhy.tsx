@@ -28,9 +28,9 @@ export const HomepagePhy = () => {
                             </h1>
                             <p>Welcome to Isaac Physics, the free platform for teachers and students.</p>
                             <ul>
-                                <li>Use it in the <strong>classroom</strong></li>
-                                <li>Use it for <strong>homework</strong></li>
-                                <li>Use it for <strong>revision</strong></li>
+                                <li>Use it in <strong>space</strong></li>
+                                <li>Use it on <strong>land</strong></li>
+                                <li>Use it <strong>underwater</strong></li>
                             </ul>
                         </Col>
                         <Col lg={7} className={above["lg"](deviceSize) ? `align-items-stretch d-flex flex-column` : ""}>
