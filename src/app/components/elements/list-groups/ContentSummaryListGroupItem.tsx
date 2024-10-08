@@ -31,6 +31,7 @@ import {Markup} from "../markup";
 import classNames from "classnames";
 import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 import { CSSModule } from "reactstrap/types/lib/utils";
+import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 
 export enum ContentTypeVisibility {
     SHOWN, // default if not specified
@@ -198,7 +199,10 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                         {`This content has ${notRelevantMessage(userContext)}.`}
                     </UncontrolledTooltip>
                 </div>}
-                {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={stack}/>}
+                <div>
+                    {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={stack}/>}
+                    {isAda && item.tags?.some(t => t === "llm_question_page") && <div className="mt-1"><LLMFreeTextQuestionIndicator /></div>}
+                </div>
             </div>
             {isAda && !noCaret && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to page"}/></div>}
         </Link>
