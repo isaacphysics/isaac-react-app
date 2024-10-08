@@ -326,12 +326,12 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                     const inactiveInGroup = membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE;
                                     return <li key={index} style={style} className={classNames("p-2 ps-3", {"inactive-group" : isAda && inactiveInGroup})}>
                                         <div className="d-flex">
-                                            <RS.Col className="me-1">
+                                            <RS.Col className="connections-fixed-length-container me-1">
                                                 <div className="d-flex">
                                                     <span id={`group-membership-${index}`} className={classNames("connections-fixed-length-text", {"text-muted connection-inactive": inactiveInGroup})}>
                                                         <b>{(membership.group.groupName ?? "Group " + membership.group.id)}</b>
                                                     </span>
-                                                    {inactiveInGroup && <span>{" ("}<i>inactive</i>{")"}</span>}
+                                                    {inactiveInGroup && <span>&nbsp;{"("}<i>inactive</i>{")"}</span>}
                                                     {membership.group.selfRemoval && <img className={classNames("self-removal-group", {"ms-1": !inactiveInGroup})} src={siteSpecific("/assets/phy/icons/teacher_features_sprite.svg#groups", "/assets/cs/icons/group.svg")} alt=""/>}
                                                     <RS.UncontrolledTooltip
                                                         placement="top" target={`group-membership-${index}`}
