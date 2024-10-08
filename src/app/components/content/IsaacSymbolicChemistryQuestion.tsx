@@ -274,7 +274,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
                 editorSeed={editorSeed}
-                editorMode="chemistry"
+                editorMode={doc.isNuclear ? "nuclear" : "chemistry"}
                 questionDoc={doc}
             />}
         </div>

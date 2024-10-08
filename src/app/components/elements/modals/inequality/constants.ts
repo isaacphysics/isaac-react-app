@@ -1,4 +1,4 @@
-export type EditorMode = "maths" | "logic" | "chemistry";
+export type EditorMode = "maths" | "logic" | "chemistry" | "nuclear";
 export type LogicSyntax = "binary" | "logic";
 
 export interface MenuItemProps {

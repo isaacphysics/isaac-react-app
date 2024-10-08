@@ -297,11 +297,11 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                 <Col md={{size: 8, offset: 2}} className="py-4 inequality-results">
                     <h4>LaTeX</h4>
                     <pre>${currentAttemptValue?.result?.tex}$</pre>
-                    {editorMode === 'chemistry' && <>
+                    {["chemistry", "nuclear"].includes(editorMode) && <>
                         <h4>MhChem</h4>
                         <pre>{currentAttemptValue?.result?.mhchem}</pre>
                     </>}
-                    {editorMode !== 'chemistry' && <>
+                    {!["chemistry", "nuclear"].includes(editorMode) && <>
                         <h4>Python</h4>
                         <pre>{currentAttemptValue?.result?.python}</pre>
                         <h4>MathML</h4>
