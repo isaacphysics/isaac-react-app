@@ -34,8 +34,8 @@ export const ResearchNotificationBanner = () => {
                 </RS.Col>
                 <RS.Col xs={12} sm={10} md={8}>
                     <small>
-                        Use of this website and the information entered is being recorded.
-                        This data is used to support research into online learning at the University of Cambridge{isAda ? " and the Raspberry Pi Foundation" : ""}.
+                        We record your use of this site and the information you enter to support research into
+                        online learning at the University of Cambridge{isAda ? " and the Raspberry Pi Foundation" : ""}.
                         Full details are in the <Link to="/privacy">privacy policy</Link>.
                     </small>
                 </RS.Col>
