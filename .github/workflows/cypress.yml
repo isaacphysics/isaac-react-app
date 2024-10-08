@@ -12,7 +12,6 @@ jobs:
     container:
       # This must stay in sync with the image used by the test-{site}-visual scripts in package.json.
       image: cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1
-      options: --user 1001
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,7 +37,7 @@ jobs:
         if: ${{ failure() }}
         run: |
           # Temporary hack to mitigate https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/322
-          sudo apt install exiftool -y
+          apt update && apt install exiftool -y
           echo "%Image::ExifTool::UserDefined = ('Image::ExifTool::PNG::TextualData' => {FRSOURCE_CPVRD_V => { }});" > ~/.ExifTool_config
           # Create or update VRT branch
           target_ref=${{ github.head_ref || github.ref_name }}
