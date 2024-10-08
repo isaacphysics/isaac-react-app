@@ -252,20 +252,20 @@ const LegendKey = ({cellClass, description}: {cellClass: string, description?: s
     </li>;
 };
 
-export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: boolean}) => {
+export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey?: boolean, id?: string}) => {
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     return <div className="p-4"><div className="assignment-progress-legend">
         {showQuestionKey && <>
-            <Label htmlFor="question-key">Question key:</Label>
-            <ul id="question-key" className="block-grid-xs-3">
+            <Label htmlFor={`question-key-${id}`}>Question key:</Label>
+            <ul id={`question-key-${id}`} className="block-grid-xs-3">
                 <QuestionKey icon={ICON.correct} description="Correct"/>
                 <QuestionKey icon={ICON.notAttempted} description="Not&nbsp;attempted"/>
                 <QuestionKey icon={ICON.incorrect} description="Incorrect"/>
             </ul>
         </>}
-        {showQuestionKey && <Label htmlFor="key" className="mt-2">Section key:</Label>}
+        {showQuestionKey && <Label htmlFor={`key-${id}`} className="mt-2">Section key:</Label>}
         <div className="d-flex flex-row flex-sm-column justify-content-between">
-            <ul id="key" className="block-grid-xs-1 block-grid-sm-2 block-grid-md-5 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
+            <ul id={`key-${id}`} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-5 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
                 <LegendKey cellClass="completed" description={`100% correct`}/>
                 <LegendKey cellClass="passed" description={`≥${passMark * 100}% correct`}/>
                 <LegendKey cellClass="in-progress" description={`<${passMark * 100}% correct`}/>
@@ -354,7 +354,7 @@ const GroupDetails = ({group, user}: {group: AppGroup, user: RegisteredUserDTO})
         : <div className="p-4 text-center">There are no tests assigned to this group.</div>;
 
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-        <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} />
+        <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} id={`legend-${group.id}`} />
         {/* Only full teachers can see the tests tab */}
         {pageSettings.isTeacher
             ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
