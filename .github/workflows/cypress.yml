@@ -12,7 +12,7 @@ jobs:
     container:
       # This must stay in sync with the image used by the test-{site}-visual scripts in package.json.
       image: cypress/browsers:node-20.14.0-chrome-125.0.6422.141-1-ff-126.0.1-edge-125.0.2535.85-1
-      options: --user 1001
+      options: --user 0
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,11 +37,16 @@ jobs:
         id: cypress-create-branch
         if: ${{ failure() }}
         run: |
+          # Temporary hack to mitigate https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff/issues/322
+          apt update && apt install exiftool -y
+          echo "%Image::ExifTool::UserDefined = ('Image::ExifTool::PNG::TextualData' => {FRSOURCE_CPVRD_V => { }});" > ~/.ExifTool_config
+          git config --global --add safe.directory $(pwd)
+          # Create or update VRT branch
           target_ref=${{ github.head_ref || github.ref_name }}
           update_branch_name=vrt/$target_ref
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          find ./src/test/pages/__image_snapshots__ -type f -name "*.actual.png" -exec bash -c 'mv "$1" "${1/.actual./.}"' shell {} \;
+          find ./src/test/pages/__image_snapshots__ -type f -name "*.actual.png" -exec bash -c 'exiftool -overwrite_original -FRSOURCE_CPVRD_V="1" "$1"; mv "$1" "${1/.actual./.}"' shell {} \;
           git fetch origin $target_ref
           git checkout -B $update_branch_name origin/$target_ref
           git commit -am "Update VRT baselines"
