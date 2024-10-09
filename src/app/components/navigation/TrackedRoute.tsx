@@ -24,7 +24,13 @@ type TrackedRouteComponentProps = RouteComponentProps & {
     component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
 };
 
-const WrapperComponent = function({component: Component, ...props}: TrackedRouteComponentProps) {
+const FigureNumberingWrappedComponent = function({component: Component, ...props}: TrackedRouteComponentProps) {
+    return <FigureNumberingContext.Provider value={{}}> {/* Create a figure numbering scope for each page */}
+        <Component {...props} />
+    </FigureNumberingContext.Provider>;
+};
+
+export const TrackedRoute = function({component, componentProps, ...rest}: TrackedRouteProps) {
     // Store react-router's location, rather than window's location, during the react render to track changes in history so that we
     // can ensure it handles the location correctly even if there is a react-router <Redirect ...> before the useEffect is called.
     const location = useLocation();
@@ -33,12 +39,6 @@ const WrapperComponent = function({component: Component, ...props}: TrackedRoute
         trackPageview({ url: window.location.origin + location.pathname + location.search + location.hash });
     }, [location.pathname]);
 
-    return <FigureNumberingContext.Provider value={{}}> {/* Create a figure numbering scope for each page */}
-        <Component {...props} />
-    </FigureNumberingContext.Provider>;
-};
-
-export const TrackedRoute = function({component, componentProps, ...rest}: TrackedRouteProps) {
     const user = useAppSelector(selectors.user.orNull);
     if (component) {
         if (rest.ifUser !== undefined) {
@@ -50,7 +50,7 @@ export const TrackedRoute = function({component, componentProps, ...rest}: Track
                     {!isNotPartiallyLoggedIn(user) && ifUser.name ?
                         <Redirect to="/verifyemail"/> :
                         user && ifUser(user) ?
-                            <WrapperComponent component={component} {...propsWithUser} {...componentProps} /> :
+                            <FigureNumberingWrappedComponent component={component} {...propsWithUser} {...componentProps} /> :
                             user && !user.loggedIn && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
                                 persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                                 :
@@ -66,7 +66,7 @@ export const TrackedRoute = function({component, componentProps, ...rest}: Track
             }}/>;
         } else {
             return <Route {...rest} render={props => {
-                return <WrapperComponent component={component} {...props} {...componentProps} />;
+                return <FigureNumberingWrappedComponent component={component} {...props} {...componentProps} />;
             }}/>;
         }
     } else {
