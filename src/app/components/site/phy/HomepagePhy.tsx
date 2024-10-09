@@ -36,12 +36,13 @@ export const HomepagePhy = () => {
                         <Col lg={7} className={above["lg"](deviceSize) ? `align-items-stretch d-flex flex-column` : ""}>
                             {!(user && user.loggedIn) && <Row className="align-self-end mt-2 mt-lg-0 mb-1 mb-lg-0">
                                 <Col className="col-6 col-lg-auto ps-lg-0 pe-1 pe-sm-2">
-                                    <Button size={above['lg'](deviceSize) || deviceSize === "xs" ? "sm" : ""} tag={Link} to="/login" color="primary" outline className="btn-block">
+                                    <Button size={above['lg'](deviceSize) || deviceSize === "xs" ? "sm" : ""} tag={Link} to="/login" color="primary" outline block
+                                    >
                                         Log in
                                     </Button>
                                 </Col>
                                 <Col className="col-6 col-lg-auto ps-lg-0 ps-1 ps-sm-2">
-                                    <Button size={above['lg'](deviceSize) || deviceSize === "xs" ? "sm" : ""} tag={Link} to="/register" color="secondary" className="btn-block">
+                                    <Button size={above['lg'](deviceSize) || deviceSize === "xs" ? "sm" : ""} tag={Link} to="/register" color="secondary" block>
                                         Sign up
                                     </Button>
                                 </Col>

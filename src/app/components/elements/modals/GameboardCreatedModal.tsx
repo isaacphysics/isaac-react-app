@@ -26,25 +26,25 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
     const dispatch = useAppDispatch();
     const closeModal = () => dispatch(closeActiveModal());
     return <Row className={"my-3"}>
-        <Col className="mb-1">
+        <Col sm={12} lg={4} className="mb-1">
             <Button
-                tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="secondary" block
+                className="w-100 h-100" tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="secondary" block
                 disabled={!gameboardId} onClick={closeModal}
             >
                 Set as assignment
             </Button>
         </Col>
-        <Col className="mb-1">
+        <Col sm={12} lg={4} className="mb-1">
             <Button
-                color="primary" outline
+                className="w-100 h-100" color="primary" outline
                 onClick={() => {resetBuilder(); closeModal();}}
             >
                 Create another {siteSpecific("board", "quiz")}
             </Button>
         </Col>
-        <Col className="mb-1">
+        <Col sm={12} lg={4} className="mb-1">
             <Button
-                tag={Link} to={PATHS.SET_ASSIGNMENTS} color="primary" outline
+                className="w-100 h-100" tag={Link} to={PATHS.SET_ASSIGNMENTS} color="primary" outline
                 onClick={closeModal}
             >
                 View all of your {siteSpecific("boards", "quizzes")}

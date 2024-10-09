@@ -112,11 +112,11 @@ export const RegistrationVerifyEmail = () => {
                 {verifyingCurrentUser ?
                     emailVerified &&
                         <Row className="justify-content-center">
-                            <Col xs={12} sm={6} lg={3}>
-                                <Button className={"my-2"} outline color="secondary" onClick={myAccount}>Your account</Button>
+                            <Col xs={12} sm={6} md={4} lg={3}>
+                                <Button className={"my-2 w-100"} outline color="secondary" onClick={myAccount}>Your account</Button>
                             </Col>
-                            <Col xs={12} sm={6} lg={3}>
-                                <Button className={"my-2"} onClick={continueToPreferences}>Continue</Button>
+                            <Col xs={12} sm={6} md={4} lg={3}>
+                                <Button className={"my-2 w-100"} onClick={continueToPreferences}>Continue</Button>
                             </Col>
                         </Row>
                     :
