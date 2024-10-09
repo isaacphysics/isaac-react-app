@@ -352,7 +352,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     {/* Submit */}
                     <Row className="mt-4 mb-4">
                         <Col md={{size: 6, offset: 3}}>
-                            <Input disabled={!consentGivenOrNotRequired} type="submit" value="Register now" className="btn btn-block btn-secondary border-0" />
+                            <Input disabled={!consentGivenOrNotRequired} type="submit" value="Register now" className="btn w-100 btn-secondary border-0" />
                         </Col>
                     </Row>
 
