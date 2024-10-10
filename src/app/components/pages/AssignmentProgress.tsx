@@ -292,19 +292,19 @@ export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey
             <div className="d-sm-flex flex-sm-row justify-content-sm-evenly assignment-progress-options">
                 <div className="d-flex flex-column align-items-center mt-sm-2">
                     <span>Colour-blind mode</span>
-                    <StyledToggle falseLabel="Disabled" trueLabel="Enabled" onChange={(e) => pageSettings.setColourBlind?.(e.currentTarget.checked)} />
+                    <StyledToggle falseLabel="Disabled" trueLabel="Enabled" checked={pageSettings.colourBlind} onChange={(e) => pageSettings.setColourBlind?.(e.currentTarget.checked)} />
                 </div>
                 
                 <div className="d-flex flex-column align-items-center mt-2">
                     <span>Table display mode</span>
-                    <StyledToggle falseLabel="Fractions" trueLabel="Percentages" onChange={(e) => pageSettings.setFormatAsPercentage?.(e.currentTarget.checked)} />
+                    <StyledToggle falseLabel="Fractions" trueLabel="Percentages" checked={pageSettings.formatAsPercentage} onChange={(e) => pageSettings.setFormatAsPercentage?.(e.currentTarget.checked)} />
                 </div>
 
                 <div className="d-flex flex-column align-items-center mt-2">
                     <div className="d-flex flex-row h-100">
                         <span>Class average mode</span>
                         {above["md"](deviceSize) && <>
-                            <span id={`attempted-toggle-${id}`} className="icon-help my-auto"/>
+                            <span id={`attempted-toggle-${id}`} className="icon-help"/>
                             <UncontrolledTooltip className="spaced-tooltip" placement="left" autohide={false} target={`attempted-toggle-${id}`}>
                                 This toggle changes what the percentages at the top and bottom of the table represent.<br/><br/>
                                 <b>Attempted</b> displays the percentage of students who have attempted all parts of that question.<br/><br/>
@@ -312,7 +312,7 @@ export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey
                             </UncontrolledTooltip>
                         </>}
                     </div>
-                    <StyledToggle falseLabel="Attempted" trueLabel="Correct" onChange={(e) => pageSettings.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} />
+                    <StyledToggle falseLabel="Attempted" trueLabel="Correct" checked={pageSettings.attemptedOrCorrect === "CORRECT"} onChange={(e) => pageSettings.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} />
                 </div>
             </div>
         </div>
