@@ -210,10 +210,12 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                 }
                                 return <React.Fragment key={teacherAuthorisation.id}>
                                 <li style={style} className="py-2">
-                                    <span className="icon-person-active" />
-                                    <span id={`teacher-authorisation-${teacherAuthorisation.id}`} className="connections-fixed-length-text">
-                                        {extractTeacherName(teacherAuthorisation)}
-                                    </span>
+                                    <div className="d-inline-flex connections-fixed-length-container">
+                                        <span className="icon-person-active" />
+                                        <span id={`teacher-authorisation-${teacherAuthorisation.id}`} className="connections-fixed-length-text">
+                                            {extractTeacherName(teacherAuthorisation)}
+                                        </span>
+                                    </div>
                                     <RS.UncontrolledTooltip
                                         placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
                                         >
@@ -264,10 +266,12 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                         return null;
                                     }
                                     return <li key={student.id} style={style} className="py-2">
-                                        <span className="icon-person-active" />
-                                        <span id={`student-authorisation-${student.id}`} className="connections-fixed-length-text">
-                                            {student.givenName} {student.familyName}
-                                        </span>
+                                        <div className="d-inline-flex connections-fixed-length-container">
+                                            <span className="icon-person-active" />
+                                            <span id={`student-authorisation-${student.id}`} className="connections-fixed-length-text">
+                                                {student.givenName} {student.familyName}
+                                            </span>
+                                        </div>
                                         <RS.UncontrolledTooltip
                                             placement="bottom" target={`student-authorisation-${student.id}`}
                                         >
