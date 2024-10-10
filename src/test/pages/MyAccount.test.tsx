@@ -178,7 +178,7 @@ describe("My Account", () => {
         const teacherName = extractTeacherName(mockTeacher);
         const teacherNameSpan = await within(teacherConnectionsList).findByText(teacherName as string);
 
-        const teacherSpan = teacherNameSpan.parentElement;
+        const teacherSpan = teacherNameSpan.closest("li");
         expect(teacherSpan).toBeInTheDocument();
 
         const teacherRevokeButton = await within(teacherSpan as HTMLElement).findByRole("button", {name: "Revoke"});
