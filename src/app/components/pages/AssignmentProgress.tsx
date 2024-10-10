@@ -44,6 +44,7 @@ import {
 } from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {
+    above,
     API_PATH,
     below,
     getAssignmentCSVDownloadLink,
@@ -269,6 +270,7 @@ const LegendKey = ({cellClass, description}: {cellClass: string, description?: s
 
 export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey?: boolean, id?: string}) => {
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
+    const deviceSize = useDeviceSize();
     return <div className="p-4"><div className="assignment-progress-legend">
         {showQuestionKey && <>
             <Label htmlFor={`question-key-${id}`}>Question key:</Label>
@@ -301,12 +303,14 @@ export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey
                 <div className="d-flex flex-column align-items-center mt-2">
                     <div className="d-flex flex-row h-100">
                         <span>Class average mode</span>
-                        <span id={`attempted-toggle-${id}`} className="icon-help my-auto"/>
-                        <UncontrolledTooltip className="spaced-tooltip" placement="left" autohide={false} target={`attempted-toggle-${id}`}>
-                            This toggle changes what the percentages at the top and bottom of the table represent.<br/><br/>
-                            <b>Attempted</b> displays the percentage of students who have attempted all parts of that question.<br/><br/>
-                            <b>Correct</b> displays the percentage of students who have achieved full marks on that question.
-                        </UncontrolledTooltip>
+                        {above["md"](deviceSize) && <>
+                            <span id={`attempted-toggle-${id}`} className="icon-help my-auto"/>
+                            <UncontrolledTooltip className="spaced-tooltip" placement="left" autohide={false} target={`attempted-toggle-${id}`}>
+                                This toggle changes what the percentages at the top and bottom of the table represent.<br/><br/>
+                                <b>Attempted</b> displays the percentage of students who have attempted all parts of that question.<br/><br/>
+                                <b>Correct</b> displays the percentage of students who have achieved full marks on that question.
+                            </UncontrolledTooltip>
+                        </>}
                     </div>
                     <StyledToggle falseLabel="Attempted" trueLabel="Correct" onChange={(e) => pageSettings.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} />
                 </div>
