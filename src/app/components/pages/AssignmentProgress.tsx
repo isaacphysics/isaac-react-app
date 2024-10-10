@@ -284,8 +284,8 @@ export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey
                 <LegendKey cellClass="completed" description={`100% correct`}/>
                 <LegendKey cellClass="passed" description={`≥${passMark * 100}% correct`}/>
                 <LegendKey cellClass="in-progress" description={`<${passMark * 100}% correct`}/>
-                <LegendKey cellClass="" description={`Not attempted`}/>
                 <LegendKey cellClass="failed" description={`>${100 - (passMark * 100)}% incorrect`}/>
+                <LegendKey cellClass="" description={`Not attempted`}/>
             </ul>
             <div className="d-sm-flex flex-sm-row justify-content-sm-evenly assignment-progress-options">
                 <div className="d-flex flex-column align-items-center mt-sm-2">
