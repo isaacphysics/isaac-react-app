@@ -44,6 +44,8 @@ function QuizItem({item}: QuizAssignmentProps) {
     const attempt = isAttempt(item) ? item : assignment?.attempt;
     const status: Status = !attempt ? Status.Unstarted : !attempt.completedDate ? Status.Started : Status.Complete;
     const assignmentStartDate = assignment?.scheduledStartDate ?? assignment?.creationDate;
+    const todaysDate = new Date();
+    const pastDueDate = assignment?.dueDate ? (todaysDate > assignment.dueDate) : false;
     return <div className="p-2">
         <RS.Card className="card-neat my-quizzes-card">
             <RS.CardBody className="d-flex flex-column">
@@ -71,10 +73,10 @@ function QuizItem({item}: QuizAssignmentProps) {
 
                 <div className="text-center mt-4">
                     {assignment ? <>
-                        {status === Status.Unstarted && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
+                        {status === Status.Unstarted && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`} disabled={pastDueDate}>
                             {siteSpecific("Start Test", "Start test")}
                         </RS.Button>}
-                        {status === Status.Started && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
+                        {status === Status.Started && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`} disabled={pastDueDate}>
                             {siteSpecific("Continue Test", "Continue test")}
                         </RS.Button>}
                         {status === Status.Complete && (
