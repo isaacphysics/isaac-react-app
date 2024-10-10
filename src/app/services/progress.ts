@@ -6,7 +6,8 @@ import {AuthorisedAssignmentProgress} from "../../IsaacAppTypes";
 export function useAssignmentProgressAccessibilitySettings({user}: {user: RegisteredUserDTO}) {
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
-    return {colourBlind, setColourBlind, formatAsPercentage, setFormatAsPercentage, isTeacher: isTeacherOrAbove(user)};
+    const [attemptedOrCorrect, setAttemptedOrCorrect] = useState<"ATTEMPTED" | "CORRECT">("ATTEMPTED");
+    return {colourBlind, setColourBlind, formatAsPercentage, setFormatAsPercentage, isTeacher: isTeacherOrAbove(user), attemptedOrCorrect, setAttemptedOrCorrect};
 }
 
 export function isAuthorisedFullAccess(progress: AssignmentProgressDTO): progress is AuthorisedAssignmentProgress {
