@@ -188,7 +188,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title};})}
                     onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
                 />
-                <span className={siteSpecific("", "d-inline-block ms-2")}>questions</span>
+                <span className={siteSpecific("ms-2", "d-inline-block ms-2")}>questions</span>
             </div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-topicChart`} className="text-center-width doughnut-binding  align-self-center">
@@ -230,7 +230,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     options={getFilteredStageOptions()}
                     onChange={selectOnChange(setStageChoices, false)}
                 />
-                questions
+                <span className="ms-2">questions</span>
             </div>
             <div className="d-flex flex-grow-1">
                 <div aria-hidden={"true"} id={`${subId}-stageChart`} className="text-center-width doughnut-binding  align-self-center">

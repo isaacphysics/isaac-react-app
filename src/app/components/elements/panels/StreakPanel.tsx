@@ -2,6 +2,7 @@ import * as RS from "reactstrap";
 import {StreakGauge} from "../views/StreakGauge";
 import React from "react";
 import {UserProgress} from "../../../../IsaacAppTypes";
+import { Col, Row } from "reactstrap";
 
 export const StreakPanel = ({userProgress}: {userProgress?: UserProgress | null}) => {
     const largestWeeklyStreak = userProgress?.userSnapshot?.weeklyStreakRecord?.largestStreak || 0;
@@ -10,9 +11,15 @@ export const StreakPanel = ({userProgress}: {userProgress?: UserProgress | null}
         <div className={"text-center-width"}>
             Weekly Streak
         </div>
-        <div className={"progress-gauge text-center-width ms-4 me-4"}>
-            <StreakGauge streakRecord={userProgress?.userSnapshot}/>
-        </div>
+        <Row>
+            <Col size={4} className="d-md-none"/>
+            <Col size={4}>
+                <div className={"progress-gauge text-center-width ms-4 me-4"}>
+                    <StreakGauge streakRecord={userProgress?.userSnapshot}/>
+                </div>
+            </Col>
+            <Col size={4} className="d-md-none"/>
+        </Row>
         <div id="streak-help" className={"text-center-width"}>
             Longest streak: {largestWeeklyStreak}&nbsp;Week{largestWeeklyStreak !== 1 && "s"}<br/>
            {currentDailyStreak >= 14 && `Daily streak: ${currentDailyStreak} Days`}
