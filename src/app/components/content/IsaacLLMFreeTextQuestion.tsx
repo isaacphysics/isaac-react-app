@@ -56,16 +56,17 @@ function validatedChoiceDtoFromEvent(event: React.ChangeEvent<HTMLInputElement>)
 
 const FreeTextEntryValidation = ({validValue, wordLimit, charLimit, piiDetected}: Validation) => {
     return validValue ? null
-        : <Alert color="warning" className={"no-print"}>
-            <strong>Warning:</strong>
-            <ul>
-                {charLimit.exceeded && <li>Character limit exceeded ({charLimit.current}/{charLimit.limit})</li>}
-                {wordLimit.exceeded && <li>Word limit exceeded ({wordLimit.current}/{wordLimit.limit})</li>}
-                {piiDetected && <li><strong>Possible PII detected:</strong><br />
+        : <div className="no-print text-failed">
+            {charLimit.exceeded && <div><span className="icon-error" /> Character limit exceeded ({charLimit.current}/{charLimit.limit})</div>}
+            {wordLimit.exceeded && <div><span className="icon-error" /> Word limit exceeded ({wordLimit.current}/{wordLimit.limit})</div>}
+            {piiDetected && <div className="d-flex">
+                <span className="icon-error" />
+                <span className="ms-1">
+                    <strong>Possible PII detected:</strong><br />
                     It looks like your answer contains personal information, like a name, email or street address. Sending this data to OpenAI is against their Usage policy.
-                </li>}
-            </ul>
-        </Alert>;
+                </span>
+            </div>}
+        </div>;
 };
 
 const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacLLMFreeTextQuestionDTO>) => {
