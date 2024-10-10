@@ -8,6 +8,13 @@
     padding: 0.5rem 0.75rem;
     font-weight: 600;
     font-size: medium;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+    &.small {
+        border: 1px solid $cs-silver !important;
+        font-weight: 600 !important;
+    }
 }
 
 .llm-info-banner {
