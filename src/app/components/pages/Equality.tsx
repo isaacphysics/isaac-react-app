@@ -7,7 +7,7 @@ import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
 import {Inequality, makeInequality} from 'inequality';
-import {parseBooleanExpression, parseMathsExpression, ParsingError} from 'inequality-grammar';
+import {parseBooleanExpression, parseInequalityChemistryExpression, parseInequalityNuclearExpression, parseMathsExpression, ParsingError} from 'inequality-grammar';
 import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
@@ -21,23 +21,29 @@ function isError(p: ParsingError | any[]): p is ParsingError {
 const equalityValidator = (input: string, editorMode: string) => {
     const openBracketsCount = input.split('(').length - 1;
     const closeBracketsCount = input.split(')').length - 1;
-    let regexStr = '';
+    let regexStr;
     const errors = [];
 
     let parsedExpression: ParsingError | any[];
     if (editorMode === 'maths') {
         regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
         parsedExpression = parseMathsExpression(input);
-    } else {
+    } else if (editorMode === 'logic') {
         regexStr = "[^ A-Za-z&|01()~¬∧∨⊻+.!=]+";
         parsedExpression = parseBooleanExpression(input);
+    } else if (editorMode === 'chemistry') {
+        regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
+        parsedExpression = parseInequalityChemistryExpression(input);
+    } else  {
+        regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
+        parsedExpression = parseInequalityNuclearExpression(input);
     }
     const badCharacters = new RegExp(regexStr);
 
     if (isError(parsedExpression) && parsedExpression.error) {
         errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`);
     }
-    if (/\\[a-zA-Z()]|[{}]/.test(input)) {
+    if (/\\[a-zA-Z()]|[{}]/.test(input) && ["maths", "logic"].includes(editorMode)) {
         errors.push('LaTeX syntax is not supported.');
     }
     if (/\|.+?\|/.test(input)) {
@@ -103,13 +109,30 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     }
 
     function updateState(state: any) {
-        const newState = sanitiseInequalityState(state);
-        const pythonExpression = newState?.result?.python || "";
-        const previousPythonExpression = currentAttempt.value?.result?.python || "";
-        if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
-            setCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
+        if (["maths", "logic"].includes(editorMode)) {
+            const newState = sanitiseInequalityState(state);
+            const pythonExpression = newState?.result?.python || "";
+            const previousPythonExpression = currentAttempt.value?.result?.python || "";
+            if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
+                setCurrentAttempt({ type: 'formula', value: JSON.stringify(newState), pythonExpression });
+            }
+            initialEditorSymbols.current = state.symbols;
+        } else {
+            const newState = sanitiseInequalityState(state);
+            const mhchemExpression = newState?.result?.mhchem || "";
+            const previousMhchemExpression = currentAttempt.value?.result?.mhchem || "";
+            if (!previousMhchemExpression || previousMhchemExpression !== mhchemExpression) {
+                setCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(newState), mhchemExpression });
+            }
+            initialEditorSymbols.current = state.symbols;
         }
-        initialEditorSymbols.current = state.symbols;
+    }
+
+    const updateEditor = (e: ChangeEvent<HTMLInputElement>) => {
+        setEditorMode(e.target.value as EditorMode); 
+        if (sketchRef.current) {
+            sketchRef.current.editorMode = e.target.value as EditorMode;
+        }
     }
 
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
@@ -126,6 +149,10 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
             parsedExpression = parseMathsExpression(input);
         } else if (editorMode === 'logic') {
             parsedExpression = parseBooleanExpression(input);
+        } else if (editorMode === 'chemistry') {
+            parsedExpression = parseInequalityChemistryExpression(input);
+        } else if (editorMode === 'nuclear') {
+            parsedExpression = parseInequalityNuclearExpression(input);
         }
 
         if (!isDefined(parsedExpression) || !(isError(parsedExpression) || (parsedExpression.length === 0 && input !== ''))) {
@@ -219,9 +246,10 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                 <Col md={{size: 2}} className="py-4 syntax-picker mode-picker">
                     <div>
                         <Label for="inequality-mode-select">Editor mode:</Label>
-                        <Input type="select" name="mode" id="inequality-mode-select" value={editorMode as string} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditorMode(e.target.value as EditorMode)}>
+                        <Input type="select" name="mode" id="inequality-mode-select" value={editorMode as string} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateEditor(e)}> 
                             <option value="maths">Maths</option>
                             <option value="chemistry">Chemistry</option>
+                            <option value="nuclear">Nuclear Physics</option>
                             <option value="logic">Boolean Logic</option>
                         </Input>
                     </div>
@@ -234,7 +262,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                     </div>}
                 </Col>
                 <Col md={{size: 8}} className="py-4 question-panel">
-                    {(editorMode === 'maths' || (isStaff(user) && editorMode === 'logic')) && <div className="eqn-editor-input mt-4">
+                    {(editorMode === 'maths'  || (isStaff(user) && editorMode === 'chemistry')  || (isStaff(user) && editorMode === 'nuclear') || (isStaff(user) && editorMode === 'logic')) && <div className="eqn-editor-input mt-4">
                         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                         <InputGroup className="my-2">
                             <Input className="py-4" type="text" onChange={updateEquation} value={textInput}
@@ -253,6 +281,21 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                                     log(x_a, 2) == log(x_a) / log(2)<br />
                                     <br />
                                     As you type, the box below will preview the result.
+                                </UncontrolledTooltip>}
+                                {editorMode === 'chemistry' && <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target='inequality-help'>
+                                    Here are some examples of expressions you can type:<br />
+                                    H2O<br />
+                                    2 H2 + O2 -&gt; 2 H2O<br />
+                                    CH3(CH2)3CH3<br />
+                                    {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br />
+                                    As you type, the box above will preview the result.
+                                </UncontrolledTooltip>}
+                                {editorMode === 'nuclear' && <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target='inequality-help'>
+                                    Here are some examples of expressions you can type:<br />
+                                    {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
+                                    {"^{0}_{-1}e"}<br />
+                                    {"\\gammaray"}<br />
+                                    As you type, the box above will preview the result.
                                 </UncontrolledTooltip>}
                                 {editorMode === 'logic' && <UncontrolledTooltip placement="top" autohide={false} target='inequality-help'>
                                     Here are some examples of expressions you can type:<br />
@@ -276,13 +319,17 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                         {modalVisible && <InequalityModal
                             close={closeModal}
                             onEditorStateChange={(state: any) => {
-                                setCurrentAttempt({
+                                setCurrentAttempt(["maths", "logic"].includes(editorMode) ? {
                                     type: 'logicFormula',
                                     value: JSON.stringify(state),
-                                    pythonExpression: (state && state.result && state.result.python)||"",
+                                    pythonExpression: (state && state.result && state.result.python) || "",
                                     symbols: [],
-                                })
-                                setTextInput(state?.result?.python || '');
+                                } : { 
+                                    type: 'chemicalFormula', 
+                                    value: JSON.stringify(state), 
+                                    mhchemExpression: (state && state.result && state.result.mhchem) || "" 
+                                });
+                                setTextInput(["maths", "logic"].includes(editorMode) ? (state?.result?.python || '') : (state?.result?.mhchem || ''));
                                 initialEditorSymbols.current = state.symbols;
                             }}
                             availableSymbols={availableSymbols || []}
