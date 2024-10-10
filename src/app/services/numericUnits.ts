@@ -49,7 +49,9 @@ export function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, un
         addUpTo(doc.availableUnits, 6);
     }
 
-    if (units) {
+    const incorrectAvailableUnits = doc.availableUnits?.filter(unit => !doc.knownUnits?.includes(unit.trim()));
+    if (!incorrectAvailableUnits?.length && units) {
+        // If there are no manually entered incorrect units, add some random units
         addUpTo(units, 6);
     }
 
