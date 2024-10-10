@@ -93,7 +93,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                 </Button>
             </div> :
             <div className="feedback-collection submitted">
-                ✓ Feedback submitted
+                <span className="icon-feedback-sent-tick" /> Feedback submitted
             </div>}
         </>}
     </div>;
