@@ -7,7 +7,7 @@ import {Link, RouteComponentProps, useHistory, useLocation, withRouter} from "re
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {QuizAssignmentDTO, QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
@@ -24,6 +24,7 @@ import {Tabs} from "../../elements/Tabs";
 import {useGetAvailableQuizzesQuery} from "../../../state";
 import {PageFragment} from "../../elements/PageFragment";
 import { CardGrid } from "../../elements/CardGrid";
+import { partition } from "lodash";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -123,7 +124,7 @@ function QuizGrid({quizzes, empty}: AssignmentGridProps) {
 const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
 
     const {data: quizzes} = useGetAvailableQuizzesQuery(0);
-    const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
+    let {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
     const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
 
     const pageHelp = <span>
@@ -131,6 +132,21 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         <br />
         You can also take some tests freely whenever you want to test your knowledge.
     </span>;
+
+    function sortByDueDate(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
+        if (a.dueDate! < b.dueDate!) {
+            return 1;
+        }
+        if (a.dueDate! > b.dueDate!) {
+            return -1;
+        }
+        return 0;
+    }
+    const todaysDate = new Date();
+    let [currentQuizzes, overdueQuizzes] = partition(quizAssignments, a => a?.dueDate ? (todaysDate > a.dueDate) : false);
+    currentQuizzes = currentQuizzes.toSorted(sortByDueDate);
+    overdueQuizzes = overdueQuizzes.toSorted(sortByDueDate).reverse();
+    quizAssignments = overdueQuizzes.concat(currentQuizzes);
 
     const assignmentsAndAttempts = [
         ...isFound(quizAssignments) ? quizAssignments : [],
