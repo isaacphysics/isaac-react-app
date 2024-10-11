@@ -40,7 +40,7 @@ enum Status {
     Unstarted, Started, Complete
 }
 
-const todaysDate = new Date();
+const todaysDate = new Date(new Date().setHours(0, 0, 0, 0));
 
 function QuizItem({item}: QuizAssignmentProps) {
     const assignment = isAttempt(item) ? null : item;
