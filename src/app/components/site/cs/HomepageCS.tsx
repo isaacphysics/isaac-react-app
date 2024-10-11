@@ -120,7 +120,7 @@ export const HomepageCS = () => {
                     </p>
                     <Row className={"mt-5"}>
                         <Col xs={12} xl={6} className={"mb-5 mb-xl-0"}>
-                            <Card className={classNames("cs-card border-0 backslash-1 w-100")}>
+                            <Card className={classNames("cs-card-plain border-0 backslash-1 w-100")}>
                                 <CardTitle className={"px-4 mt-5"}>
                                     <h3 className={"mt-1 font-size-1-5"}>Core</h3>
                                 </CardTitle>
@@ -136,7 +136,7 @@ export const HomepageCS = () => {
                             </Card>
                         </Col>
                         <Col>
-                            <Card className={classNames("cs-card border-0 backslash-2 w-100")}>
+                            <Card className={classNames("cs-card-plain border-0 backslash-2 w-100")}>
                                 <CardTitle className={"px-4 mt-5 font-size-1-5"}>
                                     <h3 className={"mt-1"}>Advanced</h3>
                                 </CardTitle>
