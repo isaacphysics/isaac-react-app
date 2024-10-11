@@ -133,11 +133,11 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
         if (sketchRef.current) {
             sketchRef.current.editorMode = e.target.value as EditorMode;
         }
-    }
+    };
 
     const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
         _updateEquation(e.target.value);
-    }
+    };
 
     const _updateEquation = (input: string) => {
         // const pycode = e.target.value;
@@ -234,6 +234,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
+    const allowTextInput = editorMode === 'maths'  || (isStaff(user) && ['chemistry', 'nuclear', 'logic'].includes(editorMode));
 
     return <div>
         <Container>
@@ -243,7 +244,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                 </Col>
             </Row>
             <Row>
-                <Col md={{size: 2}} className="py-4 syntax-picker mode-picker">
+                <Col md={3} className="py-4 syntax-picker mode-picker">
                     <div>
                         <Label for="inequality-mode-select">Editor mode:</Label>
                         <Input type="select" name="mode" id="inequality-mode-select" value={editorMode as string} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateEditor(e)}> 
@@ -261,8 +262,8 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                         </Input>
                     </div>}
                 </Col>
-                <Col md={{size: 8}} className="py-4 question-panel">
-                    {(editorMode === 'maths'  || (isStaff(user) && editorMode === 'chemistry')  || (isStaff(user) && editorMode === 'nuclear') || (isStaff(user) && editorMode === 'logic')) && <div className="eqn-editor-input mt-4">
+                <Col md={8} className="pb-4 pt-md-4 question-panel">
+                    {allowTextInput && <div className="eqn-editor-input mt-md-4">
                         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                         <InputGroup className="my-2">
                             <Input className="py-4" type="text" onChange={updateEquation} value={textInput}
@@ -270,51 +271,42 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                             <>
                                 {siteSpecific(
                                     <Button type="button" className="eqn-editor-help pt-2" id="inequality-help" size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>,
-                                    <span id={"inequality-help"} className="icon-help-q my-auto"/>
+                                    <span id={"inequality-help"} className="icon-help-q my-auto ms-2"/>
                                 )}
-                                {editorMode === 'maths' && <UncontrolledTooltip placement="top" autohide={false} target='inequality-help'>
+                                <UncontrolledTooltip placement="top" autohide={false} target='inequality-help'>
                                     Here are some examples of expressions you can type:<br />
-                                    <br />
-                                    a*x^2 + b x + c<br />
-                                    (-b ± sqrt(b**2 - 4ac)) / (2a)<br />
-                                    1/2 mv**2<br />
-                                    log(x_a, 2) == log(x_a) / log(2)<br />
-                                    <br />
+                                    {editorMode === 'maths' && <> <br />
+                                        a*x^2 + b x + c <br />
+                                        (-b ± sqrt(b**2 - 4ac)) / (2a) <br />
+                                        1/2 mv**2 <br />
+                                        log(x_a, 2) == log(x_a) / log(2) <br />
+                                        <br /> </>}
+                                    {editorMode === 'chemistry' && <>
+                                        H2O<br />
+                                        2 H2 + O2 -&gt; 2 H2O<br />
+                                        CH3(CH2)3CH3<br />
+                                        {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br /> </>}
+                                    {editorMode === 'nuclear' && <>
+                                        {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
+                                        {"^{0}_{-1}e"}<br />
+                                        {"\\gammaray"}<br /> </>}
+                                    {editorMode === 'logic' && <>
+                                        <br />
+                                        A AND (B XOR NOT C)<br />
+                                        A &amp; (B ^ !C)<br />
+                                        T &amp; ~(F + A)<br />
+                                        1 . ~(0 + A)<br /> </>}
                                     As you type, the box below will preview the result.
-                                </UncontrolledTooltip>}
-                                {editorMode === 'chemistry' && <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target='inequality-help'>
-                                    Here are some examples of expressions you can type:<br />
-                                    H2O<br />
-                                    2 H2 + O2 -&gt; 2 H2O<br />
-                                    CH3(CH2)3CH3<br />
-                                    {"NaCl(aq) -> Na^{+}(aq) +  Cl^{-}(aq)"}<br />
-                                    As you type, the box above will preview the result.
-                                </UncontrolledTooltip>}
-                                {editorMode === 'nuclear' && <UncontrolledTooltip className="spaced-tooltip" placement="top" autohide={false} target='inequality-help'>
-                                    Here are some examples of expressions you can type:<br />
-                                    {"^{238}_{92}U -> ^{4}_{2}\\alphaparticle + _{90}^{234}Th"}<br />
-                                    {"^{0}_{-1}e"}<br />
-                                    {"\\gammaray"}<br />
-                                    As you type, the box above will preview the result.
-                                </UncontrolledTooltip>}
-                                {editorMode === 'logic' && <UncontrolledTooltip placement="top" autohide={false} target='inequality-help'>
-                                    Here are some examples of expressions you can type:<br />
-                                    <br />
-                                    A AND (B XOR NOT C)<br />
-                                    A &amp; (B ^ !C)<br />
-                                    T &amp; ~(F + A)<br />
-                                    1 . ~(0 + A)<br />
-                                    As you type, the box below will preview the result.
-                                </UncontrolledTooltip>}
+                                </UncontrolledTooltip>
                             </>
                         </InputGroup>
                         <QuestionInputValidation userInput={textInput} validator={(i: string) => equalityValidator(i, editorMode)} />
                     </div>}
                     <div className="equality-page">
                         <div
-                            role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''} ${editorMode !== 'maths' ? 'mt-4' : ''}`} tabIndex={0}
+                            role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''} ${!allowTextInput && 'mt-4'}`} tabIndex={0}
                             onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
-                            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : `<small>${editorMode === 'maths' ? 'or c' : 'C'}lick here to enter a formula</small>` }}
+                            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : `<small>${allowTextInput ? 'or c' : 'C'}lick here to enter a formula</small>` }}
                         />
                         {modalVisible && <InequalityModal
                             close={closeModal}
