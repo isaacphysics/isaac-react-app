@@ -40,12 +40,13 @@ enum Status {
     Unstarted, Started, Complete
 }
 
+const todaysDate = new Date();
+
 function QuizItem({item}: QuizAssignmentProps) {
     const assignment = isAttempt(item) ? null : item;
     const attempt = isAttempt(item) ? item : assignment?.attempt;
     const status: Status = !attempt ? Status.Unstarted : !attempt.completedDate ? Status.Started : Status.Complete;
     const assignmentStartDate = assignment?.scheduledStartDate ?? assignment?.creationDate;
-    const todaysDate = new Date();
     const pastDueDate = assignment?.dueDate ? (todaysDate > assignment.dueDate) : false;
     return <div className="p-2">
         <RS.Card className="card-neat my-quizzes-card">
@@ -124,7 +125,7 @@ function QuizGrid({quizzes, empty}: AssignmentGridProps) {
 const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
 
     const {data: quizzes} = useGetAvailableQuizzesQuery(0);
-    let {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
+    const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
     const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
 
     const pageHelp = <span>
@@ -134,22 +135,30 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     </span>;
 
     function sortByDueDate(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
-        if (a.dueDate! < b.dueDate!) {
+        if (a.dueDate && b.dueDate) {
+            if (a.dueDate < b.dueDate) {
+                return 1;
+            }
+            if (a.dueDate! > b.dueDate!) {
+                return -1;
+            }
+        }
+        else if (a.dueDate) {
             return 1;
         }
-        if (a.dueDate! > b.dueDate!) {
+        else if (b.dueDate) {
             return -1;
         }
         return 0;
     }
-    const todaysDate = new Date();
+
     let [currentQuizzes, overdueQuizzes] = partition(quizAssignments, a => a?.dueDate ? (todaysDate > a.dueDate) : false);
     currentQuizzes = currentQuizzes.toSorted(sortByDueDate);
     overdueQuizzes = overdueQuizzes.toSorted(sortByDueDate).reverse();
-    quizAssignments = overdueQuizzes.concat(currentQuizzes);
+    const sortedQuizAssignments = overdueQuizzes.concat(currentQuizzes);
 
     const assignmentsAndAttempts = [
-        ...isFound(quizAssignments) ? quizAssignments : [],
+        ...isFound(sortedQuizAssignments) ? sortedQuizAssignments : [],
         ...isFound(freeAttempts) ? freeAttempts : [],
     ];
     const [completedQuizzes, incompleteQuizzes] = partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts);
