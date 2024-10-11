@@ -39,6 +39,56 @@ $cards-per-line: (
   padding-bottom: $grid-gutter-width;
 }
 
+.cs-card-container {
+  container: cs-card / inline-size;
+}
+
+.cs-card {
+  box-shadow: 0px 0px 2px 1px $shadow-08;
+  border-radius: 1rem 1rem 3rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  > img {
+    aspect-ratio: 16/9;
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  .card-footer {
+    background-color: transparent !important;
+
+    .btn-link::after {
+      content: "";
+      display: inline-flex;
+      background: url('/assets/common/icons/chevron_up_white.svg') no-repeat center center;
+      // TODO: colour in $dark-pink-300
+      filter: invert(1);
+      rotate: 90deg;
+      margin-top: -3px;
+      margin-left: 10px;
+      width: 15px;
+      height: 15px;
+    }
+  }
+}
+
+@container cs-card (min-width: 560px) {
+  .cs-card {
+    flex-direction: row-reverse;
+
+    > div {
+      width: 50%;
+    }
+
+    > img {
+      width: 50%;
+      border-radius: 0 1rem 3rem 0;
+      object-fit: cover;
+    }
+  }
+}
+
 .cs-card-plain, .news-card {
   position: relative;
   border-radius: 15px;
