@@ -139,7 +139,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
             if (a.dueDate < b.dueDate) {
                 return 1;
             }
-            if (a.dueDate! > b.dueDate!) {
+            if (a.dueDate > b.dueDate) {
                 return -1;
             }
         }
