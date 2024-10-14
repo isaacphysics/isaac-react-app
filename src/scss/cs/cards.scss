@@ -99,6 +99,7 @@ $cards-per-line: (
 
 .icon-card-container {
   container: icon-card / inline-size;
+  max-width: unset;
 }
 
 @container icon-card (min-width: 480px) {
