@@ -9,7 +9,7 @@ import {useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import {useSortable} from "@dnd-kit/sortable";
 import classNames from "classnames";
-import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, isAda, isDefined, isPhy, isTouchDevice, useDeviceSize} from "../../../../services";
+import {CLOZE_DROP_ZONE_ID_PREFIX, NULL_CLOZE_ITEM, below, isAda, isDefined, isPhy, isTouchDevice, useDeviceSize} from "../../../../services";
 import { Markup } from "..";
 
 export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean, isCorrect?: boolean}) {
@@ -141,7 +141,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
 
     if (dropRegionContext && droppableTarget) {
         return ReactDOM.createPortal(
-            (deviceSize === "xs" || (isTouchDevice() && (deviceSize === "sm" || deviceSize === "md"))) ? dropdownZone : draggableDropZone,
+            (deviceSize === "xs" || (isTouchDevice() && below['md'](deviceSize))) ? dropdownZone : draggableDropZone,
             droppableTarget
         );
     }
