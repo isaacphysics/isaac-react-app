@@ -54,21 +54,6 @@ $cards-per-line: (
     aspect-ratio: 16/9;
     border-radius: 1rem 1rem 0 0;
   }
-
-  .card-footer {
-    .btn-link::after {
-      content: "";
-      display: inline-flex;
-      background: url('/assets/common/icons/chevron_up_white.svg') no-repeat center center;
-      // TODO: colour in $dark-pink-300
-      filter: invert(1);
-      rotate: 90deg;
-      margin-top: -3px;
-      margin-left: 10px;
-      width: 15px;
-      height: 15px;
-    }
-  }
 }
 
 @container cs-card (min-width: 560px) {
@@ -126,6 +111,21 @@ $cards-per-line: (
       h3 {
         margin-top: 8px;
       }
+    }
+  }
+}
+
+.cs-card, .icon-card {
+  .card-footer {
+    .btn-link::after {
+      content: "";
+      display: inline-flex;
+      width: 6px;
+      height: 8px;
+      margin-top: -3px;
+      margin-left: 10px;
+      @include svg-color(url('/assets/common/icons/chevron_right.svg'), $dark-pink-300);
+      mask-size: cover;
     }
   }
 }
