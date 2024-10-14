@@ -137,7 +137,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             dispatch(showErrorToast("No group code provided", "You have to enter a group code!"));
             return;
         }
-        else if (isFirstLoginInPersistence()) {
+        else if (isPhy && isFirstLoginInPersistence()) {
             history.push("/register/group_invitation?authToken=" + encodeURIComponent(sanitisedToken));
         }
         else {
