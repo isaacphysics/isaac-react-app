@@ -31,13 +31,17 @@ img.full-background-img {
 .backslash-left {
   position: relative;
 
+  > div {
+    padding-left: 48px;
+  }
+
   &::before {
     content: "/";
     color: $pink-300;
     font-size: 3.5rem;
     position: absolute;
     top: 54px;
-    left: -24px;
+    left: 22px;
   }
 }
 
@@ -48,7 +52,7 @@ img.full-background-img {
 
 .help-block {
   background: url(/assets/cs/decor/decor-purple.png) no-repeat center center;
-  background-size: cover;
+  background-size: 100% 100%;
   border-radius: 15px;
 }
 
