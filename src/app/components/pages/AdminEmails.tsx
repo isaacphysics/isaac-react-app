@@ -95,7 +95,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                     <RS.Col>
                         <RS.Input
                             type="submit" value="Load template"
-                            className={"btn btn-block btn-secondary border-0 " + classnames({disabled: contentObjectID.length == 0})}
+                            className={"btn w-100 btn-secondary border-0 " + classnames({disabled: contentObjectID.length == 0})}
                             disabled={contentObjectID.length == 0}
                             onClick={() => getEmailTemplate(contentObjectID)}
                         />

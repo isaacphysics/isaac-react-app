@@ -2,7 +2,7 @@ import {UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {http, HttpResponse, HttpHandler} from "msw";
-import {ACCOUNT_TAB, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
+import {ACCOUNT_TAB, ACCOUNT_TABS, ACTION_TYPE, API_PATH, isDefined, isPhy} from "../app/services";
 import {produce} from "immer";
 import {mockUser} from "../mocks/data";
 import {isaacApi, requestCurrentUser, store} from "../app/state";
@@ -90,15 +90,6 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     </Provider>);
 };
 
-export const navTabTitles: Record<ACCOUNT_TAB, string> = {
-    [ACCOUNT_TAB.account]: "Profile",
-    [ACCOUNT_TAB.customise]: "Customise",
-    [ACCOUNT_TAB.passwordreset]: "Security",
-    [ACCOUNT_TAB.teacherconnections]: "Teacher connections",
-    [ACCOUNT_TAB.emailpreferences]: "Notifications",
-    [ACCOUNT_TAB.betafeatures]: "Beta"
-};
-
 // Clicks on the given navigation menu entry, allowing navigation around the app as a user would
 export const followHeaderNavLink = async (menu: string, linkName: string) => {
     const header = await screen.findByTestId("header");
@@ -143,6 +134,6 @@ export const navigateToAssignmentProgress = async () => {
 // Open a given tab in the account page.
 export const switchAccountTab = async (tab: ACCOUNT_TAB) => {
     // Switch to the correct tab
-    const tabLink = await within(await screen.findByTestId("account-nav")).findByText(navTabTitles[tab]);
+    const tabLink = await within(await screen.findByTestId("account-nav")).findByText(ACCOUNT_TABS.find(t => t.tab === tab)?.title ?? "");
     await userEvent.click(tabLink);
 };

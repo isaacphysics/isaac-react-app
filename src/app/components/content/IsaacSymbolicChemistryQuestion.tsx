@@ -179,6 +179,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         sketch.isUserPrivileged = () => true;
         sketch.onNotifySymbolDrag = () => undefined;
         sketch.isTrashActive = () => false;
+        sketch.editorMode = doc.isNuclear ? "nuclear" : "chemistry";
 
         sketchRef.current = sketch;
 
@@ -290,7 +291,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 availableSymbols={modifiedAvailableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
                 editorSeed={editorSeed}
-                editorMode="chemistry"
+                editorMode={doc.isNuclear ? "nuclear" : "chemistry"}
                 questionDoc={doc}
             />}
         </div>

@@ -503,7 +503,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
         <Row className={"mt-3"}>
             <Col xs={12} sm={6}>
                 <Button
-                    className="mb-2 mb-sm-0"
+                    className="mb-2 mb-sm-0 w-100"
                     block color={siteSpecific("secondary", "primary")}
                     onClick={assign}
                     disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard) || alreadyAssignedGroupNames.length === selectedGroups.length}
@@ -512,7 +512,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
                 </Button>
             </Col>
             <Col xs={12} sm={6}>
-                <Button block color="tertiary" onClick={toggleSetAssignmentUI}>Back to schedule</Button>
+                <Button block color="tertiary" className="w-100" onClick={toggleSetAssignmentUI}>Back to schedule</Button>
             </Col>
         </Row>
     </>;

@@ -25,23 +25,16 @@ import QuestionInputValidation from "../elements/inputs/QuestionInputValidation"
 import { selectUnits, wrapUnitForSelect } from "../../services/numericUnits";
 
 export const numericInputValidator = (input: string) => {
-    const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]+";
-    const badCharacters = new RegExp(regexStr);
+    const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]";
+    const badCharacters = new RegExp(regexStr, "g");
     const operatorExpression = new RegExp(".*[0-9][+/÷-]\\.?[0-9]+");
     const missingExponentSymbol = new RegExp(".*?10-([0-9]+).*?");
     const errors = [];
 
-    if (badCharacters.test(input)) {
-        const usedBadChars: string[] = []; 
-        for(let i = 0; i < input.length; i++) {
-            const char = input.charAt(i);
-            if (badCharacters.test(char)) {
-                if (!usedBadChars.includes(char)) {
-                    usedBadChars.push(char === ' ' ? 'space' : char);
-                }
-            }
-        }
-        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+    const usedBadChars = [...input.matchAll(badCharacters)];
+    const uniqueBadChars = [...new Set(usedBadChars.map(match => match[0] === ' ' ? 'space' : match[0]))].join(" ");
+    if (usedBadChars.length > 0) {
+        errors.push('Some of the characters you are using are not allowed: ' + uniqueBadChars);
     }
     if (missingExponentSymbol.test(input)) {
         errors.push('Use a correct exponent symbol, e.g. 10^-3 or 10**-3.');
@@ -50,6 +43,13 @@ export const numericInputValidator = (input: string) => {
     }
     if (/.*?[0-9][, ][0-9]{3}.*?/.test(input)) {
         errors.push('Do not use commas or spaces as thousand separators when entering your answer.');
+    } else {
+        if (/ /.test(input.trim())) {
+            errors.push('Do not use spaces when entering your answer.');
+        }
+        if (/\d,\d|^,\d/.test(input.trim())) {
+            errors.push('Use points instead of commas as decimal separators.');
+        }
     }
     return errors;
 };

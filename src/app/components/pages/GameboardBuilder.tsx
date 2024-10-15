@@ -222,12 +222,12 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     <Col>
                         <Label htmlFor="gameboard-builder-name">{siteSpecific("Gameboard", "Quiz")} title:</Label>
                         <Input id="gameboard-builder-name"
-                               type="text"
-                               placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
-                               value={gameboardTitle}
-                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                   setGameboardTitle(e.target.value);
-                               }}
+                            type="text"
+                            placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
+                            value={gameboardTitle}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                setGameboardTitle(e.target.value);
+                            }}
                         />
                     </Col>
                 </Row>
@@ -236,40 +236,40 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     <Col>
                         <Label htmlFor="gameboard-builder-tag-as">Tag as</Label>
                         <StyledSelect inputId="question-search-level"
-                                isMulti
-                                options={siteSpecific([
-                                    {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
-                                ], [
-                                    {value: 'ISAAC_BOARD', label: 'Created by Ada'},
-                                    {value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board'}
-                                ])}
-                                name="colors"
-                                value={gameboardTags}
-                                className="basic-multi-select"
-                                classNamePrefix="select"
-                                placeholder="None"
-                                onChange={selectOnChange(setGameboardTags, false)}
+                            isMulti
+                            options={siteSpecific([
+                                {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
+                            ], [
+                                {value: 'ISAAC_BOARD', label: 'Created by Ada'},
+                                {value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board'}
+                            ])}
+                            name="colors"
+                            value={gameboardTags}
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                            placeholder="None"
+                            onChange={selectOnChange(setGameboardTags, false)}
                         />
                     </Col>
                     <Col>
                         <Label htmlFor="gameboard-builder-url">{siteSpecific("Gameboard", "Quiz")} ID</Label>
                         <Input id="gameboard-builder-url"
-                               type="text"
-                               placeholder="Optional"
-                               value={gameboardURL ?? ""}
-                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                   setGameboardURL(e.target.value);
-                               }}
-                               invalid={!isValidGameboardId(gameboardURL)}
+                            type="text"
+                            placeholder="Optional"
+                            value={gameboardURL ?? ""}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                setGameboardURL(e.target.value);
+                            }}
+                            invalid={!isValidGameboardId(gameboardURL)}
                         />
                     </Col>
                     <Col>
                         <Label htmlFor="gameboard-builder-wildcard">Wildcard</Label>
                         <Input id="gameboard-builder-wildcard"
-                               type="select" value={wildcardId}
-                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                   setWildcardId(e.target.value);
-                               }}
+                            type="select" value={wildcardId}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                setWildcardId(e.target.value);
+                            }}
                         >
                             <option value="random">Random wildcard</option>
                             {isDefined(wildcards) && wildcards.map((wildcard) => {
@@ -362,7 +362,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     </Col>
                     <div className="w-100 d-md-none"></div>
                     {/* Main two centre buttons: */}
-                    <Col className="col-12 col-md-4 order-3 order-md-2 d-flex justify-content-center justify-content-md-end">
+                    <Col className="col-12 col-md-4 order-3 order-md-2 d-flex justify-content-center justify-content-md-end pb-2 pb-md-0">
                         <ShowLoading
                             placeholder={<div className="text-center"><IsaacSpinner/></div>}
                             until={!baseGameboardId || baseGameboard}

@@ -16,6 +16,7 @@ import {QuizTeacherFeedback} from "../../pages/quizzes/QuizTeacherFeedback";
 import {QuizPreview} from "../../pages/quizzes/QuizPreview";
 import {QuizDoFreeAttempt} from "../../pages/quizzes/QuizDoFreeAttempt";
 import {TeacherAccountSelfUpgrade} from "../../pages/TeacherAccountSelfUpgrade";
+import {TeachingOrders} from "../../pages/TeachingOrders";
 import {RegistrationStart} from "../../pages/RegistrationStart";
 import {RegistrationRoleSelect} from "../../pages/RegistrationRoleSelect";
 import {RegistrationAgeCheck} from "../../pages/RegistrationAgeCheck";
@@ -92,6 +93,7 @@ export const RoutesCS = [
         componentProps={{'examBoardFilter': [EXAM_BOARD.SQA], 'stageFilter': [STAGE.SCOTLAND_NATIONAL_5,
             STAGE.SCOTLAND_HIGHER, STAGE.SCOTLAND_ADVANCED_HIGHER]}} />,
     <TrackedRoute key={key++} exact path="/exam_specifications" component={ExamSpecificationsDirectory} />,
+    <TrackedRoute key={key++} exact path="/teaching_order" component={TeachingOrders}/>,
 
     // News
     <TrackedRoute key={key++} exact path="/news" component={News} />,
@@ -111,7 +113,6 @@ export const RoutesCS = [
     // Static pages:
     <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
     <StaticPageRoute key={key++} exact path="/safeguarding" pageId="events_safeguarding" />,
-    <StaticPageRoute key={key++} exact path="/teaching_order" pageId="teaching_order" />,
     <TrackedRoute key={key++} exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherAccountSelfUpgrade}/>,
 
     // <StaticPageRoute key={key++} exact path="/student_rewards" pageId="student_rewards_programme" />,

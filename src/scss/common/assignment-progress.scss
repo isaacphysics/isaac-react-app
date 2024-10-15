@@ -240,9 +240,12 @@ $failed-bg-size: 25%;
   text-align: right;
 }
 
-.assignment-progress-options label {
-  padding-left: 1rem;
-  padding-right: 0.25rem;
+.assignment-progress-options > label {
+  margin: auto 1rem auto 0.25rem;
+  
+  > input {
+    vertical-align: middle;
+  }
 }
 
 .assignment-progress-details {

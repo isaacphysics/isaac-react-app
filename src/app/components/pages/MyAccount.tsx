@@ -57,7 +57,8 @@ import {
     validateEmailPreferences,
     validatePassword,
     isTeacherOrAbove,
-    isFirstLoginInPersistence
+    isFirstLoginInPersistence,
+    ACCOUNT_TABS
 } from "../../services";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
@@ -336,57 +337,19 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <Card>
                     <Nav tabs className={classNames("my-4 flex-wrap", {"mx-4": isAda})} data-testid="account-nav">
-                    <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.account})}>
-                            <NavLink
-                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
-                                onClick={() => setActiveTab(ACCOUNT_TAB.account)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.account))}
-                            >
-                                {siteSpecific("Profile", "Details")}
-                            </NavLink>
-                        </NavItem>
-                        {isAda && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.customise})}>
-                            <NavLink
-                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
-                                onClick={() => setActiveTab(ACCOUNT_TAB.customise)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.customise))}
-                            >
-                                Customise
-                            </NavLink>
-                        </NavItem>}
-                        <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}>
-                            <NavLink
-                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
-                                onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
-                            >
-                                <span className="d-block">Security</span>
-                            </NavLink>
-                        </NavItem>
-                        <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}>
-                            <NavLink
-                                className={siteSpecific("mx-2", "px-2")}
-                                tabIndex={0}
-                                onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)}
-                                onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.teacherconnections))}
-                            >
-                                <span className="d-none d-lg-block d-lg-block">Teacher connections</span>
-                                <span className="d-block d-lg-none">Connections</span>
-                            </NavLink>
-                        </NavItem>
-                        {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.emailpreferences})}>
-                            <NavLink
-                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
-                                onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.emailpreferences))}
-                            >
-                                <span className="d-block">Notifications</span>
-                            </NavLink>
-                        </NavItem>}
-                        {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.betafeatures})}>
-                            <NavLink
-                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
-                                onClick={() => setActiveTab(ACCOUNT_TAB.betafeatures)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.betafeatures))}
-                            >
-                                <span className="d-block">Beta</span>
-                            </NavLink>
-                        </NavItem>}
+                        {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title, titleShort}) =>
+                            <NavItem key={tab} className={classnames({active: activeTab === tab})}>
+                                <NavLink
+                                    className={siteSpecific("mx-2", "px-2")} tabIndex={0}
+                                    onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
+                                >
+                                    {titleShort ? <>
+                                        <span className="d-none d-lg-block">{title}</span>
+                                        <span className="d-block d-lg-none">{titleShort}</span>
+                                    </> : title}
+                                </NavLink>
+                            </NavItem>
+                        )}
                     </Nav>
 
                     <Form name="my-account" onSubmit={updateAccount}>

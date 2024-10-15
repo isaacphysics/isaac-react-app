@@ -687,6 +687,8 @@ export interface PageSettings {
     setFormatAsPercentage: (newValue: boolean) => void;
     isTeacher: boolean;
     assignmentOrder?: AssignmentOrderSpec;
+    attemptedOrCorrect?: "ATTEMPTED" | "CORRECT";
+    setAttemptedOrCorrect?: (newValue: "ATTEMPTED" | "CORRECT") => void;
 }
 
 export interface GameboardBuilderQuestions {
