@@ -90,7 +90,7 @@ export function generateMathsBasicFunctionsItems(): MenuItemProps[] {
     ];
 }
 
-export function generateMathsTrigFunctionItem(name: string): MenuItemProps { // ohh heck
+export function generateMathsTrigFunctionItem(name: string): MenuItemProps {
     let children: { [key: string]: any } | null = null;
     let functionName: string;
     let label: string;
