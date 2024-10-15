@@ -49,7 +49,7 @@ export function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, un
         addUpTo(doc.availableUnits, 6);
     }
 
-    if (units) {
+    if (!(doc.availableUnits && doc.availableUnits.length > 0) && units) {
         addUpTo(units, 6);
     }
 

@@ -277,43 +277,36 @@ export const updateCurrentUser = (
     async function continueSettingsUpdate() {
         const editingOtherUser = currentUser.loggedIn && currentUser.id != updatedUser.id;
 
-        try {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-            const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-            await dispatch(requestCurrentUser() as any);
+        await dispatch(requestCurrentUser() as any);
 
-            if (!editingOtherUser) {
-            // Invalidate tagged caches that are dependent on the current user's settings
-                dispatch(questionsApi.util.invalidateTags(['CanAttemptQuestionType']) as any);
-            }
+        if (!editingOtherUser) {
+        // Invalidate tagged caches that are dependent on the current user's settings
+            dispatch(questionsApi.util.invalidateTags(['CanAttemptQuestionType']) as any);
+        }
 
-            const isFirstLogin = isFirstLoginInPersistence() || false;
-            if (isFirstLogin) {
-                persistence.session.remove(KEY.FIRST_LOGIN);
-                if (redirect) {
-                    history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
-                }
-            } else if (!editingOtherUser) {
-                dispatch(showToast({
-                    title: "Account settings updated",
-                    body: "Your account settings were updated successfully.",
-                    color: "success",
-                    timeout: 5000,
-                    closable: false,
-                }) as any);
-            } else if (editingOtherUser) {
-                redirect && history.push('/');
-                dispatch(showToast({
-                    title: "Account settings updated",
-                    body: "The user's account settings were updated successfully.",
-                    color: "success",
-                    timeout: 5000,
-                    closable: false,
-                }) as any);
+        const isFirstLogin = isFirstLoginInPersistence() || false;
+        if (isFirstLogin) {
+            persistence.session.remove(KEY.FIRST_LOGIN);
+            if (redirect) {
+                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
             }
-        } catch (e: any) {
-            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+        } else if (!editingOtherUser) {
+            dispatch(showToast({
+                title: "Account settings updated",
+                body: "Your account settings were updated successfully.",
+                color: "success",
+                timeout: 5000,
+                closable: false,
+            }) as any);
+        } else if (editingOtherUser) {
+            redirect && history.push('/');
+            dispatch(showToast({
+                title: "Account settings updated",
+                body: "The user's account settings were updated successfully.",
+                color: "success",
+                timeout: 5000,
+                closable: false,
+            }) as any);
         }
     }
 
@@ -321,7 +314,15 @@ export const updateCurrentUser = (
     if (currentUser.loggedIn && currentUser.id == updatedUser.id && currentUser.email !== updatedUser.email) {
         showEmailChangeModal();
     } else {
-        continueSettingsUpdate();
+        try {
+            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
+            const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
+            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
+            continueSettingsUpdate();
+        }
+        catch (e: any) {
+            dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
+        }
     }
 };
 

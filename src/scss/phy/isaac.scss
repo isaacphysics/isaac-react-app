@@ -190,6 +190,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "../common/graph-sketcher-modal";
 @import "../common/carousel";
 @import "../common/checkbox";
+@import "../common/toggle";
 @import "boards";
 @import "../common/focus";
 @import "../common/anvil";

@@ -484,7 +484,7 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                 }
             } else {
                 // Everything else is a letter, unless we are doing chemistry
-                if (editorMode === "chemistry") {
+                if (["chemistry", "nuclear"].includes(editorMode)) {
                     // Available chemical elements
                     const item = generateChemicalElementMenuItem(availableSymbol);
                     if (item) {
@@ -528,7 +528,7 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                 upperCaseLetters: "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map(letter => generateSingleLetterMenuItem(letter)),
                 lowerCaseLetters: "abcdeghijklmnopqrsuvwxyz".split("").map(letter => generateSingleLetterMenuItem(letter)),
             }, true] as [MenuItems, boolean];
-        } else if (editorMode === "chemistry") {
+        } else if (["chemistry", "nuclear"].includes(editorMode)) {
             return [{
                 ...baseItems,
                 chemicalElements: CHEMICAL_ELEMENTS.map(generateChemicalElementMenuItem),

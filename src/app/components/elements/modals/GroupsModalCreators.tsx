@@ -97,7 +97,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
     buttons: [
         <Row key={0}>
             {/* Only teachers are allowed to add additional managers to a group. */}
-            {firstTime && isTeacherOrAbove(user) && <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+            {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pd-lg-0"  xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
                 <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap mb-3": isAda})} onClick={() => {
                     store.dispatch(closeActiveModal());
                     store.dispatch(showGroupManagersModal({group, user}));
@@ -105,7 +105,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
                     Add group managers
                 </Button>
             </Col>}
-            <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+            <Col className="pb-0 pb-md-2 pd-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
                 <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap mb-3": isAda})} onClick={() => {
                     store.dispatch(closeActiveModal());
                     history.push(PATHS.SET_ASSIGNMENTS);

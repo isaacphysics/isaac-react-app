@@ -30,6 +30,7 @@ export const mockUser = {
     lastUpdated: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
     lastSeen: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
     emailVerificationStatus: "VERIFIED" as EmailVerificationStatus,
+    loggedIn: true,
     id: 1 as const
 };
 
@@ -53,6 +54,7 @@ export const buildMockStudent = <T extends number>(id: T extends (typeof mockUse
         lastUpdated: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         lastSeen: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         emailVerificationStatus: "VERIFIED",
+        loggedIn: true,
         id: id,
     };
 };
@@ -77,6 +79,7 @@ export const buildMockTeacher = <T extends number>(id: T extends (typeof mockUse
         lastUpdated: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         lastSeen: DAYS_AGO(new Date(SOME_FIXED_FUTURE_DATE), 1),
         emailVerificationStatus: "VERIFIED",
+        loggedIn: true,
         id: id,
     };
 };

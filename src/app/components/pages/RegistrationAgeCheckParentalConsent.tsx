@@ -31,10 +31,10 @@ export const RegistrationAgeCheckParentalConsent = () => {
                 <hr />
                 <Row className="justify-content-end">
                     <Col sm={3} className="d-flex justify-content-end">
-                        <Button className={"mt-2"} outline color="secondary" onClick={history.goBack}>Back</Button>
+                        <Button className="mt-2 w-100" outline color="secondary" onClick={history.goBack}>Back</Button>
                     </Col>
                     <Col sm={4} lg={3}>
-                        <Button className={"mt-2 w-100"} color="primary" onClick={continueToDetails} disabled={!parentalConsentCheckboxChecked}>Continue</Button>
+                        <Button className="mt-2 w-100" color="primary" onClick={continueToDetails} disabled={!parentalConsentCheckboxChecked}>Continue</Button>
                     </Col>
                 </Row>
             </CardBody>

@@ -8,11 +8,12 @@ import {IsaacCardDTO} from "../../../IsaacApiTypes";
 interface IsaacCardProps {
     doc: IsaacCardDTO;
     imageClassName?: string;
+    className?: string;
 }
 
-const PhysicsCard = ({doc, imageClassName}: IsaacCardProps) => {
+const PhysicsCard = ({doc, imageClassName, className}: IsaacCardProps) => {
     const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
-    const classes = classNames("menu-card", {"disabled": disabled, "isaac-card-vertical": verticalContent});
+    const classes = classNames(className + " menu-card", {"disabled": disabled, "isaac-card-vertical": verticalContent});
     const imgSrc = image?.src && apiHelper.determineImageUrl(image.src);
 
     const link = (clickUrl && isAppLink(clickUrl)) ? <Link to={clickUrl} className={"stretched-link"} aria-label={title} aria-disabled={disabled}/> :

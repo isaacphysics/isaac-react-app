@@ -159,7 +159,7 @@ export const QuestionSearchModal = (
                 type="button"
                 value={siteSpecific("Add Selections to Gameboard", "Add selections to quiz")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
-                className={"btn btn-block btn-secondary border-0"}
+                className={"btn w-100 btn-secondary border-0"}
                 onClick={() => {
                     undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
                     currentQuestions.setSelectedQuestions(modalQuestions.selectedQuestions);

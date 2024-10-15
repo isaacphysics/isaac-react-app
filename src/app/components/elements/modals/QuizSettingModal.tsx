@@ -10,7 +10,7 @@ import {
     useGetGroupsQuery,
     useGetQuizAssignmentsSetByMeQuery,
 } from "../../../state";
-import {assignMultipleQuiz, isDefined, Item, selectOnChange, TODAY} from "../../../services";
+import {assignMultipleQuiz, isDefined, Item, selectOnChange, siteSpecific, TODAY} from "../../../services";
 import range from "lodash/range";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -166,7 +166,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
 
         <div className="w-100">
             <Button
-                className={"float-start mb-4"}
+                className={"float-start mb-4 w-100 w-sm-auto"}
                 color="tertiary"
                 disabled={isAssigning}
                 onClick={() => dispatch(closeActiveModal())}
@@ -174,12 +174,12 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                 Close
             </Button>
             <Button
-                className={"float-end mb-4"}
+                className={"float-end mb-4 w-100 w-sm-auto"}
                 disabled={groupInvalid || !feedbackMode || isAssigning || dueDateInvalid || scheduledStartDateInvalid}
                 onMouseEnter={() => setValidated(new Set(['group', 'feedbackMode']))}
                 onClick={assign}
             >
-                {isAssigning ? <IsaacSpinner size={"sm"} /> : "Set test"}
+                {isAssigning ? <IsaacSpinner size={"sm"} /> : siteSpecific("Set Test", "Set test")}
             </Button>
         </div>
     </div>;
