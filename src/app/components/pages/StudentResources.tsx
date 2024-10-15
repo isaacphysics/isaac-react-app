@@ -6,6 +6,7 @@ import { IconCard } from "../elements/cards/IconCard";
 import { useGetNewsPodListQuery } from "../../state";
 import { Link } from "react-router-dom";
 import { AdaCard } from "../elements/cards/AdaCard";
+import { ImageBlock } from "../elements/layout/ImageBlock";
 
 export const StudentResources = () => {
     const {data: studentPods} = useGetNewsPodListQuery({subject: "news"});
@@ -21,7 +22,9 @@ export const StudentResources = () => {
                         </h1>
                         <p>We&apos;ve got everything to help you study computer science - including classwork, homework, and exam prep. And it&apos;s all available for free.</p>
                     </TextBlock>
-                    <img className="p-4" src="/assets/cs/decor/learner-1.png" alt=""/>
+                    <ImageBlock>
+                        <img className="p-4" src="/assets/cs/decor/learner-1.png" alt=""/>
+                    </ImageBlock>
                 </ColumnSlice>
             </Container>
         </section>
@@ -47,7 +50,9 @@ export const StudentResources = () => {
         <section id="curriculum">
             <Container className="py-5 px-md-4 px-xxl-5 mw-1600 bg-white" fluid>
                 <ColumnSlice>
-                    <img className="p-4" src="/assets/cs/decor/questions.png" alt=""/>
+                    <ImageBlock>
+                        <img className="p-4" src="/assets/cs/decor/questions.png" alt=""/>
+                    </ImageBlock>
                     <TextBlock>
                         <h2>A full curriculum of topics</h2>
                         <p>We have over 65 learning topics that cover everything you need to learn in computer science. From computing systems and networks, to AI, machine learning, and much more.</p>
@@ -65,14 +70,18 @@ export const StudentResources = () => {
                         <p>Our self-marking questions give you hints and instant feedback as you go. You can filter by exam level, topic, or concept to find exactly what you need.</p>
                         <Button className="mt-3" tag={Link} to="/questions">Try our practise questions</Button>
                     </TextBlock>
-                    <img className="p-4" src="/assets/cs/decor/question-finder-clean.png" alt=""/>
+                    <ImageBlock>
+                        <img className="p-4" src="/assets/cs/decor/question-finder-clean.png" alt=""/>
+                    </ImageBlock>
                 </ColumnSlice>
             </Container>
         </section>
         <section id="progress">
             <Container className="py-5 px-md-4 px-xxl-5 mw-1600 bg-white" fluid>
                 <ColumnSlice>
-                    <img className="p-4" src="/assets/cs/decor/progress.png" alt=""/>
+                    <ImageBlock>
+                        <img className="p-4" src="/assets/cs/decor/progress.png" alt=""/>
+                    </ImageBlock>
                     <TextBlock>
                         <h2>Track your progress</h2>
                         <p>With an Ada account, all your answers get saved so you can see what to work on and how you’re progressing. And you can track any assignments set by your teacher.</p>
@@ -156,21 +165,21 @@ export const StudentResources = () => {
                         image: {src: "https://adacomputerscience.org/images/content/news/pods/figures/ada_cs_max_f_pod.png"},
                         bodyText: "Explore how Max’s passion for computer science led him to become a software engineer through a digital technology solutions apprenticeship.",
                         buttonText: "Read more",
-                        clickUrl: "/"
+                        clickUrl: "/pages/20240730_max_fordham"
                     }}/>
                     <AdaCard card={{
                         title: "Meghna Asthana",
                         image: {src: "https://adacomputerscience.org/images/content/news/pods/figures/ada_cs_meghna_a_pod.png"},
                         bodyText: "Discover how Meghna turned her passion for coding into a career in computer vision, where she now works on innovative projects addressing environmental challenges.",
                         buttonText: "Read more",
-                        clickUrl: "/"
+                        clickUrl: "/pages/20240313_meghan_asthana"
                     }}/>
                     <AdaCard card={{
                         title: "Lella Halloum",
                         image: {src: "https://adacomputerscience.org/images/content/news/pods/figures/ada_cs_lella_h_pod.png"},
                         bodyText: "Meet Lella, a young digital changemaker who uses technology to inspire, engage, and upskill the next generation of talent.",
                         buttonText: "Read more",
-                        clickUrl: "/"
+                        clickUrl: "/pages/20240215_lella_halloum"
                     }}/>
                 </ColumnSlice>
                 <div className="d-flex justify-content-center">
