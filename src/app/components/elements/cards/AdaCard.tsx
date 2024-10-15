@@ -13,6 +13,7 @@ export interface AdaCardContentProps {
     buttonText?: string;
     buttonStyle?: "outline" | "link" | "card";
     disabled?: boolean;
+    className?: string;
 }
 
 export interface AdaCardProps extends ContainerProps {
@@ -22,7 +23,7 @@ export interface AdaCardProps extends ContainerProps {
 export const AdaCard = ({card, ...props}: AdaCardProps) => {
     const {title, image, bodyText, clickUrl, buttonText, buttonStyle, disabled} = card;
     return <Container {...props} className={classNames("cs-card-container px-3 my-3", props?.className ?? "")}>
-        <Card className={"cs-card border-0"} tag={buttonStyle === "card" ? Link : Card}>
+        <Card className={classNames("cs-card border-0", card.className)} tag={buttonStyle === "card" ? Link : Card}>
             {image && <CardImg src={image.src} alt={image.altText ?? ""} className={image.className ?? ""}/>}
             <div className={classNames("d-flex flex-column h-100", {"pb-4" : !clickUrl || buttonStyle === "card"})}>
                 <CardTitle className="px-4 mt-4">
