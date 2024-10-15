@@ -1,15 +1,3 @@
-.bg-dark-pink {
-  background-color: $dark-pink-200;
-}
-
-img.full-background-img {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
 .backslash-left {
   position: relative;
 
@@ -31,19 +19,4 @@ img.full-background-img {
   background: url(/assets/cs/decor/decor-purple.png) no-repeat center center;
   background-size: 100% 100%;
   border-radius: 15px;
-}
-
-.text-block {
-  h2, p {
-    margin-bottom: 1.2rem;
-  }
-}
-
-.image-block {
-  object-fit: contain;
-  @extend .vertical-center;
-
-  > img {
-    width: 100%;
-  }
 }
