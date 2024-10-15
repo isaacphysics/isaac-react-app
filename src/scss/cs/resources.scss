@@ -1,3 +1,7 @@
+.bg-cyan {
+  background-color: $cyan-200;
+}
+
 .bg-dark-pink {
   background-color: $dark-pink-200;
 }
@@ -37,8 +41,19 @@ img.full-background-img {
   }
 }
 
+.challenges-block {
+  background: url(/assets/cs/decor/decor-cyan.png) no-repeat center center;
+  background-size: cover;
+}
+
 .help-block {
   background: url(/assets/cs/decor/decor-purple.png) no-repeat center center;
+  background-size: cover;
+  border-radius: 15px;
+}
+
+.student-help-block {
+  background: url(/assets/cs/decor/decor-cyan-2.png) no-repeat center center;
   background-size: cover;
   border-radius: 15px;
 }
