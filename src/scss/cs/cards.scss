@@ -49,10 +49,11 @@ $cards-per-line: (
   height: 100%;
   display: flex;
   flex-direction: column;
-
+  
   > img {
     aspect-ratio: 16/9;
     border-radius: 1rem 1rem 0 0;
+    object-fit: cover;
   }
 }
 
@@ -102,6 +103,15 @@ $cards-per-line: (
   max-width: unset;
 }
 
+a.icon-card, a.cs-card {
+  text-decoration: none !important;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
 @container icon-card (min-width: 480px) {
   .icon-card {
     flex-direction: row;
@@ -128,6 +138,16 @@ $cards-per-line: (
       @include svg-color(url('/assets/common/icons/chevron_right.svg'), $dark-pink-300);
       mask-size: cover;
     }
+  }
+
+  .external-link::after {
+    content: "";
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    margin-left: 4px;
+    background: url(/assets/cs/icons/external-link.svg) no-repeat center center;
+    vertical-align: middle;
   }
 }
 
