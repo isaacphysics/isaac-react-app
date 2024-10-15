@@ -159,7 +159,7 @@ export const QuestionSearchModal = (
                 type="button"
                 value={siteSpecific("Add Selections to Gameboard", "Add selections to quiz")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
-                className={"btn btn-block btn-secondary border-0"}
+                className={"btn w-100 btn-secondary border-0"}
                 onClick={() => {
                     undoStack.push({questionOrder: currentQuestions.questionOrder, selectedQuestions: currentQuestions.selectedQuestions});
                     currentQuestions.setSelectedQuestions(modalQuestions.selectedQuestions);
@@ -187,7 +187,8 @@ export const QuestionSearchModal = (
                         {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
                         {value: "physics_linking_concepts", label: "Linking Concepts in Pre-Uni Physics"},
                         {value: "maths_book_gcse", label: "GCSE Maths"},
-                        {value: "maths_book", label: "Pre-Uni Maths"},
+                        {value: "maths_book_2e", label: "Pre-Uni Maths (2nd edition)"},
+                        {value: "maths_book", label: "Pre-Uni Maths (1st edition)"},
                         {value: "chemistry_16", label: "A-Level Physical Chemistry"}
                     ]}
                 />

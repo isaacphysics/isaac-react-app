@@ -244,7 +244,7 @@ export const AdminUserManager = () => {
                 <RS.CardFooter>
                     <RS.Row>
                         <RS.Col md={{size: 4, offset: 4}} >
-                            <RS.Input type="submit" value="Search" className="btn btn-block btn-secondary border-0"/>
+                            <RS.Input type="submit" value="Search" className="btn w-100 btn-secondary border-0"/>
                         </RS.Col>
                     </RS.Row>
                 </RS.CardFooter>

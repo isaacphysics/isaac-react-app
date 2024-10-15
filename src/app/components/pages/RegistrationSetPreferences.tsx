@@ -112,12 +112,12 @@ export const RegistrationSetPreferences = () => {
                                 submissionAttempted={false}
                             />
                             <hr />
-                            <Row>
-                                <Col xs={12} sm={6} className={classNames("d-flex justify-content-center", {"justify-content-lg-end": isAda})}>
-                                    <Button className={`my-2 px-2 ${siteSpecific("px-lg-0", "px-lg-3")}`} outline color="secondary" onClick={continueToAfterAuthPath}>I&apos;ll do this later</Button>
+                            <Row className="justify-content-end">
+                                <Col xs={12} sm={siteSpecific(4,5)} lg={6} className={classNames("d-flex justify-content-end", {"justify-content-lg-end": isAda})}>
+                                    <Button className={`my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`} outline color="secondary" onClick={continueToAfterAuthPath}>I&apos;ll do this later</Button>
                                 </Col>
-                                <Col xs={12} sm={6} className="d-flex justify-content-center">
-                                    <Button type="submit" className={`btn btn-primary my-2 px-2", ${siteSpecific("px-lg-0", "px-lg-3")}`} disabled={!canSavePreferences}>Save preferences</Button>
+                                <Col xs={12} sm={5} lg={6} className="d-flex">
+                                    <Button type="submit" className={`btn btn-primary my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`} disabled={!canSavePreferences}>Save preferences</Button>
                                 </Col>
                             </Row>
                         </Form>

@@ -21,7 +21,8 @@ import {
     DropdownToggle,
     InputGroup,
     Label,
-    UncontrolledButtonDropdown
+    UncontrolledButtonDropdown,
+    UncontrolledTooltip
 } from "reactstrap";
 import sortBy from "lodash/sortBy";
 import {
@@ -43,6 +44,7 @@ import {
 } from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {
+    above,
     API_PATH,
     below,
     getAssignmentCSVDownloadLink,
@@ -68,6 +70,7 @@ import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { QuizProgressDetails } from "./quizzes/QuizTeacherFeedback";
+import StyledToggle from "../elements/inputs/StyledToggle";
 
 enum GroupSortOrder {
     Alphabetical = "Alphabetical",
@@ -75,6 +78,8 @@ enum GroupSortOrder {
 }
 
 export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
+
+    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
 
     const questions = assignment.gameboard.contents;
 
@@ -111,11 +116,22 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
     
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     const [assignmentAverages, assignmentTotalQuestionParts] = useMemo<[number[], number]>(() => {
-        return questions?.reduce(([aAvg, aTQP], q, i) => {
-            const tickCount = progress.reduce((tc, p) => ["PASSED", "PERFECT"].includes((p.results || [])[i]) ? tc + 1 : tc, 0);
-            const tickPercent = Math.round(100 * (tickCount / progress.length));
-            return [[...aAvg, tickPercent], aTQP + (q.questionPartsTotal ?? 0)];
-        }, [[] as number[], 0]) ?? [[], 0];
+        if (assignmentProgressContext.attemptedOrCorrect === "ATTEMPTED") {
+            // for each column, calculate the percentage of students who attempted at all parts of the question
+            return questions?.reduce(([aAvg, aTQP], q, i) => {
+                const attemptedAllPartsCount = progress.reduce((tc, p) => ((p as AuthorisedAssignmentProgress)?.notAttemptedPartResults?.[i] === 0) ? tc + 1 : tc, 0);
+                const attemptedAllPartsPercent = Math.round(100 * (attemptedAllPartsCount / progress.length));
+                return [[...aAvg, attemptedAllPartsPercent], aTQP + (q.questionPartsTotal ?? 0)];
+            }, [[] as number[], 0]) ?? [[], 0];
+
+        } else {
+            // for each column, calculate the percentage of students who got all parts of the question correct
+            return questions?.reduce(([aAvg, aTQP], q, i) => {
+                const tickCount = progress.reduce((tc, p) => ((p.results || [])[i] === "PERFECT") ? tc + 1 : tc, 0);
+                const tickPercent = Math.round(100 * (tickCount / progress.length));
+                return [[...aAvg, tickPercent], aTQP + (q.questionPartsTotal ?? 0)];
+            }, [[] as number[], 0]) ?? [[], 0];
+        }
     }, [questions, progress]);
 
     function markClassesInternal(studentProgress: AssignmentProgressDTO, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
@@ -252,29 +268,52 @@ const LegendKey = ({cellClass, description}: {cellClass: string, description?: s
     </li>;
 };
 
-export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: boolean}) => {
+export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey?: boolean, id?: string}) => {
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
+    const deviceSize = useDeviceSize();
     return <div className="p-4"><div className="assignment-progress-legend">
         {showQuestionKey && <>
-            <Label htmlFor="question-key">Question key:</Label>
-            <ul id="question-key" className="block-grid-xs-3">
+            <Label htmlFor={`question-key-${id}`}>Question key:</Label>
+            <ul id={`question-key-${id}`} className="block-grid-xs-3">
                 <QuestionKey icon={ICON.correct} description="Correct"/>
                 <QuestionKey icon={ICON.notAttempted} description="Not&nbsp;attempted"/>
                 <QuestionKey icon={ICON.incorrect} description="Incorrect"/>
             </ul>
         </>}
-        {showQuestionKey && <Label htmlFor="key" className="mt-2">Section key:</Label>}
+        {showQuestionKey && <Label htmlFor={`key-${id}`} className="mt-2">Section key:</Label>}
         <div className="d-flex flex-row flex-sm-column justify-content-between">
-            <ul id="key" className="block-grid-xs-1 block-grid-sm-2 block-grid-md-5 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
+            <ul id={`key-${id}`} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-5 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
                 <LegendKey cellClass="completed" description={`100% correct`}/>
                 <LegendKey cellClass="passed" description={`≥${passMark * 100}% correct`}/>
                 <LegendKey cellClass="in-progress" description={`<${passMark * 100}% correct`}/>
-                <LegendKey cellClass="" description={`Not attempted`}/>
                 <LegendKey cellClass="failed" description={`>${100 - (passMark * 100)}% incorrect`}/>
+                <LegendKey cellClass="" description={`Not attempted`}/>
             </ul>
-            <div className="d-flex flex-column flex-sm-row assignment-progress-options justify-content-end">
-                <label>Colour-blind&nbsp;<input type="checkbox" checked={pageSettings.colourBlind} onChange={e => pageSettings.setColourBlind(e.target.checked)}/></label>
-                <label>Percent view&nbsp;<input type="checkbox" checked={pageSettings.formatAsPercentage} onChange={e => pageSettings.setFormatAsPercentage(e.target.checked)}/></label>
+            <div className="d-sm-flex flex-sm-row justify-content-sm-evenly assignment-progress-options">
+                <div className="d-flex flex-column align-items-center mt-sm-2">
+                    <span>Colour-blind mode</span>
+                    <StyledToggle falseLabel="Disabled" trueLabel="Enabled" checked={pageSettings.colourBlind} onChange={(e) => pageSettings.setColourBlind?.(e.currentTarget.checked)} />
+                </div>
+                
+                <div className="d-flex flex-column align-items-center mt-2">
+                    <span>Table display mode</span>
+                    <StyledToggle falseLabel="Fractions" trueLabel="Percentages" checked={pageSettings.formatAsPercentage} onChange={(e) => pageSettings.setFormatAsPercentage?.(e.currentTarget.checked)} />
+                </div>
+
+                <div className="d-flex flex-column align-items-center mt-2">
+                    <div className="d-flex flex-row h-100">
+                        <span>Class average mode</span>
+                        {above["md"](deviceSize) && <>
+                            <span id={`attempted-toggle-${id}`} className="icon-help"/>
+                            <UncontrolledTooltip className="spaced-tooltip" placement="left" autohide={false} target={`attempted-toggle-${id}`}>
+                                This toggle changes what the percentages at the top and bottom of the table represent.<br/><br/>
+                                <b>Attempted</b> displays the percentage of students who have attempted all parts of that question.<br/><br/>
+                                <b>Correct</b> displays the percentage of students who have achieved full marks on that question.
+                            </UncontrolledTooltip>
+                        </>}
+                    </div>
+                    <StyledToggle falseLabel="Attempted" trueLabel="Correct" checked={pageSettings.attemptedOrCorrect === "CORRECT"} onChange={(e) => pageSettings.setAttemptedOrCorrect?.(e.currentTarget.checked ? "CORRECT" : "ATTEMPTED")} />
+                </div>
             </div>
         </div>
     </div></div>;
@@ -354,7 +393,7 @@ const GroupDetails = ({group, user}: {group: AppGroup, user: RegisteredUserDTO})
         : <div className="p-4 text-center">There are no tests assigned to this group.</div>;
 
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-        <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} />
+        <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} id={`legend-${group.id}`} />
         {/* Only full teachers can see the tests tab */}
         {pageSettings.isTeacher
             ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>

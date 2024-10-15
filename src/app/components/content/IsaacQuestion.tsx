@@ -265,13 +265,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                             {secondaryAction &&
                             <div
                                 className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3": primaryAction})}>
-                                <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block"/>
+                                <input {...secondaryAction} className="h-100 btn btn-outline-primary w-100"/>
                             </div>
                             }
                             {primaryAction &&
                             <div
                                 className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"ps-sm-2 ps-md-0 ps-lg-3": secondaryAction})}>
-                                <input {...primaryAction} className="h-100 btn btn-secondary btn-block"/>
+                                <input {...primaryAction} className="h-100 btn btn-secondary w-100"/>
                             </div>
                             }
                         </div>

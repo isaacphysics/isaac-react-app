@@ -51,12 +51,12 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
             className={"d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row mb-4"}>
             {secondaryAction &&
             <div className={"m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 pe-sm-2 pe-md-0 pe-lg-3"}>
-                <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block"/>
+                <input {...secondaryAction} className="h-100 btn btn-outline-primary w-100"/>
             </div>}
             <div className={"m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ps-sm-2 ps-md-0 ps-lg-3"}>
                 <input
                     onClick={toggle} value={isVisible ? "Hide answer" : "Show answer"}
-                    className={classNames("h-100 btn btn-secondary btn-block", {"active": isVisible})}
+                    className={classNames("h-100 btn btn-secondary w-100", {"active": isVisible})}
                 />
             </div>
         </div>;

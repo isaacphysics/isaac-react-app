@@ -18,10 +18,34 @@ interface CoordinateInputProps {
     remove?: () => void;
 }
 
-export const coordinateInputValidator = (input: string) => {
-    const errors = [];
-    if (/[0-9]\s*[+/÷\-x×]\s*[0-9]/.test(input)) {
-        errors.push('Simplify your answer into a single decimal number.');
+export const coordinateInputValidator = (input: string[][]) => {
+    const errors: string[] = [];
+    const allBadChars: string[] = [];
+    let containsComma = false;
+    let containsOperator = false;
+    input.forEach((coordinate) => {
+        coordinate.forEach((value) => {
+            if (value.includes(",")) {
+                containsComma = true;
+            }
+            if (/[0-9]\s*[+/÷\-x×]\s*[0-9]/.test(value)) {
+                containsOperator = true;
+            }
+            const foundBadChars =  [...value.matchAll(/[^ 0-9+-.eE]/g)];
+            if (foundBadChars.length > 0) {
+                allBadChars.push(foundBadChars.toString());
+            }
+        });
+    });
+    if (containsComma) {
+        errors.push('Your answer should not contain commas. Enter each part of your answer in a separate box.');
+    }
+    if (containsOperator) {
+        errors.push('Simplify each part of your answer into a single decimal number.');
+    }
+    if (allBadChars.length > 0) {
+        const uniqueBadChars = [...new Set(allBadChars.toString())].filter(e => e !== ",").join(" ");
+        errors.push('Some of the characters you are using are not allowed: ' + uniqueBadChars);
     }
     return errors;
 };
@@ -115,7 +139,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                     onChange={value => updateItem(0, value)}
                 />
         }
-        <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => ((answer.x ?? "").concat(" ", answer.y ?? ""))).toString() ?? ""} validator={coordinateInputValidator}/>
+        <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => [answer.x ?? "", answer.y ?? ""]) ?? []} validator={coordinateInputValidator}/>
         {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={() => updateItem(currentAttempt?.items?.length ?? 1, {...DEFAULT_COORDINATE_ITEM})}>Add coordinate</Button>}
     </div>;
 };
