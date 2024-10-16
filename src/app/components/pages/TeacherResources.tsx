@@ -17,7 +17,7 @@ export const TeacherResources = () => {
 
     return <>
         <section id="resources-header" className="bg-dark-pink">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock className="text-white">
                         <h1 className="font-size-1-75 font-size-md-2-5">
@@ -33,7 +33,7 @@ export const TeacherResources = () => {
             </Container>
         </section>
         <section id="latest-updates">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 position-relative" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/swirls-1.png" alt=""/>
                 <ColumnSlice>
                     <TextBlock className="pe-5">
@@ -52,7 +52,7 @@ export const TeacherResources = () => {
                 </ColumnSlice>
             </Container>
 
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 bg-white" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <ColumnSlice>
                     <ImageBlock>
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.png" alt=""/>
@@ -67,7 +67,7 @@ export const TeacherResources = () => {
             </Container>
         </section>
         <section id="tools">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 position-relative" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/swirls-2.png" alt=""/>
                 <TextBlock md={8}>
                     <h2>Tools to help you teach</h2>
@@ -114,7 +114,7 @@ export const TeacherResources = () => {
             </Container>
         </section>
         <section id="cpd">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 bg-white" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <TextBlock md={8}>
                     <h2>Professional development</h2>
                     <p>Learn new skills and build confidence with our free courses for continuing professional development (CPD). They&apos;re designed to support you, whatever your level of experience.</p>
@@ -140,7 +140,7 @@ export const TeacherResources = () => {
             </Container>
         </section>
         <section id="more-resources">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 position-relative" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/decor-cyan.png" alt=""/>
                 <ColumnSlice>
                     <TextBlock>
@@ -161,7 +161,7 @@ export const TeacherResources = () => {
                 </ColumnSlice>
             </Container>
 
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 bg-white" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <TextBlock md={8}>
                     <h2>More teaching resources</h2>
                     <p>Support, lesson plans, ideas, and tools from thr Raspberry Pi Foundation&apos;s world class range of computer science resources.</p>
@@ -194,7 +194,7 @@ export const TeacherResources = () => {
                 </ColumnSlice>
             </Container>
 
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 bg-black" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 bg-black" fluid>
                 <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
                     <h2>
                         &ldquo;Ada Computer Science has eliminated the need for textbooks for A level Computer Science. There is rarely a need for any other sources of information when planning lessons and it&apos;s free!&rdquo;
@@ -204,7 +204,7 @@ export const TeacherResources = () => {
             </Container>
         </section>
         <section id="help-and-support">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 position-relative bg-white" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 position-relative bg-white" fluid>
                 <TextBlock className="text-white text-center m-3 p-5 help-block">
                     <h3>Need help?</h3>
                     <p>Our teacher support page has lots of information for common questions and issues.</p>

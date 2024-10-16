@@ -13,7 +13,7 @@ export const StudentResources = () => {
     const featuredPod = studentPods?.[0];
     return <>
         <section id="resources-header" className="bg-cyan">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock>
                         <h1>
@@ -23,13 +23,13 @@ export const StudentResources = () => {
                         <p>We&apos;ve got everything to help you study computer science - including classwork, homework, and exam prep. And it&apos;s all available for free.</p>
                     </TextBlock>
                     <ImageBlock>
-                        <img className="p-4" src="/assets/cs/decor/learner-1.png" alt=""/>
+                        <img className="px-4" src="/assets/cs/decor/learner-1.png" alt=""/>
                     </ImageBlock>
                 </ColumnSlice>
             </Container>
         </section>
         <section id="updates">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 swirls-img" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 swirls-img" fluid>
                 <ColumnSlice>
                     <TextBlock>
                         <h2>Our latest updates</h2>
@@ -48,7 +48,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="curriculum">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 bg-white" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <ColumnSlice>
                     <ImageBlock>
                         <img className="p-4" src="/assets/cs/decor/questions.png" alt=""/>
@@ -63,7 +63,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="practice-questions">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock>
                         <h2>Over 1000 practise questions</h2>
@@ -77,7 +77,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="progress">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 bg-white" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <ColumnSlice>
                     <ImageBlock>
                         <img className="p-4" src="/assets/cs/decor/progress.png" alt=""/>
@@ -92,7 +92,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="student-challenges">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 challenges-block" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 challenges-block" fluid>
                 <ColumnSlice>
                     <TextBlock>
                         <h2>Win prizes with our student challenges</h2>
@@ -113,7 +113,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="further-learning">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 bg-white" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <TextBlock>
                     <h2>Further learning</h2>
                     <p>More projects, challenges, and tools from the Raspberry Pi Foundation’s world class range of computer science resources.</p> 
@@ -144,7 +144,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="testimonial">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 bg-black" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 bg-black" fluid>
                 <TextBlock xs={{size: 8, offset: 2}} className="backslash-left text-white">
                     <h2>
                         &ldquo;I love Ada! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.&rdquo;
@@ -154,7 +154,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="careers">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600" fluid>
                 <TextBlock>
                     <h2>Explore a career in computer science</h2>
                     <p>Read stories from graduates at the early stages of their careers in software development, game design, research, and much more.</p> 
@@ -182,7 +182,7 @@ export const StudentResources = () => {
                         clickUrl: "/pages/20240215_lella_halloum"
                     }}/>
                 </ColumnSlice>
-                <div className="d-flex justify-content-center">
+                <div className="d-flex justify-content-center mt-3">
                     <Link to="" target="_blank">
                         <strong className="link-dark-pink">View more stories</strong>
                     </Link>
@@ -191,7 +191,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="help-and-support">
-            <Container className="py-5 px-md-4 px-xxl-5 mw-1600 position-relative bg-white" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 position-relative bg-white" fluid>
                 <TextBlock className="text-center m-3 p-5 student-help-block">
                     <h3>Need help?</h3>
                     <p>Our student support page has lots of information for common questions and issues.</p>
