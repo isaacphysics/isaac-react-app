@@ -34,9 +34,7 @@ export const TeacherResources = () => {
         </section>
         <section id="latest-updates">
             <Container className="py-5 px-md-4 px-xxl-5 mw-1600 position-relative" fluid>
-                <ImageBlock>
-                    <img className="full-background-img" src="/assets/cs/decor/swirls-1.png" alt=""/>
-                </ImageBlock>
+                <img className="full-background-img" src="/assets/cs/decor/swirls-1.png" alt=""/>
                 <ColumnSlice>
                     <TextBlock className="pe-5">
                         <h2>Our latest updates</h2>
@@ -70,9 +68,7 @@ export const TeacherResources = () => {
         </section>
         <section id="tools">
             <Container className="py-5 px-md-4 px-xxl-5 mw-1600 position-relative" fluid>
-                <ImageBlock>
-                    <img className="full-background-img" src="/assets/cs/decor/swirls-2.png" alt=""/>
-                </ImageBlock>
+                <img className="full-background-img" src="/assets/cs/decor/swirls-2.png" alt=""/>
                 <TextBlock md={8}>
                     <h2>Tools to help you teach</h2>
                     <p>An Ada account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.</p>
@@ -145,9 +141,7 @@ export const TeacherResources = () => {
         </section>
         <section id="more-resources">
             <Container className="py-5 px-md-4 px-xxl-5 mw-1600 position-relative" fluid>
-                <ImageBlock>
-                    <img className="full-background-img" src="/assets/cs/decor/decor-cyan.png" alt=""/>
-                </ImageBlock>
+                <img className="full-background-img" src="/assets/cs/decor/decor-cyan.png" alt=""/>
                 <ColumnSlice>
                     <TextBlock>
                         <h2>Student challenges</h2>
