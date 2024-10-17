@@ -3,7 +3,7 @@ import {IsaacCard} from "./IsaacCard";
 import {IsaacCardDeckDTO} from "../../../IsaacApiTypes";
 import {Col, Container, Row} from "reactstrap";
 import classNames from "classnames";
-import {isAda, isPhy, siteSpecific} from "../../services";
+import {isPhy, siteSpecific} from "../../services";
 
 
 const MAX_CARDS_IN_CONTENT_DEFINED_DECK = 3;
