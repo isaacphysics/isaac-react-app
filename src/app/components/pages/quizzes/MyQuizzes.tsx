@@ -165,11 +165,11 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     let [currentQuizzes, overdueQuizzes] = partition(quizAssignments, a => a?.dueDate ? (todaysDate > a.dueDate) : false);
     currentQuizzes = currentQuizzes.toSorted(sortByDate);
     overdueQuizzes = overdueQuizzes.toSorted(sortByDate).reverse();
-    const sortedQuizAssignments = overdueQuizzes.concat(currentQuizzes);
 
     const assignmentsAndAttempts = [
-        ...isFound(sortedQuizAssignments) ? sortedQuizAssignments : [],
+        ...isFound(overdueQuizzes) ? overdueQuizzes : [],
         ...isFound(freeAttempts) ? freeAttempts : [],
+        ...isFound(currentQuizzes) ? currentQuizzes : []
     ];
     const [completedQuizzes, incompleteQuizzes] = partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts);
 
