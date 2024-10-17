@@ -16,7 +16,7 @@ export const TeacherResources = () => {
     const user = useAppSelector(selectors.user.orNull);
 
     return <div id="teacher-resources">
-        <section id="resources-header" className="bg-dark-pink">
+        <section id="resources-header" className="bg-dark-pink-200">
             <Container className="py-5 homepage-x-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock className="text-white">
@@ -34,7 +34,7 @@ export const TeacherResources = () => {
         </section>
         <section id="latest-updates">
             <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
-                <img className="full-background-img" src="/assets/cs/decor/swirls-1.png" alt=""/>
+                <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock className="pe-5">
                         <h2>Our latest updates</h2>
@@ -68,7 +68,7 @@ export const TeacherResources = () => {
         </section>
         <section id="tools">
             <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
-                <img className="full-background-img" src="/assets/cs/decor/swirls-2.png" alt=""/>
+                <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <TextBlock md={8}>
                     <h2>Tools to help you teach</h2>
                     <p>An Ada account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.</p>
@@ -141,7 +141,7 @@ export const TeacherResources = () => {
         </section>
         <section id="more-resources">
             <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
-                <img className="full-background-img" src="/assets/cs/decor/decor-cyan.png" alt=""/>
+                <img className="full-background-img bg-cyan-200" src="/assets/cs/decor/slice-bg-1.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock>
                         <h2>Student challenges</h2>
@@ -154,7 +154,7 @@ export const TeacherResources = () => {
                         icon: {src: "/assets/cs/icons/lightbulb-cyan.svg"},
                         bodyText: "Join the Enigma Challenge now to prepare for stage 1 of this year's exciting competition!",
                         tag: "Starting 1st October",
-                        clickUrl: "/TODO",
+                        clickUrl: "/pages/student_challenges",
                         buttonText: "Read more",
                         buttonStyle: "link",
                     }}/>
@@ -206,7 +206,7 @@ export const TeacherResources = () => {
         <section id="help-and-support">
             <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <div className="py-4 position-relative">
-                    <img className="full-background-img border-radius-3" src="/assets/cs/decor/decor-purple.png" alt=""/>
+                    <img className="full-background-img border-radius-3 bg-dark-pink-300" src="/assets/cs/decor/help-slice-purple.svg" alt=""/>
                     <TextBlock className="py-3 text-center text-white">
                         <h3>Need help?</h3>
                         <p>Our teacher support page has lots of information for common questions and issues.</p>

@@ -15,11 +15,15 @@
   }
 }
 
-.bg-dark-pink {
+.bg-dark-pink-200 {
   background-color: $dark-pink-200;
 }
 
-.bg-cyan {
+.bg-dark-pink-300 {
+  background-color: $dark-pink-300;
+}
+
+.bg-cyan-200 {
   background-color: $cyan-200;
 }
 
@@ -29,4 +33,5 @@ img.full-background-img {
   position: absolute;
   left: 0;
   top: 0;
+  object-fit: cover;
 }

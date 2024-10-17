@@ -12,7 +12,7 @@ export const StudentResources = () => {
     const {data: studentPods} = useGetNewsPodListQuery({subject: "news"});
     const featuredPod = studentPods?.[0];
     return <div id="student-resources">
-        <section id="resources-header" className="bg-cyan">
+        <section id="resources-header" className="bg-cyan-200">
             <Container className="py-5 homepage-x-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock>
@@ -30,7 +30,7 @@ export const StudentResources = () => {
         </section>
         <section id="updates">
             <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
-                <img className="full-background-img" src="/assets/cs/decor/swirls-1.png" alt=""/>
+                <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock className="pe-5">
                         <h2>Our latest updates</h2>
@@ -52,7 +52,7 @@ export const StudentResources = () => {
             <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <ColumnSlice>
                     <ImageBlock>
-                        <img className="p-4" src="/assets/cs/decor/questions.png" alt=""/>
+                        <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
                         <h2>A full curriculum of topics</h2>
@@ -72,7 +72,7 @@ export const StudentResources = () => {
                         <Button className="mt-3" tag={Link} to="/questions">Try our practise questions</Button>
                     </TextBlock>
                     <ImageBlock>
-                        <img className="p-4" src="/assets/cs/decor/question-finder-clean.png" alt=""/>
+                        <img className="px-md-2 px-xl-4" src="/assets/cs/decor/question-finder-clean.svg" alt=""/>
                     </ImageBlock>
                 </ColumnSlice>
             </Container>
@@ -81,7 +81,7 @@ export const StudentResources = () => {
             <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <ColumnSlice>
                     <ImageBlock>
-                        <img className="p-4" src="/assets/cs/decor/progress.png" alt=""/>
+                        <img className="px-md-2 px-xl-4" src="/assets/cs/decor/progress.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
                         <h2>Track your progress</h2>
@@ -94,7 +94,7 @@ export const StudentResources = () => {
         </section>
         <section id="student-challenges">
             <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
-                <img className="full-background-img" src="/assets/cs/decor/decor-cyan.png" alt=""/>
+                <img className="full-background-img bg-cyan-200" src="/assets/cs/decor/slice-bg-1.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock>
                         <h2>Win prizes with our student challenges</h2>
@@ -107,7 +107,7 @@ export const StudentResources = () => {
                         icon: {src: "/assets/cs/icons/lightbulb-cyan.svg"},
                         bodyText: "Join the Enigma Challenge now to prepare for stage 1 of this year's exciting competition!",
                         tag: "Starting 1st October",
-                        clickUrl: "/TODO",
+                        clickUrl: "/pages/student_challenges",
                         buttonText: "Read more",
                         buttonStyle: "link",
                     }}/>
@@ -198,7 +198,7 @@ export const StudentResources = () => {
         <section id="help-and-support">
             <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <div className="py-4 position-relative">
-                    <img className="full-background-img border-radius-3" src="/assets/cs/decor/decor-cyan-2.png" alt=""/>
+                    <img className="full-background-img border-radius-3 bg-cyan-200" src="/assets/cs/decor/help-slice-cyan.svg" alt=""/>
                     <TextBlock className="py-3 text-center">
                         <h3>Need help?</h3>
                         <p>Our student support page has lots of information for common questions and issues.</p>

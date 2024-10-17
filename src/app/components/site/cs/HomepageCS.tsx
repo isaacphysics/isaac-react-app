@@ -54,7 +54,7 @@ export const HomepageCS = () => {
             </section>
             <section id="news-and-updates">
                 <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
-                    <img className="full-background-img" src="/assets/cs/decor/swirls-1.png" alt=""/>
+                    <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                     <ColumnSlice>
                         <TextBlock className="pe-5">
                             <h2>Our latest updates</h2>
@@ -120,8 +120,8 @@ export const HomepageCS = () => {
                         </TextBlock>
                         <ImageBlock>
                             <picture>
-                                <source srcSet="/assets/cs/decor/question-finder-clean.png" type="image/png"/>
-                                <img className={"d-block w-100"} src={"/assets/cs/decor/question-finder-clean.png"} alt="" />
+                                <source srcSet="/assets/cs/decor/question-finder-clean.svg" type="image/png"/>
+                                <img className={"d-block w-100"} src={"/assets/cs/decor/question-finder-clean.svg"} alt="" />
                             </picture>
                         </ImageBlock>
                     </ColumnSlice>
