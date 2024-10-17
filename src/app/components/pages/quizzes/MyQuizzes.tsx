@@ -24,7 +24,7 @@ import {Tabs} from "../../elements/Tabs";
 import {useGetAvailableQuizzesQuery} from "../../../state";
 import {PageFragment} from "../../elements/PageFragment";
 import { CardGrid } from "../../elements/CardGrid";
-import { partition } from "lodash";
+import partition from "lodash/partition";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
