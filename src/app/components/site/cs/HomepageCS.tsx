@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
+import {useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardFooter, CardTitle, Col, Container, Row} from "reactstrap";
 import {PATHS, SITE_TITLE, useDeviceSize} from "../../../services";
@@ -16,9 +16,8 @@ import { AdaCard } from "../../elements/cards/AdaCard";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
-    const user = useAppSelector(selectors.user.orNull);
     const {data: news} = useGetNewsPodListQuery({subject: "news"});
-    const featuredNewsItem = (news && user?.loggedIn) ? news[0] : undefined;
+    const featuredNewsItem = news ? news[0] : undefined;
     const deviceSize = useDeviceSize();
 
     return <>
@@ -76,10 +75,10 @@ export const HomepageCS = () => {
             <section id="benefits-for-teachers-and-students" className="bg-white">
                 <Container className={"py-5 homepage-x-padding mw-1600"}>                    
                     <Row className={"align-items-center"}>
-                        <Col xs={12} lg={5} className={"mt-4 mt-lg-0"}>
+                        <Col xs={12} lg={5} className="mt-4 mt-lg-4 order-1 order-lg-0">
                             <picture>
                                 <source srcSet="/assets/cs/decor/benefits-for-homepage.png" type="image/png"/>
-                                <img className={"d-block w-100"} src={"/assets/cs/decor/benefits-for-homepage.png"} alt="" />
+                                <img className={"d-block w-100 mw-760 px-sm-5 px-lg-0"} src={"/assets/cs/decor/benefits-for-homepage.png"} alt="" />
                             </picture>
                         </Col>
                         <Col xs={12} lg={7}>

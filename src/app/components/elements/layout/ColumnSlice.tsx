@@ -8,7 +8,7 @@ interface ColumnSliceProps extends RowProps {
 
 export const ColumnSlice = ({...props}: ColumnSliceProps) => {
     const numChildren = Math.min(React.Children.count(props.children), 4);
-    return <Row {...props} className={classNames(`row-cols-${props.breakpoint ?? "md"}-${numChildren}`, props.className)}>
+    return <Row {...props} className={classNames(`row-cols-1 row-cols-${props.breakpoint ?? "md"}-${numChildren}`, props.className)}>
         {props.children}
     </Row>;
 };
