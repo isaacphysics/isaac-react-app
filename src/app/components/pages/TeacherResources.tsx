@@ -15,7 +15,7 @@ export const TeacherResources = () => {
 
     const user = useAppSelector(selectors.user.orNull);
 
-    return <>
+    return <div id="teacher-resources">
         <section id="resources-header" className="bg-dark-pink">
             <Container className="py-5 homepage-x-padding mw-1600" fluid>
                 <ColumnSlice>
@@ -27,7 +27,7 @@ export const TeacherResources = () => {
                         <p>Classwork, homework, and exam prep to help you teach computer science. All available for free.</p>
                     </TextBlock>
                     <ImageBlock>
-                        <img className="px-md-2 px-xl-4" src="/assets/cs/decor/teacher-1.png" alt=""/>
+                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4" src="/assets/cs/decor/teacher-1.png" alt=""/>
                     </ImageBlock>
                 </ColumnSlice>
             </Container>
@@ -204,13 +204,16 @@ export const TeacherResources = () => {
             </Container>
         </section>
         <section id="help-and-support">
-            <Container className="py-5 homepage-x-padding mw-1600 position-relative bg-white" fluid>
-                <TextBlock className="text-white text-center m-3 p-5 help-block">
-                    <h3>Need help?</h3>
-                    <p>Our teacher support page has lots of information for common questions and issues.</p>
-                    <Button outline className="bg-white" to="/support" tag={Link}>Teacher support</Button>
-                </TextBlock>
+            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
+                <div className="py-4 position-relative">
+                    <img className="full-background-img border-radius-3" src="/assets/cs/decor/decor-purple.png" alt=""/>
+                    <TextBlock className="py-3 text-center text-white">
+                        <h3>Need help?</h3>
+                        <p>Our teacher support page has lots of information for common questions and issues.</p>
+                        <Button outline className="bg-white" to="/support" tag={Link}>Teacher support</Button>
+                    </TextBlock>
+                </div>
             </Container>
         </section>
-    </>;
+    </div>;
 };

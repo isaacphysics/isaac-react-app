@@ -11,27 +11,28 @@ import { ImageBlock } from "../elements/layout/ImageBlock";
 export const StudentResources = () => {
     const {data: studentPods} = useGetNewsPodListQuery({subject: "news"});
     const featuredPod = studentPods?.[0];
-    return <>
+    return <div id="student-resources">
         <section id="resources-header" className="bg-cyan">
             <Container className="py-5 homepage-x-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock>
-                        <h1>
+                        <h1 className="font-size-1-75 font-size-md-2-5">
                             <span className="text-yellow">/</span><br/>
                             Resources for students
                         </h1>
                         <p>We&apos;ve got everything to help you study computer science - including classwork, homework, and exam prep. And it&apos;s all available for free.</p>
                     </TextBlock>
                     <ImageBlock>
-                        <img className="px-4" src="/assets/cs/decor/learner-1.png" alt=""/>
+                        <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/learner-1.png" alt=""/>
                     </ImageBlock>
                 </ColumnSlice>
             </Container>
         </section>
         <section id="updates">
-            <Container className="py-5 homepage-x-padding mw-1600 swirls-img" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
+                <img className="full-background-img" src="/assets/cs/decor/swirls-1.png" alt=""/>
                 <ColumnSlice>
-                    <TextBlock>
+                    <TextBlock className="pe-5">
                         <h2>Our latest updates</h2>
                         <p>We&apos;re constantly working to improve your experience with Ada Computer Science. Read the latest news and updates from the team.</p>
                     </TextBlock>
@@ -92,7 +93,8 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="student-challenges">
-            <Container className="py-5 homepage-x-padding mw-1600 challenges-block" fluid>
+            <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
+                <img className="full-background-img" src="/assets/cs/decor/decor-cyan.png" alt=""/>
                 <ColumnSlice>
                     <TextBlock>
                         <h2>Win prizes with our student challenges</h2>
@@ -124,32 +126,35 @@ export const StudentResources = () => {
                         image: {src: "/assets/cs/decor/coding-projects.png"},
                         bodyText: "There are hundreds of free coding and computing projects, all with step-by-step instructions.",
                         buttonText: "Go to Projects",
-                        clickUrl: "https://projects.raspberrypi.org/en"
+                        clickUrl: "https://projects.raspberrypi.org/en",
+                        className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
                         title: "Your code in space",
                         image: {src: "/assets/cs/decor/astro-pi.png"},
                         bodyText: "The European Astro Pi Challenge gets young learners to write code that runs on the International Space Station.",
                         buttonText: "Go to Astro Pi",
-                        clickUrl: "https://astro-pi.org/"
+                        clickUrl: "https://astro-pi.org/",
+                        className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
                         title: "Free Code editor",
                         image: {src: "/assets/cs/decor/code-editor.png"},
                         bodyText: "Our online code editor lets you code whatever you like: a game, some art, or your very own website using Python or HTML and CSS.",
                         buttonText: "Open the code editor",
-                        clickUrl: "https://editor.raspberrypi.org/en/education"
+                        clickUrl: "https://editor.raspberrypi.org/en/education",
+                        className: "bg-cultured-grey",
                     }}/>
                 </ColumnSlice>
             </Container>
         </section>
         <section id="testimonial">
             <Container className="py-5 homepage-x-padding mw-1600 bg-black" fluid>
-                <TextBlock xs={{size: 8, offset: 2}} className="backslash-left text-white">
+                <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
                     <h2>
                         &ldquo;I love Ada! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.&rdquo;
                     </h2>
-                    <p>- Computer science student</p>
+                    <p>– Computer science student</p>
                 </TextBlock>
             </Container>
         </section>
@@ -191,13 +196,16 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="help-and-support">
-            <Container className="py-5 homepage-x-padding mw-1600 position-relative bg-white" fluid>
-                <TextBlock className="text-center m-3 p-5 student-help-block">
-                    <h3>Need help?</h3>
-                    <p>Our student support page has lots of information for common questions and issues.</p>
-                    <Button to="/support" tag={Link}>Student support</Button>
-                </TextBlock>
+            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
+                <div className="py-4 position-relative">
+                    <img className="full-background-img border-radius-3" src="/assets/cs/decor/decor-cyan-2.png" alt=""/>
+                    <TextBlock className="py-3 text-center">
+                        <h3>Need help?</h3>
+                        <p>Our student support page has lots of information for common questions and issues.</p>
+                        <Button to="/support" tag={Link}>Student support</Button>
+                    </TextBlock>
+                </div>
             </Container>
         </section>
-    </>;
+    </div>;
 };
