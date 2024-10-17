@@ -134,7 +134,8 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         You can also take some tests freely whenever you want to test your knowledge.
     </span>;
 
-    function sortByDueDate(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
+    function sortByDate(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
+        // Compare by due date if possible
         if (a.dueDate && b.dueDate) {
             if (a.dueDate < b.dueDate) {
                 return 1;
@@ -149,12 +150,21 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         else if (b.dueDate) {
             return -1;
         }
+        // Otherwise compare by set date
+        if (a.creationDate && b.creationDate) {
+            if (a.creationDate < b.creationDate) {
+                return 1;
+            }
+            if (a.creationDate > b.creationDate) {
+                return -1;
+            }
+        }
         return 0;
     }
 
     let [currentQuizzes, overdueQuizzes] = partition(quizAssignments, a => a?.dueDate ? (todaysDate > a.dueDate) : false);
-    currentQuizzes = currentQuizzes.toSorted(sortByDueDate);
-    overdueQuizzes = overdueQuizzes.toSorted(sortByDueDate).reverse();
+    currentQuizzes = currentQuizzes.toSorted(sortByDate);
+    overdueQuizzes = overdueQuizzes.toSorted(sortByDate).reverse();
     const sortedQuizAssignments = overdueQuizzes.concat(currentQuizzes);
 
     const assignmentsAndAttempts = [
