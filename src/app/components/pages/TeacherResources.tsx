@@ -77,7 +77,7 @@ export const TeacherResources = () => {
                         <Button outline to={"/login"} tag={Link}>Log in</Button>
                     </>}
                 </TextBlock>
-                <ColumnSlice breakpoint="lg">
+                <ColumnSlice>
                     <IconCard card={{
                         title: "See content specific to you",
                         icon: {src: "/assets/cs/icons/tune-cyan.svg"},
