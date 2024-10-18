@@ -55,7 +55,7 @@ export const TeacherResources = () => {
             <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <ColumnSlice>
                     <ImageBlock>
-                        <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.png" alt=""/>
+                        <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
                         <h2>A full curriculum of topics</h2>
