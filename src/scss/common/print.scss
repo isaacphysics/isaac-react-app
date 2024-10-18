@@ -29,6 +29,10 @@
     display: none !important;
   }
 
+  .no-shadow {
+    box-shadow: none !important;
+  }
+
   .force-print, .only-print {
     display: initial !important;
   }
@@ -84,6 +88,7 @@
     border-bottom: lightgray solid 1px;
     padding: 0 !important;
     margin-bottom: 1rem;
+    box-shadow: none;
   }
 
   .expansion-layout {
