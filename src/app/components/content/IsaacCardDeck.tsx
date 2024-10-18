@@ -3,7 +3,7 @@ import {IsaacCard} from "./IsaacCard";
 import {IsaacCardDeckDTO} from "../../../IsaacApiTypes";
 import {Col, Container, Row} from "reactstrap";
 import classNames from "classnames";
-import {isAda, isPhy} from "../../services";
+import {isPhy, siteSpecific} from "../../services";
 
 
 const MAX_CARDS_IN_CONTENT_DEFINED_DECK = 3;
@@ -20,10 +20,19 @@ export const IsaacCardDeck = ({doc, className, containerClassName}: IsaacCardDec
                 <h3 className={classNames("h-title", {"text-center": isPhy})}>{doc.title}</h3>
             </Col>
         </Row>}
-        <Row xs={12} className={classNames(`d-flex flex-row card-deck row-cols-1 row-cols-sm-2 row-cols-xl-${noCards} justify-content-between`, {"my-3" : isAda}, {"isaac-cards-body" : isPhy}, className)}>
-            {doc?.cards?.map((props, i) => <Container key={i} className="card-container p-3"> 
-                <IsaacCard doc={props} imageClassName={props.imageClassName}/>
-            </Container>)}
-        </Row>
+        {
+            siteSpecific(
+                <Row xs={12} className={classNames(`d-flex flex-row card-deck row-cols-1 row-cols-sm-2 row-cols-xl-${noCards} justify-content-between isaac-cards-body`, className)}>
+                    {/* TODO: move Containers into Cards for Physics */}
+                    {doc?.cards?.map((props, i) => <Container key={i} className="card-container p-3"> 
+                        <IsaacCard doc={props} imageClassName={props.imageClassName}/>
+                    </Container>)}
+                </Row>
+                ,
+                <Row className={classNames(`d-flex flex-row card-deck row-cols-1 row-cols-md-2 justify-content-between my-3`, className ?? "")}>
+                    {doc?.cards?.map((props, i) => <IsaacCard key={i} doc={props}/>)}
+                </Row>
+            )
+        }
     </Container>;
 };
