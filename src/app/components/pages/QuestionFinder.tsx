@@ -99,7 +99,6 @@ function getInitialQuestionStatuses(params: ListParams): QuestionStatus {
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
-    const userContext = useUserViewingContext();
     const params: ListParams = useQueryParams(false);
     const history = useHistory();
 
@@ -115,29 +114,31 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
     const [searchDisabled, setSearchDisabled] = useState(true);
 
-    const [populatedUserContext, setPopulatedUserContext] = useState(false);
-
-    useEffect(function populateFromUserContext() {
-        if (isAda && isLoggedIn(user) && user.registeredContexts && user.registeredContexts.length > 1) {
-            setSearchStages([STAGE.ALL]);
-            setSearchExamBoards([EXAM_BOARD.ALL]);
-        }
-        else  {
-            if (!STAGE_NULL_OPTIONS.includes(userContext.stage)) {
-                setSearchStages(arr => arr.length > 0 ? arr : [userContext.stage]);
+    const [populatedFromAccountSettings, setPopulatedFromAccountSettings] = useState(false);
+    useEffect(function populateFiltersFromAccountSettings() {
+        if (isLoggedIn(user)) {
+            const filtersHaveNotBeenSpecifiedByQueryParams = !params.stages && !params.examBoards;
+            if (filtersHaveNotBeenSpecifiedByQueryParams) {
+                const accountStages = user.registeredContexts?.map(c => c.stage).filter(s => s) as STAGE[];
+                if (isPhy || accountStages.length === 1) { // Ada only want to apply stages filter if there is only one
+                    setSearchStages(accountStages);
+                    setPopulatedFromAccountSettings(true);
+                }
+                const examBoardStages = user.registeredContexts?.map(c => c.examBoard).filter(e => e) as EXAM_BOARD[];
+                if (isAda && examBoardStages.length === 1) { // Phy does not have exam boards
+                    setSearchExamBoards(examBoardStages);
+                    setPopulatedFromAccountSettings(true);
+                }
             }
-            if (!EXAM_BOARD_NULL_OPTIONS.includes(userContext.examBoard)) {
-                setSearchExamBoards(arr => arr.length > 0 ? arr : [userContext.examBoard]);
-            }
         }
-        setPopulatedUserContext(!!userContext.stage && !!userContext.examBoard);
-    }, [userContext.stage, userContext.examBoard, user]);
+    }, [user]);
 
     // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates
     useEffect(() => {
         searchAndUpdateURL();
+        setNoResultsMessage(<em>No results match your criteria</em>);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [populatedUserContext]);
+    }, [populatedFromAccountSettings]);
 
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
@@ -233,7 +234,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         !( Object.values(searchStatuses).every(v => v) || Object.values(searchStatuses).every(v => !v) )
     );
 
-    const [noResultsMessage, setNoResultsMessage] = useState<ReactNode>(<em>No results match your criteria</em>);
+    const [noResultsMessage, setNoResultsMessage] = useState<ReactNode>(<em>Please select and apply filters</em>);
 
     const applyFilters = () => {
         // Have to use a local variable as React won't update state in time
