@@ -5,7 +5,6 @@ import {
     EXAM_BOARD_DEFAULT_OPTION,
     EXAM_BOARD_NULL_OPTIONS,
     examBoardLabelMap,
-    history,
     isAda,
     isDefined,
     isLoggedIn,
@@ -23,8 +22,7 @@ import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContex
 import {useParams} from "react-router-dom";
 import {AppState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
-import queryString from "query-string";
-import {useContext, useEffect} from "react";
+import {useContext} from "react";
 import {Immutable} from "immer";
 
 export interface UseUserContextReturnType {
@@ -37,7 +35,6 @@ export interface UseUserContextReturnType {
     hasDefaultPreferences: boolean;
 }
 
-const urlMessage = "URL query parameters";
 const gameboardMessage = `${siteSpecific("gameboard", "quiz")} settings`;
 
 export function useUserViewingContext(): UseUserContextReturnType {
@@ -56,11 +53,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
 
     // Stage
     let stage: STAGE;
-    const stageQueryParam = queryParams.stage as STAGE | undefined;
-    if (stageQueryParam && Object.values(STAGE).includes(stageQueryParam) && !STAGE_NULL_OPTIONS.includes(stageQueryParam)) {
-        stage = stageQueryParam;
-        explanation.stage = urlMessage;
-    } else if (isDefined(transientUserContext.stage)) {
+    if (isDefined(transientUserContext.stage)) {
         stage = transientUserContext.stage;
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].stage) {
         stage = user.registeredContexts[0].stage as STAGE;
@@ -70,16 +63,9 @@ export function useUserViewingContext(): UseUserContextReturnType {
 
     // Exam Board
     let examBoard: EXAM_BOARD;
-    const examBoardQueryParam = queryParams.examBoard as EXAM_BOARD | undefined;
     // Set the exam board in order of precedence:
     if (isPhy) { // Physics has no exam boards and so use the "null" option of ALL.
         examBoard = EXAM_BOARD.ALL;
-    } else if ( // A valid exam board is specified by the query params (but is not the default exam board option).
-        examBoardQueryParam && Object.values(EXAM_BOARD).includes(examBoardQueryParam) &&
-        EXAM_BOARD_DEFAULT_OPTION !== examBoardQueryParam
-    ) {
-        examBoard = examBoardQueryParam;
-        explanation.examBoard = urlMessage;
     } else if ( // An exam board has been selected via the context picker within this (redux) session.
         isDefined(transientUserContext?.examBoard)
     ) {
@@ -132,27 +118,6 @@ export function useUserViewingContext(): UseUserContextReturnType {
     } else {
         showOtherContent = true;
     }
-
-    // Replace query params
-    useEffect(() => {
-        const actualParams = queryString.parse(window.location.search, {decode: false});
-        if (stage !== actualParams.stage || (!isPhy && examBoard !== actualParams.examBoard)) {
-            try {
-                history.replace({
-                    ...window.location,
-                    search: queryString.stringify({
-                        ...actualParams,
-                        stage,
-                        examBoard: isAda ? examBoard : undefined,
-                    }, {encode: false})
-                });
-            } catch (e) {
-                // This is to handle the case where the existingLocation pathname is invalid, i.e. "isaacphysics.org//".
-                // In that case history.replace(...) throws an exception, and it will do this while the ErrorBoundary is
-                // trying to render, causing a loop and a spike in client-side errors.
-            }
-        }
-    }, [stage, examBoard]);
 
     return { stage, setStage, examBoard, setExamBoard, explanation, showOtherContent, hasDefaultPreferences };
 }
