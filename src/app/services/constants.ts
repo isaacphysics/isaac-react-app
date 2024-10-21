@@ -822,6 +822,13 @@ export const ACCOUNT_TABS : AccountTabs[] = [
     {tab: ACCOUNT_TAB.betafeatures, title: "Beta", hiddenIfEditingOtherUser: true},
 ];
 
+// we can't change the names of tabs as we have historic links to them, so use aliases to use updated names instead
+export const ACCOUNT_TABS_ALIASES: {[alias: string]: ACCOUNT_TAB} = {
+    "security": ACCOUNT_TAB.passwordreset,
+    "connections": ACCOUNT_TAB.teacherconnections,
+    "notifications": ACCOUNT_TAB.emailpreferences,
+};
+
 export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
 export enum MARKBOOK_TYPE_TAB {assignments = 1, tests = 2}
 
