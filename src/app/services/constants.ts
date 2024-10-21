@@ -628,6 +628,7 @@ export enum TAG_ID {
     // Thermal
     gases = "gases",
     heatCapacity = "heat_capacity",
+    thermalRadiation = "thermal_radiation",
     // Waves & Particles
     nuclear = "nuclear",
     superposition = "superposition",

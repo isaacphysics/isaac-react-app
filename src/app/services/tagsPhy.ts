@@ -58,8 +58,9 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.magnetic, title: "Magnetic Fields", parent: TAG_ID.fields},
         {id: TAG_ID.combined, title: "Combined Fields", parent: TAG_ID.fields},
         // Thermal
-        {id: TAG_ID.heatCapacity, title: "Heat Capacity", parent: TAG_ID.thermal},
+        {id: TAG_ID.heatCapacity, title: "Heat", parent: TAG_ID.thermal},
         {id: TAG_ID.gases, title: "Gases", parent: TAG_ID.thermal},
+        {id: TAG_ID.thermalRadiation, title: "Radiation", parent: TAG_ID.thermal},
         // Waves Particles
         {id: TAG_ID.optics, title: "Optics", parent: TAG_ID.wavesParticles},
         {id: TAG_ID.waveMotion, title: "Wave Motion", parent: TAG_ID.wavesParticles},
