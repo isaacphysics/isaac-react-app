@@ -5932,10 +5932,10 @@ indent-string@^4.0.0:
   resolved "https://registry.yarnpkg.com/indent-string/-/indent-string-4.0.0.tgz#624f8f4497d619b2d9768531d58f4122854d7251"
   integrity sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==
 
-inequality-grammar@1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/inequality-grammar/-/inequality-grammar-1.3.2.tgz#119a8afb3ea802c8abfe44bf561fde38a24a816e"
-  integrity sha512-mlwS1kXr3z60NcSXCv1CFXf7VSHXPgZzjSzN4hQSaSHJSkFGb4cJJONT3M+PiLUgUwlsjOEUBFLxE8p9V6nlWQ==
+inequality-grammar@1.3.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/inequality-grammar/-/inequality-grammar-1.3.4.tgz#22b34c7fbb6c61e5567f3c4a290b212500ea5881"
+  integrity sha512-LyRxj57cC8xW+OAj15WAK7hA3BblZtNLl8fDyXP9x/mn5hmd44bCCkWRsBdDqXZZZAwdmLCjPfAPJh48/sJaMw==
   dependencies:
     lodash "^4.17.21"
     moo "^0.5.2"
