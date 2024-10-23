@@ -6,7 +6,7 @@ import { selectors, useAppSelector } from "../../../../state";
 import classNames from "classnames";
 import { InlineStringEntryZone } from "../../inputs/InlineStringEntryZone";
 import { InlineNumericEntryZone } from "../../inputs/InlineNumericEntryZone";
-import { IsaacNumericQuestionDTO, IsaacStringMatchQuestionDTO } from "../../../../../IsaacApiTypes";
+import { IsaacNumericQuestionDTO, IsaacStringMatchQuestionDTO, QuantityDTO } from "../../../../../IsaacApiTypes";
 import { InputProps } from "reactstrap";
 
 export function correctnessClass(correctness: QuestionCorrectness) {
@@ -20,8 +20,6 @@ export function correctnessClass(correctness: QuestionCorrectness) {
 
 export interface InlineEntryZoneProps<T> extends InputProps {
     // Any inline zone styles (string match, numeric...) should use this interface
-    width: number | undefined, 
-    height: number | undefined, 
     setModified: React.Dispatch<React.SetStateAction<boolean>>;
     correctness: QuestionCorrectness,
     focusRef: React.RefObject<any>,
@@ -71,6 +69,25 @@ const InlineEntryZoneBase = ({inlineSpanId, className: _containerSpanClassName, 
             inlineContext.setFeedbackIndex(undefined);
         }
     }, [modified]);
+
+    useEffect(() => {
+        // after submitting the region (which only touches modified entry zones), if the user has not answered this question, mark it as "NOT_ANSWERED".
+        if (inlineContext?.submitting === false) {
+            if ((() => {
+                switch (questionType) {
+                    case "isaacNumericQuestion": {
+                        return questionDTO?.currentAttempt?.value === undefined && (questionDTO?.currentAttempt as QuantityDTO)?.units === undefined;
+                    }
+                    default: {
+                        return questionDTO?.currentAttempt?.value === undefined;
+                    }
+                }
+            })()) {
+                setCorrectness("NOT_ANSWERED");
+            }
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [inlineContext?.submitting, questionType]);
 
     useEffect(() => {
         setCorrectness(
