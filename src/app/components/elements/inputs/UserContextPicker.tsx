@@ -74,7 +74,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                                 newParams.examBoard = examBoard;
                                 dispatch(transientUserContextSlice.actions.setExamBoard(examBoard));
                             }
-                            history.push({search: queryString.stringify(newParams, {encode: false})});
                             dispatch(transientUserContextSlice.actions.setStage(stage));
                         }}
                     >
@@ -98,7 +97,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         aria-label={hideLabels ? "Exam Board" : undefined}
                         value={userContext.examBoard}
                         onChange={e => {
-                            history.push({search: queryString.stringify({...qParams, examBoard: e.target.value}, {encode: false})});
                             dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD));
                         }}
                     >
