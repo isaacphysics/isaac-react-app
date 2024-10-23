@@ -124,11 +124,11 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         content, which is different to your account settings. <br />
                         {unusual.stage && unusual.examBoard && <>
                             {userContext.explanation.stage === userContext.explanation.examBoard ?
-                                `The stage and exam board were specified by your ${userContext.explanation.stage}.` :
-                                `The stage was specified by your ${userContext.explanation.stage} and the exam board by your ${userContext.explanation.examBoard}.`}
+                                `The stage and exam board were specified by ${userContext.explanation.stage}.` :
+                                `The stage was specified by ${userContext.explanation.stage} and the exam board by ${userContext.explanation.examBoard}.`}
                         </>}
-                        {unusual.stage && !unusual.examBoard && `The stage was specified by your ${userContext.explanation.stage}.`}
-                        {unusual.examBoard && !unusual.stage && `The exam board was specified by your ${userContext.explanation.examBoard}.`}
+                        {unusual.stage && !unusual.examBoard && `The stage was specified by ${userContext.explanation.stage}.`}
+                        {unusual.examBoard && !unusual.stage && `The exam board was specified by ${userContext.explanation.examBoard}.`}
                     </RS.UncontrolledTooltip>
                 </div>}
             </FormGroup>

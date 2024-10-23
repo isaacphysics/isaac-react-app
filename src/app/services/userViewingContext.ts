@@ -18,10 +18,24 @@ import {
     stagesOrdered,
     useQueryParams,
 } from ".";
-import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext} from "../../IsaacApiTypes";
+import {
+    AudienceContext,
+    ContentBaseDTO,
+    ContentDTO,
+    UserRole,
+    Stage,
+    UserContext,
+    GameboardItem
+} from "../../IsaacApiTypes";
 import {useParams} from "react-router-dom";
-import {AppState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
-import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
+import {
+    AppState,
+    transientUserContextSlice,
+    TransientUserContextState,
+    useAppDispatch,
+    useAppSelector
+} from "../state";
+import {DisplaySettings, GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import {useContext} from "react";
 import {Immutable} from "immer";
 
@@ -35,7 +49,19 @@ export interface UseUserContextReturnType {
     hasDefaultPreferences: boolean;
 }
 
-const gameboardMessage = `${siteSpecific("gameboard", "quiz")} settings`;
+
+export interface GameboardAndPathInfo {
+    boardIdFromDTO?: string;
+    contentsFromDTO?: GameboardItem[];
+    boardIdFromQueryParams?: string;
+    questionIdFromPath?: string;
+}
+
+const transientContextExplanation = "your context picker settings";
+const registeredContextExplanation = "your account settings";
+const gameboardContextExplanation = `the ${siteSpecific("gameboard", "quiz")} settings`;
+const defaultExplanation = "the default settings";
+const notImplementedExplanation = "the site's settings";
 
 export function useUserViewingContext(): UseUserContextReturnType {
     const dispatch = useAppDispatch();
@@ -43,55 +69,68 @@ export function useUserViewingContext(): UseUserContextReturnType {
 
     const user = useAppSelector((state: AppState) => state && state.user);
     const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
+    const {questionId} = useParams<{ questionId: string}>();
 
+    const registeredContext = isLoggedIn(user) ? user.registeredContexts?.[0] : undefined;
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext) || {};
+
+    const { id, contents} = useContext(GameboardContext) || {};
+    const gameboardAndPathInfo = { boardIdFromDTO: id, contentsFromDTO: contents,  boardIdFromQueryParams: queryParams.board, questionIdFromPath: questionId };
 
     const setStage = (stage: STAGE) => dispatch(transientUserContextSlice?.actions.setStage(stage));
     const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));
 
+    const context = determineUserContext(transientUserContext, registeredContext, gameboardAndPathInfo, displaySettings);
+
+    return { ...context, setStage, setExamBoard };
+}
+
+export const determineUserContext = (transientUserContext: TransientUserContextState, registeredContext: UserContext | undefined,
+    gameboardAndPathInfo: GameboardAndPathInfo | undefined, displaySettings: DisplaySettings | undefined) => {
     const explanation: UseUserContextReturnType["explanation"] = {};
 
     // Stage
     let stage: STAGE;
-    if (isDefined(transientUserContext.stage)) {
+    if (transientUserContext?.stage) {
         stage = transientUserContext.stage;
-    } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].stage) {
-        stage = user.registeredContexts[0].stage as STAGE;
+        explanation.stage = transientContextExplanation;
+    } else if (registeredContext?.stage) {
+        stage = registeredContext.stage as STAGE;
+        explanation.stage = registeredContextExplanation;
     } else {
         stage = STAGE.ALL;
+        explanation.stage = defaultExplanation;
     }
 
     // Exam Board
     let examBoard: EXAM_BOARD;
-    // Set the exam board in order of precedence:
-    if (isPhy) { // Physics has no exam boards and so use the "null" option of ALL.
+    if (isPhy) {
         examBoard = EXAM_BOARD.ALL;
-    } else if ( // An exam board has been selected via the context picker within this (redux) session.
-        isDefined(transientUserContext?.examBoard)
-    ) {
+        explanation.examBoard = notImplementedExplanation;
+    } else if (transientUserContext?.examBoard) {
         examBoard = transientUserContext?.examBoard;
-    } else if ( // An exam board preference has been set on the account.
-        isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].examBoard
-    ) {
-        examBoard = user.registeredContexts[0].examBoard as EXAM_BOARD;
-    } else {  // We use the default exam board option.
+        explanation.examBoard = transientContextExplanation;
+    } else if (registeredContext?.examBoard) {
+        examBoard = registeredContext.examBoard as EXAM_BOARD;
+        explanation.examBoard = registeredContextExplanation;
+    } else {
         examBoard = EXAM_BOARD_DEFAULT_OPTION;
+        explanation.examBoard = defaultExplanation;
     }
 
     // Whether stage and examboard are the default
     const hasDefaultPreferences = isAda && stage === STAGE.ALL && examBoard === EXAM_BOARD.ADA;
 
     // Gameboard views overrides all context options
-    const currentGameboard = useContext(GameboardContext);
-    const {questionId} = useParams<{ questionId: string}>();
-    if (questionId && queryParams.board && currentGameboard && currentGameboard.id === queryParams.board) {
-        const gameboardItem = currentGameboard.contents?.filter(c => c.id === questionId)[0];
+    if (gameboardAndPathInfo?.questionIdFromPath && gameboardAndPathInfo?.boardIdFromQueryParams
+        && gameboardAndPathInfo.boardIdFromDTO === gameboardAndPathInfo.boardIdFromQueryParams) {
+        const gameboardItem = gameboardAndPathInfo.contentsFromDTO?.filter(c => c.id === gameboardAndPathInfo.questionIdFromPath)[0];
         if (gameboardItem) {
             const gameboardDeterminedViews = determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext);
             // If user's stage selection is not one specified by the gameboard change it
             if (gameboardDeterminedViews.length > 0) {
                 if (!gameboardDeterminedViews.map(v => v.stage).includes(stage) && !STAGE_NULL_OPTIONS.includes(stage)) {
-                    explanation.stage = gameboardMessage;
+                    explanation.stage = gameboardContextExplanation;
                     if (gameboardDeterminedViews.length === 1) {
                         stage = gameboardDeterminedViews[0].stage as STAGE;
                     } else {
@@ -99,7 +138,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
                     }
                 }
                 if (!gameboardDeterminedViews.map(v => v.examBoard).includes(examBoard) && !EXAM_BOARD_NULL_OPTIONS.includes(examBoard)) {
-                    explanation.examBoard = gameboardMessage;
+                    explanation.examBoard = gameboardContextExplanation;
                     if (gameboardDeterminedViews.length === 1) {
                         examBoard = gameboardDeterminedViews[0].examBoard as EXAM_BOARD;
                     } else {
@@ -119,8 +158,8 @@ export function useUserViewingContext(): UseUserContextReturnType {
         showOtherContent = true;
     }
 
-    return { stage, setStage, examBoard, setExamBoard, explanation, showOtherContent, hasDefaultPreferences };
-}
+    return { stage, examBoard, showOtherContent, hasDefaultPreferences, explanation };
+};
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "All Exam Boards", value: EXAM_BOARD.ALL},
