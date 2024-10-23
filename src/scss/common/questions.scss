@@ -70,16 +70,105 @@ $cloze-scrollbar-height: 4px;
   }
 }
 
+$inline-feedback-size: 20px;
+$inline-feedback-padding: 2px;
+
 .inline-outer-container {
   display: inline-flex;
   justify-content: center;
   width: max-content;
   vertical-align: middle;
+  min-width: calc($inline-feedback-size + 2 * $inline-feedback-padding + 5px + 1em); // feedback + padding + 5px extra (left) padding + 1em of input space
+  min-height: $inline-feedback-size;
+
+  // These are intended to be overridden as needed by the content -- classes can be specified in the markdown via [inline-question:id class="..."]
+  width: 100px;
+  height: 27px;
+}
+
+.inline-container {
+  container: inline-padding / inline-size;
+  border-radius: var(--bs-border-radius);
+
+  $shadow-size: 2px;
+  &.selected-feedback {
+    box-shadow: 0 0 0 $shadow-size #000;
+    &.is-valid {
+      box-shadow: 0 0 0 $shadow-size map-get($theme-colors, "success");
+    }
+    &.is-invalid {
+      box-shadow: 0 0 0 $shadow-size map-get($theme-colors, "failed");
+    }
+    &.is-unanswered {
+      box-shadow: 0 0 0 $shadow-size map-get($theme-colors, "in-progress");
+    }
+  }
+  
+  .feedback-wrapper {
+    // this is intended to wrap around a SINGLE component that can be marked as valid/invalid/unanswered, to allow multiple parts of one question to have different feedback states
+    display: block;
+    position: relative;
+
+    > * {
+      padding: 0 10px;
+
+      &.is-valid, &.is-unanswered, &.is-invalid {
+        padding-right: calc($inline-feedback-size + 2 * $inline-feedback-padding - 2px) !important; // -2px to account for border
+      }
+    }
+
+    > input {
+      background: none; // remove default bootstrap background from is-valid, is-invalid
+    }
+
+    &::after{
+      top: calc((100% - $inline-feedback-size) / 2);
+      right: $inline-feedback-padding;
+      width: $inline-feedback-size;
+      height: $inline-feedback-size;
+      text-align: center;
+      align-content: center;
+      line-height: 100%;
+      background-color: white;
+      border-radius: 5px;
+      pointer-events: none;
+    }
+
+    &:has(> .is-valid)::after {
+      @include pseudo-element("✔");
+      color: map-get($theme-colors, "success");
+    }
+    &:has(> .is-invalid)::after {
+      @include pseudo-element("✘");
+      color: map-get($theme-colors, "failed");
+    }
+    &:has(> .is-unanswered)::after {
+      @include pseudo-element("!");
+      color: map-get($theme-colors, "in-progress"); // TODO: check cs isn't using yellow-200
+      font-weight: bold;
+    }
+  }
+}
+
+@container inline-padding (50px < width < 100px) {
+  .feedback-wrapper.feedback-wrapper > * {
+    padding: 0 8px;
+  }
+}
+
+@container inline-padding (width < 50px) {
+  .feedback-wrapper.feedback-wrapper > * {
+    padding: 0 5px;
+  }
+}
+
+.inline-string-container {
+  @extend .inline-container;
 }
 
 .inline-numeric-container {
+  @extend .inline-container;
   display: inline-flex;
-  border-radius: 5px;
 
   @media screen {
     .units-shown {
@@ -97,6 +186,9 @@ $cloze-scrollbar-height: 4px;
       &:active {
         border: none !important;
       }
+      &.feedback-shown {
+        padding-right: 36px !important;
+      }
     }
     &.display-unit {
       margin-bottom: -2px;
@@ -104,10 +196,6 @@ $cloze-scrollbar-height: 4px;
         border: 1px solid black;
       }
     }
-  }
-
-  input {
-    padding: 0 calc(min(1.2em, 20%));
   }
 }
 
@@ -456,12 +544,6 @@ p > .katex, .katex-display {
     .feedback-box {
       z-index: 3;
       right: 75px;
-    }
-  }
-  &.inline-nq-feedback {
-    .feedback-box {
-      z-index: 3;
-      right: 10px;
     }
   }
 }

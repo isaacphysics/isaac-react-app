@@ -31,12 +31,12 @@ export interface InlineEntryZoneProps<T> extends InputProps {
 export interface InlineEntryZoneBaseProps {
     inlineSpanId: string, 
     className: string, 
-    width: number | undefined, 
-    height: number | undefined, 
+    widthPx?: number,
+    heightPx?: number,
     root: HTMLElement
 }
 
-const InlineEntryZoneBase = ({inlineSpanId, className, width, height, root}: InlineEntryZoneBaseProps) => {
+const InlineEntryZoneBase = ({inlineSpanId, className: _containerSpanClassName, widthPx, heightPx, root}: InlineEntryZoneBaseProps) => {
     
     const inlineContext = useContext(InlineContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
@@ -120,9 +120,8 @@ const InlineEntryZoneBase = ({inlineSpanId, className, width, height, root}: Inl
                 return <InlineNumericEntryZone 
                     correctness={correctness}
                     questionDTO={questionDTO as IsaacNumericQuestionDTO & AppQuestionDTO} 
-                    className={classNames("inline-part", {"selected-feedback": isSelectedFeedback})}
-                    width={width}
-                    height={height}
+                    className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
+                    style={{width: widthPx, height: heightPx}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
@@ -132,9 +131,8 @@ const InlineEntryZoneBase = ({inlineSpanId, className, width, height, root}: Inl
                 return <InlineStringEntryZone 
                     correctness={correctness}
                     questionDTO={questionDTO as IsaacStringMatchQuestionDTO & AppQuestionDTO} 
-                    className={classNames("inline-part", {"selected-feedback": isSelectedFeedback})}
-                    width={width}
-                    height={height}
+                    className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
+                    style={{width: widthPx, height: heightPx}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
