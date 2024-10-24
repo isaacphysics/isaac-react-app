@@ -7,7 +7,7 @@ import {Link, RouteComponentProps, useHistory, useLocation, withRouter} from "re
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {QuizAssignmentDTO, QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
@@ -25,6 +25,7 @@ import {Tabs} from "../../elements/Tabs";
 import {useGetAvailableQuizzesQuery} from "../../../state";
 import {PageFragment} from "../../elements/PageFragment";
 import { CardGrid } from "../../elements/CardGrid";
+import partition from "lodash/partition";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -40,11 +41,14 @@ enum Status {
     Unstarted, Started, Complete
 }
 
+const todaysDate = new Date(new Date().setHours(0, 0, 0, 0));
+
 function QuizItem({item}: QuizAssignmentProps) {
     const assignment = isAttempt(item) ? null : item;
     const attempt = isAttempt(item) ? item : assignment?.attempt;
     const status: Status = !attempt ? Status.Unstarted : !attempt.completedDate ? Status.Started : Status.Complete;
     const assignmentStartDate = assignment?.scheduledStartDate ?? assignment?.creationDate;
+    const pastDueDate = assignment?.dueDate ? (todaysDate > assignment.dueDate) : false;
     return <div className="p-2">
         <RS.Card className="card-neat my-quizzes-card">
             <RS.CardBody className="d-flex flex-column">
@@ -72,10 +76,10 @@ function QuizItem({item}: QuizAssignmentProps) {
 
                 <div className="text-center mt-4">
                     {assignment ? <>
-                        {status === Status.Unstarted && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
+                        {status === Status.Unstarted && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`} disabled={pastDueDate}>
                             {siteSpecific("Start Test", "Start test")}
                         </RS.Button>}
-                        {status === Status.Started && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
+                        {status === Status.Started && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`} disabled={pastDueDate}>
                             {siteSpecific("Continue Test", "Continue test")}
                         </RS.Button>}
                         {status === Status.Complete && (
@@ -131,9 +135,42 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         You can also take some tests freely whenever you want to test your knowledge.
     </span>;
 
+    function sortByDate(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
+        // Compare by due date if possible
+        if (a.dueDate && b.dueDate) {
+            if (a.dueDate < b.dueDate) {
+                return 1;
+            }
+            if (a.dueDate > b.dueDate) {
+                return -1;
+            }
+        }
+        else if (a.dueDate) {
+            return 1;
+        }
+        else if (b.dueDate) {
+            return -1;
+        }
+        // Otherwise compare by set date
+        if (a.creationDate && b.creationDate) {
+            if (a.creationDate < b.creationDate) {
+                return 1;
+            }
+            if (a.creationDate > b.creationDate) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+
+    let [currentQuizzes, overdueQuizzes] = partition(quizAssignments, a => a?.dueDate ? (todaysDate > a.dueDate) : false);
+    currentQuizzes = currentQuizzes.toSorted(sortByDate);
+    overdueQuizzes = overdueQuizzes.toSorted(sortByDate).reverse();
+
     const assignmentsAndAttempts = [
-        ...isFound(quizAssignments) ? quizAssignments : [],
+        ...isFound(overdueQuizzes) ? overdueQuizzes : [],
         ...isFound(freeAttempts) ? freeAttempts : [],
+        ...isFound(currentQuizzes) ? currentQuizzes : []
     ];
     const [completedQuizzes, incompleteQuizzes] = partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts);
 
