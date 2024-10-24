@@ -152,7 +152,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     };
 
     // If the user is event admin or above, and the quiz is hidden from teachers, then show that
-    // Otherwise, show if the quiz is visible to students
+    // If the user is teacher or above, show if the quiz is visible to students
     const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
         {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
         {isTutorOrAbove(user) && ((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
