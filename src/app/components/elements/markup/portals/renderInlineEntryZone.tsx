@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { PortalInHtmlHook } from "./utils";
 import { InlineContext } from "../../../../../IsaacAppTypes";
 import InlineEntryZoneBase from "./InlineEntryZone";
+import classNames from "classnames";
 
 // See the comment on `PORTAL_HOOKS` constant for an explanation of how this works
 export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
@@ -16,37 +17,26 @@ export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
     const inlineZones = htmlDom.querySelectorAll("span[id^='inline-question-']") as NodeListOf<HTMLElement>;
     if (inlineZones.length === 0) return [html, () => []];
 
-    const inlineZoneConstructors: {id: string, className: string, width: number | undefined, height: number | undefined}[] = [];
+    const inlineZoneConstructors: {id: string, className: string, widthPx?: number, heightPx?: number}[] = [];
 
     for (let i = 0; i < inlineZones.length; i++) {
-        const zone = inlineZones[i];
-        let className = "";
-        let defaultWidth = true;
-        let defaultHeight = true;
-        for (const c of zone.classList) {
-            if (c.match(/w-\d+/)) {
-                className += c + " ";
-                defaultWidth = false;
-            }
-            if (c.match(/h-\d+/)) {
-                className += c + " ";
-                defaultHeight = false;
-            }
-        }
-        const width = defaultWidth ? 100 : undefined;
-        const height = defaultHeight ? 27 : undefined;
-        inlineZoneConstructors.push({id: inlineZones[i].id, className, width, height});
+        inlineZoneConstructors.push({
+            id: inlineZones[i].id, 
+            className: classNames("inline-data-target", (inlineZones[i].dataset.classes ?? "")), 
+            widthPx: inlineZones[i].dataset.width ? parseInt(inlineZones[i].dataset.width as string) : undefined,
+            heightPx: inlineZones[i].dataset.height ? parseInt(inlineZones[i].dataset.height as string) : undefined,
+        });
     }
     
     return [
         htmlDom.innerHTML,
-        (ref?: HTMLElement) => ref ? inlineZoneConstructors.map(({id, className, width, height}) =>
+        (ref?: HTMLElement) => ref ? inlineZoneConstructors.map(({id, className, widthPx, heightPx}) =>
             <InlineEntryZoneBase
                 key={id}
                 className={className}
                 inlineSpanId={id}
-                width={width}
-                height={height}
+                widthPx={widthPx}
+                heightPx={heightPx}
                 root={ref}
             />
         ) : []

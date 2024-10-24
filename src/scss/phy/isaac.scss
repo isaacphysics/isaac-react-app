@@ -133,6 +133,10 @@ $theme-colour-overrides: (
     maths: $phy_maths,
     chemistry: $phy_chemistry,
     biology: $phy_biology,
+
+    success: #208838,
+    in-progress: #fe8e15,
+    failed: #dc3545,
 );
 $theme-colors: map-merge($theme-colors, $theme-colour-overrides);
 
