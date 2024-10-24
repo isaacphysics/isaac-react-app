@@ -14,6 +14,7 @@ import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     extractTeacherName,
     isAttempt,
+    isEventLeaderOrStaff,
     isFound,
     isTutorOrAbove,
     partitionCompleteAndIncompleteQuizzes,
@@ -150,6 +151,13 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         }
     };
 
+    // If the user is event admin or above, and the quiz is hidden from teachers, then show that
+    // If the user is teacher or above, show if the quiz is visible to students
+    const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
+        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
+        {isTutorOrAbove(user) && ((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
+    </>;
+
     const tabAnchors = ["#in-progress", "#completed", "#practice"];
 
     const anchorMap = tabAnchors.reduce((acc, anchor, index) => 
@@ -208,8 +216,11 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                             <RS.ListGroup className="mb-3 quiz-list">
                                 {quizzes.filter((quiz) => showQuiz(quiz) && quiz.title?.toLowerCase().includes(filterText.toLowerCase())).map(quiz => <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                     <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
-                                        <span className="mb-2 mb-sm-0">{quiz.title}</span>
-                                        {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
+                                        <div>
+                                            <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
+                                            {roleVisibilitySummary(quiz)}
+                                            {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
+                                        </div>
                                         <Spacer />
                                         {isTutorOrAbove(user) && <div className="d-none d-md-flex align-items-center me-4">
                                             <Link to={{pathname: `/test/preview/${quiz.id}`}}>
