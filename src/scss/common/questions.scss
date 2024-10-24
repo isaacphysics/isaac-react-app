@@ -78,17 +78,11 @@ $inline-feedback-padding: 2px;
   justify-content: center;
   width: max-content;
   vertical-align: middle;
-  min-width: calc($inline-feedback-size + 2 * $inline-feedback-padding + 5px + 1em); // feedback + padding + 5px extra (left) padding + 1em of input space
-  min-height: $inline-feedback-size;
-
-  // These are intended to be overridden as needed by the content -- classes can be specified in the markdown via [inline-question:id class="..."]
-  width: 100px;
-  height: 27px;
-}
-
-.inline-container {
-  container: inline-padding / inline-size;
   border-radius: var(--bs-border-radius);
+
+  &:has(.inline-data-target.inline-stretch) {
+    width: 100%;
+  }
 
   $shadow-size: 2px;
   &.selected-feedback {
@@ -103,22 +97,38 @@ $inline-feedback-padding: 2px;
       box-shadow: 0 0 0 $shadow-size map-get($theme-colors, "in-progress");
     }
   }
+}
+
+.inline-data-target.inline-data-target {
+  min-width: calc($inline-feedback-size + 2 * $inline-feedback-padding + 9px + 1em); // feedback + padding + 9px extra (left) padding + 1em of input space
+  min-height: $inline-feedback-size;
+
+  // These are intended to be overridden as needed by the content -- classes can be specified in the markdown via [inline-question:id class="..."]
+  width: 100px;
+  height: 27px;
+
+  &.inline-stretch {
+    width: 100%;
+  }
+}
+
+.inline-container {
+  display: inline-flex;
+  width: 100%;
   
   .feedback-wrapper {
-    // this is intended to wrap around a SINGLE component that can be marked as valid/invalid/unanswered, to allow multiple parts of one question to have different feedback states
+    // wraps around a SINGLE component that can be marked as valid/invalid/unanswered, to allow multiple parts of one question to have different feedback states
+    // requires that correctnessClass(...) is also applied, as to colour the component
     display: block;
     position: relative;
 
-    > * {
-      padding: 0 10px;
-
-      &.is-valid, &.is-unanswered, &.is-invalid {
-        padding-right: calc($inline-feedback-size + 2 * $inline-feedback-padding - 2px) !important; // -2px to account for border
-      }
+    > .is-valid, > .is-unanswered, > .is-invalid {
+      padding-right: calc($inline-feedback-size + 2 * $inline-feedback-padding - 2px) !important; // -2px to account for border
     }
 
     > input {
       background: none; // remove default bootstrap background from is-valid, is-invalid
+      padding: 0 10px;
     }
 
     &::after{
@@ -150,25 +160,12 @@ $inline-feedback-padding: 2px;
   }
 }
 
-@container inline-padding (50px < width < 100px) {
-  .feedback-wrapper.feedback-wrapper > * {
-    padding: 0 8px;
-  }
-}
-
-@container inline-padding (width < 50px) {
-  .feedback-wrapper.feedback-wrapper > * {
-    padding: 0 5px;
-  }
-}
-
 .inline-string-container {
   @extend .inline-container;
 }
 
 .inline-numeric-container {
   @extend .inline-container;
-  display: inline-flex;
 
   @media screen {
     .units-shown {
@@ -176,8 +173,8 @@ $inline-feedback-padding: 2px;
     }
   }
 
-  .inline-unit-dropdown {
-    button.btn {
+  > .inline-unit-dropdown {
+    > button.btn {
       display: block;
       height: 100%;
       min-width: 36px !important;
@@ -188,6 +185,12 @@ $inline-feedback-padding: 2px;
       }
       &.feedback-shown {
         padding-right: 36px !important;
+      }
+
+      > div {
+        // force contents of button to fit in $inline-feedback-size, so we can use it at all sizes
+        height: $inline-feedback-size;
+        margin-top: -9.5px; 
       }
     }
     &.display-unit {

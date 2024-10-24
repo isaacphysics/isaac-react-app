@@ -9,7 +9,7 @@ import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/Inline
 import { selectUnits, wrapUnitForSelect } from "../../../services/numericUnits";
 import { QuestionCorrectness } from "../../../../IsaacAppTypes";
 
-export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, focusRef, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
+export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, focusRef, contentClasses, contentStyle, ...rest} : InlineEntryZoneProps<IsaacNumericQuestionDTO>) => {
 
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId as string);
@@ -26,10 +26,10 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
     const valueCorrectness = correctness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" : 
         attempt?.correctValue ? "CORRECT" : 
         attempt?.correctValue === undefined ? "NOT_SUBMITTED" : // this fixes an edge case caused by the value not being marked (i.e. correctValue === undefined) if the units are not answered; we should not colour the value in this case
-        (attempt?.answer as QuantityDTO).value ? "INCORRECT" : "NOT_ANSWERED";
+        (attempt?.answer as QuantityDTO | undefined)?.value ? "INCORRECT" : "NOT_ANSWERED";
     const unitCorrectness = correctness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" :
         attempt?.correctUnits ? "CORRECT" :
-        (attempt?.answer as QuantityDTO).units !== undefined ? "INCORRECT" : "NOT_ANSWERED";
+        (attempt?.answer as QuantityDTO | undefined)?.units !== undefined ? "INCORRECT" : "NOT_ANSWERED";
 
     const showFeedback = (correctness : QuestionCorrectness) => {
         // whether the provided correctness requires a feedback icon to be shown
@@ -51,17 +51,19 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
     const entryZoneRef = useRef<HTMLDivElement>(null);
 
     return <div {...rest} ref={entryZoneRef}
-        className={classNames("inline-numeric-container w-100", rest.className)}
+        className={classNames("inline-numeric-container", rest.className)}
     >
         <div className="feedback-wrapper flex-grow-1">
             <Input 
                 ref={focusRef}
                 className={classNames(
-                    "force-print w-100 h-100",
+                    contentClasses,
+                    "force-print",
                     {"units-shown" : questionDTO.requireUnits || !noDisplayUnit},
                     // if the answer is incorrect because the units are wrong but the value is correct, hide the green outline from the value
                     correctnessClass((correctness === "INCORRECT" && valueCorrectness === "CORRECT") ? "NOT_SUBMITTED" : valueCorrectness)
                 )}
+                style={contentStyle}
                 value={currentAttempt?.value ?? ""}
                 onChange={(e) => {
                     updateCurrentAttempt({newValue: e.target.value});
@@ -73,18 +75,17 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
             disabled={readonly} 
             isOpen={isOpen && noDisplayUnit} 
             toggle={() => {setIsOpen(!isOpen);}} 
-            className={classNames("inline-unit-dropdown feedback-wrapper justify-content-center", {"display-unit": !noDisplayUnit})}
-        >
+            className={classNames("inline-unit-dropdown justify-content-center", {"display-unit": !noDisplayUnit})}
+        >   
             <DropdownToggle
                 disabled={readonly || !noDisplayUnit}
                 className={classNames(
-                    "feedback-zone px-2 py-0", 
-                    {[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit},
+                    "feedback-wrapper px-2 py-0", 
                     {"border-dark": !noDisplayUnit}
                 )}
                 color={noDisplayUnit ? undefined : "white"}
             >
-                <div>
+                <div className={classNames({[correctnessClass((correctness === "INCORRECT" && unitCorrectness === "CORRECT") ? "NOT_SUBMITTED" : unitCorrectness)] : showFeedback(unitCorrectness) && noDisplayUnit})}>
                     <Markup encoding={"latex"}>
                         {isDefined(unit) ? wrapUnitForSelect(unit) : "Unit..."}
                     </Markup>

@@ -5,7 +5,7 @@ import { useCurrentQuestionAttempt } from "../../../services";
 import { InlineEntryZoneProps, correctnessClass } from "../markup/portals/InlineEntryZone";
 import classNames from "classnames";
 
-export const InlineStringEntryZone = ({questionDTO, focusRef, setModified, correctness, ...rest} : InlineEntryZoneProps<IsaacStringMatchQuestionDTO>) => {
+export const InlineStringEntryZone = ({questionDTO, focusRef, setModified, correctness, contentClasses, contentStyle, ...rest} : InlineEntryZoneProps<IsaacStringMatchQuestionDTO>) => {
     
     const questionId = questionDTO?.id ?? "";
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<StringChoiceDTO>(questionId as string);
@@ -19,14 +19,16 @@ export const InlineStringEntryZone = ({questionDTO, focusRef, setModified, corre
         setModified(true);
     }
 
-    return <div className={classNames("inline-string-container w-100", rest.className)}>
+    return <div className={classNames("inline-string-container", rest.className)}>
         <div className="feedback-wrapper w-100 h-100">
             <Input 
                 {...rest}
                 className={classNames(
-                    "force-print w-100 h-100",
+                    contentClasses,
+                    "force-print",
                     correctnessClass(correctness)
                 )}
+                style={contentStyle}
                 ref={focusRef}
                 value={currentAttempt?.value ?? ""}
                 onChange={(e) => updateCurrentAttempt({newValue: e.target.value})}

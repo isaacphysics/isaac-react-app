@@ -24,6 +24,8 @@ export interface InlineEntryZoneProps<T> extends InputProps {
     correctness: QuestionCorrectness,
     focusRef: React.RefObject<any>,
     questionDTO: T & AppQuestionDTO;
+    contentClasses: string;
+    contentStyle: React.CSSProperties,
 }
 
 export interface InlineEntryZoneBaseProps {
@@ -34,7 +36,7 @@ export interface InlineEntryZoneBaseProps {
     root: HTMLElement
 }
 
-const InlineEntryZoneBase = ({inlineSpanId, className: _containerSpanClassName, widthPx, heightPx, root}: InlineEntryZoneBaseProps) => {
+const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, heightPx, root}: InlineEntryZoneBaseProps) => {
     
     const inlineContext = useContext(InlineContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
@@ -138,7 +140,8 @@ const InlineEntryZoneBase = ({inlineSpanId, className: _containerSpanClassName, 
                     correctness={correctness}
                     questionDTO={questionDTO as IsaacNumericQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
-                    style={{width: widthPx, height: heightPx}}
+                    contentClasses={contentClasses}
+                    contentStyle={{width: widthPx, height: heightPx}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}
@@ -149,7 +152,8 @@ const InlineEntryZoneBase = ({inlineSpanId, className: _containerSpanClassName, 
                     correctness={correctness}
                     questionDTO={questionDTO as IsaacStringMatchQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
-                    style={{width: widthPx, height: heightPx}}
+                    contentClasses={contentClasses}
+                    contentStyle={{width: widthPx, height: heightPx}}
                     setModified={setModified}
                     onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
                     focusRef={focusRef}

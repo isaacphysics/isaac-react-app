@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { PortalInHtmlHook } from "./utils";
 import { InlineContext } from "../../../../../IsaacAppTypes";
 import InlineEntryZoneBase from "./InlineEntryZone";
+import classNames from "classnames";
 
 // See the comment on `PORTAL_HOOKS` constant for an explanation of how this works
 export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
@@ -21,7 +22,7 @@ export const useInlineEntryZoneInHtml: PortalInHtmlHook = (html) => {
     for (let i = 0; i < inlineZones.length; i++) {
         inlineZoneConstructors.push({
             id: inlineZones[i].id, 
-            className: inlineZones[i].classList.toString(), 
+            className: classNames("inline-data-target", (inlineZones[i].dataset.classes ?? "")), 
             widthPx: inlineZones[i].dataset.width ? parseInt(inlineZones[i].dataset.width as string) : undefined,
             heightPx: inlineZones[i].dataset.height ? parseInt(inlineZones[i].dataset.height as string) : undefined,
         });
