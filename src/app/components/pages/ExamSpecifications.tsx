@@ -93,7 +93,7 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter}: ExamSpecifica
     }, [examBoardTab, stageTab]);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Exam specifications"} />
+        <TitleAndBreadcrumb currentPageTitle={"Specifications"} />
         <MetaDescription description={metaDescription} />
         {stageTabs}
         <Row>

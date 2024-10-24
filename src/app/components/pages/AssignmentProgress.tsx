@@ -495,7 +495,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
     return <>
         <Container>
             <TitleAndBreadcrumb
-                currentPageTitle={siteSpecific("Assignment Progress", "My markbook")}
+                currentPageTitle={siteSpecific("Assignment Progress", "Markbook")}
                 subTitle={"Track your group performance" + (isPhy ? " by question" : "")}
                 help={pageHelp}
                 modalId="help_modal_assignment_progress"
