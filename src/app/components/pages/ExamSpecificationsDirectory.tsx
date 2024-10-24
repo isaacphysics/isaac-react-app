@@ -11,7 +11,7 @@ export const ExamSpecificationsDirectory = () => {
         <MetaDescription description="Discover our free A level computer science topics and questions."/>
         <Row className={"justify-content-center d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-xl-4 my-3"}>
             <Col className={"my-3"}>
-                <Card className={"cs-card w-100"}>
+                <Card className={"cs-card-plain w-100"}>
                     <CardBody>
                         <CardTitle>
                             <h3>Ada CS</h3>
@@ -31,7 +31,7 @@ export const ExamSpecificationsDirectory = () => {
                 </Card>
             </Col>
             <Col className={"my-3"}>
-                <Card className={"cs-card w-100"}>
+                <Card className={"cs-card-plain w-100"}>
                     <CardBody>
                         <CardTitle>
                             <h3>England</h3>
@@ -52,7 +52,7 @@ export const ExamSpecificationsDirectory = () => {
                 </Card>
             </Col>
             <Col className={"my-3"}>
-                <Card className={"cs-card w-100"}>
+                <Card className={"cs-card-plain w-100"}>
                     <CardBody>
                         <CardTitle>
                             <h3>Scotland</h3>
@@ -73,7 +73,7 @@ export const ExamSpecificationsDirectory = () => {
                 </Card>
             </Col>
             <Col className={"my-3"}>
-                <Card className={"cs-card w-100"}>
+                <Card className={"cs-card-plain w-100"}>
                     <CardBody>
                         <CardTitle>
                             <h3>Wales</h3>

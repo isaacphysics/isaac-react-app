@@ -1,0 +1,18 @@
+#student-resources, #teacher-resources {
+  .backslash-left {
+    position: relative;
+
+    > div {
+      padding-left: 48px;
+    }
+
+    &::before {
+      content: "/";
+      color: $pink-300;
+      font-size: 3.5rem;
+      position: absolute;
+      top: 34px;
+      left: 6px;
+    }
+  }
+}
