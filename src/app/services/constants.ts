@@ -841,7 +841,7 @@ export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
 export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "Assignment Progress", to: "/assignment_progress"},
-    {title: "My markbook", to: "/my_markbook"}
+    {title: "Markbook", to: "/my_markbook"}
 );
 
 export const UserFacingRole: {[role in UserRole]: string} = {

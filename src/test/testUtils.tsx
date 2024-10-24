@@ -128,7 +128,7 @@ export const navigateToAssignmentProgress = async () => {
     isPhy ?
         await followHeaderNavLink("Teach", "Assignment Progress")
         :
-        await followHeaderNavLink("My Ada", "My markbook");
+        await followHeaderNavLink("My Ada", "Markbook");
 };
 
 // Open a given tab in the account page.
