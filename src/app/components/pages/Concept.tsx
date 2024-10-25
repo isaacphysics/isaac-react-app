@@ -75,7 +75,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                 </div>
 
                 <Row className="concept-content-container">
-                    <Col className={classNames("py-4", {"mw-760": isAda})}>
+                    <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
 
                         <SupersededDeprecatedWarningBanner doc={doc} />
 
