@@ -3,7 +3,7 @@ import {
     useGetAttemptedFreelyByMeQuery,
     useGetQuizAssignmentsAssignedToMeQuery
 } from "../../../state";
-import {Link, RouteComponentProps, useHistory, useLocation, withRouter} from "react-router-dom";
+import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -47,7 +47,8 @@ function QuizItem({item}: QuizAssignmentProps) {
     const attempt = isAttempt(item) ? item : assignment?.attempt;
     const status: Status = !attempt ? Status.Unstarted : !attempt.completedDate ? Status.Started : Status.Complete;
     const assignmentStartDate = assignment?.scheduledStartDate ?? assignment?.creationDate;
-    const pastDueDate = assignment?.dueDate ? (todaysDate > assignment.dueDate) : false;
+    const overdue = (status !== Status.Complete && assignment?.dueDate) ? (todaysDate > assignment.dueDate) : false;
+
     return <div className="p-2">
         <RS.Card className="card-neat my-quizzes-card">
             <RS.CardBody className="d-flex flex-column">
@@ -75,31 +76,28 @@ function QuizItem({item}: QuizAssignmentProps) {
 
                 <div className="text-center mt-4">
                     {assignment ? <>
-                        {status === Status.Unstarted && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`} disabled={pastDueDate}>
+                        {status === Status.Unstarted && !overdue && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
                             {siteSpecific("Start Test", "Start test")}
                         </RS.Button>}
-                        {status === Status.Started && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`} disabled={pastDueDate}>
+                        {status === Status.Started && !overdue && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
                             {siteSpecific("Continue Test", "Continue test")}
                         </RS.Button>}
+                        {overdue && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`} disabled={true}>
+                            {siteSpecific("Overdue", "Overdue")}
+                        </RS.Button>}
                         {status === Status.Complete && (
-                            assignment.quizFeedbackMode !== "NONE" ?
-                                <RS.Button tag={Link} to={`/test/attempt/${assignment.attempt?.id}/feedback`}>
-                                    {siteSpecific("View Feedback", "View feedback")}
-                                </RS.Button>
-                                :
-                                <strong>No feedback available</strong>
+                            <RS.Button disabled={assignment.quizFeedbackMode === "NONE"}>
+                                {assignment.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
+                            </RS.Button>
                         )}
                     </> : attempt && <>
                         {status === Status.Started && <RS.Button tag={Link} to={`/test/attempt/${attempt.quizId}`}>
                             {siteSpecific("Continue Test", "Continue test")}
                         </RS.Button>}
                         {status === Status.Complete && (
-                            attempt.feedbackMode !== "NONE" ?
-                                <RS.Button tag={Link} to={`/test/attempt/${attempt.id}/feedback`}>
-                                    {siteSpecific("View Feedback", "View feedback")}
-                                </RS.Button>
-                                :
-                                <strong>No feedback available</strong>
+                            <RS.Button disabled={attempt.quizAssignment?.quizFeedbackMode === "NONE"}>
+                                {attempt.quizAssignment?.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
+                            </RS.Button>
                         )}
                     </>}
                 </div>
@@ -134,44 +132,60 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         You can also take some tests freely whenever you want to test your knowledge.
     </span>;
 
-    function sortByDate(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
-        // Compare by due date if possible
+    function sortCurrentQuizzes(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
+        // Compare by due date (or lack of due date) if possible
         if (a.dueDate && b.dueDate) {
             if (a.dueDate < b.dueDate) {
-                return 1;
+                return -1;
             }
             if (a.dueDate > b.dueDate) {
-                return -1;
+                return 1;
             }
         }
         else if (a.dueDate) {
-            return 1;
+            return -1;
         }
         else if (b.dueDate) {
-            return -1;
+            return 1;
         }
         // Otherwise compare by set date
         if (a.creationDate && b.creationDate) {
             if (a.creationDate < b.creationDate) {
-                return 1;
+                return -1;
             }
             if (a.creationDate > b.creationDate) {
-                return -1;
+                return 1;
             }
         }
         return 0;
     }
 
-    let [currentQuizzes, overdueQuizzes] = partition(quizAssignments, a => a?.dueDate ? (todaysDate > a.dueDate) : false);
-    currentQuizzes = currentQuizzes.toSorted(sortByDate);
-    overdueQuizzes = overdueQuizzes.toSorted(sortByDate).reverse();
+    function sortCompletedQuizzes(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
+        // Compare by completion date; if incomplete (i.e. overdue), use due date instead
+        const aDate = (a.attempt?.completedDate ?? a.dueDate);
+        const bDate = (b.attempt?.completedDate ?? b.dueDate);
+        if (aDate! < bDate!) {
+            return -1;
+        }
+        if (aDate! > bDate!) {
+            return 1;
+        }
+        return 0;
+    }
 
-    const assignmentsAndAttempts = [
+    const [completedQuizzes, incompleteQuizzes] = quizAssignments ? partitionCompleteAndIncompleteQuizzes(quizAssignments) : [[], []];
+    let [overdueQuizzes, currentQuizzes] = partition(incompleteQuizzes, a => a.dueDate ? todaysDate > a.dueDate : false);
+    currentQuizzes = currentQuizzes.toSorted(sortCurrentQuizzes);
+    
+    let [completedFreeAttempts, currentFreeAttempts] = partitionCompleteAndIncompleteQuizzes(freeAttempts ?? []);
+    currentFreeAttempts = currentFreeAttempts?.toSorted(sortCurrentQuizzes);
+
+    let completedOrOverdueQuizzes = [
         ...isFound(overdueQuizzes) ? overdueQuizzes : [],
-        ...isFound(freeAttempts) ? freeAttempts : [],
-        ...isFound(currentQuizzes) ? currentQuizzes : []
+        ...isFound(completedQuizzes) ? completedQuizzes : [],
+        ...isFound(completedFreeAttempts) ? completedFreeAttempts : []
     ];
-    const [completedQuizzes, incompleteQuizzes] = partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts);
+    completedOrOverdueQuizzes = completedOrOverdueQuizzes.toSorted(sortCompletedQuizzes);
 
     const showQuiz = (quiz: QuizSummaryDTO) => {
         switch (user.role) {
@@ -220,18 +234,22 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                         until={quizAssignments}
                         ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}
                     >
-                        <QuizGrid quizzes={incompleteQuizzes} empty="You don't have any incomplete or assigned tests."/>
+                        <QuizGrid quizzes={currentQuizzes} empty="You don&apos;t have any incomplete or assigned tests."/>
                     </ShowLoading>,
 
-                [siteSpecific("Completed Tests", "Completed tests")]:
+                [siteSpecific("Past Tests", "Past tests")]:
                     <ShowLoading
                         until={quizAssignments}
                         ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}
                     >
-                        <QuizGrid quizzes={completedQuizzes} empty="You haven't completed any tests."/>
+                        <QuizGrid quizzes={completedOrOverdueQuizzes} empty="You don't have any completed or overdue tests."/>
                     </ShowLoading>,
 
                 [siteSpecific("Practice Tests", "Practice tests")]:
+                <>
+                    <div className="mb-5">
+                        <QuizGrid quizzes={currentFreeAttempts} empty="You don't have any practice tests in progress."/>
+                    </div>
                     <ShowLoading until={quizzes}>
                         {quizzes && <>
                             {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
@@ -261,6 +279,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                             </RS.ListGroup>
                         </>}
                     </ShowLoading>
+                </>
             }}
         </Tabs>
     </RS.Container>;
