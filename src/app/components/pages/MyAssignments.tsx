@@ -18,8 +18,13 @@ import {PageFragment} from "../elements/PageFragment";
 
 const INITIAL_NO_ASSIGNMENTS = 10;
 const NO_ASSIGNMENTS_INCREMENT = 10;
-const assignmentStates = ["All", "To do", "Older", "All attempted", "All correct"];
-type AssignmentState = typeof assignmentStates[number];
+enum AssignmentState {
+    ALL = "All",
+    TODO_RECENT = "To do (recent)",
+    TODO_OLDER = "To do (older)",
+    ALL_ATTEMPTED = "All attempted",
+    ALL_CORRECT = "All correct"
+}
 
 export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
@@ -29,7 +34,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     //  that require refetching.
     const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
 
-    const [assignmentStateFilter, setAssignmentStateFilter] = useState<AssignmentState>("To do");
+    const [assignmentStateFilter, setAssignmentStateFilter] = useState<AssignmentState>(AssignmentState.ALL);
     const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
     const [assignmentSetByFilter, setAssignmentSetByFilter] = useState<string>("All");
     const [assignmentGroupFilter, setAssignmentGroupFilter] = useState<string>("All");
@@ -54,23 +59,31 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                         const myAssignments = filterAssignmentsByStatus(assignments);
 
                         const assignmentByStates: Record<AssignmentState, AssignmentDTO[]> = {
-                            "All": [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld, ...myAssignments.allAttempted, ...myAssignments.allCorrect],
-                            "To do": myAssignments.inProgressRecent,
-                            "Older": myAssignments.inProgressOld,
-                            "All attempted": myAssignments.allAttempted,
-                            "All correct": myAssignments.allCorrect
+                            [AssignmentState.ALL]: [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld, ...myAssignments.allAttempted, ...myAssignments.allCorrect],
+                            [AssignmentState.TODO_RECENT]: myAssignments.inProgressRecent,
+                            [AssignmentState.TODO_OLDER]: myAssignments.inProgressOld,
+                            [AssignmentState.ALL_ATTEMPTED]: myAssignments.allAttempted,
+                            [AssignmentState.ALL_CORRECT]: myAssignments.allCorrect
                         };
 
                         const filteredAssignments = filterAssignmentsByProperties(assignmentByStates[assignmentStateFilter], assignmentTitleFilter, assignmentGroupFilter, assignmentSetByFilter);
 
                         return <>
                             <Row className={siteSpecific("pt-4", "pt-2")}>
-                                <Col lg={4}>
+                                <Col md={4} lg={2}>
+                                    <Label className="w-100">
+                                        Status
+                                        <Input type="select" data-testid="assignment-type-filter" value={assignmentStateFilter} onChange={e => setAssignmentStateFilter(e.target.value as AssignmentState)}>
+                                            {Object.values(AssignmentState).map(state => <option key={state} value={state}>{state}</option>)}
+                                        </Input>
+                                    </Label>
+                                </Col>
+                                <Col md={8} lg={5}>
                                     <Label className="w-100">
                                         {siteSpecific("Filter assignments", "Filter quizzes by name")} <Input type="text" onChange={(e) => setAssignmentTitleFilter(e.target.value)} placeholder={siteSpecific("Filter assignments by name", undefined)}/>
                                     </Label>
                                 </Col>
-                                <Col sm={6} md={4} lg={2} className="m-lg-auto">
+                                <Col sm={6} lg={{size: 2, offset: 1}}>
                                     <Label className="w-100">
                                         Group
                                         <Input type="select" value={assignmentGroupFilter} onChange={e => setAssignmentGroupFilter(e.target.value)}>
@@ -78,19 +91,11 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                         </Input>
                                     </Label>
                                 </Col>
-                                <Col sm={6} md={4} lg={2}>
+                                <Col sm={6} lg={2}>
                                     <Label className="w-100">
                                         Set by
                                         <Input type="select" value={assignmentSetByFilter} onChange={e => setAssignmentSetByFilter(e.target.value)}>
                                             {["All", ...getDistinctAssignmentSetters(assignments)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
-                                        </Input>
-                                    </Label>
-                                </Col>
-                                <Col md={4} lg="auto">
-                                    <Label className="w-100">
-                                        Status
-                                        <Input type="select" data-testid="assignment-type-filter" value={assignmentStateFilter} onChange={e => setAssignmentStateFilter(e.target.value)}>
-                                            {assignmentStates.map(state => <option key={state} value={state}>{state}</option>)}
                                         </Input>
                                     </Label>
                                 </Col>
