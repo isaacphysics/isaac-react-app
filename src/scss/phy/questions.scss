@@ -32,11 +32,17 @@
 .question-component .question-content {
   font-family: $primary-font;
 }
-.question-panel > .content-chunk > .content-value, .figure-panel {
+.question-panel > .content-chunk > .content-value {
   background: none;
   box-shadow: none;
   padding: 0 0.25rem;
   font-weight: 400;
+}
+
+:not(.generic-panel):not(.concept-panel):not(.question-panel) > .content-chunk > .figure-panel {
+  // if a figure is in the top level of a content block that is not the top level of a page (i.e. preamble), indent it. otherwise (i.e. when inside a layout component), leave it for that component to handle
+  // TODO: move the padding from this to the layout component (usually accordions!)
+  padding: 0 3rem;
 }
 
 .question-panel .isaac-accordion {
@@ -47,7 +53,7 @@
     line-height: 1.6;
   }
   // Make sure that reorder questions have a background when they expand on Phy
-  .question-component:not(.expansion-layout), .figure-panel {
+  .question-component:not(.expansion-layout) {
     background: none;
     box-shadow: none;
     padding: 0 !important;
