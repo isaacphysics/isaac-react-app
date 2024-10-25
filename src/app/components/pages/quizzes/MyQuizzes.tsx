@@ -86,7 +86,7 @@ function QuizItem({item}: QuizAssignmentProps) {
                             {siteSpecific("Overdue", "Overdue")}
                         </RS.Button>}
                         {status === Status.Complete && (
-                            <RS.Button disabled={assignment.quizFeedbackMode === "NONE"}>
+                            <RS.Button tag={Link} to={`/test/attempt/${assignment.attempt?.id}/feedback`} disabled={assignment.quizFeedbackMode === "NONE"}>
                                 {assignment.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
                             </RS.Button>
                         )}
@@ -95,7 +95,7 @@ function QuizItem({item}: QuizAssignmentProps) {
                             {siteSpecific("Continue Test", "Continue test")}
                         </RS.Button>}
                         {status === Status.Complete && (
-                            <RS.Button disabled={attempt.quizAssignment?.quizFeedbackMode === "NONE"}>
+                            <RS.Button tag={Link} to={`/test/attempt/${attempt.id}/feedback`}disabled={attempt.quizAssignment?.quizFeedbackMode === "NONE"}>
                                 {attempt.quizAssignment?.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
                             </RS.Button>
                         )}
