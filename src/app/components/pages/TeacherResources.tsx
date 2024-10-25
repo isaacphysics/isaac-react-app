@@ -131,7 +131,7 @@ export const TeacherResources = () => {
                     <AdaCard card={{
                         title: "Teacher mentoring",
                         image: {src: "/assets/cs/decor/teacher-3.png"},
-                        bodyText: "Get support through our online programme for newly-qualified and non-specialist computer science teachers.",
+                        bodyText: "Get support through our online programme for newly qualified and non-specialist computer science teachers.",
                         clickUrl: "/pages/teacher_mentoring_2024",
                         buttonText: "Learn more",
                         className: "bg-cultured-grey",
@@ -164,7 +164,7 @@ export const TeacherResources = () => {
             <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
                 <TextBlock md={8}>
                     <h2>More teaching resources</h2>
-                    <p>Support, lesson plans, ideas, and tools from thr Raspberry Pi Foundation&apos;s world class range of computer science resources.</p>
+                    <p>Support, lesson plans, ideas, and tools from the Raspberry Pi Foundation&apos;s world-class range of computer science resources.</p>
                 </TextBlock>
                 <ColumnSlice>
                     <AdaCard card={{
@@ -178,7 +178,7 @@ export const TeacherResources = () => {
                     <AdaCard card={{
                         title: "Hello World magazine",
                         image: {src: "/assets/cs/decor/hello-world.png"},
-                        bodyText: "Get a global perspective on computing education with Hello World–our magazine and podcast for educators. Share your expertise and write for us!",
+                        bodyText: "Get a global perspective on computing education with Hello World – our magazine and podcast for educators. Share your expertise and write for us!",
                         buttonText: "Learn more",
                         clickUrl: "https://www.raspberrypi.org/hello-world",
                         className: "bg-cultured-grey",
@@ -197,7 +197,7 @@ export const TeacherResources = () => {
             <Container className="py-5 homepage-x-padding mw-1600 bg-black" fluid>
                 <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
                     <h2>
-                        &ldquo;Ada Computer Science has eliminated the need for textbooks for A level Computer Science. There is rarely a need for any other sources of information when planning lessons and it&apos;s free!&rdquo;
+                        &ldquo;Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it&apos;s free!&rdquo;
                     </h2>
                     <p>– Matt Arnmor, computer science teacher</p>
                 </TextBlock>

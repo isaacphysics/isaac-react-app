@@ -20,7 +20,7 @@ export const StudentResources = () => {
                             <span className="text-yellow">/</span><br/>
                             Resources for students
                         </h1>
-                        <p>We&apos;ve got everything to help you study computer science - including classwork, homework, and exam prep. And it&apos;s all available for free.</p>
+                        <p>We&apos;ve got everything to help you study computer science – including classwork, homework, and exam prep. And it&apos;s all available for free.</p>
                     </TextBlock>
                     <ImageBlock>
                         <img className="px-0 px-sm-3 px-md-0 px-lg-2 px-xl-4"src="/assets/cs/decor/learner-1.png" alt=""/>
@@ -67,7 +67,7 @@ export const StudentResources = () => {
             <Container className="py-5 homepage-x-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock>
-                        <h2>Over 1000 practise questions</h2>
+                        <h2>Over 1000 practice questions</h2>
                         <p>Our self-marking questions give you hints and instant feedback as you go. You can filter by exam level, topic, or concept to find exactly what you need.</p>
                         <Button className="mt-3" tag={Link} to="/questions">Try our practise questions</Button>
                     </TextBlock>
@@ -132,13 +132,13 @@ export const StudentResources = () => {
                     <AdaCard card={{
                         title: "Your code in space",
                         image: {src: "/assets/cs/decor/astro-pi.png"},
-                        bodyText: "The European Astro Pi Challenge gets young learners to write code that runs on the International Space Station.",
+                        bodyText: "The European Astro Pi Challenge gets learners writing code that runs on the International Space Station.",
                         buttonText: "Go to Astro Pi",
                         clickUrl: "https://astro-pi.org/",
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
-                        title: "Free Code editor",
+                        title: "Free code editor",
                         image: {src: "/assets/cs/decor/code-editor.png"},
                         bodyText: "Our online code editor lets you code whatever you like: a game, some art, or your very own website using Python or HTML and CSS.",
                         buttonText: "Open the code editor",
