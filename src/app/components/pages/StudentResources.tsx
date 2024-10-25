@@ -3,14 +3,17 @@ import { ColumnSlice } from "../elements/layout/ColumnSlice";
 import { Button, Container } from "reactstrap";
 import { TextBlock } from "../elements/layout/TextBlock";
 import { IconCard } from "../elements/cards/IconCard";
-import { useGetNewsPodListQuery } from "../../state";
+import { selectors, useAppSelector, useGetNewsPodListQuery } from "../../state";
 import { Link } from "react-router-dom";
 import { AdaCard } from "../elements/cards/AdaCard";
 import { ImageBlock } from "../elements/layout/ImageBlock";
+import { isLoggedIn } from "../../services";
 
 export const StudentResources = () => {
     const {data: studentPods} = useGetNewsPodListQuery({subject: "news"});
     const featuredPod = studentPods?.[0];
+    const user = useAppSelector(selectors.user.orNull);
+
     return <div id="student-resources">
         <section id="resources-header" className="bg-cyan-200">
             <Container className="py-5 homepage-x-padding mw-1600" fluid>
@@ -86,8 +89,12 @@ export const StudentResources = () => {
                     <TextBlock>
                         <h2>Track your progress</h2>
                         <p>With an Ada account, all your answers get saved so you can see what to work on and how you’re progressing. And you can track any assignments set by your teacher.</p>
-                        <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
-                        <Button outline to={"/login"} tag={Link}>Log in</Button>
+                        {isLoggedIn(user) ? <>
+                            <Button className="mt-3" tag={Link} to="/progress">View my progress</Button>
+                        </> : <>
+                            <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
+                            <Button outline to={"/login"} tag={Link}>Log in</Button>
+                        </>}
                     </TextBlock>
                 </ColumnSlice>
             </Container>
