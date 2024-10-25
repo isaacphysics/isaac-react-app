@@ -144,7 +144,7 @@ $viewport-sizes: (
 }
 
 // Fixed sizes
-@for $size from 1 through 10 {
+@for $size from 1 through 20 {
   .wf-#{$size} {
     width: #{$size}rem !important;
   }
