@@ -131,8 +131,7 @@ export const HomepageCS = () => {
             <section id="further-learning" className="bg-white">
                 <Container className="py-5 homepage-x-padding mw-1600" fluid>
                     <TextBlock md={8}>
-                        <h2>Further learning</h2>
-                        <p className="text-pink"><b>THIS NEEDS SOME TEXT</b></p>
+                        <h2>More learning resources</h2>
                     </TextBlock>
                     <ColumnSlice>
                         <AdaCard card={{
@@ -166,11 +165,8 @@ export const HomepageCS = () => {
             <section id="what-resources">
                 <Container className={"py-5 homepage-x-padding mw-1600"}>
                     <TextBlock md={8}>
-                        <h2 className={"font-size-1-75 mb-4"}>Our Core and Advanced global resources</h2>
-                        <p>
-                            Teaching or learning from outside the UK? We&apos;ve organised our learning resources by prior
-                            knowledge and age group to make them easy to adapt for curricula in other countries.
-                        </p>
+                        <h2 className={"font-size-1-75 mb-4"}>Teaching outside the UK?</h2>
+                        <p>We&apos;ve organised our learning resources by prior knowledge and age group to make them easy to adapt for curricula around the world.</p>
                     </TextBlock>
                     <ColumnSlice>
                         <Container className="cs-card-container px-3 my-3">
@@ -181,9 +177,7 @@ export const HomepageCS = () => {
                                 <CardBody className={"px-4 pb-4"}>
                                     <ul className="mb-4">
                                         <li>For students aged 14 to 16</li>
-                                        <li>Gives learners a strong theoretical and practical knowledge of the basics of
-                                            computer science
-                                        </li>
+                                        <li>Gives learners a strong theoretical and practical knowledge of the basics of computer science</li>
                                         <li>Suitable for students with no previous knowledge</li>
                                     </ul>
                                 </CardBody>
@@ -202,9 +196,7 @@ export const HomepageCS = () => {
                                         <li>For students aged 16 to 19</li>
                                         <li>Expands on the concepts learnt in the Core curriculum with more detail</li>
                                         <li>Covers more advanced concepts that are not in the Core curriculum</li>
-                                        <li>Prepares students for a university degree / degree apprenticeship
-                                            programme
-                                        </li>
+                                        <li>Prepares students for a university degree / degree apprenticeship programme</li>
                                     </ul>
                                 </CardBody>
                                 <CardFooter className="border-top-0 p-4">
