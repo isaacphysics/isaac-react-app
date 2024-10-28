@@ -162,12 +162,12 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
 
     function sortCompletedQuizzes(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
         // Compare by completion date; if incomplete (i.e. overdue), use due date instead
-        const aDate = (a.attempt?.completedDate ?? a.dueDate);
-        const bDate = (b.attempt?.completedDate ?? b.dueDate);
-        if (aDate! < bDate!) {
+        const aDate = a.attempt?.completedDate ?? a.dueDate ?? 0;
+        const bDate = b.attempt?.completedDate ?? b.dueDate ?? 0;
+        if (aDate < bDate) {
             return -1;
         }
-        if (aDate! > bDate!) {
+        if (aDate > bDate) {
             return 1;
         }
         return 0;
