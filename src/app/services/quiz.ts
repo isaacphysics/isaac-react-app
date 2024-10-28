@@ -277,6 +277,7 @@ export function isAttempt(a: QuizAttemptOrAssignment): a is QuizAttemptDTO {
     return !('groupId' in a);
 }
 
+export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAssignmentDTO[]): [QuizAssignmentDTO[], QuizAssignmentDTO[]];
 export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAttemptOrAssignment[]): [QuizAttemptOrAssignment[], QuizAttemptOrAssignment[]] {
     return partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate));
 }
