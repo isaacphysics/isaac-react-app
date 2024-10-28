@@ -28,32 +28,10 @@ $cards-per-line: (
 @each $name, $breakpoint in $grid-breakpoints {
   @if (map-has-key($cards-per-line, $name)) {
     @include media-breakpoint-up($name) {
-      .card-deck:not(.homepage-cards) .cs-card {
+      .card-deck .cs-card {
         flex: 0 0 calc(#{math.percentage(math.div(1, map-get($cards-per-line, $name)))} - #{$grid-gutter-width});
       }
     }
-  }
-}
-
-// number of cards per line for each breakpoint
-$homepage-cards-per-line: (
-        xs: 1,
-        lg: 2
-);
-@each $name, $breakpoint in $grid-breakpoints {
-  @if (map-has-key($homepage-cards-per-line, $name)) {
-    @include media-breakpoint-up($name) {
-      .homepage-cards .cs-card {
-        flex: 0 0 calc(#{math.percentage(math.div(1, map-get($homepage-cards-per-line, $name)))} - #{$grid-gutter-width});
-      }
-    }
-  }
-}
-
-.homepage-cards {
-  .cs-card {
-    @extend .mt-4;
-    @extend .my-lg-0;
   }
 }
 
@@ -61,7 +39,118 @@ $homepage-cards-per-line: (
   padding-bottom: $grid-gutter-width;
 }
 
-.cs-card, .news-card {
+.cs-card-container {
+  container: cs-card / inline-size;
+}
+
+.cs-card {
+  box-shadow: 0px 0px 2px 1px $shadow-08;
+  border-radius: 1rem 1rem 3rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  > img {
+    aspect-ratio: 16/9;
+    border-radius: 1rem 1rem 0 0;
+    object-fit: cover;
+  }
+}
+
+@container cs-card (min-width: 560px) {
+  .cs-card {
+    flex-direction: row-reverse;
+
+    > div {
+      width: 50%;
+    }
+
+    > img {
+      width: 50%;
+      border-radius: 0 1rem 3rem 0;
+    }
+  }
+}
+
+.icon-card {
+  box-shadow: 0px 0px 2px 1px $shadow-08;
+  border-radius: 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  > img {
+    width: 25px;
+    height: 25px;
+    margin-top: 2rem;
+    margin-left: 1.5rem;
+  }
+
+  .icon-card-tag {
+    position: absolute;
+    background-color: $pink-400;
+    height: 44px;
+    margin-top: -22px;
+    right: 2rem;
+    padding: 0.8rem 1rem;
+    border-radius: 2rem;
+  }
+}
+
+.icon-card-container {
+  container: icon-card / inline-size;
+  max-width: unset;
+}
+
+a.icon-card, a.cs-card {
+  text-decoration: none !important;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+@container icon-card (min-width: 480px) {
+  .icon-card {
+    flex-direction: row;
+
+    > .icon-card-main-content > * {
+      padding-left: 1rem !important;
+
+      h3 {
+        margin-top: 8px;
+      }
+    }
+  }
+}
+
+.cs-card, .icon-card {
+  .card-footer {
+    .btn-link::after {
+      content: "";
+      display: inline-flex;
+      width: 6px;
+      height: 8px;
+      margin-top: -3px;
+      margin-left: 10px;
+      @include svg-color(url('/assets/common/icons/chevron_right.svg'), $dark-pink-300);
+      mask-size: cover;
+    }
+  }
+
+  .external-link::after {
+    content: "";
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    margin: -1px -4px 0 4px;
+    background: url(/assets/cs/icons/external-link.svg) no-repeat center center;
+    vertical-align: middle;
+  }
+}
+
+.cs-card-plain, .news-card {
   position: relative;
   border-radius: 15px;
   display: inline-block;
@@ -106,7 +195,7 @@ $homepage-cards-per-line: (
   }
 }
 
-.cs-card, .news-card, .board-card {
+.cs-card-plain, .news-card, .board-card {
   // This is to make sure that the "footers" of multiple cards line up nicely
   &::after {
     @extend .mb-5;
@@ -116,7 +205,6 @@ $homepage-cards-per-line: (
     position: relative;
   }
   .card-footer {
-    background-color: transparent !important;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -124,6 +212,12 @@ $homepage-cards-per-line: (
     .assign-button {
       margin-top: 15px;
     }
+  }
+}
+
+.cs-card, .cs-card-plain, .icon-card, .news-card, .board-card {
+  .card-footer {
+    background-color: transparent !important;
   }
 }
 
