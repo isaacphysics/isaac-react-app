@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
     getRTKQueryErrorMessage,
     useGetQuizAssignmentWithFeedbackQuery,
@@ -205,14 +205,32 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
         const definedMarks = marks?.filter(isDefined);
         if (!definedMarks || definedMarks.length === 0) return [0, 0];
         const correct = definedMarks.reduce((p, c) => p + (c.correct ?? 0), 0);
+        // the multiple is always 1 for now, but if different parts have different marks in future this should still work
         const total = assignment.userFeedback.length * ((definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) + (definedMarks[0].notAttempted ?? 0));
         return [correct, total];
     };
 
+    const fractionAttempted = (questionId: string) => {
+        if (!assignment.userFeedback) return [0, 0];
+        const marks = assignment.userFeedback.map(row => row.feedback?.questionMarks?.[questionId]);
+        const definedMarks = marks?.filter(isDefined);
+        if (!definedMarks || definedMarks.length === 0) return [0, 0];
+        const attempted = definedMarks.reduce((p, c) => p + (c.notAttempted === 0 ? (definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) : 0), 0);
+        const total = assignment.userFeedback.length * ((definedMarks[0].correct ?? 0) + (definedMarks[0].incorrect ?? 0) + (definedMarks[0].notAttempted ?? 0));
+        return [attempted, total];
+    };
+
+    const assignmentProgressContext = useContext(AssignmentProgressPageSettingsContext);
+
     const quizAverages = questions.map(q => {
         if (!q.id) return 0;
-        const [correct, total] = fractionCorrect(q.id);
-        return total ? Math.round(100 * correct / total) : 0;
+        if (assignmentProgressContext?.attemptedOrCorrect === "ATTEMPTED") {
+            const [attempted, total] = fractionAttempted(q.id);
+            return total ? Math.round(100 * attempted / total) : 0;
+        } else {
+            const [correct, total] = fractionCorrect(q.id);
+            return total ? Math.round(100 * correct / total) : 0;
+        }
     });
 
     const totalParts = questions.length;

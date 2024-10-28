@@ -68,7 +68,7 @@ export const SortItemHeader = <T extends Order>(props: SortItemHeaderProps<T>) =
         <span className="down">▼</span>
     </button>;
 
-    return <th key={props.key} {...rest} className={props.className + sortClass(defaultOrder, reverseOrder, currentOrder, reversed)} onClick={clickToSelect}>
+    return <th {...rest} className={props.className + sortClass(defaultOrder, reverseOrder, currentOrder, reversed)} onClick={clickToSelect}>
         <div className={`d-flex ${justify} align-items-center`}>
             {props.children}
             {justify === "justify-content-start" && <Spacer/>}

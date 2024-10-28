@@ -57,9 +57,9 @@ export const HeaderCS = () => {
 
                         <NavigationSection title="Resources">
                             <LinkItem to="/topics">Topics</LinkItem>
-                            <LinkItem to={PATHS.QUESTION_FINDER}>Practice questions</LinkItem>
+                            <LinkItem to={PATHS.QUESTION_FINDER}>Questions</LinkItem>
                             <LinkItem to="/glossary">Glossary</LinkItem>
-                            <LinkItem to={"/exam_specifications"}>Exam specifications</LinkItem>
+                            <LinkItem to={"/exam_specifications"}>Specifications</LinkItem>
                         </NavigationSection>
 
                         <NavigationSection title="Students">
@@ -100,7 +100,7 @@ export const HeaderCS = () => {
                                             <LinkItem to="/groups">Teaching groups</LinkItem>
                                             <LinkItem to={PATHS.SET_ASSIGNMENTS}>Manage assignments</LinkItem>
                                             <LinkItem to="/set_tests">Manage tests</LinkItem>
-                                            <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>My markbook</LinkItem>
+                                            <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
                                             <LinkItem to={PATHS.MY_ASSIGNMENTS}>Work to do {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
                                         </>
                                     :

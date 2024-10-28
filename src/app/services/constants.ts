@@ -628,6 +628,7 @@ export enum TAG_ID {
     // Thermal
     gases = "gases",
     heatCapacity = "heat_capacity",
+    thermalRadiation = "thermal_radiation",
     // Waves & Particles
     nuclear = "nuclear",
     superposition = "superposition",
@@ -822,6 +823,13 @@ export const ACCOUNT_TABS : AccountTabs[] = [
     {tab: ACCOUNT_TAB.betafeatures, title: "Beta", hiddenIfEditingOtherUser: true},
 ];
 
+// we can't change the names of tabs as we have historic links to them, so use aliases to use updated names instead
+export const ACCOUNT_TABS_ALIASES: {[alias: string]: ACCOUNT_TAB} = {
+    "security": ACCOUNT_TAB.passwordreset,
+    "connections": ACCOUNT_TAB.teacherconnections,
+    "notifications": ACCOUNT_TAB.emailpreferences,
+};
+
 export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
 export enum MARKBOOK_TYPE_TAB {assignments = 1, tests = 2}
 
@@ -833,7 +841,7 @@ export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
 export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "Assignment Progress", to: "/assignment_progress"},
-    {title: "My markbook", to: "/my_markbook"}
+    {title: "Markbook", to: "/my_markbook"}
 );
 
 export const UserFacingRole: {[role in UserRole]: string} = {

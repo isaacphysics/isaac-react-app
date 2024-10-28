@@ -143,21 +143,16 @@
     font-size: 14px;
     margin-bottom: 5px;
   }
-  .icon-person,
-  .icon-person-active {
-    margin-top: 2px;
-  }
 
   .connections-fixed-length-text {
     display: inline-block;
     max-height: 24px;
     width: max-content;
-    max-width: 264px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     &.connection-inactive {
-      max-width: 207px; // include space for "(inactive)" (57px)
+      max-width: calc(100% - 60px); // include space for "(inactive)" (
     }
   }
 }

@@ -10,7 +10,8 @@ import {
     LogicSyntax,
     MenuItemProps,
     MenuItems,
-    EditorMode
+    EditorMode,
+    CHEMICAL_STATES
 } from "./constants";
 import {GREEK_LETTERS_MAP, isDefined, sanitiseInequalityState} from "../../../../services";
 import React from "react";
@@ -344,6 +345,24 @@ export function generateChemicalElementMenuItem(symbol: string): MenuItemProps |
     return undefined;
 }
 
+export function generateChemicalOperationsMenuItem(symbol: string): MenuItemProps | undefined {
+    switch(symbol) {
+        case "+": return {type: 'BinaryOperation', properties: { operation: '+' }, menu: { label: '+', texLabel: true, className: 'chemical-operations plus' }};
+        case "-": return {type: 'BinaryOperation', properties: { operation: '-' }, menu: { label: '-', texLabel: true, className: 'chemical-operations minus' }};
+        case "/": return {type: 'Fraction', properties: { }, menu: { label: '\\frac{a}{b}', texLabel: true, className: 'chemical-operations fraction' }};
+        case "->": return {type: 'Relation', properties: { relation: 'rightarrow' }, menu: { label: '\\rightarrow', texLabel: true, className: 'chemical-operations rightarrow' }};
+        case "<=>": return {type: 'Relation', properties: { relation: 'equilibrium' }, menu: { label: '\\rightleftharpoons', texLabel: true, className: 'chemical-operations equilibrium' }};
+        case "[]": return {type: 'Brackets', properties: { type: 'square', mode: 'chemistry' }, menu: { label: '[x]', texLabel: true, className: 'chemical-operations brackets square' }};
+        case "()": return {type: 'Brackets', properties: { type: 'round', mode: 'chemistry' }, menu: { label: '(x)', texLabel: true, className: 'chemical-operations brackets round' }};
+        case ".": return {type: 'Relation', properties: { relation: '.' }, menu: { label: '\\cdot', texLabel: true, className: 'chemical-operations dot' }};
+        default: return undefined;
+    };
+}
+
+export function generateChemicalStateMenuItem(symbol: string): MenuItemProps | undefined {
+    return generateChemicalStatesMenuItems().find((item) => item.menu.label === `\\text{${symbol}}`);
+}
+
 export const generateDefaultMenuItems = (parsedAvailableSymbols: string[], logicSyntax?: LogicSyntax): MenuItems => ({
     upperCaseLetters: [],
     lowerCaseLetters: [],
@@ -360,6 +379,8 @@ export const generateDefaultMenuItems = (parsedAvailableSymbols: string[], logic
     // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
     letters: [],
     otherFunctions: [],
+    otherChemistryFunctions: [],
+    otherChemicalStates: [],
     chemicalElements: [],
     chemicalParticles: [],
     parsedChemicalElements: []
@@ -440,11 +461,13 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
     if (parsedAvailableSymbols.length > 0) {
         // ~~~ Assuming these are only letters... might become more complicated in the future.
         // THE FUTURE IS HERE! Sorry.
-        const customMenuItems: {mathsDerivatives: MenuItemProps[]; letters: MenuItemProps[]; otherFunctions: MenuItemProps[]; chemicalElements: MenuItemProps[]} = {
+        const customMenuItems: {mathsDerivatives: MenuItemProps[]; letters: MenuItemProps[]; otherFunctions: MenuItemProps[]; otherChemistryFunctions: MenuItemProps[]; chemicalElements: MenuItemProps[]; otherChemicalStates: MenuItemProps[]} = {
             mathsDerivatives: new Array<MenuItemProps>(),
             letters: new Array<MenuItemProps>(),
             otherFunctions: new Array<MenuItemProps>(),
+            otherChemistryFunctions: new Array<MenuItemProps>(),
             chemicalElements: new Array<MenuItemProps>(),
+            otherChemicalStates: new Array<MenuItemProps>(),
         };
 
         parsedAvailableSymbols.forEach((l) => {
@@ -484,11 +507,23 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                 }
             } else {
                 // Everything else is a letter, unless we are doing chemistry
-                if (editorMode === "chemistry") {
+                if (["chemistry", "nuclear"].includes(editorMode)) {
                     // Available chemical elements
-                    const item = generateChemicalElementMenuItem(availableSymbol);
-                    if (item) {
-                        customMenuItems.chemicalElements.push(item);
+                    if (CHEMICAL_ELEMENTS.includes(availableSymbol) || CHEMICAL_PARTICLES.hasOwnProperty(availableSymbol)) {
+                        const item = generateChemicalElementMenuItem(availableSymbol);
+                        if (item) {
+                            customMenuItems.chemicalElements.push(item);
+                        }
+                    } else if (CHEMICAL_STATES.includes(availableSymbol)) {
+                        const item = generateChemicalStateMenuItem(availableSymbol);
+                        if (item) {
+                            customMenuItems.otherChemicalStates.push(item);
+                        }
+                    } else {
+                        const item = generateChemicalOperationsMenuItem(availableSymbol);
+                        if (item) {
+                            customMenuItems.otherChemistryFunctions.push(item);
+                        }
                     }
                 } else {
                     const item = generateLetterMenuItem(availableSymbol);
@@ -519,6 +554,7 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                     })*/,
             otherFunctions: [ ...baseItems.otherFunctions, ...customMenuItems.otherFunctions ],
             chemicalElements: [ ...baseItems.chemicalElements, ...customMenuItems.chemicalElements ],
+            otherChemistryFunctions: [ ...baseItems.otherChemistryFunctions, ...customMenuItems.otherChemistryFunctions ],
         }, false] as [MenuItems, boolean];
     } else {
         if (editorMode === "logic") {
@@ -528,7 +564,7 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                 upperCaseLetters: "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map(letter => generateSingleLetterMenuItem(letter)),
                 lowerCaseLetters: "abcdeghijklmnopqrsuvwxyz".split("").map(letter => generateSingleLetterMenuItem(letter)),
             }, true] as [MenuItems, boolean];
-        } else if (editorMode === "chemistry") {
+        } else if (["chemistry", "nuclear"].includes(editorMode)) {
             return [{
                 ...baseItems,
                 chemicalElements: CHEMICAL_ELEMENTS.map(generateChemicalElementMenuItem),

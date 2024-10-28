@@ -18,3 +18,26 @@
     width: max-content;
   }
 }
+
+.connect-list {
+  .connect-list-header {
+    .icon-person-active {
+      margin-top: 7px;
+    }
+  
+    h4 {
+      padding: 0rem 1rem;
+    }
+  }
+}
+
+.teachers-connected {
+  .icon-person,
+  .icon-person-active {
+    margin-top: 2px;
+  }
+
+  .connections-fixed-length-container {
+    max-width: calc(100% - 91.8px);
+  }
+}

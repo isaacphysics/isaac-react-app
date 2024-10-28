@@ -58,7 +58,8 @@ import {
     validatePassword,
     isTeacherOrAbove,
     isFirstLoginInPersistence,
-    ACCOUNT_TABS
+    ACCOUNT_TABS,
+    ACCOUNT_TABS_ALIASES
 } from "../../services";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
@@ -225,9 +226,8 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
         // @ts-ignore
         const tab: ACCOUNT_TAB =
             (authToken && ACCOUNT_TAB.teacherconnections) ||
-            // This feel particularly bad
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (hashAnchor && ACCOUNT_TAB[hashAnchor as any]) ||
+            (hashAnchor && hashAnchor in ACCOUNT_TAB && ACCOUNT_TAB[hashAnchor as keyof typeof ACCOUNT_TAB]) ||
+            (hashAnchor && hashAnchor in ACCOUNT_TABS_ALIASES && ACCOUNT_TABS_ALIASES[hashAnchor as string]) ||
             ACCOUNT_TAB.account;
         setActiveTab(tab);
     }, [hashAnchor, authToken]);

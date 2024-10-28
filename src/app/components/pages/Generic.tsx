@@ -65,7 +65,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
             </div>
 
             <Row className="generic-content-container">
-                <Col className={classNames("py-4", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
+                <Col className={classNames("py-4 generic-panel", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
                     <WithFigureNumbering doc={doc}>
                         <IsaacContent doc={doc} />
                     </WithFigureNumbering>
