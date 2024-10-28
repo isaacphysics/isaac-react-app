@@ -63,17 +63,6 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
                 return section;
             })
 
-            // If cs have "show other content" set to false hide non-audience content
-            .map(section => {
-                if (
-                    isAda && userContext.showOtherContent === false &&
-                    !isIntendedAudience(section.audience, userContext, user)
-                ) {
-                    section.hidden = true;
-                }
-                return section;
-            })
-
             // If we followed a direct link to a section, we want to show it regardless
             // of any other settings. We also want to show a message somewhere on the page.
             .map(section => {

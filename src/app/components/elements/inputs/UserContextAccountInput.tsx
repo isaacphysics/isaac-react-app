@@ -60,7 +60,6 @@ function UserContextRow({
         setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
 
         // Set display settings default values
-        setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: true}));
         setUserContext({...userContext, stage, examBoard});
     };
 

@@ -32,7 +32,6 @@ export interface UseUserContextReturnType {
     setStage: (stage: STAGE) => void;
     examBoard: EXAM_BOARD;
     setExamBoard: (stage: EXAM_BOARD) => void;
-    showOtherContent?: boolean;
     explanation: {stage?: string, examBoard?: string};
     hasDefaultPreferences: boolean;
 }
@@ -45,7 +44,6 @@ export function useUserViewingContext(): UseUserContextReturnType {
     const queryParams = useQueryParams(true);
 
     const user = useAppSelector((state: AppState) => state && state.user);
-    const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
 
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext) || {};
 
@@ -124,15 +122,6 @@ export function useUserViewingContext(): UseUserContextReturnType {
         }
     }
 
-    let showOtherContent;
-    if (isDefined(transientUserContext?.showOtherContent)) {
-        showOtherContent = transientUserContext?.showOtherContent;
-    } else if (isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT)) {
-        showOtherContent = !displaySettings?.HIDE_NON_AUDIENCE_CONTENT;
-    } else {
-        showOtherContent = true;
-    }
-
     // Replace query params
     useEffect(() => {
         const actualParams = queryString.parse(window.location.search, {decode: false});
@@ -154,7 +143,7 @@ export function useUserViewingContext(): UseUserContextReturnType {
         }
     }, [stage, examBoard]);
 
-    return { stage, setStage, examBoard, setExamBoard, explanation, showOtherContent, hasDefaultPreferences };
+    return { stage, setStage, examBoard, setExamBoard, explanation, hasDefaultPreferences };
 }
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
