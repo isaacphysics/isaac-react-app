@@ -58,6 +58,7 @@ export const HeaderCS = () => {
                         <NavigationSection title="Resources">
                             <LinkItem to="/topics">Topics</LinkItem>
                             <LinkItem to={PATHS.QUESTION_FINDER}>Questions</LinkItem>
+                            <LinkItem to="/projects">Projects</LinkItem>
                             <LinkItem to="/glossary">Glossary</LinkItem>
                             <LinkItem to={"/exam_specifications"}>Specifications</LinkItem>
                         </NavigationSection>

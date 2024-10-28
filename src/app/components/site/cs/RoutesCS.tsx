@@ -32,6 +32,7 @@ import { OnlineCourses } from "../../pages/OnlineCourses";
 import {ExamSpecificationsDirectory} from "../../pages/ExamSpecificationsDirectory";
 import { StudentResources } from "../../pages/StudentResources";
 import { TeacherResources } from "../../pages/TeacherResources";
+import { CSProjects } from "../../pages/CSProjects";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -95,10 +96,9 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/exam_specifications" component={ExamSpecificationsDirectory} />,
     <TrackedRoute key={key++} exact path="/teaching_order" component={TeachingOrders}/>,
 
-    // News
+    // Pod pages: news, projects, online courses
     <TrackedRoute key={key++} exact path="/news" component={News} />,
-
-    // Online Courses
+    <TrackedRoute key={key++} exact path="/projects" component={CSProjects} />,
     <TrackedRoute key={key++} exact path="/pages/online_courses" component={OnlineCourses} />,
 
     // Books: FIXME ADA are we going to include these?
