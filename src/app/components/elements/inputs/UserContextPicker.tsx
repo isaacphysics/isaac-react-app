@@ -133,18 +133,5 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 </div>}
             </FormGroup>
         </RS.Row>
-        
-
-        {/* "Show other content" selector */}
-        {isAda && <RS.Row className="w-100 px-0 m-0 pb-2 justify-content-end">
-            <FormGroup className="form-group w-auto m-0">
-                <Label className="d-inline-block m-0" htmlFor="uc-show-other-content-check">Show other content? </Label>
-                <Input
-                    className="d-inline-block ms-2 pe-0 mt-1" type="checkbox" id="uc-show-other-content-check"
-                    checked={userContext.showOtherContent}
-                    onChange={e => dispatch(transientUserContextSlice.actions.setShowOtherContent(e.target.checked))}
-                />
-            </FormGroup>
-        </RS.Row>}
     </RS.Col>;
 };

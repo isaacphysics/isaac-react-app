@@ -206,14 +206,6 @@ export function UserContextAccountInput({
                             Add more content
                         </Button>
                     </Col>}
-                {(userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <Label>
-                    <StyledCheckbox
-                        id={`hide-content-check-${componentId}`}
-                        checked={isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings?.HIDE_NON_AUDIENCE_CONTENT : true}
-                        onChange={e => setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: !e.target.checked}))}
-                        label={<span>Show content that is not for my selected qualification(s)</span>}
-                    />
-                </Label>}
             </>}
             {!isAda && tutorOrAbove && validateUserContexts(userContexts) && <div className="mb-3 ms-2 align-content-center remove-stage-container">
                 <Button
