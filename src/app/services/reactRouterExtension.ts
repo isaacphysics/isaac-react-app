@@ -18,10 +18,10 @@ function removeQuestionMark(str: string) {
     }
 }
 
-export type ListParams = {[key: string]: string | string[] | undefined};
-export type SingleParams = {[key: string]: string | undefined};
-export function useQueryParams<B extends boolean>(takeFirstValue?: B):
-    B extends true ? SingleParams : ListParams
+export type ListParams<K extends string> = {[key in K]: string | string[] | undefined};
+export type SingleParams<K extends string> = {[key in K]: string | undefined};
+export function useQueryParams<K extends string, B extends boolean>(takeFirstValue?: B):
+    B extends true ? SingleParams<K> : ListParams<K>
 {
     const query = queryString.parse(useLocation().search);
     if (takeFirstValue && isDefined(query)) {
