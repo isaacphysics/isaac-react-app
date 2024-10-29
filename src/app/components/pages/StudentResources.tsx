@@ -209,7 +209,7 @@ export const StudentResources = () => {
                     <TextBlock className="py-3 text-center">
                         <h3>Need help?</h3>
                         <p>Our student support page has lots of information for common questions and issues.</p>
-                        <Button to="/support" tag={Link}>Student support</Button>
+                        <Button to="/support/student/general" tag={Link}>Student support</Button>
                     </TextBlock>
                 </div>
             </Container>

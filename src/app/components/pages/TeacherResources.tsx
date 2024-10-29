@@ -146,7 +146,7 @@ export const TeacherResources = () => {
                     <TextBlock>
                         <h2>Student challenges</h2>
                         <p>Encourage and reward student success with our student challenge programme, designed to inspire achievement at every stage of their studies.</p>
-                        <Button tag={Link} to={"/student_challenges"}>Find out more</Button>
+                        <Button tag={Link} to={"/pages/student_challenges"}>Find out more</Button>
                     </TextBlock>
                     {/* TODO: this is currently hard-coded because challenges aren't retrievable via an API call */}
                     <IconCard card={{
@@ -210,7 +210,7 @@ export const TeacherResources = () => {
                     <TextBlock className="py-3 text-center text-white">
                         <h3>Need help?</h3>
                         <p>Our teacher support page has lots of information for common questions and issues.</p>
-                        <Button outline className="bg-white" to="/support" tag={Link}>Teacher support</Button>
+                        <Button outline className="bg-white" to="/support/teacher/general" tag={Link}>Teacher support</Button>
                     </TextBlock>
                 </div>
             </Container>
