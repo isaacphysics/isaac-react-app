@@ -23,6 +23,7 @@ import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStac
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 import { Spacer } from "./Spacer";
+import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -124,6 +125,9 @@ const GameboardBuilderRow = (
                         {question.subtitle && <>
                             <span className="small text-muted d-none d-sm-block">{question.subtitle}</span>
                         </>}
+                        {question.tags?.includes("llm_question_page") && <div className="ms-n1 my-2 mb-lg-0">
+                            <LLMFreeTextQuestionIndicator small />
+                        </div>}
                     </div>
                 </div>
             </td>
