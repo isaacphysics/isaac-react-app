@@ -4,7 +4,6 @@ import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
     EXAM_BOARD,
-    EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     isAda,
     isLoggedIn,
@@ -16,12 +15,10 @@ import {
     SEARCH_RESULTS_PER_PAGE,
     siteSpecific,
     STAGE,
-    STAGE_NULL_OPTIONS,
     TAG_ID,
     tags,
     toSimpleCSV,
     useQueryParams,
-    useUserViewingContext,
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -38,6 +35,10 @@ import {RenderNothing} from "../elements/RenderNothing";
 import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
 import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
+
+// Type is used to ensure that we check all query params if a new one is added in the future
+const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
+type FilterParams = typeof FILTER_PARAMS[number];
 
 export interface QuestionStatus {
     notAttempted: boolean;
@@ -76,7 +77,7 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
     return selectionItems;
 }
 
-function getInitialQuestionStatuses(params: ListParams): QuestionStatus {
+function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionStatus {
     const statuses = arrayFromPossibleCsv(params.statuses);
     if (statuses.length < 1) {
         // If no statuses set use default
@@ -99,7 +100,7 @@ function getInitialQuestionStatuses(params: ListParams): QuestionStatus {
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
-    const params: ListParams = useQueryParams(false);
+    const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
@@ -107,9 +108,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]);
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
-    const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(
-        getInitialQuestionStatuses(params)
-    );
+    const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
     const [searchBooks, setSearchBooks] = useState<string[]>(arrayFromPossibleCsv(params.book));
     const [excludeBooks, setExcludeBooks] = useState<boolean>(!!params.excludeBooks);
     const [searchDisabled, setSearchDisabled] = useState(true);
@@ -117,7 +116,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const [populatedFromAccountSettings, setPopulatedFromAccountSettings] = useState(false);
     useEffect(function populateFiltersFromAccountSettings() {
         if (isLoggedIn(user)) {
-            const filtersHaveNotBeenSpecifiedByQueryParams = !params.stages && !params.examBoards;
+            const filtersHaveNotBeenSpecifiedByQueryParams = FILTER_PARAMS.every(p => !params[p]);
             if (filtersHaveNotBeenSpecifiedByQueryParams) {
                 const accountStages = user.registeredContexts?.map(c => c.stage).filter(s => s) as STAGE[];
                 if (isPhy || accountStages.length === 1) { // Ada only want to apply stages filter if there is only one
@@ -131,6 +130,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 }
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- we don't want this to re-run on params change.
     }, [user]);
 
     // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates

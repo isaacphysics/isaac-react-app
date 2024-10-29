@@ -175,7 +175,7 @@ export function useQuizSections(attempt?: QuizAttemptDTO) {
 
 export function useFilteredQuizzes(user: RegisteredUserDTO) {
     const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
-    const {filter}: {filter?: string} = useQueryParams();
+    const {filter}: {filter?: string} = useQueryParams(true);
     const [titleFilter, setTitleFilter] = useState<string|undefined>(filter?.replace(/[^a-zA-Z0-9 ]+/g, ''));
     const {data: quizzes} = useGetAvailableQuizzesQuery(0);
 
