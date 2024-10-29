@@ -174,28 +174,28 @@ export const StudentResources = () => {
                 <ColumnSlice>
                     <AdaCard card={{
                         title: "Max Fordham",
-                        image: {src: "https://adacomputerscience.org/images/content/news/pods/figures/ada_cs_max_f_pod.png"},
+                        image: {src: "/assets/cs/decor/stories/max-fordham.png"},
                         bodyText: "Explore how Max’s passion for computer science led him to become a software engineer through a digital technology solutions apprenticeship.",
                         buttonText: "Read more",
                         clickUrl: "/pages/20240730_max_fordham"
                     }}/>
                     <AdaCard card={{
                         title: "Meghna Asthana",
-                        image: {src: "https://adacomputerscience.org/images/content/news/pods/figures/ada_cs_meghna_a_pod.png"},
+                        image: {src: "/assets/cs/decor/stories/meghna-asthana.png"},
                         bodyText: "Discover how Meghna turned her passion for coding into a career in computer vision, where she now works on innovative projects addressing environmental challenges.",
                         buttonText: "Read more",
                         clickUrl: "/pages/20240313_meghan_asthana"
                     }}/>
                     <AdaCard card={{
                         title: "Lella Halloum",
-                        image: {src: "https://adacomputerscience.org/images/content/news/pods/figures/ada_cs_lella_h_pod.png"},
+                        image: {src: "/assets/cs/decor/stories/lella-halloum.png"},
                         bodyText: "Meet Lella, a young digital changemaker who uses technology to inspire, engage, and upskill the next generation of talent.",
                         buttonText: "Read more",
                         clickUrl: "/pages/20240215_lella_halloum"
                     }}/>
                 </ColumnSlice>
                 <div className="d-flex justify-content-center mt-3">
-                    <Link to="" target="_blank">
+                    <Link to="/pages/computer_science_stories" target="_blank">
                         <strong className="link-dark-pink">View more stories</strong>
                     </Link>
                     <strong className="link-dark-pink">&gt;</strong>
