@@ -16,7 +16,7 @@ export const StudentResources = () => {
 
     return <div id="student-resources">
         <section id="resources-header" className="bg-cyan-200">
-            <Container className="py-5 homepage-x-padding mw-1600" fluid>
+            <Container className="homepage-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock>
                         <h1 className="font-size-1-75 font-size-md-2-5">
@@ -32,7 +32,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="updates">
-            <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
+            <Container className="homepage-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock className="pe-5">
@@ -52,7 +52,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="curriculum">
-            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
+            <Container className="homepage-padding mw-1600 bg-white" fluid>
                 <ColumnSlice>
                     <ImageBlock>
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.svg" alt=""/>
@@ -67,7 +67,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="practice-questions">
-            <Container className="py-5 homepage-x-padding mw-1600" fluid>
+            <Container className="homepage-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock>
                         <h2>Over 1000 practice questions</h2>
@@ -81,7 +81,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="progress">
-            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
+            <Container className="homepage-padding mw-1600 bg-white" fluid>
                 <ColumnSlice>
                     <ImageBlock>
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/progress.svg" alt=""/>
@@ -100,7 +100,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="student-challenges">
-            <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
+            <Container className="homepage-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img bg-cyan-200" src="/assets/cs/decor/slice-bg-1.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock>
@@ -122,7 +122,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="further-learning">
-            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
+            <Container className="homepage-padding mw-1600 bg-white" fluid>
                 <TextBlock>
                     <h2>Further learning</h2>
                     <p>More projects, challenges, and tools from the Raspberry Pi Foundation’s world class range of computer science resources.</p> 
@@ -156,7 +156,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="testimonial">
-            <Container className="py-5 homepage-x-padding mw-1600 bg-black" fluid>
+            <Container className="homepage-padding mw-1600 bg-black" fluid>
                 <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
                     <h2>
                         &ldquo;I love Ada! The content featured is very comprehensive and detailed, and the visual guides through topics like sorts are particularly helpful to aid my understanding.&rdquo;
@@ -166,7 +166,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="careers">
-            <Container className="py-5 homepage-x-padding mw-1600" fluid>
+            <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock>
                     <h2>Explore a career in computer science</h2>
                     <p>Read stories from graduates at the early stages of their careers in software development, game design, research, and much more.</p> 
@@ -203,7 +203,7 @@ export const StudentResources = () => {
             </Container>
         </section>
         <section id="help-and-support">
-            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
+            <Container className="homepage-padding mw-1600 bg-white" fluid>
                 <div className="py-4 position-relative">
                     <img className="full-background-img border-radius-3 bg-cyan-200" src="/assets/cs/decor/help-slice-cyan.svg" alt=""/>
                     <TextBlock className="py-3 text-center">

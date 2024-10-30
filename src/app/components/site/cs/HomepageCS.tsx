@@ -25,7 +25,7 @@ export const HomepageCS = () => {
         <MetaDescription description={"Ada Computer Science is a free online computer science programme for students and teachers. Learn by using our computer science topics and questions!"}/>
         <div id="homepage">
             <section id="call-to-action" className="homepageHero">
-                <Container className="py-5 homepage-x-padding mw-1600" fluid>
+                <Container className="homepage-padding mw-1600" fluid>
                     <Row>
                         <TextBlock lg={7}>
                             <h1 className={"font-size-1-75 font-size-md-2-5"}>
@@ -53,7 +53,7 @@ export const HomepageCS = () => {
                 </Container>
             </section>
             <section id="news-and-updates">
-                <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
+                <Container className="homepage-padding mw-1600 position-relative" fluid>
                     <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                     <ColumnSlice>
                         <TextBlock className="pe-5">
@@ -73,7 +73,7 @@ export const HomepageCS = () => {
                 </Container>
             </section>
             <section id="benefits-for-teachers-and-students" className="bg-white">
-                <Container className={"py-5 homepage-x-padding mw-1600"}>                    
+                <Container className={"homepage-padding mw-1600"}>                    
                     <Row className={"align-items-center"}>
                         <Col xs={12} lg={5} className="mt-4 mt-lg-4 order-1 order-lg-0">
                             <picture>
@@ -105,7 +105,7 @@ export const HomepageCS = () => {
             </section>
 
             <section id="question-finder">
-                <Container className={"py-5 homepage-x-padding mw-1600"}>
+                <Container className={"homepage-padding mw-1600"}>
                     <ColumnSlice>
                         <TextBlock>
                             <h2 className={"font-size-1-75 mb-4"}>Questions for classwork, homework, and exam prep</h2>
@@ -129,7 +129,7 @@ export const HomepageCS = () => {
             </section>
 
             <section id="further-learning" className="bg-white">
-                <Container className="py-5 homepage-x-padding mw-1600" fluid>
+                <Container className="homepage-padding mw-1600" fluid>
                     <TextBlock md={8}>
                         <h2>More learning resources</h2>
                     </TextBlock>
@@ -163,7 +163,7 @@ export const HomepageCS = () => {
             </section>
 
             <section id="what-resources">
-                <Container className={"py-5 homepage-x-padding mw-1600"}>
+                <Container className={"homepage-padding mw-1600"}>
                     <TextBlock md={8}>
                         <h2 className={"font-size-1-75 mb-4"}>Teaching outside the UK?</h2>
                         <p>We&apos;ve organised our learning resources by prior knowledge and age group to make them easy to adapt for curricula around the world.</p>
@@ -209,7 +209,7 @@ export const HomepageCS = () => {
             </section>
 
             {news && news.length > 0 && <section id="news" className="bg-white">
-                <Container className={"py-5 homepage-x-padding mw-1600"}>
+                <Container className={"homepage-padding mw-1600"}>
                     <h2 className={"font-size-1-75 mb-4"}>News</h2>
                     <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around my-3">
                         {news.slice(0, deviceSize === "lg" ? 3 : 4).map((n, i) => <NewsCard key={i} newsItem={n} showTitle cardClassName="bg-cultured-grey" />)}

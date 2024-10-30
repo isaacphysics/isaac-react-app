@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { AdaCard } from "../elements/cards/AdaCard";
 import { isLoggedIn } from "../../services";
 import { ImageBlock } from "../elements/layout/ImageBlock";
+import classNames from "classnames";
 
 export const TeacherResources = () => {
     const {data: teacherPods} = useGetNewsPodListQuery({subject: "news"});
@@ -17,7 +18,7 @@ export const TeacherResources = () => {
 
     return <div id="teacher-resources">
         <section id="resources-header" className="bg-dark-pink-200">
-            <Container className="py-5 homepage-x-padding mw-1600" fluid>
+            <Container className="homepage-padding mw-1600" fluid>
                 <ColumnSlice>
                     <TextBlock className="text-white">
                         <h1 className="font-size-1-75 font-size-md-2-5">
@@ -33,7 +34,7 @@ export const TeacherResources = () => {
             </Container>
         </section>
         <section id="latest-updates">
-            <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
+            <Container className="homepage-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock className="pe-5">
@@ -52,7 +53,7 @@ export const TeacherResources = () => {
                 </ColumnSlice>
             </Container>
 
-            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
+            <Container className="homepage-padding mw-1600 bg-white" fluid>
                 <ColumnSlice>
                     <ImageBlock>
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.svg" alt=""/>
@@ -67,15 +68,15 @@ export const TeacherResources = () => {
             </Container>
         </section>
         <section id="tools">
-            <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
+            <Container className="homepage-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
-                <TextBlock md={8}>
+                <TextBlock md={8} className={classNames({"mb-3": !isLoggedIn(user)})}>
                     <h2>Tools to help you teach</h2>
                     <p>An Ada account makes it easy to assess your students. Set assignments to reinforce learning from lessons and use our pre-made tests to check student knowledge.</p>
-                    {!isLoggedIn(user) && <>
+                    {!isLoggedIn(user) && <div className="pb-2 mb-3">
                         <Button className="me-3" to={"/register"} tag={Link}>Create an account</Button>
                         <Button outline to={"/login"} tag={Link}>Log in</Button>
-                    </>}
+                    </div>}
                 </TextBlock>
                 <ColumnSlice>
                     <IconCard card={{
@@ -114,7 +115,7 @@ export const TeacherResources = () => {
             </Container>
         </section>
         <section id="cpd">
-            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
+            <Container className="homepage-padding mw-1600 bg-white" fluid>
                 <TextBlock md={8}>
                     <h2>Professional development</h2>
                     <p>Learn new skills and build confidence with our free courses for continuing professional development (CPD). They&apos;re designed to support you, whatever your level of experience.</p>
@@ -140,7 +141,7 @@ export const TeacherResources = () => {
             </Container>
         </section>
         <section id="more-resources">
-            <Container className="py-5 homepage-x-padding mw-1600 position-relative" fluid>
+            <Container className="homepage-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img bg-cyan-200" src="/assets/cs/decor/slice-bg-1.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock>
@@ -161,7 +162,7 @@ export const TeacherResources = () => {
                 </ColumnSlice>
             </Container>
 
-            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
+            <Container className="homepage-padding mw-1600 bg-white" fluid>
                 <TextBlock md={8}>
                     <h2>More teaching resources</h2>
                     <p>Support, lesson plans, ideas, and tools from the Raspberry Pi Foundation&apos;s world-class range of computer science resources.</p>
@@ -194,7 +195,7 @@ export const TeacherResources = () => {
                 </ColumnSlice>
             </Container>
 
-            <Container className="py-5 homepage-x-padding mw-1600 bg-black" fluid>
+            <Container className="homepage-padding mw-1600 bg-black" fluid>
                 <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
                     <h2>
                         &ldquo;Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it&apos;s free!&rdquo;
@@ -204,7 +205,7 @@ export const TeacherResources = () => {
             </Container>
         </section>
         <section id="help-and-support">
-            <Container className="py-5 homepage-x-padding mw-1600 bg-white" fluid>
+            <Container className="homepage-padding mw-1600 bg-white" fluid>
                 <div className="py-4 position-relative">
                     <img className="full-background-img border-radius-3 bg-dark-pink-300" src="/assets/cs/decor/help-slice-purple.svg" alt=""/>
                     <TextBlock className="py-3 text-center text-white">
