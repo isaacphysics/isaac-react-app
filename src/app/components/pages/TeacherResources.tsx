@@ -55,7 +55,7 @@ export const TeacherResources = () => {
         </section>
         <section id="curriculum" className="bg-white">
             <Container className="homepage-padding mw-1600" fluid>
-                <ColumnSlice>
+                <ColumnSlice reverseUnderBreakpoint>
                     <ImageBlock>
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.svg" alt=""/>
                     </ImageBlock>
