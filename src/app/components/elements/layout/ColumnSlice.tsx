@@ -4,11 +4,16 @@ import { Row, RowProps } from "reactstrap";
 
 interface ColumnSliceProps extends RowProps {
     breakpoint?: "sm" | "md" | "lg" | "xl";
+    reverseUnderBreakpoint?: boolean;
 }
 
-export const ColumnSlice = ({...props}: ColumnSliceProps) => {
-    const numChildren = Math.min(React.Children.count(props.children), 4);
-    return <Row {...props} className={classNames(`row-cols-1 row-cols-${props.breakpoint ?? "lg"}-${numChildren}`, props.className)}>
-        {props.children}
+export const ColumnSlice = ({breakpoint, reverseUnderBreakpoint, children, ...rest}: ColumnSliceProps) => {
+    const numChildren = Math.min(React.Children.count(children), 4);
+    return <Row {...rest} className={classNames(
+        `row-cols-1 row-cols-${breakpoint ?? "lg"}-${numChildren}`, 
+        {[`flex-column-reverse flex-${breakpoint ?? "lg"}-row`]: reverseUnderBreakpoint},
+        rest.className)
+    }>
+        {children}
     </Row>;
 };

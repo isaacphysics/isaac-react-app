@@ -35,7 +35,7 @@ export const IconCard = ({card, ...props}: IconCardProps) => {
                 <CardBody className="pt-2 pb-1 px-4">
                     <p className="mb-0">{bodyText}</p>
                 </CardBody>
-                {clickUrl && buttonStyle !== "card" && <CardFooter className={"border-top-0 p-4"}>
+                {clickUrl && buttonStyle !== "card" && <CardFooter className={"border-top-0 p-4 pt-3"}>
                     <Button className={classNames("text-start", {"d-flex align-items-center" : buttonStyle === "link"}, {"external-link": !isAppLink(clickUrl)})} disabled={disabled} outline={buttonStyle === "outline"} color={buttonStyle === "link" ? "link" : "secondary"} tag={Link} to={clickUrl}>
                         {buttonText || "See more"}
                     </Button>
