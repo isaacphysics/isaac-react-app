@@ -184,7 +184,7 @@ export const StudentResources = () => {
                         image: {src: "/assets/cs/decor/stories/meghna-asthana.png"},
                         bodyText: "Discover how Meghna turned her passion for coding into a career in computer vision, where she now works on innovative projects addressing environmental challenges.",
                         buttonText: "Read more",
-                        clickUrl: "/pages/20240313_meghan_asthana"
+                        clickUrl: "/pages/20240313_meghna_asthana"
                     }}/>
                     <AdaCard card={{
                         title: "Lella Halloum",
