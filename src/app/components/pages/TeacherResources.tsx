@@ -52,8 +52,9 @@ export const TeacherResources = () => {
                     }}/> : <div/>}
                 </ColumnSlice>
             </Container>
-
-            <Container className="homepage-padding mw-1600 bg-white" fluid>
+        </section>
+        <section id="curriculum" className="bg-white">
+            <Container className="homepage-padding mw-1600" fluid>
                 <ColumnSlice>
                     <ImageBlock>
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/questions.svg" alt=""/>
@@ -114,8 +115,8 @@ export const TeacherResources = () => {
                 </ColumnSlice>
             </Container>
         </section>
-        <section id="cpd">
-            <Container className="homepage-padding mw-1600 bg-white" fluid>
+        <section id="cpd" className="bg-white">
+            <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={8}>
                     <h2>Professional development</h2>
                     <p>Learn new skills and build confidence with our free courses for continuing professional development (CPD). They&apos;re designed to support you, whatever your level of experience.</p>
@@ -140,9 +141,9 @@ export const TeacherResources = () => {
                 </ColumnSlice>
             </Container>
         </section>
-        <section id="more-resources">
+        <section id="student-challenges" className="bg-cyan-200">
             <Container className="homepage-padding mw-1600 position-relative" fluid>
-                <img className="full-background-img bg-cyan-200" src="/assets/cs/decor/slice-bg-1.svg" alt=""/>
+                <img className="full-background-img" src="/assets/cs/decor/slice-bg-1.svg" alt=""/>
                 <ColumnSlice>
                     <TextBlock>
                         <h2>Student challenges</h2>
@@ -161,8 +162,9 @@ export const TeacherResources = () => {
                     }}/>
                 </ColumnSlice>
             </Container>
-
-            <Container className="homepage-padding mw-1600 bg-white" fluid>
+        </section>
+        <section id="more-resources" className="bg-white">
+            <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={8}>
                     <h2>More teaching resources</h2>
                     <p>Support, lesson plans, ideas, and tools from the Raspberry Pi Foundation&apos;s world-class range of computer science resources.</p>
@@ -194,8 +196,9 @@ export const TeacherResources = () => {
                     }}/>
                 </ColumnSlice>
             </Container>
-
-            <Container className="homepage-padding mw-1600 bg-black" fluid>
+        </section>
+        <section id="testimonial" className="bg-black">
+            <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
                     <h2>
                         &ldquo;Ada Computer Science has eliminated the need for textbooks for A level computer science. There is rarely a need for any other sources of information when planning lessons and it&apos;s free!&rdquo;
@@ -204,8 +207,8 @@ export const TeacherResources = () => {
                 </TextBlock>
             </Container>
         </section>
-        <section id="help-and-support">
-            <Container className="homepage-padding mw-1600 bg-white" fluid>
+        <section id="help-and-support" className="bg-white">
+            <Container className="homepage-padding mw-1600" fluid>
                 <div className="py-4 position-relative">
                     <img className="full-background-img border-radius-3 bg-dark-pink-300" src="/assets/cs/decor/help-slice-purple.svg" alt=""/>
                     <TextBlock className="py-3 text-center text-white">
