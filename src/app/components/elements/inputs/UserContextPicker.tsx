@@ -29,6 +29,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
 
+    const allExamBoardOptions = getFilteredExamBoardOptions();
+    const allStages = getFilteredStageOptions();
+
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
     const filteredStages = getFilteredStageOptions({byUser: user, includeNullOptions: true});
 
@@ -79,15 +82,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                                 dispatch(transientUserContextSlice.actions.setStage(stage));
                             }}
                         >
-                            {filteredStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
-                            {/* If the userContext.stage is not in the user's normal list of options (following link with q. params) add it */}
-                            {!filteredStages.map(s => s.value).includes(userContext.stage) &&
-                                <option key={userContext.stage} value={userContext.stage}>
-                                    {"*"}
-                                    {getFilteredStageOptions().filter(o => o.value === userContext.stage)[0]?.label}
-                                    {"*"}
-                                </option>
-                            }
+                            {allStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
                         </Input>
                     </>}
 
@@ -104,15 +99,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         >
                             {onlyOneBoard 
                                 ? <option value={onlyOneBoard.value}>{onlyOneBoard.label}</option> 
-                                : filteredExamBoardOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)
-                            }
-                            {/* If the userContext.examBoard is not in the user's normal list of options (following link with q. params) add it */}
-                            {!filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard) &&
-                                <option key={userContext.examBoard} value={userContext.examBoard}>
-                                    {"*"}
-                                    {getFilteredExamBoardOptions().filter(o => o.value === userContext.examBoard)[0]?.label}
-                                    {"*"}
-                                </option>
+                                : allExamBoardOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)
                             }
                         </Input>
                     </>}
