@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import {dropZoneRegex, inlineQuestionRegex, isDefined, isPhy, MARKDOWN_RENDERER} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";

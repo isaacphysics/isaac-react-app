@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { selectQuestionPart } from "../../../../services";
 import { AppQuestionDTO, InlineContext, QuestionCorrectness } from "../../../../../IsaacAppTypes";
@@ -53,6 +53,17 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
     const [correctness, setCorrectness] = useState<QuestionCorrectness>("NOT_SUBMITTED");
     const [modified, setModified] = useState(false);
 
+    const isUnanswered = useCallback((questionType?: string, questionDTO?: AppQuestionDTO): boolean => {  
+        switch (questionType) {  
+            case "isaacNumericQuestion": 
+                return questionDTO?.currentAttempt?.value === undefined && (questionDTO?.currentAttempt as QuantityDTO)?.units === undefined;  
+            case "isaacStringMatchQuestion": 
+                return questionDTO?.currentAttempt?.value === undefined;  
+            default: 
+                return false;  
+        }  
+    }, []);  
+
     useEffect(() => {
         setModified(questionId && inlineContext?.modifiedQuestionIds.includes(questionId) || false);
     }, [inlineContext?.modifiedQuestionIds, questionId]);
@@ -71,25 +82,14 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
             inlineContext.setFeedbackIndex(undefined);
         }
     }, [modified]);
-
-    useEffect(() => {
-        // after submitting the region (which only touches modified entry zones), if the user has not answered this question, mark it as "NOT_ANSWERED".
-        if (inlineContext?.submitting === false) {
-            if ((() => {
-                switch (questionType) {
-                    case "isaacNumericQuestion": {
-                        return questionDTO?.currentAttempt?.value === undefined && (questionDTO?.currentAttempt as QuantityDTO)?.units === undefined;
-                    }
-                    default: {
-                        return questionDTO?.currentAttempt?.value === undefined;
-                    }
-                }
-            })()) {
-                setCorrectness("NOT_ANSWERED");
-            }
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [inlineContext?.submitting, questionType]);
+    
+    useEffect(() => {  
+        // after submitting the region (which only touches modified entry zones), if the user has not answered this question, mark it as "NOT_ANSWERED".  
+        if (inlineContext?.submitting === false && isUnanswered(questionType, questionDTO)) {  
+            setCorrectness("NOT_ANSWERED");  
+        }  
+    // eslint-disable-next-line react-hooks/exhaustive-deps  
+    }, [inlineContext?.submitting, questionType]); 
 
     useEffect(() => {
         setCorrectness(
