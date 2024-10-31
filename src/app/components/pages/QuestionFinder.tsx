@@ -4,6 +4,7 @@ import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
     EXAM_BOARD,
+    EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     isAda,
     isLoggedIn,
@@ -15,6 +16,7 @@ import {
     SEARCH_RESULTS_PER_PAGE,
     siteSpecific,
     STAGE,
+    STAGE_NULL_OPTIONS,
     TAG_ID,
     tags,
     toSimpleCSV,
@@ -119,12 +121,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             const filtersHaveNotBeenSpecifiedByQueryParams = FILTER_PARAMS.every(p => !params[p]);
             if (filtersHaveNotBeenSpecifiedByQueryParams) {
                 const accountStages = user.registeredContexts?.map(c => c.stage).filter(s => s) as STAGE[];
-                if (isPhy || accountStages.length === 1) { // Ada only want to apply stages filter if there is only one
+                const allStagesSelected = accountStages?.some(stage => STAGE_NULL_OPTIONS.includes(stage));
+                if (!allStagesSelected && (isPhy || accountStages.length === 1)) { // Ada only want to apply stages filter if there is only one
                     setSearchStages(accountStages);
                     setPopulatedFromAccountSettings(true);
                 }
                 const examBoardStages = user.registeredContexts?.map(c => c.examBoard).filter(e => e) as EXAM_BOARD[];
-                if (isAda && examBoardStages.length === 1) { // Phy does not have exam boards
+                const allExamBoardsSelected = examBoardStages?.some(examBoard => EXAM_BOARD_NULL_OPTIONS.includes(examBoard));
+                if (isAda && !allExamBoardsSelected && examBoardStages.length === 1) { // Phy does not have exam boards
                     setSearchExamBoards(examBoardStages);
                     setPopulatedFromAccountSettings(true);
                 }
