@@ -6,6 +6,8 @@ import {CS_EXAM_BOARDS_BY_STAGE, EXAM_BOARD, STAGE, STAGES_CS, stageLabelMap} fr
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {ExamBoard} from "../../../IsaacApiTypes";
+import { selectors } from "../../state";
+import { useSelector } from "react-redux";
 
 interface ExamSpecificationsProps {
     // Show only tabs for the following stages
@@ -41,8 +43,27 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter}: ExamSpecifica
     const EXAM_BOARDS: ExamBoard[] = examBoardFilter ?? [EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.EDEXCEL];
     const FILTERED_EXAM_BOARDS_BY_STAGE = getFilteredExamBoardsByStage(STAGES, EXAM_BOARDS);
 
-    const [stageTab, setStageTab] = useState<typeof STAGES_CS[number]>(getStageFromURL(STAGES) as typeof STAGES_CS[number]);
-    const [examBoardTab, setExamBoardTab] = useState<ExamBoard>(getExamBoardFromURL(EXAM_BOARDS));
+    const user = useSelector(selectors.user.orNull);
+    const userContexts = user?.loggedIn ? user.registeredContexts : null;
+    
+    let defaultStage = getStageFromURL(STAGES) as typeof STAGES_CS[number];
+    let defaultExamBoard = getExamBoardFromURL(EXAM_BOARDS);
+
+    if (userContexts) {
+        for (const userContext of userContexts) {
+            const userContextStage = userContext.stage as typeof STAGES_CS[number];
+            const userContextExamBoard = userContext.examBoard;
+            if (userContextStage && STAGES.includes(userContextStage)) {
+                defaultStage  = userContextStage;
+            }
+            if (userContextExamBoard && FILTERED_EXAM_BOARDS_BY_STAGE[defaultStage].includes(userContextExamBoard)) {
+                defaultExamBoard = userContextExamBoard;
+            }
+        }
+    }
+
+    const [stageTab, setStageTab] = useState<typeof STAGES_CS[number]>(defaultStage);
+    const [examBoardTab, setExamBoardTab] = useState<ExamBoard>(defaultExamBoard);
     const [stageTabOverride, _setStageTabOverride] = useState<number | undefined>(Object.keys(FILTERED_EXAM_BOARDS_BY_STAGE).indexOf(stageTab) + 1 || undefined);
     const [examBoardTabOverride, setExamBoardTabOverride] = useState<number | undefined>(FILTERED_EXAM_BOARDS_BY_STAGE[stageTab].indexOf(examBoardTab) + 1 || undefined);
     const [fragmentId, setFragmentId] = useState<string>("");
@@ -93,7 +114,7 @@ export const ExamSpecifications = ({stageFilter, examBoardFilter}: ExamSpecifica
     }, [examBoardTab, stageTab]);
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Exam specifications"} />
+        <TitleAndBreadcrumb currentPageTitle={"Specifications"} />
         <MetaDescription description={metaDescription} />
         {stageTabs}
         <Row>

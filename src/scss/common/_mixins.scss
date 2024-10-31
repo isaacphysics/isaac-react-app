@@ -160,3 +160,8 @@ $viewport-sizes: (
 @mixin aspect-ratio($width, $height) {
   aspect-ratio: calc($width / $height);
 }
+
+@mixin svg-color($image, $color) {
+  mask: $image no-repeat center center;
+  background-color: $color;
+}

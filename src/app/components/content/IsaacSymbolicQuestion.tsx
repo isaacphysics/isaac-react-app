@@ -1,4 +1,4 @@
-import React, {ChangeEvent, lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {ChangeEvent, lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
@@ -224,15 +224,17 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 </IsaacContentValueOrChildren>
             </div>
             {/* TODO Accessibility */}
-            {modalVisible && <InequalityModal
-                close={closeModalAndReturnToScrollPosition}
-                onEditorStateChange={updateState}
-                availableSymbols={doc.availableSymbols}
-                initialEditorSymbols={initialEditorSymbols.current}
-                editorSeed={editorSeed}
-                editorMode="maths"
-                questionDoc={doc}
-            />}
+            {modalVisible && <Suspense fallback={<div>Loading...</div>}>
+                <InequalityModal
+                    close={closeModalAndReturnToScrollPosition}
+                    onEditorStateChange={updateState}
+                    availableSymbols={doc.availableSymbols}
+                    initialEditorSymbols={initialEditorSymbols.current}
+                    editorSeed={editorSeed}
+                    editorMode="maths"
+                    questionDoc={doc}
+                />
+            </Suspense>}
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <RS.InputGroup className="my-2 separate-input-group">
@@ -243,7 +245,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                             <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>,
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
                         )}
-                        {!modalVisible && <RS.UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
+                        {<RS.UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
                             a*x^2 + b x + c<br />

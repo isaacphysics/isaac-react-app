@@ -1,5 +1,5 @@
 import React from "react";
-import { PopoverBody, UncontrolledPopover } from "reactstrap";
+import { UncontrolledTooltip } from "reactstrap";
 import { useCanAttemptQuestionTypeQuery } from "../../state";
 import { TOO_MANY_REQUESTS, isDefined } from "../../services";
 
@@ -15,15 +15,13 @@ export function LLMFreeTextQuestionRemainingAttemptsView({canAttemptQuestionType
     if (!isDefined(remainingAttempts)) return null;
     
     return <p className="btn-link">
-        <span id="attempt-limit-help" aria-haspopup="true" className="has-tip">
-            {remainingAttempts} attempts remaining today<span className="icon-help" />
+        <span aria-haspopup="true" className="has-tip">
+            {remainingAttempts} attempts remaining today<span className="icon-help" id="attempt-limit-help" />
         </span>
-        <UncontrolledPopover trigger="click" placement="bottom" target="attempt-limit-help">
-            <PopoverBody>
-                Using a large language model (LLM) to mark free text questions costs money, and we have a fixed monthly budget.
-                To keep things fair, we set a daily cap per user so that everyone using the platform has an equal opportunity to use this tool.
-                This is in line with our mission to make computer science accessible to all.
-            </PopoverBody>
-        </UncontrolledPopover>
+        <UncontrolledTooltip innerClassName="attempt-limit-tooltip" trigger="click" placement="bottom" target="attempt-limit-help">
+            Using a large language model (LLM) to mark free text questions costs money, and we have a fixed monthly budget.
+            To keep things fair, we set a daily cap per user so that everyone using the platform has an equal opportunity to use this tool.
+            This is in line with our mission to make computer science accessible to all.
+        </UncontrolledTooltip>
     </p>;
 }

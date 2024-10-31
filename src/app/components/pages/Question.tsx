@@ -76,7 +76,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
         const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
         return <GameboardContext.Provider value={navigation.currentGameboard}>
-            <Container className={`${doc.subjectId || ""}`}>
+            <Container className={classNames(doc.subjectId, "no-shadow")}>
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
                       currentPageTitle={generateQuestionTitle(doc)}
@@ -90,7 +90,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                 </TitleAndBreadcrumb>
                 {!preview && <CanonicalHrefElement />}
                 <div className="no-print d-flex flex-wrap align-items-center mt-3">
-                    {pageContainsLLMFreeTextQuestion && <LLMFreeTextQuestionIndicator />}
+                    {pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
                     <EditContentButton doc={doc} />
                     <div className="question-actions ms-auto">
                         <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />

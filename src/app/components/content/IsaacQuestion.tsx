@@ -133,6 +133,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     // Free text question
     const isLLMFreeTextQuestion = doc.type === "isaacLLMFreeTextQuestion";
+    const [sentFeedback, setSentFeedback] = useState(false);
+    const awaitingFeedback = isLLMFreeTextQuestion && hasSubmitted && validationResponse && !sentFeedback;
 
     // Inline questions
     const isInlineQuestion = doc.type === "isaacInlineRegion" && inlineContext;
@@ -156,7 +158,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         isInlineQuestion ? {disabled: !canSubmit, value: submitButtonLabel, type: "submit", onClick: () => { 
             submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts);
         }} :
-        /* else ? */ {disabled: !canSubmit, value: submitButtonLabel, type: "submit"};
+        /* else ? */ {disabled: !canSubmit || awaitingFeedback, value: submitButtonLabel, type: "submit"};
 
     const secondaryAction = isFastTrack ?
         determineFastTrackSecondaryAction(fastTrackInfo) :
@@ -170,6 +172,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             if (event) {event.preventDefault();}
             submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
             setHasSubmitted(true);
+            setSentFeedback(false);
         }}>
             <div className={
                 classNames(
@@ -181,7 +184,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {isLLMFreeTextQuestion && <LLMFreeTextQuestionRemainingAttemptsView canAttemptQuestionType={canAttemptQuestionType} />}
 
                 <Suspense fallback={<Loading/>}>
-                    <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
+                    <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} readonly={awaitingFeedback} />
                 </Suspense>
 
                 {isAda &&
@@ -286,7 +289,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
         {/* LLM free-text question validation response */}
         {isLLMFreeTextQuestion && showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit &&
-            <LLMFreeTextQuestionFeedbackView validationResponse={validationResponse} />
+            <LLMFreeTextQuestionFeedbackView {...{validationResponse, hasSubmitted, sentFeedback, setSentFeedback}} />
         }
     </ConfidenceContext.Provider>;
 });

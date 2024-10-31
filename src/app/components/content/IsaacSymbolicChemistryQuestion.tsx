@@ -21,6 +21,7 @@ import { v4 as uuid_v4 } from "uuid";
 import { Inequality, makeInequality } from "inequality";
 import { parseInequalityChemistryExpression, parseInequalityNuclearExpression, ParsingError } from "inequality-grammar";
 import { AppState, useAppSelector } from "../../state";
+import { CHEMICAL_ELEMENTS, CHEMICAL_PARTICLES, CHEMICAL_STATES } from "../elements/modals/inequality/constants";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -48,40 +49,6 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-export const symbolicInputValidator = (input: string) => {
-    const openRoundBracketsCount = input.split("(").length - 1;
-    const closeRoundBracketsCount = input.split(")").length - 1;
-    const openSquareBracketsCount = input.split("[").length - 1;
-    const closeSquareBracketsCount = input.split("]").length - 1;
-    const openCurlyBracketsCount = input.split("{").length - 1;
-    const closeCurlyBracketsCount = input.split("}").length - 1;
-    const regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
-    const badCharacters = new RegExp(regexStr);
-    const errors = [];
-    if (badCharacters.test(input)) {
-        const usedBadChars: string[] = [];
-        for(let i = 0; i < input.length; i++) {
-            const char = input.charAt(i);
-            if (badCharacters.test(char)) {
-                if (!usedBadChars.includes(char)) {
-                    usedBadChars.push(char);
-                }
-            }
-        }
-        errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
-    }
-    if (openRoundBracketsCount !== closeRoundBracketsCount
-       || openSquareBracketsCount !== closeSquareBracketsCount
-       || openCurlyBracketsCount !== closeCurlyBracketsCount) {
-        // Rather than a long message about which brackets need closing
-        errors.push('You are missing some brackets.');
-    }
-    if (/\.[0-9]/.test(input)) {
-        errors.push('Please convert decimal numbers to fractions.');
-    }
-    return errors;
-};
-
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
@@ -97,6 +64,46 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     if (currentAttempt && currentAttempt.value) {
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
+
+    const hasMetaSymbols = !doc.availableSymbols?.every(symbol => CHEMICAL_ELEMENTS.includes(symbol.trim()) || CHEMICAL_PARTICLES.hasOwnProperty(symbol.trim()));
+
+    const symbolicInputValidator = (input: string) => {
+        const openRoundBracketsCount = input.split("(").length - 1;
+        const closeRoundBracketsCount = input.split(")").length - 1;
+        const openSquareBracketsCount = input.split("[").length - 1;
+        const closeSquareBracketsCount = input.split("]").length - 1;
+        const openCurlyBracketsCount = input.split("{").length - 1;
+        const closeCurlyBracketsCount = input.split("}").length - 1;
+        const regexStr = /[^ 0-9A-Za-z()[\]{}*+,-./<=>^_\\]+/;
+        const badCharacters = new RegExp(regexStr);
+        const errors = [];
+        if (badCharacters.test(input)) {
+            const usedBadChars: string[] = [];
+            for(let i = 0; i < input.length; i++) {
+                const char = input.charAt(i);
+                if (badCharacters.test(char)) {
+                    if (!usedBadChars.includes(char)) {
+                        usedBadChars.push(char);
+                    }
+                }
+            }
+            errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+        }
+
+        if (openRoundBracketsCount !== closeRoundBracketsCount
+           || openSquareBracketsCount !== closeSquareBracketsCount
+           || openCurlyBracketsCount !== closeCurlyBracketsCount) {
+            // Rather than a long message about which brackets need closing
+            errors.push('You are missing some brackets.');
+        }
+        if (/\.[0-9]/.test(input)) {
+            errors.push('Please convert decimal numbers to fractions.');
+        }
+        if (/\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && hasMetaSymbols && !doc.availableSymbols?.some(symbol => CHEMICAL_STATES.includes(symbol))) {
+            errors.push('This question does not require state symbols.');
+        }
+        return errors;
+    };
 
     function currentAttemptMhchemExpression(): string {
         return (currentAttemptValue?.result && currentAttemptValue.result.mhchem) || "";
@@ -212,7 +219,16 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     };
 
     const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
-    let symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
+
+    // Automatically filters out state symbols/brackets/etc from Nuclear Physics questions
+    const modifiedAvailableSymbols = doc.availableSymbols ? doc.availableSymbols : [];
+    if (doc.isNuclear && !hasMetaSymbols) {
+        modifiedAvailableSymbols.push("_plus", "_minus", "_fraction", "_right_arrow");
+    }
+
+    // We need these symbols available to do processing with, but don't want to display them to the user as available.
+    const removedSymbols = ["+","-","/","->","<=>","()","[]","."];
+    let symbolList = parsePseudoSymbolicAvailableSymbols(modifiedAvailableSymbols)?.filter(str => !removedSymbols.includes(str)).map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
     symbolList = symbolList?.replace('electron', 'e').replace('alpha', '\\alphaparticle').replace('beta', '\\betaparticle').replace('gamma', '\\gammaray').replace('neutron', '\\neutron')//
     .replace('proton', '\\proton').replace('neutrino', '\\neutrino').replace('antineutrino', '\\antineutrino');
@@ -272,7 +288,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                     dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" });
                     initialEditorSymbols.current = state.symbols;
                 }}
-                availableSymbols={doc.availableSymbols}
+                availableSymbols={modifiedAvailableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
                 editorSeed={editorSeed}
                 editorMode={doc.isNuclear ? "nuclear" : "chemistry"}

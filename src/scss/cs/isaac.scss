@@ -26,7 +26,7 @@ $cs-white: #ffffff;
 // Dark pinks
 $dark-pink-100: #510937;
 $dark-pink-200: #6C0A48;
-$dark-pink-300: #870C5A; // theme colour
+$dark-pink-300: #870D5A; // theme colour
 $dark-pink-400: #9E2372;
 $dark-pink-500: #D94BAA; // black text this and below
 $dark-pink-600: #F07DD2;
@@ -348,7 +348,7 @@ $enable-negative-margins: true;
 @import "../common/modals";
 @import "questions";
 @import "forms";
-@import "../common/elements";
+@import "elements";
 @import "breadcrumbs";
 @import "../common/media";
 @import "table";
@@ -402,6 +402,7 @@ $enable-negative-margins: true;
 @import "../common/callout";
 @import "finder";
 @import "topics";
+@import "resources";
 
 @import "expansion-layout";
 

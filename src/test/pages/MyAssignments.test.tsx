@@ -1,4 +1,3 @@
-import React from "react";
 import {http, HttpResponse, HttpHandler} from "msw";
 import {API_PATH, PATHS, siteSpecific} from "../../app/services";
 import {screen, within} from "@testing-library/react";
@@ -22,16 +21,16 @@ describe("MyAssignments", () => {
         });
     };
 
-    it('should show assignments "to do" on render', async () => {
+    it('should show all assignments on render', async () => {
         renderMyAssignments();
         const assignments = await screen.findAllByTestId("my-assignment");
         expect(assignments).toHaveLength(mockMyAssignments.length);
     });
 
-    it('should render with "To do" assignment filter selected by default', async () => {
+    it('should render with "All" assignment filter selected by default', async () => {
         renderMyAssignments();
         const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
-        expect(assignmentTypeFilter).toHaveValue("To do");
+        expect(assignmentTypeFilter).toHaveValue("All");
     });
 
     it('should allow users to filter assignments on gameboard title', async () => {
@@ -49,7 +48,7 @@ describe("MyAssignments", () => {
     it('should filter to only display "Older" assignments when that filter type is selected, this should not display any assignments', async () => {
         renderMyAssignments();
         const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
-        await userEvent.selectOptions(assignmentTypeFilter, "Older");
+        await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
         expect(screen.queryAllByTestId("my-assignment")).toHaveLength(0);
     });
 
@@ -69,12 +68,11 @@ describe("MyAssignments", () => {
                 });
             })
         ]);
-        // Wait for the assignments "to do" to show up
-        const numberOfAssignemntsToDoInMockMyAssignments = 3; 
-        expect(await screen.findAllByTestId("my-assignment")).toHaveLength(numberOfAssignemntsToDoInMockMyAssignments);
+        // Wait for the default ("All") assignments to show up
+        expect(await screen.findAllByTestId("my-assignment")).toHaveLength(mockMyAssignments.length);
         // Select the "Older Assignments" filter
         const assignmentTypeFilter = await screen.findByTestId("assignment-type-filter");
-        await userEvent.selectOptions(assignmentTypeFilter, "Older");
+        await userEvent.selectOptions(assignmentTypeFilter, "To do (older)");
         // Wait for the one old assignment that we expect
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(1);
     });
