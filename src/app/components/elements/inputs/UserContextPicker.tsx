@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as RS from "reactstrap";
 import {FormGroup, Input, Label} from "reactstrap";
 import {
@@ -29,11 +29,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
 
-    const allExamBoardOptions = getFilteredExamBoardOptions();
-    const allStages = getFilteredStageOptions();
-
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
     const filteredStages = getFilteredStageOptions({byUser: user, includeNullOptions: true});
+    const allStages = getFilteredStageOptions();
 
     const unusual = {
         stage: !filteredStages.map(s => s.value).includes(userContext.stage),
@@ -46,6 +44,12 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const onlyOneBoard : {label: string, value: EXAM_BOARD} | undefined = filteredExamBoardOptions.length === 2 && filteredExamBoardOptions.map(eb => eb.value).includes(EXAM_BOARD.ALL)
         ? filteredExamBoardOptions.filter(eb => eb.value !== EXAM_BOARD.ALL)[0]
         : undefined;
+
+    const [currentStage, setCurrentStage] = useState<STAGE>(userContext.stage);
+
+    useEffect(() => {
+        setCurrentStage(userContext.stage);
+    }, [userContext.stage]);
 
     if (isStaff(user)) {
         return <RS.Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
@@ -99,7 +103,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         >
                             {onlyOneBoard 
                                 ? <option value={onlyOneBoard.value}>{onlyOneBoard.label}</option> 
-                                : allExamBoardOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)
+                                : getFilteredExamBoardOptions({byStages: [currentStage], includeNullOptions: true})
+                                    .map(item => <option key={item.value} value={item.value}>{item.label}</option>)
                             }
                         </Input>
                     </>}
