@@ -123,19 +123,3 @@ input.form-control.is-unanswered {
   border: solid 1px theme-color("warning");
   @include border-radius($input-border-radius, 0);
 }
-
-.inline-part {
-  $shadow-size: 3px;
-  &.selected-feedback {
-    box-shadow: 0 0 0 $shadow-size #000;
-    &.is-valid {
-      box-shadow: 0 0 0 $shadow-size theme-color("success");
-    }
-    &.is-invalid {
-      box-shadow: 0 0 0 $shadow-size theme-color("danger");
-    }
-    &.is-unanswered {
-      box-shadow: 0 0 0 $shadow-size theme-color("warning");
-    }
-  }
-}
