@@ -13,6 +13,7 @@ import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     AUDIENCE_DISPLAY_FIELDS,
+    below,
     determineAudienceViews,
     filterAudienceViewsByProperties,
     generateQuestionTitle,
@@ -26,6 +27,7 @@ import {
     TAG_ID,
     TAG_LEVEL,
     tags,
+    useDeviceSize,
     useUserViewingContext
 } from "../../services";
 import {Redirect} from "react-router";
@@ -78,6 +80,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
 
     const questionViewingContexts = filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS);
     const userViewingContext = useUserViewingContext();
+    const deviceSize = useDeviceSize();
     const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
     const uniqueStage = questionViewingContexts.find(context => context.stage === userViewingContext.stage);
     return <ListGroupItem key={question.id} className={itemClasses}>
@@ -87,11 +90,11 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg>,
                     <div className={"inner-progress-icon"}>
                         <img src={iconHref} alt="" /><br/>
-                        <span className={"icon-title"}>{message}</span>
+                        <span className={"icon-title d-none d-sm-block"}>{message}</span>
                     </div>
                 )}
             </span>
-            <div className={classNames("flex-fill", {"d-flex py-3 pe-3": isAda, "d-md-flex": isPhy})}>
+            <div className={classNames("flex-fill", {"d-flex py-3 pe-3 flex-column flex-md-row": isAda, "d-md-flex": isPhy})}>
                 {/* TODO CP shouldn't the subject colour here depend on the contents/tags of the gameboard? */}
                 <div className={"flex-grow-1 " + (itemSubject?.id ?? (isPhy ? "physics" : ""))}>
                     <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-secondary": isPhy})}>
@@ -105,8 +108,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                         {questionTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
                 </div>
-
-                {question.audience && <StageAndDifficultySummaryIcons audienceViews={
+                {question.audience && <StageAndDifficultySummaryIcons stack={isAda && below['sm'](deviceSize)} audienceViews={
                     isPhy && !isTutorOrAbove(currentUser) && uniqueStage ? [uniqueStage] : questionViewingContexts                 
                 } />}
             </div>
@@ -201,13 +203,13 @@ export const Gameboard = withRouter(({ location }) => {
                         <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || `Filter Generated ${siteSpecific("Gameboard", "Quiz")}`}/>
                         <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
                         {user && isTutorOrAbove(user)
-                            ? <Row className="col-8 offset-2">
-                                <Col className="mt-4">
+                            ? <Row>
+                                <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 2}} className="mt-4">
                                     <Button tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="primary" outline block>
                                         {siteSpecific("Set as Assignment", "Set as assignment")}
                                     </Button>
                                 </Col>
-                                <Col className="mt-4">
+                                <Col xs={{size: 10, offset: 1}} sm={{size: 8, offset: 2}} md={{size: 6, offset: 0}} lg={4} xl={{size: 3, offset: 2}} className="mt-4">
                                     <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboardId}`}} color="primary" block outline>
                                         {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
                                     </Button>
