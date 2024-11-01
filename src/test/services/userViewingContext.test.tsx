@@ -1,7 +1,6 @@
 import {determineUserContext, EXAM_BOARD, GameboardAndPathInfo, isPhy, STAGE} from "../../app/services";
 import {TransientUserContextState} from "../../app/state";
 import {UserContext, Stage, ExamBoard} from "../../IsaacApiTypes";
-import {DisplaySettings} from "../../IsaacAppTypes";
 
 
 describe("User context derivation", () => {
@@ -198,43 +197,4 @@ describe("User context derivation", () => {
             expect(result.hasDefaultPreferences).toEqual(false);
         });
     }
-    it("returns show other content as true when display settings includes HIDE_NON_AUDIENCE_CONTENT as false", () => {
-        // Arrange
-        const registered: UserContext = {stage: STAGE.A_LEVEL};
-        const transient: TransientUserContextState = {stage: STAGE.GCSE};
-
-        const displaySettings: DisplaySettings = {HIDE_NON_AUDIENCE_CONTENT: false};
-
-        // Act
-        const result = determineUserContext(transient, registered, undefined, displaySettings);
-
-        // Assert
-        expect(result.showOtherContent).toBe(true);
-    });
-    it("returns show other content as false when display settings includes HIDE_NON_AUDIENCE_CONTENT as true", () => {
-        // Arrange
-        const registered: UserContext = {stage: STAGE.A_LEVEL};
-        const transient: TransientUserContextState = {stage: STAGE.GCSE};
-
-        const displaySettings: DisplaySettings = {HIDE_NON_AUDIENCE_CONTENT: true};
-
-        // Act
-        const result = determineUserContext(transient, registered, undefined, displaySettings);
-
-        // Assert
-        expect(result.showOtherContent).toBe(false);
-    });
-    it("defaults show other content to true when display settings absent", () => {
-        // Arrange
-        const registered: UserContext = {stage: STAGE.A_LEVEL};
-        const transient: TransientUserContextState = {stage: STAGE.GCSE};
-
-        const displaySettings: DisplaySettings = {};
-
-        // Act
-        const result = determineUserContext(transient, registered, undefined, displaySettings);
-
-        // Assert
-        expect(result.showOtherContent).toBe(true);
-    });
 });
