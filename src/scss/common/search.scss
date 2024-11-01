@@ -52,24 +52,38 @@ nav.search {
 
   .navbar-toggler {
     border-width: 0;
+    width: 35px;
+    height: 35px;
     position: absolute;
+    border-radius: 10px;
+    background-color: #d60265;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 
-    @include respond-below(xs) {
-      right: 19%;
-      top: 19px;
+    @include respond-below(sm) {
+      display: flex;
+      right: 12%;
+      top: 22px;
     }
-    @include respond-above(xs) {
-      right: 90px;
+    @include respond-above(md) {
+      display: none;
+      right: 70px;
       top: 19px;
     }
 
     .navbar-toggler-icon {
-      background-image: url("/assets/search-icon.svg");
+      background-image: url("../../../public/assets/SearchIcon.svg");
+      width: 15.45px;
+      height: 14.58px;
     }
 
     &.open {
       .navbar-toggler-icon {
         background-image: url("/assets/cross.svg");
+        width: 20px;
+        height: 20px;
       }
     }
   }

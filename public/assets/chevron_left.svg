@@ -1,3 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="9" height="14" viewBox="0 0 9 14">
-  <polygon fill="#666666" points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7" transform="matrix(-1 0 0 1 9 0)"/>
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="20" cy="20" r="18.5" fill="white" stroke="#D60265" stroke-width="3"/>
+<path d="M16.9581 20.1389L24.6369 27.8177L23.5917 28.8629L14.5527 19.7861L23.6317 10.7071L24.6768 11.7522L16.959 19.4309L16.6037 19.7845L16.9581 20.1389Z" fill="#FF1E8A" stroke="#D60265"/>
 </svg>

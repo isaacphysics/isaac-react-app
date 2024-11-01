@@ -80,14 +80,15 @@ describe("Dashboard", () => {
   it("shows logged out content if no user is logged in", async () => {
     setupTest("ANONYMOUS");
     const loggedOutTitle = await screen.findByRole("heading", {
-      name: /computer science learning/i,
+      name: /The free online textbook for computer science/i,
     });
     expect(loggedOutTitle).toBeInTheDocument();
     const featuredNewsTile = screen.queryByTestId("featured-news-item");
     const promoTile = screen.queryByTestId("promo-tile");
     expect(featuredNewsTile).toBeNull();
     expect(promoTile).toBeNull();
-    checkDashboardButtons();
+    const joinForFreeButton = screen.getByRole("link", { name: /Join for free!/i });
+    expect(joinForFreeButton).toBeInTheDocument();
   });
 
   it.each(USER_ROLES)("shows the correct dashboard buttons with links for a %s user", async (role) => {

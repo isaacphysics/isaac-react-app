@@ -4,29 +4,32 @@ import { ListGroupFooter } from "../elements/list-groups/ListGroupFooter";
 import { ListGroupSocial } from "../elements/list-groups/ListGroupSocial";
 import { ListGroupFooterBottom } from "../elements/list-groups/ListGroupFooterBottom";
 import { Link } from "react-router-dom";
+import { ExternalLink } from "../elements/ExternalLink";
 
 export const Footer = () => (
   <footer>
     <div className="footerTop d-print-none">
       <Container>
-        <Row className="px-3 px-sm-0 pb-3 pb-md-4">
-          <Col md="4" lg="3" className="pt-5 logo-col">
-            <div className="d-flex flex-row">
-              <Link to="/">
-                <img src="/assets/logo-mustard.svg" className="footerLogo" alt="Isaac Computer Science homepage" />
-              </Link>
-            </div>
-            <div className="footer-links logo-text pt-3">
+        <Row className="px-sm-0 pb-3 pb-md-4 footer-content">
+          <Col xs="12" lg="3" className="pt-5 logo-col">
+            <Link to="/">
+              <img
+                src="/assets/logo_footer.svg"
+                className="footerLogo d-block w-100"
+                alt="Isaac Computer Science homepage"
+              />
+            </Link>
+            <div className="footer-links logo-text mb-1 mt-4">
               <p>
                 Isaac Computer Science is part of the
-                <Link to="/teachcomputing">National Centre for Computing Education.</Link>
+                <Link to="/teachcomputing" style={{ color: "white", textDecoration: "none" }}>
+                  National Centre for Computing Education.
+                </Link>
               </p>
             </div>
           </Col>
-          <Col md={{ size: 7, offset: 1 }} lg={{ size: 5, offset: 1 }} className="pt-5 mt-4 mt-md-0">
+          <Col xs="12" lg="9" xl={{ size: 8, offset: 1 }} className="pt-5 links-col">
             <ListGroupFooter />
-          </Col>
-          <Col md="5" lg="3" className="pt-5 mt-4 mt-lg-0">
             <ListGroupSocial />
           </Col>
         </Row>
@@ -34,10 +37,15 @@ export const Footer = () => (
     </div>
     <div className="footerBottom">
       <Container>
-        <Row className="pt-3 px-3 px-sm-0 pb-3">
+        <Row className="pt-3 px-sm-0">
           <ListGroupFooterBottom />
         </Row>
       </Container>
+      <div className="w-100 d-flex justify-content-end">
+        <ExternalLink href="https://www.stem.org.uk/">
+          <img src="/assets/logos/stem_footer.svg" alt="STEM Learning" className="logo-mr" height="100px" />
+        </ExternalLink>
+      </div>
     </div>
   </footer>
 );

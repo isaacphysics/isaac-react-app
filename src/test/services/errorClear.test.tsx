@@ -33,7 +33,7 @@ describe("ErrorClear", () => {
       ],
     });
     const header = await screen.findByTestId("header");
-    const logIn = within(header).getByRole("link", { name: "LOG IN" });
+    const logIn = within(header).getByRole("link", { name: "Log in" });
     await userEvent.click(logIn);
     checkPageTitle("log in or sign up:");
     await fillFormIncorrectly();
@@ -41,7 +41,7 @@ describe("ErrorClear", () => {
     const errorMessage = screen.queryByText(/incorrect credentials/i);
     expect(errorMessage).toBeInTheDocument();
     // navigate to the student registration page, which should clear the error
-    const signUp = within(header).getByRole("link", { name: "SIGN UP" });
+    const signUp = within(header).getByRole("link", { name: "Sign up" });
     await userEvent.click(signUp);
     checkPageTitle("Register for a free account");
     // Locate the radio button for student and continue to student registration

@@ -25,17 +25,31 @@ export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?:
     meetingUrl,
   } = event;
 
+  const getCourseName = (subtitle: string | undefined) => {
+    if (!subtitle) return "N/A";
+
+    const lowerCaseSubtitle = subtitle.toLowerCase();
+    if (lowerCaseSubtitle.includes("gcse")) {
+      return "GCSE";
+    } else if (lowerCaseSubtitle.includes("a level")) {
+      return "A level";
+    } else {
+      return "N/A";
+    }
+  };
+
   return (
     <Card
       data-testid="event-card"
-      className={classnames("card-neat", {
+      className={classnames("card-neat custom-card", {
         "disabled text-muted": hasExpired || isCancelled,
         "m-4": pod,
         "mb-4": !pod,
       })}
     >
       {eventThumbnail && (
-        <div className={"event-card-image text-center"}>
+        <div className={"event-card-image"}>
+          <span className="course-name">{getCourseName(subtitle)}</span>
           <CardImg
             data-testid="event-card-image"
             aria-hidden={true}
@@ -47,7 +61,7 @@ export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?:
       )}
       <CardBody className="d-flex flex-column">
         {title && (
-          <CardTitle tag="h3" data-testid="event-card-title">
+          <CardTitle tag="h3" data-testid="event-card-title" className="card-title">
             {title}
             {isCancelled ? (
               <Badge color={"danger"} className="ml-1">
@@ -65,13 +79,16 @@ export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?:
         )}
         {subtitle && (
           <CardText className="m-0 my-auto card-date-time" data-testid="event-card-subtitle">
-            {subtitle}
+            <span className="d-block my-2">
+              <span className="card-sub-title">What</span>
+              <span className="d-block">{subtitle}</span>
+            </span>
           </CardText>
         )}
         <CardText className="m-0 my-auto card-date-time">
           {date && endDate && (
             <span className="d-block my-2">
-              <span className="font-weight-bold">When:</span>
+              <span className="card-sub-title">When</span>
               <span className="d-block" data-testid="event-card-date">
                 {formatEventCardDate(event, pod)}
               </span>
@@ -79,20 +96,23 @@ export const EventCard = ({ event, pod = false }: { event: AugmentedEvent; pod?:
           )}
           {(location?.address?.addressLine1 || event.isVirtual) && (
             <span className="d-block my-2" data-testid="event-card-location">
-              <span className="font-weight-bold">Location:</span>{" "}
-              {event.isVirtual ? (
-                <span>Online</span>
-              ) : (
-                <span>
-                  {location?.address?.addressLine1}
-                  {location?.address?.town && `, ${location.address.town}`}
-                </span>
-              )}
+              <span className="card-sub-title">Where</span>
+              <span className="d-block">
+                <span className="font-weight-bold">Location:</span>{" "}
+                {event.isVirtual ? (
+                  <span>Online</span>
+                ) : (
+                  <span>
+                    {location?.address?.addressLine1}
+                    {location?.address?.town && `, ${location.address.town}`}
+                  </span>
+                )}
+              </span>
             </span>
           )}
         </CardText>
         <CardText className="d-flex" data-testid="event-card-details">
-          <Link className="focus-target" to={`/events/${id}`}>
+          <Link className="details-button" to={`/events/${id}`}>
             View details
             <span className="sr-only">
               {" "}

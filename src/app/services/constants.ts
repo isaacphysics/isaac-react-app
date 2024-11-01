@@ -17,6 +17,18 @@ export const STAGING_URL = "https://www.staging.development.isaaccomputerscience
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
+// Screen size breakpoints and grouping limits
+export const SCREEN_SIZES = {
+  MOBILE: 769,
+  TABLET: 1024,
+};
+
+export const GROUP_LIMITS = {
+  DEFAULT: 3,
+  TABLET: 2,
+  MOBILE: 1,
+};
+
 /*
  * Configure the api provider with the server running the API:
  * No need if we want to use the same server as the static content.
@@ -46,9 +58,9 @@ export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = envSpecific("G-H95WP5C8DR", "G-
 
 export const SOCIAL_LINKS = {
   youtube: { name: "YouTube", href: "https://www.youtube.com/@isaaccomputerscience" },
-  twitter: { name: "Twitter", href: "https://twitter.com/isaaccompsci" },
   facebook: { name: "Facebook", href: "https://www.facebook.com/IsaacComputerScience" },
   instagram: { name: "Instagram", href: "https://www.instagram.com/isaaccompsci" },
+  twitter: { name: "Twitter", href: "https://twitter.com/isaaccompsci" },
 };
 
 // Change to "http://localhost:3000" if you want to run a local version of the code editor

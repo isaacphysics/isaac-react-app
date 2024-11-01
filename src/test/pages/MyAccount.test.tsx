@@ -14,7 +14,7 @@ describe("My Account", () => {
     renderTestEnvironment({ role: "STUDENT" });
     //locate "My Account" in the header and click on it
     const header = await screen.findByTestId("header");
-    const myAccount = within(header).getByRole("link", { name: "MY ACCOUNT" });
+    const myAccount = within(header).getByRole("link", { name: "My Account" });
     await userEvent.click(myAccount);
     // wait for My Account page to load then click on the "Account Security" tab
     const accountSecurityTab = await screen.findByText(/account security/i);
@@ -38,7 +38,7 @@ describe("My Account", () => {
     renderTestEnvironment({ role: "STUDENT" });
     //locate "My Account" in the header and click on it
     const header = await screen.findByTestId("header");
-    const myAccount = within(header).getByRole("link", { name: "MY ACCOUNT" });
+    const myAccount = within(header).getByRole("link", { name: "My Account" });
     await userEvent.click(myAccount);
     // wait for My Account page to load then click on the "Account Security" tab
     const accountSecurityTab = await screen.findByText(/account security/i);
@@ -64,7 +64,7 @@ describe("My Account", () => {
     renderTestEnvironment({ role: "STUDENT" });
     //locate "My Account" in the header and click on it
     const header = await screen.findByTestId("header");
-    const myAccount = within(header).getByRole("link", { name: "MY ACCOUNT" });
+    const myAccount = within(header).getByRole("link", { name: "My Account" });
     await userEvent.click(myAccount);
     // wait for My Account page to load then click on the "Account Security" tab
     const accountSecurityTab = await screen.findByText(/account security/i);

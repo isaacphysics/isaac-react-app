@@ -55,20 +55,23 @@ export const LinkItemComingSoon = ({ children }: { children: React.ReactNode }) 
 interface NavigationSectionProps {
   children: React.ReactNode;
   title: React.ReactNode;
+  svgIcon?: React.ReactNode;
   topLevelLink?: boolean;
   to?: string;
 }
-export const NavigationSection = ({ children, title, topLevelLink, to }: NavigationSectionProps) => (
+export const NavigationSection = ({ children, svgIcon, title, topLevelLink, to }: NavigationSectionProps) => (
   <MenuOpenContext.Consumer>
     {({ setMenuOpen }) => (
       <UncontrolledDropdown nav inNavbar>
         {topLevelLink ? (
           <NavLink className="p-3 ml-3 mr-3" tag={Link} to={to} onClick={() => setMenuOpen(false)}>
+            {svgIcon && <span className="mr-2">{svgIcon}</span>}
             {title}
           </NavLink>
         ) : (
-          <DropdownToggle nav caret className="p-3 ml-3 mr-3">
+          <DropdownToggle nav caret className="p-3 mr-3">
             {title}
+            {svgIcon && <span className="mr-2">{svgIcon}</span>}
           </DropdownToggle>
         )}
         <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={() => setMenuOpen(false)}>
@@ -120,10 +123,9 @@ export const NavBar = ({ children }: { children: React.ReactNode }) => {
     <MenuOpenContext.Provider value={{ menuOpen, setMenuOpen }}>
       <Navbar className="main-nav p-0" color="light" light expand="md">
         <NavbarToggler onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Close menu" : "Open menu"}>
-          Menu
+          <img src="/assets/hamburger-menu.svg" alt="Menu icon" className="menu-icon" />
         </NavbarToggler>
-
-        <Collapse isOpen={menuOpen} navbar className="px-0 mx-0 mx-xl-5 px-xl-5">
+        <Collapse isOpen={menuOpen} navbar className="px-0 mx-0">
           <Nav navbar className="justify-content-between" id="main-menu">
             {children}
           </Nav>

@@ -94,7 +94,6 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
     return (
       <span>
         Series starts <DateString formatter={FRIENDLY_DATE}>{event.date}</DateString>
-        <br />
         <DateString formatter={TIME_ONLY}>{event.date}</DateString> —{" "}
         <DateString formatter={TIME_ONLY}>{event.endDate}</DateString>
       </span>
@@ -110,8 +109,7 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
   } else {
     return (
       <>
-        <DateString formatter={FRIENDLY_DATE}>{event.endDate}</DateString>
-        {podView ? " " : <br />}
+        <DateString formatter={FRIENDLY_DATE}>{event.endDate}</DateString> {podView}
         <DateString formatter={TIME_ONLY}>{event.date}</DateString> —{" "}
         <DateString formatter={TIME_ONLY}>{event.endDate}</DateString>
       </>

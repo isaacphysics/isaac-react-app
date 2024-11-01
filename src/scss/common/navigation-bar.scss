@@ -14,26 +14,28 @@ nav {
     .navbar-toggler {
       border-width: 0;
       color: $black;
-      font-family: $secondary-font-medium;
+      font-family: "dm-sans-light", DMSans-Light, sans-serif;
       padding: 0.8rem 0 0.8rem 0.1rem;
       position: absolute;
       right: 9%;
-      text-transform: uppercase;
       top: 15px;
+      text-decoration: none;
 
       &:hover {
-        text-decoration: underline;
+        text-decoration: none;
       }
     }
 
     .navbar-nav {
-      width: 100%;
+      width: auto;
+      margin-left: 0;
+      margin-right: auto;
 
       .nav-link {
         border-bottom: 1px solid $gray-118;
         color: $gray-194;
-        font-family: $secondary-font-semi-bold;
-        font-size: 1.25rem;
+        font-family: "dm-sans-medium", DMSans-Medium, sans-serif;
+        font-size: 18px;
         font-weight: 500;
         text-decoration: none;
 
@@ -43,9 +45,8 @@ nav {
 
         @include respond-above(sm) {
           border-width: 0;
-          font-family: $secondary-font-medium;
-          font-size: 1rem;
-          text-decoration: underline;
+          font-family: "dm-sans-medium", DMSans-Medium, sans-serif;
+          font-size: 18px;
 
           &:hover {
             text-decoration: none;
@@ -116,8 +117,8 @@ nav {
             .dropdown-item {
               background-color: $gray-103;
               border-bottom: 1px solid $shadow-08;
-              font-family: $secondary-font-semi-bold;
-              font-size: 1.25rem;
+              font-family: "dm-sans-medium", DMSans-Medium, sans-serif;
+              font-size: 18px;
               text-decoration: none;
 
               &:hover {
@@ -131,12 +132,12 @@ nav {
               @include respond-above(sm) {
                 background-color: $white;
                 border-width: 0;
-                font-family: $secondary-font-medium;
-                font-size: 1rem;
-                text-decoration: underline;
+                font-family: "dm-sans-medium", DMSans-Medium, sans-serif;
+                font-size: 18px;
+                text-decoration: none;
 
                 &:hover {
-                  text-decoration: none;
+                  text-decoration: underline;
                 }
               }
             }
@@ -160,4 +161,9 @@ nav {
 
 .main-menu-container {
   position: initial;
+}
+
+.menu-icon {
+  width: 24px;
+  height: 24px;
 }

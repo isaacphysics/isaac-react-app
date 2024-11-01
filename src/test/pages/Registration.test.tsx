@@ -10,7 +10,7 @@ describe("Registration", () => {
     renderTestEnvironment({ role: "ANONYMOUS" });
     // Locate "Sign Up" in the header and click on it
     const header = await screen.findByTestId("header");
-    const signUp = within(header).getByRole("link", { name: "SIGN UP" });
+    const signUp = within(header).getByRole("link", { name: "Sign up" });
     await userEvent.click(signUp);
     // Wait for Sign Up page to load and check that the page title is correct
     const title = screen.getByRole("heading", {
@@ -29,7 +29,7 @@ describe("Registration", () => {
     renderTestEnvironment({ role: "ANONYMOUS" });
     // Locate "Sign Up" in the header and click on it
     const header = await screen.findByTestId("header");
-    const signUp = within(header).getByRole("link", { name: "SIGN UP" });
+    const signUp = within(header).getByRole("link", { name: "Sign up" });
     await userEvent.click(signUp);
     // Wait for Sign Up page to load and check that the page title is correct, then press Continue
     const title = screen.getByRole("heading", {

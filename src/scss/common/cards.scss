@@ -21,11 +21,9 @@
   .event-card-image {
     img {
       display: block;
-      height: 150px;
-      width: 150px;
-      border-radius: 50%;
-      margin: auto;
-      margin-top: 1rem;
+      height: 180px;
+      max-width: 320px;
+      padding-top: 8px;
     }
   }
 
@@ -251,10 +249,11 @@
     @include respond-above(sm) {
       margin: 1.5rem;
     }
-    @include respond-below(sm) {
-      left: 50%;
-      transform: translate(-50%);
-    }
+  }
+  .centered-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 .news-card + a,

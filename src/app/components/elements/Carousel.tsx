@@ -1,17 +1,12 @@
+import { SCREEN_SIZES, GROUP_LIMITS } from "../../services/constants";
 import React, { useEffect, useRef, useState } from "react";
-import { Carousel, CarouselControl, CarouselIndicators, CarouselItem } from "reactstrap";
+import { Carousel, CarouselControl, CarouselItem } from "reactstrap";
 import { ifKeyIsEnter } from "../../services";
 
 const ControlledCarouselInstance = ({ children, collectionTag }: any) => {
   const items = children;
   const [activeIndex, setActiveIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
-
-  const gotoIndex = (newIndex: any) => {
-    if (!animating) {
-      setActiveIndex(newIndex);
-    }
-  };
 
   const next = () => {
     if (!animating) {
@@ -88,39 +83,55 @@ const ControlledCarouselInstance = ({ children, collectionTag }: any) => {
           </CarouselItem>
         ))}
         <CarouselControl direction="next" directionText="Next" onClickHandler={next} onKeyPress={next} />
-        <CarouselIndicators
-          items={items.map((item: any, index: number) => ({ key: index }))}
-          activeIndex={activeIndex}
-          onClickHandler={gotoIndex}
-        />
       </Carousel>
     </div>
   );
 };
 
 export const ResponsiveCarousel = ({ groupingLimit, children, collectionTag = "div", className }: any) => {
-  const tuple: any = [];
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
-  if (!groupingLimit || groupingLimit == 0) {
-    groupingLimit = 3;
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  let effectiveGroupingLimit = groupingLimit || GROUP_LIMITS.DEFAULT;
+
+  if (screenWidth >= SCREEN_SIZES.MOBILE && screenWidth <= SCREEN_SIZES.TABLET) {
+    effectiveGroupingLimit = GROUP_LIMITS.TABLET;
+  } else if (screenWidth < SCREEN_SIZES.MOBILE) {
+    effectiveGroupingLimit = GROUP_LIMITS.MOBILE;
   }
 
-  children.forEach((child: any, index: number) => {
-    if (index % groupingLimit === 0) {
-      tuple.push([]);
-    }
-    tuple[Math.floor(index / groupingLimit)].push(child);
-  });
+  type TupleItem = React.ReactNode[];
+  const [tuple, setTuple] = useState<TupleItem[]>([]);
+
+  useEffect(() => {
+    const calculatedTuple: TupleItem[] = [];
+    React.Children.forEach(children, (child, index) => {
+      if (index % effectiveGroupingLimit === 0) {
+        calculatedTuple.push([]);
+      }
+      calculatedTuple[Math.floor(index / effectiveGroupingLimit)].push(child);
+    });
+    setTuple(calculatedTuple);
+  }, [children, effectiveGroupingLimit]);
 
   return (
     <React.Fragment>
       <div className={`d-md-none ${className ?? ""}`}>
         <ControlledCarouselInstance collectionTag={collectionTag}>{children}</ControlledCarouselInstance>
       </div>
-      <div data-testid={"carousel-inner"} className={`d-none d-md-block ${className ?? ""}`}>
+      <div className={`d-none d-md-block d-lg-none ${className ?? ""}`}>
+        <ControlledCarouselInstance collectionTag={collectionTag}>{tuple}</ControlledCarouselInstance>
+      </div>
+      <div data-testid={"carousel-inner"} className={`d-none d-lg-block ${className ?? ""}`}>
         <ControlledCarouselInstance collectionTag={collectionTag}>{tuple}</ControlledCarouselInstance>
       </div>
     </React.Fragment>
   );
 };
+
 export default ResponsiveCarousel;

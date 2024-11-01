@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Col, Container, Row } from "reactstrap";
+import { Card, CardBody, CardImg, CardText, CardTitle, Col, Container, Row } from "reactstrap";
 import { selectors, useAppSelector } from "../../state";
 import { isStudent } from "../../services";
 import careerVideos from "../../assets/career_videos.json";
@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const CsAtWorkDescription = () => {
   const user = useAppSelector(selectors.user.orNull);
   const loggedOutDescription =
-    "Better understand computer science curriculum topics by connecting them to the real world of work with our new video resources. Watch a Computing Ambassador introduce a topic and share what they do in their day-to-day job.";
+    "Enrich your understanding of computer science curriculum topics with our video resources. Watch a Computing Ambassador introduce a topic and share what they do in their day-to-day job.";
   const student =
     "Wondering how studying computer science can help you in your future job or where would you ever use this knowledge? Our new video resources are here to show you the real-world application of your learning. Watch a Computing Ambassador introduce a topic and share what they do in their day-to-day job.";
   const teacherOrAbove =
@@ -19,50 +19,84 @@ const CsAtWorkDescription = () => {
   return <p className="mb-3">{!user?.loggedIn ? loggedOutDescription : roleSpecificDescription}</p>;
 };
 
+interface CareerCardProps {
+  imgSrc?: string;
+  imgAlt?: string;
+  title: string;
+  text: string | JSX.Element;
+  linkTo: string;
+  linkText: string;
+  children?: React.ReactNode;
+}
+
+const CareerCard = ({ imgSrc, imgAlt, title, text, linkTo, linkText, children }: CareerCardProps) => (
+  <Card className="career-card h-100">
+    {imgSrc && <CardImg variant="top" src={imgSrc} alt={imgAlt} className="career-media-row-image" />}
+    <CardBody className="career-card-body d-flex flex-wrap flex-column">
+      {children}
+      <CardTitle className="career-subtitle">{title}</CardTitle>
+      <CardText className="career-text">{text}</CardText>
+      <div className="career-link-column mt-auto">
+        <Link className="career-link" to={linkTo}>
+          {linkText}
+        </Link>
+      </div>
+    </CardBody>
+  </Card>
+);
+
 const videoId = careerVideos[0].video;
 
 export const CareersBanner = () => {
   const user = useAppSelector(selectors.user.orNull);
   return (
-    <Container className="d-flex align-items-center flex-column">
-      <h4 className="career-title">Careers in Computer Science</h4>
-      <Row className="career reversed">
-        <Col xs={12} sm={6} className="video-column">
-          <iframe
-            title="career-video"
-            className="no-border mh-100"
-            id="ytplayer"
-            width="100%"
-            height="100%"
-            src={`https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&fs=1&modestbranding=1`}
-            allowFullScreen
-          />
-        </Col>
-        <Col className="video-description-column">
-          <h4>{isStudent(user) ? "Linking computer science to the real world" : "Computer Science at work"}</h4>
-          <CsAtWorkDescription />
-          <Button tag={Link} size="lg" className="mt-2" to={"/careers_in_computer_science"}>
-            See more careers videos
-          </Button>
-        </Col>
-      </Row>
-      <Row className="cs-journey">
-        <Col xs="auto" className="left-column">
-          <h4>
-            <a href="/pages/computer_science_journeys_gallery" rel="noopener noreferrer">
-              Computer Science Journeys
-            </a>
-          </h4>
-          <p className="mb-3">
-            Discover our monthly interview series and learn from passionate educators within the Isaac community, and
-            recently-graduated computer scientists who are doing AMAZING things in a huge range of computing-related
-            fields!
-          </p>
-        </Col>
-        <Col xs="auto" className="right-column">
-          <img src="/assets/cs_journeys.png" alt="cs journeys" />
-        </Col>
-      </Row>
+    <Container className="py-4 py-lg-5">
+      <div className="career-background-img">
+        <Container className="career-section">
+          <h4 className="career-title mb-4">Careers</h4>
+          <Row className="career-media-row gy-4 justify-content-center">
+            <Col xs={12} sm={10} md={10} lg={5}>
+              <CareerCard
+                imgSrc="/assets/cs_journeys.svg"
+                imgAlt="cs journeys"
+                title="Computer Science Journeys"
+                text="Discover our interview series and learn from passionate educators within the Isaac community, and recently graduated computer scientists, who are doing amazing things in a huge range of computing-related fields."
+                linkTo="/pages/computer_science_journeys_gallery"
+                linkText="Read our interviews"
+              />
+            </Col>
+            <Col xs={12} sm={10} md={10} lg={5}>
+              <CareerCard
+                title={isStudent(user) ? "Linking computer science to the real world" : "Computer Science at work"}
+                text={<CsAtWorkDescription />}
+                linkTo="/careers_in_computer_science"
+                linkText="See more career videos"
+              >
+                <div className="career-media-row-column">
+                  <iframe
+                    title="career-video"
+                    className="career-media-row-video no-border"
+                    id="ytplayer"
+                    width="100%"
+                    height="100%"
+                    src={`https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&fs=1&modestbranding=1`}
+                    allowFullScreen
+                  />
+                </div>
+              </CareerCard>
+            </Col>
+          </Row>
+          <div className="career-comment mt-4">
+            <div className="resources-comment-content d-flex align-items-center">
+              <img src="/assets/star.svg" alt="Star" className="star-img me-3" />
+              <p className="text-left my-3 mx-3 mb-0">
+                Students have been able to dive deeper into topics by using Isaac CS, which has led to further interest
+                and helped them understand what topics they may like to study in post 16 and post 18 study.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </div>
     </Container>
   );
 };

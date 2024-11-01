@@ -14,10 +14,10 @@ const renderCareers = async (role?: TestUserRole) => {
 describe("Careers", () => {
   it("renders section title, video, description and more videos button for logged out user", () => {
     renderCareers();
-    const sectionTitle = screen.getByRole("heading", { name: /Careers in Computer Science/i, level: 4 });
+    const sectionTitle = screen.getByRole("heading", { name: /Careers/i, level: 4 });
     const video = screen.getByTitle(/career-video/i);
-    const videoDescription = screen.getByText(/Better understand computer science curriculum/i);
-    const button = screen.getByRole("link", { name: /see more careers videos/i });
+    const videoDescription = screen.getByText(/Enrich your understanding of computer science curriculum/i);
+    const button = screen.getByRole("link", { name: /see more career videos/i });
     [button, sectionTitle, video, videoDescription].forEach((element) => expect(element).toBeInTheDocument());
     expect(button).toHaveAttribute("href", "/careers_in_computer_science");
     expect(video).toHaveAttribute("src", expect.stringContaining("https://www.youtube-nocookie.com/embed/"));
@@ -25,23 +25,22 @@ describe("Careers", () => {
 
   it("renders CS Journeys", async () => {
     await renderCareers();
-    const csJourneys = screen.getByRole("link", { name: /Computer Science Journeys/i });
-    const csJourneysDescription = screen.getByText(/Discover our monthly interview series/i);
+    const csJourneys = screen.getByText(/Computer Science Journeys/i);
+    const csJourneysDescription = screen.getByText(/Discover our interview series/i);
     const csJourneysImage = screen.getByRole("img", { name: /cs journeys/i });
+    const csJourneysLink = screen.getByRole("link", { name: /read our interviews/i });
     expect(csJourneys).toBeInTheDocument();
-    expect(csJourneys).toHaveAttribute("href", "/pages/computer_science_journeys_gallery");
+    expect(csJourneysLink).toHaveAttribute("href", "/pages/computer_science_journeys_gallery");
     expect(csJourneysDescription).toBeInTheDocument();
     expect(csJourneysImage).toBeInTheDocument();
-    expect(csJourneysImage).toHaveAttribute("src", "/assets/cs_journeys.png");
+    expect(csJourneysImage).toHaveAttribute("src", "/assets/cs_journeys.svg");
   });
 
   it.each(USER_ROLES)("shows correct video title for %s role", async (role) => {
     await renderCareers(role);
     const expectedTitle =
-      role === "STUDENT"
-        ? { name: /linking computer science to the real world/i }
-        : { name: /computer science at work/i };
-    const title = await screen.findByRole("heading", expectedTitle);
+      role === "STUDENT" ? /linking computer science to the real world/i : /computer science at work/i;
+    const title = await screen.findByText(expectedTitle);
     expect(title).toBeInTheDocument();
   });
 
@@ -51,7 +50,7 @@ describe("Careers", () => {
     const otherRoleDescription = /Looking at how to connect your/i;
     const expectedDescription = role === "STUDENT" ? studentDescription : otherRoleDescription;
     const description = await screen.findByText(expectedDescription);
-    const button = screen.getByRole("link", { name: /see more careers videos/i });
+    const button = screen.getByRole("link", { name: /see more career videos/i });
     expect(description).toBeInTheDocument();
     expect(button).toBeInTheDocument();
     expect(button).toHaveAttribute("href", "/careers_in_computer_science");

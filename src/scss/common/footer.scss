@@ -1,56 +1,48 @@
 // NOMENSA footer.scss
 // REPLACE ./assets WITH /assets
 .footerTop {
-  background-color: black;
+  background-color: #120540;
   color: white;
 }
 
-.link-list {
-  a {
-    font-family: $secondary-font-medium;
-  }
-}
-
-.footer-bottom {
-  background-color: #ffffff;
-  width: 100%;
-  .footer-bottom-info {
-    p {
-      font-family: $primary-font;
-      font-size: 13px;
-      color: #000000;
-    }
-    @include respond-above(md) {
-      width: 40%;
-    }
-  }
-  .footer-bottom-logos {
-    @include respond-above(md) {
-      width: 40%;
-      margin-left: 17%;
-    }
-  }
-}
-
 .footer-links {
-  color: $gray-120;
+  color: white;
 
-  h5 {
-    font-family: $secondary-font-semi-bold;
+  .footer-support-links {
+    .h5 {
+      font-family: $footer-links-font;
+    }
+
+    .link-list {
+
+      a {
+        font-family: $footer-text-font;
+        color: white;
+        text-decoration: none;
+
+        &:hover {
+          color: white;
+        }
+      }
+    }
+  }
+
+  .h5 {
+    font-family: $footer-links-font;
   }
 
   a {
-    color: $gray-120;
+    color: white;
     display: block;
     text-decoration: none;
 
     &:hover {
-      color: $gray-120;
+      color: white;
     }
   }
 
   .footerLink {
-    font-family: $primary-font;
+    font-family: $footer-text-font;
     font-size: 16px;
   }
 
@@ -59,20 +51,20 @@
       padding: 1rem;
     }
     a {
-      color: $gray-120;
+      color: white;
       display: block;
       text-decoration: none;
 
       &:hover {
-        color: $gray-120;
+        color: white;
       }
     }
   }
   &.footer-links-social {
-    background-image: url("/assets/social_dots.svg");
     background-position: left 82%;
     background-repeat: no-repeat;
     height: 100%;
+    
 
     @include respond-above(md) {
       background-position: left 100% bottom 15%;
@@ -81,25 +73,32 @@
 }
 
 .logo-text {
-  color: $gray-120;
-  font-family: $primary-font;
-  font-size: 0.8rem;
-  padding-top: 30px;
+  color: white;
+  font-family: $footer-text-font;
+  font-size: 14px;
+  line-height: 16.41px;
 }
 
 .link-list {
   a {
-    font-family: $secondary-font-medium;
+    font-family: $footer-text-font;
   }
 }
 
 .footer-bottom {
-  background-color: #ffffff;
+  background-color: white;
   width: 100%;
+
+  .h5 {
+    color: black;
+    font-family: $footer-links-font;
+    font-size: 20px;
+  }
+
   .footer-bottom-info {
     p {
-      font-family: $primary-font;
-      font-size: 13px;
+      font-family: $footer-text-font;
+      font-size: 14px;
       color: #000000;
     }
     @include respond-above(md) {
@@ -108,8 +107,115 @@
   }
   .footer-bottom-logos {
     @include respond-above(md) {
-      width: 40%;
-      margin-left: 17%;
+      width: 30%;
+      margin-left: 8%;
     }
+  }
+}
+
+.footer-bottom-links a {
+  color: black;
+  padding-right: 30px;
+  
+  &:hover {
+    color: black;
+  }
+}
+
+.print-font {
+  font-family: $footer-bold-font;
+  color: black !important;
+}
+
+.footer-bottom-logos img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media only screen and (min-width: 990px) {
+  .footer-bottom-logos img {
+    height: auto;
+    width: auto;
+    max-width: 90%;
+    padding-left: 14px;
+  }
+}
+
+@media only screen and (min-width: 769px) and (max-width: 989px) {
+  .links-col {
+    padding-top: 0.5rem !important;
+  }
+
+  .footer-bottom-info {
+    p {
+      padding-bottom: 1.5rem !important;
+    }
+  }
+
+  .footer-bottom-logos {
+    padding-bottom: 1.5rem;
+  }
+  
+  .footer-bottom-logos img {
+    height: auto;
+    width: auto;
+    max-width: 90%;
+    padding-left: 14px;
+  }
+}
+
+@media only screen and (min-width: 480px) and (max-width: 768px) {
+  .links-col {
+    padding-top: 0.5rem !important;
+  }
+
+  .footer-links .footer-support-links .h5, 
+  .footer-bottom-links .h5 {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .footer-links .footer-support-links a,
+  .footer-bottom-links a {
+    margin-bottom: 10px;
+  }
+
+  .footer-bottom-info {
+    p {
+      padding-bottom: 1.5rem !important;
+    }
+  }
+
+  .footer-bottom-logos {
+    padding-bottom: 1.5rem;
+    margin-left: 5%;
+    gap: 1.25rem;
+  }
+
+}
+
+@media only screen and (max-width: 480px) {
+  .logo-col {
+    padding: 20px !important;
+  }
+  
+  .links-col {
+    padding-top: 0.5rem !important;
+  }
+
+  .footer-links .footer-support-links .h5, 
+  .footer-bottom-links .h5 {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .footer-links .footer-support-links a,
+  .footer-bottom-links a {
+    margin-bottom: 10px;
+  }
+
+  .footer-bottom-logos {
+    gap: 1.25rem;
+    margin-left: 5%;
   }
 }

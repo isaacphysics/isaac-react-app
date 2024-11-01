@@ -107,10 +107,10 @@ textarea {
   }
 
   &.form-control {
-    &:focus {
-      border-color: $gray-160;
-      box-shadow: 0 0 0 0.2rem $shadow-25;
-    }
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   &.search--filter-input {
@@ -125,10 +125,19 @@ button {
   &.search-main {
     height: 36px;
     min-width: auto;
-    position: absolute;
     right: 4px;
     top: 2px;
-    width: 36px;
+    width: auto;
+    display: flex;
+    align-items: center;
+
+    .search-wrapper {
+      display: flex;
+      align-items: center;
+      background-color: #d60265;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
 
     &:hover {
       background-color: transparent;
@@ -139,11 +148,7 @@ button {
     }
 
     svg {
-      bottom: 0;
-      left: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
+      display: flex;
     }
   }
 }
@@ -151,8 +156,11 @@ button {
 .search--main-group,
 .search--filter-group {
   &.form-group {
+    display: flex;
     margin: 0;
     position: relative;
+    flex-wrap: nowrap;
+    align-items: center;
 
     input {
       &.form-control {

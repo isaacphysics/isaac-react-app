@@ -14,7 +14,7 @@ export const NewsCard = ({ newsItem, showTitle, linkText = "Find out more" }: Ne
   const { title, value, image, url } = newsItem;
 
   return (
-    <Card data-testid={"news-pod"} className={"card-neat news-card"}>
+    <Card data-testid={"news-pod"} className={"news-card custom-card"}>
       {image && (
         <a href={url}>
           <CardImg
@@ -38,18 +38,19 @@ export const NewsCard = ({ newsItem, showTitle, linkText = "Find out more" }: Ne
             )}
           </span>
         </div>
-        <CardText>
-          {!url?.startsWith("http") ? (
-            <Link className="focus-target" to={`${url}`}>
-              Read more
-            </Link>
-          ) : (
-            // eslint-disable-next-line react/jsx-no-target-blank
-            <a className="focus-target" href={url} target="_blank" rel="noopener">
-              {linkText}
-            </a>
-          )}
-        </CardText>
+        <div className="centered-link">
+          <CardText>
+            {!url?.startsWith("http") ? (
+              <Link className="details-button" to={`${url}`}>
+                Read more
+              </Link>
+            ) : (
+              <a className="focus-target" href={url} target="_blank" rel="noopener noreferrer">
+                {linkText}
+              </a>
+            )}
+          </CardText>
+        </div>
       </CardBody>
     </Card>
   );

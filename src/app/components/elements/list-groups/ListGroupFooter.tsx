@@ -10,48 +10,47 @@ interface FooterLinkProps {
 const FooterLink = ({ linkTo, children }: FooterLinkProps) => {
   return (
     <ListGroupItem className="border-0 px-0 py-0 bg-transparent align-items-stretch">
-      <Link className="footerLink py-2" to={linkTo}>
+      <Link className="footerLink" to={linkTo}>
         {children}
       </Link>
     </ListGroupItem>
   );
 };
 
-let key = 0;
 const footerLinks = {
   left: [
-    <FooterLink key={key++} linkTo="/about">
+    <FooterLink key="about-us-footer-link" linkTo="/about">
       About us
     </FooterLink>,
-    <FooterLink key={key++} linkTo="/contact">
+    <FooterLink key="contact-us-footer-link" linkTo="/contact">
       Contact us
     </FooterLink>,
-    <FooterLink key={key++} linkTo="/accessibility">
-      Accessibility <span className="d-none d-md-inline">statement</span>
-    </FooterLink>,
-    <FooterLink key={key++} linkTo="/safeguarding">
+    <FooterLink key="safeguarding-footer-link" linkTo="/safeguarding">
       Safeguarding
     </FooterLink>,
-  ],
-  right: [
-    <FooterLink key={key++} linkTo="/privacy">
-      Privacy policy
+    <FooterLink key="student-support-footer-link" linkTo="/support/student">
+      Student Support
     </FooterLink>,
-    <FooterLink key={key++} linkTo="/terms">
-      Terms of use
-    </FooterLink>,
-    <FooterLink key={key++} linkTo="/cookies">
-      Cookie policy
+    <FooterLink key="teacher-support-footer-link" linkTo="/support/teacher">
+      Teacher Support
     </FooterLink>,
   ],
 };
 
 export const ListGroupFooter = () => (
   <div className="footer-links">
-    <h2 className="h5">Links</h2>
-    <div className="d-flex flex-row pt-lg-3">
-      <ListGroup className="w-50 mb-3 link-list">{footerLinks.left}</ListGroup>
-      <ListGroup className="w-50 mb-3 link-list">{footerLinks.right}</ListGroup>
+    <div className="footer-support-links d-flex flex-column flex-md-row align-items-start mt-2 pb-4 py-lg-3">
+      <h2 className="h5 mb-3 mb-md-0 mr-md-4">Support</h2>
+      <ListGroup className="d-flex flex-column flex-md-row">
+        {footerLinks.left.map((link, index) => (
+          <ListGroupItem
+            key={`footer-link-${index}`}
+            className="border-0 bg-transparent px-0 py-0 mb-0 mb-md-0 mr-md-3"
+          >
+            {link}
+          </ListGroupItem>
+        ))}
+      </ListGroup>
     </div>
   </div>
 );

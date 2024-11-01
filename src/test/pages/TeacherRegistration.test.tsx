@@ -53,7 +53,7 @@ describe("Teacher Registration", () => {
   it("redirects to student registration page if user is not a teacher", async () => {
     renderTestEnvironment({ role: "ANONYMOUS" });
     const header = await screen.findByTestId("header");
-    const signUp = within(header).getByRole("link", { name: "SIGN UP" });
+    const signUp = within(header).getByRole("link", { name: "Sign up" });
     await userEvent.click(signUp);
     const radioButton = screen.getByLabelText("Teacher");
     await userEvent.click(radioButton);

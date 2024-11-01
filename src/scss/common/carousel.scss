@@ -4,6 +4,7 @@
   .carousel-item {
     > div {
       display: flex;
+      justify-content: center;
     }
   }
   .carousel-indicators {
@@ -25,7 +26,7 @@
   > a[class^="carousel-control-"] {
     display: block;
     cursor: pointer;
-    width: 16px;
+    width: 40px;
     background-repeat: no-repeat;
     background-size: contain;
     background-position-y: center;
@@ -36,7 +37,6 @@
       display: block;
       margin-top: auto;
       margin-bottom: auto;
-      box-shadow: 0 0 0 2pt black !important;
       border-radius: 2px;
       outline: none !important;
     }
@@ -45,11 +45,51 @@
     }
   }
   > a[class*="next"] {
-    right: 3px;
+    right: -30px;
     background-image: url("/assets/chevron_right.svg");
   }
   > a[class*="prev"] {
-    left: 3px;
+    left: -30px;
     background-image: url("/assets/chevron_left.svg");
+  }
+
+  @media (max-width: 768px) {
+    a[class^="carousel-control-"] {
+      border-radius: 50%;
+  
+      &:focus,
+      &:hover {
+        height: 30px;
+        width: 30px;
+      }
+    }
+  
+    a[class*="next"] {
+      right: 10px;
+    }
+  
+    a[class*="prev"] {
+      left: 10px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    a[class^="carousel-control-"] {
+      border-radius: 50%;
+      
+      &:focus,
+      &:hover {
+        height: 25px;
+        width: 25px;
+      }
+    }
+  
+    a[class*="next"] {
+      right: 5px;
+    }
+  
+    a[class*="prev"] {
+      left: 5px;
+    }
   }
 }

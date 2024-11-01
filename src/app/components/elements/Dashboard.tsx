@@ -64,6 +64,22 @@ const TeacherButtons = () => {
   );
 };
 
+const LoggedOutButton = ({ loggedIn }: { loggedIn: boolean | undefined }) => {
+  const loggedOutButton = [{ to: "/register", label: "Join for free!" }];
+
+  return (
+    <Row data-testid="show-me-buttons">
+      {loggedOutButton.map(({ to, label }) => (
+        <Col xs={12} lg={loggedIn ? 12 : 4} className="py-1" key={to}>
+          <Button size="lg" tag={Link} to={to} block className="homepage-button text-light">
+            {label}
+          </Button>
+        </Col>
+      ))}
+    </Row>
+  );
+};
+
 export const Dashboard = ({
   featuredNewsItem,
   promoItem,
@@ -146,46 +162,31 @@ export const Dashboard = ({
 
   const loggedOutContent = (
     <Row>
-      <Col lg="5" className="order-first pb-3">
-        <Row>
-          <Col>
-            <h1>Computer science learning</h1>
-            <p className="mt-4">
-              Welcome to Isaac Computer Science, the free online platform for students and teachers.
-            </p>
-            <ul>
-              <li>
-                Use it in the <strong>classroom</strong>
-              </li>
-              <li>
-                Use it for <strong>homework</strong>
-              </li>
-              <li>
-                Use it for <strong>revision</strong>
-              </li>
-            </ul>
-
-            <p className="mr-lg-n1">
-              {"We also offer free "}
-              <Link to="/events">student events</Link>.<br />
-              {"Isaac Computer Science is proud to be part of the Department for Education's "}
-              <Link to="/teachcomputing">National Centre for Computing Education</Link>.
-            </p>
+      <Col lg={6} xs={12} className="pb-3">
+        <h1 className="homepage-title">The free online textbook for computer science</h1>
+        <p className="mt-4 homepage-text">
+          Welcome to Isaac Computer Science, the learning platform for GCSE and A level students and teachers.
+        </p>
+        <p className="mt-4 mb-0 homepage-text">How we can help:</p>
+        <ul className="homepage-text">
+          <li>Access tailored content for your exam board to boost learning and revision</li>
+          <li>Save time when planning lessons and homework</li>
+          <li>Track progress on questions to pinpoint areas to work on</li>
+          <li>Work towards better exam results with quality materials written by experienced teachers</li>
+        </ul>
+        <Row className="justify-content-left mt-4">
+          <Col xs="auto">
+            <LoggedOutButton loggedIn={undefined} />
           </Col>
         </Row>
       </Col>
-      <Col lg="7" className="order-last order-lg-1 px-lg-5 align-self-center text-center pattern-03">
-        <iframe
-          title="Isaac Computer Science introduction video"
-          width="640"
-          height="345"
-          className="mw-100 pt-lg-4 no-border"
-          src="https://www.youtube-nocookie.com/embed/ci6_Du_NHZA?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
-          allowFullScreen
+      <Col lg={6} xs={12} className="order-lg-2 order-3 mt-4 mt-lg-0 pb-5 pb-md-0">
+        <img
+          src="/assets/homepage-header-image.png"
+          alt="Description"
+          className="img-fluid"
+          style={{ maxWidth: "100%", height: "auto" }}
         />
-      </Col>
-      <Col className="order-lg-last pb-5 pb-lg-3">
-        <DashboardButtons />
       </Col>
     </Row>
   );
