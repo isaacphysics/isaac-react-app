@@ -59,7 +59,6 @@ function UserContextRow({
         const examBoard = examBoards.includes(userContext.examBoard as EXAM_BOARD) && userContext.examBoard || possibleExamBoards[0].value;
         setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
 
-        // Set display settings default values
         setUserContext({...userContext, stage, examBoard});
     };
 

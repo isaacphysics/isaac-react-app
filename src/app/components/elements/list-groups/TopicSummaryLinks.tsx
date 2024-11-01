@@ -40,7 +40,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                 return {...item, deEmphasised: !intendedAudience};
             })
 
-            // Render remaining items
+            // Render items
             .map((item, index) => {
                 const audienceString = stringifyAudience(
                     item.audience, userContext,
