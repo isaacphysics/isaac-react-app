@@ -3,8 +3,6 @@ import {
     ALL_TOPICS_CRUMB,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
-    isIntendedAudience,
-    isPhy,
     LinkInfo,
     NOT_FOUND,
     UseUserContextReturnType
@@ -21,26 +19,21 @@ const filterForQuestions = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.QUESTION || content.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
 };
 
-export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
-    const examBoardFilteredContent = contents.filter(c =>
-        isPhy ||
-        userContext.showOtherContent ||
-        isIntendedAudience(c.audience, userContext, user)
-    );
-    const relatedConcepts = filterForConcepts(examBoardFilteredContent);
-    const relatedQuestions = filterForQuestions(examBoardFilteredContent);
+export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[]) => {
+    const relatedConcepts = filterForConcepts(contents);
+    const relatedQuestions = filterForQuestions(contents);
     return [relatedConcepts, relatedQuestions];
 };
 
-export const getRelatedDocs = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
+export const getRelatedDocs = (doc: ContentDTO | NOT_FOUND_TYPE | null) => {
     if (doc && doc != NOT_FOUND && doc.relatedContent) {
-        return filterAndSeparateRelatedContent(doc.relatedContent, userContext, user);
+        return filterAndSeparateRelatedContent(doc.relatedContent);
     }
     return [[], []];
 };
 
-export const getRelatedConcepts = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
-    return getRelatedDocs(doc, userContext, user)[0];
+export const getRelatedConcepts = (doc: ContentDTO | NOT_FOUND_TYPE | null) => {
+    return getRelatedDocs(doc)[0];
 };
 
 const isValidIdForTopic = (contentId: string, currentTopic: CurrentTopicState) => {
@@ -64,11 +57,11 @@ export const makeAttemptAtTopicHistory = () => {
     return [ALL_TOPICS_CRUMB]
 };
 
-export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
+export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string) => {
     if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
         if (isValidIdForTopic(contentId, currentTopic)) {
             const [relatedConcepts, relatedQuestions] =
-                filterAndSeparateRelatedContent(currentTopic.relatedContent, userContext, user);
+                filterAndSeparateRelatedContent(currentTopic.relatedContent);
             const orderedRelatedContent = relatedConcepts.concat(relatedQuestions);
             const relatedContentIds = orderedRelatedContent.map((content) => content.id);
             const nextIndex = relatedContentIds.indexOf(contentId) + 1;

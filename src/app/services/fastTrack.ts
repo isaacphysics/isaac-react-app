@@ -186,7 +186,7 @@ export function determineFastTrackSecondaryAction(questionPart: FastTrackPagePro
         }
     }
     if (questionPart.doc.relatedContent && questionPart.doc.relatedContent.length) {
-        const relatedConcepts = getRelatedConcepts(questionPart.doc, questionPart.userContext, questionPart.user);
+        const relatedConcepts = getRelatedConcepts(questionPart.doc);
         if (relatedConcepts && relatedConcepts.length > 0) {
             return showRelatedConceptPage(relatedConcepts[0]);
         }

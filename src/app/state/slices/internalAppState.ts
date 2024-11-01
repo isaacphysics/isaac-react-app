@@ -26,14 +26,13 @@ export const mainContentIdSlice = createSlice({
     }
 });
 
-export type TransientUserContextState = {examBoard?: EXAM_BOARD, stage?: STAGE, showOtherContent?: boolean} | null;
+export type TransientUserContextState = {examBoard?: EXAM_BOARD, stage?: STAGE} | null;
 export const transientUserContextSlice = createSlice({
     name: "transientUserContext",
     initialState: null as TransientUserContextState,
     reducers: {
         setStage: (state, action: PayloadAction<STAGE>) => ({...state, stage: action.payload}),
         setExamBoard: (state, action: PayloadAction<EXAM_BOARD>) => ({...state, examBoard: action.payload}),
-        setShowOtherContent: (state, action: PayloadAction<boolean>) => ({...state, showOtherContent: action.payload})
     }
 })
 

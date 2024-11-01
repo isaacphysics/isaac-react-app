@@ -44,7 +44,6 @@ export interface UseUserContextReturnType {
     setStage: (stage: STAGE) => void;
     examBoard: EXAM_BOARD;
     setExamBoard: (stage: EXAM_BOARD) => void;
-    showOtherContent?: boolean;
     explanation: {stage?: string, examBoard?: string};
     hasDefaultPreferences: boolean;
 }
@@ -149,16 +148,7 @@ export const determineUserContext = (transientUserContext: TransientUserContextS
         }
     }
 
-    let showOtherContent;
-    if (isDefined(transientUserContext?.showOtherContent)) {
-        showOtherContent = transientUserContext?.showOtherContent;
-    } else if (isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT)) {
-        showOtherContent = !displaySettings?.HIDE_NON_AUDIENCE_CONTENT;
-    } else {
-        showOtherContent = true;
-    }
-
-    return { stage, examBoard, showOtherContent, hasDefaultPreferences, explanation };
+    return { stage, examBoard, hasDefaultPreferences, explanation };
 };
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
