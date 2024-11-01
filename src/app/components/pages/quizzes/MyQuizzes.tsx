@@ -176,17 +176,17 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
 
     const [completedQuizzes, incompleteQuizzes] = quizAssignments ? partitionCompleteAndIncompleteQuizzes(quizAssignments) : [[], []];
     let [overdueQuizzes, currentQuizzes] = partition(incompleteQuizzes, a => a.dueDate ? todaysDate > a.dueDate : false);
-    currentQuizzes = currentQuizzes.toSorted(sortCurrentQuizzes);
+    const sortedCurrentQuizzes = [...currentQuizzes].sort(sortCurrentQuizzes);
     
     let [completedFreeAttempts, currentFreeAttempts] = partitionCompleteAndIncompleteQuizzes(freeAttempts ?? []);
-    currentFreeAttempts = currentFreeAttempts?.toSorted(sortCurrentQuizzes);
+    const sortedCurrentFreeAttempts = [...currentFreeAttempts].sort(sortCurrentQuizzes);
 
     let completedOrOverdueQuizzes = [
         ...isFound(overdueQuizzes) ? overdueQuizzes : [],
         ...isFound(completedQuizzes) ? completedQuizzes : [],
         ...isFound(completedFreeAttempts) ? completedFreeAttempts : []
     ];
-    completedOrOverdueQuizzes = completedOrOverdueQuizzes.toSorted(sortCompletedQuizzes);
+    const sortedCompletedOrOverdueQuizzes = [...completedOrOverdueQuizzes].sort(sortCompletedQuizzes);
 
     const showQuiz = (quiz: QuizSummaryDTO) => {
         switch (user.role) {
@@ -242,7 +242,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                         until={quizAssignments}
                         ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}
                     >
-                        <QuizGrid quizzes={currentQuizzes} empty="You don&apos;t have any incomplete or assigned tests."/>
+                        <QuizGrid quizzes={sortedCurrentQuizzes} empty="You don&apos;t have any incomplete or assigned tests."/>
                     </ShowLoading>,
 
                 [siteSpecific("Past Tests", "Past tests")]:
@@ -250,14 +250,14 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                         until={quizAssignments}
                         ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}
                     >
-                        <QuizGrid quizzes={completedOrOverdueQuizzes} empty="You don't have any completed or overdue tests."/>
+                        <QuizGrid quizzes={sortedCompletedOrOverdueQuizzes} empty="You don't have any completed or overdue tests."/>
                     </ShowLoading>,
 
                 [siteSpecific("Practice Tests", "Practice tests")]:
                 <>
                     <h3>{siteSpecific("In Progress", "In progress")}</h3>
                     <div className="mb-5">
-                        <QuizGrid quizzes={currentFreeAttempts} empty="You don't have any practice tests in progress."/>
+                        <QuizGrid quizzes={sortedCurrentFreeAttempts} empty="You don't have any practice tests in progress."/>
                     </div>
                     <ShowLoading until={quizzes}>
                         {quizzes && <>
