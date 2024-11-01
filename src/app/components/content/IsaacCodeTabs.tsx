@@ -1,7 +1,7 @@
 import React, {ReactElement, useEffect, useState} from "react";
 import {Tabs} from "../elements/Tabs";
 import {CodeSnippetDTO} from "../../../IsaacApiTypes";
-import {isDefined, programmingLanguagesMap, useUserPreferences} from "../../services";
+import {isDefined, PROGRAMMING_LANGUAGE, programmingLanguagesMap, useUserPreferences} from "../../services";
 import { IsaacContent } from "./IsaacContent";
 
 interface IsaacCodeTabsProps {
@@ -24,7 +24,8 @@ export const IsaacCodeTabs = (props: any) => {
 
     useEffect(() => {
         if (isDefined(preferredProgrammingLanguage) && isDefined(tabTitles)) {
-            setDefaultTabIndex(tabTitles.indexOf(programmingLanguagesMap[preferredProgrammingLanguage]));
+            const defaultIndex = (preferredProgrammingLanguage === PROGRAMMING_LANGUAGE.VBA && tabTitles.includes("VB")) ? tabTitles.indexOf("VB") : tabTitles.indexOf(programmingLanguagesMap[preferredProgrammingLanguage]);
+            setDefaultTabIndex(defaultIndex);
         }
     }, [preferredProgrammingLanguage, tabTitles]);
 
