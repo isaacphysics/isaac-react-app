@@ -43,11 +43,15 @@
 }
 
 .question-progress-icon {
-  min-width: 86px !important;
+  min-width: 58px !important;
   display: block;
   padding: 14px 0 !important;
   position: relative;
   align-content: center;
+  @include media-breakpoint-up(sm) {
+    min-width: 86px !important;
+  }
+
   .inner-progress-icon {
     @extend .text-center;
     @extend .px-2;
