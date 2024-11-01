@@ -179,9 +179,19 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
     const updateNumberInputValue = (n: number) => {
         if (!isDefined(numberInputValue) || numberInputValue === 0) return setNumberInputValue(n);
         // Past this point, we know that `numberInputValue` is defined and non-zero
-        setNumberInputValue(numberInputValue * 10 + (Math.sign(numberInputValue) * n));
+        if (numberInputValue > -100 && numberInputValue < 1000) {
+            // Multiple-digit numbers should be limited to 4 characters to fit in the Inequality menu
+            setNumberInputValue(numberInputValue * 10 + (Math.sign(numberInputValue) * n));
+        }
     };
-    const flipNumberInputValueSign = () => setNumberInputValue(-(numberInputValue ?? 0));
+    const flipNumberInputValueSign = () => {
+        if (!isDefined(numberInputValue) || numberInputValue === 0) return setNumberInputValue(0);
+        if (numberInputValue >= 1000) {
+            setNumberInputValue(-Math.floor(numberInputValue / 10));
+        } else {
+            setNumberInputValue(-numberInputValue);
+        }  
+    };
     const clearNumberInputValue = () => setNumberInputValue(undefined);
 
     // Logic for parsing chemical elements from the chemical element input box and turning them into menu items
