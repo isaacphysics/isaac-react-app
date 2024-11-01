@@ -30,6 +30,8 @@ import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import { OnlineCourses } from "../../pages/OnlineCourses";
 import {ExamSpecificationsDirectory} from "../../pages/ExamSpecificationsDirectory";
+import { StudentResources } from "../../pages/StudentResources";
+import { TeacherResources } from "../../pages/TeacherResources";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -50,11 +52,9 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/register/success" ifUser={isLoggedIn} component={RegistrationSuccess} />,
 
 
-    // Student and teacher
-    // <TrackedRoute key={key++} exact path="/students" component={Students} />,
-    // <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,
-    <Redirect key={key++} exact from="/students" to="/support/student/general" />,
-    <Redirect key={key++} exact from="/teachers" to="/support/teacher/general" />,
+    // Student and teacher resources
+    <TrackedRoute key={key++} exact path="/students" component={StudentResources} />,
+    <TrackedRoute key={key++} exact path="/teachers" component={TeacherResources} />,
 
     // Assignments
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,

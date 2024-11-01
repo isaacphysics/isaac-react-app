@@ -74,7 +74,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                                 newParams.examBoard = examBoard;
                                 dispatch(transientUserContextSlice.actions.setExamBoard(examBoard));
                             }
-                            history.push({search: queryString.stringify(newParams, {encode: false})});
                             dispatch(transientUserContextSlice.actions.setStage(stage));
                         }}
                     >
@@ -98,7 +97,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         aria-label={hideLabels ? "Exam Board" : undefined}
                         value={userContext.examBoard}
                         onChange={e => {
-                            history.push({search: queryString.stringify({...qParams, examBoard: e.target.value}, {encode: false})});
                             dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD));
                         }}
                     >
@@ -124,11 +122,11 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         content, which is different to your account settings. <br />
                         {unusual.stage && unusual.examBoard && <>
                             {userContext.explanation.stage === userContext.explanation.examBoard ?
-                                `The stage and exam board were specified by your ${userContext.explanation.stage}.` :
-                                `The stage was specified by your ${userContext.explanation.stage} and the exam board by your ${userContext.explanation.examBoard}.`}
+                                `The stage and exam board were specified by ${userContext.explanation.stage}.` :
+                                `The stage was specified by ${userContext.explanation.stage} and the exam board by ${userContext.explanation.examBoard}.`}
                         </>}
-                        {unusual.stage && !unusual.examBoard && `The stage was specified by your ${userContext.explanation.stage}.`}
-                        {unusual.examBoard && !unusual.stage && `The exam board was specified by your ${userContext.explanation.examBoard}.`}
+                        {unusual.stage && !unusual.examBoard && `The stage was specified by ${userContext.explanation.stage}.`}
+                        {unusual.examBoard && !unusual.stage && `The exam board was specified by ${userContext.explanation.examBoard}.`}
                     </RS.UncontrolledTooltip>
                 </div>}
             </FormGroup>

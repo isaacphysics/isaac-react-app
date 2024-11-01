@@ -31,6 +31,7 @@ import {Markup} from "../markup";
 import classNames from "classnames";
 import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 import { CSSModule } from "reactstrap/types/lib/utils";
+import { LLMFreeTextQuestionIndicator } from "../LLMFreeTextQuestionIndicator";
 
 export enum ContentTypeVisibility {
     SHOWN, // default if not specified
@@ -190,6 +191,9 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                     {showBreadcrumb && hierarchyTags && <div className={"hierarchy-tags d-none d-md-block"}>
                         {hierarchyTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
+                    {item.tags?.includes("llm_question_page") && <div className="ms-n1 my-2 mb-lg-0">
+                        <LLMFreeTextQuestionIndicator small />
+                    </div>}
                 </div>
 
                 {isPhy && !isContentsIntendedAudience && <div className="ms-auto me-3 d-flex align-items-center">
@@ -198,7 +202,9 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
                         {`This content has ${notRelevantMessage(userContext)}.`}
                     </UncontrolledTooltip>
                 </div>}
-                {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={stack}/>}
+                <div>
+                    {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={stack}/>}
+                </div>
             </div>
             {isAda && !noCaret && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to page"}/></div>}
         </Link>

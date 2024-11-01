@@ -57,7 +57,6 @@
   }
 
   section#benefits-for-teachers-and-students {
-    background-color: $cs-white;
     ul {
       padding-inline-start: 20px;
       li {
@@ -130,6 +129,20 @@
   section#search {
     background-color: $dark-pink-300;
   }
+}
+
+.homepage-padding {
+  @extend .px-md-4;
+  @include media-breakpoint-up(lg) {
+    padding-left: 28px !important;
+    padding-right: 28px !important;
+  }
+  @extend .py-5;
+  @include media-breakpoint-up(lg) {
+    padding-top: 5rem !important;
+    padding-bottom: 5rem !important;
+  }
+
 }
 
 .ada-pink {

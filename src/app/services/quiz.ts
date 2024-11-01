@@ -175,7 +175,7 @@ export function useQuizSections(attempt?: QuizAttemptDTO) {
 
 export function useFilteredQuizzes(user: RegisteredUserDTO) {
     const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
-    const {filter}: {filter?: string} = useQueryParams();
+    const {filter}: {filter?: string} = useQueryParams(true);
     const [titleFilter, setTitleFilter] = useState<string|undefined>(filter?.replace(/[^a-zA-Z0-9 ]+/g, ''));
     const {data: quizzes} = useGetAvailableQuizzesQuery(0);
 
@@ -277,6 +277,7 @@ export function isAttempt(a: QuizAttemptOrAssignment): a is QuizAttemptDTO {
     return !('groupId' in a);
 }
 
+export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAssignmentDTO[]): [QuizAssignmentDTO[], QuizAssignmentDTO[]];
 export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAttemptOrAssignment[]): [QuizAttemptOrAssignment[], QuizAttemptOrAssignment[]] {
     return partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate));
 }
