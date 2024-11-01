@@ -175,13 +175,13 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     }
 
     const [completedQuizzes, incompleteQuizzes] = quizAssignments ? partitionCompleteAndIncompleteQuizzes(quizAssignments) : [[], []];
-    let [overdueQuizzes, currentQuizzes] = partition(incompleteQuizzes, a => a.dueDate ? todaysDate > a.dueDate : false);
+    const [overdueQuizzes, currentQuizzes] = partition(incompleteQuizzes, a => a.dueDate ? todaysDate > a.dueDate : false);
     const sortedCurrentQuizzes = [...currentQuizzes].sort(sortCurrentQuizzes);
     
-    let [completedFreeAttempts, currentFreeAttempts] = partitionCompleteAndIncompleteQuizzes(freeAttempts ?? []);
+    const [completedFreeAttempts, currentFreeAttempts] = partitionCompleteAndIncompleteQuizzes(freeAttempts ?? []);
     const sortedCurrentFreeAttempts = [...currentFreeAttempts].sort(sortCurrentQuizzes);
 
-    let completedOrOverdueQuizzes = [
+    const completedOrOverdueQuizzes = [
         ...isFound(overdueQuizzes) ? overdueQuizzes : [],
         ...isFound(completedQuizzes) ? completedQuizzes : [],
         ...isFound(completedFreeAttempts) ? completedFreeAttempts : []
@@ -225,7 +225,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         if (location.search.includes("filter")) {
             setFilterText(new URLSearchParams(location.search).get("filter") || "");
         }
-    }, [location.hash, location.search]);
+    }, [anchorMap]);
 
     const [filterText, setFilterText] = useState<string>("");
     const [copied, setCopied] = useState(false);
@@ -266,7 +266,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                             <RS.Col xs={12} className="mb-4">
                                 <RS.Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />
                                 <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
-                                    filterText.trim() && navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
+                                    if (filterText.trim()) navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
                                     setCopied(true);
                                 }} onMouseLeave={() => setCopied(false)} />
                             </RS.Col>
