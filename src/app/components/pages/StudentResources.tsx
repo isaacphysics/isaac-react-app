@@ -21,7 +21,7 @@ export const StudentResources = () => {
                     <TextBlock>
                         <h1 className="font-size-1-75 font-size-md-2-5">
                             <span className="text-yellow">/</span><br/>
-                            Resources for students
+                            Ada for students
                         </h1>
                         <p>We&apos;ve got everything to help you study computer science – including classwork, homework, and exam prep. And it&apos;s all available for free.</p>
                     </TextBlock>

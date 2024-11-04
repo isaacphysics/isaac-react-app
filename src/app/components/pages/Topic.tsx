@@ -10,7 +10,6 @@ import {
     isAda,
     NOT_FOUND, PATHS,
     TAG_ID,
-    useUserViewingContext
 } from "../../services";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -24,13 +23,12 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     const dispatch = useAppDispatch();
     const topicPage = useAppSelector((state: AppState) => state ? state.currentTopic : null);
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserViewingContext();
-
+    
     useEffect(() => {dispatch(fetchTopicSummary(topicName));}, [dispatch, topicName]);
 
-    const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage, userContext, user);
+    const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage);
     const [relatedConceptsForSpecificViewingContext, relatedQuestionsForSpecificViewingContext] =
-        getRelatedDocs(topicPage, {...userContext, showOtherContent: false}, user);
+        getRelatedDocs(topicPage);
 
     const searchQuery = `?topic=${topicName}`;
     const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards;

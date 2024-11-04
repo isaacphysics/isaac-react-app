@@ -23,7 +23,7 @@ export const TeacherResources = () => {
                     <TextBlock className="text-white">
                         <h1 className="font-size-1-75 font-size-md-2-5">
                             <span className="text-pink">/</span><br/>
-                            Resources for teachers
+                            Ada for teachers
                         </h1>
                         <p>Classwork, homework, and exam prep to help you teach computer science. All available for free.</p>
                     </TextBlock>

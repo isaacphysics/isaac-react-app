@@ -58,19 +58,20 @@ export const HeaderCS = () => {
                         <NavigationSection title="Resources">
                             <LinkItem to="/topics">Topics</LinkItem>
                             <LinkItem to={PATHS.QUESTION_FINDER}>Questions</LinkItem>
+                            <LinkItem to="/projects">Projects</LinkItem>
                             <LinkItem to="/glossary">Glossary</LinkItem>
                             <LinkItem to={"/exam_specifications"}>Specifications</LinkItem>
                         </NavigationSection>
 
                         <NavigationSection title="Students">
-                            <LinkItem to="/students">Resources for students</LinkItem>
+                            <LinkItem to="/students">Ada for students</LinkItem>
                             <LinkItem to="/pages/stem_smart_programme">STEM SMART</LinkItem>
                             <LinkItem to="/pages/student_challenges">Challenges</LinkItem>
                             <LinkItem to="/support/student">Support</LinkItem>
                         </NavigationSection>
 
                         <NavigationSection title="Teachers">
-                            <LinkItem to="/teachers">Resources for teachers</LinkItem>
+                            <LinkItem to="/teachers">Ada for teachers</LinkItem>
                             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             <LinkItem to="/pages/online_courses">Online courses</LinkItem>
                             <LinkItem to="/pages/teacher_mentoring_2024">Mentoring programme</LinkItem>

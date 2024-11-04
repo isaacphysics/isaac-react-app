@@ -17,14 +17,20 @@ export const OnlineCourses = () => {
     const onlineCourseQuery = useGetNewsPodListQuery({subject: "online_courses", startIndex: page * NEWS_PODS_PER_PAGE});
 
     useEffect(() => {
+        let cancelled = false; // prevents multiple additions to list on unmount/remount (from e.g. strict mode)
+
         onlineCourseQuery.refetch().then((value) => {
-            if (value.status === "fulfilled" && value.data !== undefined) {
+            if (!cancelled && value.status === "fulfilled" && value.data !== undefined) {
                 setAllCourses(n => n.concat((value.data as IsaacPodDTO[]).slice(0, NEWS_PODS_PER_PAGE)));
                 if (value.data.length < NEWS_PODS_PER_PAGE) {
                     setDisableLoadMore(true);
                 }
             }
         });
+
+        return () => {
+            cancelled = true;
+        };
     }, [page]);
 
     const metaDescription = "Browse the Raspberry Pi Foundation’s free online courses for educators and choose from a range of computing topics.";

@@ -98,7 +98,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
             collectionType: "Topic",
             breadcrumbHistory: topicHistory,
             backToCollection: topicHistory.slice(-1)[0],
-            nextItem: determineNextTopicContentLink(currentTopic, currentDocId, userContext, user),
+            nextItem: determineNextTopicContentLink(currentTopic, currentDocId),
             search,
             currentGameboard
         }

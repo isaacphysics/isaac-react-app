@@ -44,9 +44,13 @@ export const renderClozeDropZones = (markdown: string) => {
 };
 
 export const renderInlineQuestionPartZones = (markdown: string) => {
-    return markdown.replace(inlineQuestionRegex, (_match, id: string | undefined, params: string | undefined, width: string | undefined, height: string | undefined) => {
+    return markdown.replace(inlineQuestionRegex, (_match, id: string | undefined, params: string | undefined, width: string | undefined, height: string | undefined, classes: string | undefined) => {
+        const dataset = ""
+          + (width ? `data-width=${width.slice("w-".length)} ` : "")
+          + (height ? `data-height=${height.slice("h-".length)} ` : "")
+          + (classes ? `data-classes="${classes}" ` : "");
         const inlineId = `inline-question-${id}`;
-        return `<span id="${inlineId}" class="inline-outer-container ${width ? width : ""} ${height ? height : ""}"></span>`;
+        return `<span id="${inlineId}" class="inline-outer-container" ${dataset}></span>`;
     });
 };
 

@@ -158,7 +158,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserViewingContext();
     const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
-    const remainingContent: ContentSummaryDTO[] = isAda && userContext.showOtherContent ? content.filter(c => !isIntendedAudience(c.audience, userContext, user)) : [];
+    const remainingContent: ContentSummaryDTO[] = isAda ? content.filter(c => !isIntendedAudience(c.audience, userContext, user)) : [];
     const showConceptGameboardButton = isAda && isTutorOrAbove(useAppSelector(selectors.user.orNull));
 
     const sortedContent = siteSpecific(

@@ -50,7 +50,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
-    const isContentsIntendedAudience = ignoreIntendedAudience || isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
+    const isContentsIntendedAudience = ignoreIntendedAudience || isIntendedAudience(item.audience, userContext, user);
     const hash = item.hash;
 
     let linkDestination, icon, audienceViews;
