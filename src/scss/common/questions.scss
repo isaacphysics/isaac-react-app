@@ -118,7 +118,7 @@ $inline-feedback-padding: 2px;
   
   .feedback-wrapper {
     // wraps around a SINGLE component that can be marked as valid/invalid/unanswered, to allow multiple parts of one question to have different feedback states
-    // requires that correctnessClass(...) is also applied, as to colour the component
+    // requires that correctnessClass(...) is applied to the child, as to colour the component
     display: block;
     position: relative;
 
@@ -154,7 +154,7 @@ $inline-feedback-padding: 2px;
     }
     &:has(> .is-unanswered)::after {
       @include pseudo-element("!");
-      color: map-get($theme-colors, "in-progress"); // TODO: check cs isn't using yellow-200
+      color: map-get($theme-colors, "in-progress");
       font-weight: bold;
     }
   }
@@ -194,7 +194,6 @@ $inline-feedback-padding: 2px;
       }
     }
     &.display-unit {
-      margin-bottom: -2px;
       button.btn {
         border: 1px solid black;
       }
