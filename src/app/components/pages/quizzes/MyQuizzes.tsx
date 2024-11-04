@@ -266,7 +266,9 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                             <RS.Col xs={12} className="mb-4">
                                 <RS.Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />
                                 <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
-                                    if (filterText.trim()) navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
+                                    if (filterText.trim()) {
+                                        navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
+                                    }
                                     setCopied(true);
                                 }} onMouseLeave={() => setCopied(false)} />
                             </RS.Col>
