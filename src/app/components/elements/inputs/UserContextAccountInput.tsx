@@ -165,8 +165,8 @@ export function UserContextAccountInput({
                 <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                     {/* This tooltip is very hard to reach */}
                     {tutorOrAbove ?
-                        <>Add a stage and examination board for each qualification you are teaching.<br />On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching.</> :
-                        <>Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.</>
+                        <>Add a stage and examination board for each qualification you are teaching.</> :
+                        <>Select a stage and examination board here to prioritise material that is relevant for the qualification you have chosen.</>
                     }
                 </UncontrolledTooltip>
             </React.Fragment>
