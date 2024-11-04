@@ -93,7 +93,7 @@ function UserContextRow({
                 {isPhy && <option value="" className="d-none"/>}
                 {getFilteredStageOptions({
                     byUserContexts: existingUserContexts.filter(uc => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard)),
-                    includeNullOptions: showNullStageOption, hideFurtherA: true
+                    includeNullOptions: showNullStageOption, hideFurtherA: true, excludeAllStages: true
                 }).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>
                 )}
@@ -109,7 +109,7 @@ function UserContextRow({
             >
                 {getFilteredExamBoardOptions({
                     byStages: [userContext.stage as STAGE || STAGE.ALL],
-                    includeNullOptions: onlyUCWithThisStage,
+                    includeNullOptions: onlyUCWithThisStage, excludeAllExamBoards: true,
                     byUserContexts: existingUserContexts.filter(uc => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard))
                 }).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>

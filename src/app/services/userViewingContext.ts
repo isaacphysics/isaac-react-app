@@ -167,6 +167,7 @@ interface ExamBoardFilterOptions {
     byStages?: STAGE[];
     byUserContexts?: UserContext[];
     includeNullOptions?: boolean;
+    excludeAllExamBoards?: boolean;
 }
 export function getFilteredExamBoardOptions(filter?: ExamBoardFilterOptions) {
     return _EXAM_BOARD_ITEM_OPTIONS
@@ -180,6 +181,8 @@ export function getFilteredExamBoardOptions(filter?: ExamBoardFilterOptions) {
         )
         // includeNullOptions flag
         .filter(i => filter?.includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.includes(i.value))
+        // excludeAllExamBoards flag
+        .filter(i => !filter?.excludeAllExamBoards || i.value !== EXAM_BOARD.ALL)
         // by user account settings
         .filter(i =>
             // skip if null or logged out user
@@ -225,11 +228,14 @@ interface StageFilterOptions {
     includeNullOptions?: boolean;
     hideFurtherA?: true;
     nullFirst?: boolean;
+    excludeAllStages?: boolean;
 }
 export function getFilteredStageOptions(filter?: StageFilterOptions) {
     return _STAGE_ITEM_OPTIONS
         // Restrict by includeNullOptions flag
         .filter(i => filter?.includeNullOptions || filter?.nullFirst || !STAGE_NULL_OPTIONS.includes(i.value))
+        // Restrict by excludeAllStages flag
+        .filter(i => !filter?.excludeAllStages || i.value !== STAGE.ALL)
         // Restrict by account settings
         .filter(i =>
             // skip if null or logged out user
