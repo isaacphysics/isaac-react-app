@@ -157,8 +157,6 @@ export function UserContextAccountInput({
                 <span id={`show-me-content-${componentId}`} className="icon-help" />
                 <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                     {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
-                    {"You will be able to change this preference on relevant pages."}<br />
-                    {'If you prefer to see all content by default, select "All stages".'}
                 </UncontrolledTooltip>
             </React.Fragment>,
             // Computer science
