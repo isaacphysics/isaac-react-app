@@ -65,7 +65,9 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
         currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
     }
 
-    const hasMetaSymbols = !doc.availableSymbols?.every(symbol => CHEMICAL_ELEMENTS.includes(symbol.trim()) || CHEMICAL_PARTICLES.hasOwnProperty(symbol.trim()));
+    const hasMetaSymbols = doc.availableSymbols ? doc.availableSymbols.length > 0 && !doc.availableSymbols.every(
+        symbol => CHEMICAL_ELEMENTS.includes(symbol.trim()) || CHEMICAL_PARTICLES.hasOwnProperty(symbol.trim())
+    ) : false;
 
     const symbolicInputValidator = (input: string) => {
         const openRoundBracketsCount = input.split("(").length - 1;

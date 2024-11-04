@@ -234,7 +234,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     };
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
-    const allowTextInput = editorMode === 'maths'  || (isStaff(user) && ['chemistry', 'nuclear', 'logic'].includes(editorMode));
+    const allowTextInput = editorMode === 'maths' || (isStaff(user) && ['chemistry', 'nuclear', 'logic'].includes(editorMode));
 
     return <div>
         <Container>
