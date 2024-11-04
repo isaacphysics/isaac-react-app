@@ -80,8 +80,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         {allStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
                     </Input>
                     {/* Exam Board Selector */}
-                    {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
-                    {isAda &&
+                    {isAda && <>
+                        {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-exam-board-select">Exam Board</Label>}
                         <Input
                             className={`flex-grow-1 d-inline-block ps-2 pe-0 mb-2 ms-1`} type="select" id="uc-exam-board-select"
                             aria-label={hideLabels ? "Exam Board" : undefined}
@@ -96,7 +96,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                                     .map(item => <option key={item.value} value={item.value}>{item.label}</option>)
                             }
                         </Input>
-                    }
+                    </>}
                     {showUnusualContextMessage && <div className="mt-2 ms-1">
                         <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
                         <RS.UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
