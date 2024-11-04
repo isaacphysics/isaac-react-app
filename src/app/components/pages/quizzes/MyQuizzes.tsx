@@ -175,18 +175,18 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     }
 
     const [completedQuizzes, incompleteQuizzes] = quizAssignments ? partitionCompleteAndIncompleteQuizzes(quizAssignments) : [[], []];
-    let [overdueQuizzes, currentQuizzes] = partition(incompleteQuizzes, a => a.dueDate ? todaysDate > a.dueDate : false);
-    currentQuizzes = currentQuizzes.toSorted(sortCurrentQuizzes);
+    const [overdueQuizzes, currentQuizzes] = partition(incompleteQuizzes, a => a.dueDate ? todaysDate > a.dueDate : false);
+    const sortedCurrentQuizzes = [...currentQuizzes].sort(sortCurrentQuizzes);
     
-    let [completedFreeAttempts, currentFreeAttempts] = partitionCompleteAndIncompleteQuizzes(freeAttempts ?? []);
-    currentFreeAttempts = currentFreeAttempts?.toSorted(sortCurrentQuizzes);
+    const [completedFreeAttempts, currentFreeAttempts] = partitionCompleteAndIncompleteQuizzes(freeAttempts ?? []);
+    const sortedCurrentFreeAttempts = [...currentFreeAttempts].sort(sortCurrentQuizzes);
 
-    let completedOrOverdueQuizzes = [
+    const completedOrOverdueQuizzes = [
         ...isFound(overdueQuizzes) ? overdueQuizzes : [],
         ...isFound(completedQuizzes) ? completedQuizzes : [],
         ...isFound(completedFreeAttempts) ? completedFreeAttempts : []
     ];
-    completedOrOverdueQuizzes = completedOrOverdueQuizzes.toSorted(sortCompletedQuizzes);
+    const sortedCompletedOrOverdueQuizzes = [...completedOrOverdueQuizzes].sort(sortCompletedQuizzes);
 
     const showQuiz = (quiz: QuizSummaryDTO) => {
         switch (user.role) {
@@ -225,7 +225,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         if (location.search.includes("filter")) {
             setFilterText(new URLSearchParams(location.search).get("filter") || "");
         }
-    }, [location.hash, location.search]);
+    }, [anchorMap]);
 
     const [filterText, setFilterText] = useState<string>("");
     const [copied, setCopied] = useState(false);
@@ -242,7 +242,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                         until={quizAssignments}
                         ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}
                     >
-                        <QuizGrid quizzes={currentQuizzes} empty="You don&apos;t have any incomplete or assigned tests."/>
+                        <QuizGrid quizzes={sortedCurrentQuizzes} empty="You don&apos;t have any incomplete or assigned tests."/>
                     </ShowLoading>,
 
                 [siteSpecific("Past Tests", "Past tests")]:
@@ -250,14 +250,14 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                         until={quizAssignments}
                         ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}
                     >
-                        <QuizGrid quizzes={completedOrOverdueQuizzes} empty="You don't have any completed or overdue tests."/>
+                        <QuizGrid quizzes={sortedCompletedOrOverdueQuizzes} empty="You don't have any completed or overdue tests."/>
                     </ShowLoading>,
 
                 [siteSpecific("Practice Tests", "Practice tests")]:
                 <>
                     <h3>{siteSpecific("In Progress", "In progress")}</h3>
                     <div className="mb-5">
-                        <QuizGrid quizzes={currentFreeAttempts} empty="You don't have any practice tests in progress."/>
+                        <QuizGrid quizzes={sortedCurrentFreeAttempts} empty="You don't have any practice tests in progress."/>
                     </div>
                     <ShowLoading until={quizzes}>
                         {quizzes && <>
@@ -266,7 +266,9 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                             <RS.Col xs={12} className="mb-4">
                                 <RS.Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />
                                 <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
-                                    filterText.trim() && navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
+                                    if (filterText.trim()) {
+                                        navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
+                                    }
                                     setCopied(true);
                                 }} onMouseLeave={() => setCopied(false)} />
                             </RS.Col>
