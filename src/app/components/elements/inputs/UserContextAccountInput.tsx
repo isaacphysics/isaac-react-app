@@ -39,10 +39,9 @@ interface UserContextRowProps {
 }
 
 function UserContextRow({
-    userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings,
+    userContext, setUserContext, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings,
     tutorOrAbove, userContexts, setUserContexts, index, required: _required
 }: UserContextRowProps) {
-    const onlyUCWithThisStage = existingUserContexts.length === 0 || existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
 
     const onStageUpdate = (e: ChangeEvent<HTMLInputElement>) => {
         const stage = e.target.value as STAGE;
