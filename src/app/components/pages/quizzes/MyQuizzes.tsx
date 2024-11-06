@@ -255,13 +255,13 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
 
                 [siteSpecific("Practice Tests", "Practice tests")]:
                 <>
-                    <h3>Started</h3>
+                    <h3>{siteSpecific("In Progress", "In progress")}</h3>
                     <div className="mb-5">
                         <QuizGrid quizzes={sortedCurrentFreeAttempts} empty="You don't have any practice tests in progress."/>
                     </div>
                     <ShowLoading until={quizzes}>
                         {quizzes && <>
-                            <h3>Available to take</h3>
+                            <h3>Available</h3>
                             {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
                             <RS.Col xs={12} className="mb-4">
                                 <RS.Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />
