@@ -78,24 +78,9 @@ $inline-feedback-padding: 2px;
   justify-content: center;
   width: max-content;
   vertical-align: middle;
-  border-radius: var(--bs-border-radius);
 
   &:has(.inline-data-target.inline-stretch) {
     width: 100%;
-  }
-
-  $shadow-size: 2px;
-  &.selected-feedback {
-    box-shadow: 0 0 0 $shadow-size #000;
-    &.is-valid {
-      box-shadow: 0 0 0 $shadow-size map-get($theme-colors, "success");
-    }
-    &.is-invalid {
-      box-shadow: 0 0 0 $shadow-size map-get($theme-colors, "failed");
-    }
-    &.is-unanswered {
-      box-shadow: 0 0 0 $shadow-size map-get($theme-colors, "in-progress");
-    }
   }
 }
 
@@ -114,6 +99,7 @@ $inline-feedback-padding: 2px;
 
 .inline-container {
   display: inline-flex;
+  border-radius: var(--bs-border-radius);
   width: 100%;
   
   .feedback-wrapper {
@@ -156,6 +142,20 @@ $inline-feedback-padding: 2px;
       @include pseudo-element("!");
       color: map-get($theme-colors, "in-progress");
       font-weight: bold;
+    }
+  }
+
+  $shadow-size: 2px;
+  &.selected-feedback {
+    box-shadow: 0 0 0 $shadow-size #000;
+    &.is-valid {
+      box-shadow: 0 0 0 $shadow-size map-get($theme-colors, "success");
+    }
+    &.is-invalid {
+      box-shadow: 0 0 0 $shadow-size map-get($theme-colors, "failed");
+    }
+    &.is-unanswered {
+      box-shadow: 0 0 0 $shadow-size map-get($theme-colors, "in-progress");
     }
   }
 }

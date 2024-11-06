@@ -120,6 +120,6 @@
 }
 
 input.form-control.is-unanswered {
-  border: solid 1px theme-color("warning");
+  border: solid 1px map-get($theme-colors, "in-progress");
   @include border-radius($input-border-radius, 0);
 }
