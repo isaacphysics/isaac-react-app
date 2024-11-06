@@ -57,7 +57,7 @@ export const CareersBanner = () => {
           <Row className="career-media-row gy-4 justify-content-center">
             <Col xs={12} sm={10} md={10} lg={5}>
               <CareerCard
-                imgSrc="/assets/cs_journeys.svg"
+                imgSrc="/assets/cs_journeys.png"
                 imgAlt="cs journeys"
                 title="Computer Science Journeys"
                 text="Discover our interview series and learn from passionate educators within the Isaac community, and recently graduated computer scientists, who are doing amazing things in a huge range of computing-related fields."
@@ -90,8 +90,9 @@ export const CareersBanner = () => {
             <div className="resources-comment-content d-flex align-items-center">
               <img src="/assets/star.svg" alt="Star" className="star-img me-3" />
               <p className="text-left my-3 mx-3 mb-0">
-                Students have been able to dive deeper into topics by using Isaac CS, which has led to further interest
-                and helped them understand what topics they may like to study in post 16 and post 18 study.
+                &quot;Isaac Computer Science is such a valuable resource for homework and revision. Attending one of
+                their discovery events expanded my understanding of computer science. Since then, I&apos;ve consistently
+                used the platform, finding it invaluable in my computer science journey.&quot; - Lauren Lo
               </p>
             </div>
           </div>

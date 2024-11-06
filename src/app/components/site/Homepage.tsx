@@ -117,7 +117,8 @@ export const Homepage = () => {
                   <div className="resources-comment-content">
                     <img src="/assets/star.svg" alt="Star" className="star-img" />
                     <p className="text-left my-3 mx-3">
-                      95% of teachers rate the quality of Isaac CS resources as good or very good.
+                      According to the 2024 annual survey, Isaac Computer Science can save teachers three hours of work
+                      per week.
                     </p>
                   </div>
                 </div>

@@ -80,7 +80,7 @@ describe("Dashboard", () => {
   it("shows logged out content if no user is logged in", async () => {
     setupTest("ANONYMOUS");
     const loggedOutTitle = await screen.findByRole("heading", {
-      name: /The free online textbook for computer science/i,
+      name: /The free online platform for computer science/i,
     });
     expect(loggedOutTitle).toBeInTheDocument();
     const featuredNewsTile = screen.queryByTestId("featured-news-item");

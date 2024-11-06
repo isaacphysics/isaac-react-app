@@ -33,7 +33,7 @@ describe("Careers", () => {
     expect(csJourneysLink).toHaveAttribute("href", "/pages/computer_science_journeys_gallery");
     expect(csJourneysDescription).toBeInTheDocument();
     expect(csJourneysImage).toBeInTheDocument();
-    expect(csJourneysImage).toHaveAttribute("src", "/assets/cs_journeys.svg");
+    expect(csJourneysImage).toHaveAttribute("src", "/assets/cs_journeys.png");
   });
 
   it.each(USER_ROLES)("shows correct video title for %s role", async (role) => {

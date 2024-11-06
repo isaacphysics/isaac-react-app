@@ -163,7 +163,7 @@ export const Dashboard = ({
   const loggedOutContent = (
     <Row>
       <Col lg={6} xs={12} className="pb-3">
-        <h1 className="homepage-title">The free online textbook for computer science</h1>
+        <h1 className="homepage-title">The free online platform for computer science</h1>
         <p className="mt-4 homepage-text">
           Welcome to Isaac Computer Science, the learning platform for GCSE and A level students and teachers.
         </p>
