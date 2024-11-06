@@ -83,6 +83,7 @@ export const RoutesCS = [
 
     // Topics and content
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
+    <Redirect key={key++} from="/topics/projects_link_pseudo_project" to="/projects" />,
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_england" component={ExamSpecifications} />,
     <TrackedRoute key={key++} exact path="/exam_specifications_wales" component={ExamSpecifications}
