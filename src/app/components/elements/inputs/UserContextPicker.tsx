@@ -7,7 +7,7 @@ import {
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     history,
-    isAda,
+    isAda, isLoggedIn,
     isStaff,
     siteSpecific,
     STAGE,
@@ -51,7 +51,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         setCurrentStage(userContext.stage);
     }, [userContext.stage]);
 
-    if (isStaff(user)) {
+    if (isAda && !isLoggedIn(user) || isStaff(user)) {
         return <RS.Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
             <RS.Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}> 
                 {/* Stage Selector */}
