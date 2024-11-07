@@ -80,6 +80,8 @@ import {GameboardFilter} from "../pages/GameboardFilter";
 import {ScrollToTop} from "../site/ScrollToTop";
 import {QuestionFinder} from "../pages/QuestionFinder";
 import {SessionCookieExpired} from "../pages/SessionCookieExpired";
+import { AccountDeletion } from '../pages/AccountDeletion';
+import { AccountDeletionSuccess } from '../pages/AccountDeletionSuccess';
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -208,6 +210,8 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/logout" component={LogOutHandler} />
                         <TrackedRoute exact path="/auth/:provider/callback" component={ProviderCallbackHandler} />
                         <TrackedRoute exact path="/resetpassword/:token" component={ResetPasswordHandler}/>
+                        <TrackedRoute exact path="/deleteaccount" ifUser={isLoggedIn} component={AccountDeletion} />
+                        <TrackedRoute exact path="/deleteaccount/success" component={AccountDeletionSuccess} />
 
                         {/* Static pages */}
                         <TrackedRoute exact path="/contact" component={Contact}/>

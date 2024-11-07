@@ -47,10 +47,6 @@
       button, a {
         font-family: $secondary-font-medium;
         margin: 0 0.25rem 1rem;
-
-        + button, +a {
-          margin: 0 0 1rem;
-        }
       }
     }
   }

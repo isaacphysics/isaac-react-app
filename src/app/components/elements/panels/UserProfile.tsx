@@ -7,8 +7,8 @@ import {
     isAda,
     isPhy,
     isTeacherOrAbove,
+    isTutorOrAbove,
     SITE_TITLE,
-    siteSpecific,
     validateCountryCode,
     validateEmail,
     validateName
@@ -20,6 +20,10 @@ import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
 import {DobInput} from "../inputs/DobInput";
 import {AccountTypeMessage} from "../AccountTypeMessage";
+import { ConfirmAccountDeletionRequestModal } from '../modals/AccountDeletionModal';
+import { openActiveModal, store, useConfirmAccountDeletionRequestMutation } from '../../../state';
+import { Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 interface UserProfileProps {
     userToUpdate: ValidationUser;
@@ -40,6 +44,8 @@ export const UserProfile = (props: UserProfileProps) => {
         userToUpdate, setUserToUpdate, userContexts, setUserContexts,
         setBooleanNotation, displaySettings, setDisplaySettings, submissionAttempted
     } = props;
+    const [confirmAccountDeletionRequest, {isLoading: _isLoading}] = useConfirmAccountDeletionRequestMutation();
+
     return <MyAccountTab
         leftColumn={<>
             <h3>Account details</h3>
@@ -47,13 +53,13 @@ export const UserProfile = (props: UserProfileProps) => {
             <p>
                 <AccountTypeMessage role={userToUpdate?.role} />
             </p>
-            <p>If you would like to delete your account please {" "}
-                {siteSpecific(
-                    <a href="/contact?preset=accountDeletion" target="_blank" rel="noopener">contact us</a>,
-                    <strong><a href="/contact?preset=accountDeletion" target="_blank" rel="noopener">contact us</a></strong>,
-                )}
-                .
-            </p>
+            {!isTutorOrAbove(userToUpdate) ? <p>
+                If you would like to delete your account please <span className="text-nowrap"><Button color="inline-link" onClick={() => {
+                    store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
+                }}>click here</Button>.</span>
+            </p> : <p>
+                Only student accounts can be deleted automatically. Please <Link to="/contact?preset=accountDeletion">contact us</Link> to request account deletion.
+            </p>}
         </>}
         rightColumn={<>
             <GivenNameInput

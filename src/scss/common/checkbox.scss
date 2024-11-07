@@ -39,6 +39,16 @@
               border-color: darken($primary, 10%);
             }
           }
+
+          &[color="danger"] {
+            background: $danger;
+            border-color: $danger;
+
+            &:hover, &:disabled {
+              background: darken($danger, 10%);
+              border-color: darken($danger, 10%);
+            }
+          }
         }
 
         &:not(.checked):hover, &:not(.checked):disabled {
