@@ -378,6 +378,17 @@ export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => 
     }
 };
 
+export const logOutDeletedUser = () => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.USER_LOG_OUT_REQUEST});
+    try {
+        await api.authentication.logout();
+        dispatch({type: ACTION_TYPE.USER_DELETION_RESPONSE_SUCCESS});
+    } catch (e) {
+        dispatch(showAxiosErrorToastIfNeeded("Logout failed", e));
+    }
+    history.push("/deleteaccount/success");
+};
+
 export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
 

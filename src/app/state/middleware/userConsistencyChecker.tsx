@@ -72,6 +72,7 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
             redirect = "/";
             clearCurrentUser();
             break;
+        case ACTION_TYPE.USER_DELETION_RESPONSE_SUCCESS:
         case ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE:
             // If the current user request returns an error we assume the user is not logged in.
             // We should therefore, remove any data in local and session storage that might be related to the user.
