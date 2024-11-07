@@ -111,8 +111,19 @@ export const AdminUserManager = () => {
 
     const search = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        adminSearchResultsRef.current?.scrollIntoView({behavior: "smooth"});
-        searchUsers(searchQuery);
+        let hasFilterSet = false;
+        for (const filter in searchQuery) {
+            if (filter && filter !== "postcodeRadius") {
+                hasFilterSet = true;
+            }
+        }    
+        if (hasFilterSet) {
+            adminSearchResultsRef.current?.scrollIntoView({behavior: "smooth"});
+            searchUsers(searchQuery);
+        }
+        else {
+            alert("At least one search filter must be set.");
+        }
     };
 
     const editUser = (userid: number | undefined) => {
