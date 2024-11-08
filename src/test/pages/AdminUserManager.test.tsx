@@ -153,7 +153,7 @@ describe("AdminUserManager", () => {
             ]
         });
         await navigateToUserManager();
-        await searchWithParams({}, {expectNumberOfResults: 1, searchHandler});
+        await searchWithParams({role: mockUser.role}, {expectNumberOfResults: 1, searchHandler});
         // Navigate away from the page
 
         // Go back to the admin user manager page
@@ -181,8 +181,6 @@ describe("AdminUserManager", () => {
             ]
         });
         await navigateToUserManager();
-        await searchWithParams({}, {expectNumberOfResults: 2, searchHandler});
-        searchHandler.mockClear();
         await searchWithParams(
             {familyName: mockUser.familyName},
             {expectNumberOfResults: 1, searchHandler, expectNames: [`${mockUser.familyName}, ${mockUser.givenName}`]}
@@ -226,7 +224,7 @@ describe("AdminUserManager", () => {
         });
         await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
-            {},
+            {role: mockUser.role},
             {
                 expectNumberOfResults: 1,
                 searchHandler
@@ -266,7 +264,7 @@ describe("AdminUserManager", () => {
         });
         await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
-            {},
+            {role: mockUser.role},
             {
                 expectNumberOfResults: 3,
                 searchHandler
@@ -322,7 +320,7 @@ describe("AdminUserManager", () => {
         });
         await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
-            {},
+            {role: mockUser.role},
             {
                 expectNumberOfResults: 3,
                 searchHandler
@@ -392,7 +390,7 @@ describe("AdminUserManager", () => {
         });
         await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
-            {},
+            {role: mockUser.role},
             {
                 expectNumberOfResults: 1,
                 searchHandler
