@@ -7,14 +7,13 @@ import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-do
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {QuizAssignmentDTO, QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     extractTeacherName,
     isAttempt,
-    isEventLeaderOrStaff,
     isFound,
     isTutorOrAbove,
     partitionCompleteAndIncompleteQuizzes,
@@ -22,12 +21,11 @@ import {
 } from "../../../services";
 import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
-import {useGetAvailableQuizzesQuery} from "../../../state";
 import {PageFragment} from "../../elements/PageFragment";
 import { CardGrid } from "../../elements/CardGrid";
 import partition from "lodash/partition";
 
-interface MyQuizzesPageProps extends RouteComponentProps {
+export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
 }
 
@@ -121,9 +119,8 @@ function QuizGrid({quizzes, empty}: AssignmentGridProps) {
     </>;
 }
 
-const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
+const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
 
-    const {data: quizzes} = useGetAvailableQuizzesQuery(0);
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
     const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
 
@@ -188,27 +185,6 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     ];
     const sortedCompletedOrOverdueQuizzes = [...completedOrOverdueQuizzes].sort(sortCompletedQuizzes);
 
-    const showQuiz = (quiz: QuizSummaryDTO) => {
-        switch (user.role) {
-            case "STUDENT":
-            // Tutors should see the same tests as students can
-            // eslint-disable-next-line no-fallthrough
-            case "TUTOR":
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents;
-            case "TEACHER":
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true;
-            default:
-                return true;
-        }
-    };
-
-    // If the user is event admin or above, and the quiz is hidden from teachers, then show that
-    // If the user is teacher or above, show if the quiz is visible to students
-    const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
-        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-block ms-2">hidden from teachers</div>}
-        {isTutorOrAbove(user) && ((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
-    </>;
-
     const tabAnchors = ["#in-progress", "#completed", "#practice"];
 
     const anchorMap = tabAnchors.reduce((acc, anchor, index) => 
@@ -222,13 +198,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
         if (location.hash && anchorMap[location.hash as keyof typeof anchorMap]) {
             setTabOverride(anchorMap[location.hash as keyof typeof anchorMap]);
         }
-        if (location.search.includes("filter")) {
-            setFilterText(new URLSearchParams(location.search).get("filter") || "");
-        }
     }, [anchorMap]);
-
-    const [filterText, setFilterText] = useState<string>("");
-    const [copied, setCopied] = useState(false);
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
@@ -259,41 +229,6 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                     <div className="mb-5">
                         <QuizGrid quizzes={sortedCurrentFreeAttempts} empty="You don't have any practice tests in progress."/>
                     </div>
-                    <ShowLoading until={quizzes}>
-                        {quizzes && <>
-                            <h3>Available</h3>
-                            {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
-                            <RS.Col xs={12} className="mb-4">
-                                <RS.Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />
-                                <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {
-                                    if (filterText.trim()) {
-                                        navigator.clipboard.writeText(`${window.location.host}${window.location.pathname}?filter=${filterText.trim()}#practice`);
-                                    }
-                                    setCopied(true);
-                                }} onMouseLeave={() => setCopied(false)} />
-                            </RS.Col>
-                            <RS.ListGroup className="mb-3 quiz-list">
-                                {quizzes.filter((quiz) => showQuiz(quiz) && quiz.title?.toLowerCase().includes(filterText.toLowerCase())).map(quiz => <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                                    <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
-                                        <div>
-                                            <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
-                                            {roleVisibilitySummary(quiz)}
-                                            {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
-                                        </div>
-                                        <Spacer />
-                                        {isTutorOrAbove(user) && <div className="d-none d-md-flex align-items-center me-4">
-                                            <Link to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                <span>Preview</span>
-                                            </Link>
-                                        </div>}
-                                        <RS.Button tag={Link} to={{pathname: `/test/attempt/${quiz.id}`}}>
-                                            {siteSpecific("Take Test", "Take test")}
-                                        </RS.Button>
-                                    </div>
-                                </RS.ListGroupItem>)}
-                            </RS.ListGroup>
-                        </>}
-                    </ShowLoading>
                 </>
             }}
         </Tabs>

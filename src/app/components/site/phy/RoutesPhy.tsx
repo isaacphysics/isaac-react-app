@@ -33,7 +33,6 @@ import {TeacherRequest} from "../../pages/TeacherRequest";
 import { RegistrationStart } from "../../pages/RegistrationStart";
 import {EmailAlterHandler} from "../../handlers/EmailAlterHandler";
 import {News} from "../../pages/News";
-import {QuestionFinder} from "../../pages/QuestionFinder";
 import { RegistrationAgeCheck } from "../../pages/RegistrationAgeCheck";
 import { RegistrationAgeCheckFailed } from "../../pages/RegistrationAgeCheckFailed";
 import { RegistrationAgeCheckParentalConsent } from "../../pages/RegistrationAgeCheckParentalConsent";
@@ -42,6 +41,7 @@ import { RegistrationTeacherConnect } from "../../pages/RegistrationTeacherConne
 import { RegistrationSuccess } from "../../pages/RegistrationSuccess";
 import { RegistrationSetPreferences } from "../../pages/RegistrationSetPreferences";
 import { RegistrationGroupInvite } from "../../pages/RegistrationGroupInvite";
+import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -71,6 +71,7 @@ export const RoutesPhy = [
     // Student test pages
     <TrackedRoute key={key++} exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />,
     <Redirect key={key++} from="/quizzes" to="/tests" />,
+    <TrackedRoute key={key++} exact path="/practice_tests" ifUser={isLoggedIn} component={PracticeQuizzes} />,
 
     // Quiz (test) pages
     <TrackedRoute key={key++} exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />,
