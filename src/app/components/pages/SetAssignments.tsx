@@ -63,7 +63,7 @@ import {
 } from "../../services";
 import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
-import {BoardAssignee, BoardOrder, Boards} from "../../../IsaacAppTypes";
+import {BoardAssignee, AssignmentBoardOrder, Boards} from "../../../IsaacAppTypes";
 import {BoardCard} from "../elements/cards/BoardCard";
 import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
@@ -246,8 +246,8 @@ interface SetAssignmentsTableProps {
     setBoardTitleFilter: (title: string) => void;
     boardCreator: BoardCreators;
     setBoardCreator: (creator: BoardCreators) => void;
-    boardOrder: BoardOrder;
-    setBoardOrder: (boardOrder: BoardOrder) => void;
+    boardOrder: AssignmentBoardOrder;
+    setBoardOrder: (boardOrder: AssignmentBoardOrder) => void;
     groupsByGameboard: {[p: string]: BoardAssignee[]};
     openAssignModal: (board: GameboardDTO) => void;
 }
@@ -263,7 +263,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <th className="text-center align-middle"><span className="ps-2 pe-2">Groups</span></th>
-        <SortItemHeader defaultOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
+        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
             Board name
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
@@ -274,7 +274,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
             </RS.UncontrolledTooltip>
         </th>
-        <SortItemHeader defaultOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
+        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited} reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
             Last viewed
         </SortItemHeader>
         <th className="text-center align-middle">Manage</th>
@@ -348,7 +348,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
 
     const tableHeader = <tr className="my-gameboard-table-header">
         <th>Groups</th>
-        <SortItemHeader colSpan={2} defaultOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
+        <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
             Quiz name
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
@@ -359,7 +359,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
             </RS.UncontrolledTooltip>
         </th>
         <th>Creator</th>
-        <SortItemHeader defaultOrder={BoardOrder.visited} reverseOrder={BoardOrder["-visited"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
+        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited} reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
             Last viewed
         </SortItemHeader>
         <th>Manage</th>
@@ -575,8 +575,8 @@ export const SetAssignments = () => {
                         </Col>
                         <Col xs={6} lg={4}>
                             <Label className="w-100">
-                                Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
-                                    {Object.values(BoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+                                Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
+                                    {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
                                 </Input>
                             </Label>
                         </Col>

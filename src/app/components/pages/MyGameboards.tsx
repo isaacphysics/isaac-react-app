@@ -8,7 +8,7 @@ import {
     Input,
     Label,
     Row} from 'reactstrap';
-import {BoardOrder} from "../../../IsaacAppTypes";
+import {AssignmentBoardOrder} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
@@ -33,8 +33,8 @@ export interface GameboardsDisplaySettingsProps {
     switchViewAndClearSelected: (e: React.ChangeEvent<HTMLInputElement>) => void,
     boardLimit: BoardLimit,
     setBoardLimit: (limit: BoardLimit) => void,
-    boardOrder: BoardOrder,
-    setBoardOrder: (order: BoardOrder) => void,
+    boardOrder: AssignmentBoardOrder,
+    setBoardOrder: (order: AssignmentBoardOrder) => void,
     showFilters: boolean,
     setShowFilters: React.Dispatch<React.SetStateAction<boolean>>,
 }
@@ -57,8 +57,8 @@ const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, board
         </Col>
         <Col xs={9} md={5} lg={{size: 4, offset: 2}}>
             <Label className="w-100">
-                Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
-                    {Object.values(BoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+                Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
+                    {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
                 </Input>
             </Label>
         </Col>

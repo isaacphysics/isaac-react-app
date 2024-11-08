@@ -13,7 +13,7 @@ import {
     siteSpecific,
     stagesOrdered
 } from "./";
-import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards} from "../../IsaacAppTypes";
+import {AssignmentBoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards} from "../../IsaacAppTypes";
 import {
     selectors,
     useAppDispatch,
@@ -204,7 +204,7 @@ export enum BoardLimit {
     "All" = "ALL"
 }
 
-export const BOARD_ORDER_NAMES: {[key in BoardOrder]: string} = {
+export const BOARD_ORDER_NAMES: {[key in AssignmentBoardOrder]: string} = {
     "created": "Date Created Ascending",
     "-created": "Date Created Descending",
     "visited": "Date Visited Ascending",
@@ -218,11 +218,11 @@ export const BOARD_ORDER_NAMES: {[key in BoardOrder]: string} = {
 };
 
 const BOARD_SORT_FUNCTIONS = {
-    [BoardOrder.visited]: (b: GameboardDTO) => b.lastVisited?.valueOf(),
-    [BoardOrder.created]: (b: GameboardDTO) => b.creationDate?.valueOf(),
-    [BoardOrder.title]: (b: GameboardDTO) => b.title,
-    [BoardOrder.attempted]: (b: GameboardDTO) => b.percentageAttempted,
-    [BoardOrder.correct]: (b: GameboardDTO) => b.percentageCorrect
+    [AssignmentBoardOrder.visited]: (b: GameboardDTO) => b.lastVisited?.valueOf(),
+    [AssignmentBoardOrder.created]: (b: GameboardDTO) => b.creationDate?.valueOf(),
+    [AssignmentBoardOrder.title]: (b: GameboardDTO) => b.title,
+    [AssignmentBoardOrder.attempted]: (b: GameboardDTO) => b.percentageAttempted,
+    [AssignmentBoardOrder.correct]: (b: GameboardDTO) => b.percentageCorrect
 };
 
 const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: BoardLimit) =>
@@ -235,7 +235,7 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
     const [ loadGameboards ] = useLazyGetGameboardsQuery();
     const boards = useAppSelector(selectors.boards.boards);
 
-    const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
+    const [boardOrder, setBoardOrder] = useState<AssignmentBoardOrder>(AssignmentBoardOrder.visited);
     const [boardView, setBoardView] = useState<BoardViews>(initialView);
     const [boardLimit, setBoardLimit] = useState<BoardLimit>(initialLimit);
     const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");

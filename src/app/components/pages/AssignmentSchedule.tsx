@@ -46,7 +46,7 @@ import {
     TODAY,
     useDeviceSize
 } from "../../services";
-import {AppGroup, AssignmentScheduleContext, BoardOrder, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
+import {AppGroup, AssignmentScheduleContext, AssignmentBoardOrder, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import classNames from "classnames";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
@@ -522,7 +522,7 @@ type AssignmentsGroupedByDate = [number, [number, [number, ValidAssignmentWithLi
 export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
-    const { data: gameboards } = useGetGameboardsQuery({startIndex: 0, limit: BoardLimit.All, sort: BoardOrder.created});
+    const { data: gameboards } = useGetGameboardsQuery({startIndex: 0, limit: BoardLimit.All, sort: AssignmentBoardOrder.created});
     const { data: groups } = useGetGroupsQuery(false);
 
     const [viewBy, setViewBy] = useState<"startDate" | "dueDate">("startDate");

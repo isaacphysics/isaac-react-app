@@ -1,12 +1,9 @@
 import React, { ComponentProps } from "react";
-import { BoardOrder } from "../../../IsaacAppTypes";
-import { isDefined, siteSpecific, SortOrder } from "../../services";
+import { isDefined, siteSpecific } from "../../services";
 import { Spacer } from "./Spacer";
+import { NonUndefined } from "@reduxjs/toolkit/dist/query/tsHelpers";
 
-export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
-type Order = BoardOrder | SortOrder | ProgressSortOrder;
-
-function toggleSort<T extends Order>(
+function toggleSort<T>(
         defaultOrder: T,
         reverseOrder: T,
         currentOrder: T,
@@ -18,7 +15,7 @@ function toggleSort<T extends Order>(
     }
 }
 
-function sortClass<T extends Order>(
+function sortClass<T>(
     defaultOrder: T,
     reverseOrder: T,
     currentOrder: T,
@@ -35,7 +32,7 @@ function sortClass<T extends Order>(
     }
 }
 
-export interface SortItemHeaderProps<T extends Order> extends ComponentProps<"th"> {
+export interface SortItemHeaderProps<T> extends ComponentProps<"th"> {
     defaultOrder: T,
     reverseOrder: T,
     currentOrder: T,
@@ -46,7 +43,7 @@ export interface SortItemHeaderProps<T extends Order> extends ComponentProps<"th
     alignment?: "start" | "center" | "end",
 }
 
-export const SortItemHeader = <T extends Order>(props: SortItemHeaderProps<T>) => {
+export const SortItemHeader = <T,>(props: SortItemHeaderProps<NonUndefined<T>>) => {
     const {
         defaultOrder,
         reverseOrder,

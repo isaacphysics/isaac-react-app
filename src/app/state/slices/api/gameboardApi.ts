@@ -1,5 +1,5 @@
 import {isaacApi} from "./baseApi";
-import {BoardOrder, Boards, NumberOfBoards} from "../../../../IsaacAppTypes";
+import {AssignmentBoardOrder, Boards, NumberOfBoards} from "../../../../IsaacAppTypes";
 import {GameboardDTO, GameboardListDTO, IsaacWildcard} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
 import {isPhy, QUESTION_CATEGORY, siteSpecific} from "../../../services";
@@ -8,7 +8,7 @@ import {logAction} from "../../actions/logging";
 export const gameboardApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
 
-        getGameboards: build.query<Boards, {startIndex: number, limit: NumberOfBoards, sort: BoardOrder}>({
+        getGameboards: build.query<Boards, {startIndex: number, limit: NumberOfBoards, sort: AssignmentBoardOrder}>({
             query: ({startIndex, limit, sort}) => ({
                 url: "/gameboards/user_gameboards",
                 params: {"start_index": startIndex, limit, sort}

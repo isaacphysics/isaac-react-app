@@ -322,7 +322,9 @@ export interface ActiveModal {
     overflowVisible?: boolean;
 }
 
-export enum BoardOrder {
+export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
+
+export enum AssignmentBoardOrder {
     "created" = "created",
     "-created" = "-created",
     "visited" = "visited",
