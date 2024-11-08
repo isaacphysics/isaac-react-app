@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, CardBody, CardImg, CardText } from "reactstrap";
+import { Card, CardBody, CardImg, CardTitle, CardText } from "reactstrap";
 import { IsaacPodDTO } from "../../../../IsaacApiTypes";
 import { apiHelper } from "../../../services";
 
@@ -30,11 +30,11 @@ export const NewsCard = ({ newsItem, showTitle, linkText = "Find out more" }: Ne
           <span className="d-block my-2">
             {showTitle ? (
               <div>
-                <h3 className="card-title">{title}</h3>
+                <CardTitle className="card-title">{title}</CardTitle>
                 <p>{value}</p>
               </div>
             ) : (
-              <h3 className="card-title">{value}</h3>
+              <CardTitle className="card-title">{value}</CardTitle>
             )}
           </span>
         </div>

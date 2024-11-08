@@ -33,19 +33,21 @@
     padding: 10px 30px;
   }
 
-  &-media-row {
-    gap: 100px;
-  }
-
   &-media-row-image,
   &-media-row-video {
     width: 100%;
     height: auto;
     object-fit: cover;
     border-radius: 5px 5px 0 0;
+    max-height: 300px;
   }
   &-media-row-video {
-    height: 250px;
+    height: 300px;
+    display: block;
+
+    @media (max-width: 1200px) {
+      height: 250px;
+    }
   }
 
   &-link-column {

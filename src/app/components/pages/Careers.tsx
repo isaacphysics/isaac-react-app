@@ -73,7 +73,7 @@ const CareerPanel = ({ video, title, description, name, job, reversed, url }: Ca
 
 export const Careers = () => (
   <Container id="careers-page">
-    <TitleAndBreadcrumb currentPageTitle="Careers in Computer Science" />
+    <TitleAndBreadcrumb currentPageTitle="Careers" />
     <div className="mt-4" />
 
     <section id="careers" className="d-flex justify-content-center flex-column align-items-center pattern-03-reverse">

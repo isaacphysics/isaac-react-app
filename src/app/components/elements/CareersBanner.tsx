@@ -30,7 +30,7 @@ interface CareerCardProps {
 }
 
 const CareerCard = ({ imgSrc, imgAlt, title, text, linkTo, linkText, children }: CareerCardProps) => (
-  <Card className="career-card h-100">
+  <Card className="career-card h-100 w-100">
     {imgSrc && <CardImg variant="top" src={imgSrc} alt={imgAlt} className="career-media-row-image" />}
     <CardBody className="career-card-body d-flex flex-wrap flex-column">
       {children}
@@ -50,12 +50,12 @@ const videoId = careerVideos[0].video;
 export const CareersBanner = () => {
   const user = useAppSelector(selectors.user.orNull);
   return (
-    <Container className="py-4 py-lg-5">
+    <Container className="pt-4 pb-5">
       <div className="career-background-img">
         <Container className="career-section">
           <h4 className="career-title mb-4">Careers</h4>
-          <Row className="career-media-row gy-4 justify-content-center">
-            <Col xs={12} sm={10} md={10} lg={5}>
+          <Row className="career-media-row justify-content-center">
+            <Col xs={12} sm={10} lg={6}>
               <CareerCard
                 imgSrc="/assets/cs_journeys.png"
                 imgAlt="cs journeys"
@@ -65,7 +65,7 @@ export const CareersBanner = () => {
                 linkText="Read our interviews"
               />
             </Col>
-            <Col xs={12} sm={10} md={10} lg={5}>
+            <Col className="mt-4 mt-lg-0" xs={12} sm={10} lg={6}>
               <CareerCard
                 title={isStudent(user) ? "Linking computer science to the real world" : "Computer Science at work"}
                 text={<CsAtWorkDescription />}

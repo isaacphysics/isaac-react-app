@@ -13,7 +13,7 @@ const renderCareers = () => {
 describe("Careers", () => {
   it("displays the page title correctly", () => {
     renderCareers();
-    const pageTitle = screen.getByRole("heading", { name: "Careers in Computer Science" });
+    const pageTitle = screen.getByRole("heading", { name: "Careers" });
     expect(pageTitle).toBeInTheDocument();
   });
 
