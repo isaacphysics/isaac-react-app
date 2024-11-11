@@ -12,6 +12,7 @@ const teacherLinks = [
   "/my_markbook",
   "/set_tests",
   "/teaching_order_g_ocr",
+  "/teaching_order_g_aqa",
   "/teaching_order",
 ];
 const learnLinks = [

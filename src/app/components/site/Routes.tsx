@@ -91,6 +91,13 @@ export const Routes = [
     path="/teaching_order_g_ocr"
     pageId="teaching_order_g_ocr"
   />,
+  <StaticPageRoute
+    key={key++}
+    exact
+    ifUser={isTutorOrAbove}
+    path="/teaching_order_g_aqa"
+    pageId="teaching_order_g_aqa"
+  />,
   <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teaching_order" pageId="teaching_order" />,
   <StaticPageRoute key={key++} exact path="/teachcomputing" pageId="teach_computing" />,
 
