@@ -227,9 +227,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 startIndex,
                 limit: SEARCH_RESULTS_PER_PAGE + 1 // request one more than we need to know if there are more results
             }));
-
-            dispatch(logAction({
-                type: "QUESTION_FINDER_SEARCH", searchString, ...filterParams, book, stages, difficulties, examBoards, questionStatuses, startIndex}));
         }, 250),
         [nothingToSearchFor]
     );
