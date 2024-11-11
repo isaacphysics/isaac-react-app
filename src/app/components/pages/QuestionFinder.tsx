@@ -1,5 +1,5 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
-import {AppState, clearQuestionSearch, logAction, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
+import {AppState, clearQuestionSearch, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
 import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
