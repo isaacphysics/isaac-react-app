@@ -68,7 +68,8 @@ button {
   min-width: unset;
   text-decoration: underline;
   vertical-align: top;
-  padding: 0;
+  padding: 0 !important;
+  border: none;
   &:hover {
     text-decoration: none;
   }
