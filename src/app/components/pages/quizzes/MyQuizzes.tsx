@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import {
     useGetAttemptedFreelyByMeQuery,
     useGetQuizAssignmentsAssignedToMeQuery
@@ -102,12 +102,12 @@ function QuizItem({quiz}: QuizAssignmentProps) {
 
 interface AssignmentGridProps {
     quizzes: DisplayableQuiz[];
-    empty: string;
+    emptyMessage: ReactNode;
 }
 
-function QuizGrid({quizzes, empty}: AssignmentGridProps) {
+function QuizGrid({quizzes, emptyMessage}: AssignmentGridProps) {
     return <>
-        {quizzes.length === 0 && <p>{empty}</p>}
+        {quizzes.length === 0 && <p>{emptyMessage}</p>}
         {quizzes.length > 0 && <CardGrid>
             {quizzes.map(quiz => <QuizItem key={(quiz.isAssigned ? 'as' : 'at') + quiz.id} quiz={quiz}/>)}
         </CardGrid>}
@@ -115,7 +115,7 @@ function QuizGrid({quizzes, empty}: AssignmentGridProps) {
 }
 
 // To avoid the chaos of QuizProgressCommon, this and PracticeQuizTable are **separate components**. Despite this repeating some code, please don't try to merge them.
-const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void}) => {
+const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void, emptyMessage: ReactNode}) => {
 
     return <Table className="my-quizzes-table mb-0">
         <colgroup>
@@ -157,11 +157,14 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder}: {quizzes: Displ
                     <td className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
                 </TrLink>;
             })}
+            {quizzes.length === 0 && <tr>
+                <td colSpan={5} className="text-center">{emptyMessage}</td>
+            </tr>}
         </tbody>
     </Table>;
 };
 
-const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void}) => {
+const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void, emptyMessage: ReactNode}) => {
     return <Table className="my-quizzes-table mb-0">
         <colgroup>
             <col className={"col-md-9"}/>
@@ -188,6 +191,9 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder}: {quizzes: Displ
                     <td className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
                 </TrLink>;
             })}
+            {quizzes.length === 0 && <tr>
+                <td colSpan={3} className="text-center">{emptyMessage}</td>
+            </tr>}
         </tbody>
     </Table>;
 };
@@ -266,6 +272,16 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         />
     </div>;
 
+    const emptyAssignedMessage = <span className="text-muted">{showCompleted
+        ? "You have not completed any tests."
+        : "You have no tests in progress."
+    }</span>;
+
+    const emptyPracticeMessage = <span className="text-muted">{showCompleted
+        ? "You have not completed any practice tests."
+        : "You have no practice tests in progress."
+    } Find some <Link to="/practice_tests">here</Link>!</span>;
+
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
         <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
@@ -285,8 +301,11 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                                 {pastTestsToggle}
                             </div>
                             {displayMode === "table" ? <Card>
-                                <AssignedQuizTable quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}/>
-                            </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} empty="No assigned tests found"/>}
+                                <AssignedQuizTable 
+                                    quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                    emptyMessage={emptyAssignedMessage}
+                                />
+                            </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} emptyMessage={emptyAssignedMessage}/>}
                         </div>
                     </ShowLoading>,
                 [siteSpecific("My Practice Tests", "My practice tests")]:
@@ -300,8 +319,11 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                                 {pastTestsToggle}
                             </div>
                             {displayMode === "table" ? <Card>
-                                <PracticeQuizTable quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}/>
-                            </Card> : <QuizGrid quizzes={sortedPracticeQuizzes} empty="No practice tests found"/>}
+                                <PracticeQuizTable 
+                                    quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                    emptyMessage={emptyPracticeMessage}
+                                />
+                            </Card> : <QuizGrid quizzes={sortedPracticeQuizzes} emptyMessage={emptyPracticeMessage}/>}
                         </div>
                     </ShowLoading>,
             }}
