@@ -210,6 +210,7 @@
 
 .my-quizzes-table {
   @extend .my-gameboard-table;
+  min-width: 694px;
   thead > tr {
     @extend .my-gameboard-table-header;
     > th {
@@ -230,6 +231,10 @@
     }
     &.completed {
       background: rgba(map-get($theme-colors, "success"), 0.09);
+    }
+
+    > td {
+      background: transparent;
     }
   }
 }

@@ -117,7 +117,7 @@ function QuizGrid({quizzes, emptyMessage}: AssignmentGridProps) {
 // To avoid the chaos of QuizProgressCommon, this and PracticeQuizTable are **separate components**. Despite this repeating some code, please don't try to merge them.
 const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void, emptyMessage: ReactNode}) => {
 
-    return <Table className="my-quizzes-table mb-0">
+    return <Table className="my-quizzes-table mb-0" responsive>
         <colgroup>
             <col className={"col-md-5"}/>
             <col className={"col-md-2"}/>
@@ -165,7 +165,7 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
 };
 
 const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void, emptyMessage: ReactNode}) => {
-    return <Table className="my-quizzes-table mb-0">
+    return <Table className="my-quizzes-table mb-0" responsive>
         <colgroup>
             <col className={"col-md-9"}/>
             <col className={"col-md-2"}/>
