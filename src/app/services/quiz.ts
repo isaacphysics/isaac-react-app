@@ -37,7 +37,8 @@ import {
     QuizAttemptDTO,
     QuizFeedbackMode,
     QuizSummaryDTO,
-    RegisteredUserDTO
+    RegisteredUserDTO,
+    UserSummaryDTO
 } from "../../IsaacApiTypes";
 import partition from "lodash/partition";
 import {skipToken} from "@reduxjs/toolkit/query";
@@ -271,13 +272,83 @@ export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {
     return `${API_PATH}/quiz/assignment/${assignmentId}/download`;
 }
 
-type QuizAttemptOrAssignment = (QuizAttemptDTO | QuizAssignmentDTO);
+// type QuizAttemptOrAssignment = (QuizAttemptDTO | QuizAssignmentDTO);
 
-export function isAttempt(a: QuizAttemptOrAssignment): a is QuizAttemptDTO {
-    return !('groupId' in a);
+// export function isAttempt(a: QuizAttemptOrAssignment): a is QuizAttemptDTO {
+//     return !('groupId' in a);
+// }
+
+// export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAssignmentDTO[]): [QuizAssignmentDTO[], QuizAssignmentDTO[]];
+// export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAttemptOrAssignment[]): [QuizAttemptOrAssignment[], QuizAttemptOrAssignment[]] {
+//     return partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate));
+// }
+
+export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAssignmentDTO[]): [QuizAssignmentDTO[], QuizAssignmentDTO[]] {
+    return partition(assignmentsAndAttempts, a => isDefined(a.attempt?.completedDate));
 }
 
-export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAssignmentDTO[]): [QuizAssignmentDTO[], QuizAssignmentDTO[]];
-export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAttemptOrAssignment[]): [QuizAttemptOrAssignment[], QuizAttemptOrAssignment[]] {
-    return partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate));
+export enum QuizStatus {
+    Overdue, NotStarted, Started, Complete
+}
+
+const todaysDate = new Date(new Date().setHours(0, 0, 0, 0));
+
+// Assigned quizzes (QuizAssignmentDTO) and single attempts at practice quizzes (QuizAttemptDTO) are considered the same thing for display purposes
+export interface DisplayableQuiz {
+    id: string | number;
+    isAssigned: boolean;
+    title?: string;
+    creationDate?: Date;
+    startDate?: Date;
+    setDate?: Date;
+    dueDate?: Date;
+    completedDate?: Date;
+    attempt?: QuizAttemptDTO;
+    assignerSummary?: UserSummaryDTO;
+    quizFeedbackMode?: QuizFeedbackMode;
+    link?: string;
+    status?: QuizStatus;
+};
+
+export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): DisplayableQuiz | undefined {
+    if (!assignment.id) {
+        return undefined;
+    }
+    const status = assignment.attempt?.completedDate ? QuizStatus.Complete
+        : (assignment.dueDate && todaysDate > assignment.dueDate) ? QuizStatus.Overdue
+            : (assignment.attempt) ? QuizStatus.Started 
+                : QuizStatus.NotStarted;
+
+    return {
+        id: assignment.id,
+        isAssigned: true,
+        title: assignment.quizSummary?.title,
+        creationDate: assignment.creationDate,
+        setDate: assignment.scheduledStartDate,
+        dueDate: assignment.dueDate,
+        attempt: assignment.attempt,
+        quizFeedbackMode: assignment.quizFeedbackMode,
+        assignerSummary: assignment.assignerSummary,
+        link: status === QuizStatus.Complete ? (assignment.quizFeedbackMode !== "NONE" ? `/test/attempt/${assignment.attempt?.id}/feedback` : undefined)
+            : status === QuizStatus.Overdue ? undefined
+                : `/test/assignment/${assignment.id}`,
+        status: status
+    };
+}
+
+export function convertAttemptToQuiz(attempt: QuizAttemptDTO): DisplayableQuiz | undefined {
+    if (!attempt.id) {
+        return undefined;
+    }
+    return {
+        id: attempt.id,
+        isAssigned: false,
+        title: attempt.quizSummary?.title,
+        startDate: attempt.startDate,
+        completedDate: attempt.completedDate,
+        attempt: attempt,
+        quizFeedbackMode: attempt.feedbackMode,
+        link: attempt.completedDate ? `/test/attempt/${attempt.id}/feedback` : `/test/attempt/${attempt.quizId}`,
+        status: attempt.completedDate ? QuizStatus.Complete : QuizStatus.Started,
+    };
 }
