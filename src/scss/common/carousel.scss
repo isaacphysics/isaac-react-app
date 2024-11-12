@@ -1,5 +1,3 @@
-// NOMENSA carousel.scss
-
 .carousel {
   .carousel-item {
     > div {
@@ -33,7 +31,6 @@
     opacity: 1;
     &:focus,
     &:hover {
-      height: 10%;
       display: block;
       margin-top: auto;
       margin-bottom: auto;
@@ -56,40 +53,29 @@
   @media (max-width: 768px) {
     a[class^="carousel-control-"] {
       border-radius: 50%;
-  
-      &:focus,
-      &:hover {
-        height: 30px;
-        width: 30px;
-      }
     }
-  
+
     a[class*="next"] {
       right: 10px;
     }
-  
+
     a[class*="prev"] {
       left: 10px;
     }
   }
-  
+
   @media (max-width: 480px) {
     a[class^="carousel-control-"] {
       border-radius: 50%;
-      
-      &:focus,
-      &:hover {
-        height: 25px;
-        width: 25px;
-      }
-    }
   
+    }
+
     a[class*="next"] {
-      right: 5px;
+      right: -7px;
     }
-  
+
     a[class*="prev"] {
-      left: 5px;
+      left: -7px;
     }
   }
 }
