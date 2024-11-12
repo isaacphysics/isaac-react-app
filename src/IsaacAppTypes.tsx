@@ -324,6 +324,19 @@ export interface ActiveModal {
 
 export type ProgressSortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
 
+export enum QuizzesBoardOrder {
+    "title" = "title",
+    "-title" = "-title",
+    "setBy" = "setBy",
+    "-setBy" = "-setBy",
+    "dueDate" = "dueDate",
+    "-dueDate" = "-dueDate",
+    "setDate" = "setDate",
+    "-setDate" = "-setDate",
+    "startDate" = "startDate",
+    "-startDate" = "-startDate",
+}
+
 export enum AssignmentBoardOrder {
     "created" = "created",
     "-created" = "-created",

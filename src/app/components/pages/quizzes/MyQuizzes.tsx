@@ -1,112 +1,114 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
     useGetAttemptedFreelyByMeQuery,
     useGetQuizAssignmentsAssignedToMeQuery
 } from "../../../state";
 import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
-import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {formatDate} from "../../elements/DateString";
-import {AppQuizAssignment} from "../../../../IsaacAppTypes";
+import {QuizzesBoardOrder} from "../../../../IsaacAppTypes";
 import {
+    convertAssignmentToQuiz,
+    convertAttemptToQuiz,
+    DisplayableQuiz,
     extractTeacherName,
-    isAttempt,
-    isFound,
+    isDefined,
     isTutorOrAbove,
-    partitionCompleteAndIncompleteQuizzes,
+    QuizStatus,
     siteSpecific
 } from "../../../services";
 import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
 import {PageFragment} from "../../elements/PageFragment";
 import { CardGrid } from "../../elements/CardGrid";
+import { SortItemHeader } from "../../elements/SortableItemHeader";
+import { Card, CardBody, Button, Table, Container, Alert } from "reactstrap";
+import orderBy from "lodash/orderBy";
 import partition from "lodash/partition";
+import classNames from "classnames";
+import StyledToggle from "../../elements/inputs/StyledToggle";
 
 export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
 }
 
-type Quiz = AppQuizAssignment | QuizAttemptDTO;
-
 interface QuizAssignmentProps {
-    item: Quiz;
+    quiz: DisplayableQuiz;
 }
 
+// TODO: replace with QuizStatus
 enum Status {
     Unstarted, Started, Complete
 }
 
-const todaysDate = new Date(new Date().setHours(0, 0, 0, 0));
-
-function QuizItem({item}: QuizAssignmentProps) {
-    const assignment = isAttempt(item) ? null : item;
-    const attempt = isAttempt(item) ? item : assignment?.attempt;
-    const status: Status = !attempt ? Status.Unstarted : !attempt.completedDate ? Status.Started : Status.Complete;
-    const assignmentStartDate = assignment?.scheduledStartDate ?? assignment?.creationDate;
-    const overdue = (status !== Status.Complete && assignment?.dueDate) ? (todaysDate > assignment.dueDate) : false;
+function QuizItem({quiz}: QuizAssignmentProps) {
+    const status: Status = !quiz.attempt ? Status.Unstarted : !quiz.completedDate ? Status.Started : Status.Complete;
+    const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
+    // const overdue = (status !== Status.Complete && quiz.dueDate) ? (todaysDate > quiz.dueDate) : false;
+    const overdue = quiz.status === QuizStatus.Overdue;
 
     return <div className="p-2">
-        <RS.Card className="card-neat my-quizzes-card">
-            <RS.CardBody className="d-flex flex-column">
-                <h4 className="border-bottom pb-3 mb-3">{item.quizSummary?.title || item.quizId }</h4>
+        <Card className="card-neat my-quizzes-card">
+            <CardBody className="d-flex flex-column">
+                <h4 className="border-bottom pb-3 mb-3">{quiz.title || quiz.id }</h4>
 
-                {assignment
-                    ? assignment.dueDate && <p>Due date: <strong>{formatDate(assignment.dueDate)}</strong></p>
-                    : attempt && siteSpecific(
+                {quiz.isAssigned
+                    ? quiz.dueDate && <p>Due date: <strong>{formatDate(quiz.dueDate)}</strong></p>
+                    : quiz.attempt && siteSpecific(
                         <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>,
                         <p>{status === Status.Started ? "Attempting" : "Attempted"} independently</p>
                     )
                 }
-                {assignment && <p>
+                {quiz.isAssigned && <p>
                     Set: {formatDate(assignmentStartDate)}
-                    {assignment.assignerSummary && <> by {extractTeacherName(assignment.assignerSummary)}</>}
+                    {quiz.assignerSummary && <> by {extractTeacherName(quiz.assignerSummary)}</>}
                 </p>}
-                {attempt && <p>
+                {quiz.attempt && <p>
                     {status === Status.Complete ?
-                        `Completed: ${formatDate(attempt.completedDate)}`
-                        : `Started: ${formatDate(attempt.startDate)}`
+                        `Completed: ${formatDate(quiz.attempt.completedDate)}`
+                        : `Started: ${formatDate(quiz.attempt.startDate)}`
                     }
                 </p>}
 
                 <Spacer/>
 
                 <div className="text-center mt-4">
-                    {assignment ? <>
-                        {status === Status.Unstarted && !overdue && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
+                    {quiz.isAssigned ? <>
+                        {status === Status.Unstarted && !overdue && <Button tag={Link} to={`/test/assignment/${quiz.id}`}>
                             {siteSpecific("Start Test", "Start test")}
-                        </RS.Button>}
-                        {status === Status.Started && !overdue && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
+                        </Button>}
+                        {status === Status.Started && !overdue && <Button tag={Link} to={`/test/assignment/${quiz.id}`}>
                             {siteSpecific("Continue Test", "Continue test")}
-                        </RS.Button>}
-                        {overdue && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`} disabled={true}>
+                        </Button>}
+                        {overdue && <Button tag={Link} to={`/test/assignment/${quiz.id}`} disabled={true}>
                             {siteSpecific("Overdue", "Overdue")}
-                        </RS.Button>}
+                        </Button>}
                         {status === Status.Complete && (
-                            <RS.Button tag={Link} to={`/test/attempt/${assignment.attempt?.id}/feedback`} disabled={assignment.quizFeedbackMode === "NONE"}>
-                                {assignment.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
-                            </RS.Button>
+                            <Button tag={Link} to={`/test/attempt/${quiz.attempt?.id}/feedback`} disabled={quiz.quizFeedbackMode === "NONE"}>
+                                {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
+                            </Button>
                         )}
-                    </> : attempt && <>
-                        {status === Status.Started && <RS.Button tag={Link} to={`/test/attempt/${attempt.quizId}`}>
+                    </> : quiz.attempt && <>
+                        {status === Status.Started && <Button tag={Link} to={`/test/attempt/${quiz.attempt.id}`}>
                             {siteSpecific("Continue Test", "Continue test")}
-                        </RS.Button>}
+                        </Button>}
                         {status === Status.Complete && (
-                            <RS.Button tag={Link} to={`/test/attempt/${attempt.id}/feedback`}disabled={attempt.quizAssignment?.quizFeedbackMode === "NONE"}>
-                                {attempt.quizAssignment?.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
-                            </RS.Button>
+                            <Button tag={Link} to={`/test/attempt/${quiz.attempt.id}/feedback`}disabled={quiz.quizFeedbackMode === "NONE"}>
+                                {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
+                            </Button>
                         )}
                     </>}
                 </div>
-            </RS.CardBody>
-        </RS.Card>
+            </CardBody>
+        </Card>
     </div>;
 }
 
 interface AssignmentGridProps {
-    quizzes: Quiz[];
+    quizzes: DisplayableQuiz[];
     empty: string;
 }
 
@@ -114,15 +116,115 @@ function QuizGrid({quizzes, empty}: AssignmentGridProps) {
     return <>
         {quizzes.length === 0 && <p>{empty}</p>}
         {quizzes.length > 0 && <CardGrid>
-            {quizzes.map(item => <QuizItem key={(isAttempt(item) ? 'at' : 'as') + item.id} item={item}/>)}
+            {quizzes.map(quiz => <QuizItem key={(quiz.isAssigned ? 'as' : 'at') + quiz.id} quiz={quiz}/>)}
         </CardGrid>}
     </>;
 }
+
+interface TdLinkProps extends React.HTMLAttributes<HTMLTableCellElement> {
+    to: string | undefined;
+}
+
+// an <a/> anywhere between a <table/> and a <td/> is illegal, so we can't wrap the row in a <Link/>. instead, we make each <td/> contain a link.
+const TdLink = ({to, ...props}: TdLinkProps) => {
+    return <td {...props} className={classNames(props.className, "td-link")}>{to ? <Link to={to}>{props.children}</Link> : <>{props.children}</>}</td>;
+};
+
+// To avoid the chaos of QuizProgressCommon, this and PracticeQuizTable are **separate components**. Despite this repeating some code, please don't try to merge them.
+const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void}) => {
+
+    return <Table className="my-quizzes-table mb-0">
+        <colgroup>
+            <col className={"col-md-5"}/>
+            <col className={"col-md-2"}/>
+            <col className={"col-md-2"}/>
+            <col className={"col-md-2"}/>
+            <col className={"col-md-1"}/>
+        </colgroup>
+        <thead className="card-header">
+            <tr>
+                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
+                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setBy} reverseOrder={QuizzesBoardOrder["-setBy"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Set by</SortItemHeader>
+                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.dueDate} reverseOrder={QuizzesBoardOrder["-dueDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Due Date</SortItemHeader>
+                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.setDate} reverseOrder={QuizzesBoardOrder["-setDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Set Date</SortItemHeader>
+                <th/> {/* chevrons */}
+            </tr>
+        </thead>
+        <tbody>
+            {quizzes.map(quiz => {
+                return <tr key={quiz.id} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete}, {"overdue": quiz.status === QuizStatus.Overdue})}>
+                    {/* TODO: replace TdLinks with one TrLink? */}
+                    <TdLink to={quiz.link}>
+                        <div>
+                            {quiz.title || quiz.id}<br/>
+                            {quiz.status === QuizStatus.Overdue && <span className="small text-muted mt-1">Overdue</span>}
+                            {quiz.status === QuizStatus.Started && <span className="small text-muted mt-1">Started</span>}
+                            {quiz.status === QuizStatus.NotStarted && <span className="small text-muted mt-1">Not started</span>}
+                            {quiz.status === QuizStatus.Complete && <>
+                                <span className="small text-muted mt-1">Completed &middot; </span>
+                                {quiz.quizFeedbackMode === "NONE" ? <span className="small text-muted mt-1">No feedback available</span> 
+                                    : <span className="small text-muted mt-1">Feedback available</span>
+                                }
+                            </>}
+                        </div>
+                    </TdLink>
+                    <TdLink to={quiz.link}>{quiz.assignerSummary && extractTeacherName(quiz.assignerSummary)}</TdLink>
+                    <TdLink to={quiz.link}>{quiz.dueDate && formatDate(quiz.dueDate)}</TdLink>
+                    <TdLink to={quiz.link}>{quiz.setDate && formatDate(quiz.setDate)}</TdLink>
+                    <TdLink to={quiz.link} className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></TdLink>
+                </tr>;
+            })}
+        </tbody>
+    </Table>;
+};
+
+const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void}) => {
+    return <Table className="my-quizzes-table mb-0">
+        <colgroup>
+            <col className={"col-md-9"}/>
+            <col className={"col-md-2"}/>
+            <col className={"col-md-1"}/>
+        </colgroup>
+        <thead className="card-header">
+            <tr>
+                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.title} reverseOrder={QuizzesBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Title</SortItemHeader>
+                <SortItemHeader<QuizzesBoardOrder> defaultOrder={QuizzesBoardOrder.startDate} reverseOrder={QuizzesBoardOrder["-startDate"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">Start Date</SortItemHeader>
+                <th/> {/* chevrons */}
+            </tr>
+        </thead>
+        <tbody>
+            {quizzes.map(quiz => {
+                return <tr key={quiz.id} tabIndex={0} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete})}>
+                    <TdLink to={quiz.link}>
+                        <div className="d-flex flex-column align-items-start">
+                            {quiz.title || quiz.id}
+                            {quiz.status === QuizStatus.Complete && <span className="small text-muted mt-1">Completed</span>}
+                        </div>
+                    </TdLink>
+                    <TdLink to={quiz.link}>{formatDate(quiz.startDate)}</TdLink>
+                    <TdLink to={quiz.link} className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></TdLink>
+                </tr>;
+            })}
+        </tbody>
+    </Table>;
+};
 
 const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
 
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
     const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
+
+    const [boardOrder, setBoardOrder] = useState<QuizzesBoardOrder>(QuizzesBoardOrder.dueDate);
+    const [showCompleted, setShowCompleted] = useState(false);
+
+    // TODO: undefined should always sort to the end, asc or desc
+    const sortQuizzesByOrder = useCallback((quizzes: DisplayableQuiz[]) => {
+        return orderBy(
+            quizzes, 
+            [boardOrder.valueOf().charAt(0) === "-" ? boardOrder.valueOf().slice(1) : boardOrder, "title"], 
+            [boardOrder.valueOf().charAt(0) === "-" ? "desc" : "asc", "asc"]
+        );
+    }, [boardOrder]);
 
     const pageHelp = <span>
         Use this page to see tests you need to take and your test results.
@@ -130,60 +232,73 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         You can also take some tests freely whenever you want to test your knowledge.
     </span>;
 
-    function sortCurrentQuizzes(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
-        // Compare by due date (or lack of due date) if possible
-        if (a.dueDate && b.dueDate) {
-            if (a.dueDate < b.dueDate) {
-                return -1;
-            }
-            if (a.dueDate > b.dueDate) {
-                return 1;
-            }
-        }
-        else if (a.dueDate) {
-            return -1;
-        }
-        else if (b.dueDate) {
-            return 1;
-        }
-        // Otherwise compare by set date
-        if (a.creationDate && b.creationDate) {
-            if (a.creationDate < b.creationDate) {
-                return -1;
-            }
-            if (a.creationDate > b.creationDate) {
-                return 1;
-            }
-        }
-        return 0;
-    }
+    // function sortCurrentQuizzes(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
+    //     // Compare by due date (or lack of due date) if possible
+    //     if (a.dueDate && b.dueDate) {
+    //         if (a.dueDate < b.dueDate) {
+    //             return -1;
+    //         }
+    //         if (a.dueDate > b.dueDate) {
+    //             return 1;
+    //         }
+    //     }
+    //     else if (a.dueDate) {
+    //         return -1;
+    //     }
+    //     else if (b.dueDate) {
+    //         return 1;
+    //     }
+    //     // Otherwise compare by set date
+    //     if (a.creationDate && b.creationDate) {
+    //         if (a.creationDate < b.creationDate) {
+    //             return -1;
+    //         }
+    //         if (a.creationDate > b.creationDate) {
+    //             return 1;
+    //         }
+    //     }
+    //     return 0;
+    // }
 
-    function sortCompletedQuizzes(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
-        // Compare by completion date; if incomplete (i.e. overdue), use due date instead
-        const aDate = a.attempt?.completedDate ?? a.dueDate ?? 0;
-        const bDate = b.attempt?.completedDate ?? b.dueDate ?? 0;
-        if (aDate < bDate) {
-            return -1;
-        }
-        if (aDate > bDate) {
-            return 1;
-        }
-        return 0;
-    }
+    // function sortCompletedQuizzes(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
+    //     // Compare by completion date; if incomplete (i.e. overdue), use due date instead
+    //     const aDate = a.attempt?.completedDate ?? a.dueDate ?? 0;
+    //     const bDate = b.attempt?.completedDate ?? b.dueDate ?? 0;
+    //     if (aDate < bDate) {
+    //         return -1;
+    //     }
+    //     if (aDate > bDate) {
+    //         return 1;
+    //     }
+    //     return 0;
+    // }
 
-    const [completedQuizzes, incompleteQuizzes] = quizAssignments ? partitionCompleteAndIncompleteQuizzes(quizAssignments) : [[], []];
-    const [overdueQuizzes, currentQuizzes] = partition(incompleteQuizzes, a => a.dueDate ? todaysDate > a.dueDate : false);
-    const sortedCurrentQuizzes = [...currentQuizzes].sort(sortCurrentQuizzes);
+    // quizAssignments are quizzes; they have a start date, due date, assignee, etc. They can only be completed once, i.e. have a single attempt inside the object.
+    // freeAttempts is a list of attempts at a quiz, i.e. they are not quizzes themselves. We want to display them the same, though, so we must sort this type discrepancy out first.
+    const [assignedQuizzes, practiceQuizzes] = [quizAssignments?.map(convertAssignmentToQuiz).filter(isDefined) ?? [], freeAttempts?.map(convertAttemptToQuiz).filter(isDefined) ?? []];
+
+    console.log(quizAssignments);
+    console.log(freeAttempts);
+
+    // const [completedQuizzes, incompleteQuizzes] = quizAssignments ? partitionCompleteAndIncompleteQuizzes(quizAssignments) : [[], []];
+    // const [overdueQuizzes, currentQuizzes] = partition(incompleteQuizzes, a => a.dueDate ? todaysDate > a.dueDate : false);
+    // const sortedCurrentQuizzes = [...currentQuizzes].sort(sortCurrentQuizzes);
     
-    const [completedFreeAttempts, currentFreeAttempts] = partitionCompleteAndIncompleteQuizzes(freeAttempts ?? []);
-    const sortedCurrentFreeAttempts = [...currentFreeAttempts].sort(sortCurrentQuizzes);
+    // const [completedFreeAttempts, currentFreeAttempts] = partitionCompleteAndIncompleteQuizzes(freeAttempts ?? []);
+    // const sortedCurrentFreeAttempts = [...currentFreeAttempts].sort(sortCurrentQuizzes);
 
-    const completedOrOverdueQuizzes = [
-        ...isFound(overdueQuizzes) ? overdueQuizzes : [],
-        ...isFound(completedQuizzes) ? completedQuizzes : [],
-        ...isFound(completedFreeAttempts) ? completedFreeAttempts : []
-    ];
-    const sortedCompletedOrOverdueQuizzes = [...completedOrOverdueQuizzes].sort(sortCompletedQuizzes);
+    // const completedOrOverdueQuizzes = [
+    //     ...isFound(overdueQuizzes) ? overdueQuizzes : [],
+    //     ...isFound(completedQuizzes) ? completedQuizzes : [],
+    //     ...isFound(completedFreeAttempts) ? completedFreeAttempts : []
+    // ];
+    // const sortedCompletedOrOverdueQuizzes = [...completedOrOverdueQuizzes].sort(sortCompletedQuizzes);
+
+    const [pastAssignedQuizzes, activeAssignedQuizzes] = partition(assignedQuizzes, quiz => quiz.status === QuizStatus.Complete || quiz.status === QuizStatus.Overdue);
+    const [pastPracticeQuizzes, activePracticeQuizzes] = partition(practiceQuizzes, quiz => quiz.status === QuizStatus.Complete);
+
+    const sortedAssignedQuizzes = sortQuizzesByOrder([...activeAssignedQuizzes, ...(showCompleted ? pastAssignedQuizzes : [])]);
+    const sortedPracticeQuizzes = sortQuizzesByOrder([...activePracticeQuizzes, ...(showCompleted ? pastPracticeQuizzes : [])]);
 
     const tabAnchors = ["#in-progress", "#completed", "#practice"];
 
@@ -200,39 +315,51 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         }
     }, [anchorMap]);
 
-    return <RS.Container>
+    const pastTestsToggle = <div className="d-flex flex-column align-items-center align-self-end w-max-content pb-3">
+        <span>Past tests</span>
+        <StyledToggle
+            checked={showCompleted}
+            falseLabel="Hidden"
+            trueLabel="Shown"
+            onChange={() => setShowCompleted(c => !c)}
+        />
+    </div>;
+
+    return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
         <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />
         <Tabs className="mb-5 mt-4" tabContentClass="mt-4" activeTabOverride={tabOverride} onActiveTabChange={(index) => {
             history.replace({...history.location, hash: tabAnchors[index - 1]});
+            setBoardOrder(index === 1 ? QuizzesBoardOrder.dueDate : QuizzesBoardOrder.title);
         }}>
             {{
-                [siteSpecific("In Progress Tests", "Tests in progress")]:
-                    <ShowLoading
+                [siteSpecific("Assigned Tests", "Assigned tests")]:
+                    <ShowLoading 
                         until={quizAssignments}
-                        ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}
+                        ifNotFound={<Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>}
                     >
-                        <QuizGrid quizzes={sortedCurrentQuizzes} empty="You don&apos;t have any incomplete or assigned tests."/>
+                        <div className="d-flex flex-column">
+                            {pastTestsToggle}
+                            <Card>
+                                <AssignedQuizTable quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}/>
+                            </Card>
+                        </div>
                     </ShowLoading>,
-
-                [siteSpecific("Past Tests", "Past tests")]:
-                    <ShowLoading
-                        until={quizAssignments}
-                        ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}
+                [siteSpecific("My Practice Tests", "My practice tests")]:
+                    <ShowLoading 
+                        until={freeAttempts}
+                        ifNotFound={<Alert color="warning">Your practice test attempts failed to load, please try refreshing the page.</Alert>}
                     >
-                        <QuizGrid quizzes={sortedCompletedOrOverdueQuizzes} empty="You don't have any completed or overdue tests."/>
+                        <div className="d-flex flex-column">
+                            {pastTestsToggle}
+                            <Card>
+                                <PracticeQuizTable quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}/>
+                            </Card>
+                        </div>
                     </ShowLoading>,
-
-                [siteSpecific("Practice Tests", "Practice tests")]:
-                <>
-                    <h3>{siteSpecific("In Progress", "In progress")}</h3>
-                    <div className="mb-5">
-                        <QuizGrid quizzes={sortedCurrentFreeAttempts} empty="You don't have any practice tests in progress."/>
-                    </div>
-                </>
             }}
         </Tabs>
-    </RS.Container>;
+    </Container>;
 };
 
 export const MyQuizzes = withRouter(MyQuizzesPageComponent);

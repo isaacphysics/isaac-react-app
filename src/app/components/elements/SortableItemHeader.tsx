@@ -2,6 +2,7 @@ import React, { ComponentProps } from "react";
 import { isDefined, siteSpecific } from "../../services";
 import { Spacer } from "./Spacer";
 import { NonUndefined } from "@reduxjs/toolkit/dist/query/tsHelpers";
+import classNames from "classnames";
 
 function toggleSort<T>(
         defaultOrder: T,
@@ -65,7 +66,10 @@ export const SortItemHeader = <T,>(props: SortItemHeaderProps<NonUndefined<T>>) 
         <span className="down">▼</span>
     </button>;
 
-    return <th {...rest} className={props.className + sortClass(defaultOrder, reverseOrder, currentOrder, reversed)} onClick={clickToSelect}>
+    return <th {...rest}
+        className={classNames(props.className, "user-select-none", sortClass(defaultOrder, reverseOrder, currentOrder, reversed))}
+        onClick={clickToSelect ?? (() => toggleSort(defaultOrder, reverseOrder, currentOrder, setOrder))}
+    >
         <div className={`d-flex ${justify} align-items-center`}>
             {props.children}
             {justify === "justify-content-start" && <Spacer/>}
