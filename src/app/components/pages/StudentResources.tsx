@@ -11,7 +11,10 @@ import { isLoggedIn } from "../../services";
 
 export const StudentResources = () => {
     const {data: studentPods} = useGetNewsPodListQuery({subject: "news"});
+    const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
     const featuredPod = studentPods?.[0];
+    const featuredStudentChallengePod = studentChallengesPods?.[0];
+    
     const user = useAppSelector(selectors.user.orNull);
 
     return <div id="student-resources">
@@ -108,16 +111,19 @@ export const StudentResources = () => {
                         <p>Join one of our termly challenges. Test your knowledge and skills, and be in with the chance to win some great prizes.</p>
                         <Button className="mt-3" tag={Link} to="/pages/student_challenges">Find out more</Button>
                     </TextBlock>
-                    {/* TODO: this is currently hard-coded because challenges aren't retrievable via an API call */}
-                    <IconCard card={{
-                        title: "Enigma challenge",
+                    {featuredStudentChallengePod ? <IconCard card={{
+                        title: featuredStudentChallengePod.title ?? "",
                         icon: {src: "/assets/cs/icons/lightbulb-cyan.svg"},
-                        bodyText: "Join the Enigma Challenge now to prepare for stage 1 of this year's exciting competition!",
-                        tag: "Starting 1st October",
-                        clickUrl: "/pages/student_challenges",
+                        bodyText: featuredStudentChallengePod.value ?? "",
+                        tag: featuredStudentChallengePod.subtitle ?? "",
+                        clickUrl: featuredStudentChallengePod.url ?? "",
                         buttonText: "Read more",
                         buttonStyle: "link",
-                    }}/>
+                    }}/> : <IconCard card={{
+                        title: "There are no active challenges at the moment.",
+                        icon: {src: "/assets/cs/icons/lightbulb-cyan.svg"},
+                        bodyText: "Check back soon!",
+                    }}/>}
                 </ColumnSlice>
             </Container>
         </section>
