@@ -220,6 +220,8 @@
     }
   }
   tbody > tr {
+    @include td-link-padding(0.8rem 1rem);
+
     &:not(.overdue) {
       cursor: pointer;
     }
@@ -229,18 +231,5 @@
     &.completed {
       background: rgba(map-get($theme-colors, "success"), 0.09);
     }
-    > td:not(.td-link), > td.td-link > a, td.td-link:not(:has(> a)) {
-      padding: 0.8rem 1rem;
-    }
-    > td.td-link:has(> a) {
-      padding: 0;
-    }
-  }
-}
-
-.td-link {
-  a {
-    display: block;
-    text-decoration: none;
   }
 }

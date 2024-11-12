@@ -30,6 +30,7 @@ import orderBy from "lodash/orderBy";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import StyledToggle from "../../elements/inputs/StyledToggle";
+import { TrLink } from "../../elements/tables/TableLinks";
 
 export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -113,15 +114,6 @@ function QuizGrid({quizzes, empty}: AssignmentGridProps) {
     </>;
 }
 
-interface TdLinkProps extends React.HTMLAttributes<HTMLTableCellElement> {
-    to: string | undefined;
-}
-
-// an <a/> anywhere between a <table/> and a <td/> is illegal, so we can't wrap the row in a <Link/>. instead, we make each <td/> contain a link.
-const TdLink = ({to, ...props}: TdLinkProps) => {
-    return <td {...props} className={classNames(props.className, "td-link")}>{to ? <Link to={to}>{props.children}</Link> : <>{props.children}</>}</td>;
-};
-
 // To avoid the chaos of QuizProgressCommon, this and PracticeQuizTable are **separate components**. Despite this repeating some code, please don't try to merge them.
 const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder}: {quizzes: DisplayableQuiz[], boardOrder: QuizzesBoardOrder, setBoardOrder: (order: QuizzesBoardOrder) => void}) => {
 
@@ -144,9 +136,8 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder}: {quizzes: Displ
         </thead>
         <tbody>
             {quizzes.map(quiz => {
-                return <tr key={quiz.id} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete}, {"overdue": quiz.status === QuizStatus.Overdue})}>
-                    {/* TODO: replace TdLinks with one TrLink? */}
-                    <TdLink to={quiz.link}>
+                return <TrLink to={quiz.link} key={quiz.id} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete}, {"overdue": quiz.status === QuizStatus.Overdue})}>
+                    <td>
                         <div>
                             {quiz.title || quiz.id}<br/>
                             {quiz.status === QuizStatus.Overdue && <span className="small text-muted mt-1">Overdue</span>}
@@ -159,12 +150,12 @@ const AssignedQuizTable = ({quizzes, boardOrder, setBoardOrder}: {quizzes: Displ
                                 }
                             </>}
                         </div>
-                    </TdLink>
-                    <TdLink to={quiz.link}>{quiz.assignerSummary && extractTeacherName(quiz.assignerSummary)}</TdLink>
-                    <TdLink to={quiz.link}>{quiz.dueDate && formatDate(quiz.dueDate)}</TdLink>
-                    <TdLink to={quiz.link}>{quiz.setDate && formatDate(quiz.setDate)}</TdLink>
-                    <TdLink to={quiz.link} className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></TdLink>
-                </tr>;
+                    </td>
+                    <td>{quiz.assignerSummary && extractTeacherName(quiz.assignerSummary)}</td>
+                    <td>{quiz.dueDate && formatDate(quiz.dueDate)}</td>
+                    <td>{quiz.setDate && formatDate(quiz.setDate)}</td>
+                    <td className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
+                </TrLink>;
             })}
         </tbody>
     </Table>;
@@ -186,16 +177,16 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder}: {quizzes: Displ
         </thead>
         <tbody>
             {quizzes.map(quiz => {
-                return <tr key={quiz.id} tabIndex={0} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete})}>
-                    <TdLink to={quiz.link}>
+                return <TrLink to={quiz.link} key={quiz.id} tabIndex={0} className={classNames("align-middle", {"completed": quiz.status === QuizStatus.Complete})}>
+                    <td>
                         <div className="d-flex flex-column align-items-start">
                             {quiz.title || quiz.id}
                             {quiz.status === QuizStatus.Complete && <span className="small text-muted mt-1">Completed</span>}
                         </div>
-                    </TdLink>
-                    <TdLink to={quiz.link}>{formatDate(quiz.startDate)}</TdLink>
-                    <TdLink to={quiz.link} className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></TdLink>
-                </tr>;
+                    </td>
+                    <td>{formatDate(quiz.startDate)}</td>
+                    <td className="text-center"><img className="icon-dropdown-90" src={"/assets/common/icons/chevron_right.svg"} alt="" /></td>
+                </TrLink>;
             })}
         </tbody>
     </Table>;
