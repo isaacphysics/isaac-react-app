@@ -39,16 +39,8 @@ interface QuizAssignmentProps {
     quiz: DisplayableQuiz;
 }
 
-// TODO: replace with QuizStatus
-enum Status {
-    Unstarted, Started, Complete
-}
-
 function QuizItem({quiz}: QuizAssignmentProps) {
-    const status: Status = !quiz.attempt ? Status.Unstarted : !quiz.completedDate ? Status.Started : Status.Complete;
     const assignmentStartDate = quiz.startDate ?? quiz.creationDate;
-    // const overdue = (status !== Status.Complete && quiz.dueDate) ? (todaysDate > quiz.dueDate) : false;
-    const overdue = quiz.status === QuizStatus.Overdue;
 
     return <div className="p-2">
         <Card className="card-neat my-quizzes-card">
@@ -58,8 +50,8 @@ function QuizItem({quiz}: QuizAssignmentProps) {
                 {quiz.isAssigned
                     ? quiz.dueDate && <p>Due date: <strong>{formatDate(quiz.dueDate)}</strong></p>
                     : quiz.attempt && siteSpecific(
-                        <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>,
-                        <p>{status === Status.Started ? "Attempting" : "Attempted"} independently</p>
+                        <p>Freely {quiz.status === QuizStatus.Started ? "attempting" : "attempted"}</p>,
+                        <p>{quiz.status === QuizStatus.Started ? "Attempting" : "Attempted"} independently</p>
                     )
                 }
                 {quiz.isAssigned && <p>
@@ -67,7 +59,7 @@ function QuizItem({quiz}: QuizAssignmentProps) {
                     {quiz.assignerSummary && <> by {extractTeacherName(quiz.assignerSummary)}</>}
                 </p>}
                 {quiz.attempt && <p>
-                    {status === Status.Complete ?
+                    {quiz.status === QuizStatus.Complete ?
                         `Completed: ${formatDate(quiz.attempt.completedDate)}`
                         : `Started: ${formatDate(quiz.attempt.startDate)}`
                     }
@@ -77,25 +69,25 @@ function QuizItem({quiz}: QuizAssignmentProps) {
 
                 <div className="text-center mt-4">
                     {quiz.isAssigned ? <>
-                        {status === Status.Unstarted && !overdue && <Button tag={Link} to={`/test/assignment/${quiz.id}`}>
+                        {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={`/test/assignment/${quiz.id}`}>
                             {siteSpecific("Start Test", "Start test")}
                         </Button>}
-                        {status === Status.Started && !overdue && <Button tag={Link} to={`/test/assignment/${quiz.id}`}>
+                        {quiz.status === QuizStatus.Started && <Button tag={Link} to={`/test/assignment/${quiz.id}`}>
                             {siteSpecific("Continue Test", "Continue test")}
                         </Button>}
-                        {overdue && <Button tag={Link} to={`/test/assignment/${quiz.id}`} disabled={true}>
+                        {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={`/test/assignment/${quiz.id}`} disabled={true}>
                             {siteSpecific("Overdue", "Overdue")}
                         </Button>}
-                        {status === Status.Complete && (
+                        {quiz.status === QuizStatus.Complete && (
                             <Button tag={Link} to={`/test/attempt/${quiz.attempt?.id}/feedback`} disabled={quiz.quizFeedbackMode === "NONE"}>
                                 {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
                             </Button>
                         )}
                     </> : quiz.attempt && <>
-                        {status === Status.Started && <Button tag={Link} to={`/test/attempt/${quiz.attempt.id}`}>
+                        {quiz.status === QuizStatus.Started && <Button tag={Link} to={`/test/attempt/${quiz.attempt.id}`}>
                             {siteSpecific("Continue Test", "Continue test")}
                         </Button>}
-                        {status === Status.Complete && (
+                        {quiz.status === QuizStatus.Complete && (
                             <Button tag={Link} to={`/test/attempt/${quiz.attempt.id}/feedback`}disabled={quiz.quizFeedbackMode === "NONE"}>
                                 {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
                             </Button>
@@ -214,17 +206,23 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
     const {data: freeAttempts} = useGetAttemptedFreelyByMeQuery();
 
+    const [displayMode, setDisplayMode] = useState<"table" | "cards">("table");
     const [boardOrder, setBoardOrder] = useState<QuizzesBoardOrder>(QuizzesBoardOrder.dueDate);
     const [showCompleted, setShowCompleted] = useState(false);
 
-    // TODO: undefined should always sort to the end, asc or desc
     const sortQuizzesByOrder = useCallback((quizzes: DisplayableQuiz[]) => {
-        return orderBy(
+        // if we're in table mode, sort by the order set by the user via the columns (boardOrder).
+        // if we're in cards mode, sort by the default order: due date, then set date, then title.
+        return displayMode === "table" ? orderBy(
             quizzes, 
             [boardOrder.valueOf().charAt(0) === "-" ? boardOrder.valueOf().slice(1) : boardOrder, "title"], 
             [boardOrder.valueOf().charAt(0) === "-" ? "desc" : "asc", "asc"]
-        );
-    }, [boardOrder]);
+        ) : orderBy(quizzes, [
+            (q) => q.dueDate,
+            (q) => q.setDate,
+            (q) => q.title ?? ""
+        ], ["asc", "asc", "asc"]);
+    }, [boardOrder, displayMode]);
 
     const pageHelp = <span>
         Use this page to see tests you need to take and your test results.
@@ -232,67 +230,9 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         You can also take some tests freely whenever you want to test your knowledge.
     </span>;
 
-    // function sortCurrentQuizzes(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
-    //     // Compare by due date (or lack of due date) if possible
-    //     if (a.dueDate && b.dueDate) {
-    //         if (a.dueDate < b.dueDate) {
-    //             return -1;
-    //         }
-    //         if (a.dueDate > b.dueDate) {
-    //             return 1;
-    //         }
-    //     }
-    //     else if (a.dueDate) {
-    //         return -1;
-    //     }
-    //     else if (b.dueDate) {
-    //         return 1;
-    //     }
-    //     // Otherwise compare by set date
-    //     if (a.creationDate && b.creationDate) {
-    //         if (a.creationDate < b.creationDate) {
-    //             return -1;
-    //         }
-    //         if (a.creationDate > b.creationDate) {
-    //             return 1;
-    //         }
-    //     }
-    //     return 0;
-    // }
-
-    // function sortCompletedQuizzes(a : QuizAssignmentDTO, b : QuizAssignmentDTO) {
-    //     // Compare by completion date; if incomplete (i.e. overdue), use due date instead
-    //     const aDate = a.attempt?.completedDate ?? a.dueDate ?? 0;
-    //     const bDate = b.attempt?.completedDate ?? b.dueDate ?? 0;
-    //     if (aDate < bDate) {
-    //         return -1;
-    //     }
-    //     if (aDate > bDate) {
-    //         return 1;
-    //     }
-    //     return 0;
-    // }
-
     // quizAssignments are quizzes; they have a start date, due date, assignee, etc. They can only be completed once, i.e. have a single attempt inside the object.
     // freeAttempts is a list of attempts at a quiz, i.e. they are not quizzes themselves. We want to display them the same, though, so we must sort this type discrepancy out first.
     const [assignedQuizzes, practiceQuizzes] = [quizAssignments?.map(convertAssignmentToQuiz).filter(isDefined) ?? [], freeAttempts?.map(convertAttemptToQuiz).filter(isDefined) ?? []];
-
-    console.log(quizAssignments);
-    console.log(freeAttempts);
-
-    // const [completedQuizzes, incompleteQuizzes] = quizAssignments ? partitionCompleteAndIncompleteQuizzes(quizAssignments) : [[], []];
-    // const [overdueQuizzes, currentQuizzes] = partition(incompleteQuizzes, a => a.dueDate ? todaysDate > a.dueDate : false);
-    // const sortedCurrentQuizzes = [...currentQuizzes].sort(sortCurrentQuizzes);
-    
-    // const [completedFreeAttempts, currentFreeAttempts] = partitionCompleteAndIncompleteQuizzes(freeAttempts ?? []);
-    // const sortedCurrentFreeAttempts = [...currentFreeAttempts].sort(sortCurrentQuizzes);
-
-    // const completedOrOverdueQuizzes = [
-    //     ...isFound(overdueQuizzes) ? overdueQuizzes : [],
-    //     ...isFound(completedQuizzes) ? completedQuizzes : [],
-    //     ...isFound(completedFreeAttempts) ? completedFreeAttempts : []
-    // ];
-    // const sortedCompletedOrOverdueQuizzes = [...completedOrOverdueQuizzes].sort(sortCompletedQuizzes);
 
     const [pastAssignedQuizzes, activeAssignedQuizzes] = partition(assignedQuizzes, quiz => quiz.status === QuizStatus.Complete || quiz.status === QuizStatus.Overdue);
     const [pastPracticeQuizzes, activePracticeQuizzes] = partition(practiceQuizzes, quiz => quiz.status === QuizStatus.Complete);
@@ -314,6 +254,16 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
             setTabOverride(anchorMap[location.hash as keyof typeof anchorMap]);
         }
     }, [anchorMap]);
+
+    const displayModeToggle = <div className="d-flex flex-column align-items-center align-self-end w-max-content pb-3 pe-3">
+        <span>Display mode</span>
+        <StyledToggle
+            checked={displayMode === "cards"}
+            falseLabel="Table"
+            trueLabel="Cards"
+            onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}
+        />
+    </div>;
 
     const pastTestsToggle = <div className="d-flex flex-column align-items-center align-self-end w-max-content pb-3">
         <span>Past tests</span>
@@ -339,10 +289,13 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                         ifNotFound={<Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>}
                     >
                         <div className="d-flex flex-column">
-                            {pastTestsToggle}
-                            <Card>
+                            <div className="d-flex justify-content-end">
+                                {displayModeToggle}
+                                {pastTestsToggle}
+                            </div>
+                            {displayMode === "table" ? <Card>
                                 <AssignedQuizTable quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}/>
-                            </Card>
+                            </Card> : <QuizGrid quizzes={sortedAssignedQuizzes} empty="No assigned tests found"/>}
                         </div>
                     </ShowLoading>,
                 [siteSpecific("My Practice Tests", "My practice tests")]:
@@ -351,10 +304,13 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                         ifNotFound={<Alert color="warning">Your practice test attempts failed to load, please try refreshing the page.</Alert>}
                     >
                         <div className="d-flex flex-column">
-                            {pastTestsToggle}
-                            <Card>
+                            <div className="d-flex justify-content-end">
+                                {displayModeToggle}
+                                {pastTestsToggle}
+                            </div>
+                            {displayMode === "table" ? <Card>
                                 <PracticeQuizTable quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}/>
-                            </Card>
+                            </Card> : <QuizGrid quizzes={sortedPracticeQuizzes} empty="No practice tests found"/>}
                         </div>
                     </ShowLoading>,
             }}

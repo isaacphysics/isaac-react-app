@@ -325,7 +325,9 @@ export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): Displaya
         title: assignment.quizSummary?.title,
         creationDate: assignment.creationDate,
         setDate: assignment.scheduledStartDate,
+        startDate: assignment.attempt?.startDate,
         dueDate: assignment.dueDate,
+        completedDate: assignment.attempt?.completedDate,
         attempt: assignment.attempt,
         quizFeedbackMode: assignment.quizFeedbackMode,
         assignerSummary: assignment.assignerSummary,
@@ -348,7 +350,7 @@ export function convertAttemptToQuiz(attempt: QuizAttemptDTO): DisplayableQuiz |
         completedDate: attempt.completedDate,
         attempt: attempt,
         quizFeedbackMode: attempt.feedbackMode,
-        link: attempt.completedDate ? `/test/attempt/${attempt.id}/feedback` : `/test/attempt/${attempt.quizId}`,
+        link: attempt.completedDate ? `/test/attempt/${attempt.id}/feedback` : `/test/attempt/${attempt.id}`,
         status: attempt.completedDate ? QuizStatus.Complete : QuizStatus.Started,
     };
 }
