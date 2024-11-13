@@ -46,3 +46,7 @@ polygon.fill-secondary {
     @include icon-dropdown(90deg);
   }
 }
+
+img[aria-disabled="true"] {
+  opacity: 0.5;
+}
