@@ -386,7 +386,6 @@ export const logOutDeletedUser = () => async (dispatch: Dispatch<Action>) => {
     } catch (e) {
         dispatch(showAxiosErrorToastIfNeeded("Logout failed", e));
     }
-    history.push("/deleteaccount/success");
 };
 
 export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
