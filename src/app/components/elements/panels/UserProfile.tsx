@@ -9,6 +9,7 @@ import {
     isTeacherOrAbove,
     isTutorOrAbove,
     SITE_TITLE,
+    siteSpecific,
     validateCountryCode,
     validateEmail,
     validateName
@@ -56,9 +57,11 @@ export const UserProfile = (props: UserProfileProps) => {
             {!isTutorOrAbove(userToUpdate) ? <p>
                 If you would like to delete your account please <span className="text-nowrap"><Button color="inline-link" onClick={() => {
                     store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
-                }}>click here</Button>.</span>
+                }}>{siteSpecific("click here", <strong>click here</strong>)}</Button>.</span>
             </p> : <p>
-                Only student accounts can be deleted automatically. Please <Link to="/contact?preset=accountDeletion">contact us</Link> to request account deletion.
+                Only student accounts can be deleted automatically. Please{" "}
+                <Link to="/contact?preset=accountDeletion">{siteSpecific("contact us", <strong>contact us</strong>)}</Link>
+                {" "}to request account deletion.
             </p>}
         </>}
         rightColumn={<>
