@@ -64,7 +64,7 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
                 termElements[i].innerHTML = text ?? term.value ?? "";
                 termElements[i].setAttribute("id", uniqueId);
                 tooltips.push(
-                    <UncontrolledTooltip key={uniqueId} placement="bottom" target={uniqueId} className="tooltip-zindex">
+                    <UncontrolledTooltip key={uniqueId} placement="bottom" target={uniqueId}>
                         <Markup trusted-markup-encoding={"markdown"} className={"inline-glossary-definition"}>
                             {titled ?
                                 "**" + term.value + "**: " + term.explanation?.value :
