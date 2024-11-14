@@ -12,7 +12,9 @@ import classNames from "classnames";
 
 export const TeacherResources = () => {
     const {data: teacherPods} = useGetNewsPodListQuery({subject: "news"});
+    const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
     const featuredPod = teacherPods?.[0];
+    const featuredStudentChallengePod = studentChallengesPods?.[0];
 
     const user = useAppSelector(selectors.user.orNull);
 
@@ -150,16 +152,19 @@ export const TeacherResources = () => {
                         <p>Encourage and reward student success with our student challenge programme, designed to inspire achievement at every stage of their studies.</p>
                         <Button tag={Link} to={"/pages/student_challenges"}>Find out more</Button>
                     </TextBlock>
-                    {/* TODO: this is currently hard-coded because challenges aren't retrievable via an API call */}
-                    <IconCard card={{
-                        title: "Enigma challenge",
+                    {featuredStudentChallengePod ? <IconCard card={{
+                        title: featuredStudentChallengePod.title ?? "",
                         icon: {src: "/assets/cs/icons/lightbulb-cyan.svg"},
-                        bodyText: "Join the Enigma Challenge now to prepare for stage 1 of this year's exciting competition!",
-                        tag: "Starting 1st October",
-                        clickUrl: "/pages/student_challenges",
+                        bodyText: featuredStudentChallengePod.value ?? "",
+                        tag: featuredStudentChallengePod.subtitle ?? "",
+                        clickUrl: featuredStudentChallengePod.url ?? "",
                         buttonText: "Read more",
                         buttonStyle: "link",
-                    }}/>
+                    }}/> : <IconCard card={{
+                        title: "There are no active challenges at the moment.",
+                        icon: {src: "/assets/cs/icons/lightbulb-cyan.svg"},
+                        bodyText: "Check back soon!",
+                    }}/>}
                 </ColumnSlice>
             </Container>
         </section>
