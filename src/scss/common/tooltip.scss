@@ -1,4 +1,4 @@
-.tooltip-zindex {
+div.fade:has(> .tooltip) {
     position: absolute;
     z-index: 1040;
     width: 100%;
