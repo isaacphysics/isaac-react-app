@@ -44,7 +44,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
     const inlineInputId = inlineSpanId.replaceAll("_", "-") + "-input";
 
     const questionId = inlineContext?.elementToQuestionMap?.[inlineInputId]?.questionId;
-    const questionType = inlineContext?.elementToQuestionMap?.[inlineInputId]?.type ?? "isaacStringMatchQuestion";
+    const questionType = inlineContext?.elementToQuestionMap?.[inlineInputId]?.type;
     const questionDTO = selectQuestionPart(pageQuestions, questionId);
 
     const elementIndex = Object.keys(inlineContext?.elementToQuestionMap ?? {}).indexOf(inlineInputId);
@@ -88,8 +88,9 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
         if (inlineContext?.submitting === false && isUnanswered(questionType, questionDTO)) {  
             setCorrectness("NOT_ANSWERED");  
         }  
+    // this *must* only run when inlineContext?.submitting changes. other deps change on page load, and we do not want to overwrite the correctness in these cases
     // eslint-disable-next-line react-hooks/exhaustive-deps  
-    }, [inlineContext?.submitting, questionType]); 
+    }, [inlineContext?.submitting]); 
 
     useEffect(() => {
         setCorrectness(
