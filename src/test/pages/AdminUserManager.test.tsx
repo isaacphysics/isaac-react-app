@@ -1,5 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {navigateToUserManager, paramsToObject, renderTestEnvironment} from "../testUtils";
+import {navigateToMyAccount, navigateToUserManager, paramsToObject, renderTestEnvironment} from "../testUtils";
 import {API_PATH, isDefined} from "../../app/services";
 import {http, HttpResponse} from "msw";
 import {handlerThatReturns} from "../../mocks/handlers";
@@ -139,7 +139,7 @@ describe("AdminUserManager", () => {
         expect(searchHandler).toHaveBeenCalledTimes(0);
     });
 
-    it.skip("shows no list of users after searching, leaving, and coming back. Also ensure that default search parameters are set.", async () => {
+    it("shows no list of users after searching, leaving, and coming back. Also ensure that default search parameters are set.", async () => {
         const searchHandler = buildSearchHandler(
             {postcodeRadius: 'FIVE_MILES'},
             {
@@ -155,7 +155,7 @@ describe("AdminUserManager", () => {
         await navigateToUserManager();
         await searchWithParams({role: mockUser.role}, {expectNumberOfResults: 1, searchHandler});
         // Navigate away from the page
-
+        await navigateToMyAccount();
         // Go back to the admin user manager page
         await navigateToUserManager();
         // The table should no longer be there, and the search endpoint should not have been accessed again
