@@ -139,6 +139,20 @@ describe("AdminUserManager", () => {
         expect(searchHandler).toHaveBeenCalledTimes(0);
     });
 
+    it("shows no table if no filters are set", async () => {
+        const searchHandler = handlerThatReturns({data: [buildMockUserSummary(mockUser, true)]});
+        renderTestEnvironment({
+            role: "ADMIN",
+            extraEndpoints: [
+                http.get(API_PATH + "/admin/users", searchHandler),
+            ]
+        });
+        await navigateToUserManager();
+        await expect(searchWithParams({},{searchHandler}))
+            .rejects
+            .toThrow();
+    });
+
     it("shows no list of users after searching, leaving, and coming back.", async () => {
         const searchHandler = buildSearchHandler(
             {postcodeRadius: 'FIVE_MILES'},
