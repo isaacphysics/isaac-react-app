@@ -12,8 +12,8 @@
       input[type="checkbox"] {
         position: relative;
         appearance: none;
-        width: 100%;
-        height: 100%;
+        width: 100% !important;
+        height: 100% !important;
         border: 0.1em solid #000;
         border-radius: 0.25em;
         margin: 0;
@@ -71,6 +71,7 @@
         width: 22px;
         height: 22px;
         top: 4px;
+        margin-left: 1px;
         transform: rotate(45deg);
         -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);
@@ -90,11 +91,11 @@
         &::after{
           content: "";
           position: absolute;
-          width: 5px;
+          width: 7px;
           height: 2px;
           background-color: #fff;
           left: 6px;
-          top: 12px;
+          top: 13px;
         }
       }
     }
