@@ -359,13 +359,7 @@ a:not(.btn):not(.nav-link) {
   }
 }
 
-.content-value {
-  a {
-    color: $dark-pink-300 !important;
-  }
-}
-
-strong a, a strong {
+.content-value a, strong a, a strong, .btn.btn-inline-link {
   color: $dark-pink-300 !important;
 }
 
@@ -377,8 +371,4 @@ strong a, a strong {
 
 .google-button:not(.linked-account-button) {
   @include ada-button-outline($cs-black, $cs-jet, lighten($cs-jet, 20%));
-}
-
-.btn.btn-inline-link {
-  color: $dark-pink-300;
 }
