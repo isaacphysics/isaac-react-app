@@ -288,7 +288,10 @@ export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: Qu
 }
 
 export enum QuizStatus {
-    Overdue, NotStarted, Started, Complete
+    Overdue = "Overdue", 
+    NotStarted = "Not started", 
+    Started = "Started", 
+    Complete = "Complete",
 }
 
 const todaysDate = new Date(new Date().setHours(0, 0, 0, 0));

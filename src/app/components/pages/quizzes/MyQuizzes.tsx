@@ -11,26 +11,29 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {formatDate} from "../../elements/DateString";
 import {QuizzesBoardOrder} from "../../../../IsaacAppTypes";
 import {
+    above,
     convertAssignmentToQuiz,
     convertAttemptToQuiz,
     DisplayableQuiz,
     extractTeacherName,
-    isDefined,
     isTutorOrAbove,
     QuizStatus,
-    siteSpecific
+    selectOnChange,
+    siteSpecific,
+    useDeviceSize
 } from "../../../services";
 import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
 import {PageFragment} from "../../elements/PageFragment";
 import { CardGrid } from "../../elements/CardGrid";
 import { SortItemHeader } from "../../elements/SortableItemHeader";
-import { Card, CardBody, Button, Table, Container, Alert } from "reactstrap";
+import { Card, CardBody, Button, Table, Container, Alert, Row, Col, Label, Input } from "reactstrap";
 import orderBy from "lodash/orderBy";
-import partition from "lodash/partition";
 import classNames from "classnames";
 import StyledToggle from "../../elements/inputs/StyledToggle";
 import { TrLink } from "../../elements/tables/TableLinks";
+import { StyledDropdown } from "../../elements/inputs/DropdownInput";
+import { StyledSelect } from "../../elements/inputs/StyledSelect";
 
 export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -198,6 +201,50 @@ const PracticeQuizTable = ({quizzes, boardOrder, setBoardOrder, emptyMessage}: {
     </Table>;
 };
 
+interface QuizFiltersProps {
+    setShowCompleted: (show: boolean) => void;
+    setQuizCreator: (creator: string) => void;
+    setQuizTitleFilter: (title: string) => void;
+    quizStatuses: QuizStatus[];
+    setQuizStatuses: React.Dispatch<React.SetStateAction<QuizStatus[]>>;
+    showFilters: boolean;
+}
+
+const QuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, quizStatuses, setQuizStatuses, showFilters}: QuizFiltersProps) => {
+    return <div>
+        <Row className={classNames("my-gameboards-filters", {"shown": showFilters})}>
+            <Col xs={6}>
+                <Label className="w-100">
+                    <span className={"text-nowrap"}>Filter by quiz title</span>
+                    <Input type="text" data-testid="title-filter" onChange={(e) => setQuizTitleFilter(e.target.value)} />
+                </Label>
+            </Col>
+            <Col xs={6}>
+                <Label className="w-100">
+                    <span className={"text-nowrap"}>Filter by assigner</span>
+                    <Input type="text" data-testid="title-filter" onChange={(e) => setQuizCreator(e.target.value)} />
+                </Label>
+            </Col>
+            <Col xs={12}>
+                <Label className="w-100">
+                    <span className={"text-nowrap"}>Filter by status</span>
+                    <StyledSelect 
+                        isMulti 
+                        value={quizStatuses.map(status => ({value: status, label: status}))} 
+                        options={Object.values(QuizStatus).map(status => ({value: status, label: status}))}
+                        onChange={(newValues) => {
+                            selectOnChange(setQuizStatuses, true)(newValues);
+                            setShowCompleted(newValues.map(v => v.value).includes(QuizStatus.Complete) || newValues.map(v => v.value).includes(QuizStatus.Overdue));
+                        }}
+                        menuPortalTarget={document.body} 
+                        styles={{ menuPortal: base => ({ ...base, zIndex: 1000 }) }}
+                    />
+                </Label>
+            </Col>
+        </Row>
+    </div>;
+};
+
 const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
 
     const {data: quizAssignments} = useGetQuizAssignmentsAssignedToMeQuery();
@@ -206,6 +253,13 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
     const [displayMode, setDisplayMode] = useState<"table" | "cards">("table");
     const [boardOrder, setBoardOrder] = useState<QuizzesBoardOrder>(QuizzesBoardOrder.dueDate);
     const [showCompleted, setShowCompleted] = useState(false);
+
+    const deviceSize = useDeviceSize();
+    
+    const [showFilters, setShowFilters] = useState(false);
+    const [quizTitleFilter, setQuizTitleFilter] = useState("");
+    const [quizCreatorFilter, setQuizCreator] = useState("");
+    const [quizStatusFilter, setQuizStatuses] = useState<QuizStatus[]>([QuizStatus.NotStarted, QuizStatus.Started]);
 
     const sortQuizzesByOrder = useCallback((quizzes: DisplayableQuiz[]) => {
         // if we're in table mode, sort by the order set by the user via the columns (boardOrder).
@@ -227,15 +281,20 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         You can also take some tests freely whenever you want to test your knowledge.
     </span>;
 
+    const quizMatchesFilters = (quiz: DisplayableQuiz | undefined) : quiz is DisplayableQuiz => {
+        if (!quiz) return false;
+        const titleMatches = !quizTitleFilter || (quiz.title?.toLowerCase().includes(quizTitleFilter.toLowerCase()) ?? true);
+        const creatorMatches = !quizCreatorFilter || (extractTeacherName(quiz.assignerSummary)?.toLowerCase().includes(quizCreatorFilter.toLowerCase()) ?? true);
+        const statusMatches = !quizStatusFilter || (!!quiz.status && quizStatusFilter.includes(quiz.status));
+        return titleMatches && creatorMatches && statusMatches;
+    };
+
     // quizAssignments are quizzes; they have a start date, due date, assignee, etc. They can only be completed once, i.e. have a single attempt inside the object.
     // freeAttempts is a list of attempts at a quiz, i.e. they are not quizzes themselves. We want to display them the same, though, so we must sort this type discrepancy out first.
-    const [assignedQuizzes, practiceQuizzes] = [quizAssignments?.map(convertAssignmentToQuiz).filter(isDefined) ?? [], freeAttempts?.map(convertAttemptToQuiz).filter(isDefined) ?? []];
+    const [assignedQuizzes, practiceQuizzes] = [quizAssignments?.map(convertAssignmentToQuiz).filter(quizMatchesFilters) ?? [], freeAttempts?.map(convertAttemptToQuiz).filter(quizMatchesFilters) ?? []];
 
-    const [pastAssignedQuizzes, activeAssignedQuizzes] = partition(assignedQuizzes, quiz => quiz.status === QuizStatus.Complete || quiz.status === QuizStatus.Overdue);
-    const [pastPracticeQuizzes, activePracticeQuizzes] = partition(practiceQuizzes, quiz => quiz.status === QuizStatus.Complete);
-
-    const sortedAssignedQuizzes = sortQuizzesByOrder([...activeAssignedQuizzes, ...(showCompleted ? pastAssignedQuizzes : [])]);
-    const sortedPracticeQuizzes = sortQuizzesByOrder([...activePracticeQuizzes, ...(showCompleted ? pastPracticeQuizzes : [])]);
+    const sortedAssignedQuizzes = sortQuizzesByOrder(assignedQuizzes);
+    const sortedPracticeQuizzes = sortQuizzesByOrder(practiceQuizzes);
 
     const tabAnchors = ["#in-progress", "#completed", "#practice"];
 
@@ -252,35 +311,65 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         }
     }, [anchorMap]);
 
-    const displayModeToggle = <div className="d-flex flex-column align-items-center align-self-end w-max-content pb-3 pe-3">
-        <span>Display mode</span>
-        <StyledToggle
-            checked={displayMode === "cards"}
-            falseLabel="Table"
-            trueLabel="Cards"
-            onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}
-        />
+    // TODO: revert to StyledToggle when the component is more widely used (post-redesign)
+
+    // const displayModeToggle = <div className="d-flex flex-column align-items-center align-self-end w-max-content pb-3 pe-3">
+    //     <span>Display mode</span>
+    //     <StyledToggle
+    //         checked={displayMode === "cards"}
+    //         falseLabel="Table"
+    //         trueLabel="Cards"
+    //         onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}
+    //     />
+    const displayModeToggle = <div className="d-flex flex-column align-items-start pb-3 pe-3 col-8 col-sm-6 col-md-3">
+        <span>Display in</span>
+        <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
+            <option value="table">Table View</option>
+            <option value="cards">Card View</option>
+        </StyledDropdown>
     </div>;
 
-    const pastTestsToggle = <div className="d-flex flex-column align-items-center align-self-end w-max-content pb-3">
+    const pastTestsToggle = <div className="d-flex flex-column align-items-center w-max-content pb-3">
         <span>Past tests</span>
-        <StyledToggle
-            checked={showCompleted}
-            falseLabel="Hidden"
-            trueLabel="Shown"
-            onChange={() => setShowCompleted(c => !c)}
-        />
+        <div className="h-100 align-content-center">
+            <StyledToggle
+                checked={showCompleted}
+                falseLabel="Hidden"
+                trueLabel="Shown"
+                onChange={() => {
+                    const target = !showCompleted;
+                    setShowCompleted(target);
+                    setQuizStatuses(s => target ? [...s, QuizStatus.Complete, QuizStatus.Overdue] : s.filter(status => ![QuizStatus.Complete, QuizStatus.Overdue].includes(status)));
+                }}
+            />
+        </div>
     </div>;
 
-    const emptyAssignedMessage = <span className="text-muted">{showCompleted
-        ? "You have not completed any tests."
-        : "You have no tests in progress."
+    const filtersToggle = <div className="d-flex flex-column align-items-center justify-content-between w-max-content pb-3 ms-3">
+        <span>Filters</span>
+        <Button color="secondary" className={classNames("gameboards-filter-dropdown align-self-center", {"selected": showFilters})}
+            onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"/>
+    </div>;
+
+    const tabTopContent = <>
+        <div className="d-flex">
+            {displayModeToggle}
+            <Spacer/>
+            {above["sm"](deviceSize) && pastTestsToggle}
+            {filtersToggle}
+        </div>
+        <QuizFilters setShowCompleted={setShowCompleted} setQuizCreator={setQuizCreator} setQuizTitleFilter={setQuizTitleFilter} 
+            quizStatuses={quizStatusFilter} setQuizStatuses={setQuizStatuses} showFilters={showFilters}/>
+    </>;
+
+    const emptyAssignedMessage = <span className="text-muted">{assignedQuizzes.filter(q => q.status && [QuizStatus.Started, QuizStatus.NotStarted].includes(q.status)).length === 0
+        ? "You have no tests in progress."
+        : "No tests match your filters."
     }</span>;
 
-    const emptyPracticeMessage = <span className="text-muted">{showCompleted
-        ? "You have not completed any practice tests."
-        : "You have no practice tests in progress."
-    } Find some <Link to="/practice_tests">here</Link>!</span>;
+    const emptyPracticeMessage = <span className="text-muted">
+        No practice tests match your filters. Take some new tests <Link to="/practice_tests">here</Link>!
+    </span>;
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
@@ -296,10 +385,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                         ifNotFound={<Alert color="warning">Your test assignments failed to load, please try refreshing the page.</Alert>}
                     >
                         <div className="d-flex flex-column">
-                            <div className="d-flex justify-content-end">
-                                {displayModeToggle}
-                                {pastTestsToggle}
-                            </div>
+                            {tabTopContent}
                             {displayMode === "table" ? <Card>
                                 <AssignedQuizTable 
                                     quizzes={sortedAssignedQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
@@ -314,10 +400,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
                         ifNotFound={<Alert color="warning">Your practice test attempts failed to load, please try refreshing the page.</Alert>}
                     >
                         <div className="d-flex flex-column">
-                            <div className="d-flex justify-content-end">
-                                {displayModeToggle}
-                                {pastTestsToggle}
-                            </div>
+                            {tabTopContent}
                             {displayMode === "table" ? <Card>
                                 <PracticeQuizTable 
                                     quizzes={sortedPracticeQuizzes} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
