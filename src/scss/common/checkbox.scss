@@ -67,7 +67,7 @@
 
       .tick {
         position: absolute;
-        display: inline-block;
+        display: block;
         width: 22px;
         height: 22px;
         top: 4px;
@@ -93,7 +93,7 @@
           width: 5px;
           height: 2px;
           background-color: #fff;
-          left: 7px;
+          left: 6px;
           top: 12px;
         }
       }
