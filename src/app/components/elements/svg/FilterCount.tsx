@@ -5,11 +5,17 @@ import { Hexagon } from "./Hexagon";
 
 const filterIconWidth = 25;
 
-export const FilterCount = ({count}: {count: number}) => {
+export interface FilterCountProps extends React.SVGProps<SVGSVGElement> {
+    count: number;
+}
+
+export const FilterCount = (props: FilterCountProps) => {
+    const {count, ...rest} = props;
+
     return <svg
+        {...rest}
         width={`${filterIconWidth}px`}
         height={`${filterIconWidth}px`}
-        className="me-2"
     >
         <title>{`${count} filters selected`}</title>
         <g>

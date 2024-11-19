@@ -35,6 +35,7 @@ import { TrLink } from "../../elements/tables/TableLinks";
 import { StyledDropdown } from "../../elements/inputs/DropdownInput";
 import { StyledSelect } from "../../elements/inputs/StyledSelect";
 import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
+import { FilterCount } from "../../elements/svg/FilterCount";
 
 export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -348,11 +349,19 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         </div>
     </div>;
 
-    const filtersToggle = <div className="d-flex flex-column align-items-center justify-content-between w-max-content pb-3 ms-3">
-        <span>Filters</span>
-        <Button color="secondary" className={classNames("gameboards-filter-dropdown align-self-center", {"selected": showFilters})}
-            onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"/>
-    </div>;
+    // +!! converts a string to 0 if null or empty and 1 otherwise
+    const filterCount = +!!quizTitleFilter + +!!quizCreatorFilter + quizStatusFilter.length;
+
+    const filtersToggle = <Col xs={3} sm={2} md={1} className="pb-3 ms-3">
+        <Label className="w-100 d-flex flex-column align-items-center mb-0">
+            <span className="text-nowrap">
+                Filters
+                {<FilterCount count={filterCount ?? 0} className="ms-2 mb-1" />}
+            </span>
+            <Button color="secondary" className={classNames("w-100 gameboards-filter-dropdown align-self-center", {"selected": showFilters})}
+                onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"/>
+        </Label>
+    </Col>;
 
     const tabTopContent = <>
         <div className="d-flex">
