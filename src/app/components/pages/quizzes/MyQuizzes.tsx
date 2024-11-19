@@ -374,7 +374,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
             quizStatuses={quizStatusFilter} setQuizStatuses={setQuizStatuses} showFilters={showFilters}/>
     </>;
 
-    const emptyAssignedMessage = <span className="text-muted">{assignedQuizzes.filter(q => q.status && [QuizStatus.Started, QuizStatus.NotStarted].includes(q.status)).length === 0
+    const emptyAssignedMessage = <span className="text-muted">{!quizAssignments || quizAssignments.length === 0
         ? "You have no tests in progress."
         : "No tests match your filters."
     }</span>;
