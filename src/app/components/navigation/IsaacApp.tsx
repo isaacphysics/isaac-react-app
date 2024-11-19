@@ -94,6 +94,7 @@ import { TeacherRegistration } from "../pages/TeacherRegistration";
 import { WorkbookDownload } from "../pages/WorkbookDownload";
 import { RegistrationSuccess } from "../pages/RegistrationSuccess";
 import { Careers } from "../pages/Careers";
+import { IsaacCompetition } from "../pages/IsaacCompetition/IsaacCompetition";
 
 const ContentEmails = lazy(() => import("../pages/ContentEmails"));
 const MyProgress = lazy(() => import("../pages/MyProgress"));
@@ -175,6 +176,7 @@ export const IsaacApp = () => {
               {Routes}
               {/* Application pages */}
               <TrackedRoute exact path="/" component={Homepage} />
+              <TrackedRoute exact path="/national-computer-science-competition" component={IsaacCompetition} />
               <Redirect exact from="/home" to="/" />{" "}
               {/* historic route which might get reintroduced with the introduction of dashboards */}
               <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />

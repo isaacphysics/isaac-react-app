@@ -9,6 +9,7 @@ import classNames from "classnames";
 import { Dashboard } from "../elements/Dashboard";
 import { CareersBanner } from "../elements/CareersBanner";
 import Resources from "../elements/Resources";
+import TestimonialComment from "../elements/TestimonialComment";
 
 export const Homepage = () => {
   useEffect(() => {
@@ -112,17 +113,11 @@ export const Homepage = () => {
                 </div>
               </Row>
               <br />
-              <div className="resources-center-container">
-                <div className="resources-comment">
-                  <div className="resources-comment-content">
-                    <img src="/assets/star.svg" alt="Star" className="star-img" />
-                    <p className="text-left my-3 mx-3">
-                      According to the 2024 annual survey, Isaac Computer Science can save teachers three hours of work
-                      per week.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <TestimonialComment
+                imageSrc="/assets/star.svg"
+                altText="Star"
+                text="According to the 2024 annual survey, Isaac Computer Science can save teachers three hours of work per week."
+              />
             </Container>
           </section>
         )}

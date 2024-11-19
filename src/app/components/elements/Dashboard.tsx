@@ -71,7 +71,7 @@ const LoggedOutButton = ({ loggedIn }: { loggedIn: boolean | undefined }) => {
     <Row data-testid="show-me-buttons">
       {loggedOutButton.map(({ to, label }) => (
         <Col xs={12} lg={loggedIn ? 12 : 4} className="py-1" key={to}>
-          <Button size="lg" tag={Link} to={to} block className="homepage-button text-light">
+          <Button size="lg" tag={Link} to={to} block className="primary-button text-light">
             {label}
           </Button>
         </Col>
@@ -163,12 +163,12 @@ export const Dashboard = ({
   const loggedOutContent = (
     <Row>
       <Col lg={6} xs={12} className="pb-3">
-        <h1 className="homepage-title">The free online platform for computer science</h1>
-        <p className="mt-4 homepage-text">
+        <h1 className="primary-heading">The free online platform for computer science</h1>
+        <p className="mt-4 body-text">
           Welcome to Isaac Computer Science, the learning platform for GCSE and A level students and teachers.
         </p>
-        <p className="mt-4 mb-0 homepage-text">How we can help:</p>
-        <ul className="homepage-text">
+        <p className="mt-4 mb-0 body-text">How we can help:</p>
+        <ul className="body-text">
           <li>Access tailored content for your exam board to boost learning and revision</li>
           <li>Save time when planning lessons and homework</li>
           <li>Track progress on questions to pinpoint areas to work on</li>

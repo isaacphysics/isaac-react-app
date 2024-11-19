@@ -16,7 +16,7 @@ interface BreadcrumbTrailProps {
 // If you want to use it elsewhere, that is fine but you must consider the implications on the "Skip to main content"
 // link which needs to skip all static navigational elements (i.e. breadcrumbs).
 // We manage the ID of the "main content" with the mainContentId reducer.
-const BreadcrumbTrail = ({
+export const BreadcrumbTrail = ({
   currentPageTitle,
   intermediateCrumbs = [],
   collectionType,

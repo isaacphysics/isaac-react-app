@@ -4,6 +4,7 @@ import { selectors, useAppSelector } from "../../state";
 import { isStudent } from "../../services";
 import careerVideos from "../../assets/career_videos.json";
 import { Link } from "react-router-dom";
+import TestimonialComment from "./TestimonialComment";
 
 const CsAtWorkDescription = () => {
   const user = useAppSelector(selectors.user.orNull);
@@ -86,17 +87,15 @@ export const CareersBanner = () => {
               </CareerCard>
             </Col>
           </Row>
-          <div className="career-comment mt-4">
-            <div className="resources-comment-content d-flex align-items-center">
-              <img src="/assets/star.svg" alt="Star" className="star-img me-3" />
-              <p className="text-left my-3 mx-3 mb-0">
-                &quot;Isaac Computer Science is such a valuable resource for homework and revision. Attending one of
-                their discovery events expanded my understanding of computer science. Since then, I&apos;ve consistently
-                used the platform, finding it invaluable in my computer science journey.&quot; - Lauren Lo
-              </p>
-            </div>
-          </div>
         </Container>
+
+        <TestimonialComment
+          imageSrc="/assets/star.svg"
+          altText="Star"
+          text='"Isaac Computer Science is such a valuable resource for homework and revision. Attending one of
+                their discovery events expanded my understanding of computer science. Since then, I&apos;ve consistently
+                used the platform, finding it invaluable in my computer science journey." - Lauren Lo'
+        />
       </div>
     </Container>
   );
