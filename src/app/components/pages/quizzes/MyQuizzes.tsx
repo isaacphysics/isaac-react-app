@@ -34,6 +34,7 @@ import StyledToggle from "../../elements/inputs/StyledToggle";
 import { TrLink } from "../../elements/tables/TableLinks";
 import { StyledDropdown } from "../../elements/inputs/DropdownInput";
 import { StyledSelect } from "../../elements/inputs/StyledSelect";
+import { CollapsibleContainer } from "../../elements/CollapsibleContainer";
 
 export interface QuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -211,8 +212,8 @@ interface QuizFiltersProps {
 }
 
 const QuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, quizStatuses, setQuizStatuses, showFilters}: QuizFiltersProps) => {
-    return <div>
-        <Row className={classNames("my-gameboards-filters", {"shown": showFilters})}>
+    return <CollapsibleContainer expanded={showFilters}>
+        <Row>
             <Col xs={6}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by quiz title</span>
@@ -225,6 +226,8 @@ const QuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, quiz
                     <Input type="text" data-testid="title-filter" onChange={(e) => setQuizCreator(e.target.value)} />
                 </Label>
             </Col>
+        </Row>
+        <Row className="pb-3">
             <Col xs={12}>
                 <Label className="w-100">
                     <span className={"text-nowrap"}>Filter by status</span>
@@ -242,7 +245,7 @@ const QuizFilters = ({setShowCompleted, setQuizTitleFilter, setQuizCreator, quiz
                 </Label>
             </Col>
         </Row>
-    </div>;
+    </CollapsibleContainer>;
 };
 
 const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
