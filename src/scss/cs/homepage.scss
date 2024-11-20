@@ -182,6 +182,11 @@
     @media (max-width: 768px) {
       margin-bottom: 10px;
     }
+
+    &:hover {
+      text-decoration: underline;
+      border: 3px solid #ad0051;
+    }
   }
 
   &-tooltip-container {
@@ -195,7 +200,6 @@
       color: #fff;
       text-align: center;
       border-radius: 5px;
-      padding: 5px 0;
       position: absolute;
       z-index: 1;
       bottom: 125%;
@@ -232,7 +236,7 @@
     .resources-center-container {
       display: flex;
       flex-direction: column;
-  
+
       @media (min-width: 768px) {
         flex-direction: row;
         justify-content: space-between;
@@ -282,10 +286,6 @@
       gap: 10px;
       padding: 20px;
       text-align: center;
-
-      @media (max-width: 768px) {
-       
-      }
 
       .star-img {
         width: 26px;

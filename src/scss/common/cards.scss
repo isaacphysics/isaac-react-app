@@ -124,7 +124,11 @@
 
 .featured-news-item {
   background: #dddddd55;
-  max-width: 450px;
+  max-width: 350px;
+
+  @media (max-width: 768px) {
+    background: none;
+  }
 }
 
 .sign-up-tabs {

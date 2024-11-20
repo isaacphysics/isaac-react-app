@@ -43,7 +43,7 @@ export const Homepage = () => {
     <>
       <div id="homepage">
         <section id="call-to-action" className={`homepageHero ${user?.loggedIn ? "pb-lg-4" : ""}`}>
-          <Container className="pt-4 z1">
+          <Container className="pt-4 z1 pb-4">
             <Dashboard promoItem={teacherPromoItem} featuredNewsItem={featuredNewsItem} />
           </Container>
         </section>
@@ -101,7 +101,7 @@ export const Homepage = () => {
                             alt="Question Finder"
                             className="q-finder-image d-none d-md-block"
                           />
-                          <span className="tooltip-text">
+                          <span className="tooltip-text p-3">
                             You can build a gameboard by selecting the areas of interest, stage and difficulties.
                             <br />
                             You can select more than one entry in each area.
@@ -128,8 +128,8 @@ export const Homepage = () => {
 
         <section id="news">
           <Container
-            className={classNames("pt-4 pb-5", {
-              "mt-n4 pt-lg-0": user?.loggedIn ?? false,
+            className={classNames("pt-4 pb-2", {
+              "mt-3 pt-lg-0": user?.loggedIn ?? false,
             })}
           >
             <div data-testid={"news-carousel"} className="eventList pt-3 pt-md-4 pattern-03-reverse">
@@ -142,7 +142,7 @@ export const Homepage = () => {
         {user?.loggedIn && (
           <section id="events">
             <Container className="pt-4 pb-5">
-              <div className="eventList pt-5 pattern-03">
+              <div className="eventList pattern-03">
                 <h2 className="h-title text-center mb-4">Events</h2>
                 <p className="pt-4 pb-2 event-description text-center col-md-8 offset-md-2">
                   {"We offer free online events for students. Visit our "}
