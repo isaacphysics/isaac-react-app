@@ -55,7 +55,7 @@ export const CareersBanner = () => {
       <div className="career-background-img">
         <Container className="career-section">
           <h4 className="career-title mb-4">Careers</h4>
-          <Row className="career-media-row justify-content-center">
+          <Row className="career-media-row justify-content-center pb-5">
             <Col xs={12} sm={10} lg={6}>
               <CareerCard
                 imgSrc="/assets/cs_journeys.png"
