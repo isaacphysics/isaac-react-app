@@ -223,7 +223,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
                 questionDoc={doc}
             />}
-            {!readonly && isStaff(user) && <div className="eqn-editor-input">
+            {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
                     <Input type="text" onChange={updateEquation} value={textInput}
