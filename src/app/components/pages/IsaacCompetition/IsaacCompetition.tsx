@@ -6,6 +6,7 @@ import content from "./content";
 import "../../../../scss/cs/competition.scss";
 import IoECard from "./Section2/IoECard";
 import TestimonialComment from "../../elements/TestimonialComment";
+import CompetitionButton from "./CompetitionButton";
 
 const { section1, section2 } = content;
 
@@ -13,6 +14,13 @@ export const IsaacCompetition = () => {
   useEffect(() => {
     document.title = "Isaac " + SITE_SUBJECT_TITLE;
   }, []);
+
+  const buttons = [
+    {
+      to: "https://forms.office.com/Pages/ResponsePage.aspx?id=8MSlGfdLSE2oGxZmua5L9cVFgGPyQM5Ft1X2dOwymT9UMjdaVzZWRjRFUEhYUlY1WTZJMERZSkJTSS4u",
+      label: "Express your interest",
+    },
+  ];
 
   return (
     <>
@@ -32,7 +40,7 @@ export const IsaacCompetition = () => {
                   href={section1.note.xLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-decoration-none"
+                  className="text-decoration-underline"
                 >
                   X
                 </a>
@@ -41,12 +49,17 @@ export const IsaacCompetition = () => {
                   href={section1.note.facebookLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-decoration-none"
+                  className="text-decoration-underline"
                 >
                   Facebook
                 </a>
                 {` ${section1.note.callToAction}`}
               </p>
+              <Row className="justify-content-left mt-4">
+                <Col xs="auto">
+                  <CompetitionButton buttons={buttons} />
+                </Col>
+              </Row>
             </Col>
             <Col lg={4} md={6} className="order-lg-2 order-3 mt-4 mt-lg-0 pb-md-0">
               <img
