@@ -226,22 +226,21 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
-                    <Input type="text" onChange={updateEquation} value={textInput}
-                           placeholder="or type your expression here"/>
+                    <Input type="text" onChange={updateEquation} value={textInput} placeholder="or type your expression here"/>
                     <>
                         {siteSpecific(
-                            <Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId}>?</Button>,
-                            <span id={helpTooltipId} className="icon-help-q my-auto"/>
+                            <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>,
+                            <span id={helpTooltipId} className="icon-help-q my-auto ms-2"/>
                         )}
-                        {!modalVisible && <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
+                        <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
-                            A AND (B XOR NOT C)<br />
-                            A &amp; (B ^ !C)<br />
-                            T &amp; ~(F + A)<br />
-                            1 . ~(0 + A)<br />
+                            A and (B or not C)<br />
+                            A &amp; (B | !C)<br />
+                            True &amp; ~(False + Q)<br />
+                            1 . ~(0 + Q)<br />
                             As you type, the box above will preview the result.
-                        </UncontrolledTooltip>}
+                        </UncontrolledTooltip>
                     </>
                 </InputGroup>
                 <QuestionInputValidation userInput={textInput} validator={symbolicLogicInputValidator} />
