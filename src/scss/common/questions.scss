@@ -145,6 +145,21 @@ $inline-feedback-padding: 2px;
     }
   }
 
+  input.is-valid, button.is-valid {
+    border: solid 1px map-get($theme-colors, "success");
+    @include border-radius($input-border-radius, 0);
+  }
+
+  input.is-invalid, button.is-invalid {
+    border: solid 1px map-get($theme-colors, "failed");
+    @include border-radius($input-border-radius, 0);
+  }
+
+  input.is-unanswered, button.is-unanswered {
+    border: solid 1px map-get($theme-colors, "in-progress");
+    @include border-radius($input-border-radius, 0);
+  }
+
   $shadow-size: 2px;
   &.selected-feedback {
     box-shadow: 0 0 0 $shadow-size #000;
@@ -197,6 +212,26 @@ $inline-feedback-padding: 2px;
       button.btn {
         border: 1px solid black;
       }
+    }
+  }
+}
+
+.inline-multi-choice-container {
+  @extend .inline-container;
+
+  
+  button.btn {
+    min-width: unset;
+    font-family: $primary-font !important;
+    background-color: transparent;
+    border-radius: 0.35rem;
+
+    &:not(.is-valid):not(.is-invalid):not(.is-unanswered) {
+      border: $gray-136 solid 1px;
+    }
+
+    > div {
+      margin-top: -1px; // equal to the border width above, re-centres contents
     }
   }
 }
@@ -454,7 +489,7 @@ $inline-feedback-padding: 2px;
   }
 }
 
-.cloze-dropdown .toggle {
+.cloze-dropdown > button {
   min-width: unset !important; // Bootstrap thinks its important
   &.empty.empty {
     &, &:hover, &:active, &:focus { // Apply regardless of hover

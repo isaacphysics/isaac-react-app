@@ -1,12 +1,13 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
-import { selectQuestionPart } from "../../../../services";
+import { InlineQuestionType, selectQuestionPart } from "../../../../services";
 import { AppQuestionDTO, InlineContext, QuestionCorrectness } from "../../../../../IsaacAppTypes";
 import { selectors, useAppSelector } from "../../../../state";
 import classNames from "classnames";
 import { InlineStringEntryZone } from "../../inputs/InlineStringEntryZone";
 import { InlineNumericEntryZone } from "../../inputs/InlineNumericEntryZone";
-import { IsaacNumericQuestionDTO, IsaacStringMatchQuestionDTO, QuantityDTO } from "../../../../../IsaacApiTypes";
+import { InlineMultiChoiceEntryZone } from "../../inputs/InlineMultiChoiceEntryZone";
+import { IsaacMultiChoiceQuestionDTO, IsaacNumericQuestionDTO, IsaacStringMatchQuestionDTO, QuantityDTO } from "../../../../../IsaacApiTypes";
 import { InputProps } from "reactstrap";
 
 export function correctnessClass(correctness: QuestionCorrectness) {
@@ -44,7 +45,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
     const inlineInputId = inlineSpanId.replaceAll("_", "-") + "-input";
 
     const questionId = inlineContext?.elementToQuestionMap?.[inlineInputId]?.questionId;
-    const questionType = inlineContext?.elementToQuestionMap?.[inlineInputId]?.type;
+    const questionType = inlineContext?.elementToQuestionMap?.[inlineInputId]?.type as InlineQuestionType | undefined;
     const questionDTO = selectQuestionPart(pageQuestions, questionId);
 
     const elementIndex = Object.keys(inlineContext?.elementToQuestionMap ?? {}).indexOf(inlineInputId);
@@ -53,14 +54,15 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
     const [correctness, setCorrectness] = useState<QuestionCorrectness>("NOT_SUBMITTED");
     const [modified, setModified] = useState(false);
 
+    // TODO: separate out from inline questions, this is entirely independent
     const isUnanswered = useCallback((questionType?: string, questionDTO?: AppQuestionDTO): boolean => {  
         switch (questionType) {  
             case "isaacNumericQuestion": 
                 return questionDTO?.currentAttempt?.value === undefined && (questionDTO?.currentAttempt as QuantityDTO)?.units === undefined;  
-            case "isaacStringMatchQuestion": 
-                return questionDTO?.currentAttempt?.value === undefined;  
-            default: 
-                return false;  
+            case "isaacStringMatchQuestion":
+            case "isaacMultiChoiceQuestion":
+            default:
+                return questionDTO?.currentAttempt?.value === undefined;
         }  
     }, []);  
 
@@ -134,7 +136,9 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
         return null;
     }
 
-    function getComponent() {
+    function getComponent() : Exclude<React.ReactNode, undefined> {
+        if (!questionType) return null;
+        
         switch (questionType) {
             case "isaacNumericQuestion": {
                 return <InlineNumericEntryZone 
@@ -152,6 +156,18 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
                 return <InlineStringEntryZone 
                     correctness={correctness}
                     questionDTO={questionDTO as IsaacStringMatchQuestionDTO & AppQuestionDTO} 
+                    className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
+                    contentClasses={contentClasses}
+                    contentStyle={{width: widthPx, height: heightPx}}
+                    setModified={setModified}
+                    onFocus={() => inlineContext?.feedbackIndex !== undefined && inlineContext?.setFeedbackIndex(elementIndex)}
+                    focusRef={focusRef}
+                />;
+            }
+            case "isaacMultiChoiceQuestion": {
+                return <InlineMultiChoiceEntryZone
+                    correctness={correctness}
+                    questionDTO={questionDTO as IsaacMultiChoiceQuestionDTO & AppQuestionDTO} 
                     className={classNames(correctnessClass(correctness), {"selected-feedback": isSelectedFeedback})}
                     contentClasses={contentClasses}
                     contentStyle={{width: widthPx, height: heightPx}}
