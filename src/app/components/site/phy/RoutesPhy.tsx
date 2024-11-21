@@ -42,6 +42,7 @@ import { RegistrationTeacherConnect } from "../../pages/RegistrationTeacherConne
 import { RegistrationSuccess } from "../../pages/RegistrationSuccess";
 import { RegistrationSetPreferences } from "../../pages/RegistrationSetPreferences";
 import { RegistrationGroupInvite } from "../../pages/RegistrationGroupInvite";
+import { TeacherEmails } from "../../pages/TeacherEmails";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -138,6 +139,7 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/alevel" pageId="alevel" />,
     <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
     <TrackedRoute key={key++} exact path="/tutor_features" component={TutorFeatures}/>,
+    <TrackedRoute key={key++} exact path="/teacher_emails" component={TeacherEmails}/>,
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
     <TrackedRoute key={key++} exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>,
     <TrackedRoute key={key++} exact path="/news" component={News} />,

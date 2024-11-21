@@ -98,11 +98,12 @@ export const TeacherFeatures = () => {
             </Col>
             <Col xs={0} sm={3} className="d-md-none"/>
             <Col sm={6} md={4}>
-                <IsaacCard doc={{ clickUrl: "/pages/isaac_embedded_schools",
-                    image: {src: "/assets/phy/icons/teacher_features_sprite.svg#groups"},
-                    title: "Teacher Ambassadors",
+                <IsaacCard doc={{ clickUrl: isTeacherOrAbove(user)  ? "/teacher_emails" : "/pages/contact_us_teacher",
+                    image: {src: "/assets/phy/icons/computer.svg"},
+                    title: "Teacher Emails",
+                    disabled: isDisabled,
                     verticalContent: true,
-                    subtitle: "Learn from practising teachers how they have embedded Isaac Physics."}}
+                    subtitle: "Recent start-of-term emails sent to teachers."}}
                 imageClassName="teacher-features"
                 className="w-100"
                 />
