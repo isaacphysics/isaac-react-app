@@ -327,7 +327,7 @@ export function convertAssignmentToQuiz(assignment: QuizAssignmentDTO): Displaya
         isAssigned: true,
         title: assignment.quizSummary?.title,
         creationDate: assignment.creationDate,
-        setDate: assignment.scheduledStartDate,
+        setDate: assignment.scheduledStartDate ?? assignment.creationDate,
         startDate: assignment.attempt?.startDate,
         dueDate: assignment.dueDate,
         completedDate: assignment.attempt?.completedDate,
