@@ -16,6 +16,7 @@ import {
     convertAttemptToQuiz,
     DisplayableQuiz,
     extractTeacherName,
+    isPhy,
     isTutorOrAbove,
     QuizStatus,
     selectOnChange,
@@ -356,7 +357,7 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         <Label className="w-100 d-flex flex-column align-items-center mb-0">
             <span className="text-nowrap">
                 Filters
-                {<FilterCount count={filterCount ?? 0} className="ms-2 mb-1" />}
+                {<FilterCount count={filterCount ?? 0} widthPx={siteSpecific(25, 20)} className={classNames("ms-2", {"mb-1" : isPhy})}/>}
             </span>
             <Button color="secondary" className={classNames("w-100 gameboards-filter-dropdown align-self-center", {"selected": showFilters})}
                 onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"/>
