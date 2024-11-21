@@ -52,7 +52,6 @@ const PracticeQuizzesComponent = ({user}: QuizzesPageProps) => {
         <PageFragment fragmentId="help_toptext_practice_tests" />
         <ShowLoading until={quizzes}>
             {quizzes && <>
-                <h3>Available</h3>
                 {quizzes.length === 0 && <p><em>There are no practice tests currently available.</em></p>}
                 <Col xs={12} className="mb-4">
                     <Input type="text" placeholder="Filter tests by name..." value={filterText} onChange={(e) => setFilterText(e.target.value)} />
