@@ -321,4 +321,4 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
         boardLimit, setBoardLimit,
         boardTitleFilter, setBoardTitleFilter
     };
-}
+};
