@@ -16,7 +16,7 @@ import {currentYear, DateInput} from "../inputs/DateInput";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {StyledSelect} from "../inputs/StyledSelect";
-import {Button, FormFeedback, Label, UncontrolledTooltip} from "reactstrap";
+import {Alert, Button, FormFeedback, Label, UncontrolledTooltip} from "reactstrap";
 import { AppGroup } from "../../../../IsaacAppTypes";
 
 
@@ -163,6 +163,10 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
                        onChange={(e) => setDueDate(e.target.valueAsDate)}/>
             {dueDateInvalid && <small className={"pt-2 text-danger"}>{dueDate.valueOf() > TODAY().valueOf() ? "Due date must be on or after the start date." : `Due date must be after today.`}</small>}
         </Label>
+
+        <Alert color={siteSpecific("warning", "info")} className="py-1 px-2 mb-4">
+            From {siteSpecific("Jan", "January")} 2025, due dates will be required for assignments.
+        </Alert>
 
         <div className="w-100">
             <Button

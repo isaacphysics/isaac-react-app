@@ -131,6 +131,9 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
             {dueDateInvalid && startDateInvalid && <br/>}
         </Label>
+        <Alert color={siteSpecific("warning", "info")} className="py-1 px-2">
+            From {siteSpecific("Jan", "January")} 2025, due dates will be required for assignments.
+        </Alert>
         {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
                 spellCheck={true}

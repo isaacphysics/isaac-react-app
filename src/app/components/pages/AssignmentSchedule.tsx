@@ -488,6 +488,9 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
                        onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} />
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
         </Label>
+        <Alert color={siteSpecific("warning", "info")} className="py-1">
+            From January 2025, due dates will be required for assignments.
+        </Alert>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
                    spellCheck={true}

@@ -117,12 +117,15 @@ export const AdminUserManager = () => {
                 hasFilterSet = true;
             }
         }    
-        if (hasFilterSet) {
+        if (!hasFilterSet) {
+            alert("At least one search filter must be set.");
+        } 
+        else if (searchQuery.postcode && !/^[A-Z]{1,2}[0-9][A-Z0-9]? ?([0-9][A-Z]{2})?$/i.test(searchQuery.postcode)) {
+            alert("Postcode input invalid");
+        } 
+        else {
             adminSearchResultsRef.current?.scrollIntoView({behavior: "smooth"});
             searchUsers(searchQuery);
-        }
-        else {
-            alert("At least one search filter must be set.");
         }
     };
 
