@@ -379,9 +379,10 @@ const MyQuizzesPageComponent = ({user}: QuizzesPageProps) => {
         : "No tests match your filters."
     }</span>;
 
-    const emptyPracticeMessage = <span className="text-muted">
-        No practice tests match your filters. Take some new tests <Link to="/practice_tests">here</Link>!
-    </span>;
+    const emptyPracticeMessage = <span className="text-muted">{!freeAttempts || freeAttempts.length === 0
+        ? <>You have no practice tests. Take some new tests <Link to="/practice_tests">here</Link>!</>
+        : "No practice tests match your filters."
+    }</span>;
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
