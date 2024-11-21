@@ -3,12 +3,17 @@
 }
 
 .td-link {
-  height: 1px; // gives cells a set height, so height: 100% can be applied to links and it will reference the td's height. the actual height a td-link ends up taking will be determined by the content.
-  a {
-    display: block;
-    align-content: center;
-    height: 100%;
-    text-decoration: none !important;
+  vertical-align: middle;
+
+  &:has(> a) {
+    display: contents;
+
+    > a {
+      @extend td;
+      display: table-cell;
+      vertical-align: middle;
+      text-decoration: none !important;
+    }
   }
 }
 
