@@ -1,5 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {navigateToUserManager, paramsToObject, renderTestEnvironment} from "../testUtils";
+import {navigateToMyAccount, navigateToUserManager, paramsToObject, renderTestEnvironment} from "../testUtils";
 import {API_PATH, isDefined} from "../../app/services";
 import {http, HttpResponse} from "msw";
 import {handlerThatReturns} from "../../mocks/handlers";
@@ -139,7 +139,21 @@ describe("AdminUserManager", () => {
         expect(searchHandler).toHaveBeenCalledTimes(0);
     });
 
-    it.skip("shows no list of users after searching, leaving, and coming back. Also ensure that default search parameters are set.", async () => {
+    it("shows no table if no filters are set", async () => {
+        const searchHandler = handlerThatReturns({data: [buildMockUserSummary(mockUser, true)]});
+        renderTestEnvironment({
+            role: "ADMIN",
+            extraEndpoints: [
+                http.get(API_PATH + "/admin/users", searchHandler),
+            ]
+        });
+        await navigateToUserManager();
+        await expect(searchWithParams({},{searchHandler}))
+            .rejects
+            .toThrow();
+    });
+
+    it("shows no list of users after searching, leaving, and coming back.", async () => {
         const searchHandler = buildSearchHandler(
             {postcodeRadius: 'FIVE_MILES'},
             {
@@ -153,9 +167,9 @@ describe("AdminUserManager", () => {
             ]
         });
         await navigateToUserManager();
-        await searchWithParams({}, {expectNumberOfResults: 1, searchHandler});
+        await searchWithParams({role: mockUser.role}, {expectNumberOfResults: 1, searchHandler});
         // Navigate away from the page
-
+        await navigateToMyAccount();
         // Go back to the admin user manager page
         await navigateToUserManager();
         // The table should no longer be there, and the search endpoint should not have been accessed again
@@ -181,8 +195,6 @@ describe("AdminUserManager", () => {
             ]
         });
         await navigateToUserManager();
-        await searchWithParams({}, {expectNumberOfResults: 2, searchHandler});
-        searchHandler.mockClear();
         await searchWithParams(
             {familyName: mockUser.familyName},
             {expectNumberOfResults: 1, searchHandler, expectNames: [`${mockUser.familyName}, ${mockUser.givenName}`]}
@@ -226,7 +238,7 @@ describe("AdminUserManager", () => {
         });
         await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
-            {},
+            {role: mockUser.role},
             {
                 expectNumberOfResults: 1,
                 searchHandler
@@ -266,7 +278,7 @@ describe("AdminUserManager", () => {
         });
         await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
-            {},
+            {role: mockUser.role},
             {
                 expectNumberOfResults: 3,
                 searchHandler
@@ -322,7 +334,7 @@ describe("AdminUserManager", () => {
         });
         await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
-            {},
+            {role: mockUser.role},
             {
                 expectNumberOfResults: 3,
                 searchHandler
@@ -392,7 +404,7 @@ describe("AdminUserManager", () => {
         });
         await navigateToUserManager();
         const searchResultsTable = await searchWithParams(
-            {},
+            {role: mockUser.role},
             {
                 expectNumberOfResults: 1,
                 searchHandler

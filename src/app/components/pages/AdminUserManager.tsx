@@ -111,9 +111,18 @@ export const AdminUserManager = () => {
 
     const search = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (searchQuery.postcode && !/^[A-Z]{1,2}[0-9][A-Z0-9]? ?([0-9][A-Z]{2})?$/i.test(searchQuery.postcode)) {
+        let hasFilterSet = false;
+        for (const filter in searchQuery) {
+            if (filter && filter !== "postcodeRadius") {
+                hasFilterSet = true;
+            }
+        }    
+        if (!hasFilterSet) {
+            alert("At least one search filter must be set.");
+        } 
+        else if (searchQuery.postcode && !/^[A-Z]{1,2}[0-9][A-Z0-9]? ?([0-9][A-Z]{2})?$/i.test(searchQuery.postcode)) {
             alert("Postcode input invalid");
-        }
+        } 
         else {
             adminSearchResultsRef.current?.scrollIntoView({behavior: "smooth"});
             searchUsers(searchQuery);
