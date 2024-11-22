@@ -36,6 +36,9 @@ module.exports = env => {
                 }, {
                     from: resolve('public/unsupported_browsers/unsupported.js'),
                     to: 'unsupported_browser.js',
+                },{
+                    from: resolve('public/robots.txt'),
+                    to: 'robots.txt',
                 }]
             }),
         ],
