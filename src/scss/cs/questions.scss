@@ -40,11 +40,6 @@
   }
 }
 
-input.form-control.is-unanswered {
-  border: solid 1px $yellow-200;
-  @include border-radius($input-border-radius, 0);
-}
-
 // Quick questions
 .quick-question-title {
   display: flex;

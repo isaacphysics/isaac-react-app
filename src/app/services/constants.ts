@@ -1045,19 +1045,7 @@ export const NULL_CLOZE_ITEM: ItemDTO = {
 // Matches: all legacy, [inline-question:questionId class="{classes}"]
 export const inlineQuestionRegex = /\[inline-question:(?<id>[a-zA-Z0-9_-]+)(?<params> *\| *(?<width>w-\d+)?(?<height>h-\d+)?| +class=(?:["']|&apos;|&[rl]?quot;)(?<classes>[a-zA-Z0-9 _-]+?)(?:["']|&apos;|&[rl]?quot;))?\]/g;
 
-interface inlineQuestionType<T extends ChoiceDTO> {
-    choice: {
-        type: string,
-        dto: T, // since types can't be variables, we make an empty object of type T then use typeof
-    }
-}
-
-type inlineDTOTypes = StringChoiceDTO | QuantityDTO;
-
-export const inlineQuestionTypes : {[key: string]: inlineQuestionType<inlineDTOTypes>} = {
-    "isaacStringMatchQuestion": {choice: { type: "stringMatch", dto: {} as StringChoiceDTO}},
-    "isaacNumericQuestion": {choice: { type: "quantity", dto: {} as QuantityDTO}},
-};
+export type InlineQuestionType = "isaacStringMatchQuestion" | "isaacNumericQuestion" | "isaacMultiChoiceQuestion";
 
 export const AUTHENTICATOR_FRIENDLY_NAMES_MAP: {[key: string]: string} = {
     "RASPBERRYPI": "Raspberry Pi Foundation",
