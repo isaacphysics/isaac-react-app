@@ -3,13 +3,19 @@ import {Circle} from "./Circle";
 import { siteSpecific } from "../../../services";
 import { Hexagon } from "./Hexagon";
 
-const filterIconWidth = 25;
+export interface FilterCountProps extends React.SVGProps<SVGSVGElement> {
+    count: number;
+    widthPx?: number;
+}
 
-export const FilterCount = ({count}: {count: number}) => {
+export const FilterCount = (props: FilterCountProps) => {
+    const {count, widthPx, ...rest} = props;
+    const filterIconWidth = widthPx || 25;
+
     return <svg
+        {...rest}
         width={`${filterIconWidth}px`}
         height={`${filterIconWidth}px`}
-        className="me-2"
     >
         <title>{`${count} filters selected`}</title>
         <g>

@@ -33,6 +33,7 @@ import {ExamSpecificationsDirectory} from "../../pages/ExamSpecificationsDirecto
 import { StudentResources } from "../../pages/StudentResources";
 import { TeacherResources } from "../../pages/TeacherResources";
 import { CSProjects } from "../../pages/CSProjects";
+import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -66,6 +67,8 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/set_tests" ifUser={isTeacherOrAbove} component={SetQuizzes} />,
     // Student test pages
     <TrackedRoute key={key++} exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />,
+
+    <TrackedRoute key={key++} exact path="/practice_tests" ifUser={isLoggedIn} component={PracticeQuizzes} />,
 
     // Quiz (test) pages
     <TrackedRoute key={key++} exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />,

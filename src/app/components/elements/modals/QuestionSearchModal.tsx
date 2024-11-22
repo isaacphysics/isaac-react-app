@@ -255,10 +255,10 @@ export const QuestionSearchModal = (
                 <thead>
                     <tr className="search-modal-table-header">
                         <th className="w-5"> </th>
-                        <SortItemHeader
+                        <SortItemHeader<SortOrder>
                             className={siteSpecific("w-40", "w-30")}
                             setOrder={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
-                            defaultOrder={SortOrder.ASC as SortOrder}
+                            defaultOrder={SortOrder.ASC}
                             reverseOrder={SortOrder.DESC}
                             currentOrder={questionsSort['title']}
                             alignment="start"

@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardBody, Button, Row, Col, Table, UncontrolledTooltip, Spinner } from "reactstrap";
-import { BoardOrder, Boards } from "../../../IsaacAppTypes";
+import { AssignmentBoardOrder, Boards } from "../../../IsaacAppTypes";
 import { isPhy, siteSpecific, difficultiesOrdered, difficultyShortLabelMap, isAda, BoardViews, BoardCreators, BoardCompletions, matchesAllWordsInAnyOrder, formatBoardOwner, boardCompletionSelection } from "../../services";
 import { SortItemHeader } from "./SortableItemHeader";
 import { BoardCard } from "./cards/BoardCard";
@@ -21,8 +21,8 @@ export interface GameboardsTableProps {
     setBoardCreator: (creator: BoardCreators) => void;
     boardCompletion: BoardCompletions;
     setBoardCompletion: (boardCompletion: BoardCompletions) => void;
-    boardOrder: BoardOrder;
-    setBoardOrder: (boardOrder: BoardOrder) => void;
+    boardOrder: AssignmentBoardOrder;
+    setBoardOrder: (boardOrder: AssignmentBoardOrder) => void;
 }
 
 export interface GameboardsCardsProps {
@@ -55,7 +55,7 @@ const CSTable = (props: GameboardsTableProps) => {
     } = props;
 
     const tableHeader = <tr className="my-gameboard-table-header">
-        <SortItemHeader colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} defaultOrder={BoardOrder.title} reverseOrder={BoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
+        <SortItemHeader<AssignmentBoardOrder> colSpan={isPhy ? 1 : 4} className={siteSpecific("", "w-100")} defaultOrder={AssignmentBoardOrder.title} reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder} setOrder={setBoardOrder} alignment="start">
             {siteSpecific("Board name", "Quiz name")}
         </SortItemHeader>
         <th colSpan={2} className={classNames("long-titled-col", {"align-middle" : isPhy})}>
@@ -66,13 +66,13 @@ const CSTable = (props: GameboardsTableProps) => {
             </UncontrolledTooltip>
         </th>
         {isAda && <th>Creator</th>}
-        <SortItemHeader defaultOrder={BoardOrder.created} reverseOrder={BoardOrder["-created"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
+        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.created} reverseOrder={AssignmentBoardOrder["-created"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
             Created
         </SortItemHeader>
-        <SortItemHeader defaultOrder={BoardOrder.attempted} reverseOrder={BoardOrder["-attempted"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
+        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.attempted} reverseOrder={AssignmentBoardOrder["-attempted"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
             Attempted
         </SortItemHeader>
-        <SortItemHeader defaultOrder={BoardOrder.correct} reverseOrder={BoardOrder["-correct"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
+        <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.correct} reverseOrder={AssignmentBoardOrder["-correct"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
             Correct
         </SortItemHeader>
         {siteSpecific(

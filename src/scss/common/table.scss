@@ -1,3 +1,27 @@
 .table-row-dragging {
-    display: table;
+  display: table;
+}
+
+.td-link {
+  vertical-align: middle;
+
+  &:has(> a) {
+    display: contents;
+
+    > a {
+      @extend td;
+      display: table-cell;
+      vertical-align: middle;
+      text-decoration: none !important;
+    }
+  }
+}
+
+@mixin td-link-padding ($padding: 0.8rem 1rem) {
+  > td:not(.td-link), > td.td-link > a, td.td-link:not(:has(> a)) {
+    padding: $padding;
+  }
+  > td.td-link:has(> a) {
+    padding: 0;
+  }
 }

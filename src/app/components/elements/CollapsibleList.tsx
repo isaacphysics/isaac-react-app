@@ -41,7 +41,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
                 {title && <span>{title}</span>}
                 <Spacer/>
                 {(props.numberSelected ?? 0) > 0
-                    && <FilterCount count={props.numberSelected ?? 0} />}
+                    && <FilterCount count={props.numberSelected ?? 0} className="me-2" />}
                 <img className={classNames("icon-dropdown-90", {"active": expanded})} src={"/assets/common/icons/chevron_right.svg"} alt="" />
             </button>
         </div>
