@@ -139,7 +139,6 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/alevel" pageId="alevel" />,
     <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
     <TrackedRoute key={key++} exact path="/tutor_features" component={TutorFeatures}/>,
-    <TrackedRoute key={key++} exact path="/teacher_emails" component={TeacherEmails}/>,
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
     <TrackedRoute key={key++} exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>,
     <TrackedRoute key={key++} exact path="/news" component={News} />,
@@ -167,6 +166,7 @@ export const RoutesPhy = [
     // Teacher Pages
     <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teachermentoring_gcse" pageId="fragments/teacher_mentoring_gcse_page_frag" />,
     <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teachermentoring_alevel" pageId="fragments/teacher_mentoring_alevel_page_frag" />,
+    <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teacher_emails" pageId="fragments/teacher_emails_frag"/>,
 
     // Events
     <TrackedRoute key={key++} exact path='/events' component={Events}/>,

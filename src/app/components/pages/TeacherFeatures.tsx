@@ -98,7 +98,7 @@ export const TeacherFeatures = () => {
             </Col>
             <Col xs={0} sm={3} className="d-md-none"/>
             <Col sm={6} md={4}>
-                <IsaacCard doc={{ clickUrl: isTeacherOrAbove(user)  ? "/teacher_emails" : "/pages/contact_us_teacher",
+                <IsaacCard doc={{ clickUrl: "/teacher_emails",
                     image: {src: "/assets/phy/icons/computer.svg"},
                     title: "Teacher Emails",
                     disabled: isDisabled,
