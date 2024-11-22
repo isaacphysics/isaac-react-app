@@ -52,7 +52,7 @@ export const AccountDeletion = () => {
                 !token ? <p>You must have a valid token to delete your account. Visit your <Link to="/account">account page</Link> to generate a new email with a token.</p> : 
                     <>
                         <PageFragment fragmentId="account_deletion_final_warning" />
-                        <p>Please select the reason for deleting your account:</p>
+                        <p>Please select the reason you wish to delete your account:</p>
                         <DeletionReasonForm className="ms-2" deletionReason={deletionReason} setDeletionReason={setDeletionReason} />
                         <FormGroup check className="mt-4 ps-0">
                             <StyledCheckbox
