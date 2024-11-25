@@ -359,16 +359,8 @@ a:not(.btn):not(.nav-link) {
   }
 }
 
-.content-value {
-  a {
-    color: $dark-pink-300 !important;
-  }
-}
-
-strong {
-  a {
-    color: $dark-pink-300 !important;
-  }
+.content-value a, strong a, a strong, .btn.btn-inline-link {
+  color: $dark-pink-300 !important;
 }
 
 .content-summary-link {

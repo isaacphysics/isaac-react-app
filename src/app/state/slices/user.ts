@@ -24,6 +24,7 @@ export const userSlice = createSlice({
             ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE,
             ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS,
             ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS,
+            ACTION_TYPE.USER_DELETION_RESPONSE_SUCCESS,
         ].includes(action.type);
 
         builder.addMatcher(

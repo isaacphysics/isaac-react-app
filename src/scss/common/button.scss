@@ -60,3 +60,17 @@ button {
   line-height: 1.5;
   border-radius: 0.2rem;
 }
+
+.btn.btn-inline-link {
+  font-family: unset;
+  font-size: unset;
+  letter-spacing: unset;
+  min-width: unset;
+  text-decoration: underline;
+  vertical-align: top;
+  padding: 0 !important;
+  border: none;
+  &:hover {
+    text-decoration: none;
+  }
+}
