@@ -1,12 +1,12 @@
 import React, {useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Button} from "reactstrap";
-import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
+import {AssignmentProgressPageSettingsContext, ProgressSortOrder} from "../../../../IsaacAppTypes";
 import {isAuthorisedFullAccess, siteSpecific, TODAY} from "../../../services";
 import {Link} from "react-router-dom";
 import orderBy from "lodash/orderBy";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
 import { closeActiveModal, openActiveModal, useAppDispatch, useReturnQuizToStudentMutation } from "../../../state";
-import { ProgressSortOrder, SortItemHeader } from "../SortableItemHeader";
+import { SortItemHeader } from "../SortableItemHeader";
 import { AssignmentProgressDTO } from "../../../../IsaacApiTypes";
 
 export const ICON = siteSpecific(
@@ -133,9 +133,9 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
     , [semiSortedProgress, reverseOrder, sortOrder]);
 
     const tableHeaderFooter = <tr className="progress-table-header-footer">
-        <SortItemHeader className="student-name" defaultOrder={"name"} reverseOrder={"name"} currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}/>
+        <SortItemHeader<ProgressSortOrder> className="student-name" defaultOrder={"name"} reverseOrder={"name"} currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}/>
         {questions.map((q, index) =>
-            <SortItemHeader
+            <SortItemHeader<ProgressSortOrder>
                 key={q.id} className={`${isSelected(q)}`}
                 defaultOrder={index} reverseOrder={index} currentOrder={sortOrder}
                 setOrder={toggleSort}
@@ -147,14 +147,14 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
             </SortItemHeader>
         )}
         {isAssignment ? <>
-            <SortItemHeader
+            <SortItemHeader<ProgressSortOrder>
                 className="total-column left"
                 defaultOrder={"totalQuestionPartPercentage"}
                 reverseOrder={"totalQuestionPartPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}>
                 Total Parts
             </SortItemHeader>
-            <SortItemHeader
+            <SortItemHeader<ProgressSortOrder>
                 className="total-column right"
                 defaultOrder={"totalQuestionPercentage"}
                 reverseOrder={"totalQuestionPercentage"}
@@ -162,7 +162,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                 Total Qs
             </SortItemHeader>
         </> :
-        <SortItemHeader
+        <SortItemHeader<ProgressSortOrder>
             defaultOrder={"totalQuestionPartPercentage"}
             reverseOrder={"totalQuestionPartPercentage"}
             currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}

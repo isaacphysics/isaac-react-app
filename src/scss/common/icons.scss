@@ -27,6 +27,8 @@ polygon.fill-secondary {
   align-self: center;
   right: 5px;
   @extend .icon-dropdown-180;
+  transition: transform 0.15s ease-in-out;
+  opacity: 0.3;
 }
 
 @mixin icon-dropdown($deg) {
@@ -45,4 +47,8 @@ polygon.fill-secondary {
   &.active {
     @include icon-dropdown(90deg);
   }
+}
+
+img[aria-disabled="true"] {
+  opacity: 0.5;
 }
