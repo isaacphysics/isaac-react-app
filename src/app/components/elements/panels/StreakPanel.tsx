@@ -22,7 +22,7 @@ export const StreakPanel = ({userProgress}: {userProgress?: UserProgress | null}
         </Row>
         <div id="streak-help" className={"text-center-width"}>
             Longest streak: {largestWeeklyStreak}&nbsp;Week{largestWeeklyStreak !== 1 && "s"}<br/>
-           {currentDailyStreak >= 14 && `Daily streak: ${currentDailyStreak} Days`}
+            {currentDailyStreak >= 14 && `Daily streak: ${currentDailyStreak} Days`}
         </div>
         <RS.UncontrolledTooltip placement="bottom" target="streak-help">
             <div className="text-start">

@@ -92,7 +92,8 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             </IsaacContentValueOrChildren>
         </div>
         <div className="sketch-preview d-flex justify-content-center overflow-auto" onClick={openModal} onKeyUp={openModal} role={readonly ? undefined : "button"}
-             tabIndex={readonly ? undefined : 0}>
+            tabIndex={readonly ? undefined : 0}
+        >
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
         </div>
         {modalVisible && <GraphSketcherModal

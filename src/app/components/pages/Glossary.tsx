@@ -34,9 +34,11 @@ import Select from "react-select";
      - `valueWhileWaiting` while waiting
      - `valueWhenFound` any time *after the first time* `waitingFor` becomes truthy
  */
-export function useUntilFound<T, U>(waitingFor: T | NOT_FOUND_TYPE | null | undefined,
-                                    valueWhenFound: U,
-                                    valueWhileWaiting: any = undefined) {
+export function useUntilFound<T, U>(
+    waitingFor: T | NOT_FOUND_TYPE | null | undefined,
+    valueWhenFound: U,
+    valueWhileWaiting: any = undefined
+) {
     const [waiting, setWaiting] = useState(true);
     useEffect( () => {
         if (waiting) {
@@ -348,14 +350,13 @@ export const Glossary = () => {
                     </Col>
                     <Col>
                         {terms.map(term => <IsaacGlossaryTerm
-                                key={term.id}
-                                ref={(el: HTMLElement) => {
-                                    glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
-                                }}
-                                doc={term}
-                                linkToGlossary={true}
-                            />
-                        )}
+                            key={term.id}
+                            ref={(el: HTMLElement) => {
+                                glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
+                            }}
+                            doc={term}
+                            linkToGlossary={true}
+                        />)}
                     </Col>
                 </div>)}
             </Col>}

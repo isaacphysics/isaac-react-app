@@ -66,7 +66,8 @@ const GameboardsDisplaySettings = ({boardView, switchViewAndClearSelected, board
             <Label className="w-100 d-flex flex-column">
                 Filters
                 <Button color="secondary" className={classNames("gameboards-filter-dropdown", {"selected": showFilters})}
-                onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"/>
+                    onClick={() => setShowFilters(s => !s)} data-testid="filter-dropdown"
+                />
             </Label>
         </Col>
     </Row>;
@@ -132,7 +133,7 @@ export const MyGameboards = () => {
     } = useGameboards(
         isMobile() ? BoardViews.card : BoardViews.table,
         isMobile() ? BoardLimit.six : BoardLimit.All
-        );
+    );
 
     function confirmDeleteMultipleBoards() {
         if (confirm(`Are you sure you want to remove ${selectedBoards && selectedBoards.length > 1 ? selectedBoards.length + " boards" : selectedBoards[0].title} from your account?`)) {

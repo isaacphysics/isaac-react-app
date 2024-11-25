@@ -138,7 +138,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                                 </p>}
                             </div>}
                         </div>;
-                }} />
+                    }} />
                 <div className="mb-5">
                     <PageFragment fragmentId="event_type_descriptions" ifNotFound={RenderNothing}/>
                 </div>

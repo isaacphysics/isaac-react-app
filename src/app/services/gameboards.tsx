@@ -132,9 +132,9 @@ export const determineGameboardSubjects = (board?: GameboardDTO) => {
 };
 
 export const determineCurrentCreationContext = (currentGameboard: GameboardDTO | NOT_FOUND_TYPE | undefined, currentDocId: string) => {
-   if (isFound(currentGameboard) && currentGameboard.contents) {
+    if (isFound(currentGameboard) && currentGameboard.contents) {
         return currentGameboard.contents.filter(gameboardItem => gameboardItem.id === currentDocId)[0]?.creationContext;
-   }
+    }
 };
 
 

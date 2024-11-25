@@ -35,7 +35,7 @@ export const FooterPhy = () => (
                             </ExternalLink>.
                             
                             <br />Supported by {' '} <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">
-                            <strong>Department for Education</strong>
+                                <strong>Department for Education</strong>
                             </ExternalLink> and {' '} 
                             <ExternalLink href="https://www.ogdentrust.com/">
                                 <strong>The&nbsp;Ogden&nbsp;Trust</strong>

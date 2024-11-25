@@ -5,10 +5,10 @@ import { NonUndefined } from "@reduxjs/toolkit/dist/query/tsHelpers";
 import classNames from "classnames";
 
 function toggleSort<T>(
-        defaultOrder: T,
-        reverseOrder: T,
-        currentOrder: T,
-        setOrder: (order: T) => void) {
+    defaultOrder: T,
+    reverseOrder: T,
+    currentOrder: T,
+    setOrder: (order: T) => void) {
     if (currentOrder === defaultOrder) {
         setOrder(reverseOrder);
     } else {

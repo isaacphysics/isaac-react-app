@@ -136,8 +136,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                     <pre>{emailTemplate.plainText}</pre>
                 </RS.CardBody>
             </RS.Card>
-            </>
-        }
+        </>}
 
         <RS.Card className="mb-5">
             <RS.CardBody>

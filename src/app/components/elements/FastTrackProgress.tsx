@@ -329,7 +329,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             <Hexagon
                 {...hexagon} properties={hexagon.questionPartProgress}
                 states={question.questionPartStates} selector={state => state === "CORRECT"}
-             />
+            />
             {question.isCompleted ?
                 generateCompletionTick(question.isCurrentQuestion) :
                 generateHexagonTitle(question.hexagonTitle, question.isCurrentQuestion)}

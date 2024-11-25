@@ -104,8 +104,8 @@ export const assignMultipleQuiz = createAsyncThunk(
                     return rejectWithValue(null);
                 } else {
                     const partialSuccessMessage = `${successfulIds.length > 1
-                            ? "Some tests were saved successfully."
-                            : `Test assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`}`;
+                        ? "Some tests were saved successfully."
+                        : `Test assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`}`;
                     appDispatch(showSuccessToast(
                         `Test${successfulIds.length > 1 ? "s" : ""} saved`,
                         partialSuccessMessage
@@ -119,7 +119,7 @@ export const assignMultipleQuiz = createAsyncThunk(
             ));
             successfulIds.forEach(groupId => {
                 appDispatch(assignmentsApi.util.updateQueryData(
-                   "getMySetAssignments",
+                    "getMySetAssignments",
                     groupId,
                     (quizzesByMe => quizzesByMe.concat(
                         newQuizAssignments.filter(q => q.groupId === groupId)

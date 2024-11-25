@@ -81,8 +81,7 @@ beforeEach(() => {
         expect(canBook).toEqual(false);
     });
 
-    it("Returns false for an event already booked for the user",
-        () => {
+    it("Returns false for an event already booked for the user", () => {
         // Arrange
         event.userBookingStatus = 'CONFIRMED';
 

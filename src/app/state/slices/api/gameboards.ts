@@ -129,7 +129,7 @@ export const assignGameboard = createAsyncThunk(
             return newAssignments;
         } else {
             appDispatch(showRTKQueryErrorToastIfNeeded(
-            `${siteSpecific("Gameboard", "Quiz")} assignment${groups.length > 1 ? "(s)" : ""} failed`,
+                `${siteSpecific("Gameboard", "Quiz")} assignment${groups.length > 1 ? "(s)" : ""} failed`,
                 response
             ));
             return rejectWithValue(null);

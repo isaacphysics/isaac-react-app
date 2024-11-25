@@ -4804,22 +4804,22 @@ export const mockFragment = (pageId: string) => ({
 });
 
 export const buildMockPage = (pageId: string) => ({
-   "id": pageId,
-   "title": `Mock page: ${pageId}`,
-   "type": "page",
-   "encoding": "markdown",
-   "canonicalSourceFile": `content/mocks/${pageId}.json`,
-   "children": [
-       {
-           "type": "content",
-           "encoding": "markdown",
-           "children": [],
-           "value": "On this page, we have a mock.",
-           "tags": []
-       },
-   ],
-   "published": true,
-   "tags": []
+    "id": pageId,
+    "title": `Mock page: ${pageId}`,
+    "type": "page",
+    "encoding": "markdown",
+    "canonicalSourceFile": `content/mocks/${pageId}.json`,
+    "children": [
+        {
+            "type": "content",
+            "encoding": "markdown",
+            "children": [],
+            "value": "On this page, we have a mock.",
+            "tags": []
+        },
+    ],
+    "published": true,
+    "tags": []
 });
 
 export const mockSchool: School = {

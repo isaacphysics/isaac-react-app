@@ -184,7 +184,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 <div className="accordion-title ps-3">
                     <RS.Row className="h-100">
                         <div className="d-flex align-items-center p-0 h-100">
-                        {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
+                            {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
                             <span className="accordion-part p-3 text-secondary text-nowrap">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
                             {trustedTitle && <div className="p-3">
                                 <h2>
@@ -196,7 +196,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                             {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
                                 <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
                                 <RS.UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
-                                                        modifiers={[preventOverflow]}>
+                                    modifiers={[preventOverflow]}>
                                     {disabled}
                                 </RS.UncontrolledTooltip>
                             </div>}

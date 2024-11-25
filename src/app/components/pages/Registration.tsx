@@ -99,12 +99,11 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
             dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true})), true));
             // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
-            trackEvent("registration", {props:
-                        {
-                            provider: "SEGUE"
-                        }
+            trackEvent("registration", {
+                props: {
+                    provider: "SEGUE"
                 }
-            );
+            });
         }
     };
 

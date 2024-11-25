@@ -315,27 +315,27 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                                                 {...provided.dragHandleProps}
                                                 style={getStyle(provided.draggableProps.style, snapshot)}
                                             >
-                                                    <pre>
-                                                        {item.value}
-                                                        {canIndent && <div className="controls">
-                                                            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                                                            <span
-                                                                className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' }`}
-                                                                role="img" onMouseUp={() => reduceIndentation(index)}
-                                                                aria-label={`reduce indentation ${!canDecreaseIndentation ? "(disabled)" : ""}`}
-                                                            >
+                                                <pre>
+                                                    {item.value}
+                                                    {canIndent && <div className="controls">
+                                                        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+                                                        <span
+                                                            className={`reduce ${canDecreaseIndentation ? 'show' : 'hide' }`}
+                                                            role="img" onMouseUp={() => reduceIndentation(index)}
+                                                            aria-label={`reduce indentation ${!canDecreaseIndentation ? "(disabled)" : ""}`}
+                                                        >
                                                                 &nbsp;
-                                                            </span>
-                                                            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
-                                                            <span
-                                                                className={`increase ${canIncreaseIndentation ? 'show' : 'hide' }`}
-                                                                role="img" onMouseUp={() => increaseIndentation(index)}
-                                                                aria-label={`increase indentation ${!canIncreaseIndentation ? "(disabled)" : ""}`}
-                                                            >
+                                                        </span>
+                                                        {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+                                                        <span
+                                                            className={`increase ${canIncreaseIndentation ? 'show' : 'hide' }`}
+                                                            role="img" onMouseUp={() => increaseIndentation(index)}
+                                                            aria-label={`increase indentation ${!canIncreaseIndentation ? "(disabled)" : ""}`}
+                                                        >
                                                                 &nbsp;
-                                                            </span>
-                                                        </div>}
-                                                    </pre>
+                                                        </span>
+                                                    </div>}
+                                                </pre>
                                             </div>;
                                         }}
                                     </Draggable>;

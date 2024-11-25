@@ -125,24 +125,24 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     {boardStagesAndDifficulties.length > 0 && <p className="mb-0">
                         <table className="w-100">
                             <thead>
-                            <tr>
-                                <th className="w-50">
-                                    {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}:`}
-                                </th>
-                                <th className="w-50">
-                                    {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th className="w-50">
+                                        {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}:`}
+                                    </th>
+                                    <th className="w-50">
+                                        {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
-                            {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
-                                <td className="w-50 align-baseline">
-                                    {stageLabelMap[stage]}:
-                                </td>
-                                <td className="w-50 ps-1">
-                                    {difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}
-                                </td>
-                            </tr>)}
+                                {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
+                                    <td className="w-50 align-baseline">
+                                        {stageLabelMap[stage]}:
+                                    </td>
+                                    <td className="w-50 ps-1">
+                                        {difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}
+                                    </td>
+                                </tr>)}
                             </tbody>
                         </table>
                     </p>}

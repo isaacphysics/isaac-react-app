@@ -60,27 +60,27 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
                 :
                 <table className="quiz-marks-table">
                     <tbody>
-                    <tr>
-                        <th>Overall mark</th>
-                        <td>{attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</td>
-                    </tr>
-                    <tr>
-                        <th colSpan={2}>Section mark breakdown</th>
-                    </tr>
-                    {Object.keys(sections).map((k, index) => {
-                        const section = sections[k];
-                        return <tr key={k}>
-                            {attempt.feedbackMode === 'DETAILED_FEEDBACK' ?
-                                <td><Link replace to={pageLink(index + 1)}>{section.title}</Link></td> :
-                                <td>{section.title}</td>
-                            }
-                            <td>
-                                {attempt.quiz?.individualFeedback?.sectionMarks?.[section.id as string]?.correct}
-                                {" / "}
-                                {attempt.quiz?.sectionTotals?.[section.id as string]}
-                            </td>
-                        </tr>;
-                    })}
+                        <tr>
+                            <th>Overall mark</th>
+                            <td>{attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</td>
+                        </tr>
+                        <tr>
+                            <th colSpan={2}>Section mark breakdown</th>
+                        </tr>
+                        {Object.keys(sections).map((k, index) => {
+                            const section = sections[k];
+                            return <tr key={k}>
+                                {attempt.feedbackMode === 'DETAILED_FEEDBACK' ?
+                                    <td><Link replace to={pageLink(index + 1)}>{section.title}</Link></td> :
+                                    <td>{section.title}</td>
+                                }
+                                <td>
+                                    {attempt.quiz?.individualFeedback?.sectionMarks?.[section.id as string]?.correct}
+                                    {" / "}
+                                    {attempt.quiz?.sectionTotals?.[section.id as string]}
+                                </td>
+                            </tr>;
+                        })}
                     </tbody>
                 </table>;
     } else {
@@ -200,7 +200,7 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
                 </p>}
             </Col>
         </Row>
-    :
+        :
         <Alert color="danger">Test section {page} not found</Alert>
     ;
 }
@@ -221,13 +221,15 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser, use
     const crumbs = preview && isTeacherOrAbove(user) ? teacherQuizzesCrumbs : myQuizzesCrumbs;
     if (page === null) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
-                                   intermediateCrumbs={crumbs}/>;
+            intermediateCrumbs={crumbs}
+        />;
     } else {
         const sections = attempt.quiz?.children;
         const section = sections && sections[page - 1] as IsaacQuizSectionDTO;
         const sectionTitle = section?.title ?? "Section " + page;
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
-                                   intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink()}]}/>;
+            intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink()}]}
+        />;
     }
 };
 

@@ -36,5 +36,5 @@ export function StageAndDifficultySummaryIcons({audienceViews, className, stack}
                 </>}
             </div>
         </div>,
-   );
+    );
 }

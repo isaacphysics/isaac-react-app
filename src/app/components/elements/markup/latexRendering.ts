@@ -262,10 +262,10 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
                     macrosToUse = KatexBaseMacros;
                 }
                 macrosToUse = {...macrosToUse, "\\ref": (context: {consumeArgs: (n: number) => {text: string}[][]}) => {
-                        const args = context.consumeArgs(1);
-                        const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");
-                        return "\\text{" + REF + reference + ENDREF + "}";
-                    }};
+                    const args = context.consumeArgs(1);
+                    const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");
+                    return "\\text{" + REF + reference + ENDREF + "}";
+                }};
                 const katexOptions = {...customKatexOptions, displayMode: search.mode == "display", macros: macrosToUse, output: "html"} as KatexOptions;
                 let katexRenderResult = katex.renderToString(latexMunged, katexOptions);
                 katexRenderResult = katexRenderResult.replace(REF_REGEXP, (_, match) => {

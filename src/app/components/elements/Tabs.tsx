@@ -68,9 +68,9 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsPr
         <ButtonGroup className={"selector-tabs"}>
             {Object.keys(children).map((tabTitle, i) =>
                 <Button key={i} innerRef={el => buttonRefs.current[i] = el}
-                        color={"secondary"} outline={activeTab !== i + 1}
-                        tabIndex={0} onClick={() => changeTab(i + 1)}
-                        className={callOrString(tabTitleClass, tabTitle, i + 1)}
+                    color={"secondary"} outline={activeTab !== i + 1}
+                    tabIndex={0} onClick={() => changeTab(i + 1)}
+                    className={callOrString(tabTitleClass, tabTitle, i + 1)}
                 >
                     {tabTitle}
                 </Button>

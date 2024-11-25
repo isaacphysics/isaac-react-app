@@ -106,7 +106,7 @@ export const HeaderCS = () => {
                                             <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
                                             <LinkItem to={PATHS.MY_ASSIGNMENTS}>Work to do {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
                                         </>
-                                    :
+                                        :
                                         <>
                                             <LinkItem to={PATHS.MY_ASSIGNMENTS}>My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
                                             <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>

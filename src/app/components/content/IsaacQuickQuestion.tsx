@@ -69,9 +69,10 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
         };
         return <>
             <ConfidenceQuestions state={confidenceState} setState={setConfidenceState}
-                                 validationPending={validationPending} setValidationPending={setValidationPending}
-                                 disableInitialState={confidenceDisabled}
-                                 identifier={doc.id} type={"quick_question"} />
+                validationPending={validationPending} setValidationPending={setValidationPending}
+                disableInitialState={confidenceDisabled}
+                identifier={doc.id} type={"quick_question"}
+            />
             {isVisible && <Row className="mt-3 no-print">
                 <Col sm={12} md={!fastTrackInfo.isFastTrackPage ? siteSpecific({size: 10, offset: 1}, {size: 12}) : {}}>
                     <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isAda})} onClick={hideAnswer}>

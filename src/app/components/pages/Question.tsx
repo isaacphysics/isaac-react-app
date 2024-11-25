@@ -79,13 +79,13 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
             <Container className={classNames(doc.subjectId, "no-shadow")}>
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
-                      currentPageTitle={generateQuestionTitle(doc)}
-                      subTitle={doc.subtitle}
-                      intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
-                      collectionType={navigation.collectionType}
-                      audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
-                      preview={preview}
-                  >
+                    currentPageTitle={generateQuestionTitle(doc)}
+                    subTitle={doc.subtitle}
+                    intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
+                    collectionType={navigation.collectionType}
+                    audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
+                    preview={preview}
+                >
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                 </TitleAndBreadcrumb>
                 {!preview && <CanonicalHrefElement />}

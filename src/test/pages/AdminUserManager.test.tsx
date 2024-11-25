@@ -92,11 +92,11 @@ describe("AdminUserManager", () => {
             expect(searchResultsTable).toBeInTheDocument();
             return searchResultsTable;
         }, {onTimeout: (error) => {
-                if (isDefined(debug)) {
-                    screen.debug(undefined, 200000);
-                }
-                return error;
+            if (isDefined(debug)) {
+                screen.debug(undefined, 200000);
             }
+            return error;
+        }
         });
         if (isDefined(debug)) {
             screen.debug(searchResultsTable);

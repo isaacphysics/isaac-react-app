@@ -99,21 +99,21 @@ const CSTable = (props: GameboardsTableProps) => {
                 {tableHeader}
             </thead>
             <tbody>
-            {boards?.boards
-                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
-                .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                .filter(board => boardCompletionSelection(board, boardCompletion))
-                .map(board =>
-                    <BoardCard
-                        key={board.id}
-                        board={board}
-                        selectedBoards={selectedBoards}
-                        setSelectedBoards={setSelectedBoards}
-                        boardView={boardView}
-                        user={user}
-                        boards={boards}
-                    />)
-            }
+                {boards?.boards
+                    .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                    .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                    .filter(board => boardCompletionSelection(board, boardCompletion))
+                    .map(board =>
+                        <BoardCard
+                            key={board.id}
+                            board={board}
+                            selectedBoards={selectedBoards}
+                            setSelectedBoards={setSelectedBoards}
+                            boardView={boardView}
+                            user={user}
+                            boards={boards}
+                        />)
+                }
             </tbody>
         </Table>
     </div>;
@@ -133,15 +133,15 @@ const Cards = (props: GameboardsCardsProps) => {
     return filteredBoards && <>
         {<Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
             {filteredBoards.map(board => <Col key={board.id}>
-                    <BoardCard
-                        board={board}
-                        selectedBoards={selectedBoards}
-                        setSelectedBoards={setSelectedBoards}
-                        boardView={boardView}
-                        user={user}
-                        boards={boards}
-                    />
-                </Col>)}
+                <BoardCard
+                    board={board}
+                    selectedBoards={selectedBoards}
+                    setSelectedBoards={setSelectedBoards}
+                    boardView={boardView}
+                    user={user}
+                    boards={boards}
+                />
+            </Col>)}
         </Row>}
         <div className="text-center mt-3 mb-5" style={{clear: "both"}}>
             {boards.boards.length === filteredBoards.length

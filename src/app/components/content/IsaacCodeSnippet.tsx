@@ -45,11 +45,11 @@ const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
                 {isAda && window.ResizeObserver && <ScrollShadows element={scrollPromptRef} />}
                 <Row>
                     <Col>
-                    <pre ref={updateScrollPromptRef} className="line-numbers">
-                        <code ref={codeSnippetRef} className={doc.disableHighlighting ? 'plaintext' : doc.language}>
-                            {doc.code}
-                        </code>
-                    </pre>
+                        <pre ref={updateScrollPromptRef} className="line-numbers">
+                            <code ref={codeSnippetRef} className={doc.disableHighlighting ? 'plaintext' : doc.language}>
+                                {doc.code}
+                            </code>
+                        </pre>
                     </Col>
                 </Row>
             </div>

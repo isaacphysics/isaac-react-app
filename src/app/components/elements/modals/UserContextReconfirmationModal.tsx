@@ -90,7 +90,8 @@ const UserContextReconfirmationModalBody = () => {
         buildModalText(
             function buildConnectionsLink(text: string) {
                 return <a target={"_blank"} onClick={logReviewTeacherConnections} rel={"noopener noreferrer"}
-                        href={"/account#teacherconnections"}>
+                    href={"/account#teacherconnections"}
+                >
                     {text}
                     <span className={"visually-hidden"}> (opens in new tab) </span>
                 </a>;
@@ -101,7 +102,7 @@ const UserContextReconfirmationModalBody = () => {
                     {text}
                     <span className={"visually-hidden"}> (opens in new tab) </span>
                 </a>;
-        })[isTutorOrAbove(user) ? (isTeacherOrAbove(user) ? "teacher" : "tutor") : "student"],
+            })[isTutorOrAbove(user) ? (isTeacherOrAbove(user) ? "teacher" : "tutor") : "student"],
 
         // ada
         adaModalText(isTeacherOrAbove(user))

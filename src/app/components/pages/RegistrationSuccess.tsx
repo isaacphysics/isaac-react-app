@@ -29,10 +29,10 @@ export const RegistrationSuccess = () => {
                 </Row>
                 <Row className="justify-content-center">
                     <Col>
-                    {siteSpecific(
-                        <img className="img-fluid mx-auto mt-3 mb-4" src="/assets/common/icons/tick.svg" alt="" id="registration-complete-tick" />,
-                        <img className="img-fluid mx-auto my-5" src="/assets/cs/decor/verify_done.svg" alt="" />
-                    )}
+                        {siteSpecific(
+                            <img className="img-fluid mx-auto mt-3 mb-4" src="/assets/common/icons/tick.svg" alt="" id="registration-complete-tick" />,
+                            <img className="img-fluid mx-auto my-5" src="/assets/cs/decor/verify_done.svg" alt="" />
+                        )}
                     </Col>
                 </Row>
                 <Row className="justify-content-center">

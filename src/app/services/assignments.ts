@@ -32,22 +32,22 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
 
     if (assignments) {
         assignments
-        .map(createAssignmentWithStartDate)
-        .forEach(assignment => {
-            if (assignment.gameboard?.percentageCorrect !== 100) {
-                const noDueDateButRecent = !assignment.dueDate && (assignment.startDate > fourWeeksAgo);
-                const beforeDueDate = assignment.dueDate && (assignment.dueDate >= midnightLastNight);
-                if (beforeDueDate || noDueDateButRecent) {
-                    myAssignments.inProgressRecent.push(assignment);
-                } else if (assignment.gameboard?.percentageAttempted === 100) {
-                    myAssignments.allAttempted.push(assignment);
+            .map(createAssignmentWithStartDate)
+            .forEach(assignment => {
+                if (assignment.gameboard?.percentageCorrect !== 100) {
+                    const noDueDateButRecent = !assignment.dueDate && (assignment.startDate > fourWeeksAgo);
+                    const beforeDueDate = assignment.dueDate && (assignment.dueDate >= midnightLastNight);
+                    if (beforeDueDate || noDueDateButRecent) {
+                        myAssignments.inProgressRecent.push(assignment);
+                    } else if (assignment.gameboard?.percentageAttempted === 100) {
+                        myAssignments.allAttempted.push(assignment);
+                    } else {
+                        myAssignments.inProgressOld.push(assignment);
+                    }
                 } else {
-                    myAssignments.inProgressOld.push(assignment);
+                    myAssignments.allCorrect.push(assignment);
                 }
-            } else {
-                myAssignments.allCorrect.push(assignment);
-            }
-        });
+            });
         myAssignments.inProgressRecent = orderBy(myAssignments.inProgressRecent, ["dueDate", "startDate"], ["asc", "desc"]);
         myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["startDate"], ["desc"]);
         myAssignments.allAttempted = orderBy(myAssignments.allAttempted, ["startDate"], ["desc"]);
@@ -58,8 +58,9 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
 };
 
 export const filterAssignmentsByProperties = (assignments: AssignmentDTO[], assignmentTitleFilter: string,
-                                              assignmentGroupFilter: string,
-                                              assignmentSetByFilter:string): AssignmentDTO[] => {
+    assignmentGroupFilter: string,
+    assignmentSetByFilter: string
+): AssignmentDTO[] => {
     const filteredAssignments: AssignmentDTO[] = [];
 
     if (assignments) {

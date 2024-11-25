@@ -19,8 +19,9 @@ export const ProgrammingLanguageInput = ({programmingLanguage, setProgrammingLan
     };
 
     return <FormGroup className="form-group me-lg-5">
-        <Label className={classNames("fw-bold", (isRequired ? "form-required" : "form-optional"))}
-               htmlFor="programming-language-select">Preferred programming language</Label>
+        <Label className={classNames("fw-bold", (isRequired ? "form-required" : "form-optional"))} htmlFor="programming-language-select">
+            Preferred programming language
+        </Label>
         <StyledDropdown
             id="programming-language-select"
             value={Object.values(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) =>

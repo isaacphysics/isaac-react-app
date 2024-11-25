@@ -209,28 +209,28 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                     return null;
                                 }
                                 return <React.Fragment key={teacherAuthorisation.id}>
-                                <li style={style} className="py-2">
-                                    <div className="d-inline-flex connections-fixed-length-container">
-                                        <span className="icon-person-active" />
-                                        <span id={`teacher-authorisation-${teacherAuthorisation.id}`} className="connections-fixed-length-text">
-                                            {extractTeacherName(teacherAuthorisation)}
-                                        </span>
-                                    </div>
-                                    <RS.UncontrolledTooltip
-                                        placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
+                                    <li style={style} className="py-2">
+                                        <div className="d-inline-flex connections-fixed-length-container">
+                                            <span className="icon-person-active" />
+                                            <span id={`teacher-authorisation-${teacherAuthorisation.id}`} className="connections-fixed-length-text">
+                                                {extractTeacherName(teacherAuthorisation)}
+                                            </span>
+                                        </div>
+                                        <RS.UncontrolledTooltip
+                                            placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
                                         >
                                         This user ({teacherAuthorisation.email}) has access to your data.
                                         To remove this access, click &apos;Revoke&apos;.
-                                    </RS.UncontrolledTooltip>
-                                    <RS.Button
-                                        color="link" className="revoke-teacher pe-1"
-                                        disabled={editingOtherUser}
-                                        onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
+                                        </RS.UncontrolledTooltip>
+                                        <RS.Button
+                                            color="link" className="revoke-teacher pe-1"
+                                            disabled={editingOtherUser}
+                                            onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
                                         >
                                         Revoke
-                                    </RS.Button>
-                                </li>
-                            </React.Fragment>;
+                                        </RS.Button>
+                                    </li>
+                                </React.Fragment>;
                             }}
                         </FixedSizeList>
                     </ul>
@@ -363,7 +363,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     {isPhy && <>
                                                         <span id={`leave-group-action-${membership.group.id}`} className="icon-help membership-status-help-button" />
                                                         <RS.UncontrolledTooltip placement="bottom" target={`leave-group-action-${membership.group.id}`}
-                                                                                modifiers={[preventOverflow]}>
+                                                            modifiers={[preventOverflow]}
+                                                        >
                                                             If you leave a group you will no longer receive notifications of new assignments.
                                                         </RS.UncontrolledTooltip>
                                                     </>}
@@ -378,7 +379,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     {isPhy && <>
                                                         <span id={`rejoin-group-action-${membership.group.id}`} className="icon-help membership-status-help-button" />
                                                         <RS.UncontrolledTooltip placement="bottom" target={`rejoin-group-action-${membership.group.id}`}
-                                                                                modifiers={[preventOverflow]}>
+                                                            modifiers={[preventOverflow]}
+                                                        >
                                                             If you rejoin a group you will see all the assignments set since the group was created.
                                                         </RS.UncontrolledTooltip>
                                                     </>}

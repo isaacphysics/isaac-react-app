@@ -267,10 +267,12 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
                             </Button>
                         </td>}
                         {(userIsOwner || user?.id === manager.id) && <td className={"text-center"}>
-                            <Button className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "secondary")} onClick={() => userIsOwner ?
-                                removeManager(manager) : removeSelf(manager)}>
-                            Remove
-                        </Button></td>}
+                            <Button className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "secondary")} 
+                                onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}
+                            >
+                                Remove
+                            </Button>
+                        </td>}
                     </tr>
                 )}
             </tbody>

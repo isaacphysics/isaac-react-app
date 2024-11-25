@@ -91,18 +91,19 @@ export const AdminContentErrors = () => {
                         <Col>
                             <Table responsive bordered>
                                 <tbody>
-                                <tr>
-                                    <th>Title / Filename</th>
-                                    <th title="Is this file published?">Published</th>
-                                    <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
-                                    <th>List of Error Messages</th>
-                                </tr>
-                                {errors.errorsList
-                                    .filter((error) => error.listOfErrors.reduce(errorReducer, false))
-                                    .filter((error) =>
-                                        (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED))
+                                    <tr>
+                                        <th>Title / Filename</th>
+                                        <th title="Is this file published?">Published</th>
+                                        <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
+                                        <th>List of Error Messages</th>
+                                    </tr>
+                                    {errors.errorsList
+                                        .filter((error) => error.listOfErrors.reduce(errorReducer, false))
+                                        .filter((error) =>
+                                            (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED))
                                         || (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)) )
-                                    .map(ContentErrorRow)}
+                                        .map(ContentErrorRow)
+                                    }
                                 </tbody>
                             </Table>
                         </Col>

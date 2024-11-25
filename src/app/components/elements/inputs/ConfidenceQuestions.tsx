@@ -160,7 +160,8 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
             <h4 className={classNames({"text-muted": disabled && isAda})}>{confidenceVariables?.title}</h4>
             <div className="ms-2 mt-n1 not-mobile">
                 <Button outline={isPhy} color="primary" className={"confidence-help"} size="sm"
-                        onClick={() => dispatch(confidenceInformationModal())}>
+                    onClick={() => dispatch(confidenceInformationModal())}
+                >
                     {
                         isPhy && <i>i</i>
                     }
@@ -175,8 +176,9 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
         <Row className={"justify-content-center"}>
             {confidenceStateVariables.options.map(option => <Col key={option.label} xl={4} size={12} className={classNames("mb-2")}>
                 <Button outline={isAda} color={isAda ? "secondary" : option.color} disabled={disabled} block
-                        className={classNames({"active": isPhy && state === "followUp"})} type="submit"
-                        onClick={() => toggle(option.label, state)}>
+                    className={classNames({"active": isPhy && state === "followUp"})} type="submit"
+                    onClick={() => toggle(option.label, state)}
+                >
                     {option.label}
                 </Button>
             </Col>)}

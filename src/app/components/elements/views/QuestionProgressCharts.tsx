@@ -64,14 +64,14 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
     const isAllZero = (arr: (string | number)[][]) =>
         arr.filter((elem) =>
-                   typeof(elem[1]) === "number" ? elem[1] : parseInt(elem[1]) > 0
-                  ).length == 0;
+            typeof(elem[1]) === "number" ? elem[1] : parseInt(elem[1]) > 0
+        ).length == 0;
     const categoryColumns = tags.getSpecifiedTags(topTagLevel, tags.allTagIds).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const topicColumns = tags.getDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const difficultyColumns = stageChoices && questionsByStageAndDifficulty[stageChoices[0].value] ?
         Object.keys(questionsByStageAndDifficulty[stageChoices[0].value])
-        .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
-        .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoices[0].value][key]]) : [];
+            .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
+            .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoices[0].value][key]]) : [];
 
 
     useEffect(() => {
@@ -157,23 +157,23 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         No data
                     </span> :
                     <table className={"visually-hidden"}>
-                    <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>{subId}</th>
-                    </tr>
-                    </thead>
-					<tbody>
-                    {categoryColumns.map((val, key) => {
-                        return (
-                            <tr key={key}>
-                                <td>{val[0]}</td>
-                                <td>{val[1]}</td>
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>{subId}</th>
                             </tr>
-                        );
-                    })}
-					</tbody>
-                </table>}
+                        </thead>
+                        <tbody>
+                            {categoryColumns.map((val, key) => {
+                                return (
+                                    <tr key={key}>
+                                        <td>{val[0]}</td>
+                                        <td>{val[1]}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>}
             </div>
         </RS.Col>}
         {isAda && <RS.Col md={3}/>}
@@ -200,21 +200,21 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     </span> :
                     <table className={"visually-hidden"}>
                         <thead>
-                        <tr>
-                            <th>Topic</th>
-                            <th>{subId}</th>
-                        </tr>
+                            <tr>
+                                <th>Topic</th>
+                                <th>{subId}</th>
+                            </tr>
                         </thead>
-						<tbody>
-                        {topicColumns.map((val, key) => {
-                            return (
-                                <tr key={key}>
-                                    <td>{val[0]}</td>
-                                    <td>{val[1]}</td>
-                                </tr>
-                            );
-                        })}
-						</tbody>
+                        <tbody>
+                            {topicColumns.map((val, key) => {
+                                return (
+                                    <tr key={key}>
+                                        <td>{val[0]}</td>
+                                        <td>{val[1]}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
                     </table>}
             </div>
         </RS.Col>
@@ -242,21 +242,21 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     </span> :
                     <table className={"visually-hidden"}>
                         <thead>
-                        <tr>
-                            <th>Stage</th>
-                            <th>{subId}</th>
-                        </tr>
+                            <tr>
+                                <th>Stage</th>
+                                <th>{subId}</th>
+                            </tr>
                         </thead>
-						<tbody>
-                        {difficultyColumns.map((val, key) => {
-                            return (
-                                <tr key={key}>
-                                    <td>{val[0]}</td>
-                                    <td>{val[1]}</td>
-                                </tr>
-                            );
-                        })}
-						</tbody>
+                        <tbody>
+                            {difficultyColumns.map((val, key) => {
+                                return (
+                                    <tr key={key}>
+                                        <td>{val[0]}</td>
+                                        <td>{val[1]}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
                     </table>}
             </div>
         </RS.Col>}

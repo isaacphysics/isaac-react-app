@@ -239,9 +239,9 @@ export function generateMathsDerivativeAndLetters(symbol: string): { derivative:
         texBottom += `\\mathrm{d}${GREEK_LETTERS_MAP[letter] ? '\\' + letter : letter}`;
         if (order > 1) {
             o.children = { ...o.children, order: {
-                    type: 'Num',
-                    properties: { significand: `${order}` }
-                }};
+                type: 'Num',
+                properties: { significand: `${order}` }
+            }};
             texBottom += `^{${order}}`;
         }
         if (!o.children.order) {

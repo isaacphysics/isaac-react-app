@@ -40,25 +40,24 @@ const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GC
             // Overwrite subcategory with stage properties
             .map(subcategory => ({...subcategory, ...subcategory.stageOverride?.[stage]}))
             .map(subcategory => {
-                    const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
-                    const topicTags = tags.getTopicTags(subcategoryDescendentIds);
-                    const topicComponents =
-                        topicTags
-                            // Overwrite subcategory with stage properties
-                            .map(topic => ({...topic, ...topic.stageOverride?.[stage]}))
-                            .map(topic => <li className="border-0 px-0 py-0 pb-1 bg-transparent" key={topic.id}>
-                                {renderTopic(topic)}
-                            </li>);
-                    if (!subcategory.hidden && topicComponents.length > 0) {
-                        return <React.Fragment key={subcategory.id}>
-                            <h3>{subcategory.title}</h3>
-                            <ul className="list-unstyled mb-3 link-list">
-                                {topicComponents}
-                            </ul>
-                        </React.Fragment>;
-                    }
+                const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
+                const topicTags = tags.getTopicTags(subcategoryDescendentIds);
+                const topicComponents = topicTags
+                    // Overwrite subcategory with stage properties
+                    .map(topic => ({...topic, ...topic.stageOverride?.[stage]}))
+                    .map(topic => <li className="border-0 px-0 py-0 pb-1 bg-transparent" key={topic.id}>
+                        {renderTopic(topic)}
+                    </li>);
+                if (!subcategory.hidden && topicComponents.length > 0) {
+                    return <React.Fragment key={subcategory.id}>
+                        <h3>{subcategory.title}</h3>
+                        <ul className="list-unstyled mb-3 link-list">
+                            {topicComponents}
+                        </ul>
+                    </React.Fragment>;
                 }
-            )}
+            })
+        }
     </Col>;
 };
 

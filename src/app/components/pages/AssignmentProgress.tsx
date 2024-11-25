@@ -95,19 +95,19 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         };
 
         const ret = (p.results || []).reduce<AuthorisedAssignmentProgress>((oldP, results, i) => {
-                const tickCount = ["PASSED", "PERFECT"].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
-                const questions = assignment.gameboard.contents;
-                return {
-                    ...oldP,
-                    tickCount,
-                    correctQuestionPartsCount: oldP.correctQuestionPartsCount + (p.correctPartResults || [])[i],
-                    incorrectQuestionPartsCount: oldP.incorrectQuestionPartsCount + (p.incorrectPartResults || [])[i],
-                    notAttemptedPartResults: [
-                        ...oldP.notAttemptedPartResults,
-                        (questions[i].questionPartsTotal - (p.correctPartResults || [])[i] - (p.incorrectPartResults || [])[i])
-                    ]
-                };
-            }, initialState);
+            const tickCount = ["PASSED", "PERFECT"].includes(results) ? oldP.tickCount + 1 : oldP.tickCount;
+            const questions = assignment.gameboard.contents;
+            return {
+                ...oldP,
+                tickCount,
+                correctQuestionPartsCount: oldP.correctQuestionPartsCount + (p.correctPartResults || [])[i],
+                incorrectQuestionPartsCount: oldP.incorrectQuestionPartsCount + (p.incorrectPartResults || [])[i],
+                notAttemptedPartResults: [
+                    ...oldP.notAttemptedPartResults,
+                    (questions[i].questionPartsTotal - (p.correctPartResults || [])[i] - (p.incorrectPartResults || [])[i])
+                ]
+            };
+        }, initialState);
         return [ret, questions.length === ret.tickCount];
     }), [assignment.gameboard.contents, assignment.progress, questions.length]);
 
@@ -191,8 +191,9 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
     };
 
     return <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} header={tableHeader} getQuestionTitle={getQuestionTitle} 
-    assignmentAverages={assignmentAverages} assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
-    isAssignment={true}/>;
+        assignmentAverages={assignmentAverages} assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
+        isAssignment={true}
+    />;
 };
 
 const ProgressLoader = ({assignment}: {assignment: EnhancedAssignment}) => {

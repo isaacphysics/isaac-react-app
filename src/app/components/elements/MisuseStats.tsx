@@ -9,20 +9,20 @@ const EventMisuseTable = ({topMisuses}: {topMisuses: MisuseStatisticDTO[]}) => {
     const [resetMisuseMonitor] = useResetMisuseMonitorMutation();
     return topMisuses.length === 0 ? <span className={"font-italic"}>No misuse statistics for this event type! 🎉</span> : <Table>
         <thead>
-        <tr>
-            <th>Agent identifier</th>
-            <th>Current event counter</th>
-            <th>Last recorded event</th>
-            <th>Misused?</th>
-        </tr>
+            <tr>
+                <th>Agent identifier</th>
+                <th>Current event counter</th>
+                <th>Last recorded event</th>
+                <th>Misused?</th>
+            </tr>
         </thead>
         <tbody>
-        {topMisuses.map((m, i) => <tr key={i}>
-            <td>{m.agentIdentifier}</td>
-            <td>{m.currentCounter}{" "}{m.currentCounter > 0 && <Button className={"float-end"} size={"sm"} onClick={() => resetMisuseMonitor({eventLabel: m.eventType, agentIdentifier: m.agentIdentifier})}>Reset</Button>}</td>
-            <td>{m.lastEventTimestamp ? (new Date(m.lastEventTimestamp)).toString() : "None"}</td>
-            <td>{m.isMisused ? <span className={"text-danger fw-bold"}>Yes</span> : (m.isOverSoftThreshold ? <span className={"text-warning fw-bold"}>Almost</span> : "No")}</td>
-        </tr>)}
+            {topMisuses.map((m, i) => <tr key={i}>
+                <td>{m.agentIdentifier}</td>
+                <td>{m.currentCounter}{" "}{m.currentCounter > 0 && <Button className={"float-end"} size={"sm"} onClick={() => resetMisuseMonitor({eventLabel: m.eventType, agentIdentifier: m.agentIdentifier})}>Reset</Button>}</td>
+                <td>{m.lastEventTimestamp ? (new Date(m.lastEventTimestamp)).toString() : "None"}</td>
+                <td>{m.isMisused ? <span className={"text-danger fw-bold"}>Yes</span> : (m.isOverSoftThreshold ? <span className={"text-warning fw-bold"}>Almost</span> : "No")}</td>
+            </tr>)}
         </tbody>
     </Table>;
 };

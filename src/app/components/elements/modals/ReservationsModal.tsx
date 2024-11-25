@@ -193,9 +193,9 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
     const isReservationLimitReached = () => {
         if (event.groupReservationLimit) {
             const bookings = eventBookingsForGroup?.filter(booking =>
-                    (booking.bookingStatus === "CONFIRMED" || booking.bookingStatus === "RESERVED" || booking.bookingStatus ==="WAITING_LIST")
+                (booking.bookingStatus === "CONFIRMED" || booking.bookingStatus === "RESERVED" || booking.bookingStatus ==="WAITING_LIST")
                     && booking.reservedById === user?.id
-                )
+            )
                 // teachers should not count toward student event limits
                 .filter(booking => !event.isAStudentEvent || booking.userBooked?.role === "STUDENT") ?? [];
 
@@ -252,9 +252,9 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                         <>
                             <Table bordered responsive className="bg-white reserved">
                                 <thead>
-                                <tr>
-                                    <th colSpan={4}>All current reservations</th>
-                                </tr>
+                                    <tr>
+                                        <th colSpan={4}>All current reservations</th>
+                                    </tr>
                                     <tr>
                                         <th className="align-middle checkbox">
                                             <Input

@@ -21,7 +21,7 @@ export const FamilyNameInput = ({className, userToUpdate, setUserToUpdate, nameV
             type="text"
             name="last-name"
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {familyName: e.target.value} : {familyName: null}))
+                setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {familyName: e.target.value} : {familyName: null}))
             }
             invalid={submissionAttempted && !nameValid}
             defaultValue={userToUpdate.familyName}
@@ -35,8 +35,9 @@ export const FamilyNameInput = ({className, userToUpdate, setUserToUpdate, nameV
 
 export const GivenNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
     return <FormGroup className={`form-group ${className}`}>
-        <Label className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}
-               htmlFor="given-name-input">First name</Label>
+        <Label className={classNames("fw-bold", (required ? "form-required" : "form-optional"))} htmlFor="given-name-input">
+            First name
+        </Label>
         <Input
             id="given-name-input"
             name="givenName"

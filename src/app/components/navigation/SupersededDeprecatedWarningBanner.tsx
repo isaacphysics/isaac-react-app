@@ -56,13 +56,11 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: SeguePageDTO}) {
             </>} {teacherMessage}
         </> :
         // If question is superseded but not deprecated
-        (supersededBy && !isStudent(user) ? <>
+            (supersededBy && !isStudent(user) ? <>
                 This question has been replaced by {" "}
-            <RS.Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
-                this question
-            </RS.Button>. {teacherMessage}
-        </> :
-        // If neither deprecated or superseded, render nothing (although this should happen at the top of the component anyway)
-        RenderNothing)}
+                <RS.Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
+                    this question
+                </RS.Button>. {teacherMessage}
+            </> : RenderNothing)} {/* If neither deprecated or superseded, render nothing (although this should happen at the top of the component anyway) */}
     </RS.Alert>;
 }
