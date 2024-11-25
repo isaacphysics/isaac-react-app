@@ -33,12 +33,12 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const chemistry = filters.includes(TAG_ID.chemistry);
     const biology = filters.includes(TAG_ID.biology);
 
-    let [searchText, setSearchText] = useState(query);
-    let [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
-    let [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
-    let [conceptFilterChemistry, setConceptFilterChemistry] = useState(chemistry);
-    let [conceptFilterBiology, setConceptFilterBiology] = useState(biology);
-    let [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
+    const [searchText, setSearchText] = useState(query);
+    const [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
+    const [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
+    const [conceptFilterChemistry, setConceptFilterChemistry] = useState(chemistry);
+    const [conceptFilterBiology, setConceptFilterBiology] = useState(biology);
+    const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {

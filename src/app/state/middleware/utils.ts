@@ -1,5 +1,5 @@
 export const MOST_RECENT_AUGUST = () => {
-    let date = new Date();
+    const date = new Date();
     if (date.getMonth() < 7) { // Month is 0-indexed for some stupid reason
         date.setFullYear(date.getFullYear() - 1);
     }

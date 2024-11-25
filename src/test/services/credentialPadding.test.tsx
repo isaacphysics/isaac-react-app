@@ -29,16 +29,16 @@ describe("Credentials are securely padded",  () => {
     });
 
     it("padded length = 256", () => {
-        let paddedLength = utf8ByteLength(JSON.stringify(paddedCredentials));
+        const paddedLength = utf8ByteLength(JSON.stringify(paddedCredentials));
         expect(paddedLength).toEqual(256);
     });
 
     it("long credential padding 2^N", () => {
-        let longCredentials = {email: "test@test.com", password: "a".repeat(300), rememberMe: false} as CredentialsAuthDTO;
-        let paddedLongCredentials = securePadCredentials(longCredentials);
-        let paddedLength = utf8ByteLength(JSON.stringify(paddedLongCredentials));
-        let log2OfLength = Math.log2(paddedLength);
-        let intergerPowerOfTwo = Math.floor(log2OfLength);
+        const longCredentials = {email: "test@test.com", password: "a".repeat(300), rememberMe: false} as CredentialsAuthDTO;
+        const paddedLongCredentials = securePadCredentials(longCredentials);
+        const paddedLength = utf8ByteLength(JSON.stringify(paddedLongCredentials));
+        const log2OfLength = Math.log2(paddedLength);
+        const intergerPowerOfTwo = Math.floor(log2OfLength);
         expect(log2OfLength).toEqual(intergerPowerOfTwo);
     });
 });
@@ -56,7 +56,7 @@ describe("Password resets are securely padded",  () => {
     });
 
     it("password reset padded length = 256", () => {
-        let paddedLength = utf8ByteLength(JSON.stringify(paddedCredentials));
+        const paddedLength = utf8ByteLength(JSON.stringify(paddedCredentials));
         expect(paddedLength).toEqual(256);
     });
 });

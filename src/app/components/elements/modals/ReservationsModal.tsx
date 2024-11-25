@@ -78,7 +78,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
         if (groupMembers) {
             const bookedUserIds = eventBookingsForGroup?.filter(booking => booking.userBooked?.id && booking.bookingStatus !== "CANCELLED")
                 .map(booking => booking.userBooked && booking.userBooked.id) ?? [];
-            let newCancelReservationCheckboxes: {[id: number]: boolean} = {};
+            const newCancelReservationCheckboxes: {[id: number]: boolean} = {};
             for (const userId of bookedUserIds) {
                 if (userId) {
                     newCancelReservationCheckboxes[userId] = false;
@@ -93,7 +93,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                     .filter(member => !(event.isStudentOnly && member.role !== "STUDENT")),
                 ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']
             );
-            let newUserCheckboxes: {[id : number]: boolean} = {};
+            const newUserCheckboxes: {[id : number]: boolean} = {};
             for (const user of newUnbookedUsers) {
                 if (!user.id || !user.authorisedFullAccess) continue;
                 newUserCheckboxes[user.id] = false;
@@ -115,7 +115,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
     const toggleAllUnbooked = () => {
         setCheckAllCheckbox(!checkAllCheckbox);
-        let checkboxes = { ...userCheckboxes };
+        const checkboxes = { ...userCheckboxes };
         for (const id in userCheckboxes) {
             if (unbookedUsersById[id].emailVerificationStatus === "VERIFIED") {
                 checkboxes[id] = !checkAllCheckbox;
@@ -135,7 +135,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
     const toggleAllCancelReservationCheckboxes = () => {
         setCheckAllCancelReservationsCheckbox(!checkAllCancelReservationsCheckbox);
-        let checkboxes = { ...cancelReservationCheckboxes };
+        const checkboxes = { ...cancelReservationCheckboxes };
         for (const id in cancelReservationCheckboxes) {
             checkboxes[id] = !checkAllCancelReservationsCheckbox;
         }

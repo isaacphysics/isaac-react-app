@@ -71,7 +71,7 @@ function convertQuestionChoicesToJson(questionChoices: (FreeTextRule & {choiceNu
 }
 
 function convertJsonToQuestionChoices(jsonString: string) {
-    let parsedJson = JSON.parse(jsonString);
+    const parsedJson = JSON.parse(jsonString);
     let choicesArray;
     if (Array.isArray(parsedJson)) {
         choicesArray = parsedJson;

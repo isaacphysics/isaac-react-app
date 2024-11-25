@@ -7,7 +7,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     const [showShareLink, setShowShareLink] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
-    let shortenedLinkUrl = linkUrl;
+    const shortenedLinkUrl = linkUrl;
     // FIXME reintroduce share URL shortening?
     // const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
     // if (isAda && segueEnvironment !== "DEV") {

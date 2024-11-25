@@ -116,9 +116,9 @@ export const determineGameboardSubjects = (board?: GameboardDTO) => {
         return ["physics"];
     }
     const subjects = ["physics", "maths", "chemistry", "biology"];
-    let allSubjects: string[] = [];
+    const allSubjects: string[] = [];
     board.contents?.map((item) => {
-        let tags = intersection(subjects, item.tags || []);
+        const tags = intersection(subjects, item.tags || []);
         tags.forEach(tag => allSubjects.push(tag));
     }
     );
@@ -126,7 +126,7 @@ export const determineGameboardSubjects = (board?: GameboardDTO) => {
     if (allSubjects.length === 0) {
         allSubjects.push("physics");
     }
-    let enumeratedSubjects = countBy(allSubjects);
+    const enumeratedSubjects = countBy(allSubjects);
     return Object.keys(enumeratedSubjects).sort(function (a, b) {return subjects.indexOf(a) - subjects.indexOf(b);})
         .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a];});
 };

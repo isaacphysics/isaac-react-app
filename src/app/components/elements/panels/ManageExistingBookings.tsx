@@ -56,7 +56,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
     }));
 
     function relevantUsers (bookingType: string) {
-        let idsToReturn: number[] = [];
+        const idsToReturn: number[] = [];
         augmentedEventBookings?.map((booking: EventBookingDTO & {schoolName?: string}) => {
             if (booking.userBooked?.id && booking.bookingStatus == bookingType) {
                 idsToReturn.push(booking.userBooked.id);
@@ -233,7 +233,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                     </RS.DropdownToggle>
                     <RS.DropdownMenu>
                         {Object.keys(bookingStatusMap).map((key, index)  => {
-                            let usersWithStatus = relevantUsers(key);
+                            const usersWithStatus = relevantUsers(key);
                             if (atLeastOne(usersWithStatus.length)) {
                                 return <RS.DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(usersWithStatus))}>
                                     Email {bookingStatusMap[key as BookingStatus]} users

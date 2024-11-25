@@ -180,7 +180,7 @@ function startMatch(match: RegExpMatchArray): Search {
             olen: match[0].length
         };
     } else if (match[0].substr(0,6) === "\\begin") {  // \begin{...}
-        let end = "\\end{" + match[1] + "}";
+        const end = "\\end{" + match[1] + "}";
         return {
             end: end, mode: "display", pcount: 0,
             endPattern: endPattern(end),
@@ -242,7 +242,7 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
         index = match.index;
 
         // Find blocks of LaTeX
-        let search = startMatch(match);
+        const search = startMatch(match);
         if (search.just) {
             output += search.just;
             index = match.index + match[0].length;

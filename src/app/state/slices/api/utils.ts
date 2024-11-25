@@ -41,7 +41,7 @@ export const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQ
             return headers;
         }
     };
-    let result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
+    const result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
     if (result.error &&
         (typeof(result.error.status) === "number" ? result.error.status : parseInt(result.error.status)) >= 500 &&
         !(result.error.data as {bypassGenericSiteErrorPage?: boolean})?.bypassGenericSiteErrorPage) {

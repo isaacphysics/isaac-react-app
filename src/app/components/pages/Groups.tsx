@@ -227,7 +227,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
     }
 
     function groupUserIds(group?: AppGroup) {
-        let groupUserIdList: number[] = [];
+        const groupUserIdList: number[] = [];
         group && group.members && group.members.map((member: AppGroupMembership) =>
             member.groupMembershipInformation.userId && member.authorisedFullAccess &&
             member.groupMembershipInformation.status == "ACTIVE" &&

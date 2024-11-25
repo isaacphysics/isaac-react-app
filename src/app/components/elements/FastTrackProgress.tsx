@@ -22,7 +22,7 @@ const fastTrackStates: LevelTag[] = ['ft_top_ten', 'ft_upper', 'ft_lower'];
 
 function getFastTrackLevel(tags?: string[]): LevelTag {
     if (!tags) throw new Error("Unknown level for undefined tags");
-    for (let state of fastTrackStates) {
+    for (const state of fastTrackStates) {
         if (tags.includes(state)) {
             return state;
         }
@@ -58,7 +58,7 @@ interface AugmentedQuestion {
 }
 
 function calculateProgressBarHeight(questionLevel: LevelTag, hexagonQuarterHeight: number, hexagonPadding: number, progressBarPadding: number) {
-    let numberOfHexagonRows = {"ft_top_ten": 1, "ft_upper": 2, "ft_lower": 3}[questionLevel];
+    const numberOfHexagonRows = {"ft_top_ten": 1, "ft_upper": 2, "ft_lower": 3}[questionLevel];
     return 2 * progressBarPadding + 4 * hexagonQuarterHeight + (numberOfHexagonRows - 1) * (6 * hexagonQuarterHeight + 2 * hexagonPadding);
 }
 
@@ -180,7 +180,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             "ft_lower": () => false,
         };
         let result = null;
-        for (let questionId of reversedQuestionHistory) {
+        for (const questionId of reversedQuestionHistory) {
             if (questionLevelMatchFunctions[conceptLevel](questionId)) {
                 result = questionId;
             }
@@ -189,8 +189,8 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     }
 
     function orderConceptQuestionsById(unorderedConceptQuestions: ConceptLevelQuestions) {
-        let result: ConceptLevelQuestions = {upperLevelQuestions: [], lowerLevelQuestions: []};
-        for (let conceptLevelName of conceptLevels) {
+        const result: ConceptLevelQuestions = {upperLevelQuestions: [], lowerLevelQuestions: []};
+        for (const conceptLevelName of conceptLevels) {
             result[conceptLevelName] = unorderedConceptQuestions[conceptLevelName].slice().sort((a: { id?: string }, b: { id?: string }) => a.id === b.id ? 0 : (a.id === undefined || (b.id !== undefined && a.id > b.id)) ? 1 : -1);
         }
         return result;
@@ -259,11 +259,11 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
         // Evaluate concept connections
         if (currentlyWorkingOn.isConcept) {
-            let mostRecentTopTenQuestionId = getMostRecentQuestion(questionHistory, 'ft_top_ten') || undefined;
-            let mostRecentTopTenIndex = gameboard?.contents?.map((question: GameboardItem) => question.id).indexOf(mostRecentTopTenQuestionId) || -1;
+            const mostRecentTopTenQuestionId = getMostRecentQuestion(questionHistory, 'ft_top_ten') || undefined;
+            const mostRecentTopTenIndex = gameboard?.contents?.map((question: GameboardItem) => question.id).indexOf(mostRecentTopTenQuestionId) || -1;
 
-            let upperQuestionId = currentlyWorkingOn.fastTrackLevel === 'ft_upper' ? currentlyWorkingOn.id : getMostRecentQuestion(questionHistory, 'ft_upper');
-            let upperIndex = conceptQuestions.upperLevelQuestions.map(question => question.id).indexOf(upperQuestionId as string);
+            const upperQuestionId = currentlyWorkingOn.fastTrackLevel === 'ft_upper' ? currentlyWorkingOn.id : getMostRecentQuestion(questionHistory, 'ft_upper');
+            const upperIndex = conceptQuestions.upperLevelQuestions.map(question => question.id).indexOf(upperQuestionId as string);
 
             // Top Ten to Upper connection
             progress.connections.topTenToUpper.push({
@@ -275,7 +275,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
 
             // Upper to Lower connections
             if (currentlyWorkingOn.fastTrackLevel === 'ft_lower') {
-                let lowerIndex = conceptQuestions.lowerLevelQuestions.map(question => question.id).indexOf(currentlyWorkingOn.id);
+                const lowerIndex = conceptQuestions.lowerLevelQuestions.map(question => question.id).indexOf(currentlyWorkingOn.id);
                 progress.connections.upperToLower.push({
                     sourceIndex: upperIndex,
                     targetIndices: [lowerIndex],
@@ -288,10 +288,10 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     }
 
     function generateHexagonTitle(title: string, isCurrentQuestion: boolean) {
-        let isTwoCharLength = ("" + title).length > 1;
-        let xSingleCharPosition = hexagon.halfWidth - {xl: 8, lg: 8, md: 6, sm: 6, xs: 5}[deviceSize];
-        let xTwoCharPosition = hexagon.halfWidth - {xl: 14, lg: 14, md: 11, sm: 11, xs: 10}[deviceSize];
-        let yPosition = hexagon.quarterHeight * 2 + {xl: 9, lg: 9, md: 7, sm: 7, xs: 6}[deviceSize];
+        const isTwoCharLength = ("" + title).length > 1;
+        const xSingleCharPosition = hexagon.halfWidth - {xl: 8, lg: 8, md: 6, sm: 6, xs: 5}[deviceSize];
+        const xTwoCharPosition = hexagon.halfWidth - {xl: 14, lg: 14, md: 11, sm: 11, xs: 10}[deviceSize];
+        const yPosition = hexagon.quarterHeight * 2 + {xl: 9, lg: 9, md: 7, sm: 7, xs: 6}[deviceSize];
         return <text
             fontFamily="Exo 2"
             fontSize={{xl: 26, lg: 26, md: 18, sm: 18, xs: 18}[deviceSize]}
