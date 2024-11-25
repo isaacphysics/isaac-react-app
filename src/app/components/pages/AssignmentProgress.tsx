@@ -292,7 +292,7 @@ export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey
             <div className="d-sm-flex flex-sm-row justify-content-sm-evenly assignment-progress-options">
                 <div className="d-flex flex-column align-items-center mt-sm-2">
                     <span>Colour-blind mode</span>
-                    <StyledToggle falseLabel="Disabled" trueLabel="Enabled" checked={pageSettings.colourBlind} onChange={(e) => pageSettings.setColourBlind?.(e.currentTarget.checked)} />
+                    <StyledToggle falseLabel="Off" trueLabel="On" checked={pageSettings.colourBlind} onChange={(e) => pageSettings.setColourBlind?.(e.currentTarget.checked)} />
                 </div>
                 
                 <div className="d-flex flex-column align-items-center mt-2">
