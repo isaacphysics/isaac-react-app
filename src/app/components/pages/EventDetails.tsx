@@ -125,235 +125,235 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
         query={eventQuery}
         defaultErrorTitle={"Event not found"}
         thenRender={event => {
-        const studentOnlyRestrictionSatisfied = userSatisfiesStudentOnlyRestrictionForEvent(user, event);
+            const studentOnlyRestrictionSatisfied = userSatisfiesStudentOnlyRestrictionForEvent(user, event);
 
-        const canMakeABooking = userCanMakeEventBooking(user, event);
-        const canBeAddedToWaitingList = userCanBeAddedToEventWaitingList(user, event);
-        const canReserveSpaces = userCanReserveEventSpaces(user, event);
+            const canMakeABooking = userCanMakeEventBooking(user, event);
+            const canBeAddedToWaitingList = userCanBeAddedToEventWaitingList(user, event);
+            const canReserveSpaces = userCanReserveEventSpaces(user, event);
 
-        const isVirtual = event.tags?.includes("virtual");
+            const isVirtual = event.tags?.includes("virtual");
 
-        function submitBooking(formEvent?: React.FormEvent<HTMLFormElement>) {
-            formEvent?.preventDefault();
+            function submitBooking(formEvent?: React.FormEvent<HTMLFormElement>) {
+                formEvent?.preventDefault();
 
-            if (user && user.loggedIn) {
-                const failureToastOrTrue = validateBookingSubmission(event, user, additionalInformation);
+                if (user && user.loggedIn) {
+                    const failureToastOrTrue = validateBookingSubmission(event, user, additionalInformation);
 
-                if (failureToastOrTrue !== true) {
-                    dispatch(showToast(failureToastOrTrue));
-                } else if (canMakeABooking) {
-                    bookMyselfOnEvent({eventId: event.id as string, additionalInformation});
-                } else if (canBeAddedToWaitingList) {
-                    addMyselfToWaitingList({eventId: event.id as string, additionalInformation, waitingListOnly: event.isWaitingListOnly});
+                    if (failureToastOrTrue !== true) {
+                        dispatch(showToast(failureToastOrTrue));
+                    } else if (canMakeABooking) {
+                        bookMyselfOnEvent({eventId: event.id as string, additionalInformation});
+                    } else if (canBeAddedToWaitingList) {
+                        addMyselfToWaitingList({eventId: event.id as string, additionalInformation, waitingListOnly: event.isWaitingListOnly});
+                    }
                 }
             }
-        }
 
-        function openAndScrollToBookingForm() {
-            document.getElementById("open_booking_form_button")?.scrollIntoView({behavior: 'smooth'});
-            document.getElementById("booking_form")?.scrollIntoView({behavior: 'smooth'});
-            setBookingFormOpen(true);
-        }
+            function openAndScrollToBookingForm() {
+                document.getElementById("open_booking_form_button")?.scrollIntoView({behavior: 'smooth'});
+                document.getElementById("booking_form")?.scrollIntoView({behavior: 'smooth'});
+                setBookingFormOpen(true);
+            }
 
-        function checkTeacherStatusThenSubmitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
-            formEvent.preventDefault();
-            dispatch(openActiveModal(teacherEventConfirmationModal(submitBooking, stopBookingIfStudent)));
-        }
+            function checkTeacherStatusThenSubmitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
+                formEvent.preventDefault();
+                dispatch(openActiveModal(teacherEventConfirmationModal(submitBooking, stopBookingIfStudent)));
+            }
 
-        const checkTeacherStatus = isPhy && event.isATeacherEvent && !isTeacherOrAbove(user);
+            const checkTeacherStatus = isPhy && event.isATeacherEvent && !isTeacherOrAbove(user);
 
-        return <Container className="events mb-5">
-            <TitleAndBreadcrumb
-                currentPageTitle={event.title as string} subTitle={event.subtitle}
-                breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
-            />
-            <EditContentButton doc={event}/>
+            return <Container className="events mb-5">
+                <TitleAndBreadcrumb
+                    currentPageTitle={event.title as string} subTitle={event.subtitle}
+                    breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
+                />
+                <EditContentButton doc={event}/>
 
-            <Card className="mt-4 pt-2">
-                <CardBody>
-                    {/* Detail Main */}
-                    <Row>
-                        <Col lg={4}>
-                            {event.eventThumbnail && <div className="mt-2">
-                                <CardImg
-                                    aria-hidden={true}
-                                    alt={"" /* Decorative image, should be hidden from screenreaders */}
-                                    className='m-auto restrict-height' top src={event.eventThumbnail.src}
-                                />
-                                <div className="border px-2 py-1 mt-3 bg-light">
-                                    <strong>{event.title}</strong>
-                                </div>
-                                {isDefined(event.location) &&
-                                isDefined(event.location?.latitude) &&
-                                isDefined(event.location?.longitude) &&
-                                <div className="border px-2 py-1 mt-3 bg-light">
-                                    <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13}>
-                                        <TileLayer
-                                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                        />
-                                        <Marker position={[event.location.latitude, event.location.longitude]}
-                                                icon={icon}>
-                                            <Popup>
-                                                {event.location?.address?.addressLine1}<br/>{event.location?.address?.addressLine2}<br/>{event.location?.address?.town}<br/>{event.location?.address?.postalCode}
-                                            </Popup>
-                                        </Marker>
-                                    </MapContainer>
-                                </div>
+                <Card className="mt-4 pt-2">
+                    <CardBody>
+                        {/* Detail Main */}
+                        <Row>
+                            <Col lg={4}>
+                                {event.eventThumbnail && <div className="mt-2">
+                                    <CardImg
+                                        aria-hidden={true}
+                                        alt={"" /* Decorative image, should be hidden from screenreaders */}
+                                        className='m-auto restrict-height' top src={event.eventThumbnail.src}
+                                    />
+                                    <div className="border px-2 py-1 mt-3 bg-light">
+                                        <strong>{event.title}</strong>
+                                    </div>
+                                    {isDefined(event.location) 
+                                        && isDefined(event.location?.latitude) 
+                                        && isDefined(event.location?.longitude) 
+                                        && <div className="border px-2 py-1 mt-3 bg-light">
+                                            <MapContainer center={[event.location.latitude, event.location.longitude]} zoom={13}>
+                                                <TileLayer
+                                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                    attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                                />
+                                                <Marker position={[event.location.latitude, event.location.longitude]} icon={icon}>
+                                                    <Popup>
+                                                        {event.location?.address?.addressLine1}<br/>{event.location?.address?.addressLine2}<br/>{event.location?.address?.town}<br/>{event.location?.address?.postalCode}
+                                                    </Popup>
+                                                </Marker>
+                                            </MapContainer>
+                                        </div>
+                                    }
+                                </div>}
+                            </Col>
+                            <Col lg={8} className={event.hasExpired ? "expired" : ""}>
+                                {/* TODO Student/Teacher/Virtual icon */}
+                                {isStaff(user) &&
+                                    <Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2"
+                                        title="Add to Google Calendar">
+                                        Add to Calendar
+                                    </Button>
                                 }
-                            </div>}
-                        </Col>
-                        <Col lg={8} className={event.hasExpired ? "expired" : ""}>
-                            {/* TODO Student/Teacher/Virtual icon */}
-                            {isStaff(user) &&
-                                <Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2"
-                                           title="Add to Google Calendar">
-                                    Add to Calendar
-                                </Button>
-                            }
 
-                            {/* Key event info */}
-                            <Table borderless className="event-key-info mb-4">
-                                <tbody>
-                                    <tr>
-                                        <td>When:</td>
-                                        <td>
-                                            {formatEventDetailsDate(event)}
-                                            {event.hasExpired && <div className="alert-danger text-center">This event is in the past.</div>}
-                                        </td>
-                                    </tr>
-                                    {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <tr>
-                                        <td>Location:</td>
-                                        <td>
-                                            {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
-                                        </td>
-                                    </tr>}
-                                    {isVirtual && <tr>
-                                        <td>Location:</td>
-                                        <td>Online</td>
-                                    </tr>}
-                                    {event.isNotClosed && !event.hasExpired && <tr>
-                                        <td>Availability:</td>
-                                        <td>
-                                            {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
-                                            {zeroOrLess(event.placesAvailable) && <div>
-                                                <strong className="text-danger">FULL</strong>
-                                                {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
-                                                {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings</span>}
-                                            </div>}
-                                            {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
-                                            {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
-                                                You have been reserved a place on this event!
-                                                <Button color="link text-success" onClick={openAndScrollToBookingForm}>
-                                                    <u>Complete your registration below</u>.
-                                                </Button>
-                                            </span></span>}
-                                            {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
-                                            {event.userBookingStatus === "WAITING_LIST" && <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
-                                            {event.isStudentOnly && !studentOnlyRestrictionSatisfied &&
-                                                <div className="text-muted fw-normal">
-                                                    {studentOnlyEventMessage(eventId)}
-                                                </div>
+                                {/* Key event info */}
+                                <Table borderless className="event-key-info mb-4">
+                                    <tbody>
+                                        <tr>
+                                            <td>When:</td>
+                                            <td>
+                                                {formatEventDetailsDate(event)}
+                                                {event.hasExpired && <div className="alert-danger text-center">This event is in the past.</div>}
+                                            </td>
+                                        </tr>
+                                        {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <tr>
+                                            <td>Location:</td>
+                                            <td>
+                                                {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
+                                            </td>
+                                        </tr>}
+                                        {isVirtual && <tr>
+                                            <td>Location:</td>
+                                            <td>Online</td>
+                                        </tr>}
+                                        {event.isNotClosed && !event.hasExpired && <tr>
+                                            <td>Availability:</td>
+                                            <td>
+                                                {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
+                                                {zeroOrLess(event.placesAvailable) && <div>
+                                                    <strong className="text-danger">FULL</strong>
+                                                    {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
+                                                    {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings</span>}
+                                                </div>}
+                                                {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
+                                                {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
+                                                    You have been reserved a place on this event!
+                                                    <Button color="link text-success" onClick={openAndScrollToBookingForm}>
+                                                        <u>Complete your registration below</u>.
+                                                    </Button>
+                                                </span></span>}
+                                                {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
+                                                {event.userBookingStatus === "WAITING_LIST" && <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
+                                                {event.isStudentOnly && !studentOnlyRestrictionSatisfied && 
+                                                    <div className="text-muted fw-normal">
+                                                        {studentOnlyEventMessage(eventId)}
+                                                    </div>
                                                 }
                                             </td>
                                         </tr>}
-                                    {(!event.isCancelled || isEventLeader(user) || isAdminOrEventManager(user)) && event.bookingDeadline &&
+                                        {(!event.isCancelled || isEventLeader(user) || isAdminOrEventManager(user)) && event.bookingDeadline &&
                                         <tr>
                                             <td>Booking Deadline:</td>
                                             <td>
                                                 <DateString>{event.bookingDeadline}</DateString>
-                                                {!event.isWithinBookingDeadline && !event.hasExpired &&
-                                                <div className="alert-danger text-center">
-                                                    The booking deadline for this event has passed.
-                                                </div>}
+                                                {!event.isWithinBookingDeadline 
+                                                    && !event.hasExpired 
+                                                    && <div className="alert-danger text-center">
+                                                        The booking deadline for this event has passed.
+                                                    </div>
+                                                }
                                             </td>
                                         </tr>}
-                                </tbody>
-                            </Table>
+                                    </tbody>
+                                </Table>
 
-                            {event.isCancelled && <Alert color={"danger"}>
-                                This event has been cancelled.
-                            </Alert>}
+                                {event.isCancelled && <Alert color={"danger"}>
+                                    This event has been cancelled.
+                                </Alert>}
 
-                            {/* Event body copy */}
-                            <div className="mb-3">
-                                <IsaacContent doc={event}/>
-                            </div>
+                                {/* Event body copy */}
+                                <div className="mb-3">
+                                    <IsaacContent doc={event}/>
+                                </div>
 
-                            {/* Booking form */}
-                            {bookingFormOpen && user?.loggedIn && 'CONFIRMED' !== event.userBookingStatus && <span>
-                                <Card className="mb-4">
-                                    <CardBody>
-                                        <h3>Event booking form</h3>
-                                        <Form onSubmit={checkTeacherStatus ? checkTeacherStatusThenSubmitBooking : submitBooking}>
-                                            <EventBookingForm
-                                                event={event} targetUser={user}
-                                                additionalInformation={additionalInformation}
-                                                updateAdditionalInformation={updateAdditionalInformation}
-                                            />
-                                            <div>
-                                                <p className="mb-3">
-                                                    <small>
-                                                        By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
-                                                        You are also giving them permission to set you pre-event work and view your progress.
-                                                        You can manage access to your progress data in your <Link
-                                                        to="/account#teacherconnections" target="_blank">account settings</Link>.
-                                                        <br/>
-                                                        Your data will be processed in accordance with {SITE_TITLE}&apos;s <Link to="/privacy" target="_blank">privacy policy</Link>.
-                                                        <br/>
-                                                        If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event.
-                                                        You can enable this in your <Link to="/account#emailpreferences" target="_blank">account settings</Link>.
-                                                    </small>
-                                                </p>
+                                {/* Booking form */}
+                                {bookingFormOpen && user?.loggedIn && 'CONFIRMED' !== event.userBookingStatus && <span>
+                                    <Card className="mb-4">
+                                        <CardBody>
+                                            <h3>Event booking form</h3>
+                                            <Form onSubmit={checkTeacherStatus ? checkTeacherStatusThenSubmitBooking : submitBooking}>
+                                                <EventBookingForm
+                                                    event={event} targetUser={user}
+                                                    additionalInformation={additionalInformation}
+                                                    updateAdditionalInformation={updateAdditionalInformation}
+                                                />
+                                                <div>
+                                                    <p className="mb-3">
+                                                        <small>
+                                                            By requesting to book on this event, you are granting event organisers access to the information provided in the form above.
+                                                            You are also giving them permission to set you pre-event work and view your progress.
+                                                            You can manage access to your progress data in your <Link to="/account#teacherconnections" target="_blank">account settings</Link>.
+                                                            <br/>
+                                                            Your data will be processed in accordance with {SITE_TITLE}&apos;s <Link to="/privacy" target="_blank">privacy policy</Link>.
+                                                            <br/>
+                                                            If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event.
+                                                            You can enable this in your <Link to="/account#emailpreferences" target="_blank">account settings</Link>.
+                                                        </small>
+                                                    </p>
 
-                                                <div className="text-center mt-4 mb-2">
-                                                    <Input
-                                                        type="submit"
-                                                        value={formatBookingModalConfirmMessage(event, canMakeABooking)}
-                                                        className="btn btn-xl btn-secondary border-0"
-                                                    />
+                                                    <div className="text-center mt-4 mb-2">
+                                                        <Input
+                                                            type="submit"
+                                                            value={formatBookingModalConfirmMessage(event, canMakeABooking)}
+                                                            className="btn btn-xl btn-secondary border-0"
+                                                        />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Form>
-                                    </CardBody>
-                                </Card>
-                            </span>}
+                                            </Form>
+                                        </CardBody>
+                                    </Card>
+                                </span>}
 
-                            {/* Buttons */}
-                            <div>
-                                {/* Options for un-logged-in users */}
-                                {!isLoggedIn(user) && event.isNotClosed && !event.hasExpired &&
-                                    <Button onClick={loginAndReturn}>
-                                        {atLeastOne(event.placesAvailable) && event.isWithinBookingDeadline ?
-                                            "Login to book" :
-                                            "Login to apply"
-                                        }
-                                    </Button>
-                                }
+                                {/* Buttons */}
+                                <div>
+                                    {/* Options for un-logged-in users */}
+                                    {!isLoggedIn(user) && event.isNotClosed && !event.hasExpired &&
+                                        <Button onClick={loginAndReturn}>
+                                            {atLeastOne(event.placesAvailable) && event.isWithinBookingDeadline ?
+                                                "Login to book" :
+                                                "Login to apply"
+                                            }
+                                        </Button>
+                                    }
 
-                                {/* Options for logged-in users */}
-                                {isLoggedIn(user) && !event.hasExpired && <>
-                                    {event.isReservationOnly && !canReserveSpaces && !isTeacherOrAbove(user) && !userBookedReservedOrOnWaitingList(user, event) && <Alert color={"warning"}>
+                                    {/* Options for logged-in users */}
+                                    {isLoggedIn(user) && !event.hasExpired && <>
+                                        {event.isReservationOnly && !canReserveSpaces && !isTeacherOrAbove(user) && !userBookedReservedOrOnWaitingList(user, event) && <Alert color={"warning"}>
                                             Places on this event can only be reserved by teachers.{" "}
                                             Please ask your teacher to reserve a place for you.{" "}
                                             You will need to be accompanied by a teacher to the event.{" "}
                                         </Alert>
-                                    }
-                                    {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
+                                        }
+                                        {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
                                         <Button onClick={() => {
                                             setBookingFormOpen(true);
                                         }}>
                                             {formatMakeBookingButtonMessage(event)}
                                         </Button>
-                                    }
-                                    {canReserveSpaces &&
+                                        }
+                                        {canReserveSpaces &&
                                         <Button color="primary" onClick={() => {
                                             dispatch(openActiveModal(reservationsModal({event})));
                                         }}>
                                             Manage reservations
                                         </Button>
-                                    }
-                                    {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
+                                        }
+                                        {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
                                         <Button color="primary" outline onClick={() =>
                                             confirmThen(
                                                 "Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.",
@@ -362,17 +362,17 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                         }>
                                             {formatCancelBookingButtonMessage(event)}
                                         </Button>
-                                    }
-                                </>}
-                                <Button tag={Link} to="/events" color="primary" outline>
+                                        }
+                                    </>}
+                                    <Button tag={Link} to="/events" color="primary" outline>
                                     Back to events
-                                </Button>
-                            </div>
-                        </Col>
-                    </Row>
-                </CardBody>
-            </Card>
-        </Container>;
-    }}/>;
+                                    </Button>
+                                </div>
+                            </Col>
+                        </Row>
+                    </CardBody>
+                </Card>
+            </Container>;
+        }}/>;
 };
 export default EventDetails;

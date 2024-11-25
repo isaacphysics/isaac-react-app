@@ -18,9 +18,7 @@ export const ReportButton = ({pageId} : {pageId?: string}) => {
         title="Report a problem (opens in new tab)"
         onClick={(event) => {
             logPageReport();
-            window.open(pageId ? `/contact?preset=contentProblem&page=${pageId}` : "/contact?preset=contentProblem",
-                "_blank");
-            }
-        }
+            window.open(pageId ? `/contact?preset=contentProblem&page=${pageId}` : "/contact?preset=contentProblem", "_blank");
+        }}
     />;
 };

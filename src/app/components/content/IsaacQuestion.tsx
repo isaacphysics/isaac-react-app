@@ -153,12 +153,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     // Determine Action Buttons
     const isLongRunningQuestionType = isLLMFreeTextQuestion;
     const submitButtonLabel = isLongRunningQuestionType && questionPart?.loading ? "Marking your answer…" : "Check my answer";
-    const primaryAction =
-        isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) :
-        isInlineQuestion ? {disabled: !canSubmit, value: submitButtonLabel, type: "submit", onClick: () => { 
-            submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts);
-        }} :
-        /* else ? */ {disabled: !canSubmit || awaitingFeedback, value: submitButtonLabel, type: "submit"};
+    const primaryAction = isFastTrack 
+        ? determineFastTrackPrimaryAction(fastTrackInfo) 
+        : isInlineQuestion 
+            ? {disabled: !canSubmit, value: submitButtonLabel, type: "submit", onClick: () => { 
+                submitInlineRegion(inlineContext, currentGameboard, currentUser, pageQuestions, dispatch, hidingAttempts);
+            }} 
+            : {disabled: !canSubmit || awaitingFeedback, value: submitButtonLabel, type: "submit"};
 
     const secondaryAction = isFastTrack ?
         determineFastTrackSecondaryAction(fastTrackInfo) :
@@ -257,10 +258,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {/* Action Buttons */}
                 {recordConfidence ?
                     <ConfidenceQuestions state={confidenceState} setState={setConfidenceState}
-                                         validationPending={validationPending} setValidationPending={setValidationPending}
-                                         disableInitialState={confidenceDisabled}
-                                         identifier={doc.id} type={"question"}
-                                         validationResponse={validationResponse} />
+                        validationPending={validationPending} setValidationPending={setValidationPending}
+                        disableInitialState={confidenceDisabled}
+                        identifier={doc.id} type={"question"}
+                        validationResponse={validationResponse} />
                     :
                     (!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) && !locked &&
                         <div

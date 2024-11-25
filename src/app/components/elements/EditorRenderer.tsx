@@ -57,7 +57,8 @@ function EditorListener() {
     const type = getType(doc);
     const colClasses = type === "question" ? "question-panel" : "";
 
-    return doc ? <Row className={`${type}-content-container`}>
+    return doc 
+        ? <Row className={`${type}-content-container`}>
             <Col className={classNames("py-4", colClasses, {"mw-760": isAda})}>
                 <FigureNumberingContext.Provider value={{}}>
                     <WithFigureNumbering doc={doc}>

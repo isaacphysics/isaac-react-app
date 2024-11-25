@@ -60,41 +60,43 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
             </Table>
         </div>
         {hasSubmitted && <>
-            {!sentFeedback ? <div className="feedback-collection">
-                <p className="mb-4">Before submitting another response, please say whether you agree with the predicted mark.</p>
-                <ul className="no-bullet px-2 mb-4">
-                    <li>
-                        <StyledCheckbox
-                            id="disagree"  label={<p>Disagree</p>} className='"mb-4'
-                            checked={feedback.disagree} onChange={() => setFeedback({...noFeedback, disagree: !feedback.disagree})}
-                        />
-                    </li>
-                    <li>
-                        <StyledCheckbox
-                            id="partlyAgree" label={<p>Partly agree</p>} className='"mb-4'
-                            checked={feedback.partlyAgree} onChange={() => setFeedback({...noFeedback, partlyAgree: !feedback.partlyAgree})}
-                        />
-                    </li>
-                    <li>
-                        <StyledCheckbox
-                            id="agree" label={<p>Agree</p>}
-                            checked={feedback.agree} onChange={() => setFeedback({...noFeedback, agree: !feedback.agree})}
-                        />
-                    </li>
-                </ul>
-                <Button
-                    color="primary" outline disabled={Object.values(feedback).every(a => !a)}
-                    onClick={() => {
-                        dispatch(logAction({type: "LLM_FREE_TEXT_QUESTION_FEEDBACK", events: {...validationResponse, pageId, userFeedback: feedback}}));
-                        setSentFeedback(true);
-                    }}
-                >
-                    Send feedback
-                </Button>
-            </div> :
-            <div className="feedback-collection submitted">
-                <span className="icon-feedback-sent-tick" /> Feedback submitted
-            </div>}
+            {!sentFeedback 
+                ? <div className="feedback-collection">
+                    <p className="mb-4">Before submitting another response, please say whether you agree with the predicted mark.</p>
+                    <ul className="no-bullet px-2 mb-4">
+                        <li>
+                            <StyledCheckbox
+                                id="disagree"  label={<p>Disagree</p>} className='"mb-4'
+                                checked={feedback.disagree} onChange={() => setFeedback({...noFeedback, disagree: !feedback.disagree})}
+                            />
+                        </li>
+                        <li>
+                            <StyledCheckbox
+                                id="partlyAgree" label={<p>Partly agree</p>} className='"mb-4'
+                                checked={feedback.partlyAgree} onChange={() => setFeedback({...noFeedback, partlyAgree: !feedback.partlyAgree})}
+                            />
+                        </li>
+                        <li>
+                            <StyledCheckbox
+                                id="agree" label={<p>Agree</p>}
+                                checked={feedback.agree} onChange={() => setFeedback({...noFeedback, agree: !feedback.agree})}
+                            />
+                        </li>
+                    </ul>
+                    <Button
+                        color="primary" outline disabled={Object.values(feedback).every(a => !a)}
+                        onClick={() => {
+                            dispatch(logAction({type: "LLM_FREE_TEXT_QUESTION_FEEDBACK", events: {...validationResponse, pageId, userFeedback: feedback}}));
+                            setSentFeedback(true);
+                        }}
+                    >
+                        Send feedback
+                    </Button>
+                </div> 
+                : <div className="feedback-collection submitted">
+                    <span className="icon-feedback-sent-tick" /> Feedback submitted
+                </div>
+            }
         </>}
     </div>;
 }

@@ -110,10 +110,11 @@ export function HexagonConnection({
 }: HexagonConnectionProps) {
     const filteredTargetIndices = targetIndices.filter(i => ![sourceIndex, i].includes(-1)); // Filter "not found" selections
     const {optionStrokeColour, ...pathProperties} = connectionProperties;
-    const connectionFunction =
-        fastTrack ? fastTrackConnectionLine :
-        mobile ? mobileConnectionLine.bind(null, rowIndex) :
-        rightAngledConnectionLine;
+    const connectionFunction = fastTrack 
+        ? fastTrackConnectionLine 
+        : mobile 
+            ? mobileConnectionLine.bind(null, rowIndex) 
+            : rightAngledConnectionLine;
 
     return <g>
         {optionIndices.filter(o => !targetIndices.includes(o)).map(optionIndex => <path

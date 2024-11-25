@@ -54,11 +54,11 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                     >
                         <div className={"stage-label d-flex align-items-center justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
                             {siteSpecific(
-                            audienceString,
-                            above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
-                                    {line}{i < arr.length && <br/>}
-                                </>
-                        )}
+                                audienceString,
+                                above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")
+                            ).split("\n").map((line, i, arr) => <>
+                                {line}{i < arr.length && <br/>}
+                            </>)}
                         </div>
                         <div className="title ps-3 d-flex">
                             <div className="p-3">

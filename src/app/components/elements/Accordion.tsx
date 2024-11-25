@@ -176,7 +176,9 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }>
                     {siteSpecific(
                         audienceString,
-                        above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")).split("\n").map((line, i, arr) => <>
+                        above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")
+                    ).split("\n").map(
+                        (line, i, arr) => <>
                             {line}{i < arr.length && <br/>}
                         </>
                     )}

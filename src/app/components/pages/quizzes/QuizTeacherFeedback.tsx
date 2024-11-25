@@ -108,8 +108,9 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                             <DropdownMenu>
                                 {QuizFeedbackModes.map(mode =>
                                     <DropdownItem key={mode}
-                                                  onClick={() => setFeedbackMode(mode)}
-                                                  active={mode === quizAssignment?.quizFeedbackMode}>
+                                        onClick={() => setFeedbackMode(mode)}
+                                        active={mode === quizAssignment?.quizFeedbackMode}
+                                    >
                                         {feedbackNames[mode]}
                                     </DropdownItem>
                                 )}
@@ -132,8 +133,8 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                         <QuizProgressDetails assignment={quizAssignment} />
                     </AssignmentProgressPageSettingsContext.Provider>
                 </div>
-            </>
-        }/>
+            </>}
+        /> 
     </Container>;
 };
 
@@ -252,11 +253,12 @@ export const QuizProgressDetails = ({assignment}: {assignment: QuizAssignmentDTO
 
     const header = <div className="progress-header">
         {assignment.userFeedback
-        ? <>
-            <strong>{assignment.userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{assignment.userFeedback.length}</strong>
-            {` students have completed the test `}
-        </>
-        : 'Preview '}
+            ? <>
+                <strong>{assignment.userFeedback.reduce((p, c) => p + (c.feedback?.complete ? 1 : 0), 0)}</strong> of <strong>{assignment.userFeedback.length}</strong>
+                {` students have completed the test `}
+            </>
+            : 'Preview '
+        }
         <Link to={`${PATHS.PREVIEW_TEST}/${assignment.quizId}/page/1`}>{assignment.quiz?.title}</Link>.
     </div>;
 
