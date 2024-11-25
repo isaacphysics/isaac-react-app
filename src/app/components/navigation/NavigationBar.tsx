@@ -43,7 +43,7 @@ export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWit
     return <DropdownItem tag={Link} className={className} {...props}>
         {children}
         {badgeTitle && <Badge color="light" className="border-secondary border bg-white ms-2 me-1">{badgeTitle}</Badge>}
-    </DropdownItem>
+    </DropdownItem>;
 };
 
 export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
@@ -58,7 +58,7 @@ export const NavigationSection = ({className, children, title, topLevelLink, to}
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => {
         setIsOpen(!isOpen);
-    }
+    };
     const linkClasses = siteSpecific("p-3 ms-3 me-3", classNames("mx-0 mx-nav-1 p-3 font-h4 link-light", {"open": isOpen}));
     const dropdownClasses = siteSpecific("p-3 m-0 mx-lg-4 nav-section", "p-3 m-0 nav-section");
     return <MenuOpenContext.Consumer>
@@ -73,7 +73,7 @@ export const NavigationSection = ({className, children, title, topLevelLink, to}
                 {children}
             </DropdownMenu>}
         </Dropdown>}
-    </MenuOpenContext.Consumer>
+    </MenuOpenContext.Consumer>;
 };
 
 export function MenuBadge({count, message, ...rest}: {count: number, message: string} & HTMLProps<HTMLDivElement>) {
@@ -121,5 +121,5 @@ export const NavigationBar = ({children}: {children: React.ReactNode}) => {
                 </Nav>
             </Collapse>
         </Navbar>
-    </MenuOpenContext.Provider>
+    </MenuOpenContext.Provider>;
 };

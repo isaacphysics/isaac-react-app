@@ -24,7 +24,7 @@ export function paramsToObject(entries: URLSearchParams): {[key: string]: string
 
 export const augmentErrorMessage = (message?: string) => (e: Error) => {
     return new Error(`${e.message}\n${message ? "Extra info: " + message : ""}`);
-}
+};
 
 interface RenderTestEnvironmentOptions {
     role?: UserRole | "ANONYMOUS";

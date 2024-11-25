@@ -191,7 +191,7 @@ const arrowMap = {
     "\\xLeftrightarrow": "arrow left and right",
     "\\xmapsto": "maps to",
     "\\xrightleftarrows": "arrow left and right",
-}
+};
 
 
 const buildString = (str, type, a11yStrings) => {

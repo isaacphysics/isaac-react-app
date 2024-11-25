@@ -273,7 +273,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         >
                             <option value="random">Random wildcard</option>
                             {isDefined(wildcards) && wildcards.map((wildcard) => {
-                                return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>
+                                return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>;
                             })}
                         </Input>
                     </Col>
@@ -374,7 +374,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
                                     dispatch(openActiveModal({
                                         closeAction: () => {
-                                            dispatch(closeActiveModal())
+                                            dispatch(closeActiveModal());
                                         },
                                         closeLabelOverride: "Cancel",
                                         size: "xl",

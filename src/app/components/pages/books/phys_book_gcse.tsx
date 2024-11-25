@@ -118,5 +118,5 @@ export const PhysBookGcse = () => {
                 </Tabs>
             </div>
         </Col>
-    </Container>
+    </Container>;
 };

@@ -19,5 +19,5 @@ export const RaspberryPiSignInButton = ({isSignup, concise}: {isSignup?: boolean
                     <div className={"d-none d-md-inline"}>Raspberry Pi Foundation</div>
                 </div>
         }
-    </Button>
-}
+    </Button>;
+};

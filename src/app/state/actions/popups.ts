@@ -54,7 +54,7 @@ export function showRTKQueryErrorToastIfNeeded(error: string, response: any, mes
                         description: `load_fail: ${error}`
                     }
                 }
-            )
+            );
             return showErrorToast(error, API_REQUEST_FAILURE_MESSAGE);
         }
     }

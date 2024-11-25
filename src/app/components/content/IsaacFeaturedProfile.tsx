@@ -39,5 +39,5 @@ export const IsaacFeaturedProfile = ({doc, contentIndex}: IsaacFeaturedProfilePr
             <img src='/assets/phy/icons/icon-mailto.png' alt=""/>
             <span className="visually-hidden">{"Email " + doc.title}</span>
         </a>}
-    </div>
+    </div>;
 };

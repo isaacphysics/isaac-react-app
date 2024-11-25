@@ -92,7 +92,7 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 }
             }
         }
-    }
+    };
     useEffect(() => {
         if (headerScrollerSentinel.current && !headerScrollerObserver.current && !headerScrollerFlag.current) {
             const options = {
@@ -168,7 +168,7 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
         </div>
         {header}
     </div>;
-}
+};
 
 interface AssignmentListEntryProps {
     assignment: ValidAssignmentWithListingDate;
@@ -281,7 +281,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                 </a>}
         </CardFooter>
     </Card>;
-}
+};
 
 // If the hexagon proportions change, the CSS class bg-timeline needs revisiting
 const dateHexagon = calculateHexagonProportions(20, 1);
@@ -322,13 +322,13 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
         {open && <div className={"date-assignment-list"}>
             {assignments.map(a => <AssignmentListEntry key={a.id} assignment={{...a, gameboard: a.gameboard ?? (a.gameboardId ? boardsById[a.gameboardId] : undefined)}}/> )}
         </div>}
-    </>
-}
+    </>;
+};
 
 const monthHexagon = calculateHexagonProportions(12, 1);
 const shouldOpenMonth = (month: number) => {
     return (new Date()).getMonth() === month;
-}
+};
 const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, datesAndAssignments: [number, ValidAssignmentWithListingDate[]][]}) => {
     const [open, setOpen] = useState<boolean>(shouldOpenMonth(month));
     const assignmentCount = useMemo(() => datesAndAssignments.reduce((n, [_, as]) => n + as.length, 0), [datesAndAssignments]);
@@ -362,7 +362,7 @@ const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, dates
         </div>
         {open && datesAndAssignments.map(([d, as]) => <DateAssignmentList key={d} date={d} assignments={as}/>)}
     </>;
-}
+};
 
 interface AssignmentModalProps {
     user: RegisteredUserDTO;
@@ -519,7 +519,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             </Col>
         </Row>
     </>;
-}
+};
 
 type AssignmentsGroupedByDate = [number, [number, [number, ValidAssignmentWithListingDate[]][]][]][];
 export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
@@ -556,7 +556,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         return assignmentsSetByMe?.reduce((acc, a) => {
             if (!a.groupId || !a.gameboardId) return acc;
             return a.groupId in acc ? {...acc, [a.groupId]: [...acc[a.groupId], a.gameboardId]} : {...acc, [a.groupId]: [a.gameboardId]};
-        }, {} as {[id: number]: string[]}) ?? {}
+        }, {} as {[id: number]: string[]}) ?? {};
     }, [assignmentsSetByMe]);
 
     // Logic to handle showing older assignments - we show the "load older assignments" button if we haven't shown
@@ -714,4 +714,4 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
             </AssignmentScheduleContext.Provider>
         </ShowLoadingQuery>
     </Container>;
-}
+};

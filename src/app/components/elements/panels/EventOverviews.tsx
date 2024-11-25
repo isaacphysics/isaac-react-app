@@ -66,7 +66,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
             </div>
             <div className="float-end mb-4">
                 <RS.Label>
-                    <RS.Input type="select" value={eventOverviewFilter} onChange={e => {setEventOverviewFilter(e.target.value as EventOverviewFilter)}}>
+                    <RS.Input type="select" value={eventOverviewFilter} onChange={e => {setEventOverviewFilter(e.target.value as EventOverviewFilter);}}>
                         {Object.entries(EventOverviewFilter).map(([filterLabel, filterValue]) =>
                             <option key={filterValue} value={filterValue}>{filterLabel}</option>
                         )}
@@ -137,5 +137,5 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                     </p>}
                 </>;
             }} />
-    </Accordion>
+    </Accordion>;
 };

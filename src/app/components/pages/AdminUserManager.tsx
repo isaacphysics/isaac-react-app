@@ -89,7 +89,7 @@ export const AdminUserManager = () => {
                     '(' + unverifiedSelectedUsers.map(user => user.email) + ')?\n' +
                     'They may not be who they claim to be, may have an invalid email or have not yet verified their account.\n\n' +
                     'Pressing "Cancel" will abort promotion for all selected users.'
-                )
+                );
             } else {
                 return true;
             }
@@ -346,7 +346,7 @@ export const AdminUserManager = () => {
                                                             type="checkbox" className="m-0 position-relative"
                                                             checked={user.id && selectedUserIds.includes(user.id) || undefined}
                                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                                user.id && updateUserSelection(user.id, event.target.checked)
+                                                                user.id && updateUserSelection(user.id, event.target.checked);
                                                             }}
                                                         />
                                                     </td>

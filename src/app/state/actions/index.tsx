@@ -415,7 +415,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
     } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
 
@@ -514,7 +514,7 @@ export const requestNotifications = () => async (dispatch: Dispatch<Action>) => 
     } catch (e) {
         dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE});
     }
-}
+};
 
 // Document & topic fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {

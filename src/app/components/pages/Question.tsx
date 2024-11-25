@@ -137,6 +137,6 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                     </Col>
                 </Row>
             </Container>
-        </GameboardContext.Provider>}
+        </GameboardContext.Provider>;}
     } />;
 });

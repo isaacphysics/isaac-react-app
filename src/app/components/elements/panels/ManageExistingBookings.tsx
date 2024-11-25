@@ -52,14 +52,14 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
             const schoolDetails = userIdToSchoolMapping?.[booking.userBooked.id];
             booking.schoolName = schoolDetails ? schoolDetails.name : "UNKNOWN";
         }
-        return booking
+        return booking;
     }));
 
     function relevantUsers (bookingType: string) {
         let idsToReturn: number[] = [];
         augmentedEventBookings?.map((booking: EventBookingDTO & {schoolName?: string}) => {
             if (booking.userBooked?.id && booking.bookingStatus == bookingType) {
-                idsToReturn.push(booking.userBooked.id)
+                idsToReturn.push(booking.userBooked.id);
             }
         });
         return idsToReturn;
@@ -219,7 +219,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.medicalRequirements}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.emergencyName}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.emergencyNumber}</td>
-                                </tr>
+                                </tr>;
                             })
                         }
                     </tbody>
@@ -254,5 +254,5 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
         {(!eventBookings || zeroOrLess(eventBookings.length)) && <p className="text-center m-0">
             <strong>There aren&apos;t currently any bookings for this event.</strong>
         </p>}
-    </Accordion>
+    </Accordion>;
 };

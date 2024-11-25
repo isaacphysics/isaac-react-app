@@ -144,5 +144,5 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                 </div>
             </div>
         </RS.Container>
-    </div>
+    </div>;
 });

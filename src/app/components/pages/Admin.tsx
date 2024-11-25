@@ -123,7 +123,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                         <h4>Error: Content version could not be changed.</h4>
                                     </RS.Alert>
                                 }
-                            </>
+                            </>;
                         }}
                     />
                     <h3 className={"mt-3"}>Demonstration Mode</h3>

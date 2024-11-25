@@ -13,20 +13,20 @@ export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionI
     const dispatch = useAppDispatch();
 
     const getContactFormParams = () => {
-        let params = ""
+        let params = "";
         if (sectionId) {
             // Accordion section IDs usually identify the page also, so nothing else is required
-            params +=`&accordion=${sectionId}`
+            params +=`&accordion=${sectionId}`;
         }
         else if (pageId) {
-            params +=`&page=${pageId}`
+            params +=`&page=${pageId}`;
             // In absence of an ID, the section titles are likely most useful in locating the problem
             if (sectionTitle) {
-                params +=`&section=${encodeURIComponent(sectionTitle)}`
+                params +=`&section=${encodeURIComponent(sectionTitle)}`;
             }
         }
-        return params
-    }
+        return params;
+    };
 
     function logAccordionReport() {
         let eventDetails = {
@@ -36,7 +36,7 @@ export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionI
             accordionTitle: sectionTitle,
             accordionIndex: sectionIndex
         };
-        dispatch(logAction(eventDetails))
+        dispatch(logAction(eventDetails));
     }
 
     return <button
@@ -44,8 +44,8 @@ export const ReportAccordionButton = ({pageId, sectionId, sectionTitle, sectionI
         aria-label="Report a problem (opens in new tab)"
         title="Report a problem (opens in new tab)"
         onClick={() => {
-            logAccordionReport()
-            window.open(`/contact?preset=contentProblem${getContactFormParams()}`, "_blank")
+            logAccordionReport();
+            window.open(`/contact?preset=contentProblem${getContactFormParams()}`, "_blank");
         }}
-    />
-}
+    />;
+};

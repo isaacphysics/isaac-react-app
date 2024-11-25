@@ -56,5 +56,5 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
                 </RS.ModalFooter>
             }
         </React.Fragment>}
-    </RS.Modal>
+    </RS.Modal>;
 };

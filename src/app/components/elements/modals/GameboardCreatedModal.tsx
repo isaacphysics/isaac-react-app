@@ -50,8 +50,8 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 View all of your {siteSpecific("boards", "quizzes")}
             </Button>
         </Col>
-    </Row>
-}
+    </Row>;
+};
 
 export const GameboardCreatedModal = ({gameboardId, error, resetBuilder}: {gameboardId: string | undefined, error: FetchBaseQueryError | SerializedError | undefined, resetBuilder: () => void}) => {
     const errorMessage = getRTKQueryErrorMessage(error).message;

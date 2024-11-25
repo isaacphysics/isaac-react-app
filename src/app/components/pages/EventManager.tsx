@@ -52,5 +52,5 @@ export const EventManager = ({user}: {user: PotentialUser}) => {
                 </div>
             </>}
         </div>
-    </Container>
+    </Container>;
 };

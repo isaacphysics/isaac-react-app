@@ -31,5 +31,5 @@ export const ProgressBar = ({percentage, primaryTitle, secondaryPercentage, seco
                 {children}
             </div>
         </div>
-    </div>
+    </div>;
 };

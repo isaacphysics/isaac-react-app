@@ -23,7 +23,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
     const focusPadding = 3;
 
     const getAbbreviation = (label : string) => label.substr(label.search(/\(/) + 1, 2);
-    const getDifficultyLevel = (value : string) => parseInt(value.substr(value.search(/_/) + 1, 1))
+    const getDifficultyLevel = (value : string) => parseInt(value.substr(value.search(/_/) + 1, 1));
 
     const practiceOptionsRow = difficultyOptions.slice(0, 3);
     const challengeOptionsRow = difficultyOptions.slice(3, 6);
@@ -100,5 +100,5 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                     </g>;})}
             </g>
         </svg>
-    </Container>
+    </Container>;
 }

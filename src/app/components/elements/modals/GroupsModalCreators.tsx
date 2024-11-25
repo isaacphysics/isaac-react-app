@@ -160,14 +160,14 @@ Are you sure you want to promote this manager to group owner?
 They will inherit the ability to add additional managers to, archive and delete this group.
 You will be demoted to an additional group manager.
 You will no longer be able to add or remove other managers, but you will still be able to modify or delete assignments, archive or rename the group or remove group members.
-            `
+            `;
         } else {
             confirm_text = `
 Are you sure you want to promote this manager to group owner?
 They will inherit the ability to add additional managers to, archive and delete this group.
 You will be demoted to an additional group manager, and will not be able to modify or delete assignments, archive or rename the group or remove group members.
 If you wish to retain these privileges, but transfer ownership, click 'cancel' here and then tick the box to give additional managers extra privileges before transferring ownership.
-            `
+            `;
         }
 
         if (group?.id) {
@@ -208,7 +208,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
     const tokenQuery = useGetGroupTokenQuery(group?.id ?? skipToken);
     const generateGroupLinkReminder = (token?: AppGroupTokenDTO) => <p>
         <small><strong>Remember:</strong> Students may need to reuse the group link{token && <>&nbsp;(<code>{location.origin}/account?authToken={token?.token}</code>)</>} to approve access to their data for any new teachers.</small>
-    </p>
+    </p>;
 
     return !group ? <Loading/> : <div className={"mb-4"}>
         <h2>Selected group: {group.groupName}</h2>

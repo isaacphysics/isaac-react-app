@@ -30,8 +30,8 @@ export const FamilyNameInput = ({className, userToUpdate, setUserToUpdate, nameV
         <FormFeedback id="familyNameValidationMessage">
             Please enter a valid name.
         </FormFeedback>
-    </FormGroup>
-}
+    </FormGroup>;
+};
 
 export const GivenNameInput = ({className, userToUpdate, setUserToUpdate, nameValid, submissionAttempted, required}: NameInputProps) => {
     return <FormGroup className={`form-group ${className}`}>
@@ -51,5 +51,5 @@ export const GivenNameInput = ({className, userToUpdate, setUserToUpdate, nameVa
         <FormFeedback id="givenNameValidationMessage">
             Please enter a valid name.
         </FormFeedback>
-    </FormGroup>
-}
+    </FormGroup>;
+};

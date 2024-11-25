@@ -51,7 +51,7 @@ const sortAssignments = (assignments: SortFuncInputType[] | undefined, sortOrder
             sortedAssignments = assignments;
     }
     return sortOrder?.order === SortOrder.DESC ? sortedAssignments?.reverse() : sortedAssignments;
-}
+};
 
 // Returns assignment objects with full gameboard and question part data
 export const useGroupAssignments = (user: RegisteredUserDTO, groupId?: number, sortOrder?: AssignmentOrderSpec) => {
@@ -67,5 +67,5 @@ export const useGroupAssignments = (user: RegisteredUserDTO, groupId?: number, s
     return {
         groupBoardAssignments,
         groupQuizAssignments
-    }
+    };
 };

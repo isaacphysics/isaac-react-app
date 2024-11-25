@@ -91,7 +91,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     // Only teachers and above can see other users progress. The API checks if the other user has shared data with the
     // current user or not.
     if (!viewingOwnData && !isTeacherOrAbove(user)) {
-        return <Unauthorised />
+        return <Unauthorised />;
     }
 
     const progress = (!viewingOwnData && isTeacherOrAbove(user)) ? userProgress : myProgress;

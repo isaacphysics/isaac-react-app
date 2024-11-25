@@ -48,5 +48,5 @@ export const LinkingConcepts = () => {
                 </Col>
             </div>
         </Col>
-    </Container>
+    </Container>;
 };

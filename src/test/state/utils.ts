@@ -25,5 +25,5 @@ export function createMockAPIAction<T, R>(endpointName: string, method: APIActio
             fulfilledTimeStamp: Date.now(),
             baseQueryMeta: {},
         }
-    }
+    };
 }

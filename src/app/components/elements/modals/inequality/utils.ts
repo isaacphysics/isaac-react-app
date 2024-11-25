@@ -44,12 +44,12 @@ export function generateLetterMenuItem(l: string): MenuItemProps | undefined {
             const subscriptLetter = parts[parts.length - 1];
             let subscriptSymbol;
             if (isNaN(parseInt(subscriptLetter))) {
-                subscriptSymbol = { type: 'Symbol', properties: { letter: GREEK_LETTERS_MAP[subscriptLetter] || subscriptLetter, upright: subscriptLetter.length > 1 } }
+                subscriptSymbol = { type: 'Symbol', properties: { letter: GREEK_LETTERS_MAP[subscriptLetter] || subscriptLetter, upright: subscriptLetter.length > 1 } };
             } else {
                 subscriptSymbol = { type: 'Num', properties: { significand: subscriptLetter } };
             }
             item.children = { subscript: subscriptSymbol };
-            item.menu.label += `_{${GREEK_LETTERS_MAP[subscriptLetter] ? `\\${subscriptLetter}` : subscriptLetter}}`
+            item.menu.label += `_{${GREEK_LETTERS_MAP[subscriptLetter] ? `\\${subscriptLetter}` : subscriptLetter}}`;
             item.menu.className = `${item.menu.className} has-subscript`;
         }
     }
@@ -193,7 +193,7 @@ export function generateMathsDefaultDerivativesItems(availableSymbols: string[] 
         derivativeItem.children = {
             numerator: { type: 'Differential', properties: { letter: 'd' } },
             denominator: { type: 'Differential', properties: { letter: 'd' } }
-        }
+        };
         return [
             {type: 'Differential', properties: { letter: 'd' }, menu: { label: '\\mathrm{d}^{\\circ}\\circ', texLabel: true, className: 'differential-d' }},
             {type: 'Differential', properties: { letter: '∆' }, menu: { label: '\\mathrm{\\Delta}^{\\circ}\\circ', texLabel: true, className: 'differential-upper-delta' }},
@@ -210,7 +210,7 @@ export function generateMathsDerivativeAndLetters(symbol: string): { derivative:
     const top = parts[0];
     if (isDefined(GREEK_LETTERS_MAP[top]) || /^[a-zA-Z]$/.test(top)) {
         // Do this only if we have a single greek letter or a single latin letter.
-        letters.push(generateSingleLetterMenuItem(GREEK_LETTERS_MAP[top] || top, GREEK_LETTERS_MAP[top] ? '\\' + top : top))
+        letters.push(generateSingleLetterMenuItem(GREEK_LETTERS_MAP[top] || top, GREEK_LETTERS_MAP[top] ? '\\' + top : top));
     }
     const pieces = parts.slice(1);
     const orders: { [piece: string]: number } = {};
@@ -266,14 +266,14 @@ export function generateMathsDerivativeAndLetters(symbol: string): { derivative:
     };
     derivativeObject.children = { numerator, denominator };
 
-    const derivative = [derivativeObject]
+    const derivative = [derivativeObject];
 
     if (isDefined(GREEK_LETTERS_MAP[top]) || /^[a-zA-Z]$/.test(top)) {
         // Do this only if we have a single greek letter or a single latin letter.
         const argument = {
             type: 'Symbol',
             properties: { letter: GREEK_LETTERS_MAP[top] || top }
-        }
+        };
         const compoundNumerator = {
             type: 'Differential',
             properties: { letter: 'd' },
@@ -295,12 +295,12 @@ export function generateMathsDifferentialAndLetters(symbol: string): { different
     const differentialArgument = parsedDifferential[3] || null;
 
     if (differentialType === "d" && differentialOrder === 0 && differentialArgument == null) {
-        return { letters: [generateSingleLetterMenuItem('d')] }
+        return { letters: [generateSingleLetterMenuItem('d')] };
     } else {
         return {
             differential: generateMathsDifferentialItem(parsedDifferential as string[]),
             letters: differentialArgument ? [generateSingleLetterMenuItem(GREEK_LETTERS_MAP[differentialArgument] || differentialArgument, GREEK_LETTERS_MAP[differentialArgument] ? '\\' + differentialArgument : differentialArgument)] : null
-        }
+        };
     }
 }
 
@@ -310,7 +310,7 @@ export function generateChemicalStatesMenuItems() {
         {type: 'StateSymbol', properties: { state: 'liquid' }, menu: { label: '\\text{(l)}', texLabel: true, className: 'chemical-state liquid' }},
         {type: 'StateSymbol', properties: { state: 'aqueous' }, menu: { label: '\\text{(aq)}', texLabel: true, className: 'chemical-state aqueous' }},
         {type: 'StateSymbol', properties: { state: 'solid' }, menu: { label: '\\text{(s)}', texLabel: true, className: 'chemical-state solid' }},
-    ]
+    ];
 }
 
 export function generateChemicalOperationsMenuItems() {
@@ -323,7 +323,7 @@ export function generateChemicalOperationsMenuItems() {
         {type: 'Brackets', properties: { type: 'round', mode: 'chemistry' }, menu: { label: '(x)', texLabel: true, className: 'chemical-operations brackets round' }},
         {type: 'Brackets', properties: { type: 'square', mode: 'chemistry' }, menu: { label: '[x]', texLabel: true, className: 'chemical-operations brackets square' }},
         {type: 'Relation', properties: { relation: '.' }, menu: { label: '\\cdot', texLabel: true, className: 'chemical-operations dot' }},
-    ]
+    ];
 }
 
 export function generateChemicalElementMenuItem(symbol: string): MenuItemProps | undefined {

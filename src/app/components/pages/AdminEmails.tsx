@@ -33,7 +33,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
 
     const numberOfUsers = csvIDs.length;
     const canSubmit = emailTemplate && emailType != "null" && numberOfUsers > 0;
-    const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num))), 250);
+    const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e);}).filter((num) => !isNaN(num))), 250);
 
     useEffect(() => {
         isEventManager(user) && setEmailType("EVENTS");

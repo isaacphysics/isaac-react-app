@@ -59,6 +59,6 @@ const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
                 <a href={doc.url} onClick={logViewOnGitHub} target="_blank" rel="noopener noreferrer">View on GitHub</a>
             </Col>
         </Row>}
-    </>
+    </>;
 };
 export default IsaacCodeSnippet;

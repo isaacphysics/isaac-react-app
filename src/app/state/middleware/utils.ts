@@ -7,8 +7,8 @@ export const MOST_RECENT_AUGUST = () => {
     date.setHours(0, 0, 0, 0);
     // Date is now the 1st day of most recent August
     return date;
-}
+};
 
 export const needToUpdateUserContextDetails = (lastConfirmedDate: Date | undefined): boolean => {
     return !!lastConfirmedDate && lastConfirmedDate <= MOST_RECENT_AUGUST();
-}
+};

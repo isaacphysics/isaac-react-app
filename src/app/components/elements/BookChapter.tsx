@@ -17,12 +17,12 @@ export const BookChapter = ({chapterId, chapterTitle, chapterSubHeading, chapter
 
     function bookChapterLoad() {
         dispatch(openActiveModal({
-            closeAction: () => {dispatch(closeActiveModal())},
+            closeAction: () => {dispatch(closeActiveModal());},
             title: chapterTitle,
             body: <div className={"book-chapter-options" + " " + chapterSubject}>
                 <PageFragment fragmentId={chapterId}/>
             </div>
-        }))
+        }));
     }
 
     return <RS.Container>
@@ -35,5 +35,5 @@ export const BookChapter = ({chapterId, chapterTitle, chapterSubHeading, chapter
             </span>
             {chapterTitle} <br/><span className="chapter-subheading">{chapterSubHeading}</span>
         </button>
-    </RS.Container>
+    </RS.Container>;
 };

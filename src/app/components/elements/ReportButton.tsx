@@ -9,7 +9,7 @@ export const ReportButton = ({pageId} : {pageId?: string}) => {
             type: "REPORT_CONTENT_PAGE",
             pageId: pageId
         };
-        dispatch(logAction(eventDetails))
+        dispatch(logAction(eventDetails));
     }
 
     return <button
@@ -17,10 +17,10 @@ export const ReportButton = ({pageId} : {pageId?: string}) => {
         aria-label="Report a problem (opens in new tab)"
         title="Report a problem (opens in new tab)"
         onClick={(event) => {
-            logPageReport()
+            logPageReport();
             window.open(pageId ? `/contact?preset=contentProblem&page=${pageId}` : "/contact?preset=contentProblem",
-                "_blank")
+                "_blank");
             }
         }
-    />
-}
+    />;
+};

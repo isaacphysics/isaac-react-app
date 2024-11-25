@@ -7,14 +7,14 @@ import {PageFragment} from "../PageFragment";
 
 export const downloadLinkModal = (link: string) => {
     return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+        closeAction: () => {store.dispatch(closeActiveModal());},
         title: "Privacy Notice",
         body: <PageFragment fragmentId="csv_download_notice" />,
         buttons: [
-            <RS.Button key={0} block color="primary" tag="a"  href={link} target="_blank" onClick={() => {store.dispatch(closeActiveModal())}}>
+            <RS.Button key={0} block color="primary" tag="a"  href={link} target="_blank" onClick={() => {store.dispatch(closeActiveModal());}}>
                 Download CSV
             </RS.Button>,
         ]
-    }
+    };
 };
 

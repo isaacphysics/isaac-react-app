@@ -55,5 +55,5 @@ export const IsaacHintModal = (props: HintModalProps) => {
                 <IsaacContent doc={body} />
             </ModalBody>
         </Modal>
-    </div>
+    </div>;
 };

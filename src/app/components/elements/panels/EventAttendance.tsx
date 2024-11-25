@@ -13,7 +13,7 @@ function displayAttendanceAsSymbol(status?: string) {
     switch (status) {
         case "ATTENDED": return "✔️";
         case "ABSENT": return "❌";
-        default: return ""
+        default: return "";
     }
 }
 
@@ -131,7 +131,7 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                                     <td className="align-middle">{additionalInformation?.medicalRequirements || ""}</td>
                                     <td className="align-middle">{additionalInformation?.emergencyName || ""}</td>
                                     <td className="align-middle">{additionalInformation?.emergencyNumber || ""}</td>
-                                </tr>
+                                </tr>;
                             })
                         }
                     </tbody>

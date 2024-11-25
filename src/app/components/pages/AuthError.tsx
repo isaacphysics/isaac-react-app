@@ -21,5 +21,5 @@ export const AuthError = ({location: {state}}: {location: {state?: {errorMessage
                 </p>
             </RS.Col>
         </RS.Row>
-    </RS.Container>
+    </RS.Container>;
 };

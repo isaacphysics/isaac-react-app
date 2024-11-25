@@ -45,7 +45,7 @@ const portalsInHtmlHookBuilder = (hookList?: PortalInHtmlHook[]): PortalInHtmlHo
         html,
         ref => renderFuncs.flatMap<JSX.Element>(func => func(ref))
     ];
-}
+};
 export const usePortalsInHtml = portalsInHtmlHookBuilder(PORTAL_HOOKS);
 export const useTableCompatiblePortalsInHtml = portalsInHtmlHookBuilder(TABLE_COMPATIBLE_PORTAL_HOOKS);
 

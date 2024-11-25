@@ -32,7 +32,7 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLE
         );
     }
     return null;
-}
+};
 
 export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpandedInnerClasses = "") => {
     const [ expanded, setExpanded ] = useState(false);
@@ -46,7 +46,7 @@ export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpand
             });
         }
         setExpanded(newExpanded);
-    }
+    };
 
     const expandableParent = useContext(ExpandableParentContext);
     const deviceSize = useDeviceSize();
@@ -64,7 +64,7 @@ export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpand
     const outerClasses = show ? (expanded ? "isaac-expand-bg expand-outer" : "expand-outer") : "";
 
     return {expandButton, innerClasses, outerClasses};
-}
+};
 
 interface TableData {
     id: number;
@@ -118,4 +118,4 @@ export const useAccessibleTablesInHtml: PortalInHtmlHook = (html) => {
         htmlDom.innerHTML,
         (ref?: HTMLElement) => ref ? tableInnerHTMLs.map(({id, html, classes}) => <Table key={id} rootElement={ref} id={id} html={html} classes={classes}/>) : []
     ];
-}
+};

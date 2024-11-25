@@ -44,4 +44,4 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = (html) => {
             />
         ) : []
     ];
-}
+};

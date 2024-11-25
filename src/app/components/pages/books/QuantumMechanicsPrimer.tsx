@@ -12,5 +12,5 @@ export const QuantumMechanicsPrimer = () => {
                 <PageFragment fragmentId="quantum_mechanics_primer_intro"/>
             </div>
         </Col>
-    </Container>
+    </Container>;
 };

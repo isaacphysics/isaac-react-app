@@ -57,7 +57,7 @@ const createGameboardHistory = (title: string, gameboardId: string) => {
     return [
         // TODO could also push a link to my gameboards here when it exists
         {title: title, to: createGameabordLink(gameboardId)}
-    ]
+    ];
 };
 export const determineGameboardHistory = (currentGameboard: GameboardDTO) => {
     return createGameboardHistory(currentGameboard.title as string, currentGameboard.id as string);
@@ -106,7 +106,7 @@ export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
 export const showWildcard = (board: GameboardDTO) => {
     const re = new RegExp('(phys_book_gcse_ch.*|pre_uni_maths.*)');
     const isaacPhysicsBoard = isPhy && board?.tags?.includes("ISAAC_BOARD");
-    return board?.id && (re.test(board.id) || isaacPhysicsBoard)
+    return board?.id && (re.test(board.id) || isaacPhysicsBoard);
 };
 
 export const determineGameboardSubjects = (board?: GameboardDTO) => {
@@ -127,8 +127,8 @@ export const determineGameboardSubjects = (board?: GameboardDTO) => {
         allSubjects.push("physics");
     }
     let enumeratedSubjects = countBy(allSubjects);
-    return Object.keys(enumeratedSubjects).sort(function (a, b) {return subjects.indexOf(a) - subjects.indexOf(b)})
-        .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a]});
+    return Object.keys(enumeratedSubjects).sort(function (a, b) {return subjects.indexOf(a) - subjects.indexOf(b);})
+        .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a];});
 };
 
 export const determineCurrentCreationContext = (currentGameboard: GameboardDTO | NOT_FOUND_TYPE | undefined, currentDocId: string) => {
@@ -142,7 +142,7 @@ export function comparatorFromOrderedValues<T>(orderedPropertyValues: T[]) {
     return function comparator(a?: T, b?: T) {
         // Ignoring undefined with ! - if it is undefined, so be it, it will return -1
         return orderedPropertyValues.indexOf(a!) - orderedPropertyValues.indexOf(b!);
-    }
+    };
 }
 
 // A function that returns ordered (stage, difficulties) tuples for a gameboard

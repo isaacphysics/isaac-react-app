@@ -23,7 +23,7 @@ export const StreakGauge = (props: StreakGaugeProps) => {
         <div style={{fontSize: 24}}>
             {currentStreak}
         </div>
-    </CircularProgressbarWithChildren>
+    </CircularProgressbarWithChildren>;
 };
 
 export const HeaderStreakGauge = (props: StreakGaugeProps) => {
@@ -41,5 +41,5 @@ export const HeaderStreakGauge = (props: StreakGaugeProps) => {
         <div style={{fontSize: 18}}>
             {currentStreak}
         </div>
-    </CircularProgressbarWithChildren>
-}
+    </CircularProgressbarWithChildren>;
+};

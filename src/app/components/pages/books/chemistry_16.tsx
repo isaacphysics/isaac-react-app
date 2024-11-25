@@ -77,5 +77,5 @@ export const Chemistry16 = () => {
                 </Col>
             </div>
         </Col>
-    </Container>
+    </Container>;
 };

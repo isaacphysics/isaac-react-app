@@ -53,5 +53,5 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                 setTimeout(window.print, 100);
             }}
             aria-label="Print page"
-        />
+        />;
 };

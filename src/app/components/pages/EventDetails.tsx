@@ -341,14 +341,14 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                     }
                                     {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
                                         <Button onClick={() => {
-                                            setBookingFormOpen(true)
+                                            setBookingFormOpen(true);
                                         }}>
                                             {formatMakeBookingButtonMessage(event)}
                                         </Button>
                                     }
                                     {canReserveSpaces &&
                                         <Button color="primary" onClick={() => {
-                                            dispatch(openActiveModal(reservationsModal({event})))
+                                            dispatch(openActiveModal(reservationsModal({event})));
                                         }}>
                                             Manage reservations
                                         </Button>
@@ -372,7 +372,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                     </Row>
                 </CardBody>
             </Card>
-        </Container>
+        </Container>;
     }}/>;
 };
 export default EventDetails;

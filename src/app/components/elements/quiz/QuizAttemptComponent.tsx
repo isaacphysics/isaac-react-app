@@ -139,7 +139,7 @@ function QuizHeader({attempt, preview, user}: QuizAttemptProps) {
             </Alert>}
         </>;
     } else {
-        return <p>You {attempt.completedDate ? "freely attempted" : "are freely attempting"} this test.</p>
+        return <p>You {attempt.completedDate ? "freely attempted" : "are freely attempting"} this test.</p>;
     }
 }
 
@@ -153,7 +153,7 @@ function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
                 {rubric.children}
             </IsaacContentValueOrChildren>
         </div>}
-    </div>
+    </div>;
 }
 
 function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizAttemptProps & {page: number}) {
@@ -166,9 +166,9 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
 
     const openQuestionModal = (attempt: QuizAttemptDTO) => {
         dispatch(openActiveModal({
-            closeAction: () => {dispatch(closeActiveModal())}, size: "lg",
+            closeAction: () => {dispatch(closeActiveModal());}, size: "lg",
             title: "Test Instructions", body: <QuizRubric attempt={attempt} />
-        }))
+        }));
     };
 
     const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
@@ -183,7 +183,7 @@ function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizA
                     {rubric && renderRubric && <Col className="text-end">
                         <Button color="tertiary" outline className="mb-4 bg-light"
                             alt="Show instructions" title="Show instructions in a modal"
-                            onClick={() => {rubric && openQuestionModal(attempt)}}>
+                            onClick={() => {rubric && openQuestionModal(attempt);}}>
                             Show instructions
                         </Button>
                     </Col>}
@@ -213,7 +213,7 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser, use
         quizTitle += " Feedback";
     }
     if (isDefined(studentUser)) {
-        quizTitle += ` for ${studentUser.givenName} ${studentUser.familyName}`
+        quizTitle += ` for ${studentUser.givenName} ${studentUser.familyName}`;
     }
     if (preview) {
         quizTitle += " Preview";

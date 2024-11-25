@@ -30,7 +30,7 @@ const ContentEmails = (props: ContentEmailsProps) => {
 
     const numberOfUsers = csvIDs.length;
     const canSubmit = emailTemplate?.subject?.length != 0 && emailTemplate?.htmlContent?.length != 0 && emailTemplate?.plainTextContent?.length != 0 && emailType != "null" && numberOfUsers > 0;
-    const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num))), 250);
+    const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e);}).filter((num) => !isNaN(num))), 250);
 
     useEffect(() => {
         setPlaintextTemplate(convert(htmlTemplate));
@@ -42,7 +42,7 @@ const ContentEmails = (props: ContentEmailsProps) => {
             plainTextContent: plaintextTemplate,
             htmlContent: htmlTemplate,
             overrideEnvelopeFrom: overrideEnvelopeFrom,
-        })
+        });
     }, [emailSubject, plaintextTemplate, htmlTemplate, overrideEnvelopeFrom]);
 
     const mailgunAddress = siteSpecific("no-reply@mail.isaacphysics.org", "no-reply@mail.adacomputerscience.org");

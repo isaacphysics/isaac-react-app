@@ -13,7 +13,7 @@ const updateQuizAttemptQuestion = (questionId: string, questionAttempt: Immutabl
             question.bestAttempt = {answer: questionAttempt};
         }
     });
-})
+});
 
 type QuizAttemptState = {attempt: QuizAttemptDTO} | {error: string} | null;
 export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Action): QuizAttemptState => {

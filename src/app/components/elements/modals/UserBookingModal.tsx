@@ -14,7 +14,7 @@ import {EventBookingForm} from "../EventBookingForm";
 
 export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, selectedEvent: AugmentedEvent, eventBookingIds: number[]) {
     return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+        closeAction: () => {store.dispatch(closeActiveModal());},
 
         title: eventBookingIds.includes(selectedUser.id as number) && zeroOrLess(selectedEvent.placesAvailable) ?
             `Add ${selectedUser.givenName} ${selectedUser.familyName} to waiting list` :
@@ -35,7 +35,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
 
             const [bookUserOnEvent] = useBookUserOnEventMutation();
             function makeUserBooking(formEvent: React.FormEvent) {
-                if (formEvent) {formEvent.preventDefault()}
+                if (formEvent) {formEvent.preventDefault();}
                 if (additionalInformation.authorisation === undefined || (additionalInformation.authorisation === "OTHER" && additionalInformation.authorisationOther === undefined)) {
                     dispatch(showErrorToast("Event booking failed", "You must provide an authorisation reason to complete this request."));
                     return;
@@ -79,7 +79,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
                         type="submit" value={formatBookingModalConfirmMessage(selectedEvent, userCanBeBookedOnEvent)}
                     />}
                 </span>
-            </RS.Form>
+            </RS.Form>;
         },
-    }
+    };
 }

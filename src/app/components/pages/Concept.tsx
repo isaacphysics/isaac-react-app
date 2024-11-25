@@ -99,6 +99,6 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     </Col>
                 </Row>
             </Container>
-        </GameboardContext.Provider>
+        </GameboardContext.Provider>;
     }}/>;
 });

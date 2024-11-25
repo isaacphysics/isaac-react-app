@@ -54,7 +54,7 @@ function generateDefaultChoice() {
         "choiceNumber": choiceNumber, "type": "freeTextRule", "encoding": "markdown", "value": "",
         "correct": true, "caseInsensitive": true, "allowsAnyOrder": false, "allowsExtraWords": false, "allowsMisspelling": false,
         "explanation": {"type": "content", "children": [{"type": "content", "value": `Match ${choiceNumber}`, "encoding": "markdown"}], "encoding": "markdown"}
-    }
+    };
 }
 const defaultChoiceExample = generateDefaultChoice();
 function removeChoiceNumber(choice: FreeTextRule & {choiceNumber: number}) {
@@ -67,7 +67,7 @@ function notEqualToDefaultChoice(choice: FreeTextRule) {
 }
 
 function convertQuestionChoicesToJson(questionChoices: (FreeTextRule & {choiceNumber: number})[]) {
-    return JSON.stringify(questionChoices.map(removeChoiceNumber), null, 2)
+    return JSON.stringify(questionChoices.map(removeChoiceNumber), null, 2);
 }
 
 function convertJsonToQuestionChoices(jsonString: string) {
@@ -88,7 +88,7 @@ function convertJsonToQuestionChoices(jsonString: string) {
 let testCaseNumber = 0;
 function generateDefaultTestCase() {
     testCaseNumber++;
-    return {testCaseNumber: testCaseNumber, expected: true, answer: {type: "stringChoice", value: ""}}
+    return {testCaseNumber: testCaseNumber, expected: true, answer: {type: "stringChoice", value: ""}};
 }
 const defaultTestCaseExample = generateDefaultTestCase();
 function removeTestCaseNumber(testCase: TestCaseDTO & {testCaseNumber: number}) {
@@ -121,12 +121,12 @@ export const FreeTextBuilder = () => {
     const [questionChoices, setQuestionChoices] = useState<(FreeTextRule & {choiceNumber: number})[]>([JSON.parse(JSON.stringify(defaultChoiceExample))]);
     const [questionChoicesJson, setQuestionChoicesJson] = useState(convertQuestionChoicesToJson(questionChoices));
     const [jsonParseError, setJsonParseError] = useState(false);
-    useEffect(() => {setQuestionChoicesJson(convertQuestionChoicesToJson(questionChoices))}, [questionChoices]);
+    useEffect(() => {setQuestionChoicesJson(convertQuestionChoicesToJson(questionChoices));}, [questionChoices]);
 
     const [testCases, setTestCases] = useState<(TestCaseDTO & {testCaseNumber: number})[]>([JSON.parse(JSON.stringify(defaultTestCaseExample))]);
     const [testCasesCsv, setTestCasesCsv] = useState(convertTestCasesToCsv(testCases));
     const [csvParseError, setCsvParseError] = useState(false);
-    useEffect(() => {setTestCasesCsv(convertTestCasesToCsv(testCases))}, [testCases]);
+    useEffect(() => {setTestCasesCsv(convertTestCasesToCsv(testCases));}, [testCases]);
 
     const [choicesHashAtPreviousRequest, setChoicesHashAtPreviousRequest] = useState<number | null>(null);
 

@@ -33,7 +33,7 @@ export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, subm
                 feedbackText={(!passwordValid || passwordsMatch) ? `Passwords must be at least ${MINIMUM_PASSWORD_LENGTH} characters long.` : "Please ensure your passwords match."}
                 value={userToUpdate.password ? userToUpdate.password : undefined}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {password: e.target.value} : {password: null}))
+                    setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {password: e.target.value} : {password: null}));
                     passwordDebounce(e.target.value, setPasswordFeedback);
                 }}
                 invalid={required && submissionAttempted && !(passwordValid && passwordsMatch) }
@@ -63,5 +63,5 @@ export const SetPasswordInput = ({className, userToUpdate, setUserToUpdate, subm
                 Passwords must match and be at least {MINIMUM_PASSWORD_LENGTH} characters long.
             </FormFeedback>
         </FormGroup>}
-    </div>
-}
+    </div>;
+};

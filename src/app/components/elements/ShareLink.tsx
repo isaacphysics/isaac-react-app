@@ -35,8 +35,8 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
         }
     }, [showShareLink]);
 
-    const shareLinkDivRef = useRef(null)
-    useOutsideCallback(shareLinkDivRef, () => clickAwayClose && setShowShareLink(false), [setShowShareLink])
+    const shareLinkDivRef = useRef(null);
+    useOutsideCallback(shareLinkDivRef, () => clickAwayClose && setShowShareLink(false), [setShowShareLink]);
 
     const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
     const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * siteSpecific(9, 6));

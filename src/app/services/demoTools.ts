@@ -12,7 +12,7 @@ export function useDemoValue<T>(vals: T[], toggleKey: string) {
             if (ev.key.toUpperCase() === toggleKey.toUpperCase()) {
                 setPointer(p => (p + 1) % vals.length);
             }
-        }
+        };
         window.addEventListener("keyup", listener);
         return () => window.removeEventListener("keyup", listener);
     });

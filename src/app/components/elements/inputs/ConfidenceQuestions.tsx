@@ -221,4 +221,4 @@ export const useConfidenceQuestionsValues = (show: boolean | undefined, type: Co
         setValidationPending,
         showQuestionFeedback
     };
-}
+};

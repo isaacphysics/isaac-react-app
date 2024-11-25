@@ -46,81 +46,81 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
 export const formatAvailabilityMessage = (event: AugmentedEvent) => {
     if (event.isWaitingListOnly) {
         //  in this case, the waiting list is for booking requests that must be approved
-        return "Bookings available by request!"
+        return "Bookings available by request!";
     }
     // this is an event which can be freely joined, however it happens to be full
-    return "Waiting list booking is available!"
-}
+    return "Waiting list booking is available!";
+};
 
 export const formatWaitingListBookingStatusMessage = (event: AugmentedEvent) => {
     if (event.isWaitingListOnly) {
-        return "You have requested a place on this event."
+        return "You have requested a place on this event.";
     }
-    return "You are on the waiting list for this event."
-}
+    return "You are on the waiting list for this event.";
+};
 
 export const formatMakeBookingButtonMessage = (event: AugmentedEvent) => {
     if (event.userBookingStatus === "RESERVED") {
-        return "Confirm your reservation"
+        return "Confirm your reservation";
     }
     if (event.isWaitingListOnly) {
-        return "Request a place"
+        return "Request a place";
     }
     if (zeroOrLess(event.placesAvailable)) {
-        return "Join waiting list"
+        return "Join waiting list";
     }
-    return "Book a place"
-}
+    return "Book a place";
+};
 
 export const formatCancelBookingButtonMessage = (event: AugmentedEvent) => {
     if (event.userBookingStatus == "CONFIRMED") {
-        return "Cancel your booking"
+        return "Cancel your booking";
     }
     else if (event.userBookingStatus == "RESERVED") {
-        return "Cancel your reservation"
+        return "Cancel your reservation";
     }
     else if (event.userBookingStatus == "WAITING_LIST") {
-        return event.isWaitingListOnly ? "Cancel booking request" : "Leave waiting list"
+        return event.isWaitingListOnly ? "Cancel booking request" : "Leave waiting list";
     }
-}
+};
 
 export const formatManageBookingActionButtonMessage = (event: AugmentedEvent) => {
     if (event.userBookingStatus === "RESERVED") {
-        return "Confirm reservation"
+        return "Confirm reservation";
     }
     if (event.isWaitingListOnly) {
-        return "Make booking request"
+        return "Make booking request";
     }
     if (zeroOrLess(event.placesAvailable)) {
-        return "Add to waiting list"
+        return "Add to waiting list";
     }
-    return "Book a place"
-}
+    return "Book a place";
+};
 
 export const formatBookingModalConfirmMessage = (event: AugmentedEvent, userCanMakeEventBooking?: boolean) => {
     if (userCanMakeEventBooking) {
-        return "Book now"
+        return "Book now";
     }
     else {
-        return event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past"
+        return event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past";
     }
-}
+};
 
 export const userSatisfiesStudentOnlyRestrictionForEvent = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
     return event.isStudentOnly ? !isTeacherOrAbove(user) : true;
-}
+};
 
 export const userIsTeacherAtAStudentEvent = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
     return event.isAStudentEvent && isTeacherOrAbove(user);
-}
+};
 
 export const userBookedReservedOrOnWaitingList = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
     return isDefined(event.userBookingStatus) && ["WAITING_LIST", "CONFIRMED", "RESERVED"].includes(event.userBookingStatus);
-}
+};
 
 export const ifEventIsReservationsOnlyThenUserIsTeacherOrUserIsReserved = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
     return event.isReservationOnly ? (isTeacherOrAbove(user) || event.userBookingStatus === "RESERVED") : true;
-}
+};
 
 export const userCanMakeEventBooking = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
     return event.isNotClosed &&
@@ -131,7 +131,7 @@ export const userCanMakeEventBooking = (user: Immutable<PotentialUser> | null, e
         ifEventIsReservationsOnlyThenUserIsTeacherOrUserIsReserved(user, event) &&
         (atLeastOne(event.placesAvailable) || userIsTeacherAtAStudentEvent(user, event) ||
             event.userBookingStatus === "RESERVED");
-}
+};
 
 export const userCanBeAddedToEventWaitingList = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
     return !userCanMakeEventBooking(user, event) &&
@@ -139,8 +139,8 @@ export const userCanBeAddedToEventWaitingList = (user: Immutable<PotentialUser> 
         !event.hasExpired &&
         !event.isReservationOnly &&
         !userBookedReservedOrOnWaitingList(user, event) &&
-        userSatisfiesStudentOnlyRestrictionForEvent(user, event)
-}
+        userSatisfiesStudentOnlyRestrictionForEvent(user, event);
+};
 
 // Tutors cannot reserve event spaces for members of their groups
 export const userCanReserveEventSpaces = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
@@ -149,4 +149,4 @@ export const userCanReserveEventSpaces = (user: Immutable<PotentialUser> | null,
         event.isWithinBookingDeadline &&
         !event.isWaitingListOnly &&
         isTeacherOrAbove(user);
-}
+};

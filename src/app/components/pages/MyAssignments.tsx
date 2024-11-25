@@ -28,7 +28,7 @@ enum AssignmentState {
 
 export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
-    useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}))}, [dispatch]);
+    useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}));}, [dispatch]);
 
     // TODO don't refetch "my assignments" every component mount, an instead invalidate cache when actions occur
     //  that require refetching.

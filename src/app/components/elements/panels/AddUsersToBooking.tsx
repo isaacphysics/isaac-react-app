@@ -127,5 +127,5 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
         {searchRequested && userSearchResults && zeroOrLess(userSearchResults.length) && <div className="text-center">
             <strong>No users returned from query</strong>
         </div>}
-    </Accordion>
+    </Accordion>;
 };

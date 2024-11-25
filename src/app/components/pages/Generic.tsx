@@ -34,7 +34,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
     const pageId = pageIdOverride || params.pageId;
 
     const dispatch = useAppDispatch();
-    useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.GENERIC, pageId))}, [dispatch, pageId]);
+    useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.GENERIC, pageId));}, [dispatch, pageId]);
     const doc = useAppSelector((state: AppState) => state?.doc || null);
 
     const hash = useUntilFound(doc, useUrlHashValue());
@@ -73,6 +73,6 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
             </Row>
 
             {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
-        </Container>
+        </Container>;
     }}/>;
 });

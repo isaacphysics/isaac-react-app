@@ -58,5 +58,5 @@ export const PreUniMaths2e = () => {
                 </Col>
             </div>
         </Col>
-    </Container>
+    </Container>;
 };

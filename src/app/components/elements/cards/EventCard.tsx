@@ -69,5 +69,5 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
                 </div>}
             </RS.CardText>
         </RS.CardBody>
-    </RS.Card>
+    </RS.Card>;
 };

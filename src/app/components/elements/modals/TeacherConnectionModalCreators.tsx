@@ -10,7 +10,7 @@ import {extractTeacherName, siteSpecific} from "../../../services";
 
 export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
     return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+        closeAction: () => {store.dispatch(closeActiveModal());},
         title: "Sharing your data",
         body: <React.Fragment>
             <p>Are you sure you would like to give the following {siteSpecific("Isaac", "Ada")} users access to your data?</p>
@@ -46,22 +46,22 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
             </p>
         </React.Fragment>,
         buttons: [
-            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
+            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </RS.Button>,
             <RS.Button key={0} color="secondary" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authToken))
-                    .then(() => store.dispatch(closeActiveModal()))
+                    .then(() => store.dispatch(closeActiveModal()));
             }}>
                 Confirm
             </RS.Button>,
         ]
-    }
+    };
 };
 
 export const revocationConfirmationModal = (userId: number, userToRevoke: UserSummaryWithEmailAddressDTO) => {
     return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+        closeAction: () => {store.dispatch(closeActiveModal());},
         title: "Revoke access to your data",
         body: <React.Fragment>
             <p>
@@ -73,22 +73,22 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
             </p>
         </React.Fragment>,
         buttons: [
-            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
+            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </RS.Button>,
             <RS.Button key={0} color="secondary" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.revokeAuthorisation.initiate(userToRevoke.id as number))
-                    .then(() => store.dispatch(closeActiveModal()))
+                    .then(() => store.dispatch(closeActiveModal()));
             }}>
                 Confirm
             </RS.Button>,
         ]
-    }
+    };
 };
 
 export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryDTO) => {
     return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+        closeAction: () => {store.dispatch(closeActiveModal());},
         title: "Remove access to students' data",
         body: <React.Fragment>
             <p>
@@ -99,22 +99,22 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
             </p>
         </React.Fragment>,
         buttons: [
-            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
+            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </RS.Button>,
             <RS.Button key={0} color="secondary" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.releaseAuthorisation.initiate(otherUser.id as number))
-                    .then(() => store.dispatch(closeActiveModal()))
+                    .then(() => store.dispatch(closeActiveModal()));
             }}>
                 Confirm
             </RS.Button>,
         ]
-    }
+    };
 };
 
 export const releaseAllConfirmationModal = () => {
     return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+        closeAction: () => {store.dispatch(closeActiveModal());},
         title: "Remove access to all students' data",
         body: <React.Fragment>
             <p>
@@ -124,17 +124,17 @@ export const releaseAllConfirmationModal = () => {
             </p>
         </React.Fragment>,
         buttons: [
-            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
+            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal());}}>
                 Cancel
             </RS.Button>,
             <RS.Button key={0} color="secondary" onClick={() => {
                 store.dispatch(authorisationsApi.endpoints.releaseAllAuthorisations.initiate())
-                    .then(() => store.dispatch(closeActiveModal()))
+                    .then(() => store.dispatch(closeActiveModal()));
             }}>
                 Confirm
             </RS.Button>,
         ]
-    }
+    };
 };
 
 export const confirmSelfRemovalModal = (userId: number, groupId: number) => {

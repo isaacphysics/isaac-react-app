@@ -34,5 +34,5 @@ export const TeacherAccountSelfUpgrade = () => {
                 {!emailVerified && <small className="text-danger d-block">Your email address is not verified — please click on the link in the verification email to confirm your email address. You can <Button color="link primary-font-link" onClick={requestVerificationEmail}>request a new verification email</Button> if necessary.</small>}
             </Col>
         </Row>
-    </Container>
-}
+    </Container>;
+};

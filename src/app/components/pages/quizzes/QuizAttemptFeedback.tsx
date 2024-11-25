@@ -23,7 +23,7 @@ function QuizFooter(props: QuizAttemptProps) {
     let controls;
     let prequel = null;
     if (page === null) {
-        prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {isDefined(studentUser) ? "their" : "your"} detailed feedback.</p>
+        prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {isDefined(studentUser) ? "their" : "your"} detailed feedback.</p>;
         controls = <>
             <Spacer/>
             <Button tag={Link} replace to={pageLink(1)}>Next</Button>

@@ -36,14 +36,14 @@ function EditorListener() {
 
     const listener = useCallback((event: MessageEvent) => {
         if (!event.origin?.includes("localhost") && event.origin !== EDITOR_ORIGIN) {
-            console.warn("Ignoring message from unexpected origin (" + event.origin + ")!")
+            console.warn("Ignoring message from unexpected origin (" + event.origin + ")!");
             return;
         }
         const {doc} = event.data;
         if (doc && "type" in doc) {
             setDoc(doc);
         }
-    }, [setDoc])
+    }, [setDoc]);
 
     useEffect(() => {
         window.addEventListener("message", listener);

@@ -43,7 +43,7 @@ const GraphSketcherPage = () => {
 
         return () => {
             window.removeEventListener('keyup', handleKeyPress);
-        }
+        };
     }, []);
 
     const onGraphSketcherStateChange = (newState: GraphSketcherState) => {

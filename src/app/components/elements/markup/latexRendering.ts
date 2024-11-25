@@ -100,7 +100,7 @@ const customKatexOptions: KatexOptions = {
 };
 
 function patternQuote(s: string) {
-    return s.replace(/([\^$(){}+*?\-|[\]:\\])/g,'\\$1')
+    return s.replace(/([\^$(){}+*?\-|[\]:\\])/g,'\\$1');
 }
 
 function endPattern(end: string) {
@@ -108,7 +108,7 @@ function endPattern(end: string) {
 }
 
 function sortLength(a: string, b: string) {
-    if (a.length !== b.length) {return b.length - a.length}
+    if (a.length !== b.length) {return b.length - a.length;}
     return (a == b ? 0 : (a < b ? -1 : 1));
 }
 
@@ -151,9 +151,9 @@ for (i = 0, m = config.displayMath.length; i < m; i++) {
     };
 }
 parts.push(starts.sort(sortLength).join("|"));
-if (config.processEnvironments) {parts.push("\\\\begin\\{([^}]*)\\}")}
-if (config.processEscapes)      {parts.push("\\\\*\\\\\\$")}
-if (config.processRefs)         {parts.push("\\\\(eq)?ref\\{[^}]*\\}")}
+if (config.processEnvironments) {parts.push("\\\\begin\\{([^}]*)\\}");}
+if (config.processEscapes)      {parts.push("\\\\*\\\\\\$");}
+if (config.processRefs)         {parts.push("\\\\(eq)?ref\\{[^}]*\\}");}
 const start = new RegExp(parts.join("|"),"g");
 
 interface Search {
@@ -339,4 +339,4 @@ export const useRenderKatex = () => {
     const figureNumbers = useContext(FigureNumberingContext);
 
     return (markup: string) => katexify(markup, user, preferredBooleanNotation && BOOLEAN_NOTATION[preferredBooleanNotation], segueEnvironment === "DEV", figureNumbers);
-}
+};

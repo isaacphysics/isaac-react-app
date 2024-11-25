@@ -68,7 +68,7 @@ const equalityValidator = (input: string, editorMode: string) => {
         errors.push('Please convert decimal numbers to fractions.');
     }
     return errors;
-}
+};
 
 const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);

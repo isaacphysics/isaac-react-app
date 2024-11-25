@@ -55,5 +55,5 @@ export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<
                 </tr>
             </tbody>
         </Table>
-    </FormGroup>
+    </FormGroup>;
 };

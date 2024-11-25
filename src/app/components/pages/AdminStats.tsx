@@ -33,7 +33,7 @@ export const AdminStats = () => {
             }
         }
         addTotalToMapOfCounts(adminStats.userGenders);
-        addTotalToMapOfCounts(adminStats.userSchoolInfo)
+        addTotalToMapOfCounts(adminStats.userSchoolInfo);
     });
 
     return <RS.Container id="admin-stats-page">

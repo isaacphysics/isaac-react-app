@@ -104,7 +104,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                             provider: "SEGUE"
                         }
                 }
-            )
+            );
         }
     };
 

@@ -63,7 +63,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
     }
 
     const queryParams = Object.keys(appParams).map((key) => {
-        return encodeURIComponent(key) + '=' + encodeURIComponent(appParams[key])
+        return encodeURIComponent(key) + '=' + encodeURIComponent(appParams[key]);
     }).join('&');
 
     const iframeSrc = `${baseURL}#?${queryParams}`;

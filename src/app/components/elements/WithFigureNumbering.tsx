@@ -17,7 +17,7 @@ export const WithFigureNumbering = ({doc, children}: WithFigureNumberingProps) =
             // Nothing to see here. Move along.
             return;
         } else if (d.type == "figure" && d.id) {
-            const figureId = extractFigureId(d.id)
+            const figureId = extractFigureId(d.id);
             if (!Object.keys(figureNumbers).includes(figureId)) {
                 figureNumbers[figureId] = n++;
             }

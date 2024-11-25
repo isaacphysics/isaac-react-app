@@ -349,7 +349,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                 {user.givenName + " " + user.familyName}
                                                 {user.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">E-mail not verified</div>}
                                             </td>
-                                        </tr>)
+                                        </tr>);
                                     })}
                                 </tbody>
                             </Table>
@@ -416,10 +416,10 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
 export const reservationsModal = ({event}: {event: AugmentedEvent}): ActiveModal => {
     return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+        closeAction: () => {store.dispatch(closeActiveModal());},
         size: 'xl',
         title: "Group reservations",
         body: <ReservationsModal event={event} />,
         overflowVisible: true
-    }
+    };
 };

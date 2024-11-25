@@ -20,7 +20,7 @@ import {
     Row, Table,
     UncontrolledButtonDropdown,
     UncontrolledTooltip
-} from "reactstrap"
+} from "reactstrap";
 import {Link} from "react-router-dom";
 import {
     resetMemberPassword,
@@ -456,7 +456,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const switchTab = (archived: boolean) => {
         setShowArchived(archived);
         setSelectedGroupId(undefined);
-    }
+    };
     const tabs = [
         {
             name: "Active",

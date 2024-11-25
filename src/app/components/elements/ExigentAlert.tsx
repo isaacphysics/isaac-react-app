@@ -9,10 +9,10 @@ type ExigentAlertProps = {
 export const ExigentAlert = (props: ExigentAlertProps) => {
 
     useEffect(() => {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
     }, []);
 
     return <Alert color={props.color}>
         {props.children}
-    </Alert>
-}
+    </Alert>;
+};

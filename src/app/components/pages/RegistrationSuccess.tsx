@@ -48,5 +48,5 @@ export const RegistrationSuccess = () => {
                 </Row>
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};

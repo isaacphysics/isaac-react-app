@@ -201,5 +201,5 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                 </React.Fragment>}
             </RS.CardBody>
         </RS.Card>
-    </>
+    </>;
 };

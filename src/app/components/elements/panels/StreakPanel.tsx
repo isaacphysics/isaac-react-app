@@ -30,5 +30,5 @@ export const StreakPanel = ({userProgress}: {userProgress?: UserProgress | null}
                 Answer at least <b>ten question parts</b> correctly per week to fill up your daily progress bar and increase your streak!
             </div>
         </RS.UncontrolledTooltip>
-    </div>
+    </div>;
 };

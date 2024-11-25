@@ -13,7 +13,7 @@ export const ChunkOrClientError = ({resetErrorBoundary, error}: FallbackProps) =
         if (isChunkError) location.reload();
     }, [isChunkError]);
     return isChunkError ? <Loading/> : <ClientError error={error} resetErrorBoundary={resetErrorBoundary}/>;
-}
+};
 
 export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     const dispatch = useAppDispatch();
@@ -28,13 +28,13 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
         location: window.location.href,
         userAgent: window.navigator.userAgent,
         errorMessage: "\n" + (error?.message || ""),
-    }
+    };
     const usefulInformationLabels: {[k in keyof typeof usefulInformation]: string} = {
         userId: "User ID",
         location: "Location",
         userAgent: "User Agent",
         errorMessage: "Error Details",
-    }
+    };
 
     useEffect(() => {
         const {userId, ...informationNotIncludingUserId} = usefulInformation;
@@ -42,7 +42,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     }, []);
 
     const plainTextUsefulInformation = "\n\n---- Useful Error Information ----\n\n" + Object.entries(usefulInformation)
-        .map(([key, value]) => `${usefulInformationLabels[key as keyof typeof usefulInformation]}: ${value}`).join("\n\n")
+        .map(([key, value]) => `${usefulInformationLabels[key as keyof typeof usefulInformation]}: ${value}`).join("\n\n");
 
     return <Container>
         <div>

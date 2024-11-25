@@ -8,7 +8,7 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number) => {
-    return <li key={index}>{errorDetailsListItem}</li>
+    return <li key={index}>{errorDetailsListItem}</li>;
 };
 
 const ContentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
@@ -26,7 +26,7 @@ const ContentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
                 {errorRecord.listOfErrors.map(contentErrorDetailsListItem)}
             </ul>
         </td>
-    </tr>
+    </tr>;
 };
 
 enum PUBLISHED_FILTER {
@@ -107,7 +107,7 @@ export const AdminContentErrors = () => {
                             </Table>
                         </Col>
                     </Row>
-                </div>
+                </div>;
             }}
         />
     </Container>;

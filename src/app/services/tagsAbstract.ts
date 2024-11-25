@@ -19,7 +19,7 @@ export abstract class AbstractBaseTagService {
                 parent = this.getBaseTagById(parent.parent);
             }
         }
-        return Object.assign(baseTag, {type: this.getTagHierarchy()[depth], level: depth})
+        return Object.assign(baseTag, {type: this.getTagHierarchy()[depth], level: depth});
     });
     public allTagIds = this.allTags.map((tag) => tag.id);
 
