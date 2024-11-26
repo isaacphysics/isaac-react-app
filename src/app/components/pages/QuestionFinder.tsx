@@ -140,7 +140,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     // this acts as an "on complete load", needed as we can only correctly update the URL once we have the user context *and* React has processed the above setStates
     useEffect(() => {
         searchAndUpdateURL();
-        setNoResultsMessage(<em>No results match your criteria</em>);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [populatedFromAccountSettings]);
 
