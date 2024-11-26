@@ -91,8 +91,8 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
 
     const isAssignmentSetToThisGroup = (group: Item<number>, assignment?: QuizAssignmentDTO) => assignment ? (assignment.quizId === quiz.id && assignment.groupId === group.value && (assignment.dueDate ? assignment.dueDate.valueOf() > Date.now() : true)) : false;
     const alreadyAssignedToAGroup = selectedGroups.some(group => quizAssignments?.some(assignment => isAssignmentSetToThisGroup(group, assignment)));
-    
-    const groupInvalid = validated.has('group') && selectedGroups.length === 0 || alreadyAssignedToAGroup;    
+
+    const groupInvalid = validated.has('group') && selectedGroups.length === 0 || alreadyAssignedToAGroup;
     const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false) || dueDate.valueOf() < Date.now());
     const scheduledStartDateInvalid = isDefined(scheduledStartDate) && scheduledStartDate.valueOf() < TODAY().valueOf();
     const feedbackModeInvalid = validated.has('feedbackMode') && feedbackMode === null;
@@ -165,7 +165,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         </Label>
 
         <Alert color={siteSpecific("warning", "info")} className="py-1 px-2 mb-4">
-            From {siteSpecific("Jan", "January")} 2025, due dates will be required for assignments.
+            From {siteSpecific("Jan", "January")} 2025, due dates will be required for set tests.
         </Alert>
 
         <div className="w-100">
