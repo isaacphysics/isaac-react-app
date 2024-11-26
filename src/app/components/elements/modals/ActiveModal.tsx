@@ -3,14 +3,14 @@ import * as AppTypes from "../../../../IsaacAppTypes";
 import {closeActiveModal, useAppDispatch} from "../../../state";
 import classNames from "classnames";
 import {isAda, isPhy, siteSpecific} from "../../../services";
-import { Modal, ModalHeader, ModalFooter } from "reactstrap";
+import { Modal, ModalHeader, ModalFooter, ModalBody } from "reactstrap";
 
 interface ActiveModalProps {
     activeModal?: AppTypes.ActiveModal | null;
 }
 
 export const ActiveModal = ({activeModal}: ActiveModalProps) => {
-    const ModalBody = activeModal && activeModal.body;
+    const ActiveModalBody = activeModal && activeModal.body;
     const dispatch = useAppDispatch();
 
     const toggle = () => {
@@ -48,7 +48,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
                 {activeModal.title}
             </ModalHeader>}
             <ModalBody className={classNames({"pt-0": !activeModal.title, "pb-2 mx-4": !activeModal?.noPadding, "pb-0": activeModal?.noPadding, "overflow-visible": activeModal?.overflowVisible})}>
-                {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
+                {typeof ActiveModalBody === "function" ? <ActiveModalBody /> : ActiveModalBody}
             </ModalBody>
             {activeModal.buttons &&
                 <ModalFooter className="mb-4 mx-2 align-self-center">
