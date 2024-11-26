@@ -1,7 +1,6 @@
 import {Immutable} from "immer";
 import {ValidationUser} from "../../../../IsaacAppTypes";
-import * as RS from "reactstrap";
-import {FormFeedback, Label} from "reactstrap";
+import {FormFeedback, FormGroup, Label} from "reactstrap";
 import classNames from "classnames";
 import React, {ChangeEvent} from "react";
 import {useGetCountriesQuery, useGetPriorityCountriesQuery,} from "../../../state";
@@ -22,7 +21,7 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryC
     const {data: allCountryOptions} = useGetCountriesQuery();
     const {data: priorityCountryOptions} = useGetPriorityCountriesQuery();
 
-    return <RS.FormGroup className={className}>
+    return <FormGroup className={className}>
         <Label htmlFor={`${idPrefix}-country-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>Country</Label>
         {isAda && <p className="d-block input-description mb-2">This helps us personalise the platform for you.</p>}
         <StyledDropdown
@@ -46,5 +45,5 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryC
                 }
             )}
         </StyledDropdown>
-    </RS.FormGroup>;
+    </FormGroup>;
 };

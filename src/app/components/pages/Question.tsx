@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
-import * as RS from "reactstrap";
-import {Col, Container, Row} from "reactstrap";
+import {Button, Col, Container, Row} from "reactstrap";
 import {match, RouteComponentProps, withRouter} from "react-router-dom";
 import {fetchDoc, goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -119,9 +118,9 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
 
                         {doc.supersededBy && isStudent(user) && <div className="alert alert-warning">
                             This question {" "}
-                            <RS.Button color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
+                            <Button color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
                                 has been replaced
-                            </RS.Button>.<br />
+                            </Button>.<br />
                             However, if you were assigned this version, you should complete it.
                         </div>}
 

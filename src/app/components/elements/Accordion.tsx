@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from "react";
-import * as RS from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {
     above,
@@ -23,6 +22,7 @@ import {Markup} from "./markup";
 import {ReportAccordionButton} from "./ReportAccordionButton";
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow.js';
 import debounce from "lodash/debounce";
+import { Button, Row, UncontrolledTooltip, Collapse, Card, CardBody } from "reactstrap";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -148,7 +148,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     return <div className="accordion">
         <div className="accordion-header">
-            <RS.Button
+            <Button
                 id={anchorId || ""} block color="link"
                 tabIndex={disabled ? -1 : 0}
                 onFocus={(e) => {
@@ -184,7 +184,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     )}
                 </span>}
                 <div className="accordion-title ps-3">
-                    <RS.Row className="h-100">
+                    <Row className="h-100">
                         <div className="d-flex align-items-center p-0 h-100">
                             {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
                             <span className="accordion-part p-3 text-secondary text-nowrap">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
@@ -197,29 +197,29 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                             </div>}
                             {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
                                 <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
-                                <RS.UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
+                                <UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
                                     modifiers={[preventOverflow]}>
                                     {disabled}
-                                </RS.UncontrolledTooltip>
+                                </UncontrolledTooltip>
                             </div>}
                         </div>
-                    </RS.Row>
+                    </Row>
                 </div>
 
                 {accordionIcon && isPhy && <span className={"accordion-icon align-self-center accordion-icon-" + accordionIcon}>
                     <span className="visually-hidden">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
                 </span>}
-            </RS.Button>
+            </Button>
         </div>
-        <RS.Collapse isOpen={isOpen} className="mt-1">
+        <Collapse isOpen={isOpen} className="mt-1">
             <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open: isOpen}}>
-                <RS.Card>
-                    <RS.CardBody>
+                <Card>
+                    <CardBody>
                         {children}
-                    </RS.CardBody>
+                    </CardBody>
                     <ReportAccordionButton pageId={getPage()?.id} sectionId={id} sectionTitle={trustedTitle}/>
-                </RS.Card>
+                </Card>
             </AccordionSectionContext.Provider>
-        </RS.Collapse>
+        </Collapse>
     </div>;
 });

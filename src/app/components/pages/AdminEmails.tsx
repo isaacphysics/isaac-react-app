@@ -5,11 +5,11 @@ import {
     useLazyGetTemplateEmailQuery,
     useSendAdminEmailWithIdsMutation
 } from "../../state";
-import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import debounce from 'lodash/debounce';
 import {isEventManager} from "../../services";
+import { Container, Card, CardTitle, CardBody, Label, Input, Row, Col } from 'reactstrap';
 
 interface AdminEmailsProps {
     location: {
@@ -39,14 +39,14 @@ export const AdminEmails = (props: AdminEmailsProps) => {
         isEventManager(user) && setEmailType("EVENTS");
     }, [user]);
 
-    return <RS.Container id="admin-emails-page">
+    return <Container id="admin-emails-page">
         <TitleAndBreadcrumb currentPageTitle="Admin emails" />
 
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">User selection</RS.CardTitle>
-            <RS.CardBody>
-                <RS.Label>Comma separated list of user IDs to email.</RS.Label>
-                <RS.Input
+        <Card className="p-3 my-3">
+            <CardTitle tag="h2">User selection</CardTitle>
+            <CardBody>
+                <Label>Comma separated list of user IDs to email.</Label>
+                <Input
                     id="email-user-ids-input"
                     type = "textarea"
                     defaultValue={csvIDs.join(", ")}
@@ -54,16 +54,16 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                         csvInputDebounce(event.target.value);
                     }}
                 />
-            </RS.CardBody>
-        </RS.Card>
+            </CardBody>
+        </Card>
 
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">Email type</RS.CardTitle>
-            <RS.CardBody>
-                <RS.Label>The type of email you are sending.</RS.Label>
+        <Card className="p-3 my-3">
+            <CardTitle tag="h2">Email type</CardTitle>
+            <CardBody>
+                <Label>The type of email you are sending.</Label>
                 <p>Users who have opted out of this type of email will
                     not receive anything. Administrative emails cannot be opted out of and should be avoided.</p>
-                <RS.Input
+                <Input
                     id="email-type-input" type="select" value={emailType}
                     disabled={isEventManager(user)}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,39 +75,39 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                     <option value="NEWS_AND_UPDATES">News and updates</option>
                     <option value="EVENTS">Events</option>
                     <option value="ADMIN">Urgent administrative email</option>
-                </RS.Input>
-            </RS.CardBody>
-        </RS.Card>
+                </Input>
+            </CardBody>
+        </Card>
 
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">Content object</RS.CardTitle>
-            <RS.CardBody>
-                <RS.Row>
-                    <RS.Col>
-                        <RS.Input
+        <Card className="p-3 my-3">
+            <CardTitle tag="h2">Content object</CardTitle>
+            <CardBody>
+                <Row>
+                    <Col>
+                        <Input
                             id="content-object-id-input" type="text" placeholder="Enter email content object ID"
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setContentObjectID(e.target.value);
                             }}
                         >
-                        </RS.Input>
-                    </RS.Col>
-                    <RS.Col>
-                        <RS.Input
+                        </Input>
+                    </Col>
+                    <Col>
+                        <Input
                             type="submit" value="Load template"
                             className={"btn w-100 btn-secondary border-0 " + classnames({disabled: contentObjectID.length == 0})}
                             disabled={contentObjectID.length == 0}
                             onClick={() => getEmailTemplate(contentObjectID)}
                         />
-                    </RS.Col>
-                </RS.Row>
-            </RS.CardBody>
-        </RS.Card>
+                    </Col>
+                </Row>
+            </CardBody>
+        </Card>
 
         {emailTemplate && <>
-            <RS.Card className="p-3 my-3">
-                <RS.CardTitle tag="h2">Details</RS.CardTitle>
-                <RS.CardBody>
+            <Card className="p-3 my-3">
+                <CardTitle tag="h2">Details</CardTitle>
+                <CardBody>
                     <ul>
                         <li><b>Subject:</b> {emailTemplate.subject || "no subject"}</li>
                         {emailTemplate.from && <li><b>From:</b> {emailTemplate.fromName || ""} &lt;{emailTemplate.from}&gt;</li>}
@@ -116,37 +116,37 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                             {emailTemplate.sender?.includes("@mail.isaac") ? "MailGun" : "University"}
                         </li>
                     </ul>
-                </RS.CardBody>
-            </RS.Card>
+                </CardBody>
+            </Card>
 
-            <RS.Card className="p-3 my-3">
-                <RS.CardTitle tag="h2">HTML preview</RS.CardTitle>
-                <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
-                <RS.CardBody>
+            <Card className="p-3 my-3">
+                <CardTitle tag="h2">HTML preview</CardTitle>
+                <Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</Label>
+                <CardBody>
                     {emailTemplate.html &&
                         <iframe title="Email content preview" className="email-preview-frame" srcDoc={emailTemplate.html}/>
                     }
-                </RS.CardBody>
-            </RS.Card>
+                </CardBody>
+            </Card>
 
-            <RS.Card className="p-3 my-3">
-                <RS.CardTitle tag="h2">Plain text preview</RS.CardTitle>
-                <RS.Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</RS.Label>
-                <RS.CardBody>
+            <Card className="p-3 my-3">
+                <CardTitle tag="h2">Plain text preview</CardTitle>
+                <Label>The preview below uses fields taken from your account (e.g. givenName and familyName).</Label>
+                <CardBody>
                     <pre>{emailTemplate.plainText}</pre>
-                </RS.CardBody>
-            </RS.Card>
+                </CardBody>
+            </Card>
         </>}
 
-        <RS.Card className="mb-5">
-            <RS.CardBody>
+        <Card className="mb-5">
+            <CardBody>
                 <div className="text-center">
                     {!emailSent ?
                         <React.Fragment>
                             {numberOfUsers >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
                                 <strong>Warning:</strong> There are currently <strong>{numberOfUsers}</strong> selected recipients.
                             </div>}
-                            <RS.Input
+                            <Input
                                 type="button" value="Send emails"
                                 className={"btn btn-xl btn-secondary border-0 " + classnames({disabled: !canSubmit})}
                                 disabled={!canSubmit}
@@ -162,7 +162,7 @@ export const AdminEmails = (props: AdminEmailsProps) => {
                         <React.Fragment>Request made, to send another refresh.</React.Fragment>
                     }
                 </div>
-            </RS.CardBody>
-        </RS.Card>
-    </RS.Container>;
+            </CardBody>
+        </Card>
+    </Container>;
 };

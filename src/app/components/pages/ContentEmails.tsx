@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {useSendProvidedEmailWithUserIdsMutation} from "../../state";
-import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import debounce from 'lodash/debounce';
 import {convert} from 'html-to-text';
 import {siteSpecific} from "../../services";
 import {EmailTemplateDTO} from "../../../IsaacApiTypes";
+import { Container, Card, CardTitle, CardBody, Label, Input } from 'reactstrap';
 
 interface ContentEmailsProps {
     location: {
@@ -49,14 +49,14 @@ const ContentEmails = (props: ContentEmailsProps) => {
 
     const [sendProvidedEmailWithUserIds] = useSendProvidedEmailWithUserIdsMutation();
 
-    return <RS.Container id="admin-emails-page">
+    return <Container id="admin-emails-page">
         <TitleAndBreadcrumb currentPageTitle="Content email sending" />
 
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">User selection</RS.CardTitle>
-            <RS.CardBody>
-                <RS.Label>Comma separated list of user IDs to email.</RS.Label>
-                <RS.Input
+        <Card className="p-3 my-3">
+            <CardTitle tag="h2">User selection</CardTitle>
+            <CardBody>
+                <Label>Comma separated list of user IDs to email.</Label>
+                <Input
                     id="email-user-ids-input"
                     type = "textarea"
                     defaultValue={csvIDs.join(", ")}
@@ -64,28 +64,28 @@ const ContentEmails = (props: ContentEmailsProps) => {
                         csvInputDebounce(event.target.value);
                     }}
                 />
-            </RS.CardBody>
-        </RS.Card>
+            </CardBody>
+        </Card>
 
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">Email subject</RS.CardTitle>
-            <RS.CardBody>
-                <RS.Label>Email subject</RS.Label>
-                <RS.Input
+        <Card className="p-3 my-3">
+            <CardTitle tag="h2">Email subject</CardTitle>
+            <CardBody>
+                <Label>Email subject</Label>
+                <Input
                     id="email-subject-input" type="text" value={emailSubject}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setEmailSubject(e.target.value);
                     }}
                 >
-                </RS.Input>
-            </RS.CardBody>
-        </RS.Card>
+                </Input>
+            </CardBody>
+        </Card>
 
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">Email Template</RS.CardTitle>
-            <RS.CardBody>
-                <RS.Label>Email HTML</RS.Label>
-                <RS.Input
+        <Card className="p-3 my-3">
+            <CardTitle tag="h2">Email Template</CardTitle>
+            <CardBody>
+                <Label>Email HTML</Label>
+                <Input
                     id="email-html-input"
                     type = "textarea"
                     defaultValue={htmlTemplate}
@@ -94,30 +94,30 @@ const ContentEmails = (props: ContentEmailsProps) => {
                     }}
                     rows={10}
                 />
-            </RS.CardBody>
-            <RS.CardBody>
-                <RS.Label>HTML Preview (unformatted)</RS.Label>
+            </CardBody>
+            <CardBody>
+                <Label>HTML Preview (unformatted)</Label>
                 <iframe title={"html preview"} srcDoc={htmlTemplate} className="email-html"/>
-            </RS.CardBody>
-            <RS.CardBody>
-                <RS.Label>Email Plaintext</RS.Label>
-                <RS.Input
+            </CardBody>
+            <CardBody>
+                <Label>Email Plaintext</Label>
+                <Input
                     id="email-plaintext-input"
                     type = "textarea"
                     value={plaintextTemplate}
                     disabled={true}
                     rows={10}
                 />
-            </RS.CardBody>
-        </RS.Card>
+            </CardBody>
+        </Card>
 
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">Email type</RS.CardTitle>
-            <RS.CardBody>
-                <RS.Label>The type of email you are sending.</RS.Label>
+        <Card className="p-3 my-3">
+            <CardTitle tag="h2">Email type</CardTitle>
+            <CardBody>
+                <Label>The type of email you are sending.</Label>
                 <p>Users who have opted out of this type of email will
                     not receive anything. Administrative emails cannot be opted out of and should be avoided.</p>
-                <RS.Input
+                <Input
                     id="email-type-input" type="select" value={emailType}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setEmailType(e.target.value);
@@ -128,15 +128,15 @@ const ContentEmails = (props: ContentEmailsProps) => {
                     <option value="NEWS_AND_UPDATES">News and updates</option>
                     <option value="EVENTS">Events</option>
                     <option value="ADMIN">Urgent administrative email</option>
-                </RS.Input>
-            </RS.CardBody>
-        </RS.Card>
+                </Input>
+            </CardBody>
+        </Card>
 
-        <RS.Card className="p-3 my-3">
-            <RS.CardTitle tag="h2">Send via</RS.CardTitle>
-            <RS.CardBody>
-                <RS.Label>The method of sending the email</RS.Label>
-                <RS.Input
+        <Card className="p-3 my-3">
+            <CardTitle tag="h2">Send via</CardTitle>
+            <CardBody>
+                <Label>The method of sending the email</Label>
+                <Input
                     id="email-type-input" type="select" value={overrideEnvelopeFrom}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setOverrideEnvelopeFrom(e.target.value);
@@ -144,19 +144,19 @@ const ContentEmails = (props: ContentEmailsProps) => {
                 >
                     <option value={undefined}>Isaac</option>
                     <option value={mailgunAddress}>Mailgun</option>
-                </RS.Input>
-            </RS.CardBody>
-        </RS.Card>
+                </Input>
+            </CardBody>
+        </Card>
 
-        <RS.Card className="mb-5">
-            <RS.CardBody>
+        <Card className="mb-5">
+            <CardBody>
                 <div className="text-center">
                     {!emailSent ?
                         <React.Fragment>
                             {numberOfUsers >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
                                 <strong>Warning:</strong> There are currently <strong>{numberOfUsers}</strong> selected recipients.
                             </div>}
-                            <RS.Input
+                            <Input
                                 type="button" value="Send emails"
                                 className={"btn btn-xl btn-secondary border-0 " + classnames({disabled: !canSubmit})}
                                 disabled={!canSubmit}
@@ -172,8 +172,8 @@ const ContentEmails = (props: ContentEmailsProps) => {
                         <React.Fragment>Request made, to send another refresh.</React.Fragment>
                     }
                 </div>
-            </RS.CardBody>
-        </RS.Card>
-    </RS.Container>;
+            </CardBody>
+        </Card>
+    </Container>;
 };
 export default ContentEmails;

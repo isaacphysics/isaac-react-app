@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {FreeTextRule} from "../../../IsaacAppTypes";
-import * as RS from "reactstrap";
 import {ContentBase, TestCaseDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AppState, testQuestion, useAppDispatch, useAppSelector} from "../../state";
 import {Tabs} from "../elements/Tabs";
 import {atLeastOne} from "../../services";
 import {IsaacContent} from "../content/IsaacContent";
+import { Container, Form, Card, CardBody, Table, Label, Input, UncontrolledTooltip, Row, Col, Button } from "reactstrap";
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
@@ -142,38 +142,38 @@ export const FreeTextBuilder = () => {
     const cleanTestCases = testCases.map(removeTestCaseNumber).filter(notEqualToDefaultTestCase);
     const atLeastOneQuestionChoiceAndTestCase = atLeastOne(cleanQuestionChoices.length) && atLeastOne(cleanTestCases.length);
 
-    return <RS.Container>
+    return <Container>
         <TitleAndBreadcrumb className="mb-4" currentPageTitle="Free-text question builder" />
-        <RS.Form onSubmit={(event: React.FormEvent) => {
+        <Form onSubmit={(event: React.FormEvent) => {
             if (event) {event.preventDefault();}
             if (atLeastOneQuestionChoiceAndTestCase) {
                 setChoicesHashAtPreviousRequest(choicesHash(questionChoices));
                 dispatch(testQuestion(cleanQuestionChoices, cleanTestCases));
             }
         }}>
-            <RS.Card className="mb-4">
-                <RS.CardBody>
+            <Card className="mb-4">
+                <CardBody>
                     <h2 className="h3">Matching rules</h2>
                     <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
                         {{
-                            'GUI': <RS.Table className="mb-3">
+                            'GUI': <Table className="mb-3">
                                 <thead><tr><th>Rule</th><th colSpan={3}>Response</th></tr></thead>
                                 <tbody>
                                     {questionChoices.map(choice => <tr key={choice.choiceNumber}>
                                         <td>
-                                            <RS.Label className="mb-3 w-100">
+                                            <Label className="mb-3 w-100">
                                                 Value
                                                 <div className="d-flex align-items-center">
-                                                    <RS.Input
+                                                    <Input
                                                         className="w-100" type="text" value={choice.value}
                                                         onChange={e => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, value: e.target.value} : c))}
                                                     />
                                                     <span id={`choice-help-${choice.choiceNumber}`} className="icon-help me-2" />
                                                 </div>
-                                            </RS.Label>
-                                            <RS.UncontrolledTooltip target={`choice-help-${choice.choiceNumber}`} placement="bottom" innerClassName="">
+                                            </Label>
+                                            <UncontrolledTooltip target={`choice-help-${choice.choiceNumber}`} placement="bottom" innerClassName="">
                                                 <div className="text-start">
-                                                    <RS.Table>
+                                                    <Table>
                                                         <thead>
                                                             <tr><th className="text-light" colSpan={2}>In-word wildcards:</th></tr>
                                                         </thead>
@@ -189,42 +189,42 @@ export const FreeTextBuilder = () => {
                                                             <td><strong><code className="text-dark">*</code></strong></td>
                                                             <td className="text-light">Match zero or more characters.</td>
                                                         </tr>
-                                                    </RS.Table>
+                                                    </Table>
                                                 </div>
-                                            </RS.UncontrolledTooltip>
-                                            <RS.Row>
-                                                <RS.Col xs={3} className="text-center">
-                                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, caseInsensitive: !c.caseInsensitive} : c))}>
-                                                        <RS.Label>Ignore case {checkMark(choice.caseInsensitive)}</RS.Label>
-                                                    </RS.Button>
-                                                </RS.Col>
-                                                <RS.Col xs={3} className="text-center">
-                                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsAnyOrder: !c.allowsAnyOrder} : c))}>
-                                                        <RS.Label>Any order {checkMark(choice.allowsAnyOrder)}</RS.Label>
-                                                    </RS.Button>
-                                                </RS.Col>
-                                                <RS.Col xs={3} className="text-center">
-                                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsExtraWords: !c.allowsExtraWords} : c))}>
-                                                        <RS.Label>Extra words {checkMark(choice.allowsExtraWords)}</RS.Label>
-                                                    </RS.Button>
-                                                </RS.Col>
-                                                <RS.Col xs={3} className="text-center">
-                                                    <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsMisspelling: !c.allowsMisspelling} : c))}>
-                                                        <RS.Label>Misspelling {checkMark(choice.allowsMisspelling)}</RS.Label>
-                                                    </RS.Button>
-                                                </RS.Col>
-                                            </RS.Row>
+                                            </UncontrolledTooltip>
+                                            <Row>
+                                                <Col xs={3} className="text-center">
+                                                    <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, caseInsensitive: !c.caseInsensitive} : c))}>
+                                                        <Label>Ignore case {checkMark(choice.caseInsensitive)}</Label>
+                                                    </Button>
+                                                </Col>
+                                                <Col xs={3} className="text-center">
+                                                    <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsAnyOrder: !c.allowsAnyOrder} : c))}>
+                                                        <Label>Any order {checkMark(choice.allowsAnyOrder)}</Label>
+                                                    </Button>
+                                                </Col>
+                                                <Col xs={3} className="text-center">
+                                                    <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsExtraWords: !c.allowsExtraWords} : c))}>
+                                                        <Label>Extra words {checkMark(choice.allowsExtraWords)}</Label>
+                                                    </Button>
+                                                </Col>
+                                                <Col xs={3} className="text-center">
+                                                    <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsMisspelling: !c.allowsMisspelling} : c))}>
+                                                        <Label>Misspelling {checkMark(choice.allowsMisspelling)}</Label>
+                                                    </Button>
+                                                </Col>
+                                            </Row>
                                         </td>
                                         <td className="align-middle">
-                                            <RS.Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, correct: !c.correct} : c))}>
+                                            <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, correct: !c.correct} : c))}>
                                                 <div className="h4 px-4">{checkMark(choice.correct)}</div>
-                                            </RS.Button>
+                                            </Button>
                                         </td>
                                         <td>
-                                            <RS.Label>
+                                            <Label>
                                                 Feedback:
                                                 {isEditableExplanation(choice.explanation) ?
-                                                    <RS.Input
+                                                    <Input
                                                         type="textarea" value={(choice.explanation as any).children[0].value}
                                                         onChange={event => {
                                                             const explanation = choice.explanation as any;
@@ -235,7 +235,7 @@ export const FreeTextBuilder = () => {
                                                     :
                                                     <IsaacContent doc={choice.explanation as ContentBase}/>
                                                 }
-                                            </RS.Label>
+                                            </Label>
                                         </td>
                                         <td>
                                             <button
@@ -248,16 +248,16 @@ export const FreeTextBuilder = () => {
                                 <tfoot>
                                     <tr>
                                         <td colSpan={4} className="text-center pb-3">
-                                            <RS.Button color="link" onClick={() => setQuestionChoices([...questionChoices, generateDefaultChoice()])}>
+                                            <Button color="link" onClick={() => setQuestionChoices([...questionChoices, generateDefaultChoice()])}>
                                                 <img src="/assets/common/icons/add_circle_outline.svg" alt="Add matching rule" />
-                                            </RS.Button>
+                                            </Button>
                                         </td>
                                     </tr>
                                 </tfoot>
-                            </RS.Table>,
+                            </Table>,
                             "JSON": <div className="mb-3">
                                 <p>JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion</p>
-                                <RS.Input
+                                <Input
                                     type="textarea" rows={25} className={jsonParseError ? "alert-danger" : ""}
                                     value={questionChoicesJson}
                                     onChange={event => {
@@ -266,7 +266,7 @@ export const FreeTextBuilder = () => {
                                     }}
                                 />
                                 <div className="text-center">
-                                    <RS.Button
+                                    <Button
                                         className="my-2" onClick={() => {
                                             try {
                                                 setQuestionChoices(convertJsonToQuestionChoices(questionChoicesJson));
@@ -276,20 +276,20 @@ export const FreeTextBuilder = () => {
                                         }}
                                     >
                                         Submit
-                                    </RS.Button>
+                                    </Button>
                                 </div>
                             </div>
                         }}
                     </Tabs>
-                </RS.CardBody>
-            </RS.Card>
+                </CardBody>
+            </Card>
 
-            <RS.Card className="mb-4">
-                <RS.CardBody>
+            <Card className="mb-4">
+                <CardBody>
                     <h2 className="h3">Test answers ({numberOfResponseMatches}/{testCases.length})</h2>
                     <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
                         {{
-                            'GUI': <RS.Table className="mb-2">
+                            'GUI': <Table className="mb-2">
                                 <thead>
                                     <tr>
                                         <th className="w-10 text-center">Expected</th>
@@ -306,12 +306,12 @@ export const FreeTextBuilder = () => {
                                         const matchFailure = !!testCaseResponse && testCaseResponse.match == false;
                                         return <tr key={testCase.testCaseNumber}>
                                             <td className="w-10 text-center align-middle">
-                                                <RS.Button color="link" onClick={() => setTestCases(testCases.map(tc => testCase == tc ? {...tc, expected: !tc.expected} : tc))}>
+                                                <Button color="link" onClick={() => setTestCases(testCases.map(tc => testCase == tc ? {...tc, expected: !tc.expected} : tc))}>
                                                     {checkMark(testCase.expected)}
-                                                </RS.Button>
+                                                </Button>
                                             </td>
                                             <td>
-                                                <RS.Input
+                                                <Input
                                                     type="text" value={testCase?.answer?.value || ""}
                                                     onChange={event => setTestCases(testCases.map(
                                                         testCaseInState => testCaseInState === testCase ?
@@ -342,21 +342,21 @@ export const FreeTextBuilder = () => {
                                 <tfoot>
                                     <tr>
                                         <td colSpan={6} className="text-center pb-3">
-                                            <RS.Button color="link" onClick={() => setTestCases([...testCases, generateDefaultTestCase()])}>
+                                            <Button color="link" onClick={() => setTestCases([...testCases, generateDefaultTestCase()])}>
                                                 <img src="/assets/common/icons/add_circle_outline.svg" alt="Add matching rule" />
-                                            </RS.Button>
+                                            </Button>
                                         </td>
                                     </tr>
                                 </tfoot>
-                            </RS.Table>,
+                            </Table>,
                             'CSV': <div className="mb-3">
                                 <p>Enter test cases as CSV with the headers: expected(true/false), value</p>
-                                <RS.Input type="textarea" rows={10} value={testCasesCsv} onChange={event => {
+                                <Input type="textarea" rows={10} value={testCasesCsv} onChange={event => {
                                     setCsvParseError(false);
                                     setTestCasesCsv(event.target.value);
                                 }} />
                                 <div className="text-center">
-                                    <RS.Button
+                                    <Button
                                         className={`my-2 ${csvParseError ? "alert-danger" : ""}`}
                                         onClick={() => {
                                             try {
@@ -367,17 +367,17 @@ export const FreeTextBuilder = () => {
                                         }}
                                     >
                                         Submit
-                                    </RS.Button>
+                                    </Button>
                                 </div>
                             </div>
                         }}
                     </Tabs>
-                </RS.CardBody>
-            </RS.Card>
+                </CardBody>
+            </Card>
 
             <div className="mb-5 text-center">
-                <RS.Input type="submit" value="Test question" className="btn btn-xl btn-secondary border-0" />
+                <Input type="submit" value="Test question" className="btn btn-xl btn-secondary border-0" />
             </div>
-        </RS.Form>
-    </RS.Container>;
+        </Form>
+    </Container>;
 };

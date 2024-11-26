@@ -7,7 +7,6 @@ import {
     useAppDispatch,
     useAppSelector
 } from "../../../state";
-import * as RS from "reactstrap";
 import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
 import {MultiValue} from "react-select";
@@ -37,6 +36,7 @@ import {GroupBase} from "react-select/dist/declarations/src/types";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { SortItemHeader } from "../SortableItemHeader";
+import { Input, Row, Col, Label, Form, Table } from "reactstrap";
 
 // Immediately load GameboardBuilderRow, but allow splitting
 const importGameboardBuilderRow = import("../GameboardBuilderRow");
@@ -155,7 +155,7 @@ export const QuestionSearchModal = (
             </strong>
         </div>
         <div>
-            <RS.Input
+            <Input
                 type="button"
                 value={siteSpecific("Add Selections to Gameboard", "Add selections to quiz")}
                 disabled={isEqual(new Set(modalQuestions.selectedQuestions.keys()), new Set(currentQuestions.selectedQuestions.keys()))}
@@ -172,9 +172,9 @@ export const QuestionSearchModal = (
     </div>;
 
     return <div className="mb-4">
-        <RS.Row>
-            {isPhy && <RS.Col lg={3} className="text-wrap my-2">
-                <RS.Label htmlFor="question-search-book">Book</RS.Label>
+        <Row>
+            {isPhy && <Col lg={3} className="text-wrap my-2">
+                <Label htmlFor="question-search-book">Book</Label>
                 <StyledSelect
                     inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
                     onChange={(e) => {
@@ -192,66 +192,66 @@ export const QuestionSearchModal = (
                         {value: "chemistry_16", label: "A-Level Physical Chemistry"}
                     ]}
                 />
-            </RS.Col>}
-            <RS.Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
-                <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
+            </Col>}
+            <Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
+                <Label htmlFor="question-search-topic">Topic</Label>
                 <StyledSelect
                     inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
                     options={groupBaseTagOptions} onChange={(x : readonly Item<string>[], {action: _action}) => {
                         selectOnChange(setSearchTopics, true)(x);
                     }}
                 />
-            </RS.Col>
-        </RS.Row>
-        <RS.Row className={isBookSearch ? "d-none" : ""}>
-            <RS.Col lg={6} className={`text-wrap my-2`}>
-                <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
+            </Col>
+        </Row>
+        <Row className={isBookSearch ? "d-none" : ""}>
+            <Col lg={6} className={`text-wrap my-2`}>
+                <Label htmlFor="question-search-stage">Stage</Label>
                 <StyledSelect
                     inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
                     options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                 />
-            </RS.Col>
-            <RS.Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
-                <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
+            </Col>
+            <Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
+                <Label htmlFor="question-search-difficulty">Difficulty</Label>
                 <StyledSelect
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
                     options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
-            </RS.Col>
-            {isAda && <RS.Col lg={6} className={`text-wrap my-2`}>
-                <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
+            </Col>
+            {isAda && <Col lg={6} className={`text-wrap my-2`}>
+                <Label htmlFor="question-search-exam-board">Exam Board</Label>
                 <StyledSelect
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
                     value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
                     options={getFilteredExamBoardOptions({byStages: searchStages})}
                     onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
                 />
-            </RS.Col>}
-        </RS.Row>
-        <RS.Row>
-            {isPhy && isStaff(user) && <RS.Col className="text-wrap mb-2">
-                <RS.Form>
-                    <RS.Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</RS.Label>
-                </RS.Form>
-            </RS.Col>}
-        </RS.Row>
-        <RS.Row>
-            <RS.Col lg={12} className="text-wrap mt-2">
-                <RS.Label htmlFor="question-search-title">Search</RS.Label>
-                <RS.Input id="question-search-title"
+            </Col>}
+        </Row>
+        <Row>
+            {isPhy && isStaff(user) && <Col className="text-wrap mb-2">
+                <Form>
+                    <Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</Label>
+                </Form>
+            </Col>}
+        </Row>
+        <Row>
+            <Col lg={12} className="text-wrap mt-2">
+                <Label htmlFor="question-search-title">Search</Label>
+                <Input id="question-search-title"
                     type="text"
                     placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setSearchQuestionName(e.target.value);
                     }}
                 />
-            </RS.Col>
-        </RS.Row>
+            </Col>
+        </Row>
         <div className="mt-4">
             {addSelectionsRow}
         </div>
         <Suspense fallback={<Loading/>}>
-            <RS.Table bordered responsive className="mt-4">
+            <Table bordered responsive className="mt-4">
                 <thead>
                     <tr className="search-modal-table-header">
                         <th className="w-5"> </th>
@@ -281,7 +281,7 @@ export const QuestionSearchModal = (
                         />
                     )}
                 </tbody>
-            </RS.Table>
+            </Table>
         </Suspense>
         {questions && questions.length > 5 && <div className="mt-2">
             {addSelectionsRow}

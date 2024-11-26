@@ -5,7 +5,6 @@ import {
     useGetFasttrackConceptQuestionsQuery,
 } from "../../state";
 import React, {useContext, useMemo} from "react";
-import * as RS from "reactstrap";
 import {selectors} from "../../state";
 import {Link} from "react-router-dom";
 import {useDeviceSize} from "../../services";
@@ -14,6 +13,7 @@ import {HexagonConnection} from "./svg/HexagonConnection";
 import {Markup} from "./markup";
 import {GameboardContext} from "../../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
+import { Row, Col } from "reactstrap";
 
 type QuestionLevel = "topTen" | "upper" | "lower";
 
@@ -365,8 +365,8 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
     }
 
     function renderProgress(progress: Progress) {
-        return <RS.Row className="mt-sm-3 mb-3 mb-sm-4">
-            <RS.Col cols={12} lg={3}>
+        return <Row className="mt-sm-3 mb-3 mb-sm-4">
+            <Col cols={12} lg={3}>
                 <h4 className="mt-lg-1">{gameboard?.title}</h4>
                 <div className="d-none d-lg-block">
                     <br className="d-none d-lg-block"/>
@@ -376,8 +376,8 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                         </Markup>
                     </h4>}
                 </div>
-            </RS.Col>
-            <RS.Col cols={12} lg={9}>
+            </Col>
+            <Col cols={12} lg={9}>
                 <svg id="ft-progress" width="100%" height={progressBarHeight}>
                     <g id="progress-bar-padding" transform={`translate(${progressBarPadding}, ${progressBarPadding})`}>
                         <g id="concept-connections">
@@ -395,8 +395,8 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                         </g>
                     </g>
                 </svg>
-            </RS.Col>
-            <RS.Col cols={12} className="d-block d-lg-none">
+            </Col>
+            <Col cols={12} className="d-block d-lg-none">
                 <div>
                     {currentlyWorkingOn.isConcept && <h4 className="mt-2">
                         <Markup encoding={"latex"}>
@@ -404,8 +404,8 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                         </Markup>
                     </h4>}
                 </div>
-            </RS.Col>
-        </RS.Row>;
+            </Col>
+        </Row>;
     }
 
     const categorisedConceptQuestions = categoriseConceptQuestions(conceptQuestions ?? []);

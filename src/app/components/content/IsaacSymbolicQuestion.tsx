@@ -1,5 +1,4 @@
 import React, {ChangeEvent, lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
-import * as RS from "reactstrap";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
@@ -18,6 +17,7 @@ import {v4 as uuid_v4} from "uuid";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
+import { InputGroup, Input, Button, UncontrolledTooltip } from "reactstrap";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -237,15 +237,15 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             </Suspense>}
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                <RS.InputGroup className="my-2 separate-input-group">
-                    <RS.Input type="text" onChange={updateEquation} value={textInput}
+                <InputGroup className="my-2 separate-input-group">
+                    <Input type="text" onChange={updateEquation} value={textInput}
                         placeholder="Type your formula here"/>
                     <>
                         {siteSpecific(
-                            <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>,
+                            <Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</Button>,
                             <span id={helpTooltipId} className="icon-help-q my-auto"/>
                         )}
-                        {<RS.UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
+                        {<UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
                             a*x^2 + b x + c<br />
@@ -254,9 +254,9 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                             log(x_a, 2) == log(x_a) / log(2)<br />
                             <br />
                             As you type, the box below will preview the result.
-                        </RS.UncontrolledTooltip>}
+                        </UncontrolledTooltip>}
                     </>
-                </RS.InputGroup>
+                </InputGroup>
                 <QuestionInputValidation userInput={textInput} validator={symbolicInputValidator} />
                 {symbolList && <div className="eqn-editor-symbols">
                     The following symbols may be useful: <pre>{symbolList}</pre>

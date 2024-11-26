@@ -1,10 +1,10 @@
 import React, {ChangeEvent} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
-import * as RS from "reactstrap";
 import {siteSpecific, validateUserGender} from "../../../services";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
+import { FormGroup, Label } from "reactstrap";
 
 interface GenderInputProps {
     className?: string;
@@ -15,10 +15,10 @@ interface GenderInputProps {
     required: boolean;
 }
 export const GenderInput = ({className, userToUpdate, setUserToUpdate, submissionAttempted, idPrefix="account", required}: GenderInputProps) => {
-    return <RS.FormGroup className={className}>
-        <RS.Label htmlFor={`${idPrefix}-gender-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
+    return <FormGroup className={className}>
+        <Label htmlFor={`${idPrefix}-gender-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>
             Gender
-        </RS.Label>
+        </Label>
         <p className="d-block input-description mb-2">
             We conduct academic research, including
             {siteSpecific(
@@ -45,5 +45,5 @@ export const GenderInput = ({className, userToUpdate, setUserToUpdate, submissio
             <option value="OTHER">Other gender identity</option>
             <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
         </StyledDropdown>
-    </RS.FormGroup>;
+    </FormGroup>;
 };

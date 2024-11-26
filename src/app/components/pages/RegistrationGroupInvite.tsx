@@ -1,7 +1,6 @@
-import {Container} from "reactstrap";
+import {Button, Card, CardBody, Container, Table} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import React, { useEffect, useState } from "react";
-import * as RS from "reactstrap";
 import { extractTeacherName, history, KEY, persistence } from "../../services";
 import { authorisationsApi, store, useLazyGetTokenOwnerQuery } from "../../state";
 import { UserSummaryWithEmailAddressDTO } from "../../../IsaacApiTypes";
@@ -39,23 +38,23 @@ export const RegistrationGroupInvite = ()  => {
     if(!isGroupValid){
         return <Container>
             <TitleAndBreadcrumb currentPageTitle={`Group not found`} className="mb-4" />
-            <RS.Card className="my-5">
-                <RS.CardBody>
+            <Card className="my-5">
+                <CardBody>
                     <p>You came here via a group join link, but the group code is invalid.</p>
-                    <RS.Button color="primary" outline onClick={() => {history.push("/account#teacherconnections");}}>
+                    <Button color="primary" outline onClick={() => {history.push("/account#teacherconnections");}}>
                         Go to teacher connections
-                    </RS.Button>
-                </RS.CardBody>
-            </RS.Card>
+                    </Button>
+                </CardBody>
+            </Card>
         </Container>;
     }
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Join group`} className="mb-4" />
-        <RS.Card className="my-5">
-            <RS.CardBody>
+        <Card className="my-5">
+            <CardBody>
                 <p>You came here via a group join link. Are you happy to join the group and allow
                 these teachers to see your work and progress?</p>
-                <RS.Table bordered>
+                <Table bordered>
                     <tbody>
                         {usersToGrantAccess?.map((member: any) => (<tr key={member.id}>
                             <td>
@@ -64,15 +63,15 @@ export const RegistrationGroupInvite = ()  => {
                             </td>
                         </tr>))}
                     </tbody>
-                </RS.Table>
-                <RS.Button color="primary" outline onClick={() => {history.push("/account");}}>
+                </Table>
+                <Button color="primary" outline onClick={() => {history.push("/account");}}>
                     No, skip this
-                </RS.Button>
+                </Button>
                 {" "}
-                <RS.Button color="secondary" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
+                <Button color="secondary" onClick={() => {store.dispatch(authorisationsApi.endpoints.authenticateWithToken.initiate(authenticationToken)); history.push("/account");}}>
                     Yes, join the group
-                </RS.Button>
-            </RS.CardBody>  
-        </RS.Card>
+                </Button>
+            </CardBody>  
+        </Card>
     </Container>;
 };

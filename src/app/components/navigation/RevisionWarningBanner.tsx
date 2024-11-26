@@ -1,7 +1,7 @@
 import React from "react";
-import * as RS from "reactstrap";
 import {AppState, selectors, useAppSelector} from "../../state";
 import {RenderNothing} from "../elements/RenderNothing";
+import { Alert } from "reactstrap";
 
 export function RevisionWarningBanner() {
 
@@ -22,12 +22,12 @@ export function RevisionWarningBanner() {
                         ? "in the last month" 
                         : "in the last week";
 
-        return <RS.Alert color="warning" className={"no-print"}>
+        return <Alert color="warning" className={"no-print"}>
             <span>You are currently in <a href="\account#betafeatures">revision mode</a> which hides your previous attempts.</span>
             {timespan && <>
                 <br/><br/><span>You answered this question correctly {timespan}.</span>
             </>}
-        </RS.Alert>;
+        </Alert>;
     } else {
         return RenderNothing;
     }

@@ -1,5 +1,4 @@
 import React, {MutableRefObject, useEffect, useState} from 'react';
-import * as RS from "reactstrap";
 import {LevelAttempts} from "../../../../IsaacAppTypes";
 import {bb, Chart} from "billboard.js";
 import {
@@ -22,6 +21,7 @@ import {
 import {SingleValue} from "react-select";
 import {Difficulty} from "../../../../IsaacApiTypes";
 import {StyledSelect} from "../inputs/StyledSelect";
+import { Row, Col } from 'reactstrap';
 
 interface QuestionProgressChartsProps {
     subId: string;
@@ -143,8 +143,8 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
     const numberOfCharts = siteSpecific(3, 2);
 
-    return <RS.Row>
-        {isPhy && <RS.Col xl={12/numberOfCharts} md={12/numberOfCharts} className="mt-4 d-flex flex-column">
+    return <Row>
+        {isPhy && <Col xl={12/numberOfCharts} md={12/numberOfCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 Questions by {topTagLevel}
             </div>
@@ -175,9 +175,9 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         </tbody>
                     </table>}
             </div>
-        </RS.Col>}
-        {isAda && <RS.Col md={3}/>}
-        <RS.Col xl={12/numberOfCharts} md={4} className="mt-4 d-flex flex-column">
+        </Col>}
+        {isAda && <Col md={3}/>}
+        <Col xl={12/numberOfCharts} md={4} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 <StyledSelect
                     inputId={`${subId}-subcategory-select`}
@@ -217,9 +217,9 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         </tbody>
                     </table>}
             </div>
-        </RS.Col>
-        {isAda && <RS.Col md={3}/>}
-        {isPhy && <RS.Col xl={12/numberOfCharts} md={12/numberOfCharts} className="mt-4 d-flex flex-column">
+        </Col>
+        {isAda && <Col md={3}/>}
+        {isPhy && <Col xl={12/numberOfCharts} md={12/numberOfCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 <StyledSelect
                     inputId={`${subId}-stage-select`}
@@ -259,6 +259,6 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                         </tbody>
                     </table>}
             </div>
-        </RS.Col>}
-    </RS.Row>;
+        </Col>}
+    </Row>;
 };

@@ -1,6 +1,5 @@
 import React, {useCallback, useRef, useState} from "react";
-import * as RS from "reactstrap";
-import {FormGroup} from "reactstrap";
+import {Button, Card, CardBody, CardFooter, CardTitle, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Form, FormGroup, Input, InputGroup, Label, Row, Table, UncontrolledButtonDropdown} from "reactstrap";
 import {
     AppState,
     resetPassword,
@@ -156,39 +155,39 @@ export const AdminUserManager = () => {
         }
     };
 
-    return <RS.Container>
+    return <Container>
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="User manager"/>
 
         {/* Search */}
-        <RS.Card className="mt-5">
-            <RS.Form name="register" onSubmit={search}>
-                <RS.CardBody>
-                    <RS.Row>
-                        <RS.Col md={6}>
-                            <RS.FormGroup>
-                                <RS.Label htmlFor="family-name-search">Find a user by family name:</RS.Label>
-                                <RS.Input
+        <Card className="mt-5">
+            <Form name="register" onSubmit={search}>
+                <CardBody>
+                    <Row>
+                        <Col md={6}>
+                            <FormGroup>
+                                <Label htmlFor="family-name-search">Find a user by family name:</Label>
+                                <Input
                                     id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder="e.g. Wilkes"
                                     onChange={e => setParamIfNotDefault("familyName", e.target.value, "")}
                                 />
-                            </RS.FormGroup>
-                            <RS.FormGroup>
-                                <RS.Label htmlFor="email-search">Find a user by email:</RS.Label>
-                                <RS.Input
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="email-search">Find a user by email:</Label>
+                                <Input
                                     id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder="e.g. teacher@school.org"
                                     onChange={e => setParamIfNotDefault("email", e.target.value, "")}
                                 />
-                            </RS.FormGroup>
-                            <RS.FormGroup>
-                                <RS.Label htmlFor="school-other-search">Find by manually entered school:</RS.Label>
-                                <RS.Input
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="school-other-search">Find by manually entered school:</Label>
+                                <Input
                                     id="school-other-search" type="text" defaultValue={searchQuery.schoolOther || undefined}
                                     onChange={e => setParamIfNotDefault("schoolOther", e.target.value, "")}
                                 />
-                            </RS.FormGroup>
-                            <RS.FormGroup>
-                                <RS.Label htmlFor="verification-status-search">Find by email verification status:</RS.Label>
-                                <RS.Input
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="verification-status-search">Find by email verification status:</Label>
+                                <Input
                                     id="verification-status-search" type="select" defaultValue={String(searchQuery.emailVerificationStatus)}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setParamIfNotDefault("emailVerificationStatus", e.target.value === "null" ? "" : e.target.value, "");
@@ -198,14 +197,14 @@ export const AdminUserManager = () => {
                                     <option value="VERIFIED">Verified</option>
                                     <option value="NOT_VERIFIED">Not verified</option>
                                     <option value="DELIVERY_FAILED">Delivery failed</option>
-                                </RS.Input>
-                            </RS.FormGroup>
-                        </RS.Col>
+                                </Input>
+                            </FormGroup>
+                        </Col>
 
-                        <RS.Col md={6}>
-                            <RS.FormGroup>
-                                <RS.Label htmlFor="role-search">Find by user role:</RS.Label>
-                                <RS.Input
+                        <Col md={6}>
+                            <FormGroup>
+                                <Label htmlFor="role-search">Find by user role:</Label>
+                                <Input
                                     id="role-search" type="select" defaultValue={String(searchQuery.role)}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         const role = e.target.value;
@@ -219,19 +218,19 @@ export const AdminUserManager = () => {
                                     <option value="EVENT_LEADER">Event leader</option>
                                     <option value="EVENT_MANAGER">Event manager</option>
                                     <option value="ADMIN">Admin</option>
-                                </RS.Input>
-                            </RS.FormGroup>
-                            <RS.FormGroup>
-                                <RS.Label htmlFor="postcode-search">Find users with school within a given distance of postcode:</RS.Label>
-                                <RS.Row>
-                                    <RS.Col md={7}>
-                                        <RS.Input
+                                </Input>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="postcode-search">Find users with school within a given distance of postcode:</Label>
+                                <Row>
+                                    <Col md={7}>
+                                        <Input
                                             id="postcode-search" data-testid="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="e.g. CB3 0FD"
                                             onChange={e => setParamIfNotDefault("postcode", e.target.value, "")}
                                         />
-                                    </RS.Col>
-                                    <RS.Col md={5} className="mt-2 mt-md-0">
-                                        <RS.Input
+                                    </Col>
+                                    <Col md={5} className="mt-2 mt-md-0">
+                                        <Input
                                             id="postcode-radius-search" data-testid="postcode-radius-search" type="select" defaultValue={searchQuery.postcodeRadius}
                                             onChange={e => setParamIfNotDefault("postcodeRadius", e.target.value, "")}
                                         >
@@ -241,79 +240,79 @@ export const AdminUserManager = () => {
                                             <option value="TWENTY_MILES">20 miles</option>
                                             <option value="TWENTY_FIVE_MILES">25 miles</option>
                                             <option value="FIFTY_MILES">50 miles</option>
-                                        </RS.Input>
-                                    </RS.Col>
-                                </RS.Row>
-                            </RS.FormGroup>
-                            <RS.FormGroup>
-                                <RS.Label htmlFor="school-urn-search">Find a user with school URN:</RS.Label>
-                                <RS.Input
+                                        </Input>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="school-urn-search">Find a user with school URN:</Label>
+                                <Input
                                     id="school-urn-search" type="text" defaultValue={searchQuery.schoolURN || undefined}
                                     onChange={e => setParamIfNotDefault("schoolURN", e.target.value, "")}
                                 />
-                            </RS.FormGroup>
-                        </RS.Col>
-                    </RS.Row>
-                </RS.CardBody>
-                <RS.CardFooter>
-                    <RS.Row>
-                        <RS.Col md={{size: 4, offset: 4}} >
-                            <RS.Input type="submit" value="Search" className="btn w-100 btn-secondary border-0"/>
-                        </RS.Col>
-                    </RS.Row>
-                </RS.CardFooter>
-            </RS.Form>
-        </RS.Card>
+                            </FormGroup>
+                        </Col>
+                    </Row>
+                </CardBody>
+                <CardFooter>
+                    <Row>
+                        <Col md={{size: 4, offset: 4}} >
+                            <Input type="submit" value="Search" className="btn w-100 btn-secondary border-0"/>
+                        </Col>
+                    </Row>
+                </CardFooter>
+            </Form>
+        </Card>
 
         {/* Result panel */}
-        <RS.Card className="my-4">
-            <RS.CardTitle data-testid="user-search-numbers" tag="h4" className="ps-4 pt-3 mb-0">
+        <Card className="my-4">
+            <CardTitle data-testid="user-search-numbers" tag="h4" className="ps-4 pt-3 mb-0">
                 Manage users ({isDefined(searchResults) && searchResults.length || 0})<br />
                 Selected ({selectedUserIds.length})
-            </RS.CardTitle>
+            </CardTitle>
 
-            <RS.CardBody innerRef={adminSearchResultsRef}>
+            <CardBody innerRef={adminSearchResultsRef}>
                 {/* Action Buttons */}
-                <RS.Row className="pb-4">
-                    <RS.Col>
-                        <RS.UncontrolledButtonDropdown>
-                            <RS.DropdownToggle caret disabled={userBeingModified} color="primary" outline>Modify Role</RS.DropdownToggle>
-                            <RS.DropdownMenu>
-                                <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
+                <Row className="pb-4">
+                    <Col>
+                        <UncontrolledButtonDropdown>
+                            <DropdownToggle caret disabled={userBeingModified} color="primary" outline>Modify Role</DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem header>Promote or demote selected users to:</DropdownItem>
                                 {(promotableRoles).map(role =>
-                                    <RS.DropdownItem
+                                    <DropdownItem
                                         key={role} disabled={selectedUserIds.length === 0}
                                         onClick={() => modifyUserRolesAndUpdateResults(role)}
                                     >
                                         {role}
-                                    </RS.DropdownItem>
+                                    </DropdownItem>
                                 )}
-                            </RS.DropdownMenu>
-                        </RS.UncontrolledButtonDropdown>
-                        {isDefined(currentUser) && currentUser.role === 'ADMIN' && <RS.UncontrolledButtonDropdown>
-                            <RS.DropdownToggle caret disabled={userBeingModified} color="primary" outline className="ms-3">Email Status</RS.DropdownToggle>
-                            <RS.DropdownMenu>
-                                <RS.DropdownItem header>Change email verification status for users to:</RS.DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledButtonDropdown>
+                        {isDefined(currentUser) && currentUser.role === 'ADMIN' && <UncontrolledButtonDropdown>
+                            <DropdownToggle caret disabled={userBeingModified} color="primary" outline className="ms-3">Email Status</DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem header>Change email verification status for users to:</DropdownItem>
                                 {(verificationStatuses).map(status =>
-                                    <RS.DropdownItem
+                                    <DropdownItem
                                         key={status} disabled={selectedUserIds.length === 0}
                                         onClick={() => modifyUserEmailVerificationStatusesAndUpdateResults(status)}
                                     >
                                         {status}
-                                    </RS.DropdownItem>
+                                    </DropdownItem>
                                 )}
-                            </RS.DropdownMenu>
-                        </RS.UncontrolledButtonDropdown>}
-                    </RS.Col>
-                    <RS.Col>
+                            </DropdownMenu>
+                        </UncontrolledButtonDropdown>}
+                    </Col>
+                    <Col>
                         <Link className="btn float-end btn-secondary border-0" to={{
                             pathname: "/admin/emails",
                             state: {
                                 csvIDs: selectedUserIds
                             }
                         }}>Email</Link>
-                    </RS.Col>
-                </RS.Row>
+                    </Col>
+                </Row>
 
                 {/* Results */}
                 {!searchNotRequested &&
@@ -322,11 +321,11 @@ export const AdminUserManager = () => {
                         thenRender={searchResults => {
                             return searchResults.length > 0 ?
                                 <div className="overflow-auto">
-                                    <RS.Table bordered data-testid="user-search-results-table">
+                                    <Table bordered data-testid="user-search-results-table">
                                         <thead>
                                             <tr>
                                                 <th>
-                                                    <RS.Button onClick={selectAllToggle} color="link">Select</RS.Button>
+                                                    <Button onClick={selectAllToggle} color="link">Select</Button>
                                                 </th>
                                                 <th>Actions</th>
                                                 <th>Name</th>
@@ -342,7 +341,7 @@ export const AdminUserManager = () => {
                                             {searchResults.map((user) =>
                                                 <tr key={user.id} data-testid="user-search-result-row">
                                                     <td className="text-center">
-                                                        <RS.Input
+                                                        <Input
                                                             type="checkbox" className="m-0 position-relative"
                                                             checked={user.id && selectedUserIds.includes(user.id) || undefined}
                                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -351,18 +350,18 @@ export const AdminUserManager = () => {
                                                         />
                                                     </td>
                                                     <td className="text-center">
-                                                        <RS.Button color="secondary btn-sm m-1" tag={Link} to={`/progress/${user.id}`} target="_blank">
+                                                        <Button color="secondary btn-sm m-1" tag={Link} to={`/progress/${user.id}`} target="_blank">
                                                             View
-                                                        </RS.Button>
-                                                        <RS.Button color="secondary btn-sm m-1" onClick={() => editUser(user.id)}>
+                                                        </Button>
+                                                        <Button color="secondary btn-sm m-1" onClick={() => editUser(user.id)}>
                                                             Edit
-                                                        </RS.Button>
-                                                        <RS.Button color="secondary btn-sm m-1" onClick={() => confirmDeleteUser(user.id)}>
+                                                        </Button>
+                                                        <Button color="secondary btn-sm m-1" onClick={() => confirmDeleteUser(user.id)}>
                                                             Delete
-                                                        </RS.Button>
-                                                        <RS.Button color="secondary btn-sm m-1" onClick={() => attemptPasswordReset(user.email)} disabled={user.emailVerificationStatus === "DELIVERY_FAILED"}>
+                                                        </Button>
+                                                        <Button color="secondary btn-sm m-1" onClick={() => attemptPasswordReset(user.email)} disabled={user.emailVerificationStatus === "DELIVERY_FAILED"}>
                                                             Reset password
-                                                        </RS.Button>
+                                                        </Button>
                                                     </td>
                                                     <td>{user.familyName}, {user.givenName}</td>
                                                     <td>{user.email}</td>
@@ -374,45 +373,45 @@ export const AdminUserManager = () => {
                                                 </tr>
                                             )}
                                         </tbody>
-                                    </RS.Table>
+                                    </Table>
                                 </div>
                                 :
                                 <div data-testid="user-search-results-table" className="text-center"><em>No results found</em></div>;
                         }
                         }/>
                 }
-            </RS.CardBody>
-        </RS.Card>
+            </CardBody>
+        </Card>
         {isAdmin(currentUser) && <>
             <hr/>
-            <RS.Card className={"my-4"}>
-                <RS.CardBody>
+            <Card className={"my-4"}>
+                <CardBody>
                     <h3>Merge user accounts</h3>
                     <FormGroup className="form-group">
-                        <RS.InputGroup className={"separate-input-group"}>
-                            <RS.Input
+                        <InputGroup className={"separate-input-group"}>
+                            <Input
                                 type="text"
                                 placeholder="User ID to keep"
                                 value={mergeTargetId}
                                 onChange={(e => setMergeTargetId(e.target.value))}
                             />
-                            <RS.Input
+                            <Input
                                 type="text"
                                 placeholder="User ID to delete"
                                 value={mergeSourceId}
                                 onChange={(e => setMergeSourceId(e.target.value))}
                             />
-                            <RS.Button
+                            <Button
                                 type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
                                 disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
                                 onClick={confirmMergeUsers}
                             >
                                 Merge
-                            </RS.Button>
-                        </RS.InputGroup>
+                            </Button>
+                        </InputGroup>
                     </FormGroup>
-                </RS.CardBody>
-            </RS.Card>
+                </CardBody>
+            </Card>
         </>}
-    </RS.Container>;
+    </Container>;
 };

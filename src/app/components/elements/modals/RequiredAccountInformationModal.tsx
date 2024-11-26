@@ -8,7 +8,6 @@ import {
     useAppSelector
 } from "../../../state";
 import React, {useEffect, useState} from "react";
-import * as RS from "reactstrap";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
@@ -30,6 +29,7 @@ import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {Immutable} from "immer";
 import { AccountTypeMessage } from "../AccountTypeMessage";
 import {useEmailPreferenceState, UserEmailPreferencesInput} from "../inputs/UserEmailPreferencesInput";
+import { Form, CardBody, Row, Col, Input } from "reactstrap";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -86,14 +86,14 @@ const RequiredAccountInfoBody = () => {
         validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts),
     );
 
-    return <RS.Form onSubmit={formSubmission}>
-        {!allUserFieldsAreValid && <RS.CardBody className="py-0">
+    return <Form onSubmit={formSubmission}>
+        {!allUserFieldsAreValid && <CardBody className="py-0">
             <div className="text-end text-muted required-before">
                 Required
             </div>
             <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage/>
-            <RS.Row className="d-flex flex-wrap my-2">
-                {((isAda && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
+            <Row className="d-flex flex-wrap my-2">
+                {((isAda && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <Col lg={6}>
                     {isAda && !validateUserGender(initialUserValue) && <div className="mb-3">
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
@@ -108,24 +108,24 @@ const RequiredAccountInfoBody = () => {
                             setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
                         />
                     </div>}
-                </RS.Col>}
-                {isAda && !validateUserSchool(initialUserValue) && <RS.Col>
+                </Col>}
+                {isAda && !validateUserSchool(initialUserValue) && <Col>
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
                         required={!("role" in userToUpdate && isTutor(userToUpdate))}
                     />
-                </RS.Col>}
-            </RS.Row>
+                </Col>}
+            </Row>
             <div className="text-muted small pb-2">
                 Providing a few extra pieces of information helps us understand the usage of {SITE_TITLE} across the UK and beyond.
                 Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
             </div>
-        </RS.CardBody>}
+        </CardBody>}
 
-        {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <RS.CardBody>
+        {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <CardBody>
             <hr className="text-center" />
-        </RS.CardBody>}
+        </CardBody>}
 
         {!validateEmailPreferences(initialEmailPreferencesValue) && <div>
             <p>Get important information about the {SITE_TITLE} programme delivered to your inbox. These settings can be changed at any time.</p>
@@ -146,14 +146,14 @@ const RequiredAccountInfoBody = () => {
             </h4>
         </div>}
 
-        <RS.CardBody className="py-0">
-            <RS.Row className="text-center pb-3">
-                <RS.Col md={{size: 6, offset: 3}}>
-                    <RS.Input type="submit" value={isMobile() ? "Update" : "Update account"} className="btn btn-secondary border-0 px-0 px-md-2 my-1" />
-                </RS.Col>
-            </RS.Row>
-        </RS.CardBody>
-    </RS.Form>;
+        <CardBody className="py-0">
+            <Row className="text-center pb-3">
+                <Col md={{size: 6, offset: 3}}>
+                    <Input type="submit" value={isMobile() ? "Update" : "Update account"} className="btn btn-secondary border-0 px-0 px-md-2 my-1" />
+                </Col>
+            </Row>
+        </CardBody>
+    </Form>;
 };
 
 export const requiredAccountInformationModal = {

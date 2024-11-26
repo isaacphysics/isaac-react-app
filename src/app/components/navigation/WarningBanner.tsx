@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import * as RS from 'reactstrap';
-import {Alert} from 'reactstrap';
+import {Alert, Col, Container, Row} from 'reactstrap';
 import Cookies from 'js-cookie';
 
 const WARNING_COOKIE = "warningBannerDismissed";
@@ -20,17 +19,17 @@ export const WarningBanner = () => {
 
     return inDateRange ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color="warning" className="mb-0">
-            <RS.Container>
-                <RS.Row style={{alignItems: "center", textAlign: "center"}}>
-                    <RS.Col xs={12} md={12}>
+            <Container>
+                <Row style={{alignItems: "center", textAlign: "center"}}>
+                    <Col xs={12} md={12}>
                         <span>
                             Isaac Computer Science will be temporarily unavailable as we make some exciting updates to the platform. <br />
                             The site is expected to be down from 4pm on 27 March 2023. Follow us on Twitter, Facebook or Instagram for updates. <br />
                             We can’t wait for you to see it!
                         </span>
-                    </RS.Col>
-                </RS.Row>
-            </RS.Container>
+                    </Col>
+                </Row>
+            </Container>
         </Alert>
     </div>: null;
 };

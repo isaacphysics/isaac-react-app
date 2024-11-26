@@ -1,14 +1,14 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import * as RS from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 export const AuthError = ({location: {state}}: {location: {state?: {errorMessage?: string}}}) => {
 
-    return <RS.Container>
+    return <Container>
         <TitleAndBreadcrumb currentPageTitle="Authentication error" breadcrumbTitleOverride="Authentication error" />
-        <RS.Row className="pt-4">
-            <RS.Col md={{size: 8, offset: 2}}>
+        <Row className="pt-4">
+            <Col md={{size: 8, offset: 2}}>
                 <h3>
                     {state?.errorMessage || ""}
                 </h3>
@@ -19,7 +19,7 @@ export const AuthError = ({location: {state}}: {location: {state?: {errorMessage
                     check <Link to="/support/student/general#login_issues">this FAQ</Link>
                     , or <Link to="/contact">contact us</Link> if this keeps happening.
                 </p>
-            </RS.Col>
-        </RS.Row>
-    </RS.Container>;
+            </Col>
+        </Row>
+    </Container>;
 };

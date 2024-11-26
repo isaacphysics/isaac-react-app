@@ -1,8 +1,8 @@
 import React from "react";
-import * as RS from "reactstrap";
 import {closeActiveModal, openActiveModal, useAppDispatch} from "../../state";
 import {PageFragment} from "./PageFragment";
 import {SUBJECTS} from "../../services";
+import { Container } from "reactstrap";
 
 interface ChapterProps {
     chapterId: string;
@@ -25,7 +25,7 @@ export const BookChapter = ({chapterId, chapterTitle, chapterSubHeading, chapter
         }));
     }
 
-    return <RS.Container>
+    return <Container>
         <button onClick={() => bookChapterLoad()} className="btn book-chapter">
             <span className="icon-stack">
                 <svg className="book-contents-icon" viewBox="0 0 11.7 13.5">
@@ -35,5 +35,5 @@ export const BookChapter = ({chapterId, chapterTitle, chapterSubHeading, chapter
             </span>
             {chapterTitle} <br/><span className="chapter-subheading">{chapterSubHeading}</span>
         </button>
-    </RS.Container>;
+    </Container>;
 };

@@ -10,7 +10,6 @@ import {
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import * as RS from "reactstrap";
 import {
     below,
     determineFastTrackPrimaryAction,
@@ -35,6 +34,7 @@ import { submitInlineRegion, useInlineRegionPart } from "./IsaacInlineRegion";
 import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeedbackView";
 import { LLMFreeTextQuestionRemainingAttemptsView } from "../elements/LLMFreeTextQuestionRemainingAttemptsView";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { Alert, Button, Col, Form, Row } from "reactstrap";
 
 function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof useCanAttemptQuestionTypeQuery> {
     // We skip the check with the API if the question type is not a restricted question type
@@ -169,7 +169,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         <IsaacContent doc={validationResponse?.explanation as ContentDTO}/>;
 
     return <ConfidenceContext.Provider value={{recordConfidence}}>
-        <RS.Form onSubmit={(event) => {
+        <Form onSubmit={(event) => {
             if (event) {event.preventDefault();}
             submitCurrentAttempt(questionPart, doc.id as string, doc.type as string, currentGameboard, currentUser, dispatch);
             setHasSubmitted(true);
@@ -195,13 +195,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 }
 
                 {/* CS Hint Reminder */}
-                {isAda && (!validationResponse || !correct || canSubmit) && <RS.Row>
-                    <RS.Col xl={{size: 10}} >
+                {isAda && (!validationResponse || !correct || canSubmit) && <Row>
+                    <Col xl={{size: 10}} >
                         {doc.hints && !!doc.hints.length && <p className="no-print mb-0">
                             <small>{"Don't forget to use the hints if you need help."}</small>
                         </p>}
-                    </RS.Col>
-                </RS.Row>}
+                    </Col>
+                </Row>}
 
                 {/* CS Hints */}
                 {isAda && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
@@ -226,21 +226,21 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                             <span>You can view feedback for a specific box by either selecting it above, or by using the control panel below.</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note" aria-labelledby="answer-feedback">
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header justify-content-around`}>
-                                    <RS.Button color="transparent" onClick={() => {
+                                    <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
                                     }}>
                                         {below["xs"](deviceSize) ? "◀" : "Previous" }
-                                    </RS.Button>
-                                    <RS.Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
+                                    </Button>
+                                    <Button color="transparent" className="inline-part-jump align-self-center" onClick={() => {
                                         if (inlineContext.feedbackIndex) inlineContext.setFocusSelection(true);
                                     }}>
                                         Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
-                                    </RS.Button>
-                                    <RS.Button color="transparent" onClick={() => {
+                                    </Button>
+                                    <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
                                     }}>
                                         {below["xs"](deviceSize) ? "▶" : "Next"}
-                                    </RS.Button>
+                                    </Button>
                                 </div>
                                 <div className="feedback-panel-content p-3">
                                     {validationFeedback}
@@ -251,9 +251,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 </div>}
 
                 {/* Lock */}
-                {locked && <RS.Alert color="danger" className={"no-print"}>
+                {locked && <Alert color="danger" className={"no-print"}>
                     This question is locked until at least {<DateString formatter={TIME_ONLY}>{locked}</DateString>} to prevent repeated guessing.
-                </RS.Alert>}
+                </Alert>}
 
                 {/* Action Buttons */}
                 {recordConfidence ?
@@ -286,7 +286,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
                 </div>}
             </div>
-        </RS.Form>
+        </Form>
 
         {/* LLM free-text question validation response */}
         {isLLMFreeTextQuestion && showQuestionFeedback && validationResponse && showInlineAttemptStatus && !canSubmit &&

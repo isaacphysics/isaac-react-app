@@ -8,9 +8,9 @@ import {
     useAppDispatch,
     useBookUserOnEventMutation
 } from "../../../state";
-import * as RS from "reactstrap";
 import {atLeastOne, formatBookingModalConfirmMessage, siteSpecific, zeroOrLess} from "../../../services";
 import {EventBookingForm} from "../EventBookingForm";
+import { Form, Label, Input } from "reactstrap";
 
 export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, selectedEvent: AugmentedEvent, eventBookingIds: number[]) {
     return {
@@ -44,7 +44,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
                     .then(() => dispatch(closeActiveModal()));
             }
 
-            return <RS.Form onSubmit={makeUserBooking} className="mb-4">
+            return <Form onSubmit={makeUserBooking} className="mb-4">
                 <EventBookingForm
                     event={selectedEvent} targetUser={selectedUser}
                     additionalInformation={additionalInformation} updateAdditionalInformation={updateAdditionalInformation}
@@ -58,10 +58,10 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
                         </small>
                     </p>
 
-                    <RS.Label htmlFor="form-authorisation" className="form-required">
+                    <Label htmlFor="form-authorisation" className="form-required">
                         Booking/personal data sharing authorised by
-                    </RS.Label>
-                    <RS.Input
+                    </Label>
+                    <Input
                         type="select" id="form-authorisation" name="form-authorisation" value={additionalInformation.authorisation || ""}
                         onChange={event => updateAdditionalInformation({authorisation: event.target.value})}
                     >
@@ -69,17 +69,17 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
                         <option value="Telephone-Owner">Telephone - Data Owner</option>
                         <option value="Email-Owner">Verified email - Data Owner</option>
                         <option value="OTHER">Other - Please specify</option>
-                    </RS.Input>
-                    {additionalInformation.authorisation === "OTHER" && <RS.Input
+                    </Input>
+                    {additionalInformation.authorisation === "OTHER" && <Input
                         type="text" className="mt-2" value={additionalInformation.authorisationOther || ""}
                         onChange={event => updateAdditionalInformation({authorisationOther: event.target.value})}
                     />}
 
-                    {(userCanBeBookedOnEvent || userCanBeAddedToWaitingList) && <RS.Input className="btn w-100 btn-secondary border-0 mt-3"
+                    {(userCanBeBookedOnEvent || userCanBeAddedToWaitingList) && <Input className="btn w-100 btn-secondary border-0 mt-3"
                         type="submit" value={formatBookingModalConfirmMessage(selectedEvent, userCanBeBookedOnEvent)}
                     />}
                 </span>
-            </RS.Form>;
+            </Form>;
         },
     };
 }
