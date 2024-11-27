@@ -76,29 +76,28 @@ function QuizItem({quiz}: QuizAssignmentProps) {
 
                 <div className="text-center mt-4">
                     {quiz.isAssigned ? <>
-                        {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={`/test/assignment/${quiz.id}`}>
+                        {quiz.status === QuizStatus.NotStarted && <Button tag={Link} to={quiz.link}>
                             {siteSpecific("Start Test", "Start test")}
                         </Button>}
-                        {quiz.status === QuizStatus.Started && <Button tag={Link} to={`/test/assignment/${quiz.id}`}>
+                        {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
                             {siteSpecific("Continue Test", "Continue test")}
                         </Button>}
-                        {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={`/test/assignment/${quiz.id}`} disabled={true}>
+                        {quiz.status === QuizStatus.Overdue && <Button tag={Link} to={quiz.link} disabled={true}>
                             {siteSpecific("Overdue", "Overdue")}
                         </Button>}
                         {quiz.status === QuizStatus.Complete && (
-                            <Button tag={Link} to={`/test/attempt/${quiz.attempt?.id}/feedback`} disabled={quiz.quizFeedbackMode === "NONE"}>
+                            <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
                                 {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
                             </Button>
                         )}
                     </> : quiz.attempt && <>
-                        {quiz.status === QuizStatus.Started && <Button tag={Link} to={`/test/attempt/${quiz.attempt.id}`}>
+                        {quiz.status === QuizStatus.Started && <Button tag={Link} to={quiz.link}>
                             {siteSpecific("Continue Test", "Continue test")}
                         </Button>}
-                        {quiz.status === QuizStatus.Complete && (
-                            <Button tag={Link} to={`/test/attempt/${quiz.attempt.id}/feedback`}disabled={quiz.quizFeedbackMode === "NONE"}>
-                                {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
-                            </Button>
-                        )}
+                        {quiz.status === QuizStatus.Complete && <Button tag={Link} to={quiz.link} disabled={quiz.quizFeedbackMode === "NONE"}>
+                            {quiz.quizFeedbackMode === "NONE" ? siteSpecific("No Feedback", "No feedback") : siteSpecific("View Feedback", "View feedback")}
+                        </Button>
+                        }
                     </>}
                 </div>
             </CardBody>
