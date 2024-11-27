@@ -29,6 +29,10 @@
             color: black;
             padding: 7px 15px;
         }
+
+        &:checked ~ span:first-of-type, &:not(:checked) ~ span:last-of-type {
+            min-width: 57px;
+        }
     }
 
     > span {
