@@ -1,4 +1,8 @@
 .styled-toggle {
+    $toggle-span-min-width: 4rem;
+    $toggle-span-normal-x-padding: 15px;
+    $toggle-span-reduced-x-padding: 8px;
+
     line-height: 18px;
     align-items: center;
     margin-bottom: 0;
@@ -27,23 +31,23 @@
             background: white;
             box-shadow: $shadow-25 0px 0px 2px;
             color: black;
-            padding: 7px 15px;
+            padding: 7px $toggle-span-normal-x-padding;
         }
 
         &:checked ~ span:first-of-type, &:not(:checked) ~ span:last-of-type {
-            min-width: 57px;
+            min-width: calc($toggle-span-min-width + $toggle-span-reduced-x-padding - $toggle-span-normal-x-padding);
         }
     }
 
     > span {
         text-align: center;
         font-size: 12px;
-        min-width: 4rem;
+        min-width: $toggle-span-min-width;
         font-family: $secondary-font-semi-bold;
         line-height: 1;
         cursor: pointer;
         display: inline-block;
-        padding: 7px 15px;
+        padding: 7px $toggle-span-normal-x-padding;
         transition: all 100ms ease-out;
         user-select: none;
         border-radius: 3rem;
@@ -52,10 +56,10 @@
     }
 
     > span:first-of-type {
-        padding-right: 8px;
+        padding-right: $toggle-span-reduced-x-padding;
     }
 
     > span:last-of-type {
-        padding-left: 8px;
+        padding-left: $toggle-span-reduced-x-padding;
     }
 }
