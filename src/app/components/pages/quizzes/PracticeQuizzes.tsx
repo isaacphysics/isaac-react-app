@@ -32,9 +32,9 @@ const PracticeQuizzesComponent = ({user}: QuizzesPageProps) => {
             // Tutors should see the same tests as students can
             // eslint-disable-next-line no-fallthrough
             case "TUTOR":
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents;
             case "TEACHER":
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true;
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents;
+                // return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true;
             default:
                 return true;
         }
