@@ -353,7 +353,7 @@ export function convertAttemptToQuiz(attempt: QuizAttemptDTO): DisplayableQuiz |
         completedDate: attempt.completedDate,
         attempt: attempt,
         quizFeedbackMode: attempt.feedbackMode,
-        link: attempt.completedDate ? `/test/attempt/${attempt.id}/feedback` : `/test/attempt/${attempt.id}`,
+        link: attempt.completedDate ? `/test/attempt/${attempt.id}/feedback` : `/test/attempt/${attempt.quizId}`,
         status: attempt.completedDate ? QuizStatus.Complete : QuizStatus.Started,
     };
 }
