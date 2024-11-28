@@ -29,12 +29,11 @@ const PracticeQuizzesComponent = ({user}: QuizzesPageProps) => {
     const showQuiz = (quiz: QuizSummaryDTO) => {
         switch (user.role) {
             case "STUDENT":
-            // Tutors should see the same tests as students can
-            // eslint-disable-next-line no-fallthrough
             case "TUTOR":
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents;
             case "TEACHER":
-                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true;
+                // Practice attempts are only possible on quizzes that are visible to students
+                // (most quizzes that are hidden from students may be previewed by teachers, but may not be practised)
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents;
             default:
                 return true;
         }
