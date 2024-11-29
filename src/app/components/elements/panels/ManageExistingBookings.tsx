@@ -200,8 +200,8 @@ const EmailOrExport = ({
 
   function relevantUsers(bookingType: string) {
     const idsToReturn: number[] = [];
-    augmentedEventBookings.map((booking: DetailedEventBookingDTO & { schoolName?: string }) => {
-      if (booking.userBooked?.id && booking.bookingStatus == bookingType) {
+    augmentedEventBookings.forEach((booking: DetailedEventBookingDTO & { schoolName?: string }) => {
+      if (booking.userBooked?.id && booking.bookingStatus === bookingType) {
         idsToReturn.push(booking.userBooked.id);
       }
     });
