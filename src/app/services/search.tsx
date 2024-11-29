@@ -6,7 +6,7 @@ import queryString from "query-string";
 import {Immutable} from "immer";
 import React, {FormEvent, useEffect, useRef, useState} from "react";
 import {useHistory, useLocation} from "react-router-dom";
-import {Form, FormGroup} from "reactstrap";
+import {Form} from "reactstrap";
 import classNames from "classnames";
 
 export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {

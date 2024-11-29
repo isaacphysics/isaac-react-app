@@ -6,16 +6,13 @@ import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {
     AuthenticationProvider,
     BookingStatus,
-    ChoiceDTO,
     ContentDTO,
     Difficulty,
     ExamBoard,
     IsaacFastTrackQuestionPageDTO,
     IsaacQuestionPageDTO,
     ItemDTO,
-    QuantityDTO,
     Stage,
-    StringChoiceDTO,
     UserRole
 } from "../../IsaacApiTypes";
 import {isPhy, siteSpecific} from "./";

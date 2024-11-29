@@ -1,4 +1,3 @@
-import React from "react";
 import {screen, waitFor} from "@testing-library/react";
 import {mockGameboards} from "../../mocks/data";
 import {MyGameboards} from "../../app/components/pages/MyGameboards";

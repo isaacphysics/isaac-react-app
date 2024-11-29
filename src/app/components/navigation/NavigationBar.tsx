@@ -1,15 +1,10 @@
-import React, {HTMLProps, useEffect, useState} from "react";
+import React, {HTMLProps, useState} from "react";
 import {Link} from "react-router-dom";
-import {
-    selectors,
-    useAppDispatch,
-    useAppSelector,
-    useGetMyAssignmentsQuery,
-    useGetQuizAssignmentsAssignedToMeQuery
-} from "../../state";
+import {selectors, useAppSelector, useGetMyAssignmentsQuery, useGetQuizAssignmentsAssignedToMeQuery} from "../../state";
 import {
     Badge,
-    Collapse, Dropdown,
+    Collapse,
+    Dropdown,
     DropdownItem,
     DropdownItemProps,
     DropdownMenu,
@@ -23,12 +18,10 @@ import {
     filterAssignmentsByStatus,
     isAda,
     isFound,
-    partitionCompleteAndIncompleteQuizzes,
-    isLoggedIn,
+    isNotPartiallyLoggedIn,
     isPhy,
-    siteSpecific,
-    isTeacherOrAbove,
-    isVerified, isNotPartiallyLoggedIn
+    partitionCompleteAndIncompleteQuizzes,
+    siteSpecific
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";

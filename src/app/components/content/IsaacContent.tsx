@@ -1,4 +1,4 @@
-import React, {lazy, useRef} from "react";
+import React, {lazy} from "react";
 import {AnvilApp} from "./AnvilApp";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestion} from "./IsaacQuestion";
@@ -21,8 +21,8 @@ import {isQuestion} from "../../services";
 import {IsaacCodeTabs} from "./IsaacCodeTabs";
 import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 import {IsaacCallout} from "./IsaacCallout";
-import IsaacInlineRegion from "./IsaacInlineRegion";
 import InlineContextProvider from "../elements/InlineContextProvider";
+
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
 const classBasedLayouts = {

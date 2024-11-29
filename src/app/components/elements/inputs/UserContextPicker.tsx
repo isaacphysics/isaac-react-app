@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {Col, FormGroup, Input, Label, Row, UncontrolledTooltip} from "reactstrap";
 import {
     EXAM_BOARD,
     examBoardLabelMap,
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
-    history,
-    isAda, isLoggedIn,
+    isAda,
+    isLoggedIn,
     isStaff,
     siteSpecific,
     STAGE,
@@ -14,13 +14,7 @@ import {
     useQueryParams,
     useUserViewingContext
 } from "../../../services";
-import {
-    selectors,
-    transientUserContextSlice,
-    useAppDispatch,
-    useAppSelector,
-} from "../../../state";
-import queryString from "query-string";
+import {selectors, transientUserContextSlice, useAppDispatch, useAppSelector,} from "../../../state";
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
     const dispatch = useAppDispatch();
@@ -52,7 +46,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
 
     if (isAda && !isLoggedIn(user) || isStaff(user)) {
         return <Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
-            <Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}> 
+            <Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}>
                 {/* Stage Selector */}
                 <FormGroup className={`form-group w-100 d-flex justify-content-end m-0`}>
                     {showStageSelector && <>
@@ -100,14 +94,14 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                                 dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD));
                             }}
                         >
-                            {onlyOneBoard 
-                                ? <option value={onlyOneBoard.value}>{onlyOneBoard.label}</option> 
+                            {onlyOneBoard
+                                ? <option value={onlyOneBoard.value}>{onlyOneBoard.label}</option>
                                 : getFilteredExamBoardOptions({byStages: [currentStage], includeNullOptions: true})
                                     .map(item => <option key={item.value} value={item.value}>{item.label}</option>)
                             }
                         </Input>
                     </>}
-                    
+
                     {showUnusualContextMessage && <div className="mt-2 ms-1">
                         <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
                         <UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>

@@ -1,5 +1,5 @@
-import {union, mapValues} from "lodash";
-import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList} from "../test-factory";
+import {mapValues, union} from "lodash";
+import {questionDTOs, registeredUserDTOs, searchResultsList} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services";
 import {Action, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";
 import {GameboardDTO} from "../../IsaacApiTypes";
@@ -12,9 +12,9 @@ import {
     questions,
     rootReducer,
     search,
+    selectors,
     toasts,
-    userSlice,
-    selectors
+    userSlice
 } from "../../app/state";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};

@@ -4,8 +4,7 @@ import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {above, SITE_TITLE, useDeviceSize, useUserConsent} from "../../../services";
-import {WarningBanner} from "../../navigation/WarningBanner";
-import { HomepageYoutubeCookieHandler } from "../../handlers/InterstitialCookieHandler";
+import {HomepageYoutubeCookieHandler} from "../../handlers/InterstitialCookieHandler";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
