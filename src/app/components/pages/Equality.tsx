@@ -350,7 +350,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                     <pre>{currentAttemptValue?.result?.uniqueSymbols}</pre>
                     {(segueEnvironment === "DEV" || isStaff(user)) && <>
                         <h4>Inequality seed</h4>
-                        <pre>{currentAttemptValue && currentAttemptValue.symbols && JSON.stringify(currentAttemptValue.symbols)}</pre>
+                        <pre>{currentAttemptValue.symbols && JSON.stringify(currentAttemptValue.symbols)}</pre>
                     </>}
                 </Col>
             </Row>}

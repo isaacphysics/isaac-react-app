@@ -307,7 +307,7 @@ export function determineAudienceViews(audience?: AudienceContext[], creationCon
         viewsFilteredByCreationContext = allViews.filter(viewingContext => {
             let viableView = true;
             if (creationContext.stage && viewingContext.stage) {
-                viableView = viableView && creationContext.stage.includes(viewingContext.stage);
+                viableView = creationContext.stage.includes(viewingContext.stage);
             }
             if (creationContext.examBoard && viewingContext.examBoard) {
                 viableView = viableView && creationContext.examBoard.includes(viewingContext.examBoard);
