@@ -78,12 +78,12 @@ export const gameboardApi = isaacApi.injectEndpoints({
                     // TODO the content should be modified with a script/change of tagging so that this is the case
                     params.questionCategories = params.questionCategories?.split(",")
                         .map(c => c === QUESTION_CATEGORY.LEARN_AND_PRACTICE ? `${QUESTION_CATEGORY.PROBLEM_SOLVING},${QUESTION_CATEGORY.BOOK_QUESTIONS}` : c)
-                        .join(",")
+                        .join(",");
                 }
                 return {
                     url: "/gameboards",
                     params
-                }
+                };
             },
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: `Error creating temporary ${siteSpecific("gameboard", "quiz")}`

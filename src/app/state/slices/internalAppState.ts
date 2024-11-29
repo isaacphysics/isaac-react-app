@@ -10,7 +10,7 @@ export const printingSettingsSlice = createSlice({
     reducers: {
         enableHints: (state, action: PayloadAction<boolean>) => ({...state, hintsEnabled: action.payload})
     }
-})
+});
 
 export const mainContentIdSlice = createSlice({
     name: "mainContentId",
@@ -34,7 +34,7 @@ export const transientUserContextSlice = createSlice({
         setStage: (state, action: PayloadAction<STAGE>) => ({...state, stage: action.payload}),
         setExamBoard: (state, action: PayloadAction<EXAM_BOARD>) => ({...state, examBoard: action.payload}),
     }
-})
+});
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const errorSlice = createSlice({
@@ -60,4 +60,4 @@ export const errorSlice = createSlice({
             (_, action) => ({type: "generalError", generalError: action.errorMessage})
         );
     }
-})
+});

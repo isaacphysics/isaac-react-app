@@ -70,5 +70,5 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
                 </div>;
             }
         })}
-   </React.Fragment>;
+    </React.Fragment>;
 };

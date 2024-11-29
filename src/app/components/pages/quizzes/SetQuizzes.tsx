@@ -8,7 +8,6 @@ import {
     useUpdateQuizAssignmentMutation
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
-import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
@@ -38,6 +37,7 @@ import {RenderNothing} from "../../elements/RenderNothing";
 import { useHistoryState } from "../../../state/actions/history";
 import classNames from "classnames";
 import { ExtendDueDateModal } from "../../elements/modals/ExtendDueDateModal";
+import { UncontrolledTooltip, Button, Table, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Row, Input, UncontrolledDropdown, Container, ListGroup, ListGroupItem, Col, Alert } from "reactstrap";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -165,10 +165,10 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                             <span className="set-quiz-table-group-hex" title={"Number of groups assigned"}>
                                 <strong>{assignedGroups.length}</strong>
                                 group{(!assignedGroups || assignedGroups.length != 1) && "s"}
-                                <RS.UncontrolledTooltip placement={"top"} target={"#group-hex-" + index}>{assignedGroups.length === 0 ?
+                                <UncontrolledTooltip placement={"top"} target={"#group-hex-" + index}>{assignedGroups.length === 0 ?
                                     "No groups have been assigned."
                                     : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
-                                </RS.UncontrolledTooltip>
+                                </UncontrolledTooltip>
                             </span>
                         </div>
                     </div>
@@ -177,27 +177,27 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
             {isAda && <td id={"group-td-" + index} className="group-counter">
                 <span><strong>{assignedGroups.length}</strong>&nbsp;</span><br/>
                 <span>group{(!assignedGroups || assignedGroups.length != 1) && "s"}</span>
-                <RS.UncontrolledTooltip placement={"top"} target={"#group-td-" + index}>{assignedGroups.length === 0 ?
+                <UncontrolledTooltip placement={"top"} target={"#group-td-" + index}>{assignedGroups.length === 0 ?
                     "No groups have been assigned."
                     : (`Test assigned to: ` + assignedGroups.map(g => g.group).join(", "))}
-                </RS.UncontrolledTooltip>
+                </UncontrolledTooltip>
             </td>}
             <td className={classNames("set-quiz-table-title align-middle ", {"ps-4": isAda})}>{quizTitle}</td>
             <td className="align-middle pe-0 d-none d-sm-table-cell">
-                <RS.Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
+                <Button className={`d-block h-4 ${below["md"](deviceSize) ? "btn-sm set-quiz-button-md" : "set-quiz-button-sm"}`}
                     onClick={(e) => {
                         assignment.quizSummary && dispatch(showQuizSettingModal(assignment.quizSummary));
                         e.stopPropagation();
                     }}
                 >
                     {siteSpecific("Set Test", "Set test")}
-                </RS.Button>
+                </Button>
             </td>
             <td className={`dropdown-arrow ${isExpanded ? "active" : ""}`}/>
         </tr>
         {isExpanded && <tr>
             <td colSpan={4} className={classNames("bg-white border-0", {"px-2 pb-2": isPhy})}>
-                <RS.Table striped className="w-100 set-quiz-table-inner mb-1">
+                <Table striped className="w-100 set-quiz-table-inner mb-1">
                     <thead>
                         <tr>
                             {innerTableHeaders.map(header => <th key={header.title} onClick={() => {
@@ -218,47 +218,47 @@ function QuizAssignment({user, assignedGroups, index}: QuizAssignmentProps) {
                     </thead>
                     <tbody>
                         {conditionalReverse(assignedGroups.sort(currentSort)).map(assignedGroup => {
-                        const assignmentNotYetStarted = assignedGroup.assignment?.scheduledStartDate && nthHourOf(0, assignedGroup.assignment?.scheduledStartDate) > TODAY();
-                        return <tr key={assignedGroup.group}>
-                            <td className="text-center text-break">{assignedGroup.group}</td>
-                            {above["md"](deviceSize) ? <td className="text-center">{formatDate(assignedGroup.assignment.creationDate)}</td> : <></>}
-                            <td className="text-center">{formatDate(assignedGroup.assignment.scheduledStartDate ?? assignedGroup.assignment.creationDate)}</td>
-                            {above["sm"](deviceSize) ?
-                                <td className="text-center">
-                                    {assignedGroup.assignment.dueDate ? <>
-                                        <span>{formatDate(assignedGroup.assignment.dueDate)}</span>
-                                    </> : "-"}
-                                </td> :
-                                <></>
-                            }
-                            <td className={isPhy ? "text-end" : "text-center"}>
-                                <RS.Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className={`px-1 bg-transparent text-center ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`}>
-                                    View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
-                                </RS.Button>
-                            </td>
+                            const assignmentNotYetStarted = assignedGroup.assignment?.scheduledStartDate && nthHourOf(0, assignedGroup.assignment?.scheduledStartDate) > TODAY();
+                            return <tr key={assignedGroup.group}>
+                                <td className="text-center text-break">{assignedGroup.group}</td>
+                                {above["md"](deviceSize) && <td className="text-center">{formatDate(assignedGroup.assignment.creationDate)}</td>}
+                                <td className="text-center">{formatDate(assignedGroup.assignment.scheduledStartDate ?? assignedGroup.assignment.creationDate)}</td>
+                                {above["sm"](deviceSize) &&
+                                    <td className="text-center">
+                                        {assignedGroup.assignment.dueDate 
+                                            ? <span>{formatDate(assignedGroup.assignment.dueDate)}</span> 
+                                            : "-"
+                                        }
+                                    </td>
+                                }
+                                <td className={isPhy ? "text-end" : "text-center"}>
+                                    <Button tag={Link} size="sm" to={`/test/assignment/${assignedGroup.assignment.id}/feedback`} disabled={isCancelling} color="tertiary" className={`px-1 bg-transparent text-center ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`}>
+                                        View {assignmentNotYetStarted ? siteSpecific("Details", "details") : siteSpecific("Results", "results")}
+                                    </Button>
+                                </td>
 
-                            <td className={isPhy ? "text-start" : "text-center"}>
-                                <RS.UncontrolledButtonDropdown>
-                                    <RS.DropdownToggle caret className={`text-nowrap ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`} size="sm" color="link">
-                                        More
-                                    </RS.DropdownToggle>
-                                    <RS.DropdownMenu>
-                                        <RS.DropdownItem color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignedGroup.assignment?.dueDate} onClick={() => {
-                                            setSelectedQuiz(assignedGroup.assignment);
-                                            setIsModalOpen(true);
-                                        }}>
-                                            Extend Due Date
-                                        </RS.DropdownItem>
-                                        <RS.DropdownItem color="tertiary" size="sm" onClick={cancel} disabled={isCancelling}>
-                                            {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
-                                        </RS.DropdownItem>
-                                    </RS.DropdownMenu>
-                                </RS.UncontrolledButtonDropdown>
-                            </td>
-                        </tr>;
+                                <td className={isPhy ? "text-start" : "text-center"}>
+                                    <UncontrolledButtonDropdown>
+                                        <DropdownToggle caret className={`text-nowrap ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`} size="sm" color="link">
+                                            More
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            <DropdownItem color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignedGroup.assignment?.dueDate} onClick={() => {
+                                                setSelectedQuiz(assignedGroup.assignment);
+                                                setIsModalOpen(true);
+                                            }}>
+                                                Extend Due Date
+                                            </DropdownItem>
+                                            <DropdownItem color="tertiary" size="sm" onClick={cancel} disabled={isCancelling}>
+                                                {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
+                                            </DropdownItem>
+                                        </DropdownMenu>
+                                    </UncontrolledButtonDropdown>
+                                </td>
+                            </tr>;
                         })}
                     </tbody>
-                </RS.Table>
+                </Table>
             </td>
         </tr>}
     </>;
@@ -311,41 +311,41 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
 
     const rowFiltersView = above["md"](deviceSize);
 
-    const titleFilterInput = <RS.Row>
-        <RS.Input
+    const titleFilterInput = <Row>
+        <Input
             id="manage-quizzes-title-filter" type="search" className={rowFiltersView ? "mb-4" : "mb-2"}
             value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
             placeholder="Filter by title" aria-label="Filter by title"
         />
-    </RS.Row>;
+    </Row>;
 
-    const groupFilterInput = <RS.Row>
-        <RS.Input
+    const groupFilterInput = <Row>
+        <Input
             id="manage-quizzes-group-name-filter" type="search" className={rowFiltersView ? "mb-4" : "mb-2"}
             value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
             placeholder="Filter by group" aria-label="Filter by group"
         />
-    </RS.Row>;
+    </Row>;
 
-    const dateFilterTypeSelector = (dateFilterType: string, setDateFilterType: React.Dispatch<React.SetStateAction<string>>) => <RS.UncontrolledDropdown className={classNames("quiz-date-filter-type", rowFiltersView ? "mb-4" : "mb-2")}>
-        <RS.DropdownToggle className="p-0 m-1 bg-transparent" color="tertiary" caret>{dateFilterType}</RS.DropdownToggle>
-        <RS.DropdownMenu>
-            <RS.DropdownItem onClick={() => setDateFilterType('after')}>
+    const dateFilterTypeSelector = (dateFilterType: string, setDateFilterType: React.Dispatch<React.SetStateAction<string>>) => <UncontrolledDropdown className={classNames("quiz-date-filter-type", rowFiltersView ? "mb-4" : "mb-2")}>
+        <DropdownToggle className="p-0 m-1 bg-transparent" color="tertiary" caret>{dateFilterType}</DropdownToggle>
+        <DropdownMenu>
+            <DropdownItem onClick={() => setDateFilterType('after')}>
                 after
-            </RS.DropdownItem>
-            <RS.DropdownItem onClick={() => setDateFilterType('before')}>
+            </DropdownItem>
+            <DropdownItem onClick={() => setDateFilterType('before')}>
                 before
-            </RS.DropdownItem>
-            <RS.DropdownItem onClick={() => setDateFilterType('on')}>
+            </DropdownItem>
+            <DropdownItem onClick={() => setDateFilterType('on')}>
                 on
-            </RS.DropdownItem>
-        </RS.DropdownMenu>
-    </RS.UncontrolledDropdown>;
+            </DropdownItem>
+        </DropdownMenu>
+    </UncontrolledDropdown>;
 
     const setDateFilterInput = <div className="d-flex align-items-baseline">
         <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Starting</span>
         {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}
-        <RS.Input
+        <Input
             id="manage-quizzes-set-date-filter" type="date" className={classNames("quiz-filter-date-input p-1", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizStartDate && !isNaN(quizStartDate.valueOf()) ? formatISODateOnly(quizStartDate) : undefined} onChange={event => setQuizStartDate(new Date(event.target.value))}
             placeholder="Filter by set date" aria-label="Filter by set date"
@@ -355,14 +355,14 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     const dueDateFilterInput = <div className="d-flex align-items-baseline">
         <span className={classNames("p-1 quiz-filter-date-span", rowFiltersView ? "mb-4" : "mb-2")}>Due</span>
         {dateFilterTypeSelector(quizDueDateFilterType, setQuizDueDateFilterType)}
-        <RS.Input
+        <Input
             id="manage-quizzes-due-date-filter" type="date" className={classNames("quiz-filter-date-input p-1", rowFiltersView ? "mb-4" : "mb-2")}
             value={quizDueDate && !isNaN(quizDueDate.valueOf()) ? formatISODateOnly(quizDueDate) : undefined} onChange={event => setQuizDueDate(new Date(event.target.value))}
             placeholder="Filter by due date" aria-label="Filter by due date"
         />
     </div>;
 
-    return <RS.Container>
+    return <Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "help_modal_set_tests" : undefined} />
         <PageFragment fragmentId={siteSpecific("help_toptext_set_tests", "set_tests_help")} ifNotFound={RenderNothing} />
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
@@ -371,88 +371,88 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                 <ShowLoading until={undeprecatedQuizzes}>
                     {undeprecatedQuizzes && <>
                         <p>The following tests are available to set to your groups.</p>
-                        <RS.Input
+                        <Input
                             id="available-quizzes-title-filter" type="search" className="mb-4"
                             value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
                             placeholder="Search by title" aria-label="Search by title"
                         />
                         {undeprecatedQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
-                        <RS.ListGroup className="mb-2 quiz-list">
-                            {undeprecatedQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                                <RS.Row className="w-100">
-                                    <RS.Col xs={9} md={8} lg={9} className="d-flex align-items-center">
+                        <ListGroup className="mb-2 quiz-list">
+                            {undeprecatedQuizzes.map(quiz =>  <ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                                <Row className="w-100">
+                                    <Col xs={9} md={8} lg={9} className="d-flex align-items-center">
                                         <div className="p-3">
                                             <span className="mb-2 mb-sm-0 pe-2">{quiz.title}</span>
                                             {roleVisibilitySummary(quiz)}
                                         </div>
-                                    </RS.Col>
-                                    <RS.Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
-                                        <RS.Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(showQuizSettingModal(quiz))}>
+                                    </Col>
+                                    <Col md={3} lg={2} className="py-3 justify-content-end justify-content-md-center justify-content-lg-end align-items-center d-none d-md-flex">
+                                        <Button className={`d-none d-md-block h-4 p-0 ${above["md"](deviceSize) ? "set-quiz-button-md" : "btn-sm set-quiz-button-sm"}`} onClick={() => dispatch(showQuizSettingModal(quiz))}>
                                             {siteSpecific("Set Test", "Set test")}
-                                        </RS.Button>
-                                    </RS.Col>
-                                    <RS.Col md={1} className="d-flex justify-content-end align-items-center d-none d-md-flex p-0">
+                                        </Button>
+                                    </Col>
+                                    <Col md={1} className="d-flex justify-content-end align-items-center d-none d-md-flex p-0">
                                         <Link className={`my-3 d-flex justify-content-end me-1`} to={{pathname: `/test/preview/${quiz.id}`}}>
                                             <span>Preview</span>
                                         </Link>
-                                    </RS.Col>
-                                    <RS.Col xs={3} className="d-flex align-items-center justify-content-end">
-                                        <RS.UncontrolledButtonDropdown className="d-flex d-md-none ">
-                                            <RS.DropdownToggle caret className="text-nowrap" size="sm" color="link">
+                                    </Col>
+                                    <Col xs={3} className="d-flex align-items-center justify-content-end">
+                                        <UncontrolledButtonDropdown className="d-flex d-md-none ">
+                                            <DropdownToggle caret className="text-nowrap" size="sm" color="link">
                                                 Actions
-                                            </RS.DropdownToggle>
-                                            <RS.DropdownMenu>
-                                                    <RS.DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz))} style={{zIndex: '1'}}>
-                                                        {siteSpecific("Set Test", "Set test")}
-                                                    </RS.DropdownItem>
-                                                    <RS.DropdownItem divider />
-                                                    <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
-                                                        <RS.DropdownItem>
-                                                            Preview
-                                                        </RS.DropdownItem>
-                                                    </Link>
-                                                </RS.DropdownMenu>
-                                        </RS.UncontrolledButtonDropdown>
-                                    </RS.Col>
-                                </RS.Row>
-                            </RS.ListGroupItem>)}
-                        </RS.ListGroup>
+                                            </DropdownToggle>
+                                            <DropdownMenu>
+                                                <DropdownItem onClick={() => dispatch(showQuizSettingModal(quiz))} style={{zIndex: '1'}}>
+                                                    {siteSpecific("Set Test", "Set test")}
+                                                </DropdownItem>
+                                                <DropdownItem divider />
+                                                <Link className="w-100" style={{textDecoration: 'none'}} to={{pathname: `/test/preview/${quiz.id}`}}>
+                                                    <DropdownItem>
+                                                        Preview
+                                                    </DropdownItem>
+                                                </Link>
+                                            </DropdownMenu>
+                                        </UncontrolledButtonDropdown>
+                                    </Col>
+                                </Row>
+                            </ListGroupItem>)}
+                        </ListGroup>
                     </>}
                 </ShowLoading>,
 
                 [siteSpecific("Manage Tests", "Previously set tests")]:
                 <>
                     <div className="d-flex justify-content-center mb-4">
-                        <RS.Button color="tertiary" size="sm" onClick={() => setShowFilters(s => !s)}>
+                        <Button color="tertiary" size="sm" onClick={() => setShowFilters(s => !s)}>
                             {showFilters ? "Hide filters" : "Show filters"}
-                        </RS.Button>
+                        </Button>
                     </div>
                     {showFilters && (rowFiltersView
-                        ? <RS.Row>
-                            <RS.Col xs={6} className="d-flex flex-column align-items-center">
+                        ? <Row>
+                            <Col xs={6} className="d-flex flex-column align-items-center">
                                 {titleFilterInput}
                                 {setDateFilterInput}
-                            </RS.Col>
-                            <RS.Col xs={6} className="d-flex flex-column align-items-center">
+                            </Col>
+                            <Col xs={6} className="d-flex flex-column align-items-center">
                                 {groupFilterInput}
                                 {dueDateFilterInput}
-                            </RS.Col>
-                        </RS.Row>
-                        : <RS.Col className="d-flex flex-column align-items-center">
+                            </Col>
+                        </Row>
+                        : <Col className="d-flex flex-column align-items-center">
                             {titleFilterInput}
                             {groupFilterInput}
                             {setDateFilterInput}
                             {dueDateFilterInput}
-                        </RS.Col>)
+                        </Col>)
                     }
                     <ShowLoadingQuery
                         query={quizAssignmentsQuery}
-                        ifError={() => <RS.Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</RS.Alert>}
+                        ifError={() => <Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</Alert>}
                         thenRender={quizAssignments => {
                             let quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
                                 const groupName = persistence.load(KEY.ANONYMISE_GROUPS) === "YES"
-                                ? `Demo Group ${assignment.groupId}`
-                                : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
+                                    ? `Demo Group ${assignment.groupId}`
+                                    : groupIdToName[assignment.groupId as number] ?? "Unknown Group";
                                 return {...assignment, groupName};
                             }).reverse();
                             if (showFilters) {
@@ -492,7 +492,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
 
                             return <>
                                 {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
-                                {quizAssignments.length > 0 && <RS.Table borderless={isAda} className="w-100 set-quiz-table">
+                                {quizAssignments.length > 0 && <Table borderless={isAda} className="w-100 set-quiz-table">
                                     <colgroup>
                                         <col width={isPhy ? "90px" : isAda ? "120px" : "auto"}/>
                                         <col width={"auto"}/>
@@ -502,14 +502,14 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                                     <tbody>
                                         {quizAssignment.map((g, i) => <QuizAssignment key={g.assignedGroups?.[0].assignment.id ?? 0} user={g.user} assignedGroups={g.assignedGroups} index={i} />)}
                                     </tbody>
-                                </RS.Table>}
+                                </Table>}
                             </>;
                         }}
                     />
                 </>
             }}
         </Tabs>
-    </RS.Container>;
+    </Container>;
 };
 
 export const SetQuizzes = withRouter(SetQuizzesPageComponent);

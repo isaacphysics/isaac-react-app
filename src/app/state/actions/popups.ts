@@ -49,12 +49,11 @@ export function showRTKQueryErrorToastIfNeeded(error: string, response: any, mes
                 return showErrorToast(error, message ?? getRTKQueryErrorMessage(response.error).message);
             }
         } else {
-            trackEvent("exception", {props:
-                    {
-                        description: `load_fail: ${error}`
-                    }
+            trackEvent("exception", {
+                props: {
+                    description: `load_fail: ${error}`
                 }
-            )
+            });
             return showErrorToast(error, API_REQUEST_FAILURE_MESSAGE);
         }
     }

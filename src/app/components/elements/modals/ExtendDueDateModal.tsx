@@ -63,10 +63,10 @@ export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
             <hr className="text-center"/>
             <Container className="py-2">
                 <Label for="dueDate" className="pe-1">Extend the due date:
-                <DateInput id="dueDate" value={dueDate} invalid={dueDate && ((dueDate < currDueDate) || dueDate <= TODAY())}
-                    yearRange={yearRange} noClear disabled={isUpdatingQuiz} className="text-center"
-                    onChange={(e) => e.target.valueAsDate && setDueDate(e.target.valueAsDate)}
-                           />
+                    <DateInput id="dueDate" value={dueDate} invalid={dueDate && ((dueDate < currDueDate) || dueDate <= TODAY())}
+                        yearRange={yearRange} noClear disabled={isUpdatingQuiz} className="text-center"
+                        onChange={(e) => e.target.valueAsDate && setDueDate(e.target.valueAsDate)}
+                    />
                 </Label>
                 {dueDate && (dueDate < currDueDate || dueDate <= TODAY()) && 
                 <p className={"text-danger"}>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import * as RS from "reactstrap";
-import {FormGroup, Input, Label} from "reactstrap";
+import {Col, FormGroup, Input, Label, Row, UncontrolledTooltip} from "reactstrap";
 import {
     EXAM_BOARD,
     examBoardLabelMap,
@@ -52,8 +51,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     }, [userContext.stage]);
 
     if (isAda && !isLoggedIn(user) || isStaff(user)) {
-        return <RS.Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
-            <RS.Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}> 
+        return <Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
+            <Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}> 
                 {/* Stage Selector */}
                 <FormGroup className={`form-group w-100 d-flex justify-content-end m-0`}>
                     {showStageSelector && <>
@@ -111,7 +110,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     
                     {showUnusualContextMessage && <div className="mt-2 ms-1">
                         <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
-                        <RS.UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
+                        <UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
                             You are seeing {stageLabelMap[userContext.stage]} {isAda ? examBoardLabelMap[userContext.examBoard] : ""}{" "}
                             content, which is different to your account settings. <br />
                             {unusual.stage && unusual.examBoard && <>
@@ -121,10 +120,10 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                             </>}
                             {unusual.stage && !unusual.examBoard && `The stage was specified by ${userContext.explanation.stage}.`}
                             {unusual.examBoard && !unusual.stage && `The exam board was specified by ${userContext.explanation.examBoard}.`}
-                        </RS.UncontrolledTooltip>
+                        </UncontrolledTooltip>
                     </div>}
                 </FormGroup>
-            </RS.Row>
-        </RS.Col>;
+            </Row>
+        </Col>;
     }
 };

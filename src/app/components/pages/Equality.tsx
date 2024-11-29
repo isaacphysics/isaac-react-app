@@ -68,7 +68,7 @@ const equalityValidator = (input: string, editorMode: string) => {
         errors.push('Please convert decimal numbers to fractions.');
     }
     return errors;
-}
+};
 
 const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);
@@ -96,10 +96,10 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
         let q = [root];
         let count = 1;
         while (q.length > 0) {
-            let e = q.shift();
+            const e = q.shift();
             if (!e) continue;
 
-            let c = Object.keys(e.children).length;
+            const c = Object.keys(e.children).length;
             if (c > 0) {
                 count = count + c;
                 q = q.concat(Object.values(e.children));

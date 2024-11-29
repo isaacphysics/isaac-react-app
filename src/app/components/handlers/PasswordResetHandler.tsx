@@ -23,10 +23,10 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
             (event.target.value == (document.getElementById("password") as HTMLInputElement).value) &&
             ((document.getElementById("password") as HTMLInputElement).value != undefined) &&
             ((document.getElementById("password") as HTMLInputElement).value.length > 5)
-        )
+        );
     };
 
-    useEffect(() => {dispatch(verifyPasswordReset(urlToken))}, [dispatch, urlToken]);
+    useEffect(() => {dispatch(verifyPasswordReset(urlToken));}, [dispatch, urlToken]);
 
     return <Container id="email-verification">
         <div>
@@ -58,7 +58,7 @@ export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: strin
                             <Input invalid={!isValidPassword} id="password-confirm" type="password" name="password-new-confirm" onBlur={e => {
                                 validateAndSetPassword(e);
                                 if (e.target.value == (document.getElementById("password") as HTMLInputElement).value) {
-                                    setCurrentPassword(e.target.value)
+                                    setCurrentPassword(e.target.value);
                                 }
                             }} aria-describedby="invalidPassword" required/>
                             <FormFeedback id="invalidPassword">{(!isValidPassword) ? `Passwords must match and be at least ${MINIMUM_PASSWORD_LENGTH} characters long` : null}</FormFeedback>

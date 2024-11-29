@@ -53,13 +53,18 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
         ...currentAttempts?.[currentFeedbackPart ?? 0]?.explanation, 
         value: undefined, 
         // if the response explanation exists (i.e. it has a value or children), use it; otherwise use the default feedback
-        children: currentFeedbackPart !== undefined ? [
-            (currentAttempts?.[currentFeedbackPart]?.explanation?.value || currentAttempts?.[currentFeedbackPart]?.explanation?.children?.length) && 
-            currentAttempts?.[currentFeedbackPart]?.explanation !== undefined ? currentAttempts?.[currentFeedbackPart]?.explanation as ContentDTO : defaultFeedback(
-                currentAttempts?.[currentFeedbackPart]?.correct ? "CORRECT" : 
-                currentAttempts?.[currentFeedbackPart]?.answer?.value !== undefined ? "INCORRECT" : "NOT_ANSWERED"
-            )
-        ] : undefined,
+        children: currentFeedbackPart !== undefined 
+            ? [
+                (currentAttempts?.[currentFeedbackPart]?.explanation?.value || currentAttempts?.[currentFeedbackPart]?.explanation?.children?.length) && 
+                currentAttempts?.[currentFeedbackPart]?.explanation !== undefined 
+                    ? currentAttempts?.[currentFeedbackPart]?.explanation as ContentDTO 
+                    : defaultFeedback(
+                        currentAttempts?.[currentFeedbackPart]?.correct 
+                            ? "CORRECT" 
+                            : currentAttempts?.[currentFeedbackPart]?.answer?.value !== undefined ? "INCORRECT" : "NOT_ANSWERED"
+                    )
+            ]
+            : undefined,
     };
     const lockedDates = inlineQuestions?.map(q => q.locked).filter(d => d) as Date[] | undefined;
     return {

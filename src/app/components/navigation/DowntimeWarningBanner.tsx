@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import * as RS from 'reactstrap';
-import {Alert} from 'reactstrap';
+import {Alert, Button, Col, Container, Row} from 'reactstrap';
 import Cookies from 'js-cookie';
 import {SITE_TITLE, siteSpecific} from "../../services";
 
@@ -22,18 +21,18 @@ export const DowntimeWarningBanner = () => {
 
     return inDateRange && noCookie ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color={colour} className="mb-0">
-            <RS.Container>
-                <RS.Row style={{alignItems: "center"}}>
-                    <RS.Col xs={12} md={9}>
+            <Container>
+                <Row style={{alignItems: "center"}}>
+                    <Col xs={12} md={9}>
                         {SITE_TITLE} will be unavailable on Saturday 10 August from 8pm BST until early Sunday morning for essential server maintenance.
-                    </RS.Col>
-                    <RS.Col xs={12} md={3} className="text-center">
-                        <RS.Button color="primary" outline className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
+                    </Col>
+                    <Col xs={12} md={3} className="text-center">
+                        <Button color="primary" outline className="my-2 my-md-0 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
                             Dismiss<span className="visually-hidden"> downtime notification</span>
-                        </RS.Button>
-                    </RS.Col>
-                </RS.Row>
-            </RS.Container>
+                        </Button>
+                    </Col>
+                </Row>
+            </Container>
         </Alert>
     </div>: null;
 };

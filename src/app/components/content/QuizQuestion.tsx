@@ -65,4 +65,4 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             </div>}
         </div>
     </React.Fragment>;
-}
+};

@@ -49,7 +49,7 @@ export const MainSearchInput = withSearch(({inputProps, setSearchText, searchTex
             value={searchText} onChange={setSearchTextAsValue}
         />
         <SearchButton/>
-    </>
+    </>;
 });
 
 export const PhySimpleSearch = withSearch(({inputProps, setSearchText, searchText}) => {
@@ -76,7 +76,7 @@ export const AdaHomepageSearch = withSearch(({inputProps, setSearchText, searchT
             />
             <LongSearchButton/>
         </InputGroup>
-    </>
+    </>;
 });
 
 export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchText}) => {

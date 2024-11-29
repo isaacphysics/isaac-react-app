@@ -1,5 +1,4 @@
 import classnames from "classnames";
-import * as RS from "reactstrap";
 import {
     tags,
     AUDIENCE_DISPLAY_FIELDS,
@@ -24,6 +23,7 @@ import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 import { Spacer } from "./Spacer";
 import { LLMFreeTextQuestionIndicator } from "./LLMFreeTextQuestionIndicator";
+import { Input } from "reactstrap";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -67,7 +67,7 @@ const GameboardBuilderRow = (
         {i === 0 && <>
             <td rowSpan={arr.length} className="w-5 text-center align-middle">
                 <div className="d-flex justify-content-center">
-                    <RS.Input
+                    <Input
                         type="checkbox"
                         id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
                         aria-label={!isSelected ? "Select question" : "Deselect question"}

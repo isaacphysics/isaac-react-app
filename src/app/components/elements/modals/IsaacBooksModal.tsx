@@ -71,7 +71,7 @@ export const BookModalBody = () => {
 };
 
 export const isaacBooksModal = () => ({
-    closeAction: () => {store.dispatch(closeActiveModal())},
+    closeAction: () => {store.dispatch(closeActiveModal());},
     title: "Isaac Skills Books",
     body: <BookModalBody/>
 });

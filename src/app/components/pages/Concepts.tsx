@@ -1,8 +1,7 @@
 import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {AppState, fetchConcepts, selectors, useAppDispatch, useAppSelector} from "../../state";
-import * as RS from "reactstrap";
-import {Col, Container, Form, Input, Label, Row} from "reactstrap";
+import {Badge, Card, CardBody, CardHeader, Col, Container, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
@@ -33,12 +32,12 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const chemistry = filters.includes(TAG_ID.chemistry);
     const biology = filters.includes(TAG_ID.biology);
 
-    let [searchText, setSearchText] = useState(query);
-    let [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
-    let [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
-    let [conceptFilterChemistry, setConceptFilterChemistry] = useState(chemistry);
-    let [conceptFilterBiology, setConceptFilterBiology] = useState(biology);
-    let [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
+    const [searchText, setSearchText] = useState(query);
+    const [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
+    const [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
+    const [conceptFilterChemistry, setConceptFilterChemistry] = useState(chemistry);
+    const [conceptFilterBiology, setConceptFilterBiology] = useState(biology);
+    const [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {
@@ -97,11 +96,11 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
             </Row>
             <Row className="mb-4">
                 <Col className="py-4">
-                    <RS.Card>
-                        <RS.CardHeader className="search-header">
+                    <Card>
+                        <CardHeader className="search-header">
                             <Col lg={4} md={3} xs={12}>
                                 <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <IsaacSpinner /> : null}
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
                                 </h3>
                             </Col>
                             <Col lg={8} md={9} xs={12}>
@@ -125,8 +124,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                                     </Label>
                                 </Form>
                             </Col>
-                        </RS.CardHeader>
-                        <RS.CardBody>
+                        </CardHeader>
+                        <CardBody>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {shortcutAndFilteredSearchResults ?
                                     <LinkToContentSummaryList 
@@ -135,8 +134,8 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                                     />
                                     : <em>No results found</em>}
                             </ShowLoading>
-                        </RS.CardBody>
-                    </RS.Card>
+                        </CardBody>
+                    </Card>
                 </Col>
             </Row>
         </Container>

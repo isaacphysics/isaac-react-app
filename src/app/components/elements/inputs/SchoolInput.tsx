@@ -1,13 +1,12 @@
 import React, {useCallback, useEffect, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
-import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {schoolNameWithPostcode, siteSpecific, validateUserSchool} from "../../../services";
 import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
 import {useLazyGetSchoolByUrnQuery, useLazySearchSchoolsQuery} from "../../../state";
-import {FormFeedback, Label} from "reactstrap";
+import {FormFeedback, FormGroup, Label} from "reactstrap";
 import { components, ControlProps, InputProps, SingleValueProps, ValueContainerProps } from "react-select";
 import { StyledCheckbox } from "./StyledCheckbox";
 
@@ -108,7 +107,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     const randomNumber = Math.random();
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
-    return <RS.FormGroup className={`school mb-4 ${className} `}>
+    return <FormGroup className={`school mb-4 ${className} `}>
         <Label htmlFor={`school-input-${randomNumber}`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>School</Label>
         <p className="d-block input-description">
             {siteSpecific("This helps us promote events near you.", "This helps us measure our reach and impact.")}
@@ -151,5 +150,5 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 Please specify your school association.
             </FormFeedback>
         </div>}
-    </RS.FormGroup>;
+    </FormGroup>;
 };

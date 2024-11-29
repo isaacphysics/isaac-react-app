@@ -29,5 +29,5 @@ export function ExternalRedirect<Params extends { [K in keyof Params]: string } 
         console.error("Problem building external redirect URL, redirecting to homepage...");
         return <Redirect to={"/"}/>;
     };
-    return <TrackedRoute exact ifUser={ifUser} path={from} component={ExternalRedirectInner} />
+    return <TrackedRoute exact ifUser={ifUser} path={from} component={ExternalRedirectInner} />;
 }

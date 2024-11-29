@@ -97,16 +97,26 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, widthPx, 
     useEffect(() => {
         setCorrectness(
             // if the user has modified any question attempt without submitting, hide any validation.
-            modified ? "NOT_SUBMITTED" : 
-            // if a question has been answered since loading the page, and the question has been validated, show the correctness of this attempt.
-            // if the attempt is empty, prefer "NOT_ANSWERED" over "INCORRECT".
-            questionDTO?.validationResponse?.correct ? "CORRECT" : 
-            questionDTO?.validationResponse?.correct === false ? (!questionDTO.validationResponse.answer?.value ? "NOT_ANSWERED" : "INCORRECT") : 
-            // if no question attempt has been submitted, it will either be displaying the previous best attempt if correct or incorrect,
-            // or a *blank* attempt if the best attempt was empty (!) or does not exist.
-            questionDTO?.bestAttempt?.correct ? "CORRECT" : 
-            questionDTO?.bestAttempt?.correct === false ? (!questionDTO.bestAttempt?.answer?.value ? "NOT_SUBMITTED" : "INCORRECT") : 
-            "NOT_SUBMITTED"
+            modified 
+                ? "NOT_SUBMITTED" 
+                // if a question has been answered since loading the page, and the question has been validated, show the correctness of this attempt.
+                : questionDTO?.validationResponse?.correct 
+                    ? "CORRECT" 
+                    : questionDTO?.validationResponse?.correct === false 
+                        ? (!questionDTO.validationResponse.answer?.value
+                            // if the attempt is empty, prefer "NOT_ANSWERED" over "INCORRECT".
+                            ? "NOT_ANSWERED" 
+                            : "INCORRECT"
+                        ) 
+                        : questionDTO?.bestAttempt?.correct 
+                            // if no question attempt has been submitted, it will either be displaying the previous best attempt if correct or incorrect,
+                            // or a *blank* attempt if the best attempt was empty (!) or does not exist.
+                            ? "CORRECT" 
+                            : questionDTO?.bestAttempt?.correct === false 
+                                ? (!questionDTO.bestAttempt?.answer?.value 
+                                    ? "NOT_SUBMITTED" 
+                                    : "INCORRECT") 
+                                : "NOT_SUBMITTED"
         );
     }, [modified, questionDTO?.bestAttempt, questionDTO?.validationResponse]);
 

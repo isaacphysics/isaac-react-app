@@ -1,16 +1,16 @@
 import React, {useEffect} from "react";
-import * as RS from "reactstrap";
 import * as AppTypes from "../../../../IsaacAppTypes";
 import {closeActiveModal, useAppDispatch} from "../../../state";
 import classNames from "classnames";
 import {isAda, isPhy, siteSpecific} from "../../../services";
+import { Modal, ModalHeader, ModalFooter, ModalBody } from "reactstrap";
 
 interface ActiveModalProps {
     activeModal?: AppTypes.ActiveModal | null;
 }
 
 export const ActiveModal = ({activeModal}: ActiveModalProps) => {
-    const ModalBody = activeModal && activeModal.body;
+    const ActiveModalBody = activeModal && activeModal.body;
     const dispatch = useAppDispatch();
 
     const toggle = () => {
@@ -24,9 +24,9 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
         };
     });
 
-    return <RS.Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={(activeModal && activeModal.size) || "lg"} centered={activeModal?.centered}>
+    return <Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={(activeModal && activeModal.size) || "lg"} centered={activeModal?.centered}>
         {activeModal && <React.Fragment>
-            {<RS.ModalHeader
+            {<ModalHeader
                 data-testid={"modal-header"}
                 tag={siteSpecific(undefined, "h2")}
                 className={classNames({
@@ -46,15 +46,15 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
                 }
             >
                 {activeModal.title}
-            </RS.ModalHeader>}
-            <RS.ModalBody className={classNames({"pt-0": !activeModal.title, "pb-2 mx-4": !activeModal?.noPadding, "pb-0": activeModal?.noPadding, "overflow-visible": activeModal?.overflowVisible})}>
-                {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
-            </RS.ModalBody>
+            </ModalHeader>}
+            <ModalBody className={classNames({"pt-0": !activeModal.title, "pb-2 mx-4": !activeModal?.noPadding, "pb-0": activeModal?.noPadding, "overflow-visible": activeModal?.overflowVisible})}>
+                {typeof ActiveModalBody === "function" ? <ActiveModalBody /> : ActiveModalBody}
+            </ModalBody>
             {activeModal.buttons &&
-                <RS.ModalFooter className="mb-4 mx-2 align-self-center">
+                <ModalFooter className="mb-4 mx-2 align-self-center">
                     {activeModal.buttons}
-                </RS.ModalFooter>
+                </ModalFooter>
             }
         </React.Fragment>}
-    </RS.Modal>
+    </Modal>;
 };

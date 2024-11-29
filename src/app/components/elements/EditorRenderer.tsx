@@ -36,14 +36,14 @@ function EditorListener() {
 
     const listener = useCallback((event: MessageEvent) => {
         if (!event.origin?.includes("localhost") && event.origin !== EDITOR_ORIGIN) {
-            console.warn("Ignoring message from unexpected origin (" + event.origin + ")!")
+            console.warn("Ignoring message from unexpected origin (" + event.origin + ")!");
             return;
         }
         const {doc} = event.data;
         if (doc && "type" in doc) {
             setDoc(doc);
         }
-    }, [setDoc])
+    }, [setDoc]);
 
     useEffect(() => {
         window.addEventListener("message", listener);
@@ -57,7 +57,8 @@ function EditorListener() {
     const type = getType(doc);
     const colClasses = type === "question" ? "question-panel" : "";
 
-    return doc ? <Row className={`${type}-content-container`}>
+    return doc 
+        ? <Row className={`${type}-content-container`}>
             <Col className={classNames("py-4", colClasses, {"mw-760": isAda})}>
                 <FigureNumberingContext.Provider value={{}}>
                     <WithFigureNumbering doc={doc}>

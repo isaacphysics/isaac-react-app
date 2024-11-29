@@ -183,24 +183,24 @@ export function UserContextAccountInput({
                         existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
                         tutorOrAbove={tutorOrAbove} userContexts={userContexts} setUserContexts={setUserContexts}
                         index={index} required={required}
-                        />
+                    />
                 </FormGroup>;
             }) : <FormGroup>
-                    <UserContextRow
-                        userContext={{stage: STAGE.ALL, examBoard: siteSpecific(undefined, EXAM_BOARD.ALL)}} showNullStageOption={true} submissionAttempted={submissionAttempted}
-                        // this component is replaced as soon as the user selects a stage, so this alternative setUserContext function is okay here, even if setting multiple
-                        setUserContext={newUc => setUserContexts([newUc])} existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation}
-                        setDisplaySettings={setDisplaySettings} tutorOrAbove={tutorOrAbove} userContexts={userContexts} setUserContexts={setUserContexts}
-                        index={0} required={required}
-                    />
-                </FormGroup>
+                <UserContextRow
+                    userContext={{stage: STAGE.ALL, examBoard: siteSpecific(undefined, EXAM_BOARD.ALL)}} showNullStageOption={true} submissionAttempted={submissionAttempted}
+                    // this component is replaced as soon as the user selects a stage, so this alternative setUserContext function is okay here, even if setting multiple
+                    setUserContext={newUc => setUserContexts([newUc])} existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation}
+                    setDisplaySettings={setDisplaySettings} tutorOrAbove={tutorOrAbove} userContexts={userContexts} setUserContexts={setUserContexts}
+                    index={0} required={required}
+                />
+            </FormGroup>
             }
             {isAda && <>
                 {tutorOrAbove &&
                     <Col lg={6} className="p-0 pe-4 pe-lg-0">
                         <Button color="primary" outline className="mb-3 px-2 w-100"
-                                onClick={() => setUserContexts([...userContexts, {}])}
-                                disabled={!validateUserContexts(userContexts)}>
+                            onClick={() => setUserContexts([...userContexts, {}])}
+                            disabled={!validateUserContexts(userContexts)}>
                             Add more content
                         </Button>
                     </Col>}

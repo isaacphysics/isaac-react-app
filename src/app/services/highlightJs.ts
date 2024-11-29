@@ -179,7 +179,7 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
             'isaacPseudocode',
         ],
         keywords: {
-           $pattern: hljsLib.UNDERSCORE_IDENT_RE,
+            $pattern: hljsLib.UNDERSCORE_IDENT_RE,
             keyword: KEYWORDS,
             literal: LITERALS,
             built_in: BUILT_INS,

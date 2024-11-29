@@ -10,7 +10,7 @@ export function calculateHexagonProportions(unitLength: number, padding: number)
         halfWidth: unitLength,
         quarterHeight: unitLength / Math.sqrt(3),
         padding: padding,
-    }
+    };
 }
 
 function generateHexagonPoints(halfWidth: number, quarterHeight: number) {

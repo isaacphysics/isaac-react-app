@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import * as RS from "reactstrap";
 import {GroupMembershipDetailDTO, LoggedInUser, PotentialUser} from "../../../../IsaacAppTypes";
 import {
     openActiveModal,
@@ -42,6 +41,7 @@ import {
 import { FixedSizeList } from "react-window";
 import { Spacer } from "../Spacer";
 import { MyAccountTab } from "./MyAccountTab";
+import { Input, UncontrolledTooltip, Form, InputGroup, Button, Col } from "reactstrap";
 
 const CONNECTIONS_ROW_HEIGHT = 40;
 const CONNECTIONS_MAX_VISIBLE_ROWS = 10;
@@ -70,7 +70,7 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
         {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ? 
             <>{enableSearch ? 
                 <>
-                    <RS.Input type="text" autoFocus placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
+                    <Input type="text" autoFocus placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
                     <Spacer />
                 </> : 
                 <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
@@ -85,7 +85,7 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
                     {title}
                 </h4>
                 <Spacer />
-                {enableSearch && <RS.Input type="text" autoFocus style={{width: "200px"}} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
+                {enableSearch && <Input type="text" autoFocus style={{width: "200px"}} placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>}
             </>
         }
         {!enableSearch && <Spacer />}
@@ -174,15 +174,15 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         rightColumn={<>
             <h3>
                 <span>Teacher connection code<span id="teacher-connections-title" className="icon-help" /></span>
-                <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
+                <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your {siteSpecific("Isaac", "Ada")} assignment progress.
-                </RS.UncontrolledTooltip>
+                </UncontrolledTooltip>
             </h3>
             <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
             {/* TODO Need to handle nested form complaint */}
-            <RS.Form onSubmit={processToken} data-testid="teacher-connect-form">
-                <RS.InputGroup className={"separate-input-group mb-4 d-flex flex-row justify-content-center"}>
-                    <RS.Input
+            <Form onSubmit={processToken} data-testid="teacher-connect-form">
+                <InputGroup className={"separate-input-group mb-4 d-flex flex-row justify-content-center"}>
+                    <Input
                         type="text" placeholder="Enter your code in here" value={authToken || undefined} className="py-4"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                         onKeyDown={(e) => {if (e.key === 'Enter') {
@@ -190,11 +190,11 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                             e.preventDefault(); 
                         }}}
                     />
-                    <RS.Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark": isPhy})} color="secondary" outline disabled={editingOtherUser}>
+                    <Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark": isPhy})} color="secondary" outline disabled={editingOtherUser}>
                         Connect
-                    </RS.Button>
-                </RS.InputGroup>
-            </RS.Form>
+                    </Button>
+                </InputGroup>
+            </Form>
 
             <div className="connect-list" data-testid="teacher-connections">
                 <ConnectionsHeader 
@@ -209,28 +209,28 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                     return null;
                                 }
                                 return <React.Fragment key={teacherAuthorisation.id}>
-                                <li style={style} className="py-2">
-                                    <div className="d-inline-flex connections-fixed-length-container">
-                                        <span className="icon-person-active" />
-                                        <span id={`teacher-authorisation-${teacherAuthorisation.id}`} className="connections-fixed-length-text">
-                                            {extractTeacherName(teacherAuthorisation)}
-                                        </span>
-                                    </div>
-                                    <RS.UncontrolledTooltip
-                                        placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
+                                    <li style={style} className="py-2">
+                                        <div className="d-inline-flex connections-fixed-length-container">
+                                            <span className="icon-person-active" />
+                                            <span id={`teacher-authorisation-${teacherAuthorisation.id}`} className="connections-fixed-length-text">
+                                                {extractTeacherName(teacherAuthorisation)}
+                                            </span>
+                                        </div>
+                                        <UncontrolledTooltip
+                                            placement="bottom" target={`teacher-authorisation-${teacherAuthorisation.id}`}
                                         >
                                         This user ({teacherAuthorisation.email}) has access to your data.
                                         To remove this access, click &apos;Revoke&apos;.
-                                    </RS.UncontrolledTooltip>
-                                    <RS.Button
-                                        color="link" className="revoke-teacher pe-1"
-                                        disabled={editingOtherUser}
-                                        onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
+                                        </UncontrolledTooltip>
+                                        <Button
+                                            color="link" className="revoke-teacher pe-1"
+                                            disabled={editingOtherUser}
+                                            onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(revocationConfirmationModal(user.id, teacherAuthorisation)))}
                                         >
                                         Revoke
-                                    </RS.Button>
-                                </li>
-                            </React.Fragment>;
+                                        </Button>
+                                    </li>
+                                </React.Fragment>;
                             }}
                         </FixedSizeList>
                     </ul>
@@ -244,10 +244,10 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 <hr className={siteSpecific("my-5 text-center", "my-4")} />
                 <h3>
                     <span>Your student connections<span id="student-connections-title" className="icon-help" /></span>
-                    <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
+                    <UncontrolledTooltip placement="bottom" target="student-connections-title">
                         These are the students who have shared their {siteSpecific("Isaac", "Ada")} data with you.
                         These students are also able to view your name and email address on their Teacher connections page.
-                    </RS.UncontrolledTooltip>
+                    </UncontrolledTooltip>
                 </h3>
                 <p>
                     You can invite students to share their {siteSpecific("Isaac", "Ada")} data with you through the {" "}
@@ -272,18 +272,18 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                 {student.givenName} {student.familyName}
                                             </span>
                                         </div>
-                                        <RS.UncontrolledTooltip
+                                        <UncontrolledTooltip
                                             placement="bottom" target={`student-authorisation-${student.id}`}
                                         >
                                             You have access to this user&apos;s data and they can see your name and email address.
                                             To remove this access, click &apos;Remove&apos;.
-                                        </RS.UncontrolledTooltip>
-                                        <RS.Button
+                                        </UncontrolledTooltip>
+                                        <Button
                                             color="link" className="revoke-teacher pe-1" disabled={editingOtherUser}
                                             onClick={() => user.loggedIn && user.id && dispatch(openActiveModal(releaseConfirmationModal(user.id, student)))}
                                         >
                                             Remove
-                                        </RS.Button>
+                                        </Button>
                                     </li>;
                                 }}
                             </FixedSizeList>
@@ -294,9 +294,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         </p>}
                     </div>
                     {studentAuthorisations && studentAuthorisations.length > 0 && <p className="remove-link">
-                        <RS.Button color="link" onClick={() => dispatch(openActiveModal(releaseAllConfirmationModal()))} disabled={editingOtherUser}>
+                        <Button color="link" onClick={() => dispatch(openActiveModal(releaseAllConfirmationModal()))} disabled={editingOtherUser}>
                             Remove all
-                        </RS.Button>
+                        </Button>
                     </p>}
                 </div>
             </React.Fragment>}
@@ -307,10 +307,10 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     Your group memberships
                     <span id="group-memberships-title" className="icon-help" />
                 </span>
-                <RS.UncontrolledTooltip placement="bottom" target="group-memberships-title">
+                <UncontrolledTooltip placement="bottom" target="group-memberships-title">
                     These are the groups you are currently a member of.
                     Groups on {siteSpecific("Isaac", "Ada")} let teachers set assignments to multiple students in one go.
-                </RS.UncontrolledTooltip>
+                </UncontrolledTooltip>
             </h3>
             <ul>
                 <li>{`Active group memberships mean you ${siteSpecific("will receive assignments set to that group by teachers in it." ,"can receive assignments from the teachers in that group.")}`}</li>
@@ -330,18 +330,18 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                     const inactiveInGroup = membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE;
                                     return <li key={index} style={style} className={classNames("p-2 ps-3", {"inactive-group" : isAda && inactiveInGroup})}>
                                         <div className="d-flex">
-                                            <RS.Col className="connections-fixed-length-container me-1">
+                                            <Col className="connections-fixed-length-container me-1">
                                                 <div className="d-flex">
                                                     <span id={`group-membership-${index}`} className={classNames("connections-fixed-length-text", {"text-muted connection-inactive": inactiveInGroup})}>
                                                         <b>{(membership.group.groupName ?? "Group " + membership.group.id)}</b>
                                                     </span>
                                                     {inactiveInGroup && <span>&nbsp;{"("}<i>inactive</i>{")"}</span>}
                                                     {membership.group.selfRemoval && <img className={classNames("self-removal-group", {"ms-1": !inactiveInGroup})} src={siteSpecific("/assets/phy/icons/teacher_features_sprite.svg#groups", "/assets/cs/icons/group.svg")} alt=""/>}
-                                                    <RS.UncontrolledTooltip
+                                                    <UncontrolledTooltip
                                                         placement="top" target={`group-membership-${index}`}
                                                     >
                                                         {membership.group.groupName ? membership.group.groupName : `Group ${membership.group.id}`}
-                                                    </RS.UncontrolledTooltip>
+                                                    </UncontrolledTooltip>
                                                 </div>
                                                 <div className="d-flex">
                                                     {membership.group.ownerSummary && <span className="connections-fixed-length-text text-muted">
@@ -350,40 +350,42 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                         }
                                                     </span>}
                                                 </div>
-                                            </RS.Col>
-                                            <RS.Col className="d-flex flex-col justify-content-end align-items-center flex-grow-0 pe-1">
+                                            </Col>
+                                            <Col className="d-flex flex-col justify-content-end align-items-center flex-grow-0 pe-1">
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
-                                                    <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
+                                                    <Button color="link" disabled={editingOtherUser} onClick={() =>
                                                         membership.group.selfRemoval 
                                                             ? dispatch(openActiveModal(confirmSelfRemovalModal((user as LoggedInUser).id as number, membership.group.id as number)))
                                                             : changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.INACTIVE})
                                                     }>
                                                         Leave
-                                                    </RS.Button>
+                                                    </Button>
                                                     {isPhy && <>
                                                         <span id={`leave-group-action-${membership.group.id}`} className="icon-help membership-status-help-button" />
-                                                        <RS.UncontrolledTooltip placement="bottom" target={`leave-group-action-${membership.group.id}`}
-                                                                                modifiers={[preventOverflow]}>
+                                                        <UncontrolledTooltip placement="bottom" target={`leave-group-action-${membership.group.id}`}
+                                                            modifiers={[preventOverflow]}
+                                                        >
                                                             If you leave a group you will no longer receive notifications of new assignments.
-                                                        </RS.UncontrolledTooltip>
+                                                        </UncontrolledTooltip>
                                                     </>}
                                                 </React.Fragment>}
 
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE && <React.Fragment>
-                                                    <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
+                                                    <Button color="link" disabled={editingOtherUser} onClick={() =>
                                                         changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.ACTIVE})
                                                     }>
                                                         Rejoin
-                                                    </RS.Button>
+                                                    </Button>
                                                     {isPhy && <>
                                                         <span id={`rejoin-group-action-${membership.group.id}`} className="icon-help membership-status-help-button" />
-                                                        <RS.UncontrolledTooltip placement="bottom" target={`rejoin-group-action-${membership.group.id}`}
-                                                                                modifiers={[preventOverflow]}>
+                                                        <UncontrolledTooltip placement="bottom" target={`rejoin-group-action-${membership.group.id}`}
+                                                            modifiers={[preventOverflow]}
+                                                        >
                                                             If you rejoin a group you will see all the assignments set since the group was created.
-                                                        </RS.UncontrolledTooltip>
+                                                        </UncontrolledTooltip>
                                                     </>}
                                                 </React.Fragment>}
-                                            </RS.Col>
+                                            </Col>
                                         </div>
                                     </li>;
                                 }}

@@ -92,7 +92,7 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 }
             }
         }
-    }
+    };
     useEffect(() => {
         if (headerScrollerSentinel.current && !headerScrollerObserver.current && !headerScrollerFlag.current) {
             const options = {
@@ -118,10 +118,10 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                     ? <>
                         <Label className={"w-100"}>Filter by group:
                             <StyledSelect inputId="groups-filter" isMulti isClearable placeholder="All"
-                                          value={groupsToInclude}
-                                          closeMenuOnSelect={!isStaff(user)}
-                                          onChange={selectOnChange(setGroupsToInclude, false)}
-                                          options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
+                                value={groupsToInclude}
+                                closeMenuOnSelect={!isStaff(user)}
+                                onChange={selectOnChange(setGroupsToInclude, false)}
+                                options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
                             />
                         </Label>
                         <Button className={"mt-2 mt-sm-0"} size={"xs"} color={"link"} block onClick={() => {
@@ -144,15 +144,17 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
                     <ButtonGroup className={"w-100 pt-3"}>
                         <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-end-0 px-1 px-lg-3"} id={"start-date-button"}
-                                color={viewBy === "startDate" ? "secondary" : "primary"}
-                                outline={viewBy !== "startDate"}
-                                onClick={() => setViewBy("startDate")}>
+                            color={viewBy === "startDate" ? "secondary" : "primary"}
+                            outline={viewBy !== "startDate"}
+                            onClick={() => setViewBy("startDate")}
+                        >
                             By start date
                         </Button>
                         <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-start-0 px-1 px-lg-3"} id={"due-date-button"}
-                                color={viewBy === "dueDate" ? "secondary" : "primary"}
-                                outline={viewBy !== "dueDate"}
-                                onClick={() => setViewBy("dueDate")}>
+                            color={viewBy === "dueDate" ? "secondary" : "primary"}
+                            outline={viewBy !== "dueDate"}
+                            onClick={() => setViewBy("dueDate")}
+                        >
                             By due date
                         </Button>
                     </ButtonGroup>
@@ -168,7 +170,7 @@ const AssignmentScheduleStickyHeader = ({user, groups, assignmentsSetByMe, viewB
         </div>
         {header}
     </div>;
-}
+};
 
 interface AssignmentListEntryProps {
     assignment: ValidAssignmentWithListingDate;
@@ -238,24 +240,24 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                         {boardStagesAndDifficulties.length > 0 && <Col xs={12} md={6}>
                             <Table>
                                 <thead>
-                                <tr>
-                                    <th className="border-top-0 fw-normal py-1">
-                                        {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}`}
-                                    </th>
-                                    <th className="border-top-0 fw-normal py-1">
-                                        {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
-                                    </th>
-                                </tr>
+                                    <tr>
+                                        <th className="border-top-0 fw-normal py-1">
+                                            {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}`}
+                                        </th>
+                                        <th className="border-top-0 fw-normal py-1">
+                                            {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
+                                        </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
-                                    <td className="py-1">
-                                        <strong>{stageLabelMap[stage]}</strong>
-                                    </td>
-                                    <td className="py-1">
-                                        <strong>{difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}</strong>
-                                    </td>
-                                </tr>)}
+                                    {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
+                                        <td className="py-1">
+                                            <strong>{stageLabelMap[stage]}</strong>
+                                        </td>
+                                        <td className="py-1">
+                                            <strong>{difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}</strong>
+                                        </td>
+                                    </tr>)}
                                 </tbody>
                             </Table>
                         </Col>}
@@ -281,7 +283,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                 </a>}
         </CardFooter>
     </Card>;
-}
+};
 
 // If the hexagon proportions change, the CSS class bg-timeline needs revisiting
 const dateHexagon = calculateHexagonProportions(20, 1);
@@ -310,7 +312,8 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
                 </foreignObject>}
                 <svg x={2.5 * dateHexagon.halfWidth - (open ? 7 : 3)} y={dateHexagon.quarterHeight * 2 - (open ? 3 : 6.5)}>
                     <polygon className={classNames("date-toggle-arrow fill-secondary", {"open": open})} points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7"
-                             transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}/>
+                        transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}
+                    />
                 </svg>
                 {<foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
                     <div className={"position-relative w-100"}>
@@ -322,13 +325,13 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
         {open && <div className={"date-assignment-list"}>
             {assignments.map(a => <AssignmentListEntry key={a.id} assignment={{...a, gameboard: a.gameboard ?? (a.gameboardId ? boardsById[a.gameboardId] : undefined)}}/> )}
         </div>}
-    </>
-}
+    </>;
+};
 
 const monthHexagon = calculateHexagonProportions(12, 1);
 const shouldOpenMonth = (month: number) => {
     return (new Date()).getMonth() === month;
-}
+};
 const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, datesAndAssignments: [number, ValidAssignmentWithListingDate[]][]}) => {
     const [open, setOpen] = useState<boolean>(shouldOpenMonth(month));
     const assignmentCount = useMemo(() => datesAndAssignments.reduce((n, [_, as]) => n + as.length, 0), [datesAndAssignments]);
@@ -338,21 +341,23 @@ const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, dates
     }, [collapsed]);
     return <>
         <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for ${MONTH_NAMES[month]}`}
-             className={"month-label w-100 text-end d-flex"} onKeyPress={(e) => {
-            if (e.key === "Enter") {
+            className={"month-label w-100 text-end d-flex"} onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                    setOpen(o => !o);
+                    setCollapsed(false);
+                }
+            }} onClick={() => {
                 setOpen(o => !o);
                 setCollapsed(false);
-            }
-        }} onClick={() => {
-            setOpen(o => !o);
-            setCollapsed(false);
-        }}>
+            }}
+        >
             <div className={"h-100 text-center position-relative"} style={{width: dateHexagon.halfWidth * 2, paddingTop: 3}}>
                 <svg height={monthHexagon.quarterHeight * 4} width={monthHexagon.halfWidth * 2}>
                     <Hexagon className={"fill-secondary"} {...monthHexagon}/>
                     <svg x={monthHexagon.halfWidth - (open ? 7.4 : 3)} y={monthHexagon.quarterHeight * 2 - (open ? 4 : 6.5)}>
                         <polygon fill={"#ffffff"} points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7"
-                                 transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}/>
+                            transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}
+                        />
                     </svg>
                 </svg>
             </div>
@@ -362,7 +367,7 @@ const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, dates
         </div>
         {open && datesAndAssignments.map(([d, as]) => <DateAssignmentList key={d} date={d} assignments={as}/>)}
     </>;
-}
+};
 
 interface AssignmentModalProps {
     user: RegisteredUserDTO;
@@ -458,17 +463,17 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
         </h3>
         <Label className="w-100 pb-2">Group(s):
             <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
-                          value={selectedGroups}
-                          closeMenuOnSelect={false}
-                          onChange={selectOnChange(setSelectedGroups, false)}
-                          options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
+                value={selectedGroups}
+                closeMenuOnSelect={false}
+                onChange={selectOnChange(setSelectedGroups, false)}
+                options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
             />
         </Label>
         <Label className="w-100 pb-2">Gameboard:
             <StyledSelect inputId="gameboard-to-assign" isClearable placeholder="None"
-                          value={selectedGameboard}
-                          onChange={selectOnChange(setSelectedGameboard, false)}
-                          options={gameboards.map(g => itemise(g.id ?? "", g.title ?? `Unknown ${siteSpecific("gameboard", "quiz")} (may belong to another user)`))}
+                value={selectedGameboard}
+                onChange={selectOnChange(setSelectedGameboard, false)}
+                options={gameboards.map(g => itemise(g.id ?? "", g.title ?? `Unknown ${siteSpecific("gameboard", "quiz")} (may belong to another user)`))}
             />
             {alreadyAssignedGroupNames && alreadyAssignedGroupNames.length > 0 && <Alert color={"warning"} className={"my-1"}>
                 This {siteSpecific("gameboard", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
@@ -481,11 +486,13 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
         </Label>
         <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
-                       onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)}
+            />
         </Label>
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
-                       onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} />
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)}
+            />
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
         </Label>
         <Alert color={siteSpecific("warning", "info")} className="py-1">
@@ -493,10 +500,10 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
         </Alert>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
-                   spellCheck={true}
-                   rows={3}
-                   value={assignmentNotes}
-                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
+                spellCheck={true}
+                rows={3}
+                value={assignmentNotes}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
             />
             <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
             {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
@@ -519,7 +526,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
             </Col>
         </Row>
     </>;
-}
+};
 
 type AssignmentsGroupedByDate = [number, [number, [number, ValidAssignmentWithListingDate[]][]][]][];
 export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
@@ -556,13 +563,13 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         return assignmentsSetByMe?.reduce((acc, a) => {
             if (!a.groupId || !a.gameboardId) return acc;
             return a.groupId in acc ? {...acc, [a.groupId]: [...acc[a.groupId], a.gameboardId]} : {...acc, [a.groupId]: [a.gameboardId]};
-        }, {} as {[id: number]: string[]}) ?? {}
+        }, {} as {[id: number]: string[]}) ?? {};
     }, [assignmentsSetByMe]);
 
     // Logic to handle showing older assignments - we show the "load older assignments" button if we haven't shown
     // the oldest assignment yet
     const [earliestShowDate, setEarliestShowDate] = useState<Date>(() => {
-        let d = new Date();
+        const d = new Date();
         d.setMonth(d.getMonth() - 1);
         d.setDate(1);
         d.setHours(0, 0, 0, 0);
@@ -575,8 +582,8 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                 return assignmentTimestamp < oldest
                     ? assignmentTimestamp : oldest;
             }, Date.now()) ?? Date.now()
-        )
-        , [assignmentsSetByMe, groupFilter, viewBy]);
+    ), [assignmentsSetByMe, groupFilter, viewBy]);
+    
     const extendBackSixMonths = (until?: Date) => setEarliestShowDate(esd => {
         const d = new Date(esd.valueOf());
         d.setMonth(d.getMonth() - 6);
@@ -714,4 +721,4 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
             </AssignmentScheduleContext.Provider>
         </ShowLoadingQuery>
     </Container>;
-}
+};

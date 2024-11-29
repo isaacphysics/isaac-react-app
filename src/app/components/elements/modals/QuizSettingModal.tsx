@@ -148,8 +148,8 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         </Label>
         <Label className="w-100 mb-4">Set an optional start date:<span id={scheduledQuizHelpTooltipId} className="icon-help"/><br/>
             <DateInput value={scheduledStartDate ?? undefined} invalid={scheduledStartDateInvalid || undefined}
-                       yearRange={yearRange}
-                       onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate)}
+                yearRange={yearRange}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate)}
             />
             <UncontrolledTooltip placement="top" autohide={false} target={scheduledQuizHelpTooltipId}>
                 You can schedule a test to appear in the future by setting a start date.
@@ -160,7 +160,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
         </Label>
         <Label className="w-100 mb-4">Set an optional due date:<br/>
             <DateInput invalid={dueDateInvalid || undefined} value={dueDate ?? undefined} yearRange={yearRange}
-                       onChange={(e) => setDueDate(e.target.valueAsDate)}/>
+                onChange={(e) => setDueDate(e.target.valueAsDate)}/>
             {dueDateInvalid && <small className={"pt-2 text-danger"}>{dueDate.valueOf() > TODAY().valueOf() ? "Due date must be on or after the start date." : `Due date must be after today.`}</small>}
         </Label>
 

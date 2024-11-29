@@ -18,7 +18,7 @@ const PhysicsContentCard = ({doc, imageClassName, className, ...rest}: IsaacCard
     const imgSrc = image?.src && apiHelper.determineImageUrl(image.src);
 
     const link = (clickUrl && isAppLink(clickUrl)) ? <Link to={clickUrl} className={"stretched-link"} aria-label={title} aria-disabled={disabled}/> :
-        <a href={clickUrl} className={"stretched-link"} aria-label={title} aria-disabled={disabled}/>
+        <a href={clickUrl} className={"stretched-link"} aria-label={title} aria-disabled={disabled}/>;
 
     return <Col className="d-flex h-100 justify-content-center">
         {verticalContent ?

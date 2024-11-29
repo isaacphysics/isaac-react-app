@@ -106,5 +106,5 @@ export const MathsBookGcse = () => {
                 </Tabs>
             </div>
         </Col>
-    </Container>
+    </Container>;
 };

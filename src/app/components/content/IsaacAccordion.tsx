@@ -54,8 +54,9 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             // Handle conditional display settings
             .map(section => {
                 const sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
-                const sectionDisplaySettings = isIntendedAudience(section.audience, userContext, user) ?
-                        sectionDisplay?.["audience"] : sectionDisplay?.["nonAudience"];
+                const sectionDisplaySettings = isIntendedAudience(section.audience, userContext, user) 
+                    ? sectionDisplay?.["audience"] 
+                    : sectionDisplay?.["nonAudience"];
                 if (sectionDisplaySettings?.includes("open")) {section.startOpen = true;}
                 if (sectionDisplaySettings?.includes("closed")) {section.startOpen = false;}
                 if (sectionDisplaySettings?.includes("de-emphasised")) {section.deEmphasised = true;}

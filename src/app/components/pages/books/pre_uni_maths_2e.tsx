@@ -15,8 +15,8 @@ export const PreUniMaths2e = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-5" currentPageTitle="Pre-University Mathematics for Sciences"
-                                    help={pageHelp} modalId="help_modal_maths_book"
-                                    subTitle="2nd Edition"
+                    help={pageHelp} modalId="help_modal_maths_book"
+                    subTitle="2nd Edition"
                 />
                 <img className="book-cover" src="/assets/phy/books/pre_uni_maths_2e.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="pre_uni_maths_intro_2e"/>
@@ -27,36 +27,41 @@ export const PreUniMaths2e = () => {
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'pre_uni_maths_2e_ch1_boards'} chapterTitle={'Algebra & Number'}
-                                         chapterSubHeading={'(Sections A-D)'}
-                                         chapterIcon={'1'} chapterSubject={SUBJECTS.MATHS}/>
+                                chapterSubHeading={'(Sections A-D)'}
+                                chapterIcon={'1'} chapterSubject={SUBJECTS.MATHS}
+                            />
                         </Col>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'pre_uni_maths_2e_ch2_boards'} chapterTitle={'Functions'}
-                                         chapterSubHeading={'(Sections E-F)'}
-                                         chapterIcon={'2'} chapterSubject={SUBJECTS.MATHS}/>
+                                chapterSubHeading={'(Sections E-F)'}
+                                chapterIcon={'2'} chapterSubject={SUBJECTS.MATHS}
+                            />
                         </Col>
                     </Row>
                     <Row>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'pre_uni_maths_2e_ch3_boards'} chapterTitle={'Geometry'}
-                                         chapterSubHeading={'(Sections G-I)'}
-                                         chapterIcon={'3'} chapterSubject={SUBJECTS.MATHS}/>
+                                chapterSubHeading={'(Sections G-I)'}
+                                chapterIcon={'3'} chapterSubject={SUBJECTS.MATHS}
+                            />
                         </Col>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'pre_uni_maths_2e_ch4_boards'} chapterTitle={'Calculus'}
-                                         chapterSubHeading={'(Sections J-L)'}
-                                         chapterIcon={'4'} chapterSubject={SUBJECTS.MATHS}/>
+                                chapterSubHeading={'(Sections J-L)'}
+                                chapterIcon={'4'} chapterSubject={SUBJECTS.MATHS}
+                            />
                         </Col>
                     </Row>
                     <Row className="mb-4">
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'pre_uni_maths_2e_ch5_boards'} chapterTitle={'Applications to Sciences'}
-                                         chapterSubHeading={'(Sections M-T)'}
-                                         chapterIcon={'5'} chapterSubject={SUBJECTS.MATHS}/>
+                                chapterSubHeading={'(Sections M-T)'}
+                                chapterIcon={'5'} chapterSubject={SUBJECTS.MATHS}
+                            />
                         </Col>
                     </Row>
                 </Col>
             </div>
         </Col>
-    </Container>
+    </Container>;
 };

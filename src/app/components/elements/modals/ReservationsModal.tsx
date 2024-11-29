@@ -78,7 +78,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
         if (groupMembers) {
             const bookedUserIds = eventBookingsForGroup?.filter(booking => booking.userBooked?.id && booking.bookingStatus !== "CANCELLED")
                 .map(booking => booking.userBooked && booking.userBooked.id) ?? [];
-            let newCancelReservationCheckboxes: {[id: number]: boolean} = {};
+            const newCancelReservationCheckboxes: {[id: number]: boolean} = {};
             for (const userId of bookedUserIds) {
                 if (userId) {
                     newCancelReservationCheckboxes[userId] = false;
@@ -93,7 +93,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                     .filter(member => !(event.isStudentOnly && member.role !== "STUDENT")),
                 ['authorisedFullAccess', 'familyName', 'givenName'], ['desc', 'asc', 'asc']
             );
-            let newUserCheckboxes: {[id : number]: boolean} = {};
+            const newUserCheckboxes: {[id : number]: boolean} = {};
             for (const user of newUnbookedUsers) {
                 if (!user.id || !user.authorisedFullAccess) continue;
                 newUserCheckboxes[user.id] = false;
@@ -115,7 +115,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
     const toggleAllUnbooked = () => {
         setCheckAllCheckbox(!checkAllCheckbox);
-        let checkboxes = { ...userCheckboxes };
+        const checkboxes = { ...userCheckboxes };
         for (const id in userCheckboxes) {
             if (unbookedUsersById[id].emailVerificationStatus === "VERIFIED") {
                 checkboxes[id] = !checkAllCheckbox;
@@ -135,7 +135,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
     const toggleAllCancelReservationCheckboxes = () => {
         setCheckAllCancelReservationsCheckbox(!checkAllCancelReservationsCheckbox);
-        let checkboxes = { ...cancelReservationCheckboxes };
+        const checkboxes = { ...cancelReservationCheckboxes };
         for (const id in cancelReservationCheckboxes) {
             checkboxes[id] = !checkAllCancelReservationsCheckbox;
         }
@@ -193,9 +193,9 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
     const isReservationLimitReached = () => {
         if (event.groupReservationLimit) {
             const bookings = eventBookingsForGroup?.filter(booking =>
-                    (booking.bookingStatus === "CONFIRMED" || booking.bookingStatus === "RESERVED" || booking.bookingStatus ==="WAITING_LIST")
+                (booking.bookingStatus === "CONFIRMED" || booking.bookingStatus === "RESERVED" || booking.bookingStatus ==="WAITING_LIST")
                     && booking.reservedById === user?.id
-                )
+            )
                 // teachers should not count toward student event limits
                 .filter(booking => !event.isAStudentEvent || booking.userBooked?.role === "STUDENT") ?? [];
 
@@ -252,9 +252,9 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                         <>
                             <Table bordered responsive className="bg-white reserved">
                                 <thead>
-                                <tr>
-                                    <th colSpan={4}>All current reservations</th>
-                                </tr>
+                                    <tr>
+                                        <th colSpan={4}>All current reservations</th>
+                                    </tr>
                                     <tr>
                                         <th className="align-middle checkbox">
                                             <Input
@@ -349,7 +349,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                 {user.givenName + " " + user.familyName}
                                                 {user.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">E-mail not verified</div>}
                                             </td>
-                                        </tr>)
+                                        </tr>);
                                     })}
                                 </tbody>
                             </Table>
@@ -416,10 +416,10 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
 export const reservationsModal = ({event}: {event: AugmentedEvent}): ActiveModal => {
     return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+        closeAction: () => {store.dispatch(closeActiveModal());},
         size: 'xl',
         title: "Group reservations",
         body: <ReservationsModal event={event} />,
         overflowVisible: true
-    }
+    };
 };

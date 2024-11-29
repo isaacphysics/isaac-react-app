@@ -1,4 +1,4 @@
-import {union, mapValues} from "lodash"
+import {union, mapValues} from "lodash";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services";
 import {Action, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";
@@ -84,8 +84,8 @@ describe("user reducer", () => {
         previousStates.map((previousState) => {
             const actualNextState = userSlice.reducer(previousState, addProfWheelerAction);
             expect(actualNextState).toEqual({...profWheeler, loggedIn: true});
-        })
-    })
+        });
+    });
 });
 
 describe("questions reducer", () => {
@@ -114,7 +114,7 @@ describe("questions reducer", () => {
         testCases.map(([previousState, expectedNextState]) => {
             const actualNextState = questions(previousState, registerManVsHorse);
             expect(actualNextState).toEqual(expectedNextState);
-        })
+        });
     });
 
     it("should deregister questions correctly", () => {
@@ -130,7 +130,7 @@ describe("questions reducer", () => {
         testCases.map(([previousState, expectedNextState]) => {
             const actualNextState = questions(previousState, deregisterManVsHorse);
             expect(actualNextState).toEqual(expectedNextState);
-        })
+        });
     });
 });
 
@@ -154,8 +154,8 @@ describe("search reducer", () => {
         previousStates.map((previousState) => {
             const actualNextState = search(previousState, unitsAction);
             expect(actualNextState).toEqual({searchResults: searchResultsList});
-        })
-    })
+        });
+    });
 });
 
 describe("toasts reducer", () => {
@@ -190,7 +190,7 @@ describe("toasts reducer", () => {
         previousStates.map((previousState) => {
             const actualNextState = toasts(previousState, toastsShowAction);
             expect(actualNextState).toEqual([...(previousState || []), moreToast]);
-        })
+        });
     });
 
     it("can mark existing toasts as hidden", () => {

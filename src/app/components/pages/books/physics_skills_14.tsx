@@ -74,5 +74,5 @@ export const PhysicsSkills14 = () => {
                 </Col>
             </div>
         </Col>
-    </Container>
+    </Container>;
 };

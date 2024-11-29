@@ -40,8 +40,8 @@ export const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQ
             headers.set("accept", "application/json, text/plain, */*");
             return headers;
         }
-    }
-    let result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
+    };
+    const result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
     if (result.error &&
         (typeof(result.error.status) === "number" ? result.error.status : parseInt(result.error.status)) >= 500 &&
         !(result.error.data as {bypassGenericSiteErrorPage?: boolean})?.bypassGenericSiteErrorPage) {
@@ -64,11 +64,11 @@ export const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQ
         }
     }
     return result;
-}
+};
 
 export const resultOrNotFound = <T>(result: T, error: FetchBaseQueryError | SerializedError | undefined) => {
     return error && 'status' in error && error.status === NOT_FOUND ? NOT_FOUND : result;
-}
+};
 
 interface QueryLifecycleSpec<T, R> {
     onQueryStart?: (args: T, api: {dispatch: Dispatch<any>, getState: () => any}) => void | {resetOptimisticUpdates: (() => void)};
@@ -112,7 +112,7 @@ export const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, succes
 
 export const mutationSucceeded = <T>(response: {data: T} | {error: FetchBaseQueryError | SerializedError}): response is {data: T} => {
     return response.hasOwnProperty("data");
-}
+};
 
 export const extractDataFromQueryResponse = <T>(response: { data?: T } | { error: FetchBaseQueryError | SerializedError; }): T | NOT_FOUND_TYPE | undefined => {
     if ('data' in response) {
@@ -126,14 +126,14 @@ export const extractDataFromQueryResponse = <T>(response: { data?: T } | { error
 export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError | undefined): {status?: number | string, message: string} => {
     if (e?.hasOwnProperty("data")) {
         // @ts-ignore
-        return {status: e.status, message: e?.data?.errorMessage ?? API_REQUEST_FAILURE_MESSAGE}
+        return {status: e.status, message: e?.data?.errorMessage ?? API_REQUEST_FAILURE_MESSAGE};
     }
     if (e?.hasOwnProperty("message")) {
         const se = e as SerializedError;
-        return {status: se.code, message: se?.message ?? API_REQUEST_FAILURE_MESSAGE}
+        return {status: se.code, message: se?.message ?? API_REQUEST_FAILURE_MESSAGE};
     }
     return {message: API_REQUEST_FAILURE_MESSAGE};
-}
+};
 
 // === Anonymisation utilities ===
 
@@ -208,4 +208,4 @@ export const anonymisationFunctions = {
         ...groupMembership,
         group: anonymisationFunctions.appGroup(groupMembership.group, anonymisationOptions) ?? {},
     })
-}
+};

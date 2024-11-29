@@ -7,7 +7,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     const [showShareLink, setShowShareLink] = useState(false);
     const user = useAppSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
-    let shortenedLinkUrl = linkUrl;
+    const shortenedLinkUrl = linkUrl;
     // FIXME reintroduce share URL shortening?
     // const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
     // if (isAda && segueEnvironment !== "DEV") {
@@ -35,8 +35,8 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
         }
     }, [showShareLink]);
 
-    const shareLinkDivRef = useRef(null)
-    useOutsideCallback(shareLinkDivRef, () => clickAwayClose && setShowShareLink(false), [setShowShareLink])
+    const shareLinkDivRef = useRef(null);
+    useOutsideCallback(shareLinkDivRef, () => clickAwayClose && setShowShareLink(false), [setShowShareLink]);
 
     const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
     const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * siteSpecific(9, 6));

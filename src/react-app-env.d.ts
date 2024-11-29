@@ -68,11 +68,11 @@ declare module "bootstrap";
 declare module "math-random-seed";
 declare module "highlightjs-vba";
 
-declare var MathJax: any;
-declare var ISAAC_SITE: string;
-declare var REACT_APP_API_VERSION: string;
+declare let MathJax: any;
+declare let ISAAC_SITE: string;
+declare let REACT_APP_API_VERSION: string;
 declare const ENV_QUIZ_FEATURE_FLAG: boolean;
-declare var EDITOR_PREVIEW: boolean;
+declare let EDITOR_PREVIEW: boolean;
 
 declare module "inequality-grammar" {
   export const parseMathsExpression: (exp: string) => (any[]) | ParsingError;

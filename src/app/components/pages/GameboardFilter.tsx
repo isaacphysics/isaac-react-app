@@ -298,7 +298,7 @@ const itemiseAndGroupConceptsByTag = (conceptDTOs : ContentSummaryDTO[]) => ((ta
             (dto.tags?.includes(tag.value) && dto.id && dto.title)
                 ? [...acc, {value: dto.id, label: dto.title}]
                 : acc,
-            [])
+        [])
     };
 });
 interface CSFilterProps extends FilterProps {
@@ -408,11 +408,11 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     <StyledSelect
                         inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
                         options={topicChoices} onChange={(v, _) => {
-                        if ((Array.isArray(v) && v.length === 0) || v === null) {
-                            setConcepts([]);
-                        }
-                        return selectOnChange(setTierSelection, false)(v);
-                    }}
+                            if ((Array.isArray(v) && v.length === 0) || v === null) {
+                                setConcepts([]);
+                            }
+                            return selectOnChange(setTierSelection, false)(v);
+                        }}
                     />
                 </Col>
             </Row>
@@ -486,15 +486,15 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     }
 
     const tiers: Tier[] = siteSpecific([
-            {id: "subjects" as TierID, name: "Subject"},
-            {id: "fields" as TierID, name: "Field"},
-            {id: "topics" as TierID, name: "Topic"},
-        ],
-        [
-            {id: "subjects" as TierID, name: "Category"},
-            {id: "fields" as TierID, name: "Strand"},
-            {id: "topics" as TierID, name: "Topic"},
-        ]).map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
+        {id: "subjects" as TierID, name: "Subject"},
+        {id: "fields" as TierID, name: "Field"},
+        {id: "topics" as TierID, name: "Topic"},
+    ],
+    [
+        {id: "subjects" as TierID, name: "Category"},
+        {id: "fields" as TierID, name: "Strand"},
+        {id: "topics" as TierID, name: "Topic"},
+    ]).map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
 
     const [stages, setStages] = useState<Item<string>[]>(queryStages.length > 0 ? queryStages : itemiseByValue([userContext.stage], getFilteredStageOptions()));
     useEffect(function keepStagesInSyncWithUserContext() {
@@ -524,8 +524,8 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
 
     function loadNewGameboard(stages: Item<string>[], difficulties: Item<string>[], concepts: Item<string>[],
-                              examBoards: Item<string>[], selections: Item<TAG_ID>[][], boardTitle: string,
-                              history: History) {
+        examBoards: Item<string>[], selections: Item<TAG_ID>[][], boardTitle: string,
+        history: History) {
         // Load a gameboard
         const params: {[key: string]: string} = {};
         if (stages.length) params.stages = stages.find(s => s.value === STAGE.ALL) ? "" : toSimpleCSV(stages.map(item => item.value));
@@ -664,26 +664,26 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                             <Col xs={12} lg={"auto"} >
                                 {isEditingTitle
                                     ? <Input defaultValue={customBoardTitle ?? gameboard?.title}
-                                                onChange={e => setPendingCustomBoardTitle(e.target.value)}
-                                                className={"mb-2 mb-lg-0"} />
+                                        onChange={e => setPendingCustomBoardTitle(e.target.value)}
+                                        className={"mb-2 mb-lg-0"} />
                                     : <h3>{customBoardTitle ?? gameboard?.title}</h3>
                                 }
                             </Col>
                             <Col xs={12} sm={isEditingTitle ? 7 : 4} lg={isEditingTitle ? 4 : 2}>
                                 {isEditingTitle ? <>
-                                        <Button className={"mb-n2"} size={"sm"} color="link" onClick={() => {
-                                            setIsEditingTitle(false);
-                                            // Only save the title if the input element changed it
-                                            if (pendingCustomBoardTitle) {
-                                                setCustomBoardTitle(pendingCustomBoardTitle);
-                                            }
-                                        }}>
+                                    <Button className={"mb-n2"} size={"sm"} color="link" onClick={() => {
+                                        setIsEditingTitle(false);
+                                        // Only save the title if the input element changed it
+                                        if (pendingCustomBoardTitle) {
+                                            setCustomBoardTitle(pendingCustomBoardTitle);
+                                        }
+                                    }}>
                                             Save title
-                                        </Button>
-                                        <Button size={"sm"} color="link" className={"ms-2 mb-n2"} onClick={() => setIsEditingTitle(false)}>
+                                    </Button>
+                                    <Button size={"sm"} color="link" className={"ms-2 mb-n2"} onClick={() => setIsEditingTitle(false)}>
                                             Cancel
-                                        </Button>
-                                    </> :
+                                    </Button>
+                                </> :
                                     <Button className={"mb-n2"} size={"sm"} color="link" onClick={() => {
                                         setIsEditingTitle(true);
                                         setPendingCustomBoardTitle(undefined);

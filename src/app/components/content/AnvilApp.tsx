@@ -63,7 +63,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
     }
 
     const queryParams = Object.keys(appParams).map((key) => {
-        return encodeURIComponent(key) + '=' + encodeURIComponent(appParams[key])
+        return encodeURIComponent(key) + '=' + encodeURIComponent(appParams[key]);
     }).join('&');
 
     const iframeSrc = `${baseURL}#?${queryParams}`;
@@ -73,7 +73,7 @@ export const AnvilApp = ({doc}: AnvilAppProps) => {
             return;
         }
 
-        let data = e.data;
+        const data = e.data;
 
         if (iframeRef.current && (data.fn == "newAppHeight")) {
             (iframeRef.current as HTMLIFrameElement).height = data.newHeight + 15;

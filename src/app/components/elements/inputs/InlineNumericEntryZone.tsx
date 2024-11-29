@@ -23,13 +23,21 @@ export const InlineNumericEntryZone = ({questionDTO, setModified, correctness, f
 
     const attempt = ((questionDTO?.validationResponse ?? questionDTO.bestAttempt) as QuantityValidationResponseDTO | undefined);
 
-    const valueCorrectness = correctness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" : 
-        attempt?.correctValue ? "CORRECT" : 
-        attempt?.correctValue === undefined ? "NOT_SUBMITTED" : // this fixes an edge case caused by the value not being marked (i.e. correctValue === undefined) if the units are not answered; we should not colour the value in this case
-        (attempt?.answer as QuantityDTO | undefined)?.value ? "INCORRECT" : "NOT_ANSWERED";
-    const unitCorrectness = correctness === "NOT_SUBMITTED" ? "NOT_SUBMITTED" :
-        attempt?.correctUnits ? "CORRECT" :
-        (attempt?.answer as QuantityDTO | undefined)?.units !== undefined ? "INCORRECT" : "NOT_ANSWERED";
+    const valueCorrectness = correctness === "NOT_SUBMITTED" 
+        ? "NOT_SUBMITTED" 
+        : attempt?.correctValue 
+            ? "CORRECT"
+            : attempt?.correctValue === undefined 
+                ? "NOT_SUBMITTED"  // this fixes an edge case caused by the value not being marked (i.e. correctValue === undefined) if the units are not answered; we should not colour the value in this case
+                : (attempt?.answer as QuantityDTO | undefined)?.value 
+                    ? "INCORRECT" 
+                    : "NOT_ANSWERED";
+
+    const unitCorrectness = correctness === "NOT_SUBMITTED" 
+        ? "NOT_SUBMITTED" 
+        : attempt?.correctUnits 
+            ? "CORRECT" 
+            : (attempt?.answer as QuantityDTO | undefined)?.units !== undefined ? "INCORRECT" : "NOT_ANSWERED";
 
     const showFeedback = (correctness : QuestionCorrectness) => {
         // whether the provided correctness requires a feedback icon to be shown

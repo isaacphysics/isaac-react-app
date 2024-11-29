@@ -72,13 +72,13 @@ export const api = {
             return endpoint.get(`/users/current_user`);
         },
         getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
-            return endpoint.get(`/users/user_preferences`)
+            return endpoint.get(`/users/user_preferences`);
         },
         passwordReset: (params: {email: string}) => {
             return endpoint.post(`/users/resetpassword`, params);
         },
         verifyPasswordReset: (token: string | null) => {
-            return endpoint.get(`/users/resetpassword/${token}`)
+            return endpoint.get(`/users/resetpassword/${token}`);
         },
         handlePasswordReset: (params: {token: string; password: string}) => {
             return endpoint.post(`/users/resetpassword/${params.token}`, securePadPasswordReset({password: params.password}));
@@ -120,13 +120,13 @@ export const api = {
             return endpoint.post(`/auth/mfa/challenge`, {mfaVerificationCode: mfaVerificationCode, rememberMe});
         },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
-            return endpoint.get(`/auth/user_authentication_settings`)
+            return endpoint.get(`/auth/user_authentication_settings`);
         },
         getSelectedUserAuthSettings: (userId: number): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
-            return endpoint.get(`/auth/user_authentication_settings/${userId}`)
+            return endpoint.get(`/auth/user_authentication_settings/${userId}`);
         },
         linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
-            return endpoint.get(`/auth/${provider}/link`)
+            return endpoint.get(`/auth/${provider}/link`);
         },
         unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
             return endpoint.delete(`/auth/${provider}/link`);
@@ -134,10 +134,10 @@ export const api = {
     },
     notifications: {
         get: (): AxiosPromise => {
-            return endpoint.get(`/notifications`)
+            return endpoint.get(`/notifications`);
         },
         respond: (id: string, response: string): AxiosPromise => {
-            return endpoint.post(`/notifications/${id}/${response}`)
+            return endpoint.post(`/notifications/${id}/${response}`);
         }
     },
     glossary: {
@@ -171,7 +171,7 @@ export const api = {
                     "to_date": toDate,
                     "per_day": perDay
                 }
-            })
+            });
         },
         testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
             return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});

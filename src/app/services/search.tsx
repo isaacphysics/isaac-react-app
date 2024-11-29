@@ -62,7 +62,7 @@ export function parseLocationSearch(search: string): [Nullable<string>, DOCUMENT
 
     const parsedFilters = searchParsed.types || "";
     const possibleFilters = (Array.isArray(parsedFilters) ? parsedFilters[0] || "" : parsedFilters || "").split(",");
-    const filters = possibleFilters.filter(pf => Object.values(DOCUMENT_TYPE).includes(pf as DOCUMENT_TYPE)) as DOCUMENT_TYPE[]
+    const filters = possibleFilters.filter(pf => Object.values(DOCUMENT_TYPE).includes(pf as DOCUMENT_TYPE)) as DOCUMENT_TYPE[];
 
     return [query, filters];
 }

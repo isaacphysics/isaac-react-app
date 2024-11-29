@@ -275,8 +275,8 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
         if (isTeacherOrAbove(user) && !isStaff(user) && newSchool && (!originalSchool || originalSchool !== newSchool)) {
             dispatch(showChangeSchoolModal());
         }
-   // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [userToUpdate, user]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userToUpdate, user]);
 
     // Form's submission method
     function updateAccount(event: React.FormEvent<HTMLFormElement>) {
@@ -395,7 +395,8 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
 
                             <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
                                 <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
-                                                    userToEdit={userToEdit}/>
+                                    userToEdit={userToEdit}
+                                />
                             </TabPane>
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>

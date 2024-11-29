@@ -45,14 +45,14 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
         presetMessage = `Hello,\n\nPlease could you delete my ${SITE_TITLE} account.\n\nThanks, \n\n` + user.givenName + " " + user.familyName;
     } else if (urlQuery?.preset === 'contentProblem') {
         presetSubject = "Content problem";
-        presetPlaceholder = "Please describe the problem here."
+        presetPlaceholder = "Please describe the problem here.";
         if (urlQuery?.accordion) {
-            presetSubject += ` in "${urlQuery.accordion}"`
+            presetSubject += ` in "${urlQuery.accordion}"`;
         } else if (urlQuery?.page) {
-            presetSubject += ` in "${urlQuery.page}"`
+            presetSubject += ` in "${urlQuery.page}"`;
         }
         if (urlQuery?.section != null) {
-            presetSubject += `, section "${urlQuery.section}"`
+            presetSubject += `, section "${urlQuery.section}"`;
         }
     } else if (urlQuery?.preset === 'notFound') {
         presetSubject = "Page not found";

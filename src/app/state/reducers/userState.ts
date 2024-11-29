@@ -9,7 +9,7 @@ export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null,
         return {
             ...userAuthSettings,
             mfaStatus: true
-        }
+        };
     }
     switch (action.type) {
         case ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS:

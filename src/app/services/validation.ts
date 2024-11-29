@@ -10,11 +10,11 @@ import {FAILURE_TOAST} from "../components/navigation/Toasts";
 import {EXAM_BOARD, isAda, isPhy, isStudent, isTeacherOrAbove, isTutor, siteSpecific, STAGE} from "./";
 import {Immutable} from "immer";
 
-export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
-export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
+export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0;}
+export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0;}
 
 export function validateName(userName?: string | null) {
-    return userName && userName.length > 0 && userName.length <= 255 && !userName.includes('*')
+    return userName && userName.length > 0 && userName.length <= 255 && !userName.includes('*');
 }
 
 export function validateCountryCode(countryCode: string | undefined) {

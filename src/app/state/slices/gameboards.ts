@@ -37,6 +37,6 @@ export const gameboardsSlice = createSlice({
                     gameboards.boards = gameboards.boards.filter(b => b.id !== action.meta.arg.originalArgs);
                 }
             }
-        )
+        );
     }
 });

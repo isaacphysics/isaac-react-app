@@ -13,7 +13,7 @@ if (["localhost:8000", "localhost:8004"].includes(document.location.host)  || do
     id = "unknown";
 }
 
-let title = id[0].toUpperCase() + id.split("_").join(" ").substring(1);
+const title = id[0].toUpperCase() + id.split("_").join(" ").substring(1);
 
 export const subject = {
     id: id,

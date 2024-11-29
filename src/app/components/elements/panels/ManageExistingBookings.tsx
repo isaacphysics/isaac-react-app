@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
 import {
     showGroupEmailModal,
@@ -26,6 +25,7 @@ import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "..
 import {DateString} from "../DateString";
 import {produce} from "immer";
 import {RenderNothing} from "../RenderNothing";
+import { Table, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 
 interface ManageExistingBookingsProps {
     user: PotentialUser;
@@ -52,14 +52,14 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
             const schoolDetails = userIdToSchoolMapping?.[booking.userBooked.id];
             booking.schoolName = schoolDetails ? schoolDetails.name : "UNKNOWN";
         }
-        return booking
+        return booking;
     }));
 
     function relevantUsers (bookingType: string) {
-        let idsToReturn: number[] = [];
+        const idsToReturn: number[] = [];
         augmentedEventBookings?.map((booking: EventBookingDTO & {schoolName?: string}) => {
             if (booking.userBooked?.id && booking.bookingStatus == bookingType) {
-                idsToReturn.push(booking.userBooked.id)
+                idsToReturn.push(booking.userBooked.id);
             }
         });
         return idsToReturn;
@@ -77,49 +77,49 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
 
         {eventBookings && atLeastOne(eventBookings.length) && <div>
             <div className="overflow-auto">
-                <RS.Table bordered className="mb-0 bg-white">
+                <Table bordered className="mb-0 bg-white">
                     <thead>
                         <tr>
                             <th className="align-middle text-center">
                                 Actions
                             </th>
                             <th className="align-middle">
-                                <RS.Button color="link" onClick={setSortPredicateAndDirection('userBooked.familyName')}>
+                                <Button color="link" onClick={setSortPredicateAndDirection('userBooked.familyName')}>
                                     Name
-                                </RS.Button>
+                                </Button>
                             </th>
                             <th className="align-middle">
-                                <RS.Button color="link" onClick={setSortPredicateAndDirection('userBooked.email')}>
+                                <Button color="link" onClick={setSortPredicateAndDirection('userBooked.email')}>
                                     Email
-                                </RS.Button>
+                                </Button>
                             </th>
                             <th className="align-middle">
-                                <RS.Button color="link" onClick={setSortPredicateAndDirection('userBooked.role')}>
+                                <Button color="link" onClick={setSortPredicateAndDirection('userBooked.role')}>
                                     Account type
-                                </RS.Button>
+                                </Button>
                             </th>
                             <th className="align-middle">
-                                <RS.Button color="link" onClick={setSortPredicateAndDirection('schoolName')}>
+                                <Button color="link" onClick={setSortPredicateAndDirection('schoolName')}>
                                     School
-                                </RS.Button>
+                                </Button>
                             </th>
                             <th className="align-middle">
                                 Job / year group
                             </th>
                             <th className="align-middle">
-                                <RS.Button color="link" onClick={setSortPredicateAndDirection('bookingStatus')}>
+                                <Button color="link" onClick={setSortPredicateAndDirection('bookingStatus')}>
                                     Booking status
-                                </RS.Button>
+                                </Button>
                             </th>
                             <th className="align-middle">
-                                <RS.Button color="link" onClick={setSortPredicateAndDirection('bookingDate')}>
+                                <Button color="link" onClick={setSortPredicateAndDirection('bookingDate')}>
                                     Booking created
-                                </RS.Button>
+                                </Button>
                             </th>
                             <th className="align-middle">
-                                <RS.Button color="link" onClick={setSortPredicateAndDirection('updated')}>
+                                <Button color="link" onClick={setSortPredicateAndDirection('updated')}>
                                     Booking updated
-                                </RS.Button>
+                                </Button>
                             </th>
                             <th className="align-middle">
                                 Stage
@@ -128,9 +128,9 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                 Exam board
                             </th>}
                             <th className="align-middle">
-                                <RS.Button color="link" onClick={setSortPredicateAndDirection('reservedById')}>
+                                <Button color="link" onClick={setSortPredicateAndDirection('reservedById')}>
                                     Reserved by ID
-                                </RS.Button>
+                                </Button>
                             </th>
                             <th className="align-middle">
                                 Level of teaching experience
@@ -156,43 +156,43 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                 return !isDefined(userId) ? RenderNothing : <tr key={booking.bookingId}>
                                     <td className="align-middle">
                                         {(['WAITING_LIST', 'CANCELLED'].includes(booking.bookingStatus as string)) &&
-                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                            <Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
                                                     "Are you sure you want to convert this to a confirmed booking?",
                                                     () => promoteUserBooking({eventId, userId})
                                                 )
                                             }>
                                                 Promote
-                                            </RS.Button>
+                                            </Button>
                                         }
                                         {(['WAITING_LIST', 'CONFIRMED'].includes(booking.bookingStatus as string)) &&
-                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                            <Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
                                                     "Are you sure you want to cancel this booking?",
                                                     () => cancelUserBooking({eventId, userId})
                                                 )
                                             }>
                                                 Cancel
-                                            </RS.Button>
+                                            </Button>
                                         }
                                         {isAdmin(user) &&
-                                            <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                            <Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
                                                     "Are you sure you want to delete this booking permanently?",
                                                     () => deleteUserBooking({eventId, userId})
                                                 )
                                             }>
                                                 Delete
-                                            </RS.Button>
+                                            </Button>
                                         }
-                                        <RS.Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
+                                        <Button color="primary" outline block className="btn-sm mb-1" onClick={() =>
                                             confirmThen(
                                                 "Are you sure you want to resend the confirmation email for this booking?",
                                                 () => resendUserConfirmationEmail({eventId, userId})
                                             )
                                         }>
                                             Resend email
-                                        </RS.Button>
+                                        </Button>
                                     </td>
                                     <td className="align-middle text-center">
                                         {booking.userBooked && <React.Fragment>{booking.userBooked.familyName}, {booking.userBooked.givenName}</React.Fragment>}
@@ -219,40 +219,40 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.medicalRequirements}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.emergencyName}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.emergencyNumber}</td>
-                                </tr>
+                                </tr>;
                             })
                         }
                     </tbody>
-                </RS.Table>
+                </Table>
             </div>
 
             <div className="mt-3 text-end">
-                <RS.ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
-                    <RS.DropdownToggle caret color="primary" outline className="me-3 mt-1">
+                <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+                    <DropdownToggle caret color="primary" outline className="me-3 mt-1">
                         Email Users
-                    </RS.DropdownToggle>
-                    <RS.DropdownMenu>
+                    </DropdownToggle>
+                    <DropdownMenu>
                         {Object.keys(bookingStatusMap).map((key, index)  => {
-                            let usersWithStatus = relevantUsers(key);
+                            const usersWithStatus = relevantUsers(key);
                             if (atLeastOne(usersWithStatus.length)) {
-                                return <RS.DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(usersWithStatus))}>
+                                return <DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(usersWithStatus))}>
                                     Email {bookingStatusMap[key as BookingStatus]} users
-                                </RS.DropdownItem>;
+                                </DropdownItem>;
                             }
                         })}
-                    </RS.DropdownMenu>
-                </RS.ButtonDropdown>
-                <RS.Button
+                    </DropdownMenu>
+                </ButtonDropdown>
+                <Button
                     color="primary" outline className="btn-md mt-1"
                     href={`${API_PATH}/events/${eventId}/bookings/download`}
                 >
                     Export as CSV
-                </RS.Button>
+                </Button>
             </div>
         </div>}
 
         {(!eventBookings || zeroOrLess(eventBookings.length)) && <p className="text-center m-0">
             <strong>There aren&apos;t currently any bookings for this event.</strong>
         </p>}
-    </Accordion>
+    </Accordion>;
 };

@@ -29,9 +29,10 @@ export const IsaacLinkHints = ({hints, questionPartId}: HintsProps) => {
             {
                 hints?.map((hint, index) =>
                     <Col key={index} xs={{size: 3}} lg={{size: 2}}>
-                            <IsaacHintModal questionPartId={questionPartId} hintIndex={index}
-                                        label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`}
-                                        body={hint} scrollable />
+                        <IsaacHintModal questionPartId={questionPartId} hintIndex={index}
+                            label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`}
+                            body={hint} scrollable
+                        />
                     </Col>
                 )
             }

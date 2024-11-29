@@ -10,4 +10,4 @@ export const jsonHelper = {
             return defaultResult;
         }
     }
-}
+};

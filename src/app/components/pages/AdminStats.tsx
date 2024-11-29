@@ -1,10 +1,10 @@
 import React from 'react';
 import {useGetSiteStatisticsQuery} from "../../state";
-import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {isDefined, siteSpecific} from "../../services";
 import {produce} from "immer";
+import { Container, Card, CardBody, Row, Col } from 'reactstrap';
 
 function asPercentage(value: number | undefined, total: number)  {
     return value !== undefined ? Math.round(100 * value / total) : 0;
@@ -33,20 +33,20 @@ export const AdminStats = () => {
             }
         }
         addTotalToMapOfCounts(adminStats.userGenders);
-        addTotalToMapOfCounts(adminStats.userSchoolInfo)
+        addTotalToMapOfCounts(adminStats.userSchoolInfo);
     });
 
-    return <RS.Container id="admin-stats-page">
+    return <Container id="admin-stats-page">
         <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Isaac", "Ada")} statistics`} breadcrumbTitleOverride="Admin statistics" />
         <ShowLoading
             until={maybeAdminStatsWithTotals}
             thenRender={adminStatsWithTotals => {
                 return <>
                     <div className="py-3">A high-level overview of the users and activity on the platform:</div>
-                    <RS.Card className="mb-5 px-3 pt-1">
-                        <RS.CardBody>
-                            <RS.Row>
-                                <RS.Col>
+                    <Card className="mb-5 px-3 pt-1">
+                        <CardBody>
+                            <Row>
+                                <Col>
                                     <strong>Users:</strong>
                                     <ul className="list-unstyled mb-5">
                                         <li>Last 6 months:&nbsp;
@@ -108,8 +108,8 @@ export const AdminStats = () => {
                                         <li>Concept Page Views: {(adminStatsWithTotals.viewConceptEvents || 0).toLocaleString()}</li>
                                     </ul>
 
-                                </RS.Col>
-                                <RS.Col>
+                                </Col>
+                                <Col>
                                     <strong>Last Seen</strong>
                                     <ul className="list-unstyled">
                                         <li>Previous 7 days:
@@ -159,12 +159,12 @@ export const AdminStats = () => {
                                             </ul>
                                         </li>
                                     </ul>
-                                </RS.Col>
-                            </RS.Row>
-                        </RS.CardBody>
-                    </RS.Card>
+                                </Col>
+                            </Row>
+                        </CardBody>
+                    </Card>
                 </>;
             }}
         />
-    </RS.Container>;
+    </Container>;
 };

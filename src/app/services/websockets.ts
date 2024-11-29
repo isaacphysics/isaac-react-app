@@ -27,7 +27,7 @@ const openNotificationSocket = function(): void {
         }
         webSocketCheckTimeout = window.setTimeout(checkForWebSocket, 10000);
         webSocketErrorCount = 0; // Reset error count on successful open.
-    }
+    };
 
     notificationWebSocket.onmessage = function(event) {
 
@@ -54,12 +54,12 @@ const openNotificationSocket = function(): void {
                 }
             });
         }
-    }
+    };
 
     notificationWebSocket.onerror = function(error) {
         console.error("WebSocket error:", error);
         store.dispatch(getSnapshot());
-    }
+    };
 
 
     notificationWebSocket.onclose = function(event) {
@@ -78,7 +78,7 @@ const openNotificationSocket = function(): void {
                 if (event.reason === 'TRY_AGAIN_LATER') {
                     // The status code 1013 isn't yet supported properly, and IE/Edge don't support custom codes.
                     // So use the event 'reason' to indicate too many connections, try again in 1 min.
-                    console.log("WebSocket endpoint overloaded. Trying again later!")
+                    console.log("WebSocket endpoint overloaded. Trying again later!");
                     webSocketCheckTimeout = window.setTimeout(checkForWebSocket, 60000);
                 } else if (event.reason === "USER_LOGOUT") {
                     // This was intentional and client generated. Do not attempt to reopen the WebSocket.
@@ -105,8 +105,8 @@ const openNotificationSocket = function(): void {
                 }
         }
         notificationWebSocket = null;
-    }
-}
+    };
+};
 
 export const checkForWebSocket = function(): void {
     try {
@@ -126,9 +126,9 @@ export const checkForWebSocket = function(): void {
             openNotificationSocket();
         }
     } catch (e) {
-        console.log("Error establishing WebSocket connection!", e)
+        console.log("Error establishing WebSocket connection!", e);
     }
-}
+};
 
 export const closeWebSocket = function(): void {
     if (notificationWebSocket !== null) {
@@ -139,4 +139,4 @@ export const closeWebSocket = function(): void {
         clearTimeout(webSocketCheckTimeout);
         webSocketCheckTimeout = null;
     }
-}
+};

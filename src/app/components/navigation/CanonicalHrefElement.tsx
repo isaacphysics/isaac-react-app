@@ -11,5 +11,5 @@ export const CanonicalHrefElement = () => {
     const canonicalHref = `${window.location.origin}${canonicalPath}`;
     return <Helmet>
         <link rel="canonical" href={canonicalHref}/>
-    </Helmet>
+    </Helmet>;
 };

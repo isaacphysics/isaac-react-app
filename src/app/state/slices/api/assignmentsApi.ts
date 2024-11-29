@@ -80,9 +80,9 @@ export const assignmentsApi = isaacApi.injectEndpoints({
                         }
                     ));
                     return {resetOptimisticUpdates: () => {
-                            // @ts-ignore These ".undo()"s definitely exist: https://redux-toolkit.js.org/rtk-query/usage/manual-cache-updates#optimistic-updates
-                            allAssignmentsPromise.undo(); groupAssignmentsPromise.undo();
-                        }};
+                        // @ts-ignore These ".undo()"s definitely exist: https://redux-toolkit.js.org/rtk-query/usage/manual-cache-updates#optimistic-updates
+                        allAssignmentsPromise.undo(); groupAssignmentsPromise.undo();
+                    }};
                 },
                 successTitle: siteSpecific("Assignment deleted", "Quiz unassigned"),
                 successMessage: siteSpecific("This assignment has been unset successfully.", "You have successfully unassigned the quiz"),

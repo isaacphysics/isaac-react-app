@@ -39,7 +39,7 @@ import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
-    const csvQuery: {[key: string]: string} = {}
+    const csvQuery: {[key: string]: string} = {};
     if (gameboard.gameFilter) {
         Object.entries(gameboard.gameFilter).forEach(([key, values]) => {
             csvQuery[key] = values.join(",");
@@ -130,8 +130,8 @@ export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
                 </div>}
             </div>
         </a>
-    </ListGroupItem>
-}
+    </ListGroupItem>;
+};
 
 export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => {
     return <ListGroup className="link-list list-group-links list-gameboard">
@@ -141,7 +141,7 @@ export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => 
         {gameboard?.contents && gameboard.contents.map(q =>
             <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
         )}
-    </ListGroup>
+    </ListGroup>;
 };
 
 export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => (
@@ -197,7 +197,7 @@ export const Gameboard = withRouter(({ location }) => {
                 ifNotFound={notFoundComponent}
                 thenRender={(gameboard) => {
                     if (showFilter) {
-                        return <Redirect to={`${PATHS.GAMEBOARD_FILTER}?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
+                        return <Redirect to={`${PATHS.GAMEBOARD_FILTER}?${extractFilterQueryString(gameboard)}#${gameboardId}`} />;
                     }
                     return <>
                         <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || `Filter Generated ${siteSpecific("Gameboard", "Quiz")}`}/>
@@ -226,7 +226,7 @@ export const Gameboard = withRouter(({ location }) => {
                                 </Col>
                             </Row>
                         }
-                    </>
+                    </>;
                 }}
             />
         </Container>;

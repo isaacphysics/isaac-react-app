@@ -100,7 +100,7 @@ const customKatexOptions: KatexOptions = {
 };
 
 function patternQuote(s: string) {
-    return s.replace(/([\^$(){}+*?\-|[\]:\\])/g,'\\$1')
+    return s.replace(/([\^$(){}+*?\-|[\]:\\])/g,'\\$1');
 }
 
 function endPattern(end: string) {
@@ -108,7 +108,7 @@ function endPattern(end: string) {
 }
 
 function sortLength(a: string, b: string) {
-    if (a.length !== b.length) {return b.length - a.length}
+    if (a.length !== b.length) {return b.length - a.length;}
     return (a == b ? 0 : (a < b ? -1 : 1));
 }
 
@@ -151,9 +151,9 @@ for (i = 0, m = config.displayMath.length; i < m; i++) {
     };
 }
 parts.push(starts.sort(sortLength).join("|"));
-if (config.processEnvironments) {parts.push("\\\\begin\\{([^}]*)\\}")}
-if (config.processEscapes)      {parts.push("\\\\*\\\\\\$")}
-if (config.processRefs)         {parts.push("\\\\(eq)?ref\\{[^}]*\\}")}
+if (config.processEnvironments) {parts.push("\\\\begin\\{([^}]*)\\}");}
+if (config.processEscapes)      {parts.push("\\\\*\\\\\\$");}
+if (config.processRefs)         {parts.push("\\\\(eq)?ref\\{[^}]*\\}");}
 const start = new RegExp(parts.join("|"),"g");
 
 interface Search {
@@ -173,14 +173,14 @@ interface Search {
 function startMatch(match: RegExpMatchArray): Search {
     const key: string = match[0];
     // @ts-ignore
-    var delim = matchers[key];
+    const delim = matchers[key];
     if (delim != null) {                              // a start delimiter
         return {
             end: delim.end, endPattern: new RegExp(endPattern(delim.end), "g"), mode: delim.mode, pcount: 0,
             olen: match[0].length
         };
     } else if (match[0].substr(0,6) === "\\begin") {  // \begin{...}
-        let end = "\\end{" + match[1] + "}";
+        const end = "\\end{" + match[1] + "}";
         return {
             end: end, mode: "display", pcount: 0,
             endPattern: endPattern(end),
@@ -242,7 +242,7 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
         index = match.index;
 
         // Find blocks of LaTeX
-        let search = startMatch(match);
+        const search = startMatch(match);
         if (search.just) {
             output += search.just;
             index = match.index + match[0].length;
@@ -262,10 +262,10 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
                     macrosToUse = KatexBaseMacros;
                 }
                 macrosToUse = {...macrosToUse, "\\ref": (context: {consumeArgs: (n: number) => {text: string}[][]}) => {
-                        const args = context.consumeArgs(1);
-                        const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");
-                        return "\\text{" + REF + reference + ENDREF + "}";
-                    }};
+                    const args = context.consumeArgs(1);
+                    const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");
+                    return "\\text{" + REF + reference + ENDREF + "}";
+                }};
                 const katexOptions = {...customKatexOptions, displayMode: search.mode == "display", macros: macrosToUse, output: "html"} as KatexOptions;
                 let katexRenderResult = katex.renderToString(latexMunged, katexOptions);
                 katexRenderResult = katexRenderResult.replace(REF_REGEXP, (_, match) => {
@@ -339,4 +339,4 @@ export const useRenderKatex = () => {
     const figureNumbers = useContext(FigureNumberingContext);
 
     return (markup: string) => katexify(markup, user, preferredBooleanNotation && BOOLEAN_NOTATION[preferredBooleanNotation], segueEnvironment === "DEV", figureNumbers);
-}
+};

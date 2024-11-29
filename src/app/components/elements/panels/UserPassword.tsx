@@ -137,36 +137,36 @@ export const UserPassword = (
                     </>}
                     {isAda && !showPasswordFields && <Button className="w-100 py-2 mt-3 mb-2" outline onClick={() => setShowPasswordFields(true)}>Change password</Button>}
                 </>
-            : !passwordResetRequested ?
-                <React.Fragment>
-                    <Row className="pt-4">
-                        <Col className="text-center">
-                            {userAuthSettings && userAuthSettings.linkedAccounts && <p>
+                : !passwordResetRequested ?
+                    <React.Fragment>
+                        <Row className="pt-4">
+                            <Col className="text-center">
+                                {userAuthSettings && userAuthSettings.linkedAccounts && <p>
                                 You do not currently have a password set for this account; you
                                 sign in using {" "}
-                                {(userAuthSettings.linkedAccounts).map((linked, index) => {
-                                    return <span key={index} className="text-capitalize">
-                                        {AUTHENTICATOR_FRIENDLY_NAMES_MAP[linked]}
-                                    </span>;
-                                })}.
-                            </p>}
-                        </Col>
-                    </Row>
-                    <Row className="pb-4">
-                        <Col className="text-center">
-                            <Button className="btn-secondary" onClick={resetPasswordIfValidEmail}>
+                                    {(userAuthSettings.linkedAccounts).map((linked, index) => {
+                                        return <span key={index} className="text-capitalize">
+                                            {AUTHENTICATOR_FRIENDLY_NAMES_MAP[linked]}
+                                        </span>;
+                                    })}.
+                                </p>}
+                            </Col>
+                        </Row>
+                        <Row className="pb-4">
+                            <Col className="text-center">
+                                <Button className="btn-secondary" onClick={resetPasswordIfValidEmail}>
                                 Click here to add a password
-                            </Button>
-                        </Col>
-                    </Row>
-                </React.Fragment>
-                :
-                <React.Fragment>
-                    <p>
-                        <strong className="d-block">Your password reset request is being processed.</strong>
-                        <strong className="d-block">Please check your inbox.</strong>
-                    </p>
-                </React.Fragment>
+                                </Button>
+                            </Col>
+                        </Row>
+                    </React.Fragment>
+                    :
+                    <React.Fragment>
+                        <p>
+                            <strong className="d-block">Your password reset request is being processed.</strong>
+                            <strong className="d-block">Please check your inbox.</strong>
+                        </p>
+                    </React.Fragment>
             }
             <React.Fragment>
                 <hr className="text-center" />

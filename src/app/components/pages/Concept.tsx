@@ -41,11 +41,11 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     const ManageButtons = () => <div className="no-print d-flex justify-content-end mt-1 ms-2">
         <div className="question-actions">
             <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
-            </div>
-            <div className="question-actions not-mobile">
+        </div>
+        <div className="question-actions not-mobile">
             <PrintButton />
-            </div>
-            <div className="question-actions">
+        </div>
+        <div className="question-actions">
             <ReportButton pageId={conceptId}/>
         </div>
     </div>;
@@ -99,6 +99,6 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     </Col>
                 </Row>
             </Container>
-        </GameboardContext.Provider>
+        </GameboardContext.Provider>;
     }}/>;
 });

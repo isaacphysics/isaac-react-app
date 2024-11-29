@@ -6,7 +6,7 @@ export const ActiveModals = () => {
     const activeModals = useAppSelector((state: AppState) => state && state.activeModals);
     return <div>
         {activeModals && activeModals.map((modal) => {
-            return <ActiveModal key={modal.title} activeModal={modal}/>
+            return <ActiveModal key={modal.title} activeModal={modal}/>;
         })}
-    </div>
+    </div>;
 };

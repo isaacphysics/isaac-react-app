@@ -11,7 +11,7 @@ export function generateSquareProportions(sideLength: number, padding: number): 
         width: sideLength,
         height: sideLength,
         padding: padding,
-    }
+    };
 }
 
 interface RectangleProps<T> extends SVGShapeProps<T> {

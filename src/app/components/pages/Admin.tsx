@@ -3,7 +3,6 @@ import {
     useGetContentVersionQuery, useGetSegueVersionQuery, useUpdateContentVersionMutation,
 } from "../../state";
 import {Link} from "react-router-dom";
-import * as RS from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {EDITOR_COMPARE_URL, isAdmin, isDefined, isPhy, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -13,6 +12,7 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {MisuseStats} from "../elements/MisuseStats";
 import classNames from "classnames";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import { Container, Card, CardTitle, ListGroup, ListGroupItem, CardBody, Form, InputGroup, Input, Button, Alert } from 'reactstrap';
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const {data: segueVersion} = useGetSegueVersionQuery();
@@ -37,36 +37,36 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
         }
     };
 
-    return <RS.Container id="admin-page">
+    return <Container id="admin-page">
         <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Isaac", "Ada")} administration`} breadcrumbTitleOverride="Admin tools" />
 
         <div className="py-4">
 
             Hi, {user.givenName}!
 
-            <RS.Card className="p-3 my-3">
-                <RS.CardTitle tag="h2">Useful links</RS.CardTitle>
-                <RS.ListGroup className="flex-row">
-                    <RS.ListGroupItem className="w-auto"><Link to="/admin/usermanager">User Manager</Link></RS.ListGroupItem>
-                    <RS.ListGroupItem className="w-auto"><Link to="/admin/emails">Admin emails</Link></RS.ListGroupItem>
-                    <RS.ListGroupItem className="w-auto"><Link to="/equality">Equation builder</Link></RS.ListGroupItem>
-                    <RS.ListGroupItem className="w-auto"><Link to="/free_text">Free-text builder</Link></RS.ListGroupItem>
-                    <RS.ListGroupItem className="w-auto"><Link to="/markdown">Markdown builder</Link></RS.ListGroupItem>
-                </RS.ListGroup>
-            </RS.Card>
+            <Card className="p-3 my-3">
+                <CardTitle tag="h2">Useful links</CardTitle>
+                <ListGroup className="flex-row">
+                    <ListGroupItem className="w-auto"><Link to="/admin/usermanager">User Manager</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto"><Link to="/admin/emails">Admin emails</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto"><Link to="/equality">Equation builder</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto"><Link to="/free_text">Free-text builder</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto"><Link to="/markdown">Markdown builder</Link></ListGroupItem>
+                </ListGroup>
+            </Card>
 
-            <RS.Card className="p-3 mb-3">
-                <RS.CardTitle tag="h2">Admin Console</RS.CardTitle>
-                <RS.CardBody>
+            <Card className="p-3 mb-3">
+                <CardTitle tag="h2">Admin Console</CardTitle>
+                <CardBody>
                     <ul>
                         <li><strong>API Version:</strong> {segueVersion}</li>
                     </ul>
-                </RS.CardBody>
-            </RS.Card>
+                </CardBody>
+            </Card>
 
-            <RS.Card className="p-3 mb-3">
-                <RS.CardTitle tag="h2">Administrative tools</RS.CardTitle>
-                <RS.CardBody>
+            <Card className="p-3 mb-3">
+                <CardTitle tag="h2">Administrative tools</CardTitle>
+                <CardBody>
                     <h3>Manage site content</h3>
                     <ShowLoadingQuery
                         defaultErrorTitle={"Error loading content version"}
@@ -78,9 +78,9 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                     <strong>Live Content Version</strong>
                                 </div>
                                 {isDefined(displayVersion) && !contentVersionUpdateIsLoading &&
-                                    <RS.Form onSubmit={startVersionUpdate}>
-                                        <RS.InputGroup className={"separate-input-group"}>
-                                            <RS.Input
+                                    <Form onSubmit={startVersionUpdate}>
+                                        <InputGroup className={"separate-input-group"}>
+                                            <Input
                                                 aria-label="Live content commit SHA"
                                                 type="text" value={displayVersion}
                                                 onChange={e => setNewVersion(e.target.value)}
@@ -96,34 +96,34 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                             >
                                                 Preview Changes
                                             </a>
-                                            <RS.Button
+                                            <Button
                                                 type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
                                                 onClick={startVersionUpdate}
                                                 disabled={!isAdmin(user) || displayVersion === liveContentVersion}
                                             >
                                                 Set Version
-                                            </RS.Button>
-                                        </RS.InputGroup>
-                                    </RS.Form>
+                                            </Button>
+                                        </InputGroup>
+                                    </Form>
                                 }
                                 {contentVersionUpdateIsLoading &&
-                                    <RS.Alert color="info">
+                                    <Alert color="info">
                                         <h4>Updating...</h4>
                                         <p>Replacing version {liveContentVersion} with {newVersion}</p>
                                         <IsaacSpinner />
-                                    </RS.Alert>
+                                    </Alert>
                                 }
                                 {contentVersionUpdateIsSuccess &&
-                                    <RS.Alert color="success">
+                                    <Alert color="success">
                                         <h4>Content version changed successfully.</h4>
-                                    </RS.Alert>
+                                    </Alert>
                                 }
                                 {contentVersionUpdateIsError &&
-                                    <RS.Alert color="danger">
+                                    <Alert color="danger">
                                         <h4>Error: Content version could not be changed.</h4>
-                                    </RS.Alert>
+                                    </Alert>
                                 }
-                            </>
+                            </>;
                         }}
                     />
                     <h3 className={"mt-3"}>Demonstration Mode</h3>
@@ -133,9 +133,9 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                         <h3 className={"mt-3"}>Misuse statistics</h3>
                         <MisuseStats/>
                     </>}
-                </RS.CardBody>
-            </RS.Card>
+                </CardBody>
+            </Card>
 
         </div>
-    </RS.Container>;
+    </Container>;
 };

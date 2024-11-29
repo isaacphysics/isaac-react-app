@@ -3,13 +3,13 @@ import {
 } from "../../../state";
 import React, {useEffect, useState} from "react";
 import {Accordion} from "../Accordion";
-import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
 import {atLeastOne, isAda, isEventLeader, zeroOrLess} from "../../../services";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import orderBy from "lodash/orderBy";
+import { Button, Label, Input, Table } from "reactstrap";
 
 export enum EventOverviewFilter {
     "All events" = "ALL",
@@ -47,11 +47,11 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
         </div>}
         <div className="clearfix">
             {isAda && <div className="mb-3 float-start">
-                <RS.Button color="primary" size="sm" tag={Link} to="/events_toolkit">Events toolkit</RS.Button>
+                <Button color="primary" size="sm" tag={Link} to="/events_toolkit">Events toolkit</Button>
             </div>}
             <div className="float-start">
                 {/* Load More Button */}
-                <RS.Button size={"sm"} disabled={!(eventOverviews && total && eventOverviews.length < total)} onClick={() => {
+                <Button size={"sm"} disabled={!(eventOverviews && total && eventOverviews.length < total)} onClick={() => {
                     if (eventOverviews) {
                         getEventOverviews({
                             startIndex: eventOverviews.length,
@@ -61,17 +61,17 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                     }
                 }}>
                     Load more events
-                </RS.Button>
+                </Button>
                 <span className="ms-2">(showing {eventOverviews?.length ?? 0} of {total ?? 0})</span>
             </div>
             <div className="float-end mb-4">
-                <RS.Label>
-                    <RS.Input type="select" value={eventOverviewFilter} onChange={e => {setEventOverviewFilter(e.target.value as EventOverviewFilter)}}>
+                <Label>
+                    <Input type="select" value={eventOverviewFilter} onChange={e => {setEventOverviewFilter(e.target.value as EventOverviewFilter);}}>
                         {Object.entries(EventOverviewFilter).map(([filterLabel, filterValue]) =>
                             <option key={filterValue} value={filterValue}>{filterLabel}</option>
                         )}
-                    </RS.Input>
-                </RS.Label>
+                    </Input>
+                </Label>
             </div>
         </div>
 
@@ -81,44 +81,44 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
             thenRender={({eventOverviews}) => {
                 return <>
                     {atLeastOne(eventOverviews.length) && <div className="overflow-auto">
-                        <RS.Table bordered className="mb-0 bg-white">
+                        <Table bordered className="mb-0 bg-white">
                             <thead>
                                 <tr>
                                     <th className="align-middle text-center">
                                         Actions
                                     </th>
-                                    <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('title'); setReverse(!reverse);}}>
+                                    <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('title'); setReverse(!reverse);}}>
                                         Title
-                                    </RS.Button></th>
-                                    <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('date'); setReverse(!reverse);}}>
+                                    </Button></th>
+                                    <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('date'); setReverse(!reverse);}}>
                                         Date
-                                    </RS.Button></th>
-                                    <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('bookingDeadline'); setReverse(!reverse);}}>
+                                    </Button></th>
+                                    <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingDeadline'); setReverse(!reverse);}}>
                                         Booking deadline
-                                    </RS.Button></th>
-                                    <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('location.address.town'); setReverse(!reverse);}}>
+                                    </Button></th>
+                                    <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('location.address.town'); setReverse(!reverse);}}>
                                         Location
-                                    </RS.Button></th>
-                                    <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('eventStatus'); setReverse(!reverse);}}>
+                                    </Button></th>
+                                    <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('eventStatus'); setReverse(!reverse);}}>
                                         Status
-                                    </RS.Button></th>
-                                    <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('numberOfConfirmedBookings'); setReverse(!reverse);}}>
+                                    </Button></th>
+                                    <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('numberOfConfirmedBookings'); setReverse(!reverse);}}>
                                         Number confirmed
-                                    </RS.Button></th>
-                                    <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('numberOfWaitingListBookings'); setReverse(!reverse);}}>
+                                    </Button></th>
+                                    <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('numberOfWaitingListBookings'); setReverse(!reverse);}}>
                                         Number waiting
-                                    </RS.Button></th>
-                                    <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('numberAttended'); setReverse(!reverse);}}>
+                                    </Button></th>
+                                    <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('numberAttended'); setReverse(!reverse);}}>
                                         Number attended
-                                    </RS.Button></th>
+                                    </Button></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {orderBy(eventOverviews, [sortPredicate], [reverse ? "desc" : "asc"])
                                     .map((event) => <tr key={event.id} data-testid="event-manager-row">
-                                        <td className="align-middle"><RS.Button color="primary" outline className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
+                                        <td className="align-middle"><Button color="primary" outline className="btn-sm" onClick={() => setSelectedEventId(event.id as string)}>
                                             Manage
-                                        </RS.Button></td>
+                                        </Button></td>
                                         <td className="align-middle"><Link to={`/events/${event.id}`} target="_blank">{event.title} - {event.subtitle}</Link></td>
                                         <td className="align-middle"><DateString>{event.date}</DateString></td>
                                         <td className="align-middle"><DateString>{event.bookingDeadline}</DateString></td>
@@ -130,12 +130,12 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                                     </tr>)
                                 }
                             </tbody>
-                        </RS.Table>
+                        </Table>
                     </div>}
                     {zeroOrLess(eventOverviews.length) && <p className="text-center">
                         <strong>No events to display with this filter setting</strong>
                     </p>}
                 </>;
             }} />
-    </Accordion>
+    </Accordion>;
 };

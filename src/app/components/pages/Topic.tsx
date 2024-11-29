@@ -1,4 +1,4 @@
-import React, {useEffect} from "react"
+import React, {useEffect} from "react";
 import {Link, withRouter} from "react-router-dom";
 import {AppState, fetchTopicSummary, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";

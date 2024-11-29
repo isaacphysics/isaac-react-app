@@ -42,5 +42,5 @@ export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
         {threeLinks && <div className="d-xl-none">
             {backToCollectionLink}
         </div>}
-    </>
+    </>;
 };

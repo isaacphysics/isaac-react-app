@@ -1,8 +1,8 @@
 import React from "react";
-import * as RS from "reactstrap";
 import {closeActiveModal, openActiveModal, useAppDispatch} from "../../state";
 import {PageFragment} from "./PageFragment";
 import {SUBJECTS} from "../../services";
+import { Container } from "reactstrap";
 
 interface ChapterProps {
     chapterId: string;
@@ -17,15 +17,15 @@ export const BookChapter = ({chapterId, chapterTitle, chapterSubHeading, chapter
 
     function bookChapterLoad() {
         dispatch(openActiveModal({
-            closeAction: () => {dispatch(closeActiveModal())},
+            closeAction: () => {dispatch(closeActiveModal());},
             title: chapterTitle,
             body: <div className={"book-chapter-options" + " " + chapterSubject}>
                 <PageFragment fragmentId={chapterId}/>
             </div>
-        }))
+        }));
     }
 
-    return <RS.Container>
+    return <Container>
         <button onClick={() => bookChapterLoad()} className="btn book-chapter">
             <span className="icon-stack">
                 <svg className="book-contents-icon" viewBox="0 0 11.7 13.5">
@@ -35,5 +35,5 @@ export const BookChapter = ({chapterId, chapterTitle, chapterSubHeading, chapter
             </span>
             {chapterTitle} <br/><span className="chapter-subheading">{chapterSubHeading}</span>
         </button>
-    </RS.Container>
+    </Container>;
 };

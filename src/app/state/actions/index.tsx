@@ -79,13 +79,12 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
                 }) as any;
             }
         } else {
-            trackEvent("exception", {props:
-                        {
-                            description: `load_fail: ${error}`,
-                            fatal: true
-                        }
+            trackEvent("exception", {
+                props: {
+                    description: `load_fail: ${error}`,
+                    fatal: true
                 }
-            );
+            });
             return showToast({
                 color: "danger", title: error, timeout: 5000,
                 body: API_REQUEST_FAILURE_MESSAGE
@@ -415,7 +414,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
     } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
 
@@ -482,12 +481,11 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         if (providerResponse.data.firstLogin) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
-            trackEvent("registration", {props:
-                    {
-                        provider: provider,
-                    }
+            trackEvent("registration", {
+                props: {
+                    provider: provider,
                 }
-            );
+            });
         }
 
         // On first login (registration), redirect to /account if there is no after-auth path.
@@ -514,7 +512,7 @@ export const requestNotifications = () => async (dispatch: Dispatch<Action>) => 
     } catch (e) {
         dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE});
     }
-}
+};
 
 // Document & topic fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {

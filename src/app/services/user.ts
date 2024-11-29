@@ -63,7 +63,7 @@ export function isTeacherAccountPending(user?: {readonly teacherAccountPending?:
 *  can only ever be partially logged-in.
 */
 export function isNotPartiallyLoggedIn(user?: {readonly role?: UserRole, readonly loggedIn?: boolean, readonly teacherAccountPending?: boolean, readonly EMAIL_VERIFICATION_REQUIRED?: boolean} | null): boolean {
-    return !(isAda && (isTeacherAccountPending(user) || user?.EMAIL_VERIFICATION_REQUIRED))
+    return !(isAda && (isTeacherAccountPending(user) || user?.EMAIL_VERIFICATION_REQUIRED));
 }
 
 export const roleRequirements: Record<UserRole, (u: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => boolean> = {
@@ -86,7 +86,7 @@ export function extractTeacherName(teacher: {readonly givenName?: string; readon
 export function schoolNameWithPostcode(schoolResult: School): string | undefined {
     let schoolName = schoolResult.name;
     if (schoolResult.postcode) {
-        schoolName += ", " + schoolResult.postcode
+        schoolName += ", " + schoolResult.postcode;
     }
     return schoolName;
 }

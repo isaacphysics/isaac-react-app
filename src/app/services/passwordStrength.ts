@@ -84,7 +84,7 @@ function breachedPasswordUseCount(responseData: string, sha1Suffix: string) {
 
 export async function checkPwnedPasswords(password: string, callback: (feedback: PasswordFeedback|null) => void) {
     try {
-        const sha1Hex = await getSHA1Hash(password)
+        const sha1Hex = await getSHA1Hash(password);
         const sha1Prefix = sha1Hex.substr(0, 5);
         const sha1Suffix = sha1Hex.substring(5);
         const pwnedPasswordResponse = await pwnedPasswordsAPI.get(`/range/${sha1Prefix}`);
@@ -102,7 +102,7 @@ export async function checkPwnedPasswords(password: string, callback: (feedback:
         }
     } catch (error) {
         // eslint-disable-next-line no-console
-        console.error("Failed to get Pwned Passwords response, skipping!")
+        console.error("Failed to get Pwned Passwords response, skipping!");
     }
 }
 

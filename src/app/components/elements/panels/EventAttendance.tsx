@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
 import {
     useRecordUserEventAttendanceMutation
@@ -8,12 +7,13 @@ import {atLeastOne, isEventLeader, sortOnPredicateAndReverse} from "../../../ser
 import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
 import {AugmentedEvent, PotentialUser, UserSchoolLookup} from "../../../../IsaacAppTypes";
+import { Table, Button, Input } from "reactstrap";
 
 function displayAttendanceAsSymbol(status?: string) {
     switch (status) {
         case "ATTENDED": return "✔️";
         case "ABSENT": return "❌";
-        default: return ""
+        default: return "";
     }
 }
 
@@ -50,20 +50,20 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                 As an event leader, you are only able to see the bookings of users who have granted you access to their data.
             </div>}
             <div className="overflow-auto">
-                <RS.Table bordered className="mb-0 bg-white">
+                <Table bordered className="mb-0 bg-white">
                     <thead>
                         <tr>
                             <th className="align-middle">
                                 Actions
                             </th>
-                            <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('bookingStatus'); setReverse(!reverse);}}>
+                            <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingStatus'); setReverse(!reverse);}}>
                                 Attendance
-                            </RS.Button></th>
+                            </Button></th>
                             <th className="align-middle">
-                                <RS.Button color="link" onClick={() => {setSortPredicate('userBooked.familyName'); setReverse(!reverse);}}>
+                                <Button color="link" onClick={() => {setSortPredicate('userBooked.familyName'); setReverse(!reverse);}}>
                                     Name
-                                </RS.Button>
-                                <RS.Input className="w-auto" value={familyNameFilter} onChange={e => setFamilyNameFilter(e.target.value)} placeholder="Surname filter" />
+                                </Button>
+                                <Input className="w-auto" value={familyNameFilter} onChange={e => setFamilyNameFilter(e.target.value)} placeholder="Surname filter" />
                             </th>
                             <th className="align-middle">
                                 Job / year group
@@ -74,15 +74,15 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                             <th className="align-middle">
                                 Account type
                             </th>
-                            <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('userBooked.email'); setReverse(!reverse);}}>
+                            <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('userBooked.email'); setReverse(!reverse);}}>
                                 Email
-                            </RS.Button></th>
-                            <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('bookingDate'); setReverse(!reverse);}}>
+                            </Button></th>
+                            <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingDate'); setReverse(!reverse);}}>
                                 Booking created
-                            </RS.Button></th>
-                            <th className="align-middle"><RS.Button color="link" onClick={() => {setSortPredicate('updated'); setReverse(!reverse);}}>
+                            </Button></th>
+                            <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('updated'); setReverse(!reverse);}}>
                                 Booking updated
-                            </RS.Button></th>
+                            </Button></th>
                             <th className="align-middle">
                                 Accessibility requirements
                             </th>
@@ -107,16 +107,16 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
 
                                 return <tr key={booking.bookingId}>
                                     <td className="align-middle">
-                                        {booking.bookingStatus != 'ATTENDED' && <RS.Button color="primary" outline className="btn-sm mb-2"
+                                        {booking.bookingStatus != 'ATTENDED' && <Button color="primary" outline className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: true})}
                                         >
                                             Mark&nbsp;as Attended
-                                        </RS.Button>}
-                                        {booking.bookingStatus != 'ABSENT' && <RS.Button color="primary" outline className="btn-sm mb-2"
+                                        </Button>}
+                                        {booking.bookingStatus != 'ABSENT' && <Button color="primary" outline className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: false})}
                                         >
                                             Mark&nbsp;as Absent
-                                        </RS.Button>}
+                                        </Button>}
                                     </td>
                                     <td className="align-middle text-center">{displayAttendanceAsSymbol(booking.bookingStatus)}</td>
                                     <td className="align-middle">{userBooked.familyName}, {userBooked.givenName}</td>
@@ -131,11 +131,11 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                                     <td className="align-middle">{additionalInformation?.medicalRequirements || ""}</td>
                                     <td className="align-middle">{additionalInformation?.emergencyName || ""}</td>
                                     <td className="align-middle">{additionalInformation?.emergencyNumber || ""}</td>
-                                </tr>
+                                </tr>;
                             })
                         }
                     </tbody>
-                </RS.Table>
+                </Table>
             </div>
         </Accordion>}
     </>;

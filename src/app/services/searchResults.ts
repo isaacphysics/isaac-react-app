@@ -51,7 +51,7 @@ export const searchList: SearchShortcut[] = [
         id: "teacher_support",
         title: "Teacher support",
         terms: ["teacher", "teacher support", "teaching", "teachers", "help", "teacher account",
-                "support", "tutor", "tutor support", "tutors", "tutoring"],
+            "support", "tutor", "tutor support", "tutors", "tutoring"],
         summary: `View teacher FAQs for using ${SITE_TITLE}.`,
         url: "/support/teacher/general",
         type: SEARCH_RESULT_TYPE.SHORTCUT
@@ -232,9 +232,11 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         url: "/books/quantum_mechanics_primer",
         hash: "quantum_primer",
         type: SEARCH_RESULT_TYPE.SHORTCUT
-    }],
-    // Ada:
-    [{
+    }
+],
+// Ada:
+[
+    {
         id: "quiz",
         title: "My quizzes",
         terms: ["quiz", "quizzes"],
@@ -242,8 +244,8 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         url: "/quizzes",
         hash: "quizzes",
         type: SEARCH_RESULT_TYPE.SHORTCUT
-    }]
-);
+    }
+]);
 searchList.push(...siteShortcuts);
 
 const group = /^[ABCDEFGHJKLMNPQRTUVWXYZ2346789]{6}$/;

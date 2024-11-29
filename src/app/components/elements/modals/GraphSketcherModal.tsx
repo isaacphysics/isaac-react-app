@@ -47,7 +47,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     // Help modal logic
     const dispatch = useAppDispatch();
     const showHelpModal = () => dispatch(openActiveModal({
-        closeAction: () => { store.dispatch(closeActiveModal()) },
+        closeAction: () => { store.dispatch(closeActiveModal()); },
         size: "xl",
         title: "Quick Help",
         body: <PageFragment fragmentId={`graph_sketcher_help_modal`}/>
@@ -93,7 +93,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                 }
             }
             p.remove();
-        }
+        };
     }, []);
 
     useEffect(() => {
@@ -122,7 +122,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     const isUndoable = () => {
         return modalSketch?.isUndoable();
-    }
+    };
 
     const undo = () => modalSketch?.undo();
 
@@ -222,6 +222,6 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                 >Hide Question</div>
             </div>}
         </div>
-    </div>
-}
+    </div>;
+};
 export default GraphSketcherModal;

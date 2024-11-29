@@ -33,7 +33,7 @@ const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossa
             {doc.explanation && <IsaacContent doc={doc.explanation} />}
             {/* {_tags && _tags.length > 0 && <p className="topics">Used in: {_tags.map(tag => tag.title).join(', ')}</p>} */}
         </Col>
-    </>
+    </>;
 
     return (inPortal === true) ? termContents : <Row className="glossary_term" key={doc.id}>{termContents}</Row>;
 };

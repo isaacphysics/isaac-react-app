@@ -56,5 +56,5 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
                 </span>
             </p>
         </CardBody>
-    </Card>
+    </Card>;
 };

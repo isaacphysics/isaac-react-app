@@ -36,8 +36,8 @@ export const UserEmailPreferencesPanel = ({emailPreferences, setEmailPreferences
                 <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
             </>}
             rightColumn={
-                <UserEmailPreferencesInput emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences} submissionAttempted={submissionAttempted} idPrefix={idPrefix}
-            />}
+                <UserEmailPreferencesInput emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences} submissionAttempted={submissionAttempted} idPrefix={idPrefix}/>
+            }
         />
     </>;
 };

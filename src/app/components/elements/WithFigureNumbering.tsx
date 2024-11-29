@@ -17,16 +17,16 @@ export const WithFigureNumbering = ({doc, children}: WithFigureNumberingProps) =
             // Nothing to see here. Move along.
             return;
         } else if (d.type == "figure" && d.id) {
-            const figureId = extractFigureId(d.id)
+            const figureId = extractFigureId(d.id);
             if (!Object.keys(figureNumbers).includes(figureId)) {
                 figureNumbers[figureId] = n++;
             }
         } else {
             // Walk all the things that might possibly contain figures. Doesn't blow up if they don't exist.
-            for (let c of d.children || []) {
+            for (const c of d.children || []) {
                 walk(c);
             }
-            for (let h of d.hints || []) {
+            for (const h of d.hints || []) {
                 walk(h);
             }
             walk(d.answer);

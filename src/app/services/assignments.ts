@@ -32,22 +32,22 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
 
     if (assignments) {
         assignments
-        .map(createAssignmentWithStartDate)
-        .forEach(assignment => {
-            if (assignment.gameboard?.percentageCorrect !== 100) {
-                const noDueDateButRecent = !assignment.dueDate && (assignment.startDate > fourWeeksAgo);
-                const beforeDueDate = assignment.dueDate && (assignment.dueDate >= midnightLastNight);
-                if (beforeDueDate || noDueDateButRecent) {
-                    myAssignments.inProgressRecent.push(assignment);
-                } else if (assignment.gameboard?.percentageAttempted === 100) {
-                    myAssignments.allAttempted.push(assignment);
+            .map(createAssignmentWithStartDate)
+            .forEach(assignment => {
+                if (assignment.gameboard?.percentageCorrect !== 100) {
+                    const noDueDateButRecent = !assignment.dueDate && (assignment.startDate > fourWeeksAgo);
+                    const beforeDueDate = assignment.dueDate && (assignment.dueDate >= midnightLastNight);
+                    if (beforeDueDate || noDueDateButRecent) {
+                        myAssignments.inProgressRecent.push(assignment);
+                    } else if (assignment.gameboard?.percentageAttempted === 100) {
+                        myAssignments.allAttempted.push(assignment);
+                    } else {
+                        myAssignments.inProgressOld.push(assignment);
+                    }
                 } else {
-                    myAssignments.inProgressOld.push(assignment);
+                    myAssignments.allCorrect.push(assignment);
                 }
-            } else {
-                myAssignments.allCorrect.push(assignment);
-            }
-        });
+            });
         myAssignments.inProgressRecent = orderBy(myAssignments.inProgressRecent, ["dueDate", "startDate"], ["asc", "desc"]);
         myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["startDate"], ["desc"]);
         myAssignments.allAttempted = orderBy(myAssignments.allAttempted, ["startDate"], ["desc"]);
@@ -58,9 +58,10 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
 };
 
 export const filterAssignmentsByProperties = (assignments: AssignmentDTO[], assignmentTitleFilter: string,
-                                              assignmentGroupFilter: string,
-                                              assignmentSetByFilter:string): AssignmentDTO[] => {
-    const filteredAssignments: AssignmentDTO[] = []
+    assignmentGroupFilter: string,
+    assignmentSetByFilter: string
+): AssignmentDTO[] => {
+    const filteredAssignments: AssignmentDTO[] = [];
 
     if (assignments) {
         assignments.forEach(assignment => {
@@ -68,37 +69,37 @@ export const filterAssignmentsByProperties = (assignments: AssignmentDTO[], assi
             const assignmentMatchesFilter =
                 matchesAllWordsInAnyOrder(assignment.gameboard?.title, assignmentTitleFilter)
                 && (assignmentGroupFilter === "All" || assignment.groupName === assignmentGroupFilter)
-                && (assignmentSetByFilter === "All" || extractTeacherName(assignment.assignerSummary) === assignmentSetByFilter)
+                && (assignmentSetByFilter === "All" || extractTeacherName(assignment.assignerSummary) === assignmentSetByFilter);
 
             if (assignmentMatchesFilter){
-                filteredAssignments.push(assignment)
+                filteredAssignments.push(assignment);
             }
         });
     }
-    return filteredAssignments
-}
+    return filteredAssignments;
+};
 
 export const getDistinctAssignmentGroups = (assignments: AssignmentDTO[] | undefined | null): Set<string> => {
-    const distinctAssignmentGroups = new Set<string>()
+    const distinctAssignmentGroups = new Set<string>();
 
     if (assignments) {
         assignments.forEach(assignment => {
-            assignment?.groupName && distinctAssignmentGroups.add(assignment.groupName)
-        })
+            assignment?.groupName && distinctAssignmentGroups.add(assignment.groupName);
+        });
     }
-    return distinctAssignmentGroups
-}
+    return distinctAssignmentGroups;
+};
 
 export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | undefined | null): Set<string> => {
-    const distinctFormattedAssignmentSetters = new Set<string>()
+    const distinctFormattedAssignmentSetters = new Set<string>();
 
     if (assignments) {
         assignments.forEach(assignment => {
-            assignment?.assignerSummary && distinctFormattedAssignmentSetters.add(extractTeacherName(assignment.assignerSummary) as string)
-        })
+            assignment?.assignerSummary && distinctFormattedAssignmentSetters.add(extractTeacherName(assignment.assignerSummary) as string);
+        });
     }
-    return distinctFormattedAssignmentSetters
-}
+    return distinctFormattedAssignmentSetters;
+};
 
 export const getAssignmentStartDate = (a: AssignmentDTO): number => (a.scheduledStartDate ?? a.creationDate ?? 0).valueOf();
 

@@ -54,7 +54,7 @@ export const determineTopicHistory = (currentTopic: CurrentTopicState, currentDo
 };
 
 export const makeAttemptAtTopicHistory = () => {
-    return [ALL_TOPICS_CRUMB]
+    return [ALL_TOPICS_CRUMB];
 };
 
 export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string) => {

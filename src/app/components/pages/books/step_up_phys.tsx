@@ -53,5 +53,5 @@ export const StepUpPhys = () => {
                 </Col>
             </div>
         </Col>
-    </Container>
+    </Container>;
 };

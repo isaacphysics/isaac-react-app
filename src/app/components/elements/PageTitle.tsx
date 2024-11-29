@@ -97,16 +97,16 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
     }
 
     const HelpModal = (props: HelpModalProps) => {
-        return <PageFragment fragmentId={props.modalId} ifNotFound={help}/>
+        return <PageFragment fragmentId={props.modalId} ifNotFound={help}/>;
     };
 
     function openHelpModal(modalId: string) {
         dispatch(openActiveModal({
-            closeAction: () => {dispatch(closeActiveModal())},
+            closeAction: () => {dispatch(closeActiveModal());},
             size: "xl",
             title: "Help",
             body: <HelpModal modalId={modalId}/>
-        }))
+        }));
     }
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary d-sm-flex ${className ? className : ""}`}>
@@ -125,7 +125,7 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
         {modalId && showModal && <React.Fragment>
             <Button color="link" className="title-help title-help-modal" onClick={() => openHelpModal(modalId)}>Help</Button>
         </React.Fragment>}
-    </h1>
+    </h1>;
 };
 
 export const formatPageTitle = (currentPageTitle: string, disallowLaTeX?: boolean) => <Markup encoding={disallowLaTeX ? "plaintext" : "latex"}>{currentPageTitle}</Markup>;

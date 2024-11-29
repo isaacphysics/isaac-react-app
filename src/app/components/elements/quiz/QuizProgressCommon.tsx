@@ -54,17 +54,19 @@ export interface ResultsTableProps<Q extends QuestionType> {
     isAssignment?: boolean;
 }
 
-export function ResultsTable<Q extends QuestionType>({assignmentId,
-                                                     duedate,
-                                                     progress,
-                                                     questions,
-                                                     header,
-                                                     getQuestionTitle,
-                                                     assignmentAverages,
-                                                     assignmentTotalQuestionParts,
-                                                     markClasses,
-                                                     markQuestionClasses,
-                                                     isAssignment} : ResultsTableProps<Q>) {
+export function ResultsTable<Q extends QuestionType>({
+    assignmentId,
+    duedate,
+    progress,
+    questions,
+    header,
+    getQuestionTitle,
+    assignmentAverages,
+    assignmentTotalQuestionParts,
+    markClasses,
+    markQuestionClasses,
+    isAssignment
+} : ResultsTableProps<Q>) {
 
     const [selectedQuestionNumber, setSelectedQuestionNumber] = useState(0);
     const selectedQuestion: Q = questions[selectedQuestionNumber];
@@ -93,7 +95,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                 <Button key={0} color="primary" target="_blank" onClick={confirm}>
                     Confirm
                 </Button>,
-        ]
+            ]
         }));
     };
 
@@ -143,7 +145,7 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                 hideIcons={index !== selectedQuestionNumber} reversed={reverseOrder}
                 alignment="center"
             >
-               {assignmentAverages[index]}%
+                {assignmentAverages[index]}%
             </SortItemHeader>
         )}
         {isAssignment ? <>
@@ -162,15 +164,15 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                 Total Qs
             </SortItemHeader>
         </> :
-        <SortItemHeader<ProgressSortOrder>
-            defaultOrder={"totalQuestionPartPercentage"}
-            reverseOrder={"totalQuestionPartPercentage"}
-            currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
-            className="total-column"
-        >
-            Overall
-        </SortItemHeader>
-    }
+            <SortItemHeader<ProgressSortOrder>
+                defaultOrder={"totalQuestionPartPercentage"}
+                reverseOrder={"totalQuestionPartPercentage"}
+                currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
+                className="total-column"
+            >
+                Overall
+            </SortItemHeader>
+        }
     </tr>;
 
     const tableRef = useRef<HTMLTableElement>(null);
@@ -231,33 +233,33 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                     {fullAccess && pageSettings.isTeacher ?
                                         (
                                             isAssignment ?
-                                            <Link to={`/progress/${studentProgress.user?.id}`} target="_blank">
-                                                {studentProgress.user?.givenName}
-                                                <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
-                                            </Link>
-                                            : <>
-                                                <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
-                                                    <div
-                                                        className="quiz-student-name"
-                                                    >
-                                                        {studentProgress.user?.givenName}
-                                                        <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
-                                                    </div>
-                                                    <div className="quiz-student-menu-icon">
-                                                        {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/common/icons/menu.svg" alt="Menu" />}
-                                                    </div>
-                                                </Button>
-                                                {!returningQuizToStudent && dropdownOpen?.[index] && <>
-                                                    {(!duedate || duedate.valueOf() > TODAY().valueOf()) &&
+                                                <Link to={`/progress/${studentProgress.user?.id}`} target="_blank">
+                                                    {studentProgress.user?.givenName}
+                                                    <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
+                                                </Link>
+                                                : <>
+                                                    <Button className="quiz-student-menu" color="link" onClick={() => toggle(index)} disabled={returningQuizToStudent}>
+                                                        <div
+                                                            className="quiz-student-name"
+                                                        >
+                                                            {studentProgress.user?.givenName}
+                                                            <span className="d-none d-lg-inline"> {studentProgress.user?.familyName}</span>
+                                                        </div>
+                                                        <div className="quiz-student-menu-icon">
+                                                            {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/common/icons/menu.svg" alt="Menu" />}
+                                                        </div>
+                                                    </Button>
+                                                    {!returningQuizToStudent && dropdownOpen?.[index] && <>
+                                                        {(!duedate || duedate.valueOf() > TODAY().valueOf()) &&
                                                         studentProgress.completed &&
                                                         <div className="py-2 px-3">
                                                             <Button size="sm" onClick={() => returnToStudent(studentProgress.user?.id)}>Allow another attempt</Button>
                                                         </div>}
-                                                    <div className="py-2 px-3">
-                                                        <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user?.id}`}>View answers</Button>
-                                                    </div>
-                                                </>}
-                                            </>
+                                                        <div className="py-2 px-3">
+                                                            <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user?.id}`}>View answers</Button>
+                                                        </div>
+                                                    </>}
+                                                </>
                                         ) :
                                         <span>{studentProgress.user?.givenName} {studentProgress.user?.familyName}</span>
                                     }
@@ -268,9 +270,9 @@ export function ResultsTable<Q extends QuestionType>({assignmentId,
                                             questions[index].questionPartsTotal as number,
                                             pageSettings.formatAsPercentage) : ""
                                         ) : 
-                                        (studentProgress.correctPartResults || [])[index] === 1 ? ICON.correct :
-                                            (studentProgress.incorrectPartResults || [])[index] === 1 ? ICON.incorrect :
-                                            /* default */ ICON.notAttempted
+                                            (studentProgress.correctPartResults || [])[index] === 1 ? ICON.correct :
+                                                (studentProgress.incorrectPartResults || [])[index] === 1 ? ICON.incorrect :
+                                                /* default */ ICON.notAttempted
                                         }
                                     </td> 
                                 )}

@@ -20,7 +20,7 @@ import {
     Row, Table,
     UncontrolledButtonDropdown,
     UncontrolledTooltip
-} from "reactstrap"
+} from "reactstrap";
 import {Link} from "react-router-dom";
 import {
     resetMemberPassword,
@@ -113,7 +113,8 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
             <div>
                 {member.authorisedFullAccess ?
                     <Link to={`/progress/${member.groupMembershipInformation.userId}`}
-                          className={"align-text-top d-flex align-items-stretch"}>
+                        className={"align-text-top d-flex align-items-stretch"}
+                    >
                         <span className="ps-1">{member.givenName} {member.familyName}</span>
                     </Link> :
                     <span className="not-authorised"><span className="ps-1 struck-out">{member.givenName} {member.familyName}</span> (Not Sharing)</span>
@@ -155,7 +156,8 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                 {isTeacherOrAbove(user) && <>
                     <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-end d-none d-sm-block">
                         <Button color="link" size="sm" className="mx-2" onClick={resetPassword}
-                                disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
+                            disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}
+                        >
                             {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
                         </Button>
                     </Tooltip>
@@ -227,7 +229,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
     }
 
     function groupUserIds(group?: AppGroup) {
-        let groupUserIdList: number[] = [];
+        const groupUserIdList: number[] = [];
         group && group.members && group.members.map((member: AppGroupMembership) =>
             member.groupMembershipInformation.userId && member.authorisedFullAccess &&
             member.groupMembershipInformation.status == "ACTIVE" &&
@@ -266,13 +268,13 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                                 valid={isGroupNameValid}
                             />
                             {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <Button
-                                    color={siteSpecific("secondary", "primary")}
-                                    className={classNames("py-0", {"px-0 border-dark": isPhy})} disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
-                                    onClick={saveUpdatedGroup}
-                                    size="sm"
-                                >
-                                    {group ? "Update" : "Create"}
-                                </Button>}
+                                color={siteSpecific("secondary", "primary")}
+                                className={classNames("py-0", {"px-0 border-dark": isPhy})} disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
+                                onClick={saveUpdatedGroup}
+                                size="sm"
+                            >
+                                {group ? "Update" : "Create"}
+                            </Button>}
                             <FormFeedback>A{existingGroupWithConflictingName?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
                         </InputGroup>
                     </Form>
@@ -315,13 +317,13 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
 
                 {additionalManagers && <Table className={classNames("group-table", {"mt-1": isAda})}>
                     <tbody>
-                    {additionalManagers.map((manager, i) =>
-                        <tr key={manager.email} data-testid={"group-manager"} className={classNames({"border-0 bg-transparent": isAda})}>
-                            <td className={classNames("align-middle", {"border-top-0": i === 0, "border-0 p-2 bg-transparent": isAda})}>
-                                <span className="icon-group-table-person" />{manager.givenName} {manager.familyName} {manager.id === group.ownerId && "(group owner)"} {user.id === manager.id && "(you)"}
-                            </td>
-                        </tr>
-                    )}
+                        {additionalManagers.map((manager, i) =>
+                            <tr key={manager.email} data-testid={"group-manager"} className={classNames({"border-0 bg-transparent": isAda})}>
+                                <td className={classNames("align-middle", {"border-top-0": i === 0, "border-0 p-2 bg-transparent": isAda})}>
+                                    <span className="icon-group-table-person" />{manager.givenName} {manager.familyName} {manager.id === group.ownerId && "(group owner)"} {user.id === manager.id && "(you)"}
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </Table>}
             </>}
@@ -424,7 +426,7 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
                         onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name"
                         invalid={isGroupNameInvalid}
                         valid={isGroupNameValid}
-                        />
+                    />
                     <FormFeedback>A{existingGroupWithConflictingName?.archived ? <>n archived</> : <></>} group with that name already exists.</FormFeedback>
                 </InputGroup>
             </Form>
@@ -456,7 +458,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const switchTab = (archived: boolean) => {
         setShowArchived(archived);
         setSelectedGroupId(undefined);
-    }
+    };
     const tabs = [
         {
             name: "Active",

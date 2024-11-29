@@ -95,7 +95,7 @@ export function useIFrameMessages(uid: string, iFrameRef?: RefObject<HTMLIFrameE
         window.addEventListener('message', handleReceive);
         return () => {
             window.removeEventListener('message', handleReceive);
-        }
+        };
     }, [handleReceive]);
 
     return {receivedData, sendMessage};
@@ -144,4 +144,4 @@ export const confirmThen = <T, R>(prompt: string, confirmCallback: () => T, canc
         return confirmCallback();
     }
     return cancelCallback?.();
-}
+};

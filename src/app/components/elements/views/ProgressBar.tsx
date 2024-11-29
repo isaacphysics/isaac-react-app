@@ -23,7 +23,7 @@ const BAR_COLOURS = new Map([
 ]);
 
 export const ProgressBar = ({percentage, primaryTitle, secondaryPercentage, secondaryTitle, children, type}: ProgressBarProps) => {
-    let colour = type && BAR_COLOURS.get(type);
+    const colour = type && BAR_COLOURS.get(type);
     return <div className="progress-bar-outer mb-2">
         {isDefined(secondaryPercentage) && <div className={`progress-bar-secondary ${colour}`} title={secondaryTitle} style={{width: `${secondaryPercentage}%`}} />}
         <div className={`progress-bar-inner ${colour}`} style={{width: `${percentage}%`}} title={primaryTitle}>
@@ -31,5 +31,5 @@ export const ProgressBar = ({percentage, primaryTitle, secondaryPercentage, seco
                 {children}
             </div>
         </div>
-    </div>
+    </div>;
 };

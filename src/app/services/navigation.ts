@@ -87,7 +87,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
             search,
             creationContext: determineCurrentCreationContext(currentGameboard, currentDocId),
             currentGameboard
-        }
+        };
     }
 
     if (topic) {
@@ -101,7 +101,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
             nextItem: determineNextTopicContentLink(currentTopic, currentDocId),
             search,
             currentGameboard
-        }
+        };
     }
 
     return defaultPageNavigation(currentGameboard);
@@ -116,4 +116,4 @@ export const ifKeyIsEnter = (action: () => void) => (event: React.KeyboardEvent)
 export const isAppLink = (path: string): boolean => {
     // Paths within the app begin with a "/"
     return path.indexOf("/") === 0;
-}
+};

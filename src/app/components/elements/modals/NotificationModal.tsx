@@ -51,13 +51,13 @@ const NotificationModalBody = (notification: { notification: any }) => {
                 </Col>
             </Row>
         </Col>
-    </React.Fragment>
+    </React.Fragment>;
 };
 
 export const notificationModal = (notification: any) => {
     return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+        closeAction: () => {store.dispatch(closeActiveModal());},
         title: notification.title,
         body: <NotificationModalBody notification={notification}/>
-    }
+    };
 };

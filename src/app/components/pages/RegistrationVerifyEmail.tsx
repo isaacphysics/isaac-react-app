@@ -32,7 +32,7 @@ export const RegistrationVerifyEmail = () => {
         if (!emailVerified && userIdFromParams && tokenFromParams) {
             verifyEmail({userid: userIdFromParams, token: tokenFromParams});
         }
-    }, [verifyEmail, userIdFromParams, tokenFromParams, emailVerified, errorSlice])
+    }, [verifyEmail, userIdFromParams, tokenFromParams, emailVerified, errorSlice]);
 
     const requestNewVerificationEmail = () => {
         if (user?.loggedIn) {
@@ -129,5 +129,5 @@ export const RegistrationVerifyEmail = () => {
                 }
             </CardBody>
         </Card>
-    </Container>
-}
+    </Container>;
+};

@@ -92,11 +92,11 @@ describe("AdminUserManager", () => {
             expect(searchResultsTable).toBeInTheDocument();
             return searchResultsTable;
         }, {onTimeout: (error) => {
-                if (isDefined(debug)) {
-                    screen.debug(undefined, 200000);
-                }
-                return error;
+            if (isDefined(debug)) {
+                screen.debug(undefined, 200000);
             }
+            return error;
+        }
         });
         if (isDefined(debug)) {
             screen.debug(searchResultsTable);
@@ -121,7 +121,7 @@ describe("AdminUserManager", () => {
             }
         }
         return searchResultsTable;
-    }
+    };
 
     it("shows no list of users initially", async () => {
         const searchHandler = handlerThatReturns({data: [buildMockUserSummary(mockUser, true)]});
@@ -360,7 +360,7 @@ describe("AdminUserManager", () => {
         await waitFor(async () => {
             expect(statusChangeHandler).toHaveBeenCalledTimes(1);
             await expect(statusChangeHandler).toHaveBeenRequestedWith(async (req) => {
-                return req.params.status === "NOT_VERIFIED"
+                return req.params.status === "NOT_VERIFIED";
             });
             const rows = within(searchResultsTable).queryAllByTestId("user-search-result-row");
             expect(rows[0]).toHaveTextContent("NOT_VERIFIED");
@@ -380,7 +380,7 @@ describe("AdminUserManager", () => {
         await waitFor(async () => {
             expect(statusChangeHandler).toHaveBeenCalledTimes(1);
             await expect(statusChangeHandler).toHaveBeenRequestedWith(async (req) => {
-                return req.params.status === "DELIVERY_FAILED"
+                return req.params.status === "DELIVERY_FAILED";
             });
             expect(rows[0]).toHaveTextContent("DELIVERY_FAILED");
             expect(within(rows[0]).queryByRole("button", {name: "Reset password"})).toBeDisabled();

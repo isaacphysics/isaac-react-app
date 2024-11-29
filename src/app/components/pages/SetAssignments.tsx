@@ -1,5 +1,4 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
-import * as RS from "reactstrap";
 import {
     Alert,
     Button,
@@ -272,10 +271,10 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <th colSpan={2} className="text-center align-middle">
             Stages and Difficulties
             <span id="difficulties-help" className="icon-help mx-1"></span>
-            <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+            <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
-            </RS.UncontrolledTooltip>
+            </UncontrolledTooltip>
         </th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited} reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder} setOrder={setBoardOrder}>
             Last viewed
@@ -356,10 +355,10 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
             Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
-            <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+            <UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                 Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
                 Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
-            </RS.UncontrolledTooltip>
+            </UncontrolledTooltip>
         </th>
         <th>Creator</th>
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited} reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder} setOrder={setBoardOrder}>

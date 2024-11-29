@@ -18,7 +18,7 @@ function useEventPropertyState<T>(element: HTMLElement | undefined, initialState
             if (isDefined(element)) {
                 setState((element as Record<string, any>)[property] as T);
             }
-        }
+        };
         eventTypes.map(eventType => {
             element.addEventListener(eventType, listener);
         });
@@ -27,7 +27,7 @@ function useEventPropertyState<T>(element: HTMLElement | undefined, initialState
             eventTypes.map(eventType => {
                 element.removeEventListener(eventType, listener);
             });
-        }
+        };
     }, [element, ...deps]);
 
     return [state, setState];
@@ -61,4 +61,4 @@ export const ScrollShadows = <T extends HTMLElement>({element} : {element : T | 
         <div aria-hidden className={classNames("scroll-shadow left")} style={{opacity: leftOpacity}}/>
         <div aria-hidden className={classNames("scroll-shadow right")} style={{opacity: rightOpacity}}/>
     </> : null;
-}
+};

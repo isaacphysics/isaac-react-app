@@ -73,7 +73,7 @@ describe("userConsistencyCheckerMiddleware", () => {
 
         // If we ask the back-end for the current user and that fails, we should clear any user information in local storage
         expect(setUserId).toBeCalledWith(undefined);
-    })
+    });
 
     it("causes a consistency error if the user changes", async () => {
         userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(loginAction);

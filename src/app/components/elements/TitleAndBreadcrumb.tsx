@@ -37,18 +37,18 @@ const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionT
 export const formatBreadcrumbItemTitle = (title: string, disallowLaTeX?: boolean) => <Markup encoding={disallowLaTeX ? "plaintext" : "latex"}>{title}</Markup>;
 
 export const formatBreadcrumbHistoryItem = (breadcrumb: LinkInfo, disallowLaTeX?: boolean) => {
-    const titleElement = formatBreadcrumbItemTitle(breadcrumb.title, disallowLaTeX)
+    const titleElement = formatBreadcrumbItemTitle(breadcrumb.title, disallowLaTeX);
 
     return <BreadcrumbItem key={breadcrumb.title}>
         {breadcrumb.to ? <Link to={breadcrumb.to} replace={breadcrumb.replace}>{titleElement}</Link> : titleElement}
-    </BreadcrumbItem>
-}
+    </BreadcrumbItem>;
+};
 
 export const formatBreadcrumbItem = (currentPageTitle: string, disallowLaTeX?: boolean) => {
     return <BreadcrumbItem active>
         {formatBreadcrumbItemTitle(currentPageTitle, disallowLaTeX)}
-    </BreadcrumbItem>
-}
+    </BreadcrumbItem>;
+};
 
 type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
     breadcrumbTitleOverride?: string;

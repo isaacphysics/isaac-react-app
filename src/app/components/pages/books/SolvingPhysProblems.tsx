@@ -12,5 +12,5 @@ export const SolvingPhysProblems = () => {
                 <PageFragment fragmentId="solve_physics_problems_intro"/>
             </div>
         </Col>
-    </Container>
+    </Container>;
 };

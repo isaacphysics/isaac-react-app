@@ -74,5 +74,5 @@ export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
                 </div>
             }
         />
-    </>
+    </>;
 };
