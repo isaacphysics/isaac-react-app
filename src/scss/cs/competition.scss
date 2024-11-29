@@ -1,3 +1,4 @@
+
 .ioe {
   &-col {
     background-color: white;
@@ -11,5 +12,123 @@
   &-text {
     color: #1c1c1c;
     font-size: 19px;
+  }
+}
+
+#competition-information-section {
+  background-color: #FFFFFF;
+}
+
+.competition-information{
+  &-title{
+    color: #120540;
+    font-size: 24px;
+  }
+
+  &-text {
+    color: #1c1c1c;
+    font-size: 19px;
+  }
+
+  &-default-background {
+    background-color: #F9F9F9;
+  }
+
+  &-prizes-background {
+    background-color: #FFDF80;
+  }
+
+    &-no-border {
+    border: none;
+  }
+}
+
+.competition-timeline {
+  background-color: #FFFFFF;
+
+  &-title {
+    color: #120540;
+    font-size: 24px;
+  }
+
+  &-content {
+    color: #130019;
+    font-size: 19px;
+  }
+
+  &-header {
+    color: #120540;
+    font-size: 28px;
+  }
+
+  &-date {
+    font-size: 20px;
+    
+    @media (max-width: 991px) {
+      text-align: right;
+    }
+  }
+
+  &-background-1 {
+    background-color: #F9F9F9;
+  }
+
+  &-background-2 {
+    background-color: #FFBBDC;
+  }
+
+  &-background-3 {
+    background-color: #FFDF80;
+  }
+
+  &-background-4 {
+    background-color: #FFC000;
+  }
+
+  &-box-container {
+    @media (min-width: 1000px) {
+      margin-right: 15px;
+      max-width: calc(25% - 15px);
+    }
+    @media (max-width: 991px) {
+      margin-bottom: 15px;
+       max-width: none;
+    }
+  }
+
+  &-arrow {
+    width: 110px;
+    height: 35px;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-left: 25px solid;
+    position: absolute;
+    top: 50%;
+    right: -110px;
+    transform: translateY(-50%);
+    z-index: 1;
+
+     @media (max-width: 991px) {
+      top: auto;
+      bottom: -95px;
+      right: 50%;
+      transform: translateX(50%) rotate(90deg);
+    }
+  }
+
+  &-background-1 &-arrow {
+    border-left-color: #F9F9F9;
+  }
+
+  &-background-2 &-arrow {
+    border-left-color: #FFBBDC;
+  }
+
+  &-background-3 &-arrow {
+    border-left-color: #FFDF80;
+  }
+
+  &-background-4 &-arrow {
+    border-left-color: #FFC000;
   }
 }

@@ -6,9 +6,11 @@ import content from "./content";
 import "../../../../scss/cs/competition.scss";
 import IoECard from "./Section2/IoECard";
 import TestimonialComment from "../../elements/TestimonialComment";
-import CompetitionButton from "./CompetitionButton";
+import CompetitionButton from "./Buttons/CompetitionButton";
+import InformationCard from "./CompetitionInformation/InformationCard";
+import CompetitionTimeline from "./CompetitionInformation/CompetitionTimeline";
 
-const { section1, section2 } = content;
+const { section1, section2, section3 } = content;
 
 export const IsaacCompetition = () => {
   useEffect(() => {
@@ -88,6 +90,50 @@ export const IsaacCompetition = () => {
             </div>
           </Container>
         </div>
+      </section>
+      <section id="competition-information-section">
+        <Container className="pt-4 pb-4 z1">
+          <Row className="py-4">
+            <Col xs={12} lg={6}>
+              <InformationCard
+                title={section3.howItWorks.title}
+                content={section3.howItWorks.steps}
+                className="competition-information-default-background"
+              />
+            </Col>
+            <Col xs={12} lg={6} className="mt-4 mt-lg-0">
+              <InformationCard
+                title={section3.whyJoin.title}
+                description={section3.whyJoin.description}
+                content={section3.whyJoin.benefits}
+                className="competition-information-default-background"
+              />
+            </Col>
+          </Row>
+          <Row className="py-4">
+            <Col xs={12} lg={6}>
+              <InformationCard
+                title={section3.eligibility.title}
+                content={[section3.eligibility.description, section3.eligibility.requirements]}
+                className="competition-information-default-background"
+              />
+            </Col>
+            <Col xs={12} lg={6} className="mt-4 mt-lg-0">
+              <InformationCard
+                title={section3.prizes.title}
+                description={section3.prizes.description}
+                content={section3.prizes.prizeList}
+                isList
+                className="competition-information-prizes-background"
+              />
+            </Col>
+          </Row>
+          <CompetitionTimeline
+            title={section3.timeline.title}
+            content={section3.timeline.content}
+            entries={section3.timeline.entries}
+          />
+        </Container>
       </section>
     </>
   );
