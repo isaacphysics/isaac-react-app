@@ -1,9 +1,4 @@
-import React, {
-    useCallback,
-    useContext,
-    useMemo,
-    useState
-} from "react";
+import React, {useCallback, useContext, useMemo, useState} from "react";
 import {
     openActiveModal,
     useAppDispatch,
@@ -19,18 +14,17 @@ import {
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
-    InputGroup,
     Label,
     UncontrolledButtonDropdown,
     UncontrolledTooltip
 } from "reactstrap";
 import sortBy from "lodash/sortBy";
 import {
-    AuthorisedAssignmentProgress,
     AppGroup,
     AssignmentOrder,
     AssignmentOrderSpec,
     AssignmentProgressPageSettingsContext,
+    AuthorisedAssignmentProgress,
     EnhancedAssignment,
     EnhancedAssignmentWithProgress
 } from "../../../IsaacAppTypes";
@@ -69,7 +63,7 @@ import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { QuizProgressDetails } from "./quizzes/QuizTeacherFeedback";
+import {QuizProgressDetails} from "./quizzes/QuizTeacherFeedback";
 import StyledToggle from "../elements/inputs/StyledToggle";
 
 enum GroupSortOrder {
@@ -113,7 +107,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     const progress = progressData.map(pd => pd[0]);
     const noStudentsAttemptedAll = progress.reduce((sa, p) => sa + (isAuthorisedFullAccess(p) && p.notAttemptedPartResults.every(v => v === 0) ? 1 : 0), 0);
-    
+
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     const [assignmentAverages, assignmentTotalQuestionParts] = useMemo<[number[], number]>(() => {
         if (assignmentProgressContext.attemptedOrCorrect === "ATTEMPTED") {
@@ -183,14 +177,14 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         {` students attempted all questions in `}
         <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link>.
     </div>;
-        
+
     const getQuestionTitle = (question: GameboardItem) => {
         return <Link to={`/questions/${question.id}?board=${assignment.gameboardId}`}>
             <strong>Q<span className="d-none d-md-inline">uestion</span>: </strong>{question.title}
         </Link>;
     };
 
-    return <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} header={tableHeader} getQuestionTitle={getQuestionTitle} 
+    return <ResultsTable<GameboardItem> assignmentId={assignment.id} progress={progress} questions={questions} header={tableHeader} getQuestionTitle={getQuestionTitle}
         assignmentAverages={assignmentAverages} assignmentTotalQuestionParts={assignmentTotalQuestionParts} markClasses={markClasses} markQuestionClasses={markQuestionClasses}
         isAssignment={true}
     />;
@@ -295,7 +289,7 @@ export const AssignmentProgressLegend = ({showQuestionKey, id}: {showQuestionKey
                     <span>Colour-blind mode</span>
                     <StyledToggle falseLabel="Off" trueLabel="On" checked={pageSettings.colourBlind} onChange={(e) => pageSettings.setColourBlind?.(e.currentTarget.checked)} />
                 </div>
-                
+
                 <div className="d-flex flex-column align-items-center mt-2">
                     <span>Table display mode</span>
                     <StyledToggle falseLabel="Fractions" trueLabel="Percentages" checked={pageSettings.formatAsPercentage} onChange={(e) => pageSettings.setFormatAsPercentage?.(e.currentTarget.checked)} />
@@ -326,7 +320,7 @@ const QuizProgressLoader = ({quizAssignmentId}: { quizAssignmentId: number }) =>
     return <ShowLoadingQuery
         query={quizAssignmentFeedbackQuery}
         defaultErrorTitle={"Error loading test assignment feedback"}
-        thenRender={quizAssignmentWithFeedback => 
+        thenRender={quizAssignmentWithFeedback =>
             <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                 <QuizProgressDetails assignment={quizAssignmentWithFeedback} />
             </div>

@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {Input, InputProps} from "reactstrap";
 import {v4} from "uuid";
 import {Spacer} from "../Spacer";
-import { ifKeyIsEnter, isPhy } from "../../../services";
+import {ifKeyIsEnter} from "../../../services";
 import classNames from "classnames";
 
 // A custom checkbox, dealing with mouse and keyboard input. Pass `onChange((e : ChangeEvent) => void)`, `checked: bool`, and `label: Element` as required as props to use.

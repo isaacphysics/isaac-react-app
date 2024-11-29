@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import {LLMFreeTextQuestionValidationResponseDTO} from "../../../IsaacApiTypes";
-import {Alert, Button, Card, Table} from "reactstrap";
+import {Button, Table} from "reactstrap";
 import {siteSpecific} from "../../services/siteConstants";
 import {Immutable} from "immer";
-import { Link } from 'react-router-dom';
-import { StyledCheckbox } from './inputs/StyledCheckbox';
-import { logAction, selectors, useAppDispatch, useAppSelector } from '../../state';
-import { NOT_FOUND } from '../../services';
+import {Link} from 'react-router-dom';
+import {StyledCheckbox} from './inputs/StyledCheckbox';
+import {logAction, selectors, useAppDispatch, useAppSelector} from '../../state';
+import {NOT_FOUND} from '../../services';
 
 const noFeedback = {disagree: false, partlyAgree: false, agree: false};
 
@@ -60,7 +60,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
             </Table>
         </div>
         {hasSubmitted && <>
-            {!sentFeedback 
+            {!sentFeedback
                 ? <div className="feedback-collection">
                     <p className="mb-4">Before submitting another response, please say whether you agree with the predicted mark.</p>
                     <ul className="no-bullet px-2 mb-4">
@@ -92,7 +92,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, has
                     >
                         Send feedback
                     </Button>
-                </div> 
+                </div>
                 : <div className="feedback-collection submitted">
                     <span className="icon-feedback-sent-tick" /> Feedback submitted
                 </div>

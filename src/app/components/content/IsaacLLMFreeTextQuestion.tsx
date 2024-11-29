@@ -1,10 +1,10 @@
 import React from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacLLMFreeTextQuestionDTO, LLMFreeTextChoiceDTO} from "../../../IsaacApiTypes";
-import {Alert, FormGroup, Input} from "reactstrap";
+import {FormGroup, Input} from "reactstrap";
 import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
 import {useCurrentQuestionAttempt} from "../../services";
-import { useCanAttemptQuestionTypeQuery } from "../../state";
+import {useCanAttemptQuestionTypeQuery} from "../../state";
 
 interface Limit {
     exceeded: boolean;

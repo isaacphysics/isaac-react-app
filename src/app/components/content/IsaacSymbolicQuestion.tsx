@@ -1,4 +1,14 @@
-import React, {ChangeEvent, lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {
+    ChangeEvent,
+    lazy,
+    Suspense,
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState
+} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
@@ -6,18 +16,18 @@ import {
     ifKeyIsEnter,
     isDefined,
     jsonHelper,
-    sanitiseInequalityState,
     parsePseudoSymbolicAvailableSymbols,
-    useCurrentQuestionAttempt, isAda, siteSpecific
+    sanitiseInequalityState,
+    siteSpecific,
+    useCurrentQuestionAttempt
 } from "../../services";
 import {Inequality, makeInequality} from "inequality";
 import {parseMathsExpression, ParsingError} from "inequality-grammar";
 import _flattenDeep from 'lodash/flatMapDeep';
 import {v4 as uuid_v4} from "uuid";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-import classNames from "classnames";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { InputGroup, Input, Button, UncontrolledTooltip } from "reactstrap";
+import {Button, Input, InputGroup, UncontrolledTooltip} from "reactstrap";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 

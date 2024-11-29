@@ -7,7 +7,6 @@ import {
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     isAda,
-    isDefined,
     isPhy,
     isTutorOrAbove,
     siteSpecific,
@@ -21,7 +20,6 @@ import classNames from "classnames";
 import {Immutable} from "immer";
 import {StyledDropdown} from "./DropdownInput";
 import isUndefined from "lodash/isUndefined";
-import { StyledCheckbox } from "./StyledCheckbox";
 
 interface UserContextRowProps {
     userContext: UserContext;

@@ -4,11 +4,11 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
 import {
-    ifKeyIsEnter, isAda,
+    ifKeyIsEnter,
     isDefined,
-    isStaff,
     jsonHelper,
-    sanitiseInequalityState, siteSpecific,
+    sanitiseInequalityState,
+    siteSpecific,
     useCurrentQuestionAttempt,
     useUserPreferences
 } from "../../services";
@@ -18,7 +18,6 @@ import {v4 as uuid_v4} from "uuid";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-import classNames from "classnames";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));

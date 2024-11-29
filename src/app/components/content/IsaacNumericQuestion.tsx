@@ -1,6 +1,5 @@
 import React, {FormEvent, useMemo, useState} from "react";
 import {AppState, useAppSelector, useGetConstantUnitsQuery} from "../../state";
-import Rand from 'rand-seed';
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
 import {
@@ -22,7 +21,7 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
-import { selectUnits, wrapUnitForSelect } from "../../services/numericUnits";
+import {selectUnits, wrapUnitForSelect} from "../../services/numericUnits";
 
 export const numericInputValidator = (input: string) => {
     const regexStr = "[^ 0-9EXex(){},.+*/\\^×÷-]";

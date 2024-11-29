@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {isAda, isMobile, isPhy, isTutorOrAbove, PATHS, siteSpecific, useOutsideCallback} from "../../services";
+import {isMobile, isPhy, isTutorOrAbove, PATHS, siteSpecific, useOutsideCallback} from "../../services";
 import {selectors, useAppSelector} from "../../state";
 import classNames from "classnames";
 
