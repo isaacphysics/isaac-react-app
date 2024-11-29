@@ -15,7 +15,7 @@ export default {
       facebookLink: "https://www.facebook.com/IsaacComputerScience",
     },
   },
-  section2: {
+  internetOfEverything: {
     ioe: {
       title: "What is the Internet of Everything?",
       section: [
@@ -84,6 +84,65 @@ export default {
         { event: "Finalist selected", date: "May" },
         { event: "The finals", date: "2 to 13 June" },
       ],
+    },
+  },
+  accordion: {
+    projectIdeas: {
+      title: "Project ideas to get started",
+      section: [
+        "There are endless possibilities! However, we know how hard it is to start with a blank page. Here are a few ideas to get you started:",
+        [
+          "develop an app or game that promotes healthy sleep habits",
+          "design a website to educate youth on mobile device cybersecurity",
+          "propose an Internet of Everything device concept that helps keep public spaces clean",
+        ],
+        "These ideas are only the beginning: we can’t wait to see what you think of!",
+      ],
+    },
+    availableSupport: {
+      title: "Available support",
+      section: [
+        "We have a range of topics to help out with your design of your IoE device. Take a look:",
+        [
+          "Embedded Systems",
+          "The processor",
+          "Factors affecting processor performance",
+          "RAM: Main memory",
+          "Wired and Wireless networks",
+          "Cybersecurity: Network threats",
+          "Legislation",
+          "Impacts of technology",
+        ],
+        "Our industry partners are also here to help! Siemens have offered to help with their Games Arcade, and are offering free software licenses for SolidEdge – CAD design to get you started.",
+      ],
+    },
+    video: {
+      title: "Video entry requirements (Coming Soon)",
+      section: ["", []],
+    },
+    groupEntry: {
+      title: "How to create a group and submit your entry (Coming Soon)",
+      section: ["", []],
+    },
+    industry: {
+      title: "Industry Partners",
+      section: [
+        "A big thank you to all of our industry partners! These include:",
+        [
+          "The British Computer Society, branded BCS, The Chartered Institute for IT",
+          "Arcadis",
+          "Cisco",
+          "Kainos",
+          "Reed",
+          "Siemens",
+          "TC",
+        ],
+        "",
+      ],
+    },
+    termsAndConditions: {
+      title: "Terms and Conditions (Coming Soon)",
+      section: ["", []],
     },
   },
 };

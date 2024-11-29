@@ -15,6 +15,20 @@
   }
 }
 
+.accordion {
+  &-button {
+    background-color: white;
+    color: #130019;
+    border-bottom: 0px;
+    font-size: 20px;
+    font-family: "dm-sans-medium", DMSans-Medium, sans-serif;
+  }
+
+  &-body {
+    font-size: 19px;
+    color: #181818;
+  }
+}
 #competition-information-section {
   background-color: #FFFFFF;
 }

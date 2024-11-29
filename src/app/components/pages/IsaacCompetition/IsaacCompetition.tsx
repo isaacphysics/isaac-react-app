@@ -1,16 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SITE_SUBJECT_TITLE } from "../../../services";
 import { BreadcrumbTrail } from "../../elements/TitleAndBreadcrumb";
 import { Col, Container, Row } from "reactstrap";
 import content from "./content";
 import "../../../../scss/cs/competition.scss";
-import IoECard from "./Section2/IoECard";
+import IoECard from "./InternetOfEverything/IoECard";
 import TestimonialComment from "../../elements/TestimonialComment";
+import Accordion from "./Accordion/Accordion";
 import CompetitionButton from "./Buttons/CompetitionButton";
 import InformationCard from "./CompetitionInformation/InformationCard";
 import CompetitionTimeline from "./CompetitionInformation/CompetitionTimeline";
 
-const { section1, section2, section3 } = content;
+const { section1, internetOfEverything, section3, accordion } = content;
 
 export const IsaacCompetition = () => {
   useEffect(() => {
@@ -22,6 +23,21 @@ export const IsaacCompetition = () => {
       to: "https://forms.office.com/Pages/ResponsePage.aspx?id=8MSlGfdLSE2oGxZmua5L9cVFgGPyQM5Ft1X2dOwymT9UMjdaVzZWRjRFUEhYUlY1WTZJMERZSkJTSS4u",
       label: "Express your interest",
     },
+  ];
+
+  const [open, setOpen] = useState<string | null>(null);
+
+  const setOpenState = (id?: string) => {
+    setOpen(id ?? null);
+  };
+
+  const accordionSections = [
+    { id: "0", title: accordion.projectIdeas.title, section: accordion.projectIdeas.section },
+    { id: "1", title: accordion.availableSupport.title, section: accordion.availableSupport.section },
+    { id: "2", title: accordion.video.title, section: accordion.video.section },
+    { id: "3", title: accordion.groupEntry.title, section: accordion.groupEntry.section },
+    { id: "4", title: accordion.industry.title, section: accordion.industry.section },
+    { id: "5", title: accordion.termsAndConditions.title, section: accordion.termsAndConditions.section },
   ];
 
   return (
@@ -79,18 +95,27 @@ export const IsaacCompetition = () => {
           <Container>
             <Row className="py-4">
               <Col xs={12} lg={6}>
-                <IoECard title={section2.ioe.title} content={section2.ioe.section} />
+                <IoECard title={internetOfEverything.ioe.title} content={internetOfEverything.ioe.section} />
               </Col>
               <Col xs={12} lg={6} className="mt-4 mt-lg-0">
-                <IoECard title={section2.examples.title} content={section2.examples.section} isList />
+                <IoECard
+                  title={internetOfEverything.examples.title}
+                  content={internetOfEverything.examples.section}
+                  isList
+                />
               </Col>
             </Row>
             <div className="pb-4">
-              <TestimonialComment imageSrc="/assets/star.svg" altText="Star" text={section2.testamonial.text} />
+              <TestimonialComment
+                imageSrc="/assets/star.svg"
+                altText="Star"
+                text={internetOfEverything.testamonial.text}
+              />
             </div>
           </Container>
         </div>
       </section>
+
       <section id="competition-information-section">
         <Container className="pt-4 pb-4 z1">
           <Row className="py-4">
@@ -133,6 +158,15 @@ export const IsaacCompetition = () => {
             content={section3.timeline.content}
             entries={section3.timeline.entries}
           />
+        </Container>
+      </section>
+      <section id="accordion" className="event-section">
+        <Container>
+          <Row className="py-4">
+            <Col lg={8}>
+              <Accordion sections={accordionSections} open={open} setOpenState={setOpenState} />
+            </Col>
+          </Row>
         </Container>
       </section>
     </>

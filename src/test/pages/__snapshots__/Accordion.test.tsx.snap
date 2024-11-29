@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Accordion Component matches the snapshot when closed 1`] = `
+<DocumentFragment>
+  <div
+    class="accordion accordion-body"
+  >
+    <div
+      class="card"
+      data-testid="accordion-item"
+      eventkey="1"
+    >
+      <div
+        class="accordion-button p-3 m-0 d-flex justify-content-between border-bottom border-dark card-header"
+      >
+        Section 1
+        <img
+          alt="Down Icon"
+          class="p-2"
+          src="/assets/chevron_down.svg"
+        />
+      </div>
+      <div
+        class="collapse"
+      >
+        <div
+          class="p-3 bg-white border-bottom border-dark card-body"
+        >
+          <p>
+            Item 1
+          </p>
+          <ul>
+            <li>
+              Sub-item 1
+            </li>
+            <li>
+              Sub-item 2
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div
+      class="card"
+      data-testid="accordion-item"
+      eventkey="2"
+    >
+      <div
+        class="accordion-button p-3 m-0 d-flex justify-content-between rounded-bottom border-bottom-0 border-bottom border-dark card-header"
+      >
+        Section 2
+        <img
+          alt="Down Icon"
+          class="p-2"
+          src="/assets/chevron_down.svg"
+        />
+      </div>
+      <div
+        class="collapse"
+      >
+        <div
+          class="p-3 bg-white border-bottom border-dark card-body"
+        >
+          <p>
+            Item 3
+          </p>
+          <p>
+            Item 3
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
