@@ -1,10 +1,11 @@
 @use "sass:map";
 
 $alert-text-colours: (
-  "physics": #4d2863,
-  "maths": #004258,
-  "chemistry": #761813,
-  "biology": #002b08,
+  "physics": $color-physics-900,
+  "maths": $color-maths-900,
+  "chemistry": $color-chemistry-900,
+  "biology": $color-biology-900,
+  "neutral": $color-neutral-800,
 );
 
 @function color-level($color, $level: 0) {
@@ -36,137 +37,121 @@ $alert-text-colours: (
   }
 }
 
-@mixin apply-subject-classes($color, $subject) {
-  /* background classes */
-  @include bg-variant(".bg-secondary", $color);
-  
+@each $palette, $subject-colors in $isaac-color-palettes {
+  @include color-mode($palette) {
+    $subject-color-500: map.get($subject-colors, 500);
 
-  /* correct answer */
-  .validation-response-panel {
-    .question-response {
-      font-family: desyrel, serif;
-      font-size: 36px;
-      font-weight: 600;
-    }
-    h1 {
-      font-family: desyrel, serif;
-      font-size: 48px;
-      font-weight: 700;
-    }
-    &.correct {
-      background: $color;
-      color: white;
-      a {
-        color: white !important;
+    /* background classes */
+    @include bg-variant(".bg-secondary", $subject-color-500);
+    
+
+    /* correct answer */
+    .validation-response-panel {
+      .question-response {
+        font-family: desyrel, serif;
+        font-size: 36px;
+        font-weight: 600;
       }
-    }
-    &.almost {
-      background: #ffb847;
-      color: #3c0000;
-    }
-  }
-
-  /* btn classes */
-  .btn-secondary {
-    @include button-variant($color, $color);
-    &:not(:disabled):not(.disabled):active {
-      background-color: darken($color, 4);
-    }
-  }
-
-  //.btn-outline-primary {
-  //  @include button-outline-variant($color);
-  //}
-
-  /* text- classes */
-  @include text-emphasis-variant(".text-secondary", $color);
-  // text-emphasis-color: $color;
-
-  /* badge classes */
-  .text-bg-secondary {
-    @extend .text-bg-#{$subject};
-  }
-
-  /* borders */
-  .border-secondary {
-    border-color: $color !important;
-  }
-
-  /* BS5 checkboxes and radio buttons */
-  .form-check-input {
-    width: 24px;
-    height: 24px;
-    transition: all 0.1s ease-in-out;
-    outline: none;
-    box-shadow: none;
-    &:checked {
-      border-color: $color;
-      background-color: $color;
-    }
-    &:focus {
-      border-color: $color;
-      &:checked {
-        box-shadow: 0 0 0 0.25rem rgba($color, 0.25);
+      h1 {
+        font-family: desyrel, serif;
+        font-size: 48px;
+        font-weight: 700;
       }
-    }
-    &:not(:disabled):active {
-      background-color: rgba($color, 0.25);
-      border-color: rgba($color, 0.25);
-    }
-  }
-
-  /* unit dropdown */
-  .numeric-question .unit-selection {
-    .display-unit {
-      opacity: 1 !important;
-    }
-    .dropdown-item {
-      &:active {
-        background-color: $color;
+      &.correct {
+        background: $subject-color-500;
         color: white;
+        a {
+          color: white !important;
+        }
+      }
+      &.almost {
+        background: #ffb847;
+        color: #3c0000;
+      }
+    }
+
+    /* text- classes */
+    @include text-emphasis-variant(".text-secondary", $subject-color-500);
+    // text-emphasis-color: $color;
+
+    /* badge classes */
+    .text-bg-secondary {
+      @extend .text-bg-#{$palette};
+    }
+
+    /* borders */
+    .border-secondary {
+      border-color: $subject-color-500 !important;
+    }
+
+    /* BS5 checkboxes and radio buttons */
+    .form-check-input {
+      width: 24px;
+      height: 24px;
+      transition: all 0.1s ease-in-out;
+      outline: none;
+      box-shadow: none;
+      &:checked {
+        border-color: $subject-color-500;
+        background-color: $subject-color-500;
       }
       &:focus {
-        box-shadow: 0 0 0 0.25rem rgba($color, .25);
+        border-color: $subject-color-500;
+        &:checked {
+          box-shadow: 0 0 0 0.25rem rgba($subject-color-500, 0.25);
+        }
+      }
+      &:not(:disabled):active {
+        background-color: rgba($subject-color-500, 0.25);
+        border-color: rgba($subject-color-500, 0.25);
       }
     }
-  }
 
-  .alert-secondary {
-    @extend .alert-#{$subject};
-    color: map.get($alert-text-colours, $subject);
-  }
-
-  li {
-    .hint-tab-title {
-      color: $color !important;
+    /* unit dropdown */
+    .numeric-question .unit-selection {
+      .display-unit {
+        opacity: 1 !important;
+      }
+      .dropdown-item {
+        &:active {
+          background-color: $subject-color-500;
+          color: white;
+        }
+        &:focus {
+          box-shadow: 0 0 0 0.25rem rgba($subject-color-500, .25);
+        }
+      }
     }
-    &.active {
+
+    .alert-secondary {
+      @extend .alert-#{$palette};
+      color: map.get($alert-text-colours, $palette);
+    }
+
+    li {
       .hint-tab-title {
-        color: white !important;
-        background-color: $color !important;
+        color: $subject-color-500 !important;
+      }
+      &.active {
+        .hint-tab-title {
+          color: white !important;
+          background-color: $subject-color-500 !important;
+        }
       }
     }
-  }
 
-  .quick-question-options {
-    background: rgba($color, 0.5);
+    .quick-question-options {
+      background: rgba($subject-color-500, 0.5);
+    }
+
+    svg.search-item-icon, svg.gameboard-item-icon {
+      fill: $subject-color-500;
+    }
   }
 }
 
 // FIXME: This is not nice at all, but does fix subject and email prefs!
-#account-page, #registration-page, #login-page {
-  @include apply-subject-classes($a11y_green, "secondary");
-}
-
-div.physics {
-  @include apply-subject-classes($phy_physics, "physics");
-}
-div.maths {
-  @include apply-subject-classes($phy_maths, "maths");
-}
-div.chemistry {
-  @include apply-subject-classes($phy_chemistry, "chemistry");
-}
-div.biology {
-  @include apply-subject-classes($phy_biology, "biology");
-}
+// TODO replace this
+// #account-page, #registration-page, #login-page {
+//   @include apply-subject-classes($a11y_green, "secondary");
+// }

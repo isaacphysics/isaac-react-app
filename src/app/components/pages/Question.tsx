@@ -75,7 +75,7 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
         const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
         return <GameboardContext.Provider value={navigation.currentGameboard}>
-            <Container className={classNames(doc.subjectId, "no-shadow")}>
+            <Container className={classNames("no-shadow")} data-bs-theme={doc.subjectId}>
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
                     currentPageTitle={generateQuestionTitle(doc)}

@@ -160,6 +160,19 @@ $color-misc-red: #b40c0c;
 $isaac-color-palettes: (
   // brand is excluded as there are no pages with the "brand" colour scheme;
   // it is used exclusively for styling individual components
+  "neutral": (
+    "white": $color-neutral-white,
+    50: $color-neutral-50,
+    100: $color-neutral-100,
+    200: $color-neutral-200,
+    300: $color-neutral-300,
+    400: $color-neutral-400,
+    500: $color-neutral-500,
+    600: $color-neutral-600,
+    700: $color-neutral-700,
+    800: $color-neutral-800,
+    900: $color-neutral-900
+  ),
   "biology": (
     50: $color-biology-50,
     100: $color-biology-100,
@@ -207,19 +220,6 @@ $isaac-color-palettes: (
     700: $color-physics-700,
     800: $color-physics-800,
     900: $color-physics-900
-  ),
-  "neutral": (
-    "white": $color-neutral-white,
-    50: $color-neutral-50,
-    100: $color-neutral-100,
-    200: $color-neutral-200,
-    300: $color-neutral-300,
-    400: $color-neutral-400,
-    500: $color-neutral-500,
-    600: $color-neutral-600,
-    700: $color-neutral-700,
-    800: $color-neutral-800,
-    900: $color-neutral-900
   )
 );
 
@@ -280,10 +280,11 @@ $spacers: map-merge($spacers, ( // Special Bootstrap variable that is used to ge
 
 // Theme colours
 $theme-colour-overrides: (
-    physics: $phy_purple,
-    maths: $phy_maths,
-    chemistry: $phy_chemistry,
-    biology: $phy_biology,
+    physics: $color-physics-500,
+    maths: $color-maths-500,
+    chemistry: $color-chemistry-500,
+    biology: $color-biology-500,
+    neutral: $color-neutral-500,
 
     success: #208838,
     in-progress: #fe8e15,

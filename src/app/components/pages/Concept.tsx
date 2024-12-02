@@ -53,7 +53,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
         return <GameboardContext.Provider value={navigation.currentGameboard}>
-            <Container className={classNames(doc.subjectId)}>
+            <Container data-bs-theme={doc.subjectId}>
                 <TitleAndBreadcrumb
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     currentPageTitle={doc.title as string}

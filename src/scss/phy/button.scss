@@ -83,7 +83,7 @@
 
   &:focus {
     outline: none !important;
-    box-shadow: 0 0 0 3px var(--color-neutral-white), 0 0 0 4.5px var(--buttons-focus-ring) !important;
+    box-shadow: 0 0 0 3px var(--buttons-light), 0 0 0 4.5px var(--buttons-focus-ring) !important;
   }
 }
 

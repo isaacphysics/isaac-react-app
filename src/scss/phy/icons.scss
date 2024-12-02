@@ -58,22 +58,6 @@
 }
 
 svg {
-  &.physics-fill {
-    fill: $phy_purple;
-  }
-
-  &.maths-fill {
-    fill: $phy_maths;
-  }
-
-  &.chemistry-fill {
-    fill: $phy_chemistry;
-  }
-
-  &.biology-fill {
-    fill: $phy_biology;
-  }
-
   &.almost-fill {
     fill: $phy_extra_force_yellow;
   }

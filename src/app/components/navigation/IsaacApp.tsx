@@ -151,7 +151,7 @@ export const IsaacApp = () => {
         <UnsupportedBrowserBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
-        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body">
+        <main ref={mainContentRef} id="main" data-testid="main" role="main" className="flex-fill content-body" data-bs-theme="neutral">
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <Suspense fallback={<Loading/>}>
                     <Switch>
