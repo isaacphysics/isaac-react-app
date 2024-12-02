@@ -83,6 +83,157 @@ $border-color: black;
 
 $enable-negative-margins: true;
 
+// TODO: remove above
+
+$color-palettes: (
+  "biology", "chemistry", "maths", "physics", "neutral"
+);
+
+/* Fluent primitives */
+$color-brand-400: #4e9934;
+$color-brand-500: #3a8621;
+$color-brand-700: #1a6600;
+$color-brand-800: #143a04;
+$color-brand-900: #100c08;
+
+$color-biology-50: #f3f8f4;
+$color-biology-100: #d7e7da;
+$color-biology-200: #bbd6c0;
+$color-biology-300: #83b48d;
+$color-biology-400: #4a9259;
+$color-biology-500: #127025;
+$color-biology-600: #09691d;
+$color-biology-700: #006214;
+$color-biology-800: #005411;
+$color-biology-900: #00450e;
+
+$color-chemistry-50: #fbf4f7;
+$color-chemistry-100: #f3dae6;
+$color-chemistry-200: #eac0d5;
+$color-chemistry-300: #d98cb2;
+$color-chemistry-400: #c85790;
+$color-chemistry-500: #b7236d;
+$color-chemistry-600: #ae1260;
+$color-chemistry-700: #a40153;
+$color-chemistry-800: #880848;
+$color-chemistry-900: #6b0f3d;
+
+$color-maths-50: #f2f8fa;
+$color-maths-100: #d4e8ef;
+$color-maths-200: #b6d7e3;
+$color-maths-300: #79b7cb;
+$color-maths-400: #3d96b4;
+$color-maths-500: #00759c;
+$color-maths-600: #00688a;
+$color-maths-700: #005a78;
+$color-maths-800: #004e68;
+$color-maths-900: #004157;
+
+$color-physics-50: #faf6fc;
+$color-physics-100: #eee1f5;
+$color-physics-200: #e1cced;
+$color-physics-300: #c7a1dd;
+$color-physics-400: #ae77ce;
+$color-physics-500: #944cbe;
+$color-physics-600: #873fb1;
+$color-physics-700: #7932a3;
+$color-physics-800: #69298f;
+$color-physics-900: #581f7a;
+
+$color-neutral-white: #ffffff;
+$color-neutral-50: #faf9f5;
+$color-neutral-100: #f2f1ed;
+$color-neutral-200: #e6e5e1;
+$color-neutral-300: #bebebe;
+$color-neutral-400: #908f94;
+$color-neutral-500: #6f6f78;
+$color-neutral-600: #62626d;
+$color-neutral-700: #545461;
+$color-neutral-800: #3c3e47;
+$color-neutral-900: #23272c;
+
+$color-misc-navy: #001f47;
+$color-misc-orange-dark: #bd5a00;
+$color-misc-orange-light: #fea102;
+$color-misc-red: #b40c0c;
+
+$isaac-color-palettes: (
+  // brand is excluded as there are no pages with the "brand" colour scheme;
+  // it is used exclusively for styling individual components
+  "biology": (
+    50: $color-biology-50,
+    100: $color-biology-100,
+    200: $color-biology-200,
+    300: $color-biology-300,
+    400: $color-biology-400,
+    500: $color-biology-500,
+    600: $color-biology-600,
+    700: $color-biology-700,
+    800: $color-biology-800,
+    900: $color-biology-900
+  ),
+  "chemistry": (
+    50: $color-chemistry-50,
+    100: $color-chemistry-100,
+    200: $color-chemistry-200,
+    300: $color-chemistry-300,
+    400: $color-chemistry-400,
+    500: $color-chemistry-500,
+    600: $color-chemistry-600,
+    700: $color-chemistry-700,
+    800: $color-chemistry-800,
+    900: $color-chemistry-900
+  ),
+  "maths": (
+    50: $color-maths-50,
+    100: $color-maths-100,
+    200: $color-maths-200,
+    300: $color-maths-300,
+    400: $color-maths-400,
+    500: $color-maths-500,
+    600: $color-maths-600,
+    700: $color-maths-700,
+    800: $color-maths-800,
+    900: $color-maths-900
+  ),
+  "physics": (
+    50: $color-physics-50,
+    100: $color-physics-100,
+    200: $color-physics-200,
+    300: $color-physics-300,
+    400: $color-physics-400,
+    500: $color-physics-500,
+    600: $color-physics-600,
+    700: $color-physics-700,
+    800: $color-physics-800,
+    900: $color-physics-900
+  ),
+  "neutral": (
+    "white": $color-neutral-white,
+    50: $color-neutral-50,
+    100: $color-neutral-100,
+    200: $color-neutral-200,
+    300: $color-neutral-300,
+    400: $color-neutral-400,
+    500: $color-neutral-500,
+    600: $color-neutral-600,
+    700: $color-neutral-700,
+    800: $color-neutral-800,
+    900: $color-neutral-900
+  )
+);
+
+/* fonts */
+// TODO: the mapping from Figma to CSS font weights is not precise, cross-check these against designs when more pages are ready
+$typography-font-weights-headings-bold: 700;
+$typography-font-weights-headings-light: 300;
+$typography-font-weights-headings-regular: 400;
+$typography-font-weights-headings-semibold: 600;
+$typography-font-weights-text-bold: 700;
+$typography-font-weights-text-light: 300;
+$typography-font-weights-text-regular: 400;
+$typography-font-weights-text-semibold: 600;
+
 // ISAAC
 // Node module imports
 @import "~bootstrap/scss/functions";
