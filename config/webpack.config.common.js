@@ -26,7 +26,8 @@ module.exports = (env) => {
 
     return {
         stats: {
-            errorDetails: true
+            errorDetails: true,
+            loggingDebug: ['sass-loader'],
         },
 
         mode: isProd ? "production" : "development",
