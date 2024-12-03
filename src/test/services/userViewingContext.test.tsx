@@ -1,4 +1,4 @@
-import {determineUserContext, EXAM_BOARD, GameboardAndPathInfo, isPhy, STAGE} from "../../app/services";
+import {CONTEXT_SOURCE, determineUserContext, EXAM_BOARD, GameboardAndPathInfo, isPhy, STAGE} from "../../app/services";
 import {TransientUserContextState} from "../../app/state";
 import {UserContext, Stage, ExamBoard} from "../../IsaacApiTypes";
 
@@ -15,10 +15,10 @@ describe("User context derivation", () => {
 
             // Assert
             expect(result.stage).toEqual(STAGE.GCSE);
-            expect(result.explanation.stage).toEqual("your context picker settings");
+            expect(result.explanation.stage).toEqual(CONTEXT_SOURCE.TRANSIENT);
 
             expect(result.examBoard).toEqual(EXAM_BOARD.ALL);
-            expect(result.explanation.examBoard).toEqual("the site's settings");
+            expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.NOT_IMPLEMENTED);
         });
     }
     if (isPhy){
@@ -28,10 +28,10 @@ describe("User context derivation", () => {
 
             // Assert
             expect(result.stage).toEqual(STAGE.ALL);
-            expect(result.explanation.stage).toEqual("the default settings");
+            expect(result.explanation.stage).toEqual(CONTEXT_SOURCE.DEFAULT);
 
             expect(result.examBoard).toEqual(EXAM_BOARD.ALL);
-            expect(result.explanation.examBoard).toEqual("the site's settings");
+            expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.NOT_IMPLEMENTED);
 
             // on Physics, hasDefaultPreferences is never true
             expect(result.hasDefaultPreferences).toEqual(false);
@@ -43,10 +43,10 @@ describe("User context derivation", () => {
 
             // Assert
             expect(result.stage).toEqual(STAGE.ALL);
-            expect(result.explanation.stage).toEqual("the default settings");
+            expect(result.explanation.stage).toEqual(CONTEXT_SOURCE.DEFAULT);
 
             expect(result.examBoard).toEqual(EXAM_BOARD.ADA);
-            expect(result.explanation.examBoard).toEqual("the default settings");
+            expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.DEFAULT);
 
             expect(result.hasDefaultPreferences).toEqual(true);
         });
@@ -60,12 +60,12 @@ describe("User context derivation", () => {
             // Act
             const result = determineUserContext({}, registered, undefined, undefined);
 
-            // Assert
+            // Asserqt
             expect(result.stage).toEqual(STAGE.A_LEVEL);
-            expect(result.explanation.stage).toEqual("your account settings");
+            expect(result.explanation.stage).toEqual(CONTEXT_SOURCE.REGISTERED);
 
             expect(result.examBoard).toEqual(EXAM_BOARD.ALL);
-            expect(result.explanation.examBoard).toEqual("the site's settings");
+            expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.NOT_IMPLEMENTED);
         });
     } else {
         it("prefers registered context over defaults on Ada", () => {
@@ -77,10 +77,10 @@ describe("User context derivation", () => {
 
             // Assert
             expect(result.stage).toEqual(STAGE.A_LEVEL);
-            expect(result.explanation.stage).toEqual("your account settings");
+            expect(result.explanation.stage).toEqual(CONTEXT_SOURCE.REGISTERED);
 
             expect(result.examBoard).toEqual(EXAM_BOARD.CIE);
-            expect(result.explanation.examBoard).toEqual("your account settings");
+            expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.REGISTERED);
         });
     }
 
@@ -95,10 +95,10 @@ describe("User context derivation", () => {
 
             // Assert
             expect(result.stage).toEqual(STAGE.GCSE);
-            expect(result.explanation.stage).toEqual("your context picker settings");
+            expect(result.explanation.stage).toEqual(CONTEXT_SOURCE.TRANSIENT);
 
             expect(result.examBoard).toEqual(EXAM_BOARD.ALL);
-            expect(result.explanation.examBoard).toEqual("the site's settings");
+            expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.NOT_IMPLEMENTED);
 
             expect(result.hasDefaultPreferences).toEqual(false);
         });
@@ -113,10 +113,10 @@ describe("User context derivation", () => {
 
             // Assert
             expect(result.stage).toEqual(STAGE.GCSE);
-            expect(result.explanation.stage).toEqual("your context picker settings");
+            expect(result.explanation.stage).toEqual(CONTEXT_SOURCE.TRANSIENT);
 
             expect(result.examBoard).toEqual(EXAM_BOARD.AQA);
-            expect(result.explanation.examBoard).toEqual("your context picker settings");
+            expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.TRANSIENT);
 
             expect(result.hasDefaultPreferences).toEqual(false);
         });
@@ -153,10 +153,10 @@ describe("User context derivation", () => {
 
             // Assert
             expect(result.stage).toEqual(STAGE.FURTHER_A);
-            expect(result.explanation.stage).toEqual("the gameboard settings");
+            expect(result.explanation.stage).toEqual(CONTEXT_SOURCE.GAMEBOARD);
 
             expect(result.examBoard).toEqual(EXAM_BOARD.ALL);
-            expect(result.explanation.examBoard).toEqual("the site's settings");
+            expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.NOT_IMPLEMENTED);
         });
     } else {
         it("prefers gameboard-derived context over transient context on Ada", () => {
@@ -189,10 +189,10 @@ describe("User context derivation", () => {
 
             // Assert
             expect(result.stage).toEqual(STAGE.SCOTLAND_HIGHER);
-            expect(result.explanation.stage).toEqual("the quiz settings");
+            expect(result.explanation.stage).toEqual(CONTEXT_SOURCE.GAMEBOARD);
 
             expect(result.examBoard).toEqual(EXAM_BOARD.SQA);
-            expect(result.explanation.examBoard).toEqual("the quiz settings");
+            expect(result.explanation.examBoard).toEqual(CONTEXT_SOURCE.GAMEBOARD);
 
             expect(result.hasDefaultPreferences).toEqual(false);
         });
