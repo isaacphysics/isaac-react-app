@@ -67,7 +67,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                             />
                         </td>
                     </tr>
-                    {isPhy && <tr>
+                    {<tr>
                         <td className="form-required">Events</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.events}

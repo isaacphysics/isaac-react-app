@@ -15,7 +15,7 @@ import mapValues from "lodash/mapValues";
 import range from "lodash/range";
 import sortBy from "lodash/sortBy";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import React, {ChangeEvent, useCallback, useContext, useEffect, useMemo, useRef, useState, Fragment} from "react";
+import React, {ChangeEvent, Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {
     Alert,
     Button,
@@ -28,11 +28,15 @@ import {
     Container,
     Input,
     Label,
-    Row, Table
+    Row,
+    Table
 } from "reactstrap";
 import {
     above,
-    BoardLimit, determineGameboardStagesAndDifficulties, determineGameboardSubjects, difficultyShortLabelMap,
+    BoardLimit,
+    determineGameboardStagesAndDifficulties,
+    determineGameboardSubjects,
+    difficultyShortLabelMap,
     formatBoardOwner,
     getAssignmentStartDate,
     isDefined,
@@ -40,20 +44,29 @@ import {
     Item,
     itemise,
     MONTH_NAMES,
-    nthHourOf, PATHS,
+    nthHourOf,
+    PATHS,
     selectOnChange,
-    siteSpecific, stageLabelMap, TAG_ID, TAG_LEVEL, tags,
+    siteSpecific,
+    stageLabelMap,
+    TAG_ID,
+    TAG_LEVEL,
+    tags,
     TODAY,
     useDeviceSize
 } from "../../services";
-import {AppGroup, AssignmentScheduleContext, AssignmentBoardOrder, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
+import {
+    AppGroup,
+    AssignmentBoardOrder,
+    AssignmentScheduleContext,
+    ValidAssignmentWithListingDate
+} from "../../../IsaacAppTypes";
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import classNames from "classnames";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {GameboardViewerInner} from "./Gameboard";
 import {Link, useLocation} from "react-router-dom";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {PhyAddGameboardButtons} from "./SetAssignments";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {formatDate} from "../elements/DateString";
 
@@ -583,7 +596,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                     ? assignmentTimestamp : oldest;
             }, Date.now()) ?? Date.now()
     ), [assignmentsSetByMe, groupFilter, viewBy]);
-    
+
     const extendBackSixMonths = (until?: Date) => setEarliestShowDate(esd => {
         const d = new Date(esd.valueOf());
         d.setMonth(d.getMonth() - 6);

@@ -100,7 +100,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-secondary": isPhy})}>
                         {generateQuestionTitle(question)}
                     </Markup>
-                    {isPhy && message && <span className={"gameboard-item-message" + (isPhy ? "-phy " : " ") + messageClasses}>{message}</span>}
+                    {isPhy && message && <span className={classNames("gameboard-item-message-phy", messageClasses)}>{message}</span>}
                     {isPhy && question.subtitle && <div className="small text-muted d-none d-sm-block">
                         {question.subtitle}
                     </div>}

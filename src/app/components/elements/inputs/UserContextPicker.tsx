@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {Col, FormGroup, Input, Label, Row, UncontrolledTooltip} from "reactstrap";
 import {
     CONTEXT_SOURCE,
@@ -16,12 +16,7 @@ import {
     useQueryParams,
     useUserViewingContext
 } from "../../../services";
-import {
-    selectors,
-    transientUserContextSlice,
-    useAppDispatch,
-    useAppSelector,
-} from "../../../state";
+import {selectors, transientUserContextSlice, useAppDispatch, useAppSelector,} from "../../../state";
 
 const contextExplanationMap: {[key in CONTEXT_SOURCE]: string} = {
     [CONTEXT_SOURCE.TRANSIENT]: "these context picker settings",
@@ -65,7 +60,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
 
     if (isAda && !isLoggedIn(user) || isStaff(user)) {
         return <Col className={`d-flex flex-column w-100 px-0 mt-2 context-picker-container no-print ${className}`}>
-            <Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}> 
+            <Row sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)} className={`d-flex m-0 p-0 justify-content-md-end`}>
                 {/* Stage Selector */}
                 <FormGroup className={`form-group w-100 d-flex justify-content-end m-0`}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}

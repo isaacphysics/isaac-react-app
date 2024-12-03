@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState, Suspense, lazy} from 'react';
+import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import classNames from "classnames";
@@ -44,22 +44,22 @@ import {UserPassword} from "../elements/panels/UserPassword";
 import {UserEmailPreferencesPanel} from "../elements/panels/UserEmailPreferencesPanel";
 import {
     ACCOUNT_TAB,
+    ACCOUNT_TABS,
+    ACCOUNT_TABS_ALIASES,
     allRequiredInformationIsPresent,
     history,
     ifKeyIsEnter,
     isAda,
     isDefined,
     isDobOldEnoughForSite,
-    isPhy,
+    isFirstLoginInPersistence,
     isStaff,
-    SITE_TITLE, siteSpecific,
+    isTeacherOrAbove,
+    SITE_TITLE,
+    siteSpecific,
     validateEmail,
     validateEmailPreferences,
-    validatePassword,
-    isTeacherOrAbove,
-    isFirstLoginInPersistence,
-    ACCOUNT_TABS,
-    ACCOUNT_TABS_ALIASES
+    validatePassword
 } from "../../services";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
@@ -69,10 +69,10 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {UserBetaFeatures} from "../elements/panels/UserBetaFeatures";
 import hash, {NormalOption} from "object-hash";
 import {skipToken} from "@reduxjs/toolkit/query";
-import { Loading } from "../handlers/IsaacSpinner";
+import {Loading} from "../handlers/IsaacSpinner";
 import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesInput";
-import { UserProfile } from '../elements/panels/UserProfile';
-import { UserContent } from '../elements/panels/UserContent';
+import {UserProfile} from '../elements/panels/UserProfile';
+import {UserContent} from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));

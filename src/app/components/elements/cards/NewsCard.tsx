@@ -1,11 +1,10 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Button, Card, CardBody, CardFooter, CardImg, CardProps, CardText, CardTitle, Container} from "reactstrap";
+import {Card, CardBody, CardImg, CardProps, CardText} from "reactstrap";
 import {IsaacPodDTO} from "../../../../IsaacApiTypes";
-import {apiHelper, isAppLink, siteSpecific} from "../../../services";
+import {apiHelper, siteSpecific} from "../../../services";
 import classNames from "classnames";
-import { ExternalLink } from "../ExternalLink";
-import { AdaCard } from "./AdaCard";
+import {AdaCard} from "./AdaCard";
 
 interface NewsCardProps extends CardProps {
     newsItem: IsaacPodDTO;

@@ -6,9 +6,9 @@ import {
     showErrorToast,
     useAppDispatch,
     useChangeMyMembershipStatusMutation,
-    useDeleteGroupMemberMutation,
     useGetActiveAuthorisationsQuery,
-    useGetGroupMembershipsQuery, useGetOtherUserAuthorisationsQuery,
+    useGetGroupMembershipsQuery,
+    useGetOtherUserAuthorisationsQuery,
     useLazyGetTokenOwnerQuery
 } from "../../../state";
 import {
@@ -38,10 +38,10 @@ import {
     revocationConfirmationModal,
     tokenVerificationModal
 } from "../modals/TeacherConnectionModalCreators";
-import { FixedSizeList } from "react-window";
-import { Spacer } from "../Spacer";
-import { MyAccountTab } from "./MyAccountTab";
-import { Input, UncontrolledTooltip, Form, InputGroup, Button, Col } from "reactstrap";
+import {FixedSizeList} from "react-window";
+import {Spacer} from "../Spacer";
+import {MyAccountTab} from "./MyAccountTab";
+import {Button, Col, Form, Input, InputGroup, UncontrolledTooltip} from "reactstrap";
 
 const CONNECTIONS_ROW_HEIGHT = 40;
 const CONNECTIONS_MAX_VISIBLE_ROWS = 10;
@@ -67,12 +67,12 @@ const ConnectionsHeader = ({enableSearch, setEnableSearch, setSearchText, title,
     const deviceSize = useDeviceSize();
 
     return <div className="connect-list-header">
-        {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ? 
-            <>{enableSearch ? 
+        {["xl", "lg", "xs"].indexOf(deviceSize) !== -1 ?
+            <>{enableSearch ?
                 <>
                     <Input type="text" autoFocus placeholder={placeholder} className="connections-search" onChange={e => setSearchText(e.target.value)}/>
                     <Spacer />
-                </> : 
+                </> :
                 <h4 className={classNames("d-flex", {"ps-0" : isAda})}>
                     <span className={siteSpecific("icon-person-active", "icon-group-white")} />
                     {title}
@@ -166,7 +166,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         }
     }
 
-    return <MyAccountTab 
+    return <MyAccountTab
         leftColumn={<>
             <h3>Connect to your teacher</h3>
             <PageFragment fragmentId={`teacher_connections_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
@@ -186,8 +186,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         type="text" placeholder="Enter your code in here" value={authToken || undefined} className="py-4"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                         onKeyDown={(e) => {if (e.key === 'Enter') {
-                            processToken(e); 
-                            e.preventDefault(); 
+                            processToken(e);
+                            e.preventDefault();
                         }}}
                     />
                     <Button onClick={processToken} className={classNames("py-2", {"px-0 border-dark": isPhy})} color="secondary" outline disabled={editingOtherUser}>
@@ -197,8 +197,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </Form>
 
             <div className="connect-list" data-testid="teacher-connections">
-                <ConnectionsHeader 
-                    title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch} 
+                <ConnectionsHeader
+                    title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch}
                     setSearchText={setTeacherSearchText} placeholder="Search teachers"/>
                 <div className="connect-list-inner">
                     <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
@@ -254,8 +254,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     <Link to="/groups">{siteSpecific("group management page", "Manage groups")}</Link>{siteSpecific(".", " page.")}
                 </p>
                 <div className="connect-list">
-                    <ConnectionsHeader 
-                        title="Student connections" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch} 
+                    <ConnectionsHeader
+                        title="Student connections" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch}
                         setSearchText={setStudentSearchText} placeholder="Search students"/>
                     <div className="connect-list-inner">
                         <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
@@ -319,8 +319,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             </ul>
             <div className="my-groups-table-section overflow-auto">
                 <div className="connect-list">
-                    <ConnectionsHeader 
-                        title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch} 
+                    <ConnectionsHeader
+                        title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch}
                         setSearchText={setGroupSearchText} placeholder="Search groups"/>
                     <div className="connect-list-inner">
                         <ul className={classNames("teachers-connected list-unstyled m-0")}>
@@ -354,7 +354,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                             <Col className="d-flex flex-col justify-content-end align-items-center flex-grow-0 pe-1">
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
                                                     <Button color="link" disabled={editingOtherUser} onClick={() =>
-                                                        membership.group.selfRemoval 
+                                                        membership.group.selfRemoval
                                                             ? dispatch(openActiveModal(confirmSelfRemovalModal((user as LoggedInUser).id as number, membership.group.id as number)))
                                                             : changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.INACTIVE})
                                                     }>

@@ -13,42 +13,51 @@ import {
     FormFeedback,
     Input,
     InputGroup,
-    Label,
     Nav,
     NavItem,
     NavLink,
-    Row, Table,
+    Row,
+    Table,
     UncontrolledButtonDropdown,
     UncontrolledTooltip
 } from "reactstrap";
 import {Link} from "react-router-dom";
 import {
+    mutationSucceeded,
     resetMemberPassword,
-    showGroupManagersModal,
-    showGroupInvitationModal,
-    showGroupEmailModal,
     showAdditionalManagerSelfRemovalModal,
     showErrorToast,
+    showGroupEmailModal,
+    showGroupInvitationModal,
+    showGroupManagersModal,
     useAppDispatch,
-    mutationSucceeded,
-    useGetGroupsQuery,
-    useDeleteGroupMutation,
     useCreateGroupMutation,
     useDeleteGroupMemberMutation,
-    useUpdateGroupMutation,
-    useLazyGetGroupMembersQuery
+    useDeleteGroupMutation,
+    useGetGroupsQuery,
+    useLazyGetGroupMembersQuery,
+    useUpdateGroupMutation
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import sortBy from "lodash/sortBy";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isAda, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific, useDeviceSize} from "../../services";
+import {
+    ifKeyIsEnter,
+    isAda,
+    isDefined,
+    isPhy,
+    isStaff,
+    isTeacherOrAbove,
+    siteSpecific,
+    useDeviceSize
+} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
+import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -142,12 +151,12 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                         Manage
                     </DropdownToggle>
                     <DropdownMenu>
-                        {isTeacherOrAbove(user) && 
+                        {isTeacherOrAbove(user) &&
                             <DropdownItem onClick={resetPassword} disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
                                 {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
                             </DropdownItem>
                         }
-                        {userHasAdditionalGroupPrivileges && 
+                        {userHasAdditionalGroupPrivileges &&
                             <DropdownItem onClick={confirmDeleteMember} aria-label="Remove member">Remove</DropdownItem>
                         }
                     </DropdownMenu>
@@ -252,7 +261,7 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
     const existingGroupWithConflictingName = allGroups?.find(g => g.groupName == newGroupName && (isDefined(group) ? group.id != g.id : true));
     const isGroupNameInvalid = isDefined(newGroupName) && isDefined(existingGroupWithConflictingName);
     const isGroupNameValid = isDefined(newGroupName) && newGroupName.length > 0 && !allGroups?.some(g => g.groupName == newGroupName) && (isDefined(group) ? newGroupName !== group.groupName : true);
-    
+
     return <Card>
         <CardBody>
             <h4 className={"mb-2"}>{group ? "Manage group" : "Create group"}</h4>

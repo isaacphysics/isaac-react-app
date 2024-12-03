@@ -1,19 +1,8 @@
 import React, {useState} from "react";
-import {
-    Button,
-    Card,
-    CardBody,
-    Col,
-    Container,
-    Form,
-    FormFeedback,
-    FormGroup,
-    Row,
-} from "reactstrap";
+import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Row,} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     EMAIL_PREFERENCE_DEFAULTS,
-    EXAM_BOARD,
     FIRST_LOGIN_STATE,
     history,
     isAda,
@@ -23,7 +12,6 @@ import {
     persistence,
     SITE_TITLE,
     siteSpecific,
-    STAGE,
     trackEvent,
     validateCountryCode,
     validateEmail,
@@ -38,14 +26,14 @@ import {SchoolInput} from "../elements/inputs/SchoolInput";
 import {CountryInput} from "../elements/inputs/CountryInput";
 import {SetPasswordInput} from "../elements/inputs/SetPasswordInput";
 import {UserRole} from "../../../IsaacApiTypes";
-import {GivenNameInput, FamilyNameInput} from "../elements/inputs/NameInput";
+import {FamilyNameInput, GivenNameInput} from "../elements/inputs/NameInput";
 import {EmailInput} from "../elements/inputs/EmailInput";
 import {GenderInput} from "../elements/inputs/GenderInput";
 import {extractErrorMessage} from "../../services/errors";
 import {ExigentAlert} from "../elements/ExigentAlert";
 import classNames from "classnames";
-import { StyledCheckbox } from "../elements/inputs/StyledCheckbox";
-import { DobInput } from "../elements/inputs/DobInput";
+import {StyledCheckbox} from "../elements/inputs/StyledCheckbox";
+import {DobInput} from "../elements/inputs/DobInput";
 
 
 interface RegistrationSetDetailsProps {
@@ -89,7 +77,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
-        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && 
+        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid &&
             (!isAda || countryCodeIsValid) && (!isPhy || dobValidOrUnset) &&
             ((role == 'STUDENT') || schoolIsValid) && tosAccepted ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);

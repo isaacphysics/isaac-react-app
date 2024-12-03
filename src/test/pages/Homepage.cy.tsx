@@ -1,7 +1,5 @@
 import React from "react";
-import {MyAssignments} from "../../app/components/pages/MyAssignments";
-import {mockUser} from "../../mocks/data";
-import {isAda, PATHS} from "../../app/services";
+import {isAda} from "../../app/services";
 import {HomepageCS} from "../../app/components/site/cs/HomepageCS";
 import {HomepagePhy} from "../../app/components/site/phy/HomepagePhy";
 
