@@ -44,7 +44,7 @@ export interface UseUserContextReturnType {
     setStage: (stage: STAGE) => void;
     examBoard: EXAM_BOARD;
     setExamBoard: (stage: EXAM_BOARD) => void;
-    explanation: {stage?: string, examBoard?: string};
+    explanation: {stage: CONTEXT_SOURCE, examBoard: CONTEXT_SOURCE};
     hasDefaultPreferences: boolean;
 }
 
@@ -56,11 +56,13 @@ export interface GameboardAndPathInfo {
     questionIdFromPath?: string;
 }
 
-const transientContextExplanation = "your context picker settings";
-const registeredContextExplanation = "your account settings";
-const gameboardContextExplanation = `the ${siteSpecific("gameboard", "quiz")} settings`;
-const defaultExplanation = "the default settings";
-const notImplementedExplanation = "the site's settings";
+export enum CONTEXT_SOURCE {
+    TRANSIENT = "TRANSIENT",
+    REGISTERED = "REGISTERED",
+    GAMEBOARD = "GAMEBOARD",
+    DEFAULT = "DEFAULT",
+    NOT_IMPLEMENTED = "NOT_IMPLEMENTED"
+}
 
 export function useUserViewingContext(): UseUserContextReturnType {
     const dispatch = useAppDispatch();
@@ -86,35 +88,35 @@ export function useUserViewingContext(): UseUserContextReturnType {
 
 export const determineUserContext = (transientUserContext: TransientUserContextState, registeredContext: UserContext | undefined,
     gameboardAndPathInfo: GameboardAndPathInfo | undefined, displaySettings: DisplaySettings | undefined) => {
-    const explanation: UseUserContextReturnType["explanation"] = {};
+    const explanation: UseUserContextReturnType["explanation"] = { stage: CONTEXT_SOURCE.DEFAULT, examBoard: CONTEXT_SOURCE.DEFAULT };
 
     // Stage
     let stage: STAGE;
     if (transientUserContext?.stage) {
         stage = transientUserContext.stage;
-        explanation.stage = transientContextExplanation;
+        explanation.stage = CONTEXT_SOURCE.TRANSIENT;
     } else if (registeredContext?.stage) {
         stage = registeredContext.stage as STAGE;
-        explanation.stage = registeredContextExplanation;
+        explanation.stage = CONTEXT_SOURCE.REGISTERED;
     } else {
         stage = STAGE.ALL;
-        explanation.stage = defaultExplanation;
+        explanation.stage = CONTEXT_SOURCE.DEFAULT;
     }
 
     // Exam Board
     let examBoard: EXAM_BOARD;
     if (isPhy) {
         examBoard = EXAM_BOARD.ALL;
-        explanation.examBoard = notImplementedExplanation;
+        explanation.examBoard = CONTEXT_SOURCE.NOT_IMPLEMENTED;
     } else if (transientUserContext?.examBoard) {
         examBoard = transientUserContext?.examBoard;
-        explanation.examBoard = transientContextExplanation;
+        explanation.examBoard = CONTEXT_SOURCE.TRANSIENT;
     } else if (registeredContext?.examBoard) {
         examBoard = registeredContext.examBoard as EXAM_BOARD;
-        explanation.examBoard = registeredContextExplanation;
+        explanation.examBoard = CONTEXT_SOURCE.REGISTERED;
     } else {
         examBoard = EXAM_BOARD_DEFAULT_OPTION;
-        explanation.examBoard = defaultExplanation;
+        explanation.examBoard = CONTEXT_SOURCE.DEFAULT;
     }
 
     // Whether stage and examboard are the default
@@ -129,7 +131,7 @@ export const determineUserContext = (transientUserContext: TransientUserContextS
             // If user's stage selection is not one specified by the gameboard change it
             if (gameboardDeterminedViews.length > 0) {
                 if (!gameboardDeterminedViews.map(v => v.stage).includes(stage) && !STAGE_NULL_OPTIONS.includes(stage)) {
-                    explanation.stage = gameboardContextExplanation;
+                    explanation.stage = CONTEXT_SOURCE.GAMEBOARD;
                     if (gameboardDeterminedViews.length === 1) {
                         stage = gameboardDeterminedViews[0].stage as STAGE;
                     } else {
@@ -137,7 +139,7 @@ export const determineUserContext = (transientUserContext: TransientUserContextS
                     }
                 }
                 if (!gameboardDeterminedViews.map(v => v.examBoard).includes(examBoard) && !EXAM_BOARD_NULL_OPTIONS.includes(examBoard)) {
-                    explanation.examBoard = gameboardContextExplanation;
+                    explanation.examBoard = CONTEXT_SOURCE.GAMEBOARD;
                     if (gameboardDeterminedViews.length === 1) {
                         examBoard = gameboardDeterminedViews[0].examBoard as EXAM_BOARD;
                     } else {
