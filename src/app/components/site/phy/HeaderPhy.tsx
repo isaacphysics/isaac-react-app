@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {selectors, useAppSelector} from "../../../state";
-import {Col, Container, Row, UncontrolledTooltip} from "reactstrap";
+import {Button, Col, Container, Row, UncontrolledTooltip} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarPhy} from "./NavigationBarPhy";
 import {HeaderStreakGauge} from "../../elements/views/StreakGauge";
@@ -16,17 +16,17 @@ export const HeaderPhy = () => {
         <Container className="container-fluid px-0">
             <Row className="align-items-center">
                 <Col className="d-grid">
-                    <div className="header-bar mx-3 mx-md-0 d-md-flex">
+                    <div className="d-flex justify-content-between mx-3 mx-md-0">
                         <div className="header-logo">
                             <Link to="/">
-                                <img src="/assets/phy/logo.svg" alt="Isaac Physics" className="d-none d-md-block d-print-block"/>
-                                <img src="/assets/phy/logo-small.svg" alt="Isaac Physics" className="d-sm-block d-md-none d-print-none"/>
+                                <img src="/assets/phy/logo.svg" alt="Isaac Physics" className="d-none d-md-block d-print-block p-3"/>
+                                <img src="/assets/phy/logo-small.svg" alt="Isaac Physics" className="d-sm-block d-md-none d-print-none p-3"/>
                             </Link>
                         </div>
 
                         <a href={`#${mainContentId}`} className="skip-main">Skip to main content</a>
 
-                        <div className="m-md-0 d-none d-md-block d-flex align-self-center d-print-none ps-4">
+                        {/* <div className="m-md-0 d-none d-md-block d-flex align-self-center d-print-none ps-4">
                             {user?.loggedIn &&
                                 <React.Fragment>
                                     <div id="header-progress" className="d-none d-md-block">
@@ -38,9 +38,9 @@ export const HeaderPhy = () => {
                                         <br/><br/>Answer at least <b>ten question parts</b> correctly per week to fill up your weekly progress bar and increase your streak!
                                     </UncontrolledTooltip>
                                 </React.Fragment>}
-                        </div>
+                        </div> */}
 
-                        <div className="header-links ms-auto pe-3 px-md-3 d-flex align-items-center d-print-none pt-lg-3">
+                        {/* <div className="header-links ms-auto pe-3 px-md-3 d-flex align-items-center d-print-none pt-lg-3">
                             {user &&
                                 (!user.loggedIn ?
                                     <React.Fragment>
@@ -73,11 +73,31 @@ export const HeaderPhy = () => {
                                     </React.Fragment>
                                 )
                             }
+                        </div> */}
+
+                        <div className="d-flex justify-content-end align-items-center flex-wrap p-3">
+                            <Link className="px-3" to="/about">About Isaac</Link>
+                            <Link className="px-3" to="/questions">Question finder</Link>
+                            <Link className="px-3" to="/concepts">Concepts</Link>
+                            <Link className="px-3" to="/news">News</Link>
+                            <Link className="px-3" to="/events">Events</Link>
+                            <Link className="px-3" to="/books">Books</Link>
+                            {/* TODO: replace with dropdown */}
+                            <Link className="ps-3 pe-4" to="/">Help</Link> 
+                            {user && user.loggedIn 
+                                ? <>
+                                    <Link className="ps-3 pe-3 h-70 border-start align-content-center" to="/admin">
+                                        <img src="/assets/phy/icons/settings-cog.svg" alt="Admin" className="no-print"/>
+                                    </Link>
+                                    <Link to="/logout">Log out</Link>
+                                </>
+                                : <Button color="solid">Sign up / log in</Button>
+                            }
                         </div>
 
-                        <div className="header-search m-md-0 ms-md-auto align-items-center d-print-none pt-3">
+                        {/* <div className="header-search m-md-0 ms-md-auto align-items-center d-print-none pt-3">
                             <MainSearch />
-                        </div>
+                        </div> */}
                     </div>
                     <NavigationBarPhy/>
                 </Col>

@@ -22,36 +22,36 @@ header {
   background-repeat: no-repeat;
   position: relative;
 
+  font-size: 14px;
+
+  a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
   > .container {
     @include respond-below(sm) {
       max-width: 100% !important;
     }
   }
 
-  .header-bar {
-    position: relative;
-    @include clearfix;
+  // .header-links {
+  //   justify-content: flex-end !important;
 
-    @include respond-above(sm) {
-      padding-right: auto;
-    }
-  }
-
-  .header-links {
-    justify-content: flex-end !important;
-
-    @include respond-below(xs) {
-      padding-right: 20% !important;
-    }
-    @include respond-above(xs){
-      padding-right: 28% !important;
-    }
-    @include respond-above(sm) {
-      margin-top: 0.2rem;
-      padding-right: 0 !important;
-      width: 100%;
-    }
-  }
+  //   @include respond-below(xs) {
+  //     padding-right: 20% !important;
+  //   }
+  //   @include respond-above(xs){
+  //     padding-right: 28% !important;
+  //   }
+  //   @include respond-above(sm) {
+  //     margin-top: 0.2rem;
+  //     padding-right: 0 !important;
+  //     width: 100%;
+  //   }
+  // }
 }
 
 a.skip-main:focus, a.skip-main:active {
@@ -68,9 +68,9 @@ header {
     background-size: 100% 70%;
   }
 
-  .header-links {
-    @include respond-below(md) {
-      margin-top: 1.7rem !important;
-    }
-  }
+  // .header-links {
+  //   @include respond-below(md) {
+  //     margin-top: 1.7rem !important;
+  //   }
+  // }
 }

@@ -8,17 +8,14 @@
 
   img {
     width: 59px;
-    height: 87px;
     vertical-align: top;
 
     @include respond-above(sm) {
-      width: 290px;
-      height: 136px;
+      width: 10rem;
     }
 
     @media print {
-      width: 290px;
-      height: 136px;
+      width: 10rem;
     }
   }
 }

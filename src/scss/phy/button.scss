@@ -68,6 +68,8 @@
   --buttons-padding-h-lg: 1.875rem;
   --buttons-prefix-opacity: 100%;
   --forms-input-border-radius: 8rem;
+
+  --buttons-font-size-btn-lg: 0.875rem;
 }
 
 // TODO: bootstrap colours other states in these buttons (:active, :focus-visible) that are not currently styled
@@ -75,7 +77,7 @@
 // Fluent buttons
 .btn.btn {
   border-radius: 22.5rem;
-  font-size: var(--buttons-font-size-button-lg, 0.875rem);
+  font-size: var(--buttons-font-size-btn-lg);
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -161,18 +163,13 @@
 }
 
 .btn, input.btn {
-  border-radius: 0.25rem;
-  font-family: $secondary-font-bold;
-  font-size: 1.125rem;
-  letter-spacing: 0.5px;
-  min-width: 136px;
-  padding: 0.5rem 2.1rem;
+  border-radius: 22.5rem;
+  padding: 0.625rem 1.25rem;
   white-space: normal;
 
   &.btn-negative, &.btn-neutral, &.btn-positive, &.btn-negative-answer, &.btn-neutral-answer, &.btn-positive-answer {
     border: 1px solid transparent;
     color: $black;
-    min-width: 100px !important;
     padding: 0 !important;
     border-radius: 5px;
 
@@ -194,10 +191,6 @@
 
   &.question-actions-link {
     font-family: $secondary-font !important;
-  }
-
-  @include respond-above(sm) {
-    min-width: 180px;
   }
 
   &:hover {
