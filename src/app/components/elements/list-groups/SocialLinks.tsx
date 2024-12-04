@@ -16,8 +16,8 @@ export const SocialLinksRow = () => {
                 siteSpecific(
                     // Physics
                     <>
-                        <b>Follow us</b>
-                        <div className='mt-1 text-nowrap'>
+                        <p className="pb-2 mx-5 footer-link-header">Follow us</p>
+                        <div className='mt-1 mx-5 text-nowrap'>
                             {Object.entries(SOCIAL_LINKS).map(([_, {name, href}]) =>
                                 <div className={"me-1 d-inline-block"} key={name}>
                                     <ExternalLink href={href}>
