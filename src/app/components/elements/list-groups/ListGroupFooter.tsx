@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import {ListGroup, ListGroupItem, Row} from "reactstrap";
 import {isAda, isPhy, siteSpecific} from "../../../services";
 import classNames from "classnames";
+import { Spacer } from "../Spacer";
 
 interface FooterLinkProps {
     linkTo: string;
@@ -27,14 +28,14 @@ const footerLinksPhy = {
         <FooterLink key={key++} linkTo="/contact">Contact us</FooterLink>,
     ],
     col2: [
-        <b key={key++}>Explore by learning stage</b>,
+        <p className="footer-link-header" key={key++}>Explore by learning stage</p>,
         <FooterLink key={key++} linkTo="/11_14">11-14</FooterLink>,
         <FooterLink key={key++} linkTo="/gcse">GCSE</FooterLink>,
         <FooterLink key={key++} linkTo="/alevel">A Level</FooterLink>,
         <FooterLink key={key++} linkTo="/university">University</FooterLink>,
     ],
     col3: [
-        <b key={key++}>Explore by subject</b>,
+        <p className="footer-link-header" key={key++}>Explore by subject</p>,
         <FooterLink key={key++} linkTo="/physics">Physics</FooterLink>,
         <FooterLink key={key++} linkTo="/maths">Maths</FooterLink>,
         <FooterLink key={key++} linkTo="/chemistry">Chemistry</FooterLink>,
@@ -60,14 +61,14 @@ const footerLinksAda = {
 export const ListGroupFooter = () => (
     siteSpecific(
         // Physics
-        <div className="footer-links d-flex flex-row">
-            <ListGroup xs={{size: 12, offset: 0}} className="w-50 mb-3 link-list">
+        <div className="footer-links d-flex flex-row footer-link-bottom">
+            <ListGroup className="mb-3 link-list">
                 {footerLinksPhy.col1}
             </ListGroup>
-            <ListGroup xs={{size: 12, offset: 0}} className="w-50 mb-3 link-list">
+            <ListGroup className="mb-3 link-list">
                 {footerLinksPhy.col2}
             </ListGroup>
-            <ListGroup xs={{size: 12, offset: 0}} className="w-50 mb-3 link-list">
+            <ListGroup className="mb-3 link-list">
                 {footerLinksPhy.col3}
             </ListGroup>
         </div>,
