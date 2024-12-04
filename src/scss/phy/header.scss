@@ -1,34 +1,42 @@
 @import "../common/header";
 
-// reverse final element in the navigation bar to keep options on the screen
-ul#main-menu {
-  li.dropdown.nav-item:last-child {
-    div.dropdown-menu {
-      right: 0;
-      left: auto;
-      &::before {
-        right: 1rem;
-        left: auto;
+#header-offcanvas {
+  width: 591px;
+  ul#main-menu {
+    li {
+      border-top: $color-neutral-200 1px solid;
+      &:last-child {
+        border-bottom: $color-neutral-200 1px solid;
+      }
+      > a {
+        position: relative;
+        z-index: 1;
+      }
+      div.nav-section {
+        border: none;
+        position: static;
       }
     }
   }
 }
 
-// NOMENSA header.scss
-// !important used to override bootstraps use of !important :(
-
-header {
-  background-size: 100%;
-  background-repeat: no-repeat;
-  position: relative;
-
-  font-size: 14px;
-
+.navbar-nav.navbar-nav {
   a {
     text-decoration: none;
     &:hover {
+      background-color: unset;
       text-decoration: underline;
     }
+  }
+}
+
+header {
+  // >=md desktop menu, not the offcanvas
+  position: relative;
+  font-size: 14px;
+
+  .navbar-nav div.nav-section {
+    position: absolute;
   }
 
   > .container {
@@ -36,22 +44,6 @@ header {
       max-width: 100% !important;
     }
   }
-
-  // .header-links {
-  //   justify-content: flex-end !important;
-
-  //   @include respond-below(xs) {
-  //     padding-right: 20% !important;
-  //   }
-  //   @include respond-above(xs){
-  //     padding-right: 28% !important;
-  //   }
-  //   @include respond-above(sm) {
-  //     margin-top: 0.2rem;
-  //     padding-right: 0 !important;
-  //     width: 100%;
-  //   }
-  // }
 }
 
 a.skip-main:focus, a.skip-main:active {
@@ -63,14 +55,4 @@ div#header-progress {
 }
 header {
   z-index: 20;
-  background-image: url('/assets/phy/line.svg');
-  @include respond-above(sm) {
-    background-size: 100% 70%;
-  }
-
-  // .header-links {
-  //   @include respond-below(md) {
-  //     margin-top: 1.7rem !important;
-  //   }
-  // }
 }

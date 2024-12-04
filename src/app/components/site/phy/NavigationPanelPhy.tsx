@@ -1,29 +1,44 @@
-import {
-    LinkItem,
-    MenuBadge,
-    NavigationBar,
-    NavigationSection,
-    useAssignmentsCount
-} from "../../navigation/NavigationBar";
 import React from "react";
-import {selectors, useAppSelector} from "../../../state";
-import {
-    isAdmin,
-    isAdminOrEventManager,
-    isEventLeader,
-    isLoggedIn,
-    isStaff,
-    isTeacherOrAbove,
-    isTutor,
-    isTutorOrAbove, PATHS
-} from "../../../services";
+import { LinkItem, NavigationSection } from "../../navigation/NavigationBar";
+import { Nav, NavProps } from "reactstrap";
+import classNames from "classnames";
+import { isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTutor } from "../../../services";
+import { selectors, useAppSelector } from "../../../state";
 
-export const NavigationBarPhy = () => {
+export const NavigationPanelPhy = (props: NavProps) => {
     const user = useAppSelector(selectors.user.orNull);
-    const {assignmentsCount, quizzesCount} = useAssignmentsCount();
+    // const {assignmentsCount, quizzesCount} = useAssignmentsCount();
+    
+    return <Nav {...props} navbar className={classNames("justify-content-between", props.className)} id="main-menu">
+        <NavigationSection topLevelLink to="/about" title={"About Isaac"}/>
+        <NavigationSection topLevelLink to="/questions" title={"Question finder"}/>
+        <NavigationSection topLevelLink to="/concepts" title={"Concepts"}/>
+        <NavigationSection topLevelLink to="/news" title={"News"}/>
+        <NavigationSection topLevelLink to="/events" title={"Events"}/>
+        <NavigationSection topLevelLink to="/publications" title={"Books"}/>
+        <NavigationSection title={"Help"}>
+            <LinkItem to="/pages/how_to_videos">How-to videos</LinkItem>
+            <LinkItem to="/solving_problems">Problem-solving guide</LinkItem>
+            <LinkItem to="/support/student">Student FAQ</LinkItem>
+            {isTutor(user)
+                ? <LinkItem to="/support/tutor">Tutor FAQ</LinkItem>
+                : <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>}
+            <LinkItem to="/glossary">Glossary</LinkItem>
+            <LinkItem to="/contact">Contact Us</LinkItem>
+        </NavigationSection>
 
-    return <NavigationBar>
-        <NavigationSection title={<>My Isaac {<MenuBadge data-testid={"my-assignments-badge"} count={assignmentsCount + quizzesCount} message="incomplete assignments and tests" />}</>}>
+        {(isStaff(user) || isEventLeader(user)) && <NavigationSection title={<i className="icon icon-cog no-print align-text-bottom" aria-label="Admin"/>} className="border-start align-content-center">
+            {isStaff(user) && <LinkItem to="/admin">Admin Tools</LinkItem>}
+            {isAdmin(user) && <LinkItem to="/admin/usermanager">User Manager</LinkItem>}
+            {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event Admin</LinkItem>}
+            {isStaff(user) && <LinkItem to="/admin/stats">Site Statistics</LinkItem>}
+            {isStaff(user) && <LinkItem to="/admin/content_errors">Content Errors</LinkItem>}
+        </NavigationSection>}
+    </Nav>;
+
+        // TODO clean comments when navigation is done
+
+        {/* <NavigationSection title={<>My Isaac {<MenuBadge data-testid={"my-assignments-badge"} count={assignmentsCount + quizzesCount} message="incomplete assignments and tests" />}</>}>
             <LinkItem to="/account" muted={!isLoggedIn(user)}>My Account</LinkItem>
             <LinkItem to={PATHS.MY_GAMEBOARDS} muted={!isLoggedIn(user)}>My Gameboards</LinkItem>
             <LinkItem to={PATHS.MY_ASSIGNMENTS} muted={!isLoggedIn(user)}>My Assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
@@ -68,14 +83,9 @@ export const NavigationBarPhy = () => {
                 ? <LinkItem to="/support/tutor">Tutor FAQ</LinkItem>
                 : <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>}
             <LinkItem to="/contact">Contact Us</LinkItem>
-        </NavigationSection>
+        </NavigationSection> */ }
 
-        {(isStaff(user) || isEventLeader(user)) && <NavigationSection title="Admin">
-            {isStaff(user) && <LinkItem to="/admin">Admin Tools</LinkItem>}
-            {isAdmin(user) && <LinkItem to="/admin/usermanager">User Manager</LinkItem>}
-            {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">Event Admin</LinkItem>}
-            {isStaff(user) && <LinkItem to="/admin/stats">Site Statistics</LinkItem>}
-            {isStaff(user) && <LinkItem to="/admin/content_errors">Content Errors</LinkItem>}
-        </NavigationSection>}
-    </NavigationBar>;
+        {/* <div className="header-search m-md-0 ms-md-auto align-items-center d-print-none pt-3">
+            <MainSearch />
+        </div> */}
 };
