@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {ListGroup, ListGroupItem} from "reactstrap";
+import {ListGroup, ListGroupItem, Row} from "reactstrap";
 import {isAda, isPhy, siteSpecific} from "../../../services";
 import classNames from "classnames";
 
@@ -9,7 +9,7 @@ interface FooterLinkProps {
     children?: React.ReactNode | string;
 }
 
-const FooterLink = ({linkTo, children}: FooterLinkProps ) => {
+export const FooterLink = ({linkTo, children}: FooterLinkProps ) => {
     return <ListGroupItem className={classNames("border-0 bg-transparent px-0 py-0", {"align-items-stretch": isPhy, "my-1": isAda})}>
         <Link className="footer-link" to={linkTo}>
             {children}
@@ -18,63 +18,68 @@ const FooterLink = ({linkTo, children}: FooterLinkProps ) => {
 };
 
 let key = 0;
-const footerLinks = siteSpecific(
-    {
-        left: [
-            <FooterLink key={key++} linkTo="/about">About Us</FooterLink>,
-            <FooterLink key={key++} linkTo="/contact">Contact Us</FooterLink>,
-            <FooterLink key={key++} linkTo="/accessibility">
-                Accessibility <span className="d-none d-md-inline">Statement</span>
-            </FooterLink>,
-            <FooterLink key={key++} linkTo="/privacy">Privacy Policy</FooterLink>,
-            <FooterLink key={key++} linkTo="/terms">Terms of Use</FooterLink>,
-        ],
-        right: [
-            <FooterLink key={key++} linkTo="/why_physics">Why Physics?</FooterLink>,
-            <FooterLink key={key++} linkTo="/bios">Biographies</FooterLink>,
-            <FooterLink key={key++} linkTo="/publications">Publications</FooterLink>,
-            <FooterLink key={key++} linkTo="/chemistry">Isaac Chemistry</FooterLink>,
-        ]
-    },
-    {
-        left: [
-            <FooterLink key={key++} linkTo="/about">About us</FooterLink>,
-            <FooterLink key={key++} linkTo="/contact">Contact us</FooterLink>,
-            <FooterLink key={key++} linkTo="/cookies">Cookie policy</FooterLink>
-        ],
-        right: [
-            <FooterLink key={key++} linkTo="/terms">Terms of use</FooterLink>,
-            <FooterLink key={key++} linkTo="/privacy">Privacy policy</FooterLink>,
-            <FooterLink key={key++} linkTo="/accessibility">
-                Access&shy;ibility <span className="d-none d-md-inline">statement</span>
-            </FooterLink>
-        ]
-    }
-);
+const footerLinksPhy = {
+    col1: [
+        <FooterLink key={key++} linkTo="/about">About Isaac</FooterLink>,
+        <FooterLink key={key++} linkTo="/news">News</FooterLink>,
+        <FooterLink key={key++} linkTo="/events">Events</FooterLink>,
+        <FooterLink key={key++} linkTo="/books">Books</FooterLink>,
+        <FooterLink key={key++} linkTo="/contact">Contact us</FooterLink>,
+    ],
+    col2: [
+        <b key={key++}>Explore by learning stage</b>,
+        <FooterLink key={key++} linkTo="/11_14">11-14</FooterLink>,
+        <FooterLink key={key++} linkTo="/gcse">GCSE</FooterLink>,
+        <FooterLink key={key++} linkTo="/alevel">A Level</FooterLink>,
+        <FooterLink key={key++} linkTo="/university">University</FooterLink>,
+    ],
+    col3: [
+        <b key={key++}>Explore by subject</b>,
+        <FooterLink key={key++} linkTo="/physics">Physics</FooterLink>,
+        <FooterLink key={key++} linkTo="/maths">Maths</FooterLink>,
+        <FooterLink key={key++} linkTo="/chemistry">Chemistry</FooterLink>,
+        <FooterLink key={key++} linkTo="/biology">Biology</FooterLink>,
+    ]
+};
+
+const footerLinksAda = {
+    left: [
+        <FooterLink key={key++} linkTo="/about">About us</FooterLink>,
+        <FooterLink key={key++} linkTo="/contact">Contact us</FooterLink>,
+        <FooterLink key={key++} linkTo="/cookies">Cookie policy</FooterLink>
+    ],
+    right: [
+        <FooterLink key={key++} linkTo="/terms">Terms of use</FooterLink>,
+        <FooterLink key={key++} linkTo="/privacy">Privacy policy</FooterLink>,
+        <FooterLink key={key++} linkTo="/accessibility">
+            Access&shy;ibility <span className="d-none d-md-inline">statement</span>
+        </FooterLink>
+    ]
+};
 
 export const ListGroupFooter = () => (
     siteSpecific(
         // Physics
-        <div className="footer-links">
-            <h2 className="h5">Links</h2>
-            <div className="d-flex flex-row pt-lg-3">
-                <ListGroup className="w-50 mb-3 link-list">
-                    {footerLinks.left}
-                </ListGroup>
-                <ListGroup className="w-50 mb-3 link-list">
-                    {footerLinks.right}
-                </ListGroup>
-            </div>
+        <div className="footer-links d-flex flex-row">
+            <ListGroup xs={{size: 12, offset: 0}} className="w-50 mb-3 link-list">
+                {footerLinksPhy.col1}
+            </ListGroup>
+            <ListGroup xs={{size: 12, offset: 0}} className="w-50 mb-3 link-list">
+                {footerLinksPhy.col2}
+            </ListGroup>
+            <ListGroup xs={{size: 12, offset: 0}} className="w-50 mb-3 link-list">
+                {footerLinksPhy.col3}
+            </ListGroup>
         </div>,
 
         // CS
         <div className="footer-links py-0">
             <div className="d-flex flex-row">
                 <ListGroup className="w-50 mb-3 me-3 link-list">
-                    {footerLinks.left}
+                    {footerLinksAda.left}
                 </ListGroup>
                 <ListGroup className="w-50 mb-3 link-list">
-                    {footerLinks.right}
+                    {footerLinksAda.right}
                 </ListGroup>
             </div>
         </div>

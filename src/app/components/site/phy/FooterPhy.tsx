@@ -1,69 +1,71 @@
 import React from "react";
-import {Container, Col, Row} from "reactstrap";
+import {Col, Row} from "reactstrap";
 import {ListGroupFooter} from "../../elements/list-groups/ListGroupFooter";
-import {Link} from "react-router-dom";
 import {SocialLinksRow} from "../../elements/list-groups/SocialLinks";
+import { Link } from "react-router-dom";
 
 const ExternalLink = ({href, children}: {href: string; children: any}) => (
     // eslint-disable-next-line react/jsx-no-target-blank
-    <a href={href} target="_blank" rel="noopener" className="d-inline fw-bold">
+    <a href={href} target="_blank" rel="noopener" className="d-inline">
         {children}
     </a>
 );
 
 export const FooterPhy = () => (
     <footer>
-        <div className="footer-top d-print-none">
-            <Container>
-                <Row className="px-3 px-sm-0 pb-3 pb-md-4">
-                    <Col md="4" className="logo-col">
-                        <div className="d-flex flex-row">
-                            <Link to="/">
-                                <img
-                                    src="/assets/phy/logo-small.svg"
-                                    className="footer-logo"
-                                    alt="Isaac Physics homepage"
-                                />
-                            </Link>
-                        </div>
-                        <div className="footer-links logo-text pt-3 mt-1">
-                            <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="mt-2 mb-3">
-                                <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='footer-org-logo' />
-                            </a>
-                            Funded by {' '} <ExternalLink href="https://www.cam.ac.uk/">
-                                <strong>University of Cambridge</strong>
-                            </ExternalLink>.
-                            
-                            <br />Supported by {' '} <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">
-                                <strong>Department for Education</strong>
-                            </ExternalLink> and {' '} 
-                            <ExternalLink href="https://www.ogdentrust.com/">
-                                <strong>The&nbsp;Ogden&nbsp;Trust</strong>
-                            </ExternalLink>.
-                        </div>
-                    </Col>
-                    <Col md={{size: 7, offset: 1}} lg={{size: 5, offset: 0}} className="pt-5 mt-4 mt-md-0">
-                        <ListGroupFooter />
-                    </Col>
-                    <Col md="5" lg="3" className="pt-5 mt-4 mt-lg-0">
-                        <SocialLinksRow />
-                    </Col>
-                </Row>
-            </Container>
-        </div>
-        <div className="footerBottom">
-            <Container>
-                <Row className="pt-3 px-3 px-sm-0 pb-3 bg-white">
-                    <div className="w-100">
-                        <div className='text-center'>
-                            All materials on this site are licensed under the {" "}
-                            <ExternalLink href="https://creativecommons.org/licenses/by/4.0/">
-                                <strong>Creative&nbsp;Commons&nbsp;license</strong>
-                            </ExternalLink>, unless stated otherwise.
-                        </div>
-                    </div>
-                </Row>
-            </Container>
+        <div className="footer-top d-print-none px-5">
+            
+            <Row className="px-3 px-sm-0 pt-5">
+                <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="mt-2 mb-3">
+                    <img src="/assets/common/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='footer-org-logo' />
+                </a>
+            </Row>
+            <Row className="px-3 px-sm-0 pb-2">
+                <div className="footer-links logo-text mt-1">
+                        Funded by {' '} <ExternalLink href="https://www.cam.ac.uk/">
+                        <u>University of Cambridge</u>
+                    </ExternalLink>.
+                    
+                    <br />Supported by {' '} <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">
+                        <u>Department for Education</u>
+                    </ExternalLink> and {' '} 
+                    <ExternalLink href="https://www.ogdentrust.com/">
+                        <u>The&nbsp;Ogden&nbsp;Trust</u>
+                    </ExternalLink>.
+                </div>
+            </Row>
+            <Row className="px-3 px-sm-0">
+                <Col lg={{size: 8, offset: 0}} md={{size: 8, offset: 0}} className="mt-4">
+                    <ListGroupFooter />
+                </Col>
+                <Col lg={{size: 4, offset: 0}} md={{size: 4, offset: 0}} className="mt-4">
+                    <SocialLinksRow />
+                </Col>
+            </Row>
+            <Row className="px-3 px-sm-0 footer-links logo-text mt-1">
+                <Col lg={{size: 4, offset: 0}} md={{size: 4, offset: 0}}>
+                    All materials on this site are licensed under the {' '}
+                    <ExternalLink href="https://creativecommons.org/licenses/by/4.0/">
+                        <u>Creative&nbsp;Commons&nbsp;license</u>
+                    </ExternalLink>, unless stated otherwise.
+                </Col>
+                <Col lg={{size: 6, offset: 2}} md={{size: 6, offset: 2}} className="pt-3 pb-4 justify-content-end">
+                    <Row>
+                        <Col>
+                            <Link to="/accessibility">Accessibility statement</Link>
+                        </Col>
+                        <Col>
+                            <Link to="/privacy">Privacy policy</Link>
+                        </Col>
+                        <Col>
+                            <Link to="/cookies">Cookie policy</Link>
+                        </Col>
+                        <Col>
+                            <Link to="/terms">Terms of use</Link>
+                        </Col>
+                    </Row>                   
+                </Col>    
+            </Row>           
         </div>
     </footer>
 );

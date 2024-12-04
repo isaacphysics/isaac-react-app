@@ -1,37 +1,32 @@
 import React from "react";
-import {Col, Row} from "reactstrap";
 import {SITE_TITLE, siteSpecific, SOCIAL_LINKS} from "../../../services";
 import {ExternalLink} from "../ExternalLink";
-import chunk from 'lodash/chunk';
 
 const getSocialIcon = (name: string) => {
     if (name === "x (twitter)") {
-        return "/assets/common/logos/x_icon.svg";
+        return siteSpecific("/assets/phy/logos/x_icon.svg", "/assets/common/logos/x_icon.svg");
     }
-    return `/assets/common/logos/${name}_icon.svg`;
+    return siteSpecific(`/assets/phy/logos/${name}_icon.svg`, `/assets/common/logos/${name}_icon.svg`);
 };
 
 export const SocialLinksRow = () => {
-    const linksByColumn = chunk(Object.entries(SOCIAL_LINKS), 2);
     return (
         <div className='footer-links footer-links-social'>
             {
                 siteSpecific(
                     // Physics
                     <>
-                        <h5>Get social</h5>
-                        <Row>
-                            {linksByColumn.map((column, index) => (
-                                <Col key={index}>
-                                    {column.map(([_, {name, href}]) =>
-                                        <ExternalLink href={href}  key={name}>
-                                            <img src={getSocialIcon(name.toLowerCase())} alt={`${SITE_TITLE} on ${name}`}
-                                                className='social-logo'/>
-                                        </ExternalLink>
-                                    )}
-                                </Col>
-                            ))}
-                        </Row>
+                        <b>Follow us</b>
+                        <div className='mt-1 text-nowrap'>
+                            {Object.entries(SOCIAL_LINKS).map(([_, {name, href}]) =>
+                                <div className={"me-1 d-inline-block"} key={name}>
+                                    <ExternalLink href={href}>
+                                        <img src={getSocialIcon(name.toLowerCase())} alt={`${SITE_TITLE} on ${name}`}
+                                            className='img-fluid footer-social-logo'/>
+                                    </ExternalLink>
+                                </div>
+                            )}
+                        </div>
                     </>,
                     // CS
                     <>
