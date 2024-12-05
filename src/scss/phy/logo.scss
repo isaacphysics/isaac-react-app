@@ -2,7 +2,7 @@
 .header-logo {
   float: left;
 
-  @include respond-above(sm) {
+  @include respond-above(xs) {
     float: none;
   }
 
@@ -10,12 +10,12 @@
     width: 59px;
     vertical-align: top;
 
-    @include respond-above(sm) {
-      width: 10rem;
+    @include respond-above(xs) {
+      width: 9.9rem;
     }
 
     @media print {
-      width: 10rem;
+      width: 9.9rem;
     }
   }
 }

@@ -32,7 +32,7 @@ export const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOp
 });
 
 export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWithChildren<DropdownItemProps & {muted?: boolean, badgeTitle?: string}>) => {
-    const className = classNames(siteSpecific("ps-4 py-3 p-md-3", "ps-2 py-2 p-nav-3 font-h4 link-light"), {"text-muted": muted});
+    const className = classNames(siteSpecific("p-3", "ps-2 py-2 p-nav-3 font-h4 link-light"), {"text-muted": muted});
     return <DropdownItem tag={Link} className={className} {...props}>
         {children}
         {badgeTitle && <Badge color="light" className="border-secondary border bg-white ms-2 me-1">{badgeTitle}</Badge>}
@@ -52,8 +52,8 @@ export const NavigationSection = ({className, children, title, topLevelLink, to}
     const toggle = () => {
         setIsOpen(!isOpen);
     };
-    const linkClasses = siteSpecific("p-3 ms-3 me-3", classNames("mx-0 mx-nav-1 p-3 font-h4 link-light", {"open": isOpen}));
-    const dropdownClasses = siteSpecific("p-3 m-0 mx-lg-4 nav-section", "p-3 m-0 nav-section");
+    const linkClasses = siteSpecific("p-3 mx-3 mx-md-0", classNames("mx-0 mx-nav-1 p-3 font-h4 link-light", {"open": isOpen}));
+    const dropdownClasses = siteSpecific("p-3 ps-4 p-md-3 nav-section", "p-3 m-0 nav-section");
     return <MenuOpenContext.Consumer>
         {({setMenuOpen}) => <Dropdown className={className} nav inNavbar isOpen={isOpen} toggle={toggle}>
             {topLevelLink ?
