@@ -1,9 +1,8 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {ListGroup, ListGroupItem, Row} from "reactstrap";
+import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
 import {isAda, isPhy, siteSpecific} from "../../../services";
 import classNames from "classnames";
-import { Spacer } from "../Spacer";
 
 interface FooterLinkProps {
     linkTo: string;
@@ -20,21 +19,21 @@ export const FooterLink = ({linkTo, children}: FooterLinkProps ) => {
 
 let key = 0;
 const footerLinksPhy = {
-    col1: [
+    left: [
         <FooterLink key={key++} linkTo="/about">About Isaac</FooterLink>,
         <FooterLink key={key++} linkTo="/news">News</FooterLink>,
         <FooterLink key={key++} linkTo="/events">Events</FooterLink>,
         <FooterLink key={key++} linkTo="/books">Books</FooterLink>,
         <FooterLink key={key++} linkTo="/contact">Contact us</FooterLink>,
     ],
-    col2: [
+    centre: [
         <p className="footer-link-header" key={key++}>Explore by learning stage</p>,
         <FooterLink key={key++} linkTo="/11_14">11-14</FooterLink>,
         <FooterLink key={key++} linkTo="/gcse">GCSE</FooterLink>,
         <FooterLink key={key++} linkTo="/alevel">A Level</FooterLink>,
         <FooterLink key={key++} linkTo="/university">University</FooterLink>,
     ],
-    col3: [
+    right: [
         <p className="footer-link-header" key={key++}>Explore by subject</p>,
         <FooterLink key={key++} linkTo="/physics">Physics</FooterLink>,
         <FooterLink key={key++} linkTo="/maths">Maths</FooterLink>,
@@ -61,16 +60,18 @@ const footerLinksAda = {
 export const ListGroupFooter = () => (
     siteSpecific(
         // Physics
-        <div className="footer-links d-flex flex-row footer-link-bottom">
-            <ListGroup className="mb-3 link-list">
-                {footerLinksPhy.col1}
-            </ListGroup>
-            <ListGroup className="mb-3 link-list">
-                {footerLinksPhy.col2}
-            </ListGroup>
-            <ListGroup className="mb-3 link-list">
-                {footerLinksPhy.col3}
-            </ListGroup>
+        <div className="footer-links py-0">
+            <Row className="footer-links footer-link d-flex flex-row">
+                <Col sm="3" className="mb-3 link-list">
+                    {footerLinksPhy.left}
+                </Col>
+                <Col sm="3" className="mb-3 link-list">
+                    {footerLinksPhy.centre}
+                </Col>
+                <Col sm="3" className="mb-3 link-list">
+                    {footerLinksPhy.right}
+                </Col>
+            </Row>
         </div>,
 
         // CS
