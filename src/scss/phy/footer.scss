@@ -23,12 +23,6 @@
   margin-bottom: 8px;
 }
 
-.footer-link-bottom{
-  display: flex;
-  justify-content: space-between;
-  white-space: nowrap;
-}
-
 .footer-top a:focus {
   outline: 0.2rem solid white;
 }
@@ -48,4 +42,7 @@
 .footer-link {
   @extend .py-2;
   font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap;
 }

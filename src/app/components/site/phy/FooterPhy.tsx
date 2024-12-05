@@ -20,7 +20,7 @@ export const FooterPhy = () => (
                 </a>
             </Row>
             <Row className="px-3 px-sm-0 pb-2">
-                <div className="footer-links logo-text mb-3">
+                <div className="footer-links logo-text mb-">
                         Funded by {' '} <ExternalLink href="https://www.cam.ac.uk/">
                         <u>University of Cambridge</u>
                     </ExternalLink>.                   
@@ -47,7 +47,7 @@ export const FooterPhy = () => (
                         <u>Creative&nbsp;Commons&nbsp;license</u>
                     </ExternalLink> unless stated otherwise.
                 </Col>
-                <Col lg={{size: 6, offset: 1}} className="pt-3 pb-4 col-md-8 align-content-end footer-link-bottom">
+                <Col lg={{size: 6, offset: 1}} className="pt-3 pb-4 col-md-8 align-content-end footer-link">
                     <Row>
                         <Col>
                             <Link to="/accessibility">Accessibility statement</Link>
