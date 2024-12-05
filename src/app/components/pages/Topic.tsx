@@ -27,8 +27,6 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     useEffect(() => {dispatch(fetchTopicSummary(topicName));}, [dispatch, topicName]);
 
     const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage);
-    const [relatedConceptsForSpecificViewingContext, relatedQuestionsForSpecificViewingContext] =
-        getRelatedDocs(topicPage);
 
     const searchQuery = `?topic=${topicName}`;
     const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards;
@@ -43,9 +41,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     <div className="d-flex justify-content-end">
                         <UserContextPicker />
                     </div>
-                    {!(atLeastOne(relatedConceptsForSpecificViewingContext.length) || atLeastOne(relatedQuestionsForSpecificViewingContext.length)) && isAda &&
-                        <IntendedAudienceWarningBanner doc={topicPage} />
-                    }
+                    {isAda && <IntendedAudienceWarningBanner doc={topicPage} />}
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }

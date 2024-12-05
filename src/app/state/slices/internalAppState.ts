@@ -31,8 +31,8 @@ export const transientUserContextSlice = createSlice({
     name: "transientUserContext",
     initialState: null as TransientUserContextState,
     reducers: {
-        setStage: (state, action: PayloadAction<STAGE>) => ({...state, stage: action.payload}),
-        setExamBoard: (state, action: PayloadAction<EXAM_BOARD>) => ({...state, examBoard: action.payload}),
+        setStage: (state, action: PayloadAction<STAGE | undefined>) => ({...state, stage: action.payload}),
+        setExamBoard: (state, action: PayloadAction<EXAM_BOARD | undefined>) => ({...state, examBoard: action.payload}),
     }
 });
 

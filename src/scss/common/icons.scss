@@ -18,6 +18,17 @@
   background-position: -50px 0px;
 }
 
+.icon-reset {
+  display: inline-block;
+  overflow: hidden;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: url(/assets/common/icons/reset.svg) no-repeat;
+  margin-bottom: -4px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 polygon.fill-secondary {
   fill: $secondary;
 }
