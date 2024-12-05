@@ -9,6 +9,13 @@
   }
 }
 
+.footer-links-aligned {
+  @extend .footer-links;
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap;
+}
+
 .footer-link:focus {
   box-shadow: 0 0 0 2pt white;
   border-radius: 3px;
@@ -36,13 +43,10 @@
 }
 
 .footer-top {
-  background-color: #23272C;
+  background-color: $color-neutral-900;
 }
 
 .footer-link {
   @extend .py-2;
   font-size: 13px;
-  display: flex;
-  justify-content: space-between;
-  white-space: nowrap;
 }

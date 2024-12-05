@@ -12,38 +12,17 @@ const getSocialIcon = (name: string) => {
 export const SocialLinksRow = () => {
     return (
         <div className='footer-links footer-links-social'>
-            {
-                siteSpecific(
-                    // Physics
-                    <>
-                        <p className="pb-2 pt-2 footer-link-header">Follow us</p>
-                        <div className='mt-1 text-nowrap'>
-                            {Object.entries(SOCIAL_LINKS).map(([_, {name, href}]) =>
-                                <div className={"me-1 d-inline-block"} key={name}>
-                                    <ExternalLink href={href}>
-                                        <img src={getSocialIcon(name.toLowerCase())} alt={`${SITE_TITLE} on ${name}`}
-                                            className='img-fluid footer-social-logo'/>
-                                    </ExternalLink>
-                                </div>
-                            )}
-                        </div>
-                    </>,
-                    // CS
-                    <>
-                        <h2>Get social</h2>
-                        <div className='mt-1 text-nowrap'>
-                            {Object.entries(SOCIAL_LINKS).map(([_, {name, href}]) =>
-                                <div className={"me-3 d-inline-block"} key={name}>
-                                    <ExternalLink href={href}>
-                                        <img src={getSocialIcon(name.toLowerCase())} alt={`${SITE_TITLE} on ${name}`}
-                                            className='img-fluid footer-social-logo'/>
-                                    </ExternalLink>
-                                </div>
-                            )}
-                        </div>
-                    </>
-                )
-            }
+            {siteSpecific(<p className="pb-2 pt-2 footer-link-header">Follow us</p>, <h2>Get social</h2>)}
+            <div className='mt-1 text-nowrap'>
+                {Object.entries(SOCIAL_LINKS).map(([_, {name, href}]) =>
+                    <div className={"me-3 d-inline-block"} key={name}>
+                        <ExternalLink href={href}>
+                            <img src={getSocialIcon(name.toLowerCase())} alt={`${SITE_TITLE} on ${name}`}
+                                className='img-fluid footer-social-logo'/>
+                        </ExternalLink>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

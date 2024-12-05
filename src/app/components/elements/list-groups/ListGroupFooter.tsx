@@ -8,8 +8,7 @@ interface FooterLinkProps {
     linkTo: string;
     children?: React.ReactNode | string;
 }
-
-export const FooterLink = ({linkTo, children}: FooterLinkProps ) => {
+const FooterLink = ({linkTo, children}: FooterLinkProps ) => {
     return <ListGroupItem className={classNames("border-0 bg-transparent px-0 py-0", {"align-items-stretch": isPhy, "my-1": isAda})}>
         <Link className="footer-link" to={linkTo}>
             {children}
@@ -60,8 +59,8 @@ const footerLinksAda = {
 export const ListGroupFooter = () => (
     siteSpecific(
         // Physics
-        <div className="footer-links py-0">
-            <Row className="footer-links footer-link d-flex flex-row">
+        <div>
+            <Row className="d-flex flex-row footer-link footer-links-aligned">
                 <Col sm="3" className="mb-3 link-list">
                     {footerLinksPhy.left}
                 </Col>
