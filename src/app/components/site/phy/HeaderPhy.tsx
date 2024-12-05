@@ -6,6 +6,7 @@ import {NavigationPanelPhy} from "./NavigationPanelPhy";
 import {above, useDeviceSize} from "../../../services";
 import { AffixButton } from "../../elements/AffixButton";
 import { MenuOpenContext } from "../../navigation/NavigationBar";
+import classNames from "classnames";
 
 export const HeaderPhy = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -32,11 +33,11 @@ export const HeaderPhy = () => {
                             ? <>
                                 {/* desktop menu bar */}
                                 <div className="d-flex justify-content-end align-items-center flex-wrap p-3">
-                                    <NavigationPanelPhy className="flex-row"/>
-                                    {user && user.loggedIn 
+                                    <NavigationPanelPhy className={classNames("flex-row")}/>
+                                    {user && (user.loggedIn 
                                         ? <Link to="/logout">Log out</Link>
                                         : <Button color="solid" size="sm" tag={Link} to="/login">Sign up / log in</Button>
-                                    } 
+                                    )} 
                                 </div>
                             </>
                             : <>

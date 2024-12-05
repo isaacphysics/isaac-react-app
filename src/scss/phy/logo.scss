@@ -11,11 +11,11 @@
     vertical-align: top;
 
     @include respond-above(xs) {
-      width: 10rem;
+      width: 9.9rem;
     }
 
     @media print {
-      width: 10rem;
+      width: 9.9rem;
     }
   }
 }
