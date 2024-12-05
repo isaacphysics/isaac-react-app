@@ -64,6 +64,12 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 {/* Stage Selector */}
                 <FormGroup className={`form-group w-100 d-flex justify-content-end m-0`}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}
+                    {!userContext.hasDefaultPreferences && (userContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
+                        <button className={"icon-reset mt-2"} aria-label={"Reset viewing context"} onClick={() => {
+                            dispatch(transientUserContextSlice.actions.setExamBoard(undefined));
+                            dispatch(transientUserContextSlice.actions.setStage(undefined));
+                        }}/>
+                    }
                     <Input
                         className={`flex-grow-1 d-inline-block ps-2 pe-0 mb-2 ${isAda ? "me-1" : ""}`}
                         type="select" id="uc-stage-select"
