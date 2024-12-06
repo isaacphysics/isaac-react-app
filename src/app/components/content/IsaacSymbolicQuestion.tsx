@@ -166,10 +166,12 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const sketchRef = useRef<Inequality | null | undefined>();
 
     useLayoutEffect(() => {
+        if (readonly) return; // as the ref won't be defined
+
         if (!isDefined(hiddenEditorRef.current)) {
             throw new Error("Unable to initialise inequality; target element not found.");
         }
-        
+
         const {sketch, p} = makeInequality(
             hiddenEditorRef.current,
             100,
