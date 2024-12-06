@@ -331,6 +331,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     const sketch = useRef<Nullable<Inequality>>(null);
     const [editorState, setEditorState] = useState<any>({});
     useLayoutEffect(() => {
+        if (!inequalityModalRef) return;
         return prepareInequality({
             sketch,
             inequalityModalRef,
