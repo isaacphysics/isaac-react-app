@@ -9,10 +9,25 @@
   }
 }
 
+.footer-links-aligned {
+  @extend .footer-links;
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap;
+}
+
 .footer-link:focus {
   box-shadow: 0 0 0 2pt white;
   border-radius: 3px;
   outline: none !important;
+}
+
+.footer-link-header{
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 .footer-top a:focus {
@@ -28,9 +43,10 @@
 }
 
 .footer-top {
-  background-color: #333333;
+  background-color: $color-neutral-900;
 }
 
 .footer-link {
   @extend .py-2;
+  font-size: 13px;
 }
