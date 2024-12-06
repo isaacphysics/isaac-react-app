@@ -183,6 +183,10 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     }, [editorSyntax]);
 
     useLayoutEffect(() => {
+        if (!isDefined(hiddenEditorRef.current)) {
+            throw new Error("Unable to initialise inequality; target element not found.");
+        }
+
         const {sketch, p} = makeInequality(
             hiddenEditorRef.current,
             100,
