@@ -64,10 +64,10 @@ export const ListGroupFooter = () => (
                 <Col sm="3" className="mb-3 link-list">
                     {footerLinksPhy.left}
                 </Col>
-                <Col sm="3" className="mb-3 link-list">
+                <Col sm="3" className="mb-3 mx-sm-4 link-list">
                     {footerLinksPhy.centre}
                 </Col>
-                <Col sm="3" className="mb-3 link-list">
+                <Col sm="3" className="mb-3 mx-sm-4 link-list">
                     {footerLinksPhy.right}
                 </Col>
             </Row>
