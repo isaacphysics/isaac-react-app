@@ -66,7 +66,7 @@ export const ListGroupFooter = () => (
             <ListGroup className="mb-3 w-max-content ms-sm-5 me-sm-4 me-lg-5">
                 {footerLinksPhy.centre}
             </ListGroup>
-            <ListGroup className="mb-3 w-max-content">
+            <ListGroup className="mb-3 w-max-content me-xl-4">
                 {footerLinksPhy.right}
             </ListGroup>
         </>,

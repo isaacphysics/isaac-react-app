@@ -25,10 +25,10 @@ export const FooterPhy = () => (
                     </ExternalLink>.
                 </div>
             </Col>
-            <Col md={{size: 8, offset: 0}} lg={{size: 8, offset: 0}} xl={{size: 6, offset: 0}} className="d-flex flex-column flex-sm-row mt-4">
+            <Col md={{size: 8, offset: 0}} lg={{size: 8, offset: 0}} xl={{size: 7, offset: 0}} className="d-flex flex-column justify-content-xl-end flex-sm-row mt-4">
                 <ListGroupFooter />
             </Col>
-            <Col md={{size: 4, offset: 0}} lg={{size: 3, offset: 1}} xl={{size: 3, offset: 3}} className="mt-sm-4">
+            <Col md={{size: 4, offset: 0}} lg={{size: 3, offset: 1}} xl={{size: 2, offset: 0}} className="mt-sm-4">
                 <SocialLinksRow />
             </Col>
         </Row>
