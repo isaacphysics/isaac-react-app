@@ -13,6 +13,7 @@ export const NavigationPanelPhy = (props: NavProps) => {
     // const {assignmentsCount, quizzesCount} = useAssignmentsCount();
     
     return <Nav {...props} navbar className={classNames("justify-content-between", props.className, "pe-0", {"pe-md-3" : !isAdminTabVisible})} id="main-menu">
+        {isOffcanvas && <NavigationSection topLevelLink to="/" title={"Home"}/>}
         <NavigationSection topLevelLink to="/about" title={"About Isaac"}/>
         <NavigationSection topLevelLink to="/questions" title={"Question finder"}/>
         <NavigationSection topLevelLink to="/concepts" title={"Concepts"}/>
