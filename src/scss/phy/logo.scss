@@ -2,20 +2,20 @@
 .header-logo {
   float: left;
 
-  @include respond-above(sm) {
+  @include respond-above(xs) {
     float: none;
   }
 
   img {
-    width: 59px;
+    width: 45px;
     vertical-align: top;
 
-    @include respond-above(sm) {
-      width: 10rem;
+    @include respond-above(xs) {
+      width: 7.85rem;
     }
 
     @media print {
-      width: 10rem;
+      width: 7.85rem;
     }
   }
 }

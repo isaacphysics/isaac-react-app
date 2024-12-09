@@ -57,6 +57,30 @@
   background-image: url(/assets/phy/ru.png) !important;
 }
 
+@mixin svg-icon($path, $width: 16px, $height: 16px) {
+  display: inline-block;
+  mask: url($path) center center no-repeat;
+  width: $width;
+  height: $height;
+  min-width: $width;
+  min-height: $height;
+  background-color: black;
+}
+
+.icon-menu {
+  @include svg-icon('/assets/phy/icons/redesign/menu.svg', 16px, 16px);
+  mask-size: 14px 12px;
+}
+
+.icon-close {
+  @include svg-icon('/assets/phy/icons/redesign/close.svg', 16px, 16px);
+  mask-size: 14px 12px;
+}
+
+.icon-cog {
+  @include svg-icon('/assets/phy/icons/redesign/cog.svg', 16px, 16px);
+}
+
 svg {
   &.almost-fill {
     fill: $phy_extra_force_yellow;
