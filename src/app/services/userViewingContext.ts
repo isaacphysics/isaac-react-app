@@ -367,9 +367,6 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
             if (!satisfiesExamBoardCriteria) {
                 return false;
             }
-        } else if (isAda) {
-            // If no exam board specified treat as off specification (only for Ada)
-            return false;
         }
 
         // If a role is specified do we have any of those roles or greater
