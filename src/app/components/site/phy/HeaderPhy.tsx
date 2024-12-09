@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {Link} from "react-router-dom";
 import {selectors, useAppSelector} from "../../../state";
 import {Button, Col, Container, Offcanvas, OffcanvasBody, OffcanvasHeader, Row} from "reactstrap";
-import {NavigationPanelPhy} from "./NavigationPanelPhy";
+import {HeaderMenuPhy} from "./HeaderMenuPhy";
 import {above, useDeviceSize} from "../../../services";
 import { AffixButton } from "../../elements/AffixButton";
 import { MenuOpenContext } from "../../navigation/NavigationBar";
@@ -37,7 +37,7 @@ export const HeaderPhy = () => {
                         ? <>
                             {/* desktop menu bar */}
                             <div className="d-flex justify-content-end align-items-center flex-wrap py-3">
-                                <NavigationPanelPhy className={classNames("flex-row")}/>
+                                <HeaderMenuPhy className={classNames("flex-row")}/>
                                 <LoginLogoutButton/>
                             </div>
                         </>
@@ -69,7 +69,7 @@ export const HeaderPhy = () => {
                                         </Link>
                                     </OffcanvasHeader>
                                     <OffcanvasBody>
-                                        <NavigationPanelPhy/>
+                                        <HeaderMenuPhy/>
                                     </OffcanvasBody>
                                 </Offcanvas>
                             </MenuOpenContext.Provider>

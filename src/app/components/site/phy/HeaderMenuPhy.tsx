@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { above, isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTutor, useDeviceSize } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 
-export const NavigationPanelPhy = (props: NavProps) => {
+export const HeaderMenuPhy = (props: NavProps) => {
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
     const isOffcanvas = !above["lg"](deviceSize);
