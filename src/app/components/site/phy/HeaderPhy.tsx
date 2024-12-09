@@ -36,14 +36,14 @@ export const HeaderPhy = () => {
                     {above["lg"](deviceSize) 
                         ? <>
                             {/* desktop menu bar */}
-                            <div className="d-flex justify-content-end align-items-center flex-wrap p-3">
+                            <div className="d-flex justify-content-end align-items-center flex-wrap py-3">
                                 <NavigationPanelPhy className={classNames("flex-row")}/>
                                 <LoginLogoutButton/>
                             </div>
                         </>
                         : <>
                             {/* mobile hamburger menu */}
-                            <div className="d-flex justify-content-end align-items-center flex-wrap p-3 gap-3">
+                            <div className="d-flex justify-content-end align-items-center flex-wrap py-3 gap-3">
                                 <LoginLogoutButton/>
                                 <AffixButton color="tint" size="lg" onClick={toggleMenu} affix={{
                                     affix: "icon-menu", 
