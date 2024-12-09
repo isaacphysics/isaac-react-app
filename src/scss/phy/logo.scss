@@ -7,15 +7,15 @@
   }
 
   img {
-    width: 59px;
+    width: 45px;
     vertical-align: top;
 
     @include respond-above(xs) {
-      width: 9.9rem;
+      width: 7.85rem;
     }
 
     @media print {
-      width: 9.9rem;
+      width: 7.85rem;
     }
   }
 }
