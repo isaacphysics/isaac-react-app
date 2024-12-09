@@ -1,52 +1,46 @@
 @import "../common/footer";
 
-.footer-links {
-  a {
+// Fluent footer theme
+footer {
+  background-color: $color-neutral-900;
+
+  li {
+    list-style-type: none;
+    list-style-image: none;
+  }
+
+  a:not(:has(img)) {
+    @extend .py-2;
+    font-size: 14px;
+    color: $color-neutral-200;
     text-decoration: none;
     &:hover {
       text-decoration: underline;
+      color: $color-neutral-200;
     }
+  }
+
+  a:focus {
+    box-shadow: 0 0 0 2pt white;
+    border-radius: 3px;
+    outline: none !important;
+  }
+  
+  .logo-text {
+    color: $color-neutral-200;
+    font-size: 14px;
   }
 }
 
-.footer-links-aligned {
-  @extend .footer-links;
-  display: flex;
-  justify-content: space-between;
-  white-space: nowrap;
-}
-
-.footer-link:focus {
-  box-shadow: 0 0 0 2pt white;
-  border-radius: 3px;
-  outline: none !important;
-}
-
-.footer-link-header{
-  font-size: 13px;
+.footer-link-header {
+  color: $color-neutral-white;
+  font-size: 15px;
   font-weight: bold;
   white-space: nowrap;
   margin-top: 8px;
   margin-bottom: 8px;
 }
 
-.footer-top a:focus {
-  outline: 0.2rem solid white;
-}
-
-.footer-logo {
-  margin-top: -0.55px;
-}
-
 .footer-org-logo {
   max-width: 12rem;
-}
-
-.footer-top {
-  background-color: $color-neutral-900;
-}
-
-.footer-link {
-  @extend .py-2;
-  font-size: 13px;
 }
