@@ -32,7 +32,7 @@ export const FooterPhy = () => (
                 <SocialLinksRow />
             </Col>
         </Row>
-        <Row className="logo-text pe-4">
+        <Row className="logo-text pe-4 align-items-center">
             <Col lg={5}>
                 All materials on this site are licensed under the {' '}
                 <ExternalLink href="https://creativecommons.org/licenses/by/4.0/" className="d-inline">
