@@ -2,6 +2,9 @@
 
 #header-offcanvas {
   width: 591px;
+  .offcanvas-header {
+    font-size: 14px;
+  }
   ul#main-menu {
     li {
       border-top: $color-neutral-200 1px solid;

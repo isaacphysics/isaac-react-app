@@ -15,6 +15,11 @@ export const HeaderPhy = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(m => !m);
 
+    const LoginLogoutButton = () => user && (user.loggedIn 
+        ? <Link to="/logout">Log out</Link>
+        : <Button color="solid" size="sm" tag={Link} to="/login">Sign up / log in</Button>
+    );
+
     return <header className="bg-white" data-testid={"header"}>
         <Container className="container-fluid px-0">
             <Row className="align-items-center">
@@ -34,16 +39,13 @@ export const HeaderPhy = () => {
                                 {/* desktop menu bar */}
                                 <div className="d-flex justify-content-end align-items-center flex-wrap p-3">
                                     <NavigationPanelPhy className={classNames("flex-row")}/>
-                                    {user && (user.loggedIn 
-                                        ? <Link to="/logout">Log out</Link>
-                                        : <Button color="solid" size="sm" tag={Link} to="/login">Sign up / log in</Button>
-                                    )} 
+                                    <LoginLogoutButton/>
                                 </div>
                             </>
                             : <>
                                 {/* mobile hamburger menu */}
                                 <div className="d-flex justify-content-end align-items-center flex-wrap p-3 gap-3">
-                                    <Button color="solid" size="sm" tag={Link} to="/login">Sign up / log in</Button>
+                                    <LoginLogoutButton/>
                                     <AffixButton color="tint" size="lg" onClick={toggleMenu} affix={{
                                         affix: "icon-menu", 
                                         position: "suffix", 
@@ -55,7 +57,7 @@ export const HeaderPhy = () => {
                                     <Offcanvas id="header-offcanvas" direction="end" isOpen={menuOpen} toggle={toggleMenu} container="#root">
                                         <OffcanvasHeader toggle={toggleMenu} className="justify-content-between" close={
                                             <div className="d-flex justify-content-end align-items-center flex-wrap gap-3 py-3">
-                                                <Button color="solid" size="sm" tag={Link} to="/login">Sign up / log in</Button>
+                                                <LoginLogoutButton/>
                                                 <AffixButton color="tint" size="lg" onClick={toggleMenu} affix={{
                                                     affix: "icon-close", 
                                                     position: "suffix", 
