@@ -161,7 +161,15 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
     const sketchRef = useRef<Inequality | null | undefined>();
 
+    const showTextEntry = !readonly && isStaff(user);
+
     useLayoutEffect(() => {
+        if (!showTextEntry) return; // as the ref will not be defined
+
+        if (!isDefined(hiddenEditorRef.current)) {
+            throw new Error("Unable to initialise inequality; target element not found.");
+        }
+
         const {sketch, p} = makeInequality(
             hiddenEditorRef.current,
             100,
@@ -242,7 +250,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                     {doc.children}
                 </IsaacContentValueOrChildren>
             </div>
-            {!readonly && isStaff(user) && <div className="eqn-editor-input">
+            {showTextEntry && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2 separate-input-group">
                     <Input type="text" onChange={updateEquation} value={textInput}
