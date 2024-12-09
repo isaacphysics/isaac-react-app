@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
-import {isAda, isPhy, siteSpecific} from "../../../services";
+import {ListGroup} from "reactstrap";
+import {isAda, siteSpecific} from "../../../services";
 import classNames from "classnames";
 
 interface FooterLinkProps {
@@ -9,11 +9,11 @@ interface FooterLinkProps {
     children?: React.ReactNode | string;
 }
 const FooterLink = ({linkTo, children}: FooterLinkProps ) => {
-    return <ListGroupItem className={classNames("border-0 bg-transparent px-0 py-0", {"align-items-stretch": isPhy, "my-1": isAda})}>
+    return <li className={classNames({"my-1": isAda})}>
         <Link className="footer-link" to={linkTo}>
             {children}
         </Link>
-    </ListGroupItem>;
+    </li>;
 };
 
 let key = 0;
@@ -59,19 +59,17 @@ const footerLinksAda = {
 export const ListGroupFooter = () => (
     siteSpecific(
         // Physics
-        <div>
-            <Row className="d-flex flex-row footer-link footer-links-aligned">
-                <Col sm="3" className="mb-3 link-list">
-                    {footerLinksPhy.left}
-                </Col>
-                <Col sm="3" className="mb-3 mx-sm-4 link-list">
-                    {footerLinksPhy.centre}
-                </Col>
-                <Col sm="3" className="mb-3 mx-sm-4 link-list">
-                    {footerLinksPhy.right}
-                </Col>
-            </Row>
-        </div>,
+        <>
+            <ListGroup className="mb-3 w-max-content">
+                {footerLinksPhy.left}
+            </ListGroup>
+            <ListGroup className="mb-3 w-max-content ms-sm-5 me-sm-4 me-lg-5">
+                {footerLinksPhy.centre}
+            </ListGroup>
+            <ListGroup className="mb-3 w-max-content me-xl-4">
+                {footerLinksPhy.right}
+            </ListGroup>
+        </>,
 
         // CS
         <div className="footer-links py-0">
