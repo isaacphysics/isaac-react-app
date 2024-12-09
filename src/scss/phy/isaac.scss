@@ -234,6 +234,18 @@ $typography-font-weights-text-light: 300;
 $typography-font-weights-text-regular: 400;
 $typography-font-weights-text-semibold: 600;
 
+/* spacing */
+$spacing-container-margins: (
+    // the spacing on either side of the container
+    xs: 24px,
+    sm: 30px,
+    md: 30px,
+    lg: 44px,
+    xl: 85px,
+    xxl: 110px
+
+);
+
 // ISAAC
 // Node module imports
 @import "~bootstrap/scss/functions";
@@ -248,7 +260,7 @@ $border-color: #dee2e6;
 
 // Grid Customisation
 $container-max-widths: (
-    md: 942px
+    xl: 100%,
 );
 
 $grid-breakpoints: (
@@ -257,7 +269,7 @@ $grid-breakpoints: (
   md: 768px,
   lg: 992px,
   xl: 1200px,
-  // xxl: 1400px // we don't need xxl
+  xxl: 1400px,
 );
 
 $element-sizes: (
@@ -333,6 +345,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 // Atoms
 @import "fonts";
 @import "typography";
+@import "containers";
 @import "table";
 @import "../common/headings";
 @import "../common/modals";
