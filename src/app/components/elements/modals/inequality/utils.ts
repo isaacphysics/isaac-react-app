@@ -690,6 +690,10 @@ interface PrepareInequalityArgs {
     setEditorState: (state: any) => void;
 }
 export function prepareInequality({editorMode, inequalityModalRef, initialEditorSymbols, isTrashActive, sketch, logicSyntax, setEditorState, onEditorStateChange}: PrepareInequalityArgs) {
+    if (!isDefined(inequalityModalRef.current)) {
+        throw new Error("Unable to initialise inequality; target element not found.");
+    }
+    
     const { sketch: newSketch, p } = makeInequality(
         inequalityModalRef.current,
         window.innerWidth,
