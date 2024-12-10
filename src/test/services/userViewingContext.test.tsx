@@ -1,4 +1,12 @@
-import {CONTEXT_SOURCE, determineUserContext, EXAM_BOARD, GameboardAndPathInfo, isPhy, STAGE} from "../../app/services";
+import {
+    CONTEXT_SOURCE,
+    determineUserContext,
+    EXAM_BOARD,
+    GameboardAndPathInfo,
+    getFilteredStageOptions,
+    isPhy,
+    STAGE
+} from "../../app/services";
 import {TransientUserContextState} from "../../app/state";
 import {UserContext, Stage, ExamBoard} from "../../IsaacApiTypes";
 
@@ -60,7 +68,7 @@ describe("User context derivation", () => {
             // Act
             const result = determineUserContext({}, registered, undefined, undefined);
 
-            // Asserqt
+            // Assert
             expect(result.stage).toEqual(STAGE.A_LEVEL);
             expect(result.explanation.stage).toEqual(CONTEXT_SOURCE.REGISTERED);
 
@@ -197,4 +205,25 @@ describe("User context derivation", () => {
             expect(result.hasDefaultPreferences).toEqual(false);
         });
     }
+});
+
+describe("Get filtered stage", () => {
+    it("does not include ALL as an option by default", () => {
+        // Act
+        const result = getFilteredStageOptions();
+
+        // Assert
+        expect(result.some((e) =>  {return e.value == STAGE.ALL;})).toBe(false);
+    });
+
+    it("includes ALL as an option when includeNullOptions option is true", () => {
+        // Arrange
+        const options = {includeNullOptions: true};
+
+        // Act
+        const result = getFilteredStageOptions(options);
+
+        // Assert
+        expect(result.some((e) =>  {return e.value == STAGE.ALL;})).toBe(true);
+    });
 });

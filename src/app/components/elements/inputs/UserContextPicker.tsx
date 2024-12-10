@@ -46,7 +46,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const userContext = useUserViewingContext();
 
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
-    const allStages = getFilteredStageOptions();
+    const allStages = getFilteredStageOptions({includeNullOptions: true});
 
     const onlyOneBoard : {label: string, value: EXAM_BOARD} | undefined = filteredExamBoardOptions.length === 2 && filteredExamBoardOptions.map(eb => eb.value).includes(EXAM_BOARD.ALL)
         ? filteredExamBoardOptions.filter(eb => eb.value !== EXAM_BOARD.ALL)[0]
