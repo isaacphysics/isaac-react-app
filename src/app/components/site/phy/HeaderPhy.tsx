@@ -7,6 +7,7 @@ import {above, useDeviceSize} from "../../../services";
 import { AffixButton } from "../../elements/AffixButton";
 import { MenuOpenContext } from "../../navigation/NavigationBar";
 import classNames from "classnames";
+import { NavigationMenuPhy } from "./NavigationMenuPhy";
 
 export const HeaderPhy = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -75,6 +76,13 @@ export const HeaderPhy = () => {
                             </MenuOpenContext.Provider>
                         </>
                     }
+                </Col>
+            </Row>
+        </Container>
+        <Container fluid id="content-nav-container">
+            <Row>
+                <Col>
+                    <NavigationMenuPhy/>
                 </Col>
             </Row>
         </Container>

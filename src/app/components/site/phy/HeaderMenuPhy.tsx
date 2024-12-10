@@ -91,8 +91,4 @@ export const HeaderMenuPhy = (props: NavProps) => {
                 : <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>}
             <LinkItem to="/contact">Contact Us</LinkItem>
         </NavigationSection> */ }
-
-        {/* <div className="header-search m-md-0 ms-md-auto align-items-center d-print-none pt-3">
-            <MainSearch />
-        </div> */}
 };

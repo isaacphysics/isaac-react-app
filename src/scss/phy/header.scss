@@ -59,3 +59,71 @@ div#header-progress {
 header {
   z-index: 20;
 }
+
+#content-nav-container {
+  background-color: $color-neutral-50;
+
+  .explore-group {
+    > span {
+      color: $color-neutral-500;
+    }
+
+    > ul {
+      list-style-type: none;
+      list-style-image: none;
+    }
+
+    li.dropdown {
+
+      > a {
+        font-size: 15px;
+        font-weight: 600;
+        font-family: $secondary-font;
+      }
+
+      &::after {
+        @include pseudo-element;
+        width: 16px;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-bottom: 4px solid $color-neutral-200;
+        transition: width 0.2s ease, border-color 0.4s ease-out;
+      }
+
+      &:hover::after {
+        width: 24px;
+      }
+
+      &.active::after {
+        border-color: var(--nav-primary);
+        width: calc(100% - 1rem);
+      }
+
+      div.dropdown-menu {
+        border: none;
+        border-radius: 0;
+        min-width: 200px;
+        margin-top: -2px;
+        background-color: $color-neutral-50;
+
+        a {
+          min-width: max-content;
+          font-size: 14px;
+          text-decoration: none;
+          &:hover {
+            background-color: $color-neutral-100;
+          }
+
+          i.icon {
+            background-color: var(--nav-primary);
+          }
+        }
+      }
+    }
+  }
+
+  a {
+    color: $color-neutral-900;
+  }
+}
