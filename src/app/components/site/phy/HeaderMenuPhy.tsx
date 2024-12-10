@@ -10,7 +10,6 @@ export const HeaderMenuPhy = (props: NavProps) => {
     const deviceSize = useDeviceSize();
     const isOffcanvas = !above["lg"](deviceSize);
     const isAdminTabVisible = user && isStaff(user) || isEventLeader(user);
-    // const {assignmentsCount, quizzesCount} = useAssignmentsCount();
     
     return <Nav {...props} navbar className={classNames("justify-content-between", props.className, "pe-0", {"pe-md-3" : !isAdminTabVisible})} id="main-menu">
         {isOffcanvas && <NavigationSection topLevelLink to="/" title={"Home"}/>}

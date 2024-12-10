@@ -9,17 +9,20 @@ import { MenuOpenContext } from "../../navigation/NavigationBar";
 import classNames from "classnames";
 import { NavigationMenuPhy } from "./NavigationMenuPhy";
 
-export const HeaderPhy = () => {
+export const LoginLogoutButton = () => {
     const user = useAppSelector(selectors.user.orNull);
+    
+    return user && (user.loggedIn 
+        ? <Link to="/logout">Log out</Link>
+        : <Button color="solid" size="sm" tag={Link} to="/login">Sign up / log in</Button>
+    );
+};
+
+export const HeaderPhy = () => {
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(m => !m);
-
-    const LoginLogoutButton = () => user && (user.loggedIn 
-        ? <Link to="/logout">Log out</Link>
-        : <Button color="solid" size="sm" tag={Link} to="/login">Sign up / log in</Button>
-    );
 
     return <header className="bg-white" data-testid={"header"}>
         <Container fluid>
