@@ -85,6 +85,14 @@
   @include svg-icon('/assets/phy/icons/redesign/hexagon.svg', 16px, 16px);
 }
 
+.icon-my-isaac {
+  @include svg-icon('/assets/phy/icons/redesign/my-isaac.svg', 28px, 28px);
+}
+
+.icon-search {
+  @include svg-icon('/assets/phy/icons/redesign/search.svg', 16px, 16px);
+}
+
 svg {
   &.almost-fill {
     fill: $phy_extra_force_yellow;

@@ -3,7 +3,7 @@ import { Dropdown, DropdownMenu, DropdownProps, DropdownToggle, Nav } from "reac
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
-import { HUMAN_STAGES, HUMAN_SUBJECTS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS } from "../../../services";
+import { HUMAN_STAGES, HUMAN_SUBJECTS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, isTeacherOrAbove } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
@@ -97,22 +97,24 @@ export const NavigationMenuPhy = () => {
 
     return <Nav tag="nav" className="d-flex align-items-end" id="content-nav">
         <NavigationSection>
+            <i className="icon icon-my-isaac me-1 mt-2" />
             <NavigationDropdown title="My Isaac" id="my-isaac-dropdown">
                 {user?.loggedIn
-                    ? <>
+                    ? <div style={{columnCount: 2}}>
+                        {isTeacherOrAbove(user) && <h5>{"STUDENT"}</h5>}
                         <NavigationItem hideIcon href="/my_gameboards">
                             My question packs
                         </NavigationItem>
                         <NavigationItem hideIcon href="/assignments">
                             My assignments
-                            <span className="badge bg-primary ms-2">{assignmentsCount}</span>
+                            <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount}</span>
                         </NavigationItem>
                         <NavigationItem hideIcon href="/progress">
                             My progress
                         </NavigationItem>
                         <NavigationItem hideIcon href="/tests">
                             My tests
-                            <span className="badge bg-primary ms-2">{quizzesCount}</span>
+                            <span className="badge bg-primary rounded-5 ms-2">{quizzesCount}</span>
                         </NavigationItem>
                         <div className="dropdown-divider" />
                         <NavigationItem hideIcon href="/account">
@@ -121,7 +123,30 @@ export const NavigationMenuPhy = () => {
                         <NavigationItem hideIcon href="/logout">
                             Log out
                         </NavigationItem>
-                    </>
+                        {isTeacherOrAbove(user) &&
+                            <>
+                                <h5>{"TEACHER"}</h5>
+                                <NavigationItem hideIcon href="/teacher_features">
+                                    Teacher features
+                                </NavigationItem>
+                                <NavigationItem hideIcon href="/groups">
+                                    Manage groups
+                                </NavigationItem>
+                                <NavigationItem hideIcon href="/set_assignments">
+                                    Set assignments
+                                </NavigationItem>
+                                <NavigationItem hideIcon href="/assignment_schedule">
+                                    Assignment schedule
+                                </NavigationItem>
+                                <NavigationItem hideIcon href="/assignment_progress">
+                                    Assignment progress
+                                </NavigationItem>
+                                <NavigationItem hideIcon href="/set_tests">
+                                    Set / manage tests
+                                </NavigationItem>
+                            </>
+                        }
+                    </div>
                     : <li>
                         Lorem ipsum.
                         <br/>
@@ -129,6 +154,7 @@ export const NavigationMenuPhy = () => {
                     </li>
                 }
             </NavigationDropdown>
+            <span className="badge bg-primary rounded-5 ms-2 mt-3 h-25">{assignmentsCount + quizzesCount}</span>
         </NavigationSection>
         <NavigationSection title="Explore by learning stage" className="border-start">
             {Object.entries(PHY_NAV_STAGES).map(([stage, subjects], i) => {
@@ -150,7 +176,7 @@ export const NavigationMenuPhy = () => {
                 return <NavigationDropdown key={i} title={humanSubject} data-bs-theme={subject}>
                     {stages.map((stage, j) => {
                         const humanStage = HUMAN_STAGES[stage.valueOf()];
-                        return <NavigationItem key={j} href={`/${subject}/${stage}`}>;
+                        return <NavigationItem key={j} href={`/${subject}/${stage}`}>
                             <i className="icon icon-hexagon me-1" />
                             <span>{humanStage} {humanSubject}</span>
                         </NavigationItem>;

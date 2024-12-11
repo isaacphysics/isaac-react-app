@@ -119,6 +119,12 @@ header {
             background-color: var(--nav-primary);
           }
         }
+
+        h5 {
+          font-size: 13px;
+          color: $color-neutral-500;
+          margin-left: 24px;
+        }
       }
     }
   }
