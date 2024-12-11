@@ -29,6 +29,11 @@
   }
 }
 
+.navbar-search {
+  border: 1px solid $color-neutral-300;
+  @include border-radius($input-border-radius, 0);
+}
+
 // NOMENSA search.scss
 // REMEMBER TO REPLACE ./assets/ WITH /assets/
 nav.search {
