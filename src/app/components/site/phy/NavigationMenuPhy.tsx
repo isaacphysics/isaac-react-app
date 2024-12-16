@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Dropdown, DropdownMenu, DropdownProps, DropdownToggle, Nav } from "reactstrap";
+import { Dropdown, DropdownMenu, DropdownProps, DropdownToggle, Nav, NavLink } from "reactstrap";
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
@@ -7,6 +7,7 @@ import { HUMAN_STAGES, HUMAN_SUBJECTS, PHY_NAV_STAGES, PHY_NAV_SUBJECTS, isTeach
 import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
+import { Link } from "react-router-dom";
 
 interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
     title: React.ReactNode;
@@ -15,7 +16,7 @@ interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
 }
 
 const NavigationDropdown = (props: NavigationDropdownProps) => {
-    const { className, title, children, ...rest } = props;
+    const { className, title, ariaTitle, children, ...rest } = props;
     const [isOpen, setIsOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -62,14 +63,15 @@ const NavigationDropdown = (props: NavigationDropdownProps) => {
     }, [isHovered]);
 
     return <Dropdown {...rest} nav inNavbar className={classNames(className, { "active": isOpen })} isOpen={isOpen} onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)} onMouseDown={() => setIsHovered(false)} toggle={toggle} title={""} aria-label={props.ariaTitle ?? title?.valueOf() as string}
+        onMouseLeave={() => setIsHovered(false)} onMouseDown={() => setIsHovered(false)} toggle={toggle} title={""} aria-label={ariaTitle ?? title?.valueOf() as string}
         // the regular title prop is for a hover tooltip, which we don't want. not defining makes it use the nearest span instead...
     >
 
         <DropdownToggle nav className="p-2 pb-4" tabIndex={isOpen ? -1 : 0}>
             {title}
         </DropdownToggle>
-        <DropdownMenu>
+        <DropdownMenu onMouseDown={(e) => e.stopPropagation()} onMouseUp={() => toggle()}>
+            {/* don't fire the onMouseDown event in the parent Dropdown (needed for mobile press check) if we click on the body (i.e. a link). */}
             {children}
         </DropdownMenu>
     </Dropdown>;
@@ -94,14 +96,13 @@ const NavigationSection = (props: NavigationSectionProps) => {
 interface NavigationItemProps extends React.HTMLAttributes<HTMLAnchorElement> {
     href: string;
     children: React.ReactNode;
-    hideIcon?: boolean;
 }
 
 const NavigationItem = (props: NavigationItemProps) => {
-    const { children, hideIcon, ...rest } = props;
-    return <a {...rest} tabIndex={0} role="menuitem" className="d-flex align-items-center px-4 py-2">
+    const { children, href, ...rest } = props;
+    return <NavLink {...rest} to={href} tag={Link} tabIndex={0} role="menuitem" className="d-flex align-items-center px-4 py-2">
         {children}
-    </a>;
+    </NavLink>;
 };
 
 export const NavigationMenuPhy = () => {
@@ -110,64 +111,72 @@ export const NavigationMenuPhy = () => {
 
     return <Nav tag="nav" className="d-flex align-items-end" id="content-nav">
         <NavigationSection>
-            <i className="icon icon-my-isaac me-1 mt-2" />
-            <NavigationDropdown title="My Isaac" id="my-isaac-dropdown">
+            <NavigationDropdown ariaTitle={`My Isaac (${assignmentsCount + quizzesCount} tasks to do)`} title={<div className="d-flex align-items-center">
+                <i className="icon icon-my-isaac icon-color-brand me-2"/>
+                My Isaac
+                <span className="badge bg-primary rounded-5 ms-2 h-max-content">{assignmentsCount + quizzesCount}</span>
+            </div>} id="my-isaac-dropdown">
                 {user?.loggedIn
-                    ? <div style={{columnCount: 2}}>
-                        {isTeacherOrAbove(user) && <h5>{"STUDENT"}</h5>}
-                        <NavigationItem hideIcon href="/my_gameboards">
-                            My question packs
-                        </NavigationItem>
-                        <NavigationItem hideIcon href="/assignments">
-                            My assignments
-                            <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount}</span>
-                        </NavigationItem>
-                        <NavigationItem hideIcon href="/progress">
-                            My progress
-                        </NavigationItem>
-                        <NavigationItem hideIcon href="/tests">
-                            My tests
-                            <span className="badge bg-primary rounded-5 ms-2">{quizzesCount}</span>
-                        </NavigationItem>
-                        <div className="dropdown-divider" />
-                        <NavigationItem hideIcon href="/account">
-                            My account
-                        </NavigationItem>
-                        <NavigationItem hideIcon href="/logout">
-                            Log out
-                        </NavigationItem>
-                        {isTeacherOrAbove(user) &&
-                            <>
+                    ? <div>
+                        <div className="d-flex">
+                            <div>
+                                {isTeacherOrAbove(user) && <h5>{"STUDENT"}</h5>}
+                                <NavigationItem href="/my_gameboards">
+                                    My question packs
+                                </NavigationItem>
+                                <NavigationItem href="/assignments">
+                                    My assignments
+                                    <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount}</span>
+                                </NavigationItem>
+                                <NavigationItem href="/progress">
+                                    My progress
+                                </NavigationItem>
+                                <NavigationItem href="/tests">
+                                    My tests
+                                    <span className="badge bg-primary rounded-5 ms-2">{quizzesCount}</span>
+                                </NavigationItem>
+                            </div>
+
+                            <div className="dropdown-divider-y" />
+
+                            {isTeacherOrAbove(user) && <div>
                                 <h5>{"TEACHER"}</h5>
-                                <NavigationItem hideIcon href="/teacher_features">
+                                <NavigationItem href="/teacher_features">
                                     Teacher features
                                 </NavigationItem>
-                                <NavigationItem hideIcon href="/groups">
+                                <NavigationItem href="/groups">
                                     Manage groups
                                 </NavigationItem>
-                                <NavigationItem hideIcon href="/set_assignments">
+                                <NavigationItem href="/set_assignments">
                                     Set assignments
                                 </NavigationItem>
-                                <NavigationItem hideIcon href="/assignment_schedule">
+                                <NavigationItem href="/assignment_schedule">
                                     Assignment schedule
                                 </NavigationItem>
-                                <NavigationItem hideIcon href="/assignment_progress">
+                                <NavigationItem href="/assignment_progress">
                                     Assignment progress
                                 </NavigationItem>
-                                <NavigationItem hideIcon href="/set_tests">
+                                <NavigationItem href="/set_tests">
                                     Set / manage tests
                                 </NavigationItem>
-                            </>
-                        }
+                            </div>}
+                        </div>
+
+                        <div className="dropdown-divider" />
+                        <NavigationItem href="/account">
+                            My account
+                        </NavigationItem>
+                        <NavigationItem href="/logout">
+                            Log out
+                        </NavigationItem>
                     </div>
-                    : <li>
-                        Lorem ipsum.
+                    : <li className="px-4">
+                        <span>You&apos;re not currently logged in. Log in or sign up for free below!</span>
                         <br/>
-                        <LoginLogoutButton/>
+                        <LoginLogoutButton className="my-2"/>
                     </li>
                 }
             </NavigationDropdown>
-            <span className="badge bg-primary rounded-5 ms-2 mt-3 h-25">{assignmentsCount + quizzesCount}</span>
         </NavigationSection>
         <NavigationSection title="Explore by learning stage" className="border-start">
             {Object.entries(PHY_NAV_STAGES).map(([stage, subjects], i) => {
