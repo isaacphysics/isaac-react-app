@@ -8,41 +8,53 @@ import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
 
-const NavigationDropdown = (props: DropdownProps) => {
-    const { className, ...rest } = props;
+interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
+    title: React.ReactNode;
+    // if the above is not a string, the dropdown should have an aria label to describe it
+    ariaTitle?: string;
+}
+
+const NavigationDropdown = (props: NavigationDropdownProps) => {
+    const { className, title, children, ...rest } = props;
     const [isOpen, setIsOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
+    const timerId = useRef<number | null>(null);
+
+    const clearTimer = () => {
+        if (timerId.current) {
+            window.clearTimeout(timerId.current);
+        }
+    };
 
     // TODO: two dropdowns can be toggled simultaneously using keyboard focus and hover. disable hover if focus is active elsewhere
 
     const toggle = useCallback((e?: any) => {
         setIsOpen(o => !o);
+        setIsFocused(false);
         if (e && e.type === "click") {
             if (isHovered) {
                 setIsOpen(true);
             }
         }
-    }, [isHovered]);
-
-    const timerId = useRef<number | null>(null);
-
-    const forceToggle = () => {
-        if (timerId.current) {
-            window.clearTimeout(timerId.current);
+        if (e && e.type === "touchstart") {
+            setIsOpen(true);
         }
-        toggle();
-    };
+
+    }, [isHovered]);
 
     useEffect(() => {
         if (isHovered) {
-            // start a 250ms timer to show the dropdown
-            timerId.current = window.setTimeout(toggle, 250);
-        } else {
-            if (timerId.current) {
-                window.clearTimeout(timerId.current);
-            }
-
             if (isOpen) {
+                setIsFocused(true);
+            } else {
+                // start a 250ms timer to show the dropdown
+                timerId.current = window.setTimeout(toggle, 250);
+            }
+        } else {
+            clearTimer();
+
+            if (isOpen && !isFocused) {
                 toggle();
             }
         }
@@ -50,14 +62,15 @@ const NavigationDropdown = (props: DropdownProps) => {
     }, [isHovered]);
 
     return <Dropdown {...rest} nav inNavbar className={classNames(className, { "active": isOpen })} isOpen={isOpen} onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)} onMouseDown={forceToggle} toggle={toggle}>
-
+        onMouseLeave={() => setIsHovered(false)} onMouseDown={() => setIsHovered(false)} toggle={toggle} title={""} aria-label={props.ariaTitle ?? title?.valueOf() as string}
+        // the regular title prop is for a hover tooltip, which we don't want. not defining makes it use the nearest span instead...
+    >
 
         <DropdownToggle nav className="p-2 pb-4" tabIndex={isOpen ? -1 : 0}>
-            {props.title}
+            {title}
         </DropdownToggle>
         <DropdownMenu>
-            {props.children}
+            {children}
         </DropdownMenu>
     </Dropdown>;
 };
