@@ -28,3 +28,12 @@
     color: $secondary;
   }
 }
+
+.search--main-group {
+  &.form-group {
+    input.form-control {
+      border: 1px solid $color-neutral-300;
+      @include border-radius($input-border-radius, 0);
+    }
+  }
+}

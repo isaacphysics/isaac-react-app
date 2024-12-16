@@ -103,12 +103,12 @@ header {
       div.dropdown-menu {
         border: none;
         border-radius: 0;
-        min-width: 200px;
         margin-top: -2px;
         background-color: $color-neutral-50;
+        min-width: 268px;
 
-        a {
-          min-width: max-content;
+        a:not(.btn) {
+          min-width: 268px;
           font-size: 14px;
           text-decoration: none;
           &:hover {
@@ -129,7 +129,7 @@ header {
     }
   }
 
-  a {
+  a:not(.btn) {
     color: $color-neutral-900;
   }
 }

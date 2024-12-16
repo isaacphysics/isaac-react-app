@@ -9,12 +9,12 @@ import { MenuOpenContext } from "../../navigation/NavigationBar";
 import classNames from "classnames";
 import { NavigationMenuPhy } from "./NavigationMenuPhy";
 
-export const LoginLogoutButton = () => {
+export const LoginLogoutButton = (props : React.HTMLAttributes<HTMLElement>) => {
     const user = useAppSelector(selectors.user.orNull);
     
     return user && (user.loggedIn 
-        ? <Link to="/logout">Log out</Link>
-        : <Button color="solid" size="sm" tag={Link} to="/login">Sign up / log in</Button>
+        ? <Link to="/logout" {...props}>Log out</Link>
+        : <Button color="solid" size="sm" tag={Link} to="/login" {...props}>Sign up / log in</Button>
     );
 };
 
