@@ -265,18 +265,22 @@ const ContentNavProfile = () => {
                     Log out
                 </NavigationItem>
             </div>
-            : <li className="px-4">
+            : <div className="px-4">
                 <span>You&apos;re not currently logged in. Log in or sign up for free below!</span>
                 <br/>
                 <LoginLogoutButton className="my-2"/>
-            </li>
+            </div>
         }
     </>;
+
+    const taskCount = assignmentsCount + quizzesCount;
 
     const title = <div className="d-flex align-items-center">
         <i className="icon icon-my-isaac icon-color-brand me-2"/>
         My Isaac
-        <span className="badge bg-primary rounded-5 ms-2 h-max-content">{assignmentsCount + quizzesCount > 99 ? "99+" : assignmentsCount + quizzesCount}</span>
+        {taskCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">
+            {taskCount > 99 ? "99+" : taskCount}
+        </span>}
     </div>;
 
     return above["md"](deviceSize) 
@@ -284,7 +288,7 @@ const ContentNavProfile = () => {
             {/* <div className={"d-flex flex-column p-0 pt-3 pe-3 explore-group"}>
             <ul className="d-flex p-0 gap-2 m-0"> */}
             <HoverableNavigationDropdown 
-                ariaTitle={`My Isaac (${assignmentsCount + quizzesCount} tasks to do)`} 
+                ariaTitle={`My Isaac (${taskCount} tasks to do)`} 
                 title={title} 
                 id="my-isaac-dropdown"
                 toggleClassName="ps-0"
