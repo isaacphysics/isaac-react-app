@@ -280,7 +280,7 @@ const ContentNavProfile = () => {
     </div>;
 
     return above["md"](deviceSize) 
-        ? <ContentNavHoverableWrapper> 
+        ? <ContentNavHoverableWrapper className="ps-0"> 
             {/* <div className={"d-flex flex-column p-0 pt-3 pe-3 explore-group"}>
             <ul className="d-flex p-0 gap-2 m-0"> */}
             <HoverableNavigationDropdown 
