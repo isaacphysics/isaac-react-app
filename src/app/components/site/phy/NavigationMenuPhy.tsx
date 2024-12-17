@@ -123,14 +123,20 @@ const NavigationSection = (props: NavigationSectionProps) => {
             {/* a little annoying, but the bottom padding (^) must be moved to the links as we need the dropdown not to disappear when hovering the space between it and the button */ }
             {title ? <span className="px-2">{title}</span> : <Spacer />}
             <ul className="d-flex p-0 gap-2 m-0">
-                {categories?.map((category, i) => <HoverableNavigationDropdown key={i} title={category.title}>
-                    {category.subcategories.map((subcategory, j) => {
-                        return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme}>
-                            <i className="icon icon-hexagon me-1" />
-                            <span>{subcategory.fullTitle}</span>
-                        </NavigationItem>;
-                    })}
-                </HoverableNavigationDropdown>)}
+                {categories?.map((category, i) => {
+                    let sharedTheme = undefined;
+                    if (category.subcategories.map(subcategory => subcategory.theme).every((theme, j, arr) => theme === arr[0])) {
+                        sharedTheme = category.subcategories[0].theme;
+                    }
+                    return <HoverableNavigationDropdown key={i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}>
+                        {category.subcategories.map((subcategory, j) => {
+                            return <NavigationItem key={j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.theme })}>
+                                <i className="icon icon-hexagon me-1" />
+                                <span>{subcategory.fullTitle}</span>
+                            </NavigationItem>;
+                        })}
+                    </HoverableNavigationDropdown>;
+                })}
             </ul>
         </div> 
         : <div className="explore-group">
