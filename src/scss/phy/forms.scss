@@ -31,6 +31,9 @@
 
 .search--main-group {
   &.form-group {
+    @include respond-below(lg) {
+      width: 130px;
+    }
     input.form-control {
       border: 1px solid $color-neutral-300;
       @include border-radius($input-border-radius, 0);

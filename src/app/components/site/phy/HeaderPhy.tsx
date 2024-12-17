@@ -82,12 +82,12 @@ export const HeaderPhy = () => {
                 </Col>
             </Row>
         </Container>
-        <Container fluid id="content-nav-container">
+        {above["md"](deviceSize) && <Container fluid id="content-nav-container">
             <Row>
                 <Col>
                     <NavigationMenuPhy/>
                 </Col>
             </Row>
-        </Container>
+        </Container>}
     </header>;
 };

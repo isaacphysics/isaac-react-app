@@ -74,30 +74,59 @@ header {
     }
 
     li.dropdown {
+      &.hoverable {
+        &::after {
+          @include pseudo-element;
+          width: 16px;
+          bottom: 16px;
+          left: 50%;
+          transform: translateX(-50%);
+          border-bottom: 4px solid $color-neutral-200;
+          transition: width 0.2s ease, border-color 0.4s ease-out;
+        }
+  
+        &:hover::after {
+          width: 24px;
+        }
+  
+        &.active::after {
+          border-color: var(--nav-primary);
+          width: calc(100% - 1rem);
+        }
+      }
 
       > a {
         font-size: 15px;
-        font-weight: 600;
         font-family: $secondary-font;
+        color: $color-neutral-900;
+        font-weight: 600;
       }
 
-      &::after {
-        @include pseudo-element;
-        width: 16px;
-        bottom: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-        border-bottom: 4px solid $color-neutral-200;
-        transition: width 0.2s ease, border-color 0.4s ease-out;
-      }
+      &:not(.hoverable) {
+        > a {
+          font-size: 15px;
+          font-family: $primary-font;
+          color: $color-neutral-500;
+          font-weight: 400;
 
-      &:hover::after {
-        width: 24px;
-      }
+          &::after {
+            content: "";
+            position: relative;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+            @include svg-icon('/assets/common/icons/chevron_down.svg', 16px, 16px);
+            transform: rotate3d(1, 0, 0, 0deg);
+            transition: transform 0.21s ease-in-out;
+          }
+        }
 
-      &.active::after {
-        border-color: var(--nav-primary);
-        width: calc(100% - 1rem);
+        &:hover > a, &.active > a {
+          color: $color-neutral-900;
+        }
+
+        &.active > a::after {
+          transform: rotate3d(1, 0, 0, 180deg);
+        }
       }
 
       div.dropdown-menu {
@@ -121,9 +150,8 @@ header {
         }
 
         h5 {
-          font-size: 13px;
-          color: $color-neutral-500;
-          margin-left: 24px;
+          font-size: 16px;
+          line-height: 1.1;
         }
       }
     }
