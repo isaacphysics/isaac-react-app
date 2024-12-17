@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Dropdown, DropdownMenu, DropdownProps, DropdownToggle, Nav, NavLink } from "reactstrap";
+import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Dropdown, DropdownMenu, DropdownProps, DropdownToggle, Nav, NavLink, UncontrolledAccordion } from "reactstrap";
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
@@ -98,6 +98,38 @@ const StaticNavigationDropdown = (props: NavigationDropdownProps) => {
     </Dropdown>;
 };
 
+interface ContentNavWrapperProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+    title?: React.ReactNode;
+}
+
+const ContentNavHoverableWrapper = (props : ContentNavWrapperProps) => {
+    const {title, className, children, ...rest} = props;
+    return <div {...rest} className={classNames("d-flex flex-column p-3 pb-0 explore-group", className)}>
+        {/* a little annoying, but the bottom padding (^) must be moved to the links as we need the dropdown not to disappear when hovering the space between it and the button */ }
+        {title ? <span className="px-2">{title}</span> : <Spacer />}
+        <ul className="d-flex p-0 gap-2 m-0">
+            {children}
+        </ul>
+    </div>; 
+};
+
+const ContentNavAccordionWrapper = (props : ContentNavWrapperProps) => {
+    const {title, children, ...rest} = props;
+    const [open, setOpen] = useState<string>('');
+    const toggle = (id : string) => setOpen(open === id ? '' : id);
+
+    return <Accordion className="explore-group mb-3" open={open} toggle={toggle} tag={"li"}>
+        <AccordionItem>
+            <AccordionHeader targetId="1" tag={"h5"}>
+                {title}
+            </AccordionHeader>
+            <AccordionBody accordionId="1" {...rest}>
+                {children}
+            </AccordionBody>
+        </AccordionItem>
+    </Accordion>;
+};
+
 interface NavigationSubcategory {
     fullTitle: string;
     href: string;
@@ -114,49 +146,156 @@ interface NavigationSectionProps extends React.HTMLAttributes<HTMLDivElement> {
     categories?: NavigationCategory[];
 }
 
-const NavigationSection = (props: NavigationSectionProps) => {
-    const { title, categories, className, ...rest } = props;
+const ContentNavSection = (props: NavigationSectionProps) => {
+    const { title, categories, ...rest } = props;
     const deviceSize = useDeviceSize();
 
     return above["xl"](deviceSize) 
-        ? <div {...rest} className={classNames("d-flex flex-column p-3 pb-0 explore-group", className)}>
-            {/* a little annoying, but the bottom padding (^) must be moved to the links as we need the dropdown not to disappear when hovering the space between it and the button */ }
-            {title ? <span className="px-2">{title}</span> : <Spacer />}
-            <ul className="d-flex p-0 gap-2 m-0">
+        // full-width, hoverable dropdowns
+        ? <ContentNavHoverableWrapper title={title} {...rest}>
+            {categories?.map((category, i) => {
+                let sharedTheme = undefined;
+                if (category.subcategories.every((sub, _j, arr) => sub.theme === arr[0].theme)) {
+                    sharedTheme = category.subcategories[0].theme;
+                }
+                return <HoverableNavigationDropdown key={i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}>
+                    {category.subcategories.map((subcategory, j) => {
+                        return <NavigationItem key={j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.theme })}>
+                            <i className="icon icon-hexagon me-1" />
+                            <span>{subcategory.fullTitle}</span>
+                        </NavigationItem>;
+                    })}
+                </HoverableNavigationDropdown>;
+            })}
+        </ContentNavHoverableWrapper> 
+        // restricted width, static dropdowns
+        : above["md"](deviceSize) 
+            ? <div className="explore-group">
+                <ul className="d-flex p-0 gap-2 m-0">
+                    <StaticNavigationDropdown title={title} {...rest}>
+                        {categories?.map((category, i) => {
+                            return <>
+                                <h5 className="px-4 m-0 py-2">{category.title}</h5>
+                                {category.subcategories.map((subcategory, j) => {
+                                    return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme}>
+                                        <i className="icon icon-hexagon me-1" />
+                                        <span>{subcategory.fullTitle}</span>
+                                    </NavigationItem>;
+                                })}
+                                {i < categories.length - 1 && <div className="section-divider"/>}
+                            </>;
+                        })}
+                    </StaticNavigationDropdown>
+                </ul>
+            </div>
+            // full width, accordion-style dropdowns -- only in the offcanvas
+            : <ContentNavAccordionWrapper title={title}>
                 {categories?.map((category, i) => {
-                    let sharedTheme = undefined;
-                    if (category.subcategories.map(subcategory => subcategory.theme).every((theme, j, arr) => theme === arr[0])) {
-                        sharedTheme = category.subcategories[0].theme;
-                    }
-                    return <HoverableNavigationDropdown key={i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}>
+                    return <>
+                        <h5 className="px-4 m-0 py-2">{category.title}</h5>
                         {category.subcategories.map((subcategory, j) => {
-                            return <NavigationItem key={j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.theme })}>
-                                <i className="icon icon-hexagon me-1" />
+                            return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme}>
+                                <i className="icon icon-hexagon me-1"/>
                                 <span>{subcategory.fullTitle}</span>
                             </NavigationItem>;
                         })}
-                    </HoverableNavigationDropdown>;
+                        {i < categories.length - 1 && <div className="section-divider"/>}
+                    </>;
                 })}
-            </ul>
-        </div> 
-        : <div className="explore-group">
-            <ul className="d-flex p-0 gap-2 m-0">
-                <StaticNavigationDropdown title={title} className={className}>
-                    {categories?.map((category, i) => {
-                        return <>
-                            <h5 className="px-4 m-0 py-2">{category.title}</h5>
-                            {category.subcategories.map((subcategory, j) => {
-                                return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme}>
-                                    <i className="icon icon-hexagon me-1" />
-                                    <span>{subcategory.fullTitle}</span>
-                                </NavigationItem>;
-                            })}
-                            {i < categories.length - 1 && <div className="dropdown-divider"/>}
-                        </>;
-                    })}
-                </StaticNavigationDropdown>
-            </ul>
-        </div>;
+            </ContentNavAccordionWrapper>;
+};
+
+const ContentNavProfile = () => {
+    const user = useAppSelector(selectors.user.orNull);
+    const {assignmentsCount, quizzesCount} = useAssignmentsCount();
+    const deviceSize = useDeviceSize();
+
+    const profileTabContents = <>
+        {user?.loggedIn
+            ? <div>
+                <div className="d-flex flex-column flex-sm-row">
+                    <div>
+                        {isTeacherOrAbove(user) && <h5>STUDENT</h5>}
+                        <NavigationItem href="/my_gameboards">
+                            My question packs
+                        </NavigationItem>
+                        <NavigationItem href="/assignments">
+                            My assignments
+                            <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount}</span>
+                        </NavigationItem>
+                        <NavigationItem href="/progress">
+                            My progress
+                        </NavigationItem>
+                        <NavigationItem href="/tests">
+                            My tests
+                            <span className="badge bg-primary rounded-5 ms-2">{quizzesCount}</span>
+                        </NavigationItem>
+                    </div>
+
+                    <div className={above["sm"](deviceSize) ? "section-divider-y" : "section-divider"}/>
+
+                    {isTeacherOrAbove(user) && <div>
+                        <h5 className="pt-2 pt-sm-0">{"TEACHER"}</h5>
+                        <NavigationItem href="/teacher_features">
+                            Teacher features
+                        </NavigationItem>
+                        <NavigationItem href="/groups">
+                            Manage groups
+                        </NavigationItem>
+                        <NavigationItem href="/set_assignments">
+                            Set assignments
+                        </NavigationItem>
+                        <NavigationItem href="/assignment_schedule">
+                            Assignment schedule
+                        </NavigationItem>
+                        <NavigationItem href="/assignment_progress">
+                            Assignment progress
+                        </NavigationItem>
+                        <NavigationItem href="/set_tests">
+                            Set / manage tests
+                        </NavigationItem>
+                    </div>}
+                </div>
+
+                <div className="section-divider" />
+                <NavigationItem href="/account">
+                    My account
+                </NavigationItem>
+                <NavigationItem href="/logout">
+                    Log out
+                </NavigationItem>
+            </div>
+            : <li className="px-4">
+                <span>You&apos;re not currently logged in. Log in or sign up for free below!</span>
+                <br/>
+                <LoginLogoutButton className="my-2"/>
+            </li>
+        }
+    </>;
+
+    const title = <div className="d-flex align-items-center">
+        <i className="icon icon-my-isaac icon-color-brand me-2"/>
+        My Isaac
+        <span className="badge bg-primary rounded-5 ms-2 h-max-content">{assignmentsCount + quizzesCount > 99 ? "99+" : assignmentsCount + quizzesCount}</span>
+    </div>;
+
+    return above["md"](deviceSize) 
+        ? <ContentNavHoverableWrapper> 
+            {/* <div className={"d-flex flex-column p-0 pt-3 pe-3 explore-group"}>
+            <ul className="d-flex p-0 gap-2 m-0"> */}
+            <HoverableNavigationDropdown 
+                ariaTitle={`My Isaac (${assignmentsCount + quizzesCount} tasks to do)`} 
+                title={title} 
+                id="my-isaac-dropdown"
+                toggleClassName="ps-0"
+            >
+                {profileTabContents}   
+            </HoverableNavigationDropdown>
+        </ContentNavHoverableWrapper>
+        : <ContentNavAccordionWrapper title={title}>
+            {profileTabContents}
+        </ContentNavAccordionWrapper>;
+
 };
 
 interface NavigationItemProps extends React.HTMLAttributes<HTMLAnchorElement> {
@@ -172,8 +311,7 @@ const NavigationItem = (props: NavigationItemProps) => {
 };
 
 export const NavigationMenuPhy = () => {
-    const user = useAppSelector(selectors.user.orNull);
-    const {assignmentsCount, quizzesCount} = useAssignmentsCount();
+    const deviceSize = useDeviceSize();
 
     const stageCategories = Object.entries(PHY_NAV_STAGES).map(([stage, subjects]) => {
         const humanStage = HUMAN_STAGES[stage];
@@ -205,88 +343,16 @@ export const NavigationMenuPhy = () => {
         };
     });
 
-    return <Nav tag="nav" className="d-flex align-items-end" id="content-nav">
-        <div className={"d-flex flex-column p-0 pt-3 pe-3 explore-group"}>
-            <ul className="d-flex p-0 gap-2 m-0">
-                <HoverableNavigationDropdown 
-                    ariaTitle={`My Isaac (${assignmentsCount + quizzesCount} tasks to do)`} 
-                    title={<div className="d-flex align-items-center">
-                        <i className="icon icon-my-isaac icon-color-brand me-2"/>
-                        My Isaac
-                        <span className="badge bg-primary rounded-5 ms-2 h-max-content">{assignmentsCount + quizzesCount > 99 ? "99+" : assignmentsCount + quizzesCount}</span>
-                    </div>} 
-                    id="my-isaac-dropdown"
-                    toggleClassName="ps-0"
-                >
-                    {user?.loggedIn
-                        ? <div>
-                            <div className="d-flex">
-                                <div>
-                                    {isTeacherOrAbove(user) && <h5>{"STUDENT"}</h5>}
-                                    <NavigationItem href="/my_gameboards">
-                                        My question packs
-                                    </NavigationItem>
-                                    <NavigationItem href="/assignments">
-                                        My assignments
-                                        <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount}</span>
-                                    </NavigationItem>
-                                    <NavigationItem href="/progress">
-                                        My progress
-                                    </NavigationItem>
-                                    <NavigationItem href="/tests">
-                                        My tests
-                                        <span className="badge bg-primary rounded-5 ms-2">{quizzesCount}</span>
-                                    </NavigationItem>
-                                </div>
-
-                                <div className="dropdown-divider-y" />
-
-                                {isTeacherOrAbove(user) && <div>
-                                    <h5>{"TEACHER"}</h5>
-                                    <NavigationItem href="/teacher_features">
-                                        Teacher features
-                                    </NavigationItem>
-                                    <NavigationItem href="/groups">
-                                        Manage groups
-                                    </NavigationItem>
-                                    <NavigationItem href="/set_assignments">
-                                        Set assignments
-                                    </NavigationItem>
-                                    <NavigationItem href="/assignment_schedule">
-                                        Assignment schedule
-                                    </NavigationItem>
-                                    <NavigationItem href="/assignment_progress">
-                                        Assignment progress
-                                    </NavigationItem>
-                                    <NavigationItem href="/set_tests">
-                                        Set / manage tests
-                                    </NavigationItem>
-                                </div>}
-                            </div>
-
-                            <div className="dropdown-divider" />
-                            <NavigationItem href="/account">
-                                My account
-                            </NavigationItem>
-                            <NavigationItem href="/logout">
-                                Log out
-                            </NavigationItem>
-                        </div>
-                        : <li className="px-4">
-                            <span>You&apos;re not currently logged in. Log in or sign up for free below!</span>
-                            <br/>
-                            <LoginLogoutButton className="my-2"/>
-                        </li>
-                    }
-                </HoverableNavigationDropdown>
-            </ul>
-        </div>
-        <NavigationSection title="Explore by learning stage" categories={stageCategories} className="border-start"/>
-        <NavigationSection title="Explore by subject" categories={subjectCategories} className="border-start">
-        </NavigationSection>
-        <Spacer />
-        <div className="header-search align-self-center d-print-none">
-            <MainSearchInput inline />
-        </div>
-    </Nav>;
+    return <>
+        <ContentNavProfile/>
+        <ContentNavSection title="Explore by learning stage" categories={stageCategories} className="border-start"/>
+        <ContentNavSection title="Explore by subject" categories={subjectCategories} className="border-start"/>
+        
+        {above["md"](deviceSize) && <>
+            <Spacer />
+            <div className="header-search align-self-center d-print-none">
+                <MainSearchInput inline />
+            </div>
+        </>}
+    </>;
 };

@@ -2,16 +2,22 @@ import React from "react";
 import { LinkItem, NavigationSection } from "../../navigation/NavigationBar";
 import { Nav, NavProps } from "reactstrap";
 import classNames from "classnames";
-import { above, isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTutor, useDeviceSize } from "../../../services";
+import { above, below, isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTutor, useDeviceSize } from "../../../services";
 import { selectors, useAppSelector } from "../../../state";
+import { NavigationMenuPhy } from "./NavigationMenuPhy";
 
 export const HeaderMenuPhy = (props: NavProps) => {
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
     const isOffcanvas = !above["lg"](deviceSize);
+    const isContentNavVisible = below["sm"](deviceSize);
     const isAdminTabVisible = user && isStaff(user) || isEventLeader(user);
     
     return <Nav {...props} navbar className={classNames("justify-content-between", props.className, "pe-0", {"pe-md-3" : !isAdminTabVisible})} id="main-menu">
+        {isContentNavVisible && <>
+            <NavigationMenuPhy/>
+            <div className="my-3"/>
+        </>}
         {isOffcanvas && <NavigationSection topLevelLink to="/" title={"Home"}/>}
         <NavigationSection topLevelLink to="/about" title={"About Isaac"}/>
         <NavigationSection topLevelLink to="/questions" title={"Question finder"}/>
@@ -41,53 +47,4 @@ export const HeaderMenuPhy = (props: NavProps) => {
             {isStaff(user) && <LinkItem to="/admin/content_errors">Content Errors</LinkItem>}
         </NavigationSection>}
     </Nav>;
-
-        // TODO clean comments when navigation is done
-
-        {/* <NavigationSection title={<>My Isaac {<MenuBadge data-testid={"my-assignments-badge"} count={assignmentsCount + quizzesCount} message="incomplete assignments and tests" />}</>}>
-            <LinkItem to="/account" muted={!isLoggedIn(user)}>My Account</LinkItem>
-            <LinkItem to={PATHS.MY_GAMEBOARDS} muted={!isLoggedIn(user)}>My Gameboards</LinkItem>
-            <LinkItem to={PATHS.MY_ASSIGNMENTS} muted={!isLoggedIn(user)}>My Assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
-            <LinkItem to="/progress" muted={!isLoggedIn(user)}>My Progress</LinkItem>
-            <LinkItem to="/tests" muted={!isLoggedIn(user)}>My Tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
-        </NavigationSection>
-
-        {isTutorOrAbove(user) && <NavigationSection title="Teach">
-            {isTeacherOrAbove(user) ? <LinkItem to="/teacher_features">Teacher Features</LinkItem> : <LinkItem to="/tutor_features">Tutor Features</LinkItem>}
-            <LinkItem to="/groups">Manage Groups</LinkItem>
-            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Set Assignments</LinkItem>
-            <LinkItem to={"/assignment_schedule"}>Assignment Schedule</LinkItem>
-            <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Assignment Progress</LinkItem>
-            {isTeacherOrAbove(user) && <>
-                <LinkItem to="/set_tests">Set / Manage Tests</LinkItem>
-            </>}
-        </NavigationSection>}
-
-        <NavigationSection title="Learn">
-            <LinkItem to="/11_14">11-14 Resources</LinkItem>
-            <LinkItem to="/gcse">GCSE Resources</LinkItem>
-            <LinkItem to="/alevel">A Level Resources</LinkItem>
-            <LinkItem to={PATHS.QUESTION_FINDER}>Question Finder</LinkItem>
-            <LinkItem to="/practice_tests">Practice Tests</LinkItem>
-            <LinkItem to="/concepts">Concepts</LinkItem>
-            <LinkItem to="/glossary">Glossary</LinkItem>
-        </NavigationSection>
-
-        <NavigationSection title="Events">
-            {isLoggedIn(user) && <LinkItem to="/events?show_booked_only=true">My Booked Events</LinkItem>}
-            <LinkItem to="/events">All Events</LinkItem>
-            <LinkItem to="/pages/isaac_mentor">Student Mentoring</LinkItem>
-            <LinkItem to="/pages/spc">Senior Physics Challenge</LinkItem>
-            <LinkItem to="/pages/stem_smart">STEM SMART</LinkItem>
-        </NavigationSection>
-
-        <NavigationSection title="Help">
-            <LinkItem to="/pages/how_to_videos">How-to Videos</LinkItem>
-            <LinkItem to="/solving_problems">Problem Solving Guide</LinkItem>
-            <LinkItem to="/support/student">Student FAQ</LinkItem>
-            {isTutor(user)
-                ? <LinkItem to="/support/tutor">Tutor FAQ</LinkItem>
-                : <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>}
-            <LinkItem to="/contact">Contact Us</LinkItem>
-        </NavigationSection> */ }
 };

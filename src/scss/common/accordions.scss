@@ -111,14 +111,11 @@
 
       &:after {
         content: "";
-        background-image: url('/assets/common/icons/chevron_down.svg');
-        background-repeat: no-repeat;
-        background-position: right;
-        width: 30px;
-        height: 10px;
-        margin-right: 1rem;
-        margin-top: auto;
-        margin-bottom: auto;
+        background: url('/assets/common/icons/chevron_down.svg') no-repeat center center;
+        background-size: contain;
+        width: 12px;
+        height: 12px;
+        margin: auto 0 auto 1rem;
       }
 
       &.active {

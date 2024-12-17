@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {Link} from "react-router-dom";
 import {selectors, useAppSelector} from "../../../state";
-import {Button, Col, Container, Offcanvas, OffcanvasBody, OffcanvasHeader, Row} from "reactstrap";
+import {Button, Col, Container, Nav, Offcanvas, OffcanvasBody, OffcanvasHeader, Row} from "reactstrap";
 import {HeaderMenuPhy} from "./HeaderMenuPhy";
 import {above, useDeviceSize} from "../../../services";
 import { AffixButton } from "../../elements/AffixButton";
@@ -85,7 +85,9 @@ export const HeaderPhy = () => {
         {above["md"](deviceSize) && <Container fluid id="content-nav-container">
             <Row>
                 <Col>
-                    <NavigationMenuPhy/>
+                    <Nav tag="nav" className="d-flex align-items-end" id="content-nav">
+                        <NavigationMenuPhy/>
+                    </Nav>
                 </Col>
             </Row>
         </Container>}

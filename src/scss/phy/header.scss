@@ -6,7 +6,7 @@
     font-size: 14px;
   }
   ul#main-menu {
-    li {
+    li:not(.explore-group) {
       border-top: $color-neutral-200 1px solid;
       &:last-child {
         border-bottom: $color-neutral-200 1px solid;
@@ -143,15 +143,14 @@ header {
           &:hover {
             background-color: $color-neutral-100;
           }
-
-          i.icon {
-            background-color: var(--nav-primary);
-          }
         }
 
         h5 {
-          font-size: 16px;
+          font-size: 14px;
+          font-family: $primary-font;
+          color: $color-neutral-500;
           line-height: 1.1;
+          margin-left: 23px;
         }
       }
     }
@@ -159,5 +158,45 @@ header {
 
   a:not(.btn) {
     color: $color-neutral-900;
+  }
+}
+
+#header-offcanvas {
+  .explore-group {
+    border-top: none;
+
+    &.accordion, .accordion-item, .accordion-header, .accordion-button {
+      background: $color-neutral-50;
+      box-shadow: none;
+      border-radius: 5px;
+    }
+
+    .accordion-button {
+      font-family: $primary-font;
+      font-size: 1rem !important; // RS... :(
+      color: $color-neutral-500;
+      transition: none;
+    }
+
+    button:focus {
+      outline: 0.2rem solid black !important;
+    }
+
+    .accordion-button:not(.collapsed), .accordion-button:hover {
+      color: $color-neutral-900;
+    }
+
+    .accordion-body > a:hover {
+      background: $color-neutral-100;
+      text-decoration: none;
+    }
+
+    .accordion-body h5 {
+      font-size: 14px;
+      font-family: $primary-font;
+      color: $color-neutral-500;
+      line-height: 1.1;
+      margin-left: 23px;
+    }
   }
 }
