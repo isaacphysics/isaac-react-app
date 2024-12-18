@@ -448,6 +448,40 @@ export enum SUBJECTS {
     CS = 'computer_science'
 }
 
+export const HUMAN_SUBJECTS: {[key: string]: string} = {
+    [SUBJECTS.PHYSICS]: 'Physics',
+    [SUBJECTS.MATHS]: 'Maths',
+    [SUBJECTS.CHEMISTRY]: 'Chemistry',
+    [SUBJECTS.BIOLOGY]: 'Biology',
+    [SUBJECTS.CS]: 'Computer Science'
+};
+
+export enum LEARNING_STAGE {
+    "11_TO_14" = "11_14",
+    GCSE = "gcse",
+    A_LEVEL = "a_level",
+    UNIVERSITY = "university",
+}
+
+export const HUMAN_STAGES: {[key: string]: string} = {
+    [LEARNING_STAGE["11_TO_14"]]: "11-14",
+    [LEARNING_STAGE.GCSE]: "GCSE",
+    [LEARNING_STAGE.A_LEVEL]: "A Level",
+    [LEARNING_STAGE.UNIVERSITY]: "University",
+};
+
+export const PHY_NAV_SUBJECTS = {
+    [SUBJECTS.PHYSICS]: [LEARNING_STAGE["11_TO_14"], LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
+    [SUBJECTS.MATHS]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
+    [SUBJECTS.CHEMISTRY]: [LEARNING_STAGE.GCSE, LEARNING_STAGE.A_LEVEL, LEARNING_STAGE.UNIVERSITY],
+    [SUBJECTS.BIOLOGY]: [LEARNING_STAGE.A_LEVEL]
+} as {[subject in SUBJECTS]: LEARNING_STAGE[]};
+
+export const PHY_NAV_STAGES = Object.values(LEARNING_STAGE).reduce((acc, stage) => {
+    acc[stage.valueOf()] = Object.keys(PHY_NAV_SUBJECTS).filter(subject => (PHY_NAV_SUBJECTS[subject as keyof typeof PHY_NAV_SUBJECTS] as LEARNING_STAGE[]).includes(stage as LEARNING_STAGE)) as SUBJECTS[];
+    return acc;
+}, {} as {[stage : string]: SUBJECTS[]});
+
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',

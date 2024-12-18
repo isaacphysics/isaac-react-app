@@ -6,7 +6,7 @@
     font-size: 14px;
   }
   ul#main-menu {
-    li {
+    li:not(.explore-group) {
       border-top: $color-neutral-200 1px solid;
       &:last-child {
         border-bottom: $color-neutral-200 1px solid;
@@ -58,4 +58,147 @@ div#header-progress {
 }
 header {
   z-index: 20;
+}
+
+#content-nav-container {
+  background-color: $color-neutral-50;
+
+  .explore-group {
+    > span {
+      color: $color-neutral-500;
+    }
+
+    > ul {
+      list-style-type: none;
+      list-style-image: none;
+    }
+
+    li.dropdown {
+      &.hoverable {
+        &::after {
+          @include pseudo-element;
+          width: 16px;
+          bottom: 16px;
+          left: 50%;
+          transform: translateX(-50%);
+          border-bottom: 4px solid $color-neutral-200;
+          transition: width 0.2s ease, border-color 0.4s ease-out;
+          pointer-events: none;
+        }
+  
+        &:hover::after {
+          width: 24px;
+        }
+  
+        &.active::after {
+          border-color: var(--nav-primary);
+          width: calc(100% - 1rem);
+        }
+      }
+
+      > a {
+        font-size: 15px;
+        font-family: $secondary-font;
+        color: $color-neutral-900;
+        font-weight: 600;
+      }
+
+      &:not(.hoverable) {
+        > a {
+          font-size: 15px;
+          font-family: $primary-font;
+          color: $color-neutral-500;
+          font-weight: 400;
+
+          &::after {
+            content: "";
+            position: relative;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+            @include svg-icon('/assets/common/icons/chevron_down.svg', 16px, 16px);
+            transform: rotate3d(1, 0, 0, 0deg);
+            transition: transform 0.21s ease-in-out;
+          }
+        }
+
+        &:hover > a, &.active > a {
+          color: $color-neutral-900;
+        }
+
+        &.active > a::after {
+          transform: rotate3d(1, 0, 0, 180deg);
+        }
+      }
+
+      div.dropdown-menu {
+        border: none;
+        border-radius: 0;
+        margin-top: -2px;
+        background-color: $color-neutral-50;
+        min-width: 268px;
+
+        a:not(.btn) {
+          min-width: 268px;
+          font-size: 14px;
+          text-decoration: none;
+          &:hover {
+            background-color: $color-neutral-100;
+          }
+        }
+
+        h5 {
+          font-size: 14px;
+          font-family: $primary-font;
+          color: $color-neutral-500;
+          line-height: 1.1;
+          margin-left: 23px;
+        }
+      }
+    }
+  }
+
+  a:not(.btn) {
+    color: $color-neutral-900;
+  }
+}
+
+#header-offcanvas {
+  .explore-group {
+    border-top: none;
+
+    &.accordion, .accordion-item, .accordion-header, .accordion-button {
+      background: $color-neutral-50;
+      box-shadow: none;
+      border-radius: 5px;
+    }
+
+    .accordion-button {
+      font-family: $primary-font;
+      font-size: 1rem !important; // RS... :(
+      line-height: 28px; // same height as the My Isaac icon
+      color: $color-neutral-500;
+      transition: none;
+    }
+
+    button:focus {
+      outline: 0.2rem solid black !important;
+    }
+
+    .accordion-button:not(.collapsed), .accordion-button:hover {
+      color: $color-neutral-900;
+    }
+
+    .accordion-body > a:hover {
+      background: $color-neutral-100;
+      text-decoration: none;
+    }
+
+    .accordion-body h5 {
+      font-size: 14px;
+      font-family: $primary-font;
+      color: $color-neutral-500;
+      line-height: 1.1;
+      margin-left: 23px;
+    }
+  }
 }

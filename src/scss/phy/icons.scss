@@ -81,6 +81,18 @@
   @include svg-icon('/assets/phy/icons/redesign/cog.svg', 16px, 16px);
 }
 
+.icon-hexagon {
+  @include svg-icon('/assets/phy/icons/redesign/hexagon.svg', 16px, 16px);
+}
+
+.icon-my-isaac {
+  @include svg-icon('/assets/phy/icons/redesign/my-isaac.svg', 28px, 28px);
+}
+
+.icon-search {
+  @include svg-icon('/assets/phy/icons/redesign/search.svg', 16px, 16px);
+}
+
 svg {
   &.almost-fill {
     fill: $phy_extra_force_yellow;
@@ -89,4 +101,12 @@ svg {
   &.correct-fill {
     fill: $phy_green;
   }
+}
+
+// Overrides -- ONLY use these on an individual basis to override an active theme.
+// Setting `data-bs-theme` on a parent element is the much preferred approach.
+// (brand has no theme, so brand-color icons will generally need `.icon-color-brand`).
+
+.icon-color-brand {
+  background-color: $color-brand-500;
 }

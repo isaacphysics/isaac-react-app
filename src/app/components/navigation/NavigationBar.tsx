@@ -98,21 +98,3 @@ export function useAssignmentsCount() {
 
     return {assignmentsCount, quizzesCount};
 }
-
-export const NavigationBar = ({children}: {children: React.ReactNode}) => {
-    const [menuOpen, setMenuOpen] = useState(false);
-
-    return <MenuOpenContext.Provider value={{menuOpen, setMenuOpen}}>
-        <Navbar className="main-nav p-0" color="light" light expand="md">
-            <NavbarToggler className="end-0 translate-middle-x" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Close menu' : 'Open menu'}>
-                Menu
-            </NavbarToggler>
-
-            <Collapse isOpen={menuOpen} navbar className={classNames("px-0 mx-0 mx-xl-5", {"px-xl-5": isAda})}>
-                <Nav navbar className="justify-content-between" id="main-menu">
-                    {children}
-                </Nav>
-            </Collapse>
-        </Navbar>
-    </MenuOpenContext.Provider>;
-};

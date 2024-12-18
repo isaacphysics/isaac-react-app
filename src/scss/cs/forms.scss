@@ -1,5 +1,20 @@
 @import "../common/forms";
 
+.search--main-group,
+.search--filter-group {
+  &.form-group {
+    margin: 0;
+    position: relative;
+
+    input {
+      &.form-control {
+        border-width: 0;
+        padding: 0 1rem;
+      }
+    }
+  }
+}
+
 .search--main-group {
   #header-search {
     border-bottom-left-radius: 0;

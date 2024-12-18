@@ -416,6 +416,7 @@ export interface ValidAssignmentWithListingDate extends AssignmentDTO {
 }
 
 export interface FigureNumbersById {[figureId: string]: number}
+export const HoverableNavigationContext = React.createContext<{openId: number | undefined, setOpenId: React.Dispatch<React.SetStateAction<number | undefined>>} | undefined>(undefined);
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
 export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string, open: boolean | null}>(
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
