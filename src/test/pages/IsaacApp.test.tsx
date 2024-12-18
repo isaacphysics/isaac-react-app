@@ -19,6 +19,7 @@ const learnLinks = [
   "/topics/gcse",
   "/topics/a_level",
   "/gameboards/new",
+  "/gcse_programming_challenges",
   "/pages/computer_science_journeys_gallery",
   "/careers_in_computer_science",
   "/glossary",
