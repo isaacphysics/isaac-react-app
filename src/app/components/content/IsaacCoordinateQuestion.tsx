@@ -58,10 +58,10 @@ const CoordinateInput = (props: CoordinateInputProps) => {
                 key={i}
                 type="text"
                 className="force-print"
-                placeholder={placeholderValues[i]}
+                placeholder={placeholderValues[i] ?? ""}
                 value={value.coordinates ? value.coordinates[i] : ""}
-                onChange={event => onChange({...value, coordinates: value.coordinates ? value.coordinates.with(i, event.target.value) :
-                    (event.target.value === "" ? undefined : Array<string>(numberOfDimensions).with(i, event.target.value))})}
+                onChange={event => onChange({...value, coordinates: value.coordinates && value.coordinates.length ? value.coordinates.with(i, event.target.value) :
+                    (event.target.value === "" ? undefined : Array<string>(numberOfDimensions).fill("").with(i, event.target.value))})}
                 readOnly={readonly}
             />
             {(i < numberOfDimensions - 1) && <span className="coordinate-input-separator">,&nbsp;</span>}
