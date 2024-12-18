@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Dropdown, DropdownMenu, DropdownProps, DropdownToggle, Nav, NavLink, UncontrolledAccordion } from "reactstrap";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Dropdown, DropdownMenu, DropdownProps, DropdownToggle, NavLink } from "reactstrap";
 import { Spacer } from "../../elements/Spacer";
 import { MainSearchInput } from "../../elements/SearchInputs";
 import classNames from "classnames";
@@ -8,19 +8,22 @@ import { selectors, useAppSelector } from "../../../state";
 import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
 import { Link } from "react-router-dom";
+import { HoverableNavigationContext } from "../../../../IsaacAppTypes";
 
 interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
     title: React.ReactNode;
     // if the above is not a string, the dropdown should have an aria label to describe it
     ariaTitle?: string;
     toggleClassName?: string;
+    ikey: number;
 }
 
 const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
-    const { className, title, ariaTitle, children, toggleClassName, ...rest } = props;
+    const { className, title, ariaTitle, children, toggleClassName, ikey, ...rest } = props;
     const [isOpen, setIsOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
+    const hoverContext = useContext(HoverableNavigationContext);
     const timerId = useRef<number | null>(null);
 
     const clearTimer = () => {
@@ -32,18 +35,25 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
     // TODO: two dropdowns can be toggled simultaneously using keyboard focus and hover. disable hover if focus is active elsewhere
 
     const toggle = useCallback((e?: any) => {
-        setIsOpen(o => !o);
-        setIsFocused(false);
         if (e && e.type === "click") {
-            if (isHovered) {
-                setIsOpen(true);
-            }
+            setIsOpen(isHovered);
+            setIsFocused(isHovered);
+            clearTimer();
+        } else if (e && e.type === "touchstart") {
+            // touchstart is called *alongside* click, as two different events!
+            setIsHovered(false);
+        } else if (e && e.type === "keydown") {
+            setIsOpen(o => !o);
+            setIsFocused(f => !f);
+        } else { // hover
+            setIsOpen(o => !o && hoverContext?.openId === undefined);
         }
-        if (e && e.type === "touchstart") {
-            setIsOpen(true);
-        }
+    }, [hoverContext?.openId, isHovered]);
 
-    }, [isHovered]);
+    useEffect(() => {
+        hoverContext?.setOpenId(id => isOpen ? ikey : (id === ikey ? undefined : id));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen, ikey]);
 
     useEffect(() => {
         if (isHovered) {
@@ -63,8 +73,12 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isHovered]);
 
-    return <Dropdown {...rest} nav inNavbar className={classNames(className, "hoverable", { "active": isOpen })} isOpen={isOpen} onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)} onMouseDown={() => setIsHovered(false)} toggle={toggle} title={""} aria-label={ariaTitle ?? title?.valueOf() as string}
+    return <Dropdown {...rest} nav inNavbar className={classNames(className, "hoverable", { "active": isOpen })} isOpen={isOpen} 
+        onMouseEnter={() => setIsHovered(true)}
+        onPointerDown={(e) => {if (e.pointerType === "touch") {
+            setIsHovered(true);
+        }}}
+        onMouseLeave={() => setIsHovered(false)} toggle={toggle} title={""} aria-label={ariaTitle ?? title?.valueOf() as string}
         // the regular title prop is for a hover tooltip, which we don't want. not defining makes it use the nearest span instead...
     >
 
@@ -79,12 +93,18 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
 };
 
 const StaticNavigationDropdown = (props: NavigationDropdownProps) => {
-    const { className, title, ariaTitle, children, ...rest } = props;
+    const { className, title, ariaTitle, children, ikey, ...rest } = props;
     const [isOpen, setIsOpen] = useState(false);
+    const hoverContext = useContext(HoverableNavigationContext);
 
     const toggle = useCallback(() => {
         setIsOpen(o => !o);
     }, []);
+
+    useEffect(() => {
+        hoverContext?.setOpenId(id => isOpen ? ikey : (id === ikey ? undefined : id));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen, ikey]);
 
     return <Dropdown {...rest} nav inNavbar className={classNames(className, { "active": isOpen })} isOpen={isOpen} toggle={toggle} 
         title={""} aria-label={ariaTitle ?? title?.valueOf() as string}
@@ -143,6 +163,7 @@ interface NavigationCategory {
 
 interface NavigationSectionProps extends React.HTMLAttributes<HTMLDivElement> {
     title?: string;
+    ikey: number;
     categories?: NavigationCategory[];
 }
 
@@ -153,12 +174,12 @@ const ContentNavSection = (props: NavigationSectionProps) => {
     return above["xl"](deviceSize) 
         // full-width, hoverable dropdowns
         ? <ContentNavHoverableWrapper title={title} {...rest}>
-            {categories?.map((category, i) => {
+            {categories?.map((category, i, catsArr) => {
                 let sharedTheme = undefined;
                 if (category.subcategories.every((sub, _j, arr) => sub.theme === arr[0].theme)) {
                     sharedTheme = category.subcategories[0].theme;
                 }
-                return <HoverableNavigationDropdown key={i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}>
+                return <HoverableNavigationDropdown key={i} ikey={props.ikey * catsArr.length + i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}>
                     {category.subcategories.map((subcategory, j) => {
                         return <NavigationItem key={j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.theme })}>
                             <i className="icon icon-hexagon me-1" />
@@ -285,13 +306,12 @@ const ContentNavProfile = () => {
 
     return above["md"](deviceSize) 
         ? <ContentNavHoverableWrapper className="ps-0"> 
-            {/* <div className={"d-flex flex-column p-0 pt-3 pe-3 explore-group"}>
-            <ul className="d-flex p-0 gap-2 m-0"> */}
             <HoverableNavigationDropdown 
                 ariaTitle={`My Isaac (${taskCount} tasks to do)`} 
                 title={title} 
                 id="my-isaac-dropdown"
                 toggleClassName="ps-0"
+                ikey={-1}
             >
                 {profileTabContents}   
             </HoverableNavigationDropdown>
@@ -299,7 +319,6 @@ const ContentNavProfile = () => {
         : <ContentNavAccordionWrapper title={title}>
             {profileTabContents}
         </ContentNavAccordionWrapper>;
-
 };
 
 interface NavigationItemProps extends React.HTMLAttributes<HTMLAnchorElement> {
@@ -315,6 +334,7 @@ const NavigationItem = (props: NavigationItemProps) => {
 };
 
 export const NavigationMenuPhy = () => {
+    const [openHoverable, setOpenHoverable] = useState<number | undefined>(undefined);
     const deviceSize = useDeviceSize();
 
     const stageCategories = Object.entries(PHY_NAV_STAGES).map(([stage, subjects]) => {
@@ -347,10 +367,10 @@ export const NavigationMenuPhy = () => {
         };
     });
 
-    return <>
+    return <HoverableNavigationContext.Provider value={{openId: openHoverable, setOpenId: setOpenHoverable}}>
         <ContentNavProfile/>
-        <ContentNavSection title="Explore by learning stage" categories={stageCategories} className="border-start"/>
-        <ContentNavSection title="Explore by subject" categories={subjectCategories} className="border-start"/>
+        <ContentNavSection title="Explore by learning stage" categories={stageCategories} className="border-start" ikey={0}/>
+        <ContentNavSection title="Explore by subject" categories={subjectCategories} className="border-start" ikey={1}/>
         
         {above["md"](deviceSize) && <>
             <Spacer />
@@ -358,5 +378,5 @@ export const NavigationMenuPhy = () => {
                 <MainSearchInput inline />
             </div>
         </>}
-    </>;
+    </HoverableNavigationContext.Provider>;
 };
