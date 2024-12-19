@@ -3376,6 +3376,1074 @@ export const mockMyAssignments = [
     }
 ];
 
+export const mockRegressionTestQuestions = {
+    "id": "_regression_test_",
+    "title": "Regression Test Page",
+    "subtitle": "Testing123",
+    "type": "isaacQuestionPage",
+    "encoding": "markdown",
+    "canonicalSourceFile": "content/_regression_test/_regression_test_.json",
+    "children": [
+        {
+            "type": "content",
+            "encoding": "markdown",
+            "children": [],
+            "value": "This page is to speed up testing of question behaviors. **Changing anything on this page is liable to break the automated testing**.\n\nYou may find this page useful to see what content looks like in the editor, then you can click the blue \"Preview on Staging\" button to see what it would look like on the Isaac site.",
+            "tags": []
+        },
+        {
+            "type": "content",
+            "layout": "accordion",
+            "children": [
+                {
+                    "id": "_regression_test_|acc_quick_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_quick_q|_regression_test_quick_",
+                            "type": "isaacQuestion",
+                            "title": "Quick Question",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "This is a quick question.",
+                            "published": true,
+                            "answer": {
+                                "type": "content",
+                                "encoding": "markdown",
+                                "children": [],
+                                "value": "This is the answer. It will be shown to students when they click the \"Show/Hide\" button.",
+                                "tags": []
+                            },
+                            "hints": [
+                                {
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "type": "content",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This is a Hint on a Quick Question. It will never be used.",
+                                            "tags": []
+                                        }
+                                    ],
+                                    "tags": []
+                                }
+                            ],
+                            "showConfidence": false
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_multi_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_multi_q|_regression_test_multi_",
+                            "type": "isaacMultiChoiceQuestion",
+                            "title": "Multiple Choice",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "This is a multiple choice question. The correct answer is $42$.",
+                            "published": true,
+                            "hints": [
+                                {
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "type": "content",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This is Hint 1.",
+                                            "tags": []
+                                        }
+                                    ],
+                                    "tags": []
+                                },
+                                {
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "type": "content",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This is Hint 2. It contains a figure!",
+                                            "tags": []
+                                        },
+                                        {
+                                            "id": "_regression_test_|acc_multi_q|_regression_test_multi_|_regression_test_figure_",
+                                            "type": "figure",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This is a figure caption!",
+                                            "published": true,
+                                            "src": "content/questions/physics/mechanics/dynamics/level4/figures/Dynamics_Spouting_Can3.svg",
+                                            "altText": "This is figure AltText."
+                                        }
+                                    ],
+                                    "tags": []
+                                }
+                            ],
+                            "choices": [
+                                {
+                                    "type": "choice",
+                                    "encoding": "markdown",
+                                    "children": [],
+                                    "value": "$42$"
+                                },
+                                {
+                                    "type": "choice",
+                                    "encoding": "markdown",
+                                    "children": [],
+                                    "value": "$69$"
+                                }
+                            ]
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_numeric_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_numeric_q|_regresssion_test_numeric_",
+                            "type": "isaacNumericQuestion",
+                            "title": "Numeric Question",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "The answer to this question is $\\quantity{2.01}{m\\\\,s^{-1}}$. The wrong answer is $\\quantity{5.00}{m\\\\,s^{-1}}$. A known wrong answer to the wrong number of sig figs is $\\quantity{42}{m\\\\,s^{-1}}$, it should say \"Hello\" on selecting it, not a sig fig warning. The answer $999$ requires no units. The units $\\units{m\\\\,s^{-1}}$ are not in `availableUnits`, so if they appear the selection code works correctly!",
+                            "relatedContent": [
+                                {
+                                    "id": "_regression_test_",
+                                    "title": "Regression Test Page",
+                                    "subtitle": "Testing123",
+                                    "type": "isaacQuestionPage",
+                                    "level": "0",
+                                    "tags": [
+                                        "regression_test"
+                                    ],
+                                    "state": "NOT_ATTEMPTED",
+                                    "audience": [
+                                        {
+                                            "stage": [
+                                                "a_level"
+                                            ],
+                                            "examBoard": [
+                                                "aqa",
+                                                "ocr"
+                                            ]
+                                        },
+                                        {
+                                            "stage": [
+                                                "advanced"
+                                            ],
+                                            "examBoard": [
+                                                "ada"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            "published": true,
+                            "hints": [
+                                {
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "type": "content",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This is Hint 1.\n\n**Concepts**\n\n- [Text files](/concepts/fileprog_text)\n- [Text files](/concepts/fileprog_text)\n- [Text files](/concepts/fileprog_text)\n",
+                                            "tags": []
+                                        }
+                                    ],
+                                    "tags": []
+                                },
+                                {
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "type": "content",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This is Hint 2.",
+                                            "tags": []
+                                        }
+                                    ],
+                                    "tags": []
+                                },
+                                {
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "type": "content",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This is Hint 3.",
+                                            "tags": []
+                                        }
+                                    ],
+                                    "tags": []
+                                },
+                                {
+                                    "id": "_regression_test_|acc_numeric_q|_regresssion_test_numeric_|isaac_anvil_info",
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "type": "content",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This is Hint 4.",
+                                            "tags": []
+                                        },
+                                        {
+                                            "type": "anvilApp",
+                                            "children": [],
+                                            "appId": "EW6Q7UNQQT3HIJ3W",
+                                            "appAccessKey": "EMAJA6ZMDQT764TGQNW2DTJF"
+                                        }
+                                    ],
+                                    "published": true,
+                                    "tags": []
+                                }
+                            ],
+                            "requireUnits": true,
+                            "disregardSignificantFigures": false,
+                            "availableUnits": [
+                                "K ",
+                                " J ",
+                                " mW ",
+                                " m\\,s^{-2} ",
+                                " J ",
+                                " km ",
+                                " T ",
+                                " km\\,s^{-1} ",
+                                " nJ ",
+                                " J ",
+                                " GY"
+                            ],
+                            "knownUnits": [
+                                "m\\,s^{-1}",
+                                "m\\,s^{-1}",
+                                "m\\,s^{-1}"
+                            ]
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_symbolic_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_symbolic_q|_regression_test_symbolic_",
+                            "type": "isaacSymbolicQuestion",
+                            "title": "Symbolic Question",
+                            "encoding": "markdown",
+                            "children": [
+                                {
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "children": [],
+                                    "value": "This is a symbolic question. The answer is $x$.",
+                                    "tags": []
+                                }
+                            ],
+                            "published": true,
+                            "hints": [
+                                {
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "type": "content",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This is Hint 1.",
+                                            "tags": []
+                                        }
+                                    ],
+                                    "tags": []
+                                }
+                            ],
+                            "formulaSeed": "[{\"type\":\"Symbol\",\"position\":{\"x\":1193.12,\"y\":518},\"expression\":{\"latex\":\"x\",\"python\":\"x\"},\"properties\":{\"letter\":\"x\"}}]",
+                            "availableSymbols": [
+                                "x   ",
+                                "   y ",
+                                "v ",
+                                "   sin()   ",
+                                "   >=   ",
+                                "   arccos()  ",
+                                "   Derivative(;x)  ",
+                                "  Deltax ",
+                                "  Deltat ",
+                                "  x_prime ",
+                                "  deltax ",
+                                "  dx"
+                            ]
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_chemistry_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_chemistry_q|_regression_test_chemistry_",
+                            "type": "isaacSymbolicChemistryQuestion",
+                            "title": "Chemistry Question",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "This is a chemistry question. The correct answer is $\\ce{H + Cl}$, an incorrect answer is $\\ce{H}$.",
+                            "published": true,
+                            "hints": [
+                                {
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "type": "content",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This is Hint 1.",
+                                            "tags": []
+                                        }
+                                    ],
+                                    "tags": []
+                                }
+                            ],
+                            "availableSymbols": [
+                                "H",
+                                " Cl"
+                            ],
+                            "allowPermutations": false,
+                            "allowScalingCoefficients": false,
+                            "nuclear": false,
+                            "isNuclear": false
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_stringmatch_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_stringmatch_q|_regression_test_stringmatch_",
+                            "type": "isaacStringMatchQuestion",
+                            "title": "String Match Question",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "This is a string matching question. Type the value `hello` for a correct answer, `Hello` for a known wrong answer, and `any case` for a case-insensitive match.",
+                            "published": true,
+                            "hints": [
+                                {
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "type": "content",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This is Hint 1.",
+                                            "tags": []
+                                        }
+                                    ],
+                                    "tags": []
+                                }
+                            ]
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_freetext_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_freetext_q|_regression_test_freetext_",
+                            "type": "isaacFreeTextQuestion",
+                            "title": "Free Text Question",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "This is a free text question. It is slightly more forgiving for longer text than String Match.\n\nTry answering \"Why did the chicken cross the road?\" below, and so long as your answer contains 'get to' and 'other side' it should be correct. It will be incorrect with custom feedback if you include 'did not' or 'didn't'.",
+                            "published": true
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_logic_question",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_logic_question|_regression_test_logic_",
+                            "type": "isaacSymbolicLogicQuestion",
+                            "title": "Logic Question",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "Convert `(NOT A) OR (NOT B)` into boolean logic syntax:",
+                            "published": true,
+                            "hints": [
+                                {
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "type": "content",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "Example hint!",
+                                            "tags": []
+                                        }
+                                    ],
+                                    "tags": []
+                                }
+                            ],
+                            "availableSymbols": [
+                                "A",
+                                "B"
+                            ]
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_item_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_item_q|_regression_test_item_",
+                            "type": "isaacItemQuestion",
+                            "title": "Item Question",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "Which of the following sentences are true?",
+                            "published": true,
+                            "items": [
+                                {
+                                    "id": "c953",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "This sentence is not true."
+                                },
+                                {
+                                    "id": "f213",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "This sentence is true."
+                                },
+                                {
+                                    "id": "7897",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "Both the above sentences are true."
+                                },
+                                {
+                                    "id": "bcd3",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "None of these sentences are true."
+                                }
+                            ]
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_parsons_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_parsons_q|_regression_test_parsons_",
+                            "type": "isaacParsonsQuestion",
+                            "title": "Parsons Question",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "Order the following sections alphabetically, indenting the letter `C` once!\n\n```\nA\nB\n    C\nD\n```",
+                            "published": true,
+                            "items": [
+                                {
+                                    "id": "aaaa",
+                                    "type": "parsonsItem",
+                                    "children": [],
+                                    "value": "A",
+                                    "indentation": 0
+                                },
+                                {
+                                    "id": "cccc",
+                                    "type": "parsonsItem",
+                                    "children": [],
+                                    "value": "C",
+                                    "indentation": 0
+                                },
+                                {
+                                    "id": "dddd",
+                                    "type": "parsonsItem",
+                                    "children": [],
+                                    "value": "D",
+                                    "indentation": 0
+                                },
+                                {
+                                    "id": "bbbb",
+                                    "type": "parsonsItem",
+                                    "children": [],
+                                    "value": "B",
+                                    "indentation": 0
+                                }
+                            ]
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_cloze_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_cloze_q|3562dfe3-fb1d-42ef-941d-41bd672aa57b",
+                            "type": "isaacClozeQuestion",
+                            "title": "Cloze Question",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "Drag \"a\" here: [drop-zone], \"b\" here: [drop-zone], and \"d\" and \"c\" should be dropped in alphabetical order below:\n<table class=\"expandable\">\n\t<tbody>\n\t\t<tr>\n    \t\t<td>[drop-zone]</td>\n            <td>[drop-zone]</td>\n        </tr>\n   \t</tbody>\n</table>\nAlso put \\(1\\) in this integral limit for fun:\n\\[ \\int^{\\text{[drop-zone|w-30]}}_0 \\sin x \\]",
+                            "published": true,
+                            "items": [
+                                {
+                                    "id": "eaf1",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "a"
+                                },
+                                {
+                                    "id": "f534",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "b"
+                                },
+                                {
+                                    "id": "1ea9",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "c"
+                                },
+                                {
+                                    "id": "a2d2",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "d"
+                                },
+                                {
+                                    "id": "6a27",
+                                    "type": "item",
+                                    "children": [],
+                                    "value": "\\(1\\)"
+                                }
+                            ]
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_inline_q",
+                    "type": "content",
+                    "children": [
+                        {
+                            "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287",
+                            "type": "isaacInlineRegion",
+                            "encoding": "markdown",
+                            "children": [
+                                {
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "children": [],
+                                    "value": "<table>\n  <thead style=\"background-color: #ddd\">\n    <td>x</td>\n    <td>2x</td>\n    <td>1/x</td>\n  </thead>\n  <tbody>\n    <tr>\n      <td>5</td>\n      <td>[inline-question:maths1]</td>\n      <td>0.2</td>\n    </tr>\n    <tr>\n      <td>[inline-question:maths2]</td>\n      <td>20</td>\n      <td>[inline-question:maths3]</td>\n    </tr>\n  </tbody>\n</table>",
+                                    "tags": []
+                                },
+                                {
+                                    "type": "content",
+                                    "encoding": "markdown",
+                                    "layout": "accordion",
+                                    "children": [
+                                        {
+                                            "title": "Accordion Test",
+                                            "type": "content",
+                                            "children": [
+                                                {
+                                                    "type": "content",
+                                                    "encoding": "markdown",
+                                                    "children": [],
+                                                    "value": "The answer to this question is 'accordion': [inline-question:accordion]",
+                                                    "tags": []
+                                                }
+                                            ],
+                                            "tags": []
+                                        }
+                                    ],
+                                    "tags": []
+                                }
+                            ],
+                            "published": true,
+                            "inlineQuestions": [
+                                {
+                                    "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:maths1",
+                                    "type": "isaacNumericQuestion",
+                                    "children": [],
+                                    "published": true,
+                                    "requireUnits": false,
+                                    "disregardSignificantFigures": false,
+                                    "availableUnits": [],
+                                    "displayUnit": "\\text{Display Unit}"
+                                },
+                                {
+                                    "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:maths2",
+                                    "type": "isaacNumericQuestion",
+                                    "children": [],
+                                    "published": true,
+                                    "requireUnits": false,
+                                    "disregardSignificantFigures": false,
+                                    "availableUnits": []
+                                },
+                                {
+                                    "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:maths3",
+                                    "type": "isaacNumericQuestion",
+                                    "children": [],
+                                    "published": true,
+                                    "requireUnits": true,
+                                    "disregardSignificantFigures": false,
+                                    "availableUnits": [
+                                        "ms^-1"
+                                    ]
+                                },
+                                {
+                                    "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287|inline-question:accordion",
+                                    "type": "isaacStringMatchQuestion",
+                                    "children": [],
+                                    "published": true
+                                }
+                            ]
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                },
+                {
+                    "id": "_regression_test_|acc_figure_numbering",
+                    "type": "content",
+                    "children": [
+                        {
+                            "type": "content",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "This is a test for whether \\ref{fig2}, \\ref{fig3} and \\ref{fig4} are referenced correctly!",
+                            "tags": []
+                        },
+                        {
+                            "type": "content",
+                            "encoding": "markdown",
+                            "layout": "horizontal",
+                            "children": [
+                                {
+                                    "id": "_regression_test_|acc_figure_numbering|fig2",
+                                    "type": "figure",
+                                    "encoding": "markdown",
+                                    "children": [],
+                                    "value": "This should be Figure 2.",
+                                    "published": true,
+                                    "src": "content/_regression_test/figures/ada_cs_person.svg",
+                                    "altText": "This is figure AltText."
+                                },
+                                {
+                                    "id": "_regression_test_|acc_figure_numbering|fig3",
+                                    "type": "figure",
+                                    "encoding": "markdown",
+                                    "children": [],
+                                    "value": "This should be Figure 3.",
+                                    "published": true,
+                                    "src": "content/_regression_test/figures/ada_cs_person.svg",
+                                    "altText": "This is figure AltText."
+                                }
+                            ],
+                            "tags": []
+                        },
+                        {
+                            "id": "_regression_test_|acc_figure_numbering|fig4",
+                            "type": "figure",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "This should be Figure 4.",
+                            "published": true,
+                            "src": "content/_regression_test/figures/ada_cs_person.svg",
+                            "altText": "This is figure AltText."
+                        },
+                        {
+                            "type": "content",
+                            "layout": "tabs",
+                            "children": [
+                                {
+                                    "id": "_regression_test_|acc_figure_numbering|tab_fig5",
+                                    "title": "Figure 5",
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "id": "_regression_test_|acc_figure_numbering|tab_fig5|fig5",
+                                            "type": "figure",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This should be Figure 5.",
+                                            "published": true,
+                                            "src": "content/_regression_test/figures/ada_cs_person.svg",
+                                            "altText": "This is figure AltText."
+                                        }
+                                    ],
+                                    "published": true,
+                                    "tags": []
+                                },
+                                {
+                                    "title": "Figure 6",
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "id": "_regression_test_|acc_figure_numbering|fig6",
+                                            "type": "figure",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This should be Figure 6.",
+                                            "published": true,
+                                            "src": "content/_regression_test/figures/ada_cs_person.svg",
+                                            "altText": "This is figure AltText."
+                                        }
+                                    ],
+                                    "tags": []
+                                },
+                                {
+                                    "title": "Figure 7",
+                                    "type": "content",
+                                    "children": [
+                                        {
+                                            "id": "_regression_test_|acc_figure_numbering|quick_question_fig7",
+                                            "type": "isaacQuestion",
+                                            "encoding": "markdown",
+                                            "children": [],
+                                            "value": "This should contain \\ref{fig7}.",
+                                            "published": true,
+                                            "answer": {
+                                                "type": "content",
+                                                "encoding": "markdown",
+                                                "children": [
+                                                    {
+                                                        "id": "_regression_test_|acc_figure_numbering|quick_question_fig7|fig7",
+                                                        "type": "figure",
+                                                        "encoding": "markdown",
+                                                        "children": [],
+                                                        "value": "This should be Figure 7.",
+                                                        "published": true,
+                                                        "src": "content/_regression_test/figures/ada_cs_person.svg",
+                                                        "altText": "This is figure AltText."
+                                                    }
+                                                ],
+                                                "tags": []
+                                            },
+                                            "showConfidence": true
+                                        }
+                                    ],
+                                    "tags": []
+                                }
+                            ],
+                            "tags": []
+                        },
+                        {
+                            "id": "_regression_test_|acc_figure_numbering|fig8",
+                            "type": "figure",
+                            "encoding": "markdown",
+                            "children": [],
+                            "value": "This should be Figure 8.",
+                            "published": true,
+                            "src": "content/_regression_test/figures/ada_cs_person.svg",
+                            "altText": "This is figure AltText."
+                        }
+                    ],
+                    "published": true,
+                    "tags": []
+                }
+            ],
+            "tags": []
+        }
+    ],
+    "relatedContent": [
+        {
+            "id": "_regression_test_",
+            "title": "Regression Test Page",
+            "subtitle": "Testing123",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "regression_test"
+            ],
+            "state": "NOT_ATTEMPTED" ,
+            "audience": [
+                {
+                    "stage": [
+                        "a_level"
+                    ],
+                    "examBoard": [
+                        "aqa",
+                        "ocr"
+                    ]
+                },
+                {
+                    "stage": [
+                        "advanced"
+                    ],
+                    "examBoard": [
+                        "ada"
+                    ]
+                }
+            ]
+        }
+    ],
+    "published": true,
+    "tags": [
+        "regression_test"
+    ],
+    "level": 0,
+    "audience": [
+        {
+            "stage": [
+                "a_level"
+            ],
+            "examBoard": [
+                "aqa",
+                "ocr"
+            ]
+        },
+        {
+            "stage": [
+                "advanced"
+            ],
+            "examBoard": [
+                "ada"
+            ]
+        }
+    ]
+};
+
+export const mockQuestionFinderResults = {
+    "results": [
+        {
+            "id": "itsp24_weight_class_q6",
+            "title": "A Bag of Flour",
+            "subtitle": "Step into Physics: Weight 6",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "physics",
+                "problem_solving",
+                "mechanics"
+            ],
+            "url": "/api/pages/questions/itsp24_weight_class_q6",
+            "state": "NOT_ATTEMPTED",
+            "audience": [
+                {
+                    "stage": [
+                        "year_7_and_8"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "year_9"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "itsp24_forcemotion_hw_q9",
+            "title": "A Bungee Jumper",
+            "subtitle": "Step into Physics: Force and Motion Practice 9",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "physics",
+                "problem_solving",
+                "mechanics"
+            ],
+            "url": "/api/pages/questions/itsp24_forcemotion_hw_q9",
+            "state": "ALL_CORRECT",
+            "audience": [
+                {
+                    "stage": [
+                        "year_7_and_8"
+                    ],
+                    "difficulty": [
+                        "practice_2"
+                    ]
+                },
+                {
+                    "stage": [
+                        "year_9"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "itsp24_accel_class_q11",
+            "title": "A Car Leaving Town",
+            "subtitle": "Step into Physics: Acceleration 11",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "physics",
+                "problem_solving",
+                "mechanics"
+            ],
+            "url": "/api/pages/questions/itsp24_accel_class_q11",
+            "state": "IN_PROGRESS",
+            "audience": [
+                {
+                    "stage": [
+                        "year_7_and_8"
+                    ],
+                    "difficulty": [
+                        "practice_3"
+                    ]
+                },
+                {
+                    "stage": [
+                        "year_9"
+                    ],
+                    "difficulty": [
+                        "practice_2"
+                    ]
+                },
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "itsp24_calcspeed_class_q3",
+            "title": "A Car on a Motorway",
+            "subtitle": "Step into Physics: Calculating Speed 3",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "physics",
+                "problem_solving",
+                "mechanics"
+            ],
+            "url": "/api/pages/questions/itsp24_calcspeed_class_q3",
+            "state": "FAILED",
+            "audience": [
+                {
+                    "stage": [
+                        "year_7_and_8"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "year_9"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "itsp24_accel_hw_q1",
+            "title": "A Cat, Cyclist, Aeroplane and Cow",
+            "subtitle": "Step into Physics: Acceleration Practice 1",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "physics",
+                "problem_solving",
+                "mechanics"
+            ],
+            "url": "/api/pages/questions/itsp24_accel_hw_q1",
+            "state": "NOT_ATTEMPTED",
+            "audience": [
+                {
+                    "stage": [
+                        "year_7_and_8"
+                    ],
+                    "difficulty": [
+                        "practice_3"
+                    ]
+                },
+                {
+                    "stage": [
+                        "year_9"
+                    ],
+                    "difficulty": [
+                        "practice_2"
+                    ]
+                },
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+    ],
+    "nextSearchOffset": 5,
+    "totalResults": 5
+};
+
 export const mockSetAssignments = [
     {
         id: 37,
