@@ -62,7 +62,7 @@ export default {
       description:
         "This competition encourages teamwork, allowing groups of up to 4 students or individual entries with teacher support.",
       requirements:
-        "Eligible participants must be in Year 9, 10, or 11 during the 2024/2025 academic year and attend a state-funded school; private, independent, and home-educated students are not eligible.",
+        "Eligible participants must be in Year 9, 10, or 11 during the 2024/2025 academic year and attend a state-funded school in England; private, independent, and home-educated students are not eligible.",
     },
     prizes: {
       title: "🏆 The prizes",
@@ -81,7 +81,7 @@ export default {
       entries: [
         { event: "Entries open", date: "January" },
         { event: "Entries close", date: "17 March" },
-        { event: "Finalist selected", date: "May" },
+        { event: "Finalists selected", date: "May" },
         { event: "The finals", date: "2 to 13 June" },
       ],
     },
