@@ -18,5 +18,7 @@ it('Question finder page should have no visual regressions', () => {
 
     cy.scrollTo('top');
 
+    cy.wait(2000);
+
     cy.matchImage();
 });
