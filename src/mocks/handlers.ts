@@ -12,7 +12,8 @@ import {
     mockUser,
     mockUserAuthSettings,
     mockUserPreferences,
-    mockRegressionTestQuestions
+    mockRegressionTestQuestions,
+    mockQuestionFinderResults
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -149,6 +150,16 @@ export const handlers = [
             status: 200,
         });
     }),
+    http.get(API_PATH + "/pages/questions/_regression_test_", () => {
+        return HttpResponse.json(mockRegressionTestQuestions, {
+            status: 200,
+        });   
+    }),
+    http.get(API_PATH + "/pages/questions/", () => {
+        return HttpResponse.json(mockQuestionFinderResults, {
+            status: 200,
+        });
+    }),
     http.get(API_PATH + "/pages/:pageId", ({params}) => {
         const {pageId} = params;
 
@@ -190,11 +201,6 @@ export const handlers = [
             status: 200,
         });
     }),
-    http.get(API_PATH + "/pages/questions/_regression_test_", () => {
-        return HttpResponse.json(mockRegressionTestQuestions, {
-            status: 200,
-        });   
-    })
 ];
 
 // --- Extra handler builder functions ---

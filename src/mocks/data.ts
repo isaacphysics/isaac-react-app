@@ -4237,6 +4237,213 @@ export const mockRegressionTestQuestions = {
     ]
 };
 
+export const mockQuestionFinderResults = {
+    "results": [
+        {
+            "id": "itsp24_weight_class_q6",
+            "title": "A Bag of Flour",
+            "subtitle": "Step into Physics: Weight 6",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "physics",
+                "problem_solving",
+                "mechanics"
+            ],
+            "url": "/api/pages/questions/itsp24_weight_class_q6",
+            "state": "NOT_ATTEMPTED",
+            "audience": [
+                {
+                    "stage": [
+                        "year_7_and_8"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "year_9"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "itsp24_forcemotion_hw_q9",
+            "title": "A Bungee Jumper",
+            "subtitle": "Step into Physics: Force and Motion Practice 9",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "physics",
+                "problem_solving",
+                "mechanics"
+            ],
+            "url": "/api/pages/questions/itsp24_forcemotion_hw_q9",
+            "state": "ALL_CORRECT",
+            "audience": [
+                {
+                    "stage": [
+                        "year_7_and_8"
+                    ],
+                    "difficulty": [
+                        "practice_2"
+                    ]
+                },
+                {
+                    "stage": [
+                        "year_9"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "itsp24_accel_class_q11",
+            "title": "A Car Leaving Town",
+            "subtitle": "Step into Physics: Acceleration 11",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "physics",
+                "problem_solving",
+                "mechanics"
+            ],
+            "url": "/api/pages/questions/itsp24_accel_class_q11",
+            "state": "IN_PROGRESS",
+            "audience": [
+                {
+                    "stage": [
+                        "year_7_and_8"
+                    ],
+                    "difficulty": [
+                        "practice_3"
+                    ]
+                },
+                {
+                    "stage": [
+                        "year_9"
+                    ],
+                    "difficulty": [
+                        "practice_2"
+                    ]
+                },
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "itsp24_calcspeed_class_q3",
+            "title": "A Car on a Motorway",
+            "subtitle": "Step into Physics: Calculating Speed 3",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "physics",
+                "problem_solving",
+                "mechanics"
+            ],
+            "url": "/api/pages/questions/itsp24_calcspeed_class_q3",
+            "state": "FAILED",
+            "audience": [
+                {
+                    "stage": [
+                        "year_7_and_8"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "year_9"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                },
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "itsp24_accel_hw_q1",
+            "title": "A Cat, Cyclist, Aeroplane and Cow",
+            "subtitle": "Step into Physics: Acceleration Practice 1",
+            "type": "isaacQuestionPage",
+            "level": "0",
+            "tags": [
+                "physics",
+                "problem_solving",
+                "mechanics"
+            ],
+            "url": "/api/pages/questions/itsp24_accel_hw_q1",
+            "state": "NOT_ATTEMPTED",
+            "audience": [
+                {
+                    "stage": [
+                        "year_7_and_8"
+                    ],
+                    "difficulty": [
+                        "practice_3"
+                    ]
+                },
+                {
+                    "stage": [
+                        "year_9"
+                    ],
+                    "difficulty": [
+                        "practice_2"
+                    ]
+                },
+                {
+                    "stage": [
+                        "gcse"
+                    ],
+                    "difficulty": [
+                        "practice_1"
+                    ]
+                }
+            ]
+        },
+    ],
+    "nextSearchOffset": 5,
+    "totalResults": 5
+};
+
 export const mockSetAssignments = [
     {
         id: 37,
