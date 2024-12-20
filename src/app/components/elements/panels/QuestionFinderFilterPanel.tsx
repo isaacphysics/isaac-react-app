@@ -307,7 +307,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             )}
                             label={<div className="d-flex align-items-center">
                                 <span className="me-2">{difficulty.label}</span>
-                                <DifficultyIcons difficulty={difficulty.value} blank classnames="mt-n2"/>
+                                <DifficultyIcons difficulty={difficulty.value} blank className="mt-n2"/>
                             </div>}
                         />
                     </div>
