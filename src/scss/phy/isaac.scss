@@ -66,7 +66,7 @@ $input-btn-padding-x-lg: 3rem;
 $border-radius-lg: 0.25rem;
 
 // fonts
-$primary-font: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+$primary-font: 'hanken-grotesk', Arial, 'Helvetica Neue', Helvetica, sans-serif;
 $secondary-font: 'exo_2regular', sans-serif;
 $secondary-font-bold: 'exo_2bold', sans-serif;
 $secondary-font-semi-bold: 'exo_2semi_bold', sans-serif;
@@ -256,7 +256,12 @@ $spacing-container-margins: (
 // borders
 $table-border-color: $gray-107;
 $table-bg: #0000; // This gets in the way of our colouring
+
 $border-color: #dee2e6;
+$border-width: 1px;
+$border-color-translucent: rgba(0, 0, 0, 0.1);
+
+$input-border-radius: 0.5rem;
 
 // Grid Customisation
 $container-max-widths: (
@@ -381,7 +386,6 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "../common/code";
 
 // Navigation
-@import "../common/navigation-bar";
 @import "footer";
 @import "header";
 @import "../common/scroll-button";

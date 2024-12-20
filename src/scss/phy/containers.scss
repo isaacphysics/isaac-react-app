@@ -6,8 +6,8 @@
     @each $bp, $_ in $grid-breakpoints {
         @include media-breakpoint-only($bp) {
             width: auto;
-            margin-left: calc(map.get($spacing-container-margins, $bp) - var(--bs-gutter-x) * 0.5);
-            margin-right: calc(map.get($spacing-container-margins, $bp) - var(--bs-gutter-x) * 0.5);
+            padding-left: map.get($spacing-container-margins, $bp);
+            padding-right: map.get($spacing-container-margins, $bp);
         }
     }
 }

@@ -328,3 +328,21 @@ iframe.email-html {
 .superseded-tag.superseded-tag {
   @include pill-tag($gray-160, white, $gray-194)
 }
+
+// mirror of bootstrap's .dropdown-divider (+ equiv for the y-axis), using always-defined props
+
+.section-divider {
+  height: 0;
+  margin: 0.5rem 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  opacity: 1;
+}
+
+.section-divider-y {
+  width: 0;
+  margin: 0 0.5rem;
+  overflow: hidden;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  opacity: 1;
+}

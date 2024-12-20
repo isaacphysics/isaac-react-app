@@ -1,24 +1,28 @@
 import React, { useState } from "react";
 import {Link} from "react-router-dom";
 import {selectors, useAppSelector} from "../../../state";
-import {Button, Col, Container, Offcanvas, OffcanvasBody, OffcanvasHeader, Row} from "reactstrap";
-import {NavigationPanelPhy} from "./NavigationPanelPhy";
+import {Button, Col, Container, Nav, Offcanvas, OffcanvasBody, OffcanvasHeader, Row} from "reactstrap";
+import {HeaderMenuPhy} from "./HeaderMenuPhy";
 import {above, useDeviceSize} from "../../../services";
 import { AffixButton } from "../../elements/AffixButton";
 import { MenuOpenContext } from "../../navigation/NavigationBar";
 import classNames from "classnames";
+import { NavigationMenuPhy } from "./NavigationMenuPhy";
+
+export const LoginLogoutButton = (props : React.HTMLAttributes<HTMLElement>) => {
+    const user = useAppSelector(selectors.user.orNull);
+    
+    return user && (user.loggedIn 
+        ? <Link to="/logout" {...props}>Log out</Link>
+        : <Button color="solid" size="sm" tag={Link} to="/login" {...props}>Sign up / log in</Button>
+    );
+};
 
 export const HeaderPhy = () => {
-    const user = useAppSelector(selectors.user.orNull);
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(m => !m);
-
-    const LoginLogoutButton = () => user && (user.loggedIn 
-        ? <Link to="/logout">Log out</Link>
-        : <Button color="solid" size="sm" tag={Link} to="/login">Sign up / log in</Button>
-    );
 
     return <header className="bg-white" data-testid={"header"}>
         <Container fluid>
@@ -37,7 +41,7 @@ export const HeaderPhy = () => {
                         ? <>
                             {/* desktop menu bar */}
                             <div className="d-flex justify-content-end align-items-center flex-wrap py-3">
-                                <NavigationPanelPhy className={classNames("flex-row")}/>
+                                <HeaderMenuPhy className={classNames("flex-row")} toggleMenu={toggleMenu}/>
                                 <LoginLogoutButton/>
                             </div>
                         </>
@@ -69,7 +73,7 @@ export const HeaderPhy = () => {
                                         </Link>
                                     </OffcanvasHeader>
                                     <OffcanvasBody>
-                                        <NavigationPanelPhy/>
+                                        <HeaderMenuPhy toggleMenu={toggleMenu}/>
                                     </OffcanvasBody>
                                 </Offcanvas>
                             </MenuOpenContext.Provider>
@@ -78,5 +82,14 @@ export const HeaderPhy = () => {
                 </Col>
             </Row>
         </Container>
+        {above["md"](deviceSize) && <Container fluid id="content-nav-container">
+            <Row>
+                <Col>
+                    <Nav tag="nav" className="d-flex align-items-end" id="content-nav">
+                        <NavigationMenuPhy toggleMenu={toggleMenu}/>
+                    </Nav>
+                </Col>
+            </Row>
+        </Container>}
     </header>;
 };
