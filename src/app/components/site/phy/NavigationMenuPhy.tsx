@@ -32,8 +32,6 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
         }
     };
 
-    // TODO: two dropdowns can be toggled simultaneously using keyboard focus and hover. disable hover if focus is active elsewhere
-
     const toggle = useCallback((e?: any) => {
         if (e && e.type === "click") {
             setIsOpen(isHovered);
@@ -164,11 +162,12 @@ interface NavigationCategory {
 interface NavigationSectionProps extends React.HTMLAttributes<HTMLDivElement> {
     title?: string;
     ikey: number;
+    toggleMenu: () => void;
     categories?: NavigationCategory[];
 }
 
 const ContentNavSection = (props: NavigationSectionProps) => {
-    const { title, categories, ...rest } = props;
+    const { title, categories, toggleMenu, ...rest } = props;
     const deviceSize = useDeviceSize();
 
     return above["xl"](deviceSize) 
@@ -215,7 +214,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                     return <>
                         <h5 className="px-4 m-0 py-2">{category.title}</h5>
                         {category.subcategories.map((subcategory, j) => {
-                            return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme}>
+                            return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme} onClick={toggleMenu}>
                                 <i className="icon icon-hexagon me-1"/>
                                 <span>{subcategory.fullTitle}</span>
                             </NavigationItem>;
@@ -226,10 +225,14 @@ const ContentNavSection = (props: NavigationSectionProps) => {
             </ContentNavAccordionWrapper>;
 };
 
-const ContentNavProfile = () => {
+const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
     const user = useAppSelector(selectors.user.orNull);
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
     const deviceSize = useDeviceSize();
+
+    const NavigationItemClose = (props: NavigationItemProps) => {
+        return <NavigationItem {...props} onClick={toggleMenu} />;
+    };
 
     const profileTabContents = <>
         {user?.loggedIn
@@ -237,55 +240,55 @@ const ContentNavProfile = () => {
                 <div className="d-flex flex-column flex-sm-row">
                     <div>
                         {isTeacherOrAbove(user) && <h5>STUDENT</h5>}
-                        <NavigationItem href="/my_gameboards">
+                        <NavigationItemClose href="/my_gameboards">
                             My question packs
-                        </NavigationItem>
-                        <NavigationItem href="/assignments">
+                        </NavigationItemClose>
+                        <NavigationItemClose href="/assignments">
                             My assignments
                             {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
-                        </NavigationItem>
-                        <NavigationItem href="/progress">
+                        </NavigationItemClose>
+                        <NavigationItemClose href="/progress">
                             My progress
-                        </NavigationItem>
-                        <NavigationItem href="/tests">
+                        </NavigationItemClose>
+                        <NavigationItemClose href="/tests">
                             My tests
                             {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
-                        </NavigationItem>
+                        </NavigationItemClose>
                     </div>
 
                     {isTeacherOrAbove(user) && <>                    
                         <div className={above["sm"](deviceSize) ? "section-divider-y" : "section-divider"}/>
                         <div>
                             <h5 className="pt-2 pt-sm-0">{"TEACHER"}</h5>
-                            <NavigationItem href="/teacher_features">
+                            <NavigationItemClose href="/teacher_features">
                                 Teacher features
-                            </NavigationItem>
-                            <NavigationItem href="/groups">
+                            </NavigationItemClose>
+                            <NavigationItemClose href="/groups">
                                 Manage groups
-                            </NavigationItem>
-                            <NavigationItem href="/set_assignments">
+                            </NavigationItemClose>
+                            <NavigationItemClose href="/set_assignments">
                                 Set assignments
-                            </NavigationItem>
-                            <NavigationItem href="/assignment_schedule">
+                            </NavigationItemClose>
+                            <NavigationItemClose href="/assignment_schedule">
                                 Assignment schedule
-                            </NavigationItem>
-                            <NavigationItem href="/assignment_progress">
+                            </NavigationItemClose>
+                            <NavigationItemClose href="/assignment_progress">
                                 Assignment progress
-                            </NavigationItem>
-                            <NavigationItem href="/set_tests">
+                            </NavigationItemClose>
+                            <NavigationItemClose href="/set_tests">
                                 Set / manage tests
-                            </NavigationItem>
+                            </NavigationItemClose>
                         </div>
                     </>}
                 </div>
 
                 <div className="section-divider" />
-                <NavigationItem href="/account">
+                <NavigationItemClose href="/account">
                     My account
-                </NavigationItem>
-                <NavigationItem href="/logout">
+                </NavigationItemClose>
+                <NavigationItemClose href="/logout">
                     Log out
-                </NavigationItem>
+                </NavigationItemClose>
             </div>
             : <div className="px-4">
                 <span>You&apos;re not currently logged in. Log in or sign up for free below!</span>
@@ -334,7 +337,7 @@ const NavigationItem = (props: NavigationItemProps) => {
     </NavLink>;
 };
 
-export const NavigationMenuPhy = () => {
+export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
     const [openHoverable, setOpenHoverable] = useState<number | undefined>(undefined);
     const deviceSize = useDeviceSize();
 
@@ -369,9 +372,9 @@ export const NavigationMenuPhy = () => {
     });
 
     return <HoverableNavigationContext.Provider value={{openId: openHoverable, setOpenId: setOpenHoverable}}>
-        <ContentNavProfile/>
-        <ContentNavSection title="Explore by learning stage" categories={stageCategories} className="border-start" ikey={0}/>
-        <ContentNavSection title="Explore by subject" categories={subjectCategories} className="border-start" ikey={1}/>
+        <ContentNavProfile toggleMenu={toggleMenu}/>
+        <ContentNavSection title="Explore by learning stage" categories={stageCategories} className="border-start" ikey={0} toggleMenu={toggleMenu}/>
+        <ContentNavSection title="Explore by subject" categories={subjectCategories} className="border-start" ikey={1} toggleMenu={toggleMenu}/>
         
         {above["md"](deviceSize) && <>
             <Spacer />

@@ -6,16 +6,17 @@ import { above, below, isAdmin, isAdminOrEventManager, isEventLeader, isStaff, i
 import { selectors, useAppSelector } from "../../../state";
 import { NavigationMenuPhy } from "./NavigationMenuPhy";
 
-export const HeaderMenuPhy = (props: NavProps) => {
+export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
+    const { toggleMenu, ...rest } = props;
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
     const isOffcanvas = !above["lg"](deviceSize);
     const isContentNavVisible = below["sm"](deviceSize);
     const isAdminTabVisible = user && isStaff(user) || isEventLeader(user);
     
-    return <Nav {...props} navbar className={classNames("justify-content-between", props.className, "pe-0", {"pe-md-3" : !isAdminTabVisible})} id="main-menu">
+    return <Nav {...rest} navbar className={classNames("justify-content-between", rest.className, "pe-0", {"pe-md-3" : !isAdminTabVisible})} id="main-menu">
         {isContentNavVisible && <>
-            <NavigationMenuPhy/>
+            <NavigationMenuPhy toggleMenu={toggleMenu}/>
             <div className="my-3"/>
         </>}
         {isOffcanvas && <NavigationSection topLevelLink to="/" title={"Home"}/>}

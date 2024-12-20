@@ -41,7 +41,7 @@ export const HeaderPhy = () => {
                         ? <>
                             {/* desktop menu bar */}
                             <div className="d-flex justify-content-end align-items-center flex-wrap py-3">
-                                <HeaderMenuPhy className={classNames("flex-row")}/>
+                                <HeaderMenuPhy className={classNames("flex-row")} toggleMenu={toggleMenu}/>
                                 <LoginLogoutButton/>
                             </div>
                         </>
@@ -73,7 +73,7 @@ export const HeaderPhy = () => {
                                         </Link>
                                     </OffcanvasHeader>
                                     <OffcanvasBody>
-                                        <HeaderMenuPhy/>
+                                        <HeaderMenuPhy toggleMenu={toggleMenu}/>
                                     </OffcanvasBody>
                                 </Offcanvas>
                             </MenuOpenContext.Provider>
@@ -86,7 +86,7 @@ export const HeaderPhy = () => {
             <Row>
                 <Col>
                     <Nav tag="nav" className="d-flex align-items-end" id="content-nav">
-                        <NavigationMenuPhy/>
+                        <NavigationMenuPhy toggleMenu={toggleMenu}/>
                     </Nav>
                 </Col>
             </Row>
