@@ -242,14 +242,14 @@ const ContentNavProfile = () => {
                         </NavigationItem>
                         <NavigationItem href="/assignments">
                             My assignments
-                            <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount}</span>
+                            {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
                         </NavigationItem>
                         <NavigationItem href="/progress">
                             My progress
                         </NavigationItem>
                         <NavigationItem href="/tests">
                             My tests
-                            <span className="badge bg-primary rounded-5 ms-2">{quizzesCount}</span>
+                            {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
                         </NavigationItem>
                     </div>
 
