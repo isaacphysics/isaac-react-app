@@ -748,3 +748,12 @@ export interface SearchShortcut {
 }
 
 export type QuestionCorrectness = "CORRECT" | "INCORRECT" | "NOT_ANSWERED" | "NOT_SUBMITTED"; 
+
+export type Subject = "physics" | "maths" | "chemistry" | "biology";
+
+export type SiteTheme = Subject | "neutral";
+
+export type PageContextState = {
+    stage: ApiTypes.Stage; // "all" is the default
+    subject: Subject | undefined;
+};
