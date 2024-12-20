@@ -195,6 +195,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
             0,
             [],
             {
+                editorMode: editorMode,
                 textEntry: true,
                 fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
                 fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
