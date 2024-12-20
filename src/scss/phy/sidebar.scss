@@ -1,0 +1,30 @@
+.sidebar {
+  ul {
+    list-style: none;
+    list-style-image: none;
+    padding-left: 0;
+    
+    li {
+      padding-left: 1rem;
+      border-radius: 1rem;
+    }
+
+    li:hover {
+      background-color: $color-neutral-100;
+    }
+  }
+
+  a {
+    display: flex;
+    align-items: flex-start;
+    text-decoration: none;
+    color: inherit;
+    &:hover .hover-underline {
+      text-decoration: underline;
+    }
+
+    i {
+      margin: 5px 0.5rem 0 0;
+    }
+  }
+}
