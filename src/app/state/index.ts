@@ -13,6 +13,7 @@ export * from "./reducers/topicState";
 export * from "./reducers/contentState";
 export * from "./slices/internalAppState";
 export * from "./slices/cookies";
+export * from "./slices/context";
 export * from "./actions/logging";
 export * from "./reducers/staticState";
 export * from "./reducers/searchState";

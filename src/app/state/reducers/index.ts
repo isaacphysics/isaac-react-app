@@ -28,7 +28,8 @@ import {
     gameboardsSlice,
     adminUserSearchSlice,
     userSlice,
-    interstitialCookieSlice
+    interstitialCookieSlice,
+    pageContextSlice,
 } from "../index";
 
 export const rootReducer = combineReducers({
@@ -87,6 +88,9 @@ export const rootReducer = combineReducers({
 
     // Quizzes
     quizAttempt,
+
+    // Context
+    pageContext: pageContextSlice.reducer,
 
     // API reducer
     [isaacApi.reducerPath]: isaacApi.reducer

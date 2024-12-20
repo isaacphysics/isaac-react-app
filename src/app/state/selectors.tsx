@@ -71,6 +71,12 @@ export const selectors = {
         /* Retrieves the current users most recent attempt at the current quiz being viewed */
         currentQuizAttempt: (state: AppState) => state?.quizAttempt,
     },
+
+    pageContext: {
+        context: (state: AppState) => state?.pageContext,
+        stage: (state: AppState) => state?.pageContext?.stage,
+        subject: (state: AppState) => state?.pageContext?.subject,
+    }
 };
 
 // Important type checking to avoid an awkward bug
