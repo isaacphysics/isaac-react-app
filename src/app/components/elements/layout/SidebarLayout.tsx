@@ -100,3 +100,8 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
         )}
     </Sidebar>;
 };
+
+export const ConceptSidebar = (props: QuestionSidebarProps) => {
+    return <QuestionSidebar {...props} />;
+};
+
