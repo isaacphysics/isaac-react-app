@@ -4,25 +4,30 @@ import {simpleDifficultyLabelMap, siteSpecific, STAGE, stageLabelMap} from "../.
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import { Difficulty } from "../../../IsaacApiTypes";
+import { Spacer } from "./Spacer";
 
-export function StageAndDifficultySummaryIcons({audienceViews, className, stack}: {
+interface StageAndDifficultySummaryIconsProps {
     audienceViews: ViewingContext[],
     className?: string,
+    iconClassName?: string,
     stack?: boolean,
-}) {
+}
+
+export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryIconsProps) => {
+    const {audienceViews, className, iconClassName, stack} = props;
     const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
     return siteSpecific(
-        <div className={classNames(className, "mt-1 d-sm-flex mt-md-0")}>
+        <div className={classNames(className, "d-flex flex-column")}>
             {audienceViews.map((view, i) =>
-                <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classNames("align-self-center d-flex d-md-block", {"ms-sm-3 ms-md-2": i > 0})}>
-                    {view.stage && view.stage !== STAGE.ALL && <div className="hierarchy-tags text-center">
-                        {stageLabelMap[view.stage]}
-                    </div>}
-                    {view.difficulty && <div className="hierarchy-tags text-center ms-md-0 ms-2">
-                        <DifficultyIcons difficulty={view.difficulty} />
-                    </div>}
-                </div>)
-            }
+                <span key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className="d-flex w-100 hierarchy-tags text-center">
+                    {view.stage && view.stage !== STAGE.ALL && stageLabelMap[view.stage] + " "}
+                    {view.difficulty && <>
+                        {simpleDifficultyLabelMap[view.difficulty]}
+                        <Spacer/>
+                        <DifficultyIcons className={classNames("d-inline-block ps-1", iconClassName)} difficulty={view.difficulty} />
+                    </>}
+                </span>
+            )}
         </div>,
         <div className={classNames(className, "d-sm-flex flex-wrap mt-1 align-items-baseline", {"justify-content-end": !stack})}>
             <div key={`${difficulties[0]}`} className={classNames("align-self-center d-flex align-items-center")}>
@@ -31,7 +36,7 @@ export function StageAndDifficultySummaryIcons({audienceViews, className, stack}
                         {simpleDifficultyLabelMap[difficulties[0]]}
                     </div>
                     <div className="hierarchy-tags text-center">
-                        <DifficultyIcons difficulty={difficulties[0]} blank classnames="mt-n1"/>
+                        <DifficultyIcons difficulty={difficulties[0]} blank className="mt-n1"/>
                     </div>
                 </>}
             </div>
