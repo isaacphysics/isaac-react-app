@@ -253,29 +253,30 @@ const ContentNavProfile = () => {
                         </NavigationItem>
                     </div>
 
-                    <div className={above["sm"](deviceSize) ? "section-divider-y" : "section-divider"}/>
-
-                    {isTeacherOrAbove(user) && <div>
-                        <h5 className="pt-2 pt-sm-0">{"TEACHER"}</h5>
-                        <NavigationItem href="/teacher_features">
-                            Teacher features
-                        </NavigationItem>
-                        <NavigationItem href="/groups">
-                            Manage groups
-                        </NavigationItem>
-                        <NavigationItem href="/set_assignments">
-                            Set assignments
-                        </NavigationItem>
-                        <NavigationItem href="/assignment_schedule">
-                            Assignment schedule
-                        </NavigationItem>
-                        <NavigationItem href="/assignment_progress">
-                            Assignment progress
-                        </NavigationItem>
-                        <NavigationItem href="/set_tests">
-                            Set / manage tests
-                        </NavigationItem>
-                    </div>}
+                    {isTeacherOrAbove(user) && <>                    
+                        <div className={above["sm"](deviceSize) ? "section-divider-y" : "section-divider"}/>
+                        <div>
+                            <h5 className="pt-2 pt-sm-0">{"TEACHER"}</h5>
+                            <NavigationItem href="/teacher_features">
+                                Teacher features
+                            </NavigationItem>
+                            <NavigationItem href="/groups">
+                                Manage groups
+                            </NavigationItem>
+                            <NavigationItem href="/set_assignments">
+                                Set assignments
+                            </NavigationItem>
+                            <NavigationItem href="/assignment_schedule">
+                                Assignment schedule
+                            </NavigationItem>
+                            <NavigationItem href="/assignment_progress">
+                                Assignment progress
+                            </NavigationItem>
+                            <NavigationItem href="/set_tests">
+                                Set / manage tests
+                            </NavigationItem>
+                        </div>
+                    </>}
                 </div>
 
                 <div className="section-divider" />
