@@ -432,6 +432,13 @@ export interface EmailTemplateDTO extends ContentDTO {
 }
 
 export interface FigureDTO extends ImageDTO {
+    dropZones?: {
+        index: number;
+        minWidth: string;
+        minHeight: string;
+        left: number;
+        top: number;
+    }[];
 }
 
 export interface FormulaDTO extends ChoiceDTO {
