@@ -72,14 +72,7 @@ export const Routes = [
   />,
 
   // Glossary:
-  <TrackedRoute
-    key={key++}
-    exact
-    path="/glossary"
-    ifUser={isLoggedIn}
-    component={Glossary}
-    userAgent={window.navigator.userAgent}
-  />,
+  <TrackedRoute key={key++} exact path="/glossary" component={Glossary} userAgent={window.navigator.userAgent} />,
 
   // Static pages:
   <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,

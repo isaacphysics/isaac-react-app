@@ -291,7 +291,6 @@ export const Glossary = () => {
                         glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
                       }}
                       doc={term}
-                      linkToGlossary={true}
                     />
                   ))}
                 </Col>
