@@ -187,7 +187,7 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path={PATHS.MY_GAMEBOARDS} ifUser={isLoggedIn} component={MyGameboards} />
-                        <TrackedRoute exact path={PATHS.GAMEBOARD_FILTER} ifUser={isNotPartiallyLoggedIn} component={GameboardFilter} />
+                        <TrackedRoute exact path={PATHS.GAMEBOARD_FILTER} ifUser={isLoggedIn} component={GameboardFilter} />
                         <TrackedRoute exact path={PATHS.QUESTION_FINDER} component={QuestionFinder} />
 
                         {/* Teacher pages */}
