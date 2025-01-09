@@ -192,6 +192,11 @@ export const api = {
             return endpoint.get(`/pages/${id}`);
         },
     },
+    interactiveVideos: {
+        get: (id: string): AxiosPromise<ApiTypes.H5pVideoDTO> => {
+            return endpoint.get(`/interactive-videos/video`);
+        },
+    },
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
             return endpoint.get(`/pages/topics/${topicName}`);

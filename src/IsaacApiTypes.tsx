@@ -549,6 +549,8 @@ export interface LLMFreeTextChoiceDTO extends ChoiceDTO {
 
 export interface VideoDTO extends MediaDTO {
 }
+export interface H5pVideoDTO extends MediaDTO {
+}
 
 export interface AbstractSegueUserDTO {
 }

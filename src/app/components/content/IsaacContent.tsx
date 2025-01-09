@@ -3,6 +3,7 @@ import {AnvilApp} from "./AnvilApp";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestion} from "./IsaacQuestion";
 import {IsaacVideo} from "./IsaacVideo";
+import {IsaacH5pVideo} from "./IsaacH5pVideo";
 import {IsaacImage} from "./IsaacImage";
 import {IsaacFigure} from "./IsaacFigure";
 import {IsaacGlossaryTerm} from "./IsaacGlossaryTerm";
@@ -63,6 +64,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
             case "figure": selectedComponent = <IsaacFigure {...props} />; break;
             case "image": selectedComponent = <IsaacImage {...props} />; break;
             case "video": selectedComponent = <IsaacVideo {...props} />; break;
+            case "h5pVideo": selectedComponent = <IsaacH5pVideo {...props} />; break;
             case "codeSnippet": selectedComponent = <IsaacCodeSnippet {...props} />; break;
             case "interactiveCodeSnippet": selectedComponent = <IsaacInteractiveCodeSnippet {...props} />; break;
             case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...props} />; break;
