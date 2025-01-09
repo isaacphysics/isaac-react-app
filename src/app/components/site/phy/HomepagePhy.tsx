@@ -1,10 +1,12 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
-import {above, SITE_TITLE, useDeviceSize, useUserConsent} from "../../../services";
+import {above, api, SITE_TITLE, useDeviceSize, useUserConsent} from "../../../services";
 import {HomepageYoutubeCookieHandler} from "../../handlers/InterstitialCookieHandler";
+import PlayH5p from "./PlayH5p";
+import { StyledSelect } from "../../elements/inputs/StyledSelect";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
@@ -12,6 +14,13 @@ export const HomepagePhy = () => {
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
     const userConsent = useUserConsent();
+
+    const [video, setVideo] = useState<string>("./h5p/si-base-units");
+    const interactiveVideos = [{ label: "Base Units", value: "./h5p/si-base-units" }, { label: "Homepage Video", value: "./h5p/homepage-video"},  { label: "Homepage Video 2", value: "./h5p/homepage-video-2" }];
+
+    useEffect(() => {
+        setVideo("");
+    }, [video]);
 
     return <>
         {/*<WarningBanner/>*/}
@@ -47,7 +56,15 @@ export const HomepagePhy = () => {
                                 </Col>
                             </Row>}
                             <div className={`h-100 ps-lg-4 content-video-container w-100 ${user?.loggedIn ? "pt-1 pt-sm-2 pt-lg-2" : "pt-4 pt-lg-3"} ${userConsent.cookieConsent?.youtubeCookieAccepted ?? false ? "ratio-16x9" : ""}`}>
-                                <HomepageYoutubeCookieHandler />
+                                {/* <HomepageYoutubeCookieHandler /> */}
+                                <PlayH5p h5pJsonPath={video} />
+                                <div className="d-inline-flex"/>
+                                <StyledSelect 
+                                    defaultValue={interactiveVideos[0]} 
+                                    options={interactiveVideos} 
+                                    onChange={(e) => {setVideo(e ? e.value : ""); console.log(video)}}
+                                />
+                                <Button size="sm" className="mt-2" onClick={() => api.interactiveVideos.get("1")}>Request</Button>
                             </div>
                         </Col>
                     </Row>

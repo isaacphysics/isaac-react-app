@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "clone_shepherd": "rm -rdf node_modules/shepherd && git clone git@github.com:shepherd-pro/shepherd.git --branch v1.1.1 node_modules/shepherd",
+    "patch_css": "patch node_modules/shepherd/dist/css/shepherd-theme-arrows.css update_css.patch",
+    "build": "npm run clone_shepherd && npm run patch_css && webpack && rm -d dist",
+    "webpack": "webpack && rm -d dist"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^12.0.2",
+    "tether": "1.0.3",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
+  }
+}

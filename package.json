@@ -17,6 +17,7 @@
     "billboard.js": "^1.12.12",
     "core-js": "^3.38.1",
     "dayjs": "^1.11.13",
+    "h5p-standalone": "^3.8.0",
     "he": "^1.2.0",
     "highlight.js": "^11.10.0",
     "history": "^4.10.1",

@@ -67,6 +67,7 @@ declare module '*.module.sass' {
 declare module "bootstrap";
 declare module "math-random-seed";
 declare module "highlightjs-vba";
+declare module 'h5p-standalone';
 
 declare let MathJax: any;
 declare let ISAAC_SITE: string;

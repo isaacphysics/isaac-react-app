@@ -1,0 +1,25 @@
+--- shepherd-theme-arrows.css	2024-06-06 19:10:22.577246006 +0200
++++ new.css	2024-06-06 19:11:31.683604832 +0200
+@@ -145,7 +145,7 @@
+       line-height: .8em;
+       font-weight: normal;
+       color: rgba(0, 0, 0, 0.5);
+-      opacity: 0.25;
++      opacity: 0.8;
+       position: relative;
+       top: .1em;
+       padding: .8em;
+@@ -186,10 +186,10 @@
+           font-size: .8em;
+           line-height: 1em;
+           padding: 0.75em 2em;
+-          background: #3288e6;
++          background: #186ac2;
+           color: #fff; }
+           .shepherd-element.shepherd-theme-arrows .shepherd-content footer .shepherd-buttons li .shepherd-button.shepherd-button-secondary {
+-            background: #eee;
+-            color: #888; }
++            background: #f3f3f3;
++            color: #666; }
+         .shepherd-element.shepherd-theme-arrows .shepherd-content footer .shepherd-buttons li:last-child .shepherd-button {
+           margin-right: 0; }
