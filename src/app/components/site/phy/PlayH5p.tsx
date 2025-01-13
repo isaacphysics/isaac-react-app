@@ -36,7 +36,7 @@ function PlayH5p({ h5pJsonPath }: H5pProps) {
 
     return (
         <div className="content-video-container ratio-16x9">
-            <div className={cn} ref={h5pContainer}/>
+            <div className={"h5p-container"} ref={h5pContainer}/>
         </div>
     );
 }

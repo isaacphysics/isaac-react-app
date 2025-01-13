@@ -3,7 +3,7 @@ import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state"
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
-import {above, api, SITE_TITLE, useDeviceSize, useUserConsent} from "../../../services";
+import {above, SITE_TITLE, useDeviceSize, useUserConsent} from "../../../services";
 import PlayH5p from "./PlayH5p";
 import { StyledSelect } from "../../elements/inputs/StyledSelect";
 
@@ -14,7 +14,7 @@ export const HomepagePhy = () => {
     const deviceSize = useDeviceSize();
     const userConsent = useUserConsent();
 
-    const [video, setVideo] = useState<string>("./h5p/si-base-units/h5p.json");
+    const [video, setVideo] = useState<string>("./h5p/homepage-video-2/h5p.json");
     const interactiveVideos = [{ label: "Base Units", value: "./h5p/si-base-units/h5p.json" }, { label: "Homepage Video", value: "./h5p/homepage-video/h5p.json"},  { label: "Homepage Video 2", value: "./h5p/homepage-video-2/h5p.json" }];
 
     useEffect(() => {
@@ -59,9 +59,9 @@ export const HomepagePhy = () => {
                                 <PlayH5p h5pJsonPath={video} />
                                 <div className="d-inline-flex"/>
                                 <StyledSelect 
-                                    defaultValue={interactiveVideos[0]} 
+                                    defaultValue={interactiveVideos[2]} 
                                     options={interactiveVideos} 
-                                    onChange={(e) => {setVideo(e ? e.value : ""); console.log(video)}}
+                                    onChange={(e) => setVideo(e ? e.value : "")}
                                 />
                             </div>
                         </Col>

@@ -8,6 +8,34 @@ import { YoutubeCookieHandler } from '../handlers/InterstitialCookieHandler';
 interface IsaacH5pVideoProps {
     doc: H5pVideoDTO;
 }
+
+function onPlayerStateChange(event: any, wrappedLogAction: (eventDetails: object) => void, pageId?: string) {
+    const YT = (window as any).YT;
+    const logEventDetails: any = {
+        videoUrl: event.target.getVideoUrl(),
+        videoPosition: event.target.getCurrentTime(),
+    };
+
+    if (pageId) {
+        logEventDetails.pageId = pageId;
+    }
+
+    switch(event.data) {
+        case YT.PlayerState.PLAYING:
+            logEventDetails.type = "VIDEO_PLAY";
+            break;
+        case YT.PlayerState.PAUSED:
+            logEventDetails.type = "VIDEO_PAUSE";
+            break;
+        case YT.PlayerState.ENDED:
+            logEventDetails.type = "VIDEO_ENDED";
+            delete logEventDetails.videoPosition;
+            break;
+        default:
+            return; // Don't send a log message.
+    }
+    
+    wrappedLogAction(logEventDetails);
 }
 
 export function IsaacH5pVideo(props: IsaacH5pVideoProps) {
