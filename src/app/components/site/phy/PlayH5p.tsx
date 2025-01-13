@@ -1,5 +1,7 @@
 import { H5P } from "h5p-standalone";
 import React, { useEffect, useRef } from "react";
+import { useUserConsent } from "../../../services";
+import { YoutubeCookieHandler } from "../../handlers/InterstitialCookieHandler";
 
 interface H5pProps {
     h5pJsonPath: string;
@@ -29,9 +31,12 @@ function PlayH5p({ h5pJsonPath }: H5pProps) {
         };
     }, [h5pJsonPath, h5pContainer]);
 
+    const UserConsent = useUserConsent();
+    const cn = "h5p-container" + (UserConsent.cookieConsent?.youtubeCookieAccepted ? "" : " d-none");
+
     return (
         <div className="content-video-container ratio-16x9">
-            <div className="h5p-container" ref={h5pContainer}/>
+            <div className={cn} ref={h5pContainer}/>
         </div>
     );
 }

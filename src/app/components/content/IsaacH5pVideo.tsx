@@ -1,20 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {VideoDTO} from "../../../IsaacApiTypes";
-import {api} from "../../services";
+import {H5pVideoDTO} from "../../../IsaacApiTypes";
+import {apiHelper} from "../../services";
 import PlayH5p from '../site/phy/PlayH5p';
 import { StyledSelect } from '../elements/inputs/StyledSelect';
-import { Button } from 'reactstrap';
+import { YoutubeCookieHandler } from '../handlers/InterstitialCookieHandler';
 
 interface IsaacH5pVideoProps {
-    doc: VideoDTO;
+    doc: H5pVideoDTO;
+}
 }
 
 export function IsaacH5pVideo(props: IsaacH5pVideoProps) {
     const {doc: {src, altText}} = props;
-    const altTextToUse = `Embedded YouTube video: ${altText || src}.`;
-    const url = window.location.origin;
 
-    const [video, setVideo] = useState<string>(url + "/h5p/si-base-units");
+    const path = (src?: string) => src ? apiHelper.determineImageUrl(src) : "";
+    const altTextToUse = `Embedded YouTube video: ${altText || src}.`;
+
+    const [video, setVideo] = useState<string>(path(src) ?? "");
     useEffect(() => {
         setVideo("");
     }, [video]);
@@ -23,18 +25,23 @@ export function IsaacH5pVideo(props: IsaacH5pVideoProps) {
         {altTextToUse}
     </div>;
 
-    const interactiveVideos = [{ label: "Base Units", value: url + "/h5p/si-base-units" }, { label: "Homepage Video", value: url + "/h5p/homepage-video"},  { label: "Homepage Video 2", value: url + "/h5p/homepage-video-2" }];
+    const interactiveVideos = [
+        { label: "Base Units", value: path("./content/beta_pages/sol/hackathon/figures/si-base-units.json") }, 
+        { label: "Homepage Video", value: path("./content/beta_pages/sol/hackathon/figures/Why-use-Isaac-Physics.json")},  
+        { label: "Homepage Video 2", value: path("./content/beta_pages/sol/hackathon/figures/Why-use-Isaac-Physics-2.json")}
+    ];
     
     return <div>
         <div className="no-print content-value text-center">
             <PlayH5p h5pJsonPath={video} />
             <div className="d-inline-flex"/>
             <StyledSelect 
+                className="mb-1"
                 defaultValue={interactiveVideos[0]} 
                 options={interactiveVideos} 
                 onChange={(e) => setVideo(e ? e.value : "")}
             />
-            <Button size="sm" className="mt-2" onClick={() => api.interactiveVideos.get("1")}>Request</Button>
+            <div className="d-inline-flex"/>
         </div>
         {detailsForPrintOut}
     </div>;

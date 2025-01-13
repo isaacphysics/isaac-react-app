@@ -1,10 +1,9 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {above, api, SITE_TITLE, useDeviceSize, useUserConsent} from "../../../services";
-import {HomepageYoutubeCookieHandler} from "../../handlers/InterstitialCookieHandler";
 import PlayH5p from "./PlayH5p";
 import { StyledSelect } from "../../elements/inputs/StyledSelect";
 
@@ -15,8 +14,8 @@ export const HomepagePhy = () => {
     const deviceSize = useDeviceSize();
     const userConsent = useUserConsent();
 
-    const [video, setVideo] = useState<string>("./h5p/si-base-units");
-    const interactiveVideos = [{ label: "Base Units", value: "./h5p/si-base-units" }, { label: "Homepage Video", value: "./h5p/homepage-video"},  { label: "Homepage Video 2", value: "./h5p/homepage-video-2" }];
+    const [video, setVideo] = useState<string>("./h5p/si-base-units/h5p.json");
+    const interactiveVideos = [{ label: "Base Units", value: "./h5p/si-base-units/h5p.json" }, { label: "Homepage Video", value: "./h5p/homepage-video/h5p.json"},  { label: "Homepage Video 2", value: "./h5p/homepage-video-2/h5p.json" }];
 
     useEffect(() => {
         setVideo("");
@@ -64,7 +63,6 @@ export const HomepagePhy = () => {
                                     options={interactiveVideos} 
                                     onChange={(e) => {setVideo(e ? e.value : ""); console.log(video)}}
                                 />
-                                <Button size="sm" className="mt-2" onClick={() => api.interactiveVideos.get("1")}>Request</Button>
                             </div>
                         </Col>
                     </Row>
