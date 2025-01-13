@@ -9,6 +9,7 @@ describe('Assignment Schedule', () => {
         cy.mountWithStoreAndRouter(<AssignmentSchedule user={mockUser}/>, ["assignment_schedule"]);
         cy.get('[data-testid="loading"]').should('not.exist');
         cy.get('.month-label').click().blur();
+        cy.get('div.hexagon-date').should('be.visible');
         cy.wait(1000);
         cy.matchImage();
     });
