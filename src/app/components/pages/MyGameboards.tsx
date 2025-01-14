@@ -185,9 +185,6 @@ export const MyGameboards = () => {
         {boards && boards.totalResults == 0 ?
             <>
                 <h3 className="text-center mt-4">You have no {siteSpecific("gameboards", "quizzes")} to view.</h3>
-                {isPhy && <div className="text-center mt-3 mb-5">
-                    <Button color="secondary" tag={Link} to={PATHS.GAMEBOARD_FILTER}>Create a gameboard</Button>
-                </div>}
             </>
             :
             <>
