@@ -241,3 +241,8 @@ export const QuestionFinderSidebar = (props: SidebarProps) => {
     // TODO
     return <Sidebar {...props}/>;
 };
+
+export const PracticeQuizzesSidebar = (props: SidebarProps) => {
+    // TODO
+    return <Sidebar {...props}/>;
+};
