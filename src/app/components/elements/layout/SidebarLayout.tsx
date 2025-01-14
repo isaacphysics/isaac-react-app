@@ -72,6 +72,7 @@ interface QuestionSidebarProps extends SidebarProps {
 }
 
 export const QuestionSidebar = (props: QuestionSidebarProps) => {
+    // TODO: this implementation is only for standalone questions; if in the context of a gameboard, the sidebar should show gameboard navigation
     const relatedConcepts = props.relatedContent?.filter(c => c.type === "isaacConceptPage") as IsaacConceptPageDTO[] | undefined;
     const relatedQuestions = props.relatedContent?.filter(c => c.type === "isaacQuestionPage") as QuestionDTO[] | undefined;
 
@@ -228,6 +229,15 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
                 Browse concepts
             </AffixButton>
         </div>
-
     </Sidebar>;
+};
+
+export const GenericConceptsSidebar = (props: SidebarProps) => {
+    // TODO
+    return <Sidebar {...props}/>;
+};
+
+export const QuestionFinderSidebar = (props: SidebarProps) => {
+    // TODO
+    return <Sidebar {...props}/>;
 };
