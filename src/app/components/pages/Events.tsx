@@ -3,7 +3,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {selectors, useAppSelector, useLazyGetEventsQuery} from "../../state";
 import queryString from "query-string";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {EventCard} from "../elements/cards/EventCard";
+import EventPod from "../elements/EventPod";
 import {PageFragment} from "../elements/PageFragment";
 import {
     EventStageMap,
@@ -17,6 +17,7 @@ import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { Container, Form, Label, Input, Row, Button } from "reactstrap";
+
 interface EventsPageQueryParams {
     show_booked_only?: boolean;
     show_reservations_only?: boolean;
@@ -114,9 +115,9 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                         const numberOfLoadedEvents = events.length;
 
                         return <div className="my-4">
-                            <Row>
-                                {events.map(event => <div key={event.id} className="col-xs-12 col-sm-6 col-md-4 d-flex">
-                                    <EventCard event={event} />
+                            <Row className="d-flex flex-row card-deck row-cols-1 row-cols-sm-2 row-cols-lg-3 justify-content-center mt-4">
+                                {events.map(event => <div key={event.id} className="my-3 px-0 justify-content-center">
+                                    <EventPod event={event} />
                                 </div>)}
                             </Row>
 

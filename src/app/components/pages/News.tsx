@@ -1,5 +1,5 @@
 import {Button, Col, Container, Row} from "reactstrap";
-import {NewsCard} from "../elements/cards/NewsCard";
+import NewsPod from "../elements/NewsPod";
 import React, { useEffect } from "react";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -41,8 +41,8 @@ export const News = () => {
             /> : 
             <>
                 <Row className="d-flex flex-row card-deck row-cols-1 row-cols-sm-2 row-cols-lg-3 justify-content-center mt-4">
-                    {allNews.map((n, i) => <Col key={i} className="d-flex my-3 px-0 justify-content-center">
-                        <NewsCard key={n.id} newsItem={n} showTitle />
+                    {allNews.map((n, i) => <Col key={i} className="my-3 px-0 justify-content-center">
+                        <NewsPod key={n.id} newsItem={n} showTitle />
                     </Col>)}
                 </Row>
                 <div className="w-100 d-flex justify-content-center mb-5">
