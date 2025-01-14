@@ -53,7 +53,7 @@
 
 // TODO: replace btn-secondary with btn-keyline
 .btn.btn-secondary, .btn.btn-keyline {
-  background-color: var(--buttons-light);
+  background-color: transparent;
   border: 1.5px solid var(--buttons-keyline-border);
   color: var(--buttons-light-text);
 
