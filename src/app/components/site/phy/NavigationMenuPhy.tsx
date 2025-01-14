@@ -44,12 +44,13 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
             setIsOpen(o => !o);
             setIsFocused(f => !f);
         } else { // hover
-            setIsOpen(o => !o && hoverContext?.openId === undefined);
+            setIsOpen(o => !o && hoverContext?.openId.current === undefined);
         }
     }, [hoverContext?.openId, isHovered]);
 
     useEffect(() => {
-        hoverContext?.setOpenId(id => isOpen ? ikey : (id === ikey ? undefined : id));
+        if (!hoverContext) return;
+        hoverContext.openId.current = isOpen ? ikey : (hoverContext?.openId.current === ikey ? undefined : hoverContext?.openId.current);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, ikey]);
 
@@ -100,7 +101,8 @@ const StaticNavigationDropdown = (props: NavigationDropdownProps) => {
     }, []);
 
     useEffect(() => {
-        hoverContext?.setOpenId(id => isOpen ? ikey : (id === ikey ? undefined : id));
+        if (!hoverContext) return;
+        hoverContext.openId.current = isOpen ? ikey : (hoverContext.openId.current === ikey ? undefined : hoverContext.openId.current);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, ikey]);
 
@@ -338,7 +340,10 @@ const NavigationItem = (props: NavigationItemProps) => {
 };
 
 export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
-    const [openHoverable, setOpenHoverable] = useState<number | undefined>(undefined);
+    const openHoverable = useRef<number | undefined>(undefined);
+    // we use a ref over useState for tracking which hoverable is open as the delay from using setState can lead to this not being reset to undefined 
+    // while moving the mouse between two hoverables, preventing the second dropdown from opening.
+    
     const deviceSize = useDeviceSize();
 
     const stageCategories = Object.entries(PHY_NAV_STAGES).map(([stage, subjects]) => {
@@ -371,7 +376,7 @@ export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
         };
     });
 
-    return <HoverableNavigationContext.Provider value={{openId: openHoverable, setOpenId: setOpenHoverable}}>
+    return <HoverableNavigationContext.Provider value={{openId: openHoverable}}>
         <ContentNavProfile toggleMenu={toggleMenu}/>
         <ContentNavSection title="Explore by learning stage" categories={stageCategories} className="border-start" ikey={0} toggleMenu={toggleMenu}/>
         <ContentNavSection title="Explore by subject" categories={subjectCategories} className="border-start" ikey={1} toggleMenu={toggleMenu}/>
