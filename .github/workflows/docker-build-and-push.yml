@@ -1,0 +1,80 @@
+# see https://docs.github.com/en/actions/use-cases-and-examples/publishing-packages/publishing-docker-images#publishing-images-to-github-packages
+name: Create and publish Docker images
+
+on:
+  push
+
+env:
+  REGISTRY: ghcr.io
+  NAMESPACE: isaacphysics
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    strategy:
+      matrix:
+        target: [build-phy, build-phy-renderer, build-ada, build-ada-renderer]
+        include:
+          - target: build-phy
+            image-name: isaac-phy-app
+          - target: build-phy-renderer
+            image-name: isaac-phy-app-renderer
+          - target: build-ada
+            image-name: isaac-ada-app
+          - target: build-ada-renderer
+            image-name: isaac-ada-app-renderer
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get metadata for image
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ matrix.image-name }}
+          tags: |
+            type=sha,prefix=,format=long
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+      - name: Load API version from .env file for release
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          source .env
+          echo REACT_APP_API_VERSION="$REACT_APP_API_VERSION" >> $GITHUB_ENV
+      - name: Build and push image for release
+        # If this is a release tag (vX.Y.Z), bake in the API version defined in .env.
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          context: .
+          build-args: |
+            BUILD_TARGET=${{ matrix.target }}
+            REACT_APP_API_VERSION=${{ env.REACT_APP_API_VERSION }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Build and push image
+        # Otherwise, assume there is an API branch or tag with the same name(!) and override the app to use that.
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        if: startsWith(github.ref, 'refs/tags/v') != true
+        with:
+          context: .
+          build-args: |
+            BUILD_TARGET=${{ matrix.target }}
+            REACT_APP_API_VERSION=${{ steps.meta.outputs.version }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

@@ -10,6 +10,8 @@ if [ $# -lt 3 ] || ! { [ $1 = "ada" ] || [ $1 = "phy" ]; }; then
   exit 1
 fi
 
+DOCKER_REPO=ghcr.io/isaacphysics
+
 # Extract args:
 SITE=$1
 APP_VERSION=$2
@@ -20,13 +22,13 @@ shift 2
 # Use the app image to find the correct API version to use:
 if [ $1 = "create" ] || [ $1 = "pull" ] || [ $1 = "push" ] || [ $1 = "run" ] || [ $1 = "start" ] || [ $1 = "up" ]; then
   # This will cause new containers or should update containers, so pull newer images if possible:
-  docker pull docker.isaacscience.org/isaac-$SITE-app:$APP_VERSION
-  API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-$SITE-app:$APP_VERSION)
-  docker pull docker.isaacscience.org/isaac-etl:$API_VERSION
+  docker pull $DOCKER_REPO/isaac-$SITE-app:$APP_VERSION
+  API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' $DOCKER_REPO/isaac-$SITE-app:$APP_VERSION)
+  docker pull $DOCKER_REPO/isaac-etl:$API_VERSION
 
 elif [ $1 = "down" ] || [ $1 = "stop" ] || [ $1 = "restart" ] || [ $1 = "exec" ] || [ $1 = "config" ] || [ $1 = "logs" ] || [ $1 = "kill" ] || [ $1 = "ps" ]; then
   # This affects existing containers, so don't pull newer images:
-  API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-$SITE-app:$APP_VERSION)
+  API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' $DOCKER_REPO/isaac-$SITE-app:$APP_VERSION)
 
 else
   # This might not be a docker-compose operation. If it is, it could be added above to the correct branch.
@@ -55,7 +57,7 @@ version: '2'
 services:
   $SITE-etl:
     container_name: $ETL_NAME
-    image: docker.isaacscience.org/isaac-etl:$API_VERSION
+    image: $DOCKER_REPO/isaac-etl:$API_VERSION
     environment:
       - SEGUE_CONFIG_LOCATION=/local/data/config/segue-config.dec.yaml
       - JAVA_OPTIONS=-Dlog.path=/isaac-logs -Dsegue.version=$API_VERSION -Djetty.port=8090
