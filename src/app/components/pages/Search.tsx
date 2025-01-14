@@ -23,7 +23,8 @@ import {
     searchResultIsPublic,
     selectOnChange,
     shortcuts,
-    siteSpecific
+    siteSpecific,
+    STAGE
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
@@ -33,6 +34,7 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {SearchPageSearch} from "../elements/SearchInputs";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import { AbstractListView, AbstractListViewItemProps } from "../elements/list-groups/AbstractListViewItem";
 
 interface Item<T> {
     value: T;
@@ -112,6 +114,24 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
     const gotResults = shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0;
 
+    const a: AbstractListViewItemProps[] = [{
+        icon: <img src={"/assets/phy/icons/concept.svg"} alt="Shortcut icon"/>,
+        title: "everything title",
+        subtitle: "subtitle",
+        breadcrumb: ["bre", "ad", "crumb"],
+        status: "status",
+        tags: ["tag1", "tag2"],
+        testTag: "testTag",
+        url: "url",
+        audienceViews: [{stage: STAGE.YEAR_7_AND_8, difficulty: "practice_2"}],
+    },
+    {
+        icon: <img src={"/assets/phy/icons/concept.svg"} alt="Shortcut icon"/>,
+        title: "Test",
+        previewUrl: "previewUrl",
+        testUrl: "testUrl",
+    }];
+
     return (
         <Container id="search-page">
             <Row>
@@ -164,10 +184,11 @@ export const Search = withRouter((props: RouteComponentProps) => {
                         {urlQuery != "" && <CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {gotResults ?
-                                    <LinkToContentSummaryList 
+                                    <AbstractListView items={a} />
+                                    /*<LinkToContentSummaryList 
                                         items={shortcutAndFilteredSearchResults} showBreadcrumb={true}
                                         contentTypeVisibility={ContentTypeVisibility.SHOWN}   
-                                    />
+                                    /> */
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </CardBody>}
