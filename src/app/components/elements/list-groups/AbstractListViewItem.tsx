@@ -102,13 +102,13 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
                 </Col>}
             </div>
         </Col>
-        <Col md={2} style={{borderLeft: "1px solid #a5a5a4"}}>
+        <Col md={2} className="d-none d-xl-flex" style={{borderLeft: "1px solid #a5a5a4"}}>
             {/* Status (but only on bigger screens) */}
             {status && <div className="d-none d-xl-flex">
                 {status}
             </div>}
         </Col>
-        {audienceViews && <Col md={2} className="d-none d-md-flex" style={{borderLeft: "1px solid #a5a5a4"}}>
+        {audienceViews && <Col md={4} xl={2} className="d-none d-md-flex" style={{borderLeft: "1px solid #a5a5a4"}}>
             {/* Stage (but only on bigger screens) */}
             <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={true}/> 
         </Col>}

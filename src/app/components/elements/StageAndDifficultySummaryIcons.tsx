@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import {simpleDifficultyLabelMap, siteSpecific, STAGE, stageLabelMap} from "../../services";
+import {difficultyLabelMap, simpleDifficultyLabelMap, siteSpecific, STAGE, stageLabelMap} from "../../services";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import { Difficulty } from "../../../IsaacApiTypes";
@@ -12,13 +12,13 @@ export function StageAndDifficultySummaryIcons({audienceViews, className, stack}
 }) {
     const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
     return siteSpecific(
-        <div className={classNames(className, "mt-1 d-sm-flex mt-md-0")}>
+        <div className={classNames(className, "mt-1 d-inline mt-md-0")}>
             {audienceViews.map((view, i) =>
-                <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classNames("align-self-center d-flex d-md-block", {"ms-sm-3 ms-md-2": i > 0})}>
-                    {view.stage && view.stage !== STAGE.ALL && <div className="hierarchy-tags text-center">
-                        {stageLabelMap[view.stage]}
+                <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classNames("d-flex", {"ms-sm-3 ms-md-2": i > 0})}>
+                    {view.stage && view.difficulty && view.stage !== STAGE.ALL && <div className="hierarchy-tags text-center">
+                        {stageLabelMap[view.stage] + " " + simpleDifficultyLabelMap[view.difficulty]}
                     </div>}
-                    {view.difficulty && <div className="hierarchy-tags text-center ms-md-0 ms-2">
+                    {view.difficulty && <div className="hierarchy-tags text-center ms-2">
                         <DifficultyIcons difficulty={view.difficulty} />
                     </div>}
                 </div>)

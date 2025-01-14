@@ -7,7 +7,7 @@ import {Rectangle} from "./Rectangle";
 import {Circle} from "./Circle";
 
 // Difficulty icon proportions
-const difficultyIconWidth = 25;
+const difficultyIconWidth = 12.5;
 const difficultyIconXPadding = 1.5;
 const yPadding = 2;
 const difficultyCategoryLevels = siteSpecific([1, 2, 3], [1, 2]);
@@ -30,11 +30,11 @@ function SingleDifficultyIconShape({difficultyCategory, difficultyCategoryLevel,
             ) :
             <Rectangle {...miniSquare} className={"square difficulty challenge " + classnames({active})} />
         }
-        {<foreignObject width={difficultyIconWidth} height={difficultyIconWidth + (difficultyCategory === "P" && isPhy ? yPadding + 2 : siteSpecific(0, 1))}>
+        {/*<foreignObject width={difficultyIconWidth} height={difficultyIconWidth + (difficultyCategory === "P" && isPhy ? yPadding + 2 : siteSpecific(0, 1))}>
             <div aria-hidden={"true"} className={`difficulty-title difficulty-icon-title ${classnames({active})} difficulty-${difficultyCategoryLevel}`}>
                 {blank ? "" : difficultyCategory}
             </div>
-        </foreignObject>}
+        </foreignObject>*/}
     </g>;
 }
 
@@ -45,6 +45,7 @@ export function DifficultyIcons({difficulty, blank, classnames} : {difficulty: D
 
     return <div className={classnames}>
         <svg
+            className="d-flex"
             role={"img"}
             width={`${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) + difficultyIconXPadding}px`}
             height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`}

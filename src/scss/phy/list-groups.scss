@@ -6,7 +6,7 @@
 
 .list-group-links li a {
   padding-right: 38px;
-  &:after {
+  /*&:after {
     @include pseudo-element;
     background-image: url('/assets/common/icons/chevron_right.svg');
     background-repeat: no-repeat;
@@ -17,5 +17,5 @@
     top: 0;
     bottom: 0;
     width: 9px;
-  }
+  } */
 }
