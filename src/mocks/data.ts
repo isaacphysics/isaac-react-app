@@ -4444,6 +4444,57 @@ export const mockQuestionFinderResults = {
     "totalResults": 5
 };
 
+export const mockConceptPage =
+    {
+        "type": "isaacConceptPage",
+        "encoding": "markdown",
+        "title": "Mock concept page",
+        "children": [
+            {
+                "type": "content",
+                "encoding": "markdown",
+                "value": "This is some text on a concept page."
+            },
+            {
+                "type": "content",
+                "layout": "accordion",
+                "children": [
+                    {
+                        "type": "content",
+                        "children": [
+                            {
+                                "type": "content",
+                                "value": "This is some text within an accordion on a concept page.",
+                                "encoding": "markdown"
+                            }
+                        ],
+                        "level": "2",
+                        "title": "Accordion",
+                        "id": "_mock_accordion_",
+                        "audience": [
+                            {
+                                "stage": [
+                                    "a_level"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "id": "_mock_concept_page_",
+        "summary": "A mock concept page",
+        "tags": [
+            "physics",
+            "thermal"
+        ],
+        "published": false,
+        "relatedContent": [
+            "cc_ideal_gas"
+        ],
+        "subtitle": "Mock concept page"
+    };
+
 export const mockSetAssignments = [
     {
         id: 37,
