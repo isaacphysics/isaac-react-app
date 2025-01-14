@@ -50,7 +50,7 @@ export const EventPod = ({event}: {event: AugmentedEvent}) => {
                     </span>}
             </CardText>
             <CardText>
-                <Link aria-label={`${title} read more`} className="focus-target btn btn-secondary" to={`/events/${id}`}>
+                <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`/events/${id}`}>
                     Read more
                     <span className='visually-hidden'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
                 </Link>

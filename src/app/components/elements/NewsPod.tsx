@@ -29,11 +29,11 @@ const NewsPod = ({newsItem, ...props}: NewsPodProps) => {
             </p>
             <CardText>
                 {!url?.startsWith("http") ?
-                    <Link aria-label={`${title} read more`} className="focus-target btn btn-secondary" to={`${url}`}>
+                    <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`${url}`}>
                         Read more
                     </Link>
                     :
-                    <a className="focus-target btn btn-secondary" href={url} target="_blank" rel="noopener">
+                    <a className="focus-target btn btn-keyline" href={url} target="_blank" rel="noopener">
                         Find out more
                     </a>
                 }
