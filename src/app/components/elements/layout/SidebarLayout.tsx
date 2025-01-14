@@ -3,7 +3,7 @@ import { Col, ColProps, Container, ContainerProps, Input, Label, Row } from "rea
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { AUDIENCE_DISPLAY_FIELDS, determineAudienceViews, filterAudienceViewsByProperties, getThemeFromContextAndTags, isDefined, stageLabelMap } from "../../../services";
+import { AUDIENCE_DISPLAY_FIELDS, determineAudienceViews, filterAudienceViewsByProperties, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
@@ -15,6 +15,8 @@ interface SidebarLayoutProps extends ContainerProps {
 }
 
 export const SidebarContainer = (props: SidebarLayoutProps) => {
+    if (isAda) return <Container {...props} />;
+
     const { children, className, ...rest } = props;
     return <Container fluid {...rest} className={classNames("sidebar-layout", className)}>
         <Row>
@@ -24,7 +26,7 @@ export const SidebarContainer = (props: SidebarLayoutProps) => {
 };
 
 export const MainContent = (props: ColProps) => {
-    return <Col xs={12} lg={8} xl={9} {...props} />;
+    return siteSpecific(<Col xs={12} lg={8} xl={9} {...props} />, props.children);
 };
 
 const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & {question: QuestionDTO, sidebarRef: RefObject<HTMLDivElement>}) => {
@@ -58,6 +60,8 @@ interface SidebarProps extends ColProps {
 }
 
 const Sidebar = (props: SidebarProps) => {
+    if (isAda) return <></>;
+
     const { className, ...rest } = props;
     return <Col lg={4} xl={3} {...rest} className={classNames("sidebar p-4", className)} />;
 };
