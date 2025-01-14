@@ -1,0 +1,87 @@
+.sidebar {
+  ul {
+    list-style: none;
+    list-style-image: none;
+    padding-left: 0;
+    margin-bottom: 0;
+    
+    li {
+      padding-left: 1rem;
+      border-radius: 0.2rem;
+
+      .link-title {
+        font-size: 16px;
+      }
+    }
+
+    li:hover {
+      background-color: $color-neutral-100;
+    }
+  }
+
+  li > a {
+    display: flex;
+    align-items: flex-start;
+    text-decoration: none;
+    color: inherit;
+    &:hover .hover-underline {
+      text-decoration: underline;
+    }
+
+    i {
+      margin: 5px 0.5rem 0 0;
+    }
+  }
+
+  .section-divider {
+    margin: 1rem 0 1.4rem;
+  }
+
+  .section-divider-small {
+    @extend .section-divider;
+    margin: 0.5rem 0 0.7rem;
+  }
+
+  .sidebar-key {
+    color: $color-neutral-700;
+    font-size: 13px;
+  }
+
+  .sidebar-help {
+    color: $color-neutral-500;
+    font-size: 15px;
+  }
+
+  .filters-checkbox {
+    cursor: pointer;
+    border-left: solid 2px transparent;
+
+    .badge.rounded-pill {
+      background-color: white;
+      color: var(--bs-body-color-rgb);
+    }
+
+    background-size: 205% 100%;
+    background-image: linear-gradient(90deg, var(--subject-color-100) 50%, transparent 50%);
+    background-position: 100% 0%;
+    transition: background-position 0.3s ease-in-out;
+    
+    &:has(> input:checked) {
+      border-left: solid 2px var(--subject-color-500);
+      background-position: 0% 0%;
+      
+      .badge.rounded-pill {
+        background-color: var(--subject-color-500);
+        color: white;
+      }
+    }
+
+    &:hover:not(:has(> input:checked)) {
+      border-left: solid 2px var(--subject-color-300);
+    }
+
+    > input {
+      display: none;
+    }
+  }
+}

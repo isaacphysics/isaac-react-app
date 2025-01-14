@@ -67,6 +67,27 @@
   background-color: black;
 }
 
+@mixin svg-icon-layered($fg_path, $bg_path, $width: 16px, $height: 16px) {
+  display: inline-block;
+  width: $width;
+  height: $height;
+  min-width: $width;
+  min-height: $height;
+  &:is(i.icon.icon) { // increase specificity over theming
+    background-color: transparent;
+  }
+  &::before {
+    content: '';
+    @include svg-icon($bg_path, $width, $height);
+    position: absolute;
+  }
+  &::after {
+    content: '';
+    @include svg-icon($fg_path, $width, $height);
+    position: absolute;
+  }
+}
+
 .icon-menu {
   @include svg-icon('/assets/phy/icons/redesign/menu.svg', 16px, 16px);
   mask-size: 14px 12px;
@@ -91,6 +112,26 @@
 
 .icon-search {
   @include svg-icon('/assets/phy/icons/redesign/search.svg', 16px, 16px);
+}
+
+.icon-right {
+  @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
+}
+
+.icon-lightbulb {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/lightbulb-fg.svg', 
+    '/assets/phy/icons/redesign/lightbulb-bg.svg',
+    16px, 16px
+  );
+}
+
+.icon-question {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/question-fg.svg', 
+    '/assets/phy/icons/redesign/question-bg.svg',
+    16px, 16px
+  );
 }
 
 svg {
