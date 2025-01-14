@@ -75,12 +75,22 @@ export abstract class AbstractBaseTagService {
         return children;
     }
 
-    public getDescendents(tagId: TAG_ID) {
+    public getDirectDescendents(tagId: TAG_ID) {
+        const descendents: Tag[] = [];
+        for (const i in this.allTags) {
+            if (this.allTags[i].parent == tagId) {
+                descendents.push(this.allTags[i]);
+            }
+        }
+        return descendents;
+    }
+
+    public getRecursiveDescendents(tagId: TAG_ID) {
         let descendents: Tag[] = [];
         for (const i in this.allTags) {
             if (this.allTags[i].parent == tagId) {
                 descendents.push(this.allTags[i]);
-                descendents = descendents.concat(this.getDescendents(this.allTags[i].id));
+                descendents = descendents.concat(this.getRecursiveDescendents(this.allTags[i].id));
             }
         }
         return descendents;

@@ -40,7 +40,7 @@ const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GC
             // Overwrite subcategory with stage properties
             .map(subcategory => ({...subcategory, ...subcategory.stageOverride?.[stage]}))
             .map(subcategory => {
-                const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
+                const subcategoryDescendentIds = tags.getRecursiveDescendents(subcategory.id).map(t => t.id);
                 const topicTags = tags.getTopicTags(subcategoryDescendentIds);
                 const topicComponents = topicTags
                     // Overwrite subcategory with stage properties
