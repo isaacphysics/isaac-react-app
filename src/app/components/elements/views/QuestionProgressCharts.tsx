@@ -67,7 +67,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             typeof(elem[1]) === "number" ? elem[1] : parseInt(elem[1]) > 0
         ).length == 0;
     const categoryColumns = tags.getSpecifiedTags(topTagLevel, tags.allTagIds).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
-    const topicColumns = tags.getDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
+    const topicColumns = tags.getRecursiveDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const difficultyColumns = stageChoices && questionsByStageAndDifficulty[stageChoices[0].value] ?
         Object.keys(questionsByStageAndDifficulty[stageChoices[0].value])
             .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
