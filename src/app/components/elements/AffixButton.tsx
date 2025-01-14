@@ -28,13 +28,13 @@ export const AffixButton = (props: AffixButtonProps) => {
     const { affix, children, className, ...rest } = props;
     return <Button {...rest} className={classNames("d-inline-flex align-items-center", className)}>
         {affix.position !== "suffix" && <>
-            {renderAffix(affix, "me-1")}
+            {renderAffix(affix, "me-2")}
             <Spacer/>
         </>}
         {children}
         {affix.position === "suffix" && <>
             <Spacer/>
-            {renderAffix(affix, "ms-1")}
+            {renderAffix(affix, "ms-2")}
         </>}
     </Button>;
 };
