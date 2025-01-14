@@ -45,6 +45,16 @@
     // ICONS
     --icon-primary: #{map.get($subject-colors, 500)};
 
+    --subject-color-100: #{map.get($subject-colors, 100)};
+    --subject-color-200: #{map.get($subject-colors, 200)};
+    --subject-color-300: #{map.get($subject-colors, 300)};
+    --subject-color-400: #{map.get($subject-colors, 400)};
+    --subject-color-500: #{map.get($subject-colors, 500)};
+    --subject-color-600: #{map.get($subject-colors, 600)};
+    --subject-color-700: #{map.get($subject-colors, 700)};
+    --subject-color-800: #{map.get($subject-colors, 800)};
+    --subject-color-900: #{map.get($subject-colors, 900)};
+
     @if $palette == "neutral" {
       // neutral has some special cases
       --badges-light: #{$color-neutral-white};
