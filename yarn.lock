@@ -5941,10 +5941,10 @@ inequality-grammar@1.3.5:
     moo "^0.5.2"
     nearley "^2.20.1"
 
-inequality@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/inequality/-/inequality-1.2.0.tgz#dc140b4da86f033aca5c7bd7821e70ac0e5427fa"
-  integrity sha512-dtOK6lRaIKITf2jAIJJPp3iyAQsI8loPJI8HC03cNiBpwJhGxf9Tvj51tApL/Ki3jc7lWlzFT/G6LxbWzcU/Cg==
+inequality@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/inequality/-/inequality-1.2.1.tgz#f83d12bc933beaa00f104a8dd4e5630d3a8994e9"
+  integrity sha512-XQSac4UVQkIIk6S+PpDnCF5A9zJCdb2TGW1aAJGv/gMvst6hvevGgnbtnYT/k834tZmlHvePMbxSAIzUgpwgMg==
 
 inflight@^1.0.4:
   version "1.0.6"
