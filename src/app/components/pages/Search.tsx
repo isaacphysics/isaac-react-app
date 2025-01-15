@@ -34,7 +34,7 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {SearchPageSearch} from "../elements/SearchInputs";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
-import { AbstractListView, AbstractListViewItemProps } from "../elements/list-groups/AbstractListViewItem";
+import { AbstractListView, AbstractListViewItemProps, STATUS } from "../elements/list-groups/AbstractListViewItem";
 
 interface Item<T> {
     value: T;
@@ -116,14 +116,14 @@ export const Search = withRouter((props: RouteComponentProps) => {
 
     const a: AbstractListViewItemProps[] = [{
         icon: <img src={"/assets/phy/icons/concept.svg"} alt="Shortcut icon"/>,
-        title: "everything title",
-        subtitle: "subtitle",
-        breadcrumb: ["bre", "ad", "crumb"],
-        status: "status",
-        tags: ["tag1", "tag2"],
-        testTag: "testTag",
-        url: "url",
-        audienceViews: [{stage: STAGE.YEAR_7_AND_8, difficulty: "practice_2"}],
+        title: "Resistance 1",
+        subtitle: "Essential GCSE Physics 24.1",
+        breadcrumb: ["Physics", "Electricity", "Resistors"],
+        status: STATUS.IN_PROGRESS,
+        tags: ["Hard, Formula practice"],
+        testTag: "LEVEL 1",
+        url: "/questions/man_vs_horse",
+        audienceViews: [{stage: STAGE.YEAR_7_AND_8, difficulty: "practice_2"}, {stage: STAGE.YEAR_9, difficulty: "practice_1"}],
     },
     {
         icon: <img src={"/assets/phy/icons/concept.svg"} alt="Shortcut icon"/>,

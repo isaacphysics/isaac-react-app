@@ -39,9 +39,33 @@ export enum ContentTypeVisibility {
     FULLY_HIDDEN
 }
 
-enum Status {
-
+export enum STATUS {
+    IN_PROGRESS = "status-in-progress",
+    CORRECT = "status-correct",
+    INCORRECT = "status-incorrect",
 }
+
+const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: STATUS}) => {
+    const { status, ...rest } = props;
+    let text;
+    switch (status) {
+        case STATUS.IN_PROGRESS:
+            text = "In progress";
+            break;
+        case STATUS.CORRECT:
+            text = "Correct";
+            break;
+        case STATUS.INCORRECT:
+            text = "Incorrect";
+            break;
+    }
+
+    return <span {...rest} className={classNames(rest.className, "d-flex align-items-center")}>
+        <img className="pe-2" src={`/assets/phy/icons/redesign/${status}.svg`} alt=""/>
+        {text}
+    </span>;
+};
+
 /* export interface ListGroupItemProps extends React.HTMLAttributes<HTMLElement> {
   [key: string]: any;
   tag?: React.ElementType;
@@ -58,7 +82,7 @@ export interface AbstractListViewItemProps {
     title: string;
     subtitle?: string;
     breadcrumb?: string[];
-    status?: string, //Status;
+    status?: STATUS;
     tags?: string[]; // Ordering of tags/subtitle is unclear. I say subtitle first, then tags.
     testTag?: string;
     url?: string;
@@ -87,10 +111,12 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
                 {breadcrumb && <div className={"hierarchy-tags d-block"}>
                     {breadcrumb.map(b => (<span className="hierarchy-tag" key={b}>{b}</span>))}
                 </div>}
-                {audienceViews && <div className="d-md-none"> 
+                {audienceViews && <div className="d-flex d-md-none"> 
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={true}/> 
                 </div>}
-                {status && <div className="d-xl-none"> {status} </div>}
+                {status && <div className="d-flex d-xl-none" style={{fontSize: "0.825rem"}}>
+                    <StatusDisplay status={status}/>
+                </div>}
                 {previewUrl && testUrl && <Col xs={12} md={4} className="d-flex align-items-center">
                     {/* PreviewURL  TestURL */}
                     <a href={previewUrl}>
@@ -102,12 +128,12 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
                 </Col>}
             </div>
         </Col>
-        <Col md={2} className="d-none d-xl-flex" style={{borderLeft: "1px solid #a5a5a4"}}>
+        {status && <Col md={2} className="d-none d-xl-flex" style={{borderLeft: "1px solid #a5a5a4"}}>
             {/* Status (but only on bigger screens) */}
-            {status && <div className="d-none d-xl-flex">
-                {status}
+            {status && <div className="d-none d-xl-flex flex-column" style={{fontSize: "0.825rem"}}>
+                <StatusDisplay status={status}/>
             </div>}
-        </Col>
+        </Col>}
         {audienceViews && <Col md={4} xl={2} className="d-none d-md-flex" style={{borderLeft: "1px solid #a5a5a4"}}>
             {/* Stage (but only on bigger screens) */}
             <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={true}/> 
