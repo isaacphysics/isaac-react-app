@@ -19,3 +19,21 @@
     width: 9px;
   } */
 }
+
+/*:root {
+  --
+}
+
+.quiz-level-1-tag {
+  @include pill-tag(var(--subject-color-500), var(--subject-color-100));
+  padding: 0 0.7em;
+  border-radius: 15px;
+  font-weight: bold;
+}
+
+.quiz-level-2-tag {
+  @include pill-tag(var(--subject-color-50), var(--subject-color-500));
+  padding: 0 0.7em;
+  border-radius: 15px;
+  font-weight: bold;
+} */
