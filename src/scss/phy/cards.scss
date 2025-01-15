@@ -1,18 +1,32 @@
+@container pod-parent (min-width: 768px) {
+  .pod.card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+}
+
+div:has(> .pod) {
+  container: pod-parent / inline-size;
+}
+
 .pod {
   background-color: transparent;
   border: none;
   width: 100%;
-  flex: none;
 
   .pod-title {
     font-size: 16px;
     font-weight: 700;
   }
   
-  > img {
+  .pod-img {
     aspect-ratio: 16/9;
     border-radius: 8px;
-    object-fit: cover;
+
+    > img {
+      object-fit: cover;
+    }
   }
 
   .event-pod-img {

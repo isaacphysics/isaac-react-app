@@ -5,7 +5,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {NEWS_PODS_PER_PAGE, siteSpecific} from "../../services";
+import {above, NEWS_PODS_PER_PAGE, siteSpecific, useDeviceSize} from "../../services";
 import { IsaacPodDTO } from "../../../IsaacApiTypes";
 
 export const News = () => {
@@ -13,6 +13,7 @@ export const News = () => {
     const [allNews, setAllNews] = React.useState([] as IsaacPodDTO[]); // each query fetches a new page; this acts as a cache for all the news fetched so far
     const [disableLoadMore, setDisableLoadMore] = React.useState(false);
 
+    const deviceSize = useDeviceSize();
     const newsQuery = useGetNewsPodListQuery({subject: siteSpecific("physics", "news"), startIndex: page * NEWS_PODS_PER_PAGE});
 
     useEffect(() => {
@@ -40,9 +41,10 @@ export const News = () => {
                 defaultErrorTitle={"Error fetching news stories"}
             /> : 
             <>
-                <Row className="d-flex flex-row card-deck row-cols-1 row-cols-sm-2 row-cols-lg-3 justify-content-center mt-4">
-                    {allNews.map((n, i) => <Col key={i} className="d-flex my-3 px-0 justify-content-center">
+                <Row className="row-cols-1 row-cols-sm-2 row-cols-md-1">
+                    {allNews.map((n, i) => <Col key={i} className="my-3 px-0 justify-content-center">
                         <NewsCard key={n.id} newsItem={n} showTitle />
+                        {above["md"](deviceSize) && <><br/><div className="section-divider"/></>}
                     </Col>)}
                 </Row>
                 <div className="w-100 d-flex justify-content-center mb-5">

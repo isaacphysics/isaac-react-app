@@ -10,8 +10,10 @@ import {
     EventStatusFilter,
     EventTypeFilter,
     STAGE,
+    above,
     isTeacherOrAbove,
     siteSpecific,
+    useDeviceSize,
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -32,6 +34,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
     const user = useAppSelector(selectors.user.orNull);
+    const deviceSize = useDeviceSize();
 
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
 
@@ -115,9 +118,10 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                         const numberOfLoadedEvents = events.length;
 
                         return <div className="my-4">
-                            <Row className="d-flex flex-row card-deck row-cols-1 row-cols-sm-2 row-cols-lg-3 justify-content-center mt-4">
+                            <Row className="row-cols-1 row-cols-sm-2 row-cols-md-1">
                                 {events.map(event => <div key={event.id} className="my-3 px-0 justify-content-center">
                                     <EventCard event={event} />
+                                    {above["md"](deviceSize) && <><br/><div className="section-divider"/></>}
                                 </div>)}
                             </Row>
 
