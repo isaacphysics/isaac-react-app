@@ -3,7 +3,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {selectors, useAppSelector, useLazyGetEventsQuery} from "../../state";
 import queryString from "query-string";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import EventPod from "../elements/EventPod";
+import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
 import {
     EventStageMap,
@@ -117,7 +117,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                         return <div className="my-4">
                             <Row className="d-flex flex-row card-deck row-cols-1 row-cols-sm-2 row-cols-lg-3 justify-content-center mt-4">
                                 {events.map(event => <div key={event.id} className="my-3 px-0 justify-content-center">
-                                    <EventPod event={event} />
+                                    <EventCard event={event} />
                                 </div>)}
                             </Row>
 
