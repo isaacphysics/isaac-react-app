@@ -1,22 +1,3 @@
-@use 'sass:math';
-
-// number of news cards per line for each breakpoint
-$news-cards-per-line: (
-  xs: 2,
-  lg: 3
-);
-
-@each $name, $breakpoint in $grid-breakpoints {
-  @if (map-has-key($news-cards-per-line, $name)) {
-    @include media-breakpoint-up($name) {
-      .card-deck .news-card {
-        flex: 0 0 calc(#{math.percentage(math.div(1, map-get($news-cards-per-line, $name)))} - #{$grid-gutter-width});
-        width: 100%;
-      }
-    }
-  }
-}
-
 .pod {
   background-color: transparent;
   border: none;
