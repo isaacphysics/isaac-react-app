@@ -15,8 +15,8 @@ export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
 
     return <Card className="pod">
         {eventThumbnail &&
-            <div className={"pod-img event-pod-img"}>
-                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} className="pod-img" />
+            <div className={"event-pod-img"}>
+                <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
                 {isVirtualEvent &&
                     <div className={"event-pod-badge"}>
                         <Badge className="badge rounded-pill" color="primary">ONLINE</Badge>

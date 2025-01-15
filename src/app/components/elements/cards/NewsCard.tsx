@@ -19,7 +19,6 @@ const PhysicsNewsCard = ({newsItem, ...props}: NewsCardProps) => {
                 top
                 src={image.src && apiHelper.determineImageUrl(image.src)}
                 alt={image.altText || `Illustration for ${title}`}
-                className="pod-img"
             />
         </a>}
         <CardBody>

@@ -1,7 +1,7 @@
 .pod {
   background-color: transparent;
   border: none;
-  width: 318px;
+  width: 100%;
   flex: none;
 
   .pod-title {
@@ -9,9 +9,10 @@
     font-weight: 700;
   }
   
-  .pod-img {
+  > img {
+    aspect-ratio: 16/9;
     border-radius: 8px;
-    height: 158px;
+    object-fit: cover;
   }
 
   .event-pod-img {
@@ -24,10 +25,6 @@
       width: 100%;
       text-align: left;
       padding: 8px 15px 15px;
-
-      &.disabled {
-        z-index: 5;
-      }
     }
 
     .event-pod-hex {
@@ -38,10 +35,6 @@
       width: 100%;
       text-align: right;
       color: white;
-
-      &.disabled {
-        z-index: 5;
-      }
 
       > b {
         position: absolute;
