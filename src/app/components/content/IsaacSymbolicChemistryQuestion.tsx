@@ -176,6 +176,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             0,
             _flattenDeep((currentAttemptValue || { symbols: [] }).symbols),
             {
+                editorMode: doc.isNuclear ? "nuclear" : "chemistry",
                 textEntry: true,
                 fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
                 fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
