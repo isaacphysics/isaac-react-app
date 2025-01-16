@@ -71,8 +71,9 @@ export interface PageTitleProps {
     audienceViews?: ViewingContext[];
     modalId?: string;
     preview?: boolean;
+    icon?: string;
 }
-export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, className, audienceViews, modalId, preview}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, className, audienceViews, modalId, preview, icon}: PageTitleProps) => {
     const dispatch = useAppDispatch();
     const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
@@ -109,7 +110,8 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
         }));
     }
 
-    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary d-sm-flex ${className ? className : ""}`}>
+    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={classNames("h-title h-secondary d-sm-flex", {"align-items-center py-4": isPhy}, className)}>
+        {icon && <img src={icon} alt="" className="me-3"/>}
         <div className="me-auto" data-testid={"main-heading"}>
             {formatPageTitle(currentPageTitle, disallowLaTeX)}
             {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}

@@ -1,0 +1,42 @@
+.title-breadcrumb-container {
+    @extend .container-fluid-override;
+    background-color: var(--subject-color-800);
+    position: relative;
+
+    > .title-graphics {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        left: 0;
+
+        &::before {
+            @include pseudo-element;
+            width: 700px;
+            height: 100%;
+            @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-900));
+            mask-position: -235px -730px;
+            mask-size: 1160px 1160px;
+            right: 740px;
+            top: 0;
+        }
+
+        &::after {
+            @include pseudo-element;
+            width: 700px;
+            height: 100%;
+            @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), color-mix(in srgb, var(--subject-color-700) 30%, transparent));
+            mask-position: -235px -736px;
+            mask-size: 1160px 1160px;
+            right: 240px;
+            top: 0;
+        }
+    }
+
+    h1#main-heading {
+        color: white;
+        > img:first-child {
+            height: 75px;
+            width: 75px;
+        }
+    }
+}

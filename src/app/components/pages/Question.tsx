@@ -96,9 +96,8 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                         collectionType={navigation.collectionType}
                         audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
                         preview={preview}
-                    >
-                        {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
-                    </TitleAndBreadcrumb>
+                    />
+                    {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                     {!preview && <CanonicalHrefElement />}
                     <div className="no-print d-flex flex-wrap align-items-center mt-3">
                         {pageContainsLLMFreeTextQuestion && <span className="me-2"><LLMFreeTextQuestionIndicator /></span>}
