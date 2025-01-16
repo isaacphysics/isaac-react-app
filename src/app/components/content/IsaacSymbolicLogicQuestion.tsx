@@ -149,6 +149,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             0,
             _flattenDeep((currentAttemptValue || { symbols: [] }).symbols),
             {
+                editorMode: "logic",
                 textEntry: true,
                 fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
                 fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
