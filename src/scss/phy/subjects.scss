@@ -40,6 +40,8 @@ $alert-text-colours: (
 // TODO: move all these definitions to more relevant files, defining the colours to use in color-theme.scss
 @each $palette, $subject-colors in $isaac-color-palettes {
   @include color-mode($palette) {
+    $subject-color-50: map.get($subject-colors, 50);
+    $subject-color-100: map.get($subject-colors, 100);
     $subject-color-500: map.get($subject-colors, 500);
 
     /* background classes */
@@ -148,6 +150,20 @@ $alert-text-colours: (
     svg.search-item-icon, svg.gameboard-item-icon {
       fill: $subject-color-500;
     }
+
+    .quiz-level-1-tag {
+      @include pill-tag($subject-color-500, $subject-color-100);
+      padding: 0 0.7em;
+      border-radius: 15px;
+      font-weight: bold;
+    }
+
+    .quiz-level-2-tag {
+      @include pill-tag($subject-color-50, $subject-color-500);
+      padding: 0 0.7em;
+      border-radius: 15px;
+      font-weight: bold;
+    } 
   }
 }
 

@@ -1,26 +1,4 @@
 import {CompletionState, ContentSummaryDTO} from "../../../../IsaacApiTypes";
-import {
-    AUDIENCE_DISPLAY_FIELDS,
-    below,
-    determineAudienceViews,
-    DOCUMENT_TYPE,
-    documentTypePathPrefix,
-    filterAudienceViewsByProperties,
-    generateQuestionTitle,
-    isAda,
-    isIntendedAudience,
-    isPhy,
-    isStaff,
-    isTeacherOrAbove,
-    notRelevantMessage,
-    SEARCH_RESULT_TYPE,
-    siteSpecific,
-    TAG_ID,
-    TAG_LEVEL,
-    tags,
-    useDeviceSize,
-    useUserViewingContext
-} from "../../../services";
 import {Link} from "react-router-dom";
 import React, {useRef} from "react";
 import {selectors, useAppSelector} from "../../../state";
@@ -104,7 +82,7 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
             {/* Title TestTag Subtitle Tags Breadcrumb */}
             <div className="justify-content-between content-summary-link-title">
                 <div className="d-flex">
-                    <span className="question-link-title text-secondary">{title}</span>
+                    <span className="question-link-title">{title}</span>
                     {testTag && <span className="quiz-level-1-tag mx-1 ms-sm-3">{testTag}</span>}
                 </div>
             
