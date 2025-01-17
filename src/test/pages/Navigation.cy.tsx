@@ -13,7 +13,7 @@ it('Navigation menu should have no visual regressions', () => {
         // Act
         cy.get('button.navbar-toggler[aria-label="Toggle navigation"]').click();
         // click on the second menu item
-        cy.get('button.navbar-toggler[aria-label="Toggle navigation"] ~ div.navbar-collapse > ul > li').eq(1).click().blur();
+        cy.get('button.navbar-toggler[aria-label="Toggle navigation"] ~ div.navbar-collapse > ul > li > a').eq(1).click().blur();
         cy.scrollTo('top');
 
         cy.wait(1000);
@@ -29,7 +29,7 @@ it('Navigation menu should have no visual regressions', () => {
         // Act
         cy.get('button.navbar-toggler[aria-label="Open menu"]').click();
         // click on the second menu item
-        cy.get('button.navbar-toggler[aria-label="Close menu"] ~ div.navbar-collapse > ul > li').eq(1).click().blur();
+        cy.get('button.navbar-toggler[aria-label="Close menu"] ~ div.navbar-collapse > ul > li > a').eq(1).click().blur();
         cy.scrollTo('top');
 
         cy.wait(1000);
