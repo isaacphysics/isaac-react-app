@@ -12,7 +12,7 @@ it('Question types\' regression test page should have no visual regressions', ()
     // open all accordions (that weren't already open)
     cy.get('.accordion-header > button:not(.active)').each(($el) => {
         cy.wrap($el).scrollIntoView();
-        cy.wrap($el).click();
+        cy.wrap($el).click().blur();
     });
 
     cy.scrollTo('top');
