@@ -11,23 +11,17 @@
 
         &::before {
             @include pseudo-element;
-            width: 700px;
-            height: 100%;
-            @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-900));
-            mask-position: -235px -730px;
-            mask-size: 1160px 1160px;
-            right: 740px;
+            @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-900), 1160px, 100%, 1160px);
+            mask-position: 0 -810px;
+            right: 660px;
             top: 0;
         }
 
         &::after {
             @include pseudo-element;
-            width: 700px;
-            height: 100%;
-            @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), color-mix(in srgb, var(--subject-color-700) 30%, transparent));
-            mask-position: -235px -736px;
-            mask-size: 1160px 1160px;
-            right: 240px;
+            @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), color-mix(in srgb, var(--subject-color-700) 30%, transparent), 510px, 100%, 510px);
+            mask-position: 0 -322px;
+            right: 400px;
             top: 0;
         }
     }

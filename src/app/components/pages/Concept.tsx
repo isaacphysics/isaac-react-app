@@ -1,12 +1,12 @@
 import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
 import {AppState, fetchDoc, pageContextSlice, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {Col, Row} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacConceptPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, above, below, getUpdatedPageContext, isAda, isPhy, useDeviceSize, useNavigation} from "../../services";
-import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
+import {DocumentSubject, GameboardContext, Subject} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -22,7 +22,7 @@ import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import {ReportButton} from "../elements/ReportButton";
 import classNames from "classnames";
-import { ConceptSidebar, MainContent, SidebarContainer } from "../elements/layout/SidebarLayout";
+import { ConceptSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -65,56 +65,58 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacConceptPageDTO & DocumentSubject;
         return <GameboardContext.Provider value={navigation.currentGameboard}>
-            <SidebarContainer data-bs-theme={doc.subjectId}>
-                <ConceptSidebar relatedContent={doc.relatedContent} />
-                <MainContent>
+            <Container fluid data-bs-theme={doc.subjectId}>
+                <TitleAndBreadcrumb
+                    intermediateCrumbs={navigation.breadcrumbHistory}
+                    currentPageTitle={doc.title as string}
+                    collectionType={navigation.collectionType}
+                    subTitle={doc.subtitle as string}
+                    preview={preview} 
+                    icon={{type: "hex", subject: doc.subjectId as Subject, icon: "page-icon-concept"}}
+                />
+                {!preview && <>
+                    <MetaDescription description={doc.summary} />
+                    <CanonicalHrefElement />
+                </>}
+                <SidebarLayout>
+                    <ConceptSidebar relatedContent={doc.relatedContent} />
+                    <MainContent>
+                        <EditContentButton doc={doc} />
 
-                    <TitleAndBreadcrumb
-                        intermediateCrumbs={navigation.breadcrumbHistory}
-                        currentPageTitle={doc.title as string}
-                        collectionType={navigation.collectionType}
-                        subTitle={doc.subtitle as string}
-                        preview={preview}
-                    />
-                    {!preview && <>
-                        <MetaDescription description={doc.summary} />
-                        <CanonicalHrefElement />
-                    </>}
-                    <EditContentButton doc={doc} />
+                        {below["sm"](deviceSize) && <ManageButtons />}
 
-                    {below["sm"](deviceSize) && <ManageButtons />}
+                        <div className="d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
+                            <UserContextPicker />
+                            {above["md"](deviceSize) && <ManageButtons />}
+                        </div>
 
-                    <div className="d-flex justify-content-end align-items-center me-sm-1 flex-grow-1">
-                        <UserContextPicker />
-                        {above["md"](deviceSize) && <ManageButtons />}
-                    </div>
+                        <Row className="concept-content-container">
+                            <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
 
-                    <Row className="concept-content-container">
-                        <Col className={classNames("py-4 concept-panel", {"mw-760": isAda})}>
+                                <SupersededDeprecatedWarningBanner doc={doc} />
 
-                            <SupersededDeprecatedWarningBanner doc={doc} />
+                                {isAda && <IntendedAudienceWarningBanner doc={doc} />}
 
-                            {isAda && <IntendedAudienceWarningBanner doc={doc} />}
+                                <WithFigureNumbering doc={doc}>
+                                    <IsaacContent doc={doc} />
+                                </WithFigureNumbering>
 
-                            <WithFigureNumbering doc={doc}>
-                                <IsaacContent doc={doc} />
-                            </WithFigureNumbering>
+                                {doc.attribution && <p className="text-muted">
+                                    <Markup trusted-markup-encoding={"markdown"}>
+                                        {doc.attribution}
+                                    </Markup>
+                                </p>}
 
-                            {doc.attribution && <p className="text-muted">
-                                <Markup trusted-markup-encoding={"markdown"}>
-                                    {doc.attribution}
-                                </Markup>
-                            </p>}
+                                {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
-                            {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                                <NavigationLinks navigation={navigation} />
 
-                            <NavigationLinks navigation={navigation} />
-
-                            {isPhy && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
-                        </Col>
-                    </Row>
-                </MainContent>
-            </SidebarContainer>
+                                {isPhy && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                            </Col>
+                        </Row>
+                    </MainContent>
+                </SidebarLayout>
+            </Container>
         </GameboardContext.Provider>;
     }}/>;
 });

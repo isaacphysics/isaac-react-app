@@ -60,8 +60,12 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     }, {} as {[key: string]: string});
 
     return <div>
-        <Container>
-            <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
+        <Container fluid>
+            <TitleAndBreadcrumb 
+                currentPageTitle={"Events"} 
+                help={pageHelp} 
+                icon={{type: "hex", icon: "page-icon-events"}}
+            />
             <MetaDescription description={metaDescription} />
             <div className="my-4">
                 {/* Filters */}

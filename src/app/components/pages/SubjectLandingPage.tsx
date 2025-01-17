@@ -21,7 +21,11 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
     return <Container fluid data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb 
             currentPageTitle={pageContext?.stage && pageContext.subject ? `${HUMAN_STAGES[pageContext.stage]} ${HUMAN_SUBJECTS[pageContext.subject]}` : ""}
-            icon={pageContext?.subject ? `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg` : undefined}
+            icon={pageContext?.subject ? {
+                type: "img", 
+                subject: pageContext.subject,
+                icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`
+            } : undefined}
         />
         <div className="mt-5">This is a subject landing page for {pageContext?.stage ? HUMAN_STAGES[pageContext.stage] : "unknown"} {pageContext?.subject ? HUMAN_SUBJECTS[pageContext.subject] : "unknown"}!</div>
     </Container>;
