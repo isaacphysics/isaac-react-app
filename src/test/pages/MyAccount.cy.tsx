@@ -9,7 +9,7 @@ describe("My Account", () => {
             it(`should have no visual regressions on ${tab.title} page`, () => {
                 cy.mountWithStoreAndRouter(<MyAccount user={mockUser}/>, ["/account"]);
                 cy.get('[data-testid="loading"]').should('not.exist');
-                cy.get('[data-testid="account-nav"]').contains(tab.title).click();
+                cy.get('[data-testid="account-nav"]').contains(tab.title).click().blur();
                 cy.matchImage();
             });
         }
