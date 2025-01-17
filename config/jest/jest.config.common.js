@@ -15,7 +15,7 @@ module.exports = {
     "testMatch": [
         "<rootDir>src/**/*.test.(js|jsx|ts|tsx)"
     ],
-    "testEnvironment": "jsdom",
+    "testEnvironment": "jest-fixed-jsdom",
     "testEnvironmentOptions": {
         "url": "http://localhost",
         customExportConditions: [''],
