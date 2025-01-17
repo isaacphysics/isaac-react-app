@@ -42,7 +42,7 @@ export const News = () => {
             /> : 
             <>
                 <Row className="row-cols-1 row-cols-sm-2 row-cols-md-1">
-                    {allNews.map((n, i) => <Col key={i} className="my-3 px-0 justify-content-center">
+                    {allNews.map((n, i) => <Col key={i} className="my-3 px-3">
                         <NewsCard key={n.id} newsItem={n} showTitle />
                         {above["md"](deviceSize) && <><br/><div className="section-divider"/></>}
                     </Col>)}

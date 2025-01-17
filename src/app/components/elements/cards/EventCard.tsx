@@ -32,7 +32,7 @@ export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
                         <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
                     </div>}
             </div>}
-        <CardBody>
+        <CardBody className="pod-content mt-md-0 mt-3">
             {title && 
                 <CardTitle tag="b">
                     {title}

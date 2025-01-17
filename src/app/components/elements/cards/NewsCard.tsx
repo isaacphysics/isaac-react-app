@@ -22,7 +22,7 @@ const PhysicsNewsCard = ({newsItem, ...props}: NewsCardProps) => {
                 className="pod-img"
             />
         </a>}
-        <CardBody>
+        <CardBody className="pod-content">
             <b className="pod-title">
                 {title}
             </b>

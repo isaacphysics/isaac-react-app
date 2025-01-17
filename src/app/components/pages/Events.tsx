@@ -119,7 +119,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
 
                         return <div className="my-4">
                             <Row className="row-cols-1 row-cols-sm-2 row-cols-md-1">
-                                {events.map(event => <div key={event.id} className="my-3 px-0 justify-content-center">
+                                {events.map(event => <div key={event.id} className="my-3 px-3">
                                     <EventCard event={event} />
                                     {above["md"](deviceSize) && <><br/><div className="section-divider"/></>}
                                 </div>)}
