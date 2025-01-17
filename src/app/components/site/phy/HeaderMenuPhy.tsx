@@ -38,7 +38,7 @@ export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
         </NavigationSection>
 
         {isAdminTabVisible && <NavigationSection 
-            title={isOffcanvas ? "Admin" : <i className="icon icon-cog no-print align-text-bottom" aria-label="Admin"/>} 
+            title={isOffcanvas ? "Admin" : <i className="icon icon-cog icon-color-black no-print align-text-bottom" aria-label="Admin"/>} 
             className={classNames({"align-content-center" : !isOffcanvas})}
         >
             {isStaff(user) && <LinkItem to="/admin">Admin Tools</LinkItem>}
