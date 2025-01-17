@@ -2,38 +2,18 @@
 
 .content-summary-item {
   min-height: 88px;
+  padding: 1rem;
 }
 
-.list-group-links li a {
-  padding-right: 38px;
-  /*&:after {
-    @include pseudo-element;
-    background-image: url('/assets/common/icons/chevron_right.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position-y: center;
-    height: 100%;
-    right: 10px;
-    top: 0;
-    bottom: 0;
-    width: 9px;
-  } */
+.list-view-icon {
+  width: 60px;
 }
 
-/*:root {
-  --
+.list-view-border {
+  border-left: 1px solid rgb(165, 165, 164);
 }
 
-.quiz-level-1-tag {
-  @include pill-tag(var(--subject-color-500), var(--subject-color-100));
-  padding: 0 0.7em;
-  border-radius: 15px;
-  font-weight: bold;
+.status-tag {
+  color: $color-neutral-500;
+  font-size: 0.825rem;
 }
-
-.quiz-level-2-tag {
-  @include pill-tag(var(--subject-color-50), var(--subject-color-500));
-  padding: 0 0.7em;
-  border-radius: 15px;
-  font-weight: bold;
-} */
