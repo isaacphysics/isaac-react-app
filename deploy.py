@@ -11,7 +11,7 @@ from typing import Union
 
 # Global flag, whether commands should be executed by this script or not
 EXEC = False
-
+DOCKER_REPO = "ghcr.io/isaacphysics"
 
 class Site(object):
     PHY = 'phy'
@@ -35,7 +35,7 @@ def parse_command_line_arguments():
     parser.add_argument('site', choices=[Site.ADA, Site.PHY, Site.BOTH])
     parser.add_argument('env', choices=['test', 'staging', 'dev', 'live', 'etl'])
     parser.add_argument('app', help="The app version target for this deployment. Examples master or v1.2.3")
-    parser.add_argument('api', help="The api version target for this deployment")
+    parser.add_argument('api', help="⚠️DEPRECATED The api version target for this deployment", nargs='?', default=None)
     parser.add_argument('--exec', help="Whether the script should execute the commands itself after prompting the user", action='store_true')
     return parser.parse_args()
 
@@ -46,13 +46,12 @@ def validate_args(args):
         print(f"Error: the app param should be v{args['app']} not {args['app']}")
         sys.exit(1)
 
-    if 'api' in args:
-        return args
+    # Docker doesn't like it when ref contains a slash. When building on GHA we swap these with dashes, so we'll do that here too.
+    args['app'] = args['app'].replace('/', '-')
 
-    app_ver_is_tag = re.match(r"^v\d+\.\d+\.\d+$", args['app'])
-    if not app_ver_is_tag:
-        api_ver = input("Please enter API version: ")
-        args['api'] = api_ver
+    if 'api' in args and args['api'] is not None:
+        print(f"WARNING ⚠️: The 'api' argument is deprecated and this value will be ignored. The API version is now derived from the app image. See https://github.com/isaacphysics/isaac-adrs/blob/main/7-automated-docker-builds.md for more info.\n")
+        args['api'] = None
 
     return args
 
@@ -118,12 +117,6 @@ def ask_to_run_command(command,
             if response in ["c", "continue"]:
                 print("Continuing...")
                 return
-
-
-def build_docker_image_for_version(ctx):
-    print("\n# BUILD THE APP AND API")
-    ask_to_run_command(f"./build-in-docker.sh {ctx['app']}{' ' + ctx['api'] if 'api' in ctx and ctx['api'] is not None else ''}")
-
 
 def get_old_versions(ctx):
     if not ctx['previous_servers_exist']:
@@ -274,11 +267,8 @@ def deploy_live(ctx):
     front_end_only_release = response == "front-end-only"
 
     if front_end_only_release:
-        print("# Front-end-only release - confirm which API this app image expects:")
-        expected_api = ask_to_run_command(f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' docker.isaacscience.org/isaac-{ctx['site']}-app:{ctx['app']}")
-
         print("# Front-end-only release - confirm the expected API is running:")
-        ask_to_run_command(f"docker ps --format '{{{{.Names}}}}' | grep {ctx['site']}-api-live-{expected_api}")
+        ask_to_run_command(f"docker ps --format '{{{{.Names}}}}' | grep {ctx['site']}-api-live-{ctx['api']}")
     else:
         if ctx['previous_servers_exist']:
             print("# List possibly-unused live apis:")
@@ -291,9 +281,6 @@ def deploy_live(ctx):
 
         if ctx['previous_servers_exist']:
             run_db_migrations(ctx)
-
-        if 'api' not in ctx or ctx['api'] is None:
-            ctx['api'] = input('What is the new api version? [v1.3.4 | master | some-branch] ')
 
         print("# Bring up the new api ready for the new app:")
         ask_to_run_command(f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-api-live-{ctx['api']}")
@@ -335,6 +322,13 @@ def deploy_etl(ctx):
         print("# Bring up the new ETL service")
         ask_to_run_command(f"./compose-etl {ctx['site']} {ctx['app']} up -d")
 
+def get_target_api_version_from_app_image(ctx):
+    print(f"# Pull App image for {ctx['app']}")
+    ask_to_run_command(f"docker pull {DOCKER_REPO}/isaac-{ctx['site']}-app:{ctx['app']}")
+
+    print(f"# Get target API version from App image")
+    ctx['api'] = ask_to_run_command(f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' {DOCKER_REPO}/isaac-{ctx['site']}-app:{ctx['app']}", run_anyway=True)
+
 
 if __name__ == '__main__':
     assert_using_a_tty()
@@ -345,10 +339,10 @@ if __name__ == '__main__':
 
     context['live'] = context['env'] == 'live' # As env changes during live deployment
 
-    print("\n# ! THIS SCRIPT IS STILL EXPERIMENTAL SO CHECK EACH COMMAND BEFORE EXECUTING IT !\n")
+    get_target_api_version_from_app_image(context)
+
     check_repos_are_up_to_date()
 
-    build_docker_image_for_version(context)
     check_running_servers(context)
 
     sites = [Site.ADA, Site.PHY] if context['site'] == Site.BOTH else [context['site']]
