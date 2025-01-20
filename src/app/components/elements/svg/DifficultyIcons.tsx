@@ -47,6 +47,7 @@ export function DifficultyIcons({difficulty, blank, className} : {difficulty: Di
 
     return <div className={className}>
         <svg
+            className="d-flex"
             role={"img"}
             width={`${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) + difficultyIconXPadding}px`}
             height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`}
