@@ -120,6 +120,8 @@ textarea {
   }
 
   &.search--filter-input {
+    border: none;
+    border-radius: 8px;
     max-width: 300px;
     width: 100%;
   }

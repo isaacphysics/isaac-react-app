@@ -9,6 +9,7 @@ import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
 import { Link } from "react-router-dom";
 import { HoverableNavigationContext } from "../../../../IsaacAppTypes";
+import max from "lodash/max";
 
 interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
     title: React.ReactNode;
@@ -44,12 +45,13 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
             setIsOpen(o => !o);
             setIsFocused(f => !f);
         } else { // hover
-            setIsOpen(o => !o && hoverContext?.openId === undefined);
+            setIsOpen(o => !o && hoverContext?.openId.current === undefined);
         }
     }, [hoverContext?.openId, isHovered]);
 
     useEffect(() => {
-        hoverContext?.setOpenId(id => isOpen ? ikey : (id === ikey ? undefined : id));
+        if (!hoverContext) return;
+        hoverContext.openId.current = isOpen ? ikey : (hoverContext?.openId.current === ikey ? undefined : hoverContext?.openId.current);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, ikey]);
 
@@ -100,7 +102,8 @@ const StaticNavigationDropdown = (props: NavigationDropdownProps) => {
     }, []);
 
     useEffect(() => {
-        hoverContext?.setOpenId(id => isOpen ? ikey : (id === ikey ? undefined : id));
+        if (!hoverContext) return;
+        hoverContext.openId.current = isOpen ? ikey : (hoverContext.openId.current === ikey ? undefined : hoverContext.openId.current);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, ikey]);
 
@@ -174,13 +177,14 @@ const ContentNavSection = (props: NavigationSectionProps) => {
         // full-width, hoverable dropdowns
         ? <ContentNavHoverableWrapper title={title} {...rest}>
             {categories?.map((category, i, catsArr) => {
+                const keyBase = max(catsArr.map(c => c.subcategories.length)) ?? 0;
                 let sharedTheme = undefined;
                 if (category.subcategories.every((sub, _j, arr) => sub.theme === arr[0].theme)) {
                     sharedTheme = category.subcategories[0].theme;
                 }
-                return <HoverableNavigationDropdown key={i} ikey={props.ikey * catsArr.length + i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}>
+                return <HoverableNavigationDropdown key={i} ikey={props.ikey * keyBase + i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}>
                     {category.subcategories.map((subcategory, j) => {
-                        return <NavigationItem key={j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.theme })}>
+                        return <NavigationItem key={i * keyBase + j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.theme })}>
                             <i className="icon icon-hexagon me-1" />
                             <span>{subcategory.fullTitle}</span>
                         </NavigationItem>;
@@ -194,7 +198,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                 <ul className="d-flex p-0 gap-2 m-0">
                     <StaticNavigationDropdown title={title} {...rest}>
                         {categories?.map((category, i) => {
-                            return <>
+                            return <div key={i}>
                                 <h5 className="px-4 m-0 py-2">{category.title}</h5>
                                 {category.subcategories.map((subcategory, j) => {
                                     return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme}>
@@ -203,7 +207,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                                     </NavigationItem>;
                                 })}
                                 {i < categories.length - 1 && <div className="section-divider"/>}
-                            </>;
+                            </div>;
                         })}
                     </StaticNavigationDropdown>
                 </ul>
@@ -211,7 +215,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
             // full width, accordion-style dropdowns -- only in the offcanvas
             : <ContentNavAccordionWrapper title={title}>
                 {categories?.map((category, i) => {
-                    return <>
+                    return <div key={i}>
                         <h5 className="px-4 m-0 py-2">{category.title}</h5>
                         {category.subcategories.map((subcategory, j) => {
                             return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme} onClick={toggleMenu}>
@@ -220,7 +224,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                             </NavigationItem>;
                         })}
                         {i < categories.length - 1 && <div className="section-divider"/>}
-                    </>;
+                    </div>;
                 })}
             </ContentNavAccordionWrapper>;
 };
@@ -338,7 +342,10 @@ const NavigationItem = (props: NavigationItemProps) => {
 };
 
 export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
-    const [openHoverable, setOpenHoverable] = useState<number | undefined>(undefined);
+    const openHoverable = useRef<number | undefined>(undefined);
+    // we use a ref over useState for tracking which hoverable is open as the delay from using setState can lead to this not being reset to undefined 
+    // while moving the mouse between two hoverables, preventing the second dropdown from opening.
+    
     const deviceSize = useDeviceSize();
 
     const stageCategories = Object.entries(PHY_NAV_STAGES).map(([stage, subjects]) => {
@@ -371,7 +378,7 @@ export const NavigationMenuPhy = ({toggleMenu}: {toggleMenu: () => void}) => {
         };
     });
 
-    return <HoverableNavigationContext.Provider value={{openId: openHoverable, setOpenId: setOpenHoverable}}>
+    return <HoverableNavigationContext.Provider value={{openId: openHoverable}}>
         <ContentNavProfile toggleMenu={toggleMenu}/>
         <ContentNavSection title="Explore by learning stage" categories={stageCategories} className="border-start" ikey={0} toggleMenu={toggleMenu}/>
         <ContentNavSection title="Explore by subject" categories={subjectCategories} className="border-start" ikey={1} toggleMenu={toggleMenu}/>

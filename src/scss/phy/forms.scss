@@ -41,9 +41,6 @@
   }
 }
 
-[type='search'] {
-  &.search--filter-input {
-    border: 1px solid $color-neutral-300;
-    border-radius: 8px;
-  }
+.search--filter-input {
+  border: 1px solid $color-neutral-300;
 }

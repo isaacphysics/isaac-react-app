@@ -43,9 +43,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
 
     useEffect(() => {
         if (doc && doc !== 404) {
-            console.log("prevPageContext", prevPageContext);
             const newPageContext = getUpdatedPageContext(prevPageContext, user && user.loggedIn && user.registeredContexts || undefined, doc);
-            console.log("newPageContext", newPageContext);
             dispatch(pageContextSlice.actions.updatePageContext(newPageContext));
         }
     }, [dispatch, user, doc]);

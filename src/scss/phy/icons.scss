@@ -114,6 +114,10 @@
   @include svg-icon('/assets/phy/icons/redesign/search.svg', 16px, 16px);
 }
 
+.icon-sidebar {
+  @include svg-icon('/assets/phy/icons/redesign/sidebar.svg', 16px, 16px);
+}
+
 .icon-right {
   @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
 }
