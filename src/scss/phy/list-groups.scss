@@ -8,6 +8,10 @@
 
 .list-view-icon {
   width: 60px;
+  i {
+    transform-origin: left 4px;
+    scale: 3.75;
+  }
 }
 
 .list-view-border {

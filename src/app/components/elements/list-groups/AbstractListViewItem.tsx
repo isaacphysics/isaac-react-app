@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
-import { ViewingContext} from "../../../../IsaacAppTypes";
+import { ShortcutResponse, ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Button, Col, ListGroup, ListGroupItem, Row } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { Spacer } from "../Spacer";
 import { CompletionState } from "../../../../IsaacApiTypes";
+import { determineAudienceViews } from "../../../services/userViewingContext";
+import { TAG_ID, tags } from "../../../services";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -74,7 +76,8 @@ export interface AbstractListViewItemProps {
 }
 
 export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status, tags, testTag, url, audienceViews, previewUrl, testUrl}: AbstractListViewItemProps) => { 
-    const colWidths = previewUrl && testUrl ? [12,6,6,6] : [12,8,9,8];
+    const isQuiz: boolean = (previewUrl && testUrl) ? true : false;
+    const colWidths = isQuiz ? [12,6,6,6] : [12,8,9,8];
     const cardBody = 
     <Row className="w-100">
         <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} className="d-flex">
@@ -106,10 +109,10 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
                 </div>}
             </div>
         </Col>
-        {status && <Col xl={2} className="d-none d-xl-flex list-view-border">
-            <StatusDisplay status={status}/>
+        {!isQuiz && <Col xl={2} className={classNames("d-none d-xl-flex", {" list-view-border": status})}>
+            <StatusDisplay status={status ?? CompletionState.NOT_ATTEMPTED}/>
         </Col>}
-        {audienceViews && <Col md={4} lg={3} xl={2} className="d-none d-md-flex list-view-border">
+        {audienceViews && <Col md={4} lg={3} xl={2} className={classNames("d-none d-md-flex", {" list-view-border": audienceViews.length > 0})}>
             <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={true}/> 
         </Col>}
         {previewUrl && testUrl && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
@@ -124,7 +127,25 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
     </ListGroupItem>;
 };
 
-export const AbstractListView = ({items}: {items: AbstractListViewItemProps[]}) => {
+export const AbstractListView = ({items}: {items: ShortcutResponse[]}) => {
+    return <ListGroup className="link-list list-group-links">
+        {items.map(item => 
+            <AbstractListViewItem 
+                key={item.title}
+                icon={<img src={"/assets/phy/icons/concept.svg"} alt="Shortcut icon"/>}
+                title={item.title ?? ""}
+                subtitle={item.subtitle}
+                breadcrumb={tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title)}
+                status={item.state}
+                url={item.url}
+                audienceViews={determineAudienceViews(item.audience)}
+                previewUrl={"item.previewUrl"}
+                testUrl={"item.testUrl"}
+            />)}
+    </ListGroup>;
+};
+
+export const AbstractListViewWithProps = ({items}: {items: AbstractListViewItemProps[]}) => {
     return <ListGroup className="link-list list-group-links">
         {items.map(item => <AbstractListViewItem key={item.title} {...item}/>)}
     </ListGroup>;
