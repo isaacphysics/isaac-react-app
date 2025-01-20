@@ -9,6 +9,7 @@ import { LoginLogoutButton } from "./HeaderPhy";
 import { useAssignmentsCount } from "../../navigation/NavigationBar";
 import { Link } from "react-router-dom";
 import { HoverableNavigationContext } from "../../../../IsaacAppTypes";
+import max from "lodash/max";
 
 interface NavigationDropdownProps extends Omit<DropdownProps, "title"> {
     title: React.ReactNode;
@@ -176,13 +177,14 @@ const ContentNavSection = (props: NavigationSectionProps) => {
         // full-width, hoverable dropdowns
         ? <ContentNavHoverableWrapper title={title} {...rest}>
             {categories?.map((category, i, catsArr) => {
+                const keyBase = max(catsArr.map(c => c.subcategories.length)) ?? 0;
                 let sharedTheme = undefined;
                 if (category.subcategories.every((sub, _j, arr) => sub.theme === arr[0].theme)) {
                     sharedTheme = category.subcategories[0].theme;
                 }
-                return <HoverableNavigationDropdown key={i} ikey={props.ikey * catsArr.length + i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}>
+                return <HoverableNavigationDropdown key={i} ikey={props.ikey * keyBase + i} title={category.title} { ...(sharedTheme && { "data-bs-theme" : sharedTheme })}>
                     {category.subcategories.map((subcategory, j) => {
-                        return <NavigationItem key={j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.theme })}>
+                        return <NavigationItem key={i * keyBase + j} href={subcategory.href} { ...(!sharedTheme && { "data-bs-theme" : subcategory.theme })}>
                             <i className="icon icon-hexagon me-1" />
                             <span>{subcategory.fullTitle}</span>
                         </NavigationItem>;
@@ -196,7 +198,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                 <ul className="d-flex p-0 gap-2 m-0">
                     <StaticNavigationDropdown title={title} {...rest}>
                         {categories?.map((category, i) => {
-                            return <>
+                            return <div key={i}>
                                 <h5 className="px-4 m-0 py-2">{category.title}</h5>
                                 {category.subcategories.map((subcategory, j) => {
                                     return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme}>
@@ -205,7 +207,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                                     </NavigationItem>;
                                 })}
                                 {i < categories.length - 1 && <div className="section-divider"/>}
-                            </>;
+                            </div>;
                         })}
                     </StaticNavigationDropdown>
                 </ul>
@@ -213,7 +215,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
             // full width, accordion-style dropdowns -- only in the offcanvas
             : <ContentNavAccordionWrapper title={title}>
                 {categories?.map((category, i) => {
-                    return <>
+                    return <div key={i}>
                         <h5 className="px-4 m-0 py-2">{category.title}</h5>
                         {category.subcategories.map((subcategory, j) => {
                             return <NavigationItem key={j} href={subcategory.href} data-bs-theme={subcategory.theme} onClick={toggleMenu}>
@@ -222,7 +224,7 @@ const ContentNavSection = (props: NavigationSectionProps) => {
                             </NavigationItem>;
                         })}
                         {i < categories.length - 1 && <div className="section-divider"/>}
-                    </>;
+                    </div>;
                 })}
             </ContentNavAccordionWrapper>;
 };
