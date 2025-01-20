@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import {difficultyLabelMap, simpleDifficultyLabelMap, siteSpecific, STAGE, stageLabelMap} from "../../services";
+import {simpleDifficultyLabelMap, siteSpecific, STAGE, stageLabelMap} from "../../services";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import { Difficulty } from "../../../IsaacApiTypes";

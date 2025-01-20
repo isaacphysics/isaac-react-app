@@ -23,7 +23,7 @@ import {
     searchResultIsPublic,
     selectOnChange,
     shortcuts,
-    siteSpecific,
+    siteSpecific
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
@@ -111,7 +111,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const shortcutResponses = (queryState ? shortcuts(queryState) : []) as ShortcutResponse[];
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
     const gotResults = shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0;
-    
+
     return (
         <Container id="search-page">
             <Row>
