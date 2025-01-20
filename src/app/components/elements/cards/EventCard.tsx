@@ -5,6 +5,7 @@ import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {DateString} from "../DateString";
 import {formatEventCardDate, siteSpecific} from "../../../services";
 import { Card, CardImg, CardBody, CardTitle, Badge, CardText } from "reactstrap";
+import { Spacer } from "../Spacer";
 
 export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
     const {id, title, subtitle, eventThumbnail, location, date} = event;
@@ -15,7 +16,7 @@ export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
 
     return <Card className="pod">
         {eventThumbnail &&
-            <div className={"pod-img event-pod-img"}>
+            <a className={"pod-img event-pod-img"} href={`/events/${id}`}>
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
                 {isVirtualEvent &&
                     <div className={"event-pod-badge"}>
@@ -31,16 +32,13 @@ export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
                         <b>STUDENT EVENT</b>
                         <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
                     </div>}
-            </div>}
-        <CardBody className="pod-content mt-md-0 mt-3">
-            {title && 
-                <CardTitle tag="b">
-                    {title}
-                </CardTitle>}
-            {subtitle &&
-                <CardText>
-                    {subtitle}
-                </CardText>}
+            </a>}
+        <CardBody className="d-flex flex-column ps-0">
+            {title && <CardTitle tag="h4" className="mb-0">{title}</CardTitle>}
+            <CardText className="mb-0">
+                {subtitle && <p className="m-0">{subtitle}</p>}
+            </CardText>
+            <Spacer/>
             <div className="section-divider"/>
             <CardText>
                 <b>When: </b>{formatEventCardDate(event)}

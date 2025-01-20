@@ -5,8 +5,9 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {above, NEWS_PODS_PER_PAGE, siteSpecific, useDeviceSize} from "../../services";
+import {above, isAda, isPhy, NEWS_PODS_PER_PAGE, siteSpecific, useDeviceSize} from "../../services";
 import { IsaacPodDTO } from "../../../IsaacApiTypes";
+import classNames from "classnames";
 
 export const News = () => {
     const [page, setPage] = React.useState(0);
@@ -41,10 +42,10 @@ export const News = () => {
                 defaultErrorTitle={"Error fetching news stories"}
             /> : 
             <>
-                <Row className="row-cols-1 row-cols-sm-2 row-cols-md-1">
-                    {allNews.map((n, i) => <Col key={i} className="my-3 px-3">
-                        <NewsCard key={n.id} newsItem={n} showTitle />
-                        {above["md"](deviceSize) && <><br/><div className="section-divider"/></>}
+                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1", "row-cols-lg-3")}`}>
+                    {allNews.map((n, i) => <Col key={i} className={`my-3 ${siteSpecific("px-3", "px-0 justify-content-center")}`}>
+                        <NewsCard key={n.id} newsItem={n} className={classNames({"h-100": isAda})} showTitle />
+                        {isPhy && above["md"](deviceSize) && <div className="section-divider"/>}
                     </Col>)}
                 </Row>
                 <div className="w-100 d-flex justify-content-center mb-5">
