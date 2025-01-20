@@ -5,6 +5,7 @@ import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {DateString} from "../DateString";
 import {formatEventCardDate, siteSpecific} from "../../../services";
 import { Card, CardImg, CardBody, CardTitle, Badge, CardText } from "reactstrap";
+import { Spacer } from "../Spacer";
 
 export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
     const {id, title, subtitle, eventThumbnail, location, date} = event;
@@ -32,15 +33,12 @@ export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
                         <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
                     </div>}
             </div>}
-        <CardBody className="pod-content mt-md-0 mt-3">
-            {title && 
-                <CardTitle tag="b">
-                    {title}
-                </CardTitle>}
-            {subtitle &&
-                <CardText>
-                    {subtitle}
-                </CardText>}
+        <CardBody className="d-flex flex-column ps-0">
+            {title && <CardTitle tag="h4" className="mb-0">{title}</CardTitle>}
+            {subtitle && <CardText className="mb-0">
+                {subtitle}
+            </CardText>}
+            <Spacer/>
             <div className="section-divider"/>
             <CardText>
                 <b>When: </b>{formatEventCardDate(event)}

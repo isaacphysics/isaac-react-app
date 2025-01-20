@@ -1,9 +1,18 @@
-@container pod-parent (min-width: 768px) {
+@container pod-parent (min-width: 736px) {
   .pod.card {
     display: flex;
     flex-direction: row;
     width: 100%;
-    padding-left: 20px;
+    height: min-content;
+    padding-left: 1.5rem;
+
+    .pod-img > img {
+      width: 200px;
+    }
+
+    .card-body {
+      padding-top: 0;
+    }
   }
 }
 
@@ -14,6 +23,7 @@ div:has(> .pod) {
 .pod {
   background-color: transparent;
   border: none;
+  height: 100%;
   width: 100%;
 
   .pod-title {
@@ -22,40 +32,29 @@ div:has(> .pod) {
   }
   
   .pod-img {
-    aspect-ratio: 16/9;
     border-radius: 8px;
-    width: 200px;
-    padding-right: 15px;
-
+    
     > img {
+      width: 100%;
+      aspect-ratio: 16/9;
       object-fit: cover;
     }
   }
 
-  .pod-content {
-    padding-left: 0;
-  }
-
   .event-pod-img {
     position: relative;
-    min-height: 100px;
+    height: min-content;
 
-    > img {
-      .event-pod-badge {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        text-align: left;
-      }
+    .event-pod-badge {
+      position: absolute;
+      bottom: 3%;
+      left: 3%;
     }
 
     .event-pod-hex {
       position: absolute;
       top: 0;
       right: 10%;
-      min-height: 91px;
-      width: 100%;
-      text-align: right;
       color: white;
 
       > b {
