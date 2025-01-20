@@ -35,10 +35,12 @@ export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
             </a>}
         <CardBody className="d-flex flex-column ps-0">
             {title && <CardTitle tag="h4" className="mb-0">{title}</CardTitle>}
-            <CardText>
+            <CardText className="mb-0">
                 {subtitle && <p className="m-0">{subtitle}</p>}
-                <Spacer/>
-                <div className="section-divider"/>
+            </CardText>
+            <Spacer/>
+            <div className="section-divider"/>
+            <CardText>
                 <b>When: </b>{formatEventCardDate(event)}
                 {location && location.address &&
                     <span className='d-block my-1'>
