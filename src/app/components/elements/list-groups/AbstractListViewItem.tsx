@@ -6,39 +6,40 @@ import classNames from "classnames";
 import { Button, Col, ListGroup, ListGroupItem, Row } from "reactstrap";
 import { AffixButton } from "../AffixButton";
 import { Spacer } from "../Spacer";
+import { CompletionState } from "../../../../IsaacApiTypes";
 
-export enum STATUS {
-    IN_PROGRESS = "status-in-progress",
-    CORRECT = "status-correct",
-    INCORRECT = "status-incorrect",
-}
+const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
+    return <>
+        {breadcrumb.map(b => (<span className="hierarchy-tag" key={b}>{b}</span>))}
+    </>;
+};
 
-const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: STATUS}) => {
+
+const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: CompletionState}) => {
     const { status, ...rest } = props;
-    let text;
     switch (status) {
-        case STATUS.IN_PROGRESS:
-            text = "In progress";
-            break;
-        case STATUS.CORRECT:
-            text = "Correct";
-            break;
-        case STATUS.INCORRECT:
-            text = "Incorrect";
-            break;
+        case CompletionState.IN_PROGRESS:
+            return <span {...rest} className={classNames(rest.className, "status-tag d-flex align-items-center")}>
+                <img className="pe-2" src={`/assets/phy/icons/redesign/status-in-progress.svg`} alt=""/>
+                In progress
+            </span>;
+        case CompletionState.ALL_CORRECT:
+            return <span {...rest} className={classNames(rest.className, "status-tag d-flex align-items-center")}>
+                <img className="pe-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt=""/>
+                Correct
+            </span>;
+        case CompletionState.NOT_ATTEMPTED:
+            return;
     }
-
-    return <span {...rest} className={classNames(rest.className, "d-flex align-items-center")}>
-        <img className="pe-2" src={`/assets/phy/icons/redesign/${status}.svg`} alt=""/>
-        {text}
-    </span>;
 };
 
 const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewUrl: string, testUrl: string}) => {
     const { previewUrl, testUrl, ...rest } = props;
     return <span {...rest} className={classNames(rest.className, "d-flex")}>
         <Spacer/>
-        <Button to={previewUrl} color="keyline" className="set-quiz-button-md">Preview</Button>
+        <Button to={previewUrl} color="keyline" className="set-quiz-button-md">
+            Preview
+        </Button>
         <span style={{minWidth: "20px"}}/>
         <AffixButton size="md" color="solid" to={testUrl} affix={{
             affix: "icon-right",
@@ -50,18 +51,12 @@ const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewUrl: s
     </span>;
 };
 
-const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
-    return <>
-        {breadcrumb.map(b => (<span className="hierarchy-tag" key={b}>{b}</span>))}
-    </>;
-};
-
 export interface AbstractListViewItemProps {
     icon: React.JSX.Element;
     title: string;
     subtitle?: string;
     breadcrumb?: string[];
-    status?: STATUS;
+    status?: CompletionState;
     tags?: string[];
     testTag?: string;
     url?: string;
@@ -91,7 +86,7 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
                 {audienceViews && <div className="d-flex d-md-none"> 
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={true}/> 
                 </div>}
-                {status && <div className="d-flex d-xl-none status-tag">
+                {status && <div className="d-flex d-xl-none">
                     <StatusDisplay status={status}/>
                 </div>}
                 {previewUrl && testUrl && <div className="d-flex d-md-none align-items-center">
@@ -100,9 +95,7 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
             </div>
         </Col>
         {status && <Col xl={2} className="d-none d-xl-flex list-view-border">
-            <div className="status-tag">
-                <StatusDisplay status={status}/>
-            </div>
+            <StatusDisplay status={status}/>
         </Col>}
         {audienceViews && <Col md={4} lg={3} xl={2} className="d-none d-md-flex list-view-border">
             <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={true}/> 
@@ -119,7 +112,6 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
             <div> 
                 {cardBody} 
             </div>}
-
     </ListGroupItem>;
 };
 

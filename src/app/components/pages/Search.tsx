@@ -34,7 +34,8 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {SearchPageSearch} from "../elements/SearchInputs";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
-import { AbstractListView, AbstractListViewItemProps, STATUS } from "../elements/list-groups/AbstractListViewItem";
+import { AbstractListView, AbstractListViewItemProps } from "../elements/list-groups/AbstractListViewItem";
+import { CompletionState } from "../../../IsaacApiTypes";
 
 interface Item<T> {
     value: T;
@@ -119,7 +120,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
         title: "Resistance 1",
         subtitle: "Essential GCSE Physics 24.1",
         breadcrumb: ["Physics", "Electricity", "Resistors"],
-        status: STATUS.IN_PROGRESS,
+        status: CompletionState.IN_PROGRESS,
         tags: ["Hard, Formula practice"],
         testTag: "LEVEL 1",
         url: "/questions/man_vs_horse",
