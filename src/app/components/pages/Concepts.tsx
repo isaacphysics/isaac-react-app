@@ -83,7 +83,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
 
     return (
-        <Container fluid id="search-page">
+        <Container id="search-page">
             <TitleAndBreadcrumb 
                 currentPageTitle="Concepts" 
                 icon={{type: "hex", icon: "page-icon-concept"}}

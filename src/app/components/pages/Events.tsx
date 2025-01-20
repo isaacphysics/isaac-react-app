@@ -60,7 +60,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     }, {} as {[key: string]: string});
 
     return <div>
-        <Container fluid>
+        <Container>
             <TitleAndBreadcrumb 
                 currentPageTitle={"Events"} 
                 help={pageHelp} 

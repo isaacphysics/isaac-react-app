@@ -18,7 +18,7 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
         dispatch(pageContextSlice.actions.updatePageContext({subject: subject as Subject, stage: stage as Stage}));
     }, [dispatch, location.pathname]);
 
-    return <Container fluid data-bs-theme={pageContext?.subject}>
+    return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb 
             currentPageTitle={pageContext?.stage && pageContext.subject ? `${HUMAN_STAGES[pageContext.stage]} ${HUMAN_SUBJECTS[pageContext.subject]}` : ""}
             icon={pageContext?.subject ? {

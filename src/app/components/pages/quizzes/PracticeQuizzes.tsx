@@ -47,7 +47,7 @@ const PracticeQuizzesComponent = ({user}: QuizzesPageProps) => {
         {isTutorOrAbove(user) && ((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-block ms-2">visible to students</div>}
     </>;
 
-    return <Container fluid>
+    return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Practice Tests", "Practice tests")} />
         <SidebarLayout>
             <PracticeQuizzesSidebar />

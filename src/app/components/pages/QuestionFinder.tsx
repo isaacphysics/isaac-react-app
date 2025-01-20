@@ -391,7 +391,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <IsaacSpinner />
     </div>;
 
-    return <Container fluid id="finder-page" className={classNames("mb-5")}>
+    return <Container id="finder-page" className={classNames("mb-5")}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question Finder", "Questions")} 
             help={pageHelp}

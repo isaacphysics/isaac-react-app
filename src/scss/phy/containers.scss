@@ -2,7 +2,7 @@
 
 // Fluent containers
 
-.container-fluid {
+.container {
     @each $bp, $_ in $grid-breakpoints {
         @include media-breakpoint-only($bp) {
             width: auto;
@@ -12,7 +12,7 @@
     }
 }
 
-.container-fluid-override {
+.container-override {
     @each $bp, $_ in $grid-breakpoints {
         @include media-breakpoint-only($bp) {
             margin-left: calc(-1 * map.get($spacing-container-margins, $bp));
