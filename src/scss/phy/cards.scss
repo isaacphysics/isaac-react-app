@@ -1,62 +1,76 @@
-@use 'sass:math';
+@container pod-parent (min-width: 736px) {
+  .pod.card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: min-content;
+    
+    a:has(> img) {
+      margin-right: 1.5rem;
 
-.card-neat {
-  .event-card-image {
-    position: relative;
-    min-height: 100px;
-
-    .event-card-image-banner {
-      position: absolute;
-      bottom: 0;
-      background-color: rgba(51,51,51,0.73);
-      width: 100%;
-      color: white;
-      text-align: right;
-      padding: 8px 15px 8px;
-
-      &.disabled {
-        z-index: 5;
+      > img {
+        width: 200px;
       }
     }
 
-    img {
+    .card-body {
+      padding-top: 0;
+    }
+  }
+}
+
+div:not(.no-horizontal):has(> .pod) {
+  container: pod-parent / inline-size;
+}
+
+.pod {
+  background-color: transparent;
+  border: none;
+  height: 100%;
+  width: 100%;
+
+  .card-body {
+    padding-top: 0.25rem;
+  }
+
+  .pod-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  
+  a:has(> img) {
+    height: min-content;
+    > img {
       width: 100%;
-      height: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border: 1px solid $color-neutral-200;
+      border-radius: 8px;
     }
   }
 
-  .event-card-icons {
-    margin-left: auto;
-    img {
-      height: 2rem;
-      width: 2rem;
-      margin-left: 0.25rem;
+  .event-pod-img {
+    position: relative;
+    height: min-content;
+
+    .event-pod-badge {
+      position: absolute;
+      bottom: 3%;
+      left: 3%;
     }
-  }
-}
 
-.card-deck .news-card {
-  max-width: 308px;
-  margin-bottom: 1.5rem;
+    .event-pod-hex {
+      position: absolute;
+      top: 1px;
+      right: 5%;
+      color: white;
 
-  a img {
-    @include aspect-ratio(5, 3);
-    object-fit: cover;
-  }
-}
-
-// number of news cards per line for each breakpoint
-$news-cards-per-line: (
-  xs: 2,
-  lg: 3
-);
-
-@each $name, $breakpoint in $grid-breakpoints {
-  @if (map-has-key($news-cards-per-line, $name)) {
-    @include media-breakpoint-up($name) {
-      .card-deck .news-card {
-        flex: 0 0 calc(#{math.percentage(math.div(1, map-get($news-cards-per-line, $name)))} - #{$grid-gutter-width});
-        width: 100%;
+      > b {
+        font-family: $secondary-font-semi-bold;
+        position: absolute;
+        text-align: center;
+        font-size: 12px;
+        padding-top: 5px;
       }
     }
   }

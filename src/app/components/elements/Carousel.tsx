@@ -87,7 +87,7 @@ const ControlledCarouselInstance = (props: ControlledCarouselInstanceProps) => {
                 <CarouselControl direction="prev" directionText="Previous" onClickHandler={previous} />
                 {props.children.map((child: ReactNode, index: number) => (
                     <CarouselItem key={index} onEntered={onEntered as any} onExiting={onExiting} onExited={onExited}>
-                        <div>
+                        <div className="no-horizontal">
                             <Spacer />
                             {child}
                             <Spacer />

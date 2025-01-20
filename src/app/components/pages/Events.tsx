@@ -10,13 +10,16 @@ import {
     EventStatusFilter,
     EventTypeFilter,
     STAGE,
+    above,
     isTeacherOrAbove,
     siteSpecific,
+    useDeviceSize,
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import { Container, Form, Label, Input, Row, Button } from "reactstrap";
+
 interface EventsPageQueryParams {
     show_booked_only?: boolean;
     show_reservations_only?: boolean;
@@ -31,6 +34,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
     const user = useAppSelector(selectors.user.orNull);
+    const deviceSize = useDeviceSize();
 
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
 
@@ -114,9 +118,10 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                         const numberOfLoadedEvents = events.length;
 
                         return <div className="my-4">
-                            <Row>
-                                {events.map(event => <div key={event.id} className="col-xs-12 col-sm-6 col-md-4 d-flex">
+                            <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1", "row-cols-lg-3")}`}>
+                                {events.map(event => <div key={event.id} className="my-3 px-3">
                                     <EventCard event={event} />
+                                    {above["md"](deviceSize) && <div className="section-divider"/>}
                                 </div>)}
                             </Row>
 
