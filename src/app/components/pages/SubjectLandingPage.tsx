@@ -5,8 +5,8 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { Subject } from "../../../IsaacAppTypes";
 import { Stage } from "../../../IsaacApiTypes";
 import { Container } from "reactstrap";
-import { HUMAN_STAGES, HUMAN_SUBJECTS } from "../../services";
 import { TitleAndBreadcrumb } from "../elements/TitleAndBreadcrumb";
+import { getHumanContext } from "../../services/context";
 
 export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
     const {location} = props;
@@ -20,13 +20,13 @@ export const SubjectLandingPage = withRouter((props: RouteComponentProps) => {
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb 
-            currentPageTitle={pageContext?.stage && pageContext.subject ? `${HUMAN_STAGES[pageContext.stage]} ${HUMAN_SUBJECTS[pageContext.subject]}` : ""}
+            currentPageTitle={getHumanContext(pageContext)}
             icon={pageContext?.subject ? {
                 type: "img", 
                 subject: pageContext.subject,
                 icon: `/assets/phy/icons/redesign/subject-${pageContext.subject}.svg`
             } : undefined}
         />
-        <div className="mt-5">This is a subject landing page for {pageContext?.stage ? HUMAN_STAGES[pageContext.stage] : "unknown"} {pageContext?.subject ? HUMAN_SUBJECTS[pageContext.subject] : "unknown"}!</div>
+        <div className="mt-5">This is a subject landing page for {getHumanContext(pageContext)}!</div>
     </Container>;
 });
