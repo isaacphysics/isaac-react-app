@@ -24,7 +24,6 @@ import {
     selectOnChange,
     shortcuts,
     siteSpecific,
-    STAGE
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
@@ -34,8 +33,6 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {SearchPageSearch} from "../elements/SearchInputs";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
-import { AbstractListView, AbstractListViewItemProps } from "../elements/list-groups/AbstractListViewItem";
-import { CompletionState } from "../../../IsaacApiTypes";
 
 interface Item<T> {
     value: T;
@@ -114,25 +111,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const shortcutResponses = (queryState ? shortcuts(queryState) : []) as ShortcutResponse[];
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
     const gotResults = shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0;
-
-    const a: AbstractListViewItemProps[] = [{
-        icon: <img src={"/assets/phy/icons/concept.svg"} alt="Shortcut icon"/>,
-        title: "Resistance 1",
-        subtitle: "Essential GCSE Physics 24.1",
-        breadcrumb: ["Physics", "Electricity", "Resistors"],
-        status: CompletionState.IN_PROGRESS,
-        tags: ["Hard, Formula practice"],
-        testTag: "LEVEL 1",
-        url: "/questions/man_vs_horse",
-        audienceViews: [{stage: STAGE.YEAR_7_AND_8, difficulty: "practice_2"}, {stage: STAGE.YEAR_9, difficulty: "practice_1"}],
-    },
-    {
-        icon: <img src={"/assets/phy/icons/concept.svg"} alt="Shortcut icon"/>,
-        title: "Test",
-        previewUrl: "previewUrl",
-        testUrl: "testUrl",
-    }];
-
+    
     return (
         <Container id="search-page">
             <Row>
@@ -185,11 +164,10 @@ export const Search = withRouter((props: RouteComponentProps) => {
                         {urlQuery != "" && <CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {gotResults ?
-                                    <AbstractListView items={a} />
-                                    /*<LinkToContentSummaryList 
+                                    <LinkToContentSummaryList 
                                         items={shortcutAndFilteredSearchResults} showBreadcrumb={true}
                                         contentTypeVisibility={ContentTypeVisibility.SHOWN}   
-                                    /> */
+                                    />
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </CardBody>}
