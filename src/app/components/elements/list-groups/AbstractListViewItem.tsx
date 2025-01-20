@@ -10,10 +10,9 @@ import { CompletionState } from "../../../../IsaacApiTypes";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
-        {breadcrumb.map(b => (<span className="hierarchy-tag" key={b}>{b}</span>))}
+        {breadcrumb.map(b => <span className="hierarchy-tag" key={b}>{b}</span>)}
     </>;
 };
-
 
 const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: CompletionState}) => {
     const { status, ...rest } = props;
@@ -31,6 +30,15 @@ const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: C
         case CompletionState.NOT_ATTEMPTED:
             return;
     }
+};
+
+const Tags = ({tags}: {tags: {tag: string, link?: string}[];}) => {
+    return <>
+        {tags.map(t => t.link ?
+            <Link to={t.link} className="card-tag" key={t.tag}>{t.tag}</Link> :
+            <div className="card-tag" key={t.tag}>{t.tag}</div>
+        )}
+    </>;
 };
 
 const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewUrl: string, testUrl: string}) => {
@@ -57,7 +65,7 @@ export interface AbstractListViewItemProps {
     subtitle?: string;
     breadcrumb?: string[];
     status?: CompletionState;
-    tags?: string[];
+    tags?: {tag: string, link?: string}[];
     testTag?: string;
     url?: string;
     audienceViews?: ViewingContext[];
@@ -78,9 +86,10 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
                     <span className="question-link-title">{title}</span>
                     {testTag && <span className="quiz-level-1-tag ms-sm-2">{testTag}</span>}
                 </div>
-                {subtitle && <div className="small text-muted">{subtitle}</div>}
-                {tags && <div className="small text-muted">{tags.join(", ")}</div>}
-                {breadcrumb && <div className={"hierarchy-tags"}>
+                {subtitle && <div className="small text-muted">
+                    {subtitle}
+                </div>}
+                {breadcrumb && <div className="hierarchy-tags">
                     <Breadcrumb breadcrumb={breadcrumb}/>
                 </div>}
                 {audienceViews && <div className="d-flex d-md-none"> 
@@ -88,6 +97,9 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
                 </div>}
                 {status && <div className="d-flex d-xl-none">
                     <StatusDisplay status={status}/>
+                </div>}
+                {tags && <div className="d-flex">
+                    <Tags tags={tags}/>
                 </div>}
                 {previewUrl && testUrl && <div className="d-flex d-md-none align-items-center">
                     <QuizLinks previewUrl={previewUrl} testUrl={testUrl}/>
@@ -106,12 +118,9 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
     </Row>;
 
     return <ListGroupItem className="content-summary-item">
-        {url ? <Link to={{pathname: url}}>
-            {cardBody}
-        </Link> : 
-            <div> 
-                {cardBody} 
-            </div>}
+        {url ? 
+            <Link to={{pathname: url}}> {cardBody} </Link> : 
+            <div> {cardBody} </div>}
     </ListGroupItem>;
 };
 

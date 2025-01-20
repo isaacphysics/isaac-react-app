@@ -1,3 +1,4 @@
+@use "sass:map";
 @import "../common/list-groups.scss";
 
 .content-summary-item {
@@ -10,11 +11,41 @@
 }
 
 .list-view-border {
-  border-left: 1px solid rgb(165, 165, 164);
+  border-left: 1px solid $color-neutral-200;
 }
 
 .status-tag {
   align-self: start;
   color: $color-neutral-500;
   font-size: 0.825rem;
+}
+
+@each $palette, $subject-colors in $isaac-color-palettes {
+  @include color-mode($palette) {
+    $subject-color-50: map.get($subject-colors, 50);
+    $subject-color-100: map.get($subject-colors, 100);
+    $subject-color-500: map.get($subject-colors, 500);
+
+    .quiz-level-1-tag {
+      @include pill-tag($subject-color-500, $subject-color-100);
+      padding: 0 0.7em;
+      border-radius: 15px;
+      font-weight: bold;
+    }
+
+    .quiz-level-2-tag {
+      @include pill-tag($subject-color-50, $subject-color-500);
+      padding: 0 0.7em;
+      border-radius: 15px;
+      font-weight: bold;
+    }
+
+    .card-tag {
+      @include pill-tag($color-neutral-900, $subject-color-50, $subject-color-100);
+      padding: 0 0.7em;
+      margin: 0.5rem 0.5rem 0 0;
+      border-radius: 15px;
+      font-size: 1rem;
+    }
+  }
 }
