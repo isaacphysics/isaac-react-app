@@ -1,9 +1,10 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Card, CardBody, CardImg, CardProps, CardText} from "reactstrap";
+import {Card, CardBody, CardImg, CardProps, CardText, CardTitle} from "reactstrap";
 import {IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper, siteSpecific} from "../../../services";
 import {AdaCard} from "./AdaCard";
+import { Spacer } from "../Spacer";
 
 interface NewsCardProps extends CardProps {
     newsItem: IsaacPodDTO;
@@ -19,17 +20,13 @@ const PhysicsNewsCard = ({newsItem, ...props}: NewsCardProps) => {
                 top
                 src={image.src && apiHelper.determineImageUrl(image.src)}
                 alt={image.altText || `Illustration for ${title}`}
-                className="pod-img"
             />
         </a>}
-        <CardBody className="pod-content">
-            <b className="pod-title">
-                {title}
-            </b>
-            <p>
-                {value}
-            </p>
+        <CardBody className="ps-0">
+            <CardTitle tag="h4" className="mb-0">{title}</CardTitle>
             <CardText>
+                {value && <p>{value}</p>}
+                <Spacer/>
                 {!url?.startsWith("http") ?
                     <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`${url}`}>
                             Read more

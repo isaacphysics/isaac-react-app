@@ -4,10 +4,13 @@
     flex-direction: row;
     width: 100%;
     height: min-content;
-    padding-left: 1.5rem;
+    
+    a:has(> img) {
+      margin-right: 1.5rem;
 
-    .pod-img > img {
-      width: 200px;
+      > img {
+        width: 200px;
+      }
     }
 
     .card-body {
@@ -31,13 +34,14 @@ div:has(> .pod) {
     font-weight: 700;
   }
   
-  .pod-img {
-    border-radius: 8px;
-    
+  a:has(> img) {
+    height: min-content;
     > img {
       width: 100%;
       aspect-ratio: 16/9;
       object-fit: cover;
+      border: 1px solid $color-neutral-200;
+      border-radius: 8px;
     }
   }
 
@@ -53,8 +57,8 @@ div:has(> .pod) {
 
     .event-pod-hex {
       position: absolute;
-      top: 0;
-      right: 10%;
+      top: 1px;
+      right: 5%;
       color: white;
 
       > b {

@@ -16,7 +16,7 @@ export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
 
     return <Card className="pod">
         {eventThumbnail &&
-            <div className={"pod-img event-pod-img"}>
+            <a className={"pod-img event-pod-img"} href={`/events/${id}`}>
                 <CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
                 {isVirtualEvent &&
                     <div className={"event-pod-badge"}>
@@ -32,15 +32,13 @@ export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
                         <b>STUDENT EVENT</b>
                         <img src="/assets/phy/icons/redesign/student-event-hex.svg" alt={"student event icon"}/>
                     </div>}
-            </div>}
+            </a>}
         <CardBody className="d-flex flex-column ps-0">
             {title && <CardTitle tag="h4" className="mb-0">{title}</CardTitle>}
-            {subtitle && <CardText className="mb-0">
-                {subtitle}
-            </CardText>}
-            <Spacer/>
-            <div className="section-divider"/>
             <CardText>
+                {subtitle && <p className="m-0">{subtitle}</p>}
+                <Spacer/>
+                <div className="section-divider"/>
                 <b>When: </b>{formatEventCardDate(event)}
                 {location && location.address &&
                     <span className='d-block my-1'>
