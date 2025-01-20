@@ -37,6 +37,7 @@ $alert-text-colours: (
   }
 }
 
+// TODO: move all these definitions to more relevant files, defining the colours to use in color-theme.scss
 @each $palette, $subject-colors in $isaac-color-palettes {
   @include color-mode($palette) {
     $subject-color-500: map.get($subject-colors, 500);
@@ -146,12 +147,6 @@ $alert-text-colours: (
 
     svg.search-item-icon, svg.gameboard-item-icon {
       fill: $subject-color-500;
-    }
-
-    @if $palette != "neutral" {
-      i.icon {
-        background-color: $subject-color-500;
-      }
     }
   }
 }
