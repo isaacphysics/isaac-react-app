@@ -1,9 +1,9 @@
 import React, { ChangeEvent, ReactNode, RefObject, useEffect, useRef, useState } from "react";
-import { Col, ColProps, Container, ContainerProps, Input, Label, Row } from "reactstrap";
+import { Col, ColProps, Container, ContainerProps, Input, Label, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { AUDIENCE_DISPLAY_FIELDS, determineAudienceViews, filterAudienceViewsByProperties, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap } from "../../../services";
+import { above, AUDIENCE_DISPLAY_FIELDS, determineAudienceViews, filterAudienceViewsByProperties, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
@@ -26,7 +26,8 @@ export const SidebarContainer = (props: SidebarLayoutProps) => {
 };
 
 export const MainContent = (props: ColProps) => {
-    return siteSpecific(<Col xs={12} lg={8} xl={9} {...props} />, props.children);
+    const { className, ...rest } = props;
+    return siteSpecific(<Col xs={12} lg={8} xl={9} {...rest} className={classNames(className, "order-0 order-lg-1")} />, props.children);
 };
 
 const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & {question: QuestionDTO, sidebarRef: RefObject<HTMLDivElement>}) => {
@@ -52,18 +53,68 @@ const ConceptLink = (props: React.HTMLAttributes<HTMLLIElement> & {concept: Isaa
             <i className="icon icon-lightbulb"/>
             <span className="hover-underline link-title">{concept.title}</span>
         </Link>
-    </li>
+    </li>;
 };
 
 interface SidebarProps extends ColProps {
 
 }
 
-const Sidebar = (props: SidebarProps) => {
+const NavigationSidebar = (props: SidebarProps) => {
+    // A navigation sidebar is used for external links that are supplementary to the main content (e.g. related content);
+    // the content in such a sidebar will collapse underneath the main content on smaller screens
     if (isAda) return <></>;
 
     const { className, ...rest } = props;
-    return <Col lg={4} xl={3} {...rest} className={classNames("sidebar p-4", className)} />;
+    return <Col lg={4} xl={3} {...rest} className={classNames("sidebar p-4 order-1 order-lg-0", className)} />;
+};
+
+interface ContentSidebarProps extends SidebarProps {
+    buttonTitle?: string;
+}
+
+const ContentSidebar = (props: ContentSidebarProps) => {
+    // A content sidebar is used to interact with the main content, e.g. filters or search boxes, or for in-page nav (e.g. lessons and revision);
+    // the content in such a sidebar will collapse into a button accessible from above the main content on smaller screens
+    const deviceSize = useDeviceSize();
+    const [menuOpen, setMenuOpen] = useState(false);
+    const toggleMenu = () => setMenuOpen(m => !m);
+
+    if (isAda) return <></>;
+
+    const { className, buttonTitle, ...rest } = props;
+    return <>
+        {above['lg'](deviceSize) 
+            ? <Col lg={4} xl={3} {...rest} className={classNames("d-none d-lg-flex flex-column sidebar p-4 order-0", className)} />
+            : <>
+                <div className="d-flex align-items-center flex-wrap py-3 gap-3">
+                    <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
+                        affix: "icon-sidebar", 
+                        position: "prefix", 
+                        type: "icon"
+                    }}>
+                        {buttonTitle ?? "Search and filter"}
+                    </AffixButton>
+                </div>
+                <Offcanvas id="content-sidebar-offcanvas" direction="start" isOpen={menuOpen} toggle={toggleMenu} container="#root">
+                    <OffcanvasHeader toggle={toggleMenu} close={
+                        <div className="d-flex w-100 justify-content-end align-items-center flex-wrap p-3">
+                            <AffixButton color="keyline" size="lg" onClick={toggleMenu} affix={{
+                                affix: "icon-close", 
+                                position: "prefix", 
+                                type: "icon"
+                            }}>
+                                Close
+                            </AffixButton>
+                        </div>
+                    }/>
+                    <OffcanvasBody>
+                        <Col {...rest} className={classNames("sidebar p-4 pt-0", className)} />
+                    </OffcanvasBody>
+                </Offcanvas>
+            </>
+        }
+    </>;
 };
 
 const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
@@ -86,7 +137,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
 
     const sidebarRef = useRef<HTMLDivElement>(null);
 
-    return <Sidebar ref={sidebarRef}>
+    return <NavigationSidebar ref={sidebarRef}>
         {relatedConcepts && relatedConcepts.length > 0 && <>
             <div className="section-divider"/>
             <h5>Related concepts</h5>
@@ -127,7 +178,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
             </div>
 
         </>}
-    </Sidebar>;
+    </NavigationSidebar>;
 };
 
 export const ConceptSidebar = (props: QuestionSidebarProps) => {
@@ -201,7 +252,7 @@ interface ConceptListSidebarProps extends SidebarProps {
 export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps) => {
     const { searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts, ...rest } = props;
 
-    return <Sidebar {...rest}>
+    return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <h5>Search concepts</h5>
         <Input
@@ -233,20 +284,25 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
                 Browse concepts
             </AffixButton>
         </div>
-    </Sidebar>;
+    </ContentSidebar>;
 };
 
 export const GenericConceptsSidebar = (props: SidebarProps) => {
     // TODO
-    return <Sidebar {...props}/>;
+    return <ContentSidebar {...props}/>;
 };
 
 export const QuestionFinderSidebar = (props: SidebarProps) => {
     // TODO
-    return <Sidebar {...props}/>;
+    return <ContentSidebar {...props}/>;
 };
 
 export const PracticeQuizzesSidebar = (props: SidebarProps) => {
     // TODO
-    return <Sidebar {...props}/>;
+    return <ContentSidebar {...props}/>;
+};
+
+export const LessonsAndRevisionSidebar = (props: SidebarProps) => {
+    // TODO
+    return <ContentSidebar {...props}/>;
 };
