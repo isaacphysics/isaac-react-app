@@ -19,7 +19,7 @@
   }
 }
 
-div:has(> .pod) {
+div:not(.no-horizontal):has(> .pod) {
   container: pod-parent / inline-size;
 }
 
@@ -28,6 +28,10 @@ div:has(> .pod) {
   border: none;
   height: 100%;
   width: 100%;
+
+  .card-body {
+    padding-top: 0.25rem;
+  }
 
   .pod-title {
     font-size: 16px;
