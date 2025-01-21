@@ -187,6 +187,24 @@
   )
 }
 
+.list-icon-question {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-question-fg.svg', 
+    '/assets/phy/icons/redesign/page-generic-bg.svg',
+    60px, 60px, 36px
+  );
+}
+
+.list-icon-concept {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-concept-fg.svg', 
+    '/assets/phy/icons/redesign/page-concept-bg.svg',
+    60px, 60px, 36px, center 15px
+    // the SVGs are correct, but visually top-heavy; the offset here shifts them down a little for better balance
+  );
+}
+
+
 svg {
   &.almost-fill {
     fill: $phy_extra_force_yellow;

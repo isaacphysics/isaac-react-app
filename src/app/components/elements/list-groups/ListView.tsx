@@ -1,16 +1,17 @@
 import React from "react";
-import { AbstractListViewItem } from "../AbstractListViewItem";
-import { ShortcutResponse, ViewingContext } from "../../../../../IsaacAppTypes";
-import { determineAudienceViews } from "../../../../services/userViewingContext";
-import { DOCUMENT_TYPE, SEARCH_RESULT_TYPE, TAG_ID, tags } from "../../../../services";
+import { AbstractListViewItem } from "./AbstractListViewItem";
+import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
+import { determineAudienceViews } from "../../../services/userViewingContext";
+import { DOCUMENT_TYPE, SEARCH_RESULT_TYPE, TAG_ID, tags } from "../../../services";
 import { ListGroup } from "reactstrap";
+import { PhyHexIcon } from "../svg/PhyHexIcon";
 
 export const QuestionListViewItem = (item: ShortcutResponse) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
 
     return <AbstractListViewItem 
-        icon={<i className="icon-question"/> /*TODO Get actual list view icons*/}
+        icon={<PhyHexIcon icon="list-icon-question" size="sm"/>}
         title={item.title ?? ""} 
         subtitle={item.subtitle} 
         breadcrumb={breadcrumb} 
@@ -22,7 +23,7 @@ export const QuestionListViewItem = (item: ShortcutResponse) => {
 
 export const ConceptListViewItem = (item: ShortcutResponse) => {
     return <AbstractListViewItem 
-        icon={<i className="icon-lightbulb"/> /*TODO Get actual list view icons*/}
+        icon={<PhyHexIcon icon="list-icon-concept" size="sm"/>}
         title={item.title ?? ""} 
         subtitle={item.subtitle} 
         url={item.url} 
@@ -31,7 +32,7 @@ export const ConceptListViewItem = (item: ShortcutResponse) => {
 
 export const EventListViewItem = (item: ShortcutResponse) => {
     return <AbstractListViewItem 
-        icon={<i className="icon-lightbulb"/> /*TODO Get actual list view icons*/}
+        icon={<PhyHexIcon icon="list-icon-concept" size="sm"/>}
         title={item.title ?? ""} 
         subtitle={item.subtitle} 
         url={item.url} 

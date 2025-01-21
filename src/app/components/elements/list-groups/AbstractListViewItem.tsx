@@ -81,10 +81,10 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
     const cardBody = 
     <Row className="w-100">
         <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} className="d-flex">
-            <div className="me-2 list-view-icon">
+            <div>
                 {icon}
             </div>
-            <div className="justify-content-between">
+            <div className="align-content-center">
                 <div className="d-flex">
                     <span className="question-link-title">{title}</span>
                     {testTag && <span className="quiz-level-1-tag ms-sm-2">{testTag}</span>}

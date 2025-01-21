@@ -112,5 +112,10 @@
       @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), 75px, 75px, 75px);
       position: absolute;
     }
+
+    .phy-hex-icon-sm {
+      @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), 60px, 60px, 60px);
+      position: absolute;
+    }
   }
 }
