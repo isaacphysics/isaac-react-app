@@ -6093,10 +6093,10 @@ inequality-grammar@1.3.5:
     moo "^0.5.2"
     nearley "^2.20.1"
 
-inequality@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/inequality/-/inequality-1.2.1.tgz#f83d12bc933beaa00f104a8dd4e5630d3a8994e9"
-  integrity sha512-XQSac4UVQkIIk6S+PpDnCF5A9zJCdb2TGW1aAJGv/gMvst6hvevGgnbtnYT/k834tZmlHvePMbxSAIzUgpwgMg==
+inequality@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/inequality/-/inequality-1.2.2.tgz#8b71d2a322b9e8fdce8a63a0495272f9736ac90a"
+  integrity sha512-VUPfa0KbqjSeqWVL/ZjOzP3OE2KoSTyWrVbWQ6Z1E0vMvyX9QzY8igKty2/YAAWpwqu9x1aGz104haxYieV8rQ==
 
 inflight@^1.0.4:
   version "1.0.6"
