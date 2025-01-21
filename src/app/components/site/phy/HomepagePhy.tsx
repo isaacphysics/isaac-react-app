@@ -5,6 +5,7 @@ import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {above, SITE_TITLE, useDeviceSize, useUserConsent} from "../../../services";
 import {HomepageYoutubeCookieHandler} from "../../handlers/InterstitialCookieHandler";
+import { ListViewCard } from "../../elements/list-groups/ListView";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
@@ -81,6 +82,28 @@ export const HomepagePhy = () => {
                             </Col>
                         </Row>
                     </div>
+                </Container>
+            </section>
+
+            <section id="navigation-cards">
+                <Container>
+                    Explore and learn!
+                    <Row className="w-100 link-list list-group-links" style={{background:"white"}}>
+                        <Col xs={6} style={{"borderRight": "1px solid #ececec"}}>
+                            <ListViewCard/>
+                        </Col>
+                        <Col xs={6}>
+                            <ListViewCard/>
+                        </Col>
+                    </Row>
+                    <Row className="w-100 link-list list-group-links" style={{background:"white"}}>
+                        <Col xs={6} style={{"borderRight": "1px solid #ececec"}}>
+                            <ListViewCard/>
+                        </Col>
+                        <Col xs={6}>
+                            <ListViewCard/>
+                        </Col>
+                    </Row>
                 </Container>
             </section>
 

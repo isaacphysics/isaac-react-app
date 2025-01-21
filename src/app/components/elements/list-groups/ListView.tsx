@@ -4,14 +4,13 @@ import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
 import { DOCUMENT_TYPE, SEARCH_RESULT_TYPE, TAG_ID, tags } from "../../../services";
 import { ListGroup } from "reactstrap";
-import { PhyHexIcon } from "../svg/PhyHexIcon";
 
 export const QuestionListViewItem = (item: ShortcutResponse) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
 
     return <AbstractListViewItem 
-        icon={<PhyHexIcon icon="list-icon-question" size="sm"/>}
+        icon={{type: "hex", icon: "list-icon-question", size: "sm"}}
         title={item.title ?? ""} 
         subtitle={item.subtitle} 
         breadcrumb={breadcrumb} 
@@ -23,7 +22,7 @@ export const QuestionListViewItem = (item: ShortcutResponse) => {
 
 export const ConceptListViewItem = (item: ShortcutResponse) => {
     return <AbstractListViewItem 
-        icon={<PhyHexIcon icon="list-icon-concept" size="sm"/>}
+        icon={{type: "hex", icon: "list-icon-concept", size: "sm"}}
         title={item.title ?? ""} 
         subtitle={item.subtitle} 
         url={item.url} 
@@ -32,10 +31,21 @@ export const ConceptListViewItem = (item: ShortcutResponse) => {
 
 export const EventListViewItem = (item: ShortcutResponse) => {
     return <AbstractListViewItem 
-        icon={<PhyHexIcon icon="list-icon-concept" size="sm"/>}
+        icon={{type: "hex", icon: "list-icon-concept", size: "sm"}}
         title={item.title ?? ""} 
         subtitle={item.subtitle} 
         url={item.url} 
+    />;
+};
+
+export const ListViewCard = () => {
+    return <AbstractListViewItem 
+        icon={{type: "img", icon: "/assets/phy/icons/redesign/subject-physics.svg"}}
+        title={"Physics"} 
+        subtitle={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris faucibus est vulputate augue  tristique, sed vehicula turpis pellentesque."} 
+        url={"physics-link"}
+        tags={[{tag: "11-14"}, {tag: "GCSE"}, {tag: "A-Level"}, {tag: "University"}]}
+        isCard
     />;
 };
 

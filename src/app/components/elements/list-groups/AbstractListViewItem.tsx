@@ -9,6 +9,8 @@ import { Spacer } from "../Spacer";
 import { CompletionState } from "../../../../IsaacApiTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
 import { TAG_ID, tags } from "../../../services";
+import { PhyHexIcon } from "../svg/PhyHexIcon";
+import { TitleIconProps } from "../PageTitle";
 
 const Breadcrumb = ({breadcrumb}: {breadcrumb: string[]}) => {
     return <>
@@ -62,7 +64,7 @@ const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewUrl: s
 };
 
 export interface AbstractListViewItemProps {
-    icon: React.JSX.Element;
+    icon: TitleIconProps;
     title: string;
     subtitle?: string;
     breadcrumb?: string[];
@@ -73,16 +75,19 @@ export interface AbstractListViewItemProps {
     audienceViews?: ViewingContext[];
     previewUrl?: string;
     testUrl?: string;
+    isCard?: boolean;
 }
 
-export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status, tags, testTag, url, audienceViews, previewUrl, testUrl}: AbstractListViewItemProps) => { 
+export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status, tags, testTag, url, audienceViews, previewUrl, testUrl, isCard}: AbstractListViewItemProps) => { 
     const isQuiz: boolean = (previewUrl && testUrl) ? true : false;
-    const colWidths = isQuiz ? [12,6,6,6] : [12,8,9,8];
+    const colWidths = isCard ? [12,12,12,12] : isQuiz ? [12,6,6,6] : [12,8,9,8];
     const cardBody = 
     <Row className="w-100">
         <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} className="d-flex">
             <div>
-                {icon}
+                {icon && (
+                    icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
+                        : icon.type === "hex" ? <PhyHexIcon icon={icon.icon} subject={icon.subject} size={icon.size}/> : undefined)}
             </div>
             <div className="align-content-center">
                 <div className="d-flex">
@@ -109,7 +114,7 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
                 </div>}
             </div>
         </Col>
-        {!isQuiz && <Col xl={2} className={classNames("d-none d-xl-flex", {" list-view-border": status})}>
+        {!isQuiz && (audienceViews || status) && <Col xl={2} className={classNames("d-none d-xl-flex", {" list-view-border": (status && status !== CompletionState.NOT_ATTEMPTED)})}>
             <StatusDisplay status={status ?? CompletionState.NOT_ATTEMPTED}/>
         </Col>}
         {audienceViews && <Col md={4} lg={3} xl={2} className={classNames("d-none d-md-flex", {" list-view-border": audienceViews.length > 0})}>
@@ -132,7 +137,7 @@ export const AbstractListView = ({items}: {items: ShortcutResponse[]}) => {
         {items.map(item => 
             <AbstractListViewItem 
                 key={item.title}
-                icon={<img src={"/assets/phy/icons/concept.svg"} alt="Shortcut icon"/>}
+                icon={{type: "img", icon: "/assets/phy/icons/redesign/subject-physics.svg"}}
                 title={item.title ?? ""}
                 subtitle={item.subtitle}
                 breadcrumb={tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title)}

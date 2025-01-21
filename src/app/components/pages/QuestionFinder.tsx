@@ -38,6 +38,7 @@ import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, L
 import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { ListView } from "../elements/list-groups/ListView";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
@@ -452,11 +453,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
                                     {displayQuestions?.length
-                                        ? <LinkToContentSummaryList 
-                                            items={displayQuestions} className="m-0" 
-                                            contentTypeVisibility={ContentTypeVisibility.ICON_ONLY} 
-                                            ignoreIntendedAudience noCaret 
-                                        />
+                                        ? <ListView items={displayQuestions}/>
                                         : noResultsMessage }
                                 </ShowLoading>
                             </CardBody>
