@@ -85,3 +85,11 @@
     }
   }
 }
+
+#content-sidebar-offcanvas {
+  background-color: $color-neutral-50;
+
+  > div {
+    padding: 0;
+  }
+}
