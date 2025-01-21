@@ -15,6 +15,18 @@
             mask-position: 0 -810px;
             right: 660px;
             top: 0;
+
+            @include media-breakpoint-only(lg) {
+                right: 500px;
+            }
+
+            @include media-breakpoint-between(sm, lg) {
+                right: 330px;
+            }
+
+            @include media-breakpoint-only(xs) {
+                right: 60px;
+            }
         }
 
         &::after {
@@ -23,6 +35,18 @@
             mask-position: 0 -322px;
             right: 400px;
             top: 0;
+            
+            @include media-breakpoint-only(lg) {
+                right: 240px
+            }
+
+            @include media-breakpoint-between(sm, lg) {
+                right: 70px;
+            }
+
+            @include media-breakpoint-only(xs) {
+                right: -200px;
+            }
         }
     }
 
