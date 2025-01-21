@@ -57,7 +57,7 @@
   background-image: url(/assets/phy/ru.png) !important;
 }
 
-@mixin svg-icon($path, $width: 16px, $height: 16px) {
+@mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
   display: inline-block;
   mask: url($path) center center no-repeat;
   width: $width;
@@ -65,9 +65,15 @@
   min-width: $width;
   min-height: $height;
   background-color: black;
+  @if $mask-size != none {
+    mask-size: $mask-size;
+  }
+  @if $mask-position != none {
+    mask-position: $mask-position;
+  }
 }
 
-@mixin svg-icon-layered($fg_path, $bg_path, $width: 16px, $height: 16px) {
+@mixin svg-icon-layered($fg_path, $bg_path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
   display: inline-block;
   width: $width;
   height: $height;
@@ -80,22 +86,32 @@
     content: '';
     @include svg-icon($bg_path, $width, $height);
     position: absolute;
+    @if $mask-size != none {
+      mask-size: $mask-size;
+    }
+    @if $mask-position != none {
+      mask-position: $mask-position;
+    }
   }
   &::after {
     content: '';
     @include svg-icon($fg_path, $width, $height);
     position: absolute;
+    @if $mask-size {
+      mask-size: $mask-size;
+    }
+    @if $mask-position != none {
+      mask-position: $mask-position;
+    }
   }
 }
 
 .icon-menu {
-  @include svg-icon('/assets/phy/icons/redesign/menu.svg', 16px, 16px);
-  mask-size: 14px 12px;
+  @include svg-icon('/assets/phy/icons/redesign/menu.svg', 16px, 16px, 14px 12px);
 }
 
 .icon-close {
-  @include svg-icon('/assets/phy/icons/redesign/close.svg', 16px, 16px);
-  mask-size: 14px 12px;
+  @include svg-icon('/assets/phy/icons/redesign/close.svg', 16px, 16px, 14px 12px);
 }
 
 .icon-cog {
@@ -103,7 +119,7 @@
 }
 
 .icon-hexagon {
-  @include svg-icon('/assets/phy/icons/redesign/hexagon.svg', 16px, 16px);
+  @include svg-icon('/assets/phy/icons/redesign/hexagon.svg', 16px, 16px, 12px);
 }
 
 .icon-my-isaac {
@@ -124,8 +140,8 @@
 
 .icon-lightbulb {
   @include svg-icon-layered(
-    '/assets/phy/icons/redesign/lightbulb-fg.svg', 
-    '/assets/phy/icons/redesign/lightbulb-bg.svg',
+    '/assets/phy/icons/redesign/page-concept-fg.svg', 
+    '/assets/phy/icons/redesign/page-concept-bg.svg',
     16px, 16px
   );
 }
@@ -136,6 +152,39 @@
     '/assets/phy/icons/redesign/question-bg.svg',
     16px, 16px
   );
+}
+
+.page-icon-question {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-question-fg.svg', 
+    '/assets/phy/icons/redesign/page-generic-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
+.page-icon-concept {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-concept-fg.svg', 
+    '/assets/phy/icons/redesign/page-concept-bg.svg',
+    75px, 75px, 40px, center 19px
+    // the SVGs are correct, but visually top-heavy; the offset here shifts them down a little for better balance
+  );
+}
+
+.page-icon-finder {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-finder-fg.svg', 
+    '/assets/phy/icons/redesign/page-finder-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
+.page-icon-events {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-event-fg.svg',
+    '/assets/phy/icons/redesign/page-event-bg.svg',
+    75px, 75px, 44px
+  )
 }
 
 svg {
@@ -150,8 +199,8 @@ svg {
 
 // Overrides -- ONLY use these on an individual basis to override an active theme.
 // Setting `data-bs-theme` on a parent element is the much preferred approach.
-// (brand has no theme, so brand-color icons will generally need `.icon-color-brand`).
 
-.icon-color-brand {
-  background-color: $color-brand-500;
+// the default icon colour for `neutral` is $color-theme-500 (green), but we use black icons in a few places across e.g. navigation
+i.icon.icon-color-black {
+  background-color: black;
 }

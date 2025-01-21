@@ -8,7 +8,7 @@ import {PreUniMaths2e} from "../../pages/books/pre_uni_maths_2e";
 import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect} from "react-router";
-import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS} from "../../../services";
+import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
@@ -42,6 +42,7 @@ import { RegistrationSuccess } from "../../pages/RegistrationSuccess";
 import { RegistrationSetPreferences } from "../../pages/RegistrationSetPreferences";
 import { RegistrationGroupInvite } from "../../pages/RegistrationGroupInvite";
 import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
+import { SubjectLandingPage } from "../../pages/SubjectLandingPage";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -112,6 +113,14 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/books/phys_book_yr9" component={PhysBookYrNine}/>,
     <TrackedRoute key={key++} exact path="/books/step_up_phys" component={StepUpPhys}/>,
     <TrackedRoute key={key++} exact path="/books/linking_concepts" component={LinkingConcepts}/>,
+
+    // Subject landing pages
+    <TrackedRoute key={key++} exact path={Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
+        stages.forEach((stage) => {
+            acc.push(`/${subject}/${stage}`);
+        });
+        return acc;
+    }, [] as string[])} component={SubjectLandingPage} />,
 
     // Concepts List
     <TrackedRoute key={key++} exact path="/concepts" component={Concepts} />,

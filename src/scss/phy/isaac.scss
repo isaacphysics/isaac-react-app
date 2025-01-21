@@ -354,6 +354,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "fonts";
 @import "typography";
 @import "containers";
+@import "page-title";
 @import "sidebar";
 @import "table";
 @import "../common/headings";

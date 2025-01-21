@@ -4,7 +4,7 @@ import {siteSpecific, withSearch} from "../../services";
 
 const PhysicsSearchButton = () => (
     <Button color='link' aria-label='search' className='search-button'>
-        <i className="icon icon-search me-1 align-middle"/>
+        <i className="icon icon-search icon-color-black me-1 align-middle"/>
         <span className='visually-hidden'>Search</span>
     </Button>
 );

@@ -130,11 +130,9 @@ a.icon-card, a.cs-card {
     .btn-link::after {
       content: "";
       display: inline-flex;
-      width: 6px;
-      height: 8px;
+      @include svg-color(url('/assets/common/icons/chevron_right.svg'), $dark-pink-300, 6px, 8px);
       margin-top: -3px;
       margin-left: 10px;
-      @include svg-color(url('/assets/common/icons/chevron_right.svg'), $dark-pink-300);
       mask-size: cover;
     }
   }
