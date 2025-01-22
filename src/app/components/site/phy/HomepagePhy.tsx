@@ -6,6 +6,49 @@ import {NewsCarousel} from "../../elements/NewsCarousel";
 import {above, SITE_TITLE, useDeviceSize, useUserConsent} from "../../../services";
 import {HomepageYoutubeCookieHandler} from "../../handlers/InterstitialCookieHandler";
 import { ListViewCard } from "../../elements/list-groups/ListView";
+import { ShortcutResponse, Subject } from "../../../../IsaacAppTypes";
+import { ListViewTagProps } from "../../elements/list-groups/AbstractListViewItem";
+
+const getSubjectTags: { [key in Subject]: ListViewTagProps[] } = {
+    physics: [{tag: "11-14", url: "physics/11_14"}, {tag: "GCSE", url: "physics/gcse"}, {tag: "A-Level", url: "physics/a_level"}, {tag: "University", url: "physics/university"}],
+    maths: [{tag: "GCSE", url: "maths/gcse"}, {tag: "A-Level", url: "maths/a_level"}, {tag: "University", url: "maths/university"}],
+    chemistry: [{tag: "GCSE", url: "chemistry/gcse"}, {tag: "A-Level", url: "chemistry/a_level"}],
+    biology: [{tag: "A-Level", url: "biology/a_level"}],
+};
+
+const ListViewSubjectCard = ({subject}: {subject: Subject}) => {
+    const item: ShortcutResponse = {
+        title: subject.charAt(0).toUpperCase() + subject.slice(1),
+        subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris faucibus est vulputate augue  tristique, sed vehicula turpis pellentesque.",
+    };
+    const tags = getSubjectTags[subject];
+
+    return <ListViewCard 
+        item={item} 
+        subject={subject} 
+        icon={{type: "img", icon: `/assets/phy/icons/redesign/subject-${subject}.svg`}} 
+        tagList={tags}
+    />;
+};
+
+const a = <div style={{borderRadius: "10px", border: "1px solid rgb(236, 236, 236)", background:"white"}}>
+    <Row className="w-100 link-list list-group-links ms-0 border-0">
+        <Col xs={6} style={{borderRight: "2px solid #ececec", borderBottom: "2px solid #ececec"}}>
+            <ListViewSubjectCard subject="physics"/>    
+        </Col>
+        <Col xs={6} style={{borderBottom: "2px solid #ececec"}}>
+            <ListViewSubjectCard subject="maths"/> 
+        </Col>
+    </Row>
+    <Row className="w-100 link-list list-group-links ms-0 border-0">
+        <Col xs={6} style={{borderRight: "2px solid #ececec"}}>
+            <ListViewSubjectCard subject="chemistry"/> </Col>
+        <Col xs={6}>
+            <ListViewSubjectCard subject="biology"/> 
+        </Col>
+    </Row>
+</div>;
+
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
@@ -88,24 +131,7 @@ export const HomepagePhy = () => {
             <section id="navigation-cards">
                 <Container>
                     Explore and learn!
-                    <div style={{borderRadius: "10px", border: "1px solid rgb(236, 236, 236)", background:"white"}}>
-                        <Row className="w-100 link-list list-group-links ml-0" style={{marginLeft: 0, border: "none"}}>
-                            <Col xs={6} style={{borderRight: "2px solid #ececec", borderBottom: "2px solid #ececec"}}>
-                                <ListViewCard/>
-                            </Col>
-                            <Col xs={6} style={{borderBottom: "2px solid #ececec"}}>
-                                <ListViewCard/>
-                            </Col>
-                        </Row>
-                        <Row className="w-100 link-list list-group-links" style={{marginLeft: 0, border: "none"}}>
-                            <Col xs={6} style={{borderRight: "2px solid #ececec"}}>
-                                <ListViewCard/>
-                            </Col>
-                            <Col xs={6}>
-                                <ListViewCard/>
-                            </Col>
-                        </Row>
-                    </div>
+                    {a}
                 </Container>
             </section>
 

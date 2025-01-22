@@ -16,11 +16,18 @@
   font-size: 0.825rem;
 }
 
+.list-group-links {
+  .question-link-title {
+    color: var(--subject-color-900);
+  }
+}
+
 @each $palette, $subject-colors in $isaac-color-palettes {
   @include color-mode($palette) {
     $subject-color-50: map.get($subject-colors, 50);
     $subject-color-100: map.get($subject-colors, 100);
     $subject-color-500: map.get($subject-colors, 500);
+    $subject-color-900: map.get($subject-colors, 900);
 
     .quiz-level-1-tag {
       @include pill-tag($subject-color-500, $subject-color-100);

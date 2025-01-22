@@ -1,65 +1,77 @@
 import React from "react";
-import { AbstractListViewItem } from "./AbstractListViewItem";
-import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
+import { AbstractListViewItem, ListViewTagProps } from "./AbstractListViewItem";
+import { ShortcutResponse, Subject, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { DOCUMENT_TYPE, SEARCH_RESULT_TYPE, TAG_ID, tags } from "../../../services";
+import { DOCUMENT_TYPE, SEARCH_RESULT_TYPE, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup } from "reactstrap";
+import { TitleIconProps } from "../PageTitle";
 
 export const QuestionListViewItem = (item: ShortcutResponse) => {
     const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
     const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
 
     return <AbstractListViewItem 
         icon={{type: "hex", icon: "list-icon-question", size: "sm"}}
-        title={item.title ?? ""} 
-        subtitle={item.subtitle} 
-        breadcrumb={breadcrumb} 
-        status={item.state} 
-        url={item.url} 
-        audienceViews={audienceViews} 
+        title={item.title ?? ""}
+        subject={itemSubject}
+        subtitle={item.subtitle}
+        breadcrumb={breadcrumb}
+        status={item.state}
+        url={item.url}
+        audienceViews={audienceViews}
     />;
 };
 
 export const ConceptListViewItem = (item: ShortcutResponse) => {
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+
     return <AbstractListViewItem 
         icon={{type: "hex", icon: "list-icon-concept", size: "sm"}}
-        title={item.title ?? ""} 
-        subtitle={item.subtitle} 
-        url={item.url} 
+        title={item.title ?? ""}
+        
+        subject={itemSubject}
+        subtitle={item.subtitle}
+        url={item.url}
     />;
 };
 
 export const EventListViewItem = (item: ShortcutResponse) => {
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+
     return <AbstractListViewItem 
         icon={{type: "hex", icon: "list-icon-concept", size: "sm"}}
-        title={item.title ?? ""} 
-        subtitle={item.subtitle} 
-        url={item.url} 
+        title={item.title ?? ""}
+        subject={itemSubject}
+        subtitle={item.subtitle}
+        url={item.url}
     />;
 };
 
-export const ListViewCard = () => {
-    return <AbstractListViewItem 
-        icon={{type: "img", icon: "/assets/phy/icons/redesign/subject-physics.svg"}}
-        title={"Physics"} 
-        subtitle={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris faucibus est vulputate augue  tristique, sed vehicula turpis pellentesque."} 
-        url={"physics"}
-        tags={[{tag: "11-14", url: "physics/11_14"}, {tag: "GCSE", url: "physics/gcse"}, {tag: "A-Level", url: "physics/a_level"}, {tag: "University", url: "physics/university"}]}
+export const ListViewCard = ({item, subject, icon, tagList}: {item: ShortcutResponse, subject: Subject, icon: TitleIconProps, tagList: ListViewTagProps[]}) => {
+    return <AbstractListViewItem
+        icon={icon}
+        title={item.title ?? ""}
+        subject={subject}
+        subtitle={item.subtitle}
+        tags={tagList}
         isCard
     />;
 };
 
 export const ListView = ({items}: {items: ShortcutResponse[]}) => {
 
-    // Cards (e.g. the subjects on the homepage)
-    // Questions
+    // Cards (e.g. the subjects on the homepage) X
+    // Questions X
     // Question Packs
     // Quick Quizzes
     // Concepts
     // Tests
+    
 
     return <ListGroup className="link-list list-group-links">
-        {items.map((item, index) => { 
+        {items.map((item, index) => {
+            console.log("tig tags", item.tags);
             switch (item.type) {
                 case (SEARCH_RESULT_TYPE.SHORTCUT):
                     return <QuestionListViewItem key={index} {...item}/>;

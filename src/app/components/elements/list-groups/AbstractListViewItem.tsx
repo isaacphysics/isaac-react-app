@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
-import { ShortcutResponse, ViewingContext} from "../../../../IsaacAppTypes";
+import { ShortcutResponse, Subject, ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Button, Col, ListGroup, ListGroupItem, Row } from "reactstrap";
 import { AffixButton } from "../AffixButton";
@@ -63,13 +63,19 @@ const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewUrl: s
     </span>;
 };
 
+export interface ListViewTagProps {
+    tag: string;
+    url?: string;
+}
+
 export interface AbstractListViewItemProps {
     icon: TitleIconProps;
     title: string;
+    subject?: Subject;
     subtitle?: string;
     breadcrumb?: string[];
     status?: CompletionState;
-    tags?: {tag: string, url?: string}[];
+    tags?: ListViewTagProps[];
     testTag?: string;
     url?: string;
     audienceViews?: ViewingContext[];
@@ -78,12 +84,12 @@ export interface AbstractListViewItemProps {
     isCard?: boolean;
 }
 
-export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status, tags, testTag, url, audienceViews, previewUrl, testUrl, isCard}: AbstractListViewItemProps) => { 
+export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, testTag, url, audienceViews, previewUrl, testUrl, isCard}: AbstractListViewItemProps) => { 
     const isQuiz: boolean = (previewUrl && testUrl) ? true : false;
     const colWidths = isCard ? [12,12,12,12] : isQuiz ? [12,6,6,6] : [12,8,9,8];
-    const cardBody = 
+    const cardBody =
     <Row className="w-100">
-        <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} className="d-flex">
+        <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} className={classNames("d-flex", {"mt-3": isCard})}>
             <div>
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
@@ -106,7 +112,7 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
                 {status && <div className="d-flex d-xl-none">
                     <StatusDisplay status={status}/>
                 </div>}
-                {tags && <div className="d-flex">
+                {tags && <div className="d-flex py-3">
                     <Tags tags={tags}/>
                 </div>}
                 {previewUrl && testUrl && <div className="d-flex d-md-none align-items-center">
@@ -125,7 +131,7 @@ export const AbstractListViewItem = ({icon, title, subtitle, breadcrumb, status,
         </Col>}
     </Row>;
 
-    return <ListGroupItem className="content-summary-item">
+    return <ListGroupItem className="content-summary-item" data-bs-theme={subject}>
         {url ? 
             <Link to={{pathname: url}}> {cardBody} </Link> : 
             <div> {cardBody} </div>}
@@ -151,7 +157,7 @@ export const AbstractListView = ({items}: {items: ShortcutResponse[]}) => {
 };
 
 export const AbstractListViewWithProps = ({items}: {items: AbstractListViewItemProps[]}) => {
-    return <ListGroup className="link-list list-group-links">
+    return <ListGroup data-bs-theme="physics" className="link-list list-group-links">
         {items.map(item => <AbstractListViewItem key={item.title} {...item}/>)}
     </ListGroup>;
 }; 
