@@ -76,10 +76,8 @@ const DashboardStreakPanel = () => {
 
     return <div className='w-100 dashboard-panel'>
         <h4>Build your weekly streak</h4>
-        <div className="text-center mt-3">
-            <div className={"streak-panel-gauge text-center-width"}>
-                <DashboardStreakGauge streakRecord={myProgress?.userSnapshot}/>
-            </div>
+        <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
+            <DashboardStreakGauge streakRecord={myProgress?.userSnapshot}/>
         </div>
         <br/><br/>
         {remainingToAnswer === 0 ? <h5>You&apos;ve maintained your streak for this week!</h5> : <h5>Only {remainingToAnswer} more question parts to answer correctly this week!</h5>}
