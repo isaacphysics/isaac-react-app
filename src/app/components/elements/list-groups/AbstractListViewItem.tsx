@@ -86,10 +86,11 @@ export interface AbstractListViewItemProps {
 
 export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, testTag, url, audienceViews, previewUrl, testUrl, isCard}: AbstractListViewItemProps) => { 
     const isQuiz: boolean = (previewUrl && testUrl) ? true : false;
-    const colWidths = isCard ? [12,12,12,12] : isQuiz ? [12,6,6,6] : [12,8,9,8];
+    const fullWidth: boolean = (status || audienceViews || previewUrl || testUrl) ? false : true;
+    const colWidths = fullWidth ? [12,12,12,12,12] : isQuiz ? [12,6,6,6,6] : [12,8,7,6,7];
     const cardBody =
-    <Row className="w-100">
-        <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} className={classNames("d-flex", {"mt-3": isCard})}>
+    <Row className="w-100 flex-row">
+        <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} xxl={colWidths[4]} className={classNames("d-flex", {"mt-3": isCard})}>
             <div>
                 {icon && (
                     icon.type === "img" ? <img src={icon.icon} alt="" className="me-3"/> 
@@ -107,7 +108,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                     <Breadcrumb breadcrumb={breadcrumb}/>
                 </div>}
                 {audienceViews && <div className="d-flex d-md-none"> 
-                    <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={true}/> 
+                    <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack/> 
                 </div>}
                 {status && <div className="d-flex d-xl-none">
                     <StatusDisplay status={status}/>
@@ -120,11 +121,11 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 </div>}
             </div>
         </Col>
-        {!isQuiz && (audienceViews || status) && <Col xl={2} className={classNames("d-none d-xl-flex", {" list-view-border": (status && status !== CompletionState.NOT_ATTEMPTED)})}>
+        {!isQuiz && (audienceViews || status) && <Col xl={2} className={classNames("d-none d-xl-flex", {"list-view-border": (status && status !== CompletionState.NOT_ATTEMPTED)})}>
             <StatusDisplay status={status ?? CompletionState.NOT_ATTEMPTED}/>
         </Col>}
-        {audienceViews && <Col md={4} lg={3} xl={2} className={classNames("d-none d-md-flex", {" list-view-border": audienceViews.length > 0})}>
-            <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack={true}/> 
+        {audienceViews && <Col md={4} lg={5} xl={4} xxl={3} className="d-none d-md-flex justify-content-end">
+            <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack spacerWidth={5} className={classNames({"list-view-border": audienceViews.length > 0})}/> 
         </Col>}
         {previewUrl && testUrl && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
             <QuizLinks previewUrl={previewUrl} testUrl={testUrl}/> 

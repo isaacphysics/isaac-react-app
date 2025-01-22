@@ -8,6 +8,10 @@
 
 .list-view-border {
   border-left: 1px solid $color-neutral-200;
+  padding-left: 1rem;
+  &.flex-column {
+    min-width: 220px;
+  }
 }
 
 .status-tag {

@@ -4,12 +4,12 @@ import {AppState, fetchConcepts, selectors, useAppDispatch, useAppSelector} from
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { ListView } from "../elements/list-groups/ListView";
 
 // This component is Isaac Physics only (currently)
 export const Concepts = withRouter((props: RouteComponentProps) => {
@@ -104,10 +104,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                         <CardBody>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {shortcutAndFilteredSearchResults ?
-                                    <LinkToContentSummaryList 
-                                        items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
-                                        contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                    />
+                                    <ListView items={shortcutAndFilteredSearchResults} />
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </CardBody>
