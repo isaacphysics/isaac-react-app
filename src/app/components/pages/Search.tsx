@@ -13,7 +13,6 @@ import {
     Row
 } from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {
     DOCUMENT_TYPE,
     documentDescription,
@@ -33,6 +32,7 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {SearchPageSearch} from "../elements/SearchInputs";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import { ListView } from "../elements/list-groups/ListView";
 
 interface Item<T> {
     value: T;
@@ -164,10 +164,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                         {urlQuery != "" && <CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {gotResults ?
-                                    <LinkToContentSummaryList 
-                                        items={shortcutAndFilteredSearchResults} showBreadcrumb={true}
-                                        contentTypeVisibility={ContentTypeVisibility.SHOWN}   
-                                    />
+                                    <ListView items={shortcutAndFilteredSearchResults}/>
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </CardBody>}
