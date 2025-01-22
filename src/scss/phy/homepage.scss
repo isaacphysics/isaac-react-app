@@ -60,7 +60,7 @@ $dashboard-panel-padding: 30px;
   height: 100%;
   padding: $dashboard-panel-padding;
 
-  > h4 {
+  h4 {
     color: $color-brand-700;
     font-size: 18px;
     font-family: $secondary-font-bold;
@@ -103,28 +103,32 @@ $dashboard-panel-padding: 30px;
   }
 }
 
+a:has(.assignment-card) {
+  text-decoration: none;
+}
+
 .assignment-card {
-  border: 1.5px;
+  border: 1.5px solid $color-neutral-300;
+  text-decoration: none;
   border-radius: 8px;
   background-color: white;
   color: $color-neutral-700;
   font-size: 13px;
-  height: 77px;
   padding: 10px;
+  transition: all 0.2s ease-out;
 
   h5 {
     font-size: 17px;
     font-family: $secondary-font-semi-bold;
   }
 
-  .due-date {
-    text-align: right;
-    margin-right: 10px;
-    margin-top: 28px;
-  }
-
   .overdue {
     color: $color-misc-red;
     font-weight: 600;
+  }
+
+  &:hover {
+    scale: 1.02;
+    border-color: $color-neutral-400;
   }
 }
