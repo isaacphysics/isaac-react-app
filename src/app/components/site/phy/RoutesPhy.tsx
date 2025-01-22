@@ -7,7 +7,7 @@ import {PreUniMaths} from "../../pages/books/pre_uni_maths";
 import {PreUniMaths2e} from "../../pages/books/pre_uni_maths_2e";
 import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
-import {Redirect} from "react-router";
+import {Redirect, RouteComponentProps} from "react-router";
 import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS, PHY_NAV_SUBJECTS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
@@ -43,10 +43,21 @@ import { RegistrationSetPreferences } from "../../pages/RegistrationSetPreferenc
 import { RegistrationGroupInvite } from "../../pages/RegistrationGroupInvite";
 import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
 import { SubjectLandingPage } from "../../pages/SubjectLandingPage";
+import { QuestionFinder } from "../../pages/QuestionFinder";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
 const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
+
+const subjectSpecificPages : Record<string, React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> | undefined> = {
+    // at all valid paths matching `/:subject/:stage${string}`, render the given component
+    "": SubjectLandingPage,
+    "/questions": QuestionFinder,
+    "/concepts": Concepts,
+    "/lessons": undefined,
+    "/practice_tests": PracticeQuizzes,
+    "/question_packs": undefined,
+};
 
 let key = 0;
 export const RoutesPhy = [
@@ -114,13 +125,15 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/books/step_up_phys" component={StepUpPhys}/>,
     <TrackedRoute key={key++} exact path="/books/linking_concepts" component={LinkingConcepts}/>,
 
-    // Subject landing pages
-    <TrackedRoute key={key++} exact path={Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
-        stages.forEach((stage) => {
-            acc.push(`/${subject}/${stage}`);
-        });
-        return acc;
-    }, [] as string[])} component={SubjectLandingPage} />,
+    // Subject-specific pages -- see subjectSpecificPages, defined above
+    ...(Object.entries(subjectSpecificPages).map(([path, component]) => (
+        <TrackedRoute key={key++} exact path={Object.entries(PHY_NAV_SUBJECTS).reduce((acc, [subject, stages]) => {
+            stages.forEach((stage) => {
+                acc.push(`/${subject}/${stage}${path}`);
+            });
+            return acc;
+        }, [] as string[])} component={component} />
+    ))),
 
     // Concepts List
     <TrackedRoute key={key++} exact path="/concepts" component={Concepts} />,
