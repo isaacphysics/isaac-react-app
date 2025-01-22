@@ -63,6 +63,7 @@
   }
 }
 
+
 .hierarchy-tags {
   font-size: 0.8125rem;
   color: $gray-160;
@@ -70,14 +71,11 @@
 
   .hierarchy-tag:not(:first-child) {
     padding-left: 12px;
+    
     &::before {
-      background-image: url(/assets/common/icons/chevron_right.svg);
-      background-repeat: no-repeat;
-      background-size: contain;
-      content: ' ';
+      content: '|';
       height: 10px;
-      margin-left: -9px;
-      margin-top: 6px;
+      margin-left: -7px;
       width: 10px;
       position: absolute;
     }
