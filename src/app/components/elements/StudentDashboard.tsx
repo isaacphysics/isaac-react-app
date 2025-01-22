@@ -59,7 +59,7 @@ const GroupJoinPanel = () => {
 
 const DashboardStreakPanel = () => {
     const dispatch = useAppDispatch();
-    const myProgress = useAppSelector(selectors.user.progress);;
+    const myProgress = useAppSelector(selectors.user.progress);
 
     useEffect(() => {
         dispatch(getMyProgress());
@@ -81,11 +81,10 @@ const DashboardStreakPanel = () => {
         <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
             <DashboardStreakGauge streakRecord={myProgress?.userSnapshot}/>
         </div>
-        <br/><br/>
-        {remainingToAnswer === 0 ? <h5>You&apos;ve maintained your streak for this week!</h5> : <h5>Only {remainingToAnswer} more question parts to answer correctly this week!</h5>}
-        <br/>
-        <button onClick={() => dispatch(streaksInfoModal())}>
-            What is this? <img src="/assets/common/icons/chevron_down.svg" alt="open help modal"/> { /* TODO replace this icon since this isn't a dropdown */ }
+        {remainingToAnswer === 0 ? <div className="streak-text">You&apos;ve maintained your streak for this week!</div> : <div className="streak-text">Only {remainingToAnswer} more question parts to answer correctly this week!</div>}
+        <Spacer/>
+        <button onClick={() => dispatch(streaksInfoModal())} className="mt-2 p-0 panel-link">
+            What is this?<img src="/assets/common/icons/chevron_down.svg" className="ms-1" alt=""/> { /* TODO replace this icon since this isn't a dropdown */ }
         </button>
     </div>;
 };
@@ -169,7 +168,7 @@ export const StudentDashboard = () => {
                         <Col className="mt-4">
                             <GroupJoinPanel />
                         </Col>
-                        <Col className="mt-4">
+                        <Col className="mt-4 panel-streak">
                             <DashboardStreakPanel />
                         </Col>
                         <Col className="mt-4">
@@ -186,7 +185,7 @@ export const StudentDashboard = () => {
                         <Col className="mt-4 col-xl-3">
                             <GroupJoinPanel />
                         </Col>
-                        <Col className="mt-4 col-xl-2">
+                        <Col className="mt-4 col-xl-2 panel-streak">
                             <DashboardStreakPanel />
                         </Col>
                         <Col className="mt-4 col-sm-7 col-xl-4">
