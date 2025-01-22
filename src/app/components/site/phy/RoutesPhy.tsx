@@ -83,7 +83,7 @@ export const RoutesPhy = [
     // Student test pages
     <TrackedRoute key={key++} exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />,
     <Redirect key={key++} from="/quizzes" to="/tests" />,
-    <TrackedRoute key={key++} exact path="/practice_tests" ifUser={isLoggedIn} component={PracticeQuizzes} />,
+    <TrackedRoute key={key++} exact path="/practice_tests" component={PracticeQuizzes} />,
 
     // Quiz (test) pages
     <TrackedRoute key={key++} exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />,
