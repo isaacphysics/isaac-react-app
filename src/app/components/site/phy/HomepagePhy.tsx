@@ -88,22 +88,24 @@ export const HomepagePhy = () => {
             <section id="navigation-cards">
                 <Container>
                     Explore and learn!
-                    <Row className="w-100 link-list list-group-links" style={{background:"white"}}>
-                        <Col xs={6} style={{"borderRight": "1px solid #ececec"}}>
-                            <ListViewCard/>
-                        </Col>
-                        <Col xs={6}>
-                            <ListViewCard/>
-                        </Col>
-                    </Row>
-                    <Row className="w-100 link-list list-group-links" style={{background:"white"}}>
-                        <Col xs={6} style={{"borderRight": "1px solid #ececec"}}>
-                            <ListViewCard/>
-                        </Col>
-                        <Col xs={6}>
-                            <ListViewCard/>
-                        </Col>
-                    </Row>
+                    <div style={{borderRadius: "10px", border: "1px solid rgb(236, 236, 236)", background:"white"}}>
+                        <Row className="w-100 link-list list-group-links ml-0" style={{marginLeft: 0, border: "none"}}>
+                            <Col xs={6} style={{borderRight: "2px solid #ececec", borderBottom: "2px solid #ececec"}}>
+                                <ListViewCard/>
+                            </Col>
+                            <Col xs={6} style={{borderBottom: "2px solid #ececec"}}>
+                                <ListViewCard/>
+                            </Col>
+                        </Row>
+                        <Row className="w-100 link-list list-group-links" style={{marginLeft: 0, border: "none"}}>
+                            <Col xs={6} style={{borderRight: "2px solid #ececec"}}>
+                                <ListViewCard/>
+                            </Col>
+                            <Col xs={6}>
+                                <ListViewCard/>
+                            </Col>
+                        </Row>
+                    </div>
                 </Container>
             </section>
 

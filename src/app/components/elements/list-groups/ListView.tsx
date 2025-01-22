@@ -43,8 +43,8 @@ export const ListViewCard = () => {
         icon={{type: "img", icon: "/assets/phy/icons/redesign/subject-physics.svg"}}
         title={"Physics"} 
         subtitle={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris faucibus est vulputate augue  tristique, sed vehicula turpis pellentesque."} 
-        url={"physics-link"}
-        tags={[{tag: "11-14"}, {tag: "GCSE"}, {tag: "A-Level"}, {tag: "University"}]}
+        url={"physics"}
+        tags={[{tag: "11-14", url: "physics/11_14"}, {tag: "GCSE", url: "physics/gcse"}, {tag: "A-Level", url: "physics/a_level"}, {tag: "University", url: "physics/university"}]}
         isCard
     />;
 };

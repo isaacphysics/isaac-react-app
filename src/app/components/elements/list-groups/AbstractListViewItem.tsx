@@ -36,10 +36,10 @@ const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: C
     }
 };
 
-const Tags = ({tags}: {tags: {tag: string, link?: string}[];}) => {
+const Tags = ({tags}: {tags: {tag: string, url?: string}[];}) => {
     return <>
-        {tags.map(t => t.link ?
-            <Link to={t.link} className="card-tag" key={t.tag}>{t.tag}</Link> :
+        {tags.map(t => t.url ?
+            <Link to={t.url} className="card-tag" key={t.tag}>{t.tag}</Link> :
             <div className="card-tag" key={t.tag}>{t.tag}</div>
         )}
     </>;
@@ -69,7 +69,7 @@ export interface AbstractListViewItemProps {
     subtitle?: string;
     breadcrumb?: string[];
     status?: CompletionState;
-    tags?: {tag: string, link?: string}[];
+    tags?: {tag: string, url?: string}[];
     testTag?: string;
     url?: string;
     audienceViews?: ViewingContext[];
