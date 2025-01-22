@@ -193,12 +193,14 @@ input[type=date]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-select.form-select, input.form-control, .separate-input-group > .form-control + .input-group-append {
-  height: calc(1.5em + 0.75rem + 2px);
-  &.input-group-append > button {
-    height: 100%;
-    padding: 0;
-    border: none;
+// Used to visually separate the button from the input in an input group (see groups page for example)
+.separate-input-group {
+  input {
+    border-radius: 0.25rem !important;
+  }
+  button {
+    margin-left: 1rem !important;
+    border-radius: 50px !important;
   }
 }
 

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { closeActiveModal, getMyProgress, openActiveModal, selectors, showErrorToast, store, useAppDispatch, useAppSelector, useGetMyAssignmentsQuery, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
-import { Button, Card, Col, Input, Row } from 'reactstrap';
+import { Button, Card, Col, Input, InputGroup, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { filterAssignmentsByStatus, isDefined, isLoggedIn, isTutorOrAbove, PATHS, useDeviceSize } from '../../services';
 import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
 import { AssignmentDTO } from '../../../IsaacApiTypes';
 import { useAssignmentsCount } from '../navigation/NavigationBar';
 import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
+import { Spacer } from './Spacer';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -37,19 +38,20 @@ const GroupJoinPanel = () => {
 
     return <div className='w-100 dashboard-panel'>
         <h4>Join a group</h4>
-        <>Enter the code given by your teacher to create a teacher connection and join a group.</>
-        <Input
-            type="text" placeholder="Enter code" className="mt-4"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
-            onKeyDown={(e) => {if (e.key === 'Enter') {
-                e.preventDefault();
-            }}}
-        /><br/>
-        <Button className="mb-5" onClick={processToken} outline color="secondary">
-            Connect
-        </Button>
-        <br/><br/>
-        <Link to="/account#teacherconnections">
+        Enter the code given by your teacher to create a teacher connection and join a group.
+        <InputGroup className="my-4 separate-input-group">
+            <Input
+                type="text" placeholder="Enter code"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
+                onKeyDown={(e) => {if (e.key === 'Enter') {
+                    e.preventDefault();
+                }}}
+            />
+            <Button onClick={processToken} outline color="secondary">
+                Connect
+            </Button>
+        </InputGroup>
+        <Spacer/>
             See my existing groups
         </Link>
     </div>;
