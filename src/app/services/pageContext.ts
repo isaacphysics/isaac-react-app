@@ -105,7 +105,7 @@ export function getHumanContext(pageContext?: {subject?: Subject, stage?: Stage}
     return `${pageContext?.stage ? (HUMAN_STAGES[pageContext.stage] + " ") : ""}${pageContext?.subject ? HUMAN_SUBJECTS[pageContext.subject] : ""}`;
 }
 
-export function determinePageContextFromUrl(url: string): {subject?: Subject, stage?: Stage} {
+function determinePageContextFromUrl(url: string): {subject?: Subject, stage?: Stage} {
     const [subject, stage] = url.split("/").filter(Boolean);
     return {subject: subject as Subject, stage: stage as Stage};
 }

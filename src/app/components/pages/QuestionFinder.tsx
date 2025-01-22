@@ -1,5 +1,5 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
-import {AppState, clearQuestionSearch, searchQuestions, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {AppState, clearQuestionSearch, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
 import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
@@ -21,6 +21,7 @@ import {
     tags,
     toSimpleCSV,
     useQueryParams,
+    useUrlPageTheme,
 } from "../../services";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -105,7 +106,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
-    const pageContext = useAppSelector(selectors.pageContext.context);
+    const pageContext = useUrlPageTheme();
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
@@ -391,12 +392,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <IsaacSpinner />
     </div>;
 
-    return <Container id="finder-page" className={classNames("mb-5")}>
+    return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question Finder", "Questions")} 
             help={pageHelp}
             icon={{type: "hex", icon: "page-icon-finder"}}
-            // TODO: add a subject field to icon if this is a context-specific QF
         />
         <SidebarLayout>
             <QuestionFinderSidebar />

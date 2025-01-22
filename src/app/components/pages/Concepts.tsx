@@ -10,6 +10,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { useUrlPageTheme } from "../../services/pageContext";
 
 // This component is Isaac Physics only (currently)
 export const Concepts = withRouter((props: RouteComponentProps) => {
@@ -17,6 +18,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const concepts = useAppSelector((state: AppState) => state?.concepts?.results || null);
+    const pageContext = useUrlPageTheme();
 
     const subject = useAppSelector(selectors.pageContext.subject);
 
@@ -83,7 +85,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
 
     return (
-        <Container id="search-page">
+        <Container id="search-page" { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
             <TitleAndBreadcrumb 
                 currentPageTitle="Concepts" 
                 icon={{type: "hex", icon: "page-icon-concept"}}
