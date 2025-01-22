@@ -305,7 +305,7 @@ const ContentNavProfile = ({toggleMenu}: {toggleMenu: () => void}) => {
     const taskCount = assignmentsCount + quizzesCount;
 
     const title = <div className="d-flex align-items-center">
-        <i className="icon icon-my-isaac icon-color-brand me-2"/>
+        <i className="icon icon-my-isaac me-2"/>
         My Isaac
         {taskCount > 0 && <span className="badge bg-primary rounded-5 ms-2 h-max-content">
             {taskCount > 99 ? "99+" : taskCount}

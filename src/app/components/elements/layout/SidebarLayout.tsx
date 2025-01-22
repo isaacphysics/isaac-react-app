@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ReactNode, RefObject, useEffect, useRef, useState } from "react";
-import { Col, ColProps, Container, ContainerProps, Input, Label, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
+import { Col, ColProps, RowProps, Input, Label, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
@@ -9,20 +9,11 @@ import { selectors, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
 import { Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
+import { getHumanContext } from "../../../services/context";
 
-interface SidebarLayoutProps extends ContainerProps {
-
-}
-
-export const SidebarContainer = (props: SidebarLayoutProps) => {
-    if (isAda) return <Container {...props} />;
-
-    const { children, className, ...rest } = props;
-    return <Container fluid {...rest} className={classNames("sidebar-layout", className)}>
-        <Row>
-            {children}
-        </Row>
-    </Container>;
+export const SidebarLayout = (props: RowProps) => {
+    const { className, ...rest } = props;
+    return siteSpecific(<Row {...rest} className={classNames("sidebar-layout", className)}/>, props.children);
 };
 
 export const MainContent = (props: ColProps) => {
@@ -252,6 +243,8 @@ interface ConceptListSidebarProps extends SidebarProps {
 export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps) => {
     const { searchText, setSearchText, conceptFilters, setConceptFilters, applicableTags, tagCounts, ...rest } = props;
 
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <h5>Search concepts</h5>
@@ -274,7 +267,7 @@ export const SubjectSpecificConceptListSidebar = (props: ConceptListSidebarProps
         <div className="section-divider"/>
 
         <div className="sidebar-help">
-            <p>The concepts shown on this page have been filtered to only show those that are relevant to GCSE Physics.</p>
+            <p>The concepts shown on this page have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
             <p>If you want to explore broader concepts across multiple subjects or learning stages, you can use the main concept browser:</p>
             <AffixButton size="md" color="keyline" tag={Link} to="/concepts" affix={{
                 affix: "icon-right",

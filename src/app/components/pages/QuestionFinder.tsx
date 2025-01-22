@@ -1,5 +1,5 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
-import {AppState, clearQuestionSearch, searchQuestions, useAppDispatch, useAppSelector} from "../../state";
+import {AppState, clearQuestionSearch, searchQuestions, selectors, useAppDispatch, useAppSelector} from "../../state";
 import debounce from "lodash/debounce";
 import {
     arrayFromPossibleCsv,
@@ -34,10 +34,10 @@ import classNames from "classnames";
 import queryString from "query-string";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
-import {Button, Card, CardBody, CardHeader, Col, Input, InputGroup, Label, Row} from "reactstrap";
+import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
 import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
-import { MainContent, QuestionFinderSidebar, SidebarContainer } from "../elements/layout/SidebarLayout";
+import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
@@ -105,6 +105,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
+    const pageContext = useAppSelector(selectors.pageContext.context);
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
@@ -390,99 +391,105 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <IsaacSpinner />
     </div>;
 
-    return <SidebarContainer id="finder-page" className={classNames("mb-5")}>
-        {/* TODO: add [data-bs-theme] to this container */}
-        <QuestionFinderSidebar />
-        <MainContent>
-            <TitleAndBreadcrumb currentPageTitle={siteSpecific("Question Finder", "Questions")} help={pageHelp}/>
-            <MetaDescription description={metaDescription}/>
-            <CanonicalHrefElement/>
-            <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
+    return <Container id="finder-page" className={classNames("mb-5")}>
+        <TitleAndBreadcrumb 
+            currentPageTitle={siteSpecific("Question Finder", "Questions")} 
+            help={pageHelp}
+            icon={{type: "hex", icon: "page-icon-finder"}}
+            // TODO: add a subject field to icon if this is a context-specific QF
+        />
+        <SidebarLayout>
+            <QuestionFinderSidebar />
+            <MainContent>
+                <MetaDescription description={metaDescription}/>
+                <CanonicalHrefElement/>
+                <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
 
-            <Row>
-                <Col lg={6} md={12} xs={12} className="finder-search">
-                    <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
-                    <InputGroup>
-                        <Input id="question-search-title"
-                            type="text"
-                            maxLength={SEARCH_CHAR_LENGTH_LIMIT}
-                            defaultValue={searchQuery}
-                            placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
-                            onChange={(e) => handleSearch(e.target.value)}
-                        />
-                        <Button className="question-search-button" onClick={searchAndUpdateURL}/>
-                    </InputGroup>
-                </Col>
-            </Row>
+                <Row>
+                    <Col lg={6} md={12} xs={12} className="finder-search">
+                        <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
+                        <InputGroup>
+                            <Input id="question-search-title"
+                                type="text"
+                                maxLength={SEARCH_CHAR_LENGTH_LIMIT}
+                                defaultValue={searchQuery}
+                                placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
+                                onChange={(e) => handleSearch(e.target.value)}
+                            />
+                            <Button className="question-search-button" onClick={searchAndUpdateURL}/>
+                        </InputGroup>
+                    </Col>
+                </Row>
 
-            <Row className="mt-4 position-relative finder-panel">
-                <Col lg={siteSpecific(4, 3)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-filters">
-                    <QuestionFinderFilterPanel {...{
-                        searchDifficulties, setSearchDifficulties,
-                        searchTopics, setSearchTopics,
-                        searchStages, setSearchStages,
-                        searchExamBoards, setSearchExamBoards,
-                        searchStatuses, setSearchStatuses,
-                        searchBooks, setSearchBooks,
-                        excludeBooks, setExcludeBooks,
-                        tiers, choices, selections, setTierSelection,
-                        applyFilters, clearFilters,
-                        validFiltersSelected, searchDisabled, setSearchDisabled
-                    }} />
-                </Col>
-                <Col lg={siteSpecific(8, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
-                    <Card>
-                        <CardHeader className="finder-header pl-3">
-                            <Col className={"px-0"}>
-                                {displayQuestions && displayQuestions.length > 0
-                                    ? <>Showing <b>{displayQuestions.length}</b></>
-                                    : <>No results</>}
-                                {(totalQuestions ?? 0) > 0
-                                && !filteringByStatus
-                                && <>{" "}of <b>{totalQuestions}</b></>}
-                                .
-                            </Col>
-                        </CardHeader>
-                        <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
-                            <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
-                                {displayQuestions?.length
-                                    ? <LinkToContentSummaryList 
-                                        items={displayQuestions} className="m-0" 
-                                        contentTypeVisibility={ContentTypeVisibility.ICON_ONLY} 
-                                        ignoreIntendedAudience noCaret 
-                                    />
-                                    : noResultsMessage }
-                            </ShowLoading>
-                        </CardBody>
-                    </Card>
-                    {(displayQuestions?.length ?? 0) > 0 &&
-                        <Row className="pt-3">
-                            <Col className="d-flex justify-content-center mb-3">
-                                <Button
-                                    onClick={() => {
-                                        searchDebounce(
-                                            searchQuery, searchTopics,
-                                            searchExamBoards,
-                                            searchBooks, searchStages,
-                                            searchDifficulties,
-                                            selections, tiers,
-                                            excludeBooks,
-                                            searchStatuses,
-                                            nextSearchOffset
-                                                ? nextSearchOffset - 1
-                                                : 0);
-                                        setPageCount(c => c + 1);
-                                        setDisableLoadMore(true);
-                                    }}
-                                    disabled={disableLoadMore}
-                                    outline={isAda}
-                                >
-                                    Load more
-                                </Button>
-                            </Col>
-                        </Row>}
-                </Col>
-            </Row>
-        </MainContent>
-    </SidebarContainer>;
+                <Row className="mt-4 position-relative finder-panel">
+                    <Col lg={siteSpecific(4, 3)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-filters">
+                        <QuestionFinderFilterPanel {...{
+                            searchDifficulties, setSearchDifficulties,
+                            searchTopics, setSearchTopics,
+                            searchStages, setSearchStages,
+                            searchExamBoards, setSearchExamBoards,
+                            searchStatuses, setSearchStatuses,
+                            searchBooks, setSearchBooks,
+                            excludeBooks, setExcludeBooks,
+                            tiers, choices, selections, setTierSelection,
+                            applyFilters, clearFilters,
+                            validFiltersSelected, searchDisabled, setSearchDisabled
+                        }} />
+                    </Col>
+                    <Col lg={siteSpecific(8, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
+                        <Card>
+                            <CardHeader className="finder-header pl-3">
+                                <Col className={"px-0"}>
+                                    {displayQuestions && displayQuestions.length > 0
+                                        ? <>Showing <b>{displayQuestions.length}</b></>
+                                        : <>No results</>}
+                                    {(totalQuestions ?? 0) > 0
+                                    && !filteringByStatus
+                                    && <>{" "}of <b>{totalQuestions}</b></>}
+                                    .
+                                </Col>
+                            </CardHeader>
+                            <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
+                                <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
+                                    {displayQuestions?.length
+                                        ? <LinkToContentSummaryList 
+                                            items={displayQuestions} className="m-0" 
+                                            contentTypeVisibility={ContentTypeVisibility.ICON_ONLY} 
+                                            ignoreIntendedAudience noCaret 
+                                        />
+                                        : noResultsMessage }
+                                </ShowLoading>
+                            </CardBody>
+                        </Card>
+                        {(displayQuestions?.length ?? 0) > 0 &&
+                            <Row className="pt-3">
+                                <Col className="d-flex justify-content-center mb-3">
+                                    <Button
+                                        onClick={() => {
+                                            searchDebounce(
+                                                searchQuery, searchTopics,
+                                                searchExamBoards,
+                                                searchBooks, searchStages,
+                                                searchDifficulties,
+                                                selections, tiers,
+                                                excludeBooks,
+                                                searchStatuses,
+                                                nextSearchOffset
+                                                    ? nextSearchOffset - 1
+                                                    : 0);
+                                            setPageCount(c => c + 1);
+                                            setDisableLoadMore(true);
+                                        }}
+                                        disabled={disableLoadMore}
+                                        outline={isAda}
+                                    >
+                                        Load more
+                                    </Button>
+                                </Col>
+                            </Row>}
+                    </Col>
+                </Row>
+            </MainContent>
+        </SidebarLayout>
+    </Container>;
 });

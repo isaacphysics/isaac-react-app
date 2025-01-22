@@ -1,7 +1,7 @@
 import React, {FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {AppState, fetchConcepts, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {Badge, Card, CardBody, CardHeader, Col, Row} from "reactstrap";
+import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
@@ -9,7 +9,7 @@ import {matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, 
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import { SubjectSpecificConceptListSidebar, MainContent, SidebarContainer } from "../elements/layout/SidebarLayout";
+import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 // This component is Isaac Physics only (currently)
 export const Concepts = withRouter((props: RouteComponentProps) => {
@@ -83,36 +83,37 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
 
     return (
-        <SidebarContainer id="search-page">
-            <SubjectSpecificConceptListSidebar 
-                searchText={searchText} setSearchText={setSearchText} 
-                conceptFilters={conceptFilters} setConceptFilters={setConceptFilters}
-                applicableTags={applicableTags} tagCounts={tagCounts}
+        <Container id="search-page">
+            <TitleAndBreadcrumb 
+                currentPageTitle="Concepts" 
+                icon={{type: "hex", icon: "page-icon-concept"}}
             />
-            <MainContent>
-                <TitleAndBreadcrumb currentPageTitle="Concepts" />
-                <Row className="mb-4">
-                    <Col className="py-4">
-                        <Card>
-                            <CardHeader className="search-header">
-                                <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
-                                </h3>
-                            </CardHeader>
-                            <CardBody>
-                                <ShowLoading until={shortcutAndFilteredSearchResults}>
-                                    {shortcutAndFilteredSearchResults ?
-                                        <LinkToContentSummaryList 
-                                            items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
-                                            contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                        />
-                                        : <em>No results found</em>}
-                                </ShowLoading>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-            </MainContent>
-        </SidebarContainer>
+            <SidebarLayout>
+                <SubjectSpecificConceptListSidebar 
+                    searchText={searchText} setSearchText={setSearchText} 
+                    conceptFilters={conceptFilters} setConceptFilters={setConceptFilters}
+                    applicableTags={applicableTags} tagCounts={tagCounts}
+                />
+                <MainContent>
+                    <Card>
+                        <CardHeader className="search-header">
+                            <h3>
+                                <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <Badge color="primary">{shortcutAndFilteredSearchResults.length}</Badge> : <IsaacSpinner /> : null}
+                            </h3>
+                        </CardHeader>
+                        <CardBody>
+                            <ShowLoading until={shortcutAndFilteredSearchResults}>
+                                {shortcutAndFilteredSearchResults ?
+                                    <LinkToContentSummaryList 
+                                        items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
+                                        contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
+                                    />
+                                    : <em>No results found</em>}
+                            </ShowLoading>
+                        </CardBody>
+                    </Card>
+                </MainContent>
+            </SidebarLayout>
+        </Container>
     );
 });

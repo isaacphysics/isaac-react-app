@@ -25,7 +25,7 @@ export const HeaderPhy = () => {
     const toggleMenu = () => setMenuOpen(m => !m);
 
     return <header className="bg-white" data-testid={"header"}>
-        <Container fluid>
+        <Container>
             <Row className="align-items-center">
                 <Col className="d-flex justify-content-between py-3">
                     <div className="header-logo align-content-center">
@@ -82,7 +82,7 @@ export const HeaderPhy = () => {
                 </Col>
             </Row>
         </Container>
-        {above["md"](deviceSize) && <Container fluid id="content-nav-container">
+        {above["md"](deviceSize) && <Container id="content-nav-container">
             <Row>
                 <Col>
                     <Nav tag="nav" className="d-flex align-items-end" id="content-nav">
