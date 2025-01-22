@@ -179,6 +179,14 @@
   );
 }
 
+.page-icon-lessons {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-lessons-fg.svg', 
+    '/assets/phy/icons/redesign/page-lessons-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
 .page-icon-events {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-event-fg.svg',

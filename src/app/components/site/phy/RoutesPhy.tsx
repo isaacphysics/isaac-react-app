@@ -44,6 +44,9 @@ import { RegistrationGroupInvite } from "../../pages/RegistrationGroupInvite";
 import { PracticeQuizzes } from "../../pages/quizzes/PracticeQuizzes";
 import { SubjectLandingPage } from "../../pages/SubjectLandingPage";
 import { QuestionFinder } from "../../pages/QuestionFinder";
+import { QuestionPacks } from "../../pages/QuestionPacks";
+import { QuickQuizzes } from "../../pages/QuickQuizzes";
+import { LessonsAndRevision } from "../../pages/LessonsAndRevision";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
@@ -54,9 +57,10 @@ const subjectSpecificPages : Record<string, React.ComponentType<RouteComponentPr
     "": SubjectLandingPage,
     "/questions": QuestionFinder,
     "/concepts": Concepts,
-    "/lessons": undefined,
+    "/lessons_and_revision": LessonsAndRevision,
     "/practice_tests": PracticeQuizzes,
-    "/question_packs": undefined,
+    "/quick_quizzes": QuickQuizzes,
+    "/question_packs": QuestionPacks,
 };
 
 let key = 0;
