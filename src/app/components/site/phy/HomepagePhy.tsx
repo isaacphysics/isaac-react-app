@@ -5,6 +5,7 @@ import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {above, SITE_TITLE, useDeviceSize, useUserConsent} from "../../../services";
 import {HomepageYoutubeCookieHandler} from "../../handlers/InterstitialCookieHandler";
+import { StudentDashboard } from "../../elements/StudentDashboard";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
@@ -15,6 +16,7 @@ export const HomepagePhy = () => {
 
     return <>
         {/*<WarningBanner/>*/}
+        <StudentDashboard />
         <div id="homepage" className="pb-5 px-2 px-sm-5 mx-md-5 px-lg-0">
             <section id="call-to-action" className="homepageHero">
                 <Container className="pt-4">
