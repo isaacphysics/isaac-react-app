@@ -71,22 +71,30 @@ $dashboard-panel-padding: 30px;
     color: $color-brand-700;
     font-weight: 600;
   }
-
-  > button {
-    font-size: 14px;
-    text-decoration: underline;
-    background: transparent;
-  }
-
-  > Button {
-    text-decoration: none;
-  }
-
+  
   .panel-link {
+    color: $color-neutral-800;
+    width: max-content;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: underline;
+    padding-bottom: 10px;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .panel-my-isaac-link {
     font-size: 14px;
     font-weight: 400;
     text-decoration: none;
     padding-bottom: 10px;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   .streak-panel-gauge {

@@ -52,6 +52,7 @@ const GroupJoinPanel = () => {
             </Button>
         </InputGroup>
         <Spacer/>
+        <Link to="/account#teacherconnections" className="panel-link">
             See my existing groups
         </Link>
     </div>;
@@ -112,15 +113,14 @@ const CurrentWorkPanel = () => {
     const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>
-        <>You have assignments that are active or due soon:</>
-        <br/><br/>
+        <span>You have assignments that are active or due soon:</span>
         <ShowLoadingQuery
             query={assignmentQuery}
             defaultErrorTitle={"Error fetching your assignments"}
             thenRender={(assignments) => {
                 const myAssignments = filterAssignmentsByStatus(assignments);
                 const toDo = [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld].slice(0, 2);
-                return <>{toDo.map((assignment: AssignmentDTO) => {return <><AssignmentCard key={assignment.id} {...assignment} /><br/></>;})}</>;
+                return toDo.map((assignment: AssignmentDTO) => <AssignmentCard key={assignment.id} {...assignment} />);
             }
             }/>
     </div>;
@@ -130,23 +130,23 @@ const MyIsaacPanel = () => {
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
     return <div className='w-100 dashboard-panel'>
         <h4>More in My Isaac</h4>
-        <div>
-            <Link to="/my_gameboards" className="panel-link">
+        <div className="d-flex flex-column">
+            <Link to="/my_gameboards" className="panel-my-isaac-link">
                 My question packs
-            </Link><br/>
-            <Link to="/assignments" className="panel-link">
+            </Link>
+            <Link to="/assignments" className="panel-my-isaac-link">
                 My assignments
                 {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
-            </Link><br/>
-            <Link to="/progress" className="panel-link">
+            </Link>
+            <Link to="/progress" className="panel-my-isaac-link">
                 My progress
-            </Link><br/>
-            <Link to="/tests" className="panel-link">
+            </Link>
+            <Link to="/tests" className="panel-my-isaac-link">
                 My tests
                 {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
             </Link>
             <div className="section-divider"/>
-            <Link to="/account" className="panel-link">
+            <Link to="/account" className="panel-my-isaac-link">
                 My account
             </Link>
         </div>
