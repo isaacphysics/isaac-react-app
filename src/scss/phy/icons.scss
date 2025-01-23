@@ -138,6 +138,14 @@
   @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
 }
 
+.icon-question-pack {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/question-pack-fg.svg',
+    '/assets/phy/icons/redesign/question-pack-bg.svg',
+    16px, 16px
+  );
+}
+
 .icon-lightbulb {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-concept-fg.svg', 
