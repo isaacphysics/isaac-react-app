@@ -21,23 +21,6 @@
     a > span:first-of-type {
       border-color: #ddd;
     }
-
-    a {
-      // Slightly higher contrast colours to achieve 4.5 contrast ratio with light green background
-      .maths > .text-secondary {
-        color: #017195 !important;
-      }
-      .physics > .text-secondary {
-        color: #8f49b8 !important;
-      }
-      .chemistry > .text-secondary {
-        color: #cb2921 !important;
-      }
-      // Biology green has a 7.88 contrast ratio against the light green background
-      .biology > .text-secondary {
-        color: #005210 !important;
-      }
-    }
   }
 
   .gameboard-item-icon {

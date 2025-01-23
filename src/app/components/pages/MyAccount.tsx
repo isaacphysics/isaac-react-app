@@ -329,7 +329,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
         <h3 className="d-md-none text-center text-muted m-3">
             <small>
                 {`Update your ${SITE_TITLE} account, or `}
-                <Link to="/logout" className="text-secondary">Log out</Link>
+                <Link to="/logout" className="text-theme">Log out</Link>
             </small>
         </h3>
 

@@ -97,7 +97,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
             <div className={classNames("flex-fill", {"d-flex py-3 pe-3 flex-column flex-md-row": isAda, "d-md-flex": isPhy})}>
                 {/* TODO CP shouldn't the subject colour here depend on the contents/tags of the gameboard? */}
                 <div className={"flex-grow-1 " + (itemSubject?.id ?? (isPhy ? "physics" : ""))}>
-                    <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-secondary": isPhy})}>
+                    <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-theme": isPhy})}>
                         {generateQuestionTitle(question)}
                     </Markup>
                     {isPhy && message && <span className={classNames("gameboard-item-message-phy", messageClasses)}>{message}</span>}

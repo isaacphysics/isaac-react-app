@@ -8,44 +8,9 @@ $alert-text-colours: (
   "neutral": $color-neutral-800,
 );
 
-@function color-level($color, $level: 0) {
-  $color-base: if($level > 0, $black, $white);
-  $level: abs($level);
-
-  @return mix($color-base, $color, $level * $theme-color-interval);
-}
-
-@mixin bg-variant($parent, $color) {
-  #{$parent} {
-    background-color: $color !important;
-  }
-  a#{$parent},
-  button#{$parent} {
-    &:hover, &:focus {
-      background-color: darken($color, 10%) !important;
-    }
-  }
-}
-
-@mixin text-emphasis-variant($parent, $color) {
-  #{$parent} {
-    color: $color !important;
-  }
-  a#{$parent}:hover,
-  a#{$parent}:focus {
-    color: darken($color, 10%) !important;
-  }
-}
-
 // TODO: move all these definitions to more relevant files, defining the colours to use in color-theme.scss
 @each $palette, $subject-colors in $isaac-color-palettes {
-  @include color-mode($palette) {
-    $subject-color-500: map.get($subject-colors, 500);
-
-    /* background classes */
-    @include bg-variant(".bg-secondary", $subject-color-500);
-    
-
+  @include color-mode($palette) {  
     /* correct answer */
     .validation-response-panel {
       .question-response {
@@ -59,7 +24,7 @@ $alert-text-colours: (
         font-weight: 700;
       }
       &.correct {
-        background: $subject-color-500;
+        background: var(--subject-color-500);
         color: white;
         a {
           color: white !important;
@@ -72,17 +37,26 @@ $alert-text-colours: (
     }
 
     /* text- classes */
-    @include text-emphasis-variant(".text-secondary", $subject-color-500);
-    // text-emphasis-color: $color;
+
+    .text-theme {
+      color: var(--subject-color-500);
+      text-emphasis-color: var(--subject-color-500);
+
+      &a {
+        &:hover, &:focus {
+          color: var(--subject-color-600);
+        }
+      }
+    }
 
     /* badge classes */
-    .text-bg-secondary {
+    .text-bg-theme {
       @extend .text-bg-#{$palette};
     }
 
     /* borders */
-    .border-secondary {
-      border-color: $subject-color-500 !important;
+    .border-theme {
+      border-color: var(--subject-color-500);
     }
 
     /* BS5 checkboxes and radio buttons */
@@ -93,18 +67,18 @@ $alert-text-colours: (
       outline: none;
       box-shadow: none;
       &:checked {
-        border-color: $subject-color-500;
-        background-color: $subject-color-500;
+        border-color: var(--subject-color-500);
+        background-color: var(--subject-color-500);
       }
       &:focus {
-        border-color: $subject-color-500;
+        border-color: var(--subject-color-500);
         &:checked {
-          box-shadow: 0 0 0 0.25rem rgba($subject-color-500, 0.25);
+          box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--subject-color-500) 25%, transparent);
         }
       }
       &:not(:disabled):active {
-        background-color: rgba($subject-color-500, 0.25);
-        border-color: rgba($subject-color-500, 0.25);
+        background-color: color-mix(in srgb, var(--subject-color-500) 25%, transparent);
+        border-color: color-mix(in srgb, var(--subject-color-500) 25%, transparent);
       }
     }
 
@@ -115,11 +89,11 @@ $alert-text-colours: (
       }
       .dropdown-item {
         &:active {
-          background-color: $subject-color-500;
+          background-color: var(--subject-color-500);
           color: white;
         }
         &:focus {
-          box-shadow: 0 0 0 0.25rem rgba($subject-color-500, .25);
+          box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--subject-color-500) 25%, transparent);
         }
       }
     }
@@ -131,22 +105,22 @@ $alert-text-colours: (
 
     li {
       .hint-tab-title {
-        color: $subject-color-500 !important;
+        color: var(--subject-color-500) !important;
       }
       &.active {
         .hint-tab-title {
           color: white !important;
-          background-color: $subject-color-500 !important;
+          background-color: var(--subject-color-500) !important;
         }
       }
     }
 
     .quick-question-options {
-      background: rgba($subject-color-500, 0.5);
+      background: color-mix(in srgb, var(--subject-color-500) 50%, transparent);
     }
 
     svg.search-item-icon, svg.gameboard-item-icon {
-      fill: $subject-color-500;
+      fill: var(--subject-color-500);
     }
   }
 }
