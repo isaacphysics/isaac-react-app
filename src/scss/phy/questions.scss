@@ -118,3 +118,42 @@
     border: solid 1px $black;
   }
 }
+
+.validation-response-panel {
+  .question-response {
+    font-family: desyrel, serif;
+    font-size: 36px;
+    font-weight: 600;
+  }
+  h1 {
+    font-family: desyrel, serif;
+    font-size: 48px;
+    font-weight: 700;
+  }
+  &.correct {
+    background: var(--subject-color-500);
+    color: white;
+    a {
+      color: white !important;
+    }
+  }
+  &.almost {
+    background: #ffb847;
+    color: #3c0000;
+  }
+}
+
+.numeric-question .unit-selection {
+  .display-unit {
+    opacity: 1 !important;
+  }
+  .dropdown-item {
+    &:active {
+      background-color: var(--subject-color-500);
+      color: white;
+    }
+    &:focus {
+      box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--subject-color-500) 25%, transparent);
+    }
+  }
+}
