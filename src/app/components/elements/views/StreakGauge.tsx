@@ -58,7 +58,7 @@ export const DashboardStreakGauge = (props: StreakGaugeProps) => {
             trailColor: GRAY_120,
             backgroundColor: "#FFFFFF"
         })}>
-        <div className="streak-panel-gauge">
+        <div className="streak-panel-gauge m-0 align-content-center">
             <b>{currentStreak}</b><br/>WEEK{currentStreak !== 1 && "S"}
         </div>
     </CircularProgressbarWithChildren>;

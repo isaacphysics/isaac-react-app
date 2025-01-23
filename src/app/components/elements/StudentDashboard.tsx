@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { closeActiveModal, getMyProgress, openActiveModal, selectors, showErrorToast, store, useAppDispatch, useAppSelector, useGetMyAssignmentsQuery, useLazyGetTokenOwnerQuery } from '../../state';
 import { DashboardStreakGauge } from './views/StreakGauge';
-import { Button, Card, Col, Input, Row } from 'reactstrap';
+import { Button, Card, Col, Input, InputGroup, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { filterAssignmentsByStatus, isDefined, isLoggedIn, isTutorOrAbove, PATHS, useDeviceSize } from '../../services';
 import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
 import { AssignmentDTO } from '../../../IsaacApiTypes';
 import { useAssignmentsCount } from '../navigation/NavigationBar';
 import { ShowLoadingQuery } from '../handlers/ShowLoadingQuery';
+import { Spacer } from './Spacer';
 
 const GroupJoinPanel = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -37,19 +38,21 @@ const GroupJoinPanel = () => {
 
     return <div className='w-100 dashboard-panel'>
         <h4>Join a group</h4>
-        <>Enter the code given by your teacher to create a teacher connection and join a group.</>
-        <Input
-            type="text" placeholder="Enter code" className="mt-4"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
-            onKeyDown={(e) => {if (e.key === 'Enter') {
-                e.preventDefault();
-            }}}
-        /><br/>
-        <Button className="mb-5" onClick={processToken} outline color="secondary">
-            Connect
-        </Button>
-        <br/><br/>
-        <Link to="/account#teacherconnections">
+        Enter the code given by your teacher to create a teacher connection and join a group.
+        <InputGroup className="my-4 separate-input-group">
+            <Input
+                type="text" placeholder="Enter code"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
+                onKeyDown={(e) => {if (e.key === 'Enter') {
+                    e.preventDefault();
+                }}}
+            />
+            <Button onClick={processToken} outline color="secondary">
+                Connect
+            </Button>
+        </InputGroup>
+        <Spacer/>
+        <Link to="/account#teacherconnections" className="panel-link">
             See my existing groups
         </Link>
     </div>;
@@ -57,7 +60,7 @@ const GroupJoinPanel = () => {
 
 const DashboardStreakPanel = () => {
     const dispatch = useAppDispatch();
-    const myProgress = useAppSelector(selectors.user.progress);;
+    const myProgress = useAppSelector(selectors.user.progress);
 
     useEffect(() => {
         dispatch(getMyProgress());
@@ -76,16 +79,13 @@ const DashboardStreakPanel = () => {
 
     return <div className='w-100 dashboard-panel'>
         <h4>Build your weekly streak</h4>
-        <div className="text-center mt-3">
-            <div className={"streak-panel-gauge text-center-width"}>
-                <DashboardStreakGauge streakRecord={myProgress?.userSnapshot}/>
-            </div>
+        <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
+            <DashboardStreakGauge streakRecord={myProgress?.userSnapshot}/>
         </div>
-        <br/><br/>
-        {remainingToAnswer === 0 ? <h5>You&apos;ve maintained your streak for this week!</h5> : <h5>Only {remainingToAnswer} more question parts to answer correctly this week!</h5>}
-        <br/>
-        <button onClick={() => dispatch(streaksInfoModal())}>
-            What is this? <img src="/assets/common/icons/chevron_down.svg" alt="open help modal"/> { /* TODO replace this icon since this isn't a dropdown */ }
+        {remainingToAnswer === 0 ? <div className="streak-text">You&apos;ve maintained your streak for this week!</div> : <div className="streak-text">Only {remainingToAnswer} more question parts to answer correctly this week!</div>}
+        <Spacer/>
+        <button onClick={() => dispatch(streaksInfoModal())} className="mt-2 p-0 panel-link">
+            What is this?<img src="/assets/common/icons/chevron_down.svg" className="ms-1" alt=""/> { /* TODO replace this icon since this isn't a dropdown */ }
         </button>
     </div>;
 };
@@ -95,36 +95,32 @@ const AssignmentCard = (assignment: AssignmentDTO) => {
     const dueDate = assignment.dueDate ? new Date(assignment.dueDate) : undefined;
     const isOverdue = dueDate && dueDate < today;
     const daysUntilDue = dueDate ? Math.ceil((dueDate.getTime() - today.getTime()) / 86400000) : undefined; // 1000*60*60*24
-    return <Card className="assignment-card px-3">
-        <Row>
-            <i className="icon icon-question-pack" />
-            <Col>
-                <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`} style={{textDecoration: "none"}}>
+    return <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`} className="mt-3">
+        <Card className="assignment-card px-3">
+            <div className="d-flex flex-row h-100">
+                <i className="icon icon-question-pack" />
+                <div className="flex-grow-1 ms-2">
                     <h5>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h5>
-                </Link><br/>
-                <>{isDefined(assignment.groupName) && assignment.groupName}</>
-            </Col>
-            <Col>            
-                {dueDate && (isOverdue ? <p className="due-date overdue">Overdue</p> : <p className="due-date">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</p>)}
-            </Col>
-        </Row>
-        
-    </Card>;
+                    {isDefined(assignment.groupName) && assignment.groupName}
+                </div>
+                {dueDate && (isOverdue ? <span className="align-self-end overdue">Overdue</span> : <span className="align-self-end">Due in {daysUntilDue} day{daysUntilDue !== 1 && "s"}</span>)}
+            </div>
+        </Card>
+    </Link>;
 };
 
 const CurrentWorkPanel = () => {
     const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>
-        <>You have assignments that are active or due soon:</>
-        <br/><br/>
+        <span>You have assignments that are active or due soon:</span>
         <ShowLoadingQuery
             query={assignmentQuery}
             defaultErrorTitle={"Error fetching your assignments"}
             thenRender={(assignments) => {
                 const myAssignments = filterAssignmentsByStatus(assignments);
                 const toDo = [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld].slice(0, 2);
-                return <>{toDo.map((assignment: AssignmentDTO) => {return <><AssignmentCard key={assignment.id} {...assignment} /><br/></>;})}</>;
+                return toDo.map((assignment: AssignmentDTO) => <AssignmentCard key={assignment.id} {...assignment} />);
             }
             }/>
     </div>;
@@ -134,23 +130,23 @@ const MyIsaacPanel = () => {
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
     return <div className='w-100 dashboard-panel'>
         <h4>More in My Isaac</h4>
-        <div>
-            <Link to="/my_gameboards" className="panel-link">
+        <div className="d-flex flex-column">
+            <Link to="/my_gameboards" className="panel-my-isaac-link">
                 My question packs
-            </Link><br/>
-            <Link to="/assignments" className="panel-link">
+            </Link>
+            <Link to="/assignments" className="panel-my-isaac-link">
                 My assignments
                 {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
-            </Link><br/>
-            <Link to="/progress" className="panel-link">
+            </Link>
+            <Link to="/progress" className="panel-my-isaac-link">
                 My progress
-            </Link><br/>
-            <Link to="/tests" className="panel-link">
+            </Link>
+            <Link to="/tests" className="panel-my-isaac-link">
                 My tests
                 {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
             </Link>
             <div className="section-divider"/>
-            <Link to="/account" className="panel-link">
+            <Link to="/account" className="panel-my-isaac-link">
                 My account
             </Link>
         </div>
@@ -169,7 +165,7 @@ export const StudentDashboard = () => {
                         <Col className="mt-4">
                             <GroupJoinPanel />
                         </Col>
-                        <Col className="mt-4">
+                        <Col className="mt-4 panel-streak">
                             <DashboardStreakPanel />
                         </Col>
                         <Col className="mt-4">
@@ -186,7 +182,7 @@ export const StudentDashboard = () => {
                         <Col className="mt-4 col-xl-3">
                             <GroupJoinPanel />
                         </Col>
-                        <Col className="mt-4 col-xl-2">
+                        <Col className="mt-4 col-xl-2 panel-streak">
                             <DashboardStreakPanel />
                         </Col>
                         <Col className="mt-4 col-sm-7 col-xl-4">

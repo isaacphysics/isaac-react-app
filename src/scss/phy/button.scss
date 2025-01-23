@@ -470,12 +470,3 @@ button.close { // default <button class="close"/> components;
   background-position: 50% 50%;
   background-color: transparent;
 }
-
-.separate-input-group {
-  input {
-    border-radius: 0.25rem;
-  }
-  button {
-    border-radius: 0 0.25rem 0.25rem 0;
-  }
-}

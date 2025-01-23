@@ -107,3 +107,11 @@ input[type=text], input[type=search] {
   }
 }
 
+select.form-select, input.form-control, .separate-input-group > .form-control + .input-group-append {
+  height: calc(1.5em + 0.75rem + 2px);
+  &.input-group-append > button {
+    height: 100%;
+    padding: 0;
+    border: none;
+  }
+}

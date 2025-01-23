@@ -27,80 +27,116 @@
   margin: 5px 0px;
 }
 
+$dashboard-panel-size: 120px;
+$dashboard-panel-padding: 30px;
+
+@container streak-panel (min-width: 432px) {
+  div.dashboard-panel {
+    min-height: calc($dashboard-panel-size + 2 * $dashboard-panel-padding);
+    > * {
+      max-width: calc(100% - $dashboard-panel-size - $dashboard-panel-padding);
+    }
+
+    div.streak-panel-gauge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: $dashboard-panel-padding;
+    }
+  }
+}
+
+.panel-streak {
+  container: streak-panel / inline-size;
+}
+
 .dashboard-panel {
+  display: flex;
+  flex-direction: column;
+  position: relative;
   background-color: $color-neutral-50;
   border: 2px solid $color-neutral-200;
   border-radius: 8px;
   height: 100%;
-  padding: 30px;
+  padding: $dashboard-panel-padding;
 
-  > h4 {
+  h4 {
     color: $color-brand-700;
     font-size: 18px;
     font-family: $secondary-font-bold;
     padding-bottom: 10px;
   }
 
-  > h5 {
+  .streak-text {
     color: $color-brand-700;
-    font-family: $primary-font;
-    font-size: 14px;
     font-weight: 600;
   }
-
-  > button {
-    font-size: 14px;
-    text-decoration: underline;
-    background: transparent;
-  }
-
-  > Button {
-    text-decoration: none;
-  }
-
+  
   .panel-link {
+    color: $color-neutral-800;
+    width: max-content;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: underline;
+    padding-bottom: 10px;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .panel-my-isaac-link {
     font-size: 14px;
     font-weight: 400;
     text-decoration: none;
     padding-bottom: 10px;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   .streak-panel-gauge {
     display: inline-block;
-    padding-top: 15px;
     font-family: $secondary-font-semi-bold;
-    width: 120px;
-    height: 120px;
+    width: $dashboard-panel-size;
+    height: $dashboard-panel-size;
     > b {
       color: $color-brand-700;
       font-size: 32px;
+      line-height: 32px;
       font-weight: 700;
     }
   }
 }
 
+a:has(.assignment-card) {
+  text-decoration: none;
+}
+
 .assignment-card {
-  border: 1.5px;
+  border: 1.5px solid $color-neutral-300;
+  text-decoration: none;
   border-radius: 8px;
   background-color: white;
   color: $color-neutral-700;
   font-size: 13px;
-  height: 77px;
   padding: 10px;
+  transition: all 0.2s ease-out;
 
   h5 {
     font-size: 17px;
     font-family: $secondary-font-semi-bold;
   }
 
-  .due-date {
-    text-align: right;
-    margin-right: 10px;
-    margin-top: 28px;
-  }
-
   .overdue {
     color: $color-misc-red;
     font-weight: 600;
+  }
+
+  &:hover {
+    scale: 1.02;
+    border-color: $color-neutral-400;
   }
 }

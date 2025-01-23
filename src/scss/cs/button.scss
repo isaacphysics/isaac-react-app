@@ -271,17 +271,6 @@
   background-image: url("/assets/cs/icons/info-white.svg");
 }
 
-// Used to visually separate the button from the input in an input group (see groups page for example)
-.separate-input-group {
-  input {
-    border-radius: 0.25rem !important;
-  }
-  button {
-    margin-left: 1rem !important;
-    border-radius: 50px !important;
-  }
-}
-
 .selector-tabs {
   z-index: 0;
   position: relative;
