@@ -130,7 +130,7 @@ export const HomepagePhy = () => {
 
             <section id="navigation-cards">
                 <Container>
-                    Explore and learn!
+                    <h2>Explore and learn!</h2>
                     {a}
                 </Container>
             </section>

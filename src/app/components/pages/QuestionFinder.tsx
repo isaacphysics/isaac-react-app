@@ -25,7 +25,6 @@ import {
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {RouteComponentProps, useHistory, withRouter} from "react-router";
-import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -39,6 +38,7 @@ import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilter
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { ListView } from "../elements/list-groups/ListView";
+import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
@@ -452,8 +452,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             </CardHeader>
                             <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
-                                    {displayQuestions?.length
-                                        ? <ListView items={displayQuestions}/>
+                                    {displayQuestions?.length ? 
+                                        isPhy ? 
+                                            <ListView items={displayQuestions}/> :
+                                            <LinkToContentSummaryList 
+                                                items={displayQuestions} className="m-0" 
+                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY} 
+                                                ignoreIntendedAudience noCaret 
+                                            />
                                         : noResultsMessage }
                                 </ShowLoading>
                             </CardBody>
