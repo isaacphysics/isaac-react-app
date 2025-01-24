@@ -85,14 +85,14 @@ export interface AbstractListViewItemProps {
     fullWidth?: boolean;
 }
 
-export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, testTag, url, audienceViews, previewUrl, testUrl, isCard, fullWidth}: AbstractListViewItemProps) => { 
+export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, testTag, url, audienceViews, previewUrl, testUrl, isCard, fullWidth, ...rest}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
     const isQuiz: boolean = (previewUrl && testUrl) ? true : false;
     
     fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewUrl || testUrl) ? false : true);
     const colWidths = fullWidth ? [12,12,12,12,12] : isQuiz ? [12,6,6,6,6] : [12,8,7,6,7];
     const cardBody =
-    <Row className="w-100 flex-row">
+    <Row className="w-100 flex-row" {...rest}>
         <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} xxl={colWidths[4]} className={classNames("d-flex", {"mt-3": isCard})}>
             <div>
                 {icon && (
