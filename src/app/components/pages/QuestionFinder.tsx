@@ -423,8 +423,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 </Row>
 
                 <Row className="mt-4 position-relative finder-panel">
-                    <Col lg={siteSpecific(4, 3)} md={12} xs={12} className="text-wrap my-2 d-lg-none" data-testid="question-finder-filters">
-                        <QuestionFinderFilterPanel {...{
+                    <Col lg={siteSpecific(4, 3)} md={12} xs={12} className={classNames("text-wrap my-2", {"d-lg-none": isPhy})} data-testid="question-finder-filters">
+                        <QuestionFinderFilterPanel {...{ 
                             searchDifficulties, setSearchDifficulties,
                             searchTopics, setSearchTopics,
                             searchStages, setSearchStages,
@@ -435,7 +435,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             tiers, choices, selections, setTierSelection,
                             applyFilters, clearFilters,
                             validFiltersSelected, searchDisabled, setSearchDisabled
-                        }} />
+                        }} /> {/* Temporarily disabled at >=lg to test list view until this filter is moved into the sidebar */}
                     </Col>
                     <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
                         <Card>

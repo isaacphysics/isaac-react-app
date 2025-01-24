@@ -8,7 +8,7 @@ import { AffixButton } from "../AffixButton";
 import { Spacer } from "../Spacer";
 import { CompletionState } from "../../../../IsaacApiTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { above, below, TAG_ID, tags, useDeviceSize } from "../../../services";
+import { below, TAG_ID, tags, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 
@@ -45,21 +45,15 @@ const Tags = ({tags}: {tags: {tag: string, url?: string}[];}) => {
     </>;
 };
 
-const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewUrl: string, testUrl: string}) => {
-    const { previewUrl, testUrl, ...rest } = props;
+const QuizLinks = (props: React.HTMLAttributes<HTMLSpanElement> & {previewQuizUrl: string, quizButton: JSX.Element}) => {
+    const { previewQuizUrl, quizButton, ...rest } = props;
     return <span {...rest} className={classNames(rest.className, "d-flex")}>
         <Spacer/>
-        <Button to={previewUrl} color="keyline" className="set-quiz-button-md">
+        <Button to={previewQuizUrl} color="keyline" tag={Link} className="set-quiz-button-md">
             Preview
         </Button>
         <span style={{minWidth: "20px"}}/>
-        <AffixButton size="md" color="solid" to={testUrl} affix={{
-            affix: "icon-right",
-            position: "suffix",
-            type: "icon"
-        }}>
-            Take the test
-        </AffixButton>
+        {quizButton}
     </span>;
 };
 
@@ -79,17 +73,17 @@ export interface AbstractListViewItemProps {
     testTag?: string;
     url?: string;
     audienceViews?: ViewingContext[];
-    previewUrl?: string;
-    testUrl?: string;
+    previewQuizUrl?: string;
+    quizButton?: JSX.Element;
     isCard?: boolean;
     fullWidth?: boolean;
 }
 
-export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, testTag, url, audienceViews, previewUrl, testUrl, isCard, fullWidth, ...rest}: AbstractListViewItemProps) => { 
+export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, testTag, url, audienceViews, previewQuizUrl, quizButton, isCard, fullWidth, ...rest}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
-    const isQuiz: boolean = (previewUrl && testUrl) ? true : false;
+    const isQuiz: boolean = (previewQuizUrl && quizButton) ? true : false;
     
-    fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewUrl || testUrl) ? false : true);
+    fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewQuizUrl || quizButton) ? false : true);
     const colWidths = fullWidth ? [12,12,12,12,12] : isQuiz ? [12,6,6,6,6] : [12,8,7,6,7];
     const cardBody =
     <Row className="w-100 flex-row" {...rest}>
@@ -119,8 +113,8 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {tags && <div className="d-flex py-3">
                     <Tags tags={tags}/>
                 </div>}
-                {previewUrl && testUrl && fullWidth && <div className="d-flex d-md-none align-items-center">
-                    <QuizLinks previewUrl={previewUrl} testUrl={testUrl}/>
+                {previewQuizUrl && quizButton && fullWidth && <div className="d-flex d-md-none align-items-center">
+                    <QuizLinks previewQuizUrl={previewQuizUrl} quizButton={quizButton}/>
                 </div>}
             </div>
         </Col>
@@ -132,8 +126,8 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {audienceViews && <Col md={4} lg={5} xl={4} xxl={3} className="d-none d-md-flex justify-content-end">
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack spacerWidth={5} className={classNames({"list-view-border": audienceViews.length > 0})}/> 
                 </Col>}
-                {previewUrl && testUrl && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
-                    <QuizLinks previewUrl={previewUrl} testUrl={testUrl}/> 
+                {previewQuizUrl && quizButton && <Col md={6} className="d-none d-md-flex align-items-center justify-content-end">
+                    <QuizLinks previewQuizUrl={previewQuizUrl} quizButton={quizButton}/> 
                 </Col>}
             </>
         }
@@ -158,8 +152,6 @@ export const AbstractListView = ({items}: {items: ShortcutResponse[]}) => {
                 status={item.state}
                 url={item.url}
                 audienceViews={determineAudienceViews(item.audience)}
-                previewUrl={"item.previewUrl"}
-                testUrl={"item.testUrl"}
             />)}
     </ListGroup>;
 };
