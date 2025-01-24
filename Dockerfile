@@ -1,10 +1,24 @@
+ARG BUILD_TARGET="build-phy"
+
+FROM node:22.13.0-bookworm AS builder
+ARG BUILD_TARGET
+ARG REACT_APP_API_VERSION
+
+RUN mkdir /build
+WORKDIR /build
+
+COPY package.json /build
+COPY yarn.lock /build
+RUN yarn install --frozen-lockfile
+
+COPY . /build
+RUN yarn $BUILD_TARGET
+
 FROM nginx:stable
+ARG BUILD_TARGET
+ARG REACT_APP_API_VERSION
 
-ARG API_VERSION
-ARG SUBJECT
-ARG RENDERER_PATH=""
-
+COPY --from=builder /build/$BUILD_TARGET/ /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY ./build-$SUBJECT$RENDERER_PATH/ /usr/share/nginx/html
 
-LABEL apiVersion=$API_VERSION
+LABEL apiVersion=$REACT_APP_API_VERSION
