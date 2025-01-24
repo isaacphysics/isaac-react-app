@@ -138,6 +138,14 @@
   @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
 }
 
+.icon-question-pack {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/question-pack-fg.svg',
+    '/assets/phy/icons/redesign/question-pack-bg.svg',
+    16px, 16px
+  );
+}
+
 .icon-lightbulb {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-concept-fg.svg', 
@@ -175,6 +183,14 @@
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-finder-fg.svg', 
     '/assets/phy/icons/redesign/page-finder-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
+.page-icon-lessons {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/page-lessons-fg.svg', 
+    '/assets/phy/icons/redesign/page-lessons-bg.svg',
     75px, 75px, 44px
   );
 }

@@ -172,7 +172,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 aria-expanded={isOpen ? "true" : "false"}
             >
                 {isConceptPage && audienceString && <span className={
-                    classNames("stage-label d-flex align-items-center p-2 justify-content-center ", {[audienceStyle(audienceString)]: isAda, "text-bg-secondary": isPhy})
+                    classNames("stage-label d-flex align-items-center p-2 justify-content-center ", {[audienceStyle(audienceString)]: isAda, "text-bg-theme": isPhy})
                 }>
                     {siteSpecific(
                         audienceString,
@@ -187,7 +187,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     <Row className="h-100">
                         <div className="d-flex align-items-center p-0 h-100">
                             {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
-                            <span className="accordion-part p-3 text-secondary text-nowrap">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
+                            <span className="accordion-part p-3 text-theme text-nowrap">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
                             {trustedTitle && <div className="p-3">
                                 <h2>
                                     <Markup encoding={"latex"}>

@@ -29,7 +29,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
         {/* Account Information */}
         <Card className="mb-3 bg-light">
             <CardBody>
-                <legend>Your account information (<a href="/account" target="_blank" className="text-secondary">update</a>)</legend>
+                <legend>Your account information (<a href="/account" target="_blank" className="text-theme">update</a>)</legend>
                 <Row>
                     <Col md={6}>
                         {/* Should be impossible to not have a first name */}

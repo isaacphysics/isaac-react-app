@@ -9,7 +9,7 @@ import { selectors, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
 import { Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
-import { getHumanContext } from "../../../services/context";
+import { getHumanContext } from "../../../services/pageContext";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;

@@ -123,7 +123,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
             </Row>
             <Row>
                 <Col>
-                    <SearchPageSearch className={siteSpecific("", "border-secondary")} initialValue={urlQuery ?? ""} />
+                    <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={urlQuery ?? ""} />
                 </Col>
             </Row>
             <Row>

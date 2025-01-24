@@ -396,7 +396,6 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "../common/scroll-button";
 
 // Pages
-@import "subjects";
 @import "../common/pages";
 @import "homepage";
 @import "../common/login";

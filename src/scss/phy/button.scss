@@ -331,7 +331,7 @@ a.btn {
 }
 
 .quick-question-options {
-  background: rgba($secondary, 0.5);
+  background: color-mix(in srgb, var(--subject-color-500) 50%, transparent);
   border: 1px solid transparent;
   transition: opacity 0.2s linear;
 }
@@ -469,13 +469,4 @@ button.close { // default <button class="close"/> components;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-color: transparent;
-}
-
-.separate-input-group {
-  input {
-    border-radius: 0.25rem;
-  }
-  button {
-    border-radius: 0 0.25rem 0.25rem 0;
-  }
 }

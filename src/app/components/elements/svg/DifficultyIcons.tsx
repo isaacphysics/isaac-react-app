@@ -7,7 +7,7 @@ import {Rectangle} from "./Rectangle";
 import {Circle} from "./Circle";
 
 // Difficulty icon proportions
-const difficultyIconWidth = 15;
+const difficultyIconWidth = siteSpecific(15, 25);
 const difficultyIconXPadding = 1.5;
 const yPadding = 2;
 const difficultyCategoryLevels = siteSpecific([1, 2, 3], [1, 2]);

@@ -231,7 +231,7 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
             const number = figureNumbers[ref];
             if (number) {
                 const figure = `Figure&nbsp;${number}`;
-                return format ? `<strong class="text-secondary figure-reference">${figure}</strong>` : figure;
+                return format ? `<strong class="text-theme figure-reference">${figure}</strong>` : figure;
             }
         }
         return ifMissing;

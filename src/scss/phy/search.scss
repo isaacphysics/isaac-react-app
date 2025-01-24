@@ -3,3 +3,7 @@
 .searchContextPicker {
     margin-right: -0.75rem;
 }
+
+svg.search-item-icon, svg.gameboard-item-icon {
+    fill: var(--subject-color-500);
+}

@@ -55,6 +55,9 @@
     --subject-color-800: #{map.get($subject-colors, 800)};
     --subject-color-900: #{map.get($subject-colors, 900)};
 
+    // ALERT
+    --alert-text-color: #{map.get($subject-colors, 900)};
+
     @if $palette == "neutral" {
       // neutral has some special cases
       --badges-light: #{$color-neutral-white};
@@ -69,6 +72,8 @@
       --nav-primary: #{$color-brand-500};
 
       --icon-primary: #{$color-brand-500};
+
+      --alert-text-color: #{$color-neutral-800};
     }
   }
 }
@@ -117,5 +122,28 @@
       @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), 60px, 60px, 60px);
       position: absolute;
     }
+    
+    .text-bg-theme {
+      @extend .text-bg-#{$palette};
+    }
+
+    .alert-secondary {
+      @extend .alert-#{$palette};
+      color: var(--alert-text-color);
+    }
   }
+}
+
+.text-theme {
+  color: var(--subject-color-500);
+
+  &a {
+    &:hover, &:focus {
+      color: var(--subject-color-600);
+    }
+  }
+}
+
+.border-theme {
+  border-color: var(--subject-color-500);
 }

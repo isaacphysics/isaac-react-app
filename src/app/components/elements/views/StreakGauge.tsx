@@ -43,3 +43,23 @@ export const HeaderStreakGauge = (props: StreakGaugeProps) => {
         </div>
     </CircularProgressbarWithChildren>;
 };
+
+export const DashboardStreakGauge = (props: StreakGaugeProps) => {
+    const {streakRecord} = props;
+    const streakActivity = streakRecord?.weeklyStreakRecord?.currentActivity || 0;
+    const currentStreak = streakRecord?.weeklyStreakRecord?.currentStreak || 0;
+    const maxParts = 10;
+    return <CircularProgressbarWithChildren value={streakActivity}
+        maxValue={maxParts}
+        strokeWidth={6}
+        background={true}
+        styles={buildStyles({
+            pathColor: "#3A8621", // color-brand-500
+            trailColor: GRAY_120,
+            backgroundColor: "#FFFFFF"
+        })}>
+        <div className="streak-panel-gauge m-0 align-content-center">
+            <b>{currentStreak}</b><br/>WEEK{currentStreak !== 1 && "S"}
+        </div>
+    </CircularProgressbarWithChildren>;
+};

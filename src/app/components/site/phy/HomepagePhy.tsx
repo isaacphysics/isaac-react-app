@@ -8,6 +8,7 @@ import {HomepageYoutubeCookieHandler} from "../../handlers/InterstitialCookieHan
 import { ListViewCard } from "../../elements/list-groups/ListView";
 import { ShortcutResponse, Subject } from "../../../../IsaacAppTypes";
 import { ListViewTagProps } from "../../elements/list-groups/AbstractListViewItem";
+import { StudentDashboard } from "../../elements/StudentDashboard";
 
 const getSubjectTags: { [key in Subject]: ListViewTagProps[] } = {
     physics: [{tag: "11-14", url: "physics/11_14"}, {tag: "GCSE", url: "physics/gcse"}, {tag: "A-Level", url: "physics/a_level"}, {tag: "University", url: "physics/university"}],
@@ -49,7 +50,6 @@ const a = <div style={{borderRadius: "10px", border: "1px solid rgb(236, 236, 23
     </Row>
 </div>;
 
-
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
@@ -59,6 +59,7 @@ export const HomepagePhy = () => {
 
     return <>
         {/*<WarningBanner/>*/}
+        <StudentDashboard />
         <div id="homepage" className="pb-5 px-2 px-sm-5 mx-md-5 px-lg-0">
             <section id="call-to-action" className="homepageHero">
                 <Container className="pt-4">
