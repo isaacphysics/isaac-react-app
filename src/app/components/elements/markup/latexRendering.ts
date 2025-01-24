@@ -252,7 +252,14 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
                 endMatch(match, search);
             }
             if (search.matched && match) {
-                const latex = html.substring(index + (search.olen || 0), match.index + match[0].length - (search.clen || 0));
+                let latex = html.substring(index + (search.olen || 0), match.index + match[0].length - (search.clen || 0));
+
+                const charAfter = html[match.index + match[0].length];
+                if (/[.,"':;?!)]/.test(charAfter)) {
+                    latex += charAfter;
+                    match.index++;
+                }
+
                 const latexUnEntitied = he.decode(latex);
                 const latexMunged = munge(latexUnEntitied);
                 let macrosToUse;
