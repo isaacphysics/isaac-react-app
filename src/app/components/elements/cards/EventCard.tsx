@@ -34,7 +34,7 @@ export const PhysicsEventCard = ({event}: {event: AugmentedEvent}) => {
                     </div>}
             </a>}
         <CardBody className="d-flex flex-column ps-0">
-            {title && <CardTitle tag="h4" className="mb-0">{title}</CardTitle>}
+            {title && <CardTitle className="mb-0 pod-title">{title}</CardTitle>}
             <CardText className="mb-0">
                 {subtitle && <p className="m-0">{subtitle}</p>}
             </CardText>

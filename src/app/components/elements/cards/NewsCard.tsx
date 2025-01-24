@@ -4,7 +4,6 @@ import {Card, CardBody, CardImg, CardProps, CardText, CardTitle} from "reactstra
 import {IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper, siteSpecific} from "../../../services";
 import {AdaCard} from "./AdaCard";
-import { Spacer } from "../Spacer";
 import classNames from "classnames";
 
 interface NewsCardProps extends CardProps {
@@ -24,11 +23,10 @@ const PhysicsNewsCard = ({newsItem, ...props}: NewsCardProps) => {
             />
         </a>}
         <CardBody className="d-flex flex-column ps-0">
-            <CardTitle tag="h4" className="mb-0">{title}</CardTitle>
+            <CardTitle className="mb-0 pod-title">{title}</CardTitle>
             <CardText>
                 {value && <p>{value}</p>}
             </CardText>
-            <Spacer/>
             <CardText>
                 {!url?.startsWith("http") ?
                     <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`${url}`}>

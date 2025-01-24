@@ -1,4 +1,4 @@
-@container pod-parent (min-width: 736px) {
+@container pod-parent (min-width: 700px) {
   .pod.card {
     display: flex;
     flex-direction: row;
@@ -15,6 +15,10 @@
 
     .card-body {
       padding-top: 0;
+    }
+
+    .pod-title {
+      font-size: 24px;
     }
   }
 }
