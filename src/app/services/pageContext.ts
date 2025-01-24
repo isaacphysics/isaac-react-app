@@ -1,6 +1,6 @@
 import { ContentBaseDTO, UserContext } from "../../IsaacApiTypes";
 import { PageContextState, SiteTheme, Subject } from "../../IsaacAppTypes";
-import { TAG_ID } from "./constants";
+import { LEARNING_STAGE, SUBJECTS, TAG_ID } from "./constants";
 import { isDefined } from "./miscUtils";
 import { useLocation } from "react-router";
 import { Stage } from "../../IsaacApiTypes";
@@ -105,9 +105,20 @@ export function getHumanContext(pageContext?: {subject?: Subject, stage?: Stage}
     return `${pageContext?.stage ? (HUMAN_STAGES[pageContext.stage] + " ") : ""}${pageContext?.subject ? HUMAN_SUBJECTS[pageContext.subject] : ""}`;
 }
 
+function isValidIsaacSubject(subject?: string): subject is Subject {
+    return typeof subject === "string" && (Object.values(SUBJECTS).filter(x => x !== SUBJECTS.CS) as string[]).includes(subject);
+}
+
+function isValidIsaacStage(stage?: string): stage is Stage {
+    return typeof stage === "string" && (Object.values(LEARNING_STAGE) as string[]).includes(stage);
+}
+
 function determinePageContextFromUrl(url: string): {subject?: Subject, stage?: Stage} {
     const [subject, stage] = url.split("/").filter(Boolean);
-    return {subject: subject as Subject, stage: stage as Stage};
+    if (isValidIsaacSubject(subject) && isValidIsaacStage(stage)) {
+        return {subject, stage};
+    }
+    return {};
 }
 
 /**
@@ -122,7 +133,9 @@ export function useUrlPageTheme(): {subject?: Subject; stage?: Stage} {
 
     useEffect(() => {
         const {subject, stage} = determinePageContextFromUrl(location.pathname);
-        dispatch(pageContextSlice.actions.updatePageContext({subject: subject as Subject, stage: stage as Stage}));
+        if (subject && stage) {
+            dispatch(pageContextSlice.actions.updatePageContext({subject: subject as Subject, stage: stage as Stage}));
+        }
     }, [dispatch, location.pathname]);
 
     return determinePageContextFromUrl(location.pathname);

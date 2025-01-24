@@ -9,7 +9,7 @@ import {matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, 
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
 import { useUrlPageTheme } from "../../services/pageContext";
 
 // This component is Isaac Physics only (currently)
@@ -91,11 +91,11 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                 icon={{type: "hex", icon: "page-icon-concept"}}
             />
             <SidebarLayout>
-                <SubjectSpecificConceptListSidebar 
+                {pageContext?.subject ? <SubjectSpecificConceptListSidebar 
                     searchText={searchText} setSearchText={setSearchText} 
                     conceptFilters={conceptFilters} setConceptFilters={setConceptFilters}
                     applicableTags={applicableTags} tagCounts={tagCounts}
-                />
+                /> : <GenericConceptsSidebar />}
                 <MainContent>
                     <Card>
                         <CardHeader className="search-header">
