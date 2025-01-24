@@ -12,7 +12,7 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {formatDate, formatISODateOnly} from "../../elements/DateString";
-import {AppQuizAssignment, ShortcutResponse} from "../../../../IsaacAppTypes";
+import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     above,
     below, confirmThen,
@@ -43,7 +43,6 @@ import { ListView } from "../../elements/list-groups/ListView";
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
 }
-
 
 interface AssignedGroup {
     assignment: QuizAssignmentDTO;

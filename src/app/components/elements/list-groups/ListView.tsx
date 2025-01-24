@@ -50,26 +50,28 @@ export const QuestionListViewItem = ({item, ...rest} : {item: ShortcutResponse})
 
 export const ConceptListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
 
     return <AbstractListViewItem 
         icon={{type: "hex", icon: "list-icon-concept", size: "sm"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
-        url={item.url}
+        url={url}
         {...rest}
     />;
 };
 
 export const EventListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
 
     return <AbstractListViewItem 
         icon={{type: "hex", icon: "list-icon-events", size: "sm"}}
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
-        url={item.url}
+        url={url}
         {...rest}
     />;
 };
@@ -81,7 +83,7 @@ export const QuizListViewItem = ({item, isQuizSetter, ...rest}: {item: QuizSumma
         <AffixButton size="md" color="solid" onClick={() => (dispatch(showQuizSettingModal(item)))} affix={{ affix: "icon-right", position: "suffix", type: "icon" }}>
             Set test
         </AffixButton> :
-        <AffixButton size="md" color="solid" to={item.url} tag={Link} affix={{ affix: "icon-right", position: "suffix", type: "icon" }}>
+        <AffixButton size="md" color="solid" to={`/${documentTypePathPrefix[DOCUMENT_TYPE.QUIZ]}/${item.id}`} tag={Link} affix={{ affix: "icon-right", position: "suffix", type: "icon" }}>
             Take the test
         </AffixButton>;
 
@@ -95,19 +97,79 @@ export const QuizListViewItem = ({item, isQuizSetter, ...rest}: {item: QuizSumma
     />;
 };
 
+export const QuestionPackListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
+    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+    const url = `/gameboards#${item.id}`;
+
+    return <AbstractListViewItem
+        icon={{type: "hex", icon: "list-icon-question", size: "sm"}}
+        title={item.title ?? ""}
+        subject={itemSubject}
+        subtitle={item.subtitle}
+        breadcrumb={breadcrumb}
+        url={url}
+        {...rest}
+    />;
+};
+
+export const QuickQuizListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
+    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+    const url = `/gameboards#${item.id}`;
+
+    return <AbstractListViewItem
+        icon={{type: "hex", icon: "list-icon-question", size: "sm"}}
+        title={item.title ?? ""}
+        subject={itemSubject}
+        subtitle={item.subtitle}
+        breadcrumb={breadcrumb}
+        status={item.state}
+        testTag={"Level 1" /* Quick quizzes are currently just gameboards. This tag doesn't exist yet. */} 
+        url={url}
+        audienceViews={audienceViews}
+        {...rest}
+    />;
+};
+
+export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) => {
+    const breadcrumb = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title);
+    const audienceViews: ViewingContext[] = determineAudienceViews(item.audience);
+    const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[])?.id as Subject;
+    const url = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
+
+    return <AbstractListViewItem
+        icon={{type: "hex", icon: "list-icon-question", size: "sm"}}
+        title={item.title ?? ""}
+        subject={itemSubject}
+        subtitle={item.subtitle}
+        breadcrumb={breadcrumb}
+        status={item.state}
+        url={url}
+        audienceViews={audienceViews}
+        {...rest}
+    />;
+};
+
 export const ListViewCards = ({cards}: {cards: ListViewCardProps[]}) => {
     const cardGrid: JSX.Element[] = [];
-    for (let i = 0; i < cards.length; i += 2) {
-        if (i % 2 === 0) {
-            cardGrid.push(<Row className="w-100 link-list list-group-links ms-0 border-0" key={i}>
-                <Col xs={12} lg={6} className="list-view-card-border">
-                    <ListViewCard {...cards[i]}/>
-                </Col>
-                <Col xs={12} lg={6} className="list-view-card-border">
-                    <ListViewCard {...cards[i+1]}/>
-                </Col>
-            </Row>);
-        }
+    for (let i = 0; i < (cards.length - cards.length % 2); i += 2) {
+        cardGrid.push(<Row className="w-100 link-list list-group-links ms-0 border-0">
+            <Col xs={12} lg={6} className="list-view-card-border">
+                <ListViewCard {...cards[i]}/>
+            </Col>
+            <Col xs={12} lg={6} className="list-view-card-border">
+                <ListViewCard {...cards[i+1]}/>
+            </Col>
+        </Row>);
+    }
+    if (cards.length % 2 == 1) {
+        cardGrid.push(<Row className="w-100 link-list list-group-links ms-0 border-0 justify-content-center">
+            <Col xs={12} lg={6} className="list-view-card-border">
+                <ListViewCard {...cards[cards.length-1]}/>
+            </Col>
+        </Row>);
     }
 
     return <div className="list-view-card-container">
@@ -116,19 +178,12 @@ export const ListViewCards = ({cards}: {cards: ListViewCardProps[]}) => {
 };
 
 export const ListView = ({items, ...rest}: {items: ShortcutResponse[], fullWidth?: boolean, isQuizSetter?: boolean}) => {
-
-    // Cards (e.g. the subjects on the homepage) Xxxx
-    // Questions X
-    // Question Packs
-    // Quick Quizzes
-    // Concepts
-    // Tests x
-
     return <ListGroup className="link-list list-group-links">
         {items.map((item, index) => {
             switch (item.type) {
+                case (DOCUMENT_TYPE.GENERIC):
                 case (SEARCH_RESULT_TYPE.SHORTCUT):
-                    return <QuestionListViewItem key={index} item={item} {...rest}/>;
+                    return <GenericListViewItem key={index} item={item} {...rest}/>;
                 case (DOCUMENT_TYPE.QUESTION):
                 case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
                     return <QuestionListViewItem key={index} item={item} {...rest}/>;
@@ -136,17 +191,13 @@ export const ListView = ({items, ...rest}: {items: ShortcutResponse[], fullWidth
                     return <ConceptListViewItem key={index} item={item} {...rest}/>;
                 case (DOCUMENT_TYPE.EVENT):
                     return <EventListViewItem key={index} item={item} {...rest}/>;
-                case (DOCUMENT_TYPE.TOPIC_SUMMARY):
-                    return <ConceptListViewItem key={index} item={item} {...rest}/>;
-                case (DOCUMENT_TYPE.GENERIC):
-                    return <QuestionListViewItem key={index} item={item} {...rest}/>;
                 case (DOCUMENT_TYPE.QUIZ):
                     return <QuizListViewItem key={index} item={item} {...rest}/>;
                 default:
                     // Do not render this item if there is no matching DOCUMENT_TYPE
                     console.error("Not able to display item as a ListViewItem: ", item);
                     return null;
-            } 
+            }
         })}
     </ListGroup>;
 };

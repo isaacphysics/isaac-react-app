@@ -51,7 +51,6 @@
     $subject-color-50: map.get($subject-colors, 50);
     $subject-color-100: map.get($subject-colors, 100);
     $subject-color-500: map.get($subject-colors, 500);
-    $subject-color-900: map.get($subject-colors, 900);
 
     .quiz-level-1-tag {
       @include pill-tag($subject-color-500, $subject-color-100);

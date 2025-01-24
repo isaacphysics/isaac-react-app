@@ -4,7 +4,6 @@ import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcon
 import { ShortcutResponse, Subject, ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import { Button, Col, ListGroup, ListGroupItem, Row } from "reactstrap";
-import { AffixButton } from "../AffixButton";
 import { Spacer } from "../Spacer";
 import { CompletionState } from "../../../../IsaacApiTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
@@ -139,25 +138,3 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
             <div> {cardBody} </div>}
     </ListGroupItem>;
 };
-
-export const AbstractListView = ({items}: {items: ShortcutResponse[]}) => {
-    return <ListGroup className="link-list list-group-links">
-        {items.map(item => 
-            <AbstractListViewItem 
-                key={item.title}
-                icon={{type: "img", icon: "/assets/phy/icons/redesign/subject-physics.svg"}}
-                title={item.title ?? ""}
-                subtitle={item.subtitle}
-                breadcrumb={tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[]).map(tag => tag.title)}
-                status={item.state}
-                url={item.url}
-                audienceViews={determineAudienceViews(item.audience)}
-            />)}
-    </ListGroup>;
-};
-
-/*export const AbstractListViewWithProps = ({items}: {items: AbstractListViewItemProps[]}) => {
-    return <ListGroup data-bs-theme="physics" className="link-list list-group-links">
-        {items.map(item => <AbstractListViewItem key={item.title} {...item}/>)}
-    </ListGroup>;
-};*/ 
