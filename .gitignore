@@ -15,7 +15,7 @@ bundle-stats-*.json
 
 # production
 /build
-/build-physics
+/build-phy
 /build-ada
 /build-phy-renderer
 /build-ada-renderer
