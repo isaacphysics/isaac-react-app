@@ -33,14 +33,14 @@ export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWit
     const className = classNames(siteSpecific("p-3", "ps-2 py-2 p-nav-3 font-h4 link-light"), {"text-muted": muted});
     return <DropdownItem tag={Link} className={className} {...props}>
         {children}
-        {badgeTitle && <Badge color="light" className="border-secondary border bg-white ms-2 me-1">{badgeTitle}</Badge>}
+        {badgeTitle && <Badge color="light" className="border-theme border bg-white ms-2 me-1">{badgeTitle}</Badge>}
     </DropdownItem>;
 };
 
 export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
     <LinkItem to="/coming_soon" aria-disabled="true">
         <span className="me-2 text-muted">{children}</span>
-        <Badge  color="light" className="border-secondary border bg-white ms-auto me-1">Coming soon</Badge>
+        <Badge  color="light" className="border-theme border bg-white ms-auto me-1">Coming soon</Badge>
     </LinkItem>
 );
 
