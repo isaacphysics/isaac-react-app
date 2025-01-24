@@ -37,6 +37,13 @@
     }
   }
 
+  button::after {
+    width: 30px;
+    height: 10px;
+    background-position: right;
+    margin: auto 1rem auto 0;
+  }
+
   h2 {
     font-size: inherit !important;
   }
