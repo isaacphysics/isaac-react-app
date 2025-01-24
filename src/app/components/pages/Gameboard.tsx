@@ -31,22 +31,11 @@ import {
     useUserViewingContext
 } from "../../services";
 import {Redirect} from "react-router";
-import queryString from "query-string";
 import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySummaryIcons";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-
-function extractFilterQueryString(gameboard: GameboardDTO): string {
-    const csvQuery: {[key: string]: string} = {};
-    if (gameboard.gameFilter) {
-        Object.entries(gameboard.gameFilter).forEach(([key, values]) => {
-            csvQuery[key] = values.join(",");
-        });
-    }
-    return queryString.stringify(csvQuery, {encode: false});
-}
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
     let itemClasses = classNames("content-summary-link text-info bg-white", {"p-3": isPhy, "p-0": isAda});
@@ -109,7 +98,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     </div>}
                 </div>
                 {question.audience && <StageAndDifficultySummaryIcons stack={isAda && below['sm'](deviceSize)} audienceViews={
-                    isPhy && !isTutorOrAbove(currentUser) && uniqueStage ? [uniqueStage] : questionViewingContexts                 
+                    isPhy && !isTutorOrAbove(currentUser) && uniqueStage ? [uniqueStage] : questionViewingContexts
                 } />}
             </div>
             {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/common/icons/chevron_right.svg"} alt={"Go to question"}/></div>}
@@ -159,14 +148,6 @@ export const Gameboard = withRouter(({ location }) => {
     const { data: gameboard } = gameboardQuery;
     const user = useAppSelector(selectors.user.orNull);
 
-    // Show filter
-    const {filter} = queryString.parse(location.search);
-    let showFilter = false;
-    if (filter) {
-        const filterValue = filter instanceof Array ? filter[0] : filter;
-        showFilter = isDefined(filterValue) && filterValue.toLowerCase() === "true";
-    }
-
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
         if (isDefined(gameboard) && isFound(gameboard)) {
@@ -180,25 +161,17 @@ export const Gameboard = withRouter(({ location }) => {
             <small>
                 {`We're sorry, we were not able to find a ${siteSpecific("gameboard", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
             </small>
-            {isPhy && <div className="mt-4 text-center">
-                <Button tag={Link} to={PATHS.GAMEBOARD_FILTER} color="primary" outline className="btn-lg">
-                    Generate a new gameboard
-                </Button>
-            </div>}
         </h3>
     </Container>;
 
     return !gameboardId
-        ? <Redirect to={PATHS.GAMEBOARD_FILTER} />
+        ? <Redirect to={PATHS.QUESTION_FINDER} />
         : <Container className="mb-5">
             <ShowLoadingQuery
                 query={gameboardQuery}
                 defaultErrorTitle={`Error fetching ${siteSpecific("gameboard", "quiz")} with id: ${gameboardId}`}
                 ifNotFound={notFoundComponent}
                 thenRender={(gameboard) => {
-                    if (showFilter) {
-                        return <Redirect to={`${PATHS.GAMEBOARD_FILTER}?${extractFilterQueryString(gameboard)}#${gameboardId}`} />;
-                    }
                     return <>
                         <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || `Filter Generated ${siteSpecific("Gameboard", "Quiz")}`}/>
                         <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />

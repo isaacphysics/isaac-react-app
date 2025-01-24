@@ -183,12 +183,19 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     }, [editorSyntax]);
 
     useLayoutEffect(() => {
+        if (!allowTextInput) return; // as the ref won't be defined
+
+        if (!isDefined(hiddenEditorRef.current)) {
+            throw new Error("Unable to initialise inequality; target element not found.");
+        }
+
         const {sketch, p} = makeInequality(
             hiddenEditorRef.current,
             100,
             0,
             [],
             {
+                editorMode: editorMode,
                 textEntry: true,
                 fontItalicPath: '/assets/common/fonts/STIXGeneral-Italic.ttf',
                 fontRegularPath: '/assets/common/fonts/STIXGeneral-Regular.ttf',
