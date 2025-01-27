@@ -179,6 +179,14 @@
   );
 }
 
+.page-icon-question-pack {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/question-pack-fg.svg',
+    '/assets/phy/icons/redesign/question-pack-bg.svg',
+    75px, 75px, 44px
+  );
+}
+
 .page-icon-finder {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/page-finder-fg.svg', 

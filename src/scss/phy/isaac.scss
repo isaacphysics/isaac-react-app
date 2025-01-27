@@ -63,7 +63,6 @@ $shadow-black: rgb(0, 0, 0);
 // Button sizing
 $input-btn-padding-y-lg: 0.5rem;
 $input-btn-padding-x-lg: 3rem;
-$border-radius-lg: 0.25rem;
 
 // fonts
 $primary-font: 'hanken-grotesk', Arial, 'Helvetica Neue', Helvetica, sans-serif;
@@ -410,6 +409,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "../common/events";
 @import "../common/fasttrack";
 @import "../common/scroll";
+@import "assignments";
 @import "assignment-progress";
 @import "books";
 @import "menu-page-phy";
