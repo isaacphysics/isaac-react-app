@@ -51,9 +51,9 @@ export const coordinateInputValidator = (input: (readonly string[])[]) => {
 
 const CoordinateInput = (props: CoordinateInputProps) => {
     const {value, placeholderValues, numberOfDimensions, onChange, readonly, remove} = props;
-    return <span className="coordinate-input">{[...Array(numberOfDimensions)].map((_, i) =>
+    return <span className="coordinate-input">({[...Array(numberOfDimensions)].map((_, i) =>
         <span key={i}>
-            (<Input
+            <Input
                 type="text"
                 className="force-print"
                 placeholder={placeholderValues[i] ?? ""}
@@ -61,9 +61,9 @@ const CoordinateInput = (props: CoordinateInputProps) => {
                 onChange={event => onChange({...value, coordinates: value.coordinates && value.coordinates.length ? value.coordinates.with(i, event.target.value) :
                     (event.target.value === "" ? undefined : Array<string>(numberOfDimensions).fill("").with(i, event.target.value))})}
                 readOnly={readonly}
-            />)
+            />
             {(i < numberOfDimensions - 1) && <span className="coordinate-input-separator">,&nbsp;</span>}
-        </span>)}
+        </span>)})
     {remove && <Button className="ms-3" size="sm" onClick={remove}>Delete</Button>}
     </span>;
 };
