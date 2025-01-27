@@ -70,7 +70,7 @@ export interface AbstractListViewItemProps {
     tags?: string[]
     supersededBy?: string;
     linkTags?: ListViewTagProps[];
-    testTag?: string;
+    quizTag?: string;
     url?: string;
     audienceViews?: ViewingContext[];
     previewQuizUrl?: string;

@@ -128,7 +128,7 @@ export const QuickQuizListViewItem = ({item, ...rest}: {item: ShortcutResponse})
         subtitle={item.subtitle}
         breadcrumb={breadcrumb}
         status={item.state}
-        testTag={"Level 1" /* Quick quizzes are currently just gameboards. This tag doesn't exist yet in the content. */} 
+        quizTag={"Level 1" /* Quick quizzes are currently just gameboards. This tag doesn't exist yet in the content. */} 
         url={url}
         audienceViews={audienceViews}
         {...rest}
