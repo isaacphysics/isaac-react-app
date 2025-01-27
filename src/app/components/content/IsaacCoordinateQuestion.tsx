@@ -58,7 +58,7 @@ const CoordinateInput = (props: CoordinateInputProps) => {
                 type="text"
                 className="force-print"
                 placeholder={placeholderValues[i] ?? ""}
-                value={value.coordinates ? value.coordinates[i] : ""}
+                value={isDefined(value.coordinates?.[i]) ? value.coordinates[i] : ""}
                 onChange={event => onChange({...value, coordinates: value.coordinates && value.coordinates.length ? value.coordinates.with(i, event.target.value) :
                     (event.target.value === "" ? undefined : Array<string>(numberOfDimensions).fill("").with(i, event.target.value))})}
                 readOnly={readonly}
