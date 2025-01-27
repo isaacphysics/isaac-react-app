@@ -14,16 +14,16 @@ export interface ListViewCardProps {
     item: ShortcutResponse;
     icon: TitleIconProps;
     subject?: Subject;
-    tagList?: ListViewTagProps[];
+    linkTags?: ListViewTagProps[];
 }
 
-export const ListViewCard = ({item, icon, subject, tagList, ...rest}: ListViewCardProps) => {
+export const ListViewCard = ({item, icon, subject, linkTags, ...rest}: ListViewCardProps) => {
     return <AbstractListViewItem
         icon={icon}
         title={item.title ?? ""}
         subject={subject}
         subtitle={item.subtitle}
-        tags={tagList}
+        linkTags={linkTags}
         isCard
         {...rest}
     />;
@@ -39,6 +39,8 @@ export const QuestionListViewItem = ({item, ...rest} : {item: ShortcutResponse})
         icon={{type: "hex", icon: "list-icon-question", size: "sm"}}
         title={item.title ?? ""}
         subject={itemSubject}
+        tags={item.tags}
+        supersededBy={item.supersededBy}
         subtitle={item.subtitle}
         breadcrumb={breadcrumb}
         status={item.state}
@@ -126,7 +128,7 @@ export const QuickQuizListViewItem = ({item, ...rest}: {item: ShortcutResponse})
         subtitle={item.subtitle}
         breadcrumb={breadcrumb}
         status={item.state}
-        testTag={"Level 1" /* Quick quizzes are currently just gameboards. This tag doesn't exist yet. */} 
+        testTag={"Level 1" /* Quick quizzes are currently just gameboards. This tag doesn't exist yet in the content. */} 
         url={url}
         audienceViews={audienceViews}
         {...rest}
@@ -144,6 +146,8 @@ export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
         title={item.title ?? ""}
         subject={itemSubject}
         subtitle={item.subtitle}
+        tags={item.tags}
+        supersededBy={item.supersededBy}
         breadcrumb={breadcrumb}
         status={item.state}
         url={url}

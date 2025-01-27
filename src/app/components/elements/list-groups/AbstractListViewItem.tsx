@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
-import { ShortcutResponse, Subject, ViewingContext} from "../../../../IsaacAppTypes";
+import { Subject, ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Button, Col, ListGroup, ListGroupItem, Row } from "reactstrap";
+import { Button, Col, ListGroupItem, Row } from "reactstrap";
 import { Spacer } from "../Spacer";
 import { CompletionState } from "../../../../IsaacApiTypes";
-import { determineAudienceViews } from "../../../services/userViewingContext";
-import { below, TAG_ID, tags, useDeviceSize } from "../../../services";
+import { below, isPhy, useDeviceSize } from "../../../services";
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { TitleIconProps } from "../PageTitle";
 
@@ -35,9 +34,9 @@ const StatusDisplay = (props: React.HTMLAttributes<HTMLSpanElement> & {status: C
     }
 };
 
-const Tags = ({tags}: {tags: {tag: string, url?: string}[];}) => {
+const LinkTags = ({linkTags}: {linkTags: {tag: string, url?: string}[];}) => {
     return <>
-        {tags.map(t => t.url ?
+        {linkTags.map(t => t.url ?
             <Link to={t.url} className="card-tag" key={t.tag}>{t.tag}</Link> :
             <div className="card-tag" key={t.tag}>{t.tag}</div>
         )}
@@ -68,7 +67,9 @@ export interface AbstractListViewItemProps {
     subtitle?: string;
     breadcrumb?: string[];
     status?: CompletionState;
-    tags?: ListViewTagProps[];
+    tags?: string[]
+    supersededBy?: string;
+    linkTags?: ListViewTagProps[];
     testTag?: string;
     url?: string;
     audienceViews?: ViewingContext[];
@@ -78,7 +79,7 @@ export interface AbstractListViewItemProps {
     fullWidth?: boolean;
 }
 
-export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, testTag, url, audienceViews, previewQuizUrl, quizButton, isCard, fullWidth, ...rest}: AbstractListViewItemProps) => { 
+export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, supersededBy, linkTags, testTag, url, audienceViews, previewQuizUrl, quizButton, isCard, fullWidth, ...rest}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
     const isQuiz: boolean = (previewQuizUrl && quizButton) ? true : false;
     
@@ -96,6 +97,16 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 <div className="d-flex">
                     <span className="question-link-title">{title}</span>
                     {testTag && <span className="quiz-level-1-tag ms-sm-2">{testTag}</span>}
+                    {isPhy && <div className="d-flex flex-column justify-self-end">
+                        {supersededBy && <a 
+                            className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
+                            href={`/questions/${supersededBy}`}
+                            onClick={(e) => e.stopPropagation()}
+                        >SUPERSEDED</a>}
+                        {tags?.includes("nofilter") && <span
+                            className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
+                        >NO-FILTER</span>}
+                    </div>}
                 </div>
                 {subtitle && <div className="small text-muted">
                     {subtitle}
@@ -109,8 +120,8 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {status && (below["lg"](deviceSize) || fullWidth) && <div className="d-flex">
                     <StatusDisplay status={status}/>
                 </div>}
-                {tags && <div className="d-flex py-3">
-                    <Tags tags={tags}/>
+                {linkTags && <div className="d-flex py-3">
+                    <LinkTags linkTags={linkTags}/>
                 </div>}
                 {previewQuizUrl && quizButton && fullWidth && <div className="d-flex d-md-none align-items-center">
                     <QuizLinks previewQuizUrl={previewQuizUrl} quizButton={quizButton}/>
