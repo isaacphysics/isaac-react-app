@@ -1,18 +1,84 @@
 .physics-strapline {
-  //font-family: 'exo_2regular', sans-serif;
-  //font-size: 1.8rem;
-  h1 {
+  h2 {
+    font-family: $secondary-font-bold;
+    font-size: 40px;
   }
-  small {
-    font-family: "exo_2regular", sans-serif;
-    font-weight: 400;
-    line-height: 1;
+
+  .text-green {
+    color: $color-brand-700;
   }
 }
 
-.physics-site-intro {
-  @include respond-above(sm) {
-    font-size: large;
+.homepage {
+
+  h3 {
+    font-family: $secondary-font-bold;
+    font-size: 24px;
+    display: inline;
+    margin-right: 18px;
+    text-wrap: nowrap;
+  }
+
+  .news-events-link {
+    text-wrap: nowrap;
+    margin-top: 7px;
+    margin-right: 10px;
+  }
+
+  .section-divider {
+    height: 0;
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
+    margin-top: 18px;
+    flex-grow: 1;
+  }
+
+  .homepage-hero {
+    background-color: #DCEBD7;
+    position: relative;
+
+    .homepage-hero-content {
+      z-index: 1;
+      padding: 80px;
+    }
+
+    .homepage-hero-img {
+      z-index: 0;
+      display: flex;
+      height: 100%;
+      background-size: contain;
+      right: -400px;
+      aspect-ratio: 16 / 9;
+      clip-path: polygon(32% 0, 95% 0, 95% 100%, 32% 100%, 17% 50%);
+      position: absolute;
+      background-image: url('/assets/phy/phy-homepage-image.jpg');
+      background-repeat: no-repeat;
+    }
+
+    .homepage-hero-card {
+      height: 100%;
+      border-radius: 8px;
+
+      h4 {
+        font-family: $secondary-font-bold;
+        font-size: 24px;
+      }
+
+      .homepage-hero-card-tag {
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: white;
+
+        > b {
+          font-family: $secondary-font-semi-bold;
+          position: absolute;
+          text-align: center;
+          font-size: 14px;
+          padding-top: 8px;
+          left: 30px;
+        }
+      }
+    }
   }
 }
 
