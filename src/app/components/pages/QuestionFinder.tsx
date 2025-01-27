@@ -6,6 +6,8 @@ import {
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
+    getHumanContext,
+    getUpdatedPageContext,
     isAda,
     isLoggedIn,
     isPhy,
@@ -39,6 +41,7 @@ import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, L
 import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { Tag } from "../../../IsaacAppTypes";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
@@ -382,6 +385,11 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         You can select more than one entry in each area.
     </span>, undefined);
 
+    const description = siteSpecific(
+        (pageContext.subject && pageContext.stage ? `Use our question finder to find questions to try on ${getHumanContext(pageContext)} topics.` : "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.") 
+        + " Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.",
+        "");
+
     const metaDescription = siteSpecific(
         "Find physics, maths, chemistry and biology questions by topic and difficulty.",
         "Search for the perfect computer science questions to study. For revision. For homework. For the classroom."
@@ -395,16 +403,17 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question Finder", "Questions")}
-            description={siteSpecific("Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology. Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.", "")}
-            help={pageHelp}
+            description={description} help={pageHelp}
             icon={{type: "hex", icon: "page-icon-finder"}}
         />
         <SidebarLayout>
-            <QuestionFinderSidebar />
+            <QuestionFinderSidebar searchText={searchQuery} setSearchText={setSearchQuery} questionFilters={[]} setQuestionFilters={function (value: React.SetStateAction<Tag[]>): void {
+                throw new Error("Function not implemented.");
+            } } applicableTags={[]} />
             <MainContent>
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
-                <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />
+                {/*<PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} /> */}
 
                 <Row>
                     <Col lg={6} md={12} xs={12} className="finder-search">
@@ -423,7 +432,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 </Row>
 
                 <Row className="mt-4 position-relative finder-panel">
-                    <Col lg={siteSpecific(4, 3)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-filters">
+                    <Col lg={siteSpecific(4, 3)} md={12} xs={12} className={classNames("text-wrap my-2", {"d-none": isPhy})} data-testid="question-finder-filters">
                         <QuestionFinderFilterPanel {...{
                             searchDifficulties, setSearchDifficulties,
                             searchTopics, setSearchTopics,
@@ -437,7 +446,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             validFiltersSelected, searchDisabled, setSearchDisabled
                         }} />
                     </Col>
-                    <Col lg={siteSpecific(8, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
+                    <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
                         <Card>
                             <CardHeader className="finder-header pl-3">
                                 <Col className={"px-0"}>

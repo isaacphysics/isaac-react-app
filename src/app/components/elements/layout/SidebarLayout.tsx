@@ -285,9 +285,53 @@ export const GenericConceptsSidebar = (props: SidebarProps) => {
     return <ContentSidebar {...props}/>;
 };
 
-export const QuestionFinderSidebar = (props: SidebarProps) => {
-    // TODO
-    return <ContentSidebar {...props}/>;
+interface QuestionFinderSidebarProps extends SidebarProps {
+    searchText: string;
+    setSearchText: React.Dispatch<React.SetStateAction<string>>;
+    questionFilters: Tag[];
+    setQuestionFilters: React.Dispatch<React.SetStateAction<Tag[]>>;
+    applicableTags: Tag[];
+    tagCounts?: Record<string, number>;
+}
+
+export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
+    const { searchText, setSearchText, questionFilters, setQuestionFilters, applicableTags, tagCounts, ...rest } = props;
+
+    const pageContext = useAppSelector(selectors.pageContext.context);
+
+    return <ContentSidebar {...rest}>
+        <div className="section-divider"/>
+        <h5>Search Questions</h5>
+        <Input
+            className='search--filter-input my-4'
+            type="search" value={searchText || ""}
+            placeholder="e.g. Man vs. Horse"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+        />
+
+        <div className="section-divider"/>
+
+        <div className="d-flex flex-column">
+            <h5>Filter questions by</h5>
+            <AllFiltersCheckbox conceptFilters={questionFilters} setConceptFilters={setQuestionFilters} tagCounts={tagCounts} />
+            <div className="section-divider-small"/>
+            {applicableTags.map(tag => <FilterCheckbox key={tag.id} tag={tag} conceptFilters={questionFilters} setConceptFilters={setQuestionFilters} tagCounts={tagCounts}/>)}
+        </div>
+
+        <div className="section-divider"/>
+
+        <div className="sidebar-help">
+            <p>The questions shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+            <p>If you want to explore our full range of questions across multiple subjects or learning stages, you can use the main question finder:</p>
+            <AffixButton size="md" color="keyline" tag={Link} to="/questions" affix={{
+                affix: "icon-right",
+                position: "suffix",
+                type: "icon"
+            }}>
+                Browse all questions
+            </AffixButton>
+        </div>
+    </ContentSidebar>;
 };
 
 export const PracticeQuizzesSidebar = (props: SidebarProps) => {
