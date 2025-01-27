@@ -3,20 +3,26 @@ import React, {useMemo, useState} from "react";
 import {Button, Col, Collapse, Label, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {
+    above,
     determineGameboardStagesAndDifficulties,
     determineGameboardSubjects,
     difficultyShortLabelMap,
     extractTeacherName,
     generateGameboardSubjectHexagons,
+    HUMAN_SUBJECTS,
     isDefined,
     PATHS,
     siteSpecific,
     stageLabelMap,
     TAG_ID,
-    tags
+    tags,
+    useDeviceSize
 } from "../../services";
-import {formatDate} from "./DateString";
+import {formatDate, FRIENDLY_DATE, getFriendlyDaysUntil} from "./DateString";
 import {Circle} from "./svg/Circle";
+import { PhyHexIcon } from "./svg/PhyHexIcon";
+import { Subject } from "../../../IsaacAppTypes";
+import { HoverableTooltip } from "./HoverableTooltip";
 
 const midnightOf = (date: Date | number) => {
     const d = new Date(date);
@@ -41,6 +47,8 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     const now = new Date();
     const boardStagesAndDifficulties = useMemo(() => determineGameboardStagesAndDifficulties(assignment.gameboard), [assignment.gameboard]);
 
+    const deviceSize = useDeviceSize();
+
     const topics = tags.getTopicTags(Array.from((assignment.gameboard?.contents || []).reduce((a, c) => {
         if (isDefined(c.tags) && c.tags.length > 0) {
             return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
@@ -49,71 +57,84 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
 
-    return <>
-        <hr />
-        <Row className="board-card" data-testid="my-assignment">
-            <Col xs={8} sm={10} md={8}>
-                <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
-                    <h4 className="text-break">{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
-                </Link>
-                {isDefined(assignmentStartDate) &&
-                <p className="mb-0" data-testid={"gameboard-assigned"}><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>
-                }
-                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageAttempted !== 100
-                    ? <p className="mb-0"><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>
-                    : <>{assignment.dueDate && <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>}</>
-                }
-                {isDefined(assignment.groupName) &&
-                <p className="mb-0"><strong>Group:</strong> {assignment.groupName}</p>
-                }
-                {isDefined(assignment.assignerSummary) &&
-                <p className="mb-0"><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>
-                }
+    const boardSubjects = determineGameboardSubjects(assignment.gameboard);
+
+    return <Link className="w-100 assignments-card px-3 py-2 mb-3" to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
+        <Row data-testid="my-assignment">
+            <Col xs={8}>
+                <div className="d-flex align-items-center">
+                    <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
+                        <div className="board-subject-hexagon-container justify-content-center">
+                            {generateGameboardSubjectHexagons(boardSubjects)}
+                        </div>
+                        <PhyHexIcon icon="page-icon-question-pack" subject={boardSubjects[0] as Subject} className="assignment-hex ps-3"/>
+                    </div>
+                    <div className="d-flex flex-column flex-grow-1">
+                        <h4 className="text-break m-0">{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
+                        {above['md'](deviceSize) && boardSubjects.length > 0 && <div className="d-flex align-items-center mb-2">
+                            {boardSubjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}
+                        </div>}
+                    </div>
+                </div>
+
+                <Row>
+                    <Col>
+                        {isDefined(assignmentStartDate) &&
+                            <p className="mb-0" data-testid={"gameboard-assigned"}>Assigned <HoverableTooltip tooltip={formatDate(assignmentStartDate, FRIENDLY_DATE)}>
+                                <strong>{getFriendlyDaysUntil(assignmentStartDate)}</strong>
+                            </HoverableTooltip></p>
+                        }
+                        {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageAttempted !== 100
+                            ? <p className="mb-0"><strong className="overdue">Overdue!</strong> <span className="small text-muted">(due {formatDate(assignment.dueDate)})</span></p>
+                            : <>{assignment.dueDate && <p className="mb-0">Due <strong>{getFriendlyDaysUntil(assignment.dueDate)}</strong></p>}</>
+                        }
+                    </Col>
+                    {above['md'](deviceSize) && <Col>
+                        {isDefined(assignment.groupName) &&
+                            <p className="mb-0"><strong>Group:</strong> {assignment.groupName}</p>
+                        }
+                        {isDefined(assignment.assignerSummary) &&
+                            <p className="mb-0"><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>
+                        }
+                    </Col>}
+                </Row>
+                
                 {isDefined(assignment.notes) && <p className="mb-0"><strong>Notes:</strong> {assignment.notes}</p>}
-                <Button className="my-2 btn-underline" color="link" onClick={() => setShowMore(!showMore)}>
+                <Button className="my-2 btn-underline" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
                     {showMore ? "Show less" : "Show more"}
                 </Button>
             </Col>
 
-            <Col xs={4} sm={2} md={4}>
-                <Row className="justify-content-end me-0 me-md-1">
-                    <Col md="auto">
-                        <Label className="d-block w-100 text-center text-nowrap">
-                            Attempted
-                            <div className="d-flex w-100 justify-content-center board-subject-hexagon-size">
-                                <div className="board-subject-hexagon-container justify-content-center">
-                                    {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageAttempted === 100) ?
-                                        <span className="board-subject-hexagon subject-complete"/> :
-                                        <>
-                                            {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
-                                            <div className="board-percent-completed">{assignment.gameboard.percentageAttempted ?? 0}</div>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        </Label>
-                    </Col>
-                    <Col md="auto">
-                        <Label className="d-block w-100 text-center text-nowrap">
-                            Correct
-                            <div className="d-flex w-100 justify-content-center board-subject-hexagon-size">
-                                <div className="board-subject-hexagon-container justify-content-center">
-                                    {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCorrect === 100) ?
-                                        <span className="board-subject-hexagon subject-complete"/> :
-                                        <>
-                                            {generateGameboardSubjectHexagons(determineGameboardSubjects(assignment.gameboard))}
-                                            <div className="board-percent-completed">{assignment.gameboard.percentageCorrect ?? 0}</div>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        </Label>
-                    </Col>
-                </Row>
+            <Col xs={4}>
+                <div className="d-flex flex-wrap justify-content-center justify-content-md-end justify-content-lg-center justify-content-xl-end column-gap-4">
+                    <Label className="d-block w-max-content text-center text-nowrap pt-3">
+                        {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageAttempted === 100) ?
+                            <span className="board-subject-hexagon subject-complete"/> :
+                            <div className="board-percent-completed">{assignment.gameboard.percentageAttempted ?? 0}</div>
+                        )}
+                        Attempted
+                    </Label>
+                    <Label className="d-block w-max-content text-center text-nowrap pt-3">
+                        {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCorrect === 100) ?
+                            <span className="board-subject-hexagon subject-complete"/> :
+                            <div className="board-percent-completed">{assignment.gameboard.percentageCorrect ?? 0}</div>
+                        )}
+                        Correct
+                    </Label>
+                </div>
             </Col>
         </Row>
         <Collapse isOpen={showMore} className="w-100">
             <Row>
+                {!above['md'](deviceSize) && <Col xs={12}>
+                    {isDefined(assignment.groupName) &&
+                        <p className="mb-0"><strong>Group:</strong> {assignment.groupName}</p>
+                    }
+                    {isDefined(assignment.assignerSummary) &&
+                        <p className="mb-0"><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>
+                    }
+                </Col>}
+
                 <Col xs={12} md={8} className="mt-sm-2">
                     <p className="mb-0"><strong>Questions:</strong> {assignment.gameboard?.contents?.length || "0"}</p>
                     {isDefined(topics) && topics.length > 0 && <p className="mb-0">
@@ -149,7 +170,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 </Col>
             </Row>
         </Collapse>
-    </>;
+    </Link>;
 };
 
 const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
