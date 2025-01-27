@@ -5,9 +5,6 @@ import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {above, SITE_TITLE, useDeviceSize, useUserConsent} from "../../../services";
 import {HomepageYoutubeCookieHandler} from "../../handlers/InterstitialCookieHandler";
-import { ListViewCardProps, ListViewCards } from "../../elements/list-groups/ListView";
-import { ShortcutResponse, Subject } from "../../../../IsaacAppTypes";
-import { ListViewTagProps } from "../../elements/list-groups/AbstractListViewItem";
 import { StudentDashboard } from "../../elements/StudentDashboard";
 
 export const HomepagePhy = () => {
@@ -16,31 +13,6 @@ export const HomepagePhy = () => {
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
     const userConsent = useUserConsent();
-    const subjectList: Subject[] = ["physics","maths","chemistry","biology"]; 
-    const subjectTags: { [key in Subject]: ListViewTagProps[] } = {
-        physics: [{tag: "11-14", url: "physics/11_14"}, {tag: "GCSE", url: "physics/gcse"}, {tag: "A-Level", url: "physics/a_level"}, {tag: "University", url: "physics/university"}],
-        maths: [{tag: "GCSE", url: "maths/gcse"}, {tag: "A-Level", url: "maths/a_level"}, {tag: "University", url: "maths/university"}],
-        chemistry: [{tag: "GCSE", url: "chemistry/gcse"}, {tag: "A-Level", url: "chemistry/a_level"}],
-        biology: [{tag: "A-Level", url: "biology/a_level"}],
-    };
-    
-    const getListViewSubjectCard = ({subject}: {subject: Subject}) => {
-        const item: ShortcutResponse = {
-            title: subject.charAt(0).toUpperCase() + subject.slice(1),
-            subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris faucibus est vulputate augue  tristique, sed vehicula turpis pellentesque.",
-        };
-    
-        const listViewSubjectCard: ListViewCardProps = {
-            item: item,
-            icon: {type: "img", icon: `/assets/phy/icons/redesign/subject-${subject}.svg`},
-            subject: subject,
-            linkTags: subjectTags[subject],
-        };
-    
-        return listViewSubjectCard;
-    };
-    
-    const cards = subjectList.map((subject: Subject) => getListViewSubjectCard({subject}));
 
     return <>
         {/*<WarningBanner/>*/}
@@ -111,13 +83,6 @@ export const HomepagePhy = () => {
                             </Col>
                         </Row>
                     </div>
-                </Container>
-            </section>
-
-            <section id="navigation-cards">
-                <Container>
-                    <h2>Explore and learn!</h2>
-                    <ListViewCards cards={cards}/> 
                 </Container>
             </section>
 
