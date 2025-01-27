@@ -345,7 +345,6 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
         <QuestionFinderFilterPanel {...questionFinderFilterPanelProps} />
         {/*<AllFiltersCheckbox conceptFilters={questionFilters} setConceptFilters={setQuestionFilters} tagCounts={tagCounts} /> */}
         {/*{topLevelFilters.map(filter => <FilterDropdown key={filter.id} tag={tag} conceptFilters={questionFilters} setConceptFilters={setQuestionFilters} tagCounts={tagCounts}/>)}*/}
-        
 
         <div className="section-divider"/>
 

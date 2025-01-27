@@ -109,9 +109,9 @@ function initialiseListState(tags: GroupBase<Item<string>>[]): OpenListsState {
 }
 
 const listTitles: { [field in keyof TopLevelListsState]: string } = {
-    stage: "Stage",
+    stage: siteSpecific("Learning Stage", "Stage"),
     examBoard: "Exam board",
-    topics: "Topics",
+    topics: siteSpecific("Topic", "Topics"),
     difficulty: siteSpecific("Difficulty", "Question difficulty"),
     books: "Book",
     questionStatus: siteSpecific("Status", "Question status")
@@ -172,7 +172,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             if (below["md"](deviceSize)) handleFilterPanelExpansion(e);
         }}>
             {siteSpecific(
-                <h6>Filter questions by</h6>,
+                <h6 className="filter-question-text">Filter questions by</h6>,
                 <>
                     <div>
                         <img
@@ -218,7 +218,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.length}
             >
                 {getFilteredStageOptions().map((stage, index) => (
-                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
+                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy})} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchStages.includes(stage.value)}
@@ -234,7 +234,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={searchExamBoards.length}
             >
                 {getFilteredExamBoardOptions({byStages: searchStages}).map((board, index) => (
-                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
+                    <div className="w-100 ps-3 py-1 bg-white" key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchExamBoards.includes(board.value)}
@@ -300,7 +300,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     <b className="small text-start">{siteSpecific("Learn more about difficulty levels", "What do the difficulty levels mean?")}</b>
                 </button>
                 {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
-                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
+                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy})} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchDifficulties.includes(difficulty.value)}
@@ -323,7 +323,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={excludeBooks ? 1 : searchBooks.length}
             >
                 <>
-                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})}>
+                    <div className="w-100 ps-3 py-1 ms-2">
                         <StyledCheckbox
                             color="primary"
                             checked={excludeBooks}
@@ -332,7 +332,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         />
                     </div>
                     {bookOptions.map((book, index) => (
-                        <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
+                        <div className="w-100 ps-3 py-1 ms-2" key={index}>
                             <StyledCheckbox
                                 color="primary" disabled={excludeBooks}
                                 checked={searchBooks.includes(book.value) && !excludeBooks}
@@ -352,7 +352,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 toggle={() => listStateDispatch({type: "toggle", id: "questionStatus", focus: below["md"](deviceSize)})}
                 numberSelected={Object.values(searchStatuses).reduce((acc, item) => acc + item, 0)}
             >
-                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda})}>
+                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy})}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.notAttempted}
@@ -375,7 +375,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         </div>}
                     />
                 </div>
-                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda})}>
+                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy})}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.complete}
@@ -398,7 +398,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         </div>}
                     />
                 </div>
-                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda})}>
+                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy})}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.tryAgain}

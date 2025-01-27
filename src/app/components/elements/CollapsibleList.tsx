@@ -39,11 +39,11 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
     return <Col className={props.className} data-targetHeight={(headRef.current?.offsetHeight ?? 0) + (expanded ? expandedHeight : 0)}>
         <div className="row collapsible-head" ref={headRef}>
             <button className={classNames("w-100 d-flex align-items-center p-3 text-start", {"bg-white": isAda, "bg-transparent": isPhy, "ps-4": props.asSubList})} onClick={toggle}>
-                {title && <span>{title}</span>}
-                <Spacer/>
+                {title && <span className="me-2">{title}</span>}
+                {isAda && <Spacer/>}
                 {(props.numberSelected ?? 0) > 0
                     && <FilterCount count={props.numberSelected ?? 0} className="me-2" />}
-                <img className={classNames("icon-dropdown-90", {"active": expanded})} src={"/assets/common/icons/chevron_right.svg"} alt="" />
+                <img className={classNames({"icon-dropdown-90": isAda, "icon-dropdown-180": isPhy, "active": expanded})} src={classNames({"/assets/common/icons/chevron_right.svg": isAda, "/assets/common/icons/chevron_down.svg": isPhy})} alt="" />
             </button>
         </div>
         <Row 
