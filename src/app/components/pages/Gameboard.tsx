@@ -36,8 +36,6 @@ import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import { ListView } from "../elements/list-groups/ListView";
-import { ShortcutResponse } from "../../../IsaacAppTypes";
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
     let itemClasses = classNames("content-summary-link text-info bg-white", {"p-3": isPhy, "p-0": isAda});
