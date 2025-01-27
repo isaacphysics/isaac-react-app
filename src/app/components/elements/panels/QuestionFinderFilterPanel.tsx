@@ -117,7 +117,7 @@ const listTitles: { [field in keyof TopLevelListsState]: string } = {
     questionStatus: siteSpecific("Status", "Question status")
 };
 
-interface QuestionFinderFilterPanelProps {
+export interface QuestionFinderFilterPanelProps {
     searchDifficulties: Difficulty[]; setSearchDifficulties: Dispatch<SetStateAction<Difficulty[]>>;
     searchTopics: string[], setSearchTopics: Dispatch<SetStateAction<string[]>>;
     searchStages: STAGE[], setSearchStages: Dispatch<SetStateAction<STAGE[]>>;
@@ -165,36 +165,40 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         }
     };
 
-    return <Card>
+    return <div className={classNames({"card": isAda})}>
         <CardHeader className="finder-header pl-3" onClick={(e) => {
             // the filters panel can only be collapsed when it is not a sidebar
             // (changing screen size after collapsing does not re-expand it but the options become visible)
             if (below["md"](deviceSize)) handleFilterPanelExpansion(e);
         }}>
-            <div>
-                <img
-                    src="/assets/common/icons/filter-icon.svg"
-                    alt="Filter"
-                    style={{width: 18}}
-                    className="ms-1 me-2"
-                />
-                <b>Filter by</b>
-            </div>
-            <Spacer/>
-            {validFiltersSelected && <div className="pe-1 pe-lg-0">
+            {siteSpecific(
+                <h6>Filter questions by</h6>,
+                <>
+                    <div>
+                        <img
+                            src="/assets/common/icons/filter-icon.svg"
+                            alt="Filter"
+                            style={{width: 18}}
+                            className="ms-1 me-2"
+                        />
+                        <b>Filter by</b>
+                    </div>
+                    <Spacer/>
+                    {validFiltersSelected && <div className="pe-1 pe-lg-0">
+                        <button
+                            className={classNames("text-black pe-lg-0 py-0 me-2 me-lg-0 bg-opacity-10 btn-link", {"bg-white": isAda})}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                clearFilters();
+                            }}
+                        >
+                            Clear all
+                        </button>
+                    </div>}
+                </>)}
+            {below["md"](deviceSize) && isAda && <div>
                 <button
-                    className={"text-black pe-lg-0 py-0 me-2 me-lg-0 bg-white bg-opacity-10 btn-link"}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        clearFilters();
-                    }}
-                >
-                    Clear all
-                </button>
-            </div>}
-            {below["md"](deviceSize) && <div>
-                <button
-                    className="bg-white bg-opacity-10 p-0"
+                    className="bg-opacity-10 p-0 bg-white"
                     onClick={handleFilterPanelExpansion}
                 >
                     <img
@@ -207,14 +211,14 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 </button>
             </div>}
         </CardHeader>
-        <CardBody className={classNames("p-0 m-0", {"d-none": below["md"](deviceSize) && !filtersVisible})}>
+        <CardBody className={classNames("p-0 m-0", {"d-none": isAda && below["md"](deviceSize) && !filtersVisible})}>
             <CollapsibleList
                 title={listTitles.stage} expanded={listState.stage.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "stage", focus: below["md"](deviceSize)})}
                 numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.length}
             >
                 {getFilteredStageOptions().map((stage, index) => (
-                    <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchStages.includes(stage.value)}
@@ -230,7 +234,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={searchExamBoards.length}
             >
                 {getFilteredExamBoardOptions({byStages: searchStages}).map((board, index) => (
-                    <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchExamBoards.includes(board.value)}
@@ -263,7 +267,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             toggle={() => listStateDispatch({type: "toggle", id: `topics ${sublistDelimiter} ${tag.label}`, focus: true})}
                         >
                             {tag.options.map((topic, index) => (
-                                <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                                <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
                                     <StyledCheckbox
                                         color="primary"
                                         checked={searchTopics.includes(topic.value)}
@@ -288,7 +292,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={searchDifficulties.length}
             >
                 <button
-                    className="p-0 bg-white h-min-content btn-link d-flex ps-3 py-2"
+                    className={classNames("p-0 h-min-content btn-link d-flex ps-3 py-2", {"bg-white": isAda, "bg-transparent": isPhy})}
                     onClick={(e) => {
                         e.preventDefault();
                         dispatch(openActiveModal(questionFinderDifficultyModal()));
@@ -296,7 +300,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     <b className="small text-start">{siteSpecific("Learn more about difficulty levels", "What do the difficulty levels mean?")}</b>
                 </button>
                 {SIMPLE_DIFFICULTY_ITEM_OPTIONS.map((difficulty, index) => (
-                    <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchDifficulties.includes(difficulty.value)}
@@ -307,7 +311,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                             )}
                             label={<div className="d-flex align-items-center">
                                 <span className="me-2">{difficulty.label}</span>
-                                <DifficultyIcons difficulty={difficulty.value} blank className="mt-n2"/>
+                                <DifficultyIcons difficulty={difficulty.value} blank className={classNames({"mt-n2": isAda, "mt-2": isPhy})}/>
                             </div>}
                         />
                     </div>
@@ -319,7 +323,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={excludeBooks ? 1 : searchBooks.length}
             >
                 <>
-                    <div className="w-100 ps-3 py-1 bg-white">
+                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})}>
                         <StyledCheckbox
                             color="primary"
                             checked={excludeBooks}
@@ -328,7 +332,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         />
                     </div>
                     {bookOptions.map((book, index) => (
-                        <div className="w-100 ps-3 py-1 bg-white" key={index}>
+                        <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda})} key={index}>
                             <StyledCheckbox
                                 color="primary" disabled={excludeBooks}
                                 checked={searchBooks.includes(book.value) && !excludeBooks}
@@ -348,7 +352,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 toggle={() => listStateDispatch({type: "toggle", id: "questionStatus", focus: below["md"](deviceSize)})}
                 numberSelected={Object.values(searchStatuses).reduce((acc, item) => acc + item, 0)}
             >
-                <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
+                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda})}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.notAttempted}
@@ -371,7 +375,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         </div>}
                     />
                 </div>
-                <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
+                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda})}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.complete}
@@ -394,7 +398,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         </div>}
                     />
                 </div>
-                <div className="w-100 ps-3 py-1 bg-white d-flex align-items-center">
+                <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda})}>
                     <StyledCheckbox
                         color="primary"
                         checked={searchStatuses.tryAgain}
@@ -442,14 +446,14 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                     </span>}
                 />
             </div>}*/}
-            <Col className="text-center py-3 filter-btn bg-white border-radius-2">
+            {isAda && <Col className="text-center py-3 filter-btn bg-white border-radius-2">
                 <Button onClick={() => {
                     applyFilters();
                     setSearchDisabled(true);
                 }} disabled={searchDisabled}>
                     Apply filters
                 </Button>
-            </Col>
+            </Col>}
         </CardBody>
-    </Card>;
+    </div>;
 }

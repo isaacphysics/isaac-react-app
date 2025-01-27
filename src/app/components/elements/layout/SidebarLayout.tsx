@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { getHumanContext } from "../../../services/pageContext";
+import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../panels/QuestionFinderFilterPanel";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -285,17 +286,48 @@ export const GenericConceptsSidebar = (props: SidebarProps) => {
     return <ContentSidebar {...props}/>;
 };
 
+interface FilterDropdownProps extends React.HTMLAttributes<HTMLLabelElement> {
+    tag: Tag;
+    questionFilters: Tag[];
+    setQuestionFilters: React.Dispatch<React.SetStateAction<Tag[]>>;
+    tagCounts?: Record<string, number>;
+}
+
+const FilterDropdownBase = (props: FilterCheckboxBaseProps) => {
+    const { id, checked, onInputChange, filterTitle, count, ...rest } = props;
+    return <Label {...rest} className="d-flex align-items-center filters-checkbox py-2 mb-1">
+        <Input id={`problem-search-${id}`} type="checkbox" checked={checked ?? false} onChange={onInputChange} />
+        <span className="ms-3">{filterTitle}</span>
+        {isDefined(count) && <span className="badge rounded-pill ms-2">{count}</span>}
+    </Label>;
+};
+
+const FilterDropdown = (props : FilterDropdownProps) => {
+    const {tag, questionFilters, setQuestionFilters, tagCounts, ...rest} = props;
+    const [checked, setChecked] = useState(questionFilters.includes(tag));
+
+    useEffect(() => {
+        setChecked(questionFilters.includes(tag));
+    }, [questionFilters, tag]);
+
+    return <FilterDropdownBase {...rest} id={tag.id} checked={checked} 
+        onInputChange={(e: ChangeEvent<HTMLInputElement>) => setQuestionFilters(f => e.target.checked ? [...f, tag] : f.filter(c => c !== tag))}
+        filterTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
+    />;
+};
+
 interface QuestionFinderSidebarProps extends SidebarProps {
     searchText: string;
     setSearchText: React.Dispatch<React.SetStateAction<string>>;
     questionFilters: Tag[];
     setQuestionFilters: React.Dispatch<React.SetStateAction<Tag[]>>;
-    applicableTags: Tag[];
+    topLevelFilters: string[];
     tagCounts?: Record<string, number>;
+    questionFinderFilterPanelProps: QuestionFinderFilterPanelProps
 }
 
 export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
-    const { searchText, setSearchText, questionFilters, setQuestionFilters, applicableTags, tagCounts, ...rest } = props;
+    const { searchText, setSearchText, questionFilters, setQuestionFilters, topLevelFilters, tagCounts, questionFinderFilterPanelProps, ...rest } = props;
 
     const pageContext = useAppSelector(selectors.pageContext.context);
 
@@ -309,14 +341,11 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
             onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
         />
 
-        <div className="section-divider"/>
-
-        <div className="d-flex flex-column">
-            <h5>Filter questions by</h5>
-            <AllFiltersCheckbox conceptFilters={questionFilters} setConceptFilters={setQuestionFilters} tagCounts={tagCounts} />
-            <div className="section-divider-small"/>
-            {applicableTags.map(tag => <FilterCheckbox key={tag.id} tag={tag} conceptFilters={questionFilters} setConceptFilters={setQuestionFilters} tagCounts={tagCounts}/>)}
-        </div>
+        
+        <QuestionFinderFilterPanel {...questionFinderFilterPanelProps} />
+        {/*<AllFiltersCheckbox conceptFilters={questionFilters} setConceptFilters={setQuestionFilters} tagCounts={tagCounts} /> */}
+        {/*{topLevelFilters.map(filter => <FilterDropdown key={filter.id} tag={tag} conceptFilters={questionFilters} setConceptFilters={setQuestionFilters} tagCounts={tagCounts}/>)}*/}
+        
 
         <div className="section-divider"/>
 

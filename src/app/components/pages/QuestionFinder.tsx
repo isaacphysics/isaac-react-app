@@ -42,6 +42,10 @@ import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilter
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { Tag } from "../../../IsaacAppTypes";
+import { PrintButton } from "../elements/PrintButton";
+import { EditContentButton } from "../elements/EditContentButton";
+import { ShareLink } from "../elements/ShareLink";
+import { Spacer } from "../elements/Spacer";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
@@ -406,16 +410,40 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             description={description} help={pageHelp}
             icon={{type: "hex", icon: "page-icon-finder"}}
         />
+        <div className="d-flex align-items-center">
+            <span>Use the search box and/or filters to find questions; you can then refine your search further with the filters.</span>
+            <Spacer/>
+            <div className="no-print d-flex align-items-center">
+                <div className="question-actions question-actions-leftmost mt-3">
+                    <ShareLink linkUrl={`/questions`}/>
+                </div>
+                <div className="question-actions mt-3 not-mobile">
+                    <PrintButton/>
+                </div>
+            </div>
+        </div>
         <SidebarLayout>
             <QuestionFinderSidebar searchText={searchQuery} setSearchText={setSearchQuery} questionFilters={[]} setQuestionFilters={function (value: React.SetStateAction<Tag[]>): void {
                 throw new Error("Function not implemented.");
-            } } applicableTags={[]} />
+            } } topLevelFilters={[]} 
+            questionFinderFilterPanelProps={{
+                searchDifficulties, setSearchDifficulties,
+                searchTopics, setSearchTopics,
+                searchStages, setSearchStages,
+                searchExamBoards, setSearchExamBoards,
+                searchStatuses, setSearchStatuses,
+                searchBooks, setSearchBooks,
+                excludeBooks, setExcludeBooks,
+                tiers, choices, selections, setTierSelection,
+                applyFilters, clearFilters,
+                validFiltersSelected, searchDisabled, setSearchDisabled
+            }} />
             <MainContent>
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
                 {/*<PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} /> */}
 
-                <Row>
+                {isAda && <Row>
                     <Col lg={6} md={12} xs={12} className="finder-search">
                         <Label htmlFor="question-search-title" className="mt-2"><b>Search for a question</b></Label>
                         <InputGroup>
@@ -429,7 +457,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             <Button className="question-search-button" onClick={searchAndUpdateURL}/>
                         </InputGroup>
                     </Col>
-                </Row>
+                </Row>}
 
                 <Row className="mt-4 position-relative finder-panel">
                     <Col lg={siteSpecific(4, 3)} md={12} xs={12} className={classNames("text-wrap my-2", {"d-none": isPhy})} data-testid="question-finder-filters">
