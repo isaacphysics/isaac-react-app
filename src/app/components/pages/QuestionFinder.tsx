@@ -394,7 +394,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
-            currentPageTitle={siteSpecific("Question Finder", "Questions")} 
+            currentPageTitle={siteSpecific("Question Finder", "Questions")}
+            description={siteSpecific("Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology. Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.", "")}
             help={pageHelp}
             icon={{type: "hex", icon: "page-icon-finder"}}
         />
