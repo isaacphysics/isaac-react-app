@@ -315,7 +315,7 @@ const AssignmentStatusCheckbox = (props: AssignmentStatusCheckboxProps) => {
         id={status ?? ""} filterTitle={status}
         onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== AssignmentState.ALL), status]) : setStatusFilter(c => c.filter(s => s !== status))}
         checked={statusFilter.includes(status)}
-        count={count}
+        count={count} {...rest}
     />;
 };
 
@@ -333,7 +333,7 @@ const AssignmentStatusAllCheckbox = (props: Omit<AssignmentStatusCheckboxProps, 
             }
         }}
         checked={statusFilter.includes(AssignmentState.ALL)}
-        count={count}
+        count={count} {...rest}
     />;
 };
 
