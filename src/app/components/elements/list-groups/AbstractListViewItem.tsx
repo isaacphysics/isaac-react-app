@@ -79,7 +79,7 @@ export interface AbstractListViewItemProps {
     fullWidth?: boolean;
 }
 
-export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, supersededBy, linkTags, testTag, url, audienceViews, previewQuizUrl, quizButton, isCard, fullWidth, ...rest}: AbstractListViewItemProps) => { 
+export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb, status, tags, supersededBy, linkTags, quizTag, url, audienceViews, previewQuizUrl, quizButton, isCard, fullWidth, ...rest}: AbstractListViewItemProps) => { 
     const deviceSize = useDeviceSize();
     const isQuiz: boolean = (previewQuizUrl && quizButton) ? true : false;
     
@@ -96,7 +96,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
             <div className="align-content-center">
                 <div className="d-flex">
                     <span className="question-link-title">{title}</span>
-                    {testTag && <span className="quiz-level-1-tag ms-sm-2">{testTag}</span>}
+                    {quizTag && <span className="quiz-level-1-tag ms-sm-2">{quizTag}</span>}
                     {isPhy && <div className="d-flex flex-column justify-self-end">
                         {supersededBy && <a 
                             className="superseded-tag mx-1 ms-sm-3 my-1 align-self-end" 
