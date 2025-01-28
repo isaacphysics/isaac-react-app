@@ -73,7 +73,7 @@ export const selectors = {
     },
 
     pageContext: {
-        context: (state: AppState) => state?.pageContext,
+        context: (state: AppState) => state?.pageContext ?? undefined, // transform null => undefined
         stage: (state: AppState) => state?.pageContext?.stage,
         subject: (state: AppState) => state?.pageContext?.subject,
     }

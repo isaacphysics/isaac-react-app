@@ -756,4 +756,4 @@ export type SiteTheme = Subject | "neutral";
 export type PageContextState = {
     stage: ApiTypes.Stage; // "all" is the default
     subject: Subject | undefined;
-};
+} | null;
