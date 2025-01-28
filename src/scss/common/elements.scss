@@ -302,7 +302,7 @@ iframe.email-html {
   max-height: 0;
 }
 
-@mixin pill-tag($text-color, $bg-color: white, $border-color: null) {
+@mixin pill-tag($text-color: black, $bg-color: var(--subject-color-50, white), $border-color: null) {
   width: max-content;
   padding: 0 0.4em;
   align-self: center;
@@ -310,10 +310,10 @@ iframe.email-html {
   text-decoration: none;
   color: $text-color;
   background-color: $bg-color;
-  border-radius: 8px;
-  transition: color 0.2s;
+  border-radius: $border-radius-pill;
+  transition: color 0.2s ease-out, background-color 0.2s ease-out;
   &::after {
-      display: none;
+    display: none;
   }
 
   @if $border-color {
@@ -321,7 +321,8 @@ iframe.email-html {
   }
 
   &:is(a):hover {
-      color: darken($text-color, 20%);
+    color: color-mix(in srgb, var(--pill-text-color, black), black 20%);
+    background-color: color-mix(in hsl, var(--pill-bg-color, var(--subject-color-50)), black 5%);
   }
 }
 

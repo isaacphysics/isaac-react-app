@@ -45,6 +45,7 @@
     // ICONS
     --icon-primary: #{map.get($subject-colors, 500)};
 
+    --subject-color-50: #{map.get($subject-colors, 50)};
     --subject-color-100: #{map.get($subject-colors, 100)};
     --subject-color-200: #{map.get($subject-colors, 200)};
     --subject-color-300: #{map.get($subject-colors, 300)};
