@@ -18,19 +18,35 @@
   border-radius: 10px; 
   border: 1px solid $gray-107;
   background: white;
-}
 
-.list-view-card-border:not(:last-child) {
-  border-bottom: 2px solid $gray-107;
-  @media (min-width: 992px) {
-    border-right: 2px solid $gray-107;
-    border-bottom: none;
-  }
-}
+  > .list-group-item {
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
 
-.row:not(:last-child) {
-  .list-view-card-border {
-      border-bottom: 2px solid $gray-107;
+    @include media-breakpoint-down(lg) {
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--border-light);
+      }
+      &:not(:first-child) {
+        border-top: 1px solid var(--border-light);
+      }
+    }
+
+    @include media-breakpoint-up(lg) {
+      &:nth-child(odd) {
+        border-right: 1px solid var(--border-light);
+      }
+      &:nth-child(even) {
+        border-left: 1px solid var(--border-light);
+      }
+      &:nth-child(n+3) {
+        border-top: 1px solid var(--border-light);
+      }
+      &:nth-last-child(n+3) {
+        border-bottom: 1px solid var(--border-light);
+      }
+    }
   }
 }
 
@@ -43,6 +59,7 @@
 .list-group-links {
   .question-link-title {
     color: var(--subject-color-900);
+    font-family: $secondary-font-medium;
   }
 }
 

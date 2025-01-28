@@ -157,28 +157,9 @@ export const GenericListViewItem = ({item, ...rest}: {item: ShortcutResponse}) =
 };
 
 export const ListViewCards = ({cards}: {cards: ListViewCardProps[]}) => {
-    const cardGrid: JSX.Element[] = [];
-    for (let i = 0; i < (cards.length - cards.length % 2); i += 2) {
-        cardGrid.push(<Row className="w-100 link-list list-group-links ms-0 border-0">
-            <Col xs={12} lg={6} className="list-view-card-border">
-                <ListViewCard {...cards[i]}/>
-            </Col>
-            <Col xs={12} lg={6} className="list-view-card-border">
-                <ListViewCard {...cards[i+1]}/>
-            </Col>
-        </Row>);
-    }
-    if (cards.length % 2 == 1) {
-        cardGrid.push(<Row className="w-100 link-list list-group-links ms-0 border-0 justify-content-center">
-            <Col xs={12} lg={6} className="list-view-card-border">
-                <ListViewCard {...cards[cards.length-1]}/>
-            </Col>
-        </Row>);
-    }
-
-    return <div className="list-view-card-container">
-        {cardGrid}
-    </div>;
+    return <ListGroup className="list-view-card-container link-list list-group-links p-0 m-0 flex-row row-cols-1 row-cols-lg-2 row">
+        {cards.map((card, index) => <ListViewCard key={index} {...card}/>)}
+    </ListGroup>;
 };
 
 export const ListView = ({items, ...rest}: {items: ShortcutResponse[], fullWidth?: boolean, isQuizSetter?: boolean}) => {
