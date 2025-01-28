@@ -55,7 +55,7 @@ export const getThemeFromContextAndTags = (element: React.RefObject<HTMLElement>
  * @returns The page context for this page.
  */
 export const getUpdatedPageContext = (previousContext: PageContextState | undefined, userContexts: readonly UserContext[] | undefined, doc: ContentBaseDTO | undefined): PageContextState => {
-    const newContext = {stage: "all", subject: undefined} as PageContextState;
+    const newContext = {stage: "all", subject: undefined} as NonNullable<PageContextState>;
 
     // if we haven't changed stage (GCSE => GCSE), use the stage from the old context
     if (previousContext?.stage && doc?.audience?.some(a => a.stage?.includes(previousContext.stage))) {

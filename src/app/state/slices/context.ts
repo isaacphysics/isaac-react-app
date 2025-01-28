@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { PageContextState, Subject } from "../../../IsaacAppTypes";
+import { PageContextState } from "../../../IsaacAppTypes";
 import { Stage } from "../../../IsaacApiTypes";
 
 interface actionType {
@@ -9,12 +9,12 @@ interface actionType {
 
 export const pageContextSlice = createSlice({
     name: 'pageContextSlice',
-    initialState: ({stage: "all" as Stage, subject: undefined as Subject | undefined}),
+    initialState: null as PageContextState,
     reducers: {
         updatePageContext: (state, action: actionType) => {
             if (state) {
-                state.stage = action.payload.stage;
-                state.subject = action.payload.subject;
+                state.stage = action.payload?.stage || "all" as Stage;
+                state.subject = action.payload?.subject || undefined;
             }
         }
     },
