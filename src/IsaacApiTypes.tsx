@@ -44,7 +44,7 @@ export interface AssignmentStatusDTO {
     errorMessage?: string;
 }
 
-export interface AssignmentProgressDTO { 
+export interface AssignmentProgressDTO {
     user?: UserSummaryDTO;
     correctPartResults?: number[];
     incorrectPartResults?: number[];
@@ -514,6 +514,8 @@ export interface ParsonsItemDTO extends ItemDTO {
 
 export interface CoordinateItemDTO extends ItemDTO {
     coordinates?: string[];
+    x?: string;  // deprecated
+    y?: string;  // deprecated
 }
 
 export interface QuantityDTO extends ChoiceDTO {
