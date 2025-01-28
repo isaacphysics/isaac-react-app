@@ -3,7 +3,7 @@ import React from "react";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { Subject, ViewingContext} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import { Button, Col, ListGroupItem, Row } from "reactstrap";
+import { Button, Col, ListGroupItem, ListGroupItemProps, Row } from "reactstrap";
 import { Spacer } from "../Spacer";
 import { CompletionState } from "../../../../IsaacApiTypes";
 import { below, isPhy, useDeviceSize } from "../../../services";
@@ -60,7 +60,7 @@ export interface ListViewTagProps {
     url?: string;
 }
 
-export interface AbstractListViewItemProps {
+export interface AbstractListViewItemProps extends ListGroupItemProps {
     icon: TitleIconProps;
     title: string;
     subject?: Subject;
@@ -86,7 +86,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
     fullWidth = fullWidth || below["sm"](deviceSize) || ((status || audienceViews || previewQuizUrl || quizButton) ? false : true);
     const colWidths = fullWidth ? [12,12,12,12,12] : isQuiz ? [12,6,6,6,6] : [12,8,7,6,7];
     const cardBody =
-    <Row className="w-100 flex-row" {...rest}>
+    <Row className="w-100 flex-row">
         <Col xs={colWidths[0]} md={colWidths[1]} lg={colWidths[2]} xl={colWidths[3]} xxl={colWidths[4]} className={classNames("d-flex", {"mt-3": isCard})}>
             <div>
                 {icon && (
@@ -143,7 +143,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
         }
     </Row>;
 
-    return <ListGroupItem className="content-summary-item" data-bs-theme={subject}>
+    return <ListGroupItem {...rest} className={classNames("content-summary-item", rest.className)} data-bs-theme={subject}>
         {url ? 
             <Link to={{pathname: url}}> {cardBody} </Link> : 
             <div> {cardBody} </div>}
