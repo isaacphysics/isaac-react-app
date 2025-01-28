@@ -120,7 +120,7 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {status && (below["lg"](deviceSize) || fullWidth) && <div className="d-flex">
                     <StatusDisplay status={status}/>
                 </div>}
-                {linkTags && <div className="d-flex py-3">
+                {linkTags && <div className="d-flex py-3 flex-wrap">
                     <LinkTags linkTags={linkTags}/>
                 </div>}
                 {previewQuizUrl && quizButton && fullWidth && <div className="d-flex d-md-none align-items-center">
