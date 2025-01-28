@@ -53,9 +53,12 @@ const WrapperComponent = function ({ component: Component, trackingOptions, ...p
   );
 };
 
-export const isGoogleBot = function (userAgent?: string): boolean {
-  const googleBotUserAgents: string = "compatible; Googlebot/2.1; +http://www.google.com/bot.html";
-  return userAgent?.includes(googleBotUserAgents) ?? false;
+export const isBot = function (userAgent?: string): boolean {
+  const botUserAgents: string[] = [
+    "compatible; Googlebot/2.1; +http://www.google.com/bot.html",
+    "compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm",
+  ];
+  return botUserAgents.some((bot) => userAgent?.includes(bot) ?? false);
 };
 
 export const TrackedRoute = function ({ component, trackingOptions, componentProps, ...rest }: TrackedRouteProps) {
@@ -72,7 +75,7 @@ export const TrackedRoute = function ({ component, trackingOptions, componentPro
               rest.ifUser && [isTutorOrAbove.name, isTeacherOrAbove.name].includes(rest.ifUser.name); // TODO we should try to find a more robust way than this
             return (
               <ShowLoading until={user}>
-                {(user && ifUser(user)) || isGoogleBot(userAgent) ? (
+                {(user && ifUser(user)) || isBot(userAgent) ? (
                   <WrapperComponent
                     component={component}
                     trackingOptions={trackingOptions}

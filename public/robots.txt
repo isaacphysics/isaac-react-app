@@ -8,4 +8,5 @@ Disallow:
 
 # Allow Googlebot access to everything
 User-agent: Googlebot
+User-agent: Bingbot
 Disallow:
