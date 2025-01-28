@@ -15,6 +15,18 @@
   }
 }
 
+.text-theme {
+  @extend .text-secondary;
+}
+
+.bg-theme {
+  @extend .bg-secondary;
+}
+
+.border-theme {
+  @extend .border-secondary;
+}
+
 .bg-dark-pink-200 {
   background-color: $dark-pink-200;
 }
