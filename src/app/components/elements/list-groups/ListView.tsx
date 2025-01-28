@@ -3,14 +3,14 @@ import { AbstractListViewItem, ListViewTagProps } from "./AbstractListViewItem";
 import { ShortcutResponse, Subject, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
 import { DOCUMENT_TYPE, documentTypePathPrefix, SEARCH_RESULT_TYPE, TAG_ID, TAG_LEVEL, tags } from "../../../services";
-import { Col, ListGroup, Row } from "reactstrap";
+import { ListGroup, ListGroupItemProps } from "reactstrap";
 import { TitleIconProps } from "../PageTitle";
 import { AffixButton } from "../AffixButton";
 import { QuizSummaryDTO } from "../../../../IsaacApiTypes";
 import { Link } from "react-router-dom";
 import { showQuizSettingModal, useAppDispatch } from "../../../state";
 
-export interface ListViewCardProps {
+export interface ListViewCardProps extends ListGroupItemProps {
     item: ShortcutResponse;
     icon: TitleIconProps;
     subject?: Subject;
