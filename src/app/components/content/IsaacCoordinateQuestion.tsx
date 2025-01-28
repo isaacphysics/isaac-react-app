@@ -30,7 +30,7 @@ export const coordinateInputValidator = (input: (readonly string[])[]) => {
             if (/[0-9]\s*[+/÷\-x×]\s*[0-9]/.test(value)) {
                 containsOperator = true;
             }
-            const foundBadChars =  [...value.matchAll(/[^ 0-9+-.eE]/g)];
+            const foundBadChars = [...value.matchAll(/[^ 0-9+-.eE]/g)];
             if (foundBadChars.length > 0) {
                 allBadChars.push(foundBadChars.toString());
             }
@@ -49,6 +49,41 @@ export const coordinateInputValidator = (input: (readonly string[])[]) => {
     return errors;
 };
 
+const coordItemToValue = function (item: Immutable<CoordinateItemDTO>, index: number) {
+    if (isDefined(item.x) && isDefined(item.y) ) {
+        // This is an old-style choice, we need to display the x and y properties for indexes 0 and 1.
+        return index === 0 ? item.x : (index === 1 ? item.y : "");
+    }
+    return isDefined(item.coordinates?.[index]) ? item.coordinates[index] : "";
+};
+
+const updateCoordItem = function (item: Immutable<CoordinateItemDTO>, newValue: string, index: number, numberOfDimensions: number) {
+    let coords;
+    if (!item?.coordinates?.length) {
+        // Create an array, and backfill with old-style x and y if necessary:
+        coords = Array<string>(numberOfDimensions).fill("");
+        if (isDefined(item.x)) {
+            coords[0] = item.x;
+        }
+        if (isDefined(item.y)) {
+            coords[1] = item.y;
+        }
+    } else {
+        coords = item.coordinates;
+    }
+    coords = coords.with(index, newValue);
+    return {...item, coordinates: coords};
+};
+
+const cleanItem = function (item: Immutable<CoordinateItemDTO>) {
+    const { x, y, ...cleaned } = item;
+    // Remove x and y from the top-level object, but only discard if coordinates already set, otherwise use to init:
+    if (isDefined(x) && isDefined(y) && !isDefined(cleaned.coordinates)) {
+        return {...cleaned, coordinates: [x, y]};
+    }
+    return cleaned;
+};
+
 const CoordinateInput = (props: CoordinateInputProps) => {
     const {value, placeholderValues, numberOfDimensions, onChange, readonly, remove} = props;
     return <span className="coordinate-input">({[...Array(numberOfDimensions)].map((_, i) =>
@@ -57,9 +92,8 @@ const CoordinateInput = (props: CoordinateInputProps) => {
                 type="text"
                 className="force-print"
                 placeholder={placeholderValues[i] ?? ""}
-                value={isDefined(value.coordinates?.[i]) ? value.coordinates[i] : ""}
-                onChange={event => onChange({...value, coordinates: value.coordinates && value.coordinates.length ? value.coordinates.with(i, event.target.value) :
-                    (event.target.value === "" ? undefined : Array<string>(numberOfDimensions).fill("").with(i, event.target.value))})}
+                value={coordItemToValue(value, i)}
+                onChange={event => onChange(updateCoordItem(value, event.target.value, i, numberOfDimensions))}
                 readOnly={readonly}
             />
             {(i < numberOfDimensions - 1) && <span className="coordinate-input-separator">,&nbsp;</span>}
@@ -81,13 +115,13 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
     }, [dispatchSetCurrentAttempt, currentAttempt]);
 
     const updateItem = useCallback((index: number, value: Immutable<CoordinateItemDTO>) => {
-        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? item : {...DEFAULT_COORDINATE_ITEM});
-        items[index] = value;
+        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : {...DEFAULT_COORDINATE_ITEM});
+        items[index] = cleanItem(value);
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
     }, [currentAttempt, dispatchSetCurrentAttempt]);
 
     const removeItem = useCallback((index: number) => {
-        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? item : {...DEFAULT_COORDINATE_ITEM});
+        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : {...DEFAULT_COORDINATE_ITEM});
         items.splice(index, 1);
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
     }, [currentAttempt, dispatchSetCurrentAttempt]);
