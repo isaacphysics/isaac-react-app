@@ -158,14 +158,14 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
             </UncontrolledTooltip>
             {scheduledStartDateInvalid && <small className={"pt-2 text-danger"}>Start date must be today or in the future.</small>}
         </Label>
-        <Label className="w-100 mb-4">Set an optional due date:<br/>
+        <Label className="w-100 mb-4">Set a due date:<br/>
             <DateInput invalid={dueDateInvalid || undefined} value={dueDate ?? undefined} yearRange={yearRange}
                 onChange={(e) => setDueDate(e.target.valueAsDate)}/>
             {dueDateInvalid && <small className={"pt-2 text-danger"}>{dueDate.valueOf() > TODAY().valueOf() ? "Due date must be on or after the start date." : `Due date must be after today.`}</small>}
         </Label>
 
         <Alert color={siteSpecific("warning", "info")} className="py-1 px-2 mb-4">
-            From {siteSpecific("Jan", "January")} 2025, due dates will be required for set tests.
+            Since {siteSpecific("Jan", "January")} 2025, due dates are required for set tests.
         </Alert>
 
         <div className="w-100">
@@ -179,7 +179,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, scheduledStartD
             </Button>
             <Button
                 className={"float-end mb-4 w-100 w-sm-auto"}
-                disabled={groupInvalid || !feedbackMode || isAssigning || dueDateInvalid || scheduledStartDateInvalid}
+                disabled={groupInvalid || !feedbackMode || isAssigning || !dueDate || dueDateInvalid || scheduledStartDateInvalid }
                 onMouseEnter={() => setValidated(new Set(['group', 'feedbackMode']))}
                 onClick={assign}
             >
