@@ -94,7 +94,7 @@ const fullyAttemptedQuestion = {...threePartQuestion, id: "fully_attempted_quest
 const partiallyAttemptedQuestion = {...threePartQuestion, id: "partially_attempted_question", questionPartsCorrect: 1, questionPartsIncorrect: 1, questionPartsNotAttempted: 1};
 const notAttemptedQuestion = {...threePartQuestion, id: "not_attempted_question", questionPartsNotAttempted: 3};
 
-function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO & {startDate: Date} {
+function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO & {startDate: Date | number} {
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate as Date;
     return {...assignment, startDate: assignmentStartDate};
 }
