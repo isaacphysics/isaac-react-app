@@ -28,7 +28,7 @@ if [ $1 = "create" ] || [ $1 = "pull" ] || [ $1 = "push" ] || [ $1 = "run" ] || 
 
 elif [ $1 = "down" ] || [ $1 = "stop" ] || [ $1 = "restart" ] || [ $1 = "exec" ] || [ $1 = "config" ] || [ $1 = "logs" ] || [ $1 = "kill" ] || [ $1 = "ps" ]; then
   # This affects existing containers, so don't pull newer images:
-  API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' $DOCKER_REPO/isaac-$SITE-app:$APP_VERSION)
+  API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' $SITE-app-$ENV-$APP_VERSION)
 
 else
   # This might not be a docker-compose operation. If it is, it could be added above to the correct branch.
