@@ -22,13 +22,13 @@ import {
 type ExtendDueDateModalProps = {
     isOpen: boolean;
     toggle: () => void;
-    currDueDate: Date;
+    currDueDate: Date | number;
     numericQuizAssignmentId: number;
 }
 export const ExtendDueDateModal = (props: ExtendDueDateModalProps) => {
     const {isOpen, toggle, currDueDate, numericQuizAssignmentId} = props;
     const yearRange = range(currentYear, currentYear + 5);
-    const [dueDate, setDueDate] = useState<Date>(currDueDate);
+    const [dueDate, setDueDate] = useState<Date>(new Date(currDueDate));
     const [updateQuiz, {isLoading: isUpdatingQuiz}] = useUpdateQuizAssignmentMutation();
     const dispatch = useAppDispatch();
 

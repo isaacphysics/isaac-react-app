@@ -1,0 +1,21 @@
+.assignments-card {
+    background-color: white;
+    text-decoration: none;
+    border: 1px solid $color-neutral-300;
+    border-radius: $border-radius-lg;
+    transition: all 0.2s ease-out;
+
+    &:hover {
+        border-color: $color-neutral-400;
+        scale: 1.02;
+    }
+
+    .overdue {
+        color: $color-misc-red;
+        font-weight: 600;
+    }
+}
+
+.assignment-hex {
+    z-index: 5;
+}

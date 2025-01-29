@@ -346,3 +346,13 @@ iframe.email-html {
   border-left: 1px solid rgba(0, 0, 0, 0.1);
   opacity: 1;
 }
+
+.hoverable-tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  &:hover .popup {
+    display: block;
+  }
+}

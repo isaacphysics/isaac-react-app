@@ -80,7 +80,7 @@ const _compareStrings = (a: string | undefined, b: string | undefined): number =
     return a.localeCompare(b);
 };
 
-const _compareDates = (a: Date | undefined, b: Date | undefined): number => {
+const _compareDates = (a: Date | number | undefined, b: Date | number | undefined): number => {
     // sorts by date descending (most recent first), then undefined
     if (!a && !b) return 0;
     if (!a) return 1;

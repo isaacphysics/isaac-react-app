@@ -41,8 +41,15 @@
   }
 }
 
-.search--filter-input {
+[type='search'].search--filter-input {
   border: 1px solid $color-neutral-300;
+}
+
+select.form-select {
+  border: none;
+  border-radius: 0;
+  border-bottom: 2px solid $color-neutral-300;
+  background-color: transparent;
 }
 
 .form-check-input {
