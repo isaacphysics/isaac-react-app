@@ -17,19 +17,19 @@ interface HomepageHeroCardProps extends CardProps {
 const HomepageHeroCard = ({title, content, isStudent}: HomepageHeroCardProps) => {
     return <Card className="homepage-hero-card">
         <CardBody>
-            <span className="homepage-hero-card-tag">
+            <div className="homepage-hero-card-tag">
                 {isStudent
                     ? <>
-                        <img src="/assets/phy/icons/redesign/homepage-hero-student-flag.svg" height={"40px"} style={{alignContent: "left"}} alt={"student card tag"}/>
+                        <img src="/assets/phy/icons/redesign/homepage-hero-student-flag.svg" height={"40px"} alt={"student card tag"}/>
                         <b>STUDENTS</b>
                     </>
                     : <>
-                        <img src="/assets/phy/icons/redesign/homepage-hero-teacher-flag.svg" height={"40px"} style={{alignContent: "left"}} alt={"teacher card tag"}/>
+                        <img src="/assets/phy/icons/redesign/homepage-hero-teacher-flag.svg" height={"40px"} alt={"teacher card tag"}/>
                         <b>TEACHERS</b>
                     </>
                 }
-            </span><br/>
-            <CardTitle tag="h4">{title}</CardTitle>
+            </div>
+            <CardTitle className="mt-4" tag="h4">{title}</CardTitle>
             <CardText>{content}</CardText>
             <Button tag={Link} to={isStudent ? "/login" : "/teacher_account_request"}>Create a {isStudent ? "student" : "teacher"} account</Button>
         </CardBody>
@@ -43,12 +43,12 @@ const HomepageHero = () => {
         return <div className="homepage-hero">
             {above["xl"](deviceSize) && <div className="homepage-hero-img"/>}
             <div className="homepage-hero-content">
-                <div className="w-100 w-xl-50 mb-6">
-                    <span className="physics-strapline">
+                <div className="w-100 w-xl-50 mb-4 mb-xl-6">
+                    <div className="physics-strapline mb-3">
                         <h2 className="text-green">Master Science subjects</h2>
                         <h2>by solving problems</h2>
-                    </span><br/>
-                    <p>From School to University - <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.</p>
+                    </div>
+                    From School to University - <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.
                 </div>
                 <Row className="row-cols-1 row-cols-md-2">
                     <Col className="mb-3">
@@ -64,16 +64,15 @@ const HomepageHero = () => {
                             isStudent={false}/>
                     </Col>
                 </Row>
-            </div>
-            
+            </div>           
         </div>;
     }
 };
 
 export const HomepagePhy = () => {
-    const user = useAppSelector(selectors.user.orNull);
-
     useEffect( () => {document.title = SITE_TITLE;}, []);
+
+    const user = useAppSelector(selectors.user.orNull);
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
 
     const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
@@ -91,15 +90,15 @@ export const HomepagePhy = () => {
             </section>
             <Container>
                 <section id="explore-learn">
-                    <div style={{display: "flex"}} className="mt-5">
+                    <div className="mt-5">
                         <h3>Explore and learn!</h3>                                            
-                        <div className="section-divider"/>
                     </div>                    
                 </section>
+                <div className="section-divider"/>
                 <section id="events-news">
                     <Row className="mt-5 row-cols-1 row-cols-lg-2">
                         <div className="mt-3">
-                            <div style={{display: "flex"}}>
+                            <div className="d-flex">
                                 <h3>Upcoming Events</h3>
                                 <Link to="/events" className="news-events-link">More events</Link>                        
                                 <div className="section-divider"/>
@@ -109,14 +108,14 @@ export const HomepagePhy = () => {
                                 defaultErrorTitle={"Error loading events list"}
                                 thenRender={({events}) => {
                                     return <Row>
-                                        {events.slice(0, 2).map(event => <Col key={event.id}>
+                                        {events.map(event => <Col key={event.id}>
                                             <EventCard event={event} />
                                         </Col>)}
                                     </Row>;
                                 }}/>
                         </div>
                         <div className="mt-3"> 
-                            <div style={{display: "flex"}}>
+                            <div className="d-flex">
                                 <h3>News & Features</h3>
                                 <Link to="/news" className="news-events-link">More news</Link>                        
                                 <div className="section-divider"/>

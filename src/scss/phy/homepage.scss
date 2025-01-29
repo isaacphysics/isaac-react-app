@@ -10,48 +10,39 @@
 }
 
 .homepage {
-
   h3 {
     font-family: $secondary-font-bold;
     font-size: 24px;
     display: inline;
-    margin-right: 18px;
     text-wrap: nowrap;
   }
 
   .news-events-link {
     text-wrap: nowrap;
-    margin-top: 7px;
-    margin-right: 10px;
+    margin: 7px 10px 0px;
   }
 
   .section-divider {
-    height: 0;
-    border-top: 2px solid rgba(0, 0, 0, 0.1);
     margin-top: 18px;
     flex-grow: 1;
   }
 
   .homepage-hero {
-    background-color: #DCEBD7;
+    background-color: #DCEBD7; // not in colour scheme
     position: relative;
 
     .homepage-hero-content {
-      z-index: 1;
       padding: 80px;
     }
 
     .homepage-hero-img {
-      z-index: 0;
-      display: flex;
+      position: absolute;
       height: 100%;
-      background-size: contain;
       right: -400px;
       aspect-ratio: 16 / 9;
-      clip-path: polygon(32% 0, 95% 0, 95% 100%, 32% 100%, 17% 50%);
-      position: absolute;
       background-image: url('/assets/phy/phy-homepage-image.jpg');
-      background-repeat: no-repeat;
+      background-size: contain;
+      clip-path: polygon(28% 0, 95% 0, 95% 100%, 28% 100%, 14% 50%);
     }
 
     .homepage-hero-card {
@@ -67,12 +58,11 @@
         position: absolute;
         left: 0;
         top: 0;
-        color: white;
 
         > b {
           font-family: $secondary-font-semi-bold;
+          color: white;
           position: absolute;
-          text-align: center;
           font-size: 14px;
           padding-top: 8px;
           left: 30px;
