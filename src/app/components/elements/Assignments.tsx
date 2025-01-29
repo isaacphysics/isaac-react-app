@@ -91,7 +91,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                             </p>
                         }
                         {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageAttempted !== 100
-                            ? <p className="mb-0"><strong className="overdue">Overdue!</strong> <span className="small text-muted">(due {formatDate(assignment.dueDate)})</span></p>
+                            ? <p className="mb-0"><strong className="overdue">Overdue</strong> <span className="small text-muted">(due {formatDate(assignment.dueDate)})</span></p>
                             : <>{assignment.dueDate && <p className="mb-0">Due <strong>{getFriendlyDaysUntil(assignment.dueDate)}</strong></p>}</>
                         }
                     </Col>
@@ -105,9 +105,9 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     </Col>}
                 </Row>
                 
-                {isDefined(assignment.notes) && <p className="mb-0"><strong>Notes:</strong> {assignment.notes}</p>}
+                {assignment.notes && <p className="mb-0"><strong>Notes:</strong> {assignment.notes}</p>}
                 <Button className="my-2 btn-underline" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
-                    {showMore ? "Show less" : "Show more"}
+                    {showMore ? "Hide details" : "Show details"}
                 </Button>
             </Col>
 
