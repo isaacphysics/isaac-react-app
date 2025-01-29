@@ -358,7 +358,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
         }    
     }, [statusFilter, setStatusFilter]);
 
-    return <ContentSidebar {...rest}>
+    return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         <ShowLoadingQuery query={assignmentQuery} defaultErrorTitle="" thenRender={(assignments: AssignmentDTO[]) => {
             const myAssignments = filterAssignmentsByStatus(assignments);
             const assignmentCountByStatus = myAssignments && Object.fromEntries(Object.entries(myAssignments).map(([key, value]) => [key, value.length]));

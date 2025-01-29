@@ -79,7 +79,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                             assignmentTitleFilter, assignmentGroupFilter, assignmentSetByFilter
                         );
 
-                        return <>
+                        return <div className="pt-4">
                             <Assignments assignments={filteredAssignments.slice(0, limit)} />
                             {limit < filteredAssignments.length && <div className="text-center">
                                 <hr className="text-center" />
@@ -90,7 +90,7 @@ const PhyMyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                     Show more
                                 </Button>
                             </div>}
-                        </>;
+                        </div>;
                     }}
                 />
             </MainContent>
