@@ -42,8 +42,6 @@ export const DateString = ({children, defaultValue, formatter=FRIENDLY_DATE_AND_
 export function getFriendlyDaysUntil(date: number | Date) : string {
     const today = new Date();
 
-    // const daysUntil = Math.ceil(((typeof date === "number" ? date : date.getTime()) - today.getTime()) / 86400000); // 1000*60*60*24
-
     const getStartOfDay = (date: number | Date): Date => {
         const dateObject = new Date(date);
         dateObject.setHours(0, 0, 0, 0);
