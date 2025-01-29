@@ -89,15 +89,6 @@ export const GameboardCard = (props: GameboardCardProps) => {
         </Row>
         <Collapse isOpen={showMore} className="w-100">
             <Row>
-                {/* {!above['md'](deviceSize) && <Col xs={12}>
-                    {isDefined(assignment.groupName) &&
-                        <p className="mb-0"><strong>Group:</strong> {assignment.groupName}</p>
-                    }
-                    {isDefined(assignment.assignerSummary) &&
-                        <p className="mb-0"><strong>By:</strong> {extractTeacherName(assignment.assignerSummary)}</p>
-                    }
-                </Col>} */}
-
                 <Col xs={12} md={8} className="mt-sm-2">
                     <p className="mb-0"><strong>Questions:</strong> {gameboard?.contents?.length || "0"}</p>
                     {isDefined(topics) && topics.length > 0 && <p className="mb-0">

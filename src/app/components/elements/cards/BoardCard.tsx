@@ -19,15 +19,13 @@ import {GameboardDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Circle} from "../svg/Circle";
 import classNames from "classnames";
 import sortBy from "lodash/sortBy";
-import {formatDate} from "../DateString";
+import {formatDate, getFriendlyDaysUntil} from "../DateString";
 import {ShareLink} from "../ShareLink";
 import {
     Button,
     Card,
     CardBody,
     CardFooter,
-    CardSubtitle,
-    CardTitle,
     Col,
     Input,
     Row,
@@ -38,7 +36,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {BoardAssignee, Boards} from "../../../../IsaacAppTypes";
 import indexOf from "lodash/indexOf";
-import { Spacer } from "../Spacer";
+import { GameboardCard, GameboardLinkLocation } from "./GameboardCard";
 
 
 interface HexagonGroupsButtonProps {
@@ -289,80 +287,34 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         </tr>)
         :
         siteSpecific(
-            <Card className="board-card card-neat" data-testid={"gameboard-card"}>
-                <CardBody className="d-flex flex-column pb-4 pt-4">
-                    <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
-                    <Row className="mt-1 mb-2 justify-content-between">
-                        <Col lg={8} md={8} sm={10} xs={8}>
-                            <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
-                            <CardSubtitle data-testid={"owner"}>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
-                        </Col>
-                        {isSetAssignments ? <Col className="d-flex justify-content-center">
-                            <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                        </Col>
-                            : <>
-                                <Col xs={2} className="card-share-link col-auto px-3">
-                                    <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
-                                </Col>
-                            </>}
-                    </Row>
-                    <CardSubtitle data-testid={"created-date"}>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
-                    <CardSubtitle data-testid={"last-visited"}>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                    <br />
-                    <table className="w-100">
-                        <thead>
-                            <tr>
-                                <th className="w-50">
-                                    <strong>{`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}`}</strong>
-                                </th>
-                                <th className="w-50 ps-1">
-                                    <strong>{`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}</strong>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
-                                <td className="w-50 align-baseline text-lg">
-                                    {stageLabelMap[stage]}
-                                </td>
-                                <td className="w-50 ps-1">
-                                    {difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}
-                                </td>
-                            </tr>)}
-                            {boardStagesAndDifficulties.length === 0 && <tr>
-                                <td className="w-50 align-baseline text-lg">
-                                N/A
-                                </td>
-                                <td className="w-50 ps-1">
-                                -
-                                </td>
-                            </tr>}
-                        </tbody>
-                    </table>
-                    <Spacer />
-                    <Row className={isSetAssignments ? "justify-content-end" : "pt-4 my-gameboards-cards-hex-container"}>
-                        {isSetAssignments ? <Col xs={2} className="card-share-link col-auto">
-                            <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
-                        </Col>
-                            :
-                            <>
-                                <Col>
-                                    <b>Attempted:</b>
-                                    <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-                                </Col>
-                                <Col>
-                                    <b>Correct:</b>
-                                    <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageCorrect ?? 0} />                    
-                                </Col>
-                            </>}
-                    </Row>
-                </CardBody>
-                {isSetAssignments && <CardFooter>
-                    <Button className={"mb-1"} block color="tertiary" onClick={toggleAssignModal}>
-                        Assign{hasAssignedGroups && " / Unassign"}
-                    </Button>
-                </CardFooter>}
-            </Card>,
+            //                 <CardSubtitle data-testid={"owner"}>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
+            //             {isSetAssignments ? <Col className="d-flex justify-content-center">
+            //                 <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
+            //             </Col>
+            //                 : <>
+            //                     <Col xs={2} className="card-share-link col-auto px-3">
+            //                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
+            //                     </Col>
+            //                 </>}
+
+            //     {isSetAssignments && <CardFooter>
+            //         <Button className={"mb-1"} block color="tertiary" onClick={toggleAssignModal}>
+            //             Assign{hasAssignedGroups && " / Unassign"}
+            //         </Button>
+            //     </CardFooter>}
+
+            <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard}>
+                <Row>
+                    <Col>
+                        {isDefined(board.creationDate) && <p className="mb-0" data-testid={"created-date"}>
+                            Created <strong>{getFriendlyDaysUntil(board.creationDate)}</strong>
+                        </p>}
+                        {isDefined(board.lastVisited) && <p className="mb-0" data-testid={"last-visited"}>
+                            Last visited <strong>{getFriendlyDaysUntil(board.lastVisited)}</strong>
+                        </p>}
+                    </Col>
+                </Row>
+            </GameboardCard>,
             <Card className={"board-card"} data-testid={"gameboard-card"}>
                 <CardBody className="pb-5 pt-4">
                     <Row className={"mb-2"}>
