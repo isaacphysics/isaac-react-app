@@ -71,7 +71,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     </div>
                     <div className="d-flex flex-column flex-grow-1">
                         <h4 className="text-break m-0">{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
-                        {above['md'](deviceSize) && boardSubjects.length > 0 && <div className="d-flex align-items-center mb-2">
+                        {above['sm'](deviceSize) && boardSubjects.length > 0 && <div className="d-flex align-items-center mb-2">
                             {boardSubjects.map((subject) => <span key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</span>)}
                         </div>}
                     </div>
