@@ -20,6 +20,7 @@ import {
     STAGE,
     STAGE_NULL_OPTIONS,
     TAG_ID,
+    TAG_LEVEL,
     tags,
     toSimpleCSV,
     useQueryParams,
@@ -38,7 +39,7 @@ import queryString from "query-string";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
-import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
+import {ChoiceTree, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { Tag } from "../../../IsaacAppTypes";
@@ -70,18 +71,27 @@ function questionStatusToURIComponent(statuses: QuestionStatus): string {
         .join(",");
 }
 
-function processTagHierarchy(subjects: string[], fields: string[], topics: string[]): Item<TAG_ID>[][] {
+function processTagHierarchy(subjects: string[], fields: string[], topics: string[]): ChoiceTree[] {
     const tagHierarchy = tags.getTagHierarchy();
-    const selectionItems: Item<TAG_ID>[][] = [];
+    const selectionItems: ChoiceTree[] = [{}, {}, {}];
 
-    let plausibleParentHeirarchy = true;
     [subjects, fields, topics].forEach((tier, index) => {
-        if (tier && plausibleParentHeirarchy) {
+        if (tier) {
             const validTierTags = tags.getSpecifiedTags(
                 tagHierarchy[index], tier as TAG_ID[]
             );
-            plausibleParentHeirarchy = validTierTags.length === 1;
-            selectionItems.push(validTierTags.map(itemiseTag));
+
+            if (index === 0)
+                selectionItems.push({[TAG_LEVEL.subject]: validTierTags.map(itemiseTag)} as ChoiceTree);
+            else if (index === 1) {
+                const x = selectionItems[0][TAG_LEVEL.subject] ?? [];
+                const validChildren = x.map(subject => tags.getChildren(subject.value).filter(c => fields.includes(c.id)).map(itemiseTag));
+                const currentLayer: ChoiceTree = {};
+                x.forEach((subject, i) => {
+                    currentLayer[subject.value] = validChildren[i].length > 0 ? validChildren[i] : undefined;
+                });
+                selectionItems.push(currentLayer);
+            } // TODO come back here and clean and add indexes
         }
     });
 
@@ -155,7 +165,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const [disableLoadMore, setDisableLoadMore] = useState(false);
 
-    const [selections, setSelections] = useState<Item<TAG_ID>[][]>(
+    const [selections, setSelections] = useState<ChoiceTree[]>(
         processTagHierarchy(
             arrayFromPossibleCsv(params.subjects), 
             arrayFromPossibleCsv(params.fields), 
@@ -163,14 +173,18 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         )
     );
 
-    const choices = [tags.allSubjectTags.map(itemiseTag)];
+    const choices: ChoiceTree[] = [{"subject": tags.allSubjectTags.map(itemiseTag)}];
+    console.log("ch", choices);
+    console.log("select", selections);
     let tierIndex;
     for (tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
-        const selection = selections[tierIndex];
+        const selection = Object.keys(selections[tierIndex]);
         if (selection.length === 0) break;
-        choices[tierIndex+1] = [];
-        for (let i = 0; i < selection.length; i++)
-            choices[tierIndex+1].push(...tags.getChildren(selection[i].value).map(itemiseTag));
+        choices[tierIndex+1] = {};
+        for (const [key, value] of Object.entries(selections[tierIndex])) {
+            for (const value2 of value) 
+                choices[tierIndex+1][value2.value] = tags.getChildren(value2.value).map(itemiseTag);
+        } //TODO CLEANUP
     }
 
     const tiers: Tier[] = [
@@ -180,22 +194,23 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, tierIndex + 1);
 
     const setTierSelection = (tierIndex: number) => {
-        return ((values: Item<TAG_ID>[]) => {
-            const newSelections = selections.slice(0, tierIndex);
-            newSelections.push(values);
+        return ((values: ChoiceTree) => {
+            const newSelections = selections.slice(0, 3);
+            newSelections[tierIndex] = values;
             setSelections(newSelections);
-        }) as React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
+            console.log("whaaa", values, newSelections);
+        }) as React.Dispatch<React.SetStateAction<ChoiceTree>>;
     };
 
     const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const nothingToSearchFor =
         [searchQuery, searchTopics, searchBooks, searchStages, searchDifficulties, searchExamBoards].every(v => v.length === 0) &&
-        selections.every(v => v.length === 0);
+        selections.every(v => Object.keys(v).length === 0);
 
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], examBoards: string[],
             book: string[], stages: string[], difficulties: string[],
-            hierarchySelections: Item<TAG_ID>[][], tiers: Tier[],
+            hierarchySelections: ChoiceTree[], tiers: Tier[],
             excludeBooks: boolean, questionStatuses: QuestionStatus,
             startIndex: number) => {
             if (nothingToSearchFor) {
@@ -207,13 +222,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             if (isPhy) {
                 const allTags: TAG_ID[] = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
                 tiers.forEach((tier, i) => {
-                    if (!hierarchySelections[i] || hierarchySelections[i].length === 0) {
+                    if (!hierarchySelections[i] || Object.keys(hierarchySelections[i]).length === 0) {
                         if (i === 0) {
                             filterParams[tier.id] = allTags;
                         }
                         return;
                     }
-                    filterParams[tier.id] = hierarchySelections[i].map(item => item.value);
+                    filterParams[tier.id] = Object.values(hierarchySelections[i]).flat().map(item => item.value);
                 });
             } else {
                 filterParams["topics"] = [...topics].filter((query) => query != "");
@@ -297,10 +312,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
         if (isPhy) {
             tiers.forEach((tier, i) => {
-                if (!selections[i] || selections[i].length === 0) {
+                if (!selections[i] || Object.keys(selections[i]).length === 0) {
                     return;
                 }
-                params[tier.id] = selections[i].map(item => item.value).join(",");
+                params[tier.id] = Object.values(selections[i]).flat().map(item => item.value).join(",");
             });
         }
 
@@ -356,7 +371,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || searchStages.length > 0
             || searchBooks.length > 0
             || excludeBooks
-            || selections.some(tier => tier.length > 0)
+            || selections.some(tier => Object.keys(tier).length > 0)
             || Object.entries(searchStatuses).some(e => e[1]));
         if (isPhy) applyFilters();
     }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
@@ -368,7 +383,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setSearchStages([]);
         setSearchBooks([]);
         setExcludeBooks(false);
-        setSelections([[], [], []]);
+        setSelections([{}, {}, {}]);
         setSearchStatuses(
             {
                 notAttempted: false,

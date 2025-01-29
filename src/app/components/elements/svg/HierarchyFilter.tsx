@@ -11,7 +11,8 @@ import {
     svgLine,
     svgMoveTo,
     TAG_ID,
-    useDeviceSize, siteSpecific
+    useDeviceSize, siteSpecific,
+    TAG_LEVEL
 } from "../../../services";
 import {calculateHexagonProportions, Hexagon, HexagonProportions} from "./Hexagon";
 import {HexagonConnection} from "./HexagonConnection";
@@ -19,6 +20,7 @@ import classNames from "classnames";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { Label } from "reactstrap";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
+import { ChoiceTree } from "../panels/QuestionFinderFilterPanel";
 
 export type TierID = "subjects" | "fields" | "topics";
 export interface Tier {id: TierID; name: string; for: string}
@@ -27,13 +29,15 @@ const connectionProperties = {fill: 'none', strokeWidth: 3, strokeDasharray: 3};
 
 interface HierarchySummaryProps {
     tiers: Tier[];
-    choices: Item<TAG_ID>[][];
-    selections: Item<TAG_ID>[][];
+    choices: ChoiceTree[];
+    selections: ChoiceTree[];
 }
 
 interface HierarchyFilterProps extends HierarchySummaryProps {
     questionFinderFilter?: boolean;
-    setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
+    setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<ChoiceTree>>;
+    tier: number;
+    index: TAG_ID | TAG_LEVEL;
 }
 
 function naturalLanguageList(list: string[]) {
@@ -44,29 +48,33 @@ function naturalLanguageList(list: string[]) {
     return `${lowerCaseList.slice(0, lastIndex).join(", ")} and ${lowerCaseList[lastIndex]}`;
 }
 
-export function HierarchyFilterHexagonal({tiers, choices, selections, questionFinderFilter, setTierSelection}: HierarchyFilterProps) {
+export function HierarchyFilterHexagonal({tier, index, tiers, choices, selections, questionFinderFilter, setTierSelection}: HierarchyFilterProps) {  
     return <div>
-        {tiers.map((tier, i) => ( // Subject / Field / Topic
-            choices[i].map((choice, j) => {
-                const isSelected = !!selections[i]?.map(s => s.value).includes(choice.value);
-                function selectValue() {
-                    setTierSelection(i)(isSelected ?
-                        selections[i].filter(s => s.value !== choice.value) : // remove
-                        [...(selections[i] || []), choice] // add
-                    );
+        {choices[tier][index] && choices[tier][index].map((choice) => {
+            const isSelected = selections[tier][index]?.map(s => s.value).includes(choice.value);
+            console.log(tier, index, choice, isSelected, "womaaa")
+            function selectValue() {
+                if (selections[tier][index]) {
+                    setTierSelection(tier)({...selections[tier], [index]: isSelected ? 
+                        selections[tier][index].filter(s => s.value !== choice.value) :
+                        [...selections[tier][index], choice]});
                 }
+                else {
+                    setTierSelection(tier)({...selections[tier], [index]: [choice]});
+                }
+            };
 
-                return <div key={choice.value} className="ps-3 ms-2">
-                    <StyledCheckbox
-                        color="primary"
-                        checked={isSelected}
-                        onChange={selectValue}
-                        label={<span>{choice.label}</span>}
-                        className="ps-3"
-                    />
-                </div>;
-            })
-        ))}
+            return <div key={choice.value} className={classNames("ps-3 ms-2", {"ms-3": tier===1, "ms-4": tier===2})}>
+                <StyledCheckbox
+                    color="primary"
+                    checked={isSelected}
+                    onChange={selectValue}
+                    label={<span>{choice.label}</span>}
+                />
+                {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && <HierarchyFilterHexagonal {...{tier: tier+1, index: choice.value, tiers, choices, selections, questionFinderFilter, setTierSelection}}/>}
+            </div>;
+        }
+        )}
     </div>;
 }
 
@@ -76,7 +84,7 @@ export function HierarchyFilterSummary({tiers, choices, selections}: HierarchySu
     const connection = {length: 60};
     const height = `${hexagon.quarterHeight * 4 + hexagon.padding * 2 + 32}px`;
 
-    if (! selections[0]?.length) {
+    if (!selections[0]?.length) {
         return <span className="text-muted ms-3 d-inline-block" style={{height}}>
             None Selected
         </span>;

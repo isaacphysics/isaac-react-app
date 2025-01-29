@@ -14,6 +14,7 @@ import {
     siteSpecific,
     STAGE,
     TAG_ID,
+    TAG_LEVEL,
     tags,
     useDeviceSize
 } from "../../../services";
@@ -116,6 +117,8 @@ const listTitles: { [field in keyof TopLevelListsState]: string } = {
     questionStatus: siteSpecific("Status", "Question status")
 };
 
+export type ChoiceTree = Partial<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>>;
+
 export interface QuestionFinderFilterPanelProps {
     searchDifficulties: Difficulty[]; setSearchDifficulties: Dispatch<SetStateAction<Difficulty[]>>;
     searchTopics: string[], setSearchTopics: Dispatch<SetStateAction<string[]>>;
@@ -124,7 +127,8 @@ export interface QuestionFinderFilterPanelProps {
     searchStatuses: QuestionStatus, setSearchStatuses: Dispatch<SetStateAction<QuestionStatus>>;
     searchBooks: string[], setSearchBooks: Dispatch<SetStateAction<string[]>>;
     excludeBooks: boolean, setExcludeBooks: Dispatch<SetStateAction<boolean>>;
-    tiers: Tier[], choices: Item<TAG_ID>[][], selections: Item<TAG_ID>[][], setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>,
+    tiers: Tier[], choices: ChoiceTree[]; selections: ChoiceTree[]; 
+    setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<ChoiceTree>>
     applyFilters: () => void; clearFilters: () => void;
     validFiltersSelected: boolean; 
     searchDisabled: boolean;
@@ -241,15 +245,13 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 numberSelected={siteSpecific(
                     // Find the last non-zero tier in the tree
                     // FIXME: Use `filter` and `at` when Safari supports it
-                    selections.map(tier => tier.length)
-                        .reverse()
-                        .find(l => l > 0),
+                    selections.reduce((tierAcc, tier) => tierAcc + Object.keys(tier).reduce(optAcc => optAcc++, 0), 0),
                     searchTopics.length
                 )}
             >
                 {siteSpecific(
                     <div>
-                        <HierarchyFilterHexagonal {...{tiers, choices, selections: selections, questionFinderFilter: true, setTierSelection}} />
+                        <HierarchyFilterHexagonal {...{tier: 0, index: TAG_LEVEL.subject, tiers, choices, selections: selections, questionFinderFilter: true, setTierSelection}} />
                     </div>,
                     groupBaseTagOptions.map((tag, index) => (
                         <CollapsibleList

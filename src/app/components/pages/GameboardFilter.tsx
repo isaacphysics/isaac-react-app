@@ -38,7 +38,8 @@ import {
     toSimpleCSV,
     arrayFromPossibleCsv,
     itemiseByValue,
-    itemiseTag
+    itemiseTag,
+    TAG_LEVEL
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer, GameboardViewerInner} from './Gameboard';
@@ -156,12 +157,12 @@ function stripSoftHyphens(input: string): string {
 
 // Shared props that both PHY and CS question filters use
 interface FilterProps {
-    selections : Item<TAG_ID>[][];
-    setSelections : React.Dispatch<React.SetStateAction<Item<TAG_ID>[][]>>;
-    stages : Item<string>[];
-    setStages : React.Dispatch<React.SetStateAction<Item<string>[]>>;
-    difficulties : Item<string>[];
-    setDifficulties : React.Dispatch<React.SetStateAction<Item<string>[]>>;
+    selections: Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>[];
+    setSelections: React.Dispatch<React.SetStateAction<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>[]>>;
+    stages: Item<string>[];
+    setStages: React.Dispatch<React.SetStateAction<Item<string>[]>>;
+    difficulties: Item<string>[];
+    setDifficulties: React.Dispatch<React.SetStateAction<Item<string>[]>>;
     scrollToQuestions: () => void;
     previousBoard?: () => void;
     refresh: () => void;
