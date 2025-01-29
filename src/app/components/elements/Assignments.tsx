@@ -79,10 +79,16 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
 
                 <Row>
                     <Col>
-                        {isDefined(assignmentStartDate) &&
-                            <p className="mb-0" data-testid={"gameboard-assigned"}>Assigned <HoverableTooltip tooltip={formatDate(assignmentStartDate, FRIENDLY_DATE)}>
-                                <strong>{getFriendlyDaysUntil(assignmentStartDate)}</strong>
-                            </HoverableTooltip></p>
+                        {isDefined(assignmentStartDate) && 
+                            <p className="mb-0" data-testid={"gameboard-assigned"}>
+                                Assigned{" "}
+                                { getFriendlyDaysUntil(assignmentStartDate).startsWith("on ")
+                                    ? <strong>{getFriendlyDaysUntil(assignmentStartDate)}</strong>
+                                    : <HoverableTooltip tooltip={formatDate(assignmentStartDate, FRIENDLY_DATE)}>
+                                        <strong>{getFriendlyDaysUntil(assignmentStartDate)}</strong>
+                                    </HoverableTooltip>
+                                }
+                            </p>
                         }
                         {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageAttempted !== 100
                             ? <p className="mb-0"><strong className="overdue">Overdue!</strong> <span className="small text-muted">(due {formatDate(assignment.dueDate)})</span></p>
