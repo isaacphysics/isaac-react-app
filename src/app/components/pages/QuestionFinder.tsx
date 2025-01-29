@@ -167,8 +167,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     let tierIndex;
     for (tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
         const selection = selections[tierIndex];
-        if (selection.length !== 1) break;
-        choices.push(tags.getChildren(selection[0].value).map(itemiseTag));
+        if (selection.length === 0) break;
+        choices[tierIndex+1] = [];
+        for (let i = 0; i < selection.length; i++)
+            choices[tierIndex+1].push(...tags.getChildren(selection[i].value).map(itemiseTag));
     }
 
     const tiers: Tier[] = [
@@ -281,7 +283,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (searchStages.length) params.stages = toSimpleCSV(searchStages);
         if (searchDifficulties.length) params.difficulties = toSimpleCSV(searchDifficulties);
         if (searchQuery.length) params.query = encodeURIComponent(searchQuery);
-        if (isAda && searchTopics.length) params.topics = toSimpleCSV(searchTopics);
+        if (searchTopics.length) params.topics = toSimpleCSV(searchTopics);
         if (isAda && searchExamBoards.length) params.examBoards = toSimpleCSV(searchExamBoards);
         if (isPhy && !excludeBooks && searchBooks.length) {
             params.book = toSimpleCSV(searchBooks);
@@ -356,6 +358,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || excludeBooks
             || selections.some(tier => tier.length > 0)
             || Object.entries(searchStatuses).some(e => e[1]));
+        if (isPhy) applyFilters();
     }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
 
     const clearFilters = useCallback(() => {

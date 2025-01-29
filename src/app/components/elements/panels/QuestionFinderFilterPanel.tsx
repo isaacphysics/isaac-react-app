@@ -28,7 +28,6 @@ import { openActiveModal, useAppDispatch } from "../../../state";
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
 
-
 const bookOptions: Item<string>[] = [
     {value: "phys_book_step_up", label: "Step Up to GCSE Physics"},
     {value: "phys_book_gcse", label: "GCSE Physics"},
@@ -144,7 +143,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         applyFilters, clearFilters, validFiltersSelected, 
         searchDisabled, setSearchDisabled
     } = props;
-    const groupBaseTagOptions: GroupBase<Item<string>>[] = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
+    const groupBaseTagOptions: GroupBase<Item<string>>[] = siteSpecific(tags.allSubjectTags.map(groupTagSelectionsByParent), tags.allSubcategoryTags.map(groupTagSelectionsByParent));
 
     const [listState, listStateDispatch] = useReducer(listStateReducer, groupBaseTagOptions, initialiseListState);
     const deviceSize = useDeviceSize();
@@ -175,22 +174,14 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 <h6 className="filter-question-text">Filter questions by</h6>,
                 <>
                     <div>
-                        <img
-                            src="/assets/common/icons/filter-icon.svg"
-                            alt="Filter"
-                            style={{width: 18}}
-                            className="ms-1 me-2"
-                        />
+                        <img src="/assets/common/icons/filter-icon.svg" alt="Filter" style={{width: 18}} className="ms-1 me-2"/>
                         <b>Filter by</b>
                     </div>
                     <Spacer/>
                     {validFiltersSelected && <div className="pe-1 pe-lg-0">
                         <button
                             className={classNames("text-black pe-lg-0 py-0 me-2 me-lg-0 bg-opacity-10 btn-link", {"bg-white": isAda})}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                clearFilters();
-                            }}
+                            onClick={(e) => { e.stopPropagation(); clearFilters(); }}
                         >
                             Clear all
                         </button>
@@ -282,8 +273,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                 </div>
                             ))}
                         </CollapsibleList>
-                    )))
-                }
+                    )))}
             </CollapsibleList>
 
             <CollapsibleList
@@ -357,22 +347,15 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         color="primary"
                         checked={searchStatuses.notAttempted}
                         onChange={() => setSearchStatuses(s => {return {...s, notAttempted: !s.notAttempted};})}
-                        label={<div>
-                            <span>{siteSpecific("Not started", "Not attempted")}</span>
-                            {siteSpecific(
-                                <svg
-                                    className={"search-item-icon ps-2 icon-status"}
-                                    aria-label={"Not started"}>
-                                    <use href={`/assets/phy/icons/question-hex.svg#icon`}
-                                        xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/>
-                                </svg>,
-                                <img
-                                    src="/assets/common/icons/not-started.svg"
-                                    alt="Not attempted"
-                                    className="ps-2 icon-status"
-                                />
-                            )}
-                        </div>}
+                        label={siteSpecific(
+                            <div className="d-flex">
+                                Not started
+                            </div>,
+                            <div>
+                                Not attempted
+                                <img className="ps-2 icon-status" src="/assets/common/icons/not-started.svg" alt="Not attempted" />
+                            </div>
+                        )}
                     />
                 </div>
                 <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy})}>
@@ -380,22 +363,16 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         color="primary"
                         checked={searchStatuses.complete}
                         onChange={() => setSearchStatuses(s => {return {...s, complete: !s.complete};})}
-                        label={<div>
-                            <span>{siteSpecific("Fully correct", "Completed")}</span>
-                            {siteSpecific(
-                                <svg
-                                    className={"search-item-icon ps-2 icon-status correct-fill"}
-                                    aria-label={"Fully correct"}>
-                                    <use href={`/assets/phy/icons/tick-rp-hex.svg#icon`}
-                                        xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/>
-                                </svg>,
-                                <img
-                                    src="/assets/common/icons/completed.svg"
-                                    alt="Completed"
-                                    className="ps-2 icon-status"
-                                />
-                            )}
-                        </div>}
+                        label={siteSpecific(
+                            <div className="d-flex">
+                                Fully correct
+                                <img className="ps-2" src={`/assets/phy/icons/redesign/status-correct.svg`} alt="Fully correct"/> 
+                            </div>,
+                            <div>
+                                Completed
+                                <img className="ps-2 icon-status" src="/assets/common/icons/completed.svg" alt="Completed" />
+                            </div>
+                        )}
                     />
                 </div>
                 <div className={classNames("w-100 ps-3 py-1 d-flex align-items-center", {"bg-white": isAda, "ms-2": isPhy})}>
@@ -403,22 +380,16 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         color="primary"
                         checked={searchStatuses.tryAgain}
                         onChange={() => setSearchStatuses(s => {return {...s, tryAgain: !s.tryAgain};})}
-                        label={<div>
-                            <span>{siteSpecific("In progress", "Try again")}</span>
-                            {siteSpecific(
-                                <svg
-                                    className={"search-item-icon ps-2 icon-status almost-fill"}
-                                    aria-label={"In progress"}>
-                                    <use href={`/assets/phy/icons/incomplete-hex.svg#icon`}
-                                        xlinkHref={`/assets/phy/icons/incomplete-hex.svg#icon`}/>
-                                </svg>,
-                                <img
-                                    src="/assets/common/icons/incorrect.svg"
-                                    alt="Try again"
-                                    className="ps-2 icon-status"
-                                />
-                            )}
-                        </div>}
+                        label={siteSpecific(
+                            <div className="d-flex">
+                                In progress
+                                <img className="ps-2" src={`/assets/phy/icons/redesign/status-in-progress.svg`} alt="In Progress"/> 
+                            </div>,
+                            <div>
+                                Try again
+                                <img className="ps-2 icon-status" src="/assets/common/icons/incorrect.svg" alt="Try again" />
+                            </div>
+                        )}
                     />
                 </div>
             </CollapsibleList>
