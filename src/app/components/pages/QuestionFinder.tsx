@@ -39,7 +39,7 @@ import queryString from "query-string";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
-import {ChoiceTree, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
+import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { Tag } from "../../../IsaacAppTypes";
@@ -73,25 +73,26 @@ function questionStatusToURIComponent(statuses: QuestionStatus): string {
 
 function processTagHierarchy(subjects: string[], fields: string[], topics: string[]): ChoiceTree[] {
     const tagHierarchy = tags.getTagHierarchy();
-    const selectionItems: ChoiceTree[] = [{}, {}, {}];
+    const selectionItems: ChoiceTree[] = [];
 
     [subjects, fields, topics].forEach((tier, index) => {
-        if (tier) {
+        if (tier.length > 0) {
             const validTierTags = tags.getSpecifiedTags(
                 tagHierarchy[index], tier as TAG_ID[]
             );
 
             if (index === 0)
                 selectionItems.push({[TAG_LEVEL.subject]: validTierTags.map(itemiseTag)} as ChoiceTree);
-            else if (index === 1) {
-                const x = selectionItems[0][TAG_LEVEL.subject] ?? [];
-                const validChildren = x.map(subject => tags.getChildren(subject.value).filter(c => fields.includes(c.id)).map(itemiseTag));
+            else {
+                const parents =  Object.values(selectionItems[index-1]).flat();
+                const validChildren = parents.map(p => tags.getChildren(p.value).filter(c => tier.includes(c.id)).map(itemiseTag));
+
                 const currentLayer: ChoiceTree = {};
-                x.forEach((subject, i) => {
-                    currentLayer[subject.value] = validChildren[i].length > 0 ? validChildren[i] : undefined;
+                parents.forEach((p, i) => {
+                    currentLayer[p.value] = validChildren[i];
                 });
                 selectionItems.push(currentLayer);
-            } // TODO come back here and clean and add indexes
+            }
         }
     });
 
@@ -174,31 +175,29 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     );
 
     const choices: ChoiceTree[] = [{"subject": tags.allSubjectTags.map(itemiseTag)}];
-    console.log("ch", choices);
-    console.log("select", selections);
+
     let tierIndex;
     for (tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
-        const selection = Object.keys(selections[tierIndex]);
-        if (selection.length === 0) break;
-        choices[tierIndex+1] = {};
-        for (const [key, value] of Object.entries(selections[tierIndex])) {
-            for (const value2 of value) 
-                choices[tierIndex+1][value2.value] = tags.getChildren(value2.value).map(itemiseTag);
-        } //TODO CLEANUP
+        if (Object.keys(selections[tierIndex]).length > 0) {
+            choices[tierIndex+1] = {};
+            for (const v of Object.values(selections[tierIndex])) {
+                for (const v2 of v) 
+                    choices[tierIndex+1][v2.value] = tags.getChildren(v2.value).map(itemiseTag);
+            }
+        }
     }
 
     const tiers: Tier[] = [
         {id: "subjects" as TierID, name: "Subject"},
         {id: "fields" as TierID, name: "Field"},
         {id: "topics" as TierID, name: "Topic"}
-    ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, tierIndex + 1);
+    ].map(tier => ({...tier, for: "for_" + tier.id}));
 
     const setTierSelection = (tierIndex: number) => {
         return ((values: ChoiceTree) => {
             const newSelections = selections.slice(0, 3);
             newSelections[tierIndex] = values;
             setSelections(newSelections);
-            console.log("whaaa", values, newSelections);
         }) as React.Dispatch<React.SetStateAction<ChoiceTree>>;
     };
 

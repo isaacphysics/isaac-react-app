@@ -10,6 +10,7 @@ import {
     isAda,
     isPhy,
     Item,
+    itemiseTag,
     SIMPLE_DIFFICULTY_ITEM_OPTIONS,
     siteSpecific,
     STAGE,
@@ -118,6 +119,21 @@ const listTitles: { [field in keyof TopLevelListsState]: string } = {
 };
 
 export type ChoiceTree = Partial<Record<TAG_ID | TAG_LEVEL, Item<TAG_ID>[]>>;
+
+export function getChoiceTreeLeaves(tree: ChoiceTree[]) {
+    let leaves: Item<TAG_ID>[] = [];
+    for (let index = 0; index < tree.length; index++) {
+        if (index === 0)
+            leaves.push(...tree[0][TAG_LEVEL.subject] ?? []);
+        else {
+            const parentIds = Object.values(tree[index]).flat().map(item => tags.getById(item.value).parent);
+            leaves = leaves.filter(l => !parentIds.includes(l.value))
+            Object.values(tree[index]).forEach(v => leaves.push(...v)); 
+        }
+    }
+
+    return leaves;
+}
 
 export interface QuestionFinderFilterPanelProps {
     searchDifficulties: Difficulty[]; setSearchDifficulties: Dispatch<SetStateAction<Difficulty[]>>;
@@ -244,8 +260,10 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
                 numberSelected={siteSpecific(
                     // Find the last non-zero tier in the tree
-                    // FIXME: Use `filter` and `at` when Safari supports it
-                    selections.reduce((tierAcc, tier) => tierAcc + Object.keys(tier).reduce(optAcc => optAcc++, 0), 0),
+                    // FIXME: Use `filter` and `at` when Safari supports it 
+                    //
+                    // TODO CURRENTLY COUNTING NUMBER OF LAYERS 
+                    getChoiceTreeLeaves(selections).length,
                     searchTopics.length
                 )}
             >

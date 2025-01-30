@@ -50,11 +50,10 @@ function naturalLanguageList(list: string[]) {
 
 export function HierarchyFilterHexagonal({tier, index, tiers, choices, selections, questionFinderFilter, setTierSelection}: HierarchyFilterProps) {  
     return <div>
-        {choices[tier][index] && choices[tier][index].map((choice) => {
-            const isSelected = selections[tier][index]?.map(s => s.value).includes(choice.value);
-            console.log(tier, index, choice, isSelected, "womaaa")
+        {choices[tier] && choices[tier][index] && choices[tier][index].map((choice) => {
+            const isSelected = selections[tier] && selections[tier][index]?.map(s => s.value).includes(choice.value);
             function selectValue() {
-                if (selections[tier][index]) {
+                if (selections[tier] && selections[tier][index]) {
                     setTierSelection(tier)({...selections[tier], [index]: isSelected ? 
                         selections[tier][index].filter(s => s.value !== choice.value) :
                         [...selections[tier][index], choice]});
