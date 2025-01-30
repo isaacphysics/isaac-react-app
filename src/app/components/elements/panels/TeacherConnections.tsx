@@ -200,7 +200,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 <ConnectionsHeader
                     title="Teacher connections" enableSearch={enableTeacherSearch} setEnableSearch={setEnableTeacherSearch}
                     setSearchText={setTeacherSearchText} placeholder="Search teachers"/>
-                <div className="connect-list-inner">
+                <div>
                     <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                         <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredActiveAuthorisations?.length ?? 0))} itemCount={filteredActiveAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                             {({index, style}) => {
@@ -257,7 +257,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     <ConnectionsHeader
                         title="Student connections" enableSearch={enableStudentSearch} setEnableSearch={setEnableStudentSearch}
                         setSearchText={setStudentSearchText} placeholder="Search students"/>
-                    <div className="connect-list-inner">
+                    <div>
                         <ul className={classNames("teachers-connected list-unstyled my-0", {"ms-3 me-2": isPhy}, {"ms-1 me-2": isAda})}>
                             <FixedSizeList height={CONNECTIONS_ROW_HEIGHT * (Math.min(CONNECTIONS_MAX_VISIBLE_ROWS, filteredStudentAuthorisations?.length ?? 0))} itemCount={filteredStudentAuthorisations?.length ?? 0} itemSize={CONNECTIONS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                                 {({index, style}) => {
@@ -322,7 +322,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     <ConnectionsHeader
                         title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch}
                         setSearchText={setGroupSearchText} placeholder="Search groups"/>
-                    <div className="connect-list-inner">
+                    <div>
                         <ul className={classNames("teachers-connected list-unstyled m-0")}>
                             {sortedGroupMemberships && <FixedSizeList height={MEMBERSHIPS_ROW_HEIGHT * (Math.min(MEMBERSHIPS_MAX_VISIBLE_ROWS, sortedGroupMemberships.length ?? 0))} itemCount={sortedGroupMemberships.length ?? 0} itemSize={MEMBERSHIPS_ROW_HEIGHT} width="100%" style={{scrollbarGutter: "stable"}}>
                                 {({index, style}) => {
