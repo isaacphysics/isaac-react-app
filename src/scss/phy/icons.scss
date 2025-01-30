@@ -57,55 +57,6 @@
   background-image: url(/assets/phy/ru.png) !important;
 }
 
-@mixin svg-icon($path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
-  display: inline-block;
-  mask: url($path) center center no-repeat;
-  width: $width;
-  height: $height;
-  min-width: $width;
-  min-height: $height;
-  background-color: black;
-  @if $mask-size != none {
-    mask-size: $mask-size;
-  }
-  @if $mask-position != none {
-    mask-position: $mask-position;
-  }
-}
-
-@mixin svg-icon-layered($fg_path, $bg_path, $width: 16px, $height: 16px, $mask-size: none, $mask-position: none) {
-  display: inline-block;
-  width: $width;
-  height: $height;
-  min-width: $width;
-  min-height: $height;
-  &:is(i.icon.icon) { // increase specificity over theming
-    background-color: transparent;
-  }
-  &::before {
-    content: '';
-    @include svg-icon($bg_path, $width, $height);
-    position: absolute;
-    @if $mask-size != none {
-      mask-size: $mask-size;
-    }
-    @if $mask-position != none {
-      mask-position: $mask-position;
-    }
-  }
-  &::after {
-    content: '';
-    @include svg-icon($fg_path, $width, $height);
-    position: absolute;
-    @if $mask-size {
-      mask-size: $mask-size;
-    }
-    @if $mask-position != none {
-      mask-position: $mask-position;
-    }
-  }
-}
-
 .icon-menu {
   @include svg-icon('/assets/phy/icons/redesign/menu.svg', 16px, 16px, 14px 12px);
 }
