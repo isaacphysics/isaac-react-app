@@ -299,3 +299,9 @@ export const LessonsAndRevisionSidebar = (props: SidebarProps) => {
     // TODO
     return <ContentSidebar {...props}/>;
 };
+
+export const MyAccountSidebar = (props: SidebarProps) => {
+    return <ContentSidebar buttonTitle="Account settings" {...props}>
+        {props.children}
+    </ContentSidebar>;
+};

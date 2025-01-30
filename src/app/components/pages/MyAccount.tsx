@@ -1,7 +1,6 @@
 import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
-import classNames from "classnames";
 import {
     Button,
     Card,
@@ -74,6 +73,7 @@ import {useEmailPreferenceState} from "../elements/inputs/UserEmailPreferencesIn
 import {UserProfile} from '../elements/panels/UserProfile';
 import {UserContent} from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
+import {MainContent, MyAccountSidebar, SidebarLayout} from '../elements/layout/SidebarLayout';
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -324,23 +324,151 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab]);
 
-    return <Container id="account-page" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} className="mb-4" />
+    const CommonMyAccount = () => <>
+        {user.loggedIn && userToUpdate.loggedIn &&
+            <Form name="my-account" onSubmit={updateAccount}>
+                {error?.type == "generalError" &&
+                                    <ExigentAlert color="warning">
+                                        <p className="alert-heading fw-bold">Unable to update your account</p>
+                                        <p>{error.generalError}</p>
+                                    </ExigentAlert>
+                }
+                <TabContent activeTab={activeTab}>
+                    <TabPane tabId={ACCOUNT_TAB.account}>
+                        <UserProfile
+                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                            userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                            booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
+                            displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
+                            submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                            userAuthSettings={userAuthSettings}
+                        />
+                    </TabPane>
+
+                    {isAda && <TabPane tabId={ACCOUNT_TAB.customise}>
+                        <UserContent
+                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                            userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                            programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
+                            booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
+                            displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
+                            submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                            userAuthSettings={userAuthSettings}
+                        />
+                    </TabPane>}
+
+                    <TabPane tabId={ACCOUNT_TAB.passwordreset}>
+                        <UserPassword
+                            currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
+                            myUser={userToUpdate} setMyUser={setUserToUpdate}
+                            setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
+                            newPassword={newPassword} setNewPassword={setNewPassword} editingOtherUser={editingOtherUser}
+                            isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
+                        />
+                    </TabPane>
+
+                    <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+                        <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
+                            userToEdit={userToEdit}
+                        />
+                    </TabPane>
+
+                    {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
+                        <UserEmailPreferencesPanel
+                            emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
+                            submissionAttempted={attemptedAccountUpdate}
+                        />
+                    </TabPane>}
+
+                    {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
+                        <UserBetaFeatures
+                            displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
+                            consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
+                        />
+                    </TabPane>}
+                </TabContent>
+
+                {/* siteSpecific within common component to keep this inside the Form */}
+                {/* Teacher connections does not have a save */}
+                {siteSpecific(
+                    <div className="d-flex justify-content-center">
+                        <Input
+                            type="submit" value="Save" className="btn btn-solid w-50"
+                            disabled={!accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections}
+                        />
+                    </div>
+                    ,
+                    <CardFooter className="py-4">
+                        <Row>
+                            <Col size={12} md={{size: 6, offset: 3}}>
+                                <Input
+                                    type="submit" value="Save" className="btn btn-secondary border-0"
+                                    disabled={!accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections}
+                                />
+                            </Col>
+                        </Row>
+                    </CardFooter>
+                )}
+            </Form>}
+        {activeTab === ACCOUNT_TAB.passwordreset && isStaff(userToUpdate) && !editingOtherUser &&
+            // Currently staff only. This is outside the main Form as they cannot be nested.
+            <Suspense fallback={<Loading/>}>
+                <UserMFA
+                    userAuthSettings={userAuthSettings}
+                    userToUpdate={userToUpdate}
+                    editingOtherUser={editingOtherUser}
+                />
+            </Suspense>
+        }
+    </>;
+       
+    const PhyMyAccount = <Container id="account-page" className="mb-5">
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "page-icon-account"}} className="mb-4"/>
         <h3 className="d-md-none text-center text-muted m-3">
             <small>
-                {`Update your ${SITE_TITLE} account, or `}
+                {`Update your Isaac Physics account, or `}
                 <Link to="/logout" className="text-theme">Log out</Link>
             </small>
         </h3>
+        <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
+            {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
+                <SidebarLayout>
+                    <MyAccountSidebar>
+                        <div className="section-divider mt-0"/>
+                        <h5>Account settings</h5>
+                        {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
+                            <NavLink
+                                key={tab} tabIndex={0} className={classnames("sidebar-tab", {"active-tab": activeTab === tab})}
+                                onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
+                            >
+                                {title}
+                            </NavLink>                    
+                        )}
+                    </MyAccountSidebar>
+                    <MainContent className="w-lg-50">
+                        <CommonMyAccount/>   
+                    </MainContent>
+                </SidebarLayout>
+            }
+        </ShowLoading>
+    </Container>;
 
+    const AdaMyAccount = <Container id="account-page" className="mb-5">
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} className="mb-4" />
+        <h3 className="d-md-none text-center text-muted m-3">
+            <small>
+                {`Update your Ada Computer Science account, or `}
+                <Link to="/logout" className="text-theme">Log out</Link>
+            </small>
+        </h3>
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <Card>
-                    <Nav tabs className={classNames("my-4 flex-wrap", {"mx-4": isAda})} data-testid="account-nav">
+                    <Nav tabs className="my-4 flex-wrap mx-4" data-testid="account-nav">
                         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title, titleShort}) =>
                             <NavItem key={tab} className={classnames({active: activeTab === tab})}>
                                 <NavLink
-                                    className={siteSpecific("mx-2", "px-2")} tabIndex={0}
+                                    className="px-2" tabIndex={0}
                                     onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
                                 >
                                     {titleShort ? <>
@@ -351,95 +479,13 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                             </NavItem>
                         )}
                     </Nav>
-
-                    <Form name="my-account" onSubmit={updateAccount}>
-                        {error?.type == "generalError" &&
-                                <ExigentAlert color="warning">
-                                    <p className="alert-heading fw-bold">Unable to update your account</p>
-                                    <p>{error.generalError}</p>
-                                </ExigentAlert>
-                        }
-                        <TabContent activeTab={activeTab}>
-                            <TabPane tabId={ACCOUNT_TAB.account}>
-                                <UserProfile
-                                    userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
-                                    booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
-                                    displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
-                                    submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
-                                    userAuthSettings={userAuthSettings}
-                                />
-                            </TabPane>
-
-                            {isAda && <TabPane tabId={ACCOUNT_TAB.customise}>
-                                <UserContent
-                                    userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
-                                    programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
-                                    booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
-                                    displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
-                                    submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
-                                    userAuthSettings={userAuthSettings}
-                                />
-                            </TabPane>}
-
-                            <TabPane tabId={ACCOUNT_TAB.passwordreset}>
-                                <UserPassword
-                                    currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
-                                    myUser={userToUpdate} setMyUser={setUserToUpdate}
-                                    setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
-                                    newPassword={newPassword} setNewPassword={setNewPassword} editingOtherUser={editingOtherUser}
-                                    isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
-                                />
-                            </TabPane>
-
-                            <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
-                                <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
-                                    userToEdit={userToEdit}
-                                />
-                            </TabPane>
-
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
-                                <UserEmailPreferencesPanel
-                                    emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
-                                    submissionAttempted={attemptedAccountUpdate}
-                                />
-                            </TabPane>}
-
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
-                                <UserBetaFeatures
-                                    displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
-                                    consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
-                                />
-                            </TabPane>}
-                        </TabContent>
-
-                        <CardFooter className="py-4">
-                            <Row>
-                                <Col size={12} md={{size: 6, offset: 3}}>
-                                    {/* Teacher connections does not have a save */}
-                                    <Input
-                                        type="submit" value="Save" className="btn btn-secondary border-0"
-                                        disabled={!accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections}
-                                    />
-                                </Col>
-                            </Row>
-                        </CardFooter>
-                    </Form>
-                    {activeTab === ACCOUNT_TAB.passwordreset && isStaff(userToUpdate) && !editingOtherUser &&
-                        // Currently staff only. This is outside the main Form as they cannot be nested.
-                        <Suspense fallback={<Loading/>}>
-                            <UserMFA
-                                userAuthSettings={userAuthSettings}
-                                userToUpdate={userToUpdate}
-                                editingOtherUser={editingOtherUser}
-                            />
-                        </Suspense>
-                    }
+                    <CommonMyAccount />
                 </Card>
             }
         </ShowLoading>
     </Container>;
+
+    return siteSpecific(PhyMyAccount, AdaMyAccount);
 };
 
 export const MyAccount = withRouter(connect(stateToProps, dispatchToProps)(AccountPageComponent));
