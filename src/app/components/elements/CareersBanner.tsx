@@ -51,8 +51,8 @@ const videoId = careerVideos[0].video;
 export const CareersBanner = () => {
   const user = useAppSelector(selectors.user.orNull);
   return (
-    <Container className="pt-4 pb-5">
-      <div className="career-background-img">
+    <div className="career-background-img">
+      <Container className="pt-4 pb-5">
         <Container className="career-section">
           <h4 className="career-title mb-4">Careers</h4>
           <Row className="career-media-row justify-content-center pb-5">
@@ -96,7 +96,7 @@ export const CareersBanner = () => {
                 their discovery events expanded my understanding of computer science. Since then, I&apos;ve consistently
                 used the platform, finding it invaluable in my computer science journey." - Lauren Lo'
         />
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 };

@@ -694,6 +694,7 @@ export interface AdditionalInformation {
   emergencyNumber?: string;
   authorisation?: string;
   authorisationOther?: string;
+  submissionLink?: string;
 }
 
 export interface CredentialsAuthDTO {

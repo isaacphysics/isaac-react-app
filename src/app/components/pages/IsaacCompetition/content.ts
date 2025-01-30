@@ -80,9 +80,9 @@ export default {
         "Save the 2024/25 dates in your calendar and plan time for you or your team to develop your IoE idea before applications close.",
       entries: [
         { event: "Entries open", date: "January" },
-        { event: "Entries close", date: "17 March" },
-        { event: "Finalists selected", date: "May" },
-        { event: "The finals", date: "2 to 13 June" },
+        { event: "Entries close", date: "28 March 16:00" },
+        { event: "Finalist selected", date: "April" },
+        { event: "The final", date: "19 May" },
       ],
     },
   },

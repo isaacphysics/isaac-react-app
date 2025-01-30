@@ -1,4 +1,3 @@
-
 .ioe {
   &-col {
     background-color: white;
@@ -30,11 +29,11 @@
   }
 }
 #competition-information-section {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
-.competition-information{
-  &-title{
+.competition-information {
+  &-title {
     color: #120540;
     font-size: 24px;
   }
@@ -45,20 +44,20 @@
   }
 
   &-default-background {
-    background-color: #F9F9F9;
+    background-color: #f9f9f9;
   }
 
   &-prizes-background {
-    background-color: #FFDF80;
+    background-color: #ffdf80;
   }
 
-    &-no-border {
+  &-no-border {
     border: none;
   }
 }
 
 .competition-timeline {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 
   &-title {
     color: #120540;
@@ -77,26 +76,26 @@
 
   &-date {
     font-size: 20px;
-    
+
     @media (max-width: 991px) {
       text-align: right;
     }
   }
 
   &-background-1 {
-    background-color: #F9F9F9;
+    background-color: #f9f9f9;
   }
 
   &-background-2 {
-    background-color: #FFBBDC;
+    background-color: #ffbbdc;
   }
 
   &-background-3 {
-    background-color: #FFDF80;
+    background-color: #ffdf80;
   }
 
   &-background-4 {
-    background-color: #FFC000;
+    background-color: #ffc000;
   }
 
   &-box-container {
@@ -106,7 +105,7 @@
     }
     @media (max-width: 991px) {
       margin-bottom: 15px;
-       max-width: none;
+      max-width: none;
     }
   }
 
@@ -122,7 +121,7 @@
     transform: translateY(-50%);
     z-index: 1;
 
-     @media (max-width: 991px) {
+    @media (max-width: 991px) {
       top: auto;
       bottom: -95px;
       right: 50%;
@@ -131,18 +130,64 @@
   }
 
   &-background-1 &-arrow {
-    border-left-color: #F9F9F9;
+    border-left-color: #f9f9f9;
   }
 
   &-background-2 &-arrow {
-    border-left-color: #FFBBDC;
+    border-left-color: #ffbbdc;
   }
 
   &-background-3 &-arrow {
-    border-left-color: #FFDF80;
+    border-left-color: #ffdf80;
   }
 
   &-background-4 &-arrow {
-    border-left-color: #FFC000;
+    border-left-color: #ffc000;
+  }
+}
+
+.entry-form {
+  &-section {
+    background-color: #ffdf80;
+  }
+
+  &-background-img {
+    background-image: url("../../../public/assets/CompetitionTrianglePattern.svg");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: contain;
+  }
+
+  &-title {
+    color: #120540;
+    font-size: 36px;
+  }
+
+  &-sub-title {
+    color: #130019;
+    font-size: 18px;
+    font-family: "dm-sans-light", DMSans-Light, sans-serif;
+  }
+
+  &-button {
+    background-color: #d60265;
+    color: white !important;
+    border: none !important;
+    width: 109px;
+    height: 48px;
+    font-size: 18px;
+    font-family: "dm-sans-light", DMSans-Light, sans-serif;
+  }
+
+  &-button-label {
+    padding-top: 34px;
+  }
+
+  &-button:focus {
+    background-color: #d60265;
+  }
+
+  &-astrisk{
+    color: red;
   }
 }

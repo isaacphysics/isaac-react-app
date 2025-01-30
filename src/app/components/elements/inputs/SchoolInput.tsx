@@ -24,7 +24,8 @@ export const SchoolInput = ({
   idPrefix = "school",
   disableInput,
   required,
-}: SchoolInputProps) => {
+  showLabel = true,
+}: SchoolInputProps & { showLabel?: boolean }) => {
   const [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
   // Get school associated with urn
@@ -77,7 +78,7 @@ export const SchoolInput = ({
   const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
   return (
     <FormGroup className={`school ${className}`}>
-      <Label htmlFor={`school-input-${randomNumber}`}>My current school or college</Label>
+      {showLabel && <Label htmlFor={`school-input-${randomNumber}`}>My current school or college</Label>}
       {userToUpdate.schoolOther !== NOT_APPLICABLE && (
         <React.Fragment>
           <AsyncCreatableSelect
@@ -95,7 +96,6 @@ export const SchoolInput = ({
           />
         </React.Fragment>
       )}
-
       {((userToUpdate.schoolOther == undefined && !(selectedSchoolObject && selectedSchoolObject.name)) ||
         userToUpdate.schoolOther == NOT_APPLICABLE) && (
         <div className={(userToUpdate.schoolOther === NOT_APPLICABLE ? "mt-1" : "mt-3") + " d-flex"}>
@@ -118,7 +118,6 @@ export const SchoolInput = ({
           />
         </div>
       )}
-
       <div className="invalid-school">
         {submissionAttempted && !validateUserSchool(userToUpdate) && "Please specify a school or college"}
       </div>

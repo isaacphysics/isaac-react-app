@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2024-08-20 12:58:07.
+// Generated using typescript-generator version 3.2.1263 on 2024-12-23 12:45:08.
 
 export interface AssignmentDTO extends IAssignmentLike {
   gameboardId?: string;
@@ -103,6 +103,7 @@ export interface IsaacEventPageDTO extends ContentDTO {
   groupReservationLimit?: number;
   allowGroupReservations?: boolean;
   privateEvent?: boolean;
+  competitionEvent?: boolean;
   hub?: Hub;
   meetingUrl?: string;
   endDate?: EpochTimeStamp;
@@ -485,6 +486,11 @@ export interface StringChoiceDTO extends ChoiceDTO {
 export interface VideoDTO extends MediaDTO {
 }
 
+export interface CompetitionEntryDTO {
+  entrantIds?: number[];
+  submissionURL?: string;
+}
+
 export interface DetailedEventBookingDTO extends EventBookingDTO {
   additionalInformation?: { [index: string]: string };
 }
@@ -587,11 +593,11 @@ export interface UserSummaryWithGroupMembershipDTO extends UserSummaryDTO {
 }
 
 export interface IAssignmentLike {
-  ownerUserId?: number;
+  id?: number;
   creationDate?: EpochTimeStamp;
+  ownerUserId?: number;
   dueDate?: EpochTimeStamp;
   groupId?: number;
-  id?: number;
 }
 
 export interface GameboardItem {
@@ -634,8 +640,8 @@ export interface GameFilter {
 }
 
 export interface HasTitleOrId {
-  title?: string;
   id?: string;
+  title?: string;
 }
 
 export interface AudienceContext {
@@ -662,8 +668,8 @@ export interface Image extends Media {
 }
 
 export interface IHasQuizSummary {
-  quizSummary?: ContentSummaryDTO;
   quizId?: string;
+  quizSummary?: ContentSummaryDTO;
 }
 
 export interface Mark {
