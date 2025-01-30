@@ -318,7 +318,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 <li>If you want to permanently leave a group, ask your teacher to remove you.</li>
             </ul>
             <div className="my-groups-table-section overflow-auto">
-                <div className="connect-list">
+                <div className="connect-list mb-3">
                     <ConnectionsHeader
                         title="Group memberships" enableSearch={enableGroupSearch} setEnableSearch={setEnableGroupSearch}
                         setSearchText={setGroupSearchText} placeholder="Search groups"/>
@@ -392,11 +392,11 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                             </FixedSizeList>}
                         </ul>
                     </div>
+                    {groupMemberships && groupMemberships.length === 0 && <p className="teachers-connected">
+                        You are not a member of any groups.
+                    </p>}
                 </div>
             </div>
-            {groupMemberships && groupMemberships.length === 0 && <p className="teachers-connected text-center">
-                You are not a member of any groups.
-            </p>}
         </>}
     />;
 };
