@@ -6,6 +6,8 @@ import { generateGameboardSubjectHexagons, isDefined, above, HUMAN_SUBJECTS, sta
 import { PhyHexIcon } from "../svg/PhyHexIcon";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
+import { Spacer } from "../Spacer";
+import { ShareLink } from "../ShareLink";
 
 export enum GameboardLinkLocation {
     // where on the card can the user click to navigate to the gameboard
@@ -17,11 +19,15 @@ interface GameboardCardProps extends React.HTMLAttributes<HTMLElement> {
     gameboard?: GameboardDTO;
     linkLocation?: GameboardLinkLocation;
     onDelete?: () => void; // if this exists, a delete button will be shown calling this function
+    setAssignmentsDetails?: {
+        groupCount?: number;
+        toggleAssignModal?: () => void;
+    }
 }
 
 // any children passed into this component will be rendered in the card body
 export const GameboardCard = (props: GameboardCardProps) => {
-    const {gameboard, linkLocation, onDelete, children, ...rest} = props;
+    const {gameboard, linkLocation, onDelete, children, setAssignmentsDetails, ...rest} = props;
 
     const [showMore, setShowMore] = useState(false);
     const boardStagesAndDifficulties = useMemo(() => determineGameboardStagesAndDifficulties(gameboard), [gameboard]);
@@ -37,9 +43,13 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
     const boardSubjects = determineGameboardSubjects(gameboard);
 
+    const isSetAssignments = isDefined(setAssignmentsDetails);
+
+    const boardLink = gameboard && `${PATHS.GAMEBOARD}#${gameboard.id}`;
+
     const card = <div className="px-3 py-2 flex-grow-1">
         <Row data-testid="my-assignment">
-            <Col xs={8}>
+            <Col md={8} className="d-flex flex-column align-items-start">
                 <div className="d-flex align-items-center">
                     <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
                         <div className="board-subject-hexagon-container justify-content-center">
@@ -62,29 +72,56 @@ export const GameboardCard = (props: GameboardCardProps) => {
                 </div>
 
                 {children}
+
+                <Spacer/>
                 
-                <Button className="my-2 btn-underline" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
+                {above['md'](deviceSize) && <Button className="my-2 btn-underline" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
                     {showMore ? "Hide details" : "Show details"}
-                </Button>
+                </Button>}
             </Col>
 
-            <Col xs={4}>
-                <div className="d-flex flex-wrap justify-content-center justify-content-md-end justify-content-lg-center justify-content-xl-end column-gap-4">
-                    <Label className="d-block w-max-content text-center text-nowrap pt-3">
-                        {isDefined(gameboard) && ((gameboard.percentageAttempted === 100) ?
-                            <span className="board-subject-hexagon subject-complete"/> :
-                            <div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>
-                        )}
-                        Attempted
-                    </Label>
-                    <Label className="d-block w-max-content text-center text-nowrap pt-3">
-                        {isDefined(gameboard) && ((gameboard.percentageCorrect === 100) ?
-                            <span className="board-subject-hexagon subject-complete"/> :
-                            <div className="board-percent-completed">{gameboard.percentageCorrect ?? 0}</div>
-                        )}
-                        Correct
-                    </Label>
+            <Col md={4} className="d-flex flex-column justify-content-between">
+                <div className={classNames("d-flex flex-wrap justify-content-center justify-content-md-end", 
+                    {"justify-content-lg-center justify-content-xl-end column-gap-5 column-gap-md-4": !isSetAssignments},
+                )}>
+                    {!isSetAssignments 
+                        ? <>
+                            <Label className="d-block w-max-content text-center text-nowrap pt-3">
+                                {isDefined(gameboard) && ((gameboard.percentageAttempted === 100) ?
+                                    <div className="board-percent-completed subject-complete"/> :
+                                    <div className="board-percent-completed">{gameboard.percentageAttempted ?? 0}</div>
+                                )}
+                                Attempted
+                            </Label>
+                            <Label className="d-block w-max-content text-center text-nowrap pt-3">
+                                {isDefined(gameboard) && ((gameboard.percentageCorrect === 100) ?
+                                    <div className="board-percent-completed subject-complete"/> :
+                                    <div className="board-percent-completed">{gameboard.percentageCorrect ?? 0}</div>
+                                )}
+                                Correct
+                            </Label> 
+                        </>
+                        : <>
+                            <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1">
+                                Assigned to
+                                <div className="board-bubble-info">{setAssignmentsDetails?.groupCount ?? 0}</div>
+                                group{setAssignmentsDetails?.groupCount !== 1 && "s"}
+                            </Label>
+                        </>
+                    }
                 </div>
+                {isSetAssignments 
+                    ? <Button color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
+                        Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
+                    </Button> 
+                    : boardLink && <div className="card-share-link">
+                        <ShareLink linkUrl={boardLink} gameboardId={gameboard.id} reducedWidthLink clickAwayClose />
+                    </div>
+                }
+
+                {!above['md'](deviceSize) && <Button className="my-2 btn-underline w-max-content" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
+                    {showMore ? "Hide details" : "Show details"}
+                </Button>}
             </Col>
         </Row>
         <Collapse isOpen={showMore} className="w-100">
@@ -126,8 +163,8 @@ export const GameboardCard = (props: GameboardCardProps) => {
         </Collapse>
     </div>;
 
-    if (gameboard && linkLocation === GameboardLinkLocation.Card) {
-        return <Link {...rest} className={classNames("w-100 d-flex assignments-card mb-3", rest.className)} to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>
+    if (gameboard && linkLocation === GameboardLinkLocation.Card && boardLink) {
+        return <Link {...rest} className={classNames("w-100 d-flex assignments-card mb-3", rest.className)} to={boardLink}>
             {card}
             {onDelete && <Button className="delete-button" color="solid" onClick={(e) => {onDelete(); e.preventDefault();}}>
                 <img src="/assets/phy/icons/bin-black.svg" alt="Delete board"/>

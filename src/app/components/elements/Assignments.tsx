@@ -34,7 +34,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
 
     return <GameboardCard gameboard={assignment.gameboard} linkLocation={GameboardLinkLocation.Card}>
-        <Row>
+        <Row className="w-100">
             <Col xs={12} md={6}>
                 {isDefined(assignmentStartDate) && 
                     <p className="mb-0" data-testid={"gameboard-assigned"}>

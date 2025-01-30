@@ -287,24 +287,9 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         </tr>)
         :
         siteSpecific(
-            //                 <CardSubtitle data-testid={"owner"}>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
-            //             {isSetAssignments ? <Col className="d-flex justify-content-center">
-            //                 <PhyHexagon {...infoShapeProps} percentageDisplayed={board.percentageAttempted ?? 0} />
-            //             </Col>
-            //                 : <>
-            //                     <Col xs={2} className="card-share-link col-auto px-3">
-            //                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
-            //                     </Col>
-            //                 </>}
-
-            //     {isSetAssignments && <CardFooter>
-            //         <Button className={"mb-1"} block color="tertiary" onClick={toggleAssignModal}>
-            //             Assign{hasAssignedGroups && " / Unassign"}
-            //         </Button>
-            //     </CardFooter>}
-
-            <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard}>
-                <Row>
+            <GameboardCard gameboard={board} linkLocation={GameboardLinkLocation.Card} onDelete={confirmDeleteBoard} 
+                {...(isSetAssignments ? {'setAssignmentsDetails': {toggleAssignModal, groupCount: assignees.length}} : {})}>
+                <Row className="w-100">
                     <Col>
                         {isDefined(board.creationDate) && <p className="mb-0" data-testid={"created-date"}>
                             Created <strong>{getFriendlyDaysUntil(board.creationDate)}</strong>
