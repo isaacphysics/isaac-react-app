@@ -111,7 +111,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
         }
     }
 
-    return <Container className="py-2">
+    return <Container fluid className="py-2">
         <Label className="w-100 pb-2">Group(s):
             <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
                 value={selectedGroups}
@@ -531,7 +531,15 @@ export const SetAssignments = () => {
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} help={pageHelp} modalId="help_modal_set_assignments"/>
         <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
         <SidebarLayout>
-            <SetAssignmentsSidebar/>
+            <SetAssignmentsSidebar
+                displayMode={boardView} setDisplayMode={setBoardView}
+                displayLimit={boardLimit} setDisplayLimit={setBoardLimit}
+                boardTitleFilter={boardTitleFilter} setBoardTitleFilter={setBoardTitleFilter}
+                sortOrder={boardOrder} setSortOrder={setBoardOrder}
+                boardSubject={boardSubject} setBoardSubject={setBoardSubject}
+                boardCreator={boardCreator} setBoardCreator={setBoardCreator}
+                sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
+            />
             <MainContent>            
                 {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
                 {groups && groups.length === 0 && <Alert color="warning">
@@ -549,9 +557,10 @@ export const SetAssignments = () => {
                         )}
                     </h3>
                     : <>
-                        {isPhy && <h4>
+                        {isPhy && <h5>
                             Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view assignments by start date and due date.
-                        </h4>}
+                            <hr/>
+                        </h5>}
                         {isAda && <>
                             {boards && boards.totalResults > 0 && <h4>
                                 You have <strong>{boards.totalResults}</strong> quiz{boards.totalResults > 1 && "zes"} ready to assign...{" "}
@@ -563,8 +572,8 @@ export const SetAssignments = () => {
                                 You have <IsaacSpinner size="sm" inline/> {siteSpecific("gameboards", "quizzes")} ready to assign...
                             </h4>}
                         </>}
-                        <Row>
-                            {(isPhy || boardView === BoardViews.card) && <Col sm={6} lg={3}>
+                        {isAda && <Row>
+                            {boardView === BoardViews.card && <Col sm={6} lg={3}>
                                 <Label className="w-100">
                                     Display in <Input type="select" value={boardView} onChange={switchView}>
                                         {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
@@ -587,23 +596,29 @@ export const SetAssignments = () => {
                                     </Label>
                                 </Col>
                             </>}
-                        </Row>
+                        </Row>}
                         <ShowLoading until={boards}>
                             {boards && boards.boards && <div>
                                 {boardView == BoardViews.card ?
                                     // Card view
                                     <>
                                         <Row className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
-                                            {boards.boards && boards.boards.map(board =>
-                                                <Col key={board.id}>
-                                                    <BoardCard
-                                                        user={user}
-                                                        board={board}
-                                                        boardView={boardView}
-                                                        assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                                                        toggleAssignModal={() => openAssignModal(board)}
-                                                    />
-                                                </Col>)}
+                                            {boards.boards && boards.boards
+                                                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                                                .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                                                .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
+                                                .map(board =>
+                                                    <Col key={board.id}>
+                                                        <BoardCard
+                                                            user={user}
+                                                            board={board}
+                                                            boardView={boardView}
+                                                            assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                                            toggleAssignModal={() => openAssignModal(board)}
+                                                        />
+                                                    </Col>
+                                                )
+                                            }
                                         </Row>
                                         <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
                                             <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong>
