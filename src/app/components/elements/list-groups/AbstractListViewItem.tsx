@@ -114,10 +114,10 @@ export const AbstractListViewItem = ({icon, title, subject, subtitle, breadcrumb
                 {breadcrumb && <div className="hierarchy-tags">
                     <Breadcrumb breadcrumb={breadcrumb}/>
                 </div>}
-                {audienceViews && fullWidth && <div className="d-flex"> 
+                {audienceViews && fullWidth && <div className="d-flex mt-1"> 
                     <StageAndDifficultySummaryIcons audienceViews={audienceViews} stack/> 
                 </div>}
-                {status && (below["lg"](deviceSize) || fullWidth) && <div className="d-flex">
+                {status && (below["lg"](deviceSize) || fullWidth) && <div className="d-flex mt-1">
                     <StatusDisplay status={status}/>
                 </div>}
                 {linkTags && <div className="d-flex py-3 flex-wrap">
