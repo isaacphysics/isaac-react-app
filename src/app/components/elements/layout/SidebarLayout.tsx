@@ -482,7 +482,9 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
         </div>
         <h5 className="mt-4 mb-3">Sort by</h5>
         <Input type="select" className="mb-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as AssignmentBoardOrder)} disabled={sortDisabled}>
-            {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+            {Object.values(AssignmentBoardOrder).filter(
+                order => !['attempted', '-attempted', 'correct', '-correct'].includes(order)
+            ).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
         </Input>
         {sortDisabled && <div className="small text-muted mt-2">
             Sorting is disabled if some gameboards are hidden. Increase the display limit to show all gameboards.

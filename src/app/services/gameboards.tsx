@@ -205,16 +205,16 @@ export enum BoardLimit {
 }
 
 export const BOARD_ORDER_NAMES: {[key in AssignmentBoardOrder]: string} = {
-    "created": "Date Created Ascending",
-    "-created": "Date Created Descending",
-    "visited": "Date Visited Ascending",
-    "-visited": "Date Visited Descending",
-    "title": "Title Ascending",
-    "-title": "Title Descending",
-    "attempted": "Attempted Ascending",
-    "-attempted": "Attempted Descending",
-    "correct": "Correctness Ascending",
-    "-correct": "Correctness Descending"
+    "created": "Date created (oldest first)",
+    "-created": "Date created (recent first)",
+    "visited": "Date visited (oldest first)",
+    "-visited": "Date visited (recent first)",
+    "title": "Title (A-Z)",
+    "-title": "Title (Z-A)",
+    "attempted": "Attempted (lowest first)",
+    "-attempted": "Attempted (highest first)",
+    "correct": "Correctness (lowest first)",
+    "-correct": "Correctness (highest first)"
 };
 
 const BOARD_SORT_FUNCTIONS = {
