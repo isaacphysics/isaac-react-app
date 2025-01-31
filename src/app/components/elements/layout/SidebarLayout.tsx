@@ -346,19 +346,21 @@ export const QuestionFinderSidebar = (props: QuestionFinderSidebarProps) => {
         {/*<AllFiltersCheckbox conceptFilters={questionFilters} setConceptFilters={setQuestionFilters} tagCounts={tagCounts} /> */}
         {/*{topLevelFilters.map(filter => <FilterDropdown key={filter.id} tag={tag} conceptFilters={questionFilters} setConceptFilters={setQuestionFilters} tagCounts={tagCounts}/>)}*/}
 
-        <div className="section-divider"/>
+        {pageContext?.subject && pageContext?.stage && <>
+            <div className="section-divider"/>
 
-        <div className="sidebar-help">
-            <p>The questions shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
-            <p>If you want to explore our full range of questions across multiple subjects or learning stages, you can use the main question finder:</p>
-            <AffixButton size="md" color="keyline" tag={Link} to="/questions" affix={{
-                affix: "icon-right",
-                position: "suffix",
-                type: "icon"
-            }}>
-                Browse all questions
-            </AffixButton>
-        </div>
+            <div className="sidebar-help">
+                <p>The questions shown here have been filtered to only show those that are relevant to {getHumanContext(pageContext)}.</p>
+                <p>If you want to explore our full range of questions across multiple subjects or learning stages, you can use the main question finder:</p>
+                <AffixButton size="md" color="keyline" tag={Link} to="/questions" affix={{
+                    affix: "icon-right",
+                    position: "suffix",
+                    type: "icon"
+                }}>
+                    Browse all questions
+                </AffixButton>
+            </div>
+        </>}
     </ContentSidebar>;
 };
 

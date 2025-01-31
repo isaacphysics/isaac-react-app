@@ -38,6 +38,7 @@ interface HierarchyFilterProps extends HierarchySummaryProps {
     setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<ChoiceTree>>;
     tier: number;
     index: TAG_ID | TAG_LEVEL;
+    className?: string;
 }
 
 function naturalLanguageList(list: string[]) {
@@ -48,8 +49,8 @@ function naturalLanguageList(list: string[]) {
     return `${lowerCaseList.slice(0, lastIndex).join(", ")} and ${lowerCaseList[lastIndex]}`;
 }
 
-export function HierarchyFilterHexagonal({tier, index, tiers, choices, selections, questionFinderFilter, setTierSelection}: HierarchyFilterProps) {  
-    return <div>
+export function HierarchyFilterHexagonal({tier, index, tiers, choices, selections, questionFinderFilter, setTierSelection, className}: HierarchyFilterProps) {  
+    return <div className={className}>
         {choices[tier] && choices[tier][index] && choices[tier][index].map((choice) => {
             const isSelected = selections[tier] && selections[tier][index]?.map(s => s.value).includes(choice.value);
             function selectValue() {
@@ -63,14 +64,16 @@ export function HierarchyFilterHexagonal({tier, index, tiers, choices, selection
                 }
             };
 
-            return <div key={choice.value} className={classNames("ps-3 ms-2", {"ms-3": tier===1, "ms-4": tier===2})}>
+            return <div key={choice.value} className={classNames("ps-3 ms-2", {"ms-3": tier===1, "ms-4 search-field": tier===2})}>
                 <StyledCheckbox
                     color="primary"
                     checked={isSelected}
                     onChange={selectValue}
                     label={<span>{choice.label}</span>}
                 />
-                {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && <HierarchyFilterHexagonal {...{tier: tier+1, index: choice.value, tiers, choices, selections, questionFinderFilter, setTierSelection}}/>}
+                {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
+                    <HierarchyFilterHexagonal {...{tier: tier+1, index: choice.value, tiers, choices, selections, questionFinderFilter, setTierSelection}} className={classNames({"bg-white": tier===0, "bg-light": tier===1})}/>
+                }
             </div>;
         }
         )}
