@@ -55,7 +55,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 <AccountTypeMessage role={userToUpdate?.role} />
             </p>
             {!isTutorOrAbove(userToUpdate) ? <p>
-                If you would like to delete your account, please <span className="text-nowrap"><Button color="inline-link" onClick={() => {
+                If you would like to delete your account, please <span className="text-nowrap"><Button className={isPhy ? "btn-link" : ""} color="inline-link" onClick={() => {
                     store.dispatch(openActiveModal(ConfirmAccountDeletionRequestModal(confirmAccountDeletionRequest)));
                 }}>{siteSpecific("click here", <strong>click here</strong>)}</Button>.</span>
             </p> : <p>
@@ -86,7 +86,7 @@ export const UserProfile = (props: UserProfileProps) => {
                 submissionAttempted={submissionAttempted}
                 required={true}
             />
-            <hr className="text-center border-muted my-4"/>
+            {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center border-muted my-4"/>)}
             {isAda &&
                 <CountryInput
                     userToUpdate={userToUpdate}

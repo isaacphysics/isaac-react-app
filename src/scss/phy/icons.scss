@@ -203,6 +203,13 @@
   )
 }
 
+.page-icon-account {
+  @include svg-icon(
+    '/assets/phy/icons/redesign/my-isaac.svg', 
+    75px, 75px, 44px // no background - generic hex background clashes with foreground hex
+  );
+}
+
 svg {
   &.almost-fill {
     fill: $phy_extra_force_yellow;

@@ -20,11 +20,13 @@
 }
 
 .connect-list {
-  .connect-list-header {
-    .icon-person-active {
-      margin-top: 7px;
-    }
+  border-radius: 8px;
   
+  .connect-list-header {
+    border-radius: 7px 7px 0 0; // avoids clashing with 8px on border
+    background-color: $color-brand-700;
+    min-height: 3rem;
+
     h4 {
       padding: 0rem 1rem;
     }
@@ -40,4 +42,24 @@
   .connections-fixed-length-container {
     max-width: calc(100% - 91.8px);
   }
+}
+
+.sidebar-tab {
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600px;
+}
+
+.active-tab {
+  background-color: $color-neutral-200;
+  border-left: 3px solid $color-brand-500;
+}
+
+.btn-link {
+  font-size: 1rem;
+  margin-top: 3px;
+}
+
+.section-divider-bold {
+  margin: 2rem 0;
 }

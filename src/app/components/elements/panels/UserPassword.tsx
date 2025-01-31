@@ -169,7 +169,7 @@ export const UserPassword = (
                     </React.Fragment>
             }
             <React.Fragment>
-                <hr className="text-center" />
+                {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 {connectedAccounts.length > 0 && <FormGroup className="form-group">
                     <h4>Linked {siteSpecific("Accounts", "accounts")}</h4>
                     <Col>
@@ -188,7 +188,7 @@ export const UserPassword = (
                 </FormGroup>}
             </React.Fragment>
             <React.Fragment>
-                <hr className="text-center"/>
+                {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 <FormGroup className="form-group">
                     <h4>Log Out</h4>
                     <p>
