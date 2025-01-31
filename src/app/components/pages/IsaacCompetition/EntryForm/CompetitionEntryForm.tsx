@@ -8,7 +8,7 @@ import FormInput from "./FormInput";
 import { useReserveUsersOnCompetition } from "./useReserveUsersOnCompetition";
 import { useActiveGroups } from "./useActiveGroups";
 
-const COMPETITON_ID = "isaac_competition_25";
+const COMPETITON_ID = "20250131_isaac_competition";
 interface CompetitionEntryFormProps {
   handleTermsClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
