@@ -11,12 +11,14 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Alert, Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
+    below,
     HUMAN_QUESTION_TAGS,
     HUMAN_QUESTION_TYPES,
     isPhy,
     isTeacherOrAbove,
     safePercentage,
-    siteSpecific
+    siteSpecific,
+    useDeviceSize
 } from "../../services";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {PotentialUser} from "../../../IsaacAppTypes";
@@ -28,6 +30,7 @@ import {FlushableRef, QuestionProgressCharts} from "../elements/views/QuestionPr
 import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
 import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import { ListView } from '../elements/list-groups/ListView';
 
 const siteSpecificStats = siteSpecific(
     // Physics
@@ -75,6 +78,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const achievements = useAppSelector(selectors.user.achievementsRecord);
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
+    const screenSize = useDeviceSize();
 
     useEffect(() => {
         if (viewingOwnData && user.loggedIn) {
@@ -201,19 +205,23 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                         <Row id="progress-questions">
                             {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                                 <h4>Most recently answered questions</h4>
-                                <LinkToContentSummaryList 
-                                    items={progress.mostRecentQuestions} 
-                                    contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN} 
-                                    ignoreIntendedAudience
-                                />
+                                {isPhy ? 
+                                    <ListView items={progress.mostRecentQuestions} fullWidth={below["lg"](screenSize)}/> :
+                                    <LinkToContentSummaryList 
+                                        items={progress.mostRecentQuestions} 
+                                        contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN} 
+                                        ignoreIntendedAudience
+                                    />}
                             </Col>}
                             {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                                 <h4>Oldest unsolved questions</h4>
-                                <LinkToContentSummaryList 
-                                    items={progress.oldestIncompleteQuestions} 
-                                    contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN} 
-                                    ignoreIntendedAudience
-                                />
+                                {isPhy ? 
+                                    <ListView items={progress.oldestIncompleteQuestions} fullWidth={below["lg"](screenSize)}/> :
+                                    <LinkToContentSummaryList 
+                                        items={progress.oldestIncompleteQuestions} 
+                                        contentTypeVisibility={ContentTypeVisibility.FULLY_HIDDEN} 
+                                        ignoreIntendedAudience
+                                    />}
                             </Col>}
                         </Row>
                     </div>,

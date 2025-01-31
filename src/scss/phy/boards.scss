@@ -1,9 +1,8 @@
 @import "../common/boards";
 
 .board-subject-hexagon-size {
-  width: 63px;
-  min-width: 63px;
-  height: 74px;
+  width: 72px;
+  height: 72px;
 }
 
 // Subject hexagons:
@@ -45,11 +44,7 @@
   font-size: 30px;
   line-height: 110%;
   font-family: $secondary-font-semi-bold;
-  color: #fff;
-  z-index: 10;
-  position: absolute;
-  top: 20px;
-  left: 5px;
+  color: $color-neutral-900;
   text-align: center;
   &:after {
     font-size: 0.5em;
@@ -60,21 +55,25 @@
 }
 
 .board-subject-hexagon {
-  background: url(/assets/phy/icons/hexagons_sprite.png) no-repeat -256px 0;
-  left: 0;
+  // background: url(/assets/phy/icons/hexagons_sprite.png) no-repeat -256px 0;
+  // left: 0;
+  mask: url(/assets/phy/icons/redesign/hexagon.svg) no-repeat center center;
+  mask-size: contain;
+  width: 72px;
+  height: 72px;
 }
 .subject-physics {
-  background-position: 0 0;
+  background-color: $color-physics-500;
 }
 .subject-maths {
-  background-position: -64px 0;
+  background-color: $color-maths-500;
 }
 .subject-chemistry {
-  background-position: -128px 0;
+  background-color: $color-chemistry-500;
 }
 .subject-biology {
-  background-position: -192px 0;
+  background-color: $color-biology-500;
 }
-.subject-complete {
-  background-position: -320px 0;
-}
+// .subject-complete {
+//   background-position: -320px 0;
+// }

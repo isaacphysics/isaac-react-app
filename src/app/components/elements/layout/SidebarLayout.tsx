@@ -2,14 +2,16 @@ import React, { ChangeEvent, ReactNode, RefObject, useEffect, useRef, useState }
 import { Col, ColProps, RowProps, Input, Label, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { above, AUDIENCE_DISPLAY_FIELDS, determineAudienceViews, filterAudienceViewsByProperties, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
+import { above, AUDIENCE_DISPLAY_FIELDS, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
 import { Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { getHumanContext } from "../../../services/pageContext";
+import { AssignmentState } from "../../pages/MyAssignments";
+import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -298,6 +300,96 @@ export const PracticeQuizzesSidebar = (props: SidebarProps) => {
 export const LessonsAndRevisionSidebar = (props: SidebarProps) => {
     // TODO
     return <ContentSidebar {...props}/>;
+};
+
+interface AssignmentStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
+    status: AssignmentState;
+    statusFilter: AssignmentState[];
+    setStatusFilter: React.Dispatch<React.SetStateAction<AssignmentState[]>>;
+    count?: number;
+}
+
+const AssignmentStatusCheckbox = (props: AssignmentStatusCheckboxProps) => {
+    const {status, statusFilter, setStatusFilter, count, ...rest} = props;
+    return <FilterCheckboxBase 
+        id={status ?? ""} filterTitle={status}
+        onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== AssignmentState.ALL), status]) : setStatusFilter(c => c.filter(s => s !== status))}
+        checked={statusFilter.includes(status)}
+        count={count} {...rest}
+    />;
+};
+
+const AssignmentStatusAllCheckbox = (props: Omit<AssignmentStatusCheckboxProps, "status">) => {
+    const { statusFilter, setStatusFilter, count, ...rest } = props;
+    const [previousFilters, setPreviousFilters] = useState<AssignmentState[]>([]);
+    return <FilterCheckboxBase 
+        id="all" filterTitle="All"
+        onInputChange={(e) => {
+            if (e.target.checked) {
+                setPreviousFilters(statusFilter);
+                setStatusFilter([AssignmentState.ALL]);
+            } else {
+                setStatusFilter(previousFilters);
+            }
+        }}
+        checked={statusFilter.includes(AssignmentState.ALL)}
+        count={count} {...rest}
+    />;
+};
+
+interface MyAssignmentsSidebarProps extends SidebarProps {
+    statusFilter: AssignmentState[];
+    setStatusFilter: React.Dispatch<React.SetStateAction<AssignmentState[]>>;
+    titleFilter: string;
+    setTitleFilter: React.Dispatch<React.SetStateAction<string>>;
+    groupFilter: string;
+    setGroupFilter: React.Dispatch<React.SetStateAction<string>>;
+    setByFilter: string;
+    setSetByFilter: React.Dispatch<React.SetStateAction<string>>;
+    assignmentQuery: any;
+}
+
+export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
+    const { statusFilter, setStatusFilter, titleFilter, setTitleFilter, groupFilter, setGroupFilter, setByFilter, setSetByFilter, assignmentQuery, ...rest } = props;
+
+    useEffect(() => {
+        if (statusFilter.length === 0) {
+            setStatusFilter([AssignmentState.ALL]);
+        }    
+    }, [statusFilter, setStatusFilter]);
+
+    return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
+        <ShowLoadingQuery query={assignmentQuery} defaultErrorTitle="" thenRender={(assignments: AssignmentDTO[]) => {
+            const myAssignments = filterAssignmentsByStatus(assignments);
+            const assignmentCountByStatus = myAssignments && Object.fromEntries(Object.entries(myAssignments).map(([key, value]) => [key, value.length]));
+            return <>
+                <div className="section-divider"/>
+                <h5>Search assignments</h5>
+                <Input
+                    className='search--filter-input my-4'
+                    type="search" value={titleFilter || ""}
+                    placeholder="e.g. Forces"
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setTitleFilter(e.target.value)}
+                />
+                <div className="section-divider"/>
+                <h5 className="mb-4">Filter by status</h5>
+                <AssignmentStatusAllCheckbox statusFilter={statusFilter} setStatusFilter={setStatusFilter} count={assignmentCountByStatus?.[AssignmentState.ALL]}/>
+                <div className="section-divider-small"/>
+                {Object.values(AssignmentState).filter(s => s !== AssignmentState.ALL).map(state => <AssignmentStatusCheckbox 
+                    key={state} status={state} count={assignmentCountByStatus?.[state]}
+                    statusFilter={statusFilter} setStatusFilter={setStatusFilter} 
+                />)}
+                <h5 className="mt-4 mb-3">Filter by group</h5>
+                <Input type="select" value={groupFilter} onChange={e => setGroupFilter(e.target.value)}>
+                    {["All", ...getDistinctAssignmentGroups(assignments)].map(group => <option key={group} value={group}>{group}</option>)}
+                </Input>
+                <h5 className="mt-4 mb-3">Filter by assigner</h5>
+                <Input type="select" value={setByFilter} onChange={e => setSetByFilter(e.target.value)}>
+                    {["All", ...getDistinctAssignmentSetters(assignments)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
+                </Input>
+            </>;
+        }}/>
+    </ContentSidebar>;
 };
 
 export const MyAccountSidebar = (props: SidebarProps) => {

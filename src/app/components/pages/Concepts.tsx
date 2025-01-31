@@ -4,11 +4,12 @@ import {AppState, fetchConcepts, selectors, useAppDispatch, useAppSelector} from
 import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
+import {isPhy, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import { ListView } from "../elements/list-groups/ListView";
+import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
 import { useUrlPageTheme } from "../../services/pageContext";
 
@@ -106,10 +107,12 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                         <CardBody>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {shortcutAndFilteredSearchResults ?
-                                    <LinkToContentSummaryList 
-                                        items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
-                                        contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
-                                    />
+                                    isPhy ? 
+                                        <ListView items={shortcutAndFilteredSearchResults}/> :
+                                        <LinkToContentSummaryList 
+                                            items={shortcutAndFilteredSearchResults} showBreadcrumb={false} 
+                                            contentTypeVisibility={ContentTypeVisibility.ICON_ONLY}
+                                        />
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </CardBody>

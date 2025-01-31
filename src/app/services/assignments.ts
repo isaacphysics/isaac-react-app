@@ -10,7 +10,7 @@ export function getAssignmentCSVDownloadLink(assignmentId: number) {
     return `${API_PATH}/assignments/assign/${assignmentId}/progress/download`;
 }
 
-function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO & {startDate: Date} {
+function createAssignmentWithStartDate(assignment: AssignmentDTO): AssignmentDTO & {startDate: Date | number} {
     const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate as Date;
     return {...assignment, startDate: assignmentStartDate};
 }
@@ -23,7 +23,7 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
     const midnightLastNight = new Date(now);
     midnightLastNight.setHours(0, 0, 0, 0);
 
-    const myAssignments: Record<AssignmentStatus, (AssignmentDTO & {startDate: Date})[]> = {
+    const myAssignments: Record<AssignmentStatus, (AssignmentDTO & {startDate: Date | number})[]> = {
         inProgressRecent: [],
         inProgressOld: [],
         allAttempted: [],

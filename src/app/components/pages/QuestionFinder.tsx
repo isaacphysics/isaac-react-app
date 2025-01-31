@@ -26,7 +26,6 @@ import {
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {RouteComponentProps, useHistory, withRouter} from "react-router";
-import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
@@ -39,6 +38,8 @@ import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, L
 import {QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
+import { ListView } from "../elements/list-groups/ListView";
+import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
@@ -422,8 +423,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 </Row>
 
                 <Row className="mt-4 position-relative finder-panel">
-                    <Col lg={siteSpecific(4, 3)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-filters">
-                        <QuestionFinderFilterPanel {...{
+                    <Col lg={siteSpecific(4, 3)} md={12} xs={12} className={classNames("text-wrap my-2", {"d-lg-none": isPhy})} data-testid="question-finder-filters">
+                        <QuestionFinderFilterPanel {...{ 
                             searchDifficulties, setSearchDifficulties,
                             searchTopics, setSearchTopics,
                             searchStages, setSearchStages,
@@ -434,9 +435,9 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             tiers, choices, selections, setTierSelection,
                             applyFilters, clearFilters,
                             validFiltersSelected, searchDisabled, setSearchDisabled
-                        }} />
+                        }} /> {/* Temporarily disabled at >=lg to test list view until this filter is moved into the sidebar */}
                     </Col>
-                    <Col lg={siteSpecific(8, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
+                    <Col lg={siteSpecific(12, 9)} md={12} xs={12} className="text-wrap my-2" data-testid="question-finder-results">
                         <Card>
                             <CardHeader className="finder-header pl-3">
                                 <Col className={"px-0"}>
@@ -451,12 +452,14 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             </CardHeader>
                             <CardBody className={classNames({"border-0": isPhy, "p-0": displayQuestions?.length, "m-0": isAda && displayQuestions?.length})}>
                                 <ShowLoading until={displayQuestions} placeholder={loadingPlaceholder}>
-                                    {displayQuestions?.length
-                                        ? <LinkToContentSummaryList 
-                                            items={displayQuestions} className="m-0" 
-                                            contentTypeVisibility={ContentTypeVisibility.ICON_ONLY} 
-                                            ignoreIntendedAudience noCaret 
-                                        />
+                                    {displayQuestions?.length ? 
+                                        isPhy ? 
+                                            <ListView items={displayQuestions}/> :
+                                            <LinkToContentSummaryList 
+                                                items={displayQuestions} className="m-0" 
+                                                contentTypeVisibility={ContentTypeVisibility.ICON_ONLY} 
+                                                ignoreIntendedAudience noCaret 
+                                            />
                                         : noResultsMessage }
                                 </ShowLoading>
                             </CardBody>
