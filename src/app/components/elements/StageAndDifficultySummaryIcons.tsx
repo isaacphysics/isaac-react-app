@@ -11,10 +11,11 @@ interface StageAndDifficultySummaryIconsProps {
     className?: string,
     iconClassName?: string,
     stack?: boolean,
+    spacerWidth?: number,
 }
 
 export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryIconsProps) => {
-    const {audienceViews, className, iconClassName, stack} = props;
+    const {audienceViews, className, iconClassName, stack, spacerWidth} = props;
     const difficulties: Difficulty[] = audienceViews.map(v => v.difficulty).filter(v => v !== undefined);
     return siteSpecific(
         <div className={classNames(className, "d-flex flex-column")}>
@@ -23,7 +24,7 @@ export const StageAndDifficultySummaryIcons = (props: StageAndDifficultySummaryI
                     {view.stage && view.stage !== STAGE.ALL && stageLabelMap[view.stage] + " "}
                     {view.difficulty && <>
                         {simpleDifficultyLabelMap[view.difficulty]}
-                        <Spacer/>
+                        <Spacer width={spacerWidth}/>
                         <DifficultyIcons className={classNames("d-inline-block ps-1", iconClassName)} difficulty={view.difficulty} />
                     </>}
                 </span>

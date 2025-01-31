@@ -6,12 +6,48 @@
   padding: 1rem;
 }
 
-.list-view-icon {
-  width: 60px;
-}
-
 .list-view-border {
   border-left: 1px solid $color-neutral-200;
+  padding-left: 1rem;
+  &.flex-column {
+    min-width: 220px;
+  }
+}
+
+.list-view-card-container {
+  border-radius: 10px; 
+  border: 1px solid $gray-107;
+  background: white;
+
+  > .list-group-item {
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+
+    @include media-breakpoint-down(lg) {
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--border-light);
+      }
+      &:not(:first-child) {
+        border-top: 1px solid var(--border-light);
+      }
+    }
+
+    @include media-breakpoint-up(lg) {
+      &:nth-child(odd) {
+        border-right: 1px solid var(--border-light);
+      }
+      &:nth-child(even) {
+        border-left: 1px solid var(--border-light);
+      }
+      &:nth-child(n+3) {
+        border-top: 1px solid var(--border-light);
+      }
+      &:nth-last-child(n+3) {
+        border-bottom: 1px solid var(--border-light);
+      }
+    }
+  }
 }
 
 .status-tag {
@@ -20,32 +56,29 @@
   font-size: 0.825rem;
 }
 
-@each $palette, $subject-colors in $isaac-color-palettes {
-  @include color-mode($palette) {
-    $subject-color-50: map.get($subject-colors, 50);
-    $subject-color-100: map.get($subject-colors, 100);
-    $subject-color-500: map.get($subject-colors, 500);
-
-    .quiz-level-1-tag {
-      @include pill-tag($subject-color-500, $subject-color-100);
-      padding: 0 0.7em;
-      border-radius: 15px;
-      font-weight: bold;
-    }
-
-    .quiz-level-2-tag {
-      @include pill-tag($subject-color-50, $subject-color-500);
-      padding: 0 0.7em;
-      border-radius: 15px;
-      font-weight: bold;
-    }
-
-    .card-tag {
-      @include pill-tag($color-neutral-900, $subject-color-50, $subject-color-100);
-      padding: 0 0.7em;
-      margin: 0.5rem 0.5rem 0 0;
-      border-radius: 15px;
-      font-size: 1rem;
-    }
+.list-group-links {
+  .question-link-title {
+    color: var(--subject-color-900);
+    font-family: $secondary-font-medium;
   }
+}
+
+.quiz-level-1-tag {
+  @include pill-tag(var(--subject-color-500), var(--subject-color-100));
+  padding: 0 0.7em;
+  font-weight: bold;
+}
+
+.quiz-level-2-tag {
+  @include pill-tag(var(--subject-color-50), var(--subject-color-500));
+  padding: 0 0.7em;
+  font-weight: bold;
+}
+
+.list-group-links li a.card-tag {
+  @include pill-tag($color-neutral-900, var(--subject-color-50), var(--subject-color-100));
+  font-family: $secondary-font;
+  padding: 0.15rem 0.8rem;
+  margin: 0.5rem 0.5rem 0 0;
+  font-size: 14px;
 }
