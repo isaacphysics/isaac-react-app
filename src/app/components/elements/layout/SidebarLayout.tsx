@@ -3,15 +3,16 @@ import { Col, ColProps, RowProps, Input, Label, Offcanvas, OffcanvasBody, Offcan
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { above, AUDIENCE_DISPLAY_FIELDS, BoardCompletions, BoardCreators, BoardLimit, BoardViews, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
+import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
-import { Tag } from "../../../../IsaacAppTypes";
+import { AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { getHumanContext } from "../../../services/pageContext";
 import { AssignmentState } from "../../pages/MyAssignments";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
+import { Spacer } from "../Spacer";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -418,14 +419,17 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
             onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
         />
         <div className="section-divider"/>
-        <h5 className="mb-4">Display mode</h5>
-        <Input type="select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
-            {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
-        </Input>
-        <h5 className="mt-4 mb-3">Display limit</h5>
-        <Input type="select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
-            {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
-        </Input>
+        <h5 className="mb-4">Display</h5>
+        <div className="d-flex">
+            <Input className="w-auto" type="select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+            </Input>
+            <Spacer/>
+            <div className="select-pretext">Limit:</div>
+            <Input className="w-auto" type="select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+            </Input>
+        </div>
         <h5 className="mt-4 mb-3">Filter by creator</h5>
         <Input type="select" value={boardCreatorFilter} onChange={e => setBoardCreatorFilter(e.target.value as BoardCreators)}>
             {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
@@ -436,8 +440,61 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
         </Input>
     </ContentSidebar>;
 };
+interface SetAssignmentsSidebarProps extends SidebarProps {
+    displayMode: BoardViews;
+    setDisplayMode: React.Dispatch<React.SetStateAction<BoardViews>>;
+    displayLimit: BoardLimit;
+    setDisplayLimit: React.Dispatch<React.SetStateAction<BoardLimit>>;
+    boardTitleFilter: string;
+    setBoardTitleFilter: React.Dispatch<React.SetStateAction<string>>;
+    sortOrder: AssignmentBoardOrder;
+    setSortOrder: React.Dispatch<React.SetStateAction<AssignmentBoardOrder>>;
+    boardSubject: BoardSubjects;
+    setBoardSubject: React.Dispatch<React.SetStateAction<BoardSubjects>>;
+    boardCreator: BoardCreators;
+    setBoardCreator: React.Dispatch<React.SetStateAction<BoardCreators>>;
+    sortDisabled?: boolean;
+}
 
-export const SetAssignmentsSidebar = (props: SidebarProps) => {
-    // TODO
-    return <ContentSidebar {...props}/>;
+export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
+    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, sortOrder, setSortOrder, sortDisabled, boardSubject, setBoardSubject, boardCreator, setBoardCreator, ...rest } = props;
+
+    return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
+        <div className="section-divider"/>
+        <h5>Search gameboards</h5>
+        <Input
+            className='search--filter-input my-4'
+            type="search" value={boardTitleFilter || ""}
+            placeholder="e.g. Forces"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
+        />
+        <div className="section-divider"/>
+        <h5 className="mb-4">Display</h5>
+        <div className="d-flex">
+            <Input className="w-auto" type="select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+            </Input>
+            <Spacer/>
+            <div className="select-pretext">Limit:</div>
+            <Input className="w-auto" type="select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+            </Input>
+        </div>
+        <h5 className="mt-4 mb-3">Sort by</h5>
+        <Input type="select" className="mb-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as AssignmentBoardOrder)} disabled={sortDisabled}>
+            {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+        </Input>
+        {sortDisabled && <div className="small text-muted mt-2">
+            Sorting is disabled if some gameboards are hidden. Increase the display limit to show all gameboards.
+        </div>}
+        <div className="section-divider"/>
+        <h5 className="mb-3">Filter by subject</h5>
+        <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
+            {Object.values(BoardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
+        </Input>
+        <h5 className="mt-4 mb-3">Filter by creator</h5>
+        <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
+            {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+        </Input>
+    </ContentSidebar>;
 };

@@ -236,13 +236,15 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
     const boards = useAppSelector(selectors.boards.boards);
 
     const [boardOrder, setBoardOrder] = useState<AssignmentBoardOrder>(AssignmentBoardOrder.visited);
-    const [boardView, setBoardView] = useState<BoardViews>(initialView);
+    const [boardView, setBoardView] = useState<BoardViews>((boards && boards.boards.length > 6) ? BoardViews.table : initialView);
     const [boardLimit, setBoardLimit] = useState<BoardLimit>(initialLimit);
     const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
 
     const [loading, setLoading] = useState(false);
 
     const [numberOfBoards, setNumberOfBoards] = useState<NumberOfBoards>(parseBoardLimitAsNumber(boardLimit));
+
+    const haveAllBoards = boards && boards.totalResults === boards.boards.length;
 
     // Fetch gameboards from server, no aggregation since we want a fresh list
     const loadInitial = useCallback((limit: NumberOfBoards) => {
@@ -258,7 +260,7 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
     // number as is currently on screen
     useEffect(() => {
         // Only refetch if we cannot reorder the boards in the frontend (we need all the boards to reorder them)
-        if (boardLimit != BoardLimit.All) {
+        if (!haveAllBoards) {
             loadInitial(numberOfBoards);
         }
     }, [boardOrder]);
@@ -301,13 +303,13 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
 
     // If we have all the users boards already, order them client-side
     const orderedBoards = useMemo<Boards | null>(() => {
-        if (boards == null || boardLimit != BoardLimit.All) {
+        if (boards == null || !haveAllBoards) {
             return boards;
         }
         const boardOrderNegative = boardOrder.at(0) == "-";
         const boardOrderKind = (boardOrderNegative ? boardOrder.slice(1) : boardOrder) as "created" | "visited" | "attempted" | "correct" | "title";
         const orderedBoards = sortBy(boards?.boards, BOARD_SORT_FUNCTIONS[boardOrderKind]);
-        if (["visited", "created", "-attempted", "-correct", "-title"].includes(boardOrder)) orderedBoards.reverse();
+        if (["-visited", "-created", "-attempted", "-correct", "-title"].includes(boardOrder)) orderedBoards.reverse();
         return {
             totalResults: boards?.totalResults ?? 0,
             boards: orderedBoards

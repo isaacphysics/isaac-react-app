@@ -111,7 +111,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                     }
                 </div>
                 {isSetAssignments 
-                    ? <Button color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
+                    ? <Button className="mb-2" color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
                         Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
                     </Button> 
                     : boardLink && <div className="card-share-link">

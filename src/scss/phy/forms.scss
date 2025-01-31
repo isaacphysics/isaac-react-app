@@ -50,6 +50,13 @@ select.form-select {
   border-radius: 0;
   border-bottom: 2px solid $color-neutral-300;
   background-color: transparent;
+
+  &:disabled {
+    background-color: $color-neutral-50;
+    border-color: $color-neutral-200;
+    color: $color-neutral-400;
+    background-blend-mode: difference;
+  }
 }
 
 .form-check-input {
