@@ -66,3 +66,29 @@
     border-color: color-mix(in srgb, var(--subject-color-500) 25%, transparent);
   }
 }
+
+input {
+  &.form-control {
+    height: 2.6rem;
+    border: 1px solid $color-neutral-300;
+    border-radius: 8px;
+  }
+}
+
+select {
+  &.form-select {
+    height: 2.6rem;
+    border: 1px solid $color-neutral-300;
+    border-radius: 8px;
+
+    &[name='selectMulti'] {
+      padding: 1rem 1.2rem 1.5rem;
+    }
+  }
+}
+
+.school-input {
+  height: 2.6rem;
+  border: 1px solid $color-neutral-300;
+  border-radius: 8px;
+}
