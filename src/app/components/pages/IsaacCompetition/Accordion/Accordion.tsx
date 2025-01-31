@@ -5,7 +5,7 @@ interface AccordionProps {
   sections: {
     id: string;
     title: string;
-    section: (string | string[])[];
+    section: (string | (string | (string | string[])[])[])[];
   }[];
   open: string | null;
   setOpenState: (id: string | undefined) => void;
