@@ -342,11 +342,11 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
 };
 
 const monthHexagon = calculateHexagonProportions(12, 1);
-const shouldOpenMonth = (month: number) => {
-    return (new Date()).getMonth() === month;
+const shouldOpenMonth = (year: number, month: number) => {
+    return (new Date()).getMonth() === month && (new Date()).getFullYear() === year;
 };
-const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, datesAndAssignments: [number, ValidAssignmentWithListingDate[]][]}) => {
-    const [open, setOpen] = useState<boolean>(shouldOpenMonth(month));
+const MonthAssignmentList = ({year, month, datesAndAssignments}: {year: number, month: number, datesAndAssignments: [number, ValidAssignmentWithListingDate[]][]}) => {
+    const [open, setOpen] = useState<boolean>(shouldOpenMonth(year, month));
     const assignmentCount = useMemo(() => datesAndAssignments.reduce((n, [_, as]) => n + as.length, 0), [datesAndAssignments]);
     const {collapsed, setCollapsed, viewBy} = useContext(AssignmentScheduleContext);
     useEffect(() => {
@@ -715,7 +715,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                                             <h3 className="mb-n3">{`${y}`}</h3>
                                             <hr className="ms-4"/>
                                         </div>
-                                        {ms.map(([m, ds]) => <MonthAssignmentList key={m} month={m} datesAndAssignments={ds}/>)}
+                                        {ms.map(([m, ds]) => <MonthAssignmentList key={m} year={y} month={m} datesAndAssignments={ds}/>)}
                                     </Fragment>
                                 )}
                                 <div className={classNames("bg-timeline", {"fade-in": !notAllPastAssignmentsAreListed})}/>

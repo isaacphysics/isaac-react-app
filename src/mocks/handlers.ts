@@ -11,7 +11,10 @@ import {
     mockSetAssignments,
     mockUser,
     mockUserAuthSettings,
-    mockUserPreferences
+    mockUserPreferences,
+    mockRegressionTestQuestions,
+    mockQuestionFinderResults,
+    mockConceptPage
 } from "./data";
 import {API_PATH} from "../app/services";
 import {produce} from "immer";
@@ -145,6 +148,21 @@ export const handlers = [
     http.get(API_PATH + "/pages/fragments/:fragmentId", ({params}) => {
         const {fragmentId} = params;
         return HttpResponse.json(mockFragment(fragmentId as string), {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/pages/questions/_regression_test_", () => {
+        return HttpResponse.json(mockRegressionTestQuestions, {
+            status: 200,
+        });   
+    }),
+    http.get(API_PATH + "/pages/questions/", () => {
+        return HttpResponse.json(mockQuestionFinderResults, {
+            status: 200,
+        });
+    }),
+    http.get(API_PATH + "/pages/concepts/_mock_concept_page_", () => {
+        return HttpResponse.json(mockConceptPage, {
             status: 200,
         });
     }),

@@ -13,11 +13,11 @@ import {
     Row
 } from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentTypeVisibility, LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {
     DOCUMENT_TYPE,
     documentDescription,
     isAda,
+    isPhy,
     parseLocationSearch,
     pushSearchToHistory,
     searchResultIsPublic,
@@ -33,6 +33,8 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {SearchPageSearch} from "../elements/SearchInputs";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import { ListView } from "../elements/list-groups/ListView";
+import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 
 interface Item<T> {
     value: T;
@@ -121,7 +123,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
             </Row>
             <Row>
                 <Col>
-                    <SearchPageSearch className={siteSpecific("", "border-secondary")} initialValue={urlQuery ?? ""} />
+                    <SearchPageSearch className={siteSpecific("", "border-theme")} initialValue={urlQuery ?? ""} />
                 </Col>
             </Row>
             <Row>
@@ -164,10 +166,12 @@ export const Search = withRouter((props: RouteComponentProps) => {
                         {urlQuery != "" && <CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
                                 {gotResults ?
-                                    <LinkToContentSummaryList 
-                                        items={shortcutAndFilteredSearchResults} showBreadcrumb={true}
-                                        contentTypeVisibility={ContentTypeVisibility.SHOWN}   
-                                    />
+                                    isPhy ? 
+                                        <ListView items={shortcutAndFilteredSearchResults}/> :
+                                        <LinkToContentSummaryList 
+                                            items={shortcutAndFilteredSearchResults} showBreadcrumb={true}
+                                            contentTypeVisibility={ContentTypeVisibility.SHOWN}   
+                                        />
                                     : <em>No results found</em>}
                             </ShowLoading>
                         </CardBody>}

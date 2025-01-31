@@ -331,7 +331,7 @@ a.btn {
 }
 
 .quick-question-options {
-  background: rgba($secondary, 0.5);
+  background: color-mix(in srgb, var(--subject-color-500) 50%, transparent);
   border: 1px solid transparent;
   transition: opacity 0.2s linear;
 }

@@ -1,7 +1,12 @@
 import { ContentBaseDTO, UserContext } from "../../IsaacApiTypes";
 import { PageContextState, SiteTheme, Subject } from "../../IsaacAppTypes";
-import { TAG_ID } from "./constants";
+import { LEARNING_STAGE, SUBJECTS, TAG_ID } from "./constants";
 import { isDefined } from "./miscUtils";
+import { useLocation } from "react-router";
+import { Stage } from "../../IsaacApiTypes";
+import { HUMAN_STAGES, HUMAN_SUBJECTS } from "./constants";
+import { pageContextSlice, useAppDispatch } from "../state";
+import { useEffect } from "react";
 
 const filterBySubjects = (tags: (TAG_ID | string)[]): SiteTheme[] => {
     // filtering this const list against the passed-in tags maintains the order (and thus precedence) of the subjects
@@ -50,7 +55,7 @@ export const getThemeFromContextAndTags = (element: React.RefObject<HTMLElement>
  * @returns The page context for this page.
  */
 export const getUpdatedPageContext = (previousContext: PageContextState | undefined, userContexts: readonly UserContext[] | undefined, doc: ContentBaseDTO | undefined): PageContextState => {
-    const newContext = {stage: "all", subject: undefined} as PageContextState;
+    const newContext = {stage: "all", subject: undefined} as NonNullable<PageContextState>;
 
     // if we haven't changed stage (GCSE => GCSE), use the stage from the old context
     if (previousContext?.stage && doc?.audience?.some(a => a.stage?.includes(previousContext.stage))) {
@@ -90,3 +95,48 @@ export const getUpdatedPageContext = (previousContext: PageContextState | undefi
 
     return newContext;
 };
+
+/**
+ * Gets a human-readable string representing the current page context (e.g. "GCSE Physics").
+ * @param pageContext - The current page context.
+ * @returns A human-readable string.
+ */
+export function getHumanContext(pageContext?: {subject?: Subject, stage?: Stage}): string {
+    return `${pageContext?.stage ? (HUMAN_STAGES[pageContext.stage] + " ") : ""}${pageContext?.subject ? HUMAN_SUBJECTS[pageContext.subject] : ""}`;
+}
+
+function isValidIsaacSubject(subject?: string): subject is Subject {
+    return typeof subject === "string" && (Object.values(SUBJECTS).filter(x => x !== SUBJECTS.CS) as string[]).includes(subject);
+}
+
+function isValidIsaacStage(stage?: string): stage is Stage {
+    return typeof stage === "string" && (Object.values(LEARNING_STAGE) as string[]).includes(stage);
+}
+
+function determinePageContextFromUrl(url: string): {subject?: Subject, stage?: Stage} {
+    const [subject, stage] = url.split("/").filter(Boolean);
+    if (isValidIsaacSubject(subject) && isValidIsaacStage(stage)) {
+        return {subject, stage};
+    }
+    return {};
+}
+
+/**
+ * A hook for updating the page context based on the URL. Only use on pages where the URL is the source of truth for the page context.
+ * (i.e. subject-specific pages, like question finders, concept pages, etc.)
+ * If you want to get the current page context from redux rather than the URL, use `useAppSelector(selectors.pageContext.context)` instead.
+ * @returns The current page context.
+ */
+export function useUrlPageTheme(): {subject?: Subject; stage?: Stage} {
+    const location = useLocation();
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        const {subject, stage} = determinePageContextFromUrl(location.pathname);
+        if (subject && stage) {
+            dispatch(pageContextSlice.actions.updatePageContext({subject: subject as Subject, stage: stage as Stage}));
+        }
+    }, [dispatch, location.pathname]);
+
+    return determinePageContextFromUrl(location.pathname);
+}

@@ -45,6 +45,7 @@
     // ICONS
     --icon-primary: #{map.get($subject-colors, 500)};
 
+    --subject-color-50: #{map.get($subject-colors, 50)};
     --subject-color-100: #{map.get($subject-colors, 100)};
     --subject-color-200: #{map.get($subject-colors, 200)};
     --subject-color-300: #{map.get($subject-colors, 300)};
@@ -54,6 +55,9 @@
     --subject-color-700: #{map.get($subject-colors, 700)};
     --subject-color-800: #{map.get($subject-colors, 800)};
     --subject-color-900: #{map.get($subject-colors, 900)};
+
+    // ALERT
+    --alert-text-color: #{map.get($subject-colors, 900)};
 
     @if $palette == "neutral" {
       // neutral has some special cases
@@ -69,6 +73,8 @@
       --nav-primary: #{$color-brand-500};
 
       --icon-primary: #{$color-brand-500};
+
+      --alert-text-color: #{$color-neutral-800};
     }
   }
 }
@@ -81,6 +87,8 @@
   --forms-colour-input-border-error: #{var(--color-misc-red)};
   --forms-colour-input-placeholder: #{var(--primary-color-label)};
   --forms-colour-input-text: #{$color-neutral-900};
+
+  --border-light: #F5F4F0;
 
   /* number */
   --buttons-padding-v-sm: 0.6875rem;
@@ -112,5 +120,37 @@
       @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), 75px, 75px, 75px);
       position: absolute;
     }
+
+    .phy-hex-icon-sm {
+      @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), 60px, 60px, 60px);
+      position: absolute;
+    }
+    
+    .text-bg-theme {
+      @extend .text-bg-#{$palette};
+    }
+
+    .alert-secondary {
+      @extend .alert-#{$palette};
+      color: var(--alert-text-color);
+    }
   }
+}
+
+.text-theme {
+  color: var(--subject-color-500);
+
+  &a {
+    &:hover, &:focus {
+      color: var(--subject-color-600);
+    }
+  }
+}
+
+.bg-theme {
+  background-color: var(--subject-color-500);
+}
+
+.border-theme {
+  border-color: var(--subject-color-500);
 }

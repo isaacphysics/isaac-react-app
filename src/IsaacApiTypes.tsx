@@ -657,9 +657,9 @@ export interface UserSummaryWithGroupMembershipDTO extends UserSummaryDTO {
 export interface IAssignmentLike {
     groupId?: number;
     id?: number;
-    creationDate?: Date;
-    dueDate?: Date;
-    scheduledStartDate?: Date;
+    creationDate?: Date | number;
+    dueDate?: Date | number;
+    scheduledStartDate?: Date | number;
     ownerUserId?: number;
 }
 

@@ -301,11 +301,11 @@ export interface DisplayableQuiz {
     id: string | number;
     isAssigned: boolean;
     title?: string;
-    creationDate?: Date;
-    startDate?: Date;
-    setDate?: Date;
-    dueDate?: Date;
-    completedDate?: Date;
+    creationDate?: Date | number;
+    startDate?: Date | number;
+    setDate?: Date | number;
+    dueDate?: Date | number;
+    completedDate?: Date | number;
     attempt?: QuizAttemptDTO;
     assignerSummary?: UserSummaryDTO;
     quizFeedbackMode?: QuizFeedbackMode;

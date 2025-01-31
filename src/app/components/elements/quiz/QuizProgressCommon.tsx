@@ -42,7 +42,7 @@ export interface QuestionType {
 
 export interface ResultsTableProps<Q extends QuestionType> {
     assignmentId?: number;
-    duedate?: Date;
+    duedate?: Date | number;
     progress?: AssignmentProgressDTO[];
     questions: Q[];
     header: JSX.Element;

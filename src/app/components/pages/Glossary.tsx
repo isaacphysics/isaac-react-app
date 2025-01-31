@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Col, Container, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
-import {AppState, useAppSelector} from "../../state";
+import {AppState, logAction, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShareLink} from "../elements/ShareLink";
@@ -98,6 +98,7 @@ function processQueryString(query: string): QueryStringResponse {
 const ALPHABET_HEADER_OFFSET = -65;
 
 export const Glossary = () => {
+    const dispatch = useAppDispatch();
     const location = useLocation();
     const history = useHistory();
     // query stages not used recently
@@ -120,6 +121,11 @@ export const Glossary = () => {
             }
         )
     );
+
+    // Log on initial page load
+    useEffect(() => {
+        dispatch(logAction({type: "VIEW_GLOSSARY_PAGE"}));
+    }, []);
 
     // Update url
     useEffect(() => {

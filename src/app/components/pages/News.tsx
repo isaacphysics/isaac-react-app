@@ -42,9 +42,9 @@ export const News = () => {
                 defaultErrorTitle={"Error fetching news stories"}
             /> : 
             <>
-                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1", "row-cols-lg-3")}`}>
+                <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-md-1", "row-cols-lg-3 mt-4")}`}>
                     {allNews.map((n, i) => <Col key={i} className={`my-3 ${siteSpecific("px-3", "px-0 justify-content-center")}`}>
-                        <NewsCard key={n.id} newsItem={n} className={classNames({"h-100": isAda})} showTitle />
+                        <NewsCard key={n.id} newsItem={n} showTitle />
                         {isPhy && above["md"](deviceSize) && <div className="section-divider"/>}
                     </Col>)}
                 </Row>

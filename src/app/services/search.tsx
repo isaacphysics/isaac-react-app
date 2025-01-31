@@ -23,7 +23,7 @@ export const pushSearchToHistory = function(history: History, searchQuery: strin
 
 export const pushConceptsToHistory = function(history: History, searchText: string, subjects: TAG_ID[]) {
     history.push({
-        pathname: "/concepts",
+        pathname: history.location.pathname,
         search: `?query=${encodeURIComponent(searchText)}&types=${subjects.join(",")}`,
     });
 };
