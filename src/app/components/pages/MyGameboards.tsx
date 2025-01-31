@@ -132,7 +132,7 @@ export const MyGameboards = () => {
         boardLimit, setBoardLimit,
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(
-        BoardViews.card,
+        siteSpecific(BoardViews.card, BoardViews.table),
         isMobile() ? BoardLimit.six : BoardLimit.All
     );
 
