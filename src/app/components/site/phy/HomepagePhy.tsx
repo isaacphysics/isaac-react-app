@@ -2,11 +2,13 @@ import React, {useEffect} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardProps, CardText, CardTitle, Col, Container, Row} from "reactstrap";
-import {above, EventStatusFilter, EventTypeFilter, isLoggedIn, SITE_TITLE, STAGE, useDeviceSize} from "../../../services";
+import {above, EventStatusFilter, EventTypeFilter, HUMAN_STAGES, HUMAN_SUBJECTS, isLoggedIn, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, useDeviceSize} from "../../../services";
 import { NewsCard } from "../../elements/cards/NewsCard";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { EventCard } from "../../elements/cards/EventCard";
 import { StudentDashboard } from "../../elements/StudentDashboard";
+import { Subject, ShortcutResponse } from "../../../../IsaacAppTypes";
+import { ListViewCardProps, ListViewCards } from "../../elements/list-groups/ListView";
 
 interface HomepageHeroCardProps extends CardProps {
     title?: string;
@@ -69,6 +71,38 @@ const HomepageHero = () => {
     }
 };
 
+type subjectCategory = {subject: string, humanSubject: string, subcategories: {humanStage: string, href: string}[]};
+const subjectCategories = Object.entries(PHY_NAV_SUBJECTS).map(([subject, stages]) => {
+    return {
+        subject: subject,
+        humanSubject: HUMAN_SUBJECTS[subject],
+        subcategories: stages.map((stage) => {
+            return {
+                humanStage: HUMAN_STAGES[stage.valueOf()],
+                href: `/${subject}/${stage}`,
+            };
+        })
+    };
+});
+
+const getListViewSubjectCard = (sc: subjectCategory) => {
+    const item: ShortcutResponse = {
+        title: sc.humanSubject,
+        subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris faucibus est vulputate augue tristique, sed vehicula turpis pellentesque.",
+    };
+
+    const listViewSubjectCard: ListViewCardProps = {
+        item: item,
+        icon: {type: "img", icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`},
+        subject: sc.subject as Subject,
+        linkTags: sc.subcategories.map((subcat) => ({tag: subcat.humanStage, url: subcat.href}))
+    };
+
+    return listViewSubjectCard;
+};
+
+const cards = subjectCategories.map((sc) => getListViewSubjectCard(sc));
+
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
 
@@ -91,10 +125,13 @@ export const HomepagePhy = () => {
             <Container>
                 <section id="explore-learn">
                     <div className="mt-5">
-                        <h3>Explore and learn!</h3>                                            
+                        <div className="d-flex">
+                            <h3>Explore and learn!</h3>
+                            <div className="section-divider ms-2"/>
+                        </div>
+                        <ListViewCards cards={cards}/>                                         
                     </div>                    
                 </section>
-                <div className="section-divider"/>
                 <section id="events-news">
                     <Row className="mt-5 row-cols-1 row-cols-lg-2">
                         <div className="mt-3">
@@ -117,7 +154,7 @@ export const HomepagePhy = () => {
                         <div className="mt-3"> 
                             <div className="d-flex">
                                 <h3>News & Features</h3>
-                                <Link to="/news" className="news-events-link">More news</Link>                        
+                                <Link to="/news" className="news-events-link">More news</Link>                     
                                 <div className="section-divider"/>
                             </div>
                             {news && <>
