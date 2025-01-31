@@ -34,7 +34,7 @@ export const HomepagePhy = () => {
             item: item,
             icon: {type: "img", icon: `/assets/phy/icons/redesign/subject-${subject}.svg`},
             subject: subject,
-            tagList: subjectTags[subject],
+            linkTags: subjectTags[subject],
         };
     
         return listViewSubjectCard;
