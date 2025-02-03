@@ -670,7 +670,6 @@ export interface GameboardItem {
     title?: string;
     subtitle?: string;
     description?: string;
-    uri?: string;
     tags?: string[];
     audience?: AudienceContext[];
     creationContext?: AudienceContext;
