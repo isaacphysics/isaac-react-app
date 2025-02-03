@@ -9,6 +9,7 @@ import { EventCard } from "../../elements/cards/EventCard";
 import { StudentDashboard } from "../../elements/StudentDashboard";
 import { Subject, ShortcutResponse } from "../../../../IsaacAppTypes";
 import { ListViewCardProps, ListViewCards } from "../../elements/list-groups/ListView";
+import { Spacer } from "../../elements/Spacer";
 
 interface HomepageHeroCardProps extends CardProps {
     title?: string;
@@ -17,8 +18,8 @@ interface HomepageHeroCardProps extends CardProps {
 }
 
 const HomepageHeroCard = ({title, content, isStudent}: HomepageHeroCardProps) => {
-    return <Card className="homepage-hero-card">
-        <CardBody>
+    return <Card className="homepage-hero-card border-0">
+        <CardBody className="p-4 pt-5 d-flex flex-column">
             <div className="homepage-hero-card-tag">
                 {isStudent
                     ? <>
@@ -31,9 +32,10 @@ const HomepageHeroCard = ({title, content, isStudent}: HomepageHeroCardProps) =>
                     </>
                 }
             </div>
-            <CardTitle className="mt-4" tag="h4">{title}</CardTitle>
+            <CardTitle className="mt-1" tag="h4">{title}</CardTitle>
             <CardText>{content}</CardText>
-            <Button tag={Link} to={isStudent ? "/login" : "/teacher_account_request"}>Create a {isStudent ? "student" : "teacher"} account</Button>
+            <Spacer/>
+            <Button className="w-max-content" tag={Link} to={isStudent ? "/login" : "/teacher_account_request"}>Create a {isStudent ? "student" : "teacher"} account</Button>
         </CardBody>
     </Card>;
 };
@@ -43,15 +45,15 @@ const HomepageHero = () => {
     const deviceSize = useDeviceSize();
     if (!isLoggedIn(user)) {
         return <div className="homepage-hero">
-            {above["xl"](deviceSize) && <div className="homepage-hero-img"/>}
-            <div className="homepage-hero-content">
-                <div className="w-100 w-xl-50 mb-4 mb-xl-6">
+            {above['md'](deviceSize) && <div className="homepage-hero-img"/>}
+            <Container className="pt-5">
+                <div className="w-100 w-md-50 mb-4 mb-md-5 mb-xl-6 pe-xl-5">
                     <div className="physics-strapline mb-3">
-                        <h2 className="text-green">Master Science subjects</h2>
-                        <h2>by solving problems</h2>
+                        <h2><span className="text-green">Master Science subjects</span> by solving problems</h2>
                     </div>
-                    From School to University - <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.
+                    From School to University – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.
                 </div>
+                {!above['md'](deviceSize) && <div className="homepage-hero-img container-override"/>}
                 <Row className="row-cols-1 row-cols-md-2">
                     <Col className="mb-3">
                         <HomepageHeroCard
@@ -66,7 +68,7 @@ const HomepageHero = () => {
                             isStudent={false}/>
                     </Col>
                 </Row>
-            </div>           
+            </Container>           
         </div>;
     }
 };
