@@ -345,11 +345,6 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                 userAuthSettings={userAuthSettings}
             />
         </TabPane>}
-        <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
-            <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
-                userToEdit={userToEdit}
-            />
-        </TabPane>
         {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
             <UserEmailPreferencesPanel
                 emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
@@ -397,6 +392,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                             }
                             <TabContent activeTab={activeTab}>
                                 <TabPanes/>
+                                {/* These two tabs don't work inside the TabPanes component */}
                                 <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                     <UserPassword
                                         currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
@@ -404,6 +400,11 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                         setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
                                         newPassword={newPassword} setNewPassword={setNewPassword} editingOtherUser={editingOtherUser}
                                         isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
+                                    />
+                                </TabPane>
+                                <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+                                    <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
+                                        userToEdit={userToEdit}
                                     />
                                 </TabPane>
                             </TabContent>
@@ -473,6 +474,11 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                     setCurrentPassword={setCurrentPassword} currentPassword={currentPassword}
                                     newPassword={newPassword} setNewPassword={setNewPassword} editingOtherUser={editingOtherUser}
                                     isNewPasswordValid={isNewPasswordValid} submissionAttempted={attemptedAccountUpdate}
+                                />
+                            </TabPane>
+                            <TabPane tabId={ACCOUNT_TAB.teacherconnections}>
+                                <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
+                                    userToEdit={userToEdit}
                                 />
                             </TabPane>
                         </TabContent>
