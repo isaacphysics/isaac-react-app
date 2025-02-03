@@ -68,7 +68,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
     return <CardBody className="pt-0 px-0">
         <Row>
             <Col xs={{size: 8, offset: 2}} lg={{size: 6, offset: 3}} className="px-4">
-                {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
+                {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-3"/>)}
                 <h4>Two-factor Authentication (2FA)</h4>
             </Col>
         </Row>
