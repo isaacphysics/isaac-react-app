@@ -355,6 +355,16 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                     </ExigentAlert>
                             }
                             <TabContent activeTab={activeTab}>
+                                <TabPane tabId={ACCOUNT_TAB.account}>
+                                    <UserProfile
+                                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                                        userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                                        booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
+                                        displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
+                                        submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                                        userAuthSettings={userAuthSettings}
+                                    />
+                                </TabPane>
                                 <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                     <UserPassword
                                         currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
@@ -368,17 +378,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                     <TeacherConnections user={user} authToken={authToken} editingOtherUser={editingOtherUser}
                                         userToEdit={userToEdit}
                                     />
-                                </TabPane>
-                                <TabPane tabId={ACCOUNT_TAB.account}>
-                                    <UserProfile
-                                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                        userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
-                                        booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
-                                        displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
-                                        submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
-                                        userAuthSettings={userAuthSettings}
-                                    />
-                                </TabPane>
+                                </TabPane>                                
                                 {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
                                     <UserEmailPreferencesPanel
                                         emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
@@ -471,18 +471,6 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                     userAuthSettings={userAuthSettings}
                                 />
                             </TabPane>
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
-                                <UserEmailPreferencesPanel
-                                    emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
-                                    submissionAttempted={attemptedAccountUpdate}
-                                />
-                            </TabPane>}
-                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
-                                <UserBetaFeatures
-                                    displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
-                                    consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
-                                />
-                            </TabPane>}
                             <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                 <UserPassword
                                     currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
@@ -497,6 +485,18 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                     userToEdit={userToEdit}
                                 />
                             </TabPane>
+                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
+                                <UserEmailPreferencesPanel
+                                    emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
+                                    submissionAttempted={attemptedAccountUpdate}
+                                />
+                            </TabPane>}
+                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
+                                <UserBetaFeatures
+                                    displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
+                                    consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
+                                />
+                            </TabPane>}
                         </TabContent>
                         {/* Teacher connections does not have a save */}
                         <CardFooter className="py-4">
