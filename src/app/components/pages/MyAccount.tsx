@@ -323,42 +323,6 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab]);
 
-    const TabPanes = () => <>
-        <TabPane tabId={ACCOUNT_TAB.account}>
-            <UserProfile
-                userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
-                booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
-                displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
-                submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
-                userAuthSettings={userAuthSettings}
-            />
-        </TabPane>
-        {isAda && <TabPane tabId={ACCOUNT_TAB.customise}>
-            <UserContent
-                userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
-                programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
-                booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
-                displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
-                submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
-                userAuthSettings={userAuthSettings}
-            />
-        </TabPane>}
-        {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
-            <UserEmailPreferencesPanel
-                emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
-                submissionAttempted={attemptedAccountUpdate}
-            />
-        </TabPane>}
-        {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
-            <UserBetaFeatures
-                displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
-                consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
-            />
-        </TabPane>}
-    </>;
-       
     const PhyMyAccount = <Container id="account-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "page-icon-account"}} className="mb-4"/>
         <h3 className="d-md-none text-center text-muted m-3">
@@ -391,8 +355,6 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                     </ExigentAlert>
                             }
                             <TabContent activeTab={activeTab}>
-                                <TabPanes/>
-                                {/* These two tabs don't work inside the TabPanes component */}
                                 <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                     <UserPassword
                                         currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
@@ -407,6 +369,28 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                         userToEdit={userToEdit}
                                     />
                                 </TabPane>
+                                <TabPane tabId={ACCOUNT_TAB.account}>
+                                    <UserProfile
+                                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                                        userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                                        booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
+                                        displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
+                                        submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                                        userAuthSettings={userAuthSettings}
+                                    />
+                                </TabPane>
+                                {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
+                                    <UserEmailPreferencesPanel
+                                        emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
+                                        submissionAttempted={attemptedAccountUpdate}
+                                    />
+                                </TabPane>}
+                                {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
+                                    <UserBetaFeatures
+                                        displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
+                                        consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
+                                    />
+                                </TabPane>}
                             </TabContent>
                             {/* Teacher connections does not have a save */}
                             <div className="d-flex justify-content-center">
@@ -466,7 +450,39 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                 </ExigentAlert>
                         }
                         <TabContent activeTab={activeTab}>
-                            <TabPanes/>
+                            <TabPane tabId={ACCOUNT_TAB.account}>
+                                <UserProfile
+                                    userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                                    userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                                    booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
+                                    displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
+                                    submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                                    userAuthSettings={userAuthSettings}
+                                />
+                            </TabPane>
+                            <TabPane tabId={ACCOUNT_TAB.customise}>
+                                <UserContent
+                                    userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                                    userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                                    programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
+                                    booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
+                                    displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
+                                    submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
+                                    userAuthSettings={userAuthSettings}
+                                />
+                            </TabPane>
+                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.emailpreferences}>
+                                <UserEmailPreferencesPanel
+                                    emailPreferences={emailPreferences} setEmailPreferences={setEmailPreferences}
+                                    submissionAttempted={attemptedAccountUpdate}
+                                />
+                            </TabPane>}
+                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
+                                <UserBetaFeatures
+                                    displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings}
+                                    consentSettings={myUserPreferences?.CONSENT ?? {}} setConsentSettings={setConsentSettings}
+                                />
+                            </TabPane>}
                             <TabPane tabId={ACCOUNT_TAB.passwordreset}>
                                 <UserPassword
                                     currentUserEmail={userToUpdate ? userToUpdate.email : user.email} userAuthSettings={userAuthSettings}
