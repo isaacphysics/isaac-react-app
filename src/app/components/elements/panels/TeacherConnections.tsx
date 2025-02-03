@@ -173,7 +173,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
         </>}
         rightColumn={<>
             <h3>
-                <span className={isPhy ? "h4" : ""}>Teacher connection code<span id="teacher-connections-title" className={siteSpecific("mx-2 icon-menu", "icon-help")} /></span>
+                <span className={isPhy ? "h4" : ""}>Teacher connection code<span id="teacher-connections-title" className={siteSpecific("mx-2 icon-chevron-down", "icon-help")} /></span>
                 <UncontrolledTooltip placement="bottom" target="teacher-connections-title">
                     The teachers that you are connected to can view your {siteSpecific("Isaac", "Ada")} assignment progress.
                 </UncontrolledTooltip>
@@ -242,7 +242,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-4"/>)}
                 <h3>
-                    <span className={isPhy ? "h4" : ""}>Your student connections<span id="student-connections-title" className={siteSpecific("mx-2 icon-menu", "icon-help")} /></span>
+                    <span className={isPhy ? "h4" : ""}>Your student connections<span id="student-connections-title" className={siteSpecific("mx-2 icon-chevron-down", "icon-help")} /></span>
                     <UncontrolledTooltip placement="bottom" target="student-connections-title">
                         These are the students who have shared their {siteSpecific("Isaac", "Ada")} data with you.
                         These students are also able to view your name and email address on their Teacher connections page.
@@ -304,7 +304,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             <h3>
                 <span className={isPhy ? "h4" : ""}>
                     Your group memberships
-                    <span id="group-memberships-title" className={siteSpecific("mx-2 icon-menu", "icon-help")} />
+                    <span id="group-memberships-title" className={siteSpecific("mx-2 icon-chevron-down", "icon-help")} />
                 </span>
                 <UncontrolledTooltip placement="bottom" target="group-memberships-title">
                     These are the groups you are currently a member of.
@@ -360,7 +360,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                         Leave
                                                     </Button>
                                                     {isPhy && <>
-                                                        <span id={`leave-group-action-${membership.group.id}`} className={siteSpecific("mx-2 icon-menu", "icon-help membership-status-help-button")} />
+                                                        <span id={`leave-group-action-${membership.group.id}`} className={siteSpecific("mx-2 icon-chevron-down", "icon-help membership-status-help-button")} />
                                                         <UncontrolledTooltip placement="bottom" target={`leave-group-action-${membership.group.id}`}
                                                             modifiers={[preventOverflow]}
                                                         >
@@ -376,7 +376,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                         Rejoin
                                                     </Button>
                                                     {isPhy && <>
-                                                        <span id={`rejoin-group-action-${membership.group.id}`} className={siteSpecific("mx-2 icon-menu", "icon-help membership-status-help-button")} />
+                                                        <span id={`rejoin-group-action-${membership.group.id}`} className={siteSpecific("mx-2 icon-chevron-down", "icon-help membership-status-help-button")} />
                                                         <UncontrolledTooltip placement="bottom" target={`rejoin-group-action-${membership.group.id}`}
                                                             modifiers={[preventOverflow]}
                                                         >
