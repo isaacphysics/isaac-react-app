@@ -30,7 +30,7 @@ import { openActiveModal, useAppDispatch } from "../../../state";
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
 
-const bookOptions: Item<string>[] = [
+const bookOptions: Item<string>[] = [ // add subject label
     {value: "phys_book_step_up", label: "Step Up to GCSE Physics"},
     {value: "phys_book_gcse", label: "GCSE Physics"},
     {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},

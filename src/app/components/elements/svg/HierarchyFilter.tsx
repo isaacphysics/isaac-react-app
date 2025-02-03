@@ -64,7 +64,7 @@ export function HierarchyFilterHexagonal({tier, index, tiers, choices, selection
                 }
             };
 
-            return <div key={choice.value} className={classNames("ps-3 ms-2", {"ms-3": tier===1, "ms-4 search-field": tier===2})}>
+            return <div key={choice.value} className={classNames("ps-3 ms-2", {"ms-3": tier===1, "ms-4 search-field": tier===2, "bg-white": tier===0 && isSelected, "bg-light": tier===1 && isSelected})}>
                 <StyledCheckbox
                     color="primary"
                     checked={isSelected}

@@ -458,7 +458,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             <MainContent>
                 <MetaDescription description={metaDescription}/>
                 <CanonicalHrefElement/>
-                {/*<PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} /> */}
 
                 {isAda && <Row>
                     <Col lg={6} md={12} xs={12} className="finder-search">
