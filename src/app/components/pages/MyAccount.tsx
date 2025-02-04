@@ -390,7 +390,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                             {/* Teacher connections does not have a save */}
                             <div className="d-flex justify-content-center">
                                 <Input
-                                    type="submit" value="Save" className="btn btn-solid w-50"
+                                    type="submit" value="Save" className="btn btn-solid"
                                     disabled={!accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections}
                                 />
                             </div>
