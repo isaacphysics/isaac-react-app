@@ -15,7 +15,7 @@ export const MyAccountTab = ({leftColumn, rightColumn} : MyAccountTabProps) => {
             {rightColumn}
         </div>,   
         
-        <CardBody className={classNames("my-account-tab px-4", {"px-sm-5": isAda})}>
+        <CardBody className="my-account-tab px-4 px-sm-5">
             <Container>
                 <Row>
                     <Col lg={6} className="pe-lg-4 px-0 ps-lg-2">
