@@ -138,7 +138,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         <TitleAndBreadcrumb 
             currentPageTitle={type[0].toUpperCase() + type.slice(1) + " FAQs"}
             icon={{type: "hex", icon: "page-icon-finder"}}
-        />
+        />  {/* TODO replace this icon */}
         <SidebarLayout>
             <FAQSidebar>
                 <div className="section-divider mb-2"/>
