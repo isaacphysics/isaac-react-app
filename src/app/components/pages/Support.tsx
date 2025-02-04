@@ -110,18 +110,14 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
     }
 
     const categoryNames = Object.keys(section.categories);
-    const categoryIndex = categoryNames.indexOf(category);
+    const categoryIndex = siteSpecific(categoryNames.indexOf(category), categoryNames.indexOf(category) + 1);
 
     if (categoryIndex == -1) {
         return <Route component={NotFound} />;
     }
 
     function activeTabChanged(tabIndex: number) {
-        history.push(supportPath(type, categoryNames[tabIndex]));
-    }
-
-    function tabTitleClass(_tabName: string, tabIndex: number) {
-        return "support-tab-" + section?.categories[categoryNames[tabIndex]].icon;
+        history.push(supportPath(type, siteSpecific(categoryNames[tabIndex], categoryNames[tabIndex - 1])));
     }
 
     const metaDescriptionMap = siteSpecific(
@@ -177,8 +173,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         <Row>
             <Col className="pt-4 pb-5">
                 <Tabs
-                    activeTabOverride={categoryIndex} onActiveTabChange={activeTabChanged}
-                    tabTitleClass={tabTitleClass} tabContentClass="pt-4"
+                    activeTabOverride={categoryIndex} onActiveTabChange={activeTabChanged} tabContentClass="pt-4"
                 >
                     {fromPairs(Object.values(section.categories).map((category, index) => {
                         return [category.title, <PageFragment key={index} fragmentId={`support_${type}_${category.category}`} />];
