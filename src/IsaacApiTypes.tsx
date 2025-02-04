@@ -44,7 +44,7 @@ export interface AssignmentStatusDTO {
     errorMessage?: string;
 }
 
-export interface AssignmentProgressDTO { 
+export interface AssignmentProgressDTO {
     user?: UserSummaryDTO;
     correctPartResults?: number[];
     incorrectPartResults?: number[];
@@ -219,8 +219,8 @@ export interface IsaacSymbolicQuestionDTO extends QuestionDTO {
 
 export interface IsaacCoordinateQuestionDTO extends QuestionDTO {
     numberOfCoordinates?: number;
-    placeholderXValue?: string;
-    placeholderYValue?: string;
+    numberOfDimensions?: number;
+    placeholderValues?:  string[];
 }
 
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
@@ -513,8 +513,9 @@ export interface ParsonsItemDTO extends ItemDTO {
 }
 
 export interface CoordinateItemDTO extends ItemDTO {
-    x?: string;
-    y?: string;
+    coordinates?: string[];
+    x?: string;  // deprecated
+    y?: string;  // deprecated
 }
 
 export interface QuantityDTO extends ChoiceDTO {
@@ -669,7 +670,6 @@ export interface GameboardItem {
     title?: string;
     subtitle?: string;
     description?: string;
-    uri?: string;
     tags?: string[];
     audience?: AudienceContext[];
     creationContext?: AudienceContext;
