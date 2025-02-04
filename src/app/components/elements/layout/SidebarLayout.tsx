@@ -304,6 +304,8 @@ export const LessonsAndRevisionSidebar = (props: SidebarProps) => {
 
 export const FAQSidebar = (props: SidebarProps) => {
     return <ContentSidebar buttonTitle="Select a topic" {...props}>
+        <div className="section-divider mb-3"/>
+        <h4>Select a topic</h4>
         {props.children}
     </ContentSidebar>;
 };

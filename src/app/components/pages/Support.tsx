@@ -137,8 +137,6 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         />  {/* TODO replace this icon */}
         <SidebarLayout>
             <FAQSidebar>
-                <div className="section-divider mb-2"/>
-                <h4>Select a topic</h4>
                 {Object.values(section.categories).map((category, index) => 
                     <NavLink
                         key={index} tabIndex={index} className={classNames("sidebar-tab", {"active-tab": categoryIndex === index})}
