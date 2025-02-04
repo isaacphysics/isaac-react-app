@@ -498,7 +498,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                             <Row>
                                 <Col size={12} md={{size: 6, offset: 3}}>
                                     <Input
-                                        type="submit" value="Save" className="btn btn-secondary border-0"
+                                        type="submit" value="Save" className="btn btn-secondary border-0 w-100"
                                         disabled={!accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections}
                                     />
                                 </Col>
