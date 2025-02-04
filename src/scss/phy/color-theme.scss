@@ -45,6 +45,7 @@
     // ICONS
     --icon-primary: #{map.get($subject-colors, 500)};
 
+    --subject-color-50: #{map.get($subject-colors, 50)};
     --subject-color-100: #{map.get($subject-colors, 100)};
     --subject-color-200: #{map.get($subject-colors, 200)};
     --subject-color-300: #{map.get($subject-colors, 300)};
@@ -87,6 +88,8 @@
   --forms-colour-input-placeholder: #{var(--primary-color-label)};
   --forms-colour-input-text: #{$color-neutral-900};
 
+  --border-light: #F5F4F0;
+
   /* number */
   --buttons-padding-v-sm: 0.6875rem;
   --buttons-padding-v-md: 0.8125rem;
@@ -118,6 +121,11 @@
       position: absolute;
     }
 
+    .phy-hex-icon-sm {
+      @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), 60px, 60px, 60px);
+      position: absolute;
+    }
+    
     .text-bg-theme {
       @extend .text-bg-#{$palette};
     }
@@ -137,6 +145,10 @@
       color: var(--subject-color-600);
     }
   }
+}
+
+.bg-theme {
+  background-color: var(--subject-color-500);
 }
 
 .border-theme {

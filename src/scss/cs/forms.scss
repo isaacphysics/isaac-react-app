@@ -115,3 +115,14 @@ select.form-select, input.form-control, .separate-input-group > .form-control + 
     border: none;
   }
 }
+
+select {
+  &.form-select {
+    border: solid 1px $black;
+    padding: 0 1.2em;
+
+    &[name='selectMulti'] {
+      padding: 1rem 1.2rem 1.5rem;
+    }
+  }
+}

@@ -505,7 +505,7 @@ $inline-feedback-padding: 2px;
   white-space: nowrap !important;
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
-  display: inline-table;
+  display: inline;
 }
 
 // cloze dropdowns inside katex are normally cut off due to content-driven overflows we cannot control easily. this:

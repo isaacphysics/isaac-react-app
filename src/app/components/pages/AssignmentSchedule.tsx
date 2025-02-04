@@ -444,7 +444,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
 
     const yearRange = range(currentYear, currentYear + 5);
 
-    const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false;
+    const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) : false) || TODAY().valueOf() > dueDate.valueOf());
 
     useEffect(() => {
         if (showSetAssignmentUI) setShowGameboardPreview(false);
@@ -502,14 +502,14 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)}
             />
         </Label>
-        <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
+        <Label className="w-100 pb-2">Due date reminder
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)}
             />
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
         </Label>
         <Alert color={siteSpecific("warning", "info")} className="py-1">
-            From January 2025, due dates will be required for assignments.
+            Since January 2025, due dates are required for assignments.
         </Alert>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
@@ -529,7 +529,7 @@ const AssignmentModal = ({user, showSetAssignmentUI, toggleSetAssignmentUI, assi
                     className="mb-2 mb-sm-0 w-100"
                     block color={siteSpecific("secondary", "primary")}
                     onClick={assign}
-                    disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard) || alreadyAssignedGroupNames.length === selectedGroups.length}
+                    disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard) || alreadyAssignedGroupNames.length === selectedGroups.length || !dueDate || dueDateInvalid}
                 >
                     Assign to group{selectedGroups.length > 1 ? "s" : ""}
                 </Button>
