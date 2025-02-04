@@ -350,9 +350,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                     </span>}
                                                 </div>
                                             </Col>
-                                            <Col className="d-flex flex-col justify-content-end align-items-center flex-grow-0 pe-1">
+                                            <Col className={isPhy ? "d-flex flex-col justify-content-end align-items-center flex-grow-0 pe-1" : ""}>
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
-                                                    <Button color="link" disabled={editingOtherUser} onClick={() =>
+                                                    <Button className={isAda ? "revoke-teacher pe-1 pt-2" : ""} color="link" disabled={editingOtherUser} onClick={() =>
                                                         membership.group.selfRemoval
                                                             ? dispatch(openActiveModal(confirmSelfRemovalModal((user as LoggedInUser).id as number, membership.group.id as number)))
                                                             : changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.INACTIVE})
@@ -370,7 +370,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                                 </React.Fragment>}
 
                                                 {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE && <React.Fragment>
-                                                    <Button color="link" disabled={editingOtherUser} onClick={() =>
+                                                    <Button  className={isAda ? "revoke-teacher pe-1 pt-2" : ""} color="link" disabled={editingOtherUser} onClick={() =>
                                                         changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.ACTIVE})
                                                     }>
                                                         Rejoin
