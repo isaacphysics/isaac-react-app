@@ -44,6 +44,12 @@
     margin: auto 1rem auto 0;
   }
 
+  h2 {
+    font-size: inherit !important;
+  }
+}
+
+.accordion-header button {
   &:after {
     content: "";
     background: url('/assets/common/icons/chevron_down.svg') no-repeat center center;
@@ -51,10 +57,6 @@
     width: 12px;
     height: 12px;
     margin: auto 0 auto 1rem;
-  }
-
-  h2 {
-    font-size: inherit !important;
   }
 }
 
