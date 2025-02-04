@@ -48,14 +48,22 @@
         margin: 0 -80px -150px;
       }
 
+      @include media-breakpoint-only(xs) {
+        margin-bottom: -200px;
+      }
+
       @include media-breakpoint-between(md, lg) {
         left: 40%;
         background-position: -30px 0;
         max-height: 500px;
       }
 
-      @include media-breakpoint-up(lg) {
+      @include media-breakpoint-between(lg, xxl) {
         left: 38%;
+      }
+
+      @include media-breakpoint-up(xxl) {
+        right: -50px;
         background-position: -90px -120px;
         background-size: 120%;
       }
