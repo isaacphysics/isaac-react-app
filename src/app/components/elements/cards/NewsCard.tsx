@@ -5,6 +5,7 @@ import {IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper, siteSpecific} from "../../../services";
 import {AdaCard} from "./AdaCard";
 import classNames from "classnames";
+import { Spacer } from "../Spacer";
 
 interface NewsCardProps extends CardProps {
     newsItem: IsaacPodDTO;
@@ -27,6 +28,7 @@ const PhysicsNewsCard = ({newsItem, ...props}: NewsCardProps) => {
             <CardText>
                 {value && <p>{value}</p>}
             </CardText>
+            <Spacer/>
             <CardText>
                 {!url?.startsWith("http") ?
                     <Link aria-label={`${title} read more`} className="focus-target btn btn-keyline" to={`${url}`}>

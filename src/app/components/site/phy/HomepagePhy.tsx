@@ -136,7 +136,7 @@ export const HomepagePhy = () => {
                 </section>
                 <section id="events-news">
                     <Row className="mt-5 row-cols-1 row-cols-lg-2">
-                        <div className="mt-3">
+                        <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
                                 <h3>Upcoming Events</h3>
                                 <Link to="/events" className="news-events-link">More events</Link>                        
@@ -146,26 +146,24 @@ export const HomepagePhy = () => {
                                 query={eventsQuery}
                                 defaultErrorTitle={"Error loading events list"}
                                 thenRender={({events}) => {
-                                    return <Row>
+                                    return <Row className="h-100">
                                         {events.map(event => <Col key={event.id}>
                                             <EventCard event={event} />
                                         </Col>)}
                                     </Row>;
                                 }}/>
                         </div>
-                        <div className="mt-3"> 
+                        <div className="d-flex flex-column mt-3"> 
                             <div className="d-flex">
                                 <h3>News & Features</h3>
                                 <Link to="/news" className="news-events-link">More news</Link>                     
                                 <div className="section-divider"/>
                             </div>
-                            {news && <>
-                                <Row>
-                                    {news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>
-                                        <NewsCard newsItem={newsItem} />
-                                    </Col>)}
-                                </Row>
-                            </>}
+                            {news && <Row className="h-100">
+                                {news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>
+                                    <NewsCard newsItem={newsItem} />
+                                </Col>)}
+                            </Row>}
                         </div>
                     </Row>
                 </section>
