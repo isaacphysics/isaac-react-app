@@ -325,12 +325,6 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
 
     const PhyMyAccount = <Container id="account-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} icon={{type: "hex", icon: "page-icon-account"}} className="mb-4"/>
-        <h3 className="d-md-none text-center text-muted m-3">
-            <small>
-                {`Update your Isaac Physics account, or `}
-                <Link to="/logout" className="text-theme">Log out</Link>
-            </small>
-        </h3>
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <SidebarLayout>
@@ -346,7 +340,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                             </NavLink>
                         )}
                     </MyAccountSidebar>
-                    <MainContent className="w-lg-50">                        
+                    <MainContent className="w-lg-50">
                         <Form name="my-account" onSubmit={updateAccount}>
                             {error?.type == "generalError" &&
                                     <ExigentAlert color="warning">
@@ -392,6 +386,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                                     />
                                 </TabPane>}
                             </TabContent>
+                            <div className="section-divider-bold"/>
                             {/* Teacher connections does not have a save */}
                             <div className="d-flex justify-content-center">
                                 <Input
