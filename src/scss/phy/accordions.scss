@@ -3,10 +3,37 @@
 .accordion {
   box-shadow: 0 2px 30px 0 $shadow-08;
   background: #FBFBFB;
-  border-top: 1px solid $shadow-08;//$gray-120;
+  border: 1px solid $color-neutral-300;
+  border-radius: 8px;
+  margin-bottom: 8px;
+
   .accordion-header {
     background: rgba(white, 1);
+    border-radius: 8px;
   }
+
+  .active-border{
+    border: 5px solid $color-brand-500 !important;
+    border-radius: 8px;
+  }
+
+  span::after {
+    content: "";
+    display: inline-block;
+    background: url('/assets/phy/icons/redesign/chevron-down.svg');
+    height: 16px;
+    width: 16px;
+    margin-left: 8px;
+  }
+
+  .up-chevron span::after {
+    transform: rotate(180deg);
+  }
+}
+
+.accordion-background {
+  background-color: $color-neutral-100;
+  padding: 8px;
 }
 
 .section-divider {

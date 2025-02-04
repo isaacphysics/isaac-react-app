@@ -147,79 +147,81 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     const isOpen = open && !disabled;
 
     return <div className="accordion">
-        <div className="accordion-header">
-            <Button
-                id={anchorId || ""} block color="link"
-                tabIndex={disabled ? -1 : 0}
-                onFocus={(e) => {
-                    if (disabled) {
-                        e.target.blur();
-                    }
-                }}
-                className={"d-flex align-items-stretch " + classNames({"de-emphasised": deEmphasised || disabled, "active": isOpen})}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-                    if (disabled) {
-                        return;
-                    }
-                    pauseAllVideos();
-                    const nextState = !isOpen;
-                    setOpen(nextState);
-                    if (nextState) {
-                        logAccordionOpen();
-                        scrollVerticallyIntoView(event.target as HTMLElement);
-                    }
-                }}
-                aria-expanded={isOpen ? "true" : "false"}
-            >
-                {isConceptPage && audienceString && <span className={
-                    classNames("stage-label d-flex align-items-center p-2 justify-content-center ", {[audienceStyle(audienceString)]: isAda, "text-bg-theme": isPhy})
-                }>
-                    {siteSpecific(
-                        audienceString,
-                        above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")
-                    ).split("\n").map(
-                        (line, i, arr) => <>
-                            {line}{i < arr.length && <br/>}
-                        </>
-                    )}
-                </span>}
-                <div className="accordion-title ps-3">
-                    <Row className="h-100">
-                        <div className="d-flex align-items-center p-0 h-100">
-                            {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
-                            <span className="accordion-part p-3 text-theme text-nowrap">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
-                            {trustedTitle && <div className="p-3">
-                                <h2>
-                                    <Markup encoding={"latex"}>
-                                        {trustedTitle}
-                                    </Markup>
-                                </h2>
-                            </div>}
-                            {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
-                                <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
-                                <UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
-                                    modifiers={[preventOverflow]}>
-                                    {disabled}
-                                </UncontrolledTooltip>
-                            </div>}
-                        </div>
-                    </Row>
-                </div>
+        <div className={classNames({"active-border": isPhy && !page && isOpen})}> {/* don't apply accordion borders on content pages yet */}
+            <div className="accordion-header">
+                <Button
+                    id={anchorId || ""} block color="link"
+                    tabIndex={disabled ? -1 : 0}
+                    onFocus={(e) => {
+                        if (disabled) {
+                            e.target.blur();
+                        }
+                    }}
+                    className={"d-flex align-items-stretch " + classNames({"de-emphasised": deEmphasised || disabled, "active": isOpen, "up-chevron": isPhy && isOpen})}
+                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+                        if (disabled) {
+                            return;
+                        }
+                        pauseAllVideos();
+                        const nextState = !isOpen;
+                        setOpen(nextState);
+                        if (nextState) {
+                            logAccordionOpen();
+                            scrollVerticallyIntoView(event.target as HTMLElement);
+                        }
+                    }}
+                    aria-expanded={isOpen ? "true" : "false"}
+                >
+                    {isConceptPage && audienceString && <span className={
+                        classNames("stage-label d-flex align-items-center p-2 justify-content-center ", {[audienceStyle(audienceString)]: isAda, "text-bg-theme": isPhy})
+                    }>
+                        {siteSpecific(
+                            audienceString,
+                            above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n")
+                        ).split("\n").map(
+                            (line, i, arr) => <>
+                                {line}{i < arr.length && <br/>}
+                            </>
+                        )}
+                    </span>}
+                    <div className="accordion-title ps-3">
+                        <Row className="h-100">
+                            <div className="d-flex align-items-center p-0 h-100">
+                                {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
+                                <span className="accordion-part p-3 text-theme text-nowrap">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
+                                {trustedTitle && <div className="p-3">
+                                    <h2>
+                                        <Markup encoding={"latex"}>
+                                            {trustedTitle}
+                                        </Markup>
+                                    </h2>
+                                </div>}
+                                {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
+                                    <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
+                                    <UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
+                                        modifiers={[preventOverflow]}>
+                                        {disabled}
+                                    </UncontrolledTooltip>
+                                </div>}
+                            </div>
+                        </Row>
+                    </div>
 
-                {accordionIcon && isPhy && <span className={"accordion-icon align-self-center accordion-icon-" + accordionIcon}>
-                    <span className="visually-hidden">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
-                </span>}
-            </Button>
+                    {accordionIcon && isPhy && <span className={"accordion-icon align-self-center accordion-icon-" + accordionIcon}>
+                        <span className="visually-hidden">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
+                    </span>}
+                </Button>
+            </div>
+            <Collapse isOpen={isOpen} className="mt-1">
+                <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open: isOpen}}>
+                    <Card>
+                        <CardBody>
+                            {children}
+                        </CardBody>
+                        <ReportAccordionButton pageId={getPage()?.id} sectionId={id} sectionTitle={trustedTitle}/>
+                    </Card>
+                </AccordionSectionContext.Provider>
+            </Collapse>
         </div>
-        <Collapse isOpen={isOpen} className="mt-1">
-            <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open: isOpen}}>
-                <Card>
-                    <CardBody>
-                        {children}
-                    </CardBody>
-                    <ReportAccordionButton pageId={getPage()?.id} sectionId={id} sectionTitle={trustedTitle}/>
-                </Card>
-            </AccordionSectionContext.Provider>
-        </Collapse>
     </div>;
 });
