@@ -434,7 +434,8 @@ button.close { // default <button class="close"/> components;
 
 .btn-plus.btn-plus { // need the specificity to be above bootstrap's .btn
   @extend .btn-close;
-  background-image: url(/assets/common/icons/plus.svg);
+  background-image: url(/assets/common/icons/plus.svg) !important;
+  border: none;
 }
 
 .print-icon {
