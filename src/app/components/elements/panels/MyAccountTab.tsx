@@ -1,7 +1,6 @@
 import React from "react";
 import { CardBody, Col, Container, Row } from "reactstrap";
-import { isAda, siteSpecific } from "../../../services";
-import classNames from "classnames";
+import { siteSpecific } from "../../../services";
 
 export interface MyAccountTabProps {
     leftColumn: React.ReactNode;
