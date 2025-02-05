@@ -119,7 +119,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
     const toggle = () => setOpen(!dropdownOpen);
 
     if (isPhy && videoInAnAccordionSection && accordionSectionContext.open) {
-        return <div className="my-2">
+        return <div className="my-3">
             <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
                 <DropdownToggle color="primary" className={classNames("btn-dropdown", {"btn-dropdown-open": dropdownOpen})}>
                     {altText}
