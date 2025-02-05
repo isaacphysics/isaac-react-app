@@ -157,7 +157,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                             e.target.blur();
                         }
                     }}
-                    className={"d-flex align-items-stretch " + classNames({"de-emphasised": deEmphasised || disabled, "active": isOpen, "up-chevron": isPhy && isOpen})}
+                    className={"d-flex align-items-stretch " + classNames({"de-emphasised": deEmphasised || disabled, "active": isOpen})}
                     onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                         if (disabled) {
                             return;
