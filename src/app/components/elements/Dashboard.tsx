@@ -8,6 +8,7 @@ import { IsaacPodDTO, IsaacQuestionPageDTO } from "../../../IsaacApiTypes";
 import { ShowLoading, defaultPlaceholder } from "../handlers/ShowLoading";
 import QuestionCard from "./cards/QuestionCard";
 import { isStudent, isTeacher, isTutorOrAbove } from "../../services";
+import HomepageHighlight from "../pages/IsaacCompetition/HomepageHighlight/HomepageHighlight";
 
 const ShowMeButtons = ({ loggedIn }: { loggedIn: boolean | undefined }) => {
   const showMeButtons = [
@@ -136,6 +137,7 @@ export const Dashboard = ({
 
   const loggedInContent = (
     <Row className="py-4">
+      <HomepageHighlight />
       {!expanded && (
         <Col md="12" lg="5" className={"pt-lg-4"}>
           <Container className={"mb-4"}>
@@ -162,6 +164,7 @@ export const Dashboard = ({
 
   const loggedOutContent = (
     <Row>
+      <HomepageHighlight />
       <Col lg={6} xs={12} className="pb-3">
         <h1 className="primary-heading">The free online platform for computer science</h1>
         <p className="mt-4 body-text">

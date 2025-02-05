@@ -294,3 +294,21 @@
     }
   }
 }
+
+// ----------------------------------------------
+// Homepage Highlight Section
+// ----------------------------------------------
+
+.homepage-highlight {
+  background-color: #ffdf80;
+
+  &-title {
+    font-size: 78px;
+    color: #120540;
+  }
+
+  &-sub-title {
+    color: #120540;
+    font-size: 32px;
+  }
+}
