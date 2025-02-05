@@ -12,8 +12,14 @@
     border-radius: 8px;
   }
 
+  .accordion-body {
+    background-color: rgba(white, 1);
+    border-radius: 0 0 8px 8px;
+    padding-top: 0;
+  }
+
   .active-border{
-    border: 5px solid $color-brand-500 !important;
+    border: 5px solid $color-brand-500;
     border-radius: 8px;
   }
 

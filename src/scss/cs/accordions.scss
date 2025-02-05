@@ -58,6 +58,10 @@
     height: 12px;
     margin: auto 0 auto 1rem;
   }
+
+  &.active {
+    border-bottom: 1px solid $shadow-08 !important;
+  }
 }
 
 .accordion {

@@ -212,7 +212,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     </span>}
                 </Button>
             </div>
-            <Collapse isOpen={isOpen} className="mt-1">
+            <Collapse isOpen={isOpen} className={siteSpecific("accordion-body", "mt-1")}>
                 <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open: isOpen}}>
                     <Card>
                         <CardBody>

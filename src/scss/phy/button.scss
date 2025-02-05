@@ -240,7 +240,23 @@
   &.btn-dropdown {
     color: black;
     background-color: $color-neutral-100;
+    border: 1px solid $color-neutral-300;
     border-radius: 6px;
+
+    &::after {
+      content: "";
+      display: inline-block;
+      background: url('/assets/phy/icons/redesign/chevron-down.svg') no-repeat center center;
+      height: 9px;
+      width: 9px;
+      margin-left: 8px;
+    }
+
+    &.btn-dropdown-open {
+      &::after {
+        transform: rotate(180deg);
+      }
+    }
   }
 }
 

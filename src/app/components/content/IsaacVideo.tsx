@@ -121,16 +121,16 @@ export function IsaacVideo(props: IsaacVideoProps) {
     if (isPhy && videoInAnAccordionSection && accordionSectionContext.open) {
         return <div className="my-2">
             <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
-                <DropdownToggle caret color="primary" className="btn-dropdown">
+                <DropdownToggle color="primary" className={classNames("btn-dropdown", {"btn-dropdown-open": dropdownOpen})}>
                     {altText}
                 </DropdownToggle>
             </ButtonDropdown>
-            {dropdownOpen && <div className="d-flex flex-column align-items-center mt-3">
+            {dropdownOpen && <div className="mt-3">
                 <div className="no-print content-value text-center w-75">
                     { embedSrc ?
                         <div className={classNames("content-video-container", {"ratio-16x9" : userConsent.cookieConsent?.youtubeCookieAccepted ?? false})}>
                             <YoutubeCookieHandler afterAcceptedElement={
-                                <iframe ref={videoRef} className="mw-100" title={altTextToUse} src={embedSrc} allowFullScreen/>
+                                <iframe ref={videoRef} title={altTextToUse} src={embedSrc} allowFullScreen/>
                             } />
                         </div>
                         : altText
