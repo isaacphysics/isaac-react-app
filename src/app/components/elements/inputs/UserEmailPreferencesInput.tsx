@@ -5,6 +5,7 @@ import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {EMAIL_PREFERENCE_DEFAULTS, isPhy, siteSpecific} from "../../../services";
 import {Dispatch} from "react";
 import { TrueFalseRadioInput } from "./TrueFalseRadioInput";
+import classNames from "classnames";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences | null | undefined;
@@ -30,7 +31,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
         )
     };
 
-    return <FormGroup className="form-group overflow-auto">
+    return <FormGroup className={classNames("form-group overflow-auto", {"pt-4": isPhy})}>
         {isPhy && submissionAttempted !== undefined ? <> {/* submissionAttempted should always exist on phy, just here for typing */}
             <Table className="mb-0">
                 <thead>

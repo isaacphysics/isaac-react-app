@@ -138,6 +138,10 @@
   @include svg-icon('/assets/phy/icons/redesign/arrow-right.svg', 16px, 16px);
 }
 
+.icon-chevron-down {
+  @include svg-icon('/assets/phy/icons/redesign/chevron-down.svg', 16px, 16px);
+}
+
 .icon-question-pack {
   @include svg-icon-layered(
     '/assets/phy/icons/redesign/question-pack-fg.svg',
@@ -209,6 +213,13 @@
     '/assets/phy/icons/redesign/page-event-bg.svg',
     75px, 75px, 44px
   )
+}
+
+.page-icon-account {
+  @include svg-icon(
+    '/assets/phy/icons/redesign/my-isaac.svg', 
+    75px, 75px, 44px // no background - generic hex background clashes with foreground hex
+  );
 }
 
 .list-icon-question {

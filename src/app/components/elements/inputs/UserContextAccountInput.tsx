@@ -152,7 +152,7 @@ export function UserContextAccountInput({
         {siteSpecific(
             // Physics
             <React.Fragment>
-                <span id={`show-me-content-${componentId}`} className="icon-help" />
+                <span id={`show-me-content-${componentId}`} className="mx-2 icon-chevron-down" />
                 <UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                     {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
                     {"You will be able to change this preference on relevant pages."}<br />
@@ -206,7 +206,7 @@ export function UserContextAccountInput({
             {!isAda && tutorOrAbove && validateUserContexts(userContexts) && <div className="mb-3 ms-2 align-content-center remove-stage-container">
                 <Button
                     aria-label="Add stage"
-                    className={`ms-2 align-middle btn-plus float-none pointer-cursor bg-white`}
+                    className={`ms-2 align-middle btn-plus float-none pointer-cursor bg-transparent`}
                     onClick={() => setUserContexts([...userContexts, {}])}
                 />
             </div>}

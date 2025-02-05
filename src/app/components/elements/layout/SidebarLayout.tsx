@@ -391,3 +391,9 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
         }}/>
     </ContentSidebar>;
 };
+
+export const MyAccountSidebar = (props: SidebarProps) => {
+    return <ContentSidebar buttonTitle="Account settings" {...props}>
+        {props.children}
+    </ContentSidebar>;
+};
