@@ -73,14 +73,14 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
         case CompletionState.IN_PROGRESS:
             questionIconLabel = "In progress question icon";
             questionIcon = siteSpecific(
-                <svg style={{width: "60px", height: "60px"}} className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/incomplete-hex.svg#icon`} xlinkHref={`/assets/phy/icons/incomplete-hex.svg#icon`}/></svg>,
+                <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/incomplete-hex.svg#icon`} xlinkHref={`/assets/phy/icons/incomplete-hex.svg#icon`}/></svg>,
                 <img src="/assets/common/icons/incorrect.svg" alt={questionIconLabel}/>
             );
             break;
         case CompletionState.ALL_CORRECT:
             questionIconLabel = "Complete question icon";
             questionIcon = siteSpecific(
-                <svg style={{width: "60px", height: "60px"}}  className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/tick-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/></svg>,
+                <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/tick-rp-hex.svg#icon`} xlinkHref={`/assets/phy/icons/tick-rp-hex.svg#icon`}/></svg>,
                 <img src="/assets/common/icons/completed.svg" alt={questionIconLabel}/>
             );
             break;
@@ -88,7 +88,7 @@ export const ContentSummaryListGroupItem = ({item, search, showBreadcrumb, noCar
         default:
             questionIconLabel = "Not attempted question icon";
             questionIcon = siteSpecific(
-                <svg style={{width: "60px", height: "60px"}}  className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/question-hex.svg#icon`} xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/></svg>,
+                <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/phy/icons/question-hex.svg#icon`} xlinkHref={`/assets/phy/icons/question-hex.svg#icon`}/></svg>,
                 <img src="/assets/common/icons/not-started.svg" alt={questionIconLabel}/>
             );
             break;

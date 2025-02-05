@@ -129,7 +129,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(params.stages) as STAGE[]);
+    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(pageContext.stage ? [pageContext.stage] : params.stages) as STAGE[]);
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
@@ -169,16 +169,21 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const [selections, setSelections] = useState<ChoiceTree[]>(
         processTagHierarchy(
-            arrayFromPossibleCsv(params.subjects), 
+            arrayFromPossibleCsv(pageContext.subject ? [pageContext.subject] : params.subjects), 
             arrayFromPossibleCsv(params.fields), 
             arrayFromPossibleCsv(params.topics)
         )
     );
 
-    const choices: ChoiceTree[] = [{"subject": tags.allSubjectTags.map(itemiseTag)}];
+    const choices: ChoiceTree[] = [];
+    if (!pageContext.subject) {
+        choices.push({"subject": tags.allSubjectTags.map(itemiseTag)});
+    } else {
+        choices.push({});
+        choices[0][pageContext.subject] = tags.getChildren(pageContext.subject as TAG_ID).map(itemiseTag);
+    }
 
-    let tierIndex;
-    for (tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
+    for (let tierIndex = 0; tierIndex < selections.length && tierIndex < 2; tierIndex++)  {
         if (Object.keys(selections[tierIndex]).length > 0) {
             choices[tierIndex+1] = {};
             for (const v of Object.values(selections[tierIndex])) {
@@ -422,6 +427,23 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <IsaacSpinner />
     </div>;
 
+    const FilterTag = ({name}: {name: string}) => {
+        return (
+            <div className="tag">
+                {name}
+            </div>
+        );
+    };
+
+    const FilterSummary = () => {
+        const selectionList: string[] = getChoiceTreeLeaves(selections).map(leaf => leaf.label);
+        const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
+
+        const categories = [searchDifficulties, searchTopics, searchStages, searchExamBoards, statusList, searchBooks, selectionList];
+
+        return <div> {categories.map(c => c.map(c2 => <FilterTag key={c2} name={c2}/>))} </div>;
+    };
+
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question Finder", "Questions")}
@@ -475,6 +497,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                         </InputGroup>
                     </Col>
                 </Row>}
+
+                <FilterSummary />
 
                 <Row className="mt-4 position-relative finder-panel">
                     <Col lg={siteSpecific(4, 3)} md={12} xs={12} className={classNames("text-wrap my-2", {"d-none": isPhy})} data-testid="question-finder-filters">

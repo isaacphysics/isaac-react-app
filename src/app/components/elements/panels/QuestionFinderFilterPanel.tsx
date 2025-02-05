@@ -6,6 +6,7 @@ import {
     below,
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
+    getUpdatedPageContext,
     groupTagSelectionsByParent,
     isAda,
     isPhy,
@@ -17,7 +18,8 @@ import {
     TAG_ID,
     TAG_LEVEL,
     tags,
-    useDeviceSize
+    useDeviceSize,
+    useUrlPageTheme
 } from "../../../services";
 import { Difficulty, ExamBoard } from "../../../../IsaacApiTypes";
 import { QuestionStatus } from "../../pages/QuestionFinder";
@@ -168,6 +170,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     const [listState, listStateDispatch] = useReducer(listStateReducer, groupBaseTagOptions, initialiseListState);
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
+    const pageContext = useUrlPageTheme();
 
     const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));
 
@@ -223,13 +226,13 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             </div>}
         </CardHeader>
         <CardBody className={classNames("p-0 m-0", {"d-none": isAda && below["md"](deviceSize) && !filtersVisible})}>
-            <CollapsibleList
+            {(isAda || !pageContext.stage) && <CollapsibleList
                 title={listTitles.stage} expanded={listState.stage.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "stage", focus: below["md"](deviceSize)})}
                 numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.length}
             >
                 {getFilteredStageOptions().map((stage, index) => (
-                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy})} key={index}>
+                    <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy, "bg-grey": isPhy && searchStages.includes(stage.value)})} key={index}>
                         <StyledCheckbox
                             color="primary"
                             checked={searchStages.includes(stage.value)}
@@ -238,7 +241,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         />
                     </div>
                 ))}
-            </CollapsibleList>
+            </CollapsibleList>}
             {isAda && <CollapsibleList
                 title={listTitles.examBoard} expanded={listState.examBoard.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "examBoard", focus: below["md"](deviceSize)})}
@@ -258,18 +261,16 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             <CollapsibleList
                 title={listTitles.topics} expanded={listState.topics.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
-                numberSelected={siteSpecific(
-                    // Find the last non-zero tier in the tree
-                    // FIXME: Use `filter` and `at` when Safari supports it 
-                    //
-                    // TODO CURRENTLY COUNTING NUMBER OF LAYERS 
-                    getChoiceTreeLeaves(selections).length,
-                    searchTopics.length
-                )}
+                numberSelected={siteSpecific(getChoiceTreeLeaves(selections).length, searchTopics.length)}
             >
                 {siteSpecific(
                     <div>
-                        <HierarchyFilterHexagonal {...{tier: 0, index: TAG_LEVEL.subject, tiers, choices, selections: selections, questionFinderFilter: true, setTierSelection}} />
+                        <HierarchyFilterHexagonal {...{
+                            tier: pageContext.subject ? 1 : 0,
+                            index: pageContext.subject as TAG_ID ?? TAG_LEVEL.subject,
+                            tiers, choices, selections,
+                            questionFinderFilter: true, setTierSelection
+                        }}/>
                     </div>,
                     groupBaseTagOptions.map((tag, index) => (
                         <CollapsibleList
