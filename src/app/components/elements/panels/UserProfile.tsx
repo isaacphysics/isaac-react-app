@@ -65,20 +65,42 @@ export const UserProfile = (props: UserProfileProps) => {
             </p>}
         </>}
         rightColumn={<>
-            <GivenNameInput
-                userToUpdate={userToUpdate}
-                setUserToUpdate={setUserToUpdate}
-                nameValid={!!validateName(userToUpdate.givenName)}
-                submissionAttempted={submissionAttempted}
-                required={true}
-            />
-            <FamilyNameInput
-                userToUpdate={userToUpdate}
-                setUserToUpdate={setUserToUpdate}
-                nameValid={!!validateName(userToUpdate.familyName)}
-                submissionAttempted={submissionAttempted}
-                required={true}
-            />
+            {siteSpecific(
+                <>
+                    <div className="row row-cols-2">
+                        <GivenNameInput
+                            userToUpdate={userToUpdate}
+                            setUserToUpdate={setUserToUpdate}
+                            nameValid={!!validateName(userToUpdate.givenName)}
+                            submissionAttempted={submissionAttempted}
+                            required={true}
+                        />
+                        <FamilyNameInput
+                            userToUpdate={userToUpdate}
+                            setUserToUpdate={setUserToUpdate}
+                            nameValid={!!validateName(userToUpdate.familyName)}
+                            submissionAttempted={submissionAttempted}
+                            required={true}
+                        />
+                    </div>
+                </>,
+                <>
+                    <GivenNameInput
+                        userToUpdate={userToUpdate}
+                        setUserToUpdate={setUserToUpdate}
+                        nameValid={!!validateName(userToUpdate.givenName)}
+                        submissionAttempted={submissionAttempted}
+                        required={true}
+                    />
+                    <FamilyNameInput
+                        userToUpdate={userToUpdate}
+                        setUserToUpdate={setUserToUpdate}
+                        nameValid={!!validateName(userToUpdate.familyName)}
+                        submissionAttempted={submissionAttempted}
+                        required={true}
+                    />
+                </>
+            )}
             <EmailInput
                 userToUpdate={userToUpdate}
                 setUserToUpdate={setUserToUpdate}
