@@ -11,11 +11,11 @@ export const pageContextSlice = createSlice({
     name: 'pageContextSlice',
     initialState: null as PageContextState,
     reducers: {
-        updatePageContext: (state, action: actionType) => {
-            if (state) {
-                state.stage = action.payload?.stage || "all" as Stage;
-                state.subject = action.payload?.subject || undefined;
-            }
-        }
+        updatePageContext: (state, action: actionType) => ({
+            ...state,
+            stage: action.payload?.stage || "all" as Stage,
+            subject: action.payload?.subject || undefined,
+        }),
+        resetPageContext: () => null,
     },
 });
