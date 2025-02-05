@@ -64,7 +64,7 @@ export function HierarchyFilterHexagonal({tier, index, tiers, choices, selection
                 }
             };
 
-            return <div key={choice.value} className={classNames("ps-3 ms-2", {"ms-3": tier===1, "ms-4 search-field": tier===2, "bg-white": tier===0 && isSelected, "bg-light": tier===1 && isSelected})}>
+            return <div key={choice.value} className={classNames("ps-3 ms-2", {"ms-3": tier===1, "ms-4 search-field": tier===2, "bg-white": tier===0 && isSelected, "bg-grey": tier===1 && isSelected})}>
                 <StyledCheckbox
                     color="primary"
                     checked={isSelected}
@@ -72,7 +72,7 @@ export function HierarchyFilterHexagonal({tier, index, tiers, choices, selection
                     label={<span>{choice.label}</span>}
                 />
                 {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
-                    <HierarchyFilterHexagonal {...{tier: tier+1, index: choice.value, tiers, choices, selections, questionFinderFilter, setTierSelection}} className={classNames({"bg-white": tier===0, "bg-light": tier===1})}/>
+                    <HierarchyFilterHexagonal {...{tier: tier+1, index: choice.value, tiers, choices, selections, questionFinderFilter, setTierSelection}} className={classNames({"bg-white": tier===0})}/>
                 }
             </div>;
         }

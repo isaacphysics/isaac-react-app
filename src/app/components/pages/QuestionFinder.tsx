@@ -385,10 +385,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setSearchDifficulties([]);
         setSearchTopics([]);
         setSearchExamBoards([]);
-        setSearchStages([]);
+        setSearchStages(pageContext.stage ? [pageContext.stage as STAGE] : []);
         setSearchBooks([]);
         setExcludeBooks(false);
-        setSelections([{}, {}, {}]);
+        setSelections([pageContext.subject ? {"subject": [itemiseTag(tags.getById(pageContext.subject as TAG_ID))]} : {}, {}, {}]);
         setSearchStatuses(
             {
                 notAttempted: false,
@@ -429,19 +429,27 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const FilterTag = ({name}: {name: string}) => {
         return (
-            <div className="tag">
+            <div className="quiz-level-1-tag me-2">
                 {name}
             </div>
         );
     };
 
     const FilterSummary = () => {
-        const selectionList: string[] = getChoiceTreeLeaves(selections).map(leaf => leaf.label);
+        const stageList: string[] = searchStages.filter(stage => stage !== pageContext.stage);
+        const selectionList: string[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext.subject).map(leaf => leaf.label);
         const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
 
-        const categories = [searchDifficulties, searchTopics, searchStages, searchExamBoards, statusList, searchBooks, selectionList];
+        const categories = [searchDifficulties, searchTopics, stageList, searchExamBoards, statusList, searchBooks, selectionList].flat();
 
-        return <div> {categories.map(c => c.map(c2 => <FilterTag key={c2} name={c2}/>))} </div>;
+        return <div className="d-flex"> 
+            {categories.map(c => <FilterTag key={c} name={c}/>)}
+            {categories.length > 0 ? 
+                <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
+                    clear all filters
+                </button> 
+                : <div/>}
+        </div>;
     };
 
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
@@ -498,7 +506,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     </Col>
                 </Row>}
 
-                <FilterSummary />
+                {isPhy && <FilterSummary/>}
 
                 <Row className="mt-4 position-relative finder-panel">
                     <Col lg={siteSpecific(4, 3)} md={12} xs={12} className={classNames("text-wrap my-2", {"d-none": isPhy})} data-testid="question-finder-filters">

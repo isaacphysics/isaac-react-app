@@ -229,7 +229,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             {(isAda || !pageContext.stage) && <CollapsibleList
                 title={listTitles.stage} expanded={listState.stage.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "stage", focus: below["md"](deviceSize)})}
-                numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.length}
+                numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.filter(s => s !== pageContext.stage).length}
             >
                 {getFilteredStageOptions().map((stage, index) => (
                     <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy, "bg-grey": isPhy && searchStages.includes(stage.value)})} key={index}>
@@ -261,7 +261,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             <CollapsibleList
                 title={listTitles.topics} expanded={listState.topics.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
-                numberSelected={siteSpecific(getChoiceTreeLeaves(selections).length, searchTopics.length)}
+                numberSelected={siteSpecific(getChoiceTreeLeaves(selections).filter(l => l.value !== pageContext.subject).length, searchTopics.length)}
             >
                 {siteSpecific(
                     <div>
