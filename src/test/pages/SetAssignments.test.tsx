@@ -170,9 +170,10 @@ describe("SetAssignments", () => {
 
         // Check scheduled start date and due date are there
         within(modal).getByLabelText("Schedule an assignment start date", {exact: false});
-        within(modal).getByLabelText("Due date reminder", {exact: false});
-        // TODO check setting scheduled start date and due date - might be best to transition to
-        //  react-select date picker UI for this functionality anyway
+        const dueDateContainer = within(modal).getByLabelText("Due date reminder", {exact: false});
+        // TODO check setting scheduled start date and due date leads to correctly saved values,
+        //  since this currently just checks any form of due date is set.
+        await userEvent.selectOptions(dueDateContainer, "1");
 
         // Add some notes
         const testNotes = "Test notes to test groups for test assignments";
@@ -195,7 +196,7 @@ describe("SetAssignments", () => {
             expect(requestGroupIds).toEqual([mockActiveGroups[1].id]);
             expect(requestAssignment.gameboardId).toEqual(mockGameboard.id);
             expect(requestAssignment.notes).toEqual(testNotes);
-            expect(requestAssignment.dueDate).not.toBeDefined();
+            expect(requestAssignment.dueDate).toBeDefined();
             expect(requestAssignment.scheduledStartDate).not.toBeDefined();
         });
 

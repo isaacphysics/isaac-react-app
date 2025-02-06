@@ -7,18 +7,17 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Immutable} from "immer";
 import QuestionInputValidation from "../elements/inputs/QuestionInputValidation";
 
-// Custom input component for coordinates - a pair of inputs, one for x and one for y, formatted with brackets
-// and a comma in between.
+// Custom input component for coordinates
 interface CoordinateInputProps {
     value: Immutable<CoordinateItemDTO>;
-    placeholderXValue?: string;
-    placeholderYValue?: string;
+    placeholderValues: string[];
+    numberOfDimensions: number;
     onChange: (value: Immutable<CoordinateItemDTO>) => void;
     readonly?: boolean;
     remove?: () => void;
 }
 
-export const coordinateInputValidator = (input: string[][]) => {
+export const coordinateInputValidator = (input: (readonly string[])[]) => {
     const errors: string[] = [];
     const allBadChars: string[] = [];
     let containsComma = false;
@@ -31,7 +30,7 @@ export const coordinateInputValidator = (input: string[][]) => {
             if (/[0-9]\s*[+/÷\-x×]\s*[0-9]/.test(value)) {
                 containsOperator = true;
             }
-            const foundBadChars =  [...value.matchAll(/[^ 0-9+-.eE]/g)];
+            const foundBadChars = [...value.matchAll(/[^ 0-9+-.eE]/g)];
             if (foundBadChars.length > 0) {
                 allBadChars.push(foundBadChars.toString());
             }
@@ -50,33 +49,60 @@ export const coordinateInputValidator = (input: string[][]) => {
     return errors;
 };
 
+const coordItemToValue = function (item: Immutable<CoordinateItemDTO>, index: number) {
+    if (isDefined(item.x) && isDefined(item.y) ) {
+        // This is an old-style choice, we need to display the x and y properties for indexes 0 and 1.
+        return index === 0 ? item.x : (index === 1 ? item.y : "");
+    }
+    return isDefined(item.coordinates?.[index]) ? item.coordinates[index] : "";
+};
+
+const updateCoordItem = function (item: Immutable<CoordinateItemDTO>, newValue: string, index: number, numberOfDimensions: number) {
+    let coords;
+    if (!item?.coordinates?.length) {
+        // Create an array, and backfill with old-style x and y if necessary:
+        coords = Array<string>(numberOfDimensions).fill("");
+        if (isDefined(item.x)) {
+            coords[0] = item.x;
+        }
+        if (isDefined(item.y)) {
+            coords[1] = item.y;
+        }
+    } else {
+        coords = item.coordinates;
+    }
+    coords = coords.with(index, newValue);
+    return {...item, coordinates: coords};
+};
+
+const cleanItem = function (item: Immutable<CoordinateItemDTO>) {
+    const { x, y, ...cleaned } = item;
+    // Remove x and y from the top-level object, but only discard if coordinates already set, otherwise use to init:
+    if (isDefined(x) && isDefined(y) && !isDefined(cleaned.coordinates)) {
+        return {...cleaned, coordinates: [x, y]};
+    }
+    return cleaned;
+};
+
 const CoordinateInput = (props: CoordinateInputProps) => {
-    const {value, placeholderXValue, placeholderYValue, onChange, readonly, remove} = props;
-    return <span className="coordinate-input">
-        (
-        <Input
-            type="text"
-            className="force-print"
-            placeholder={placeholderXValue ?? "x"}
-            value={value.x ?? ""}
-            onChange={event => onChange({...value, x: event.target.value === "" ? undefined : event.target.value})}
-            readOnly={readonly}
-        />
-        <span className="coordinate-input-separator">,&nbsp;</span>
-        <Input
-            type="text"
-            className="force-print"
-            placeholder={placeholderYValue ?? "y"}
-            value={value.y ?? ""}
-            onChange={event => onChange({...value, y: event.target.value === "" ? undefined : event.target.value})}
-            readOnly={readonly}
-        />
-        )
-        {remove && <Button className="ms-3" size="sm" onClick={remove}>Delete</Button>}
+    const {value, placeholderValues, numberOfDimensions, onChange, readonly, remove} = props;
+    return <span className="coordinate-input">({[...Array(numberOfDimensions)].map((_, i) =>
+        <span key={i}>
+            <Input
+                type="text"
+                className="force-print"
+                placeholder={placeholderValues[i] ?? ""}
+                value={coordItemToValue(value, i)}
+                onChange={event => onChange(updateCoordItem(value, event.target.value, i, numberOfDimensions))}
+                readOnly={readonly}
+            />
+            {(i < numberOfDimensions - 1) && <span className="coordinate-input-separator">,&nbsp;</span>}
+        </span>)})
+    {remove && <Button className="ms-3" size="sm" onClick={remove}>Delete</Button>}
     </span>;
 };
 
-const DEFAULT_COORDINATE_ITEM = {type: "coordinateItem", x: undefined, y: undefined};
+const DEFAULT_COORDINATE_ITEM = {type: "coordinateItem", coordinates: []};
 
 const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacCoordinateQuestionDTO>) => {
 
@@ -89,13 +115,13 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
     }, [dispatchSetCurrentAttempt, currentAttempt]);
 
     const updateItem = useCallback((index: number, value: Immutable<CoordinateItemDTO>) => {
-        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? item : {...DEFAULT_COORDINATE_ITEM});
-        items[index] = value;
+        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : {...DEFAULT_COORDINATE_ITEM});
+        items[index] = cleanItem(value);
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
     }, [currentAttempt, dispatchSetCurrentAttempt]);
 
     const removeItem = useCallback((index: number) => {
-        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? item : {...DEFAULT_COORDINATE_ITEM});
+        const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? cleanItem(item) : {...DEFAULT_COORDINATE_ITEM});
         items.splice(index, 1);
         dispatchSetCurrentAttempt({type: "coordinateChoice", items});
     }, [currentAttempt, dispatchSetCurrentAttempt]);
@@ -110,8 +136,8 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
             ? Array.from({length: doc.numberOfCoordinates}).map((_, index) =>
                 <CoordinateInput
                     key={index}
-                    placeholderXValue={doc.placeholderXValue}
-                    placeholderYValue={doc.placeholderYValue}
+                    placeholderValues={doc.placeholderValues ?? []}
+                    numberOfDimensions={doc.numberOfDimensions ?? 1}
                     value={currentAttempt?.items?.[index] ?? {...DEFAULT_COORDINATE_ITEM}}
                     readonly={readonly}
                     onChange={value => updateItem(index, value)}
@@ -121,8 +147,8 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                     {currentAttempt?.items?.map((item, index) =>
                         <CoordinateInput
                             key={index}
-                            placeholderXValue={doc.placeholderXValue}
-                            placeholderYValue={doc.placeholderYValue}
+                            placeholderValues={doc.placeholderValues ?? []}
+                            numberOfDimensions={doc.numberOfDimensions ?? 1}
                             value={item}
                             readonly={readonly}
                             onChange={value => updateItem(index, value)}
@@ -132,14 +158,14 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
                 </>
                 : <CoordinateInput
                     key={0}
-                    placeholderXValue={doc.placeholderXValue}
-                    placeholderYValue={doc.placeholderYValue}
+                    placeholderValues={doc.placeholderValues ?? []}
+                    numberOfDimensions={doc.numberOfDimensions ?? 1}
                     value={{...DEFAULT_COORDINATE_ITEM}}
                     readonly={readonly}
                     onChange={value => updateItem(0, value)}
                 />
         }
-        <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => [answer.x ?? "", answer.y ?? ""]) ?? []} validator={coordinateInputValidator}/>
+        <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => answer.coordinates ?? []) ?? []} validator={coordinateInputValidator}/>
         {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={() => updateItem(currentAttempt?.items?.length ?? 1, {...DEFAULT_COORDINATE_ITEM})}>Add coordinate</Button>}
     </div>;
 };

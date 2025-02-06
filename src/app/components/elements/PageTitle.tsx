@@ -67,6 +67,7 @@ export interface TitleIconProps {
     type: "img" | "hex";
     subject?: Subject;
     icon: string;
+    size?: string;
 }
 
 export interface PageTitleProps {
