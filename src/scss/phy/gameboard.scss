@@ -53,3 +53,13 @@
     }
   }
 }
+
+button.btn.delete-button {
+  border-radius: inherit;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  padding: 0.625rem;
+  > img {
+    filter: invert(1);
+  }
+}

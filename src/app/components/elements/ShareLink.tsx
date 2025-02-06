@@ -42,9 +42,9 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * siteSpecific(9, 6));
     const showDuplicateAndEdit = gameboardId && isTutorOrAbove(user);
     return <div ref={shareLinkDivRef} className={classNames("share-link-icon", className)}>
-        <button className={siteSpecific("btn-action", classNames({"outline": outline}))} onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
+        <button className={siteSpecific("btn-action", classNames({"outline": outline}))} onClick={(e) => {e.preventDefault(); toggleShareLink();}} aria-label={buttonAriaLabel} />
         <div className={`share-link ${showShareLink ? "d-block" : ""} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
-            <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
+            <input type="text" readOnly ref={shareLink} value={shareUrl} onClick={(e) => e.preventDefault()} aria-label="Share URL" />
             {showDuplicateAndEdit && <React.Fragment>
                 {isPhy && <hr className="text-center mt-4" />}
                 <a href={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboardId}`} className={isPhy ? "px-1" : ""}>
