@@ -199,7 +199,7 @@ export const MyGameboards = () => {
                     :
                     <>
                         <div className="mt-4 mb-2">
-                            {boards && <h4>Showing <strong>{inProgress + notStarted}</strong> gameboards, with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
+                            {boards && <h4>Showing <strong>{inProgress + notStarted}</strong> {siteSpecific("gameboards", "quizzes")}, with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
                             {!boards && <IsaacSpinner size="sm" inline />}
                         </div>
                         {isAda && <> 
