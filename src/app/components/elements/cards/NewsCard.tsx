@@ -4,8 +4,8 @@ import {Card, CardBody, CardImg, CardProps, CardText, CardTitle} from "reactstra
 import {IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper, siteSpecific} from "../../../services";
 import {AdaCard} from "./AdaCard";
-import { Spacer } from "../Spacer";
 import classNames from "classnames";
+import { Spacer } from "../Spacer";
 
 interface NewsCardProps extends CardProps {
     newsItem: IsaacPodDTO;
@@ -24,7 +24,7 @@ const PhysicsNewsCard = ({newsItem, ...props}: NewsCardProps) => {
             />
         </a>}
         <CardBody className="d-flex flex-column ps-0">
-            <CardTitle tag="h4" className="mb-0">{title}</CardTitle>
+            <CardTitle className="mb-0 pod-title">{title}</CardTitle>
             <CardText>
                 {value && <p>{value}</p>}
             </CardText>
