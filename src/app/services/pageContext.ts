@@ -1,9 +1,8 @@
 import { ContentBaseDTO, UserContext } from "../../IsaacApiTypes";
-import { PageContextState, SiteTheme, Subject } from "../../IsaacAppTypes";
-import { LEARNING_STAGE, SUBJECTS, TAG_ID } from "./constants";
+import { PageContextState } from "../../IsaacAppTypes";
+import { LearningStage, LearningStages, SiteTheme, STAGE_TO_LEARNING_STAGE, Subject, Subjects, TAG_ID } from "./constants";
 import { isDefined } from "./miscUtils";
 import { useLocation } from "react-router";
-import { Stage } from "../../IsaacApiTypes";
 import { HUMAN_STAGES, HUMAN_SUBJECTS } from "./constants";
 import { pageContextSlice, useAppDispatch } from "../state";
 import { useEffect } from "react";
@@ -55,10 +54,10 @@ export const getThemeFromContextAndTags = (element: React.RefObject<HTMLElement>
  * @returns The page context for this page.
  */
 export const getUpdatedPageContext = (previousContext: PageContextState | undefined, userContexts: readonly UserContext[] | undefined, doc: ContentBaseDTO | undefined): PageContextState => {
-    const newContext = {stage: "all", subject: undefined} as NonNullable<PageContextState>;
+    const newContext = {stage: undefined, subject: undefined} as NonNullable<PageContextState>;
 
-    // if we haven't changed stage (GCSE => GCSE), use the stage from the old context
-    if (previousContext?.stage && doc?.audience?.some(a => a.stage?.includes(previousContext.stage))) {
+    // if we haven't changed learning stage (GCSE => GCSE), use the learning stage from the old context
+    if (previousContext?.stage && doc?.audience?.some(a => a.stage?.map(s => STAGE_TO_LEARNING_STAGE[s]).filter(isDefined).some(s => previousContext.stage?.includes(s)))) {
         newContext.stage = previousContext.stage;
     }
     // if we have changed stage...
@@ -66,16 +65,17 @@ export const getUpdatedPageContext = (previousContext: PageContextState | undefi
         // ...if the user has a registered context for the new stage, use that stage (with precedence for earlier stages in the user context)
         const newStage = userContexts.map(c => c.stage).find(s => doc.audience?.flatMap(a => a.stage).includes(s));
         if (newStage) {
-            newContext.stage = newStage;
+            newContext.stage = isDefined(STAGE_TO_LEARNING_STAGE[newStage]) ? [STAGE_TO_LEARNING_STAGE[newStage] as LearningStage] : undefined;
         }
 
         // ...if the user has no registered context for that stage, if the question has only one stage, switch to that stage)
         const stages = doc.audience.flatMap(a => a.stage).filter(isDefined).filter((v, i, a) => a.indexOf(v) === i);
         if (stages.length === 1) {
-            newContext.stage = stages[0];
+            newContext.stage = isDefined(STAGE_TO_LEARNING_STAGE[stages[0]]) ? [STAGE_TO_LEARNING_STAGE[stages[0]] as LearningStage] : undefined;
         }
     }
     // otherwise we cannot infer a single stage to show (user not logged in OR no registered context for a question with multiple valid stages), so the default of "all" is used
+    // (i.e. stage === undefined)
 
 
     // repeat the process for subject
@@ -101,22 +101,22 @@ export const getUpdatedPageContext = (previousContext: PageContextState | undefi
  * @param pageContext - The current page context.
  * @returns A human-readable string.
  */
-export function getHumanContext(pageContext?: {subject?: Subject, stage?: Stage}): string {
-    return `${pageContext?.stage ? (HUMAN_STAGES[pageContext.stage] + " ") : ""}${pageContext?.subject ? HUMAN_SUBJECTS[pageContext.subject] : ""}`;
+export function getHumanContext(pageContext?: PageContextState): string {
+    return `${pageContext?.stage && isSingleStageContext(pageContext) ? (HUMAN_STAGES[pageContext.stage[0]] + " ") : ""}${pageContext?.subject ? HUMAN_SUBJECTS[pageContext.subject] : ""}`;
 }
 
 function isValidIsaacSubject(subject?: string): subject is Subject {
-    return typeof subject === "string" && (Object.values(SUBJECTS).filter(x => x !== SUBJECTS.CS) as string[]).includes(subject);
+    return typeof subject === "string" && Subjects.includes(subject as Subject);
 }
 
-function isValidIsaacStage(stage?: string): stage is Stage {
-    return typeof stage === "string" && (Object.values(LEARNING_STAGE) as string[]).includes(stage);
+function isValidIsaacStage(stage?: string): stage is LearningStage {
+    return typeof stage === "string" && LearningStages.includes(stage as LearningStage);
 }
 
-function determinePageContextFromUrl(url: string): {subject?: Subject, stage?: Stage} {
+function determinePageContextFromUrl(url: string): PageContextState {
     const [subject, stage] = url.split("/").filter(Boolean);
     if (isValidIsaacSubject(subject) && isValidIsaacStage(stage)) {
-        return {subject, stage};
+        return {subject, stage: [stage]};
     }
     return {};
 }
@@ -132,9 +132,12 @@ export function useUrlPageTheme(): {subject?: Subject; stage?: Stage} {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const {subject, stage} = determinePageContextFromUrl(location.pathname);
-        if (subject && stage) {
-            dispatch(pageContextSlice.actions.updatePageContext({subject: subject as Subject, stage: stage as Stage}));
+        const urlContext = determinePageContextFromUrl(location.pathname);
+        if (urlContext?.subject && urlContext?.stage) {
+            dispatch(pageContextSlice.actions.updatePageContext({
+                subject: urlContext.subject, 
+                stage: urlContext.stage
+            }));
         }
     }, [dispatch, location.pathname]);
 

@@ -1,8 +1,8 @@
 import React from "react";
 import { AbstractListViewItem, ListViewTagProps } from "./AbstractListViewItem";
-import { ShortcutResponse, Subject, ViewingContext } from "../../../../IsaacAppTypes";
+import { ShortcutResponse, ViewingContext } from "../../../../IsaacAppTypes";
 import { determineAudienceViews } from "../../../services/userViewingContext";
-import { DOCUMENT_TYPE, documentTypePathPrefix, SEARCH_RESULT_TYPE, TAG_ID, TAG_LEVEL, tags } from "../../../services";
+import { DOCUMENT_TYPE, documentTypePathPrefix, SEARCH_RESULT_TYPE, Subject, TAG_ID, TAG_LEVEL, tags } from "../../../services";
 import { ListGroup, ListGroupItemProps } from "reactstrap";
 import { TitleIconProps } from "../PageTitle";
 import { AffixButton } from "../AffixButton";

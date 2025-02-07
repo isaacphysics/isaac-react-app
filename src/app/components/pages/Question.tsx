@@ -13,6 +13,7 @@ import {
     isAda,
     isPhy,
     isStudent,
+    Subject,
     TAG_ID,
     tags,
     useNavigation
@@ -25,7 +26,7 @@ import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
-import {DocumentSubject, GameboardContext, Subject} from "../../../IsaacAppTypes";
+import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import queryString from "query-string";

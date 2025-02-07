@@ -14,6 +14,7 @@ import {
     PATHS,
     siteSpecific,
     stageLabelMap,
+    Subject,
     TAG_ID,
     tags,
     useDeviceSize
@@ -21,7 +22,6 @@ import {
 import {formatDate, FRIENDLY_DATE, getFriendlyDaysUntil} from "./DateString";
 import {Circle} from "./svg/Circle";
 import { PhyHexIcon } from "./svg/PhyHexIcon";
-import { Subject } from "../../../IsaacAppTypes";
 import { HoverableTooltip } from "./HoverableTooltip";
 
 const midnightOf = (date: Date | number) => {
