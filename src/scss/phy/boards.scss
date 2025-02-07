@@ -39,14 +39,35 @@
     left: 0;
   }
 }
-.board-percent-completed {
+
+.board-bubble-info {
   width: 100%;
+  height: 39px;
+  position: relative;
+  z-index: 5;
+  align-content: center;
   font-size: 30px;
   line-height: 110%;
   font-family: $secondary-font-semi-bold;
   color: $color-neutral-900;
   text-align: center;
-  &:after {
+}
+
+.board-percent-completed {
+  @extend .board-bubble-info;
+
+  &.subject-complete {
+    height: 32px;
+    margin-bottom: 7px;
+
+    &::after {
+      content: "";
+      display: block;
+      @include svg-color(url("/assets/common/icons/tick.svg"), $color-neutral-900, 100%, 100%, 48px 48px);
+    }
+  }
+
+  &:not(.subject-complete)::after {
     font-size: 0.5em;
     content: '%';
     position: relative;
@@ -54,26 +75,39 @@
   }
 }
 
+label:has(> .board-percent-completed) {
+  cursor: inherit;
+}
+
+// old style; board percent displayed on top of subject hexagons
+.board-subject-hexagon-container > .board-percent-completed {
+  height: 100%;
+  color: white;
+}
+
 .board-subject-hexagon {
-  // background: url(/assets/phy/icons/hexagons_sprite.png) no-repeat -256px 0;
-  // left: 0;
   mask: url(/assets/phy/icons/redesign/hexagon.svg) no-repeat center center;
   mask-size: contain;
   width: 72px;
   height: 72px;
+
+  &.subject-physics {
+    background-color: $color-physics-500;
+  }
+  &.subject-maths {
+    background-color: $color-maths-500;
+  }
+  &.subject-chemistry {
+    background-color: $color-chemistry-500;
+  }
+  &.subject-biology {
+    background-color: $color-biology-500;
+  }
+  &.subject-complete {
+    background-color: $color-neutral-900;
+    &::after {
+      @include pseudo-element;
+      @include svg-color(url("/assets/common/icons/tick.svg"), white, 100%, 100%, 48px 48px);
+    }
+  }
 }
-.subject-physics {
-  background-color: $color-physics-500;
-}
-.subject-maths {
-  background-color: $color-maths-500;
-}
-.subject-chemistry {
-  background-color: $color-chemistry-500;
-}
-.subject-biology {
-  background-color: $color-biology-500;
-}
-// .subject-complete {
-//   background-position: -320px 0;
-// }

@@ -17,6 +17,7 @@ describe("My Gameboards", () => {
         cy.mountWithStoreAndRouter(<MyGameboards user={mockUser}/>, [PATHS.MY_GAMEBOARDS]);
         cy.get('[data-testid="display-select"]').select("Card View");
         cy.get('[data-testid="loading"]').should('not.exist');
+        cy.wait(1000);
         cy.matchImage();
     });
 });

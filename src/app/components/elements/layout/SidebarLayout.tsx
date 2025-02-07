@@ -3,7 +3,7 @@ import { Col, ColProps, RowProps, Input, Label, Offcanvas, OffcanvasBody, Offcan
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { above, AUDIENCE_DISPLAY_FIELDS, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
+import { above, AUDIENCE_DISPLAY_FIELDS, BoardCompletions, BoardCreators, BoardLimit, BoardViews, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
@@ -389,5 +389,61 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                 </Input>
             </>;
         }}/>
+    </ContentSidebar>;
+};
+
+interface MyGameboardsSidebarProps extends SidebarProps {
+    displayMode: BoardViews;
+    setDisplayMode: React.Dispatch<React.SetStateAction<BoardViews>>;
+    displayLimit: BoardLimit;
+    setDisplayLimit: React.Dispatch<React.SetStateAction<BoardLimit>>;
+    boardTitleFilter: string,
+    setBoardTitleFilter: React.Dispatch<React.SetStateAction<string>>;
+    boardCreatorFilter: BoardCreators;
+    setBoardCreatorFilter: React.Dispatch<React.SetStateAction<BoardCreators>>;
+    boardCompletionFilter: BoardCompletions;
+    setBoardCompletionFilter: React.Dispatch<React.SetStateAction<BoardCompletions>>;
+}
+
+export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
+    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, boardCreatorFilter, setBoardCreatorFilter, boardCompletionFilter, setBoardCompletionFilter, ...rest } = props;
+
+    return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
+        <div className="section-divider"/>
+        <h5>Search gameboards</h5>
+        <Input
+            className='search--filter-input my-4'
+            type="search" value={boardTitleFilter || ""}
+            placeholder="e.g. Forces"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
+        />
+        <div className="section-divider"/>
+        <h5 className="mb-4">Display mode</h5>
+        <Input type="select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+            {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+        </Input>
+        <h5 className="mt-4 mb-3">Display limit</h5>
+        <Input type="select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+            {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+        </Input>
+        <h5 className="mt-4 mb-3">Filter by creator</h5>
+        <Input type="select" value={boardCreatorFilter} onChange={e => setBoardCreatorFilter(e.target.value as BoardCreators)}>
+            {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+        </Input>
+        <h5 className="mt-4 mb-3">Filter by completion</h5>
+        <Input type="select" value={boardCompletionFilter} onChange={e => setBoardCompletionFilter(e.target.value as BoardCompletions)}>
+            {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
+        </Input>
+    </ContentSidebar>;
+};
+
+export const SetAssignmentsSidebar = (props: SidebarProps) => {
+    // TODO
+    return <ContentSidebar {...props}/>;
+};
+
+export const MyAccountSidebar = (props: SidebarProps) => {
+    return <ContentSidebar buttonTitle="Account settings" {...props}>
+        {props.children}
     </ContentSidebar>;
 };
