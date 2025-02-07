@@ -31,12 +31,12 @@
           }
 
           &[color="primary"] {
-            background: $primary;
-            border-color: $primary;
+            background: $color-brand-500;
+            border-color: $color-brand-500;
 
             &:hover, &:disabled {
-              background: darken($primary, 10%);
-              border-color: darken($primary, 10%);
+              background: darken($color-brand-500, 10%);
+              border-color: darken($color-brand-500, 10%);
             }
           }
 

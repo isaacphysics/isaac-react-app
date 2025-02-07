@@ -145,8 +145,8 @@ export interface QuestionFinderFilterPanelProps {
     searchStatuses: QuestionStatus, setSearchStatuses: Dispatch<SetStateAction<QuestionStatus>>;
     searchBooks: string[], setSearchBooks: Dispatch<SetStateAction<string[]>>;
     excludeBooks: boolean, setExcludeBooks: Dispatch<SetStateAction<boolean>>;
-    tiers: Tier[], choices: ChoiceTree[]; selections: ChoiceTree[]; 
-    setTierSelection: (tierIndex: number) => React.Dispatch<React.SetStateAction<ChoiceTree>>
+    tiers: Tier[], choices: ChoiceTree[]; 
+    selections: ChoiceTree[], setSelections: Dispatch<SetStateAction<ChoiceTree[]>>;
     applyFilters: () => void; clearFilters: () => void;
     validFiltersSelected: boolean; 
     searchDisabled: boolean;
@@ -161,7 +161,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
         searchStatuses, setSearchStatuses,
         searchBooks, setSearchBooks,
         excludeBooks, setExcludeBooks,
-        tiers, choices, selections, setTierSelection,
+        tiers, choices, selections, setSelections,
         applyFilters, clearFilters, validFiltersSelected, 
         searchDisabled, setSearchDisabled
     } = props;
@@ -268,8 +268,8 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                         <HierarchyFilterHexagonal {...{
                             tier: pageContext.subject ? 1 : 0,
                             index: pageContext.subject as TAG_ID ?? TAG_LEVEL.subject,
-                            tiers, choices, selections,
-                            questionFinderFilter: true, setTierSelection
+                            tiers, choices, selections, setSelections,
+                            questionFinderFilter: true
                         }}/>
                     </div>,
                     groupBaseTagOptions.map((tag, index) => (

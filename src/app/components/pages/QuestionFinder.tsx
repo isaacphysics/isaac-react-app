@@ -48,6 +48,7 @@ import { ShareLink } from "../elements/ShareLink";
 import { Spacer } from "../elements/Spacer";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
+import { get, set } from "lodash";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
@@ -85,7 +86,7 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
             if (index === 0)
                 selectionItems.push({[TAG_LEVEL.subject]: validTierTags.map(itemiseTag)} as ChoiceTree);
             else {
-                const parents =  Object.values(selectionItems[index-1]).flat();
+                const parents = selectionItems[index-1] ? Object.values(selectionItems[index-1]).flat() : [];
                 const validChildren = parents.map(p => tags.getChildren(p.value).filter(c => tier.includes(c.id)).map(itemiseTag));
 
                 const currentLayer: ChoiceTree = {};
@@ -98,6 +99,28 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
     });
 
     return selectionItems;
+}
+
+export function pruneTreeNode(tree: ChoiceTree[], filter: string, recursive?: boolean): ChoiceTree[] {
+    let newTree = [...tree];
+    newTree.forEach((tier, i) => {
+        if (tier[filter as TAG_ID]) { // removing children of node
+            Object.values(tier[filter as TAG_ID] || {}).forEach(v => pruneTreeNode(newTree, v.value, recursive));
+            delete newTree[i][filter as TAG_ID];
+        } else { // removing node itself
+            const parents = Object.keys(tier);
+            parents.forEach(parent => {
+                if (newTree[i][parent as TAG_ID]?.some(c => c.value === filter)) {
+                    newTree[i][parent as TAG_ID] = newTree[i][parent as TAG_ID]?.filter(c => c.value !== filter);
+                    if (recursive && newTree[i][parent as TAG_ID]?.length === 0) {
+                        newTree = pruneTreeNode(newTree, parent, true);
+                    }
+                }
+            });
+        }
+    });
+
+    return newTree;
 }
 
 function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionStatus {
@@ -171,8 +194,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         processTagHierarchy(
             arrayFromPossibleCsv(pageContext.subject ? [pageContext.subject] : params.subjects), 
             arrayFromPossibleCsv(params.fields), 
-            arrayFromPossibleCsv(params.topics)
-        )
+            arrayFromPossibleCsv(params.topics))  
     );
 
     const choices: ChoiceTree[] = [];
@@ -198,14 +220,6 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         {id: "fields" as TierID, name: "Field"},
         {id: "topics" as TierID, name: "Topic"}
     ].map(tier => ({...tier, for: "for_" + tier.id}));
-
-    const setTierSelection = (tierIndex: number) => {
-        return ((values: ChoiceTree) => {
-            const newSelections = selections.slice(0, 3);
-            newSelections[tierIndex] = values;
-            setSelections(newSelections);
-        }) as React.Dispatch<React.SetStateAction<ChoiceTree>>;
-    };
 
     const {results: questions, totalResults: totalQuestions, nextSearchOffset} = useAppSelector((state: AppState) => state && state.questionSearchResult) || {};
     const nothingToSearchFor =
@@ -376,7 +390,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             || searchStages.length > 0
             || searchBooks.length > 0
             || excludeBooks
-            || selections.some(tier => Object.keys(tier).length > 0)
+            || selections.some(tier => Object.values(tier).flat().length > 0)
             || Object.entries(searchStatuses).some(e => e[1]));
         if (isPhy) applyFilters();
     }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
@@ -427,27 +441,44 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         <IsaacSpinner />
     </div>;
 
+    function removeFilterTag(filter: string) {
+        if (searchStages.includes(filter as STAGE)) {
+            setSearchStages(searchStages.filter(f => f !== filter));
+        } else if (getChoiceTreeLeaves(selections).some(leaf => leaf.value === filter)) {
+            setSelections(pruneTreeNode(selections, filter, true));
+        } else if (searchDifficulties.includes(filter as Difficulty)) {
+            setSearchDifficulties(searchDifficulties.filter(f => f !== filter));
+        } else if (searchExamBoards.includes(filter as ExamBoard)) {
+            setSearchExamBoards(searchExamBoards.filter(f => f !== filter));
+        } else if (searchBooks.includes(filter)) {
+            setSearchBooks(searchBooks.filter(f => f !== filter));
+        } else if (searchStatuses[filter as keyof QuestionStatus]) {
+            setSearchStatuses({...searchStatuses, [filter as keyof QuestionStatus]: false});
+        }
+    };
+
     const FilterTag = ({name}: {name: string}) => {
         return (
-            <div className="quiz-level-1-tag me-2">
+            <div data-bs-theme="neutral" className="filter-tag me-2 d-flex align-items-center">
                 {name}
+                <button className="icon icon-close" onClick={() => removeFilterTag(name)} aria-label="Close"/>
             </div>
         );
     };
 
     const FilterSummary = () => {
         const stageList: string[] = searchStages.filter(stage => stage !== pageContext.stage);
-        const selectionList: string[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext.subject).map(leaf => leaf.label);
+        const selectionList: string[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext.subject).map(leaf => leaf.value); // value for now???
         const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
 
-        const categories = [searchDifficulties, searchTopics, stageList, searchExamBoards, statusList, searchBooks, selectionList].flat();
+        const categories = [searchDifficulties, stageList, searchExamBoards, statusList, searchBooks, selectionList].flat();
 
         return <div className="d-flex"> 
             {categories.map(c => <FilterTag key={c} name={c}/>)}
-            {categories.length > 0 ? 
+            {categories.length > 0 ?
                 <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
                     clear all filters
-                </button> 
+                </button>
                 : <div/>}
         </div>;
     };
@@ -482,7 +513,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 searchStatuses, setSearchStatuses,
                 searchBooks, setSearchBooks,
                 excludeBooks, setExcludeBooks,
-                tiers, choices, selections, setTierSelection,
+                tiers, choices, 
+                selections, setSelections,
                 applyFilters, clearFilters,
                 validFiltersSelected, searchDisabled, setSearchDisabled
             }} />
@@ -518,7 +550,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                             searchStatuses, setSearchStatuses,
                             searchBooks, setSearchBooks,
                             excludeBooks, setExcludeBooks,
-                            tiers, choices, selections, setTierSelection,
+                            tiers, choices, 
+                            selections, setSelections,
                             applyFilters, clearFilters,
                             validFiltersSelected, searchDisabled, setSearchDisabled
                         }} /> {/* Temporarily disabled at >=lg to test list view until this filter is moved into the sidebar */}
