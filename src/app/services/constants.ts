@@ -898,6 +898,8 @@ export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
+export const GENERIC_QUESTION_CRUMB = {title: "Questions", to: "/questions"};
+export const GENERIC_CONCEPT_CRUMB = {title: "Concepts", to: "/concepts"};
 export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "Assignment Progress", to: "/assignment_progress"},
     {title: "Markbook", to: "/my_markbook"}

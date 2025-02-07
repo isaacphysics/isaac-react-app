@@ -143,3 +143,11 @@ export function useUrlPageTheme(): {subject?: Subject; stage?: Stage} {
 
     return determinePageContextFromUrl(location.pathname);
 }
+
+export function isDefinedContext(context?: PageContextState): context is NonNullable<Required<PageContextState>> {
+    return isDefined(context) && isDefined(context.subject) && isDefined(context.stage);
+}
+
+export function isSingleStageContext(context?: PageContextState): boolean {
+    return isDefinedContext(context) && context.stage.length === 1;
+}

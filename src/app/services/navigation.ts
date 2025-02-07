@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import queryString from "query-string";
-import {fetchTopicSummary, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery} from "../state";
+import {fetchTopicSummary, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery} from "../state";
 import {
     determineCurrentCreationContext,
     determineGameboardHistory,
@@ -10,6 +10,16 @@ import {
     determineTopicHistory,
     DOCUMENT_TYPE,
     fastTrackProgressEnabledBoards,
+    GENERIC_CONCEPT_CRUMB,
+    GENERIC_QUESTION_CRUMB,
+    HUMAN_STAGES,
+    HUMAN_SUBJECTS,
+    isDefined,
+    isDefinedContext,
+    isFound,
+    isNotPartiallyLoggedIn,
+    isPhy,
+    isSingleStageContext,
     makeAttemptAtTopicHistory,
     NOT_FOUND, PATHS, siteSpecific,
     TAG_ID,
@@ -17,7 +27,7 @@ import {
     useUserViewingContext
 } from "./";
 import {AudienceContext, ContentDTO, GameboardDTO} from "../../IsaacApiTypes";
-import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {NOT_FOUND_TYPE, PageContextState} from "../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {useLocation} from "react-router-dom";
 
@@ -34,7 +44,44 @@ export interface PageNavigation {
     currentGameboard?: GameboardDTO;
 }
 
-const defaultPageNavigation = (currentGameboard?: GameboardDTO) => ({breadcrumbHistory: [], currentGameboard});
+const defaultPageNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null, pageContext: NonNullable<PageContextState> | undefined, currentGameboard?: GameboardDTO) : PageNavigation => {
+    if (doc === NOT_FOUND || doc === null) {
+        return {breadcrumbHistory: [], currentGameboard};
+    }
+
+    if (doc.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.CONCEPT].includes(doc.type as DOCUMENT_TYPE)) {
+        // attempt to determine which landing page to return to
+        if (isDefinedContext(pageContext) && isSingleStageContext(pageContext)) {
+            return {
+                breadcrumbHistory: [
+                    {
+                        title: `${HUMAN_STAGES[pageContext.stage[0]]} ${HUMAN_SUBJECTS[pageContext.subject]}`,
+                        to: `/${pageContext.subject}/${pageContext.stage[0]}`,
+                        replace: false
+                    },
+                    {
+                        title: doc.type === DOCUMENT_TYPE.QUESTION ? "Questions" : "Concepts",
+                        to: `/${pageContext.subject}/${pageContext.stage[0]}/${doc.type === DOCUMENT_TYPE.QUESTION ? "questions" : "concepts"}`,
+                        replace: false
+                    },
+                ],
+                currentGameboard,
+            }
+        }
+    }
+
+    let history = [] as LinkInfo[];
+
+    switch (doc.type) {
+        case DOCUMENT_TYPE.QUESTION:
+            history = [GENERIC_QUESTION_CRUMB];
+            break;
+        case DOCUMENT_TYPE.CONCEPT:
+            history = [GENERIC_CONCEPT_CRUMB];
+            break;
+    }
+    return {breadcrumbHistory: history, currentGameboard};
+};
 
 export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavigation => {
     const {search} = useLocation();
@@ -49,10 +96,12 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
 
     const currentTopic = useAppSelector(selectors.topic.currentTopic);
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserViewingContext();
+    const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
+    const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
+    const pageContext = useAppSelector(selectors.pageContext.context);
 
     if (doc === null || doc === NOT_FOUND) {
-        return defaultPageNavigation(currentGameboard);
+        return defaultPageNavigation(doc, pageContext, currentGameboard);
     }
 
     if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && fastTrackProgressEnabledBoards.includes(currentGameboard?.id || "")) {
@@ -75,12 +124,17 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     }
 
     if (gameboardId) {
-        const gameboardHistory = (currentGameboard && gameboardId === currentGameboard.id) ?
+        const gameboardHistory : LinkInfo[] = (currentGameboard && gameboardId === currentGameboard.id) ?
             determineGameboardHistory(currentGameboard) :
             [];
+
+        const breadcrumbHistory = isPhy && isDefined(assignments) && isFound(assignments) && (assignments.map(a => a.gameboardId).includes(gameboardId))
+            ? [{title: "Assignments", to: "/assignments"}, ...gameboardHistory]
+            : gameboardHistory;
+
         return {
             collectionType: siteSpecific("Gameboard", "Quiz"),
-            breadcrumbHistory: gameboardHistory,
+            breadcrumbHistory: breadcrumbHistory,
             backToCollection: gameboardHistory.slice(-1)[0],
             nextItem: determineNextGameboardItem(currentGameboard, currentDocId),
             previousItem: determinePreviousGameboardItem(currentGameboard, currentDocId),
@@ -104,7 +158,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
         };
     }
 
-    return defaultPageNavigation(currentGameboard);
+    return defaultPageNavigation(doc, pageContext, currentGameboard);
 };
 
 export const ifKeyIsEnter = (action: () => void) => (event: React.KeyboardEvent) => {

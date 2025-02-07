@@ -5,7 +5,8 @@ import {
     selectors,
     setAssignBoardPath,
     useAppDispatch,
-    useAppSelector, useGetGameboardByIdQuery
+    useAppSelector, useGetGameboardByIdQuery,
+    useGetMyAssignmentsQuery
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
 import {Button, Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap";
@@ -20,6 +21,7 @@ import {
     isAda,
     isDefined,
     isFound,
+    isNotPartiallyLoggedIn,
     isPhy,
     isTutorOrAbove, PATHS,
     showWildcard,
@@ -147,6 +149,8 @@ export const Gameboard = withRouter(({ location }) => {
     const gameboardQuery = useGetGameboardByIdQuery(gameboardId || skipToken);
     const { data: gameboard } = gameboardQuery;
     const user = useAppSelector(selectors.user.orNull);
+    const queryArg = user?.loggedIn && isNotPartiallyLoggedIn(user) ? undefined : skipToken;
+    const {data: assignments} = useGetMyAssignmentsQuery(queryArg, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
@@ -173,7 +177,10 @@ export const Gameboard = withRouter(({ location }) => {
                 ifNotFound={notFoundComponent}
                 thenRender={(gameboard) => {
                     return <>
-                        <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || `Filter Generated ${siteSpecific("Gameboard", "Quiz")}`}/>
+                        <TitleAndBreadcrumb 
+                            currentPageTitle={gameboard && gameboard.title || `Filter Generated ${siteSpecific("Gameboard", "Quiz")}`}
+                            intermediateCrumbs={isPhy && isDefined(assignments) && isFound(assignments) && (assignments.map(a => a.gameboardId).includes(gameboardId)) ? [{title: "Assignments", to: "/assignments"}] : []}
+                        />
                         <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
                         {user && isTutorOrAbove(user)
                             ? <Row>
