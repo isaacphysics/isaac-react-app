@@ -113,14 +113,20 @@ const CurrentWorkPanel = () => {
     const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     return <div className='w-100 dashboard-panel'>
         <h4>Complete current work</h4>
-        <span>You have assignments that are active or due soon:</span>
         <ShowLoadingQuery
             query={assignmentQuery}
             defaultErrorTitle={"Error fetching your assignments"}
             thenRender={(assignments) => {
                 const myAssignments = filterAssignmentsByStatus(assignments);
                 const toDo = [...myAssignments.inProgressRecent, ...myAssignments.inProgressOld].slice(0, 2);
-                return toDo.map((assignment: AssignmentDTO) => <AssignmentCard key={assignment.id} {...assignment} />);
+                return <>
+                    {toDo.length === 0 ?
+                        <div className="mt-3">You have no active assignments.</div> :
+                        <>
+                            <span>You have assignments that are active or due soon:</span>
+                            {toDo.map((assignment: AssignmentDTO) => <AssignmentCard key={assignment.id} {...assignment} />)}
+                        </>}
+                </>;
             }
             }/>
     </div>;
