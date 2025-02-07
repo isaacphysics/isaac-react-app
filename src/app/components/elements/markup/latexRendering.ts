@@ -1,11 +1,10 @@
 import {useContext} from "react";
-import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../../state";
-import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
+import {useGetSegueEnvironmentQuery} from "../../../state";
+import {FigureNumberingContext, FigureNumbersById} from "../../../../IsaacAppTypes";
 import he from "he";
-import {dropZoneRegex, renderA11yString, BOOLEAN_NOTATION, isAda, useUserPreferences} from "../../../services";
+import {BOOLEAN_NOTATION, dropZoneRegex, isAda, renderA11yString, useUserPreferences} from "../../../services";
 import katex, {KatexOptions} from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
-import {Immutable} from "immer";
 
 type MathJaxMacro = string|[string, number];
 
@@ -220,7 +219,13 @@ const ENDREF = "==ENDREF==";
 const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
 const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
 
-export function katexify(html: string, user: Immutable<PotentialUser> | null, booleanNotation : BOOLEAN_NOTATION | undefined, showScreenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
+export function katexify(
+    html: string,
+    booleanNotation : BOOLEAN_NOTATION | undefined,
+    showScreenReaderHoverText: boolean,
+    preferMathML: boolean,
+    figureNumbers: FigureNumbersById
+) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -287,8 +292,8 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
                 // Until https://github.com/KaTeX/KaTeX/issues/3668 is resolved, apply suggested fix ourselves, awfully:
                 katexRenderResult = katexRenderResult.replaceAll("color:transparent;", "color:transparent;visibility:hidden;");
 
-                // If katex-a11y fails, generate MathML using KaTeX for accessibility
-                if (screenReaderText) {
+                // If katex-a11y fails, or MathML preferred, generate MathML using KaTeX for accessibility:
+                if (!preferMathML && screenReaderText) {
                     katexRenderResult = katexRenderResult.replace('<span class="katex">',
                         `<span class="katex"><span class="visually-hidden" aria-label="${screenReaderText}" role="text"></span>`);
                 } else {
@@ -333,10 +338,9 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
 
 // A hook wrapper around katexify that gets its required parameters from the current redux state and existing figure numbering context
 export const useRenderKatex = () => {
-    const user = useAppSelector(selectors.user.orNull);
     const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
-    const {preferredBooleanNotation} = useUserPreferences();
+    const {preferredBooleanNotation, preferMathML} = useUserPreferences();
     const figureNumbers = useContext(FigureNumberingContext);
 
-    return (markup: string) => katexify(markup, user, preferredBooleanNotation && BOOLEAN_NOTATION[preferredBooleanNotation], segueEnvironment === "DEV", figureNumbers);
+    return (markup: string) => katexify(markup, preferredBooleanNotation && BOOLEAN_NOTATION[preferredBooleanNotation], segueEnvironment === "DEV", preferMathML ?? false, figureNumbers);
 };

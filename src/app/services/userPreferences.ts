@@ -4,12 +4,13 @@ import { AppState, useAppSelector } from '../state';
 interface UseUserPreferencesReturnType {
     preferredProgrammingLanguage?: PROGRAMMING_LANGUAGE;
     preferredBooleanNotation?: BOOLEAN_NOTATION;
+    preferMathML?: boolean;
 }
 
 export function useUserPreferences(): UseUserPreferencesReturnType {
     const {examBoard} = useUserViewingContext();
 
-    const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation} =
+    const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} =
         useAppSelector((state: AppState) => state?.userPreferences) || {};
 
     // Programming language preference -
@@ -28,8 +29,12 @@ export function useUserPreferences(): UseUserPreferencesReturnType {
         preferredBooleanNotation = examBoardBooleanNotationMap[examBoard];
     }
 
+    // Accessibility preferences:
+    const preferMathML = displaySettings?.PREFER_MATHML;
+
     return {
         preferredProgrammingLanguage,
-        preferredBooleanNotation
+        preferredBooleanNotation,
+        preferMathML
     };
 }
