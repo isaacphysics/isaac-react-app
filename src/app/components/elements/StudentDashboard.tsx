@@ -3,7 +3,7 @@ import { closeActiveModal, getMyProgress, openActiveModal, selectors, showErrorT
 import { DashboardStreakGauge } from './views/StreakGauge';
 import { Button, Card, Col, Input, InputGroup, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { filterAssignmentsByStatus, isDefined, isLoggedIn, isTutorOrAbove, PATHS, useDeviceSize } from '../../services';
+import { filterAssignmentsByStatus, isDefined, isLoggedIn, PATHS, useDeviceSize } from '../../services';
 import { tokenVerificationModal } from './modals/TeacherConnectionModalCreators';
 import { AssignmentDTO } from '../../../IsaacApiTypes';
 import { useAssignmentsCount } from '../navigation/NavigationBar';
@@ -156,14 +156,13 @@ const MyIsaacPanel = () => {
 export const StudentDashboard = () => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
-    if (user && isLoggedIn(user) && !isTutorOrAbove(user)) {
+    if (user && isLoggedIn(user)) {
         return <div className="dashboard w-100">
-            <span className="physics-welcome-text">Welcome back, {user.givenName}!</span>
             {deviceSize === "lg"
                 ? <>
                     <Row className="row-cols-3">
                         <Col className="mt-4">
-                            <GroupJoinPanel />
+                            <CurrentWorkPanel />
                         </Col>
                         <Col className="mt-4 panel-streak">
                             <DashboardStreakPanel />
@@ -174,19 +173,19 @@ export const StudentDashboard = () => {
                     </Row>
                     <Row>
                         <Col className="mt-4">
-                            <CurrentWorkPanel />
+                            <GroupJoinPanel />
                         </Col>
                     </Row></>
                 : <>
                     <Row className="row-cols-1 row-cols-sm-2 row-cols-xl-4">
                         <Col className="mt-4 col-xl-3">
-                            <GroupJoinPanel />
+                            <CurrentWorkPanel />
                         </Col>
                         <Col className="mt-4 col-xl-2 panel-streak">
                             <DashboardStreakPanel />
                         </Col>
                         <Col className="mt-4 col-sm-7 col-xl-4">
-                            <CurrentWorkPanel />
+                            <GroupJoinPanel />
                         </Col>
                         <Col className="mt-4 col-sm-5 col-xl-3">
                             <MyIsaacPanel />
