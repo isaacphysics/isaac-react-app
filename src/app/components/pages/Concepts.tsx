@@ -19,7 +19,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const concepts = useAppSelector((state: AppState) => state?.concepts?.results || null);
-    const pageContext = useUrlPageTheme();
+    const pageContext = useUrlPageTheme({resetIfNotFound: true});
 
     const subject = useAppSelector(selectors.pageContext.subject);
 

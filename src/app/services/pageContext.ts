@@ -125,9 +125,10 @@ function determinePageContextFromUrl(url: string): PageContextState {
  * A hook for updating the page context based on the URL. Only use on pages where the URL is the source of truth for the page context.
  * (i.e. subject-specific pages, like question finders, concept pages, etc.)
  * If you want to get the current page context from redux rather than the URL, use `useAppSelector(selectors.pageContext.context)` instead.
+ * @param resetIfNotFound - If true, the page context will be reset if the URL does not contain a valid page context. This should be true on pages with a "neutral" version and a "subject-specific" version.
  * @returns The current page context.
  */
-export function useUrlPageTheme(): {subject?: Subject; stage?: Stage} {
+export function useUrlPageTheme(params?: {resetIfNotFound?: boolean}): PageContextState {
     const location = useLocation();
     const dispatch = useAppDispatch();
 
@@ -138,6 +139,10 @@ export function useUrlPageTheme(): {subject?: Subject; stage?: Stage} {
                 subject: urlContext.subject, 
                 stage: urlContext.stage
             }));
+        } else {
+            if (params?.resetIfNotFound) {
+                dispatch(pageContextSlice.actions.resetPageContext());
+            }
         }
     }, [dispatch, location.pathname]);
 
