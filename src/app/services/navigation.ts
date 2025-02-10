@@ -14,6 +14,7 @@ import {
     GENERIC_QUESTION_CRUMB,
     HUMAN_STAGES,
     HUMAN_SUBJECTS,
+    isAda,
     isDefined,
     isDefinedContext,
     isFound,
@@ -44,7 +45,7 @@ export interface PageNavigation {
 }
 
 const defaultPageNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null, pageContext: NonNullable<PageContextState> | undefined, currentGameboard?: GameboardDTO) : PageNavigation => {
-    if (doc === NOT_FOUND || doc === null) {
+    if (isAda || doc === NOT_FOUND || doc === null) {
         return {breadcrumbHistory: [], currentGameboard};
     }
 
