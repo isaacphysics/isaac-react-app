@@ -24,7 +24,6 @@ import {
     NOT_FOUND, PATHS, siteSpecific,
     TAG_ID,
     useQueryParams,
-    useUserViewingContext
 } from "./";
 import {AudienceContext, ContentDTO, GameboardDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE, PageContextState} from "../../IsaacAppTypes";

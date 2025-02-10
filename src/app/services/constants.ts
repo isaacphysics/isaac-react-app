@@ -485,7 +485,7 @@ export const STAGE_TO_LEARNING_STAGE: {[stage in STAGE]: LearningStage | undefin
     scotland_advanced_higher: "a_level",
     core: "gcse",
     advanced: "a_level",
-}
+};
 
 export const HUMAN_STAGES: {[key: string]: string} = {
     "11_14": "11-14",
