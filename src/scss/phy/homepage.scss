@@ -17,6 +17,13 @@
     text-wrap: nowrap;
   }
 
+  h5 {
+    font-size: 14px;
+    font-family: $primary-font;
+    color: $color-neutral-500;
+    line-height: 1.1;
+  }
+  
   .news-events-link {
     text-wrap: nowrap;
     margin: 7px 16px 0px;
@@ -96,15 +103,23 @@
   }
 }
 
-.physics-welcome-text {
+.welcome-text {
   font-family: $secondary-font-bold;
   font-size: 24px;
+  background-color: white;
+  padding-left: 30px;
+  padding-top: 20px;
+}
+
+.dashboard-toggle {
+  background-color: white;
+  padding-left: 30px;
+  padding-top: 20px;
 }
 
 .dashboard {
   background-color: white;
-  padding: 50px 30px;
-  margin: 5px 0px;
+  padding: 10px 30px 50px;
 }
 
 $dashboard-panel-size: 120px;
@@ -138,6 +153,8 @@ $dashboard-panel-padding: 30px;
   border: 2px solid $color-neutral-200;
   border-radius: 8px;
   height: 100%;
+  max-height: 450px;
+  overflow-y: scroll;
   padding: $dashboard-panel-padding;
 
   h4 {
@@ -152,6 +169,10 @@ $dashboard-panel-padding: 30px;
     font-weight: 600;
   }
   
+  .plain-link {
+    text-decoration: none;
+  }
+
   .panel-link {
     color: $color-neutral-800;
     width: max-content;
@@ -175,6 +196,12 @@ $dashboard-panel-padding: 30px;
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  .book-title {
+    font-family: $secondary-font-medium;
+    font-size: 14px;
+    text-decoration: none;
   }
 
   .streak-panel-gauge {

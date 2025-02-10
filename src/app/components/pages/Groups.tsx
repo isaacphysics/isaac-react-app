@@ -450,7 +450,7 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
     </Row>;
 };
 
-type GroupSelectorProps = {
+interface GroupSelectorProps {
     user: RegisteredUserDTO;
     groups?: AppGroup[];
     allGroups: AppGroup[];
@@ -459,10 +459,11 @@ type GroupSelectorProps = {
     showArchived: boolean;
     setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
     groupNameInputRef: React.RefObject<HTMLInputElement>;
-    createNewGroup: (newGroupName: string) => Promise<boolean>;
+    createNewGroup?: (newGroupName: string) => Promise<boolean>;
+    showCreateGroup?: boolean;
 }
 
-export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup}: GroupSelectorProps) => {
+export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, showCreateGroup}: GroupSelectorProps) => {
     const dispatch = useAppDispatch();
 
     // Clear the selected group when switching between tabs
@@ -518,17 +519,18 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
 
     return <Card>
         <CardBody>
-            <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
-            <div className="d-none d-lg-block mb-3">
-                <Button block color="primary" outline onClick={() => {
-                    setSelectedGroupId(undefined);
-                    if (groupNameInputRef.current) {
-                        groupNameInputRef.current.focus();
-                    }
-                }}>Create new group</Button>
-            </div>
-            <hr/>
-            <div className="text-start mt-3">
+            {showCreateGroup && isDefined(createNewGroup) && <><MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
+                <div className="d-none d-lg-block mb-3">
+                    <Button block color="primary" outline onClick={() => {
+                        setSelectedGroupId(undefined);
+                        if (groupNameInputRef.current) {
+                            groupNameInputRef.current.focus();
+                        }
+                    }}>Create new group</Button>
+                </div>
+                {siteSpecific(<div className="section-divider"/>, <hr/>)}
+            </>}
+            <div className={classNames("text-start", {"mt-3": showCreateGroup})}>
                 <strong className={"me-2"}>Groups:</strong>
                 <UncontrolledButtonDropdown size="sm">
                     <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={"sm"}>
@@ -545,7 +547,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                 {tabs.map((tab, index) => {
                     return <NavItem key={index} className={classNames({"px-2": isPhy, "active": tab.active()})}>
                         <NavLink
-                            className={classNames("text-center", {"px-2": isAda})} tabIndex={0}
+                            className={classNames("text-center", {"group-nav-link": isPhy}, {"px-2": isAda})} tabIndex={0}
                             onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
                         >
                             {tab.name}
@@ -569,7 +571,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                                 </button>
                                 }
                             </div>
-                            {selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
+                            {createNewGroup && selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
                                 <GroupEditor user={user} group={selectedGroup} allGroups={allGroups} createNewGroup={createNewGroup}/>
                             </div>}
                         </div>)
@@ -643,7 +645,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
             <Row className="mb-5">
                 <Col lg={4}>
                     <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                        showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup}/>
+                        showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true}/>
                 </Col>
                 <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
                     <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />

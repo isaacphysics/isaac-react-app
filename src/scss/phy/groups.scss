@@ -15,3 +15,14 @@
     border-top: $table-border-color solid 1px;
   }
 }
+
+.group-nav-link {
+  font-size: 16px !important;
+}
+
+.nav-tabs .nav-item {
+  &.active .nav-link {
+    border-radius: 8px;
+    background-color: $color-brand-700;
+  }
+}
