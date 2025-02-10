@@ -559,7 +559,7 @@ export const SetAssignments = () => {
                     : <>
                         {isPhy && <h5>
                             Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view assignments by start date and due date.
-                            <hr/>
+                            <div className="section-divider my-4"/>
                         </h5>}
                         {isAda && <>
                             {boards && boards.totalResults > 0 && <h4>
