@@ -500,3 +500,9 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
         </Input>
     </ContentSidebar>;
 };
+
+export const MyAccountSidebar = (props: SidebarProps) => {
+    return <ContentSidebar buttonTitle="Account settings" {...props}>
+        {props.children}
+    </ContentSidebar>;
+};

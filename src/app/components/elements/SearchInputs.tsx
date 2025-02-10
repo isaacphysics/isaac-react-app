@@ -40,7 +40,7 @@ export const PhySearchInput = withSearch(({inputProps, setSearchText, searchText
     return <>
         <Label for='header-search' className='visually-hidden'>Search</Label>
         <Input
-            id="header-search" className="navbar-search" {...inputProps}
+            id="header-search" {...inputProps}
             value={searchText} onChange={setSearchTextAsValue}
         />
         <SearchButton/>

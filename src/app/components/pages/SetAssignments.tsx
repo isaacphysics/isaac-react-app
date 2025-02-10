@@ -97,7 +97,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
     }
 
     const yearRange = range(currentYear, currentYear + 5);
-    const dueDateInvalid = dueDate && scheduledStartDate ? (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf() || TODAY().valueOf() > dueDate.valueOf()) : false;
+    const dueDateInvalid = isDefined(dueDate) && ((scheduledStartDate ? (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) : false) || TODAY().valueOf() > dueDate.valueOf());
     const startDateInvalid = scheduledStartDate ? TODAY().valueOf() > scheduledStartDate.valueOf() : false;
 
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
@@ -125,14 +125,14 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
                 onChange={setScheduledStartDateAtSevenAM} />
             {startDateInvalid && <small className={"pt-2 text-danger"}>Start date must be in the future.</small>}
         </Label>
-        <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
+        <Label className="w-100 pb-2">Due date reminder
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date and in the future.</small>}
             {dueDateInvalid && startDateInvalid && <br/>}
         </Label>
         <Alert color={siteSpecific("warning", "info")} className="py-1 px-2">
-            From {siteSpecific("Jan", "January")} 2025, due dates will be required for assignments.
+            Since {siteSpecific("Jan", "January")} 2025, due dates are required for assignments.
         </Alert>
         {isEventLeaderOrStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
@@ -151,7 +151,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
             block color={siteSpecific("secondary", "primary")}
             onClick={assign}
             role={"button"}
-            disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || dueDateInvalid || startDateInvalid}
+            disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !dueDate || dueDateInvalid || startDateInvalid}
         >Assign to group{selectedGroups.length > 1 ? "s" : ""}</Button>
     </Container>;
 };
