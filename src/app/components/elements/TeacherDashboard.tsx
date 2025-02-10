@@ -59,18 +59,7 @@ const AssignmentCard = ({assignmentId, groupName}: AssignmentCardProps) => {
         return <Link to={`/assignment_progress/${assignmentId}`} className="plain-link">
             <Card key={assignmentId} className="p-3 my-2 w-100 assignment-card">
                 <Row>
-                    {deviceSize === "lg" && <Col className="col-3 d-flex flex-column me-4">
-                        <div className="d-flex justify-content-center board-subject-hexagon-size my-2">
-                            <div className="board-subject-hexagon-container justify-content-center">
-                                {generateGameboardSubjectHexagons(boardSubjects)}
-                            </div>
-                            <PhyHexIcon icon="page-icon-question-pack" subject={boardSubjects[0] as Subject} className="assignment-hex ps-3"/>
-                        </div>
-                        {boardSubjects.length > 0 && <div className="mb-2">
-                            {boardSubjects.map((subject) => <div key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</div>)}
-                        </div>}
-                    </Col>}
-                    {deviceSize !== "lg" && <i className="icon icon-question-pack" />}
+                    <i className="icon icon-question-pack" />
                     <Col>
                         <div>
                             <h5>{gameboard?.title ?? ""}</h5>
