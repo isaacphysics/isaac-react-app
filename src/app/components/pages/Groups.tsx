@@ -1,4 +1,5 @@
 import React, {MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
+import {connect} from "react-redux";
 import {
     Button,
     ButtonDropdown,
@@ -21,8 +22,9 @@ import {
     UncontrolledButtonDropdown,
     UncontrolledTooltip
 } from "reactstrap";
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import {
+    AppState,
     mutationSucceeded,
     resetMemberPassword,
     showAdditionalManagerSelfRemovalModal,
@@ -556,9 +558,9 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                     ? sortedGroups.map((g: AppGroup) =>
                         <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                             <div className="d-flex justify-content-between align-items-center group-name-buttons">
-                                <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
+                                <Link to={`/groups#${g.id}`} title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 group-name d-flex flex-fill">
                                     {g.groupName}
-                                </Button>
+                                </Link>
                                 {showArchived &&
                                 <button
                                     onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
@@ -578,7 +580,14 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
     </Card>;
 };
 
-export const Groups = ({user}: {user: RegisteredUserDTO}) => {
+const stateToProps = (_state: AppState, props: any) => {
+    const {location: {hash}} = props;
+    return {
+        hashAnchor: hash?.slice(1) ?? null
+    };
+};
+
+const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAnchor: number}) => {
     const dispatch = useAppDispatch();
     const [showArchived, setShowArchived] = useState(false);
     const groupQuery = useGetGroupsQuery(showArchived);
@@ -589,7 +598,12 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
 
     const [createGroup] = useCreateGroupMutation();
 
-    const [selectedGroupId, setSelectedGroupId] = useState<number>();
+    const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>();
+    useEffect(() => {
+        // @ts-ignore
+        const tab: number = hashAnchor && parseInt(hashAnchor);
+        setSelectedGroupId(tab);
+    }, [hashAnchor]);
     const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
 
     const createNewGroup: (newGroupName: string) => Promise<boolean> = async (newGroupName: string) => {
@@ -638,3 +652,5 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
         </ShowLoadingQuery>
     </Container>;
 };
+
+export const Groups = withRouter(connect(stateToProps)(GroupsComponent));
