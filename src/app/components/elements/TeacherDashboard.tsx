@@ -3,7 +3,7 @@ import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQue
 import { skipToken } from '@reduxjs/toolkit/query';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { above, below, determineGameboardSubjects, generateGameboardSubjectHexagons, HUMAN_SUBJECTS, isDefined, isLoggedIn, isTutorOrAbove, TAG_ID, tags, useDeviceSize } from '../../services';
+import { above, determineGameboardSubjects, generateGameboardSubjectHexagons, HUMAN_SUBJECTS, isDefined, isLoggedIn, isTutorOrAbove, TAG_ID, tags, useDeviceSize } from '../../services';
 import { useAssignmentsCount } from '../navigation/NavigationBar';
 import { BookInfo, isaacBooks } from './modals/IsaacBooksModal';
 import { AssignmentDTO, RegisteredUserDTO } from '../../../IsaacApiTypes';
@@ -23,7 +23,7 @@ const GroupsPanel = () => {
     const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
     const groupNameInputRef = useRef<HTMLInputElement>(null);
 
-    return <div className="w-100 dashboard-panel">
+    return <div className="dashboard-panel">
         <Link to="/groups" className="plain-link">
             <h4>Manage my groups</h4>
         </Link>
@@ -59,7 +59,7 @@ const AssignmentCard = ({assignmentId, groupName}: AssignmentCardProps) => {
         return <Link to={`/assignment_progress/${assignmentId}`} className="plain-link">
             <Card key={assignmentId} className="p-3 my-2 w-100 assignment-card">
                 <Row>
-                    {above["md"](deviceSize) && <Col className="col-3 d-flex flex-column me-4">
+                    {deviceSize === "lg" && <Col className="col-3 d-flex flex-column me-4">
                         <div className="d-flex justify-content-center board-subject-hexagon-size my-2">
                             <div className="board-subject-hexagon-container justify-content-center">
                                 {generateGameboardSubjectHexagons(boardSubjects)}
@@ -70,7 +70,7 @@ const AssignmentCard = ({assignmentId, groupName}: AssignmentCardProps) => {
                             {boardSubjects.map((subject) => <div key={subject} className="badge rounded-pill bg-theme me-1" data-bs-theme={subject}>{HUMAN_SUBJECTS[subject]}</div>)}
                         </div>}
                     </Col>}
-                    {below["sm"](deviceSize) && <i className="icon icon-question-pack" />}
+                    {deviceSize !== "lg" && <i className="icon icon-question-pack" />}
                     <Col>
                         <div>
                             <h5>{gameboard?.title ?? ""}</h5>
@@ -115,7 +115,7 @@ const AssignmentsPanel = () => {
     const sortedAssignments = getSortedAssignments(assignmentsSetByMe);
     const upcomingAssignments = sortedAssignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false);
 
-    return <div className="w-100 dashboard-panel">
+    return <div className="dashboard-panel">
         <Link to="/assignment_schedule"  className="plain-link">
             <h4>Assignment schedule</h4>
         </Link>
@@ -126,10 +126,10 @@ const AssignmentsPanel = () => {
 const MyIsaacPanel = () => {
     const deviceSize = useDeviceSize();
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
-    return <div className='w-100 dashboard-panel'>
+    return <div className='dashboard-panel'>
         <h4>More in My Isaac</h4>
         <div className="d-flex flex-column flex-sm-row">
-            <div>
+            <div className="col">
                 <h5>STUDENT</h5>
                 <Link to="/my_gameboards" className='d-block panel-my-isaac-link'>
                     My question packs
@@ -147,7 +147,7 @@ const MyIsaacPanel = () => {
                 </Link>
             </div>                
             <div className={above["sm"](deviceSize) ? "section-divider-y" : "section-divider"}/>
-            <div>
+            <div className="col">
                 <h5>{"TEACHER"}</h5>
                 <Link to="/teacher_features" className='d-block panel-my-isaac-link'>
                     Teacher features
@@ -182,7 +182,7 @@ const MyIsaacPanel = () => {
 
 const BookCard = ({title, image, path}: BookInfo) => {
     return <Card className="p-2 h-100" style={{minWidth: "100px"}}>  
-        <Link to={path} className="book-title">
+        <Link to={path} className="book">
             <img src={image} alt={title} className="w-100"/>
             <div className="mt-2">{title}</div>
         </Link>
@@ -205,7 +205,7 @@ const BooksPanel = () => {
                 {/* No biology books */}
             </StyledDropdown>
         </div>
-        <Row className="row-cols-2 row-cols-lg-6 row-cols-xl-2 flex-nowrap">
+        <Row className="row-cols-3 row-cols-sm-4 row-cols-md-3 row-cols-xl-4 row-cols-xxl-2 flex-nowrap">
             {isaacBooks.filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2">
@@ -216,42 +216,23 @@ const BooksPanel = () => {
 };
 
 export const TeacherDashboard = () => {
-    const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
     if (user && isLoggedIn(user) && isTutorOrAbove(user)) {
         return <div className="dashboard w-100">
-            {deviceSize === "lg" ?
-                <>
-                    <Row className="row-cols-1 row-cols-sm-2 row-cols-lg-3">
-                        <Col className="mt-4">
-                            <GroupsPanel />
-                        </Col>
-                        <Col className="mt-4">
-                            <AssignmentsPanel />
-                        </Col>
-                        <Col className="mt-4">
-                            <MyIsaacPanel />
-                        </Col>
-                    </Row>
-                    <Row className="mt-4">
-                        <BooksPanel />
-                    </Row>
-                </> :
-                <Row className="row-cols-1 row-cols-sm-2 row-cols-lg-4">
-                    <Col className="mt-4">
-                        <GroupsPanel />
-                    </Col>
-                    <Col className="mt-4">
-                        <AssignmentsPanel />
-                    </Col>
-                    <Col className="mt-4">
-                        <BooksPanel />
-                    </Col>
-                    <Col className="mt-4">
-                        <MyIsaacPanel />
-                    </Col>
-                </Row>
-            }
+            <Row className="row-cols-1 row-cols-sm-2 row-cols-lg-4 dashboard-cols">
+                <Col className="mt-4">
+                    <GroupsPanel />
+                </Col>
+                <Col className="mt-4">
+                    <AssignmentsPanel />
+                </Col>
+                <Col className="mt-4">
+                    <BooksPanel />
+                </Col>
+                <Col className="mt-4">
+                    <MyIsaacPanel />
+                </Col>
+            </Row>
         </div>;
     }
 };

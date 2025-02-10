@@ -198,7 +198,7 @@ $dashboard-panel-padding: 30px;
     }
   }
 
-  .book-title {
+  .book {
     font-family: $secondary-font-medium;
     font-size: 14px;
     text-decoration: none;
@@ -245,5 +245,18 @@ a:has(.assignment-card) {
   &:hover {
     scale: 1.02;
     border-color: $color-neutral-400;
+  }
+}
+
+// custom breakpoints for dashboard panel widths
+@media (min-width: 992px) and (max-width: 1405px) {
+  .dashboard-cols > * {
+      flex: 0 0 auto;
+      width: 50%;
+  }
+}
+@media (max-width: 731px) {
+  .dashboard-cols > * {
+      width: 100%;
   }
 }
