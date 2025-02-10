@@ -49,7 +49,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
     const card = <div className="px-3 py-2 flex-grow-1">
         <Row data-testid="my-assignment">
-            <Col md={8} className="d-flex flex-column align-items-start">
+            <Col sm={isSetAssignments ? 8 : 12} md={8} className="d-flex flex-column align-items-start">
                 <div className="d-flex align-items-center">
                     <div className="d-flex justify-content-center board-subject-hexagon-size me-4 my-2">
                         <div className="board-subject-hexagon-container justify-content-center">
@@ -75,13 +75,13 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
                 <Spacer/>
                 
-                {above['md'](deviceSize) && <Button className="my-2 btn-underline" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
+                {above[isSetAssignments ? 'sm' : 'md'](deviceSize) && <Button className="my-2 btn-underline" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
                     {showMore ? "Hide details" : "Show details"}
                 </Button>}
             </Col>
 
-            <Col md={4} className="d-flex flex-column justify-content-between">
-                <div className={classNames("d-flex flex-wrap justify-content-center justify-content-md-end", 
+            <Col sm={isSetAssignments ? 4 : 12} md={4} className="d-flex flex-column justify-content-between">
+                <div className={classNames("d-flex flex-wrap justify-content-center justify-content-sm-end", 
                     {"justify-content-lg-center justify-content-xl-end column-gap-5 column-gap-md-4": !isSetAssignments},
                 )}>
                     {!isSetAssignments 
@@ -111,7 +111,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                     }
                 </div>
                 {isSetAssignments 
-                    ? <Button color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
+                    ? above['md'](deviceSize) && <Button className="mb-2" color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
                         Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
                     </Button> 
                     : boardLink && <div className="card-share-link">
@@ -119,7 +119,13 @@ export const GameboardCard = (props: GameboardCardProps) => {
                     </div>
                 }
 
-                {!above['md'](deviceSize) && <Button className="my-2 btn-underline w-max-content" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
+                {isSetAssignments && !above['md'](deviceSize) &&
+                    <Button className="mb-2" color="keyline" onClick={(e) => {e.preventDefault(); setAssignmentsDetails.toggleAssignModal?.();}}>
+                        Assign{!isDefined(setAssignmentsDetails.groupCount) || setAssignmentsDetails.groupCount > 0 && " / Unassign"}
+                    </Button> 
+                }
+
+                {!above[isSetAssignments ? 'sm' : 'md'](deviceSize) && <Button className="my-2 btn-underline w-max-content" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
                     {showMore ? "Hide details" : "Show details"}
                 </Button>}
             </Col>
