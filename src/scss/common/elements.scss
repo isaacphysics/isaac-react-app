@@ -364,3 +364,40 @@ iframe.email-html {
     display: block;
   }
 }
+
+.tab-picker {
+  cursor: pointer;
+  border-left: solid 2px transparent;
+
+  .badge.rounded-pill {
+    background-color: white;
+    color: var(--bs-body-color-rgb);
+  }
+
+  background-size: 205% 100%;
+  background-image: linear-gradient(90deg, var(--subject-color-100) 50%, transparent 50%);
+  background-position: 100% 0%;
+  transition: background-position 0.3s ease-in-out;
+  
+  &:has(> input:checked) {
+    border-left: solid 2px var(--sidebar-tab-active);
+    background-position: 0% 0%;
+    
+    .badge.rounded-pill {
+      background-color: var(--sidebar-tab-active);
+      color: white;
+    }
+  }
+
+  &:hover:not(:has(> input:checked)) {
+    border-left: solid 2px var(--sidebar-tab-hover);
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  > input {
+    display: none;
+  }
+}
