@@ -98,7 +98,7 @@ def ask_to_run_command(command,
                 stdout_data.append(decoded_chunk)  # Store for later
 
             return_code = proc.wait()
-            output = ''.join(stdout_data)
+            output = ''.join(stdout_data).strip()
         if return_code == 0:
             return output
         elif expected_nonzero_exit_codes and return_code in expected_nonzero_exit_codes:
