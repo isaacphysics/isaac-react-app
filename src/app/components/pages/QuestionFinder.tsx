@@ -26,7 +26,7 @@ import {
     useQueryParams,
     useUrlPageTheme,
 } from "../../services";
-import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, Difficulty, ExamBoard, Stage} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {RouteComponentProps, useHistory, withRouter} from "react-router";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -41,7 +41,7 @@ import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, L
 import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { Tag } from "../../../IsaacAppTypes";
+import { Subject, Tag } from "../../../IsaacAppTypes";
 import { PrintButton } from "../elements/PrintButton";
 import { EditContentButton } from "../elements/EditContentButton";
 import { ShareLink } from "../elements/ShareLink";
@@ -101,19 +101,19 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
     return selectionItems;
 }
 
-export function pruneTreeNode(tree: ChoiceTree[], filter: string, recursive?: boolean): ChoiceTree[] {
+export function pruneTreeNode(tree: ChoiceTree[], filter: string, recursive?: boolean, pageContext?: {subject?: Subject; stage?: Stage}): ChoiceTree[] {
     let newTree = [...tree];
     newTree.forEach((tier, i) => {
         if (tier[filter as TAG_ID]) { // removing children of node
-            Object.values(tier[filter as TAG_ID] || {}).forEach(v => pruneTreeNode(newTree, v.value, recursive));
+            Object.values(tier[filter as TAG_ID] || {}).forEach(v => pruneTreeNode(newTree, v.value, recursive, pageContext));
             delete newTree[i][filter as TAG_ID];
         } else { // removing node itself
             const parents = Object.keys(tier);
             parents.forEach(parent => {
                 if (newTree[i][parent as TAG_ID]?.some(c => c.value === filter)) {
                     newTree[i][parent as TAG_ID] = newTree[i][parent as TAG_ID]?.filter(c => c.value !== filter);
-                    if (recursive && newTree[i][parent as TAG_ID]?.length === 0) {
-                        newTree = pruneTreeNode(newTree, parent, true);
+                    if (recursive && newTree[i][parent as TAG_ID]?.length === 0 && parent !== pageContext?.subject && parent !== pageContext?.stage) {
+                        newTree = pruneTreeNode(newTree, parent, true, pageContext);
                     }
                 }
             });
@@ -445,7 +445,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         if (searchStages.includes(filter as STAGE)) {
             setSearchStages(searchStages.filter(f => f !== filter));
         } else if (getChoiceTreeLeaves(selections).some(leaf => leaf.value === filter)) {
-            setSelections(pruneTreeNode(selections, filter, true));
+            setSelections(pruneTreeNode(selections, filter, true, pageContext));
         } else if (searchDifficulties.includes(filter as Difficulty)) {
             setSearchDifficulties(searchDifficulties.filter(f => f !== filter));
         } else if (searchExamBoards.includes(filter as ExamBoard)) {

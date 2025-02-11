@@ -21,41 +21,6 @@
         cursor: pointer;
         transition: all 250ms cubic-bezier(0.1, 0.75, 0.5, 1);
 
-        &.checked {
-          background: #000;
-          border-color: #000;
-
-          &:hover, &:disabled {
-            background: #333;
-            border-color: #333;
-          }
-
-          &[color="primary"] {
-            background: $color-brand-500;
-            border-color: $color-brand-500;
-
-            &:hover, &:disabled {
-              background: darken($color-brand-500, 10%);
-              border-color: darken($color-brand-500, 10%);
-            }
-          }
-
-          &[color="danger"] {
-            background: $danger;
-            border-color: $danger;
-
-            &:hover, &:disabled {
-              background: darken($danger, 10%);
-              border-color: darken($danger, 10%);
-            }
-          }
-        }
-
-        &:not(.checked):hover, &:not(.checked):disabled {
-          background: #f8f8f8;
-          border-color: #666;
-        }
-
         &.is-invalid {
           border-color: $form-invalid-border-color !important;
         }
@@ -64,42 +29,8 @@
           box-shadow: 0 0 0 0.1em #000;
         }
       }
-
-      .tick {
-        position: absolute;
-        display: block;
-        width: 22px;
-        height: 22px;
-        top: 4px;
-        margin-left: 1px;
-        transform: rotate(45deg);
-        -webkit-transform: rotate(45deg);
-        -ms-transform: rotate(45deg);
-        pointer-events: none;
-        z-index: 1;
-
-        &::before {
-          content: "";
-          position: absolute;
-          width: 2px;
-          height: 12px;
-          background-color: #fff;
-          left: 11px;
-          top: 2px;
-        }
-
-        &::after{
-          content: "";
-          position: absolute;
-          width: 7px;
-          height: 2px;
-          background-color: #fff;
-          left: 6px;
-          top: 13px;
-        }
-      }
     }
-
+    
     > label {
       width: fit-content;
       margin: 0;

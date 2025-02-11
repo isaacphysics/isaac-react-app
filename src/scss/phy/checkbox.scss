@@ -1,0 +1,43 @@
+@import "../common/checkbox";
+
+.styled-checkbox-wrapper div input[type="checkbox"]{
+    border: none;
+}
+
+.icon-checkbox-off {
+    @include svg-icon(
+        '/assets/phy/icons/redesign/checkbox-bg.svg',
+        1.6em, 1.6em, 1.6em
+    );
+}
+  
+.icon-checkbox-partial {
+    @include svg-icon-layered(
+        '/assets/phy/icons/redesign/checkbox-partial-fg.svg',
+        '/assets/phy/icons/redesign/checkbox-bg.svg',
+        1.6em, 1.6em, 1.6em
+    );
+}
+  
+.icon-checkbox-partial-alt {
+    @include svg-icon-layered(
+        '/assets/phy/icons/redesign/checkbox-partial-alt-fg.svg',
+        '/assets/phy/icons/redesign/checkbox-bg.svg',
+        1.6em, 1.6em, 1.6em
+    );
+}
+  
+.icon-checkbox-selected {
+    @include svg-icon-layered(
+        '/assets/phy/icons/redesign/checkbox-selected-fg.svg',
+        '/assets/phy/icons/redesign/checkbox-selected-bg.svg',
+        1.6em, 1.6em, 1.6em
+    );
+  
+    &::before {
+        background-color: $color-brand-500;
+    }
+    &::after {
+        background-color: $color-neutral-100;
+    }
+}
