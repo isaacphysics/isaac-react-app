@@ -1,33 +1,23 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
-import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQuery, useGetSingleSetAssignmentQuery } from '../../state';
+import { selectors, useAppSelector, useGetMySetAssignmentsQuery, useGetSingleSetAssignmentQuery } from '../../state';
 import { skipToken } from '@reduxjs/toolkit/query';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { above, isDefined, isLoggedIn, isTutorOrAbove, TAG_ID, tags, useDeviceSize } from '../../services';
 import { useAssignmentsCount } from '../navigation/NavigationBar';
 import { BookInfo, isaacBooks } from './modals/IsaacBooksModal';
-import { AssignmentDTO, RegisteredUserDTO } from '../../../IsaacApiTypes';
+import { AssignmentDTO } from '../../../IsaacApiTypes';
 import { GroupSelector } from '../pages/Groups';
 import { Subject } from '../../../IsaacAppTypes';
 import { StyledDropdown } from './inputs/DropdownInput';
 
 const GroupsPanel = () => {
-    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    const [showArchived, setShowArchived] = useState(false);
-    const groupQuery = useGetGroupsQuery(showArchived);
-    const { currentData: groups, isLoading, isFetching } = groupQuery;
-    const otherGroups = useGetGroupsQuery(!showArchived);
-    const allGroups = [...(groups ?? []) , ...(otherGroups.currentData ?? [])];
-    const [selectedGroupId, setSelectedGroupId] = useState<number>();
-    const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
     const groupNameInputRef = useRef<HTMLInputElement>(null);
-
     return <div className="dashboard-panel">
         <Link to="/groups" className="plain-link">
             <h4>Manage my groups</h4>
         </Link>
-        <GroupSelector allGroups={allGroups} groupNameInputRef={groupNameInputRef} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
-            setShowArchived={setShowArchived} groups={groups} user={user} selectedGroup={selectedGroup} showCreateGroup={false} />
+        <GroupSelector groupNameInputRef={groupNameInputRef} showCreateGroup={false} />
     </div>;
 };
 
@@ -169,7 +159,7 @@ const MyIsaacPanel = () => {
 
 const BookCard = ({title, image, path}: BookInfo) => {
     return <Card className="p-2 h-100" style={{minWidth: "100px"}}>  
-        <Link to={path} className="book">
+        <Link to={path} className="book-title">
             <img src={image} alt={title} className="w-100"/>
             <div className="mt-2">{title}</div>
         </Link>

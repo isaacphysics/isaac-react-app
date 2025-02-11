@@ -27,12 +27,14 @@ import {
     AppState,
     mutationSucceeded,
     resetMemberPassword,
+    selectors,
     showAdditionalManagerSelfRemovalModal,
     showErrorToast,
     showGroupEmailModal,
     showGroupInvitationModal,
     showGroupManagersModal,
     useAppDispatch,
+    useAppSelector,
     useCreateGroupMutation,
     useDeleteGroupMemberMutation,
     useDeleteGroupMutation,
@@ -451,20 +453,23 @@ const MobileGroupCreatorComponent = ({className, createNewGroup, allGroups}: Gro
 };
 
 interface GroupSelectorProps {
-    user: RegisteredUserDTO;
-    groups?: AppGroup[];
-    allGroups: AppGroup[];
-    selectedGroup?: AppGroup;
-    setSelectedGroupId: React.Dispatch<React.SetStateAction<number | undefined>>;
-    showArchived: boolean;
-    setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
     groupNameInputRef: React.RefObject<HTMLInputElement>;
     createNewGroup?: (newGroupName: string) => Promise<boolean>;
     showCreateGroup?: boolean;
 }
 
-export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, showCreateGroup}: GroupSelectorProps) => {
+export const GroupSelector = ({groupNameInputRef, createNewGroup, showCreateGroup}: GroupSelectorProps) => {
     const dispatch = useAppDispatch();
+
+    // TODO reorder these
+    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
+    const [showArchived, setShowArchived] = useState(false);
+    const groupQuery = useGetGroupsQuery(showArchived);
+    const { currentData: groups, isLoading, isFetching } = groupQuery;
+    const otherGroups = useGetGroupsQuery(!showArchived);
+    const allGroups = [...(groups ?? []) , ...(otherGroups.currentData ?? [])];
+    const [selectedGroupId, setSelectedGroupId] = useState<number>();
+    const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
 
     // Clear the selected group when switching between tabs
     const switchTab = (archived: boolean) => {
@@ -521,12 +526,14 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
         <CardBody>
             {showCreateGroup && isDefined(createNewGroup) && <><MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup} allGroups={allGroups}/>
                 <div className="d-none d-lg-block mb-3">
-                    <Button block color="primary" outline onClick={() => {
-                        setSelectedGroupId(undefined);
-                        if (groupNameInputRef.current) {
-                            groupNameInputRef.current.focus();
-                        }
-                    }}>Create new group</Button>
+                    <Link to="/groups" className="w-100" style={{textDecoration: "none"}}>
+                        <Button block color="primary" outline onClick={() => {
+                            setSelectedGroupId(undefined);
+                            if (groupNameInputRef.current) {
+                                groupNameInputRef.current.focus();
+                            }
+                        }}>Create new group</Button>
+                    </Link>
                 </div>
                 {siteSpecific(<div className="section-divider"/>, <hr/>)}
             </>}
@@ -644,8 +651,7 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <Row className="mb-5">
                 <Col lg={4}>
-                    <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
-                        showArchived={showArchived} setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true}/>
+                    <GroupSelector groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true}/>
                 </Col>
                 <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
                     <GroupEditor group={selectedGroup} allGroups={allGroups} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
