@@ -45,7 +45,7 @@ export default {
         "2. Students and teachers create or log in to an account",
         "3. Attend our Q&A sessions for tips and tricks on entries (coming soon)",
         "4. Boost your knowledge with our Student Boosters and Gameboards",
-        "5. Submit your entry! The finalists will be selected and invited to a final in Manchester, Birmingham, or London (depending on the location of your school) in June",
+        "5. Submit your entry! The finalists will be selected and invited to a final in Birmingham on 19 May.",
       ],
     },
     whyJoin: {
