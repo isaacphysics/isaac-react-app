@@ -148,7 +148,10 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     return <div className={classNames("accordion", {"active-border": isPhy && !page && isOpen})}>
         <button 
-            className={classNames("accordion-header d-flex w-100 p-0 align-items-stretch", {"de-emphasised": deEmphasised || disabled, "active": isOpen})}
+            className={classNames(
+                "accordion-header d-flex w-100 p-0 align-items-stretch", 
+                {"de-emphasised": deEmphasised || disabled, "active": isOpen, "btn btn-link": isAda}
+            )}
             id={anchorId || ""} type="button"
             tabIndex={disabled ? -1 : 0}
             onFocus={(e) => {
@@ -182,7 +185,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     </>
                 )}
             </span>}
-            <div className="d-flex ps-3 align-items-center flex-grow-1">
+            <div className={classNames("d-flex align-items-center flex-grow-1", siteSpecific("ps-3", "ps-1"))}>
                 {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
                 <span className="accordion-part p-3 text-theme text-nowrap">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
                 {trustedTitle && <div className="accordion-title p-3 ps-1">
