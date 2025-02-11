@@ -245,6 +245,44 @@
   )
 }
 
+.icon-checkbox-partial-alt {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/checkbox-partial-alt-fg.svg',
+    '/assets/phy/icons/redesign/checkbox-partial-bg.svg',
+    16px, 16px
+  );
+}
+
+.icon-checkbox-partial {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/checkbox-partial-fg.svg',
+    '/assets/phy/icons/redesign/checkbox-partial-bg.svg',
+    16px, 16px
+  );
+}
+
+.icon-checkbox-selected {
+  @include svg-icon-layered(
+    '/assets/phy/icons/redesign/checkbox-selected-fg.svg',
+    '/assets/phy/icons/redesign/checkbox-selected-bg.svg',
+    16px, 16px
+  );
+
+  &::before {
+      background-color: $color-brand-500;
+  }
+
+  &::after {
+      background-color: $color-neutral-100;
+  }
+}
+
+.icon-checkbox-off {
+  @include svg-icon(
+      '/assets/phy/icons/redesign/checkbox-off.svg',
+      16px, 16px
+  );
+}
 
 svg {
   &.almost-fill {

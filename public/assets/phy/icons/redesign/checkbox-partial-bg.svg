@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="16"
+   height="16"
+   viewBox="0 0 16 16"
+   fill="none"
+   version="1.1"
+   id="svg1"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <linearGradient
+       id="swatch3">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="0"
+         id="stop3" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#swatch3"
+       id="linearGradient3"
+       x1="0"
+       y1="8"
+       x2="16"
+       y2="8"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <rect
+     x="0.5"
+     y="0.5"
+     width="15"
+     height="15"
+     rx="1.5"
+     fill="#ffffff"
+     stroke="#6f6f78"
+     id="rect1"
+     style="fill:url(#linearGradient3);fill-opacity:0" />
+  <path
+     style="fill:#ffffff;fill-opacity:0;stroke-width:0.021;stroke-dasharray:none"
+     d="M 1.6907815,14.937591 C 1.3882061,14.833526 1.1636142,14.607281 1.0612539,14.303429 1.0194199,14.179247 1.019305,14.161978 1.019305,8 c 0,-6.1619783 1.149e-4,-6.1792465 0.041949,-6.3034287 C 1.164369,1.3904788 1.3900548,1.1645119 1.6953799,1.0616553 L 1.8210947,1.019305 H 8 14.178905 l 0.125715,0.04235 c 0.305484,0.10291 0.531005,0.3288053 0.63426,0.6353127 0.04206,0.1248535 0.04208,0.1282205 0.0368,6.3388152 l -0.0053,6.2138951 -0.07558,0.158266 c -0.12562,0.26306 -0.322904,0.440354 -0.590202,0.530401 l -0.125715,0.04235 -6.1834033,-6.9e-4 C 1.83995,14.979319 1.8115514,14.979128 1.6907815,14.937591 Z"
+     id="path3" />
+</svg>

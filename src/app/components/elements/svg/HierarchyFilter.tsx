@@ -20,7 +20,7 @@ import classNames from "classnames";
 import {StyledSelect} from "../inputs/StyledSelect";
 import { Label } from "reactstrap";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
-import { ChoiceTree } from "../panels/QuestionFinderFilterPanel";
+import { ChoiceTree, getChoiceTreeLeaves } from "../panels/QuestionFinderFilterPanel";
 import { pruneTreeNode } from "../../pages/QuestionFinder";
 
 export type TierID = "subjects" | "fields" | "topics";
@@ -54,12 +54,13 @@ export function HierarchyFilterHexagonal({tier, index, tiers, choices, selection
     return <div className={classNames("ms-3", className)}>
         {choices[tier] && choices[tier][index] && choices[tier][index].map((choice) => {
             const isSelected = selections[tier] && selections[tier][index]?.map(s => s.value).includes(choice.value);
+            const isLeaf = getChoiceTreeLeaves(selections).map(l => l.value).includes(choice.value);
             function selectValue() {
                 let newSelections = [...selections];
                 if (selections[tier] && selections[tier][index]) {
-                    if (isSelected) {
+                    if (isSelected) { // Remove the node from the tree
                         newSelections = pruneTreeNode(newSelections, choice.value);
-                    } else {
+                    } else { // Add the node to the tree
                         newSelections[tier][index]?.push(choice);
                     }
                 }
@@ -69,13 +70,17 @@ export function HierarchyFilterHexagonal({tier, index, tiers, choices, selection
                 setSelections(newSelections);
             };
 
-            return <div key={choice.value} className={classNames("ps-3", {"ms-2": tier===0, "search-field": tier===2, "bg-white": tier===0 && isSelected, "bg-grey": tier===1 && isSelected})}>
-                <StyledCheckbox
-                    color="primary"
-                    checked={isSelected}
-                    onChange={selectValue}
-                    label={<span>{choice.label}</span>}
-                />
+            return <div key={choice.value} className={classNames("ps-2", {"ms-2": tier===0, "search-field": tier===2, "bg-white": tier===0 && isSelected, "bg-grey": tier===1 && isSelected})}>
+                <div className="d-flex align-items-center">
+                    <i 
+                        className={classNames({"icon-checkbox-off": !isSelected, "icon icon-checkbox-partial-alt": isSelected && !isLeaf, "icon-checkbox-selected": isLeaf})} 
+                        onClick={selectValue}
+                        onKeyDown={() => ifKeyIsEnter(selectValue)}
+                        role="button"
+                        tabIndex={0}
+                    />
+                    <span className="ms-2">{choice.label}</span>
+                </div>
                 {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
                     <HierarchyFilterHexagonal {...{tier: tier+1, index: choice.value, tiers, choices, selections, questionFinderFilter, setSelections}} className={classNames({"bg-white": tier===0})}/>
                 }

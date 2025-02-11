@@ -47,7 +47,7 @@ export const CollapsibleList = (props: CollapsibleListProps) => {
             </button>
         </div>
         <Row 
-            className={`collapsible-body overflow-hidden ${expanded ? "open" : "closed"}`} 
+            className={classNames("collapsible-body overflow-hidden", {"open": expanded, "d-none closed": !expanded})} 
             style={{height: expanded ? expandedHeight : 0, maxHeight: expanded ? expandedHeight : 0}}
         >
             <Col>
