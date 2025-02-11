@@ -28,7 +28,8 @@
   background-image: url(/assets/cs/icons/flag-black.svg);
 }
 
-.accordion .accordion-header {
+.accordion button.accordion-header {
+  background: none;
   span, button, button:hover {
     color: black !important;
 
@@ -37,19 +38,15 @@
     }
   }
 
-  button::after {
+  &::after {
     width: 30px;
     height: 10px;
     background-position: right;
     margin: auto 1rem auto 0;
   }
-
-  h2 {
-    font-size: inherit !important;
-  }
 }
 
-.accordion-header button {
+button.accordion-header {
   &:after {
     content: "";
     background: url('/assets/common/icons/chevron_down.svg') no-repeat center center;
