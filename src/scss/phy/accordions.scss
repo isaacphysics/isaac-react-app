@@ -1,11 +1,11 @@
 @import "../common/accordions";
 
 .accordion {
-  box-shadow: 0 2px 30px 0 $shadow-08;
   background: #FBFBFB;
-  border: 1px solid $color-neutral-300;
+  border: 2px solid $color-neutral-300;
   border-radius: 8px;
   margin-bottom: 8px;
+  transition: border-color 0.2s ease-in-out, outline 0.2s ease-in-out;
 
   .accordion-header {
     background: rgba(white, 1);
@@ -18,8 +18,8 @@
     padding-top: 0;
   }
 
-  .active-border{
-    border: 5px solid $color-brand-500;
+  &.active-border {
+    border-color: var(--nav-primary);
     border-radius: 8px;
   }
 

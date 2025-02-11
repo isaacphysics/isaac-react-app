@@ -1,11 +1,10 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useContext} from 'react';
 import {VideoDTO} from "../../../IsaacApiTypes";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {isPhy, NOT_FOUND, trackEvent, useUserConsent} from "../../services";
+import {NOT_FOUND, trackEvent, useUserConsent} from "../../services";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import { YoutubeCookieHandler } from '../handlers/InterstitialCookieHandler';
 import classNames from "classnames";
-import { ButtonDropdown, DropdownToggle } from 'reactstrap';
 
 interface IsaacVideoProps {
     doc: VideoDTO;
@@ -115,31 +114,6 @@ export function IsaacVideo(props: IsaacVideoProps) {
 
     const accordionSectionContext = useContext(AccordionSectionContext);
     const videoInAnAccordionSection = accordionSectionContext.open !== null;
-    const [dropdownOpen, setOpen] = useState(false);
-    const toggle = () => setOpen(!dropdownOpen);
-
-    if (isPhy && videoInAnAccordionSection && accordionSectionContext.open) {
-        return <div className="my-3">
-            <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
-                <DropdownToggle color="primary" className={classNames("btn-dropdown", {"btn-dropdown-open": dropdownOpen})}>
-                    {altText}
-                </DropdownToggle>
-            </ButtonDropdown>
-            {dropdownOpen && <div className="mt-3">
-                <div className="no-print content-value text-center w-75">
-                    { embedSrc ?
-                        <div className={classNames("content-video-container", {"ratio-16x9" : userConsent.cookieConsent?.youtubeCookieAccepted ?? false})}>
-                            <YoutubeCookieHandler afterAcceptedElement={
-                                <iframe ref={videoRef} title={altTextToUse} src={embedSrc} allowFullScreen/>
-                            } />
-                        </div>
-                        : altText
-                    }
-                </div>
-                {detailsForPrintOut}
-            </div>}
-        </div>;
-    }
 
     // Exit early if a parent accordion section is closed (for the sake of pages containing many videos)
     if (videoInAnAccordionSection && !accordionSectionContext.open) {

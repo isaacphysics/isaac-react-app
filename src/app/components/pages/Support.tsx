@@ -1,5 +1,5 @@
 import React from "react";
-import {Col, Container, NavLink, Row, TabContent, TabPane} from "reactstrap";
+import {Col, Container, Row, TabContent, TabPane} from "reactstrap";
 import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
@@ -10,7 +10,7 @@ import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
 import {MetaDescription} from "../elements/MetaDescription";
 import { FAQSidebar, MainContent, SidebarLayout } from "../elements/layout/SidebarLayout";
-import classNames from "classnames";
+import { StyledTabPicker } from "../elements/inputs/StyledTabPicker";
 
 type SupportType = "student" | "teacher" | "tutor";
 
@@ -138,12 +138,10 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         <SidebarLayout>
             <FAQSidebar>
                 {Object.values(section.categories).map((category, index) => 
-                    <NavLink
-                        key={index} tabIndex={index} className={classNames("sidebar-tab", {"active-tab": categoryIndex === index})}
+                    <StyledTabPicker
+                        key={index} id={category.category} tabIndex={0} checkboxTitle={category.title} checked={categoryIndex === index}
                         onClick={() => activeTabChanged(index)} onKeyDown={ifKeyIsEnter(() => activeTabChanged(index))}
-                    >
-                        {category.title}
-                    </NavLink>
+                    />
                 )}
             </FAQSidebar>
             <MainContent>

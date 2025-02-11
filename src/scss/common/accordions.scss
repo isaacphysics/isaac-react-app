@@ -73,66 +73,50 @@
 
 // Nomensa accordions.scss
 .accordion {
-  &:first-of-type {
-    border-top: 0;
-  }
-  &:last-of-type {
-    //border-bottom: 1px solid $gray-120;
-    margin-bottom: 1rem;
-  }
   .accordion-header {
-    //border-color: $gray-120;
-    //border-style: solid;
-    //border-width: 0 1px;
-    button {
-      border-radius: 0;
-      font-family: $secondary-font-semi-bold;
-      font-size: 1.25rem !important;
-      transition: all 0.5s ease;
-      position: relative;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      border: none;
-      text-align: left;
-      text-decoration: none;
+    border-radius: 0;
+    font-family: $secondary-font-semi-bold;
+    font-size: 1.25rem !important;
+    transition: all 0.5s ease;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: none;
+    text-align: left;
+    text-decoration: none;
 
-      .accordion-title {
-        flex-grow: 1;
-
-        h2 {
-          font-size: inherit;
-          font-family: inherit;
-          font-weight: inherit;
-          line-height: inherit;
-          margin-bottom: inherit;
-        }
-      }
-
-      &.active {
-        &:after {
-          background-image: url('/assets/common/icons/chevron_up.svg');
-        }
-      }
-
-      &.de-emphasised {
-        background: darken(#fff, 9%);
-        color: lighten(black, 10%);
-        .stage-label {
-          background: lighten($dark, 10%);
-        }
-      }
-
-      &:hover {
-        .accordion-title {
-          text-decoration: underline;
-        }
+    &.active {
+      &:after {
+        background-image: url('/assets/common/icons/chevron_up.svg');
       }
     }
+
+    &.de-emphasised {
+      background: darken(#fff, 9%);
+      color: lighten(black, 10%);
+      .stage-label {
+        background: lighten($dark, 10%);
+      }
+    }
+
+    &:hover {
+      .accordion-title {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .accordion-title {
+    line-height: 1.5;
   }
 
   .card {
     background: transparent;
     border-width: 0;
+  }
+
+  .accordion-body {
+    padding-bottom: 0;
   }
 }
