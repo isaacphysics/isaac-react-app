@@ -68,8 +68,8 @@ const InequalityMenuTab = ({menu, latexTitle, subMenu, className, isSubMenu = fa
     if (!menuContext) return null;
     const {activeMenu: [activeMenu, activeSubMenu], openNewMenuTab} = menuContext;
 
-    const navigate = () => openNewMenuTab([menu, subMenu ?? null]);
     const active = activeMenu === menu && (isSubMenu ? activeSubMenu === subMenu : true);
+    const navigate = () => openNewMenuTab([menu, (!active || isSubMenu) && subMenu ? subMenu : null]);
 
     return <li className={classNames(active ? "active" : "inactive", className)} onClick={navigate} onKeyUp={navigate}>
         {isSubMenu ? <VShape/> : <TabShape/>}<Markup encoding={"latex"}>{`$${latexTitle}$`}</Markup>

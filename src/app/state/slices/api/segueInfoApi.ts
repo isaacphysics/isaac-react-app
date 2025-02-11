@@ -7,7 +7,7 @@ const updatedIsaacApi = isaacApi.injectEndpoints({
 
         getContentVersion: build.query<string, void>({
             query: () => ({
-                url: "/info/content_versions/live_version",
+                url: "/admin/live_version",
                 method: "GET",
             }),
             onQueryStarted: onQueryLifecycleEvents({
