@@ -3,7 +3,7 @@ import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQue
 import { skipToken } from '@reduxjs/toolkit/query';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { above, determineGameboardSubjects, isDefined, isLoggedIn, isTutorOrAbove, TAG_ID, tags, useDeviceSize } from '../../services';
+import { above, isDefined, isLoggedIn, isTutorOrAbove, TAG_ID, tags, useDeviceSize } from '../../services';
 import { useAssignmentsCount } from '../navigation/NavigationBar';
 import { BookInfo, isaacBooks } from './modals/IsaacBooksModal';
 import { AssignmentDTO, RegisteredUserDTO } from '../../../IsaacApiTypes';
@@ -44,7 +44,6 @@ const AssignmentCard = ({assignmentId, groupName}: AssignmentCardProps) => {
     const { data: assignment } = assignmentQuery;
     const gameboard = assignment?.gameboard;
 
-    const boardSubjects = determineGameboardSubjects(gameboard);
     const [showMore, setShowMore] = useState(false);
 
     const topics = tags.getTopicTags(Array.from((gameboard?.contents || []).reduce((a, c) => {
