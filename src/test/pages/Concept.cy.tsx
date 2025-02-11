@@ -10,7 +10,7 @@ it('Concept pages should have no visual regressions', () => {
 
     // open accordion
     cy.get('.accordion > button.accordion-header:not(.active)').scrollIntoView();
-    cy.get('.accordion > button.accodtion-header:not(.active)').click();
+    cy.get('.accordion > button.accordion-header:not(.active)').click();
 
     cy.scrollTo('top');
 
