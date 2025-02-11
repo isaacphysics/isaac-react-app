@@ -154,7 +154,6 @@ $dashboard-panel-padding: 30px;
   border-radius: 8px;
   height: 100%;
   max-height: 450px;
-  overflow-y: scroll;
   padding: $dashboard-panel-padding;
 
   h4 {
@@ -198,12 +197,6 @@ $dashboard-panel-padding: 30px;
     }
   }
 
-  .book {
-    font-family: $secondary-font-medium;
-    font-size: 14px;
-    text-decoration: none;
-  }
-
   .streak-panel-gauge {
     display: inline-block;
     font-family: $secondary-font-semi-bold;
@@ -215,6 +208,25 @@ $dashboard-panel-padding: 30px;
       line-height: 32px;
       font-weight: 700;
     }
+  }
+}
+
+.scrollable-panel {
+  overflow-y: scroll;
+}
+
+.book-panel {
+  overflow-x: scroll;
+  overflow-y: hidden;
+
+  .book {
+    font-family: $secondary-font-medium;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  *:has(>.book) {
+    min-width: 100px;
   }
 }
 
@@ -255,7 +267,7 @@ a:has(.assignment-card) {
       width: 50%;
   }
 }
-@media (max-width: 731px) {
+@media (max-width: 785px) {
   .dashboard-cols > * {
       width: 100%;
   }

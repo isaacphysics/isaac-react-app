@@ -460,14 +460,14 @@ interface GroupSelectorProps {
 
 export const GroupSelector = ({groupNameInputRef, createNewGroup, showCreateGroup}: GroupSelectorProps) => {
     const dispatch = useAppDispatch();
-
-    // TODO reorder these
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
+
     const [showArchived, setShowArchived] = useState(false);
     const groupQuery = useGetGroupsQuery(showArchived);
     const { currentData: groups, isLoading, isFetching } = groupQuery;
     const otherGroups = useGetGroupsQuery(!showArchived);
     const allGroups = [...(groups ?? []) , ...(otherGroups.currentData ?? [])];
+    
     const [selectedGroupId, setSelectedGroupId] = useState<number>();
     const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
 
@@ -554,7 +554,7 @@ export const GroupSelector = ({groupNameInputRef, createNewGroup, showCreateGrou
                 {tabs.map((tab, index) => {
                     return <NavItem key={index} className={classNames({"px-2": isPhy, "active": tab.active()})}>
                         <NavLink
-                            className={classNames("text-center", {"group-nav-link": isPhy}, {"px-2": isAda})} tabIndex={0}
+                            className={classNames("text-center", {"group-nav-tab": isPhy}, {"px-2": isAda})} tabIndex={0}
                             onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
                         >
                             {tab.name}
@@ -591,9 +591,7 @@ export const GroupSelector = ({groupNameInputRef, createNewGroup, showCreateGrou
 
 const stateToProps = (_state: AppState, props: any) => {
     const {location: {hash}} = props;
-    return {
-        hashAnchor: hash?.slice(1) ?? null
-    };
+    return {hashAnchor: hash?.slice(1) ?? null};
 };
 
 const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAnchor: number}) => {

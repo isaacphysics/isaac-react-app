@@ -88,7 +88,7 @@ const Dashboard = () => {
                         checked={studentView}
                         falseLabel="Teacher"
                         trueLabel="Student"
-                        onChange={() => setStudentView(isStudent => !isStudent)}             
+                        onChange={() => setStudentView(studentView => !studentView)}             
                     />
                 </div>
                 {studentView ? <StudentDashboard /> : <TeacherDashboard />}
@@ -136,7 +136,7 @@ export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
 
     const user = useAppSelector(selectors.user.orNull);
-    const nameToDisplay = isLoggedIn(user) ? (isTutorOrAbove(user) ? extractTeacherName(user as UserSummaryDTO) : user.givenName) : undefined;
+    const nameToDisplay = isLoggedIn(user) && (isTutorOrAbove(user) ? extractTeacherName(user as UserSummaryDTO) : user.givenName);
     
     const {data: news} = useGetNewsPodListQuery({subject: "physics"});
 

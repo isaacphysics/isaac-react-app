@@ -13,7 +13,7 @@ import { StyledDropdown } from './inputs/DropdownInput';
 
 const GroupsPanel = () => {
     const groupNameInputRef = useRef<HTMLInputElement>(null);
-    return <div className="dashboard-panel">
+    return <div className="dashboard-panel scrollable-panel">
         <Link to="/groups" className="plain-link">
             <h4>Manage my groups</h4>
         </Link>
@@ -90,9 +90,9 @@ const AssignmentsPanel = () => {
     const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
     const sortedAssignments = getSortedAssignments(assignmentsSetByMe);
-    const upcomingAssignments = sortedAssignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false);
+    const upcomingAssignments = sortedAssignments?.filter(a => a.dueDate ? a.dueDate >= new Date() : false); // Filter out past assignments
 
-    return <div className="dashboard-panel">
+    return <div className="dashboard-panel scrollable-panel">
         <Link to="/assignment_schedule"  className="plain-link">
             <h4>Assignment schedule</h4>
         </Link>
@@ -123,7 +123,7 @@ const MyIsaacPanel = () => {
                     {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
                 </Link>
             </div>                
-            <div className={above["sm"](deviceSize) ? "section-divider-y" : "section-divider"}/>
+            <div className={above["sm"](deviceSize) ? "section-divider-y me-4" : "section-divider"}/>
             <div className="col">
                 <h5>{"TEACHER"}</h5>
                 <Link to="/teacher_features" className='d-block panel-my-isaac-link'>
@@ -146,7 +146,6 @@ const MyIsaacPanel = () => {
                 </Link>
             </div>
         </div>
-    
         <div className="section-divider" />
         <Link to="/account" className="panel-my-isaac-link">
             My account
@@ -158,17 +157,17 @@ const MyIsaacPanel = () => {
 };
 
 const BookCard = ({title, image, path}: BookInfo) => {
-    return <Card className="p-2 h-100" style={{minWidth: "100px"}}>  
-        <Link to={path} className="book-title">
+    return <Card className="p-2 h-100">  
+        <Link to={path} className="book">
             <img src={image} alt={title} className="w-100"/>
-            <div className="mt-2">{title}</div>
+            <div className="mt-3">{title}</div>
         </Link>
     </Card>;
 };
 
 const BooksPanel = () => {
     const [subject, setSubject] = useState<Subject | "all">("all");
-    return <div className='w-100 dashboard-panel' style={{ overflowX: "scroll"}}>
+    return <div className="w-100 dashboard-panel book-panel">
         <Link to="/publications" className="plain-link">
             <h4>Books</h4>
         </Link>
@@ -182,7 +181,7 @@ const BooksPanel = () => {
                 {/* No biology books */}
             </StyledDropdown>
         </div>
-        <Row className="row-cols-3 row-cols-sm-4 row-cols-md-3 row-cols-xl-4 row-cols-xxl-2 flex-nowrap">
+        <Row className="row-cols-3 row-cols-sm-4 row-cols-md-3 row-cols-xl-4 flex-nowrap">
             {isaacBooks.filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
                     <Col key={book.title} className="mb-2">
