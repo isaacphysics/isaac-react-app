@@ -10,6 +10,19 @@
   .accordion-header {
     background: rgba(white, 1);
     border-radius: 8px;
+
+    .accordion-title::after {
+      content: "";
+      display: inline-block;
+      background: url('/assets/phy/icons/redesign/chevron-down.svg') no-repeat center center;
+      height: 16px;
+      width: 16px;
+      margin-left: 8px;
+    }
+  
+    &.active .accordion-title::after {
+      transform: rotate(180deg);
+    }
   }
 
   .accordion-body {
@@ -21,19 +34,6 @@
   &.active-border {
     border-color: var(--nav-primary);
     border-radius: 8px;
-  }
-
-  span::after {
-    content: "";
-    display: inline-block;
-    background: url('/assets/phy/icons/redesign/chevron-down.svg') no-repeat center center;
-    height: 16px;
-    width: 16px;
-    margin-left: 8px;
-  }
-
-  .active span::after {
-    transform: rotate(180deg);
   }
 }
 
