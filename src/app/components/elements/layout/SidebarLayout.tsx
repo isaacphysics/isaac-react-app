@@ -1,17 +1,19 @@
-import React, { ChangeEvent, ReactNode, RefObject, useEffect, useRef, useState } from "react";
-import { Col, ColProps, RowProps, Input, Label, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
+import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { above, AUDIENCE_DISPLAY_FIELDS, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
+import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
-import { Tag } from "../../../../IsaacAppTypes";
+import { AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { getHumanContext } from "../../../services/pageContext";
 import { AssignmentState } from "../../pages/MyAssignments";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
+import { Spacer } from "../Spacer";
+import { StyledTabPicker } from "../inputs/StyledTabPicker";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -178,23 +180,7 @@ export const ConceptSidebar = (props: QuestionSidebarProps) => {
     return <QuestionSidebar {...props} />;
 };
 
-interface FilterCheckboxBaseProps extends React.HTMLAttributes<HTMLLabelElement> {
-    id: string;
-    checked?: boolean;
-    onInputChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
-    filterTitle: ReactNode;
-    conceptFilters?: Tag[];
-    count?: number;
-}
 
-const FilterCheckboxBase = (props: FilterCheckboxBaseProps) => {
-    const { id, checked, onInputChange, filterTitle, count, ...rest } = props;
-    return <Label {...rest} className="d-flex align-items-center filters-checkbox py-2 mb-1">
-        <Input id={`problem-search-${id}`} type="checkbox" checked={checked ?? false} onChange={onInputChange} />
-        <span className="ms-3">{filterTitle}</span>
-        {isDefined(count) && <span className="badge rounded-pill ms-2">{count}</span>}
-    </Label>;
-};
 
 interface FilterCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
     tag: Tag;
@@ -211,17 +197,17 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
         setChecked(conceptFilters.includes(tag));
     }, [conceptFilters, tag]);
 
-    return <FilterCheckboxBase {...rest} id={tag.id} checked={checked} 
+    return <StyledTabPicker {...rest} id={tag.id} checked={checked} 
         onInputChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilters(f => e.target.checked ? [...f, tag] : f.filter(c => c !== tag))}
-        filterTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
+        checkboxTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
     />;
 };
 
 const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag">) => {
     const { conceptFilters, setConceptFilters, tagCounts, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<Tag[]>([]);
-    return <FilterCheckboxBase {...rest} 
-        id="all" checked={!conceptFilters.length} filterTitle="All" count={tagCounts && Object.values(tagCounts).reduce((a, b) => a + b, 0)}
+    return <StyledTabPicker {...rest} 
+        id="all" checked={!conceptFilters.length} checkboxTitle="All" count={tagCounts && Object.values(tagCounts).reduce((a, b) => a + b, 0)}
         onInputChange={(e) => {
             if (e.target.checked) {
                 setPreviousFilters(conceptFilters);
@@ -319,8 +305,8 @@ interface AssignmentStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelEl
 
 const AssignmentStatusCheckbox = (props: AssignmentStatusCheckboxProps) => {
     const {status, statusFilter, setStatusFilter, count, ...rest} = props;
-    return <FilterCheckboxBase 
-        id={status ?? ""} filterTitle={status}
+    return <StyledTabPicker 
+        id={status ?? ""} checkboxTitle={status}
         onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== AssignmentState.ALL), status]) : setStatusFilter(c => c.filter(s => s !== status))}
         checked={statusFilter.includes(status)}
         count={count} {...rest}
@@ -330,8 +316,8 @@ const AssignmentStatusCheckbox = (props: AssignmentStatusCheckboxProps) => {
 const AssignmentStatusAllCheckbox = (props: Omit<AssignmentStatusCheckboxProps, "status">) => {
     const { statusFilter, setStatusFilter, count, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<AssignmentState[]>([]);
-    return <FilterCheckboxBase 
-        id="all" filterTitle="All"
+    return <StyledTabPicker 
+        id="all" checkboxTitle="All"
         onInputChange={(e) => {
             if (e.target.checked) {
                 setPreviousFilters(statusFilter);
@@ -397,6 +383,114 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                 </Input>
             </>;
         }}/>
+    </ContentSidebar>;
+};
+
+interface MyGameboardsSidebarProps extends SidebarProps {
+    displayMode: BoardViews;
+    setDisplayMode: React.Dispatch<React.SetStateAction<BoardViews>>;
+    displayLimit: BoardLimit;
+    setDisplayLimit: React.Dispatch<React.SetStateAction<BoardLimit>>;
+    boardTitleFilter: string,
+    setBoardTitleFilter: React.Dispatch<React.SetStateAction<string>>;
+    boardCreatorFilter: BoardCreators;
+    setBoardCreatorFilter: React.Dispatch<React.SetStateAction<BoardCreators>>;
+    boardCompletionFilter: BoardCompletions;
+    setBoardCompletionFilter: React.Dispatch<React.SetStateAction<BoardCompletions>>;
+}
+
+export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
+    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, boardCreatorFilter, setBoardCreatorFilter, boardCompletionFilter, setBoardCompletionFilter, ...rest } = props;
+
+    return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
+        <div className="section-divider"/>
+        <h5>Search gameboards</h5>
+        <Input
+            className='search--filter-input my-4'
+            type="search" value={boardTitleFilter || ""}
+            placeholder="e.g. Forces"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
+        />
+        <div className="section-divider"/>
+        <h5 className="mb-4">Display</h5>
+        <div className="d-flex">
+            <Input className="w-auto" type="select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+            </Input>
+            <Spacer/>
+            <div className="select-pretext">Limit:</div>
+            <Input className="w-auto" type="select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+            </Input>
+        </div>
+        <h5 className="mt-4 mb-3">Filter by creator</h5>
+        <Input type="select" value={boardCreatorFilter} onChange={e => setBoardCreatorFilter(e.target.value as BoardCreators)}>
+            {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+        </Input>
+        <h5 className="mt-4 mb-3">Filter by completion</h5>
+        <Input type="select" value={boardCompletionFilter} onChange={e => setBoardCompletionFilter(e.target.value as BoardCompletions)}>
+            {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
+        </Input>
+    </ContentSidebar>;
+};
+interface SetAssignmentsSidebarProps extends SidebarProps {
+    displayMode: BoardViews;
+    setDisplayMode: React.Dispatch<React.SetStateAction<BoardViews>>;
+    displayLimit: BoardLimit;
+    setDisplayLimit: React.Dispatch<React.SetStateAction<BoardLimit>>;
+    boardTitleFilter: string;
+    setBoardTitleFilter: React.Dispatch<React.SetStateAction<string>>;
+    sortOrder: AssignmentBoardOrder;
+    setSortOrder: React.Dispatch<React.SetStateAction<AssignmentBoardOrder>>;
+    boardSubject: BoardSubjects;
+    setBoardSubject: React.Dispatch<React.SetStateAction<BoardSubjects>>;
+    boardCreator: BoardCreators;
+    setBoardCreator: React.Dispatch<React.SetStateAction<BoardCreators>>;
+    sortDisabled?: boolean;
+}
+
+export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
+    const { displayMode, setDisplayMode, displayLimit, setDisplayLimit, boardTitleFilter, setBoardTitleFilter, sortOrder, setSortOrder, sortDisabled, boardSubject, setBoardSubject, boardCreator, setBoardCreator, ...rest } = props;
+
+    return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
+        <div className="section-divider"/>
+        <h5>Search gameboards</h5>
+        <Input
+            className='search--filter-input my-4'
+            type="search" value={boardTitleFilter || ""}
+            placeholder="e.g. Forces"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
+        />
+        <div className="section-divider"/>
+        <h5 className="mb-4">Display</h5>
+        <div className="d-flex">
+            <Input className="w-auto" type="select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+            </Input>
+            <Spacer/>
+            <div className="select-pretext">Limit:</div>
+            <Input className="w-auto" type="select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+            </Input>
+        </div>
+        <h5 className="mt-4 mb-3">Sort by</h5>
+        <Input type="select" className="mb-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as AssignmentBoardOrder)} disabled={sortDisabled}>
+            {Object.values(AssignmentBoardOrder).filter(
+                order => !['attempted', '-attempted', 'correct', '-correct'].includes(order)
+            ).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+        </Input>
+        {sortDisabled && <div className="small text-muted mt-2">
+            Sorting is disabled if some gameboards are hidden. Increase the display limit to show all gameboards.
+        </div>}
+        <div className="section-divider"/>
+        <h5 className="mb-3">Filter by subject</h5>
+        <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
+            {Object.values(BoardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
+        </Input>
+        <h5 className="mt-4 mb-3">Filter by creator</h5>
+        <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
+            {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+        </Input>
     </ContentSidebar>;
 };
 

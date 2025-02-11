@@ -131,7 +131,7 @@ const Cards = (props: GameboardsCardsProps) => {
         .filter(board => boardCompletionSelection(board, boardCompletion));
 
     return filteredBoards && <>
-        {<Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
+        {<Row className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
             {filteredBoards.map(board => <Col key={board.id}>
                 <BoardCard
                     board={board}

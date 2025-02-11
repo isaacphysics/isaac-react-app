@@ -17,16 +17,17 @@ import {
     BoardCreators,
     BoardLimit,
     BoardViews,
+    isAda,
     isMobile,
-    isPhy, isTutorOrAbove, PATHS,
+    isTutorOrAbove, 
     siteSpecific,
     useGameboards} from "../../services";
-import {Link} from "react-router-dom";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { GameboardsCards, GameboardsCardsProps, GameboardsTable, GameboardsTableProps } from "../elements/Gameboards";
 import classNames from "classnames";
+import { MainContent, MyGameboardsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 export interface GameboardsDisplaySettingsProps {
     boardView: BoardViews,
@@ -131,7 +132,7 @@ export const MyGameboards = () => {
         boardLimit, setBoardLimit,
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(
-        isMobile() ? BoardViews.card : BoardViews.table,
+        siteSpecific(BoardViews.card, BoardViews.table),
         isMobile() ? BoardLimit.six : BoardLimit.All
     );
 
@@ -179,35 +180,51 @@ export const MyGameboards = () => {
         user, boards, selectedBoards, setSelectedBoards, boardView, boardTitleFilter, boardCreator, boardCompletion, loading, viewMore
     };
 
-    return <Container> {/* fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})} */}
+    return <Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My gameboards", "My quizzes")} help={pageHelp} />
         <PageFragment fragmentId={`${siteSpecific("gameboards", "quizzes")}_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
-        {boards && boards.totalResults == 0 ?
-            <>
-                <h3 className="text-center mt-4">You have no {siteSpecific("gameboards", "quizzes")} to view.</h3>
-            </>
-            :
-            <>
-                <div className="mt-4 mb-2">
-                    {boards && <h4>Showing <strong>{inProgress + notStarted}</strong> gameboards, with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
-                    {!boards && <IsaacSpinner size="sm" inline />}
-                </div>
-                <GameboardsDisplaySettings
-                    boardView={boardView} switchViewAndClearSelected={switchViewAndClearSelected} boardLimit={boardLimit}
-                    setBoardLimit={setBoardLimit} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
-                    showFilters={showFilters} setShowFilters={setShowFilters}
-                />
-                <GameboardsFilters boardCreator={boardCreator} setBoardCreator={setBoardCreator} boardCompletion={boardCompletion}
-                    setBoardCompletion={setBoardCompletion} setBoardTitleFilter={setBoardTitleFilter} showFilters={showFilters}
-                />
-                <ShowLoading until={boards}>
-                    {boards && boards.boards && <>
-                        {(boardView === BoardViews.card
-                            ? <GameboardsCards {...cardProps}/>
-                            : <GameboardsTable {...tableProps}/>
-                        )}
+        <SidebarLayout>
+            <MyGameboardsSidebar
+                displayMode={boardView} setDisplayMode={setBoardView}
+                displayLimit={boardLimit} setDisplayLimit={setBoardLimit}
+                boardTitleFilter={boardTitleFilter} setBoardTitleFilter={setBoardTitleFilter}
+                boardCreatorFilter={boardCreator} setBoardCreatorFilter={setBoardCreator}
+                boardCompletionFilter={boardCompletion} setBoardCompletionFilter={setBoardCompletion}
+            />
+            <MainContent>
+                {boards && boards.totalResults == 0 ?
+                    <>
+                        <h3 className="text-center mt-4">You have no {siteSpecific("gameboards", "quizzes")} to view.</h3>
+                    </>
+                    :
+                    <>
+                        <div className="mt-4 mb-2">
+                            {boards 
+                                ? <h4>Showing <strong>{inProgress + notStarted}</strong> {siteSpecific("gameboards", "quizzes")}, with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>
+                                : <IsaacSpinner size="sm" inline />
+                            }
+                        </div>
+                        {isAda && <> 
+                            {/* this is in the sidebar on phy */}
+                            <GameboardsDisplaySettings
+                                boardView={boardView} switchViewAndClearSelected={switchViewAndClearSelected} boardLimit={boardLimit}
+                                setBoardLimit={setBoardLimit} boardOrder={boardOrder} setBoardOrder={setBoardOrder}
+                                showFilters={showFilters} setShowFilters={setShowFilters}
+                            />
+                            <GameboardsFilters boardCreator={boardCreator} setBoardCreator={setBoardCreator} boardCompletion={boardCompletion}
+                                setBoardCompletion={setBoardCompletion} setBoardTitleFilter={setBoardTitleFilter} showFilters={showFilters}
+                            />
+                        </>}
+                        <ShowLoading until={boards}>
+                            {boards && boards.boards && <>
+                                {(boardView === BoardViews.card
+                                    ? <GameboardsCards {...cardProps}/>
+                                    : <GameboardsTable {...tableProps}/>
+                                )}
+                            </>}
+                        </ShowLoading>
                     </>}
-                </ShowLoading>
-            </>}
+            </MainContent>
+        </SidebarLayout>
     </Container>;
 };
