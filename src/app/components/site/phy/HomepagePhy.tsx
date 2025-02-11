@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {selectors, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Card, CardBody, CardProps, CardText, CardTitle, Col, Container, Row} from "reactstrap";
-import {above, EventStatusFilter, EventTypeFilter, extractTeacherName, HUMAN_STAGES, HUMAN_SUBJECTS, isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, useDeviceSize} from "../../../services";
+import {above, EventStatusFilter, EventTypeFilter, extractTeacherName, HUMAN_STAGES, HUMAN_SUBJECTS, isLoggedIn, isTutorOrAbove, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, useDeviceSize} from "../../../services";
 import { NewsCard } from "../../elements/cards/NewsCard";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { EventCard } from "../../elements/cards/EventCard";
