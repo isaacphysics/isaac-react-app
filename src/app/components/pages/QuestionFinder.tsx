@@ -7,11 +7,9 @@ import {
     EXAM_BOARD_NULL_OPTIONS,
     getFilteredExamBoardOptions,
     getHumanContext,
-    getUpdatedPageContext,
     isAda,
     isLoggedIn,
     isPhy,
-    Item,
     itemiseTag,
     ListParams,
     SEARCH_CHAR_LENGTH_LIMIT,
@@ -35,20 +33,16 @@ import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
 import queryString from "query-string";
-import {PageFragment} from "../elements/PageFragment";
-import {RenderNothing} from "../elements/RenderNothing";
 import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, Label, Row} from "reactstrap";
 import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { Subject, Tag } from "../../../IsaacAppTypes";
 import { PrintButton } from "../elements/PrintButton";
-import { EditContentButton } from "../elements/EditContentButton";
 import { ShareLink } from "../elements/ShareLink";
 import { Spacer } from "../elements/Spacer";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
-import { get, set } from "lodash";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
