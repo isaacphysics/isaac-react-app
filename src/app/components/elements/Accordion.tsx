@@ -7,6 +7,7 @@ import {
     DOCUMENT_TYPE,
     isAda,
     isAQuestionLikeDoc,
+    isDefined,
     isPhy,
     NOT_FOUND,
     scrollVerticallyIntoView,
@@ -146,10 +147,10 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     const isOpen = open && !disabled;
 
-    return <div className={classNames("accordion", {"active-border": isPhy && !page && isOpen})}>
+    return <div className="accordion">
         <button 
             className={classNames(
-                "accordion-header d-flex w-100 p-0 align-items-stretch", 
+                "accordion-header d-flex w-100 p-3 pb-0 align-items-stretch", 
                 {"de-emphasised": deEmphasised || disabled, "active": isOpen, "btn btn-link": isAda}
             )}
             id={anchorId || ""} type="button"
@@ -168,7 +169,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 setOpen(nextState);
                 if (nextState) {
                     logAccordionOpen();
-                    scrollVerticallyIntoView(event.target as HTMLElement);
+                    scrollVerticallyIntoView(event.target as HTMLElement, -50);
                 }
             }}
             aria-expanded={isOpen ? "true" : "false"}
@@ -185,10 +186,9 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     </>
                 )}
             </span>}
-            <div className={classNames("d-flex align-items-center flex-grow-1", siteSpecific("ps-3", "ps-1"))}>
-                {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
-                <span className="accordion-part p-3 text-theme text-nowrap">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
-                {trustedTitle && <div className="accordion-title p-3 ps-1">
+            <div className={classNames("d-flex flex-grow-1", siteSpecific("flex-column", "align-items-center ps-1"))}>
+                {isDefined(index) && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>}
+                {trustedTitle && <div className={classNames("accordion-title p-3 ps-1", siteSpecific("pt-0", ""))}>
                     <Markup encoding={"latex"}>
                         {trustedTitle}
                     </Markup>

@@ -177,9 +177,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         }}>
             <div className={
                 classNames(
-                    "question-component p-md-5",
+                    "question-component",
                     doc.type,
-                    {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)}
+                    {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)},
+                    {"p-md-5": isAda}
                 )}>
                 
                 {isLLMFreeTextQuestion && <LLMFreeTextQuestionRemainingAttemptsView canAttemptQuestionType={canAttemptQuestionType} />}
@@ -280,12 +281,11 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                             }
                         </div>
                 }
-
-                {/* Physics Hints */}
-                {isPhy && <div className={correct ? "mt-5" : ""}>
-                    <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
-                </div>}
             </div>
+            {/* Physics Hints */}
+            {isPhy && <div className={correct ? "mt-5" : ""}>
+                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
+            </div>}
         </Form>
 
         {/* LLM free-text question validation response */}

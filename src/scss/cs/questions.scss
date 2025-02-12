@@ -28,6 +28,19 @@
 // Validation response
 .validation-response-panel {
   text-align: left;
+  border-top: solid 1px $gray-107;
+  border-bottom: solid 1px $gray-107;
+  &.correct, &.almost {
+    margin-left: -3rem;
+    margin-right: -3rem;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    @include media-breakpoint-down(md) {
+      margin-left: -1rem;
+      margin-right: -1rem;
+      margin-bottom: -1rem;
+    }
+  }
   &.correct {
     background: $cyan-600;
     color: $cs-black;
