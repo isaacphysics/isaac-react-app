@@ -65,3 +65,8 @@
   align-content: center;
   margin-bottom: 3px;
 }
+
+.disabled-tab {
+  color: $color-neutral-300;
+  cursor: not-allowed !important;
+}
