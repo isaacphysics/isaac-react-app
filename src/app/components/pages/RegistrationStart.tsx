@@ -29,19 +29,19 @@ export const RegistrationStart = () => {
                             <p>Here, you can create an {SITE_TITLE} account, or log in to an existing one.</p>
                         </div>
                         <div className="my-5">
-                            <h3>Create a new account with your email:</h3>
+                            <div className={siteSpecific("h4 mb-3", "h3")}>Create a new account with your email:</div>
                             <Button block onClick={emailSignUp}>Continue with email</Button>
                         </div>
                         <div className="my-5">
-                            <h3>Or log in with:</h3>
+                            <div className={siteSpecific("h4 mb-3", "h3")}>Or log in with:</div>
                             {isAda && <div className="mb-2">
                                 <RaspberryPiSignInButton />
                             </div>}
                             <GoogleSignInButton />
                         </div>
-                        <hr />
+                        {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <div className="mt-5">
-                            <h3>Already have an account?</h3>
+                            <div className={siteSpecific("h4 mb-3", "h3")}>Already have an account?</div>
                             <Button color="secondary" outline block onClick={login}>Log in</Button>
                         </div>
                     </Col>

@@ -1,8 +1,9 @@
 import React from "react";
 import {Button, Card, CardBody, Col, Container, Input, Label, Row} from "reactstrap";
-import {history, siteSpecific} from "../../services";
+import {history, isPhy, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { Link } from "react-router-dom";
+import classNames from "classnames";
 
 export const RegistrationAgeCheckParentalConsent = () => {
 
@@ -23,18 +24,18 @@ export const RegistrationAgeCheckParentalConsent = () => {
                     <Input
                         id="consent-checkbox" name="consent-checkbox" type="checkbox"
                         checked={parentalConsentCheckboxChecked}
-                        className="mt-1"
+                        className="mt-1 input-primary"
                         onChange={(e) => setParentalConsentCheckboxChecked(e?.target.checked)}
                     />
                     <Label for="consent-checkbox" className="ms-2 mb-0">Please check the box to confirm that you have read and understood this message.</Label>
                 </div>
-                <hr />
+                {siteSpecific(<br/>, <hr/>)}
                 <Row className="justify-content-end">
                     <Col sm={3} className="d-flex justify-content-end">
                         <Button className="mt-2 w-100" outline color="secondary" onClick={history.goBack}>Back</Button>
                     </Col>
                     <Col sm={4} lg={3}>
-                        <Button className="mt-2 w-100" color="primary" onClick={continueToDetails} disabled={!parentalConsentCheckboxChecked}>Continue</Button>
+                        <Button className={classNames("mt-2 w-100", {"btn-keyline": isPhy})} onClick={continueToDetails} disabled={!parentalConsentCheckboxChecked}>Continue</Button>
                     </Col>
                 </Row>
             </CardBody>

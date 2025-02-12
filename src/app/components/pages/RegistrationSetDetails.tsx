@@ -111,26 +111,28 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                 }
                 <Row>
                     <Col xs={12} lg={6}>
-                        <h3>Create your{siteSpecific("", ` ${role.toLowerCase()}`)} account</h3>
+                        <div className={siteSpecific("h4", "h3")}>Create your{siteSpecific("", ` ${role.toLowerCase()}`)} account</div>
                     </Col>
                     <Col xs={12} lg={5}>
                         <Form onSubmit={register}>
-                            <GivenNameInput
-                                className="mb-4"
-                                userToUpdate={registrationUser}
-                                setUserToUpdate={setRegistrationUser}
-                                nameValid={!!givenNameIsValid}
-                                submissionAttempted={attemptedSignUp}
-                                required={true}
-                            />
-                            <FamilyNameInput
-                                className="my-4"
-                                userToUpdate={registrationUser}
-                                setUserToUpdate={setRegistrationUser}
-                                nameValid={!!familyNameIsValid}
-                                submissionAttempted={attemptedSignUp}
-                                required={true}
-                            />
+                            <div className={siteSpecific("row row-cols-2", "")}>
+                                <GivenNameInput
+                                    className={siteSpecific("my-4", "mb-4")}
+                                    userToUpdate={registrationUser}
+                                    setUserToUpdate={setRegistrationUser}
+                                    nameValid={!!givenNameIsValid}
+                                    submissionAttempted={attemptedSignUp}
+                                    required={true}
+                                />
+                                <FamilyNameInput
+                                    className="my-4"
+                                    userToUpdate={registrationUser}
+                                    setUserToUpdate={setRegistrationUser}
+                                    nameValid={!!familyNameIsValid}
+                                    submissionAttempted={attemptedSignUp}
+                                    required={true}
+                                />
+                            </div>
                             <EmailInput
                                 className="my-4"
                                 userToUpdate={registrationUser}
@@ -157,7 +159,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 submissionAttempted={attemptedSignUp}
                                 required={true}
                             />}
-                            <hr className={classNames({"d-none": role == 'TEACHER'}, "my-4 text-center")} />
+                            <hr className={classNames({"d-none": role == 'TEACHER'}, siteSpecific("section-divider", "my-4 text-center"))} />
                             <SchoolInput
                                 className="my-4"
                                 userToUpdate={registrationUser}
@@ -172,7 +174,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                     submissionAttempted={attemptedSignUp}
                                 />
                             }
-                            <hr className={classNames({"d-none": role != 'TEACHER'}, "my-4")} />
+                            <hr className={classNames({"d-none": role != 'TEACHER'}, siteSpecific("section-divider", "my-4"))} />
                             <GenderInput
                                 className="mt-4 mb-5"
                                 userToUpdate={registrationUser}
@@ -180,12 +182,13 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 submissionAttempted={attemptedSignUp}
                                 required={false}
                             />
-                            <hr className="text-center"/>
+                            <hr className={siteSpecific("section-divider", "text-center")}/>
                             <FormGroup className="form-group my-4">
                                 <StyledCheckbox
                                     id="tos-confirmation"
                                     name="tos-confirmation"
                                     type="checkbox"
+                                    color={siteSpecific("primary", "")}
                                     onChange={(e) => setTosAccepted(e?.target.checked)}
                                     invalid={attemptedSignUp && !tosAccepted}
                                     label={<span className={classNames({"form-required": isPhy})}>I accept the <a href="/terms" target="_blank">terms of use</a>.</span>}
@@ -194,7 +197,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                     You must accept the terms to continue.
                                 </FormFeedback>
                             </FormGroup>
-                            <hr className="text-center"/>
+                            {isAda && <hr className="text-center"/>}
                             <Row className="justify-content-end">
                                 <Col className="d-flex justify-content-end" xs={12} sm={siteSpecific(3,4)} lg={6}>
                                     <Button className="mt-2 w-100" outline color="secondary" onClick={history.goBack}>Back</Button>

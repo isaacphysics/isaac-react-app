@@ -15,12 +15,12 @@ export const RegistrationAgeCheckFailed = () => {
         <Card className="my-5">
             <CardBody>
                 <h3>Unable to create account</h3>
-                <p>Unfortunately, we aren't able to offer accounts to students under {siteSpecific("10", "13")} years old.</p>
+                <p>Unfortunately, we aren&apos;t able to offer accounts to students under {siteSpecific("10", "13")} years old.</p>
                 <p>{siteSpecific(
                     <><b>But you can still access the whole site for free!</b> You just won&apos;t be able to track your progress.</>,
                     <><b>However, you can still access the whole site for free!</b> However you will not be able to track your progress.</>
                 )}</p>
-                <hr />
+                {isAda && <hr/>}
                 <Row className="justify-content-end">
                     {isAda && <Col sm={4} lg={3} className="d-flex justify-content-end">
                         <Button className="mt-2 w-100" outline color="secondary" onClick={history.goBack}>Back</Button>

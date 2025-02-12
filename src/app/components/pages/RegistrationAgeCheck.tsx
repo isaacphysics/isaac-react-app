@@ -12,7 +12,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history, isPhy, SITE_TITLE, siteSpecific} from "../../services";
+import {history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 type AgePermission = "denied" | "additional_info" | "allowed";
@@ -43,7 +43,7 @@ export const RegistrationAgeCheck = () => {
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
         <Card className="my-5">
             <CardBody>
-                <h3>How old are you?</h3>
+                <div className={siteSpecific("h4", "h3")}>How old are you?</div>
                 <p>{siteSpecific(
                     "We can only create accounts for users 10 years old or over.",
                     "We can only create accounts for people over 13 years old."
@@ -52,7 +52,7 @@ export const RegistrationAgeCheck = () => {
                     <FormGroup check className="my-2">
                         <Input
                             id="registration-age-check-over"
-                            className="d-inline mt-1"
+                            className="d-inline mt-1 input-primary"
                             type="radio"
                             checked={agePermission === "allowed"}
                             onChange={() => {setAgePermission("allowed");}}
@@ -64,7 +64,7 @@ export const RegistrationAgeCheck = () => {
                     {isPhy && <FormGroup check className="my-2">
                         <Input
                             id="registration-age-check-additional-info"
-                            className="d-inline mt-1"
+                            className="d-inline mt-1 input-primary"
                             type="radio"
                             checked={agePermission === "additional_info"}
                             onChange={() => {setAgePermission("additional_info");}}
@@ -90,7 +90,7 @@ export const RegistrationAgeCheck = () => {
                             Please make a selection.
                         </FormFeedback>
                     </FormGroup>
-                    <hr />
+                    {isAda && <hr/>}
                     <Row className="justify-content-end">
                         <Col sm={siteSpecific(3,4)} lg={3} className="d-flex justify-content-end mb-1 mb-sm-0">
                             <Button className="w-100 h-100" outline color="secondary" onClick={history.goBack}>Back</Button>

@@ -20,7 +20,7 @@ export function TrueFalseRadioInput({id, stateObject, propertyName, setStateFunc
                 {trueLabel}<span className='visually-hidden'> for {propertyName}</span>
             </Label>
             <Input
-                id={`${id}-t`} type="radio" name={id} color="$secondary" className="d-inline"
+                id={`${id}-t`} type="radio" name={id} color="$secondary" className="d-inline input-primary"
                 checked={stateObject?.[propertyName] === true} invalid={invalid}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setStateFunction({...stateObject, [propertyName]: e.target.checked});
@@ -33,7 +33,7 @@ export function TrueFalseRadioInput({id, stateObject, propertyName, setStateFunc
                 {falseLabel}<span className='visually-hidden'> for {propertyName}</span>
             </Label>
             <Input
-                id={`${id}-f`} type="radio" name={id} color="$secondary" className="d-inline"
+                id={`${id}-f`} type="radio" name={id} color="$secondary" className="d-inline input-primary"
                 checked={stateObject?.[propertyName] === false} invalid={invalid}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setStateFunction({...stateObject, [propertyName]: !e.target.checked});
