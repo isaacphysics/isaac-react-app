@@ -181,7 +181,7 @@ export const MyGameboards = () => {
 
     return <Container> {/* fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})} */}
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My gameboards", "My quizzes")} help={pageHelp} />
-        <PageFragment fragmentId={`help_toptext_${siteSpecific("gameboards", "quizzes")}_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
+        <PageFragment fragmentId={`${siteSpecific("gameboards", "quizzes")}_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />
         {boards && boards.totalResults == 0 ?
             <>
                 <h3 className="text-center mt-4">You have no {siteSpecific("gameboards", "quizzes")} to view.</h3>

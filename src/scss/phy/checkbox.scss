@@ -1,14 +1,48 @@
 @import "../common/checkbox";
 
-.styled-checkbox-wrapper div input[type="checkbox"]{
+.checkbox-region {
+    background-color: $color-neutral-100;
+    outline: 1px solid $color-neutral-200;
+    border-radius: 4px;
+    
+    .checkbox-region {
+        background-color: $color-neutral-200;
+        outline: 1px solid $color-neutral-300;
+    }
+
+    &.search-field {
+        display: inline-block;
+        background-color: transparent;
+        outline: none;
+    }
+}
+
+.styled-checkbox-wrapper div input[type="checkbox"] { 
     border: none;
 }
 
 .icon-checkbox-off {
-    @include svg-icon(
+    @include svg-icon-layered(
+        '/assets/phy/icons/redesign/checkbox-fg.svg',
         '/assets/phy/icons/redesign/checkbox-bg.svg',
         1.6em, 1.6em, 1.6em
     );
+
+    &::before {
+        background-color: $color-neutral-500;
+    }
+
+    &::after {
+        background-color: $color-neutral-white;
+    }
+
+    &:disabled::before{
+        background-color: $color-neutral-300;
+    }
+    
+    &:hover:not(:disabled)::after {
+        background-color: #f8f8f8;
+    }
 }
   
 .icon-checkbox-partial {
@@ -17,6 +51,15 @@
         '/assets/phy/icons/redesign/checkbox-bg.svg',
         1.6em, 1.6em, 1.6em
     );
+
+    background: $color-neutral-white;
+    &:hover:not(:disabled) {
+        background: #f8f8f8;
+    }
+
+    &::after {
+        background-color: $color-neutral-300;
+    }
 }
   
 .icon-checkbox-partial-alt {
@@ -25,6 +68,15 @@
         '/assets/phy/icons/redesign/checkbox-bg.svg',
         1.6em, 1.6em, 1.6em
     );
+
+    background: $color-neutral-white;
+    &:hover:not(:disabled) {
+        background: #f8f8f8;
+    }
+
+    &::after {
+        background-color: $color-brand-500;
+    }
 }
   
 .icon-checkbox-selected {

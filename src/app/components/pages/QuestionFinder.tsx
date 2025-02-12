@@ -459,7 +459,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const FilterTag = ({name}: {name: string}) => {
         return (
-            <div data-bs-theme="neutral" className="filter-tag me-2 d-flex align-items-center">
+            <div data-bs-theme="neutral" className="filter-tag me-2 mt-1 d-flex align-items-center">
                 {name}
                 <button className="icon icon-close" onClick={() => removeFilterTag(name)} aria-label="Close"/>
             </div>
@@ -473,7 +473,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
         const categories = [searchDifficulties, stageList, searchExamBoards, statusList, searchBooks, selectionList].flat();
 
-        return <div className="d-flex"> 
+        return <div className="d-flex flex-wrap mt-2"> 
             {categories.map(c => <FilterTag key={c} name={c}/>)}
             {categories.length > 0 ?
                 <button className="text-black py-0 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
