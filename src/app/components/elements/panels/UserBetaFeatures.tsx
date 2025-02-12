@@ -18,7 +18,7 @@ export const RevisionModeInput = ({displaySettings, setDisplaySettings}: Revisio
     return <StyledCheckbox checked={displaySettings.HIDE_QUESTION_ATTEMPTS ?? false}
         onChange={e => {
             setDisplaySettings((oldDs) => ({...oldDs, HIDE_QUESTION_ATTEMPTS: e.target.checked}));
-        }} 
+        }}
         color={siteSpecific("primary", "")}
         label={<p>Hide previous question attempts</p>}
         id={"hide-previous-q-attempts"}
@@ -35,6 +35,17 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
             <>
                 <b><RevisionModeInput {...{displaySettings, setDisplaySettings}}/></b>
                 <p>{`This feature lets you answer questions ${siteSpecific("that you have answered before, without seeing your old answer.", "again, even if you've answered them before.")} It's useful if you are reviewing a topic before a test or exam.`}</p>
+            </>
+            <>
+                <b><StyledCheckbox checked={displaySettings.PREFER_MATHML ?? false}
+                    onChange={e => {
+                        setDisplaySettings((oldDs) => ({...oldDs, PREFER_MATHML: e.target.checked}));
+                    }}
+                    color={siteSpecific("primary", "")}
+                    label={<p>Use MathML for accessible maths</p>}
+                    id={"prefer-mathml"}
+                /></b>
+                <p>{`With this setting you can toggle between using alternative text or MathML for mathematical equations.`}</p>
             </>
             {isAda && <>
                 <StyledCheckbox checked={consentSettings.OPENAI ?? false}

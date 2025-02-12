@@ -48,7 +48,6 @@ import {
     allRequiredInformationIsPresent,
     history,
     ifKeyIsEnter,
-    isAda,
     isDefined,
     isDobOldEnoughForSite,
     isFirstLoginInPersistence,
@@ -73,6 +72,7 @@ import {UserProfile} from '../elements/panels/UserProfile';
 import {UserContent} from '../elements/panels/UserContent';
 import {ExigentAlert} from "../elements/ExigentAlert";
 import {MainContent, MyAccountSidebar, SidebarLayout} from '../elements/layout/SidebarLayout';
+import { StyledTabPicker } from '../elements/inputs/StyledTabPicker';
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -332,12 +332,10 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, error, userAuthS
                         <div className="section-divider mt-0"/>
                         <h5>Account settings</h5>
                         {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
-                            <NavLink
-                                key={tab} tabIndex={0} className={classnames("sidebar-tab", {"active-tab": activeTab === tab})}
+                            <StyledTabPicker
+                                key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
                                 onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
-                            >
-                                {title}
-                            </NavLink>
+                            />
                         )}
                     </MyAccountSidebar>
                     <MainContent className="w-lg-50">

@@ -1,5 +1,5 @@
-import React, { ChangeEvent, ReactNode, RefObject, useEffect, useRef, useState } from "react";
-import { Col, ColProps, RowProps, Input, Label, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
+import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
@@ -14,6 +14,7 @@ import { QuestionFinderFilterPanel, QuestionFinderFilterPanelProps } from "../pa
 import { AssignmentState } from "../../pages/MyAssignments";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
+import { StyledTabPicker } from "../inputs/StyledTabPicker";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -180,23 +181,7 @@ export const ConceptSidebar = (props: QuestionSidebarProps) => {
     return <QuestionSidebar {...props} />;
 };
 
-interface FilterCheckboxBaseProps extends React.HTMLAttributes<HTMLLabelElement> {
-    id: string;
-    checked?: boolean;
-    onInputChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
-    filterTitle: ReactNode;
-    conceptFilters?: Tag[];
-    count?: number;
-}
 
-const FilterCheckboxBase = (props: FilterCheckboxBaseProps) => {
-    const { id, checked, onInputChange, filterTitle, count, ...rest } = props;
-    return <Label {...rest} className="d-flex align-items-center filters-checkbox py-2 mb-1">
-        <Input id={`problem-search-${id}`} type="checkbox" checked={checked ?? false} onChange={onInputChange} />
-        <span className="ms-3">{filterTitle}</span>
-        {isDefined(count) && <span className="badge rounded-pill ms-2">{count}</span>}
-    </Label>;
-};
 
 interface FilterCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
     tag: Tag;
@@ -213,17 +198,17 @@ const FilterCheckbox = (props : FilterCheckboxProps) => {
         setChecked(conceptFilters.includes(tag));
     }, [conceptFilters, tag]);
 
-    return <FilterCheckboxBase {...rest} id={tag.id} checked={checked} 
+    return <StyledTabPicker {...rest} id={tag.id} checked={checked} 
         onInputChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilters(f => e.target.checked ? [...f, tag] : f.filter(c => c !== tag))}
-        filterTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
+        checkboxTitle={tag.title} count={tagCounts && isDefined(tagCounts[tag.id]) ? tagCounts[tag.id] : undefined}
     />;
 };
 
 const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag">) => {
     const { conceptFilters, setConceptFilters, tagCounts, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<Tag[]>([]);
-    return <FilterCheckboxBase {...rest} 
-        id="all" checked={!conceptFilters.length} filterTitle="All" count={tagCounts && Object.values(tagCounts).reduce((a, b) => a + b, 0)}
+    return <StyledTabPicker {...rest} 
+        id="all" checked={!conceptFilters.length} checkboxTitle="All" count={tagCounts && Object.values(tagCounts).reduce((a, b) => a + b, 0)}
         onInputChange={(e) => {
             if (e.target.checked) {
                 setPreviousFilters(conceptFilters);
@@ -353,8 +338,8 @@ interface AssignmentStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelEl
 
 const AssignmentStatusCheckbox = (props: AssignmentStatusCheckboxProps) => {
     const {status, statusFilter, setStatusFilter, count, ...rest} = props;
-    return <FilterCheckboxBase 
-        id={status ?? ""} filterTitle={status}
+    return <StyledTabPicker 
+        id={status ?? ""} checkboxTitle={status}
         onInputChange={() => !statusFilter.includes(status) ? setStatusFilter(c => [...c.filter(s => s !== AssignmentState.ALL), status]) : setStatusFilter(c => c.filter(s => s !== status))}
         checked={statusFilter.includes(status)}
         count={count} {...rest}
@@ -364,8 +349,8 @@ const AssignmentStatusCheckbox = (props: AssignmentStatusCheckboxProps) => {
 const AssignmentStatusAllCheckbox = (props: Omit<AssignmentStatusCheckboxProps, "status">) => {
     const { statusFilter, setStatusFilter, count, ...rest } = props;
     const [previousFilters, setPreviousFilters] = useState<AssignmentState[]>([]);
-    return <FilterCheckboxBase 
-        id="all" filterTitle="All"
+    return <StyledTabPicker 
+        id="all" checkboxTitle="All"
         onInputChange={(e) => {
             if (e.target.checked) {
                 setPreviousFilters(statusFilter);
