@@ -46,7 +46,7 @@ export const RegistrationStart = () => {
                                 {siteSpecific(<div className="section-divider"/>, <hr/>)}
                                 <div className="mt-5">
                                     <div className={siteSpecific("h4 mb-3", "h3")}>Already have an account?</div>
-                                    <Button color="secondary" outline block onClick={login}>Log in</Button>
+                                    <Button color={siteSpecific("solid", "secondary")} outline={siteSpecific(false, true)} block onClick={login}>Log in</Button>
                                 </div>
                             </Col>
                             <Col xs={12} lg={6}>
