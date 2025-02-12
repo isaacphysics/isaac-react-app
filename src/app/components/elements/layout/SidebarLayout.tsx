@@ -6,7 +6,7 @@ import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } fr
 import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { getHumanContext } from "../../../services/pageContext";
@@ -489,5 +489,18 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
 export const MyAccountSidebar = (props: SidebarProps) => {
     return <ContentSidebar buttonTitle="Account settings" {...props}>
         {props.children}
+    </ContentSidebar>;
+};
+
+export const SignupSidebar = ({activeTab} : {activeTab: number}) => {
+    const history = useHistory();
+    return <ContentSidebar buttonTitle="Create an account">
+        <div className="section-divider mt-4"/>
+        <h5 className="mt-1">Create an account</h5>
+        {/* Tabs are clickable iff their page could be reached with a Back button */}
+        <StyledTabPicker checkboxTitle={"Sign-up method"} checked={activeTab === 0} onClick={activeTab > 0 && activeTab < 3 ? (() => history.push("/register")) : undefined}/>
+        <StyledTabPicker checkboxTitle={"Age verification"} checked={activeTab === 1} onClick={activeTab === 2 ? (() => history.push("age")) : undefined}/>
+        <StyledTabPicker checkboxTitle={"Account details"} checked={activeTab === 2}/>
+        <StyledTabPicker checkboxTitle={"Preferences"} checked={activeTab === 3}/>
     </ContentSidebar>;
 };

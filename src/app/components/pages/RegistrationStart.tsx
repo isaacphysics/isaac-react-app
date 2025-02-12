@@ -4,6 +4,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
 import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 import {history, isAda, SITE_TITLE, siteSpecific} from "../../services";
+import { SidebarLayout, SignupSidebar, MainContent } from "../elements/layout/SidebarLayout";
 
 export const RegistrationStart = () => {
 
@@ -20,39 +21,44 @@ export const RegistrationStart = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={`Create an ${SITE_TITLE} account`} className="mb-4" />
-        <Card className="my-5">
-            <CardBody>
-                <Row className="align-items-start">
-                    <Col xs={12} lg={6}>
-                        <div className="mb-5">
-                            <h2>{siteSpecific("Hello!", "How would you like to sign up?")}</h2>
-                            <p>Here, you can create an {SITE_TITLE} account, or log in to an existing one.</p>
-                        </div>
-                        <div className="my-5">
-                            <div className={siteSpecific("h4 mb-3", "h3")}>Create a new account with your email:</div>
-                            <Button block onClick={emailSignUp}>Continue with email</Button>
-                        </div>
-                        <div className="my-5">
-                            <div className={siteSpecific("h4 mb-3", "h3")}>Or log in with:</div>
-                            {isAda && <div className="mb-2">
-                                <RaspberryPiSignInButton />
-                            </div>}
-                            <GoogleSignInButton />
-                        </div>
-                        {siteSpecific(<div className="section-divider"/>, <hr/>)}
-                        <div className="mt-5">
-                            <div className={siteSpecific("h4 mb-3", "h3")}>Already have an account?</div>
-                            <Button color="secondary" outline block onClick={login}>Log in</Button>
-                        </div>
-                    </Col>
-                    <Col xs={12} lg={6}>
-                        {siteSpecific(
-                            <img className="d-none d-lg-block img-fluid mx-auto p-2 border-radius-3" src={"/assets/phy/decor/physics-bg-light-3x5.png"} alt="" />,
-                            <img className="d-none d-lg-block img-fluid mx-auto" src={"/assets/cs/decor/register-3x4.png"} alt="" />
-                        )}
-                    </Col>
-                </Row>
-            </CardBody>
-        </Card>
+        <SidebarLayout>
+            <SignupSidebar activeTab={0}/>
+            <MainContent>
+                <Card className="my-5">
+                    <CardBody>
+                        <Row className="align-items-start">
+                            <Col xs={12} lg={6}>
+                                <div className="mb-5">
+                                    <h2>{siteSpecific("Hello!", "How would you like to sign up?")}</h2>
+                                    <p>Here, you can create an {SITE_TITLE} account, or log in to an existing one.</p>
+                                </div>
+                                <div className="my-5">
+                                    <div className={siteSpecific("h4 mb-3", "h3")}>Create a new account with your email:</div>
+                                    <Button block onClick={emailSignUp}>Continue with email</Button>
+                                </div>
+                                <div className="my-5">
+                                    <div className={siteSpecific("h4 mb-3", "h3")}>Or log in with:</div>
+                                    {isAda && <div className="mb-2">
+                                        <RaspberryPiSignInButton />
+                                    </div>}
+                                    <GoogleSignInButton />
+                                </div>
+                                {siteSpecific(<div className="section-divider"/>, <hr/>)}
+                                <div className="mt-5">
+                                    <div className={siteSpecific("h4 mb-3", "h3")}>Already have an account?</div>
+                                    <Button color="secondary" outline block onClick={login}>Log in</Button>
+                                </div>
+                            </Col>
+                            <Col xs={12} lg={6}>
+                                {siteSpecific(
+                                    <img className="d-none d-lg-block img-fluid mx-auto p-2 border-radius-3" src={"/assets/phy/decor/physics-bg-light-3x5.png"} alt="" />,
+                                    <img className="d-none d-lg-block img-fluid mx-auto" src={"/assets/cs/decor/register-3x4.png"} alt="" />
+                                )}
+                            </Col>
+                        </Row>
+                    </CardBody>
+                </Card>
+            </MainContent>
+        </SidebarLayout>
     </Container>;
 };
