@@ -13,12 +13,12 @@
           }
 
           &[color="primary"] {
-            background: $color-brand-500;
-            border-color: $color-brand-500;
+            background: $dark-pink-300;
+            border-color: $dark-pink-300;
 
             &:hover, &:disabled {
-              background: darken($color-brand-500, 10%);
-              border-color: darken($color-brand-500, 10%);
+              background: darken($dark-pink-300, 10%);
+              border-color: darken($dark-pink-300, 10%);
             }
           }
 

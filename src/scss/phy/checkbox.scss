@@ -4,13 +4,13 @@
     background-color: $color-neutral-100;
     outline: 1px solid $color-neutral-200;
     border-radius: 4px;
-    
+
     .checkbox-region {
         background-color: $color-neutral-200;
         outline: 1px solid $color-neutral-300;
     }
 
-    &.search-field {
+    .search-field {
         display: inline-block;
         background-color: transparent;
         outline: none;
