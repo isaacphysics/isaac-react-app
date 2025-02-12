@@ -69,6 +69,7 @@ import {StyledSelect} from "../elements/inputs/StyledSelect";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 import { SortItemHeader } from "../elements/SortableItemHeader";
+import { MainContent, SetAssignmentsSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -110,7 +111,7 @@ const AssignGroup = ({groups, board}: AssignGroupProps) => {
         }
     }
 
-    return <Container className="py-2">
+    return <Container fluid className="py-2">
         <Label className="w-100 pb-2">Group(s):
             <StyledSelect inputId="groups-to-assign" isMulti isClearable placeholder="None"
                 value={selectedGroups}
@@ -529,90 +530,110 @@ export const SetAssignments = () => {
 
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Manage assignments")} help={pageHelp} modalId="help_modal_set_assignments"/>
         <PageFragment fragmentId={siteSpecific("help_toptext_set_gameboards", "set_quizzes_help")} ifNotFound={RenderNothing} />
-        {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
-        {groups && groups.length === 0 && <Alert color="warning">
-            You have not created any groups to assign work to.
-            Please <Link to="/groups">create a group here first.</Link>
-        </Alert>}
-        {boards && boards.totalResults === 0
-            ? <h3 className="text-center mt-4 mb-5">
-                You have no {siteSpecific("gameboards", "quizzes")} to assign
-                {siteSpecific(
-                    "; use one of the options above to find one.",
-                    <><br /><Button className={"mt-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="secondary">
-                        Create a quiz
-                    </Button></>
-                )}
-            </h3>
-            : <>
-                {isPhy && <h4>
-                    Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view assignments by start date and due date.
-                </h4>}
-                {isAda && <>
-                    {boards && boards.totalResults > 0 && <h4>
-                        You have <strong>{boards.totalResults}</strong> quiz{boards.totalResults > 1 && "zes"} ready to assign...{" "}
-                        {<Button className={"font-size-1-25"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
-                            create another quiz?
-                        </Button>}
-                    </h4>}
-                    {!boards && <h4>
-                        You have <IsaacSpinner size="sm" inline/> {siteSpecific("gameboards", "quizzes")} ready to assign...
-                    </h4>}
-                </>}
-                <Row>
-                    {(isPhy || boardView === BoardViews.card) && <Col sm={6} lg={3}>
-                        <Label className="w-100">
-                            Display in <Input type="select" value={boardView} onChange={switchView}>
-                                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
-                            </Input>
-                        </Label>
-                    </Col>}
-                    {boardView === BoardViews.card && <>
-                        <Col xs={6} lg={{size: 2, offset: 3}}>
-                            <Label className="w-100">
-                                Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
-                                    {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
-                                </Input>
-                            </Label>
-                        </Col>
-                        <Col xs={6} lg={4}>
-                            <Label className="w-100">
-                                Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
-                                    {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
-                                </Input>
-                            </Label>
-                        </Col>
+        <SidebarLayout>
+            <SetAssignmentsSidebar
+                displayMode={boardView} setDisplayMode={setBoardView}
+                displayLimit={boardLimit} setDisplayLimit={setBoardLimit}
+                boardTitleFilter={boardTitleFilter} setBoardTitleFilter={setBoardTitleFilter}
+                sortOrder={boardOrder} setSortOrder={setBoardOrder}
+                boardSubject={boardSubject} setBoardSubject={setBoardSubject}
+                boardCreator={boardCreator} setBoardCreator={setBoardCreator}
+                sortDisabled={!!boards && boards.boards.length !== boards.totalResults}
+            />
+            <MainContent>            
+                {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
+                {groups && groups.length === 0 && <Alert color="warning">
+                    You have not created any groups to assign work to.
+                    Please <Link to="/groups">create a group here first.</Link>
+                </Alert>}
+                {boards && boards.totalResults === 0
+                    ? <h3 className="text-center mt-4 mb-5">
+                        You have no {siteSpecific("gameboards", "quizzes")} to assign
+                        {siteSpecific(
+                            "; use one of the options above to find one.",
+                            <><br /><Button className={"mt-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="secondary">
+                                Create a quiz
+                            </Button></>
+                        )}
+                    </h3>
+                    : <>
+                        {isPhy && <h5>
+                            Use the <Link to={"/assignment_schedule"}>assignment schedule</Link> page to view assignments by start date and due date.
+                            <div className="section-divider my-4"/>
+                        </h5>}
+                        {isAda && <>
+                            {boards && boards.totalResults > 0 && <h4>
+                                You have <strong>{boards.totalResults}</strong> quiz{boards.totalResults > 1 && "zes"} ready to assign...{" "}
+                                {<Button className={"font-size-1-25"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
+                                    create another quiz?
+                                </Button>}
+                            </h4>}
+                            {!boards && <h4>
+                                You have <IsaacSpinner size="sm" inline/> {siteSpecific("gameboards", "quizzes")} ready to assign...
+                            </h4>}
+                        </>}
+                        {isAda && <Row>
+                            {boardView === BoardViews.card && <Col sm={6} lg={3}>
+                                <Label className="w-100">
+                                    Display in <Input type="select" value={boardView} onChange={switchView}>
+                                        {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                                    </Input>
+                                </Label>
+                            </Col>}
+                            {boardView === BoardViews.card && <>
+                                <Col xs={6} lg={{size: 2, offset: 3}}>
+                                    <Label className="w-100">
+                                        Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                                            {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+                                        </Input>
+                                    </Label>
+                                </Col>
+                                <Col xs={6} lg={4}>
+                                    <Label className="w-100">
+                                        Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as AssignmentBoardOrder)}>
+                                            {Object.values(AssignmentBoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+                                        </Input>
+                                    </Label>
+                                </Col>
+                            </>}
+                        </Row>}
+                        <ShowLoading until={boards}>
+                            {boards && boards.boards && <div>
+                                {boardView == BoardViews.card ?
+                                    // Card view
+                                    <>
+                                        <Row className={siteSpecific("row-cols-1", "row-cols-lg-3 row-cols-md-2 row-cols-1")}>
+                                            {boards.boards && boards.boards
+                                                .filter(board => matchesAllWordsInAnyOrder(board.title, boardTitleFilter))
+                                                .filter(board => formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                                                .filter(board => boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
+                                                .map(board =>
+                                                    <Col key={board.id}>
+                                                        <BoardCard
+                                                            user={user}
+                                                            board={board}
+                                                            boardView={boardView}
+                                                            assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                                            toggleAssignModal={() => openAssignModal(board)}
+                                                        />
+                                                    </Col>
+                                                )
+                                            }
+                                        </Row>
+                                        <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
+                                            <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong>
+                                            </p>
+                                            {boards.boards.length < boards.totalResults &&
+                                            <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner/> : "View more"}</Button>}
+                                        </div>
+                                    </>
+                                    :
+                                    // Table view
+                                    <SetAssignmentsTable {...tableProps}/>}
+                            </div>}
+                        </ShowLoading>
                     </>}
-                </Row>
-                <ShowLoading until={boards}>
-                    {boards && boards.boards && <div>
-                        {boardView == BoardViews.card ?
-                            // Card view
-                            <>
-                                <Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
-                                    {boards.boards && boards.boards.map(board =>
-                                        <Col key={board.id}>
-                                            <BoardCard
-                                                user={user}
-                                                board={board}
-                                                boardView={boardView}
-                                                assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
-                                                toggleAssignModal={() => openAssignModal(board)}
-                                            />
-                                        </Col>)}
-                                </Row>
-                                <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
-                                    <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong>
-                                    </p>
-                                    {boards.boards.length < boards.totalResults &&
-                                    <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner/> : "View more"}</Button>}
-                                </div>
-                            </>
-                            :
-                            // Table view
-                            <SetAssignmentsTable {...tableProps}/>}
-                    </div>}
-                </ShowLoading>
-            </>}
+            </MainContent>
+        </SidebarLayout>
     </Container>;
 };

@@ -2,7 +2,7 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isDefined, SITE_TITLE} from "../../../services";
+import {AUTHENTICATOR_FRIENDLY_NAMES_MAP, isDefined, SITE_TITLE, siteSpecific} from "../../../services";
 import {
     useGetSegueEnvironmentQuery,
     useDisableAccountMFAMutation,
@@ -67,14 +67,14 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
 
     return <CardBody className="pt-0 px-0">
         <Row>
-            <Col xs={{size: 8, offset: 2}} lg={{size: 6, offset: 3}} className="px-4">
-                <hr className="text-center" />
+            <Col xs={{size: 8, offset: 2}} lg={siteSpecific({size: 8, offset: 2}, {size: 6, offset: 3})} className="px-4">
+                {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-3"/>)}
                 <h4>Two-factor Authentication (2FA)</h4>
             </Col>
         </Row>
         {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
             <Row>
-                <Col xs={{size: 8, offset: 2}} lg={{size: 6, offset: 3}} className="px-4">
+                <Col xs={{size: 8, offset: 2}} lg={siteSpecific({size: 8, offset: 2}, {size: 6, offset: 3})} className="px-4">
                     <Row>
                         <Col>
                             <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>

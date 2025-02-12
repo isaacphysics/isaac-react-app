@@ -1,117 +1,173 @@
 import React, {useEffect} from "react";
-import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
+import {selectors, useAppSelector, useGetNewsPodListQuery, useLazyGetEventsQuery} from "../../../state";
 import {Link} from "react-router-dom";
-import {Button, Col, Container, Row} from "reactstrap";
-import {NewsCarousel} from "../../elements/NewsCarousel";
-import {above, SITE_TITLE, useDeviceSize, useUserConsent} from "../../../services";
-import {HomepageYoutubeCookieHandler} from "../../handlers/InterstitialCookieHandler";
+import {Button, Card, CardBody, CardProps, CardText, CardTitle, Col, Container, Row} from "reactstrap";
+import {above, EventStatusFilter, EventTypeFilter, HUMAN_STAGES, HUMAN_SUBJECTS, isLoggedIn, PHY_NAV_SUBJECTS, SITE_TITLE, STAGE, useDeviceSize} from "../../../services";
+import { NewsCard } from "../../elements/cards/NewsCard";
+import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
+import { EventCard } from "../../elements/cards/EventCard";
 import { StudentDashboard } from "../../elements/StudentDashboard";
+import { Subject, ShortcutResponse } from "../../../../IsaacAppTypes";
+import { ListViewCardProps, ListViewCards } from "../../elements/list-groups/ListView";
+import { Spacer } from "../../elements/Spacer";
+
+interface HomepageHeroCardProps extends CardProps {
+    title?: string;
+    content?: string;
+    isStudent?: boolean;
+}
+
+const HomepageHeroCard = ({title, content, isStudent}: HomepageHeroCardProps) => {
+    return <Card className="homepage-hero-card border-0">
+        <CardBody className="p-4 pt-5 d-flex flex-column">
+            <div className="homepage-hero-card-tag">
+                {isStudent
+                    ? <>
+                        <img src="/assets/phy/icons/redesign/homepage-hero-student-flag.svg" height={"40px"} alt={"student card tag"}/>
+                        <b>STUDENTS</b>
+                    </>
+                    : <>
+                        <img src="/assets/phy/icons/redesign/homepage-hero-teacher-flag.svg" height={"40px"} alt={"teacher card tag"}/>
+                        <b>TEACHERS</b>
+                    </>
+                }
+            </div>
+            <CardTitle className="mt-1" tag="h4">{title}</CardTitle>
+            <CardText>{content}</CardText>
+            <Spacer/>
+            <Button className="w-max-content" tag={Link} to={isStudent ? "/login" : "/teacher_account_request"}>Create a {isStudent ? "student" : "teacher"} account</Button>
+        </CardBody>
+    </Card>;
+};
+
+const HomepageHero = () => {
+    const user = useAppSelector(selectors.user.orNull);
+    const deviceSize = useDeviceSize();
+    if (!isLoggedIn(user)) {
+        return <div className="homepage-hero">
+            {above['md'](deviceSize) && <div className="homepage-hero-img"/>}
+            <Container className="pt-5">
+                <div className="w-100 w-md-50 mb-4 mb-md-5 mb-xl-6 pe-xl-5">
+                    <div className="physics-strapline mb-3">
+                        <h2><span className="text-green">Master Science subjects</span> by solving problems</h2>
+                    </div>
+                    From School to University – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.
+                </div>
+                {!above['md'](deviceSize) && <div className="homepage-hero-img container-override"/>}
+                <Row className="row-cols-1 row-cols-md-2">
+                    <Col className="mb-3">
+                        <HomepageHeroCard
+                            title="Build Confidence in Physics through Practice"
+                            content="Tackle interactive questions, explore varying difficulty levels, and strengthen problem-solving skills with concept guides, video lessons, and events."
+                            isStudent={true}/>
+                    </Col>
+                    <Col className="mb-3">
+                        <HomepageHeroCard
+                            title="Support students in developing skills and achieving higher results"
+                            content="Assign, track, and manage student progress with ease—ideal for classwork, homework, or revision. Trusted by over 1,000 UK schools."
+                            isStudent={false}/>
+                    </Col>
+                </Row>
+            </Container>           
+        </div>;
+    }
+};
+
+type subjectCategory = {subject: string, humanSubject: string, subcategories: {humanStage: string, href: string}[]};
+const subjectCategories = Object.entries(PHY_NAV_SUBJECTS).map(([subject, stages]) => {
+    return {
+        subject: subject,
+        humanSubject: HUMAN_SUBJECTS[subject],
+        subcategories: stages.map((stage) => {
+            return {
+                humanStage: HUMAN_STAGES[stage.valueOf()],
+                href: `/${subject}/${stage}`,
+            };
+        })
+    };
+});
+
+const getListViewSubjectCard = (sc: subjectCategory) => {
+    const item: ShortcutResponse = {
+        title: sc.humanSubject,
+        subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris faucibus est vulputate augue tristique, sed vehicula turpis pellentesque.",
+    };
+
+    const listViewSubjectCard: ListViewCardProps = {
+        item: item,
+        icon: {type: "img", icon: `/assets/phy/icons/redesign/subject-${sc.subject}.svg`},
+        subject: sc.subject as Subject,
+        linkTags: sc.subcategories.map((subcat) => ({tag: subcat.humanStage, url: subcat.href}))
+    };
+
+    return listViewSubjectCard;
+};
+
+const cards = subjectCategories.map((sc) => getListViewSubjectCard(sc));
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
-    const {data: news} = useGetNewsPodListQuery({subject: "physics"});
+
     const user = useAppSelector(selectors.user.orNull);
-    const deviceSize = useDeviceSize();
-    const userConsent = useUserConsent();
+    const {data: news} = useGetNewsPodListQuery({subject: "physics"});
 
+    const [getEventsList, eventsQuery] = useLazyGetEventsQuery();
+    useEffect(() => {
+        getEventsList({startIndex: 0, limit: 2, typeFilter: EventTypeFilter["All events"], statusFilter: EventStatusFilter["Upcoming events"], stageFilter: [STAGE.ALL]});
+    }, []);
+    
     return <>
-        {/*<WarningBanner/>*/}
-        <StudentDashboard />
-        <div id="homepage" className="pb-5 px-2 px-sm-5 mx-md-5 px-lg-0">
-            <section id="call-to-action" className="homepageHero">
-                <Container className="pt-4">
-                    <Row className="mt-sm-4">
-                        <Col lg={5} className="physics-site-intro">
-                            <h1 className={`physics-strapline ${above["lg"](deviceSize) ? "h2" : ""} mb-lg-3`}>
-                                {above["sm"](deviceSize) ?
-                                    <>Master Physics by Solving Problems:<br /><small>from School to University!</small></> :
-                                    <>Master Physics by Solving Problems</>}
-                            </h1>
-                            <p>Welcome to Isaac Physics, the free platform for teachers and students.</p>
-                            <ul>
-                                <li>Use it in the <strong>classroom</strong></li>
-                                <li>Use it for <strong>homework</strong></li>
-                                <li>Use it for <strong>revision</strong></li>
-                            </ul>
-                        </Col>
-                        <Col lg={7} className={above["lg"](deviceSize) ? `align-items-stretch d-flex flex-column` : ""}>
-                            {!(user && user.loggedIn) && <Row className="align-self-end mt-2 mt-lg-0 mb-1 mb-lg-0">
-                                <Col className="col-6 col-lg-auto ps-lg-0 pe-1 pe-sm-2">
-                                    <Button size={above['lg'](deviceSize) || deviceSize === "xs" ? "sm" : ""} tag={Link} to="/login" color="primary" outline block
-                                    >
-                                        Log in
-                                    </Button>
-                                </Col>
-                                <Col className="col-6 col-lg-auto ps-lg-0 ps-1 ps-sm-2">
-                                    <Button size={above['lg'](deviceSize) || deviceSize === "xs" ? "sm" : ""} tag={Link} to="/register" color="secondary" block>
-                                        Sign up
-                                    </Button>
-                                </Col>
-                            </Row>}
-                            <div className={`h-100 ps-lg-4 content-video-container w-100 ${user?.loggedIn ? "pt-1 pt-sm-2 pt-lg-2" : "pt-4 pt-lg-3"} ${userConsent.cookieConsent?.youtubeCookieAccepted ?? false ? "ratio-16x9" : ""}`}>
-                                <HomepageYoutubeCookieHandler />
+        <div id="homepage" className="homepage pb-5">
+            <section id="student-dashboard">
+                <StudentDashboard />
+            </section>
+            <section id="homepage-hero">               
+                {!isLoggedIn(user) && <HomepageHero />}
+            </section>
+            <Container>
+                <section id="explore-learn">
+                    <div className="mt-5">
+                        <div className="d-flex">
+                            <h3>Explore and learn!</h3>
+                            <div className="section-divider ms-2"/>
+                        </div>
+                        <ListViewCards cards={cards}/>                                         
+                    </div>                    
+                </section>
+                <section id="events-news">
+                    <Row className="mt-5 row-cols-1 row-cols-lg-2">
+                        <div className="d-flex flex-column mt-3">
+                            <div className="d-flex">
+                                <h3>Upcoming Events</h3>
+                                <Link to="/events" className="news-events-link">More events</Link>                        
+                                <div className="section-divider"/>
                             </div>
-                        </Col>
+                            <ShowLoadingQuery
+                                query={eventsQuery}
+                                defaultErrorTitle={"Error loading events list"}
+                                thenRender={({events}) => {
+                                    return <Row className="h-100">
+                                        {events.map(event => <Col key={event.id}>
+                                            <EventCard event={event} />
+                                        </Col>)}
+                                    </Row>;
+                                }}/>
+                        </div>
+                        <div className="d-flex flex-column mt-3"> 
+                            <div className="d-flex">
+                                <h3>News & Features</h3>
+                                <Link to="/news" className="news-events-link">More news</Link>                     
+                                <div className="section-divider"/>
+                            </div>
+                            {news && <Row className="h-100">
+                                {news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>
+                                    <NewsCard newsItem={newsItem} />
+                                </Col>)}
+                            </Row>}
+                        </div>
                     </Row>
-
-                    <div className="physics-site-intro mt-4 mt-lg-2">
-                        <strong>Show me resources for...</strong>
-                        <Row className="mt-2">
-                            <Col xs={12} lg={3} className="pe-lg-1 py-1">
-                                <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/11_14" className="h-100 d-inline-flex align-items-center justify-content-center">
-                                    11-14
-                                </Button>
-                            </Col>
-                            <Col xs={12} lg={3} className="px-lg-1 py-1">
-                                <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/gcse" className="h-100 d-inline-flex align-items-center justify-content-center">
-                                    {above["md"](deviceSize) ?
-                                        "GCSE or\u00A0equivalent" :
-                                        "GCSE"}
-                                </Button>
-                            </Col>
-                            <Col xs={12} lg={3} className="px-lg-1 py-1">
-                                <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/alevel" className="h-100 d-inline-flex align-items-center justify-content-center">
-                                    {above["md"](deviceSize) ?
-                                        "A\u00A0Level or\u00A0equivalent" :
-                                        "A\u00A0Level"}
-                                </Button>
-                            </Col>
-                            <Col xs={12} lg={3} className="ps-lg-1 py-1">
-                                <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/teacher_features" className="h-100 d-inline-flex align-items-center justify-content-center">
-                                    teachers
-                                </Button>
-                            </Col>
-                        </Row>
-                    </div>
-                </Container>
-            </section>
-
-            <section id="news">
-                <Container>
-                    <div className="h-underline mb-4 mt-4 pt-2 mt-sm-5 pt-sm-0 d-flex align-items-center">
-                        <h2>News and features</h2>
-                        <Link to="/news" className="ms-auto">See all news</Link>
-                    </div>
-                    <Row className="eventList pt-1">
-                        <Col>
-                            <NewsCarousel items={news} showTitle className={"mx-sm-n4"} />
-                        </Col>
-                    </Row>
-                </Container>
-            </section>
-
-            {!user?.loggedIn && <section className="mb-4">
-                <Container>
-                    <div className="mt-4 py-4 px-5 d-flex align-items-center flex-column flex-md-row border bg-white">
-                        <h3 className="text-center text-md-start me-md-4 me-lg-0 mb-3 mb-md-0">
-                            Sign up to track your progress
-                        </h3>
-                        <Button tag={Link} size="lg" className="ms-md-auto me-md-3 me-lg-5 btn-xl" to={"/register"}>
-                            Sign up
-                        </Button>
-                    </div>
-                </Container>
-            </section>}
+                </section>
+            </Container>
         </div>
     </>;
 };

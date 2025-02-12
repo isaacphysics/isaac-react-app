@@ -19,6 +19,7 @@ export const RevisionModeInput = ({displaySettings, setDisplaySettings}: Revisio
         onChange={e => {
             setDisplaySettings((oldDs) => ({...oldDs, HIDE_QUESTION_ATTEMPTS: e.target.checked}));
         }} 
+        color={siteSpecific("primary", "")}
         label={<p>Hide previous question attempts</p>}
         id={"hide-previous-q-attempts"}
     />;

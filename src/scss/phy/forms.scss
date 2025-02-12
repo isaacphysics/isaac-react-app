@@ -52,6 +52,13 @@ select.form-select {
   border-radius: 0;
   border-bottom: 2px solid $color-neutral-300;
   background-color: transparent;
+
+  &:disabled {
+    background-color: $color-neutral-50;
+    border-color: $color-neutral-200;
+    color: $color-neutral-400;
+    background-blend-mode: difference;
+  }
 }
 
 .form-check-input {
@@ -74,4 +81,31 @@ select.form-select {
     background-color: color-mix(in srgb, var(--subject-color-500) 25%, transparent);
     border-color: color-mix(in srgb, var(--subject-color-500) 25%, transparent);
   }
+}
+
+input {
+  &.form-control {
+    height: 2.6rem;
+    border: 1px solid $color-neutral-300;
+    border-radius: 8px;
+  }
+}
+
+select {
+  &.form-select {
+    height: 2.6rem;
+    border: 1px solid $color-neutral-300;
+    border-radius: 8px;
+    background-color: white;
+
+    &[name='selectMulti'] {
+      padding: 1rem 1.2rem 1.5rem;
+    }
+  }
+}
+
+.school-input {
+  height: 2.6rem;
+  border: 1px solid $color-neutral-300;
+  border-radius: 8px;
 }
