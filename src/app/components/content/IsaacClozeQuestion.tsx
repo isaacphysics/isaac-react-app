@@ -151,6 +151,8 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const inlineDropValueMap = useMemo<{[p: string]: ClozeItemDTO}>(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
 
+    console.log(inlineDropValueMap);
+
     // Compute map used to highlight each inline drop-zone with whether it is correct or not
     const itemsCorrect = validationResponse?.itemsCorrect;
     const [dropZoneValidationMap, setDropZoneValidationMap] = useState<{[p: string]: {correct?: boolean, itemId?: string} | undefined}>({});
@@ -231,6 +233,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     useAutoScroll({active: isDefined(activeItem) && !usingKeyboard, acceleration: 5, interval: 5});
 
     const registerInlineDropRegion = useCallback((dropRegionId: string, index: number) => {
+        console.log("registering", dropRegionId, index);
         if (!registeredDropRegionIDs.has(dropRegionId)) {
             registeredDropRegionIDs.set(dropRegionId, index);
             setInlineDropValues(idvs => [...idvs]); // This is messy, but it makes sure that the inlineDropValueMap is recomputed
@@ -484,7 +487,8 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             shouldGetFocus,
             dropZoneValidationMap,
             nonSelectedItems,
-            allItems
+            allItems,
+            zoneIds: new Set<string>(),
         }}>
             <DndContext
                 sensors={sensors}

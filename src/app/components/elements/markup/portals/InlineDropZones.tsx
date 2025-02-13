@@ -59,6 +59,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
     const droppableId = CLOZE_DROP_ZONE_ID_PREFIX + `${index + 1}`;
     const dropdownItems = dropRegionContext?.allItems ?? [];
     const nonSelectedItemIds = (dropRegionContext?.nonSelectedItems ?? []).map(item => item.id);
+    dropRegionContext?.zoneIds.add(id);
 
     useEffect(() => {
         // Register with the current cloze question on first render

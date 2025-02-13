@@ -27,13 +27,14 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = (html) => {
             console.error("Drop zone div element has invalid index data attribute!", dropZones[i]);
             continue;
         }
-        dropZones[i].setAttribute("id", `${dropZones[i].id}-${safeQuestionId}`);
-        dropIds.push({id: dropZones[i].id, index, width, height});
+        const contextIndex = index + dropRegionContext.zoneIds.size;
+        dropZones[i].setAttribute("id", `drop-region-${contextIndex}-${safeQuestionId}`);
+        dropIds.push({id: dropZones[i].id, index: contextIndex, width, height});
     }
 
     return [
         htmlDom.innerHTML,
-        (ref?: HTMLElement) => ref ? dropIds.map(({id, index, width, height}) =>
+        (ref?: HTMLElement) => ref ? dropIds.map(({id, index, width, height}) => 
             <InlineDropRegion
                 key={id}
                 rootElement={ref}

@@ -433,7 +433,7 @@ export interface EmailTemplateDTO extends ContentDTO {
 
 export interface FigureDTO extends ImageDTO {
     dropZones?: {
-        index: number;
+        index?: number;
         minWidth: string;
         minHeight: string;
         left: number;

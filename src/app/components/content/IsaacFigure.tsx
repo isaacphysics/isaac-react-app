@@ -32,18 +32,19 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                     <div className="w-100 d-flex justify-content-center" ref={clozeDropRootElement}>
                         <div className="position-relative w-max-content">
                             {doc.dropZones && clozeContext && path && doc.dropZones.map((dropZone, i) => {
-                                const dropZoneElement = document.getElementById(`figure-drop-target-${dropZone.index}`);
+                                const index = dropZone.index ?? clozeContext.zoneIds.size + i;
+                                const dropZoneElement = document.getElementById(`figure-drop-target-${index}`);
                                 return <div 
-                                    className="position-absolute" id={`figure-drop-target-${dropZone.index}`} key={i}
+                                    className="position-absolute" id={`figure-drop-target-${index}`} key={i}
                                     // style={{left: `calc(16px + ${dropZone.left}% - ${(100 + 16) * dropZone.left/100}px)`, top: `calc(32px + ${dropZone.top}% - ${(34 + 16) * dropZone.top/100}px)`}}
                                     style={{
                                         left: `calc(16px + ${dropZone.left}% - ((${dropZoneElement?.clientWidth}px + 16px + 16px) * ${(dropZone.left)/100})`, 
-                                        top: `calc(16px + ${dropZone.top}% - ((${dropZoneElement?.clientHeight}px + 32px + 16px) * ${(dropZone.top)/100})`
+                                        top: `calc(8px + 16px + ${dropZone.top}% - ((${dropZoneElement?.clientHeight}px + 32px + 16px) * ${(dropZone.top)/100})`
                                     }}
                                 >
                                     <InlineDropRegion 
-                                        id={`figure-drop-target-${dropZone.index}`}
-                                        index={dropZone.index}
+                                        id={`figure-drop-target-${index}`}
+                                        index={index}
                                         emptyWidth={dropZone.minWidth.endsWith("px") ? dropZone.minWidth.replace("px", "") : undefined}
                                         emptyHeight={dropZone.minHeight.endsWith("px") ? dropZone.minHeight.replace("px", "") : undefined}
                                         rootElement={clozeDropRootElement.current || undefined}
