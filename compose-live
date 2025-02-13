@@ -15,7 +15,7 @@ DOCKER_REPO=ghcr.io/isaacphysics
 SITE=$1
 APP_VERSION=$2
 ENV=live
-# We're done with the first two args. The remainder will be passed to docker-compose:
+# We're done with the first two args. The remainder will be passed to docker compose:
 shift 2
 
 
@@ -32,8 +32,8 @@ elif [ $1 = "down" ] || [ $1 = "stop" ] || [ $1 = "restart" ] || [ $1 = "exec" ]
   API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' $SITE-app-$ENV-$APP_VERSION)
 
 else
-  # This might not be a docker-compose operation. If it is, it could be added above to the correct branch.
-  echo "Error: Unsupported docker-compose operation '$1'!"
+  # This might not be a docker compose operation. If it is, it could be added above to the correct branch.
+  echo "Error: Unsupported docker compose operation '$1'!"
   exit 1
 fi
 
@@ -55,7 +55,7 @@ elif [ "$SITE" == "phy" ]; then
   CONTENT_REPO="rutherford-content"
 fi
 
-docker-compose -p dc-${APP_NAME//./-} -f - $@ << EOF
+docker compose -p dc-${APP_NAME//./-} -f - $@ << EOF
 version: '2'
 services:
   $APP_NAME:
