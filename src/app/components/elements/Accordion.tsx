@@ -120,13 +120,14 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     const clientId = useRef('c' + nextClientId++);
 
     // Check results of questions in this accordion
-    let accordionIcon;
+    let accordionState : "correct" | "incorrect" | "in-progress" | undefined;
     const questionsOnPage = useAppSelector(selectors.questions.getQuestions) || [];
     const questionsInsideAccordionSection = questionsOnPage?.filter(q => q.accordionClientId === clientId.current);
     if (questionsInsideAccordionSection.length > 0) {
         let allCorrect = true;
         let allWrong = true;
         let allValidated = true;
+        let anyValidated = false;
         questionsInsideAccordionSection.forEach(question => {
             if (question.validationResponse) {
                 const correct = question.validationResponse.correct;
@@ -135,12 +136,14 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 } else {
                     allCorrect = false;
                 }
+                anyValidated = true;
             } else {
                 allValidated = false;
             }
         });
-        if (allValidated && allCorrect) accordionIcon = "tick";
-        if (allValidated && allWrong) accordionIcon = "cross";
+        if (allValidated && allCorrect) accordionState = "correct";
+        if (allValidated && allWrong) accordionState = "incorrect";
+        if (anyValidated && !accordionState) accordionState = "in-progress";
     }
 
     const isConceptPage = page && page != NOT_FOUND && page.type === DOCUMENT_TYPE.CONCEPT;
@@ -150,7 +153,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     return <div className="accordion">
         <button 
             className={classNames(
-                "accordion-header d-flex w-100 p-3 pb-0 align-items-stretch", 
+                "accordion-header d-flex w-100 p-0 align-items-stretch", 
                 {"de-emphasised": deEmphasised || disabled, "active": isOpen, "btn btn-link": isAda}
             )}
             id={anchorId || ""} type="button"
@@ -186,7 +189,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     </>
                 )}
             </span>}
-            <div className={classNames("d-flex flex-grow-1", siteSpecific("flex-column", "align-items-center ps-1"))}>
+            <div className={classNames("d-flex flex-grow-1 ps-3 pt-3", siteSpecific("flex-column", "align-items-center ps-1"))}>
                 {isDefined(index) && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>}
                 {trustedTitle && <div className={classNames("accordion-title p-3 ps-1", siteSpecific("pt-0", ""))}>
                     <Markup encoding={"latex"}>
@@ -202,8 +205,25 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 </div>}
             </div>
 
-            {accordionIcon && isPhy && <span className={"accordion-icon align-self-center accordion-icon-" + accordionIcon}>
-                <span className="visually-hidden">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
+            {accordionState && isPhy && <span className={"accordion-icon d-flex align-items-center gap-2 w-max-content h-100 pb-1 pe-3 align-self-center"}>
+                {accordionState === "correct"
+                    ? <>
+                        <span>Correct</span>
+                        <div className="icon-correct"/>
+                        <span className="visually-hidden">All questions in this part are answered correctly.</span>
+                    </>
+                    : accordionState === "incorrect" 
+                        ? <>
+                            <span>Incorrect</span>
+                            <div className="icon-incorrect"/>
+                            <span className="visually-hidden">All questions in this part are answered incorrectly.</span>
+                        </>
+                        : <>
+                            <span>In progress</span>
+                            <div className="icon-in-progress"/>
+                            <span className="visually-hidden">Some questions in this part are answered incorrectly.</span>
+                        </>
+                }
             </span>}
         </button>
         <Collapse isOpen={isOpen} className={siteSpecific("accordion-body", "mt-1")}>

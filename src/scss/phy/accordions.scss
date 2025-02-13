@@ -7,6 +7,11 @@
   margin-bottom: 8px;
   transition: border-color 0.2s ease-in-out, outline 0.2s ease-in-out;
 
+  &:not(:has(> .accordion-header.active)):hover {
+    border-color: $color-neutral-400;
+    transition: border-color 0.05s ease-out;
+  }
+
   &:has(> .accordion-header.active) {
     border-color: var(--nav-primary);
     border-radius: 8px;

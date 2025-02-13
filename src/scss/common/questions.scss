@@ -400,9 +400,6 @@ $inline-feedback-padding: 2px;
 
 .validation-response-panel {
   text-align: center;
-  &.correct {
-    margin-bottom: -3rem;
-  }
   p {
     margin-bottom: 0;
   }
@@ -568,6 +565,10 @@ p > .katex, .katex-display {
       right: 75px;
     }
   }
+}
+
+.unit-selection .dropdown button.feedback-zone.feedback-showing {
+  border-color: $form-invalid-border-color;
 }
 
 .question-actions {
