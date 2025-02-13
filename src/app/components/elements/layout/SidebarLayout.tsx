@@ -288,6 +288,14 @@ export const LessonsAndRevisionSidebar = (props: SidebarProps) => {
     return <ContentSidebar {...props}/>;
 };
 
+export const FAQSidebar = (props: SidebarProps) => {
+    return <ContentSidebar buttonTitle="Select a topic" {...props}>
+        <div className="section-divider mb-3"/>
+        <h5 className="mb-3">Select a topic</h5>
+        {props.children}
+    </ContentSidebar>;
+};
+
 interface AssignmentStatusCheckboxProps extends React.HTMLAttributes<HTMLLabelElement> {
     status: AssignmentState;
     statusFilter: AssignmentState[];
