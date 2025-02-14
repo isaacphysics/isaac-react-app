@@ -3,10 +3,18 @@
     justify-content: center;
     align-items: center;
 
+    &.checkbox-small {
+      --checkbox-size: 1em;
+    }
+
+    &:not(.checkbox-small) {
+        --checkbox-size: 1.6em;
+    }
+
     div {
-      width: 1.6em;
-      min-width: 1.6em;
-      height: 1.6em;
+      width: var(--checkbox-size);
+      min-width: var(--checkbox-size);
+      height: var(--checkbox-size);
       position: relative;
 
       input[type="checkbox"] {
