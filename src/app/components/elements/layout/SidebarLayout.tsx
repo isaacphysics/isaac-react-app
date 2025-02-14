@@ -2,18 +2,19 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
+import { above, ACCOUNT_TAB, ACCOUNT_TABS, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, ifKeyIsEnter, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
-import { AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
+import { AppGroup, AssignmentBoardOrder, Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { getHumanContext } from "../../../services/pageContext";
 import { AssignmentState } from "../../pages/MyAssignments";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
+import { GroupSelector } from "../../pages/Groups";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -494,8 +495,44 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
     </ContentSidebar>;
 };
 
-export const MyAccountSidebar = (props: SidebarProps) => {
+interface MyAccountSidebarProps extends SidebarProps {
+    editingOtherUser: boolean;
+    activeTab: ACCOUNT_TAB;
+    setActiveTab: React.Dispatch<React.SetStateAction<ACCOUNT_TAB>>;
+}
+
+export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
+    const { editingOtherUser, activeTab, setActiveTab } = props;
     return <ContentSidebar buttonTitle="Account settings" {...props}>
-        {props.children}
+        <div className="section-divider mt-0"/>
+        <h5>Account settings</h5>
+        {ACCOUNT_TABS.filter(tab => !tab.hidden && !(editingOtherUser && tab.hiddenIfEditingOtherUser)).map(({tab, title}) => 
+            <StyledTabPicker
+                key={tab} id={title} tabIndex={0} checkboxTitle={title} checked={activeTab === tab}
+                onClick={() => setActiveTab(tab)} onKeyDown={ifKeyIsEnter(() => setActiveTab(tab))}
+            />
+        )}
+    </ContentSidebar>;
+};
+
+interface GroupsSidebarProps extends SidebarProps {
+    user: RegisteredUserDTO;
+    groups: AppGroup[] | undefined;
+    allGroups: AppGroup[];
+    selectedGroup: AppGroup | undefined;
+    setSelectedGroupId: React.Dispatch<React.SetStateAction<number | undefined>>;
+    showArchived: boolean;
+    setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
+    groupNameInputRef: RefObject<HTMLInputElement>;
+    createNewGroup: (newGroupName: string) => Promise<boolean>;
+}
+
+export const GroupsSidebar = (props: GroupsSidebarProps) => {
+    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup } = props;
+    return <ContentSidebar buttonTitle="Select or create a group" {...props}>
+        <div className="section-divider"/>
+        <h5>Select a group</h5>
+        <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
+            setShowArchived={setShowArchived} groupNameInputRef={groupNameInputRef} createNewGroup={createNewGroup} showCreateGroup={true} sidebarStyle={true}/>
     </ContentSidebar>;
 };
