@@ -13,6 +13,8 @@ import {
     isAda,
     isPhy,
     isStudent,
+    siteSpecific,
+    Subject,
     TAG_ID,
     tags,
     useNavigation
@@ -25,7 +27,7 @@ import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
-import {DocumentSubject, GameboardContext, Subject} from "../../../IsaacAppTypes";
+import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import queryString from "query-string";
@@ -85,11 +87,11 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
         const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
         return <GameboardContext.Provider value={navigation.currentGameboard}>
-            <Container className={classNames("no-shadow")} data-bs-theme={doc.subjectId}>
+            <Container className={classNames("no-shadow")} data-bs-theme={prevPageContext?.subject ?? doc.subjectId}>
                 <TitleAndBreadcrumb
                     currentPageTitle={generateQuestionTitle(doc)}
                     subTitle={doc.subtitle}
-                    intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
+                    intermediateCrumbs={siteSpecific([...navigation.breadcrumbHistory], [...navigation.breadcrumbHistory, ...getTags(doc.tags)])}
                     collectionType={navigation.collectionType}
                     audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
                     preview={preview} icon={{type: "hex", subject: doc.subjectId as Subject, icon: "page-icon-question"}}

@@ -5,13 +5,13 @@ import {Badge, Card, CardBody, CardHeader, Container} from "reactstrap";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {isPhy, matchesAllWordsInAnyOrder, pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID, tags} from "../../services";
-import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse, Tag} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
 import { SubjectSpecificConceptListSidebar, MainContent, SidebarLayout, GenericConceptsSidebar } from "../elements/layout/SidebarLayout";
-import { useUrlPageTheme } from "../../services/pageContext";
+import { isDefinedContext, useUrlPageTheme } from "../../services/pageContext";
 
 // This component is Isaac Physics only (currently)
 export const Concepts = withRouter((props: RouteComponentProps) => {
@@ -19,7 +19,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const concepts = useAppSelector((state: AppState) => state?.concepts?.results || null);
-    const pageContext = useUrlPageTheme();
+    const pageContext = useUrlPageTheme({resetIfNotFound: true});
 
     const subject = useAppSelector(selectors.pageContext.subject);
 
@@ -85,10 +85,13 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
 
     const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);
 
+    const crumb = isPhy && isDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
+
     return (
         <Container id="search-page" { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
             <TitleAndBreadcrumb 
                 currentPageTitle="Concepts" 
+                intermediateCrumbs={crumb ? [crumb] : undefined}
                 icon={{type: "hex", icon: "page-icon-concept"}}
             />
             <SidebarLayout>

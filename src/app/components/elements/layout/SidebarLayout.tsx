@@ -142,7 +142,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
             </ul>
         </>}
         {relatedQuestions && relatedQuestions.length > 0 && <>
-            {pageContextStage === "all" || !pageContextStage || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
+            {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
                 ? <>
                     <div className="section-divider"/>
                     <h5>Related questions</h5>
@@ -152,7 +152,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
                 </>
                 : <>
                     <div className="section-divider"/>
-                    <h5>Related {stageLabelMap[pageContextStage]} questions</h5>
+                    <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
                     <ul>
                         {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
                     </ul>
