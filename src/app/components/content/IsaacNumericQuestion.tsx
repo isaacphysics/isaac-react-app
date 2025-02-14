@@ -108,7 +108,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
             </div>
             <Row className="no-print">
                 <Col className="d-flex flex-column flex-md-row">
-                    <div className="d-flex flex-column numeric-value w-100 w-md-50">
+                    <div className="d-flex flex-column numeric-value w-100 w-md-50 mb-2">
                         Value
                         <InputGroup className={"feedback-zone nq-feedback separate-input-group flex-grow-1"}>
                             <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
@@ -124,7 +124,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                             {!readonly && !(isPhy && above['md'](deviceSize)) && tooltip}
                         </InputGroup>
                     </div>
-                    {(doc.requireUnits || doc.displayUnit) && <div className="d-flex flex-column unit-selection ps-md-5 w-100 w-md-50">
+                    {(doc.requireUnits || doc.displayUnit) && <div className="d-flex flex-column unit-selection ps-md-5 w-100 w-md-50 mb-2">
                         Unit{noDisplayUnit && "s"}
                         <Dropdown className="flex-grow-1" disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                             <DropdownToggle

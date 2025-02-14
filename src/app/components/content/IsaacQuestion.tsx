@@ -20,6 +20,7 @@ import {
     QUESTION_TYPES,
     RESTRICTED_QUESTION_TYPES,
     selectQuestionPart,
+    siteSpecific,
     submitCurrentAttempt,
     useDeviceSize,
     useFastTrackInformation} from "../../services";
@@ -275,7 +276,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                             }
                             {primaryAction &&
                             <div
-                                className={classNames("m-auto pt-3 pb-3 w-100 w-sm-100 w-md-50 w-lg-50", {"ps-sm-2 ps-md-0 ps-lg-3": secondaryAction})}>
+                                className={classNames("m-auto pt-3 w-100 w-sm-100 w-md-50 w-lg-50", siteSpecific("pb-3", "pb-1"), {"ps-sm-2 ps-md-0 ps-lg-3": secondaryAction})}>
                                 <input {...primaryAction} className="h-100 btn btn-secondary w-100"/>
                             </div>
                             }
