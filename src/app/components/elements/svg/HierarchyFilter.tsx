@@ -37,6 +37,7 @@ interface HierarchyFilterProps {
     tier: number;
     index: TAG_ID | TAG_LEVEL;
     className?: string;
+    root?: boolean;
 }
 
 interface HierarchySummaryProps {
@@ -52,7 +53,7 @@ interface HierarchyFilterHexagonalProps extends HierarchySummaryProps {
     selections: Item<TAG_ID>[][]; 
 }
 
-export function HierarchyFilterTreeList({tier, index, tiers, choices, selections, questionFinderFilter, className, setSelections}: HierarchyFilterProps) {  
+export function HierarchyFilterTreeList({tier, index, tiers, choices, selections, questionFinderFilter, className, root, setSelections}: HierarchyFilterProps) {  
     return <div className={classNames("ms-3", className)}>
         {choices[tier] && choices[tier][index] && choices[tier][index].map((choice) => {
             const isSelected = selections[tier] && selections[tier][index]?.map(s => s.value).includes(choice.value);
@@ -72,10 +73,11 @@ export function HierarchyFilterTreeList({tier, index, tiers, choices, selections
                 setSelections(newSelections);
             };
 
-            return <div key={choice.value} className={classNames("ps-2", {"search-field": tier===2, "checkbox-region": isSelected})}>
+            return <div key={choice.value} className={classNames("ps-2", {"search-field": tier===2, "checkbox-region": isSelected, "hierarchy-true-root": root && tier === 0})}>
                 <div className="d-flex align-items-center">
                     <StyledCheckbox
                         color="white"
+                        bsSize={root ? "lg" : "sm"}
                         checked={isSelected}
                         onChange={selectValue}
                         label={<span>{choice.label}</span>}
