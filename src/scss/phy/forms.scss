@@ -104,8 +104,11 @@ select {
   }
 }
 
-.input-primary {
-  &:checked {
-    background-color: $primary;
-  }
+input[color='primary']:checked {
+  background-color: $color-brand-500;
+}
+
+.inline-form-input-btn {
+  border: 1px solid $color-neutral-300;
+  width: 55px;
 }

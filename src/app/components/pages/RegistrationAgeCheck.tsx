@@ -53,43 +53,41 @@ export const RegistrationAgeCheck = () => {
                             "We can only create accounts for people over 13 years old."
                         )}</p>
                         <Form onSubmit={submit}>
-                            <FormGroup check className="my-2">
+                            <FormGroup check className="d-flex align-items-center my-2">
                                 <Input
                                     id="registration-age-check-over"
-                                    className="d-inline mt-1 input-primary"
+                                    className="d-inline"
                                     type="radio"
                                     checked={agePermission === "allowed"}
                                     onChange={() => {setAgePermission("allowed");}}
-                                    color="secondary"
+                                    color="primary"
                                     invalid={submissionAttempted && agePermission === undefined}
                                 />
-                                <Label for="registration-age-check-over" className="ms-2">13 and over</Label>
+                                <Label for="registration-age-check-over" className="ms-2 mb-0">13 and over</Label>
                             </FormGroup>
-                            {isPhy && <FormGroup check className="my-2">
+                            {isPhy && <FormGroup check className="d-flex align-items-center my-2">
                                 <Input
                                     id="registration-age-check-additional-info"
-                                    className="d-inline mt-1 input-primary"
+                                    className="d-inline"
                                     type="radio"
                                     checked={agePermission === "additional_info"}
                                     onChange={() => {setAgePermission("additional_info");}}
-                                    color="secondary"
+                                    color="primary"
                                     invalid={submissionAttempted && agePermission === undefined}
-                                >
-                                </Input>
-                                <Label for="registration-age-check-additional-info" className="ms-2">10 - 12 years old</Label>
+                                />
+                                <Label for="registration-age-check-additional-info" className="ms-2 mb-0">10 - 12 years old</Label>
                             </FormGroup>}
-                            <FormGroup check className="my-2">
+                            <FormGroup check className="d-flex align-items-center my-2">
                                 <Input
                                     id="registration-age-check-under"
-                                    className="d-inline mt-1"
+                                    className="d-inline"
                                     type="radio"
                                     checked={agePermission === "denied"}
                                     onChange={() => {setAgePermission("denied");}}
-                                    color="secondary"
+                                    color="primary"
                                     invalid={submissionAttempted && agePermission === undefined}
-                                >
-                                </Input>
-                                <Label for="registration-age-check-under" className="ms-2">Under {siteSpecific("10 years old", "13")}</Label>
+                                />
+                                <Label for="registration-age-check-under" className="ms-2 mb-0">Under {siteSpecific("10 years old", "13")}</Label>
                                 <FormFeedback>
                                     Please make a selection.
                                 </FormFeedback>
