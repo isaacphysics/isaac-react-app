@@ -31,8 +31,8 @@ interface StyledTabPickerProps extends React.HTMLAttributes<HTMLLabelElement> {
  */
 export const StyledTabPicker = (props: StyledTabPickerProps): JSX.Element => {
     const { checked, disabled, onInputChange, checkboxTitle, count, ...rest } = props;
-    return <Label {...rest} className={classNames("d-flex align-items-center tab-picker py-2 mb-1", {"disabled-tab": disabled})}>
-        <Input type="checkbox" checked={checked ?? false} onChange={onInputChange} />
+    return <Label {...rest} className={classNames("d-flex align-items-center tab-picker py-2 mb-1")}>
+        <Input type="checkbox" checked={checked ?? false} onChange={onInputChange} disabled={disabled} />
         <span className="ms-3">{checkboxTitle}</span>
         {isDefined(count) && <span className="badge rounded-pill ms-2">{count}</span>}
     </Label>;
