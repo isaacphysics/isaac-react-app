@@ -15,6 +15,7 @@ import {
 import {history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { MainContent, SidebarLayout, SignupSidebar } from "../elements/layout/SidebarLayout";
+import classNames from "classnames";
 
 type AgePermission = "denied" | "additional_info" | "allowed";
 
@@ -56,7 +57,7 @@ export const RegistrationAgeCheck = () => {
                             <FormGroup check className="d-flex align-items-center my-2">
                                 <Input
                                     id="registration-age-check-over"
-                                    className="d-inline"
+                                    className={classNames("d-inline", {"mb-1" : isAda})}
                                     type="radio"
                                     checked={agePermission === "allowed"}
                                     onChange={() => {setAgePermission("allowed");}}
@@ -68,7 +69,7 @@ export const RegistrationAgeCheck = () => {
                             {isPhy && <FormGroup check className="d-flex align-items-center my-2">
                                 <Input
                                     id="registration-age-check-additional-info"
-                                    className="d-inline"
+                                    className={classNames("d-inline", {"mb-1" : isAda})}
                                     type="radio"
                                     checked={agePermission === "additional_info"}
                                     onChange={() => {setAgePermission("additional_info");}}
@@ -80,7 +81,7 @@ export const RegistrationAgeCheck = () => {
                             <FormGroup check className="d-flex align-items-center my-2">
                                 <Input
                                     id="registration-age-check-under"
-                                    className="d-inline"
+                                    className={classNames("d-inline", {"mb-1" : isAda})}
                                     type="radio"
                                     checked={agePermission === "denied"}
                                     onChange={() => {setAgePermission("denied");}}
