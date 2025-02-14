@@ -15,7 +15,7 @@ import {
     groupsApi,
 } from "../../../state";
 import sortBy from "lodash/sortBy";
-import {history, isAda, isDefined, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
+import {history, isAda, isDefined, isPhy, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
 import {Row, Col, Form, Input, Table, Alert, Label} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
@@ -64,24 +64,23 @@ interface CurrentGroupInviteModalProps {
 const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProps) => {
     const tokenQuery = useGetGroupTokenQuery(group.id as number);
     return <>
-        {firstTime && <h1>Invite users</h1>}
+        {firstTime && <span className={siteSpecific("h3 mb-3", "h1")}>Invite users</span>}
         <p>Use one of the following methods to add users to your group. Students joining your group will be shown your name and account email and asked to confirm sharing data.</p>
         <ShowLoadingQuery
             query={tokenQuery}
             defaultErrorTitle={"Error fetching group joining token"}
             thenRender={token => <>
-                <div className="jumbotron rounded px-3 px-sm-4 py-3 py-sm-5">
-                    <h2 className={classNames({"font-size-1-5": isAda})}>Option 1: Share link</h2>
+                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-5"))}>
+                    <span className={siteSpecific("h4", "h2 font-size-1-5")}>Option 1: Share link</span>
                     <p>Share the following link with your students to have them join your group:</p>
                     <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1" data-testid={"share-link"}>
                         {location.origin}/account?authToken={token?.token}
                     </span>
                 </div>
-
-                <div className="jumbotron rounded px-3 px-sm-4 py-3 py-sm-5">
-                    <h2 className={classNames({"font-size-1-5": isAda})}>Option 2: Share code</h2>
+                <div className={classNames("jumbotron rounded px-3 px-sm-4", siteSpecific("pt-2", "py-3 py-sm-5"))}>
+                    <span className={siteSpecific("h4", "h2 font-size-1-5")}>Option 2: Share code</span>
                     <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
-                    <h3 className="text-center user-select-all d-block border bg-light p-1" data-testid={"share-code"}>{token?.token}</h3>
+                    <span className={classNames("text-center user-select-all d-block border bg-light p-1", siteSpecific("h4", "h3"))} data-testid={"share-code"}>{token?.token}</span>
                 </div>
             </>}
         />
@@ -97,8 +96,8 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
     buttons: [
         <Row key={0}>
             {/* Only teachers are allowed to add additional managers to a group. */}
-            {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pd-lg-0"  xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap mb-3": isAda})} onClick={() => {
+            {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pd-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("groups-modal-btn", "text-nowrap mb-3")} onClick={() => {
                     store.dispatch(closeActiveModal());
                     store.dispatch(showGroupManagersModal({group, user}));
                 }}>
@@ -106,7 +105,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
                 </Button>
             </Col>}
             <Col className="pb-0 pb-md-2 pd-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap mb-3": isAda})} onClick={() => {
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("groups-modal-btn", "text-nowrap mb-3")} onClick={() => {
                     store.dispatch(closeActiveModal());
                     history.push(PATHS.SET_ASSIGNMENTS);
                 }}>
@@ -114,7 +113,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
                 </Button>
             </Col>
             {firstTime && <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap": isAda})} onClick={() => {
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("groups-modal-btn", "text-nowrap mb-3")} onClick={() => {
                     store.dispatch(closeActiveModal());
                     backToCreateGroup?.();
                 }}>
