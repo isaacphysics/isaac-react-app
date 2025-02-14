@@ -189,7 +189,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     </>
                 )}
             </span>}
-            <div className={classNames("d-flex flex-grow-1 ps-3 pt-3", siteSpecific("flex-column", "align-items-center ps-1"))}>
+            <div className={classNames("d-flex flex-grow-1", siteSpecific("flex-column ps-3 pt-3", "align-items-center ps-1"))}>
                 {isDefined(index) && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>}
                 {trustedTitle && <div className={classNames("accordion-title p-3 ps-1", siteSpecific("pt-0", ""))}>
                     <Markup encoding={"latex"}>
