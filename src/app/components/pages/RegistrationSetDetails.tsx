@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Row,} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
+    confirmThen,
     EMAIL_PREFERENCE_DEFAULTS,
     FIRST_LOGIN_STATE,
     history,
@@ -96,6 +97,19 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                         }
             }
             );
+        }
+    };
+
+    const goBack = () => {
+        if (isPhy || role === "STUDENT") {
+            confirmThen(
+                "Are you sure you want go back? Any information you have entered will be lost.",
+                () => history.push("age"));
+        }
+        else { // teachers skip age check on Ada
+            confirmThen(
+                "Are you sure you want go back? Any information you have entered will be lost.",
+                () => history.push("/register"));
         }
     };
 
@@ -200,7 +214,7 @@ export const RegistrationSetDetails = ({role}: RegistrationSetDetailsProps) => {
                                 {isAda && <hr className="text-center"/>}
                                 <Row className="justify-content-end">
                                     <Col className="d-flex justify-content-end" xs={12} sm={siteSpecific(3,4)} lg={6}>
-                                        <Button className="mt-2 w-100"  color={siteSpecific("solid", "secondary")} outline={siteSpecific(false, true)} onClick={history.goBack}>Back</Button>
+                                        <Button className="mt-2 w-100"  color={siteSpecific("solid", "secondary")} outline={siteSpecific(false, true)} onClick={goBack}>Back</Button>
                                     </Col>
                                     <Col xs={12} sm={siteSpecific(4,5)} lg={6}>
                                         <Button type="submit" value="Continue" className="mt-2 w-100">Continue</Button>

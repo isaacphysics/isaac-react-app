@@ -12,7 +12,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
+import {confirmThen, history, isAda, isPhy, SITE_TITLE, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { MainContent, SidebarLayout, SignupSidebar } from "../elements/layout/SidebarLayout";
 import classNames from "classnames";
@@ -39,6 +39,12 @@ export const RegistrationAgeCheck = () => {
                 history.push("/register/student/age_denied");
                 break;
         }
+    };
+
+    const goBack = () => {
+        confirmThen(
+            "Are you sure you want go back? Any information you have entered will be lost.",
+            () => history.push("/register"));
     };
 
     return <Container>
@@ -96,7 +102,7 @@ export const RegistrationAgeCheck = () => {
                             {isAda && <hr/>}
                             <Row className="justify-content-end">
                                 <Col sm={siteSpecific(3,4)} lg={3} className="d-flex justify-content-end mb-1 mb-sm-0">
-                                    <Button className="w-100 h-100" color={siteSpecific("solid", "secondary")} outline={siteSpecific(false, true)} onClick={history.goBack}>Back</Button>
+                                    <Button className="w-100 h-100" color={siteSpecific("solid", "secondary")} outline={siteSpecific(false, true)} onClick={goBack}>Back</Button>
                                 </Col>
                                 <Col sm={siteSpecific(4,5)} lg={3}>
                                     <Button type="submit" className="w-100 h-100">Continue</Button>
