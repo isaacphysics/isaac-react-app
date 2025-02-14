@@ -360,7 +360,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "../common/modals";
 @import "forms";
 @import "../common/elements";
-@import "../common/breadcrumbs";
+@import "breadcrumbs";
 @import "../common/media";
 @import "../common/cookies";
 @import "../common/tabs";

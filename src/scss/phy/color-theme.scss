@@ -129,10 +129,6 @@
       @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), 60px, 60px, 60px);
       position: absolute;
     }
-    
-    .text-bg-theme {
-      @extend .text-bg-#{$palette};
-    }
 
     .alert-secondary {
       @extend .alert-#{$palette};

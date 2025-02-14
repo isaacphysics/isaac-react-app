@@ -3,7 +3,7 @@ import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHead
 import partition from "lodash/partition";
 import classNames from "classnames";
 import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, isAda, isDefined, siteSpecific, stageLabelMap, useDeviceSize } from "../../../services";
+import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link } from "react-router-dom";
@@ -141,7 +141,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
             </ul>
         </>}
         {relatedQuestions && relatedQuestions.length > 0 && <>
-            {pageContextStage === "all" || !pageContextStage || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
+            {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
                 ? <>
                     <div className="section-divider"/>
                     <h5>Related questions</h5>
@@ -151,7 +151,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
                 </>
                 : <>
                     <div className="section-divider"/>
-                    <h5>Related {stageLabelMap[pageContextStage]} questions</h5>
+                    <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
                     <ul>
                         {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
                     </ul>

@@ -174,7 +174,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             aria-expanded={isOpen ? "true" : "false"}
         >
             {isConceptPage && audienceString && <span className={
-                classNames("stage-label d-flex align-items-center p-2 justify-content-center ", {[audienceStyle(audienceString)]: isAda, "text-bg-theme": isPhy})
+                classNames("stage-label d-flex align-items-center p-2 justify-content-center ", {[audienceStyle(audienceString)]: isAda, "bg-theme text-white": isPhy})
             }>
                 {siteSpecific(
                     audienceString,
