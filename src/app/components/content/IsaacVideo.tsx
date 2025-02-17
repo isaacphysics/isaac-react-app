@@ -112,13 +112,13 @@ export function IsaacVideo(props: IsaacVideoProps) {
         {altTextToUse}
     </div>;
 
-    // Exit early if a parent accordion section is closed (for the sake of pages containing many videos)
     const accordionSectionContext = useContext(AccordionSectionContext);
     const videoInAnAccordionSection = accordionSectionContext.open !== null;
+
+    // Exit early if a parent accordion section is closed (for the sake of pages containing many videos)
     if (videoInAnAccordionSection && !accordionSectionContext.open) {
         return detailsForPrintOut;
     }
-
 
     return <div>
         <div className="no-print content-value text-center">

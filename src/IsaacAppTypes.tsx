@@ -22,11 +22,13 @@ import {
     ACTION_TYPE,
     DOCUMENT_TYPE,
     EXAM_BOARD,
+    LearningStage,
     MEMBERSHIP_STATUS,
     PROGRAMMING_LANGUAGE,
     SEARCH_RESULT_TYPE,
     SortOrder,
     STAGE,
+    Subject,
     TAG_ID,
     TAG_LEVEL
 } from "./app/services";
@@ -750,11 +752,7 @@ export interface SearchShortcut {
 
 export type QuestionCorrectness = "CORRECT" | "INCORRECT" | "NOT_ANSWERED" | "NOT_SUBMITTED";
 
-export type Subject = "physics" | "maths" | "chemistry" | "biology";
-
-export type SiteTheme = Subject | "neutral";
-
 export type PageContextState = {
-    stage: ApiTypes.Stage; // "all" is the default
-    subject: Subject | undefined;
-} | null;
+    stage?: LearningStage[];
+    subject?: Subject;
+} | null | undefined;
