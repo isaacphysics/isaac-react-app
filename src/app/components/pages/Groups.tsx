@@ -569,20 +569,25 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                 {sortedGroups && sortedGroups.length > 0
                     ? sortedGroups.map((g: AppGroup) =>
                         sidebarStyle                         
-                            ? <Link to={`/groups#${g.id}`} key={g.id} className="d-block" style={{textDecoration: "none"}}>
-                                <StyledTabPicker id={g.groupName} tabIndex={0} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}/>
-                            </Link>
+                            ? <div key={g.id} className="group-item" data-testid={"group-item"}>
+                                <div className="d-flex align-items-center">
+                                    <Link to={`/groups#${g.id}`} className="d-block" style={{textDecoration: "none", width: "100%"}}>
+                                        <StyledTabPicker id={g.groupName} tabIndex={0} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}/>
+                                    </Link>
+                                    {showArchived &&
+                                        <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
+                                            aria-label="Delete group" className="ms-1 icon-close" title={"Delete group"}/>
+                                    }
+                                </div>
+                            </div>
                             : <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                 <div className="d-flex justify-content-between align-items-center group-name-buttons">
                                     <Link to={`/groups#${g.id}`} title={isStaff(user) ? `Group id: ${g.id}` : undefined} data-testid={"select-group"} className="text-start px-1 py-1 group-name d-flex flex-fill">
                                         {g.groupName}
                                     </Link>
                                     {showArchived &&
-                                        <button
-                                            onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
-                                            aria-label="Delete group" className={classNames("ms-1", siteSpecific("icon-close", "bin-icon"))} title={"Delete group"}
-                                        >
-                                        </button>
+                                        <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
+                                            aria-label="Delete group" className={classNames("ms-1", siteSpecific("icon-close", "bin-icon"))} title={"Delete group"}/>
                                     }
                                 </div>
                             </div>
@@ -593,6 +598,10 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
         </CardBody>
     </Card>;
 };
+
+/*
+
+                             */
 
 const stateToProps = (_state: AppState, props: any) => {
     const {location: {hash}} = props;
