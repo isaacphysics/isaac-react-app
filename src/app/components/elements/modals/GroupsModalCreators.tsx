@@ -210,7 +210,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
     </p>;
 
     return !group ? <Loading/> : <div className={"mb-4"}>
-        <h2>Selected group: {group.groupName}</h2>
+        <span className={siteSpecific("h3", "h2")}>Selected group: {group.groupName}</span>
 
         <p>
             Sharing this group lets other teachers add and remove students, set new assignments or tests and view progress.
@@ -313,7 +313,7 @@ If you wish to retain these privileges, but transfer ownership, click 'cancel' h
                     ifError={() => generateGroupLinkReminder()}
                     thenRender={generateGroupLinkReminder}
                 />
-                <Button block onClick={addManager} disabled={!isDefined(newManagerEmail) || newManagerEmail === ""}>Add group manager</Button>
+                <Button block className={siteSpecific("groups-modal-btn", "")} onClick={addManager} disabled={!isDefined(newManagerEmail) || newManagerEmail === ""}>Add group manager</Button>
             </Form>
         </>}
     </div>;
