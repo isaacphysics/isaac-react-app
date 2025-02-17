@@ -599,10 +599,6 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
     </Card>;
 };
 
-/*
-
-                             */
-
 const stateToProps = (_state: AppState, props: any) => {
     const {location: {hash}} = props;
     return {hashAnchor: hash?.slice(1) ?? null};
