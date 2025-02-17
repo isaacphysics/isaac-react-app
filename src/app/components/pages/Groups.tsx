@@ -574,7 +574,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                             </Link>
                             : <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                 <div className="d-flex justify-content-between align-items-center group-name-buttons">
-                                    <Link to={`/groups#${g.id}`} title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 group-name d-flex flex-fill">
+                                    <Link to={`/groups#${g.id}`} title={isStaff(user) ? `Group id: ${g.id}` : undefined} data-testid={"select-group"} className="text-start px-1 py-1 group-name d-flex flex-fill">
                                         {g.groupName}
                                     </Link>
                                     {showArchived &&
