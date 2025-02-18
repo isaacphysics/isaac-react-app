@@ -175,6 +175,10 @@
 
   > div:first-child {
     padding: 2rem 2rem 0.5rem;
+
+    &:last-child {
+      padding-bottom: 3rem;
+    }
   }
 }
 
