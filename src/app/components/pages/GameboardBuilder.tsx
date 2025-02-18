@@ -214,7 +214,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="gameboard-builder" fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
         <div ref={sentinel}/>
-        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Gameboard", "Quiz")} builder`} help={pageHelp} modalId="help_modal_gameboard_builder"/>
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Gameboard", "Quiz")} builder`} icon={{type: "hex", icon: "page-icon-question-pack"}} help={pageHelp} modalId="help_modal_gameboard_builder"/>
 
         <Card className="p-3 mt-4 mb-5">
             <CardBody>
@@ -334,8 +334,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                 <Row className="justify-content-center">
                     <Col className="col-auto col-md-2 order-1 d-flex justify-content-center">
                         {undoStack.length > 0 && <Button
-                            className="btn-sm my-2"
-                            color="primary" outline
+                            className={classNames("my-2", siteSpecific("btn btn-keyline", "btn-sm"))}
+                            color="primary" outline={isAda}
                             onClick={() => {
                                 const newQuestion = undoStack.pop();
                                 redoStack.push(currentQuestions);
@@ -348,8 +348,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     </Col>
                     <Col className="col-auto col-md-2 order-2 order-md-4 d-flex justify-content-center">
                         {redoStack.length > 0 && <Button
-                            className="btn-sm my-2"
-                            color="primary" outline
+                            className={classNames("my-2", siteSpecific("btn btn-keyline", "btn-sm"))}
+                            color="primary" outline={isAda}
                             onClick={() => {
                                 const newQuestion = redoStack.pop();
                                 undoStack.push(currentQuestions);
@@ -368,8 +368,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             until={!baseGameboardId || baseGameboard}
                         >
                             <Button
-                                className="plus-button"
-                                color="primary" outline
+                                className={siteSpecific("btn btn-keyline d-flex align-items-center", "plus-button")}
+                                color="primary" outline={isAda}
                                 onClick={() => {
                                     logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
                                     dispatch(openActiveModal({
@@ -389,7 +389,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 }}
                             >
                                 {siteSpecific("Add Questions", "Add questions")}
-                                {isAda && <img className={"plus-icon"} src={"/assets/cs/icons/add-circle-outline-pink.svg"} alt="" />}
+                                {siteSpecific(<img src={"/assets/phy/icons/redesign/plus.svg"} height={"12px"} className={"ms-2"} alt="" />,
+                                    <img className={"plus-icon"} src={"/assets/cs/icons/add-circle-outline-pink.svg"} alt="" />)}
                             </Button>
                         </ShowLoading>
                     </Col>
