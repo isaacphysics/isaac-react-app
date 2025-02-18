@@ -49,11 +49,11 @@
   width: 25px;
   height: 20px;
   margin-right: 0.25rem;
-  &-tick {
-    background-image: url(/assets/common/icons/tick.svg);
-  }
-  &-cross {
-    background-image: url(/assets/common/icons/untick.svg);
+  > span {
+    font-family: $primary-font;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
   }
   &-report {
     background-image: url(/assets/common/icons/flag-accordion.svg);
