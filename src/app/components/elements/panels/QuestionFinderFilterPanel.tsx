@@ -271,7 +271,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             >
                 {siteSpecific(
                     <div>
-                        <HierarchyFilterTreeList {...{
+                        <HierarchyFilterTreeList root {...{
                             tier: pageContext.subject ? 1 : 0,
                             index: pageContext.subject as TAG_ID ?? TAG_LEVEL.subject,
                             tiers, choices, selections, setSelections,

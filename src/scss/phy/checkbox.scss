@@ -1,20 +1,18 @@
 @import "../common/checkbox";
 
 .checkbox-region {
-    background-color: $color-neutral-100;
-    outline: 1px solid $color-neutral-200;
     border-radius: 4px;
-
-    .checkbox-region {
-        background-color: $color-neutral-200;
-        outline: 1px solid $color-neutral-300;
-    }
 
     .search-field {
         display: inline-block;
         background-color: transparent;
         outline: none;
     }
+}
+
+.checkbox-region:not(.hierarchy-true-root) {
+    background-color: $color-neutral-100;
+    outline: 1px solid $color-neutral-200;
 }
 
 .styled-checkbox-wrapper div input[type="checkbox"] { 
@@ -25,7 +23,7 @@
     @include svg-icon-layered(
         '/assets/phy/icons/redesign/checkbox-fg.svg',
         '/assets/phy/icons/redesign/checkbox-bg.svg',
-        1.6em, 1.6em, 1.6em
+        var(--checkbox-size), var(--checkbox-size), var(--checkbox-size)
     );
 
     &::before {
@@ -49,7 +47,7 @@
     @include svg-icon-layered(
         '/assets/phy/icons/redesign/checkbox-partial-fg.svg',
         '/assets/phy/icons/redesign/checkbox-bg.svg',
-        1.6em, 1.6em, 1.6em
+        var(--checkbox-size), var(--checkbox-size), var(--checkbox-size)
     );
 
     background: $color-neutral-white;
@@ -66,7 +64,7 @@
     @include svg-icon-layered(
         '/assets/phy/icons/redesign/checkbox-partial-alt-fg.svg',
         '/assets/phy/icons/redesign/checkbox-bg.svg',
-        1.6em, 1.6em, 1.6em
+        var(--checkbox-size), var(--checkbox-size), var(--checkbox-size)
     );
 
     background: $color-neutral-white;
@@ -83,7 +81,7 @@
     @include svg-icon-layered(
         '/assets/phy/icons/redesign/checkbox-selected-fg.svg',
         '/assets/phy/icons/redesign/checkbox-selected-bg.svg',
-        1.6em, 1.6em, 1.6em
+        var(--checkbox-size), var(--checkbox-size), var(--checkbox-size)
     );
   
     &::before {
