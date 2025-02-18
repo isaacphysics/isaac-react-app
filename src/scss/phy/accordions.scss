@@ -17,6 +17,11 @@
     border-radius: 8px;
   }
 
+  &:has(> .accordion-header:focus-visible) {
+    outline: 2px solid var(--subject-color-300);
+    outline-offset: 2px;
+  }
+
   .accordion-header {
     background: rgba(white, 1);
     border-radius: 8px;
