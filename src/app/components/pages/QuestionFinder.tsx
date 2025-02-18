@@ -26,7 +26,7 @@ import {
     useQueryParams,
     useUrlPageTheme,
 } from "../../services";
-import {ContentSummaryDTO, Difficulty, ExamBoard, Stage} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {RouteComponentProps, useHistory, withRouter} from "react-router";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -40,12 +40,13 @@ import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../ele
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
 import { PageContextState, Tag } from "../../../IsaacAppTypes";
-import { Subject } from "../../services";
 import { PrintButton } from "../elements/PrintButton";
 import { ShareLink } from "../elements/ShareLink";
 import { Spacer } from "../elements/Spacer";
 import { ListView } from "../elements/list-groups/ListView";
 import { ContentTypeVisibility, LinkToContentSummaryList } from "../elements/list-groups/ContentSummaryListGroupItem";
+import { PageFragment } from "../elements/PageFragment";
+import { RenderNothing } from "../elements/RenderNothing";
 
 // Type is used to ensure that we check all query params if a new one is added in the future
 const FILTER_PARAMS = ["query", "topics", "fields", "subjects", "stages", "difficulties", "examBoards", "book", "excludeBooks", "statuses"] as const;
@@ -499,7 +500,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
             intermediateCrumbs={crumb ? [crumb] : []}
             icon={{type: "hex", icon: "page-icon-finder"}}
         />
-        <div className="d-flex align-items-center">
+        {siteSpecific(<div className="d-flex align-items-center">
             <span>Use the search box and/or filters to find questions; you can then refine your search further with the filters.</span>
             <Spacer/>
             <div className="no-print d-flex align-items-center">
@@ -510,7 +511,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                     <PrintButton/>
                 </div>
             </div>
-        </div>
+        </div>, 
+        <PageFragment fragmentId={"question_finder_intro"} ifNotFound={RenderNothing} />)}
         <SidebarLayout>
             <QuestionFinderSidebar searchText={searchQuery} setSearchText={setSearchQuery} questionFilters={[]} setQuestionFilters={function (value: React.SetStateAction<Tag[]>): void {
                 throw new Error("Function not implemented.");
