@@ -100,7 +100,7 @@ const LoginOrSignUpBody = () => {
                             Sign up
                         </Button>
 
-                        <hr className="text-center hr-or" />
+                        {siteSpecific(<div className="section-divider"/>, <hr className="text-center hr-or"/>)}
                         {isAda && <div className="mb-2">
                             <RaspberryPiSignInButton concise={true} />
                         </div>}
