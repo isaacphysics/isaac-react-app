@@ -62,7 +62,7 @@ const GameboardBuilderRow = (
     const isSelected = question.id !== undefined && currentQuestions.selectedQuestions.has(question.id);
 
     return filteredAudienceViews.map((view, i, arr) => <tr
-        key={`${question.id} ${i}`} className={classnames({selected: isSelected})}
+        key={`${question.id} ${i}`}
     >
         {i === 0 && <>
             <td rowSpan={arr.length} className="w-5 text-center align-middle">

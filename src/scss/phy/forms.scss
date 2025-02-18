@@ -5,7 +5,9 @@
     box-shadow: 0 0 0 0.2rem $focus-blue;
   }
   .select__control, .select__control:hover {
-    border-color: $black;
+    border-color: $color-neutral-300;
+    border-radius: 8px;
+    height: 2.6rem;
 
     .select__value-container {
       padding: 0 0 0 1.2em;
