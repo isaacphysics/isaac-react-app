@@ -513,8 +513,8 @@ export const SignupSidebar = ({activeTab} : {activeTab: number}) => {
         <div className="section-divider mt-4"/>
         <h5 className="mt-1">Create an account</h5>
         {/* Tabs are clickable iff their page could be reached with a Back buttons */}
-        <StyledTabPicker checkboxTitle={"Sign-up method"} checked={activeTab === 0} disabled={activeTab > 2} onClick={() => goBack("/register")}/>
-        <StyledTabPicker checkboxTitle={"Age verification"} checked={activeTab === 1}  disabled={activeTab < 1 || activeTab > 2} onClick={() => goBack("age")}/>
+        <StyledTabPicker checkboxTitle={"Sign-up method"} checked={activeTab === 0} disabled={activeTab > 2} onClick={() => (activeTab === 1 || activeTab === 2) && goBack("/register")}/>
+        <StyledTabPicker checkboxTitle={"Age verification"} checked={activeTab === 1} disabled={activeTab < 1 || activeTab > 2} onClick={() => activeTab === 2 && goBack("age")}/>
         <StyledTabPicker checkboxTitle={"Account details"} checked={activeTab === 2} disabled={activeTab !== 2}/>
         <StyledTabPicker checkboxTitle={"Preferences"} checked={activeTab === 3} disabled={activeTab !== 3}/>
     </ContentSidebar>;
