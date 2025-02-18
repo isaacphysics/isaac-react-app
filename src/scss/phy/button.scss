@@ -38,7 +38,7 @@
   border: none;
   color: var(--buttons-dark-text);
 
-  &:hover {
+  &:hover, &.btn-dropdown.active {
     background: var(--buttons-dark-hover);
     color: var(--buttons-dark-hover-icon);
     text-decoration: none;
@@ -61,7 +61,7 @@
   border: 1.5px solid var(--buttons-keyline-border);
   color: var(--buttons-light-text);
 
-  &:hover {
+  &:hover, &.btn-dropdown.active {
     background: var(--buttons-light-hover);
     color: var(--buttons-dark-text);
     text-decoration: none;
@@ -81,7 +81,7 @@
   border: 1.5px solid var(--buttons-tint-border);
   color: var(--buttons-light-text);
 
-  &:hover {
+  &:hover, &.btn-dropdown.active {
     background: var(--buttons-light-hover);
     color: var(--buttons-dark-text);
     text-decoration: none;
@@ -101,7 +101,7 @@
   border: 1.5px solid var(--buttons-keyline-white-border);
   color: var(--buttons-keyline-white-text);
 
-  &:hover {
+  &:hover, &.btn-dropdown.active {
     background: var(--buttons-keyline-white-hover);
     color: var(--buttons-dark-text);
     text-decoration: none;
@@ -236,8 +236,20 @@
       width: auto;
     }
   }
-}
 
+  &.btn-dropdown {
+    color: black;
+    background-color: $color-neutral-100;
+    border: 1px solid $color-neutral-300;
+    border-radius: 6px;
+
+    &.active {
+      i.icon {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}
 
 // ISAAC
 .btn-underline {

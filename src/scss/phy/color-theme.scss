@@ -94,6 +94,8 @@
 
   --border-light: #F5F4F0;
 
+  --sidebar-tab-disabled: #{$color-neutral-300};
+
   /* number */
   --buttons-padding-v-sm: 0.6875rem;
   --buttons-padding-v-md: 0.8125rem;
@@ -128,10 +130,6 @@
     .phy-hex-icon-sm {
       @include svg-color(url("/assets/phy/icons/redesign/hexagon.svg"), var(--subject-color-200), 60px, 60px, 60px);
       position: absolute;
-    }
-    
-    .text-bg-theme {
-      @extend .text-bg-#{$palette};
     }
 
     .alert-secondary {

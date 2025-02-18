@@ -8,6 +8,7 @@ import {
     getFilteredExamBoardOptions,
     getHumanContext,
     isAda,
+    isDefinedContext,
     isLoggedIn,
     isPhy,
     itemiseTag,
@@ -28,7 +29,7 @@ import {ContentSummaryDTO, Difficulty, ExamBoard, Stage} from "../../../IsaacApi
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {RouteComponentProps, useHistory, withRouter} from "react-router";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {generateSubjectLandingPageCrumbFromContext, TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import classNames from "classnames";
@@ -142,7 +143,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const user = useAppSelector((state: AppState) => state && state.user);
     const params = useQueryParams<FilterParams, false>(false);
     const history = useHistory();
-    const pageContext = useUrlPageTheme();
+    const pageContext = useUrlPageTheme({resetIfNotFound: true});
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
@@ -476,11 +477,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                 : <div/>}
         </div>;
     };
+    const crumb = isPhy && isDefinedContext(pageContext) && generateSubjectLandingPageCrumbFromContext(pageContext);
 
     return <Container id="finder-page" className={classNames("mb-5")} { ...(pageContext?.subject && { "data-bs-theme" : pageContext.subject })}>
         <TitleAndBreadcrumb 
             currentPageTitle={siteSpecific("Question Finder", "Questions")}
             description={description} help={pageHelp}
+            intermediateCrumbs={crumb ? [crumb] : []}
             icon={{type: "hex", icon: "page-icon-finder"}}
         />
         <div className="d-flex align-items-center">

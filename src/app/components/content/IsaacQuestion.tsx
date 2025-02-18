@@ -20,6 +20,7 @@ import {
     QUESTION_TYPES,
     RESTRICTED_QUESTION_TYPES,
     selectQuestionPart,
+    siteSpecific,
     submitCurrentAttempt,
     useDeviceSize,
     useFastTrackInformation} from "../../services";
@@ -177,9 +178,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         }}>
             <div className={
                 classNames(
-                    "question-component p-md-5",
+                    "question-component",
                     doc.type,
-                    {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)}
+                    {"expansion-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)},
+                    {"p-md-5": isAda}
                 )}>
                 
                 {isLLMFreeTextQuestion && <LLMFreeTextQuestionRemainingAttemptsView canAttemptQuestionType={canAttemptQuestionType} />}
@@ -268,24 +270,23 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                             className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-5 mb-n3": correct})}>
                             {secondaryAction &&
                             <div
-                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3": primaryAction})}>
+                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"pe-sm-2 pe-md-0 pe-lg-3 pb-3": primaryAction})}>
                                 <input {...secondaryAction} className="h-100 btn btn-outline-primary w-100"/>
                             </div>
                             }
                             {primaryAction &&
                             <div
-                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-50 w-lg-50", {"ps-sm-2 ps-md-0 ps-lg-3": secondaryAction})}>
+                                className={classNames("m-auto pt-3 w-100 w-sm-100 w-md-50 w-lg-50", siteSpecific("pb-3", "pb-1"), {"ps-sm-2 ps-md-0 ps-lg-3": secondaryAction})}>
                                 <input {...primaryAction} className="h-100 btn btn-secondary w-100"/>
                             </div>
                             }
                         </div>
                 }
-
-                {/* Physics Hints */}
-                {isPhy && <div className={correct ? "mt-5" : ""}>
-                    <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
-                </div>}
             </div>
+            {/* Physics Hints */}
+            {isPhy && <div>
+                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
+            </div>}
         </Form>
 
         {/* LLM free-text question validation response */}

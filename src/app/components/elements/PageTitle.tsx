@@ -10,6 +10,7 @@ import {
     siteSpecific,
     STAGE,
     stageLabelMap,
+    Subject,
     useUserViewingContext
 } from "../../services";
 import {
@@ -21,7 +22,7 @@ import {
     useAppSelector
 } from "../../state";
 import {PageFragment} from "./PageFragment";
-import {Subject, ViewingContext} from "../../../IsaacAppTypes";
+import {ViewingContext} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 import {Helmet} from "react-helmet";

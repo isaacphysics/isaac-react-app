@@ -1,10 +1,38 @@
+@use 'sass:math';
+
 @import "../common/breadcrumbs";
 
-.breadcrumb-item + .breadcrumb-item::before {
-  position: relative;
-  height: 0.888rem !important;
-  left: 3px !important;
-  top: 4px !important;
-  margin: 0 !important;
-  width: 21px !important;
+.bread {
+  margin-left: -1 * math.div($grid-gutter-width, 2);
+  margin-right: -1 * math.div($grid-gutter-width, 2);
+  @include respond-above(sm) {
+    margin: 0;
+  }
+
+  .breadcrumb {
+    padding: 0.75rem 0 0.75rem 1rem;
+    @include respond-above(sm) {
+      padding-left: 0;
+    }
+  }
+
+  .breadcrumb-item {
+    font-family: $secondary-font-medium;
+    &.active {
+      color: $gray-blue;
+    }
+  }
+
+  .breadcrumb-item + .breadcrumb-item::before {
+    position: relative;
+    background-image: url('/assets/common/icons/chevron_right.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: '';
+    height: 0.888rem;
+    left: 3px;
+    top: 4px;
+    margin: 0;
+    width: 21px;
+  }
 }

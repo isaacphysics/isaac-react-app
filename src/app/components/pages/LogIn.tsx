@@ -229,7 +229,7 @@ export const LogIn = () => {
                     <CardBody>
                         <Form name="login" onSubmit={validateAndLogIn} noValidate>
 
-                            <h2 className="h-title mb-4"  ref={headingRef} tabIndex={-1}>
+                            <h2 className={classNames("h-title", {"mb-4": isAda})}  ref={headingRef} tabIndex={-1}>
                                 Log&nbsp;in or sign&nbsp;up:
                             </h2>
                             {totpChallengePending ?
@@ -265,7 +265,8 @@ export const LogIn = () => {
                                             <Button
                                                 id="log-in"
                                                 tag="input" value="Log in"
-                                                color="secondary" type="submit" className="mb-2" block
+                                                color={siteSpecific("solid", "secondary")}
+                                                type="submit" className="mb-2" block
                                                 onClick={attemptLogIn}
                                                 disabled={!!user?.requesting}
                                             />
@@ -278,8 +279,8 @@ export const LogIn = () => {
                                         </Col>
                                     </Row>
 
-                                    <hr className="text-center mb-4"/>
-                                    <h3 className="text-start mb-3">Log in with:</h3>
+                                    {siteSpecific(<div className="section-divider"/>, <hr className="text-center mb-4"/>)}
+                                    <div className={classNames("text-start mb-3", siteSpecific("h4", "h3"))}>Log in with:</div>
                                     {isAda &&
                                         <Row className="mb-2 justify-content-center">
                                             <Col sm={9}>

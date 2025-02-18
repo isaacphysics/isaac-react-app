@@ -74,7 +74,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 
 $question-line-height: 1.6;
 $question-padding: 3rem;
-$question-font-size: 1.25rem;
+$question-font-size: 1.125rem;
 $question-font-weight: 600;
 
 // forms
@@ -262,6 +262,12 @@ $border-color-translucent: rgba(0, 0, 0, 0.1);
 
 $input-border-radius: 0.5rem;
 
+$tooltip-bg: rgba($color-neutral-700, 0.98);
+$tooltip-opacity: 1;
+$tooltip-padding-x: 0.6rem;
+$tooltip-padding-y: 0.6rem;
+$tooltip-max-width: 370px;
+
 // Grid Customisation
 $container-max-widths: (
     xl: 100%,
@@ -360,7 +366,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "../common/modals";
 @import "forms";
 @import "../common/elements";
-@import "../common/breadcrumbs";
+@import "breadcrumbs";
 @import "../common/media";
 @import "../common/cookies";
 @import "../common/tabs";
@@ -368,7 +374,7 @@ $theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colo
 @import "../common/graph-sketcher-modal";
 @import "../common/carousel";
 @import "../common/toggle";
-@import "../common/tooltip";
+@import "tooltip";
 @import "boards";
 @import "../common/focus";
 @import "../common/anvil";

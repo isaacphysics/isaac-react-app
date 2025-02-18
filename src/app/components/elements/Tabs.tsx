@@ -7,6 +7,7 @@ import {useStatefulElementRef} from "./markup/portals/utils";
 import {useExpandContent} from "./markup/portals/Tables";
 import {ExpandableParentContext} from "../../../IsaacAppTypes";
 import {Markup} from "./markup";
+import { AffixButton } from "./AffixButton";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
@@ -21,7 +22,7 @@ interface TabsProps {
     refreshHash?: string;
     expandable?: boolean;
     singleLine?: boolean;
-    style?: "tabs" | "buttons";
+    style?: "tabs" | "buttons" | "dropdowns";
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabTitle: string, tabIndex: number) {
@@ -30,6 +31,7 @@ function callOrString(stringOrTabFunction: StringOrTabFunction | undefined, tabT
     return stringOrTabFunction(tabTitle, tabIndex);
 }
 
+// e.g.:   Tab 1 | Tab 2 | Tab 3
 const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
     return <Nav tabs className={classNames("flex-wrap", {"guaranteed-single-line": singleLine})}>
         {Object.keys(children).map((tabTitle, mapIndex) => {
@@ -49,6 +51,7 @@ const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab}: 
     </Nav>;
 };
 
+// e.g.:   (Tab 1|Tab 2|Tab 3), i.e. as joined buttons
 const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
     const gliderRef = useRef<HTMLSpanElement>(null);
     const numberOfTabs = Object.keys(children).length;
@@ -77,6 +80,26 @@ const ButtonNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsPr
             )}
             <span ref={gliderRef} className={"glider"}/>
         </ButtonGroup>
+    </div>;
+};
+
+const DropdownNavbar = ({children, activeTab, changeTab, tabTitleClass=""}: TabsProps & {activeTab: number; changeTab: (i: number) => void}) => {
+    return <div className="my-3">
+        {!!Object.keys(children).length && <h5 className="text-theme mb-2">Need some help?</h5>}
+        <div>
+            {Object.keys(children).map((tabTitle, i) =>
+                <AffixButton key={tabTitle} color="tint" className={classNames("btn-dropdown me-2", tabTitleClass, {"active": activeTab === i + 1})} onClick={() => changeTab(i + 1)} affix={{
+                    affix: "icon-chevron-down",
+                    position: "suffix",
+                    type: "icon",
+                }}>
+                    {tabTitle}
+                </AffixButton>
+            )}
+        </div>
+        {activeTab > 0 && <div className="mt-3">
+            {children[activeTab]}
+        </div>}
     </div>;
 };
 
@@ -113,7 +136,9 @@ export const Tabs = (props: TabsProps) => {
         <div className={classNames(className, innerClasses, "position-relative")}>
             {style === "tabs"
                 ? <TabNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</TabNavbar>
-                : <ButtonNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</ButtonNavbar>
+                : style === "buttons"
+                    ? <ButtonNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</ButtonNavbar>
+                    : <DropdownNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</DropdownNavbar>
             }
             <ExpandableParentContext.Provider value={true}>
                 <TabContent activeTab={activeTab} className={tabContentClass}>

@@ -2,9 +2,10 @@ import React, {ReactElement} from "react";
 import {PageTitle, PageTitleProps} from "./PageTitle";
 import {Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {Link} from "react-router-dom";
-import {CollectionType, HOME_CRUMB, isAda, isPhy, LinkInfo} from "../../services";
+import {CollectionType, HOME_CRUMB, HUMAN_STAGES, HUMAN_SUBJECTS, isAda, isDefined, isPhy, isSingleStageContext, LinkInfo, siteSpecific} from "../../services";
 import {Markup} from "./markup";
 import classNames from "classnames";
+import { PageContextState } from "../../../IsaacAppTypes";
 
 interface BreadcrumbTrailProps {
     currentPageTitle: string;
@@ -19,18 +20,17 @@ interface BreadcrumbTrailProps {
 // We manage the ID of the "main content" with the mainContentId reducer.
 const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionType, disallowLaTeX}:
                              BreadcrumbTrailProps) => {
-    const breadcrumbHistory = [HOME_CRUMB as LinkInfo, ...intermediateCrumbs];
+    const breadcrumbHistory = siteSpecific([
+        ...intermediateCrumbs,
+    ].filter(isDefined),
+    [
+        HOME_CRUMB as LinkInfo, 
+        ...intermediateCrumbs
+    ]);
 
-    // Copy and mask collection type title
-    if (collectionType === "Gameboard") {
-        const collectionBreadcrumb = breadcrumbHistory.splice(1, 1)[0];
-        breadcrumbHistory.splice(1, 0,
-            Object.assign({}, collectionBreadcrumb, {title: collectionType}));
-    }
-
-    return <Breadcrumb className="py-md-2 px-md-0 mb-3 mb-md-0 bread">
+    return !!breadcrumbHistory.length && <Breadcrumb className={classNames("py-md-2 mb-3 mb-md-0 bread", siteSpecific("container-override", "px-md-0"))}>
         {breadcrumbHistory.map((breadcrumb) => formatBreadcrumbHistoryItem(breadcrumb, disallowLaTeX))}
-        {formatBreadcrumbItem(currentPageTitle, disallowLaTeX)}
+        {isAda && formatBreadcrumbItem(currentPageTitle, disallowLaTeX)}
     </Breadcrumb>;
 };
 
@@ -57,11 +57,11 @@ type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
 export const TitleAndBreadcrumb = ({modalId, children, breadcrumbTitleOverride, currentPageTitle, subTitle, description, disallowLaTeX, className, audienceViews, help, collectionType, intermediateCrumbs, preview, icon}: TitleAndBreadcrumbProps) => {
     return <div className={classNames(className, {"title-breadcrumb-container": isPhy, "pt-4 pt-md-5": isAda})}>
         {isPhy && <div className="title-graphics"/>}
-        {isAda && <BreadcrumbTrail
+        <BreadcrumbTrail
             currentPageTitle={breadcrumbTitleOverride ?? currentPageTitle}
             intermediateCrumbs={intermediateCrumbs}
             collectionType={collectionType}
-        />}
+        />
         {children}
         <PageTitle
             modalId={modalId} subTitle={subTitle} description={description}
@@ -71,4 +71,15 @@ export const TitleAndBreadcrumb = ({modalId, children, breadcrumbTitleOverride, 
         />
         {isAda && <hr/>}
     </div>;
+};
+
+export const generateSubjectLandingPageCrumbFromContext = (pageContext: NonNullable<Required<PageContextState>>) : LinkInfo | undefined => {
+    if (!isSingleStageContext(pageContext)) return;
+    return pageContext.stage[0] in HUMAN_STAGES 
+        ? {
+            title: `${HUMAN_STAGES[pageContext.stage[0]]} ${HUMAN_SUBJECTS[pageContext.subject]}`,
+            to: `/${pageContext.subject}/${pageContext.stage}`,
+            replace: false
+        }
+        : undefined;
 };

@@ -1,6 +1,6 @@
 import React from "react";
-import { Subject } from "../../../../IsaacAppTypes";
 import classNames from "classnames";
+import { Subject } from "../../../services";
 
 interface PhyHexIconProps extends React.HTMLAttributes<HTMLDivElement> {
     icon: string;
