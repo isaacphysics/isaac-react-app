@@ -20,7 +20,7 @@ import {
     useUrlPageTheme
 } from "../../../services";
 import { Difficulty, ExamBoard } from "../../../../IsaacApiTypes";
-import { QuestionStatus } from "../../pages/QuestionFinder";
+import { pageStageToSearchStage, QuestionStatus } from "../../pages/QuestionFinder";
 import classNames from "classnames";
 import { StyledCheckbox } from "../inputs/StyledCheckbox";
 import { DifficultyIcons } from "../svg/DifficultyIcons";
@@ -29,7 +29,7 @@ import { HierarchyFilterTreeList, Tier } from "../svg/HierarchyFilter";
 import { openActiveModal, useAppDispatch } from "../../../state";
 import { questionFinderDifficultyModal } from "../modals/QuestionFinderDifficultyModal";
 import { Spacer } from "../Spacer";
-import { Subject } from "../../../../IsaacAppTypes";
+import { Subject } from "../../../services";
 
 const bookOptions: Partial<Record<Subject, Item<string>[]>> = {
     "physics": [
@@ -176,7 +176,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
     const deviceSize = useDeviceSize();
     const dispatch = useAppDispatch();
     const pageContext = useUrlPageTheme();
-    const contextBookOptions: Item<string>[] = pageContext.subject ? bookOptions[pageContext.subject] ?? [] : Object.values(bookOptions).flat();
+    const contextBookOptions: Item<string>[] = pageContext?.subject ? bookOptions[pageContext.subject] ?? [] : Object.values(bookOptions).flat();
 
     const [filtersVisible, setFiltersVisible] = useState<boolean>(above["lg"](deviceSize));
 
@@ -232,10 +232,10 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             </div>}
         </CardHeader>
         <CardBody className={classNames("p-0 m-0", {"d-none": isAda && below["md"](deviceSize) && !filtersVisible})}>
-            {(isAda || !pageContext.stage) && <CollapsibleList
+            {(isAda || !pageContext?.stage) && <CollapsibleList
                 title={listTitles.stage} expanded={listState.stage.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "stage", focus: below["md"](deviceSize)})}
-                numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.filter(s => s !== pageContext.stage).length}
+                numberSelected={(isAda && searchStages.includes(STAGE.ALL)) ? searchStages.length - 1 : searchStages.filter(s => pageStageToSearchStage(pageContext?.stage).includes(s)).length}
             >
                 {getFilteredStageOptions().map((stage, index) => (
                     <div className={classNames("w-100 ps-3 py-1", {"bg-white": isAda, "ms-2": isPhy, "checkbox-region": isPhy && searchStages.includes(stage.value)})} key={index}>
@@ -267,13 +267,13 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
             <CollapsibleList
                 title={listTitles.topics} expanded={listState.topics.state}
                 toggle={() => listStateDispatch({type: "toggle", id: "topics", focus: below["md"](deviceSize)})}
-                numberSelected={siteSpecific(getChoiceTreeLeaves(selections).filter(l => l.value !== pageContext.subject).length, searchTopics.length)}
+                numberSelected={siteSpecific(getChoiceTreeLeaves(selections).filter(l => l.value !== pageContext?.subject).length, searchTopics.length)}
             >
                 {siteSpecific(
                     <div>
                         <HierarchyFilterTreeList root {...{
-                            tier: pageContext.subject ? 1 : 0,
-                            index: pageContext.subject as TAG_ID ?? TAG_LEVEL.subject,
+                            tier: pageContext?.subject ? 1 : 0,
+                            index: pageContext?.subject as TAG_ID ?? TAG_LEVEL.subject,
                             tiers, choices, selections, setSelections,
                             questionFinderFilter: true
                         }}/>

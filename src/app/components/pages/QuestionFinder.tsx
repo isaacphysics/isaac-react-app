@@ -12,6 +12,7 @@ import {
     isLoggedIn,
     isPhy,
     itemiseTag,
+    LearningStage,
     ListParams,
     SEARCH_CHAR_LENGTH_LIMIT,
     SEARCH_RESULTS_PER_PAGE,
@@ -38,7 +39,8 @@ import {Button, Card, CardBody, CardHeader, Col, Container, Input, InputGroup, L
 import {ChoiceTree, getChoiceTreeLeaves, QuestionFinderFilterPanel} from "../elements/panels/QuestionFinderFilterPanel";
 import {Tier, TierID} from "../elements/svg/HierarchyFilter";
 import { MainContent, QuestionFinderSidebar, SidebarLayout } from "../elements/layout/SidebarLayout";
-import { Subject, Tag } from "../../../IsaacAppTypes";
+import { PageContextState, Tag } from "../../../IsaacAppTypes";
+import { Subject } from "../../services";
 import { PrintButton } from "../elements/PrintButton";
 import { ShareLink } from "../elements/ShareLink";
 import { Spacer } from "../elements/Spacer";
@@ -96,7 +98,7 @@ function processTagHierarchy(subjects: string[], fields: string[], topics: strin
     return selectionItems;
 }
 
-export function pruneTreeNode(tree: ChoiceTree[], filter: string, recursive?: boolean, pageContext?: {subject?: Subject; stage?: Stage}): ChoiceTree[] {
+export function pruneTreeNode(tree: ChoiceTree[], filter: string, recursive?: boolean, pageContext?: PageContextState): ChoiceTree[] {
     let newTree = [...tree];
     newTree.forEach((tier, i) => {
         if (tier[filter as TAG_ID]) { // removing children of node
@@ -107,7 +109,7 @@ export function pruneTreeNode(tree: ChoiceTree[], filter: string, recursive?: bo
             parents.forEach(parent => {
                 if (newTree[i][parent as TAG_ID]?.some(c => c.value === filter)) {
                     newTree[i][parent as TAG_ID] = newTree[i][parent as TAG_ID]?.filter(c => c.value !== filter);
-                    if (recursive && newTree[i][parent as TAG_ID]?.length === 0 && parent !== pageContext?.subject && parent !== pageContext?.stage) {
+                    if (recursive && newTree[i][parent as TAG_ID]?.length === 0 && parent !== pageContext?.subject) {
                         newTree = pruneTreeNode(newTree, parent, true, pageContext);
                     }
                 }
@@ -138,6 +140,17 @@ function getInitialQuestionStatuses(params: ListParams<FilterParams>): QuestionS
     }
 }
 
+export function pageStageToSearchStage(stage?: LearningStage[]): STAGE[] {
+    if (!stage || stage.length === 0) return [];
+    switch (stage[0]) {
+        case "11_14": return [STAGE.YEAR_7_AND_8, STAGE.YEAR_9];
+        case "gcse": return [STAGE.GCSE];
+        case "a_level": return [STAGE.A_LEVEL, STAGE.FURTHER_A];
+        case "university": return [STAGE.UNIVERSITY];
+        default: return [];
+    }
+}
+
 export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => state && state.user);
@@ -147,7 +160,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const [searchTopics, setSearchTopics] = useState<string[]>(arrayFromPossibleCsv(params.topics));
     const [searchQuery, setSearchQuery] = useState<string>(params.query ? (params.query instanceof Array ? params.query[0] : params.query) : "");
-    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(pageContext.stage ? [pageContext.stage] : params.stages) as STAGE[]);
+    const [searchStages, setSearchStages] = useState<STAGE[]>(arrayFromPossibleCsv(pageContext?.stage ? pageStageToSearchStage(pageContext.stage) : params.stages) as STAGE[]);
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>(arrayFromPossibleCsv(params.difficulties) as Difficulty[]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>(arrayFromPossibleCsv(params.examBoards) as ExamBoard[]);
     const [searchStatuses, setSearchStatuses] = useState<QuestionStatus>(getInitialQuestionStatuses(params));
@@ -187,13 +200,13 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
     const [selections, setSelections] = useState<ChoiceTree[]>(
         processTagHierarchy(
-            arrayFromPossibleCsv(pageContext.subject ? [pageContext.subject] : params.subjects), 
+            arrayFromPossibleCsv(pageContext?.subject ? [pageContext.subject] : params.subjects), 
             arrayFromPossibleCsv(params.fields), 
             arrayFromPossibleCsv(params.topics))  
     );
 
     const choices: ChoiceTree[] = [];
-    if (!pageContext.subject) {
+    if (!pageContext?.subject) {
         choices.push({"subject": tags.allSubjectTags.map(itemiseTag)});
     } else {
         choices.push({});
@@ -394,10 +407,10 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setSearchDifficulties([]);
         setSearchTopics([]);
         setSearchExamBoards([]);
-        setSearchStages(pageContext.stage ? [pageContext.stage as STAGE] : []);
+        setSearchStages(pageStageToSearchStage(pageContext?.stage));
         setSearchBooks([]);
         setExcludeBooks(false);
-        setSelections([pageContext.subject ? {"subject": [itemiseTag(tags.getById(pageContext.subject as TAG_ID))]} : {}, {}, {}]);
+        setSelections([pageContext?.subject ? {"subject": [itemiseTag(tags.getById(pageContext.subject as TAG_ID))]} : {}, {}, {}]);
         setSearchStatuses(
             {
                 notAttempted: false,
@@ -422,7 +435,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     </span>, undefined);
 
     const description = siteSpecific(
-        (pageContext.subject && pageContext.stage ? `Use our question finder to find questions to try on ${getHumanContext(pageContext)} topics.` : "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.") 
+        (pageContext?.subject && pageContext.stage ? `Use our question finder to find questions to try on ${getHumanContext(pageContext)} topics.` : "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology.") 
         + " Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.",
         "");
 
@@ -462,8 +475,8 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     };
 
     const FilterSummary = () => {
-        const stageList: string[] = searchStages.filter(stage => stage !== pageContext.stage);
-        const selectionList: string[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext.subject).map(leaf => leaf.value); // value for now???
+        const stageList: string[] = searchStages.filter(stage => !pageStageToSearchStage(pageContext?.stage).includes(stage));
+        const selectionList: string[] = getChoiceTreeLeaves(selections).filter(leaf => leaf.value !== pageContext?.subject).map(leaf => leaf.value); // value for now???
         const statusList: string[] = Object.keys(searchStatuses).filter(status => searchStatuses[status as keyof QuestionStatus]);
 
         const categories = [searchDifficulties, stageList, searchExamBoards, statusList, searchBooks, selectionList].flat();
