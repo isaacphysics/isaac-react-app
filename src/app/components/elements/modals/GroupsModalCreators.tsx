@@ -97,7 +97,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
         <Row key={0}>
             {/* Only teachers are allowed to add additional managers to a group. */}
             {firstTime && isTeacherOrAbove(user) && <Col className="pb-0 pb-md-2 pd-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("groups-modal-btn", "text-nowrap mb-3")} onClick={() => {
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
                     store.dispatch(closeActiveModal());
                     store.dispatch(showGroupManagersModal({group, user}));
                 }}>
@@ -105,7 +105,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
                 </Button>
             </Col>}
             <Col className="pb-0 pb-md-2 pd-lg-0" xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("groups-modal-btn", "text-nowrap mb-3")} onClick={() => {
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
                     store.dispatch(closeActiveModal());
                     history.push(PATHS.SET_ASSIGNMENTS);
                 }}>
@@ -113,7 +113,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
                 </Button>
             </Col>
             {firstTime && <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
-                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("groups-modal-btn", "text-nowrap mb-3")} onClick={() => {
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={siteSpecific("btn-keyline", "text-nowrap mb-3")} onClick={() => {
                     store.dispatch(closeActiveModal());
                     backToCreateGroup?.();
                 }}>

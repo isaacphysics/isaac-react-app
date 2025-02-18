@@ -31,8 +31,3 @@
   background-color: $color-neutral-50;
   border: none;
 }
-
-.groups-modal-btn {
-  // Override border because --buttons-keyline-border isn't set in modal's context
-  border: 1.5px solid $color-neutral-700 !important;
-}

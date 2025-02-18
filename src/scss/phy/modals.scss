@@ -1,0 +1,4 @@
+.btn-keyline {
+    // Override border because --buttons-keyline-border isn't set in modal's context
+    border: 1.5px solid $color-neutral-700 !important;
+}
