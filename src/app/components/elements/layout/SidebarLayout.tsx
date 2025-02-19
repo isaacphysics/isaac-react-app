@@ -137,7 +137,7 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
         {relatedConcepts && relatedConcepts.length > 0 && <>
             <div className="section-divider"/>
             <h5>Related concepts</h5>
-            <ul>
+            <ul className="link-list">
                 {relatedConcepts.map((concept, i) => <ConceptLink key={i} concept={concept} sidebarRef={sidebarRef} />)}
             </ul>
         </>}
@@ -146,19 +146,19 @@ export const QuestionSidebar = (props: QuestionSidebarProps) => {
                 ? <>
                     <div className="section-divider"/>
                     <h5>Related questions</h5>
-                    <ul>
+                    <ul className="link-list">
                         {relatedQuestions.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
                     </ul>
                 </>
                 : <>
                     <div className="section-divider"/>
                     <h5>Related {HUMAN_STAGES[pageContextStage[0]]} questions</h5>
-                    <ul>
+                    <ul className="link-list">
                         {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
                     </ul>
                     <div className="section-divider"/>
                     <h5>Related questions for other learning stages</h5>
-                    <ul>
+                    <ul className="link-list">
                         {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} sidebarRef={sidebarRef} question={question} />)}
                     </ul>
                 </>
@@ -528,8 +528,8 @@ interface GroupsSidebarProps extends SidebarProps {
 }
 
 export const GroupsSidebar = (props: GroupsSidebarProps) => {
-    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup } = props;
-    return <ContentSidebar buttonTitle="Select or create a group" {...props}>
+    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, ...rest } = props;
+    return <ContentSidebar buttonTitle="Select or create a group" {...rest}>
         <div className="section-divider"/>
         <h5>Select a group</h5>
         <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}

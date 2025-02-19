@@ -123,7 +123,10 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
 
     return <div className="p-2 member-info-item d-flex justify-content-between" data-testid={"member-info"}>
         <div className="pt-1 d-flex flex-fill">
-            <span className={classNames("d-inline-block", siteSpecific("icon-my-isaac me-2", "icon-group-table-person"))} />
+            {siteSpecific(
+                <i className="icon icon-my-isaac me-2"/>,
+                <span className={classNames("d-inline-block icon-group-table-person")}/>
+            )}
             <div>
                 {member.authorisedFullAccess ?
                     <Link to={`/progress/${member.groupMembershipInformation.userId}`}
@@ -336,7 +339,10 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                             <tr key={manager.email} data-testid={"group-manager"} className={classNames({"border-0 bg-transparent": isAda})}>
                                 <td className={classNames("align-middle", {"border-top-0": i === 0, "border-0 p-2 bg-transparent": isAda})}>
                                     <div className="d-flex align-items-center">
-                                        <span className={siteSpecific("icon-my-isaac me-2", "icon-group-table-person")}/>
+                                        {siteSpecific(
+                                            <i className="icon icon-my-isaac me-2"/>,
+                                            <span className="icon-group-table-person"/>
+                                        )}
                                         {manager.givenName} {manager.familyName} {manager.id === group.ownerId && "(group owner)"} {user.id === manager.id && "(you)"}
                                     </div>                                  
                                 </td>
@@ -565,21 +571,17 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                     </NavItem>;
                 })}
             </Nav>
-            <div className="mt-3 mt-lg-0">
+            <ul className="mt-3 mt-lg-0 p-0 mb-0">
                 {sortedGroups && sortedGroups.length > 0
                     ? sortedGroups.map((g: AppGroup) =>
                         sidebarStyle                         
-                            ? <div key={g.id} className="group-item" data-testid={"group-item"}>
-                                <div className="d-flex align-items-center">
-                                    <Link to={`/groups#${g.id}`} className="d-block" style={{textDecoration: "none", width: "100%"}}>
-                                        <StyledTabPicker id={g.groupName} tabIndex={0} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}/>
-                                    </Link>
-                                    {showArchived &&
-                                        <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
-                                            aria-label="Delete group" className="ms-1 icon-close" title={"Delete group"}/>
-                                    }
-                                </div>
-                            </div>
+                            ? <li key={g.id} className="d-flex align-items-center group-item" data-testid={"group-item"}>
+                                <StyledTabPicker 
+                                    id={g.groupName} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}
+                                    onInputChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)} data-testid={"select-group"}
+                                    suffix={showArchived ? {icon: "icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(g);}, info: "Delete group"} : undefined}
+                                />
+                            </li>
                             : <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                 <div className="d-flex justify-content-between align-items-center group-name-buttons">
                                     <Link to={`/groups#${g.id}`} title={isStaff(user) ? `Group id: ${g.id}` : undefined} data-testid={"select-group"} className="text-start px-1 py-1 group-name d-flex flex-fill">
@@ -594,17 +596,17 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                     )
                     : <div className={"group-item p-2"}>No {showArchived ? "archived" : "active"} groups</div>
                 }
-            </div>
+            </ul>
         </CardBody>
     </Card>;
 };
 
-const stateToProps = (_state: AppState, props: any) => {
+const stateToProps = (_state: AppState, props: any): {hashAnchor: string | null} => {
     const {location: {hash}} = props;
     return {hashAnchor: hash?.slice(1) ?? null};
 };
 
-const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAnchor: number}) => {
+const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAnchor: string | null}) => {
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
 
@@ -617,12 +619,21 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
 
     const [createGroup] = useCreateGroupMutation();
 
-    const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>();
+    const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>(window.location.hash ? parseInt(window.location.hash.slice(1)) : undefined);
+
     useEffect(() => {
-        // @ts-ignore
-        const tab: number = hashAnchor && parseInt(hashAnchor);
+        const tab = hashAnchor ? parseInt(hashAnchor) : undefined;
         setSelectedGroupId(tab);
     }, [hashAnchor]);
+
+    useEffect(() => {
+        if (isDefined(selectedGroupId)) {
+            window.location.hash = selectedGroupId.toString();
+        } else {
+            history.replaceState("", document.title, window.location.pathname + window.location.search);
+        }
+    }, [selectedGroupId]);
+    
     const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
 
     const createNewGroup: (newGroupName: string) => Promise<boolean> = async (newGroupName: string) => {
