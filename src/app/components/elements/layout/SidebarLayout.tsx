@@ -528,8 +528,8 @@ interface GroupsSidebarProps extends SidebarProps {
 }
 
 export const GroupsSidebar = (props: GroupsSidebarProps) => {
-    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup } = props;
-    return <ContentSidebar buttonTitle="Select or create a group" {...props}>
+    const { user, groups, allGroups, selectedGroup, setSelectedGroupId, showArchived, setShowArchived, groupNameInputRef, createNewGroup, ...rest } = props;
+    return <ContentSidebar buttonTitle="Select or create a group" {...rest}>
         <div className="section-divider"/>
         <h5>Select a group</h5>
         <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId} showArchived={showArchived}
