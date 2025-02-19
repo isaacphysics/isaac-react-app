@@ -271,7 +271,7 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
     return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
         <QuizTitle {...props} />
         <SidebarLayout>
-            <QuizSidebar attempt={attempt} totalSections={sectionCount} currentSection={page ? page : undefined}/>
+            <QuizSidebar attempt={attempt} viewingAsSomeoneElse={viewingAsSomeoneElse} totalSections={sectionCount} currentSection={page ? page : undefined}/>
             <MainContent>
                 {page === null ?
                     <div className="mt-4">

@@ -497,16 +497,26 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
 
 interface QuizSidebarProps extends SidebarProps {
     attempt: QuizAttemptDTO;
+    viewingAsSomeoneElse: boolean;
     totalSections: number;
     currentSection?: number;
 }
 
 export const QuizSidebar = (props: QuizSidebarProps) => {
-    const { attempt, totalSections, currentSection } = props;
+    const { attempt, viewingAsSomeoneElse, totalSections, currentSection } = props;
     const deviceSize = useDeviceSize();
     const history = useHistory();
     const location = history.location.pathname;
-    const rubricPath = location.split("/page")[0];
+    const rubricPath = viewingAsSomeoneElse ? location.split("/").slice(0, 6).join("/") : location.split("/page")[0];
+
+    const switchToPage = (page: string) => {
+        if (viewingAsSomeoneElse) {
+            history.push(rubricPath.concat("/", page));
+        }
+        else {
+            history.push(rubricPath.concat("/page/", page));
+        }
+    };
 
     const SidebarContents = () => {
         return <ContentSidebar buttonTitle="Sections">
@@ -514,7 +524,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
             <h5 className="mb-3">Test Progress</h5>
             <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
             {Array.from({length: totalSections}, (_, i) => i + 1).map(section => 
-                <StyledTabPicker key={section} checkboxTitle={`Section ${section}`} checked={currentSection === section} onClick={() => history.push(rubricPath.concat("/page/", String(section)))}/>)}
+                <StyledTabPicker key={section} checkboxTitle={`Section ${section}`} checked={currentSection === section} onClick={() => switchToPage(String(section))}/>)}
         </ContentSidebar>;
     };
 
