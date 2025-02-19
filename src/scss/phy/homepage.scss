@@ -17,13 +17,6 @@
     text-wrap: nowrap;
   }
 
-  h5 {
-    font-size: 14px;
-    font-family: $primary-font;
-    color: $color-neutral-500;
-    line-height: 1.1;
-  }
-  
   .news-events-link {
     text-wrap: nowrap;
     margin: 7px 16px 0px;
@@ -257,18 +250,5 @@ a:has(.assignment-card) {
   &:hover {
     scale: 1.02;
     border-color: $color-neutral-400;
-  }
-}
-
-// custom breakpoints for dashboard panel widths
-@media (min-width: 992px) and (max-width: 1405px) {
-  .dashboard-cols > * {
-      flex: 0 0 auto;
-      width: 50%;
-  }
-}
-@media (max-width: 785px) {
-  .dashboard-cols > * {
-      width: 100%;
   }
 }
