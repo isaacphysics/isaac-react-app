@@ -494,6 +494,26 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
     </ContentSidebar>;
 };
 
+interface QuizSidebarProps extends SidebarProps {
+    totalSections: number;
+    currentSection?: number;
+}
+
+export const QuizSidebar = (props: QuizSidebarProps) => {
+    const { totalSections, currentSection } = props;
+    const history = useHistory();
+    const location = history.location.pathname;
+    const rubricPath = location.split("/page")[0];
+
+    return <ContentSidebar buttonTitle="Sections">
+        <div className="section-divider"/>
+        <h5 className="mb-3">Test Progress</h5>
+        <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
+        {Array.from({length: totalSections}, (_, i) => i + 1).map(section => 
+            <StyledTabPicker key={section} checkboxTitle={`Section ${section}`} checked={currentSection === section} onClick={() => history.push(rubricPath.concat("/page/", String(section)))}/>)}
+    </ContentSidebar>;
+};
+
 export const MyAccountSidebar = (props: SidebarProps) => {
     return <ContentSidebar buttonTitle="Account settings" {...props}>
         {props.children}

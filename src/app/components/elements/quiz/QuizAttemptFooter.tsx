@@ -11,6 +11,7 @@ import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
 import {confirmThen, siteSpecific} from "../../../services";
+import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
@@ -64,7 +65,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
             controls = <>
                 {
                     siteSpecific(
-                        <Button color="tertiary" tag={Link} replace to={pageLink(1)}>Review answers</Button>,
+                        <Button className="btn btn-keyline" tag={Link} replace to={pageLink(1)}>Review answers</Button>,
                         <Button outline color="secondary" tag={Link} replace to={pageLink(1)}>Review answers</Button>
                     )
                 }
@@ -96,10 +97,13 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
         controls = <QuizPagination {...props} page={page} finalLabel="Finish"/>;
     }
 
-    return <>
-        {prequel}
-        <div className="d-flex border-top pt-2 my-2 align-items-center">
-            {controls}
-        </div>
-    </>;
+    // Empty sidebar to match layout of quiz attempt component
+    return <SidebarLayout className="d-flex flex-column align-items-end">
+        <MainContent>
+            {prequel}
+            <div className="d-flex border-top pt-2 my-2 align-items-center">
+                {controls}
+            </div>
+        </MainContent>
+    </SidebarLayout>;
 }
