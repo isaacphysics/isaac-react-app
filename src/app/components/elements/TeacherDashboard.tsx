@@ -4,7 +4,6 @@ import { skipToken } from '@reduxjs/toolkit/query';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { above, isDefined, isLoggedIn, isTutorOrAbove, TAG_ID, tags, useDeviceSize } from '../../services';
-import { useAssignmentsCount } from '../navigation/NavigationBar';
 import { BookInfo, isaacBooks } from './modals/IsaacBooksModal';
 import { AssignmentDTO, RegisteredUserDTO } from '../../../IsaacApiTypes';
 import { GroupSelector } from '../pages/Groups';
@@ -146,14 +145,14 @@ const BookCard = ({title, image, path}: BookInfo) => {
     return <Card className="p-2 h-100">  
         <Link to={path} className="book">
             <img src={image} alt={title} className="w-100"/>
-            <div className="mt-3">{title}</div>
+            <div className="mt-2">{title}</div>
         </Link>
     </Card>;
 };
 
 const BooksPanel = () => {
     const [subject, setSubject] = useState<Subject | "all">("all");
-    return <div className="w-100 dashboard-panel book-panel">
+    return <div className="w-100 dashboard-panel">
         <Link to="/publications" className="plain-link">
             <h4>Books</h4>
         </Link>
@@ -167,10 +166,10 @@ const BooksPanel = () => {
                 {/* No biology books */}
             </StyledDropdown>
         </div>
-        <Row className="row-cols-3 row-cols-sm-4 row-cols-md-3 row-cols-xl-4 flex-nowrap">
+        <Row className="row-cols-3 row-cols-md-4 row-cols-lg-6 row-cols-xl-2 row-cols-xxl-3 flex-nowrap book-panel">
             {isaacBooks.filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
-                    <Col key={book.title} className="mb-2">
+                    <Col key={book.title} className="mb-2 p-0">
                         <BookCard {...book}/>
                     </Col>)}
         </Row>
@@ -178,23 +177,44 @@ const BooksPanel = () => {
 };
 
 export const TeacherDashboard = () => {
+    const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
     if (user && isLoggedIn(user) && isTutorOrAbove(user)) {
         return <div className="dashboard w-100">
-            <Row className="row-cols-1 row-cols-sm-2 row-cols-lg-4 dashboard-cols">
-                <Col className="mt-4">
-                    <GroupsPanel />
-                </Col>
-                <Col className="mt-4">
-                    <AssignmentsPanel />
-                </Col>
-                <Col className="mt-4">
-                    <BooksPanel />
-                </Col>
-                <Col className="mt-4">
-                    <MyIsaacPanel />
-                </Col>
-            </Row>
+            {deviceSize === "lg"
+                ? <>
+                    <Row className="row-cols-3">
+                        <Col className="mt-4">
+                            <GroupsPanel />
+                        </Col>
+                        <Col className="mt-4 panel-streak">
+                            <AssignmentsPanel />
+                        </Col>
+                        <Col className="mt-4">
+                            <MyIsaacPanel />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="mt-4">
+                            <BooksPanel />
+                        </Col>
+                    </Row></>
+                : <>
+                    <Row className="row-cols-1 row-cols-sm-2 row-cols-xl-4">
+                        <Col className="mt-4">
+                            <GroupsPanel />
+                        </Col>
+                        <Col className="mt-4">
+                            <AssignmentsPanel />
+                        </Col>
+                        <Col className="mt-4 col-sm-7 col-xl-3">
+                            <BooksPanel />
+                        </Col>
+                        <Col className="mt-4 col-sm-5 col-xl-3">
+                            <MyIsaacPanel />
+                        </Col>
+                    </Row>
+                </>}
         </div>;
     }
 };

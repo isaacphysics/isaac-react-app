@@ -156,6 +156,10 @@ $dashboard-panel-padding: 30px;
   max-height: 450px;
   padding: $dashboard-panel-padding;
 
+  @include media-breakpoint-only(lg) {
+    max-height: 500px;
+  }
+
   h4 {
     color: $color-brand-700;
     font-size: 18px;
@@ -223,10 +227,6 @@ $dashboard-panel-padding: 30px;
     font-family: $secondary-font-medium;
     font-size: 14px;
     text-decoration: none;
-  }
-
-  *:has(>.book) {
-    min-width: 100px;
   }
 }
 
