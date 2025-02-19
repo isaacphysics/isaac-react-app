@@ -524,7 +524,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     const SidebarContents = () => {
         return <ContentSidebar buttonTitle="Sections">
             <div className="section-divider"/>
-            <h5 className="mb-3">Test Progress</h5>
+            <h5 className="mb-3">Sections</h5>
             <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
             {Array.from({length: totalSections}, (_, i) => i + 1).map(section => 
                 <StyledTabPicker key={section} checkboxTitle={`Section ${section}`} checked={currentSection === section} onClick={() => switchToPage(String(section))}/>)}
