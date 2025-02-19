@@ -17,13 +17,6 @@
     text-wrap: nowrap;
   }
 
-  h5 {
-    font-size: 14px;
-    font-family: $primary-font;
-    color: $color-neutral-500;
-    line-height: 1.1;
-  }
-  
   .news-events-link {
     text-wrap: nowrap;
     margin: 7px 16px 0px;
@@ -156,6 +149,10 @@ $dashboard-panel-padding: 30px;
   max-height: 450px;
   padding: $dashboard-panel-padding;
 
+  @include media-breakpoint-only(lg) {
+    max-height: 500px;
+  }
+
   h4 {
     color: $color-brand-700;
     font-size: 18px;
@@ -212,21 +209,17 @@ $dashboard-panel-padding: 30px;
 }
 
 .scrollable-panel {
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .book-panel {
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
 
   .book {
     font-family: $secondary-font-medium;
     font-size: 14px;
     text-decoration: none;
-  }
-
-  *:has(>.book) {
-    min-width: 100px;
   }
 }
 
@@ -257,18 +250,5 @@ a:has(.assignment-card) {
   &:hover {
     scale: 1.02;
     border-color: $color-neutral-400;
-  }
-}
-
-// custom breakpoints for dashboard panel widths
-@media (min-width: 992px) and (max-width: 1405px) {
-  .dashboard-cols > * {
-      flex: 0 0 auto;
-      width: 50%;
-  }
-}
-@media (max-width: 785px) {
-  .dashboard-cols > * {
-      width: 100%;
   }
 }
