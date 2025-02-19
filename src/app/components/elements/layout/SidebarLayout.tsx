@@ -507,10 +507,13 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
     const deviceSize = useDeviceSize();
     const history = useHistory();
     const location = history.location.pathname;
-    const rubricPath = viewingAsSomeoneElse ? location.split("/").slice(0, 6).join("/") : location.split("/page")[0];
+    const rubricPath = 
+        viewingAsSomeoneElse ? location.split("/").slice(0, 6).join("/") :
+            attempt.feedbackMode ? location.split("/").slice(0, 5).join("/") :
+                location.split("/page")[0];
 
     const switchToPage = (page: string) => {
-        if (viewingAsSomeoneElse) {
+        if (viewingAsSomeoneElse || attempt.feedbackMode) {
             history.push(rubricPath.concat("/", page));
         }
         else {
