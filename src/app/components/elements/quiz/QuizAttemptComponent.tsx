@@ -281,6 +281,9 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
                         </div>}
                         <QuizRubric {...props}/>
                         <QuizContents {...props} />
+                        {viewingAsSomeoneElse && <div className="mt-3">
+                            Click on a section title or click &lsquo;Next&rsquo; to look at {viewingAsSomeoneElse ? "their" : "your"} detailed feedback.
+                        </div>}
                     </div>
                     :
                     <QuizSection {...props} page={page}/>
