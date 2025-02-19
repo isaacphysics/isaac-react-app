@@ -212,11 +212,11 @@ $dashboard-panel-padding: 30px;
 }
 
 .scrollable-panel {
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .book-panel {
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
 
   .book {
