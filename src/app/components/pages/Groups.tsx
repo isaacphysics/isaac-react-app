@@ -123,7 +123,10 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
 
     return <div className="p-2 member-info-item d-flex justify-content-between" data-testid={"member-info"}>
         <div className="pt-1 d-flex flex-fill">
-            <span className={classNames("d-inline-block", siteSpecific("icon-my-isaac me-2", "icon-group-table-person"))} />
+            {siteSpecific(
+                <i className="icon icon-my-isaac me-2"/>,
+                <span className={classNames("d-inline-block icon-group-table-person")}/>
+            )}
             <div>
                 {member.authorisedFullAccess ?
                     <Link to={`/progress/${member.groupMembershipInformation.userId}`}
@@ -336,7 +339,10 @@ const GroupEditor = ({group, allGroups, user, createNewGroup, groupNameInputRef}
                             <tr key={manager.email} data-testid={"group-manager"} className={classNames({"border-0 bg-transparent": isAda})}>
                                 <td className={classNames("align-middle", {"border-top-0": i === 0, "border-0 p-2 bg-transparent": isAda})}>
                                     <div className="d-flex align-items-center">
-                                        <span className={siteSpecific("icon-my-isaac me-2", "icon-group-table-person")}/>
+                                        {siteSpecific(
+                                            <i className="icon icon-my-isaac me-2"/>,
+                                            <span className="icon-group-table-person"/>
+                                        )}
                                         {manager.givenName} {manager.familyName} {manager.id === group.ownerId && "(group owner)"} {user.id === manager.id && "(you)"}
                                     </div>                                  
                                 </td>
