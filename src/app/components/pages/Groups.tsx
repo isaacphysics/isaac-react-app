@@ -606,12 +606,12 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
     </Card>;
 };
 
-const stateToProps = (_state: AppState, props: any) => {
+const stateToProps = (_state: AppState, props: any): {hashAnchor: string | null} => {
     const {location: {hash}} = props;
     return {hashAnchor: hash?.slice(1) ?? null};
 };
 
-const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAnchor: number}) => {
+const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAnchor: string | null}) => {
     const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
 
@@ -624,12 +624,21 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
 
     const [createGroup] = useCreateGroupMutation();
 
-    const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>();
+    const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>(window.location.hash ? parseInt(window.location.hash.slice(1)) : undefined);
+
     useEffect(() => {
-        // @ts-ignore
-        const tab: number = hashAnchor && parseInt(hashAnchor);
+        const tab = hashAnchor ? parseInt(hashAnchor) : undefined;
         setSelectedGroupId(tab);
     }, [hashAnchor]);
+
+    useEffect(() => {
+        if (isDefined(selectedGroupId)) {
+            window.location.hash = selectedGroupId.toString();
+        } else {
+            history.replaceState("", document.title, window.location.pathname + window.location.search);
+        }
+    }, [selectedGroupId]);
+    
     const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
 
     const createNewGroup: (newGroupName: string) => Promise<boolean> = async (newGroupName: string) => {
