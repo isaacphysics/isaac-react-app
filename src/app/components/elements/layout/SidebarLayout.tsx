@@ -2,8 +2,8 @@ import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "reac
 import { Col, ColProps, RowProps, Input, Offcanvas, OffcanvasBody, OffcanvasHeader, Row } from "reactstrap";
 import partition from "lodash/partition";
 import classNames from "classnames";
-import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO } from "../../../../IsaacApiTypes";
-import { above, AUDIENCE_DISPLAY_FIELDS, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
+import { AssignmentDTO, ContentSummaryDTO, IsaacConceptPageDTO, QuestionDTO, QuizAttemptDTO } from "../../../../IsaacApiTypes";
+import { above, AUDIENCE_DISPLAY_FIELDS, below, BOARD_ORDER_NAMES, BoardCompletions, BoardCreators, BoardLimit, BoardSubjects, BoardViews, confirmThen, determineAudienceViews, filterAssignmentsByStatus, filterAudienceViewsByProperties, getDistinctAssignmentGroups, getDistinctAssignmentSetters, getThemeFromContextAndTags, HUMAN_STAGES, isAda, isDefined, siteSpecific, useDeviceSize } from "../../../services";
 import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcons";
 import { selectors, useAppSelector } from "../../../state";
 import { Link, useHistory } from "react-router-dom";
@@ -14,6 +14,7 @@ import { AssignmentState } from "../../pages/MyAssignments";
 import { ShowLoadingQuery } from "../../handlers/ShowLoadingQuery";
 import { Spacer } from "../Spacer";
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
+import { QuizRubricButton } from "../quiz/QuizAttemptComponent";
 
 export const SidebarLayout = (props: RowProps) => {
     const { className, ...rest } = props;
@@ -495,23 +496,41 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
 };
 
 interface QuizSidebarProps extends SidebarProps {
+    attempt: QuizAttemptDTO;
     totalSections: number;
     currentSection?: number;
 }
 
 export const QuizSidebar = (props: QuizSidebarProps) => {
-    const { totalSections, currentSection } = props;
+    const { attempt, totalSections, currentSection } = props;
+    const deviceSize = useDeviceSize();
     const history = useHistory();
     const location = history.location.pathname;
     const rubricPath = location.split("/page")[0];
 
-    return <ContentSidebar buttonTitle="Sections">
-        <div className="section-divider"/>
-        <h5 className="mb-3">Test Progress</h5>
-        <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
-        {Array.from({length: totalSections}, (_, i) => i + 1).map(section => 
-            <StyledTabPicker key={section} checkboxTitle={`Section ${section}`} checked={currentSection === section} onClick={() => history.push(rubricPath.concat("/page/", String(section)))}/>)}
-    </ContentSidebar>;
+    const SidebarContents = () => {
+        return <ContentSidebar buttonTitle="Sections">
+            <div className="section-divider"/>
+            <h5 className="mb-3">Test Progress</h5>
+            <StyledTabPicker checkboxTitle={"Overview"} checked={!isDefined(currentSection)} onClick={() => history.push(rubricPath)}/>
+            {Array.from({length: totalSections}, (_, i) => i + 1).map(section => 
+                <StyledTabPicker key={section} checkboxTitle={`Section ${section}`} checked={currentSection === section} onClick={() => history.push(rubricPath.concat("/page/", String(section)))}/>)}
+        </ContentSidebar>;
+    };
+
+    return <>
+        {below["md"](deviceSize) ?
+            <Row className="d-flex align-items-center">
+                <Col>
+                    <SidebarContents/>
+                </Col>
+                <Col className="d-flex justify-content-end">
+                    <QuizRubricButton attempt={attempt}/>
+                </Col>
+            </Row> :
+            <SidebarContents/>
+        }
+    </>;
 };
 
 export const MyAccountSidebar = (props: SidebarProps) => {
