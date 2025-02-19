@@ -238,7 +238,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], examBoards: string[],
             book: string[], stages: string[], difficulties: string[],
-            hierarchySelections: ChoiceTree[], tiers: Tier[],
+            hierarchySelections: ChoiceTree[],
             excludeBooks: boolean, questionStatuses: QuestionStatus,
             startIndex: number) => {
             if (nothingToSearchFor) {
@@ -248,31 +248,23 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
 
             const filterParams: Record<TierID, string[] | undefined> = {} as Record<TierID, string[] | undefined>;
             if (isPhy) {
-                const allTags: TAG_ID[] = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
-                tiers.forEach((tier, i) => {
-                    if (!hierarchySelections[i] || Object.keys(hierarchySelections[i]).length === 0) {
-                        if (i === 0) {
-                            filterParams[tier.id] = allTags;
-                        }
-                        return;
-                    }
-                    filterParams[tier.id] = Object.values(hierarchySelections[i]).flat().map(item => item.value);
-                });
+                if (getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value).length === 0) {
+                    filterParams.subjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
+                }
             } else {
-                filterParams["topics"] = [...topics].filter((query) => query != "");
+                filterParams.topics = [...topics].filter((query) => query != "");
             }
-            const examBoardString = examBoards.join(",");
 
             dispatch(searchQuestions({
                 searchString: searchString,
-                tags: "", // Tags currently not used
+                tags: getChoiceTreeLeaves(hierarchySelections).map(leaf => leaf.value).join(",") || undefined,
                 fields: filterParams.fields?.join(",") || undefined,
                 subjects: filterParams.subjects?.join(",") || undefined,
                 topics: filterParams.topics?.join(",") || undefined,
                 books: (!excludeBooks && book.join(",")) || undefined,
                 stages: stages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
-                examBoards: examBoardString,
+                examBoards: examBoards.join(",") || undefined,
                 questionCategories: isPhy
                     ? (excludeBooks ? "problem_solving" : "problem_solving,book")
                     : undefined,
@@ -319,7 +311,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
         setDisplayQuestions(undefined);
         searchDebounce(
             searchQuery, searchTopics, searchExamBoards, searchBooks, searchStages,
-            searchDifficulties, selections, tiers, excludeBooks, searchStatuses, 0
+            searchDifficulties, selections, excludeBooks, searchStatuses, 0
         );
 
         const params: {[key: string]: string} = {};
@@ -605,7 +597,7 @@ export const QuestionFinder = withRouter(({location}: RouteComponentProps) => {
                                                 searchExamBoards,
                                                 searchBooks, searchStages,
                                                 searchDifficulties,
-                                                selections, tiers,
+                                                selections,
                                                 excludeBooks,
                                                 searchStatuses,
                                                 nextSearchOffset
