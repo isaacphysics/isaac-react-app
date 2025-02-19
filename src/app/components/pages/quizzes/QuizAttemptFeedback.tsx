@@ -14,12 +14,10 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Alert, Button, Container} from "reactstrap";
 
 function QuizFooter(props: QuizAttemptProps) {
-    const {page, pageLink, studentUser} = props;
+    const {page, pageLink} = props;
 
     let controls;
-    let prequel = null;
     if (page === null) {
-        prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {isDefined(studentUser) ? "their" : "your"} detailed feedback.</p>;
         controls = <>
             <Spacer/>
             <Button tag={Link} replace to={pageLink(1)}>Next</Button>
@@ -29,7 +27,6 @@ function QuizFooter(props: QuizAttemptProps) {
     }
 
     return <>
-        {prequel}
         <div className="d-flex border-top pt-2 my-2 align-items-center">
             {controls}
         </div>
