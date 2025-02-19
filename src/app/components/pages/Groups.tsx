@@ -577,9 +577,10 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                         sidebarStyle                         
                             ? <div key={g.id} className="group-item" data-testid={"group-item"}>
                                 <div className="d-flex align-items-center">
-                                    <Link to={`/groups#${g.id}`} className="d-block" style={{textDecoration: "none", width: "100%"}}>
-                                        <StyledTabPicker id={g.groupName} tabIndex={0} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}/>
-                                    </Link>
+                                    <StyledTabPicker 
+                                        id={g.groupName} tabIndex={0} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}
+                                        onInputChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)}
+                                    />
                                     {showArchived &&
                                         <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
                                             aria-label="Delete group" className="ms-1 icon-close" title={"Delete group"}/>
