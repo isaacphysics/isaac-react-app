@@ -571,7 +571,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                     </NavItem>;
                 })}
             </Nav>
-            <ul className="mt-3 mt-lg-0">
+            <ul className="mt-3 mt-lg-0 p-0 mb-0">
                 {sortedGroups && sortedGroups.length > 0
                     ? sortedGroups.map((g: AppGroup) =>
                         sidebarStyle                         
