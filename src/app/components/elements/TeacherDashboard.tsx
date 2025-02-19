@@ -111,31 +111,10 @@ const AssignmentsPanel = () => {
 };
 
 const MyIsaacPanel = () => {
-    const deviceSize = useDeviceSize();
-    const {assignmentsCount, quizzesCount} = useAssignmentsCount();
     return <div className='dashboard-panel'>
         <h4>More in My Isaac</h4>
-        <div className="d-flex flex-column flex-sm-row">
+        <div className="d-flex flex-column">
             <div className="col">
-                <h5>STUDENT</h5>
-                <Link to="/my_gameboards" className='d-block panel-my-isaac-link'>
-                    My question packs
-                </Link>
-                <Link to="/assignments" className='d-block panel-my-isaac-link'>
-                    My assignments
-                    {assignmentsCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{assignmentsCount > 99 ? "99+" : assignmentsCount}</span>}
-                </Link>
-                <Link to="/progress" className='d-block panel-my-isaac-link'>
-                    My progress
-                </Link>
-                <Link to="/tests" className='d-block panel-my-isaac-link'>
-                    My tests
-                    {quizzesCount > 0 && <span className="badge bg-primary rounded-5 ms-2">{quizzesCount > 99 ? "99+" : quizzesCount}</span>}
-                </Link>
-            </div>                
-            <div className={above["sm"](deviceSize) ? "section-divider-y me-4" : "section-divider"}/>
-            <div className="col">
-                <h5>{"TEACHER"}</h5>
                 <Link to="/teacher_features" className='d-block panel-my-isaac-link'>
                     Teacher features
                 </Link>
@@ -159,9 +138,6 @@ const MyIsaacPanel = () => {
         <div className="section-divider" />
         <Link to="/account" className="panel-my-isaac-link">
             My account
-        </Link>
-        <Link to="/logout" className="panel-my-isaac-link">
-            Log out
         </Link>
     </div>;
 };
