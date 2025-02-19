@@ -571,22 +571,17 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                     </NavItem>;
                 })}
             </Nav>
-            <div className="mt-3 mt-lg-0">
+            <ul className="mt-3 mt-lg-0">
                 {sortedGroups && sortedGroups.length > 0
                     ? sortedGroups.map((g: AppGroup) =>
                         sidebarStyle                         
-                            ? <div key={g.id} className="group-item" data-testid={"group-item"}>
-                                <div className="d-flex align-items-center">
-                                    <StyledTabPicker 
-                                        id={g.groupName} tabIndex={0} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}
-                                        onInputChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)}
-                                    />
-                                    {showArchived &&
-                                        <button onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
-                                            aria-label="Delete group" className="ms-1 icon-close" title={"Delete group"}/>
-                                    }
-                                </div>
-                            </div>
+                            ? <li key={g.id} className="d-flex align-items-center group-item" data-testid={"group-item"}>
+                                <StyledTabPicker 
+                                    id={g.groupName} checkboxTitle={g.groupName} checked={selectedGroup && selectedGroup.id === g.id}
+                                    onInputChange={() => setSelectedGroupId(id => g.id === id ? undefined : g.id)} data-testid={"select-group"}
+                                    suffix={showArchived ? {icon: "icon-close", action: (e) => {e.stopPropagation(); confirmDeleteGroup(g);}, info: "Delete group"} : undefined}
+                                />
+                            </li>
                             : <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                 <div className="d-flex justify-content-between align-items-center group-name-buttons">
                                     <Link to={`/groups#${g.id}`} title={isStaff(user) ? `Group id: ${g.id}` : undefined} data-testid={"select-group"} className="text-start px-1 py-1 group-name d-flex flex-fill">
@@ -601,7 +596,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                     )
                     : <div className={"group-item p-2"}>No {showArchived ? "archived" : "active"} groups</div>
                 }
-            </div>
+            </ul>
         </CardBody>
     </Card>;
 };
