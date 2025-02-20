@@ -263,11 +263,11 @@ const assemblyHighlightDefinition: LanguageFn = function(hljsLib) {
                 ],
                 relevance: 0
             },
-            { // 1 arg LMC instructions:
+            { // 1 arg LMC instructions
                 begin: [
-                    /LDA|STA|ADD|SUB/,
+                    /(ADD|SUB|STA|LDA)/,
                     / +/,
-                    /[0-9]+/,
+                    /[a-zA-Z0-9]+/,
                 ],
                 beginScope: {
                     1: "keyword",
@@ -344,7 +344,7 @@ const assemblyHighlightDefinition: LanguageFn = function(hljsLib) {
             { // calls with labels
                 begin: [
                     // LMC | AQA
-                    /(BRP|BRA|BRZ)|(BEQ|BNE|BLT|BGT|B)/,
+                    /(BR[APZ])|(BEQ|BNE|BLT|BGT|B)/,
                     / +/,
                     /[a-zA-Z][a-zA-Z0-9]+/,
                 ],
@@ -354,21 +354,9 @@ const assemblyHighlightDefinition: LanguageFn = function(hljsLib) {
                 },
                 contains: []
             } as Mode,
-            { // LMC calls with variables
-                begin: [
-                    /(SUB|STA|LDA|ADD)/,
-                    / +/,
-                    /[a-zA-Z][a-zA-Z0-9]+/,
-                ],
-                beginScope: {
-                    1: "keyword",
-                    3: "variable",
-                },
-                contains: []
-            } as Mode,
             { // AQA labelled blocks
                 begin: [
-                    /[a-zA-Z][a-zA-Z0-9]+/,
+                    /^[a-zA-Z][a-zA-Z0-9]*/,
                     /:/
                 ],
                 beginScope: {
@@ -377,7 +365,7 @@ const assemblyHighlightDefinition: LanguageFn = function(hljsLib) {
             } as Mode,
             { // LMC variable declarations
                 begin: [
-                    /^[a-zA-Z][a-zA-Z0-9]+/,
+                    /^[a-zA-Z][a-zA-Z0-9]*/,
                     /(?= *(DAT))/
                 ],
                 beginScope: {
@@ -386,8 +374,8 @@ const assemblyHighlightDefinition: LanguageFn = function(hljsLib) {
             } as Mode,
             { // LMC labelled blocks (symbols)
                 begin: [
-                    /^[a-z][a-zA-Z0-9]+/,
-                    /(?= *[A-Z]+)/
+                    /^[a-zA-Z][a-zA-Z0-9]*/,
+                    /(?= +(INP|OUT|ADD|SUB|STA|LDA|HLT|BR[APZ]))/
                 ],
                 beginScope: {
                     1: "symbol"
