@@ -5,8 +5,9 @@ import classNames from "classnames";
 
 interface AffixProps {
     affix: ReactNode;
-    position: "prefix" | "suffix";
+    position: "prefix" | "suffix" | "center";
     type: "text" | "icon" | "icon-img";
+    affixClassName?: string;
 }
 
 export interface AffixButtonProps extends ButtonProps {
@@ -27,14 +28,28 @@ const renderAffix = (affix: AffixProps, className?: string) => {
 export const AffixButton = (props: AffixButtonProps) => {
     const { affix, children, className, ...rest } = props;
     return <Button {...rest} className={classNames("d-inline-flex align-items-center", className)}>
-        {affix.position !== "suffix" && <>
-            {renderAffix(affix, "me-2")}
+        {affix.position === "prefix" && <>
+            {renderAffix(affix, classNames("me-2", affix.affixClassName))}
             <Spacer/>
         </>}
-        {children}
+        {affix.position === "center" ? <>
+            <Spacer/>
+            {renderAffix(affix, affix.affixClassName)}
+            <Spacer/>
+        </> : children}
         {affix.position === "suffix" && <>
             <Spacer/>
-            {renderAffix(affix, "ms-2")}
+            {renderAffix(affix, classNames("ms-2", affix.affixClassName))}
         </>}
     </Button>;
+};
+
+interface IconButtonProps extends ButtonProps {
+    icon: string;
+    affixClassName?: string;
+}
+
+export const IconButton = (props: IconButtonProps) => {
+    const { icon, className, affixClassName, ...rest } = props;
+    return <AffixButton {...rest} className={classNames(className, "p-3")} affix={{affix: icon, position: "center", type: "icon", affixClassName}}/>;
 };
