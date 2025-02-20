@@ -3,11 +3,10 @@ import { selectors, useAppSelector, useGetGroupsQuery, useGetMySetAssignmentsQue
 import { skipToken } from '@reduxjs/toolkit/query';
 import { Button, Card, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { above, isDefined, isLoggedIn, isTutorOrAbove, TAG_ID, tags, useDeviceSize } from '../../services';
+import { above, isDefined, isLoggedIn, isTutorOrAbove, Subject, TAG_ID, tags, useDeviceSize } from '../../services';
 import { BookInfo, isaacBooks } from './modals/IsaacBooksModal';
 import { AssignmentDTO, RegisteredUserDTO } from '../../../IsaacApiTypes';
 import { GroupSelector } from '../pages/Groups';
-import { Subject } from '../../../IsaacAppTypes';
 import { StyledDropdown } from './inputs/DropdownInput';
 
 const GroupsPanel = () => {

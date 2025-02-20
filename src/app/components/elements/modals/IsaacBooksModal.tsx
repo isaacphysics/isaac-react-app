@@ -2,8 +2,7 @@ import {closeActiveModal, store, useAppDispatch} from "../../../state";
 import React from "react";
 import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
-import {siteSpecific} from "../../../services";
-import { Subject } from "../../../../IsaacAppTypes";
+import {siteSpecific, Subject} from "../../../services";
 
 export interface BookInfo {
     title: string;
