@@ -51,6 +51,7 @@ export function DifficultyIcons({difficulty, blank, className} : {difficulty: Di
             role={"img"}
             width={`${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) + difficultyIconXPadding}px`}
             height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`}
+            viewBox={`0 0 ${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding} ${miniHexagon.quarterHeight * 4}`}
         >
             <title>{difficultyLabelMap[difficulty]}</title>
             {difficultyCategoryLevels.map(difficultyCategoryLevel => {
