@@ -8,6 +8,7 @@ $link-text-bottom-padding: 4px;
   align-items: stretch;
   border-bottom: none;
   .nav-item {
+    border-left: 1px solid $black;
     padding-left: 10px;
     padding-right: 10px;
     &:first-of-type {

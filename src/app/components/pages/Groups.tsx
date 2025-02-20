@@ -547,7 +547,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                     </DropdownMenu>
                 </UncontrolledButtonDropdown>
             </div>
-            <Nav tabs className={classNames("d-flex flex-wrap guaranteed-single-line mt-3", {"mb-3": isPhy})}>
+            <Nav tabs className={classNames("d-flex flex-nowrap guaranteed-single-line mt-3", {"mb-3": isPhy})}>
                 {tabs.map((tab, index) => {
                     return <NavItem key={index} className={classNames({"px-2": isPhy, "active": tab.active()})}>
                         <NavLink
