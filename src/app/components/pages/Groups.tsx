@@ -642,6 +642,8 @@ const GroupsComponent = ({user, hashAnchor}: {user: RegisteredUserDTO, hashAncho
             if (mutationSucceeded(result)) {
                 const group = result.data;
                 if (!group.id) return false;
+                // setting the hash early here prevents the useEffect from changing the hash and causing a reload after the modal is dispatched, which would remove it.
+                window.location.hash = group.id.toString(); 
                 dispatch(showGroupInvitationModal({group, user, firstTime: true, backToCreateGroup: () => setSelectedGroupId(undefined)}));
                 setSelectedGroupId(group.id);
                 return true;
