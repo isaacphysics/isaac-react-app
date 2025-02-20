@@ -166,20 +166,20 @@ export const StudentDashboard = () => {
         return <div className="dashboard w-100">
             {deviceSize === "lg"
                 ? <>
-                    <Row className="row-cols-3">
+                    <Row>
                         <Col className="mt-4">
                             <CurrentWorkPanel />
                         </Col>
+                    </Row>
+                    <Row className="row-cols-3">
                         <Col className="mt-4 panel-streak">
                             <DashboardStreakPanel />
                         </Col>
                         <Col className="mt-4">
-                            <MyIsaacPanel />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className="mt-4">
                             <GroupJoinPanel />
+                        </Col>
+                        <Col className="mt-4">
+                            <MyIsaacPanel />
                         </Col>
                     </Row></>
                 : <>
