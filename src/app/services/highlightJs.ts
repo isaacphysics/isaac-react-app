@@ -263,6 +263,18 @@ const assemblyHighlightDefinition: LanguageFn = function(hljsLib) {
                 ],
                 relevance: 0
             },
+            { // 1 arg LMC instructions:
+                begin: [
+                    /LDA|STA|ADD|SUB/,
+                    / +/,
+                    /[0-9]+/,
+                ],
+                beginScope: {
+                    1: "keyword",
+                    3: "variable",
+                },
+                contains: []
+            } as Mode,
             { // 2 arg instructions:
                 begin: [
                     /LDR|STR|MOV|CMP|MVN/,
