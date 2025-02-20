@@ -166,10 +166,10 @@ const BooksPanel = () => {
                 {/* No biology books */}
             </StyledDropdown>
         </div>
-        <Row className="row-cols-3 row-cols-md-4 row-cols-lg-6 row-cols-xl-2 row-cols-xxl-3 flex-nowrap book-panel">
+        <Row className="row-cols-3 row-cols-md-4 row-cols-lg-8 row-cols-xl-2 row-cols-xxl-3 flex-nowrap book-panel">
             {isaacBooks.filter(book => book.subject === subject || subject === "all")
                 .map((book) =>
-                    <Col key={book.title} className="mb-2 p-0">
+                    <Col key={book.title} className="mb-2 me-1 p-0">
                         <BookCard {...book}/>
                     </Col>)}
         </Row>

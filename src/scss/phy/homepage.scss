@@ -252,3 +252,10 @@ a:has(.assignment-card) {
     border-color: $color-neutral-400;
   }
 }
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .row-cols-lg-8 > *{
+    flex: 0 0 auto;
+    width: 12.5%;
+  }
+}
